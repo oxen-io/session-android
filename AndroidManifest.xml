@@ -609,7 +609,7 @@
               android:authorities="network.loki.provider.securesms.mms" />
 
     <provider android:name="android.support.v4.content.FileProvider"
-              android:authorities="network.loki.securesms.fileprovider"
+              android:authorities="org.thoughtcrime.securesms.fileprovider"
               android:exported="false"
               android:grantUriPermissions="true">
 

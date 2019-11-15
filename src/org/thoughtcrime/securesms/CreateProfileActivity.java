@@ -411,6 +411,9 @@ public class CreateProfileActivity extends BaseActionBarActivity implements Inje
           // ========
           AvatarHelper.setAvatar(CreateProfileActivity.this, Address.fromSerialized(TextSecurePreferences.getLocalNumber(context)), avatarBytes);
           TextSecurePreferences.setProfileAvatarId(CreateProfileActivity.this, new SecureRandom().nextInt());
+
+          //TODO: upload the profile photo here
+
         } catch (IOException e) {
           Log.w(TAG, e);
           return false;

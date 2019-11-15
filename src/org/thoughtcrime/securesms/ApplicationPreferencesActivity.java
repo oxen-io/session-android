@@ -398,8 +398,8 @@ public class ApplicationPreferencesActivity extends PassphraseRequiredActionBarA
         Intent intent = new Intent(preference.getContext(), CreateProfileActivity.class);
         intent.putExtra(CreateProfileActivity.EXCLUDE_SYSTEM, true);
 
-        getActivity().startActivity(intent);
-//        ((BaseActionBarActivity)getActivity()).startActivitySceneTransition(intent, getActivity().findViewById(R.id.avatar), "avatar");
+//        getActivity().startActivity(intent);
+        ((BaseActionBarActivity)getActivity()).startActivitySceneTransition(intent, getActivity().findViewById(R.id.avatar), "avatar");
         return true;
       }
     }

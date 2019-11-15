@@ -18,9 +18,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
+import org.thoughtcrime.securesms.contacts.avatars.ProfileContactPhoto;
+import org.thoughtcrime.securesms.contacts.avatars.ResourceContactPhoto;
 import org.thoughtcrime.securesms.database.Address;
 import org.thoughtcrime.securesms.loki.JazzIdenticonDrawable;
 import org.thoughtcrime.securesms.util.TextSecurePreferences;
+import org.thoughtcrime.securesms.mms.GlideApp;
 
 import network.loki.messenger.R;
 
@@ -106,14 +111,14 @@ public class ProfilePreference extends Preference {
       }
     });
 
-    /*
+    // Enable the profile avatar selection of the camera icon
     GlideApp.with(getContext().getApplicationContext())
             .load(new ProfileContactPhoto(localAddress, String.valueOf(TextSecurePreferences.getProfileAvatarId(getContext()))))
             .error(new ResourceContactPhoto(R.drawable.ic_camera_alt_white_24dp).asDrawable(getContext(), getContext().getResources().getColor(R.color.grey_400)))
             .circleCrop()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(avatarView);
-     */
+     
 
     if (!TextUtils.isEmpty(profileName)) {
       profileNameView.setText(profileName);
