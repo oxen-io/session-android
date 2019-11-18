@@ -38,8 +38,12 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 import org.thoughtcrime.securesms.components.RatingManager;
 import org.thoughtcrime.securesms.components.SearchToolbar;
+import org.thoughtcrime.securesms.contacts.avatars.ProfileContactPhoto;
+import org.thoughtcrime.securesms.contacts.avatars.ResourceContactPhoto;
 import org.thoughtcrime.securesms.conversation.ConversationActivity;
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil;
 import org.thoughtcrime.securesms.database.Address;
@@ -48,6 +52,7 @@ import org.thoughtcrime.securesms.database.MessagingDatabase.MarkedMessageInfo;
 import org.thoughtcrime.securesms.lock.RegistrationLockDialog;
 import org.thoughtcrime.securesms.loki.AddPublicChatActivity;
 import org.thoughtcrime.securesms.loki.JazzIdenticonDrawable;
+import org.thoughtcrime.securesms.mms.GlideApp;
 import org.thoughtcrime.securesms.notifications.MarkReadReceiver;
 import org.thoughtcrime.securesms.notifications.MessageNotifier;
 import org.thoughtcrime.securesms.permissions.Permissions;
@@ -205,6 +210,7 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
     String profileAddress = (recipientAddress.equalsIgnoreCase(currentUser) && primaryAddress != null) ? primaryAddress : recipientAddress;
 
     profilePictureImageView.setClipToOutline(true);
+    /*
     profilePictureImageView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
 
       @Override
@@ -218,6 +224,7 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
         return true;
       }
     });
+     */
 
     /*
     String        name          = Optional.fromNullable(recipient.getName()).or(Optional.fromNullable(TextSecurePreferences.getProfileName(this))).or("");
@@ -229,13 +236,15 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
 
     Drawable fallback = new GeneratedContactPhoto(name, R.drawable.ic_profile_default).asDrawable(this, fallbackColor.toAvatarColor(this));
 
+     */
+
     GlideApp.with(this)
             .load(new ProfileContactPhoto(recipient.getAddress(), String.valueOf(TextSecurePreferences.getProfileAvatarId(this))))
-            .error(fallback)
+            .error(new ResourceContactPhoto(R.drawable.ic_profile_default).asDrawable(this, getResources().getColor(R.color.grey_400)))
             .circleCrop()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .into(icon);
-     */
+            .into(profilePictureImageView);
+
 
     profilePictureImageView.setOnClickListener(v -> handleDisplaySettings());
   }

@@ -101,6 +101,7 @@ public class ProfilePreference extends Preference {
       }
     });
     avatarView.setClipToOutline(true);
+    /*
     avatarView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
 
       @Override
@@ -114,6 +115,7 @@ public class ProfilePreference extends Preference {
         return true;
       }
     });
+     */
 
     // Enable the profile avatar selection of the camera icon
     GlideApp.with(getContext().getApplicationContext())

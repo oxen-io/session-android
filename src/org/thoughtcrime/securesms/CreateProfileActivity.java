@@ -59,6 +59,7 @@ import org.whispersystems.signalservice.api.SignalServiceAccountManager;
 import org.whispersystems.signalservice.api.crypto.ProfileCipher;
 import org.whispersystems.signalservice.api.util.StreamDetails;
 import org.whispersystems.signalservice.loki.api.LokiPublicChatAPI;
+import org.whispersystems.signalservice.loki.api.LokiStorageAPI;
 import org.whispersystems.signalservice.loki.utilities.Analytics;
 
 import java.io.ByteArrayInputStream;
@@ -72,6 +73,7 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
+import kotlin.Triple;
 import network.loki.messenger.R;
 
 @SuppressLint("StaticFieldLeak")
@@ -413,7 +415,12 @@ public class CreateProfileActivity extends BaseActionBarActivity implements Inje
           TextSecurePreferences.setProfileAvatarId(CreateProfileActivity.this, new SecureRandom().nextInt());
 
           //TODO: upload the profile photo here
-
+          if (avatar != null) {
+            LokiStorageAPI storageAPI = LokiStorageAPI.shared;
+            Triple<Long, String, byte[]> result = storageAPI.uploadProfilePhoto(storageAPI.getServer(), avatarBytes);
+            String url = result.component2();
+            Log.d("Loki", "Upload profile photo success, the url is " + url);
+          }
         } catch (IOException e) {
           Log.w(TAG, e);
           return false;
