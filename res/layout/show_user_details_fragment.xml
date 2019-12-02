@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true"
+    android:padding="20dp"
+    android:gravity="center_horizontal"
+    android:background="?verification_background"
+    android:orientation="vertical">
+
+    <org.thoughtcrime.securesms.components.AvatarImageView
+        android:id="@+id/contact_photo_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:contentDescription="@string/conversation_list_item_view__contact_photo_image"
+        android:cropToPadding="true"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/labelPubKey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:text="@string/fragment_new_conversation_public_key_edit_text_label"
+            android:textSize="17sp" />
+
+        <TextView android:id="@+id/recipientId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:lineSpacingExtra="3sp"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_conversation_default_hint"
+            android:id="@+id/button_new_message"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/verify_display_fragment_context_menu__copy_to_clipboard"
+            android:id="@+id/button_copy_pub_key"/>
+    </LinearLayout>
+
+</LinearLayout>

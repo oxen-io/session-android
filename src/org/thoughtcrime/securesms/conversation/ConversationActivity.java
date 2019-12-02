@@ -91,6 +91,7 @@ import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity;
 import org.thoughtcrime.securesms.PromptMmsActivity;
 import org.thoughtcrime.securesms.RegistrationActivity;
 import org.thoughtcrime.securesms.ShortcutLauncherActivity;
+import org.thoughtcrime.securesms.ShowUserDetailsActivity;
 import org.thoughtcrime.securesms.TransportOption;
 import org.thoughtcrime.securesms.VerifyIdentityActivity;
 import org.thoughtcrime.securesms.audio.AudioRecorder;
@@ -901,6 +902,12 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
      */
   }
 
+  private void handleShowUserDetails() {
+    Intent intent = new Intent(ConversationActivity.this, ShowUserDetailsActivity.class);
+    intent.putExtra(ShowUserDetailsActivity.ADDRESS_EXTRA, recipient.getAddress());
+    startActivity(intent);
+  }
+
   private void handleUnmuteNotifications() {
     recipient.setMuted(0);
 
@@ -1616,7 +1623,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
       buttonToggle.getBackground().invalidateSelf();
       if (manuallySelected) recordTransportPreference(newTransport);
     });
-
+    titleView.setOnClickListener(v -> handleShowUserDetails());
     /*
     titleView.setOnClickListener(v -> handleConversationSettings());
     titleView.setOnLongClickListener(v -> handleDisplayQuickContact());

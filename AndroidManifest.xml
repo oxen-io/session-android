@@ -437,6 +437,9 @@
             android:name="org.thoughtcrime.securesms.RecipientPreferenceActivity"
             android:configChanges="touchscreen|keyboard|keyboardHidden|orientation|screenLayout|screenSize"
             android:theme="@style/TextSecure.LightNoActionBar" />
+        <activity android:name="org.thoughtcrime.securesms.ShowUserDetailsActivity"
+            android:theme="@style/TextSecure.LightNoActionBar"
+            android:configChanges="touchscreen|keyboard|keyboardHidden|orientation|screenLayout|screenSize"/>
         <activity
             android:name="org.thoughtcrime.securesms.BlockedContactsActivity"
             android:configChanges="touchscreen|keyboard|keyboardHidden|orientation|screenLayout|screenSize"

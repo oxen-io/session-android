@@ -57,6 +57,7 @@ import org.thoughtcrime.securesms.BindableConversationItem;
 import org.thoughtcrime.securesms.ConfirmIdentityDialog;
 import org.thoughtcrime.securesms.MediaPreviewActivity;
 import org.thoughtcrime.securesms.MessageDetailsActivity;
+import org.thoughtcrime.securesms.ShowUserDetailsActivity;
 import org.thoughtcrime.securesms.attachments.DatabaseAttachment;
 import org.thoughtcrime.securesms.components.AlertView;
 import org.thoughtcrime.securesms.components.AudioView;
@@ -230,6 +231,14 @@ public class ConversationItem extends LinearLayout
 
     bodyText.setOnLongClickListener(passthroughClickListener);
     bodyText.setOnClickListener(passthroughClickListener);
+
+    if(contactPhoto != null) {
+      contactPhoto.setOnClickListener(view -> {
+        Intent intent = new Intent(getContext(), ShowUserDetailsActivity.class);
+        intent.putExtra(ShowUserDetailsActivity.ADDRESS_EXTRA, recipient.getAddress());
+        getContext().startActivity(intent);
+      });
+    }
 
     bodyText.setMovementMethod(LongClickMovementMethod.getInstance(getContext()));
   }

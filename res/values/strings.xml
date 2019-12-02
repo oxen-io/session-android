@@ -575,6 +575,10 @@
     <!-- RecipientProvider -->
     <string name="RecipientProvider_unnamed_group">Unnamed group</string>
 
+    <!-- ShowUserDetailsActivity -->
+    <string name="ShowUserDetailsActivity_groupId">Group id</string>
+
+
     <!-- RedPhone -->
     <string name="RedPhone_answering">Answering</string>
     <string name="RedPhone_ending_call">Ending call</string>
