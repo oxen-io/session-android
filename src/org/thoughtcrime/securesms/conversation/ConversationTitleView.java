@@ -85,6 +85,7 @@ public class ConversationTitleView extends RelativeLayout {
   public void setOnClickListener(@Nullable OnClickListener listener) {
     this.content.setOnClickListener(listener);
     this.avatar.setOnClickListener(listener);
+    this.avatar.setEnabled(listener != null);
   }
 
   @Override
