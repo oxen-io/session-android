@@ -708,6 +708,10 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
 
     inflater.inflate(R.menu.conversation, menu);
 
+    if (isSingleConversation() && !isSelfConversation()) {
+      inflater.inflate(R.menu.conversation_verify_safety_number, menu);
+    }
+
     if (isSingleConversation() && isSecureText) {
       inflater.inflate(R.menu.conversation_secure, menu);
     } else if (isSingleConversation()) {
@@ -809,6 +813,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     case R.id.menu_mute_notifications:        handleMuteNotifications();                         return true;
     case R.id.menu_unmute_notifications:      handleUnmuteNotifications();                       return true;
     // case R.id.menu_conversation_settings:     handleConversationSettings();                      return true;
+    case R.id.menu_verify_safety_number:      handleVerifySafetyNumber();                        return true;
     case R.id.menu_expiring_messages_off:
     case R.id.menu_expiring_messages:         handleSelectMessageExpiration();                   return true;
     case android.R.id.home:                   handleReturnToConversationList();                  return true;
@@ -899,6 +904,27 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
 
     startActivitySceneTransition(intent, titleView.findViewById(R.id.contact_photo_image), "avatar");
      */
+  }
+
+  private void handleVerifySafetyNumber() {
+    IdentityUtil.getRemoteIdentityKey(this, recipient).addListener(new ListenableFuture.Listener<Optional<IdentityRecord>>() {
+      @Override
+      public void onSuccess(Optional<IdentityRecord> result) {
+        if (result.isPresent()) {
+          Intent intent = new Intent(ConversationActivity.this, VerifyIdentityActivity.class);
+          intent.putExtra(VerifyIdentityActivity.ADDRESS_EXTRA, recipient.getAddress());
+          intent.putExtra(VerifyIdentityActivity.IDENTITY_EXTRA, new IdentityKeyParcelable(result.get().getIdentityKey()));
+          intent.putExtra(VerifyIdentityActivity.VERIFIED_EXTRA, result.get().getVerifiedStatus() == IdentityDatabase.VerifiedStatus.VERIFIED);
+
+          ConversationActivity.this.startActivity(intent);
+        }
+      }
+
+      @Override
+      public void onFailure(ExecutionException e) {
+        Log.w(TAG, e);
+      }
+    });
   }
 
   private void handleUnmuteNotifications() {
