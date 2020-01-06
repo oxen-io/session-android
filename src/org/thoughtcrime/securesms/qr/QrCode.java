@@ -32,7 +32,7 @@ public class QrCode {
       for (int y = 0; y < result.getHeight(); y++) {
         for (int x = 0; x < result.getWidth(); x++) {
           if (result.get(x, y)) {
-            bitmap.setPixel(x, y, Color.BLACK);
+            bitmap.setPixel(x, y, Color.WHITE);
           }
         }
       }
