@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_linked_devices.*
 import network.loki.messenger.R
+import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
@@ -142,7 +143,7 @@ class LinkedDevicesActivity : PassphraseRequiredActionBarActivity, LoaderManager
         }
     }
 
-    override fun onDeviceLinkRequestAuthorized(deviceLink: DeviceLink) {
+    override fun onDeviceLinkRequestAuthorized(deviceLink: DeviceLink, dismiss: () -> Unit) {
         LokiFileServerAPI.shared.addDeviceLink(deviceLink).success {
             signAndSendDeviceLinkMessage(this, deviceLink).successUi {
                 LoaderManager.getInstance(this).restartLoader(0, null, this)
@@ -157,8 +158,9 @@ class LinkedDevicesActivity : PassphraseRequiredActionBarActivity, LoaderManager
             }.fail {
                 LokiFileServerAPI.shared.removeDeviceLink(deviceLink) // If this fails we have a problem
                 DatabaseFactory.getLokiPreKeyBundleDatabase(this).removePreKeyBundle(deviceLink.slaveHexEncodedPublicKey)
-            }
+            }.alwaysUi(dismiss)
         }.failUi {
+            dismiss()
             DatabaseFactory.getLokiPreKeyBundleDatabase(this).removePreKeyBundle(deviceLink.slaveHexEncodedPublicKey)
             Toast.makeText(this, "Couldn't link device", Toast.LENGTH_LONG).show()
         }

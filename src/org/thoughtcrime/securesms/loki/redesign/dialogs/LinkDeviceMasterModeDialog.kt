@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
+import kotlinx.android.synthetic.main.attachment_type_selector.view.*
 import kotlinx.android.synthetic.main.dialog_link_device_master_mode.view.*
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.database.DatabaseFactory
@@ -63,10 +64,19 @@ class LinkDeviceMasterModeDialog : DialogFragment(), DeviceLinkingSessionListene
 
     private fun authorizeDeviceLink() {
         val authorization = this.deviceLink ?: return
-        delegate?.onDeviceLinkRequestAuthorized(authorization)
+        isCancelable = false
+        Util.runOnMain {
+            contentView.titleTextView.text = "Authorising Device"
+            contentView.explanationTextView.text = "Please wait patiently while we link your devices"
+            contentView.mnemonicTextView.visibility = View.GONE
+            contentView.authorizeButton.visibility = View.GONE
+            contentView.cancelButton.visibility = View.GONE
+        }
+        delegate?.onDeviceLinkRequestAuthorized(authorization) {
+            dismiss()
+        }
         DeviceLinkingSession.shared.stopListeningForLinkingRequests()
         DeviceLinkingSession.shared.removeListener(this)
-        dismiss()
     }
 
     private fun onDeviceLinkCanceled() {
@@ -82,6 +92,6 @@ class LinkDeviceMasterModeDialog : DialogFragment(), DeviceLinkingSessionListene
 
 interface LinkDeviceMasterModeDialogDelegate {
 
-    fun onDeviceLinkRequestAuthorized(authorization: DeviceLink)
+    fun onDeviceLinkRequestAuthorized(deviceLink: DeviceLink, dismiss: () -> Unit)
     fun onDeviceLinkCanceled()
 }
