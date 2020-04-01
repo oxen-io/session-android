@@ -70,6 +70,7 @@ class LokiPublicChatPoller(private val context: Context, private val group: Loki
     }
 
     private val pollForDisplayNamesTask = object : Runnable {
+
         override fun run() {
             pollForDisplayNames()
             handler.postDelayed(this, pollForDisplayNamesInterval)
@@ -217,11 +218,17 @@ class LokiPublicChatPoller(private val context: Context, private val group: Loki
         val userPrivateKey = IdentityKeyUtil.getIdentityKeyPair(context).privateKey.serialize()
         val database = DatabaseFactory.getLokiAPIDatabase(context)
         LokiFileServerAPI.configure(false, userHexEncodedPublicKey, userPrivateKey, database)
-        LokiDeviceLinkUtilities.getAllLinkedDeviceHexEncodedPublicKeys(userHexEncodedPublicKey).bind { devices ->
+        // Kovenant propagates a context to chained promises, so LokiPublicChatAPI.sharedContext should be used for all of the below
+        LokiDeviceLinkUtilities.getAllLinkedDeviceHexEncodedPublicKeys(userHexEncodedPublicKey).bind(LokiPublicChatAPI.sharedContext) { devices ->
             userDevices = devices
             api.getMessages(group.channel, group.server)
-        }.bind { messages ->
+        }.bind(LokiPublicChatAPI.sharedContext) { messages ->
             if (messages.isNotEmpty()) {
+                if (messages.count() == 1) {
+                    Log.d("Loki", "Fetched 1 new message.")
+                } else {
+                    Log.d("Loki", "Fetched ${messages.count()} new messages.")
+                }
                 // We need to fetch the device mapping for any devices we don't have
                 uniqueDevices = messages.map { it.hexEncodedPublicKey }.toSet()
                 val devicesToUpdate = uniqueDevices.filter { !userDevices.contains(it) && LokiFileServerAPI.shared.hasDeviceLinkCacheExpired(hexEncodedPublicKey = it) }

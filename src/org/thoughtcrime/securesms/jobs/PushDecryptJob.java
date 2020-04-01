@@ -59,6 +59,7 @@ import org.thoughtcrime.securesms.database.model.MmsMessageRecord;
 import org.thoughtcrime.securesms.database.model.SmsMessageRecord;
 import org.thoughtcrime.securesms.database.model.StickerRecord;
 import org.thoughtcrime.securesms.dependencies.InjectableType;
+import org.thoughtcrime.securesms.groups.GroupManager;
 import org.thoughtcrime.securesms.groups.GroupMessageProcessor;
 import org.thoughtcrime.securesms.jobmanager.Data;
 import org.thoughtcrime.securesms.jobmanager.Job;
@@ -75,6 +76,8 @@ import org.thoughtcrime.securesms.loki.MultiDeviceUtilities;
 import org.thoughtcrime.securesms.loki.redesign.activities.HomeActivity;
 import org.thoughtcrime.securesms.loki.redesign.messaging.LokiAPIUtilities;
 import org.thoughtcrime.securesms.loki.redesign.messaging.LokiPreKeyBundleDatabase;
+import org.thoughtcrime.securesms.loki.redesign.utilities.Broadcaster;
+import org.thoughtcrime.securesms.loki.redesign.utilities.OpenGroupUtilities;
 import org.thoughtcrime.securesms.mms.IncomingMediaMessage;
 import org.thoughtcrime.securesms.mms.MmsException;
 import org.thoughtcrime.securesms.mms.OutgoingExpirationUpdateMessage;
@@ -139,6 +142,7 @@ import org.whispersystems.signalservice.loki.api.DeviceLinkingSession;
 import org.whispersystems.signalservice.loki.api.LokiAPI;
 import org.whispersystems.signalservice.loki.api.LokiDeviceLinkUtilities;
 import org.whispersystems.signalservice.loki.api.LokiFileServerAPI;
+import org.whispersystems.signalservice.loki.api.LokiPublicChat;
 import org.whispersystems.signalservice.loki.crypto.LokiServiceCipher;
 import org.whispersystems.signalservice.loki.messaging.LokiMessageFriendRequestStatus;
 import org.whispersystems.signalservice.loki.messaging.LokiServiceMessage;
@@ -394,6 +398,7 @@ public class PushDecryptJob extends BaseJob implements InjectableType {
         else if (syncMessage.getStickerPackOperations().isPresent()) handleSynchronizeStickerPackOperation(syncMessage.getStickerPackOperations().get());
         else if (syncMessage.getContacts().isPresent())              handleContactSyncMessage(syncMessage.getContacts().get());
         else if (syncMessage.getGroups().isPresent())                handleGroupSyncMessage(content, syncMessage.getGroups().get());
+        else if (syncMessage.getOpenGroups().isPresent())            handleOpenGroupSyncMessage(syncMessage.getOpenGroups().get());
         else                                                         Log.w(TAG, "Contains no known sync types...");
       } else if (content.getCallMessage().isPresent()) {
         Log.i(TAG, "Got call message...");
@@ -748,6 +753,24 @@ public class PushDecryptJob extends BaseJob implements InjectableType {
       } catch (Exception e) {
         Log.d("Loki", "Failed to sync group due to error: " + e + ".");
       }
+    }
+  }
+
+  private void handleOpenGroupSyncMessage(@NonNull List<LokiPublicChat> openGroups) {
+    try {
+      for (LokiPublicChat openGroup : openGroups) {
+        long threadID = GroupManager.getPublicChatThreadId(openGroup.getId(), context);
+        if (threadID > -1) continue;
+
+        String url = openGroup.getServer();
+        long channel = openGroup.getChannel();
+        OpenGroupUtilities.addGroup(context, url, channel).fail(e -> {
+          Log.d("Loki", "Failed to sync open group: " + url + " due to error: " + e + ".");
+          return Unit.INSTANCE;
+        });
+      }
+    } catch (Exception e) {
+      Log.d("Loki", "Failed to sync open groups due to error: " + e + ".");
     }
   }
 
@@ -1171,9 +1194,13 @@ public class PushDecryptJob extends BaseJob implements InjectableType {
   }
 
   private void handleDeviceLinkRequestMessage(@NonNull DeviceLink deviceLink, @NonNull SignalServiceContent content) {
-    boolean isValid = isValidDeviceLinkMessage(deviceLink);
     DeviceLinkingSession linkingSession = DeviceLinkingSession.Companion.getShared();
-    if (!isValid || !linkingSession.isListeningForLinkingRequests()) { return; }
+    if (!linkingSession.isListeningForLinkingRequests()) {
+      new Broadcaster(context).broadcast("unexpectedDeviceLinkRequestReceived");
+      return;
+    }
+    boolean isValid = isValidDeviceLinkMessage(deviceLink);
+    if (!isValid) { return; }
     storePreKeyBundleIfNeeded(content);
     linkingSession.processLinkingRequest(deviceLink);
   }

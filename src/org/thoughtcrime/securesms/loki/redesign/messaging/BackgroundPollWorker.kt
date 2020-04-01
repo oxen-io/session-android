@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 class BackgroundPollWorker : PersistentAlarmManagerListener() {
 
     companion object {
-        private val pollInterval = TimeUnit.MINUTES.toMillis(1)
+        private val pollInterval = TimeUnit.MINUTES.toMillis(2)
 
         @JvmStatic
         fun schedule(context: Context) {
@@ -32,7 +32,9 @@ class BackgroundPollWorker : PersistentAlarmManagerListener() {
             val userHexEncodedPublicKey = TextSecurePreferences.getLocalNumber(context)
             val lokiAPIDatabase = DatabaseFactory.getLokiAPIDatabase(context)
             try {
-                LokiAPI(userHexEncodedPublicKey, lokiAPIDatabase, (context.applicationContext as ApplicationContext).broadcaster).getMessages().map { messages ->
+                val applicationContext = context.applicationContext as ApplicationContext
+                val broadcaster = applicationContext.broadcaster
+                LokiAPI(userHexEncodedPublicKey, lokiAPIDatabase, broadcaster).getMessages().map { messages ->
                     messages.forEach {
                         PushContentReceiveJob(context).processEnvelope(SignalServiceEnvelope(it))
                     }

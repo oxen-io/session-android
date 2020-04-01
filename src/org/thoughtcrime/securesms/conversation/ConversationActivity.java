@@ -77,7 +77,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.annimon.stream.Stream;
-import com.google.android.gms.location.places.ui.PlacePicker;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -133,7 +132,6 @@ import org.thoughtcrime.securesms.database.DatabaseFactory;
 import org.thoughtcrime.securesms.database.DraftDatabase;
 import org.thoughtcrime.securesms.database.DraftDatabase.Draft;
 import org.thoughtcrime.securesms.database.DraftDatabase.Drafts;
-import org.thoughtcrime.securesms.database.GroupDatabase;
 import org.thoughtcrime.securesms.database.IdentityDatabase;
 import org.thoughtcrime.securesms.database.IdentityDatabase.IdentityRecord;
 import org.thoughtcrime.securesms.database.IdentityDatabase.VerifiedStatus;
@@ -179,7 +177,6 @@ import org.thoughtcrime.securesms.mms.ImageSlide;
 import org.thoughtcrime.securesms.mms.LocationSlide;
 import org.thoughtcrime.securesms.mms.MediaConstraints;
 import org.thoughtcrime.securesms.mms.OutgoingExpirationUpdateMessage;
-import org.thoughtcrime.securesms.mms.OutgoingGroupMediaMessage;
 import org.thoughtcrime.securesms.mms.OutgoingMediaMessage;
 import org.thoughtcrime.securesms.mms.OutgoingSecureMediaMessage;
 import org.thoughtcrime.securesms.mms.QuoteId;
@@ -214,7 +211,6 @@ import org.thoughtcrime.securesms.util.BitmapUtil;
 import org.thoughtcrime.securesms.util.CommunicationActions;
 import org.thoughtcrime.securesms.util.DateUtils;
 import org.thoughtcrime.securesms.util.Dialogs;
-import org.thoughtcrime.securesms.util.DirectoryHelper;
 import org.thoughtcrime.securesms.util.DynamicLanguage;
 import org.thoughtcrime.securesms.util.DynamicNoActionBarTheme;
 import org.thoughtcrime.securesms.util.ExpirationUtil;
@@ -351,8 +347,8 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   private int        distributionType;
   private boolean    archived;
   private boolean    isSecureText;
-  private boolean    isDefaultSms            = true;
-  private boolean    isMmsEnabled            = true;
+  private boolean    isDefaultSms            = false;
+  private boolean    isMmsEnabled            = false;
   private boolean    isSecurityInitialized   = false;
   private int        expandedKeyboardHeight  = 0;
   private int        collapsedKeyboardHeight = Integer.MAX_VALUE;
@@ -662,10 +658,12 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
       recipient.addListener(this);
       fragment.reloadList();
       break;
+      /*
     case PICK_LOCATION:
       SignalPlace place = new SignalPlace(PlacePicker.getPlace(data, this));
       attachmentManager.setLocation(place, getCurrentMediaConstraints());
       break;
+       */
     case PICK_GIF:
       setMedia(data.getData(),
               MediaType.GIF,
@@ -1240,15 +1238,13 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   }
 
   private boolean handleDisplayQuickContact() {
-    if (recipient.getAddress().isGroup()) return false;
+    return !recipient.getAddress().isGroup();
 
 //    if (recipient.getContactUri() != null) {
 //      ContactsContract.QuickContact.showQuickContact(ConversationActivity.this, titleView, recipient.getContactUri(), ContactsContract.QuickContact.MODE_LARGE, null);
 //    } else {
 //      handleAddToContacts();
 //    }
-
-    return true;
   }
 
   private void handleAddAttachment() {
@@ -1481,41 +1477,11 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     new AsyncTask<Recipient, Void, boolean[]>() {
       @Override
       protected boolean[] doInBackground(Recipient... params) {
-        Context           context         = ConversationActivity.this;
-        Recipient         recipient       = params[0];
-        Log.i(TAG, "Resolving registered state...");
-        RegisteredState registeredState;
-
-        if (recipient.isPushGroupRecipient()) {
-          Log.i(TAG, "Push group recipient...");
-          registeredState = RegisteredState.REGISTERED;
-        } else if (recipient.isResolving()) {
-          Log.i(TAG, "Talking to DB directly.");
-          registeredState = DatabaseFactory.getRecipientDatabase(ConversationActivity.this).isRegistered(recipient.getAddress());
-        } else {
-          Log.i(TAG, "Checking through resolved recipient");
-          registeredState = recipient.resolve().getRegistered();
-        }
-
-        // Loki - Override the flag below
-        registeredState = RegisteredState.REGISTERED;
-
-        Log.i(TAG, "Resolved registered state: " + registeredState);
         // Loki - Override the flag below
         boolean signalEnabled = true; // TextSecurePreferences.isPushRegistered(context);
 
-        if (registeredState == RegisteredState.UNKNOWN) {
-          try {
-            Log.i(TAG, "Refreshing directory for user: " + recipient.getAddress().serialize());
-            registeredState = DirectoryHelper.refreshDirectoryFor(context, recipient);
-          } catch (IOException e) {
-            Log.w(TAG, e);
-          }
-        }
 
-        Log.i(TAG, "Returning registered state...");
-        return new boolean[] {registeredState == RegisteredState.REGISTERED && signalEnabled,
-                              Util.isDefaultSmsProvider(context)};
+        return new boolean[] { signalEnabled, false};
       }
 
       @Override
@@ -2403,6 +2369,12 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     } catch (InvalidMessageException ex) {
       Log.w(TAG, ex);
     }
+
+    if (messageStatus == null && !isGroupConversation()) {
+      messageStatus = "calculatingPoW";
+      updateSubtitleTextView();
+      updateMessageStatusProgressBar();
+    }
   }
 
   private void sendMediaMessage(final boolean forceSms, final long expiresIn, final int subscriptionId, boolean initiating)
@@ -2455,38 +2427,30 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     LokiThreadFriendRequestStatus friendRequestStatus = DatabaseFactory.getLokiThreadDatabase(context).getFriendRequestStatus(threadId);
     outgoingMessage.isFriendRequest = !isGroupConversation() && friendRequestStatus != LokiThreadFriendRequestStatus.FRIENDS; // Needed for stageOutgoingMessage(...)
 
-    Permissions.with(this)
-               .request(Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS)
-               .ifNecessary(!isSecureText || forceSms)
-               .withPermanentDenialDialog(getString(R.string.ConversationActivity_signal_needs_sms_permission_in_order_to_send_an_sms))
-               .onAllGranted(() -> {
-                 if (clearComposeBox) {
-                   inputPanel.clearQuote();
-                   attachmentManager.clear(glideRequests, false);
-                   silentlySetComposeText("");
-                 }
+    if (clearComposeBox) {
+      inputPanel.clearQuote();
+      attachmentManager.clear(glideRequests, false);
+      silentlySetComposeText("");
+    }
 
-                 final long id = fragment.stageOutgoingMessage(outgoingMessage);
+    final long id = fragment.stageOutgoingMessage(outgoingMessage);
 
-                 new AsyncTask<Void, Void, Long>() {
-                   @Override
-                   protected Long doInBackground(Void... param) {
-                     if (initiating) {
-                       DatabaseFactory.getRecipientDatabase(context).setProfileSharing(recipient, true);
-                     }
+    new AsyncTask<Void, Void, Long>() {
+      @Override
+      protected Long doInBackground(Void... param) {
+        if (initiating) {
+          DatabaseFactory.getRecipientDatabase(context).setProfileSharing(recipient, true);
+        }
 
-                     return MessageSender.send(context, outgoingMessage, threadId, forceSms, () -> fragment.releaseOutgoingMessage(id));
-                   }
+        return MessageSender.send(context, outgoingMessage, threadId, forceSms, () -> fragment.releaseOutgoingMessage(id));
+      }
 
-                   @Override
-                   protected void onPostExecute(Long result) {
-                     sendComplete(result);
-                     future.set(null);
-                   }
-                 }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-               })
-               .onAnyDenied(() -> future.set(null))
-               .execute();
+      @Override
+      protected void onPostExecute(Long result) {
+        sendComplete(result);
+        future.set(null);
+      }
+    }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     return future;
   }
@@ -2515,32 +2479,24 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     LokiThreadFriendRequestStatus friendRequestStatus = DatabaseFactory.getLokiThreadDatabase(context).getFriendRequestStatus(threadId);
     message.isFriendRequest = !isGroupConversation() && friendRequestStatus != LokiThreadFriendRequestStatus.FRIENDS; // Needed for stageOutgoingMessage(...)
 
-    Permissions.with(this)
-               .request(Manifest.permission.SEND_SMS)
-               .ifNecessary(forceSms || !isSecureText)
-               .withPermanentDenialDialog(getString(R.string.ConversationActivity_signal_needs_sms_permission_in_order_to_send_an_sms))
-               .onAllGranted(() -> {
-                 silentlySetComposeText("");
-                 final long id = fragment.stageOutgoingMessage(message);
+    silentlySetComposeText("");
+    final long id = fragment.stageOutgoingMessage(message);
 
-                 new AsyncTask<OutgoingTextMessage, Void, Long>() {
-                   @Override
-                   protected Long doInBackground(OutgoingTextMessage... messages) {
-                     if (initiatingConversation) {
-                       DatabaseFactory.getRecipientDatabase(context).setProfileSharing(recipient, true);
-                     }
+    new AsyncTask<OutgoingTextMessage, Void, Long>() {
+      @Override
+      protected Long doInBackground(OutgoingTextMessage... messages) {
+        if (initiatingConversation) {
+          DatabaseFactory.getRecipientDatabase(context).setProfileSharing(recipient, true);
+        }
 
-                     return MessageSender.send(context, messages[0], threadId, forceSms, () -> fragment.releaseOutgoingMessage(id));
-                   }
+        return MessageSender.send(context, messages[0], threadId, forceSms, () -> fragment.releaseOutgoingMessage(id));
+      }
 
-                   @Override
-                   protected void onPostExecute(Long result) {
-                     sendComplete(result);
-                   }
-                 }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, message);
-
-               })
-               .execute();
+      @Override
+      protected void onPostExecute(Long result) {
+         sendComplete(result);
+       }
+    }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, message);
   }
 
   private void showDefaultSmsPrompt() {

@@ -146,7 +146,7 @@ class LinkedDevicesActivity : PassphraseRequiredActionBarActivity, LoaderManager
     }
 
     override fun onDeviceLinkRequestAuthorized(deviceLink: DeviceLink, dismiss: () -> Unit) {
-        LokiFileServerAPI.shared.addDeviceLink(deviceLink).bind(LokiAPI.sharedWorkContext) {
+        LokiFileServerAPI.shared.addDeviceLink(deviceLink).bind(LokiAPI.sharedContext) {
             signAndSendDeviceLinkMessage(this, deviceLink)
         }.successUi {
             LoaderManager.getInstance(this).restartLoader(0, null, this)
@@ -155,6 +155,7 @@ class LinkedDevicesActivity : PassphraseRequiredActionBarActivity, LoaderManager
             Timer().schedule(4000) {
                 MessageSender.syncAllGroups(this@LinkedDevicesActivity)
                 MessageSender.syncAllContacts(this@LinkedDevicesActivity, Address.fromSerialized(deviceLink.slaveHexEncodedPublicKey))
+                MessageSender.syncAllOpenGroups(this@LinkedDevicesActivity)
             }
         }.fail {
             LokiFileServerAPI.shared.removeDeviceLink(deviceLink) // If this fails we have a problem

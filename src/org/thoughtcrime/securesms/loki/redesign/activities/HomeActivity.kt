@@ -19,7 +19,9 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.util.DisplayMetrics
 import android.view.View
+import android.widget.RelativeLayout
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_home.*
 import network.loki.messenger.R
@@ -33,6 +35,7 @@ import org.thoughtcrime.securesms.loki.getColorWithID
 import org.thoughtcrime.securesms.loki.redesign.utilities.push
 import org.thoughtcrime.securesms.loki.redesign.utilities.show
 import org.thoughtcrime.securesms.loki.redesign.views.ConversationView
+import org.thoughtcrime.securesms.loki.redesign.views.NewConversationButtonSetViewDelegate
 import org.thoughtcrime.securesms.loki.redesign.views.SeedReminderViewDelegate
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.mms.GlideRequests
@@ -41,7 +44,7 @@ import org.thoughtcrime.securesms.util.GroupUtil
 import org.thoughtcrime.securesms.util.TextSecurePreferences
 import kotlin.math.abs
 
-class HomeActivity : PassphraseRequiredActionBarActivity, ConversationClickListener, SeedReminderViewDelegate {
+class HomeActivity : PassphraseRequiredActionBarActivity, ConversationClickListener, SeedReminderViewDelegate, NewConversationButtonSetViewDelegate {
     private lateinit var glide: GlideRequests
 
     private val hexEncodedPublicKey: String
@@ -75,7 +78,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity, ConversationClickListe
             }
         }
         // Double check that the long poller is up
-        (applicationContext as ApplicationContext).startLongPollingIfNeeded()
+        (applicationContext as ApplicationContext).startPollingIfNeeded()
         // Set content view
         setContentView(R.layout.activity_home)
         // Set custom toolbar
@@ -87,8 +90,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity, ConversationClickListe
         profileButton.hexEncodedPublicKey = hexEncodedPublicKey
         profileButton.update()
         profileButton.setOnClickListener { openSettings() }
-        createClosedGroupButton.setOnClickListener { createClosedGroup() }
-        joinPublicChatButton.setOnClickListener { joinPublicChat() }
         // Set up seed reminder view
         val isMasterDevice = (TextSecurePreferences.getMasterHexEncodedPublicKey(this) == null)
         val hasViewedSeed = TextSecurePreferences.getHasViewedSeed(this)
@@ -125,8 +126,14 @@ class HomeActivity : PassphraseRequiredActionBarActivity, ConversationClickListe
                 homeAdapter.changeCursor(null)
             }
         })
-        // Set up new conversation button
-        newConversationButton.setOnClickListener { createPrivateChat() }
+        // Set up gradient view
+        val gradientViewLayoutParams = gradientView.layoutParams as RelativeLayout.LayoutParams
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        val height = displayMetrics.heightPixels
+        gradientViewLayoutParams.topMargin = (0.15 * height.toFloat()).toInt()
+        // Set up new conversation button set
+        newConversationButtonSet.delegate = this
         // Set up typing observer
         ApplicationContext.getInstance(this).typingStatusRepository.typingThreads.observe(this, Observer<Set<Long>> { threadIDs ->
             val adapter = recyclerView.adapter as HomeAdapter
@@ -176,6 +183,13 @@ class HomeActivity : PassphraseRequiredActionBarActivity, ConversationClickListe
 //            bottomSheet.show(supportFragmentManager, bottomSheet.tag)
 //        }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == CreateClosedGroupActivity.createNewPrivateChatResultCode) {
+            createNewPrivateChat()
+        }
+    }
     // endregion
 
     override fun handleSeedReminderViewContinueButtonTapped() {
@@ -194,7 +208,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity, ConversationClickListe
 
     private fun openConversation(thread: ThreadRecord) {
         val intent = Intent(this, ConversationActivity::class.java)
-        intent.putExtra(ConversationActivity.ADDRESS_EXTRA, thread.recipient.getAddress())
+        intent.putExtra(ConversationActivity.ADDRESS_EXTRA, thread.recipient.address)
         intent.putExtra(ConversationActivity.THREAD_ID_EXTRA, thread.threadId)
         intent.putExtra(ConversationActivity.DISTRIBUTION_TYPE_EXTRA, thread.distributionType)
         intent.putExtra(ConversationActivity.TIMING_EXTRA, System.currentTimeMillis())
@@ -208,17 +222,17 @@ class HomeActivity : PassphraseRequiredActionBarActivity, ConversationClickListe
         show(intent)
     }
 
-    private fun createPrivateChat() {
+    override fun createNewPrivateChat() {
         val intent = Intent(this, CreatePrivateChatActivity::class.java)
         show(intent)
     }
 
-    private fun createClosedGroup() {
+    override fun createNewClosedGroup() {
         val intent = Intent(this, CreateClosedGroupActivity::class.java)
-        show(intent)
+        show(intent, true)
     }
 
-    private fun joinPublicChat() {
+    override fun joinOpenGroup() {
         val intent = Intent(this, JoinPublicChatActivity::class.java)
         show(intent)
     }
@@ -255,9 +269,9 @@ class HomeActivity : PassphraseRequiredActionBarActivity, ConversationClickListe
             val dialog = AlertDialog.Builder(activity)
             dialog.setMessage(dialogMessage)
             dialog.setPositiveButton(R.string.yes) { _, _ ->
-                val isGroup = recipient.isGroupRecipient
+                val isClosedGroup = recipient.address.isSignalGroup
                 // Send a leave group message if this is an active closed group
-                if (isGroup && DatabaseFactory.getGroupDatabase(activity).isActive(recipient.address.toGroupString())) {
+                if (isClosedGroup && DatabaseFactory.getGroupDatabase(activity).isActive(recipient.address.toGroupString())) {
                     if (!GroupUtil.leaveGroup(activity, recipient)) {
                         Toast.makeText(activity, "Couldn't leave group", Toast.LENGTH_LONG).show()
                         clearView(activity.recyclerView, viewHolder)
@@ -267,10 +281,11 @@ class HomeActivity : PassphraseRequiredActionBarActivity, ConversationClickListe
                 // Archive the conversation and then delete it after 10 seconds (the case where the
                 // app was closed before the conversation could be deleted is handled in onCreate)
                 threadDatabase.archiveConversation(threadID)
+                val delay = if (isClosedGroup) 10000L else 1000L
                 val handler = Handler()
-                handler.postDelayed(deleteThread, 10000)
+                handler.postDelayed(deleteThread, delay)
                 // Notify the user
-                val toastMessage = if (isGroup) R.string.MessageRecord_left_group else R.string.activity_home_conversation_deleted_message
+                val toastMessage = if (recipient.isGroupRecipient) R.string.MessageRecord_left_group else R.string.activity_home_conversation_deleted_message
                 Toast.makeText(activity, toastMessage, Toast.LENGTH_LONG).show()
             }
             dialog.setNegativeButton(R.string.no) { _, _ ->

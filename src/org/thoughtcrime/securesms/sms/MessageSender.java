@@ -48,6 +48,7 @@ import org.thoughtcrime.securesms.logging.Log;
 import org.thoughtcrime.securesms.loki.BackgroundMessage;
 import org.thoughtcrime.securesms.loki.FriendRequestHandler;
 import org.thoughtcrime.securesms.loki.GeneralUtilitiesKt;
+import org.thoughtcrime.securesms.loki.MultiDeviceOpenGroupUpdateJob;
 import org.thoughtcrime.securesms.loki.MultiDeviceUtilities;
 import org.thoughtcrime.securesms.loki.PushBackgroundMessageSendJob;
 import org.thoughtcrime.securesms.loki.PushMessageSyncSendJob;
@@ -84,6 +85,10 @@ public class MessageSender {
 
   public static void syncAllGroups(Context context) {
     ApplicationContext.getInstance(context).getJobManager().add(new MultiDeviceGroupUpdateJob());
+  }
+
+  public static void syncAllOpenGroups(Context context) {
+    ApplicationContext.getInstance(context).getJobManager().add(new MultiDeviceOpenGroupUpdateJob());
   }
 
   /**
@@ -279,10 +284,8 @@ public class MessageSender {
       sendLocalMediaSelf(context, messageId);
     } else if (isGroupPushSend(recipient)) {
       sendGroupPush(context, recipient, messageId, null);
-    } else if (!forceSms && isPushMediaSend(context, recipient)) {
-      sendMediaPush(context, recipient, messageId);
     } else {
-      sendMms(context, messageId);
+      sendMediaPush(context, recipient, messageId);
     }
   }
 
@@ -292,10 +295,8 @@ public class MessageSender {
   {
     if (isLocalSelfSend(context, recipient, forceSms)) {
       sendLocalTextSelf(context, messageId);
-    } else if (!forceSms && isPushTextSend(context, recipient, keyExchange)) {
-      sendTextPush(context, recipient, messageId);
     } else {
-      sendSms(context, recipient, messageId);
+      sendTextPush(context, recipient, messageId);
     }
   }
 
