@@ -23,8 +23,6 @@ In Android studio, this can be done from the Quickstart panel, choose "Configure
 You will then need to clone and run `./gradlew build` on each of the following repositories IN ORDER.
 
 https://github.com/loki-project/loki-messenger-android-curve-25519
-https://github.com/loki-project/loki-messenger-android-protocol
-https://github.com/loki-project/loki-messenger-android-meta
 https://github.com/loki-project/session-android-service
 
 This will build these depndencies into a common maven filepath which the main repo will then draw from. The easiest way to do this is to create new projects from git version control in Android Studio, allow Gradle to sort itself out, then run `./gradlew build`
