@@ -214,6 +214,7 @@ import org.thoughtcrime.securesms.util.Dialogs;
 import org.thoughtcrime.securesms.util.DynamicLanguage;
 import org.thoughtcrime.securesms.util.DynamicNoActionBarTheme;
 import org.thoughtcrime.securesms.util.ExpirationUtil;
+import org.thoughtcrime.securesms.util.GroupUtil;
 import org.thoughtcrime.securesms.util.IdentityUtil;
 import org.thoughtcrime.securesms.util.MediaUtil;
 import org.thoughtcrime.securesms.util.ServiceUtil;
@@ -467,7 +468,9 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
 
     LokiPublicChat publicChat = DatabaseFactory.getLokiThreadDatabase(this).getPublicChat(threadId);
     if (publicChat != null) {
-      ApplicationContext.getInstance(this).getLokiPublicChatAPI().getChannelInfo(publicChat.getChannel(), publicChat.getServer()).success( displayName -> {
+      ApplicationContext.getInstance(this).getLokiPublicChatAPI().getChannelInfo(publicChat.getChannel(), publicChat.getServer()).success( info -> {
+        String groupId = GroupUtil.getEncodedOpenGroupId(publicChat.getId().getBytes());
+        ApplicationContext.getInstance(this).getLokiPublicChatAPI().updateOpenGroupProfileIfNeeded(publicChat.getChannel(), publicChat.getServer(), groupId, info, DatabaseFactory.getGroupDatabase(this), false);
         updateSubtitleTextView();
         return Unit.INSTANCE;
       });

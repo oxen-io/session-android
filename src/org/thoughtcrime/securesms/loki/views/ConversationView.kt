@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.view_conversation.view.*
 import network.loki.messenger.R
+import org.thoughtcrime.securesms.database.DatabaseFactory
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.loki.utilities.MentionManagerUtilities.populateUserPublicKeyCacheIfNeeded
 import org.thoughtcrime.securesms.loki.utilities.MentionUtilities.highlightMentions
@@ -56,7 +57,11 @@ class ConversationView : LinearLayout {
                 val users = MentionsManager.shared.userPublicKeyCache[thread.threadId]?.toList() ?: listOf()
                 val randomUsers = users.sorted() // Sort to provide a level of stability
                 profilePictureView.hexEncodedPublicKey = randomUsers.getOrNull(0) ?: ""
-                profilePictureView.additionalHexEncodedPublicKey = randomUsers.getOrNull(1) ?: ""
+                if (thread.recipient.contactPhoto != null) {
+                    profilePictureView.groupAvatar = thread.recipient.contactPhoto
+                } else {
+                    profilePictureView.additionalHexEncodedPublicKey = randomUsers.getOrNull(1) ?: ""
+                }
                 profilePictureView.isRSSFeed = thread.recipient.name == "Loki News" || thread.recipient.name == "Session Updates"
             }
         } else {

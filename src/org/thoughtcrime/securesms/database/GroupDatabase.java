@@ -21,6 +21,7 @@ import org.thoughtcrime.securesms.util.GroupUtil;
 import org.thoughtcrime.securesms.util.Util;
 import org.whispersystems.libsignal.util.guava.Optional;
 import org.whispersystems.signalservice.api.messages.SignalServiceAttachmentPointer;
+import org.whispersystems.signalservice.loki.database.LokiGroupDatabaseProtocol;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -29,7 +30,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class GroupDatabase extends Database {
+public class GroupDatabase extends Database implements LokiGroupDatabaseProtocol {
 
   @SuppressWarnings("unused")
   private static final String TAG = GroupDatabase.class.getSimpleName();

@@ -70,6 +70,10 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         private val publicChatID = "public_chat_id"
         private val userCount = "user_count"
         @JvmStatic val createUserCountCacheCommand = "CREATE TABLE $userCountCache ($publicChatID STRING PRIMARY KEY, $userCount INTEGER DEFAULT 0);"
+        // Public Chat avatar cache
+        private val openGroupAvatarCache = "loki_public_chat_avatar_cache"
+        private val openGroupAvatar = "public_chat_avatar"
+        @JvmStatic val createOpenGroupAvatarCacheCommand = "CREATE TABLE $openGroupAvatarCache ($publicChatID STRING PRIMARY KEY, $openGroupAvatar TEXT NULLABLE DEFAULT NULL);"
         // Session request timestamp cache
         private val sessionRequestTimestampCache = "session_request_timestamp_cache"
         private val publicKey = "public_key"
@@ -321,6 +325,21 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         val index = "$server.$group"
         val row = wrap(mapOf(publicChatID to index, Companion.userCount to userCount.toString()))
         database.insertOrUpdate(userCountCache, row, "$publicChatID = ?", wrap(index))
+    }
+
+    override fun getOpenGroupAvatarURL(group: Long, server: String): String? {
+        val database = databaseHelper.readableDatabase
+        val index = "$server.$group"
+        return database.get(openGroupAvatarCache, "$publicChatID = ?", wrap(index)) { cursor ->
+            cursor.getString(openGroupAvatar)
+        }?.toString()
+    }
+
+    override fun setOpenGroupAvatarURL(url: String, group: Long, server: String) {
+        val database = databaseHelper.writableDatabase
+        val index = "$server.$group"
+        val row = wrap(mapOf(publicChatID to index, Companion.openGroupAvatar to url))
+        database.insertOrUpdate(openGroupAvatarCache, row, "$publicChatID = ?", wrap(index))
     }
 
     fun getSessionRequestTimestamp(publicKey: String): Long? {

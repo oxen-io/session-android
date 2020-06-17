@@ -1,6 +1,7 @@
 package org.thoughtcrime.securesms.loki.views
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.support.annotation.DimenRes
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -10,6 +11,8 @@ import android.widget.RelativeLayout
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.view_profile_picture.view.*
 import network.loki.messenger.R
+import org.thoughtcrime.securesms.contacts.avatars.ContactPhoto
+import org.thoughtcrime.securesms.contacts.avatars.GroupRecordContactPhoto
 import org.thoughtcrime.securesms.contacts.avatars.ProfileContactPhoto
 import org.thoughtcrime.securesms.database.Address
 import org.thoughtcrime.securesms.loki.todo.JazzIdenticonDrawable
@@ -25,6 +28,7 @@ class ProfilePictureView : RelativeLayout {
     var additionalHexEncodedPublicKey: String? = null
     var isRSSFeed = false
     var isLarge = false
+    var groupAvatar: ContactPhoto? = null
 
     // region Lifecycle
     constructor(context: Context) : super(context) {
@@ -60,6 +64,12 @@ class ProfilePictureView : RelativeLayout {
         rssImageView.visibility = if (isRSSFeed) View.VISIBLE else View.INVISIBLE
         fun setProfilePictureIfNeeded(imageView: ImageView, hexEncodedPublicKey: String, @DimenRes sizeID: Int) {
             glide.clear(imageView)
+            if (groupAvatar != null) {
+                glide.load(groupAvatar).diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop().into(imageView)
+                doubleModeImageViewContainer.visibility = View.INVISIBLE
+                singleModeImageViewContainer.visibility = View.VISIBLE
+                return
+            }
             if (hexEncodedPublicKey.isNotEmpty()) {
                 val recipient = Recipient.from(context, Address.fromSerialized(hexEncodedPublicKey), false);
                 val signalProfilePicture = recipient.contactPhoto

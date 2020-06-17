@@ -2,17 +2,23 @@ package org.thoughtcrime.securesms.loki.api
 
 import android.content.Context
 import android.database.ContentObserver
+import android.graphics.Bitmap
 import android.text.TextUtils
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.functional.bind
 import nl.komponents.kovenant.functional.map
+import nl.komponents.kovenant.then
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.database.DatabaseContentProviders
 import org.thoughtcrime.securesms.database.DatabaseFactory
 import org.thoughtcrime.securesms.groups.GroupManager
+import org.thoughtcrime.securesms.util.BitmapUtil
+import org.thoughtcrime.securesms.util.GroupUtil
 import org.thoughtcrime.securesms.util.TextSecurePreferences
 import org.thoughtcrime.securesms.util.Util
 import org.whispersystems.signalservice.loki.api.opengroups.LokiPublicChat
+import org.whispersystems.signalservice.loki.api.opengroups.LokiPublicChatAPI
+import org.whispersystems.signalservice.loki.api.opengroups.LokiPublicChatInfo
 
 class LokiPublicChatManager(private val context: Context) {
   private var chats = mutableMapOf<Long, LokiPublicChat>()
@@ -46,12 +52,17 @@ class LokiPublicChatManager(private val context: Context) {
     }
   }
 
-  public fun addChat(server: String, channel: Long, name: String): LokiPublicChat {
-    val chat = LokiPublicChat(channel, server, name, true)
+  public fun addChat(server: String, channel: Long, info: LokiPublicChatInfo): LokiPublicChat {
+    val chat = LokiPublicChat(channel, server, info.displayName, true)
     var threadID =  GroupManager.getOpenGroupThreadID(chat.id, context)
+    var avatar: Bitmap? = null
     // Create the group if we don't have one
     if (threadID < 0) {
-      val result = GroupManager.createOpenGroup(chat.id, context, null, chat.displayName)
+      if (!info.profilePictureURL.isEmpty()) {
+        val avatarBytes = ApplicationContext.getInstance(context).lokiPublicChatAPI?.downloadOpenGroupAvatar("$server${info.profilePictureURL}")
+        avatar = BitmapUtil.fromByteArray(avatarBytes)
+      }
+      val result = GroupManager.createOpenGroup(chat.id, context, avatar, chat.displayName)
       threadID = result.threadId
     }
     DatabaseFactory.getLokiThreadDatabase(context).setPublicChat(chat, threadID)
