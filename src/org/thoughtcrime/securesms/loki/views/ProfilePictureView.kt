@@ -65,7 +65,7 @@ class ProfilePictureView : RelativeLayout {
         fun setProfilePictureIfNeeded(imageView: ImageView, hexEncodedPublicKey: String, @DimenRes sizeID: Int) {
             glide.clear(imageView)
             if (groupAvatar != null) {
-                glide.load(groupAvatar).diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop().into(imageView)
+                glide.load(groupAvatar).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).circleCrop().into(imageView)
                 doubleModeImageViewContainer.visibility = View.INVISIBLE
                 singleModeImageViewContainer.visibility = View.VISIBLE
                 return

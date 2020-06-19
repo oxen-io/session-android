@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.ContentObserver
 import android.graphics.Bitmap
 import android.text.TextUtils
+import com.bumptech.glide.Glide
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.functional.bind
 import nl.komponents.kovenant.functional.map
@@ -62,7 +63,9 @@ class LokiPublicChatManager(private val context: Context) {
         val avatarBytes = ApplicationContext.getInstance(context).lokiPublicChatAPI?.downloadOpenGroupAvatar("$server${info.profilePictureURL}")
         avatar = BitmapUtil.fromByteArray(avatarBytes)
       }
-      val result = GroupManager.createOpenGroup(chat.id, context, avatar, chat.displayName)
+      // FIXME: If updating the avatar here, there can be a memory issue if a public chat message contains some attachment.
+      // The error message is "Failed to process a message: Canvas: trying to use a recycled bitmap android.graphics.Bitmap"
+      val result = GroupManager.createOpenGroup(chat.id, context, null, chat.displayName)
       threadID = result.threadId
     }
     DatabaseFactory.getLokiThreadDatabase(context).setPublicChat(chat, threadID)
