@@ -64,8 +64,8 @@ class LokiPublicChatManager(private val context: Context) {
         avatar = BitmapUtil.fromByteArray(avatarBytes)
       }
       // FIXME: If updating the avatar here, there can be a memory issue if a public chat message contains some attachment.
-      // The error message is "Failed to process a message: Canvas: trying to use a recycled bitmap android.graphics.Bitmap"
-      val result = GroupManager.createOpenGroup(chat.id, context, null, chat.displayName)
+      // The error message is "Failed to execute task in background: Canvas: trying to use a recycled bitmap android.graphics.Bitmap"
+      val result = GroupManager.createOpenGroup(chat.id, context, avatar, chat.displayName)
       threadID = result.threadId
     }
     DatabaseFactory.getLokiThreadDatabase(context).setPublicChat(chat, threadID)
