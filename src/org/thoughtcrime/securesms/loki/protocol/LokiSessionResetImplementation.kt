@@ -22,6 +22,7 @@ class LokiSessionResetImplementation(private val context: Context) : LokiSession
             val ephemeralMessage = EphemeralMessage.create(hexEncodedPublicKey)
             ApplicationContext.getInstance(context).jobManager.add(PushEphemeralMessageSendJob(ephemeralMessage))
         }
+        setSessionResetStatus(hexEncodedPublicKey, LokiSessionResetStatus.NONE)
         // TODO: Show session reset succeed message
     }
 

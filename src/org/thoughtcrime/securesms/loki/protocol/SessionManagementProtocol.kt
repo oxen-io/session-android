@@ -35,6 +35,7 @@ object SessionManagementProtocol {
         if (infoMessageID > -1) {
             smsDB.markAsSentLokiSessionRestorationRequest(infoMessageID)
         }
+        lokiThreadDB.setSessionResetStatus(recipient.address.serialize(), LokiSessionResetStatus.IN_PROGRESS)
         lokiThreadDB.removeAllSessionRestoreDevices(threadID)
     }
 
@@ -78,7 +79,7 @@ object SessionManagementProtocol {
 
     @JvmStatic
     fun handleEndSessionMessageIfNeeded(context: Context, content: SignalServiceContent) {
-        if (!content.dataMessage.isPresent || !content.dataMessage.get().isEndSession) { return }
+        if (!content.dataMessage.isPresent || !(content.dataMessage.get().isEndSession || content.dataMessage.get().isSessionRestorationRequest)) { return }
         val sessionStore = TextSecureSessionStore(context)
         val lokiThreadDB = DatabaseFactory.getLokiThreadDatabase(context)
         Log.d("Loki", "Received a session reset request from: ${content.sender}; archiving the session.")

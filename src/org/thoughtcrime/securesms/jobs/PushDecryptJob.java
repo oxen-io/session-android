@@ -299,7 +299,10 @@ public class PushDecryptJob extends BaseJob implements InjectableType {
           MultiDeviceProtocol.handleUnlinkingRequestIfNeeded(context, content);
         } else {
           // Loki - Don't process session restoration requests any further
-          if (message.isSessionRestorationRequest()) { return; }
+          if (message.isSessionRestorationRequest()) {
+            SessionManagementProtocol.handleEndSessionMessageIfNeeded(context, content);
+            return;
+          }
 
           // Loki - Handle friend request acceptance if needed
           FriendRequestProtocol.handleFriendRequestAcceptanceIfNeeded(context, content.getSender(), content);
