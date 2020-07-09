@@ -1131,15 +1131,17 @@ public class PushDecryptJob extends BaseJob implements InjectableType {
   {
     SmsDatabase smsDatabase = DatabaseFactory.getSmsDatabase(context);
 
-    if (!smsMessageId.isPresent()) {
-      Optional<InsertResult> insertResult = insertPlaceholder(sender, senderDevice, timestamp);
+    if (SessionMetaProtocol.shouldErrorMessageShow(context, timestamp, sender)) {
+      if (!smsMessageId.isPresent()) {
+        Optional<InsertResult> insertResult = insertPlaceholder(sender, senderDevice, timestamp);
 
-      if (insertResult.isPresent()) {
-        smsDatabase.markAsDecryptFailed(insertResult.get().getMessageId());
-        MessageNotifier.updateNotification(context, insertResult.get().getThreadId());
+        if (insertResult.isPresent()) {
+          smsDatabase.markAsDecryptFailed(insertResult.get().getMessageId());
+          MessageNotifier.updateNotification(context, insertResult.get().getThreadId());
+        }
+      } else {
+        smsDatabase.markAsDecryptFailed(smsMessageId.get());
       }
-    } else {
-      smsDatabase.markAsDecryptFailed(smsMessageId.get());
     }
     SessionManagementProtocol.triggerSessionRestorationUI(context, sender);
   }
@@ -1148,16 +1150,17 @@ public class PushDecryptJob extends BaseJob implements InjectableType {
                                       @NonNull Optional<Long> smsMessageId)
   {
     SmsDatabase smsDatabase = DatabaseFactory.getSmsDatabase(context);
+    if (SessionMetaProtocol.shouldErrorMessageShow(context, timestamp, sender)) {
+      if (!smsMessageId.isPresent()) {
+        Optional<InsertResult> insertResult = insertPlaceholder(sender, senderDevice, timestamp);
 
-    if (!smsMessageId.isPresent()) {
-      Optional<InsertResult> insertResult = insertPlaceholder(sender, senderDevice, timestamp);
-
-      if (insertResult.isPresent()) {
-        smsDatabase.markAsNoSession(insertResult.get().getMessageId());
-        MessageNotifier.updateNotification(context, insertResult.get().getThreadId());
+        if (insertResult.isPresent()) {
+          smsDatabase.markAsNoSession(insertResult.get().getMessageId());
+          MessageNotifier.updateNotification(context, insertResult.get().getThreadId());
+        }
+      } else {
+        smsDatabase.markAsNoSession(smsMessageId.get());
       }
-    } else {
-      smsDatabase.markAsNoSession(smsMessageId.get());
     }
     SessionManagementProtocol.triggerSessionRestorationUI(context, sender);
   }

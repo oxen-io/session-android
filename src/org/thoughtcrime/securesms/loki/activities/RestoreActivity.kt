@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.loki.activities
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
 import android.net.Uri
@@ -13,18 +14,24 @@ import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_restore.*
 import network.loki.messenger.R
+import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.BaseActionBarActivity
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
 import org.thoughtcrime.securesms.database.Address
 import org.thoughtcrime.securesms.database.DatabaseFactory
 import org.thoughtcrime.securesms.database.IdentityDatabase
+import org.thoughtcrime.securesms.loki.protocol.MultiDeviceProtocol
 import org.thoughtcrime.securesms.loki.utilities.push
 import org.thoughtcrime.securesms.loki.utilities.setUpActionBarSessionLogo
+import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.util.Base64
 import org.thoughtcrime.securesms.util.Hex
 import org.thoughtcrime.securesms.util.TextSecurePreferences
 import org.whispersystems.libsignal.ecc.Curve
 import org.whispersystems.libsignal.util.KeyHelper
+import org.whispersystems.signalservice.loki.api.LokiSwarmAPI
+import org.whispersystems.signalservice.loki.api.LokiSwarmAPI.Companion.configureIfNeeded
+import org.whispersystems.signalservice.loki.api.fileserver.LokiFileServerAPI
 import org.whispersystems.signalservice.loki.crypto.MnemonicCodec
 import org.whispersystems.signalservice.loki.utilities.hexEncodedPublicKey
 import java.io.File
@@ -104,6 +111,18 @@ class RestoreActivity : BaseActionBarActivity() {
             TextSecurePreferences.setLocalNumber(this, userHexEncodedPublicKey)
             TextSecurePreferences.setRestorationTime(this, System.currentTimeMillis())
             TextSecurePreferences.setHasViewedSeed(this, true)
+            // Loki: try to recover linked device after restoration
+            val application = ApplicationContext.getInstance(this)
+            val apiDB = DatabaseFactory.getLokiAPIDatabase(this)
+            LokiSwarmAPI.Companion.configureIfNeeded(apiDB)
+            application.setUpStorageAPIIfNeeded()
+            LokiFileServerAPI.shared.getDeviceLinksForCurrentUser().success {
+                for (deviceLink in it) {
+                    val recipient = Recipient.from(this, Address.fromSerialized(deviceLink.slaveHexEncodedPublicKey), false)
+                    MultiDeviceProtocol.sendSessionResetRequestToLinkedDevice(this, recipient)
+                }
+            }
+
             val intent = Intent(this, DisplayNameActivity::class.java)
             push(intent)
         } catch (e: Exception) {

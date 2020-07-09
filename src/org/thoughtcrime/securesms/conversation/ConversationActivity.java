@@ -226,6 +226,7 @@ import org.thoughtcrime.securesms.util.concurrent.ListenableFuture;
 import org.thoughtcrime.securesms.util.concurrent.SettableFuture;
 import org.thoughtcrime.securesms.util.views.Stub;
 import org.whispersystems.libsignal.InvalidMessageException;
+import org.whispersystems.libsignal.loki.LokiSessionResetStatus;
 import org.whispersystems.libsignal.util.guava.Optional;
 import org.whispersystems.signalservice.loki.api.opengroups.LokiPublicChat;
 import org.whispersystems.signalservice.loki.protocol.mentions.Mention;
@@ -1530,8 +1531,9 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   }
 
   private void updateSessionRestoreBanner() {
-    Set<String> devices = DatabaseFactory.getLokiThreadDatabase(this).getSessionRestoreDevices(threadId);
-    if (devices.size() > 0) {
+    LokiThreadDatabase lokiThreadDatabase = DatabaseFactory.getLokiThreadDatabase(this);
+    Set<String> devices = lokiThreadDatabase.getSessionRestoreDevices(threadId);
+    if (devices.size() > 0 && lokiThreadDatabase.getSessionResetStatus(recipient.getAddress().serialize()) == LokiSessionResetStatus.NONE) {
       sessionRestoreBannerView.update(recipient);
       sessionRestoreBannerView.show();
     } else {

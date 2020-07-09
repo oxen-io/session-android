@@ -8,15 +8,31 @@ import org.thoughtcrime.securesms.database.RecipientDatabase
 import org.thoughtcrime.securesms.jobs.RetrieveProfileAvatarJob
 import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.util.TextSecurePreferences
+import org.whispersystems.libsignal.loki.LokiSessionResetStatus
 import org.whispersystems.signalservice.api.messages.SignalServiceContent
 import org.whispersystems.signalservice.api.messages.SignalServiceDataMessage
 import org.whispersystems.signalservice.loki.protocol.multidevice.MultiDeviceProtocol
 import org.whispersystems.signalservice.loki.protocol.todo.LokiThreadFriendRequestStatus
 import java.security.MessageDigest
+import java.security.PublicKey
 
 object SessionMetaProtocol {
 
     private val timestamps = mutableSetOf<Long>()
+
+    private val errorThreadsBeforeRestoration: MutableSet<String> = mutableSetOf()
+
+    @JvmStatic
+    fun shouldErrorMessageShow(context: Context, timestamp: Long, sender: String): Boolean {
+        if (timestamp < TextSecurePreferences.getRestorationTime(context)) {
+            if (errorThreadsBeforeRestoration.contains(sender)) {
+                return false
+            } else {
+                errorThreadsBeforeRestoration.add(sender)
+            }
+        }
+        return true
+    }
 
     @JvmStatic
     fun shouldIgnoreMessage(content: SignalServiceContent): Boolean {
@@ -101,5 +117,14 @@ object SessionMetaProtocol {
         if (recipient == null || recipient.isGroupRecipient) { return false }
         val threadID = DatabaseFactory.getThreadDatabase(context).getThreadIdFor(recipient)
         return DatabaseFactory.getLokiThreadDatabase(context).getFriendRequestStatus(threadID) == LokiThreadFriendRequestStatus.FRIENDS
+    }
+
+    @JvmStatic
+    fun shoudSendToSelf(context: Context, recipient: Recipient): Boolean {
+        val threadDatabase = DatabaseFactory.getLokiThreadDatabase(context)
+        val hexEncodedPublicKey = recipient.address.serialize()
+        val masterDevicePublicKey = MultiDeviceProtocol.shared.getMasterDevice(hexEncodedPublicKey) ?: hexEncodedPublicKey
+        return threadDatabase.getSessionResetStatus(hexEncodedPublicKey) != LokiSessionResetStatus.NONE ||
+                threadDatabase.getSessionResetStatus(masterDevicePublicKey) != LokiSessionResetStatus.NONE
     }
 }

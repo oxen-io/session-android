@@ -84,7 +84,8 @@ object SessionManagementProtocol {
         val lokiThreadDB = DatabaseFactory.getLokiThreadDatabase(context)
         Log.d("Loki", "Received a session reset request from: ${content.sender}; archiving the session.")
         sessionStore.archiveAllSessions(content.sender)
-        lokiThreadDB.setSessionResetStatus(content.sender, LokiSessionResetStatus.REQUEST_RECEIVED)
+        val masterDevicePublicKey = MultiDeviceProtocol.shared.getMasterDevice(content.sender) ?: content.sender
+        lokiThreadDB.setSessionResetStatus(masterDevicePublicKey, LokiSessionResetStatus.REQUEST_RECEIVED)
         Log.d("Loki", "Sending an ephemeral message back to: ${content.sender}.")
         val ephemeralMessage = EphemeralMessage.create(content.sender)
         ApplicationContext.getInstance(context).jobManager.add(PushEphemeralMessageSendJob(ephemeralMessage))

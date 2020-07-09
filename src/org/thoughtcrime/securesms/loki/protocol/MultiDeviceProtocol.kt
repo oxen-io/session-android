@@ -15,6 +15,7 @@ import org.thoughtcrime.securesms.loki.utilities.Broadcaster
 import org.thoughtcrime.securesms.loki.utilities.recipient
 import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.util.TextSecurePreferences
+import org.whispersystems.libsignal.loki.LokiSessionResetStatus
 import org.whispersystems.signalservice.api.messages.SignalServiceContent
 import org.whispersystems.signalservice.api.messages.SignalServiceDataMessage
 import org.whispersystems.signalservice.api.push.SignalServiceAddress
@@ -29,6 +30,17 @@ import org.whispersystems.signalservice.loki.utilities.retryIfNeeded
 object MultiDeviceProtocol {
 
     enum class MessageType { Text, Media }
+
+    //Recover Linked devices
+    @JvmStatic
+    fun sendSessionResetRequestToLinkedDevice(context: Context, recipient: Recipient) {
+        val lokiThreadDB = DatabaseFactory.getLokiThreadDatabase(context)
+        val sessionRestorationRequest = EphemeralMessage.createSessionRestorationRequest(recipient.address.serialize())
+        ApplicationContext.getInstance(context).jobManager.add(PushEphemeralMessageSendJob(sessionRestorationRequest))
+        val hexEncodedPublicKey = recipient.address.serialize()
+        val masterDevicePublicKey = MultiDeviceProtocol.shared.getMasterDevice(hexEncodedPublicKey) ?: hexEncodedPublicKey
+        lokiThreadDB.setSessionResetStatus(masterDevicePublicKey, LokiSessionResetStatus.IN_PROGRESS)
+    }
 
     @JvmStatic
     fun sendTextPush(context: Context, recipient: Recipient, messageID: Long, isEndSession: Boolean) {

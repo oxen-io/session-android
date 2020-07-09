@@ -240,14 +240,15 @@ public class PushTextSendJob extends PushSendJob implements InjectableType {
 
         messageSender.sendMessage(syncMessage, syncAccess);
         return syncAccess.isPresent();
-      } else {
-        SendMessageResult result = messageSender.sendMessage(messageId, address, unidentifiedAccess, textSecureMessage);
-        if (result.getLokiAPIError() != null) {
-          throw result.getLokiAPIError();
-        } else {
-          return result.getSuccess().isUnidentified();
-        }
       }
+
+      SendMessageResult result = messageSender.sendMessage(messageId, address, unidentifiedAccess, textSecureMessage);
+      if (result.getLokiAPIError() != null) {
+        throw result.getLokiAPIError();
+      } else {
+        return result.getSuccess().isUnidentified();
+      }
+
     } catch (UnregisteredUserException e) {
       warn(TAG, "Failure", e);
       throw new InsecureFallbackApprovalException(e);
