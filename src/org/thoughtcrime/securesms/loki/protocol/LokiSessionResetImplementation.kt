@@ -6,6 +6,7 @@ import org.thoughtcrime.securesms.database.Address
 import org.thoughtcrime.securesms.database.DatabaseFactory
 import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.sms.OutgoingTextMessage
+import org.thoughtcrime.securesms.util.TextSecurePreferences
 import org.whispersystems.libsignal.loki.LokiSessionResetProtocol
 import org.whispersystems.libsignal.loki.LokiSessionResetStatus
 import org.whispersystems.libsignal.protocol.PreKeySignalMessage
@@ -34,8 +35,15 @@ class LokiSessionResetImplementation(private val context: Context) : LokiSession
 
     fun showSessionRestorationDone(hexEncodedPublicKey: String) {
         val smsDB = DatabaseFactory.getSmsDatabase(context)
-        val masterDevicePublicKey = MultiDeviceProtocol.shared.getMasterDevice(hexEncodedPublicKey) ?: hexEncodedPublicKey
-        val recipient = Recipient.from(context, Address.fromSerialized(masterDevicePublicKey), false)
+        val userPublicKey = TextSecurePreferences.getLocalNumber(context)
+        val allUserDevices = MultiDeviceProtocol.shared.getAllLinkedDevices(userPublicKey)
+        val recipient: Recipient
+        if (allUserDevices.contains(hexEncodedPublicKey)) {
+            recipient = Recipient.from(context, Address.fromSerialized(userPublicKey), false)
+        } else {
+            val masterDevicePublicKey = MultiDeviceProtocol.shared.getMasterDevice(hexEncodedPublicKey) ?: hexEncodedPublicKey
+            recipient = Recipient.from(context, Address.fromSerialized(masterDevicePublicKey), false)
+        }
         val threadID = DatabaseFactory.getThreadDatabase(context).getThreadIdFor(recipient)
         val infoMessage = OutgoingTextMessage(recipient, "", 0, 0)
         val infoMessageID = smsDB.insertMessageOutbox(threadID, infoMessage, false, System.currentTimeMillis(), null)

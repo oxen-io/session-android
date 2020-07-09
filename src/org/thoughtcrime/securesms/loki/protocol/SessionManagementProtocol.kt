@@ -97,7 +97,9 @@ object SessionManagementProtocol {
         val masterDevicePublicKey = MultiDeviceProtocol.shared.getMasterDevice(publicKey) ?: publicKey
         val masterDeviceAsRecipient = recipient(context, masterDevicePublicKey)
         if (masterDeviceAsRecipient.isGroupRecipient) { return }
+        val lokiThreadDatabase = DatabaseFactory.getLokiThreadDatabase(context)
+        if (lokiThreadDatabase.getSessionResetStatus(masterDevicePublicKey) != LokiSessionResetStatus.NONE) { return }
         val threadID = DatabaseFactory.getThreadDatabase(context).getThreadIdFor(masterDeviceAsRecipient)
-        DatabaseFactory.getLokiThreadDatabase(context).addSessionRestoreDevice(threadID, publicKey)
+        lokiThreadDatabase.addSessionRestoreDevice(threadID, publicKey)
     }
 }
