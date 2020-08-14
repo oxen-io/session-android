@@ -576,7 +576,7 @@ public class SmsDatabase extends MessagingDatabase {
     return new Pair<>(messageId, threadId);
   }
 
-  protected Optional<InsertResult> insertMessageInbox(IncomingTextMessage message, long type) {
+  public Optional<InsertResult> insertMessageInbox(IncomingTextMessage message, long type, Address groupID) {
     if (message.isJoined()) {
       type = (type & (Types.TOTAL_MASK - Types.BASE_TYPE_MASK)) | Types.JOINED_TYPE;
     } else if (message.isPreKeyBundle()) {
@@ -606,7 +606,9 @@ public class SmsDatabase extends MessagingDatabase {
     if (message.getGroupId() == null) {
       groupRecipient = null;
     } else {
-      groupRecipient = Recipient.from(context, message.getGroupId(), true);
+      Address a;
+      if (groupID != null) { a = groupID; } else { a = message.getGroupId(); }
+      groupRecipient = Recipient.from(context, a, true);
     }
 
     boolean    unread     = (org.thoughtcrime.securesms.util.Util.isDefaultSmsProvider(context) ||
@@ -668,7 +670,7 @@ public class SmsDatabase extends MessagingDatabase {
   }
 
   public Optional<InsertResult> insertMessageInbox(IncomingTextMessage message) {
-    return insertMessageInbox(message, Types.BASE_INBOX_TYPE);
+    return insertMessageInbox(message, Types.BASE_INBOX_TYPE, null);
   }
 
   public long insertMessageOutbox(long threadId, OutgoingTextMessage message,

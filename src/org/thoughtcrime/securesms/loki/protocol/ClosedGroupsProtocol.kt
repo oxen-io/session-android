@@ -30,7 +30,7 @@ import org.whispersystems.signalservice.loki.utilities.toHexString
 import java.util.*
 
 object ClosedGroupsProtocol {
-    val isSharedSenderKeysEnabled = false
+    val isSharedSenderKeysEnabled = true
     
     public fun createClosedGroup(context: Context, name: String, members: Collection<String>): String {
         // Prepare
@@ -242,6 +242,7 @@ object ClosedGroupsProtocol {
         }
         // Create the group
         val groupID = GroupUtil.getEncodedId(Hex.fromStringCondensed(groupPublicKey), false)
+        Log.d("Test", "[1] $groupID")
         DatabaseFactory.getGroupDatabase(context).create(groupID, name, LinkedList<Address>(members.map { Address.fromSerialized(it) }),
             null, null, LinkedList<Address>(admins.map { Address.fromSerialized(it) }))
         DatabaseFactory.getRecipientDatabase(context).setProfileSharing(Recipient.from(context, Address.fromSerialized(groupID), false), true)

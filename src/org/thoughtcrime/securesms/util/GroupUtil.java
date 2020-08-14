@@ -28,7 +28,7 @@ import static org.whispersystems.signalservice.internal.push.SignalServiceProtos
 
 public class GroupUtil {
 
-  private static final String ENCODED_CLOSED_GROUP_PREFIX   = "__textsecure_group__!";
+  public static final String ENCODED_CLOSED_GROUP_PREFIX   = "__textsecure_group__!";
   private static final String ENCODED_MMS_GROUP_PREFIX      = "__signal_mms_group__!";
   private static final String ENCODED_OPEN_GROUP_PREFIX     = "__loki_public_chat_group__!";
   private static final String ENCODED_RSS_FEED_GROUP_PREFIX = "__loki_rss_feed_group__!";

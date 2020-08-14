@@ -46,6 +46,7 @@ import org.thoughtcrime.securesms.database.MessagingDatabase;
 import org.thoughtcrime.securesms.database.MessagingDatabase.InsertResult;
 import org.thoughtcrime.securesms.database.MessagingDatabase.SyncMessageId;
 import org.thoughtcrime.securesms.database.MmsDatabase;
+import org.thoughtcrime.securesms.database.MmsSmsColumns;
 import org.thoughtcrime.securesms.database.NoSuchMessageException;
 import org.thoughtcrime.securesms.database.PushDatabase;
 import org.thoughtcrime.securesms.database.SmsDatabase;
@@ -66,10 +67,10 @@ import org.thoughtcrime.securesms.logging.Log;
 import org.thoughtcrime.securesms.loki.activities.HomeActivity;
 import org.thoughtcrime.securesms.loki.database.LokiMessageDatabase;
 import org.thoughtcrime.securesms.loki.protocol.ClosedGroupsProtocol;
-import org.thoughtcrime.securesms.loki.protocol.shelved.MultiDeviceProtocol;
 import org.thoughtcrime.securesms.loki.protocol.SessionManagementProtocol;
 import org.thoughtcrime.securesms.loki.protocol.SessionMetaProtocol;
 import org.thoughtcrime.securesms.loki.protocol.SessionResetImplementation;
+import org.thoughtcrime.securesms.loki.protocol.shelved.MultiDeviceProtocol;
 import org.thoughtcrime.securesms.loki.protocol.shelved.SyncMessagesProtocol;
 import org.thoughtcrime.securesms.loki.utilities.MentionManagerUtilities;
 import org.thoughtcrime.securesms.loki.utilities.PromiseUtilities;
@@ -260,7 +261,7 @@ public class PushDecryptJob extends BaseJob implements InjectableType {
 
       SignalServiceContent content = cipher.decrypt(envelope);
 
-      if (shouldIgnore(content)) {
+      if (shouldIgnore(content, envelope.getSource())) {
         Log.i(TAG, "Ignoring message.");
         return;
       }
@@ -286,13 +287,13 @@ public class PushDecryptJob extends BaseJob implements InjectableType {
           if (message.isEndSession()) {
             handleEndSessionMessage(content, smsMessageId);
           } else if (message.isGroupUpdate()) {
-            handleGroupMessage(content, message, smsMessageId);
+            handleGroupMessage(content, message, smsMessageId, envelope.getSource());
           } else if (message.isExpirationUpdate()) {
             handleExpirationUpdate(content, message, smsMessageId);
           } else if (isMediaMessage) {
-            handleMediaMessage(content, message, smsMessageId, Optional.absent());
+            handleMediaMessage(content, message, smsMessageId, Optional.absent(), envelope.getSource());
           } else if (message.getBody().isPresent()) {
-            handleTextMessage(content, message, smsMessageId, Optional.absent());
+            handleTextMessage(content, message, smsMessageId, Optional.absent(), envelope.getSource());
           }
 
           if (message.getGroupInfo().isPresent() && groupDatabase.isUnknownGroup(GroupUtil.getEncodedId(message.getGroupInfo().get()))) {
@@ -517,12 +518,13 @@ public class PushDecryptJob extends BaseJob implements InjectableType {
 
   private void handleGroupMessage(@NonNull SignalServiceContent content,
                                   @NonNull SignalServiceDataMessage message,
-                                  @NonNull Optional<Long> smsMessageId)
+                                  @NonNull Optional<Long> smsMessageId,
+                                  @NonNull String envelopeSource)
       throws StorageFailedException
   {
     GroupMessageProcessor.process(context, content, message, false);
 
-    if (message.getExpiresInSeconds() != 0 && message.getExpiresInSeconds() != getMessageDestination(content, message).getExpireMessages()) {
+    if (message.getExpiresInSeconds() != 0 && message.getExpiresInSeconds() != getMessageDestination(content, message, envelopeSource).getExpireMessages()) {
       handleExpirationUpdate(content, message, Optional.absent());
     }
 
@@ -719,26 +721,27 @@ public class PushDecryptJob extends BaseJob implements InjectableType {
   public void handleMediaMessage(@NonNull SignalServiceContent content,
                                  @NonNull SignalServiceDataMessage message,
                                  @NonNull Optional<Long> smsMessageId,
-                                 @NonNull Optional<Long> messageServerIDOrNull)
+                                 @NonNull Optional<Long> messageServerIDOrNull,
+                                 @NonNull String envelopeSource)
       throws StorageFailedException
   {
-    Recipient originalRecipient = getMessageDestination(content, message);
-    Recipient masterRecipient = getMessageMasterDestination(content.getSender());
+    Recipient recipient = getMessageDestination(content, message, envelopeSource);
+//    Recipient masterRecipient = getMessageMasterDestination(content.getSender());
 
-    notifyTypingStoppedFromIncomingMessage(masterRecipient, content.getSender(), content.getSenderDevice());
+    notifyTypingStoppedFromIncomingMessage(recipient, content.getSender(), content.getSenderDevice());
 
     Optional<QuoteModel>        quote          = getValidatedQuote(message.getQuote());
     Optional<List<Contact>>     sharedContacts = getContacts(message.getSharedContacts());
     Optional<List<LinkPreview>> linkPreviews   = getLinkPreviews(message.getPreviews(), message.getBody().or(""));
     Optional<Attachment>        sticker        = getStickerAttachment(message.getSticker());
 
-    Address masterAddress = masterRecipient.getAddress();
+//    Address masterAddress = masterRecipient.getAddress();
 
-    if (message.isGroupMessage()) {
-      masterAddress = getMessageMasterDestination(content.getSender()).getAddress();
-    }
+//    if (message.isGroupMessage()) {
+//      masterAddress = getMessageMasterDestination(content.getSender()).getAddress();
+//    }
 
-    IncomingMediaMessage mediaMessage = new IncomingMediaMessage(masterAddress, message.getTimestamp(), -1,
+    IncomingMediaMessage mediaMessage = new IncomingMediaMessage(recipient.getAddress(), message.getTimestamp(), -1,
       message.getExpiresInSeconds() * 1000L, false, content.isNeedsReceipt(), message.getBody(), message.getGroupInfo(), message.getAttachments(),
       quote, sharedContacts, linkPreviews, sticker);
 
@@ -801,7 +804,7 @@ public class PushDecryptJob extends BaseJob implements InjectableType {
       if (result.getMessageId() > -1) {
         ThreadDatabase threadDatabase = DatabaseFactory.getThreadDatabase(context);
         LokiMessageDatabase lokiMessageDatabase = DatabaseFactory.getLokiMessageDatabase(context);
-        long originalThreadId = threadDatabase.getThreadIdFor(originalRecipient);
+        long originalThreadId = threadDatabase.getThreadIdFor(recipient);
         lokiMessageDatabase.setOriginalThreadID(result.getMessageId(), originalThreadId);
       }
     }
@@ -912,15 +915,16 @@ public class PushDecryptJob extends BaseJob implements InjectableType {
   public void handleTextMessage(@NonNull SignalServiceContent content,
                                 @NonNull SignalServiceDataMessage message,
                                 @NonNull Optional<Long> smsMessageId,
-                                @NonNull Optional<Long> messageServerIDOrNull)
+                                @NonNull Optional<Long> messageServerIDOrNull,
+                                @NonNull String envelopeSource)
       throws StorageFailedException
   {
     SmsDatabase database          = DatabaseFactory.getSmsDatabase(context);
     String      body              = message.getBody().isPresent() ? message.getBody().get() : "";
-    Recipient   originalRecipient = getMessageDestination(content, message);
-    Recipient   masterRecipient   = getMessageMasterDestination(content.getSender());
+    Recipient   recipient         = getMessageDestination(content, message, envelopeSource);
+//    Recipient   masterRecipient   = getMessageMasterDestination(content.getSender());
 
-    if (message.getExpiresInSeconds() != originalRecipient.getExpireMessages()) {
+    if (message.getExpiresInSeconds() != recipient.getExpireMessages()) {
       handleExpirationUpdate(content, message, Optional.absent());
     }
 
@@ -929,15 +933,15 @@ public class PushDecryptJob extends BaseJob implements InjectableType {
     if (smsMessageId.isPresent() && !message.getGroupInfo().isPresent()) {
       threadId = database.updateBundleMessageBody(smsMessageId.get(), body).second;
     } else {
-      notifyTypingStoppedFromIncomingMessage(masterRecipient, content.getSender(), content.getSenderDevice());
+      notifyTypingStoppedFromIncomingMessage(recipient, content.getSender(), content.getSenderDevice());
 
-      Address masterAddress = masterRecipient.getAddress();
+//      Address masterAddress = masterRecipient.getAddress();
 
-      if (message.isGroupMessage()) {
-        masterAddress = getMessageMasterDestination(content.getSender()).getAddress();
-      }
+//      if (message.isGroupMessage()) {
+//        masterAddress = getMessageMasterDestination(content.getSender()).getAddress();
+//      }
 
-      IncomingTextMessage tm = new IncomingTextMessage(masterAddress,
+      IncomingTextMessage tm = new IncomingTextMessage(recipient.getAddress(),
                                                        content.getSenderDevice(),
                                                        message.getTimestamp(), body,
                                                        message.getGroupInfo(),
@@ -950,7 +954,13 @@ public class PushDecryptJob extends BaseJob implements InjectableType {
       if (textMessage.getMessageBody().length() == 0) { return; }
 
       // Insert the message into the database
-      Optional<InsertResult> insertResult = database.insertMessageInbox(textMessage);
+      Optional<InsertResult> insertResult;
+      boolean isSSKBasedClosedGroup = DatabaseFactory.getSSKDatabase(context).isSSKBasedClosedGroup(envelopeSource);
+      if (isSSKBasedClosedGroup) {
+         insertResult = database.insertMessageInbox(textMessage, MmsSmsColumns.Types.BASE_INBOX_TYPE, recipient.getAddress());
+      } else {
+        insertResult = database.insertMessageInbox(textMessage);
+      }
 
       if (insertResult.isPresent()) {
         threadId = insertResult.get().getThreadId();
@@ -981,7 +991,7 @@ public class PushDecryptJob extends BaseJob implements InjectableType {
         if (result.getMessageId() > -1) {
           ThreadDatabase threadDatabase = DatabaseFactory.getThreadDatabase(context);
           LokiMessageDatabase lokiMessageDatabase = DatabaseFactory.getLokiMessageDatabase(context);
-          long originalThreadId = threadDatabase.getThreadIdFor(originalRecipient);
+          long originalThreadId = threadDatabase.getThreadIdFor(recipient);
           lokiMessageDatabase.setOriginalThreadID(result.getMessageId(), originalThreadId);
         }
       }
@@ -1382,9 +1392,15 @@ public class PushDecryptJob extends BaseJob implements InjectableType {
     }
   }
 
-  private Recipient getMessageDestination(SignalServiceContent content, SignalServiceDataMessage message) {
+  private Recipient getMessageDestination(SignalServiceContent content, SignalServiceDataMessage message, String envelopeSource) {
     if (message.getGroupInfo().isPresent()) {
-      return Recipient.from(context, Address.fromExternal(context, GroupUtil.getEncodedId(message.getGroupInfo().get().getGroupId(), false)), false);
+      boolean isSSKBasedClosedGroup = DatabaseFactory.getSSKDatabase(context).isSSKBasedClosedGroup(envelopeSource);
+      if (isSSKBasedClosedGroup) {
+        Log.d("Test", "[2] " + GroupUtil.ENCODED_CLOSED_GROUP_PREFIX+ envelopeSource);
+        return Recipient.from(context, Address.fromExternal(context, GroupUtil.ENCODED_CLOSED_GROUP_PREFIX + envelopeSource), false);
+      } else {
+        return Recipient.from(context, Address.fromExternal(context, GroupUtil.getEncodedId(message.getGroupInfo().get().getGroupId(), false)), false);
+      }
     } else {
       return Recipient.from(context, Address.fromExternal(context, content.getSender()), false);
     }
@@ -1424,7 +1440,7 @@ public class PushDecryptJob extends BaseJob implements InjectableType {
     }
   }
 
-  private boolean shouldIgnore(@Nullable SignalServiceContent content) {
+  private boolean shouldIgnore(@Nullable SignalServiceContent content, @NonNull String envelopeSource) {
     if (content == null) {
       Log.w(TAG, "Got a message with null content.");
       return true;
@@ -1441,7 +1457,7 @@ public class PushDecryptJob extends BaseJob implements InjectableType {
       return false;
     } else if (content.getDataMessage().isPresent()) {
       SignalServiceDataMessage message      = content.getDataMessage().get();
-      Recipient                conversation = getMessageDestination(content, message);
+      Recipient                conversation = getMessageDestination(content, message, envelopeSource);
 
       if (conversation.isGroupRecipient() && conversation.isBlocked()) {
         return true;

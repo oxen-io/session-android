@@ -45,6 +45,7 @@ import org.whispersystems.signalservice.api.messages.SignalServiceGroup;
 import org.whispersystems.signalservice.api.messages.shared.SharedContact;
 import org.whispersystems.signalservice.api.push.SignalServiceAddress;
 import org.whispersystems.signalservice.internal.push.SignalServiceProtos.GroupContext;
+import org.whispersystems.signalservice.loki.utilities.HexEncodingKt;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -257,7 +258,7 @@ public class PushGroupSendJob extends PushSendJob implements InjectableType {
 
     if (message.isGroup() && address.isClosedGroup()) {
       // Loki - Only send GroupUpdate or GroupQuit messages to closed groups
-      OutgoingGroupMediaMessage groupMessage     = (OutgoingGroupMediaMessage) message;
+      OutgoingGroupMediaMessage groupMessage     = (OutgoingGroupMediaMessage)message;
       GroupContext              groupContext     = groupMessage.getGroupContext();
       SignalServiceAttachment   avatar           = attachmentPointers.isEmpty() ? null : attachmentPointers.get(0);
       SignalServiceGroup.Type   type             = groupMessage.isGroupQuit() ? SignalServiceGroup.Type.QUIT : SignalServiceGroup.Type.UPDATE;
@@ -270,7 +271,12 @@ public class PushGroupSendJob extends PushSendJob implements InjectableType {
 
       return messageSender.sendMessage(messageId, addresses, unidentifiedAccess, groupDataMessage);
     } else {
-      SignalServiceGroup       group        = new SignalServiceGroup(GroupUtil.getDecodedId(groupId), groupType);
+      byte[] sanitizedGroupID = GroupUtil.getDecodedId(groupId);
+      if (DatabaseFactory.getSSKDatabase(context).isSSKBasedClosedGroup(HexEncodingKt.toHexString(sanitizedGroupID))) {
+        sanitizedGroupID = groupId.getBytes();
+      }
+
+      SignalServiceGroup       group        = new SignalServiceGroup(sanitizedGroupID, groupType);
       SignalServiceDataMessage groupMessage = SignalServiceDataMessage.newBuilder()
                                                                       .withTimestamp(message.getSentTimeMillis())
                                                                       .asGroupMessage(group)

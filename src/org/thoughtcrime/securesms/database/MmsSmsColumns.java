@@ -32,7 +32,7 @@ public interface MmsSmsColumns {
     protected static final long MISSED_CALL_TYPE                   = 3;
     protected static final long JOINED_TYPE                        = 4;
 
-    protected static final long BASE_INBOX_TYPE                    = 20;
+    public    static final long BASE_INBOX_TYPE                    = 20;
     protected static final long BASE_OUTBOX_TYPE                   = 21;
     protected static final long BASE_SENDING_TYPE                  = 22;
     protected static final long BASE_SENT_TYPE                     = 23;
