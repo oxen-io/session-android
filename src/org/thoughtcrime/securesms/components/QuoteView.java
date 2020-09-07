@@ -23,7 +23,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.thoughtcrime.securesms.attachments.Attachment;
 import org.thoughtcrime.securesms.database.DatabaseFactory;
-import org.thoughtcrime.securesms.loki.utilities.UiModeUtilities;
 import org.thoughtcrime.securesms.mms.DecryptableStreamUriLoader.DecryptableUri;
 import org.thoughtcrime.securesms.mms.GlideRequests;
 import org.thoughtcrime.securesms.mms.Slide;
@@ -211,7 +210,7 @@ public class QuoteView extends FrameLayout implements RecipientModifiedListener 
     authorView.setText(isOwnNumber ? getContext().getString(R.string.QuoteView_you) : quoteeDisplayName);
 
     // We use the raw color resource because Android 4.x was struggling with tints here
-    int colorID = UiModeUtilities.isDayUiMode(getContext()) ? R.color.black : R.color.accent;
+    int colorID = R.color.accent;
     quoteBarView.setImageResource(colorID);
     mainView.setBackgroundColor(ThemeUtil.getThemedColor(getContext(),
             outgoing ? R.attr.message_received_background_color : R.attr.message_sent_background_color));

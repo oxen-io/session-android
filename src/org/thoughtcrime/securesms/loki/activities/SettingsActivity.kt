@@ -29,10 +29,8 @@ import org.thoughtcrime.securesms.avatar.AvatarSelection
 import org.thoughtcrime.securesms.crypto.ProfileKeyUtil
 import org.thoughtcrime.securesms.database.Address
 import org.thoughtcrime.securesms.database.DatabaseFactory
-import org.thoughtcrime.securesms.loki.dialogs.ChangeUiModeDialog
 import org.thoughtcrime.securesms.loki.dialogs.ClearAllDataDialog
 import org.thoughtcrime.securesms.loki.dialogs.SeedDialog
-import org.thoughtcrime.securesms.loki.utilities.UiModeUtilities
 import org.thoughtcrime.securesms.loki.utilities.fadeIn
 import org.thoughtcrime.securesms.loki.utilities.fadeOut
 import org.thoughtcrime.securesms.loki.utilities.push
@@ -103,12 +101,6 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.settings_general, menu)
-
-        // Update UI mode menu icon.
-        // It uses three-level selector where each level corresponds to the related UiMode ordinal value.
-        val uiMode = UiModeUtilities.getUserSelectedUiMode(this)
-        menu.findItem(R.id.action_change_theme).icon!!.level = uiMode.ordinal
-
         return true
     }
 
@@ -116,10 +108,6 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         return when (item.itemId) {
             R.id.action_qr_code -> {
                 showQRCode()
-                true
-            }
-            R.id.action_change_theme -> {
-                ChangeUiModeDialog().show(supportFragmentManager, ChangeUiModeDialog.TAG)
                 true
             }
             else -> super.onOptionsItemSelected(item)

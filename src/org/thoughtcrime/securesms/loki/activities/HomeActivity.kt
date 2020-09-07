@@ -222,15 +222,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity, ConversationClickListe
                 return
             }
         }
-
-        // Light theme introduction sheet
-        if (!TextSecurePreferences.hasSeenLightThemeIntroSheet(this) &&
-                UiModeUtilities.isDayUiMode(this)) {
-            TextSecurePreferences.setHasSeenLightThemeIntroSheet(this)
-            val bottomSheet = LightThemeFeatureIntroBottomSheet()
-            bottomSheet.show(supportFragmentManager, bottomSheet.tag)
-            return
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

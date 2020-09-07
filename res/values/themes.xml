@@ -6,11 +6,10 @@
 
     <!-- Due to historical reasons the base theme is dark and the light one
     is implemented using "notnight" type of resources. -->
-    <style name="Base.Theme.Session" parent="@style/Theme.AppCompat.DayNight.DarkActionBar">
+    <style name="Base.Theme.Session" parent="@style/Theme.AppCompat">
         <item name="colorPrimary">@color/action_bar_background</item>
         <item name="colorPrimaryDark">@color/action_bar_background</item>
         <item name="colorAccent">@color/accent</item>
-        <item name="colorControlNormal">?android:textColorPrimary</item>
         <item name="colorControlActivated">?colorAccent</item>
         <item name="colorControlHighlight">?colorAccent</item>
         <item name="android:textColorPrimary">@color/text</item>
@@ -21,10 +20,12 @@
         <item name="android:windowBackground">@drawable/default_session_background</item>
         <item name="android:colorBackground">@color/default_background_start</item>
         <item name="android:navigationBarColor">@color/compose_view_background</item>
+        <item name="android:colorControlNormal">?android:textColorPrimary</item>
+        <item name="colorControlNormal">?android:colorControlNormal</item>
 
-        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat</item>
         <item name="actionBarWidgetTheme">@null</item>
-        <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.DayNight.ActionBar</item>
+        <item name="actionBarTheme">@null</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
 
         <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
@@ -140,7 +141,7 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
-    <style name="Theme.Session.BottomSheet" parent="@style/Theme.AppCompat.DayNight.Dialog">
+    <style name="Theme.Session.BottomSheet" parent="@style/Theme.AppCompat.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>
         <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>
@@ -328,7 +329,7 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
     
-    <style name="Theme.TextSecure.Dialog.Rationale" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+    <style name="Theme.TextSecure.Dialog.Rationale" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:windowBackground">@drawable/default_dialog_background</item>
     </style>
 

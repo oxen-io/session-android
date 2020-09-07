@@ -72,7 +72,6 @@ import org.thoughtcrime.securesms.loki.protocol.ClosedGroupsProtocol;
 import org.thoughtcrime.securesms.loki.protocol.SessionRequestMessageSendJob;
 import org.thoughtcrime.securesms.loki.protocol.SessionResetImplementation;
 import org.thoughtcrime.securesms.loki.utilities.Broadcaster;
-import org.thoughtcrime.securesms.loki.utilities.UiModeUtilities;
 import org.thoughtcrime.securesms.notifications.DefaultMessageNotifier;
 import org.thoughtcrime.securesms.notifications.MessageNotifier;
 import org.thoughtcrime.securesms.notifications.NotificationChannels;
@@ -216,8 +215,6 @@ public class ApplicationContext extends MultiDexApplication implements Dependenc
     publicChatManager = new PublicChatManager(this);
     updateOpenGroupProfilePicturesIfNeeded();
     registerForFCMIfNeeded(false);
-    // Set application UI mode (day/night theme) to the user selected one.
-    UiModeUtilities.setupUiModeToUserSelected(this);
     // ========
     initializeJobManager();
     initializeMessageRetrieval();

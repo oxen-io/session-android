@@ -53,8 +53,7 @@ object MentionUtilities {
         }
         val result = SpannableString(text)
         for (mention in mentions) {
-            val isLightMode = UiModeUtilities.isDayUiMode(context)
-            val colorID = if (isLightMode && isOutgoingMessage) R.color.black else R.color.accent
+            val colorID = R.color.accent
             result.setSpan(ForegroundColorSpan(context.resources.getColorWithID(colorID, context.theme)), mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             result.setSpan(StyleSpan(Typeface.BOLD), mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
