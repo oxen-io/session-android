@@ -227,6 +227,10 @@ public class PushGroupSendJob extends PushSendJob implements InjectableType {
   private List<SendMessageResult> deliver(OutgoingMediaMessage message, @NonNull List<Address> destinations)
       throws IOException, UntrustedIdentityException, UndeliverableMessageException {
 
+    if (messageSender == null) {
+      messageSender = ApplicationContext.getInstance(context).communicationModule.provideSignalMessageSender();
+    }
+
     // Loki - The user shouldn't be able to message RSS feeds
     Address address = message.getRecipient().getAddress();
     if (address.isRSSFeed()) {
@@ -267,7 +271,6 @@ public class PushGroupSendJob extends PushSendJob implements InjectableType {
                                                                            .withExpiration(message.getRecipient().getExpireMessages())
                                                                            .asGroupMessage(group)
                                                                            .build();
-
       return messageSender.sendMessage(messageId, addresses, unidentifiedAccess, groupDataMessage);
     } else {
       SignalServiceGroup       group        = new SignalServiceGroup(GroupUtil.getDecodedId(groupId), groupType);

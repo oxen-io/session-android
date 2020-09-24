@@ -143,20 +143,23 @@ public class GroupManager {
     final Set<Address>  memberAddresses = getMemberAddresses(members);
     final Set<Address>  adminAddresses  = getMemberAddresses(admins);
     final byte[]        avatarBytes     = BitmapUtil.toByteArray(avatar);
+    GroupActionResult result;
 
     memberAddresses.add(Address.fromSerialized(TextSecurePreferences.getLocalNumber(context)));
+
+    if (!GroupUtil.isMmsGroup(groupId)) {
+       result = sendGroupUpdate(context, groupId, memberAddresses, name, avatarBytes, adminAddresses);
+    } else {
+      Recipient groupRecipient = Recipient.from(context, Address.fromSerialized(groupId), true);
+      long      threadId       = DatabaseFactory.getThreadDatabase(context).getThreadIdFor(groupRecipient);
+      result = new GroupActionResult(groupRecipient, threadId);
+    }
     groupDatabase.updateMembers(groupId, new LinkedList<>(memberAddresses));
     groupDatabase.updateAdmins(groupId, new LinkedList<>(adminAddresses));
     groupDatabase.updateTitle(groupId, name);
     groupDatabase.updateAvatar(groupId, avatarBytes);
 
-    if (!GroupUtil.isMmsGroup(groupId)) {
-      return sendGroupUpdate(context, groupId, memberAddresses, name, avatarBytes, adminAddresses);
-    } else {
-      Recipient groupRecipient = Recipient.from(context, Address.fromSerialized(groupId), true);
-      long      threadId       = DatabaseFactory.getThreadDatabase(context).getThreadIdFor(groupRecipient);
-      return new GroupActionResult(groupRecipient, threadId);
-    }
+    return result;
   }
 
   private static GroupActionResult sendGroupUpdate(@NonNull  Context      context,

@@ -41,6 +41,7 @@ import org.thoughtcrime.securesms.jobs.PushTextSendJob;
 import org.thoughtcrime.securesms.jobs.SmsSendJob;
 import org.thoughtcrime.securesms.logging.Log;
 import org.thoughtcrime.securesms.mms.MmsException;
+import org.thoughtcrime.securesms.mms.OutgoingGroupMediaMessage;
 import org.thoughtcrime.securesms.mms.OutgoingMediaMessage;
 import org.thoughtcrime.securesms.push.AccountManagerFactory;
 import org.thoughtcrime.securesms.recipients.Recipient;
@@ -101,8 +102,12 @@ public class MessageSender {
 
       Recipient recipient = message.getRecipient();
       long      messageId = database.insertMessageOutbox(message, allocatedThreadId, forceSms, insertListener);
+      boolean   sendImmediately = false;
+      if (message.isGroup()) {
+        sendImmediately = ((OutgoingGroupMediaMessage)message).isGroupUpdate();
+      }
 
-      sendMediaMessage(context, recipient, forceSms, messageId, message.getExpiresIn());
+      sendMediaMessage(context, recipient, forceSms, messageId, message.getExpiresIn(), sendImmediately);
       return allocatedThreadId;
     } catch (MmsException e) {
       Log.w(TAG, e);
@@ -123,18 +128,18 @@ public class MessageSender {
     Recipient  recipient   = messageRecord.getRecipient();
 
     if (messageRecord.isMms()) {
-      sendMediaMessage(context, recipient, forceSms, messageId, expiresIn);
+      sendMediaMessage(context, recipient, forceSms, messageId, expiresIn, false);
     } else {
       sendTextMessage(context, recipient, forceSms, keyExchange, messageId);
     }
   }
 
-  private static void sendMediaMessage(Context context, Recipient recipient, boolean forceSms, long messageId, long expiresIn)
+  private static void sendMediaMessage(Context context, Recipient recipient, boolean forceSms, long messageId, long expiresIn, boolean sendImmediately)
   {
     if (isLocalSelfSend(context, recipient, forceSms)) {
       sendLocalMediaSelf(context, messageId);
     } else if (isGroupPushSend(recipient)) {
-      sendGroupPush(context, recipient, messageId, null);
+      sendGroupPush(context, recipient, messageId, null, sendImmediately);
     } else {
       sendMediaPush(context, recipient, messageId);
     }
@@ -166,6 +171,17 @@ public class MessageSender {
   private static void sendGroupPush(Context context, Recipient recipient, long messageId, Address filterAddress) {
     JobManager jobManager = ApplicationContext.getInstance(context).getJobManager();
     PushGroupSendJob.enqueue(context, jobManager, messageId, recipient.getAddress(), filterAddress);
+  }
+
+  private static void sendGroupPush(Context context, Recipient recipient, long messageId, Address filterAddress, boolean sendImmediately) {
+    if (sendImmediately) {
+      PushGroupSendJob job = new PushGroupSendJob(messageId, recipient.getAddress(), filterAddress);
+      job.setContext(context);
+      job.run();
+    } else {
+      sendGroupPush(context, recipient, messageId, filterAddress);
+    }
+
   }
 
   private static void sendSms(Context context, Recipient recipient, long messageId) {
