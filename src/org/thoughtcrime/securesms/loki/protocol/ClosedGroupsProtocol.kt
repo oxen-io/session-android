@@ -21,6 +21,7 @@ import org.thoughtcrime.securesms.util.Hex
 import org.thoughtcrime.securesms.util.TextSecurePreferences
 import org.whispersystems.libsignal.ecc.Curve
 import org.whispersystems.libsignal.util.guava.Optional
+import org.whispersystems.signalservice.api.messages.SignalServiceDataMessage
 import org.whispersystems.signalservice.api.messages.SignalServiceGroup
 import org.whispersystems.signalservice.api.messages.SignalServiceGroup.GroupType
 import org.whispersystems.signalservice.internal.push.SignalServiceProtos
@@ -249,11 +250,12 @@ object ClosedGroupsProtocol {
     }
 
     @JvmStatic
-    public fun handleSharedSenderKeysUpdate(context: Context, closedGroupUpdate: SignalServiceProtos.ClosedGroupUpdate, senderPublicKey: String) {
+    public fun handleSharedSenderKeysUpdate(context: Context, dataMessage: SignalServiceDataMessage, senderPublicKey: String) {
+        val closedGroupUpdate = dataMessage.closedGroupUpdate.get()
         if (!isValid(closedGroupUpdate)) { return; }
         when (closedGroupUpdate.type) {
             SignalServiceProtos.ClosedGroupUpdate.Type.NEW -> handleNewClosedGroup(context, closedGroupUpdate, senderPublicKey)
-            SignalServiceProtos.ClosedGroupUpdate.Type.INFO -> handleClosedGroupUpdate(context, closedGroupUpdate, senderPublicKey)
+            SignalServiceProtos.ClosedGroupUpdate.Type.INFO -> handleClosedGroupUpdate(context, closedGroupUpdate, dataMessage.timestamp, senderPublicKey)
             SignalServiceProtos.ClosedGroupUpdate.Type.SENDER_KEY_REQUEST -> handleSenderKeyRequest(context, closedGroupUpdate, senderPublicKey)
             SignalServiceProtos.ClosedGroupUpdate.Type.SENDER_KEY -> handleSenderKey(context, closedGroupUpdate, senderPublicKey)
             else -> {
@@ -337,7 +339,7 @@ object ClosedGroupsProtocol {
         LokiPushNotificationManager.performOperation(context, ClosedGroupOperation.Subscribe, groupPublicKey, userPublicKey)
     }
 
-    public fun handleClosedGroupUpdate(context: Context, closedGroupUpdate: SignalServiceProtos.ClosedGroupUpdate, senderPublicKey: String) {
+    public fun handleClosedGroupUpdate(context: Context, closedGroupUpdate: SignalServiceProtos.ClosedGroupUpdate, timestamp: Long, senderPublicKey: String) {
         // Prepare
         val userPublicKey = TextSecurePreferences.getLocalNumber(context)
         val sskDatabase = DatabaseFactory.getSSKDatabase(context)
@@ -354,6 +356,10 @@ object ClosedGroupsProtocol {
         val group = groupDB.getGroup(groupID).orNull()
         if (group == null) {
             Log.d("Loki", "Ignoring closed group info message for nonexistent group.")
+            return
+        }
+        if (group.createdAt > timestamp) {
+            Log.d("Loki", "Ignoring closed group info message before the group was created.")
             return
         }
         val oldMembers = group.members.map { it.serialize() }

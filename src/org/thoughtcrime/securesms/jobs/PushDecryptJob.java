@@ -283,7 +283,7 @@ public class PushDecryptJob extends BaseJob implements InjectableType {
         } else {
 
           if (message.getClosedGroupUpdate().isPresent()) {
-            ClosedGroupsProtocol.handleSharedSenderKeysUpdate(context, message.getClosedGroupUpdate().get(), content.getSender());
+            ClosedGroupsProtocol.handleSharedSenderKeysUpdate(context, message, content.getSender());
           }
 
           if (message.isEndSession()) {
