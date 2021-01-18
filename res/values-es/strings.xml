@@ -30,7 +30,7 @@
   <string name="ApplicationPreferencesActivity_unregistering">Desregistrándose</string>
   <string name="ApplicationPreferencesActivity_unregistering_from_signal_messages_and_calls">Borrando cuenta de Session ...</string>
   <string name="ApplicationPreferencesActivity_disable_signal_messages_and_calls">¿Desactivar mensajes y llamadas de Session?</string>
-  <string name="ApplicationPreferencesActivity_disable_signal_messages_and_calls_by_unregistering">Esto desactivará los mensajes de Signal eliminando tu número del servidor. Necesitarás volver a registrar tu número de teléfono para usar Session de nuevo en el futuro.</string>
+  <string name="ApplicationPreferencesActivity_disable_signal_messages_and_calls_by_unregistering">Esto desactivará los mensajes de Session eliminando tu número del servidor. Necesitarás volver a registrar tu número de teléfono para usar Session de nuevo en el futuro.</string>
   <string name="ApplicationPreferencesActivity_error_connecting_to_server">¡Fallo al conectarse al servidor!</string>
   <string name="ApplicationPreferencesActivity_sms_enabled">SMS activados</string>
   <string name="ApplicationPreferencesActivity_touch_to_change_your_default_sms_app">Toca para cambiar la aplicación de SMS predeterminada</string>
@@ -117,7 +117,7 @@
   <string name="ConversationItem_download_more">  Descargar más</string>
   <string name="ConversationItem_pending">  Pendiente</string>
   <!--ConversationActivity-->
-  <string name="ConversationActivity_reset_secure_session_question">¿Reiniciar Session segura?</string>
+  <string name="ConversationActivity_reset_secure_session_question">¿Reiniciar sesión segura?</string>
   <string name="ConversationActivity_this_may_help_if_youre_having_encryption_problems">Esto puede ayudar si estás teniendo problemas de cifrado con este chat. Tus mensajes se mantendrán.</string>
   <string name="ConversationActivity_reset">Reiniciar</string>
   <string name="ConversationActivity_add_attachment">Añadir archivo adjunto</string>
@@ -157,7 +157,7 @@
   <string name="ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video">Session necesita acceso a la cámara para tomar fotos o vídeos. Por favor, ve al menú de configuración de la aplicación, selecciona «Permisos» y habilita «Cámara».</string>
   <string name="ConversationActivity_signal_needs_camera_permissions_to_take_photos_or_video">Session necesita acceder a la cámara para tomar fotos o vídeo.</string>
   <string name="ConversationActivity_quoted_contact_message">%1$s %2$s</string>
-  <string name="ConversationActivity_signal_cannot_sent_sms_mms_messages_because_it_is_not_your_default_sms_app">Signal no puede enviar SMS/MMS ya que no es la aplicación configurada por defecto. ¿Deseas cambiar la configuración de Android para que Session sea la aplicación por defecto para SMS?</string>
+  <string name="ConversationActivity_signal_cannot_sent_sms_mms_messages_because_it_is_not_your_default_sms_app">Session no puede enviar SMS/MMS ya que no es la aplicación configurada por defecto. ¿Deseas cambiar la configuración de Android para que Session sea la aplicación por defecto para SMS?</string>
   <string name="ConversationActivity_yes">Sí</string>
   <string name="ConversationActivity_no">No</string>
   <string name="ConversationActivity_search_position">%1$d de %2$d</string>
@@ -237,7 +237,7 @@
   <string name="CreateProfileActivity_too_long">Demasiado largo</string>
   <string name="CreateProfileActivity_profile_name">Nombre de perfil</string>
   <string name="CreateProfileActivity_set_up_your_profile">Completa tu perfil</string>
-  <string name="CreateProfileActivity_signal_profiles_are_end_to_end_encrypted">Los perfiles de Signal están cifrados de punto a punto por lo que el servidor de Session no tiene acceso a ningún dato.</string>
+  <string name="CreateProfileActivity_signal_profiles_are_end_to_end_encrypted">Los perfiles de Session están cifrados de extremo a extremo, y el servicio de Session nunca tiene acceso a esta información.</string>
   <!--CustomDefaultPreference-->
   <string name="CustomDefaultPreference_using_custom">Usar personalizado: %s</string>
   <string name="CustomDefaultPreference_using_default">Usar predeterminado: %s</string>
@@ -279,7 +279,7 @@
   <string name="ExperienceUpgradeActivity_textsecure_is_now_signal">TextSecure es ahora Session.</string>
   <string name="ExperienceUpgradeActivity_textsecure_is_now_signal_long">TextSecure y RedPhone son ahora una sola aplicación: Session. Toca para explorar.</string>
   <string name="ExperienceUpgradeActivity_say_hello_to_video_calls">Di hola a las vídeollamadas seguras.</string>
-  <string name="ExperienceUpgradeActivity_signal_now_supports_secure_video_calls">Signal ofrece ahora vídeollamadas seguras. Simplemente inicia una llamada de Session con normalidad, toca el botón de vídeo, y saluda con la mano.</string>
+  <string name="ExperienceUpgradeActivity_signal_now_supports_secure_video_calls">Session ofrece ahora vídeollamadas seguras. Simplemente inicia una llamada de Session con normalidad, toca el botón de vídeo, y saluda con la mano.</string>
   <string name="ExperienceUpgradeActivity_signal_now_supports_secure_video_calling">Session ofrece ahora vídeollamadas seguras.</string>
   <string name="ExperienceUpgradeActivity_signal_now_supports_secure_video_calling_long">Session ofrece ahora vídeollamadas seguras. Toca para saber más.</string>
   <string name="ExperienceUpgradeActivity_ready_for_your_closeup">¿Listo para tu retrato?</string>
@@ -300,7 +300,7 @@
   <string name="GcmBroadcastReceiver_retrieving_a_message">Recuperando un mensaje...</string>
   <!--GcmRefreshJob-->
   <string name="GcmRefreshJob_Permanent_Signal_communication_failure">¡Fallo permanente de comunicación de Session!</string>
-  <string name="GcmRefreshJob_Signal_was_unable_to_register_with_Google_Play_Services">Signal fué incapaz de registrarse con Google Play Services. Los mensajes y llamadas de Session han sido desactivados, por favor, intenta registrarte otra vez en Configuración &gt; Avanzado.</string>
+  <string name="GcmRefreshJob_Signal_was_unable_to_register_with_Google_Play_Services">Session fué incapaz de registrarse con Google Play Services. Los mensajes y llamadas de Session han sido desactivados, por favor, intenta registrarte otra vez en Configuración &gt; Avanzado.</string>
   <!--GiphyActivity-->
   <string name="GiphyActivity_error_while_retrieving_full_resolution_gif">Fallo al obtener el GIF a resolución completa</string>
   <!--GiphyFragmentPageAdapter-->
@@ -312,7 +312,7 @@
   <string name="GroupCreateActivity_group_name_hint">Nombre del grupo</string>
   <string name="GroupCreateActivity_actionbar_mms_title">Nuevo grupo de MMS</string>
   <string name="GroupCreateActivity_contacts_dont_support_push">Has seleccionado un contacto que no dispone de chats de grupo de Session, así que este grupo será de MMS.</string>
-  <string name="GroupCreateActivity_youre_not_registered_for_signal">No estás registrado para los mensajes y llamadas de Signal, así que los grupos de Session están desactivados, por favor, intenta registrarte otra vez en Configuración &gt; Avanzado.</string>
+  <string name="GroupCreateActivity_youre_not_registered_for_signal">No estás registrado para los mensajes y llamadas de Session, así que los grupos de Session están desactivados, por favor, intenta registrarte otra vez en Configuración &gt; Avanzado.</string>
   <string name="GroupCreateActivity_contacts_no_members">¡Necesitas al menos una persona en tu grupo!</string>
   <string name="GroupCreateActivity_contacts_invalid_number">Uno de los miembros de tu grupo tiene un número que no puede ser leído correctamente. Por favor arréglalo o elimina el contacto, e inténtalo de nuevo.</string>
   <string name="GroupCreateActivity_avatar_content_description">Avatar del grupo</string>
@@ -423,7 +423,7 @@
   <string name="MessageRecord_you_disabled_disappearing_messages">Has desactivado la desaparición de mensajes.</string>
   <string name="MessageRecord_s_disabled_disappearing_messages">%1$s ha desactivado la desaparición de mensajes.</string>
   <string name="MessageRecord_you_set_disappearing_message_time_to_s">Has fijado la desaparición de mensajes en %1$s.</string>
-  <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$sha fijado la desaparición de mensajes en %2$s. </string>
+  <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s ha fijado la desaparición de mensajes en %2$s. </string>
   <string name="MessageRecord_your_safety_number_with_s_has_changed">Tus cifras de seguridad con %s han cambiado.</string>
   <string name="MessageRecord_you_marked_your_safety_number_with_s_verified">Has marcado tus cifras de seguridad con %s como verificadas.</string>
   <string name="MessageRecord_you_marked_your_safety_number_with_s_verified_from_another_device">Has marcado tus cifras de seguridad con %s como verificadas desde otro dispositivo</string>
@@ -451,7 +451,7 @@
   <string name="DeviceProvisioningActivity_sorry_you_have_too_many_devices_linked_already">Lo sentimos, ya tienes demasiados dispositivos enlazados. Elimina alguno</string>
   <string name="DeviceActivity_sorry_this_is_not_a_valid_device_link_qr_code">Lo sentimos, este código QR no es ​​válido.</string>
   <string name="DeviceProvisioningActivity_link_a_signal_device">¿Enlazar un dispositivo Session?</string>
-  <string name="DeviceProvisioningActivity_it_looks_like_youre_trying_to_link_a_signal_device_using_a_3rd_party_scanner">Parece que estás intentando enlazar un dispositivo Signal usando una aplicación de escáner desconocida. Para tu protección, escanea el código otra vez desde Session.</string>
+  <string name="DeviceProvisioningActivity_it_looks_like_youre_trying_to_link_a_signal_device_using_a_3rd_party_scanner">Parece que estás intentando enlazar un dispositivo Session usando una aplicación de escáner desconocida. Para tu protección, escanea el código otra vez desde Session.</string>
   <string name="DeviceActivity_signal_needs_the_camera_permission_in_order_to_scan_a_qr_code">Session necesita acceso a la cámara para escanear el código QR. Por favor, ve al menú de configuración de la aplicación, selecciona «Permisos» y activa «Cámara».</string>
   <string name="DeviceActivity_unable_to_scan_a_qr_code_without_the_camera_permission">No se puede escanear un código QR sin acceso a la cámara.</string>
   <!--ExpirationDialog-->
@@ -567,13 +567,13 @@ de intercambio de claves!
 Se recibió un mensaje de intercambio de claves para una versión no válida del protocolo.
 </string>
   <string name="SmsMessageRecord_received_message_with_new_safety_number_tap_to_process">Has recibido un mensaje con unas cifras de seguridad nuevas. Toca para procesarlo y mostrarlo.</string>
-  <string name="SmsMessageRecord_secure_session_reset">Has reiniciado la Session segura.</string>
-  <string name="SmsMessageRecord_secure_session_reset_s">%s reinició la Session segura.</string>
+  <string name="SmsMessageRecord_secure_session_reset">Has reiniciado la sesión segura.</string>
+  <string name="SmsMessageRecord_secure_session_reset_s">%s reinició la sesión segura.</string>
   <string name="SmsMessageRecord_duplicate_message">Duplicar mensaje.</string>
   <!--ThreadRecord-->
   <string name="ThreadRecord_group_updated">Grupo actualizado</string>
   <string name="ThreadRecord_left_the_group">Abandonar el grupo</string>
-  <string name="ThreadRecord_secure_session_reset">Reinicio de Session segura.</string>
+  <string name="ThreadRecord_secure_session_reset">Reinicio de sesión segura.</string>
   <string name="ThreadRecord_draft">Borrador:</string>
   <string name="ThreadRecord_called">Has llamado</string>
   <string name="ThreadRecord_called_you">Te ha llamado</string>
@@ -614,10 +614,10 @@ Se recibió un mensaje de intercambio de claves para una versión no válida del
   <string name="VerifyIdentityActivity_unable_to_scan_qr_code_without_camera_permission">No se puede escanear un código QR sin acceso a la cámara</string>
   <!--MessageDisplayHelper-->
   <string name="MessageDisplayHelper_bad_encrypted_message">Mensaje cifrado erróneo</string>
-  <string name="MessageDisplayHelper_message_encrypted_for_non_existing_session">El mensaje ha sido cifrado para una Session inexistente</string>
+  <string name="MessageDisplayHelper_message_encrypted_for_non_existing_session">El mensaje ha sido cifrado para una sesión inexistente</string>
   <!--MmsMessageRecord-->
   <string name="MmsMessageRecord_bad_encrypted_mms_message">Mensaje MMS cifrado erróneo</string>
-  <string name="MmsMessageRecord_mms_message_encrypted_for_non_existing_session">El mensaje MMS ha sido cifrado para una Session inexistente</string>
+  <string name="MmsMessageRecord_mms_message_encrypted_for_non_existing_session">El mensaje MMS ha sido cifrado para una sesión inexistente</string>
   <!--MuteDialog-->
   <string name="MuteDialog_mute_notifications">Silenciar notificaciones</string>
   <!--OutdatedBuildReminder-->
@@ -731,7 +731,7 @@ Se recibió un mensaje de intercambio de claves para una versión no válida del
   <!--single_contact_selection_activity-->
   <string name="SingleContactSelectionActivity_contact_photo">Foto del contacto</string>
   <!--ContactSelectionListFragment-->
-  <string name="ContactSelectionListFragment_signal_requires_the_contacts_permission_in_order_to_display_your_contacts">Signal necesita acceso a los contactos para mostrar los que usan Session. Por favor, ve al menú de configuración de la aplicación, selecciona «Permisos» y activa «Contactos».</string>
+  <string name="ContactSelectionListFragment_signal_requires_the_contacts_permission_in_order_to_display_your_contacts">Session necesita acceso a los contactos para mostrar los que usan Session. Por favor, ve al menú de configuración de la aplicación, selecciona «Permisos» y activa «Contactos».</string>
   <string name="ContactSelectionListFragment_error_retrieving_contacts_check_your_network_connection">Fallo al compilar contactos, comprueba la conexión a la red.</string>
   <!--blocked_contacts_fragment-->
   <string name="blocked_contacts_fragment__no_blocked_contacts">No hay contactos bloqueados</string>
@@ -917,7 +917,7 @@ Se recibió un mensaje de intercambio de claves para una versión no válida del
   <string name="redphone_call_controls__flip_camera_rear">Rotar cámara</string>
   <!--registration_activity-->
   <string name="registration_activity__phone_number">NÚMERO DE TELÉFONO</string>
-  <string name="registration_activity__registration_will_transmit_some_contact_information_to_the_server_temporariliy">Signal hace fácil la comunicación usando tu número de teléfono y lista de contactos existentes. Los amigos y contactos que ya conocen tu teléfono podrán ponerse en contacto contigo a través de Session.\n\nEl proceso de registro transmite alguna información acerca de tus contactos al servidor pero no se almacena.</string>
+  <string name="registration_activity__registration_will_transmit_some_contact_information_to_the_server_temporariliy">Session hace fácil la comunicación usando tu número de teléfono y lista de contactos existentes. Los amigos y contactos que ya conocen tu teléfono podrán ponerse en contacto contigo a través de Session.\n\nEl proceso de registro transmite alguna información acerca de tus contactos al servidor pero no se almacena.</string>
   <string name="registration_activity__verify_your_number">Verifica tu número</string>
   <string name="registration_activity__please_enter_your_mobile_number_to_receive_a_verification_code_carrier_rates_may_apply">Por favor, introduce tu número de móvil para recibir el código de verificación por SMS. Puede que tu proveedor aplique una tasa por recibir SMS.</string>
   <!--recipients_panel-->
@@ -1007,7 +1007,7 @@ Se recibió un mensaje de intercambio de claves para una versión no válida del
   <string name="preferences__enable_passphrase">Activa bloqueo de pantalla con clave de acceso</string>
   <string name="preferences__lock_signal_and_message_notifications_with_a_passphrase">Bloquea pantalla y notificaciones con clave de acceso</string>
   <string name="preferences__screen_security">Seguridad de pantalla</string>
-  <string name="preferences__disable_screen_security_to_allow_screen_shots">Bloquea capturas de pantalla de signal en la lista de aplicaciones recientes y dentro de la aplicación</string>
+  <string name="preferences__disable_screen_security_to_allow_screen_shots">Bloquea capturas de pantalla en la lista de aplicaciones recientes y dentro de la aplicación</string>
   <string name="preferences__auto_lock_signal_after_a_specified_time_interval_of_inactivity">Bloquea automáticamente Session tras un intervalo de inactividad especificado</string>
   <string name="preferences__inactivity_timeout_passphrase">Clave de acceso por inactividad</string>
   <string name="preferences__inactivity_timeout_interval">Intervalo para suspensión por inactividad</string>
@@ -1053,7 +1053,7 @@ Se recibió un mensaje de intercambio de claves para una versión no válida del
   <string name="preferences__chats">Chats y multimedia</string>
   <string name="preferences__conversation_length_limit">Límite de longitud de chat</string>
   <string name="preferences__trim_all_conversations_now">Recortar ahora todos los chats</string>
-  <string name="preferences__scan_through_all_conversations_and_enforce_conversation_length_limits">Escanear todos lo chats e aplicar los límites de longitud</string>
+  <string name="preferences__scan_through_all_conversations_and_enforce_conversation_length_limits">Escanear todos lo chats y aplicar los límites de longitud</string>
   <string name="preferences__linked_devices">Dispositivos enlazados</string>
   <string name="preferences__light_theme">Claro</string>
   <string name="preferences__dark_theme">Oscuro</string>
@@ -1142,7 +1142,7 @@ Se recibió un mensaje de intercambio de claves para una versión no válida del
   <string name="conversation_list_fragment__fab_content_description">Nuevo chat</string>
   <string name="conversation_list_fragment__give_your_inbox_something_to_write_home_about_get_started_by_messaging_a_friend">Dale a tu buzón de entrada una razón de ser. Comienza a chatear con un amigo.</string>
   <!--conversation_secure_verified-->
-  <string name="conversation_secure_verified__menu_reset_secure_session">Reiniciar Session segura</string>
+  <string name="conversation_secure_verified__menu_reset_secure_session">Reiniciar sesión segura</string>
   <!--conversation_muted-->
   <string name="conversation_muted__unmute">No silenciar</string>
   <!--conversation_unmuted-->
@@ -1193,7 +1193,7 @@ Se recibió un mensaje de intercambio de claves para una versión no válida del
   <string name="reminder_header_share_title">¡Invita a tus amigos!</string>
   <string name="reminder_header_share_text">Cuantos más amigos usen Session, mejor será.</string>
   <string name="reminder_header_service_outage_text">Session está experimentando dificultades técnicas. Estamos trabajando duro para restablecer el servicio lo antes posible.</string>
-  <string name="reminder_header_the_latest_signal_features_wont_work">Las nuevas prestaciones de Signal no funcionan en esta versión de Android. Actualiza este dispositivo para usar todo el potencial de Session.</string>
+  <string name="reminder_header_the_latest_signal_features_wont_work">Las nuevas prestaciones de Session no funcionan en esta versión de Android. Actualiza este dispositivo para usar todo el potencial de Session.</string>
   <!--media_preview-->
   <string name="media_preview__save_title">Guardar</string>
   <string name="media_preview__forward_title">Avanzar</string>
@@ -1217,8 +1217,8 @@ Se recibió un mensaje de intercambio de claves para una versión no válida del
   <string name="ConversationActivity_signal_needs_sms_permission_in_order_to_send_an_sms">Session necesita acceso a SMS para poder enviar SMS. Por favor, ve al menú de configuración de la aplicación, selecciona «Permisos» y activa «SMS».</string>
   <string name="Permissions_continue">Continuar</string>
   <string name="Permissions_not_now">Ahora no</string>
-  <string name="ConversationListActivity_signal_needs_contacts_permission_in_order_to_search_your_contacts_but_it_has_been_permanently_denied">Signal necesita acceso a tus contactos para buscar los contactos que usan Session. Por favor, ve al menú de configuración de la aplicación, selecciona «Permisos» y activa «Contactos».</string>
-  <string name="conversation_activity__enable_signal_messages">ACTIVAR MENSAJES DE SIGNAL</string>
+  <string name="ConversationListActivity_signal_needs_contacts_permission_in_order_to_search_your_contacts_but_it_has_been_permanently_denied">Session necesita acceso a tus contactos para buscar los contactos que usan Session. Por favor, ve al menú de configuración de la aplicación, selecciona «Permisos» y activa «Contactos».</string>
+  <string name="conversation_activity__enable_signal_messages">ACTIVAR MENSAJES DE SESSION</string>
   <string name="SQLCipherMigrationHelper_migrating_signal_database">Migrar base de datos de Session</string>
   <string name="PushDecryptJob_new_locked_message">Nuevo mensaje bloqueado</string>
   <string name="PushDecryptJob_unlock_to_view_pending_messages">Desbloquear para ver mensajes pendientes</string>
@@ -1231,7 +1231,7 @@ Se recibió un mensaje de intercambio de claves para una versión no válida del
   <string name="registration_activity__skip">Omitir</string>
   <string name="registration_activity__register">Registro</string>
   <string name="preferences_chats__chat_backups">Copias de seguridad de los chats</string>
-  <string name="preferences_chats__backup_chats_to_external_storage">Hace una copia de seguridad de los chats en una unidad de almacenamiento externo</string>
+  <string name="preferences_chats__backup_chats_to_external_storage">Hacer copia de seguridad de los chats en una unidad de almacenamiento externo</string>
   <string name="preferences_chats__create_backup">Crear copia de seguridad</string>
   <string name="RegistrationActivity_enter_backup_passphrase">Introduce la clave de la copia de seguridad</string>
   <string name="RegistrationActivity_restore">Restaurar</string>
@@ -1281,7 +1281,7 @@ Se recibió un mensaje de intercambio de claves para una versión no válida del
   <string name="RegistrationActivity_you_have_made_too_many_incorrect_registration_lock_pin_attempts_please_try_again_in_a_day">Has realizado demasiados intentos incorrectos del PIN de bloqueo de registro. Por favor, inténtalo de nuevo pasado un día.</string>
   <string name="RegistrationActivity_error_connecting_to_service">Fallo al conectar con el servicio</string>
   <string name="RegistrationActivity_oh_no">¡Oh no!</string>
-  <string name="RegistrationActivity_registration_of_this_phone_number_will_be_possible_without_your_registration_lock_pin_after_seven_days_have_passed">El registro de este número de teléfono en Signal será posible sin PIN de bloqueo de registro pasados 7 días desde que este número ya fuera activado en Session. Aún quedan %d días.</string>
+  <string name="RegistrationActivity_registration_of_this_phone_number_will_be_possible_without_your_registration_lock_pin_after_seven_days_have_passed">El registro de este número de teléfono en Session será posible sin PIN de bloqueo de registro pasados 7 días desde que este número ya fuera activado en Session. Aún quedan %d días.</string>
   <string name="RegistrationActivity_registration_lock_pin">PIN de bloqueo de registro</string>
   <string name="RegistrationActivity_this_phone_number_has_registration_lock_enabled_please_enter_the_registration_lock_pin">Este número de teléfono tiene el bloqueo de registro activado. Por favor, introduce el PIN de bloqueo de registro.</string>
   <string name="RegistrationLockDialog_registration_lock_is_enabled_for_your_phone_number">El bloqueo de registro está activado para tu número de teléfono. Para ayudarte a memorizar el PIN de bloqueo de registro, Session te pedirá periódicamente que lo confirmes.</string>
@@ -1383,7 +1383,7 @@ Se recibió un mensaje de intercambio de claves para una versión no válida del
   <string name="activity_create_private_chat_title">Nueva Session</string>
   <string name="activity_create_private_chat_enter_session_id_tab_title">Session ID</string>
   <string name="activity_create_private_chat_scan_qr_code_tab_title">Escanear código QR</string>
-  <string name="activity_create_private_chat_scan_qr_code_explanation">Escanea el código QR de un usuario para empezar una Session. Los códigos QR se pueden encontrar tocando el icono del código QR en los ajustes de la cuenta.</string>
+  <string name="activity_create_private_chat_scan_qr_code_explanation">Escanea el código QR de un usuario para empezar una sesión. Los códigos QR se pueden encontrar tocando el icono del código QR en los ajustes de la cuenta.</string>
 
   <string name="fragment_enter_public_key_edit_text_hint">Ingresa la ID de Session del destinatario</string>
   <string name="fragment_enter_public_key_explanation">Los usuarios pueden compartir su ID de Session yendo a los ajustes de su cuenta y pulsando en Compartir ID de Session o compartiendo su código QR</string>
@@ -1469,10 +1469,10 @@ Se recibió un mensaje de intercambio de claves para una versión no válida del
   <string name="activity_qr_code_view_scan_qr_code_tab_title">Escanear código QR</string>
   <string name="activity_qr_code_view_scan_qr_code_explanation">Escanea el código QR de una persona para comenzar una conversación con ella</string>
 
-  <string name="fragment_view_my_qr_code_explanation">Este es tu código QR. Otros usuarios pueden escanearlo para empezar una Session contigo.</string>
+  <string name="fragment_view_my_qr_code_explanation">Este es tu código QR. Otros usuarios pueden escanearlo para empezar una sesión contigo.</string>
   <string name="fragment_view_my_qr_code_share_title">Compartir código QR</string>
 
-  <string name="session_reset_banner_message">¿Quieres restaurar tu Session con %s?</string>
+  <string name="session_reset_banner_message">¿Quieres restaurar tu sesión con %s?</string>
   <string name="session_reset_banner_dismiss_button_title">Descartar</string>
   <string name="session_reset_banner_restore_button_title">Restaurar</string>
 
