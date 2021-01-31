@@ -10,6 +10,7 @@ import androidx.annotation.DimenRes
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.view_profile_picture.view.*
 import network.loki.messenger.R
+import org.thoughtcrime.securesms.contacts.avatars.GroupRecordContactPhoto
 import org.thoughtcrime.securesms.contacts.avatars.ProfileContactPhoto
 import org.thoughtcrime.securesms.database.Address
 import org.thoughtcrime.securesms.database.DatabaseFactory
@@ -49,8 +50,7 @@ class ProfilePictureView : RelativeLayout {
 
     private fun setUpViewHierarchy() {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val contentView = inflater.inflate(R.layout.view_profile_picture, null)
-        addView(contentView)
+        inflater.inflate(R.layout.view_profile_picture, this)
     }
     // endregion
 
@@ -68,11 +68,13 @@ class ProfilePictureView : RelativeLayout {
                 return result ?: publicKey
             }
         }
+
         fun isOpenGroupWithProfilePicture(recipient: Recipient): Boolean {
             return recipient.isOpenGroupRecipient && recipient.groupAvatarId != null
         }
         if (recipient.isGroupRecipient && !isOpenGroupWithProfilePicture(recipient)) {
-            val users = MentionsManager.shared.userPublicKeyCache[threadID]?.toMutableList() ?: mutableListOf()
+            val users = MentionsManager.shared.userPublicKeyCache[threadID]?.toMutableList()
+                    ?: mutableListOf()
             users.remove(TextSecurePreferences.getLocalNumber(context))
             val masterPublicKey = TextSecurePreferences.getMasterHexEncodedPublicKey(context)
             if (masterPublicKey != null) {
@@ -131,23 +133,29 @@ class ProfilePictureView : RelativeLayout {
     }
 
     private fun setProfilePictureIfNeeded(imageView: ImageView, publicKey: String, displayName: String?, @DimenRes sizeResId: Int) {
-        glide.clear(imageView)
         if (publicKey.isNotEmpty()) {
-            val recipient = Recipient.from(context, Address.fromSerialized(publicKey), false);
+            val recipient = Recipient.from(context, Address.fromSerialized(publicKey), false)
             val signalProfilePicture = recipient.contactPhoto
             if (signalProfilePicture != null && (signalProfilePicture as? ProfileContactPhoto)?.avatarObject != "0"
-                && (signalProfilePicture as? ProfileContactPhoto)?.avatarObject != "") {
+                    && (signalProfilePicture as? ProfileContactPhoto)?.avatarObject != "") {
+                if (imageView.tag != null && imageView.tag == signalProfilePicture.hashCode()) return
+                glide.clear(imageView)
                 glide.load(signalProfilePicture).diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop().into(imageView)
+                imageView.tag = signalProfilePicture.hashCode()
             } else {
+                // use the imageView's tag as a cache and prevent load if the contents haven't changed
+                if (imageView.tag != null && imageView.tag == publicKey) return
                 val sizeInPX = resources.getDimensionPixelSize(sizeResId)
                 val masterPublicKey = TextSecurePreferences.getMasterHexEncodedPublicKey(context)
                 val hepk = if (recipient.isLocalNumber && masterPublicKey != null) masterPublicKey else publicKey
+                glide.clear(imageView)
                 glide.load(AvatarPlaceholderGenerator.generate(
                         context,
                         sizeInPX,
                         hepk,
                         displayName
                 )).diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop().into(imageView)
+                imageView.tag = publicKey
             }
         } else {
             imageView.setImageDrawable(null)

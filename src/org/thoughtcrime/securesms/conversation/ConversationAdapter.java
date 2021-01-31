@@ -23,6 +23,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,10 +80,11 @@ public class ConversationAdapter <V extends View & BindableConversationItem>
   implements StickyHeaderDecoration.StickyHeaderAdapter<HeaderViewHolder>
 {
 
-  private static final int MAX_CACHE_SIZE = 40;
+  private static final int MAX_CACHE_SIZE = 1000;
   private static final String TAG = ConversationAdapter.class.getSimpleName();
   private final Map<String,SoftReference<MessageRecord>> messageRecordCache =
       Collections.synchronizedMap(new LRUCache<String, SoftReference<MessageRecord>>(MAX_CACHE_SIZE));
+  private final SparseArray<String> positionToCacheRef = new SparseArray<>();
 
   private static final int MESSAGE_TYPE_OUTGOING           = 0;
   private static final int MESSAGE_TYPE_INCOMING           = 1;
@@ -189,6 +192,7 @@ public class ConversationAdapter <V extends View & BindableConversationItem>
   @Override
   public void changeCursor(Cursor cursor) {
     messageRecordCache.clear();
+    positionToCacheRef.clear();
     super.cleanFastRecords();
     super.changeCursor(cursor);
   }
@@ -196,8 +200,39 @@ public class ConversationAdapter <V extends View & BindableConversationItem>
   @Override
   protected void onBindItemViewHolder(ViewHolder viewHolder, @NonNull MessageRecord messageRecord) {
     int           adapterPosition = viewHolder.getAdapterPosition();
-    MessageRecord previousRecord  = adapterPosition < getItemCount() - 1 && !isFooterPosition(adapterPosition + 1) ? getRecordForPositionOrThrow(adapterPosition + 1) : null;
-    MessageRecord nextRecord      = adapterPosition > 0 && !isHeaderPosition(adapterPosition - 1) ? getRecordForPositionOrThrow(adapterPosition - 1) : null;
+    MessageRecord previousRecord = null;
+
+    String prevCachedId = positionToCacheRef.get(adapterPosition - 1,null);
+    String nextCachedId = positionToCacheRef.get(adapterPosition + 1, null);
+
+    if (adapterPosition < getItemCount() - 1 && !isFooterPosition(adapterPosition + 1)) {
+      if (prevCachedId != null && messageRecordCache.containsKey(prevCachedId)) {
+        SoftReference<MessageRecord> prevSoftRecord = messageRecordCache.get(prevCachedId);
+        MessageRecord prevCachedRecord = prevSoftRecord.get();
+        if (prevCachedRecord != null) {
+          previousRecord = prevCachedRecord;
+        } else {
+          previousRecord = getRecordForPositionOrThrow(adapterPosition + 1);
+        }
+      } else {
+        previousRecord = getRecordForPositionOrThrow(adapterPosition + 1);
+      }
+    }
+
+    MessageRecord nextRecord = null;
+    if (adapterPosition > 0 && !isHeaderPosition(adapterPosition - 1)) {
+      if (nextCachedId != null && messageRecordCache.containsKey(nextCachedId)) {
+        SoftReference<MessageRecord> nextSoftRecord = messageRecordCache.get(nextCachedId);
+        MessageRecord nextCachedRecord = nextSoftRecord.get();
+        if (nextCachedRecord != null) {
+          nextRecord = nextCachedRecord;
+        } else {
+          nextRecord = getRecordForPositionOrThrow(adapterPosition - 1);
+        }
+      } else {
+        nextRecord = getRecordForPositionOrThrow(adapterPosition - 1);
+      }
+    }
 
     viewHolder.getView().bind(messageRecord,
                           Optional.fromNullable(previousRecord),
@@ -316,14 +351,17 @@ public class ConversationAdapter <V extends View & BindableConversationItem>
     long   messageId = cursor.getLong(cursor.getColumnIndexOrThrow(MmsSmsColumns.ID));
     String type      = cursor.getString(cursor.getColumnIndexOrThrow(MmsSmsDatabase.TRANSPORT));
 
-    final SoftReference<MessageRecord> reference = messageRecordCache.get(type + messageId);
+    String typeAndId = type + messageId;
+    final SoftReference<MessageRecord> reference = messageRecordCache.get(typeAndId);
     if (reference != null) {
       final MessageRecord record = reference.get();
       if (record != null) return record;
     }
 
+    int position = cursor.getPosition();
     final MessageRecord messageRecord = db.readerFor(cursor).getCurrent();
-    messageRecordCache.put(type + messageId, new SoftReference<>(messageRecord));
+    messageRecordCache.put(typeAndId, new SoftReference<>(messageRecord));
+    positionToCacheRef.put(position, typeAndId);
 
     return messageRecord;
   }
