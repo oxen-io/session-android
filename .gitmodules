@@ -1,0 +1,12 @@
+[submodule "submodules/loki-messenger-android-curve-25519"]
+	path = submodules/loki-messenger-android-curve-25519
+	url = https://github.com/loki-project/loki-messenger-android-curve-25519
+[submodule "submodules/loki-messenger-android-protocol"]
+	path = submodules/loki-messenger-android-protocol
+	url = https://github.com/loki-project/loki-messenger-android-protocol
+[submodule "submodules/loki-messenger-android-meta"]
+	path = submodules/loki-messenger-android-meta
+	url = https://github.com/loki-project/loki-messenger-android-meta
+[submodule "submodules/session-android-service"]
+	path = submodules/session-android-service
+	url = https://github.com/loki-project/session-android-service

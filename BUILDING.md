@@ -28,7 +28,9 @@ You will then need to clone and run `./gradlew install` on each of the following
 * https://github.com/loki-project/loki-messenger-android-meta
 * https://github.com/loki-project/session-android-service
 
-This installs these dependencies into a local Maven repository which the main Session Android repository will then draw from.
+If you are familiar with git submodules, these repositories are also accessible within ./submodules/ in this repository, for your convenience.  However, the submodule commit hash in this repository may not be up to date.
+
+Running `./gradlew install` in each of these repositories installs these dependencies into a local Maven repository which the main Session Android repository will then draw from.
 
 Setting up a development environment and building from Android Studio
 ------------------------------------
