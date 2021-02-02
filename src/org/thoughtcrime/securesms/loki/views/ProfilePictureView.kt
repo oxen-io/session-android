@@ -139,7 +139,6 @@ class ProfilePictureView : RelativeLayout {
             if (signalProfilePicture != null && (signalProfilePicture as? ProfileContactPhoto)?.avatarObject != "0"
                     && (signalProfilePicture as? ProfileContactPhoto)?.avatarObject != "") {
                 if (imageView.tag != null && imageView.tag == signalProfilePicture.hashCode()) return
-                glide.clear(imageView)
                 glide.load(signalProfilePicture).diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop().into(imageView)
                 imageView.tag = signalProfilePicture.hashCode()
             } else {
@@ -148,7 +147,6 @@ class ProfilePictureView : RelativeLayout {
                 val sizeInPX = resources.getDimensionPixelSize(sizeResId)
                 val masterPublicKey = TextSecurePreferences.getMasterHexEncodedPublicKey(context)
                 val hepk = if (recipient.isLocalNumber && masterPublicKey != null) masterPublicKey else publicKey
-                glide.clear(imageView)
                 glide.load(AvatarPlaceholderGenerator.generate(
                         context,
                         sizeInPX,
