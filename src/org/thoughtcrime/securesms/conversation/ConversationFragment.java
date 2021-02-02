@@ -413,7 +413,7 @@ public class ConversationFragment extends Fragment
       Set<String> uniqueUserSet = new HashSet<>();
       for (MessageRecord message : messageRecords) {
         if (!message.isOutgoing()) { areAllSentByUser = false; }
-        uniqueUserSet.add(message.getRecipient().getAddress().toPhoneString());
+        uniqueUserSet.add(message.getRecipient().getAddress().serialize());
       }
       menu.findItem(R.id.menu_context_copy_public_key).setVisible(selectedMessageCount == 1 && !areAllSentByUser);
       menu.findItem(R.id.menu_context_reply).setVisible(selectedMessageCount == 1);
