@@ -202,8 +202,8 @@ public class ConversationAdapter <V extends View & BindableConversationItem>
     int           adapterPosition = viewHolder.getAdapterPosition();
     MessageRecord previousRecord = null;
 
-    String prevCachedId = positionToCacheRef.get(adapterPosition - 1,null);
-    String nextCachedId = positionToCacheRef.get(adapterPosition + 1, null);
+    String prevCachedId = positionToCacheRef.get(adapterPosition + 1,null);
+    String nextCachedId = positionToCacheRef.get(adapterPosition - 1, null);
 
     if (adapterPosition < getItemCount() - 1 && !isFooterPosition(adapterPosition + 1)) {
       if (prevCachedId != null && messageRecordCache.containsKey(prevCachedId)) {
