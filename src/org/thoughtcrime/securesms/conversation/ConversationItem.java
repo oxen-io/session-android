@@ -343,6 +343,9 @@ public class ConversationItem extends LinearLayout
     if (recipient != null) {
       recipient.removeListener(this);
     }
+    if (profilePictureView != null) {
+      profilePictureView.recycle();
+    }
   }
 
   public MessageRecord getMessageRecord() {

@@ -15,8 +15,6 @@ import org.thoughtcrime.securesms.loki.utilities.MentionManagerUtilities.populat
 import org.thoughtcrime.securesms.loki.utilities.MentionUtilities.highlightMentions
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.DateUtils
-import org.thoughtcrime.securesms.util.TextSecurePreferences
-import org.whispersystems.signalservice.loki.protocol.mentions.MentionsManager
 import java.util.*
 
 class ConversationView : LinearLayout {
@@ -41,7 +39,7 @@ class ConversationView : LinearLayout {
 
     private fun setUpViewHierarchy() {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val contentView = inflater.inflate(R.layout.view_conversation, null)
+        val contentView = inflater.inflate(R.layout.view_conversation, this, false)
         addView(contentView)
     }
     // endregion
@@ -82,6 +80,10 @@ class ConversationView : LinearLayout {
             thread.isRemoteRead -> statusIndicatorImageView.setImageResource(R.drawable.ic_filled_circle_check)
             else -> statusIndicatorImageView.setImageResource(R.drawable.ic_circle_check)
         }
+    }
+
+    fun recycle() {
+        profilePictureView.recycle()
     }
 
     private fun getUserDisplayName(publicKey: String?): String? {
