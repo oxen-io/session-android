@@ -1420,7 +1420,7 @@ Vous avez reçu un message d’échange de clés pour une version de protocole i
   <string name="activity_notification_settings_style_section_title">Style de notification</string>
   <string name="activity_notification_settings_content_section_title">Contenu de notification</string>
 
-  <string name="activity_privacy_settings_title">Confidientalité</string>
+  <string name="activity_privacy_settings_title">Confidentialité</string>
 
   <string name="activity_chat_settings_title">Chats</string>
 
