@@ -3,7 +3,6 @@ package org.thoughtcrime.securesms.loki.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,7 +12,6 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.appcompat.content.res.AppCompatResources
 import kotlinx.android.synthetic.main.activity_create_closed_group.*
 import kotlinx.android.synthetic.main.activity_create_closed_group.emptyStateContainer
 import kotlinx.android.synthetic.main.activity_create_closed_group.mainContentContainer
@@ -22,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_edit_closed_group.loader
 import kotlinx.android.synthetic.main.activity_linked_devices.recyclerView
 import network.loki.messenger.R
 import nl.komponents.kovenant.Promise
+import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
@@ -35,7 +34,6 @@ import org.thoughtcrime.securesms.loki.utilities.fadeIn
 import org.thoughtcrime.securesms.loki.utilities.fadeOut
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.recipients.Recipient
-import org.thoughtcrime.securesms.util.GroupUtil
 import org.thoughtcrime.securesms.util.TextSecurePreferences
 import org.thoughtcrime.securesms.util.ThemeUtil
 import org.whispersystems.signalservice.loki.utilities.toHexString
@@ -226,6 +224,9 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
         val members = this.members.map {
             Recipient.from(this, Address.fromSerialized(it), false)
         }.toSet()
+        val originalMembers = this.originalMembers.map {
+            Recipient.from(this, Address.fromSerialized(it), false)
+        }.toSet()
 
         val admins = members.toSet() //TODO For now, consider all the users to be admins.
 
@@ -259,11 +260,25 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
         if (isSSKBasedClosedGroup) {
             isLoading = true
             loader.fadeIn()
-            val promise: Promise<Unit, Exception>
-            if (!members.contains(Recipient.from(this, Address.fromSerialized(userPublicKey), false))) {
-                promise = ClosedGroupsProtocolV2.leave(this, groupPublicKey!!)
+            val promise: Promise<Any, Exception> = if (!members.contains(Recipient.from(this, Address.fromSerialized(userPublicKey), false))) {
+                ClosedGroupsProtocolV2.leave(this, groupPublicKey!!)
             } else {
-                promise = ClosedGroupsProtocolV2.update(this, groupPublicKey!!, members.map { it.address.serialize() }, name)
+//                TODO: uncomment when we switch to sending new explicit updates after clients update
+//                task {
+//                    val name =
+//                            if (hasNameChanged) ClosedGroupsProtocolV2.explicitNameChange(this@EditClosedGroupActivity,groupPublicKey!!,name)
+//                            else Promise.of(Unit)
+//                    name.get()
+//                    members.filterNot { it in originalMembers }.let { adds ->
+//                        if (adds.isNotEmpty()) ClosedGroupsProtocolV2.explicitAddMembers(this@EditClosedGroupActivity, groupPublicKey!!, adds.map { it.address.serialize() })
+//                        else Promise.of(Unit)
+//                    }.get()
+//                    originalMembers.filterNot { it in members }.let { removes ->
+//                        if (removes.isNotEmpty()) ClosedGroupsProtocolV2.explicitRemoveMembers(this@EditClosedGroupActivity, groupPublicKey!!, removes.map { it.address.serialize() })
+//                        else Promise.of(Unit)
+//                    }.get()
+//                }
+                ClosedGroupsProtocolV2.update(this, groupPublicKey!!, members.map { it.address.serialize() }, name)
             }
             promise.successUi {
                 loader.fadeOut()

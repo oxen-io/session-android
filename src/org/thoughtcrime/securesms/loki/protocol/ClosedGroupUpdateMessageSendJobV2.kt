@@ -7,7 +7,6 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.crypto.UnidentifiedAccessUtil
-import org.thoughtcrime.securesms.crypto.storage.SignalProtocolStoreImpl
 import org.thoughtcrime.securesms.jobmanager.Data
 import org.thoughtcrime.securesms.jobmanager.Job
 import org.thoughtcrime.securesms.jobmanager.impl.NetworkConstraint
@@ -15,14 +14,11 @@ import org.thoughtcrime.securesms.jobs.BaseJob
 import org.thoughtcrime.securesms.logging.Log
 import org.thoughtcrime.securesms.loki.utilities.recipient
 import org.thoughtcrime.securesms.util.Hex
-import org.whispersystems.libsignal.SignalProtocolAddress
 import org.whispersystems.libsignal.ecc.DjbECPrivateKey
 import org.whispersystems.libsignal.ecc.DjbECPublicKey
 import org.whispersystems.libsignal.ecc.ECKeyPair
-import org.whispersystems.libsignal.ecc.ECPublicKey
 import org.whispersystems.signalservice.api.push.SignalServiceAddress
 import org.whispersystems.signalservice.internal.push.SignalServiceProtos
-import org.whispersystems.signalservice.loki.protocol.closedgroups.ClosedGroupSenderKey
 import org.whispersystems.signalservice.loki.protocol.meta.TTLUtilities
 import org.whispersystems.signalservice.loki.utilities.removing05PrefixIfNeeded
 import org.whispersystems.signalservice.loki.utilities.toHexString
@@ -34,6 +30,10 @@ class ClosedGroupUpdateMessageSendJobV2 private constructor(parameters: Paramete
     sealed class Kind {
         class New(val publicKey: ByteArray, val name: String, val encryptionKeyPair: ECKeyPair, val members: Collection<ByteArray>, val admins: Collection<ByteArray>) : Kind()
         class Update(val name: String, val members: Collection<ByteArray>) : Kind()
+        object Leave : Kind()
+        class RemoveMembers(val members: Collection<ByteArray>) : Kind()
+        class AddMembers(val members: Collection<ByteArray>) : Kind()
+        class NameChange(val name: String) : Kind()
         class EncryptionKeyPair(val wrappers: Collection<KeyPairWrapper>) : Kind() // The new encryption key pair encrypted for each member individually
     }
 
@@ -91,6 +91,23 @@ class ClosedGroupUpdateMessageSendJobV2 private constructor(parameters: Paramete
                 val members = kind.members.joinToString(" - ") { it.toHexString() }
                 builder.putString("members", members)
             }
+            is Kind.RemoveMembers -> {
+                builder.putString("kind", "RemoveMembers")
+                val members = kind.members.joinToString(" - ") { it.toHexString() }
+                builder.putString("members", members)
+            }
+            Kind.Leave -> {
+                builder.putString("kind", "Leave")
+            }
+            is Kind.AddMembers -> {
+                builder.putString("kind", "AddMembers")
+                val members = kind.members.joinToString(" - ") { it.toHexString() }
+                builder.putString("members", members)
+            }
+            is Kind.NameChange -> {
+                builder.putString("kind", "NameChange")
+                builder.putString("name", kind.name)
+            }
             is Kind.EncryptionKeyPair -> {
                 builder.putString("kind", "EncryptionKeyPair")
                 val wrappers = kind.wrappers.joinToString(" - ") { Json.encodeToString(it) }
@@ -126,6 +143,21 @@ class ClosedGroupUpdateMessageSendJobV2 private constructor(parameters: Paramete
                     val wrappers: Collection<KeyPairWrapper> = data.getString("wrappers").split(" - ").map { Json.decodeFromString(it) }
                     kind = Kind.EncryptionKeyPair(wrappers)
                 }
+                "RemoveMembers" -> {
+                    val members = data.getString("members").split(" - ").map { Hex.fromStringCondensed(it) }
+                    kind = Kind.RemoveMembers(members)
+                }
+                "AddMembers" -> {
+                    val members = data.getString("members").split(" - ").map { Hex.fromStringCondensed(it) }
+                    kind = Kind.AddMembers(members)
+                }
+                "NameChange" -> {
+                    val name = data.getString("name")
+                    kind = Kind.NameChange(name)
+                }
+                "Leave" -> {
+                    kind = Kind.Leave
+                }
                 else -> throw Exception("Invalid closed group update message kind: $rawKind.")
             }
             return ClosedGroupUpdateMessageSendJobV2(parameters, destination, kind)
@@ -157,6 +189,21 @@ class ClosedGroupUpdateMessageSendJobV2 private constructor(parameters: Paramete
                 closedGroupUpdate.type = SignalServiceProtos.ClosedGroupUpdateV2.Type.ENCRYPTION_KEY_PAIR
                 closedGroupUpdate.addAllWrappers(kind.wrappers.map { it.toProto() })
             }
+            Kind.Leave -> {
+                closedGroupUpdate.type = SignalServiceProtos.ClosedGroupUpdateV2.Type.MEMBER_LEFT
+            }
+            is Kind.RemoveMembers -> {
+                closedGroupUpdate.type = SignalServiceProtos.ClosedGroupUpdateV2.Type.MEMBERS_REMOVED
+                closedGroupUpdate.addAllMembers(kind.members.map { ByteString.copyFrom(it) })
+            }
+            is Kind.AddMembers -> {
+                closedGroupUpdate.type = SignalServiceProtos.ClosedGroupUpdateV2.Type.MEMBERS_ADDED
+                closedGroupUpdate.addAllMembers(kind.members.map { ByteString.copyFrom(it) })
+            }
+            is Kind.NameChange -> {
+                closedGroupUpdate.type = SignalServiceProtos.ClosedGroupUpdateV2.Type.NAME_CHANGE
+                closedGroupUpdate.name = kind.name
+            }
         }
         dataMessage.closedGroupUpdateV2 = closedGroupUpdate.build()
         contentMessage.dataMessage = dataMessage.build()
@@ -165,10 +212,9 @@ class ClosedGroupUpdateMessageSendJobV2 private constructor(parameters: Paramete
         val address = SignalServiceAddress(destination)
         val recipient = recipient(context, destination)
         val udAccess = UnidentifiedAccessUtil.getAccessFor(context, recipient)
-        val ttl: Int
-        when (kind) {
-            is Kind.EncryptionKeyPair -> ttl = 4 * 24 * 60 * 60 * 1000
-            else -> ttl = TTLUtilities.getTTL(TTLUtilities.MessageType.ClosedGroupUpdate)
+        val ttl = when (kind) {
+            is Kind.EncryptionKeyPair -> 4 * 24 * 60 * 60 * 1000
+            else -> TTLUtilities.getTTL(TTLUtilities.MessageType.ClosedGroupUpdate)
         }
         try {
             // isClosedGroup can always be false as it's only used in the context of legacy closed groups

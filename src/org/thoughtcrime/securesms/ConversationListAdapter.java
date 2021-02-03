@@ -36,6 +36,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -139,6 +140,11 @@ class ConversationListAdapter extends CursorRecyclerViewAdapter<ConversationList
   @Override
   public void onItemViewRecycled(ViewHolder holder) {
     holder.getItem().unbind();
+  }
+
+  @Override
+  public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List<Object> payloads) {
+    super.onBindViewHolder(holder, position, payloads);
   }
 
   @Override
