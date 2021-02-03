@@ -138,22 +138,24 @@ class ProfilePictureView : RelativeLayout {
             val signalProfilePicture = recipient.contactPhoto
             if (signalProfilePicture != null && (signalProfilePicture as? ProfileContactPhoto)?.avatarObject != "0"
                     && (signalProfilePicture as? ProfileContactPhoto)?.avatarObject != "") {
-                if (imageView.tag != null && imageView.tag == signalProfilePicture.hashCode()) return
+                if (tag != null && tag == signalProfilePicture.hashCode()) return
+                glide.clear(imageView)
                 glide.load(signalProfilePicture).diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop().into(imageView)
-                imageView.tag = signalProfilePicture.hashCode()
+                tag = signalProfilePicture.hashCode()
             } else {
-                // use the imageView's tag as a cache and prevent load if the contents haven't changed
-                if (imageView.tag != null && imageView.tag == publicKey) return
+                // use the view's tag as a cache and prevent load if the contents haven't changed
+                if (tag != null && tag == publicKey) return
                 val sizeInPX = resources.getDimensionPixelSize(sizeResId)
                 val masterPublicKey = TextSecurePreferences.getMasterHexEncodedPublicKey(context)
                 val hepk = if (recipient.isLocalNumber && masterPublicKey != null) masterPublicKey else publicKey
+                glide.clear(imageView)
                 glide.load(AvatarPlaceholderGenerator.generate(
                         context,
                         sizeInPX,
                         hepk,
                         displayName
                 )).diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop().into(imageView)
-                imageView.tag = publicKey
+                tag = publicKey
             }
         } else {
             imageView.setImageDrawable(null)
