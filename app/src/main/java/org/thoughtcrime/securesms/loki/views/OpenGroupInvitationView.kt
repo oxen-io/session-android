@@ -31,6 +31,7 @@ class OpenGroupInvitationView : FrameLayout {
     private val displayedUrl: TextView
 
     private var groupUrl: String = ""
+    private var joinOpenGroupListener: JoinOpenGroupListener? = null
 
     constructor(context: Context): this(context, null)
 
@@ -42,8 +43,6 @@ class OpenGroupInvitationView : FrameLayout {
         openGroupIcon = findViewById(R.id.open_group_icon)
         groupName = findViewById(R.id.group_name)
         displayedUrl = findViewById(R.id.group_url)
-
-        joinButton.setOnClickListener { joinPublicGroup(groupUrl) }
     }
 
     fun setOpenGroup(name: String, url: String, isOutgoing: Boolean = false) {
@@ -58,6 +57,12 @@ class OpenGroupInvitationView : FrameLayout {
             joinButton.visibility = View.VISIBLE
             openGroupIcon.visibility = View.GONE
         }
+
+        joinButton.setOnClickListener { joinOpenGroupListener?.joinOpenGroup(url) }
+    }
+
+    fun setJoinOpenGroupListener(listener: JoinOpenGroupListener) {
+        joinOpenGroupListener = listener
     }
 
     private fun joinPublicGroup(url: String) {
@@ -95,9 +100,11 @@ class OpenGroupInvitationView : FrameLayout {
                 }
             }
         }
-
         builder.setNegativeButton(R.string.no, null)
         builder.show()
     }
 
+    interface JoinOpenGroupListener {
+        fun joinOpenGroup(url: String)
+    }
 }

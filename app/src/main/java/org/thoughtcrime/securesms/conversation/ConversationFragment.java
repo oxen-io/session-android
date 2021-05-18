@@ -57,6 +57,7 @@ import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
 
 import com.annimon.stream.Stream;
 
+import org.jetbrains.annotations.NotNull;
 import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.messaging.messages.control.DataExtractionNotification;
 import org.session.libsession.messaging.messages.signal.OutgoingMediaMessage;
@@ -72,6 +73,8 @@ import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview;
 import org.session.libsession.messaging.threads.Address;
 import org.session.libsession.messaging.threads.recipients.Recipient;
+import org.session.libsession.utilities.OpenGroupRoom;
+import org.session.libsession.utilities.OpenGroupUrlParser;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.Util;
 import org.session.libsession.utilities.ViewUtil;
@@ -93,6 +96,8 @@ import org.thoughtcrime.securesms.database.loaders.ConversationLoader;
 import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord;
+import org.thoughtcrime.securesms.loki.protocol.MultiDeviceProtocol;
+import org.thoughtcrime.securesms.loki.utilities.OpenGroupUtilities;
 import org.thoughtcrime.securesms.longmessage.LongMessageActivity;
 import org.thoughtcrime.securesms.mediasend.Media;
 import org.thoughtcrime.securesms.mms.GlideApp;
@@ -800,6 +805,41 @@ public class ConversationFragment extends Fragment
     });
   }
 
+  private void handleJoinOpenGroup(final String url) {
+    OpenGroupRoom openGroup = OpenGroupUrlParser.INSTANCE.parseUrl(url);
+    Context context = getContext();
+    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+    builder.setTitle(context.getString(R.string.ConversationActivity_join_open_group, openGroup.getRoom()));
+    builder.setIconAttribute(R.attr.dialog_info_icon);
+    builder.setCancelable(true);
+
+    String message =
+            context.getString(R.string.ConversationActivity_join_open_group_confirmation_message, openGroup.getRoom());
+
+    builder.setMessage(message);
+    builder.setPositiveButton(R.string.yes, (dialogInterface, i) -> {
+      //lifecycleScope.launch(Dispatchers.IO) {
+        try {
+          dialogInterface.dismiss();
+          OpenGroupUtilities.addGroup(
+                  context,
+                  openGroup.getServer(),
+                  openGroup.getRoom(),
+                  openGroup.getServerPublicKey()
+          );
+
+          MultiDeviceProtocol.INSTANCE.forceSyncConfigurationNowIfNeeded(context);
+        } catch (Exception e) {
+          Log.e("JoinPublicChatActivity", "Failed to join open group.", e);
+          Toast.makeText(context, R.string.activity_join_public_chat_error, Toast.LENGTH_SHORT).show();
+        }
+      //}
+    });
+
+    builder.setNegativeButton(R.string.no, null);
+    builder.show();
+  }
+
   /**
    * Send a MediaSaved notification to the recipient
    */
@@ -1144,6 +1184,12 @@ public class ConversationFragment extends Fragment
       if (getContext() != null && getActivity() != null) {
         startActivity(LongMessageActivity.getIntent(getContext(), conversationAddress, messageId, isMms));
       }
+    }
+
+    @Override
+    public void onJoinOpenGroupClicked(@NonNull @NotNull String url) {
+      if (getContext() != null)
+        handleJoinOpenGroup(url);
     }
   }
 

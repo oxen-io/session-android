@@ -646,6 +646,12 @@ public class ConversationItem extends LinearLayout
       }
 
       openGroupInvitationViewStub.get().setOpenGroup(name, url, messageRecord.isOutgoing());
+      String finalUrl = url;
+      openGroupInvitationViewStub.get().setJoinOpenGroupListener(view -> {
+        if (eventListener != null) {
+          eventListener.onJoinOpenGroupClicked(finalUrl);
+        }
+      });
       openGroupInvitationViewStub.get().setOnLongClickListener(passthroughClickListener);
 
       bodyText.setVisibility(View.GONE);

@@ -35,5 +35,6 @@ public interface BindableConversationItem extends Unbindable {
     void onQuoteClicked(MmsMessageRecord messageRecord);
     void onLinkPreviewClicked(@NonNull LinkPreview linkPreview);
     void onMoreTextClicked(@NonNull Address conversationAddress, long messageId, boolean isMms);
+    void onJoinOpenGroupClicked(@NonNull String url);
   }
 }
