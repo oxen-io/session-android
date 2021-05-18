@@ -8,15 +8,15 @@ import okhttp3.MediaType
 import okhttp3.RequestBody
 import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
 import org.session.libsession.snode.OnionRequestAPI
-import org.session.libsignal.service.loki.HTTP
+import org.session.libsignal.utilities.HTTP
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.JsonUtil
-import org.session.libsignal.utilities.logging.Log
+import org.session.libsignal.utilities.Log
 
 object FileServerAPIV2 {
 
-    private const val DEFAULT_SERVER_PUBLIC_KEY = "7cb31905b55cd5580c686911debf672577b3fb0bff81df4ce2d5c4cb3a7aaa69"
-    const val DEFAULT_SERVER = "http://88.99.175.227"
+    private const val SERVER_PUBLIC_KEY = "7cb31905b55cd5580c686911debf672577b3fb0bff81df4ce2d5c4cb3a7aaa69"
+    const val SERVER = "http://88.99.175.227"
 
     sealed class Error(message: String) : Exception(message) {
         object ParsingFailed : Error("Invalid response.")
@@ -24,12 +24,12 @@ object FileServerAPIV2 {
     }
 
     data class Request(
-        val verb: HTTP.Verb,
-        val endpoint: String,
-        val queryParameters: Map<String, String> = mapOf(),
-        val parameters: Any? = null,
-        val headers: Map<String, String> = mapOf(),
-        /**
+            val verb: HTTP.Verb,
+            val endpoint: String,
+            val queryParameters: Map<String, String> = mapOf(),
+            val parameters: Any? = null,
+            val headers: Map<String, String> = mapOf(),
+            /**
          * Always `true` under normal circumstances. You might want to disable
          * this when running over Lokinet.
          */
@@ -43,7 +43,7 @@ object FileServerAPIV2 {
     }
 
     private fun send(request: Request): Promise<Map<*, *>, Exception> {
-        val url = HttpUrl.parse(DEFAULT_SERVER) ?: return Promise.ofFail(OpenGroupAPIV2.Error.InvalidURL)
+        val url = HttpUrl.parse(SERVER) ?: return Promise.ofFail(OpenGroupAPIV2.Error.InvalidURL)
         val urlBuilder = HttpUrl.Builder()
             .scheme(url.scheme())
             .host(url.host())
@@ -64,7 +64,7 @@ object FileServerAPIV2 {
             HTTP.Verb.DELETE -> requestBuilder.delete(createBody(request.parameters))
         }
         if (request.useOnionRouting) {
-            return OnionRequestAPI.sendOnionRequest(requestBuilder.build(), DEFAULT_SERVER, DEFAULT_SERVER_PUBLIC_KEY).fail { e ->
+            return OnionRequestAPI.sendOnionRequest(requestBuilder.build(), SERVER, SERVER_PUBLIC_KEY).fail { e ->
                 Log.e("Loki", "File server request failed.", e)
             }
         } else {

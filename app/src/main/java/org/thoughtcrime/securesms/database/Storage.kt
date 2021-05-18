@@ -29,11 +29,11 @@ import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.IdentityKeyUtil
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.preferences.ProfileKeyUtil
-import org.session.libsignal.libsignal.ecc.ECKeyPair
-import org.session.libsignal.libsignal.util.KeyHelper
-import org.session.libsignal.libsignal.util.guava.Optional
-import org.session.libsignal.service.api.messages.SignalServiceAttachmentPointer
-import org.session.libsignal.service.api.messages.SignalServiceGroup
+import org.session.libsignal.crypto.ecc.ECKeyPair
+import org.session.libsignal.utilities.KeyHelper
+import org.session.libsignal.utilities.guava.Optional
+import org.session.libsignal.messages.SignalServiceAttachmentPointer
+import org.session.libsignal.messages.SignalServiceGroup
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 import org.thoughtcrime.securesms.jobs.RetrieveProfileAvatarJob
@@ -165,7 +165,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
             mmsDatabase.endTransaction()
         } else {
             val smsDatabase = DatabaseFactory.getSmsDatabase(context)
-            val isOpenGroupInvitation = message.openGroupInvitation != null
+            val isOpenGroupInvitation = (message.openGroupInvitation != null)
 
             val insertResult = if (message.sender == getUserPublicKey()) {
                 val textMessage = if (isOpenGroupInvitation) OutgoingTextMessage.fromOpenGroupInvitation(message.openGroupInvitation, targetRecipient, message.sentTimestamp)
@@ -351,7 +351,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         DatabaseFactory.getLokiAPIDatabase(context).removeLastDeletionServerID(group, server)
     }
 
-    override fun isMessageDuplicated(timestamp: Long, sender: String): Boolean {
+    override fun isDuplicateMessage(timestamp: Long, sender: String): Boolean {
         return getReceivedMessageTimestamps().contains(timestamp)
     }
 

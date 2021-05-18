@@ -55,7 +55,7 @@ import org.thoughtcrime.securesms.database.MmsSmsDatabase;
 import org.thoughtcrime.securesms.database.SmsDatabase;
 import org.thoughtcrime.securesms.database.loaders.MessageDetailsLoader;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
-import org.session.libsignal.utilities.logging.Log;
+import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord;
 import org.thoughtcrime.securesms.loki.database.LokiMessageDatabase;
 import org.thoughtcrime.securesms.mms.GlideApp;
@@ -65,7 +65,7 @@ import org.session.libsession.messaging.threads.recipients.RecipientModifiedList
 import org.thoughtcrime.securesms.util.DateUtils;
 import org.session.libsession.utilities.ExpirationUtil;
 import org.session.libsession.utilities.Util;
-import org.session.libsignal.libsignal.util.guava.Optional;
+import org.session.libsignal.utilities.guava.Optional;
 
 import java.lang.ref.WeakReference;
 import java.sql.Date;
@@ -454,8 +454,8 @@ public class MessageDetailsActivity extends PassphraseRequiredActionBarActivity 
         UpdateMessageData updateMessageData = UpdateMessageData.Companion.fromJSON(messageRecord.getBody());
         if (updateMessageData.getKind() instanceof UpdateMessageData.Kind.OpenGroupInvitation) {
           UpdateMessageData.Kind.OpenGroupInvitation data = (UpdateMessageData.Kind.OpenGroupInvitation)updateMessageData.getKind();
-          openGroupInvitation.setGroupName(data.getGroupName());
-          openGroupInvitation.setGroupUrl(data.getGroupUrl());
+          openGroupInvitation.setName(data.getGroupName());
+          openGroupInvitation.setUrl(data.getGroupUrl());
         }
         message.setOpenGroupInvitation(openGroupInvitation);
       } else {

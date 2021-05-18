@@ -112,14 +112,14 @@ import org.session.libsession.utilities.Util;
 import org.session.libsession.utilities.ViewUtil;
 import org.session.libsession.utilities.concurrent.AssertedSuccessListener;
 import org.session.libsession.utilities.views.Stub;
-import org.session.libsignal.libsignal.InvalidMessageException;
-import org.session.libsignal.libsignal.util.guava.Optional;
-import org.session.libsignal.service.loki.Mention;
-import org.session.libsignal.service.loki.utilities.HexEncodingKt;
-import org.session.libsignal.service.loki.utilities.PublicKeyValidation;
-import org.session.libsignal.utilities.concurrent.ListenableFuture;
-import org.session.libsignal.utilities.concurrent.SettableFuture;
-import org.session.libsignal.utilities.logging.Log;
+import org.session.libsignal.exceptions.InvalidMessageException;
+import org.session.libsignal.utilities.guava.Optional;
+import org.session.libsession.messaging.mentions.Mention;
+import org.session.libsignal.utilities.HexEncodingKt;
+import org.session.libsignal.utilities.PublicKeyValidation;
+import org.session.libsignal.utilities.ListenableFuture;
+import org.session.libsignal.utilities.SettableFuture;
+import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.ExpirationDialog;
 import org.thoughtcrime.securesms.MediaOverviewActivity;
@@ -384,6 +384,11 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
       PublicChatInfoUpdateWorker.scheduleInstant(this, publicChat.getServer(), publicChat.getChannel());
     } else if (openGroupV2 != null) {
       PublicChatInfoUpdateWorker.scheduleInstant(this, openGroupV2.getServer(), openGroupV2.getRoom());
+      if (openGroupV2.getRoom().equals("session") || openGroupV2.getRoom().equals("oxen")
+          || openGroupV2.getRoom().equals("lokinet") || openGroupV2.getRoom().equals("crypto")) {
+        View openGroupGuidelinesView = findViewById(R.id.open_group_guidelines_view);
+        openGroupGuidelinesView.setVisibility(View.VISIBLE);
+      }
     }
 
     View rootView = findViewById(R.id.rootView);
@@ -1854,19 +1859,18 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     sendComplete(allocatedThreadId);
   }
 
-  private void sendOpenGroupInvitations(String[] contactsID) {
+  private void sendOpenGroupInvitations(String[] contactIDs) {
     final Context context = getApplicationContext();
     OpenGroupV2 openGroup = DatabaseFactory.getLokiThreadDatabase(context).getOpenGroupChat(threadId);
-    for (String contactId: contactsID) {
-      Recipient recipient = Recipient.from(context, Address.fromSerialized(contactId), true);
+    for (String contactID : contactIDs) {
+      Recipient recipient = Recipient.from(context, Address.fromSerialized(contactID), true);
       VisibleMessage message = new VisibleMessage();
       message.setSentTimestamp(System.currentTimeMillis());
       OpenGroupInvitation openGroupInvitationMessage = new OpenGroupInvitation();
-      openGroupInvitationMessage.setGroupName(openGroup.getName());
-      openGroupInvitationMessage.setGroupUrl(openGroup.getJoinURL());
+      openGroupInvitationMessage.setName(openGroup.getName());
+      openGroupInvitationMessage.setUrl(openGroup.getJoinURL());
       message.setOpenGroupInvitation(openGroupInvitationMessage);
       OutgoingTextMessage outgoingTextMessage = OutgoingTextMessage.fromOpenGroupInvitation(openGroupInvitationMessage, recipient, message.getSentTimestamp());
-
       DatabaseFactory.getSmsDatabase(context).insertMessageOutbox(-1, outgoingTextMessage, message.getSentTimestamp());
       MessageSender.send(message, recipient.getAddress());
     }
