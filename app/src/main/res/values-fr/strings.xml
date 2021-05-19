@@ -151,10 +151,6 @@
   <string name="ConversationActivity_attachment_exceeds_size_limits">La pièce jointe dépasse la limite de taille autorisée.</string>
   <string name="ConversationActivity_quick_camera_unavailable">L’appareil photo n’est pas disponible</string>
   <string name="ConversationActivity_unable_to_record_audio">Impossible d’enregistrer l’audio !</string>
-  <string name="ConversationActivity_invite_to_open_group">Ajouter des membres</string>
-  <string name="ConversationActivity_join_open_group">Rejoindre %s</string>
-  <string name="ConversationActivity_join_open_group_confirmation_message">Êtes-vous sûr de vouloir rejoindre le group public <b>%s</b>?</string>
-
   <string name="ConversationActivity_there_is_no_app_available_to_handle_this_link_on_your_device">Il n’y a aucune appli pour gérer ce lien sur votre appareil.</string>
   <string name="ConversationActivity_to_send_audio_messages_allow_signal_access_to_your_microphone">Pour envoyer des messages audio, autorisez Session à accéder à votre microphone.</string>
   <string name="ConversationActivity_signal_requires_the_microphone_permission_in_order_to_send_audio_messages">Session exige l’autorisation Microphone afin d’envoyer des messages audio, mais elle a été refusée définitivement. Veuillez accéder au menu des paramètres des applis, sélectionner « Autorisations » et activer « Microphone ».</string>
@@ -212,6 +208,11 @@
   <string name="ConversationFragment_banning_user">Bannissement de l’utilisateur…</string>
   <string name="ConversationFragment_quoted_message_not_found">Le message original est introuvable</string>
   <string name="ConversationFragment_quoted_message_no_longer_available">Le message original n’est plus disponible</string>
+  <string name="ConversationFragment_join_open_group">Rejoindre %s</string>
+  <string name="ConversationFragment_join_open_group_confirmation_message">Êtes-vous sûr de vouloir rejoindre le group public <b>%s</b>?</string>
+  <string name="ConversationFragment_join_open_group_progress_dialog_title">Rejoindre un groupe public</string>
+  <string name="ConversationFragment_join_open_group_progress_dialog_message">Chargement</string>
+
   <!--ConversationListActivity-->
   <string name="ConversationListActivity_there_is_no_browser_installed_on_your_device">Aucun navigateur n’est installé sur votre appareil.</string>
   <!--ConversationListFragment-->
@@ -1426,6 +1427,7 @@ Vous avez reçu un message d’échange de clés pour une version de protocole i
 
   <string name="activity_join_public_chat_title">Joindre un groupe public</string>
   <string name="activity_join_public_chat_error">Impossible de rejoindre le groupe</string>
+  <string name="activity_join_public_chat_joined">Le groupe a été rejoint avec succès</string>
   <string name="activity_join_public_chat_enter_group_url_tab_title">URL du groupe public</string>
   <string name="activity_join_public_chat_scan_qr_code_tab_title">Scannez le code QR</string>
   <string name="activity_join_public_chat_scan_qr_code_explanation">Scannez le code QR du groupe public que vous souhaitez rejoindre</string>
@@ -1530,6 +1532,8 @@ Vous avez reçu un message d’échange de clés pour une version de protocole i
   <string name="dialog_ui_mode_option_system_default">Système</string>
 
   <string name="activity_conversation_menu_copy_session_id">Copier le Session ID</string>
+
+  <string name="activity_conversation_menu_invite_open_group">Ajouter des membres</string>
 
   <string name="attachment">Pièce jointe</string>
   <string name="attachment_type_voice_message">Message vocal</string>

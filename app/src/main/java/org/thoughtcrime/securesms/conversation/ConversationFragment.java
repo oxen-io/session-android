@@ -806,34 +806,49 @@ public class ConversationFragment extends Fragment
   }
 
   private void handleJoinOpenGroup(final String url) {
-    V2OpenGroupInfo openGroup = OpenGroupUrlParser.INSTANCE.parseUrl(url);
+    final V2OpenGroupInfo openGroup = OpenGroupUrlParser.INSTANCE.parseUrl(url);
     Context context = getContext();
     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-    builder.setTitle(context.getString(R.string.ConversationActivity_join_open_group, openGroup.getRoom()));
+    builder.setTitle(context.getString(R.string.ConversationFragment_join_open_group, openGroup.getRoom()));
     builder.setIconAttribute(R.attr.dialog_info_icon);
     builder.setCancelable(true);
 
     String message =
-            context.getString(R.string.ConversationActivity_join_open_group_confirmation_message, openGroup.getRoom());
+            context.getString(R.string.ConversationFragment_join_open_group_confirmation_message, openGroup.getRoom());
 
     builder.setMessage(message);
-    builder.setPositiveButton(R.string.yes, (dialogInterface, i) -> {
-      //lifecycleScope.launch(Dispatchers.IO) {
-        try {
-          dialogInterface.dismiss();
-          OpenGroupUtilities.addGroup(
-                  context,
-                  openGroup.getServer(),
-                  openGroup.getRoom(),
-                  openGroup.getServerPublicKey()
-          );
+    builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+      new ProgressDialogAsyncTask<V2OpenGroupInfo, Void, Boolean>(getActivity(),
+              R.string.ConversationFragment_join_open_group_progress_dialog_title,
+              R.string.ConversationFragment_join_open_group_progress_dialog_message) {
+        @Override
+        protected Boolean doInBackground(V2OpenGroupInfo... openGroupInfos) {
+          try {
+            OpenGroupUtilities.addGroup(
+                    context,
+                    openGroup.getServer(),
+                    openGroup.getRoom(),
+                    openGroup.getServerPublicKey()
+            );
 
-          MultiDeviceProtocol.INSTANCE.forceSyncConfigurationNowIfNeeded(context);
-        } catch (Exception e) {
-          Log.e("JoinPublicChatActivity", "Failed to join open group.", e);
-          Toast.makeText(context, R.string.activity_join_public_chat_error, Toast.LENGTH_SHORT).show();
+            MultiDeviceProtocol.INSTANCE.forceSyncConfigurationNowIfNeeded(context);
+            return Boolean.TRUE;
+          } catch (Exception e) {
+            Log.e("JoinPublicChatActivity", "Failed to join open group.", e);
+            return Boolean.FALSE;
+          }
         }
-      //}
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+          super.onPostExecute(result);
+          if (result) {
+            Toast.makeText(context, R.string.activity_join_public_chat_joined, Toast.LENGTH_SHORT).show();
+          } else {
+            Toast.makeText(context, R.string.activity_join_public_chat_error, Toast.LENGTH_SHORT).show();
+          }
+        }
+      }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, openGroup);
     });
 
     builder.setNegativeButton(R.string.no, null);

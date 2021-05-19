@@ -51,35 +51,6 @@ class OpenGroupInvitationView : FrameLayout {
         joinOpenGroupListener = listener
     }
 
-    private fun joinOpenGroup(url: String) {
-        val openGroup = OpenGroupUrlParser.parseUrl(url)
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle(context.getString(R.string.ConversationActivity_join_open_group, nameTextView.text.toString()))
-        builder.setCancelable(true)
-        val message: String =
-            context.getString(R.string.ConversationActivity_join_open_group_confirmation_message, nameTextView.text.toString())
-        builder.setMessage(message)
-        builder.setPositiveButton(R.string.yes) { dialog, _ ->
-            GlobalScope.launch(Dispatchers.IO) {
-                try {
-                    dialog.dismiss()
-                    val group = OpenGroupUtilities.addGroup(
-                        context,
-                        openGroup.server,
-                        openGroup.room,
-                        openGroup.serverPublicKey
-                    )
-                    MultiDeviceProtocol.forceSyncConfigurationNowIfNeeded(context)
-                } catch (e: Exception) {
-                    Log.e("Loki", "Failed to join open group.", e)
-                    Toast.makeText(context, R.string.activity_join_public_chat_error, Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-        builder.setNegativeButton(R.string.no, null)
-        builder.show()
-    }
-
     interface JoinOpenGroupListener {
         fun joinOpenGroup(url: String)
     }
