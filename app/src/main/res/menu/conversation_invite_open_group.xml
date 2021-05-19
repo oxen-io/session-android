@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="@string/activity_conversation_menu_copy_session_id"
+    <item android:title="@string/activity_conversation_menu_invite_open_group"
         android:id="@+id/menu_invite_to_open_group"
         android:icon="?menu_accept_icon" />
 
