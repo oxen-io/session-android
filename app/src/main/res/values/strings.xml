@@ -803,9 +803,9 @@
     <string name="dialog_ui_mode_option_night">Night</string>
     <string name="dialog_ui_mode_option_system_default">System default</string>
 
-    <string name="activity_conversation_menu_copy_session_id">Add members</string>
-
     <string name="activity_conversation_menu_invite_open_group">Copy Session ID</string>
+
+    <string name="activity_conversation_menu_copy_session_id">Add members</string>
 
     <string name="attachment">Attachment</string>
     <string name="attachment_type_voice_message">Voice Message</string>
