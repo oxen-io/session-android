@@ -22,8 +22,6 @@ class OpenGroupInvitationView : FrameLayout {
     private val urlTextView: TextView
     private var url: String = ""
 
-    private var joinOpenGroupListener: JoinOpenGroupListener? = null
-
     constructor(context: Context): this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?): this(context, attrs, 0)
@@ -43,15 +41,9 @@ class OpenGroupInvitationView : FrameLayout {
         this.url = url
         joinButton.visibility = if (isOutgoing) View.GONE else View.VISIBLE
         openGroupIconContainer.visibility = if (isOutgoing) View.VISIBLE else View.GONE
-
-        joinButton.setOnClickListener { joinOpenGroupListener?.joinOpenGroup(url) }
     }
 
-    fun setJoinOpenGroupListener(listener: JoinOpenGroupListener) {
-        joinOpenGroupListener = listener
-    }
-
-    interface JoinOpenGroupListener {
-        fun joinOpenGroup(url: String)
+    fun setJoinButtonClickListener(listener: OnClickListener) {
+        joinButton.setOnClickListener(listener)
     }
 }
