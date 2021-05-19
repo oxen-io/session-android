@@ -71,9 +71,9 @@ import org.session.libsession.messaging.open_groups.OpenGroupV2;
 import org.session.libsession.messaging.sending_receiving.MessageSender;
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment;
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview;
-import org.session.libsession.messaging.threads.Address;
-import org.session.libsession.messaging.threads.recipients.Recipient;
 import org.session.libsession.utilities.OpenGroupUrlParser;
+import org.session.libsession.utilities.Address;
+import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.Util;
 import org.session.libsession.utilities.V2OpenGroupInfo;
@@ -96,6 +96,7 @@ import org.thoughtcrime.securesms.database.loaders.ConversationLoader;
 import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord;
+import org.thoughtcrime.securesms.loki.api.OpenGroupManager;
 import org.thoughtcrime.securesms.loki.protocol.MultiDeviceProtocol;
 import org.thoughtcrime.securesms.loki.utilities.OpenGroupUtilities;
 import org.thoughtcrime.securesms.longmessage.LongMessageActivity;
@@ -824,11 +825,11 @@ public class ConversationFragment extends Fragment
         @Override
         protected Boolean doInBackground(V2OpenGroupInfo... openGroupInfos) {
           try {
-            OpenGroupUtilities.addGroup(
-                    context,
+            OpenGroupManager.INSTANCE.add(
                     openGroup.getServer(),
                     openGroup.getRoom(),
-                    openGroup.getServerPublicKey()
+                    openGroup.getServerPublicKey(),
+                    context
             );
 
             MultiDeviceProtocol.INSTANCE.forceSyncConfigurationNowIfNeeded(context);
