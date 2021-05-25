@@ -30,8 +30,8 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.mentions.MentionsManager
-import org.session.libsession.messaging.open_groups.OpenGroupAPI
 import org.session.libsession.messaging.sending_receiving.MessageSender
+import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPollerV2
 import org.session.libsession.utilities.*
 import org.session.libsignal.utilities.toHexString
 import org.session.libsignal.utilities.ThreadUtils
@@ -52,10 +52,9 @@ import org.thoughtcrime.securesms.mms.GlideRequests
 import java.io.IOException
 
 class HomeActivity : PassphraseRequiredActionBarActivity(),
-        ConversationClickListener,
-        SeedReminderViewDelegate,
-        NewConversationButtonSetViewDelegate {
-
+    ConversationClickListener,
+    SeedReminderViewDelegate,
+    NewConversationButtonSetViewDelegate {
     private lateinit var glide: GlideRequests
     private var broadcastReceiver: BroadcastReceiver? = null
 
@@ -134,12 +133,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         })
         // Set up remaining components if needed
         val application = ApplicationContext.getInstance(this)
-        val apiDB = DatabaseFactory.getLokiAPIDatabase(this)
-        val threadDB = DatabaseFactory.getLokiThreadDatabase(this)
-        val userDB = DatabaseFactory.getLokiUserDatabase(this)
         val userPublicKey = TextSecurePreferences.getLocalNumber(this)
         if (userPublicKey != null) {
-            MentionsManager.configureIfNeeded(userPublicKey, userDB)
             OpenGroupManager.startPolling()
             JobQueue.shared.resumePendingJobs()
         }
@@ -173,19 +168,11 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         if (hasViewedSeed) {
             seedReminderView.visibility = View.GONE
         }
-        showFileServerInstabilityNotificationIfNeeded()
         if (TextSecurePreferences.getConfigurationMessageSynced(this)) {
             lifecycleScope.launch(Dispatchers.IO) {
                 MultiDeviceProtocol.syncConfigurationIfNeeded(this@HomeActivity)
             }
         }
-    }
-
-    private fun showFileServerInstabilityNotificationIfNeeded() {
-        val hasSeenNotification = TextSecurePreferences.hasSeenFileServerInstabilityNotification(this)
-        if (hasSeenNotification) { return }
-        FileServerDialog().show(supportFragmentManager, "File Server Dialog")
-        TextSecurePreferences.setHasSeenFileServerInstabilityNotification(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -341,22 +328,16 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                     }
                 }
                 // Delete the conversation
-                val v1OpenGroup = DatabaseFactory.getLokiThreadDatabase(context).getPublicChat(threadID)
                 val v2OpenGroup = DatabaseFactory.getLokiThreadDatabase(context).getOpenGroupChat(threadID)
-                if (v1OpenGroup != null) {
-                    val apiDB = DatabaseFactory.getLokiAPIDatabase(context)
-                    apiDB.removeLastMessageServerID(v1OpenGroup.channel, v1OpenGroup.server)
-                    apiDB.removeLastDeletionServerID(v1OpenGroup.channel, v1OpenGroup.server)
-                    apiDB.clearOpenGroupProfilePictureURL(v1OpenGroup.channel, v1OpenGroup.server)
-                    OpenGroupAPI.leave(v1OpenGroup.channel, v1OpenGroup.server)
-                    // FIXME: No longer supported so let's remove this code
-                } else if (v2OpenGroup != null) {
+                if (v2OpenGroup != null) {
                     val apiDB = DatabaseFactory.getLokiAPIDatabase(context)
                     apiDB.removeLastMessageServerID(v2OpenGroup.room, v2OpenGroup.server)
                     apiDB.removeLastDeletionServerID(v2OpenGroup.room, v2OpenGroup.server)
                     OpenGroupManager.delete(v2OpenGroup.server, v2OpenGroup.room, this@HomeActivity)
                 } else {
-                    threadDB.deleteConversation(threadID)
+                    ThreadUtils.queue {
+                        threadDB.deleteConversation(threadID)
+                    }
                 }
                 // Update the badge count
                 ApplicationContext.getInstance(context).messageNotifier.updateNotification(context)
