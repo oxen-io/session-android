@@ -11,8 +11,8 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.TextUtils
 import android.text.style.StyleSpan
-import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Base64
+import org.session.libsignal.utilities.Log
 import java.io.*
 import java.nio.charset.StandardCharsets
 import java.security.SecureRandom
@@ -321,6 +321,8 @@ object Util {
 
     @JvmStatic
     fun getBoldedString(value: String?): CharSequence {
+        if (value.isNullOrEmpty()) return ""
+
         val spanned = SpannableString(value)
         spanned.setSpan(StyleSpan(Typeface.BOLD), 0,
                 spanned.length,

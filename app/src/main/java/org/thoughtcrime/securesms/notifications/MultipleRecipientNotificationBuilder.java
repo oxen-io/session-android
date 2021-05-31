@@ -4,18 +4,21 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.text.SpannableStringBuilder;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import android.text.SpannableStringBuilder;
+
 import org.session.libsession.messaging.contacts.Contact;
+import org.session.libsession.utilities.NotificationPrivacyPreference;
+import org.session.libsession.utilities.TextSecurePreferences;
+import org.session.libsession.utilities.Util;
+import org.session.libsession.utilities.recipients.Recipient;
 import org.thoughtcrime.securesms.database.DatabaseFactory;
 import org.thoughtcrime.securesms.loki.activities.HomeActivity;
 import org.thoughtcrime.securesms.loki.database.SessionContactDatabase;
-import org.session.libsession.utilities.NotificationPrivacyPreference;
-import org.session.libsession.utilities.recipients.Recipient;
-import org.session.libsession.utilities.TextSecurePreferences;
-import org.session.libsession.utilities.Util;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -78,16 +81,6 @@ public class MultipleRecipientNotificationBuilder extends AbstractNotificationBu
 
   public void addMessageBody(@NonNull Recipient sender, Recipient threadRecipient, @Nullable CharSequence body) {
     String displayName = sender.toShortString();
-    if (threadRecipient.isOpenGroupRecipient()) {
-      SessionContactDatabase contactDB = DatabaseFactory.getSessionContactDatabase(context);
-      String sessionID = sender.getAddress().serialize();
-      Contact contact = contactDB.getContactWithSessionID(sessionID);
-      if (contact != null) {
-        displayName = contact.displayName(Contact.ContactContext.OPEN_GROUP);
-      } else {
-        displayName = sessionID;
-      }
-    }
     if (privacy.isDisplayMessage()) {
       SpannableStringBuilder builder = new SpannableStringBuilder();
       builder.append(Util.getBoldedString(displayName));
