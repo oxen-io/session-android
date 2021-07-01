@@ -462,7 +462,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun markAllAsRead() {
-        val messages = DatabaseFactory.getThreadDatabase(this).setRead(threadID, true)
+        val messages = DatabaseFactory.getThreadDatabase(applicationContext).setRead(threadID, true)
         if (thread.isGroupRecipient) {
             for (message in messages) {
                 MarkReadReceiver.scheduleDeletion(this, message.expirationInfo)
