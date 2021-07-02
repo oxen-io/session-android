@@ -65,17 +65,16 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Address.Companion.fromSerialized
 import org.session.libsession.utilities.MediaTypes
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.TextSecurePreferences.getLocalNumber
 import org.session.libsession.utilities.concurrent.SimpleTask
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.recipients.RecipientModifiedListener
 import org.session.libsignal.utilities.ListenableFuture
-import org.session.libsignal.utilities.SettableFuture
 import org.session.libsignal.utilities.guava.Optional
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.audio.AudioRecorder
 import org.thoughtcrime.securesms.contactshare.SimpleTextWatcher
-import org.thoughtcrime.securesms.conversation.ConversationActivity
 import org.thoughtcrime.securesms.conversation.v2.dialogs.*
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarButton
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarDelegate
@@ -462,7 +461,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun markAllAsRead() {
-        val messages = DatabaseFactory.getThreadDatabase(applicationContext).setRead(threadID, true)
+        val messages = DatabaseFactory.getThreadDatabase(this).setRead(threadID, true)
         if (thread.isGroupRecipient) {
             for (message in messages) {
                 MarkReadReceiver.scheduleDeletion(this, message.expirationInfo)
@@ -885,7 +884,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         message.text = body
         val quote = quotedMessage?.let {
             val quotedAttachments = (it as? MmsMessageRecord)?.slideDeck?.asAttachments() ?: listOf()
-            QuoteModel(it.dateSent, it.individualRecipient.address, it.body, false, quotedAttachments)
+            val author = if (it.isOutgoing) {
+                Recipient.from(this, fromSerialized(getLocalNumber(this)!!), true).address
+            } else {
+                it.individualRecipient.address
+            }
+            QuoteModel(it.dateSent, author, it.body, false, quotedAttachments)
         }
         val outgoingTextMessage = OutgoingMediaMessage.from(message, thread, attachments, quote, linkPreview)
         // Clear the input bar
