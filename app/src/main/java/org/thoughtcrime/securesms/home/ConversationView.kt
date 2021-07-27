@@ -98,10 +98,10 @@ class ConversationView : LinearLayout {
     }
 
     private fun getUserDisplayName(recipient: Recipient): String? {
-        if (recipient.isLocalNumber) {
-            return context.getString(R.string.note_to_self)
+        return if (recipient.isLocalNumber) {
+            context.getString(R.string.note_to_self)
         } else {
-            return recipient.name // Internally uses the Contact API
+            recipient.name // Internally uses the Contact API
         }
     }
     // endregion
