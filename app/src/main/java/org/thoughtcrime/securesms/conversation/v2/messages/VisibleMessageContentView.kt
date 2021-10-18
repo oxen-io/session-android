@@ -23,16 +23,15 @@ import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import androidx.core.text.getSpans
 import androidx.core.text.toSpannable
+import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.view_visible_message_content.view.*
 import network.loki.messenger.R
 import okhttp3.HttpUrl
 import org.session.libsession.utilities.ThemeUtil
-import org.session.libsession.utilities.ViewUtil
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.components.emoji.EmojiTextView
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.ModalUrlBottomSheet
-import org.thoughtcrime.securesms.conversation.v2.components.AlbumThumbnailView
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities
 import org.thoughtcrime.securesms.conversation.v2.utilities.ModalURLSpan
 import org.thoughtcrime.securesms.conversation.v2.utilities.TextUtilities.getIntersectedModalSpans
@@ -48,7 +47,7 @@ import java.util.*
 import kotlin.math.roundToInt
 
 class VisibleMessageContentView : LinearLayout {
-    var onContentClick: ((event: MotionEvent) -> Unit)? = null
+    var onContentClick: MutableList<((event: MotionEvent) -> Unit)> = mutableListOf()
     var onContentDoubleTap: (() -> Unit)? = null
     var delegate: VisibleMessageContentViewDelegate? = null
     var indexInAdapter: Int = -1
@@ -73,23 +72,32 @@ class VisibleMessageContentView : LinearLayout {
         val filter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(color, BlendModeCompat.SRC_IN)
         background.colorFilter = filter
         setBackground(background)
-        // Body
-        mainContainer.removeAllViews()
-        onContentClick = null
+
+        // reset visibilities / containers
+        onContentClick.clear()
         onContentDoubleTap = null
+
         if (message.isDeleted) {
-            val deletedMessageView = DeletedMessageView(context)
+            deletedMessageView.isVisible = true
             deletedMessageView.bind(message, VisibleMessageContentView.getTextColor(context,message))
-            mainContainer.addView(deletedMessageView)
-        } else if (message is MmsMessageRecord && message.linkPreviews.isNotEmpty()) {
-            val linkPreviewView = LinkPreviewView(context)
-            linkPreviewView.bind(message, glide, isStartOfMessageCluster, isEndOfMessageCluster, searchQuery)
-            mainContainer.addView(linkPreviewView)
-            onContentClick = { event -> linkPreviewView.calculateHit(event) }
-            // Body text view is inside the link preview for layout convenience
-        } else if (message is MmsMessageRecord && message.quote != null) {
+            return
+        } else {
+            deletedMessageView.isVisible = false
+        }
+
+        quoteView.isVisible = message is MmsMessageRecord && message.quote != null
+        linkPreviewView.isVisible = message is MmsMessageRecord && message.linkPreviews.isNotEmpty()
+        untrustedView.isVisible = !contactIsTrusted
+        voiceMessageView.isVisible = contactIsTrusted && message is MmsMessageRecord && message.slideDeck.audioSlide != null
+        documentView.isVisible = contactIsTrusted && message is MmsMessageRecord && message.slideDeck.documentSlide != null
+        albumThumbnailView.isVisible = contactIsTrusted && message is MmsMessageRecord && message.slideDeck.thumbnailSlide != null
+        openGroupInvitationView.isVisible = message.isOpenGroupInvitation
+        var hideBody = false
+
+        if (message is MmsMessageRecord && message.quote != null) {
+            // TODO: test if this looks fine for deleted messages using message.isDeleted when unsend is activated
+            quoteView.isVisible = true
             val quote = message.quote!!
-            val quoteView = QuoteView(context, QuoteView.Mode.Regular)
             // The max content width is the max message bubble size - 2 times the horizontal padding - 2
             // times the horizontal margin. This unfortunately has to be calculated manually
             // here to get the layout right.
@@ -102,56 +110,47 @@ class VisibleMessageContentView : LinearLayout {
             quoteView.bind(quote.author.toString(), quoteText, quote.attachment, thread,
                 message.isOutgoing, maxContentWidth, message.isOpenGroupInvitation, message.threadId,
                 quote.isOriginalMissing, glide)
-            mainContainer.addView(quoteView)
-            val bodyTextView = VisibleMessageContentView.getBodyTextView(context, message, searchQuery)
-            ViewUtil.setPaddingTop(bodyTextView, 0)
-            mainContainer.addView(bodyTextView)
-            onContentClick = { event ->
+            onContentClick.add { event ->
                 val r = Rect()
                 quoteView.getGlobalVisibleRect(r)
                 if (r.contains(event.rawX.roundToInt(), event.rawY.roundToInt())) {
                     delegate?.scrollToMessageIfPossible(quote.id)
-                } else {
-                    bodyTextView.getIntersectedModalSpans(event).forEach { span ->
-                        span.onClick(bodyTextView)
-                    }
                 }
             }
+        }
+
+        if (message is MmsMessageRecord && message.linkPreviews.isNotEmpty()) {
+            linkPreviewView.bind(message, glide, isStartOfMessageCluster, isEndOfMessageCluster)
+            onContentClick.add { event -> linkPreviewView.calculateHit(event) }
+            // Body text view is inside the link preview for layout convenience
         } else if (message is MmsMessageRecord && message.slideDeck.audioSlide != null) {
             // Audio attachment
             if (contactIsTrusted || message.isOutgoing) {
-                val voiceMessageView = VoiceMessageView(context)
                 voiceMessageView.indexInAdapter = indexInAdapter
                 voiceMessageView.delegate = context as? ConversationActivityV2
                 voiceMessageView.bind(message, isStartOfMessageCluster, isEndOfMessageCluster)
-                mainContainer.addView(voiceMessageView)
                 // We have to use onContentClick (rather than a click listener directly on the voice
                 // message view) so as to not interfere with all the other gestures.
-                onContentClick = { voiceMessageView.togglePlayback() }
+                onContentClick.add { voiceMessageView.togglePlayback() }
                 onContentDoubleTap = { voiceMessageView.handleDoubleTap() }
             } else {
-                val untrustedView = UntrustedAttachmentView(context)
+                // TODO: move this out to its own area
                 untrustedView.bind(UntrustedAttachmentView.AttachmentType.AUDIO, VisibleMessageContentView.getTextColor(context,message))
-                mainContainer.addView(untrustedView)
-                onContentClick = { untrustedView.showTrustDialog(message.individualRecipient) }
+                onContentClick.add { untrustedView.showTrustDialog(message.individualRecipient) }
             }
         } else if (message is MmsMessageRecord && message.slideDeck.documentSlide != null) {
             // Document attachment
             if (contactIsTrusted || message.isOutgoing) {
-                val documentView = DocumentView(context)
                 documentView.bind(message, VisibleMessageContentView.getTextColor(context, message))
-                mainContainer.addView(documentView)
             } else {
-                val untrustedView = UntrustedAttachmentView(context)
                 untrustedView.bind(UntrustedAttachmentView.AttachmentType.DOCUMENT, VisibleMessageContentView.getTextColor(context,message))
-                mainContainer.addView(untrustedView)
-                onContentClick = { untrustedView.showTrustDialog(message.individualRecipient) }
+                onContentClick.add { untrustedView.showTrustDialog(message.individualRecipient) }
             }
         } else if (message is MmsMessageRecord && message.slideDeck.asAttachments().isNotEmpty()) {
-            // Images/Video attachment
+            /*
+             *    Images / Video attachment
+             */
             if (contactIsTrusted || message.isOutgoing) {
-                val albumThumbnailView = AlbumThumbnailView(context)
-                mainContainer.addView(albumThumbnailView)
                 // isStart and isEnd of cluster needed for calculating the mask for full bubble image groups
                 // bind after add view because views are inflated and calculated during bind
                 albumThumbnailView.bind(
@@ -160,26 +159,24 @@ class VisibleMessageContentView : LinearLayout {
                         isStart = isStartOfMessageCluster,
                         isEnd = isEndOfMessageCluster
                 )
-                onContentClick = { event ->
+                onContentClick.add { event ->
                     albumThumbnailView.calculateHitObject(event, message, thread)
                 }
             } else {
-                val untrustedView = UntrustedAttachmentView(context)
                 untrustedView.bind(UntrustedAttachmentView.AttachmentType.MEDIA, VisibleMessageContentView.getTextColor(context,message))
-                mainContainer.addView(untrustedView)
-                onContentClick = { untrustedView.showTrustDialog(message.individualRecipient) }
+                onContentClick.add { untrustedView.showTrustDialog(message.individualRecipient) }
             }
         } else if (message.isOpenGroupInvitation) {
-            val openGroupInvitationView = OpenGroupInvitationView(context)
             openGroupInvitationView.bind(message, VisibleMessageContentView.getTextColor(context, message))
-            mainContainer.addView(openGroupInvitationView)
-            onContentClick = { openGroupInvitationView.joinOpenGroup() }
-        } else {
-            val bodyTextView = VisibleMessageContentView.getBodyTextView(context, message, searchQuery)
-            mainContainer.addView(bodyTextView)
-            onContentClick = { event ->
-                // intersectedModalSpans should only be a list of one item
-                bodyTextView.getIntersectedModalSpans(event).forEach { span ->
+            onContentClick.add { openGroupInvitationView.joinOpenGroup() }
+        }
+
+        bodyTextView.isVisible = message.body.isNotEmpty() && !hideBody
+        if (message.body.isNotEmpty() && !hideBody) {
+            val body = getBodySpans(context, message, searchQuery)
+            bodyTextView.text = body
+            onContentClick.add { e: MotionEvent ->
+                bodyTextView.getIntersectedModalSpans(e).forEach { span ->
                     span.onClick(bodyTextView)
                 }
             }
@@ -202,14 +199,13 @@ class VisibleMessageContentView : LinearLayout {
     }
 
     fun recycle() {
-        mainContainer.removeAllViews()
     }
     // endregion
 
     // region Convenience
     companion object {
 
-        fun getBodyTextView(context: Context, message: MessageRecord, searchQuery: String?): TextView {
+        fun getBodyTextView(context: Context, message: MessageRecord, searchQuery: String?): Pair<TextView, (MotionEvent)->Unit> {
             val result = EmojiTextView(context)
             val vPadding = context.resources.getDimension(R.dimen.small_spacing).toInt()
             val hPadding = toPx(12, context.resources)
@@ -220,7 +216,11 @@ class VisibleMessageContentView : LinearLayout {
             result.setLinkTextColor(color)
             val body = getBodySpans(context, message, searchQuery)
             result.text = body
-            return result
+            return result to { e: MotionEvent ->
+                result.getIntersectedModalSpans(e).forEach { span ->
+                    span.onClick(result)
+                }
+            }
         }
 
         fun getBodySpans(context: Context, message: MessageRecord, searchQuery: String?): Spannable {

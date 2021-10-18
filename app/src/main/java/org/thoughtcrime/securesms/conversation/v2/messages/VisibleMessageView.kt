@@ -79,7 +79,6 @@ class VisibleMessageView : LinearLayout {
 
     private fun initialize() {
         LayoutInflater.from(context).inflate(R.layout.view_visible_message, this)
-        layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         isHapticFeedbackEnabled = true
         setWillNotDraw(false)
         expirationTimerViewContainer.disableClipping()
@@ -374,7 +373,7 @@ class VisibleMessageView : LinearLayout {
     }
 
     fun onContentClick(event: MotionEvent) {
-        messageContentView.onContentClick?.invoke(event)
+        messageContentView.onContentClick.forEach { clickHandler -> clickHandler.invoke(event) }
     }
 
     private fun onPress(event: MotionEvent) {

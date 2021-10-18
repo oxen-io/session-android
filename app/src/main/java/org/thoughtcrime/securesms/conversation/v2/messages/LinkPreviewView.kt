@@ -38,7 +38,12 @@ class LinkPreviewView : LinearLayout {
     // endregion
 
     // region Updating
-    fun bind(message: MmsMessageRecord, glide: GlideRequests, isStartOfMessageCluster: Boolean, isEndOfMessageCluster: Boolean, searchQuery: String?) {
+    fun bind(
+        message: MmsMessageRecord,
+        glide: GlideRequests,
+        isStartOfMessageCluster: Boolean,
+        isEndOfMessageCluster: Boolean
+    ) {
         val linkPreview = message.linkPreviews.first()
         url = linkPreview.url
         // Thumbnail
@@ -55,9 +60,6 @@ class LinkPreviewView : LinearLayout {
             if (UiModeUtilities.isDayUiMode(context)) R.color.black else R.color.white
         }
         titleTextView.setTextColor(ResourcesCompat.getColor(resources, textColorID, context.theme))
-        // Body
-        bodyTextView = VisibleMessageContentView.getBodyTextView(context, message, searchQuery)
-        mainLinkPreviewContainer.addView(bodyTextView)
         // Corner radii
         val cornerRadii = MessageBubbleUtilities.calculateRadii(context, isStartOfMessageCluster, isEndOfMessageCluster, message.isOutgoing)
         cornerMask.setTopLeftRadius(cornerRadii[0])

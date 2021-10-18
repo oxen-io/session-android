@@ -46,11 +46,10 @@ class QuoteView : LinearLayout {
     enum class Mode { Regular, Draft }
 
     // region Lifecycle
-    constructor(context: Context) : super(context) { throw IllegalAccessError("Use QuoteView(context:mode:) instead.") }
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) { throw IllegalAccessError("Use QuoteView(context:mode:) instead.") }
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) { throw IllegalAccessError("Use QuoteView(context:mode:) instead.") }
+    constructor(context: Context) : this(context, Mode.Regular)
+    constructor(context: Context, attrs: AttributeSet) : this(context,  Mode.Regular, attrs)
 
-    constructor(context: Context, mode: Mode) : super(context) {
+    constructor(context: Context, mode: Mode, attrs: AttributeSet? = null) : super(context, attrs) {
         this.mode = mode
         LayoutInflater.from(context).inflate(R.layout.view_quote, this)
         // Add padding here (not on mainQuoteViewContainer) to get a bit of a top inset while avoiding
