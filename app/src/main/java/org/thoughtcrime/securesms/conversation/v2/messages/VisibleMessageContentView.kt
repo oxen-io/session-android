@@ -72,6 +72,9 @@ class VisibleMessageContentView : LinearLayout {
         background.colorFilter = filter
         setBackground(background)
 
+        val onlyBodyMessage = message is SmsMessageRecord
+        val mediaThumbnailMessage = contactIsTrusted && message is MmsMessageRecord && message.slideDeck.thumbnailSlide != null
+
         // reset visibilities / containers
         onContentClick.clear()
         albumThumbnailView.clearViews()
@@ -86,14 +89,22 @@ class VisibleMessageContentView : LinearLayout {
         }
 
         quoteView.isVisible = message is MmsMessageRecord && message.quote != null
+        val quoteLayoutParams = quoteView.layoutParams
+        quoteLayoutParams.width = if (mediaThumbnailMessage) 0 else ViewGroup.LayoutParams.WRAP_CONTENT
+        quoteView.layoutParams = quoteLayoutParams
+
         linkPreviewView.isVisible = message is MmsMessageRecord && message.linkPreviews.isNotEmpty()
+
+        val linkPreviewLayout = linkPreviewView.layoutParams
+        linkPreviewLayout.width = if (mediaThumbnailMessage) 0 else ViewGroup.LayoutParams.WRAP_CONTENT
+        linkPreviewView.layoutParams = linkPreviewLayout
+
         untrustedView.isVisible = !contactIsTrusted && message is MmsMessageRecord
         voiceMessageView.isVisible = contactIsTrusted && message is MmsMessageRecord && message.slideDeck.audioSlide != null
         documentView.isVisible = contactIsTrusted && message is MmsMessageRecord && message.slideDeck.documentSlide != null
-        albumThumbnailView.isVisible = contactIsTrusted && message is MmsMessageRecord && message.slideDeck.thumbnailSlide != null
+        albumThumbnailView.isVisible = mediaThumbnailMessage
         openGroupInvitationView.isVisible = message.isOpenGroupInvitation
 
-        val onlyBodyMessage = message is SmsMessageRecord
         var hideBody = false
 
         if (message is MmsMessageRecord && message.quote != null) {
