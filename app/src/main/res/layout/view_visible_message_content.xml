@@ -89,7 +89,7 @@
         android:id="@+id/albumThumbnailView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-    <TextView
+    <org.thoughtcrime.securesms.components.emoji.EmojiTextView
         app:layout_constraintHorizontal_bias="0"
         tools:visibility="visible"
         android:visibility="gone"
