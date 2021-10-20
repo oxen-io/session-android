@@ -12,7 +12,6 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.view.*
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -36,6 +35,7 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
+
 @AndroidEntryPoint
 class VisibleMessageView : LinearLayout {
 
@@ -79,6 +79,7 @@ class VisibleMessageView : LinearLayout {
 
     private fun initialize() {
         LayoutInflater.from(context).inflate(R.layout.view_visible_message, this)
+        layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         isHapticFeedbackEnabled = true
         setWillNotDraw(false)
         expirationTimerViewContainer.disableClipping()
@@ -205,11 +206,13 @@ class VisibleMessageView : LinearLayout {
     }
 
     private fun updateExpirationTimer(message: MessageRecord) {
-        val expirationTimerViewLayoutParams = expirationTimerView.layoutParams as RelativeLayout.LayoutParams
-        val ruleToAdd = if (message.isOutgoing) RelativeLayout.ALIGN_START else RelativeLayout.ALIGN_END
-        val ruleToRemove = if (message.isOutgoing) RelativeLayout.ALIGN_END else RelativeLayout.ALIGN_START
-        expirationTimerViewLayoutParams.removeRule(ruleToRemove)
-        expirationTimerViewLayoutParams.addRule(ruleToAdd, R.id.messageContentView)
+        val expirationTimerViewLayoutParams = expirationTimerView.layoutParams as MarginLayoutParams
+        val container = expirationTimerViewContainer
+        val content = container.messageContentView
+        val expiration = container.expirationTimerView
+        container.removeAllViewsInLayout()
+        container.addView(if (message.isOutgoing) expiration else content)
+        container.addView(if (message.isOutgoing) content else expiration)
         val expirationTimerViewSize = toPx(12, resources)
         val smallSpacing = resources.getDimension(R.dimen.small_spacing).roundToInt()
         expirationTimerViewLayoutParams.marginStart = if (message.isOutgoing) -(smallSpacing + expirationTimerViewSize) else 0
@@ -242,6 +245,7 @@ class VisibleMessageView : LinearLayout {
         } else {
             expirationTimerView.isVisible = false
         }
+        container.requestLayout()
     }
 
     private fun handleIsSelectedChanged() {

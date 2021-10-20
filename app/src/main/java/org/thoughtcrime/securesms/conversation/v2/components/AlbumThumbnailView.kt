@@ -89,6 +89,11 @@ class AlbumThumbnailView : FrameLayout {
         }
     }
 
+    fun clearViews() {
+        albumCellContainer.removeAllViews()
+        slideSize = -1
+    }
+
     fun bind(glideRequests: GlideRequests, message: MmsMessageRecord,
              isStart: Boolean, isEnd: Boolean) {
         slides = message.slideDeck.thumbnailSlides

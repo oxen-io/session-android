@@ -63,7 +63,7 @@ class QuoteView : LinearLayout {
                 val quoteViewMainContentContainerLayoutParams = quoteViewMainContentContainer.layoutParams as RelativeLayout.LayoutParams
                 // Since we're not showing the cancel button we can shorten the end margin
                 quoteViewMainContentContainerLayoutParams.marginEnd = resources.getDimension(R.dimen.medium_spacing).roundToInt()
-                quoteViewMainContentContainer.layoutParams = quoteViewMainContentContainerLayoutParams
+                // quoteViewMainContentContainer.layoutParams = quoteViewMainContentContainerLayoutParams
             }
         }
     }
@@ -133,7 +133,7 @@ class QuoteView : LinearLayout {
         if (!hasAttachments) {
             val accentLineLayoutParams = quoteViewAccentLine.layoutParams as RelativeLayout.LayoutParams
             accentLineLayoutParams.height = getIntrinsicContentHeight(maxContentWidth) // Match the intrinsic * content * height
-            quoteViewAccentLine.layoutParams = accentLineLayoutParams
+            // quoteViewAccentLine.layoutParams = accentLineLayoutParams
             quoteViewAccentLine.setBackgroundColor(getLineColor(isOutgoingMessage))
         } else if (attachments != null) {
             quoteViewAttachmentPreviewImageView.imageTintList = ColorStateList.valueOf(ResourcesCompat.getColor(resources, R.color.white, context.theme))
@@ -159,11 +159,11 @@ class QuoteView : LinearLayout {
                 quoteViewBodyTextView.text = if (MediaUtil.isVideo(slide.asAttachment())) resources.getString(R.string.Slide_video) else resources.getString(R.string.Slide_image)
             }
         }
-        mainQuoteViewContainer.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, getIntrinsicHeight(maxContentWidth))
+        //mainQuoteViewContainer.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, getIntrinsicHeight(maxContentWidth))
         val quoteViewMainContentContainerLayoutParams = quoteViewMainContentContainer.layoutParams as RelativeLayout.LayoutParams
         // The start margin is different if we just show the accent line vs if we show an attachment thumbnail
         quoteViewMainContentContainerLayoutParams.marginStart = if (!hasAttachments) toPx(16, resources) else toPx(48, resources)
-        quoteViewMainContentContainer.layoutParams = quoteViewMainContentContainerLayoutParams
+//        quoteViewMainContentContainer.layoutParams = quoteViewMainContentContainerLayoutParams
     }
     // endregion
 

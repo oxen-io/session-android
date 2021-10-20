@@ -10,11 +10,10 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.URLSpan
 import android.text.util.Linkify
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
@@ -29,7 +28,6 @@ import network.loki.messenger.R
 import okhttp3.HttpUrl
 import org.session.libsession.utilities.ThemeUtil
 import org.session.libsession.utilities.recipients.Recipient
-import org.thoughtcrime.securesms.components.emoji.EmojiTextView
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.ModalUrlBottomSheet
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities
@@ -37,6 +35,7 @@ import org.thoughtcrime.securesms.conversation.v2.utilities.ModalURLSpan
 import org.thoughtcrime.securesms.conversation.v2.utilities.TextUtilities.getIntersectedModalSpans
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
+import org.thoughtcrime.securesms.database.model.SmsMessageRecord
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.SearchUtil
 import org.thoughtcrime.securesms.util.SearchUtil.StyleFactory
@@ -75,6 +74,7 @@ class VisibleMessageContentView : LinearLayout {
 
         // reset visibilities / containers
         onContentClick.clear()
+        albumThumbnailView.clearViews()
         onContentDoubleTap = null
 
         if (message.isDeleted) {
@@ -87,11 +87,13 @@ class VisibleMessageContentView : LinearLayout {
 
         quoteView.isVisible = message is MmsMessageRecord && message.quote != null
         linkPreviewView.isVisible = message is MmsMessageRecord && message.linkPreviews.isNotEmpty()
-        untrustedView.isVisible = !contactIsTrusted
+        untrustedView.isVisible = !contactIsTrusted && message is MmsMessageRecord
         voiceMessageView.isVisible = contactIsTrusted && message is MmsMessageRecord && message.slideDeck.audioSlide != null
         documentView.isVisible = contactIsTrusted && message is MmsMessageRecord && message.slideDeck.documentSlide != null
         albumThumbnailView.isVisible = contactIsTrusted && message is MmsMessageRecord && message.slideDeck.thumbnailSlide != null
         openGroupInvitationView.isVisible = message.isOpenGroupInvitation
+
+        val onlyBodyMessage = message is SmsMessageRecord
         var hideBody = false
 
         if (message is MmsMessageRecord && message.quote != null) {
@@ -124,6 +126,7 @@ class VisibleMessageContentView : LinearLayout {
             onContentClick.add { event -> linkPreviewView.calculateHit(event) }
             // Body text view is inside the link preview for layout convenience
         } else if (message is MmsMessageRecord && message.slideDeck.audioSlide != null) {
+            hideBody = true
             // Audio attachment
             if (contactIsTrusted || message.isOutgoing) {
                 voiceMessageView.indexInAdapter = indexInAdapter
@@ -139,6 +142,7 @@ class VisibleMessageContentView : LinearLayout {
                 onContentClick.add { untrustedView.showTrustDialog(message.individualRecipient) }
             }
         } else if (message is MmsMessageRecord && message.slideDeck.documentSlide != null) {
+            hideBody = true
             // Document attachment
             if (contactIsTrusted || message.isOutgoing) {
                 documentView.bind(message, VisibleMessageContentView.getTextColor(context, message))
@@ -167,12 +171,22 @@ class VisibleMessageContentView : LinearLayout {
                 onContentClick.add { untrustedView.showTrustDialog(message.individualRecipient) }
             }
         } else if (message.isOpenGroupInvitation) {
+            hideBody = true
             openGroupInvitationView.bind(message, VisibleMessageContentView.getTextColor(context, message))
             onContentClick.add { openGroupInvitationView.joinOpenGroup() }
         }
 
         bodyTextView.isVisible = message.body.isNotEmpty() && !hideBody
+
+        // set it to use constraints if not only a text message, otherwise wrap content to whatever width it wants
+        val params = bodyTextView.layoutParams
+        params.width = if (onlyBodyMessage) ViewGroup.LayoutParams.WRAP_CONTENT else 0
+        bodyTextView.layoutParams = params
+
         if (message.body.isNotEmpty() && !hideBody) {
+            val color = getTextColor(context, message)
+            bodyTextView.setTextColor(color)
+            bodyTextView.setLinkTextColor(color)
             val body = getBodySpans(context, message, searchQuery)
             bodyTextView.text = body
             onContentClick.add { e: MotionEvent ->
@@ -204,24 +218,6 @@ class VisibleMessageContentView : LinearLayout {
 
     // region Convenience
     companion object {
-
-        fun getBodyTextView(context: Context, message: MessageRecord, searchQuery: String?): Pair<TextView, (MotionEvent)->Unit> {
-            val result = EmojiTextView(context)
-            val vPadding = context.resources.getDimension(R.dimen.small_spacing).toInt()
-            val hPadding = toPx(12, context.resources)
-            result.setPadding(hPadding, vPadding, hPadding, vPadding)
-            result.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.resources.getDimension(R.dimen.small_font_size))
-            val color = getTextColor(context, message)
-            result.setTextColor(color)
-            result.setLinkTextColor(color)
-            val body = getBodySpans(context, message, searchQuery)
-            result.text = body
-            return result to { e: MotionEvent ->
-                result.getIntersectedModalSpans(e).forEach { span ->
-                    span.onClick(result)
-                }
-            }
-        }
 
         fun getBodySpans(context: Context, message: MessageRecord, searchQuery: String?): Spannable {
             var body = message.body.toSpannable()
