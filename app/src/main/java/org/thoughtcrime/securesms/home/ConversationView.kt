@@ -40,7 +40,7 @@ class ConversationView : LinearLayout {
     fun bind(thread: ThreadRecord, isTyping: Boolean, glide: GlideRequests) {
         this.thread = thread
         if (thread.isPinned) {
-            conversationViewDisplayNameTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_push_pin_24, 0)
+            conversationViewDisplayNameTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_pin, 0)
             background = ContextCompat.getDrawable(context, R.drawable.conversation_pinned_background)
         } else {
             conversationViewDisplayNameTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
