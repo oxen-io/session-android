@@ -45,7 +45,7 @@ class JobQueue : JobDelegate {
             while (isActive) {
                 for (job in queue) {
                     when (job) {
-                        is NotifyPNServerJob, is AttachmentUploadJob, is MessageSendJob -> txQueue.send(job)
+                        is NotifyPNServerJob, is AttachmentUploadJob, is MessageSendJob, is GroupAvatarDownloadJob -> txQueue.send(job)
                         is MessageReceiveJob, is TrimThreadJob, is BatchMessageReceiveJob, is AttachmentDownloadJob-> rxQueue.send(job)
                         else -> throw IllegalStateException("Unexpected job type.")
                     }
@@ -123,7 +123,8 @@ class JobQueue : JobDelegate {
             MessageReceiveJob.KEY,
             MessageSendJob.KEY,
             NotifyPNServerJob.KEY,
-            BatchMessageReceiveJob.KEY
+            BatchMessageReceiveJob.KEY,
+            GroupAvatarDownloadJob.KEY
         )
         allJobTypes.forEach { type ->
             resumePendingJobs(type)

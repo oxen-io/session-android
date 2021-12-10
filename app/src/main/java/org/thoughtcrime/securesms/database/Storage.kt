@@ -185,6 +185,10 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         return DatabaseComponent.get(context).sessionJobDatabase().getMessageReceiveJob(messageReceiveJobID)
     }
 
+    override fun getGroupAvatarDownloadJob(groupAvatarDownloadJobId: String): Job? {
+        return DatabaseComponent.get(context).sessionJobDatabase().getGroupAvatarDownloadJob(groupAvatarDownloadJobId)
+    }
+
     override fun resumeMessageSendJobIfNeeded(messageSendJobID: String) {
         val job = DatabaseComponent.get(context).sessionJobDatabase().getMessageSendJob(messageSendJobID) ?: return
         JobQueue.shared.resumePendingSendMessage(job)

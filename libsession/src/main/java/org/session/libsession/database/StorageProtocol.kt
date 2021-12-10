@@ -43,6 +43,7 @@ interface StorageProtocol {
     fun getAttachmentUploadJob(attachmentID: Long): AttachmentUploadJob?
     fun getMessageSendJob(messageSendJobID: String): MessageSendJob?
     fun getMessageReceiveJob(messageReceiveJobID: String): Job?
+    fun getGroupAvatarDownloadJob(groupAvatarDownloadJobId: String): Job?
     fun resumeMessageSendJobIfNeeded(messageSendJobID: String)
     fun isJobCanceled(job: Job): Boolean
 

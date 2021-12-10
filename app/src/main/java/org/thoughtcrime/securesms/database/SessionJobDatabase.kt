@@ -78,6 +78,16 @@ class SessionJobDatabase(context: Context, helper: SQLCipherOpenHelper) : Databa
         }
     }
 
+    fun getGroupAvatarDownloadJob(groupAvatarDownloadJobId: String): GroupAvatarDownloadJob? {
+        return databaseHelper.readableDatabase.get(
+            table = sessionJobTable,
+            query = "$jobID = ? AND $jobType = ?",
+            arguments = arrayOf(groupAvatarDownloadJobId, GroupAvatarDownloadJob.KEY)
+        ) {
+            jobFromCursor(it) as GroupAvatarDownloadJob?
+        }
+    }
+
     fun cancelPendingMessageSendJobs(threadID: Long) {
         val database = databaseHelper.writableDatabase
         val attachmentUploadJobKeys = mutableListOf<String>()
