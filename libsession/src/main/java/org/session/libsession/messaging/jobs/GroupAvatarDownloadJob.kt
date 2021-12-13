@@ -8,7 +8,7 @@ import org.session.libsession.utilities.GroupUtil
 class GroupAvatarDownloadJob(val room: String, val server: String) : Job {
 
     override var delegate: JobDelegate? = null
-    override var id: String? = "$server.$room"
+    override var id: String? = null
     override var failureCount: Int = 0
     override val maxFailureCount: Int = 10
 
@@ -19,6 +19,7 @@ class GroupAvatarDownloadJob(val room: String, val server: String) : Job {
             val bytes = OpenGroupAPIV2.downloadOpenGroupProfilePicture(info.id, server).get()
             val groupId = GroupUtil.getEncodedOpenGroupID("$server.$room".toByteArray())
             storage.updateProfilePicture(groupId, bytes)
+            storage.updateTimestampUpdated(groupId, System.currentTimeMillis())
         } catch (e: Exception) {
         }
     }

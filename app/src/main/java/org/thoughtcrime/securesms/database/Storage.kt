@@ -472,6 +472,11 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
             .updateFormationTimestamp(groupID, formationTimestamp)
     }
 
+    override fun updateTimestampUpdated(groupID: String, updatedTimestamp: Long) {
+        DatabaseComponent.get(context).groupDatabase()
+            .updateTimestampUpdated(groupID, updatedTimestamp)
+    }
+
     override fun setExpirationTimer(groupID: String, duration: Int) {
         val recipient = Recipient.from(context, fromSerialized(groupID), false)
         DatabaseComponent.get(context).recipientDatabase().setExpireMessages(recipient, duration);
