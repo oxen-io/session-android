@@ -20,7 +20,9 @@ class GroupAvatarDownloadJob(val room: String, val server: String) : Job {
             val groupId = GroupUtil.getEncodedOpenGroupID("$server.$room".toByteArray())
             storage.updateProfilePicture(groupId, bytes)
             storage.updateTimestampUpdated(groupId, System.currentTimeMillis())
+            delegate?.handleJobSucceeded(this)
         } catch (e: Exception) {
+            delegate?.handleJobFailed(this, e)
         }
     }
 

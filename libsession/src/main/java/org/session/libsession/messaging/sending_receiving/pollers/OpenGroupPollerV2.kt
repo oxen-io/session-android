@@ -106,10 +106,9 @@ class OpenGroupPollerV2(private val server: String, private val executorService:
     }
 
     private fun downloadGroupAvatarIfNeeded(room: String) {
-        val openGroupId = "$server.$room"
         val storage = MessagingModuleConfiguration.shared.storage
-        if (storage.getGroupAvatarDownloadJob(openGroupId) != null) return
-        val groupId = GroupUtil.getEncodedOpenGroupID(openGroupId.toByteArray())
+        if (storage.getGroupAvatarDownloadJob(server, room) != null) return
+        val groupId = GroupUtil.getEncodedOpenGroupID("$server.$room".toByteArray())
         storage.getGroup(groupId)?.let {
             if (System.currentTimeMillis() > it.updatedTimestamp + TimeUnit.DAYS.toMillis(7)) {
                 JobQueue.shared.add(GroupAvatarDownloadJob(room, server))
