@@ -320,7 +320,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 adapter.changeCursor(cursor)
                 lifecycleScope.launchWhenResumed {
                     threadDb.getRecipientForThreadId(threadID)?.let {
-                        println("Refresh pic")
                         profilePictureView.update(thread, threadID)
                     }
                 }
