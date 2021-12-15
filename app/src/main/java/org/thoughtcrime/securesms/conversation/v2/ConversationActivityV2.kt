@@ -25,7 +25,6 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.lifecycleScope
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -318,11 +317,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
             override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
                 adapter.changeCursor(cursor)
-                lifecycleScope.launchWhenResumed {
-                    threadDb.getRecipientForThreadId(threadID)?.let {
-                        profilePictureView.update(thread, threadID)
-                    }
-                }
             }
 
             override fun onLoaderReset(cursor: Loader<Cursor>) {
@@ -507,6 +501,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             }
             updateSubtitle()
             showOrHideInputIfNeeded()
+            profilePictureView.update(recipient, threadID)
         }
     }
 
