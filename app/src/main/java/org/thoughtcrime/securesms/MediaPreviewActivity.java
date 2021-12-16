@@ -27,6 +27,8 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,6 +38,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowInsets;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -92,6 +95,8 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
 
   private final static String TAG = MediaPreviewActivity.class.getSimpleName();
 
+  private static final int UI_ANIMATION_DELAY     = 300;
+
   public static final String ADDRESS_EXTRA        = "address";
   public static final String DATE_EXTRA           = "date";
   public static final String SIZE_EXTRA           = "size";
@@ -117,6 +122,25 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
   private ViewPagerListener     viewPagerListener;
 
   private int restartItem = -1;
+
+  private boolean isFullscreen = false;
+  private final Handler hideHandler = new Handler(Looper.myLooper());
+  private final Runnable showRunnable = (Runnable) () -> {
+    getSupportActionBar().show();
+  };
+  private final Runnable hideRunnable = (Runnable) () -> {
+    if (Build.VERSION.SDK_INT >= 30) {
+      mediaPager.getWindowInsetsController().hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+    } else {
+      mediaPager.setSystemUiVisibility(
+              View.SYSTEM_UI_FLAG_LOW_PROFILE |
+                      View.SYSTEM_UI_FLAG_FULLSCREEN |
+                      View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                      View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
+                      View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+                      View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+    }
+  };
 
   public static Intent getPreviewIntent(Context context, Slide slide, MmsMessageRecord mms, Recipient threadRecipient) {
     Intent previewIntent = null;
@@ -145,6 +169,32 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
     initializeViews();
     initializeResources();
     initializeObservers();
+  }
+
+  private void toggleFullscreen() {
+    if (isFullscreen) {
+      hideFullscreen();
+    } else {
+      showFullscreen();
+    }
+  }
+
+  private void hideFullscreen() {
+    getSupportActionBar().hide();
+    isFullscreen = false;
+    hideHandler.removeCallbacks(showRunnable);
+    hideHandler.postDelayed(hideRunnable, UI_ANIMATION_DELAY);
+  }
+
+  private void showFullscreen() {
+    if (Build.VERSION.SDK_INT >= 30) {
+      mediaPager.getWindowInsetsController().show(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+    } else {
+      mediaPager.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+    }
+    isFullscreen = true;
+    hideHandler.removeCallbacks(hideRunnable);
+    hideHandler.postDelayed(showRunnable, UI_ANIMATION_DELAY);
   }
 
   @Override
@@ -295,12 +345,13 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
       }
     });
 
-    clickDetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener() {
+    clickDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
       @Override
       public boolean onSingleTapUp(MotionEvent e) {
         if (e.getY() < detailsContainer.getTop()) {
           detailsContainer.setVisibility(detailsContainer.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
         }
+        toggleFullscreen();
         return super.onSingleTapUp(e);
       }
     });
