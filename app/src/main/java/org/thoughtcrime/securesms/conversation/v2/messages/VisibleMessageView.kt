@@ -16,6 +16,7 @@ import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.view_visible_message.view.*
@@ -384,9 +385,10 @@ class VisibleMessageView : LinearLayout {
 
     private fun showUserDetails(publicKey: String, threadID: Long) {
         val userDetailsBottomSheet = UserDetailsBottomSheet()
-        val bundle = Bundle()
-        bundle.putString(UserDetailsBottomSheet.ARGUMENT_PUBLIC_KEY, publicKey)
-        bundle.putLong(UserDetailsBottomSheet.ARGUMENT_THREAD_ID, threadID)
+        val bundle = bundleOf(
+                UserDetailsBottomSheet.ARGUMENT_PUBLIC_KEY to publicKey,
+                UserDetailsBottomSheet.ARGUMENT_THREAD_ID to threadID
+        )
         userDetailsBottomSheet.arguments = bundle
         val activity = context as AppCompatActivity
         userDetailsBottomSheet.show(activity.supportFragmentManager, userDetailsBottomSheet.tag)
