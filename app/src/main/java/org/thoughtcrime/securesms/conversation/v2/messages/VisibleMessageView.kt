@@ -23,6 +23,7 @@ import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact.ContactContext
 import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
 import org.session.libsession.utilities.ViewUtil
+import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.ThreadUtils
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.database.*
@@ -103,7 +104,9 @@ class VisibleMessageView : LinearLayout {
             profilePictureView.publicKey = senderSessionID
             profilePictureView.glide = glide
             profilePictureView.update(message.individualRecipient, threadID)
-            profilePictureView.setOnClickListener { showUserDetails(message.recipient.address.toString()) }
+            profilePictureView.setOnClickListener {
+                showUserDetails(senderSessionID, threadID)
+            }
             if (thread.isOpenGroupRecipient) {
                 val openGroup = lokiThreadDb.getOpenGroupChat(threadID) ?: return
                 val isModerator = OpenGroupAPIV2.isUserModerator(senderSessionID, openGroup.room, openGroup.server)
@@ -379,10 +382,11 @@ class VisibleMessageView : LinearLayout {
         pressCallback = null
     }
 
-    private fun showUserDetails(publicKey: String) {
+    private fun showUserDetails(publicKey: String, threadID: Long) {
         val userDetailsBottomSheet = UserDetailsBottomSheet()
         val bundle = Bundle()
-        bundle.putString("publicKey", publicKey)
+        bundle.putString(UserDetailsBottomSheet.ARGUMENT_PUBLIC_KEY, publicKey)
+        bundle.putLong(UserDetailsBottomSheet.ARGUMENT_THREAD_ID, threadID)
         userDetailsBottomSheet.arguments = bundle
         val activity = context as AppCompatActivity
         userDetailsBottomSheet.show(activity.supportFragmentManager, userDetailsBottomSheet.tag)
