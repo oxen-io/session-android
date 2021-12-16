@@ -251,7 +251,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
             bottomSheet.dismiss()
             val userDetailsBottomSheet = UserDetailsBottomSheet()
             val bundle = Bundle()
-            bundle.putString("publicKey", thread.recipient.address.toString())
+            bundle.putString(UserDetailsBottomSheet.ARGUMENT_PUBLIC_KEY, thread.recipient.address.toString())
+            bundle.putLong(UserDetailsBottomSheet.ARGUMENT_THREAD_ID, thread.threadId)
             userDetailsBottomSheet.arguments = bundle
             userDetailsBottomSheet.show(supportFragmentManager, userDetailsBottomSheet.tag)
         }
