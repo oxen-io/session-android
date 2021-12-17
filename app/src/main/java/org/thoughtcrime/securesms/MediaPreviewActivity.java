@@ -193,7 +193,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
     } else {
       rootContainer.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
     }
-    isFullscreen = true;
+    isFullscreen = false;
     hideHandler.removeCallbacks(hideRunnable);
     hideHandler.postDelayed(showRunnable, UI_ANIMATION_DELAY);
   }
