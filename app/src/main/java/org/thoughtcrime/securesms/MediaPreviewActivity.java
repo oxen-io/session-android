@@ -104,6 +104,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
   public static final String OUTGOING_EXTRA       = "outgoing";
   public static final String LEFT_IS_RECENT_EXTRA = "left_is_recent";
 
+  private View                  rootContainer;
   private ViewPager             mediaPager;
   private View                  detailsContainer;
   private TextView              caption;
@@ -125,14 +126,14 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
 
   private boolean isFullscreen = false;
   private final Handler hideHandler = new Handler(Looper.myLooper());
-  private final Runnable showRunnable = (Runnable) () -> {
+  private final Runnable showRunnable = () -> {
     getSupportActionBar().show();
   };
-  private final Runnable hideRunnable = (Runnable) () -> {
-    if (Build.VERSION.SDK_INT >= 30) {
-      mediaPager.getWindowInsetsController().hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+  private final Runnable hideRunnable = () -> {
+    if (VERSION.SDK_INT >= 30) {
+      rootContainer.getWindowInsetsController().hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
     } else {
-      mediaPager.setSystemUiVisibility(
+      rootContainer.setSystemUiVisibility(
               View.SYSTEM_UI_FLAG_LOW_PROFILE |
                       View.SYSTEM_UI_FLAG_FULLSCREEN |
                       View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
@@ -173,24 +174,24 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
 
   private void toggleFullscreen() {
     if (isFullscreen) {
-      hideFullscreen();
+      exitFullscreen();
     } else {
-      showFullscreen();
+      enterFullscreen();
     }
   }
 
-  private void hideFullscreen() {
+  private void enterFullscreen() {
     getSupportActionBar().hide();
-    isFullscreen = false;
+    isFullscreen = true;
     hideHandler.removeCallbacks(showRunnable);
     hideHandler.postDelayed(hideRunnable, UI_ANIMATION_DELAY);
   }
 
-  private void showFullscreen() {
+  private void exitFullscreen() {
     if (Build.VERSION.SDK_INT >= 30) {
-      mediaPager.getWindowInsetsController().show(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+      rootContainer.getWindowInsetsController().show(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
     } else {
-      mediaPager.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+      rootContainer.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
     }
     isFullscreen = true;
     hideHandler.removeCallbacks(hideRunnable);
@@ -273,6 +274,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
   }
 
   private void initializeViews() {
+    rootContainer = findViewById(R.id.media_preview_root);
     mediaPager = findViewById(R.id.media_pager);
     mediaPager.setOffscreenPageLimit(1);
 
