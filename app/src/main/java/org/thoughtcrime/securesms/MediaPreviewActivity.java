@@ -39,6 +39,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -132,6 +133,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
   private final Runnable hideRunnable = () -> {
     if (VERSION.SDK_INT >= 30) {
       rootContainer.getWindowInsetsController().hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+      rootContainer.getWindowInsetsController().setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
     } else {
       rootContainer.setSystemUiVisibility(
               View.SYSTEM_UI_FLAG_LOW_PROFILE |
