@@ -55,6 +55,7 @@ import org.thoughtcrime.securesms.groups.JoinPublicChatActivity
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.mms.GlideRequests
+import org.thoughtcrime.securesms.notifications.MarkReadReceiver
 import org.thoughtcrime.securesms.onboarding.SeedActivity
 import org.thoughtcrime.securesms.onboarding.SeedReminderViewDelegate
 import org.thoughtcrime.securesms.preferences.SettingsActivity
@@ -296,6 +297,10 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
                 unpinConversation(thread)
             }
         }
+        bottomSheet.onMarkAllAsReadTapped = {
+            bottomSheet.dismiss()
+            markAllAsRead(thread)
+        }
         bottomSheet.show(supportFragmentManager, bottomSheet.tag)
     }
 
@@ -374,6 +379,19 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
             threadDb.setPinned(thread.threadId, false)
             Util.runOnMain {
                 LoaderManager.getInstance(this).restartLoader(0, null, this)
+            }
+        }
+    }
+
+    private fun markAllAsRead(thread: ThreadRecord) {
+        ThreadUtils.queue {
+            val messages = threadDb.setRead(thread.threadId, true)
+            if (thread.recipient.isGroupRecipient || thread.recipient.expireMessages > 0) {
+                for (message in messages) {
+                    MarkReadReceiver.scheduleDeletion(this, message.expirationInfo)
+                }
+            } else {
+                MarkReadReceiver.process(this, messages)
             }
         }
     }
