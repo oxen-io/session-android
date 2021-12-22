@@ -280,7 +280,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     override fun onResume() {
         super.onResume()
         ApplicationContext.getInstance(this).messageNotifier.setVisibleThread(threadID)
-        markAllAsRead()
+        threadDb.markAllAsRead(threadID, thread.isOpenGroupRecipient)
     }
 
     override fun onPause() {
@@ -513,18 +513,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         } else {
             inputBar.showInput = true
         }
-    }
-
-    private fun markAllAsRead() {
-        val messages = threadDb.setRead(threadID, true)
-        if (thread.isGroupRecipient) {
-            for (message in messages) {
-                MarkReadReceiver.scheduleDeletion(this, message.expirationInfo)
-            }
-        } else {
-            MarkReadReceiver.process(this, messages)
-        }
-        ApplicationContext.getInstance(this).messageNotifier.updateNotification(this, false, 0)
     }
 
     override fun inputBarHeightChanged(newValue: Int) {

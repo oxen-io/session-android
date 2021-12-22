@@ -385,14 +385,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
 
     private fun markAllAsRead(thread: ThreadRecord) {
         ThreadUtils.queue {
-            val messages = threadDb.setRead(thread.threadId, true)
-            if (thread.recipient.isGroupRecipient || thread.recipient.expireMessages > 0) {
-                for (message in messages) {
-                    MarkReadReceiver.scheduleDeletion(this, message.expirationInfo)
-                }
-            } else {
-                MarkReadReceiver.process(this, messages)
-            }
+            threadDb.markAllAsRead(thread.threadId, thread.recipient.isOpenGroupRecipient)
         }
     }
 
