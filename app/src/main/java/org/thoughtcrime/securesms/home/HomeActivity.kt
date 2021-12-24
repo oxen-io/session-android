@@ -13,7 +13,6 @@ import android.text.style.ForegroundColorSpan
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.loader.app.LoaderManager
@@ -104,7 +103,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
         val hasViewedSeed = TextSecurePreferences.getHasViewedSeed(this)
         if (!hasViewedSeed) {
             binding.seedReminderStub.setOnInflateListener { _, inflated ->
-                val stubBinding: SeedReminderStubBinding = DataBindingUtil.bind(inflated)!!
+                val stubBinding = SeedReminderStubBinding.bind(inflated)
                 val seedReminderViewTitle = SpannableString("You're almost finished! 80%") // Intentionally not yet translated
                 seedReminderViewTitle.setSpan(ForegroundColorSpan(resources.getColorWithID(R.color.accent, theme)), 24, 27, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 stubBinding.seedReminderView.title = seedReminderViewTitle
@@ -112,9 +111,9 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
                 stubBinding.seedReminderView.setProgress(80, false)
                 stubBinding.seedReminderView.delegate = this@HomeActivity
             }
-            binding.seedReminderStub.viewStub?.inflate()
+            binding.seedReminderStub.inflate()
         } else {
-            binding.seedReminderStub.viewStub?.isVisible = false
+            binding.seedReminderStub.isVisible = false
         }
         // Set up recycler view
         homeAdapter.setHasStableIds(true)
@@ -187,7 +186,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
         binding.profileButton.update()
         val hasViewedSeed = TextSecurePreferences.getHasViewedSeed(this)
         if (hasViewedSeed) {
-            binding.seedReminderStub.root?.isVisible = false
+            binding.seedReminderStub.isVisible = false
         }
         if (TextSecurePreferences.getConfigurationMessageSynced(this)) {
             lifecycleScope.launch(Dispatchers.IO) {
