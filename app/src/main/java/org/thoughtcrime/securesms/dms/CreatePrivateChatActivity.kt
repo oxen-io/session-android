@@ -49,6 +49,10 @@ class CreatePrivateChatActivity : PassphraseRequiredActionBarActivity(), ScanQRC
         super.onCreate(savedInstanceState, isReady)
         // Set content view
         setContentView(R.layout.activity_create_private_chat)
+        val data = intent.data
+         if(data?.getQueryParameter("id")!= null) {
+                createPrivateChatIfPossible(data.getQueryParameter("id"))
+         }
         // Set title
         supportActionBar!!.title = resources.getString(R.string.activity_create_private_chat_title)
         // Set up view pager
