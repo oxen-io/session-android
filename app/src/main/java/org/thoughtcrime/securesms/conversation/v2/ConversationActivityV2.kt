@@ -46,27 +46,21 @@ import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityConversationV2ActionBarBinding
 import network.loki.messenger.databinding.ActivityConversationV2Binding
-import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
-import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.mentions.Mention
 import org.session.libsession.messaging.mentions.MentionsManager
 import org.session.libsession.messaging.messages.control.DataExtractionNotification
-import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.signal.OutgoingMediaMessage
 import org.session.libsession.messaging.messages.signal.OutgoingTextMessage
-import org.session.libsession.messaging.messages.visible.OpenGroupInvitation
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
-import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Address.Companion.fromSerialized
-import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.MediaTypes
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.concurrent.SimpleTask
@@ -76,7 +70,6 @@ import org.session.libsignal.crypto.MnemonicCodec
 import org.session.libsignal.utilities.ListenableFuture
 import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.hexEncodedPrivateKey
-import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.audio.AudioRecorder
@@ -110,7 +103,6 @@ import org.thoughtcrime.securesms.database.LokiMessageDatabase
 import org.thoughtcrime.securesms.database.LokiThreadDatabase
 import org.thoughtcrime.securesms.database.MmsDatabase
 import org.thoughtcrime.securesms.database.MmsSmsDatabase
-import org.thoughtcrime.securesms.database.RecipientDatabase
 import org.thoughtcrime.securesms.database.SessionContactDatabase
 import org.thoughtcrime.securesms.database.SmsDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
@@ -141,9 +133,6 @@ import org.thoughtcrime.securesms.util.toPx
 import java.util.Locale
 import java.util.concurrent.ExecutionException
 import javax.inject.Inject
-import kotlin.collections.component1
-import kotlin.collections.component2
-import kotlin.collections.set
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -168,7 +157,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     @Inject lateinit var sessionContactDb: SessionContactDatabase
     @Inject lateinit var groupDb: GroupDatabase
     @Inject lateinit var lokiApiDb: LokiAPIDatabase
-    @Inject lateinit var recipientDb: RecipientDatabase
     @Inject lateinit var smsDb: SmsDatabase
     @Inject lateinit var mmsDb: MmsDatabase
     @Inject lateinit var lokiMessageDb: LokiMessageDatabase
@@ -492,7 +480,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val name = contact?.displayName(Contact.ContactContext.REGULAR) ?: sessionID
         binding.blockedBannerTextView.text = resources.getString(R.string.activity_conversation_blocked_banner_text, name)
         binding.blockedBanner.isVisible = viewModel.recipient.isBlocked
-        binding.blockedBanner.setOnClickListener { unblock() }
+        binding.blockedBanner.setOnClickListener { viewModel.unblock() }
     }
 
     private fun setUpLinkPreviewObserver() {
@@ -904,11 +892,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         return hitRect.contains(x, y)
     }
 
-    private fun unblock() {
-        if (!viewModel.recipient.isContactRecipient) { return }
-        recipientDb.setBlocked(viewModel.recipient, false)
-    }
-
     private fun handleMentionSelected(mention: Mention) {
         if (currentMentionStartIndex == -1) { return }
         mentions.add(mention)
@@ -1104,19 +1087,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 val extras = intent?.extras ?: return
                 if (!intent.hasExtra(selectedContactsKey)) { return }
                 val selectedContacts = extras.getStringArray(selectedContactsKey)!!
-                val openGroup = lokiThreadDb.getOpenGroupChat(viewModel.threadId)
-                for (contact in selectedContacts) {
-                    val recipient = Recipient.from(this, fromSerialized(contact), true)
-                    val message = VisibleMessage()
-                    message.sentTimestamp = System.currentTimeMillis()
-                    val openGroupInvitation = OpenGroupInvitation()
-                    openGroupInvitation.name = openGroup!!.name
-                    openGroupInvitation.url = openGroup!!.joinURL
-                    message.openGroupInvitation = openGroupInvitation
-                    val outgoingTextMessage = OutgoingTextMessage.fromOpenGroupInvitation(openGroupInvitation, recipient, message.sentTimestamp)
-                    smsDb.insertMessageOutbox(-1, outgoingTextMessage, message.sentTimestamp!!)
-                    MessageSender.send(message, recipient.address)
-                }
+                viewModel.inviteContacts(selectedContacts)
             }
         }
     }
@@ -1171,91 +1142,15 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         stopAudioHandler.removeCallbacks(stopVoiceMessageRecordingTask)
     }
 
-    private fun buildUnsendRequest(message: MessageRecord): UnsendRequest? {
-        if (this.viewModel.recipient.isOpenGroupRecipient) return null
-        val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
-        messageDataProvider.getServerHashForMessage(message.id) ?: return null
-        val unsendRequest = UnsendRequest()
-        if (message.isOutgoing) {
-            unsendRequest.author = TextSecurePreferences.getLocalNumber(this)
-        } else {
-            unsendRequest.author = message.individualRecipient.address.contactIdentifier()
-        }
-        unsendRequest.timestamp = message.timestamp
-
-        return unsendRequest
-    }
-
-    private fun deleteLocally(message: MessageRecord) {
-        buildUnsendRequest(message)?.let { unsendRequest ->
-            TextSecurePreferences.getLocalNumber(this@ConversationActivityV2)?.let {
-                MessageSender.send(unsendRequest, Address.fromSerialized(it))
-            }
-        }
-        MessagingModuleConfiguration.shared.messageDataProvider.deleteMessage(message.id, !message.isMms)
-    }
-
-    private fun deleteForEveryone(message: MessageRecord) {
-        buildUnsendRequest(message)?.let { unsendRequest ->
-            MessageSender.send(unsendRequest, viewModel.recipient.address)
-        }
-        val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
-        val openGroup = lokiThreadDb.getOpenGroupChat(viewModel.threadId)
-        if (openGroup != null) {
-            lokiMessageDb.getServerID(message.id, !message.isMms)?.let { messageServerID ->
-                OpenGroupAPIV2.deleteMessage(messageServerID, openGroup.room, openGroup.server)
-                    .success {
-                        messageDataProvider.deleteMessage(message.id, !message.isMms)
-                    }.failUi { error ->
-                        Toast.makeText(this@ConversationActivityV2, "Couldn't delete message due to error: $error", Toast.LENGTH_LONG).show()
-                    }
-            }
-        } else {
-            messageDataProvider.deleteMessage(message.id, !message.isMms)
-            messageDataProvider.getServerHashForMessage(message.id)?.let { serverHash ->
-                var publicKey = viewModel.recipient.address.serialize()
-                if (viewModel.recipient.isClosedGroupRecipient) { publicKey = GroupUtil.doubleDecodeGroupID(publicKey).toHexString() }
-                SnodeAPI.deleteMessage(publicKey, listOf(serverHash))
-                    .failUi { error ->
-                        Toast.makeText(this@ConversationActivityV2, "Couldn't delete message due to error: $error", Toast.LENGTH_LONG).show()
-                    }
-            }
-        }
-    }
-
     // Remove this after the unsend request is enabled
     fun deleteMessagesWithoutUnsendRequest(messages: Set<MessageRecord>) {
         val messageCount = messages.size
-        val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
         val builder = AlertDialog.Builder(this)
         builder.setTitle(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
         builder.setMessage(resources.getQuantityString(R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages, messageCount, messageCount))
         builder.setCancelable(true)
-        val openGroup = lokiThreadDb.getOpenGroupChat(viewModel.threadId)
         builder.setPositiveButton(R.string.delete) { _, _ ->
-            if (openGroup != null) {
-                val messageServerIDs = mutableMapOf<Long, MessageRecord>()
-                for (message in messages) {
-                    val messageServerID = lokiMessageDb.getServerID(message.id, !message.isMms) ?: continue
-                    messageServerIDs[messageServerID] = message
-                }
-                for ((messageServerID, message) in messageServerIDs) {
-                    OpenGroupAPIV2.deleteMessage(messageServerID, openGroup.room, openGroup.server)
-                        .success {
-                            messageDataProvider.deleteMessage(message.id, !message.isMms)
-                        }.failUi { error ->
-                            Toast.makeText(this@ConversationActivityV2, "Couldn't delete message due to error: $error", Toast.LENGTH_LONG).show()
-                        }
-                }
-            } else {
-                for (message in messages) {
-                    if (message.isMms) {
-                        mmsDb.deleteMessage(message.id)
-                    } else {
-                        smsDb.deleteMessage(message.id)
-                    }
-                }
-            }
+            viewModel.deleteMessagesWithoutUnsendRequest(messages)
             endActionMode()
         }
         builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
@@ -1280,7 +1175,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             builder.setCancelable(true)
             builder.setPositiveButton(R.string.delete) { _, _ ->
                 for (message in messages) {
-                    this.deleteForEveryone(message)
+                    viewModel.deleteForEveryone(message)
                 }
                 endActionMode()
             }
@@ -1294,14 +1189,14 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             bottomSheet.recipient = viewModel.recipient
             bottomSheet.onDeleteForMeTapped = {
                 for (message in messages) {
-                    this.deleteLocally(message)
+                    viewModel.deleteLocally(message)
                 }
                 bottomSheet.dismiss()
                 endActionMode()
             }
             bottomSheet.onDeleteForEveryoneTapped = {
                 for (message in messages) {
-                    this.deleteForEveryone(message)
+                    viewModel.deleteForEveryone(message)
                 }
                 bottomSheet.dismiss()
                 endActionMode()
@@ -1319,7 +1214,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             builder.setCancelable(true)
             builder.setPositiveButton(R.string.delete) { _, _ ->
                 for (message in messages) {
-                    this.deleteLocally(message)
+                    viewModel.deleteLocally(message)
                 }
                 endActionMode()
             }
@@ -1333,17 +1228,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     override fun banUser(messages: Set<MessageRecord>) {
         val builder = AlertDialog.Builder(this)
-        val sessionID = messages.first().individualRecipient.address.toString()
         builder.setTitle(R.string.ConversationFragment_ban_selected_user)
         builder.setMessage("This will ban the selected user from this room. It won't ban them from other rooms.")
         builder.setCancelable(true)
-        val openGroup = lokiThreadDb.getOpenGroupChat(viewModel.threadId)!!
         builder.setPositiveButton(R.string.ban) { _, _ ->
-            OpenGroupAPIV2.ban(sessionID, openGroup.room, openGroup.server).successUi {
-                Toast.makeText(this@ConversationActivityV2, "Successfully banned user", Toast.LENGTH_LONG).show()
-            }.failUi { error ->
-                Toast.makeText(this@ConversationActivityV2, "Couldn't ban user due to error: $error", Toast.LENGTH_LONG).show()
-            }
+            viewModel.banUser(messages)
             endActionMode()
         }
         builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
@@ -1355,17 +1244,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     override fun banAndDeleteAll(messages: Set<MessageRecord>) {
         val builder = AlertDialog.Builder(this)
-        val sessionID = messages.first().individualRecipient.address.toString()
         builder.setTitle(R.string.ConversationFragment_ban_selected_user)
         builder.setMessage("This will ban the selected user from this room and delete all messages sent by them. It won't ban them from other rooms or delete the messages they sent there.")
         builder.setCancelable(true)
-        val openGroup = lokiThreadDb.getOpenGroupChat(viewModel.threadId)!!
         builder.setPositiveButton(R.string.ban) { _, _ ->
-            OpenGroupAPIV2.banAndDeleteAll(sessionID, openGroup.room, openGroup.server).successUi {
-                Toast.makeText(this@ConversationActivityV2, "Successfully banned user and deleted all their messages", Toast.LENGTH_LONG).show()
-            }.failUi { error ->
-                Toast.makeText(this@ConversationActivityV2, "Couldn't execute request due to error: $error", Toast.LENGTH_LONG).show()
-            }
+            viewModel.banAndDeleteAll(messages)
             endActionMode()
         }
         builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
