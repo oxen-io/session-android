@@ -139,7 +139,13 @@
             android:name="org.thoughtcrime.securesms.dms.CreatePrivateChatActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.Session.DayNight.FlatActionBar" />
+                  android:theme="@style/Theme.Session.DayNight.FlatActionBar">
+        
+            <intent-filter>
+            <data android:scheme="loki"
+              android:host="user" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="org.thoughtcrime.securesms.groups.CreateClosedGroupActivity"
             android:screenOrientation="portrait" />
