@@ -142,8 +142,10 @@
                   android:theme="@style/Theme.Session.DayNight.FlatActionBar">
         
             <intent-filter>
-            <data android:scheme="loki"
-              android:host="user" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="loki"/>
             </intent-filter>
         </activity>
         <activity
