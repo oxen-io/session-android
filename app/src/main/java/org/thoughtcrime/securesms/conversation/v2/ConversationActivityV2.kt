@@ -37,12 +37,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.annimon.stream.Stream
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityConversationV2ActionBarBinding
 import network.loki.messenger.databinding.ActivityConversationV2Binding
@@ -275,7 +277,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         setUpInputBar()
         setUpLinkPreviewObserver()
         restoreDraftIfNeeded()
-        addOpenGroupGuidelinesIfNeeded()
+        setUpUiStateObserver()
         binding.scrollToBottomButton.setOnClickListener {
             val layoutManager = binding.conversationRecyclerView.layoutManager ?: return@setOnClickListener
             if (layoutManager.isSmoothScrolling) {
@@ -433,10 +435,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
-    private fun addOpenGroupGuidelinesIfNeeded() {
-        val openGroup = lokiThreadDb.getOpenGroupChat(viewModel.threadId) ?: return
-        val isOxenHostedOpenGroup = openGroup.room == "session" || openGroup.room == "oxen"
-            || openGroup.room == "lokinet" || openGroup.room == "crypto"
+    private fun addOpenGroupGuidelinesIfNeeded(isOxenHostedOpenGroup: Boolean) {
         if (!isOxenHostedOpenGroup) { return }
         binding.openGroupGuidelinesView.visibility = View.VISIBLE
         val recyclerViewLayoutParams = binding.conversationRecyclerView.layoutParams as RelativeLayout.LayoutParams
@@ -499,6 +498,18 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 else -> {
                     binding.inputBar.cancelLinkPreviewDraft()
                 }
+            }
+        }
+    }
+
+    private fun setUpUiStateObserver() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.uiState.collect { uiState ->
+                uiState.uiMessages.firstOrNull()?.let {
+                    Toast.makeText(this@ConversationActivityV2, it.message, Toast.LENGTH_LONG).show()
+                    viewModel.messageShown(it.id)
+                }
+                addOpenGroupGuidelinesIfNeeded(uiState.isOxenHostedOpenGroup)
             }
         }
     }

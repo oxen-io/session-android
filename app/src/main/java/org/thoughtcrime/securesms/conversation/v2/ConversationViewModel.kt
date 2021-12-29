@@ -1,13 +1,14 @@
 package org.thoughtcrime.securesms.conversation.v2
 
 import android.app.Application
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import nl.komponents.kovenant.ui.failUi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import nl.komponents.kovenant.ui.successUi
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.control.UnsendRequest
@@ -32,8 +33,8 @@ import org.thoughtcrime.securesms.database.SmsDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.notifications.MarkReadReceiver
+import java.util.UUID
 
-//FIXME: extend from ViewModel instead and remove android.* dependencies
 class ConversationViewModel(
     val threadId: Long,
     private val threadDb: ThreadDatabase,
@@ -46,8 +47,20 @@ class ConversationViewModel(
     application: Application
 ) : AndroidViewModel(application) {
 
+    private val _uiState = MutableStateFlow(ConversationUiState())
+    val uiState: StateFlow<ConversationUiState> = _uiState
+
     val recipient: Recipient by lazy {
         threadDb.getRecipientForThreadId(threadId)!!
+    }
+
+    init {
+        val openGroup = lokiThreadDb.getOpenGroupChat(threadId)
+        val isOxenHostedOpenGroup = openGroup?.room == "session" || openGroup?.room == "oxen"
+                || openGroup?.room == "lokinet" || openGroup?.room == "crypto"
+        _uiState.update {
+            it.copy(isOxenHostedOpenGroup = isOxenHostedOpenGroup)
+        }
     }
 
     fun markAllAsRead() {
@@ -107,8 +120,8 @@ class ConversationViewModel(
                 OpenGroupAPIV2.deleteMessage(messageServerID, openGroup.room, openGroup.server)
                     .success {
                         messageDataProvider.deleteMessage(message.id, !message.isMms)
-                    }.failUi { error ->
-                        Toast.makeText(getApplication(), "Couldn't delete message due to error: $error", Toast.LENGTH_LONG).show()
+                    }.fail { error ->
+                        showMessage("Couldn't delete message due to error: $error")
                     }
             }
         } else {
@@ -117,8 +130,8 @@ class ConversationViewModel(
                 var publicKey = recipient.address.serialize()
                 if (recipient.isClosedGroupRecipient) { publicKey = GroupUtil.doubleDecodeGroupID(publicKey).toHexString() }
                 SnodeAPI.deleteMessage(publicKey, listOf(serverHash))
-                    .failUi { error ->
-                        Toast.makeText(getApplication(), "Couldn't delete message due to error: $error", Toast.LENGTH_LONG).show()
+                    .fail { error ->
+                        showMessage("Couldn't delete message due to error: $error")
                     }
             }
         }
@@ -161,8 +174,8 @@ class ConversationViewModel(
                 OpenGroupAPIV2.deleteMessage(messageServerID, openGroup.room, openGroup.server)
                     .success {
                         messageDataProvider.deleteMessage(message.id, !message.isMms)
-                    }.failUi { error ->
-                        Toast.makeText(getApplication(), "Couldn't delete message due to error: $error", Toast.LENGTH_LONG).show()
+                    }.fail { error ->
+                        showMessage("Couldn't delete message due to error: $error")
                     }
             }
         } else {
@@ -180,9 +193,9 @@ class ConversationViewModel(
         val sessionID = messages.first().individualRecipient.address.toString()
         val openGroup = lokiThreadDb.getOpenGroupChat(threadId)!!
         OpenGroupAPIV2.ban(sessionID, openGroup.room, openGroup.server).successUi {
-            Toast.makeText(getApplication(), "Successfully banned user", Toast.LENGTH_LONG).show()
-        }.failUi { error ->
-            Toast.makeText(getApplication(), "Couldn't ban user due to error: $error", Toast.LENGTH_LONG).show()
+            showMessage("Successfully banned user")
+        }.fail { error ->
+            showMessage("Couldn't ban user due to error: $error")
         }
     }
 
@@ -190,9 +203,26 @@ class ConversationViewModel(
         val sessionID = messages.first().individualRecipient.address.toString()
         val openGroup = lokiThreadDb.getOpenGroupChat(threadId)!!
         OpenGroupAPIV2.banAndDeleteAll(sessionID, openGroup.room, openGroup.server).successUi {
-            Toast.makeText(getApplication(), "Successfully banned user and deleted all their messages", Toast.LENGTH_LONG).show()
-        }.failUi { error ->
-            Toast.makeText(getApplication(), "Couldn't execute request due to error: $error", Toast.LENGTH_LONG).show()
+            showMessage("Successfully banned user and deleted all their messages")
+        }.fail { error ->
+            showMessage("Couldn't execute request due to error: $error")
+        }
+    }
+
+    private fun showMessage(message: String) {
+        _uiState.update { currentUiState ->
+            val messages = currentUiState.uiMessages + UiMessage(
+                id = UUID.randomUUID().mostSignificantBits,
+                message = message
+            )
+            currentUiState.copy(uiMessages = messages)
+        }
+    }
+    
+    fun messageShown(messageId: Long) {
+        _uiState.update { currentUiState ->
+            val messages = currentUiState.uiMessages.filterNot { it.id == messageId }
+            currentUiState.copy(uiMessages = messages)
         }
     }
 
@@ -229,3 +259,10 @@ class ConversationViewModel(
         }
     }
 }
+
+data class UiMessage(val id: Long, val message: String)
+
+data class ConversationUiState(
+    val isOxenHostedOpenGroup: Boolean = false,
+    val uiMessages: List<UiMessage> = emptyList()
+)
