@@ -1403,7 +1403,24 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         })
     }
 
-    fun onSearchQueryUpdated(query: String?) {
+    fun onSearchOpened() {
+        searchViewModel.onSearchOpened()
+        binding.searchBottomBar.visibility = View.VISIBLE
+        binding.searchBottomBar.setData(0, 0)
+        binding.inputBar.visibility = View.GONE
+    }
+
+    fun onSearchClosed() {
+        searchViewModel.onSearchClosed()
+        binding.searchBottomBar.visibility = View.GONE
+        binding.inputBar.visibility = View.VISIBLE
+        adapter.onSearchQueryUpdated(null)
+        invalidateOptionsMenu()
+    }
+
+    fun onSearchQueryUpdated(query: String) {
+        searchViewModel.onQueryUpdated(query, viewModel.threadId)
+        binding.searchBottomBar.showLoading()
         adapter.onSearchQueryUpdated(query)
     }
 
