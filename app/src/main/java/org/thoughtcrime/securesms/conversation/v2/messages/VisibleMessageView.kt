@@ -74,7 +74,11 @@ class VisibleMessageView : LinearLayout {
     private var onDoubleTap: (() -> Unit)? = null
     var indexInAdapter: Int = -1
     var snIsSelected = false
-        set(value) { field = value; handleIsSelectedChanged()}
+        set(value) {
+            field = value
+            binding.messageTimestampTextView.isVisible = isSelected
+            handleIsSelectedChanged()
+        }
     var onPress: ((event: MotionEvent) -> Unit)? = null
     var onSwipeToReply: (() -> Unit)? = null
     var onLongPress: (() -> Unit)? = null
@@ -82,7 +86,7 @@ class VisibleMessageView : LinearLayout {
 
     companion object {
         const val swipeToReplyThreshold = 64.0f // dp
-        const val longPressMovementTreshold = 10.0f // dp
+        const val longPressMovementThreshold = 10.0f // dp
         const val longPressDurationThreshold = 250L // ms
         const val maxDoubleTapInterval = 200L
     }
@@ -315,7 +319,7 @@ class VisibleMessageView : LinearLayout {
 
     private fun onMove(event: MotionEvent) {
         val translationX = toDp(event.rawX + dx, context.resources)
-        if (abs(translationX) < longPressMovementTreshold || snIsSelected) {
+        if (abs(translationX) < longPressMovementThreshold || snIsSelected) {
             return
         } else {
             longPressCallback?.let { gestureHandler.removeCallbacks(it) }
