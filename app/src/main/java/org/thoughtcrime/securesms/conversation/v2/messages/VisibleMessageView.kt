@@ -122,7 +122,7 @@ class VisibleMessageView : LinearLayout {
             binding.profilePictureContainer.visibility = if (isEndOfMessageCluster) View.VISIBLE else View.INVISIBLE
             binding.profilePictureView.publicKey = senderSessionID
             binding.profilePictureView.glide = glide
-            binding.profilePictureView.update(message.individualRecipient, threadID)
+            binding.profilePictureView.update(message.individualRecipient)
             binding.profilePictureView.setOnClickListener {
                 showUserDetails(senderSessionID, threadID)
             }

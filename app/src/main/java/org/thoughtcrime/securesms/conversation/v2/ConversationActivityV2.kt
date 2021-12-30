@@ -376,7 +376,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         actionBarBinding.profilePictureView.layoutParams = LinearLayout.LayoutParams(size, size)
         actionBarBinding.profilePictureView.glide = glide
         MentionManagerUtilities.populateUserPublicKeyCacheIfNeeded(viewModel.threadId, this)
-        actionBarBinding.profilePictureView.update(viewModel.recipient, viewModel.threadId)
+        actionBarBinding.profilePictureView.update(viewModel.recipient)
     }
 
     private fun setUpInputBar() {
@@ -541,7 +541,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             }
             updateSubtitle()
             showOrHideInputIfNeeded()
-            actionBarBinding.profilePictureView.update(recipient, viewModel.threadId)
+            actionBarBinding.profilePictureView.update(recipient)
         }
     }
 

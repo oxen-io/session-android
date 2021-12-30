@@ -14,7 +14,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import dagger.hilt.EntryPoint
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_user_details_bottom_sheet.*
 import network.loki.messenger.R
@@ -52,7 +51,7 @@ class UserDetailsBottomSheet : BottomSheetDialogFragment() {
         profilePictureView.publicKey = publicKey
         profilePictureView.glide = GlideApp.with(this)
         profilePictureView.isLarge = true
-        profilePictureView.update(recipient, -1)
+        profilePictureView.update(recipient)
         nameTextViewContainer.visibility = View.VISIBLE
         nameTextViewContainer.setOnClickListener {
             nameTextViewContainer.visibility = View.INVISIBLE
