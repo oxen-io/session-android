@@ -12,7 +12,7 @@ class ScanQRCodePlaceholderFragment: Fragment() {
     var delegate: ScanQRCodePlaceholderFragmentDelegate? = null
 
     override fun onCreateView(layoutInflater: LayoutInflater, viewGroup: ViewGroup?, bundle: Bundle?): View {
-        val binding = FragmentScanQrCodePlaceholderBinding.inflate(layoutInflater, viewGroup, false)
+        binding = FragmentScanQrCodePlaceholderBinding.inflate(layoutInflater, viewGroup, false)
         return binding.root
     }
 

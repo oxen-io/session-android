@@ -22,10 +22,15 @@ import network.loki.messenger.databinding.ActivityPathBinding
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsignal.utilities.Snode
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
-import org.thoughtcrime.securesms.util.*
 import org.thoughtcrime.securesms.util.GlowViewUtilities
 import org.thoughtcrime.securesms.util.IP2Country
 import org.thoughtcrime.securesms.util.PathDotView
+import org.thoughtcrime.securesms.util.UiModeUtilities
+import org.thoughtcrime.securesms.util.animateSizeChange
+import org.thoughtcrime.securesms.util.disableClipping
+import org.thoughtcrime.securesms.util.fadeIn
+import org.thoughtcrime.securesms.util.fadeOut
+import org.thoughtcrime.securesms.util.getColorWithID
 
 class PathActivity : PassphraseRequiredActionBarActivity() {
     private lateinit var binding: ActivityPathBinding

@@ -473,9 +473,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private fun setUpBlockedBanner() {
         if (viewModel.recipient.isGroupRecipient) { return }
-        val contactDB = sessionContactDb
         val sessionID = viewModel.recipient.address.toString()
-        val contact = contactDB.getContactWithSessionID(sessionID)
+        val contact = sessionContactDb.getContactWithSessionID(sessionID)
         val name = contact?.displayName(Contact.ContactContext.REGULAR) ?: sessionID
         binding.blockedBannerTextView.text = resources.getString(R.string.activity_conversation_blocked_banner_text, name)
         binding.blockedBanner.isVisible = viewModel.recipient.isBlocked

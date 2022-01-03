@@ -11,7 +11,7 @@ import network.loki.messenger.databinding.ViewUntrustedAttachmentBinding
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.dialogs.DownloadDialog
 import org.thoughtcrime.securesms.util.ActivityDispatcher
-import java.util.*
+import java.util.Locale
 
 class UntrustedAttachmentView: LinearLayout {
     private lateinit var binding: ViewUntrustedAttachmentBinding

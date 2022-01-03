@@ -26,7 +26,7 @@ import org.thoughtcrime.securesms.util.StreamUtil
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.*
+import java.util.Objects
 import java.util.concurrent.TimeUnit
 
 class ShareLogsDialog : BaseDialog() {

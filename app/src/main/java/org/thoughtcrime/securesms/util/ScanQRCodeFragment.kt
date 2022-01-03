@@ -2,12 +2,11 @@ package org.thoughtcrime.securesms.util
 
 import android.content.res.Configuration
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import network.loki.messenger.R
+import androidx.fragment.app.Fragment
 import network.loki.messenger.databinding.FragmentScanQrCodeBinding
 import org.thoughtcrime.securesms.qr.ScanListener
 import org.thoughtcrime.securesms.qr.ScanningThread
