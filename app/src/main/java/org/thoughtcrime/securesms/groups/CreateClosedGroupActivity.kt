@@ -96,7 +96,7 @@ class CreateClosedGroupActivity : PassphraseRequiredActionBarActivity(), LoaderM
     }
 
     private fun createNewPrivateChat() {
-        setResult(Companion.closedGroupCreatedResultCode)
+        setResult(closedGroupCreatedResultCode)
         finish()
     }
 

@@ -66,8 +66,7 @@ class PNModeActivity : BaseActionBarActivity() {
 
     // region Interaction
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-        when(id) {
+        when(item.itemId) {
             R.id.learnMoreButton -> learnMore()
             else -> { /* Do nothing */ }
         }

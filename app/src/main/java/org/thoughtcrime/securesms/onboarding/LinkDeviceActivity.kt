@@ -188,19 +188,21 @@ class RecoveryPhraseFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.mnemonicEditText.imeOptions = EditorInfo.IME_ACTION_DONE or 16777216 // Always use incognito keyboard
-        binding.mnemonicEditText.setRawInputType(InputType.TYPE_CLASS_TEXT)
-        binding.mnemonicEditText.setOnEditorActionListener { v, actionID, _ ->
-            if (actionID == EditorInfo.IME_ACTION_DONE) {
-                val imm = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(v.windowToken, 0)
-                handleContinueButtonTapped()
-                true
-            } else {
-                false
+        with(binding) {
+            mnemonicEditText.imeOptions = EditorInfo.IME_ACTION_DONE or 16777216 // Always use incognito keyboard
+            mnemonicEditText.setRawInputType(InputType.TYPE_CLASS_TEXT)
+            mnemonicEditText.setOnEditorActionListener { v, actionID, _ ->
+                if (actionID == EditorInfo.IME_ACTION_DONE) {
+                    val imm = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(v.windowToken, 0)
+                    handleContinueButtonTapped()
+                    true
+                } else {
+                    false
+                }
             }
+            continueButton.setOnClickListener { handleContinueButtonTapped() }
         }
-        binding.continueButton.setOnClickListener { handleContinueButtonTapped() }
     }
 
     private fun handleContinueButtonTapped() {

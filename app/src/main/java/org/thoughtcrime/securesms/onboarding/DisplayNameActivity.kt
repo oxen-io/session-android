@@ -23,19 +23,21 @@ class DisplayNameActivity : BaseActionBarActivity() {
         setUpActionBarSessionLogo()
         binding = ActivityDisplayNameBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.displayNameEditText.imeOptions = binding.displayNameEditText.imeOptions or 16777216 // Always use incognito keyboard
-        binding.displayNameEditText.setOnEditorActionListener(
-                OnEditorActionListener { _, actionID, event ->
-                    if (actionID == EditorInfo.IME_ACTION_SEARCH ||
-                        actionID == EditorInfo.IME_ACTION_DONE ||
-                       (event.action == KeyEvent.ACTION_DOWN &&
-                        event.keyCode == KeyEvent.KEYCODE_ENTER)) {
-                        this.register()
-                        return@OnEditorActionListener true
-                    }
-                    false
-                })
-        binding.registerButton.setOnClickListener { register() }
+        with(binding) {
+            displayNameEditText.imeOptions = displayNameEditText.imeOptions or 16777216 // Always use incognito keyboard
+            displayNameEditText.setOnEditorActionListener(
+                    OnEditorActionListener { _, actionID, event ->
+                        if (actionID == EditorInfo.IME_ACTION_SEARCH ||
+                            actionID == EditorInfo.IME_ACTION_DONE ||
+                           (event.action == KeyEvent.ACTION_DOWN &&
+                            event.keyCode == KeyEvent.KEYCODE_ENTER)) {
+                            register()
+                            return@OnEditorActionListener true
+                        }
+                        false
+                    })
+            registerButton.setOnClickListener { register() }
+        }
     }
 
     private fun register() {
