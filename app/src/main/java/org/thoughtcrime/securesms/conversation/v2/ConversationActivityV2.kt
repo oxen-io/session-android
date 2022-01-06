@@ -44,11 +44,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.annimon.stream.Stream
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityConversationV2ActionBarBinding
 import network.loki.messenger.databinding.ActivityConversationV2Binding
 import nl.komponents.kovenant.ui.successUi
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.mentions.Mention
 import org.session.libsession.messaging.mentions.MentionsManager
@@ -125,6 +125,7 @@ import org.thoughtcrime.securesms.mms.MediaConstraints
 import org.thoughtcrime.securesms.mms.Slide
 import org.thoughtcrime.securesms.mms.SlideDeck
 import org.thoughtcrime.securesms.mms.VideoSlide
+import org.thoughtcrime.securesms.notifications.MarkReadReceiver
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.util.ActivityDispatcher
 import org.thoughtcrime.securesms.util.DateUtils
@@ -309,7 +310,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     override fun onResume() {
         super.onResume()
         ApplicationContext.getInstance(this).messageNotifier.setVisibleThread(viewModel.threadId)
-        viewModel.markAllAsRead()
+        markAllAsRead()
     }
 
     override fun onPause() {
@@ -552,6 +553,18 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         } else {
             binding.inputBar.showInput = true
         }
+    }
+
+    fun markAllAsRead() {
+        val messages = threadDb.setRead(viewModel.threadId, true)
+        if (viewModel.recipient.isGroupRecipient) {
+            for (message in messages) {
+                MarkReadReceiver.scheduleDeletion(this, message.expirationInfo)
+            }
+        } else {
+            MarkReadReceiver.process(this, messages)
+        }
+        ApplicationContext.getInstance(this).messageNotifier.updateNotification(this, false, 0)
     }
 
     override fun inputBarHeightChanged(newValue: Int) {
@@ -1097,7 +1110,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 val extras = intent?.extras ?: return
                 if (!intent.hasExtra(selectedContactsKey)) { return }
                 val selectedContacts = extras.getStringArray(selectedContactsKey)!!
-                viewModel.inviteContacts(selectedContacts)
+                val recipients = selectedContacts.map { contact ->
+                    Recipient.from(this, fromSerialized(contact), true)
+                }
+                viewModel.inviteContacts(recipients)
             }
         }
     }
@@ -1152,6 +1168,15 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         stopAudioHandler.removeCallbacks(stopVoiceMessageRecordingTask)
     }
 
+    private fun deleteLocally(message: MessageRecord) {
+        viewModel.buildUnsendRequest(message)?.let { unsendRequest ->
+            TextSecurePreferences.getLocalNumber(this@ConversationActivityV2)?.let {
+                MessageSender.send(unsendRequest, fromSerialized(it))
+            }
+        }
+        MessagingModuleConfiguration.shared.messageDataProvider.deleteMessage(message.id, !message.isMms)
+    }
+
     // Remove this after the unsend request is enabled
     fun deleteMessagesWithoutUnsendRequest(messages: Set<MessageRecord>) {
         val messageCount = messages.size
@@ -1199,7 +1224,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             bottomSheet.recipient = viewModel.recipient
             bottomSheet.onDeleteForMeTapped = {
                 for (message in messages) {
-                    viewModel.deleteLocally(message)
+                    deleteLocally(message)
                 }
                 bottomSheet.dismiss()
                 endActionMode()
@@ -1224,7 +1249,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             builder.setCancelable(true)
             builder.setPositiveButton(R.string.delete) { _, _ ->
                 for (message in messages) {
-                    viewModel.deleteLocally(message)
+                    deleteLocally(message)
                 }
                 endActionMode()
             }

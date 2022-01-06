@@ -1,7 +1,5 @@
 package org.thoughtcrime.securesms.conversation.v2
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import dagger.assisted.Assisted
@@ -18,12 +16,10 @@ import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.snode.SnodeAPI
-import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.toHexString
-import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.database.DraftDatabase
 import org.thoughtcrime.securesms.database.LokiMessageDatabase
 import org.thoughtcrime.securesms.database.LokiThreadDatabase
@@ -32,7 +28,6 @@ import org.thoughtcrime.securesms.database.RecipientDatabase
 import org.thoughtcrime.securesms.database.SmsDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
-import org.thoughtcrime.securesms.notifications.MarkReadReceiver
 import java.util.UUID
 
 class ConversationViewModel(
@@ -44,8 +39,8 @@ class ConversationViewModel(
     private val mmsDb: MmsDatabase,
     private val recipientDb: RecipientDatabase,
     private val lokiMessageDb: LokiMessageDatabase,
-    application: Application
-) : AndroidViewModel(application) {
+    private val textSecurePreferences: TextSecurePreferences
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ConversationUiState())
     val uiState: StateFlow<ConversationUiState> = _uiState
@@ -63,18 +58,6 @@ class ConversationViewModel(
         }
     }
 
-    fun markAllAsRead() {
-        val messages = threadDb.setRead(threadId, true)
-        if (recipient.isGroupRecipient) {
-            for (message in messages) {
-                MarkReadReceiver.scheduleDeletion(getApplication(), message.expirationInfo)
-            }
-        } else {
-            MarkReadReceiver.process(getApplication(), messages)
-        }
-        ApplicationContext.getInstance(getApplication()).messageNotifier.updateNotification(getApplication(), false, 0)
-    }
-
     fun saveDraft(text: String) {
         if (text.isEmpty()) return
         val drafts = DraftDatabase.Drafts()
@@ -88,19 +71,18 @@ class ConversationViewModel(
         return drafts.find { it.type == DraftDatabase.Draft.TEXT }?.value
     }
 
-    fun inviteContacts(contacts: Array<String>) {
+    fun inviteContacts(contacts: List<Recipient>) {
         val openGroup = lokiThreadDb.getOpenGroupChat(threadId) ?: return
         for (contact in contacts) {
-            val recipient = Recipient.from(getApplication(), Address.fromSerialized(contact), true)
             val message = VisibleMessage()
             message.sentTimestamp = System.currentTimeMillis()
             val openGroupInvitation = OpenGroupInvitation()
             openGroupInvitation.name = openGroup.name
             openGroupInvitation.url = openGroup.joinURL
             message.openGroupInvitation = openGroupInvitation
-            val outgoingTextMessage = OutgoingTextMessage.fromOpenGroupInvitation(openGroupInvitation, recipient, message.sentTimestamp)
+            val outgoingTextMessage = OutgoingTextMessage.fromOpenGroupInvitation(openGroupInvitation, contact, message.sentTimestamp)
             smsDb.insertMessageOutbox(-1, outgoingTextMessage, message.sentTimestamp!!)
-            MessageSender.send(message, recipient.address)
+            MessageSender.send(message, contact.address)
         }
     }
 
@@ -137,22 +119,13 @@ class ConversationViewModel(
         }
     }
 
-    fun deleteLocally(message: MessageRecord) {
-        buildUnsendRequest(message)?.let { unsendRequest ->
-            TextSecurePreferences.getLocalNumber(getApplication())?.let {
-                MessageSender.send(unsendRequest, Address.fromSerialized(it))
-            }
-        }
-        MessagingModuleConfiguration.shared.messageDataProvider.deleteMessage(message.id, !message.isMms)
-    }
-
-    private fun buildUnsendRequest(message: MessageRecord): UnsendRequest? {
+    fun buildUnsendRequest(message: MessageRecord): UnsendRequest? {
         if (recipient.isOpenGroupRecipient) return null
         val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
         messageDataProvider.getServerHashForMessage(message.id) ?: return null
         val unsendRequest = UnsendRequest()
         if (message.isOutgoing) {
-            unsendRequest.author = TextSecurePreferences.getLocalNumber(getApplication())
+            unsendRequest.author = textSecurePreferences.getLocalNumber()
         } else {
             unsendRequest.author = message.individualRecipient.address.contactIdentifier()
         }
@@ -241,7 +214,7 @@ class ConversationViewModel(
         private val mmsDb: MmsDatabase,
         private val recipientDb: RecipientDatabase,
         private val lokiMessageDb: LokiMessageDatabase,
-        private val application: Application
+        private val textSecurePreferences: TextSecurePreferences
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -254,7 +227,7 @@ class ConversationViewModel(
                 mmsDb,
                 recipientDb,
                 lokiMessageDb,
-                application
+                textSecurePreferences
             ) as T
         }
     }
