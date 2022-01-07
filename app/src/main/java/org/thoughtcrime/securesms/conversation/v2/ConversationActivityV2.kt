@@ -48,7 +48,6 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityConversationV2ActionBarBinding
 import network.loki.messenger.databinding.ActivityConversationV2Binding
 import nl.komponents.kovenant.ui.successUi
-import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.mentions.Mention
 import org.session.libsession.messaging.mentions.MentionsManager
@@ -1168,15 +1167,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         stopAudioHandler.removeCallbacks(stopVoiceMessageRecordingTask)
     }
 
-    private fun deleteLocally(message: MessageRecord) {
-        viewModel.buildUnsendRequest(message)?.let { unsendRequest ->
-            TextSecurePreferences.getLocalNumber(this@ConversationActivityV2)?.let {
-                MessageSender.send(unsendRequest, fromSerialized(it))
-            }
-        }
-        MessagingModuleConfiguration.shared.messageDataProvider.deleteMessage(message.id, !message.isMms)
-    }
-
     // Remove this after the unsend request is enabled
     fun deleteMessagesWithoutUnsendRequest(messages: Set<MessageRecord>) {
         val messageCount = messages.size
@@ -1224,7 +1214,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             bottomSheet.recipient = viewModel.recipient
             bottomSheet.onDeleteForMeTapped = {
                 for (message in messages) {
-                    deleteLocally(message)
+                    viewModel.deleteLocally(message)
                 }
                 bottomSheet.dismiss()
                 endActionMode()
@@ -1249,7 +1239,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             builder.setCancelable(true)
             builder.setPositiveButton(R.string.delete) { _, _ ->
                 for (message in messages) {
-                    deleteLocally(message)
+                    viewModel.deleteLocally(message)
                 }
                 endActionMode()
             }
