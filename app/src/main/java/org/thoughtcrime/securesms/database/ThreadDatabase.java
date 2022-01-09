@@ -17,6 +17,9 @@
  */
 package org.thoughtcrime.securesms.database;
 
+import static org.session.libsession.utilities.GroupUtil.OPEN_GROUP_PREFIX;
+import static org.thoughtcrime.securesms.database.GroupDatabase.GROUP_ID;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -87,6 +90,7 @@ public class ThreadDatabase extends Database {
   public  static final String EXPIRES_IN             = "expires_in";
   public  static final String LAST_SEEN              = "last_seen";
   private static final String HAS_SENT               = "has_sent";
+  public  static final String IS_PINNED              = "is_pinned";
 
   public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " ("                    +
     ID + " INTEGER PRIMARY KEY, " + DATE + " INTEGER DEFAULT 0, "                                  +
@@ -106,7 +110,7 @@ public class ThreadDatabase extends Database {
 
   private static final String[] THREAD_PROJECTION = {
       ID, DATE, MESSAGE_COUNT, ADDRESS, SNIPPET, SNIPPET_CHARSET, READ, UNREAD_COUNT, TYPE, ERROR, SNIPPET_TYPE,
-      SNIPPET_URI, ARCHIVED, STATUS, DELIVERY_RECEIPT_COUNT, EXPIRES_IN, LAST_SEEN, READ_RECEIPT_COUNT
+      SNIPPET_URI, ARCHIVED, STATUS, DELIVERY_RECEIPT_COUNT, EXPIRES_IN, LAST_SEEN, READ_RECEIPT_COUNT, IS_PINNED
   };
 
   private static final List<String> TYPED_THREAD_PROJECTION = Stream.of(THREAD_PROJECTION)
@@ -117,6 +121,11 @@ public class ThreadDatabase extends Database {
                                                                                                              Stream.of(RecipientDatabase.TYPED_RECIPIENT_PROJECTION)),
                                                                                                Stream.of(GroupDatabase.TYPED_GROUP_PROJECTION))
                                                                                        .toList();
+
+  public static String getCreatePinnedCommand() {
+    return "ALTER TABLE "+ TABLE_NAME + " " +
+            "ADD COLUMN " + IS_PINNED + " INTEGER DEFAULT 0;";
+  }
 
   public ThreadDatabase(Context context, SQLCipherOpenHelper databaseHelper) {
     super(context, databaseHelper);
@@ -374,7 +383,9 @@ public class ThreadDatabase extends Database {
 
   private Cursor getConversationList(String archived) {
     SQLiteDatabase db     = databaseHelper.getReadableDatabase();
-    String         query  = createQuery(ARCHIVED + " = ? AND " + MESSAGE_COUNT + " != 0", 0);
+    String         where  = "(" + MESSAGE_COUNT + " != 0 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') " +
+                            "AND " + ARCHIVED + " = ?";
+    String         query  = createQuery(where, 0);
     Cursor         cursor = db.rawQuery(query, new String[]{archived});
 
     setNotifyConverationListListeners(cursor);
@@ -572,6 +583,16 @@ public class ThreadDatabase extends Database {
     }
   }
 
+  public void setPinned(long threadId, boolean pinned) {
+    ContentValues contentValues = new ContentValues(1);
+    contentValues.put(IS_PINNED, pinned ? 1 : 0);
+
+    databaseHelper.getWritableDatabase().update(TABLE_NAME, contentValues, ID_WHERE,
+            new String[] {String.valueOf(threadId)});
+
+    notifyConversationListeners(threadId);
+  }
+
   private boolean deleteThreadOnEmpty(long threadId) {
     Recipient threadRecipient = getRecipientForThreadId(threadId);
     return threadRecipient != null && !threadRecipient.isOpenGroupRecipient();
@@ -615,9 +636,9 @@ public class ThreadDatabase extends Database {
            " LEFT OUTER JOIN " + RecipientDatabase.TABLE_NAME +
            " ON " + TABLE_NAME + "." + ADDRESS + " = " + RecipientDatabase.TABLE_NAME + "." + RecipientDatabase.ADDRESS +
            " LEFT OUTER JOIN " + GroupDatabase.TABLE_NAME +
-           " ON " + TABLE_NAME + "." + ADDRESS + " = " + GroupDatabase.TABLE_NAME + "." + GroupDatabase.GROUP_ID +
+           " ON " + TABLE_NAME + "." + ADDRESS + " = " + GroupDatabase.TABLE_NAME + "." + GROUP_ID +
            " WHERE " + where +
-           " ORDER BY " + TABLE_NAME + "." + DATE + " DESC";
+           " ORDER BY " + TABLE_NAME + "." + IS_PINNED + " DESC, " + TABLE_NAME + "." + DATE + " DESC";
 
     if (limit >  0) {
       query += " LIMIT " + limit;
@@ -678,6 +699,7 @@ public class ThreadDatabase extends Database {
       long               expiresIn            = cursor.getLong(cursor.getColumnIndexOrThrow(ThreadDatabase.EXPIRES_IN));
       long               lastSeen             = cursor.getLong(cursor.getColumnIndexOrThrow(ThreadDatabase.LAST_SEEN));
       Uri                snippetUri           = getSnippetUri(cursor);
+      boolean            pinned              = cursor.getInt(cursor.getColumnIndex(ThreadDatabase.IS_PINNED)) != 0;
 
       if (!TextSecurePreferences.isReadReceiptsEnabled(context)) {
         readReceiptCount = 0;
@@ -685,7 +707,7 @@ public class ThreadDatabase extends Database {
 
       return new ThreadRecord(body, snippetUri, recipient, date, count,
                               unreadCount, threadId, deliveryReceiptCount, status, type,
-                              distributionType, archived, expiresIn, lastSeen, readReceiptCount);
+                              distributionType, archived, expiresIn, lastSeen, readReceiptCount, pinned);
     }
 
     private @Nullable Uri getSnippetUri(Cursor cursor) {

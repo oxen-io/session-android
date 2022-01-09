@@ -15,6 +15,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.view_visible_message.view.*
@@ -22,6 +23,7 @@ import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact.ContactContext
 import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
 import org.session.libsession.utilities.ViewUtil
+import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.ThreadUtils
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.database.*
@@ -69,7 +71,6 @@ class VisibleMessageView : LinearLayout {
         const val longPressMovementTreshold = 10.0f // dp
         const val longPressDurationThreshold = 250L // ms
         const val maxDoubleTapInterval = 200L
-        const val maxTimeBetweenBreaks = 5 * 60 * 1000L // 5 minutes
     }
 
     // region Lifecycle
@@ -104,7 +105,9 @@ class VisibleMessageView : LinearLayout {
             profilePictureView.publicKey = senderSessionID
             profilePictureView.glide = glide
             profilePictureView.update(message.individualRecipient, threadID)
-            profilePictureView.setOnClickListener { showUserDetails(message.recipient.address.toString()) }
+            profilePictureView.setOnClickListener {
+                showUserDetails(senderSessionID, threadID)
+            }
             if (thread.isOpenGroupRecipient) {
                 val openGroup = lokiThreadDb.getOpenGroupChat(threadID) ?: return
                 val isModerator = OpenGroupAPIV2.isUserModerator(senderSessionID, openGroup.room, openGroup.server)
@@ -120,9 +123,7 @@ class VisibleMessageView : LinearLayout {
             senderNameTextView.visibility = View.GONE
         }
         // Date break
-        val showDateBreak = (previous == null || message.timestamp - previous.timestamp > maxTimeBetweenBreaks)
-        dateBreakTextView.isVisible = showDateBreak
-        dateBreakTextView.text = if (showDateBreak) DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), message.timestamp) else ""
+        dateBreakTextView.showDateBreak(message, previous)
         // Timestamp
         messageTimestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), message.timestamp)
         // Margins
@@ -385,10 +386,12 @@ class VisibleMessageView : LinearLayout {
         pressCallback = null
     }
 
-    private fun showUserDetails(publicKey: String) {
+    private fun showUserDetails(publicKey: String, threadID: Long) {
         val userDetailsBottomSheet = UserDetailsBottomSheet()
-        val bundle = Bundle()
-        bundle.putString("publicKey", publicKey)
+        val bundle = bundleOf(
+                UserDetailsBottomSheet.ARGUMENT_PUBLIC_KEY to publicKey,
+                UserDetailsBottomSheet.ARGUMENT_THREAD_ID to threadID
+        )
         userDetailsBottomSheet.arguments = bundle
         val activity = context as AppCompatActivity
         userDetailsBottomSheet.show(activity.supportFragmentManager, userDetailsBottomSheet.tag)
