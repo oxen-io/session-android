@@ -67,7 +67,7 @@ class ConversationView : LinearLayout {
         val textSize = if (unreadCount < 100) 12.0f else 9.0f
         binding.unreadCountTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize)
         binding.unreadCountTextView.setTypeface(Typeface.DEFAULT, if (unreadCount < 100) Typeface.BOLD else Typeface.NORMAL)
-        binding. unreadCountIndicator.isVisible = (unreadCount != 0 && !thread.isRead)
+        binding.unreadCountIndicator.isVisible = (unreadCount != 0 && !thread.isRead)
         val senderDisplayName = getUserDisplayName(thread.recipient)
                 ?: thread.recipient.address.toString()
         binding.conversationViewDisplayNameTextView.text = senderDisplayName

@@ -153,6 +153,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private lateinit var binding: ActivityConversationV2Binding
     private lateinit var actionBarBinding: ActivityConversationV2ActionBarBinding
 
+    @Inject lateinit var textSecurePreferences: TextSecurePreferences
     @Inject lateinit var threadDb: ThreadDatabase
     @Inject lateinit var mmsSmsDb: MmsSmsDatabase
     @Inject lateinit var lokiThreadDb: LokiThreadDatabase
@@ -452,7 +453,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             binding.typingIndicatorViewContainer.setTypists(recipients)
             inputBarHeightChanged(binding.inputBar.height)
         }
-        if (TextSecurePreferences.isTypingIndicatorsEnabled(this)) {
+        if (textSecurePreferences.isTypingIndicatorsEnabled()) {
             binding.inputBar.addTextChangedListener(object : SimpleTextWatcher() {
 
                 override fun onTextChanged(text: String?) {
@@ -482,7 +483,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun setUpLinkPreviewObserver() {
-        if (!TextSecurePreferences.isLinkPreviewsEnabled(this)) {
+        if (!textSecurePreferences.isLinkPreviewsEnabled()) {
             linkPreviewViewModel.onUserCancel(); return
         }
         linkPreviewViewModel.linkPreviewState.observe(this) { previewState: LinkPreviewState? ->
@@ -554,7 +555,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
-    fun markAllAsRead() {
+    private fun markAllAsRead() {
         val messages = threadDb.setRead(viewModel.threadId, true)
         if (viewModel.recipient.isGroupRecipient) {
             for (message in messages) {
@@ -593,18 +594,18 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun inputBarEditTextContentChanged(newContent: CharSequence) {
-        if (TextSecurePreferences.isLinkPreviewsEnabled(this)) {
+        if (textSecurePreferences.isLinkPreviewsEnabled()) {
             linkPreviewViewModel.onTextChanged(this, binding.inputBar.text, 0, 0)
         }
         showOrHideMentionCandidatesIfNeeded(newContent)
         if (LinkPreviewUtil.findWhitelistedUrls(newContent.toString()).isNotEmpty()
-            && !TextSecurePreferences.isLinkPreviewsEnabled(this) && !TextSecurePreferences.hasSeenLinkPreviewSuggestionDialog(this)) {
+            && !textSecurePreferences.isLinkPreviewsEnabled() && !textSecurePreferences.hasSeenLinkPreviewSuggestionDialog()) {
             LinkPreviewDialog {
                 setUpLinkPreviewObserver()
                 linkPreviewViewModel.onEnabled()
                 linkPreviewViewModel.onTextChanged(this, binding.inputBar.text, 0, 0)
             }.show(supportFragmentManager, "Link Preview Dialog")
-            TextSecurePreferences.setHasSeenLinkPreviewSuggestionDialog(this)
+            textSecurePreferences.setHasSeenLinkPreviewSuggestionDialog()
         }
     }
 
@@ -956,7 +957,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private fun sendTextOnlyMessage(hasPermissionToSendSeed: Boolean = false) {
         val text = getMessageBody()
-        val userPublicKey = TextSecurePreferences.getLocalNumber(this)
+        val userPublicKey = textSecurePreferences.getLocalNumber()
         val isNoteToSelf = (viewModel.recipient.isContactRecipient && viewModel.recipient.address.toString() == userPublicKey)
         if (text.contains(seed) && !isNoteToSelf && !hasPermissionToSendSeed) {
             val dialog = SendSeedDialog { sendTextOnlyMessage(true) }
@@ -990,7 +991,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         message.text = body
         val quote = quotedMessage?.let {
             val quotedAttachments = (it as? MmsMessageRecord)?.slideDeck?.asAttachments() ?: listOf()
-            val sender = if (it.isOutgoing) fromSerialized(TextSecurePreferences.getLocalNumber(this)!!) else it.individualRecipient.address
+            val sender = if (it.isOutgoing) fromSerialized(textSecurePreferences.getLocalNumber()!!) else it.individualRecipient.address
             QuoteModel(it.dateSent, sender, it.body, false, quotedAttachments)
         }
         val outgoingTextMessage = OutgoingMediaMessage.from(message, viewModel.recipient, attachments, quote, linkPreview)
@@ -1015,13 +1016,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun showGIFPicker() {
-        val hasSeenGIFMetaDataWarning: Boolean = TextSecurePreferences.hasSeenGIFMetaDataWarning(this)
+        val hasSeenGIFMetaDataWarning: Boolean = textSecurePreferences.hasSeenGIFMetaDataWarning()
         if (!hasSeenGIFMetaDataWarning) {
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Search GIFs?")
             builder.setMessage("You will not have full metadata protection when sending GIFs.")
             builder.setPositiveButton("OK") { dialog: DialogInterface, _: Int ->
-                TextSecurePreferences.setHasSeenGIFMetaDataWarning(this)
+                textSecurePreferences.setHasSeenGIFMetaDataWarning()
                 AttachmentManager.selectGif(this, PICK_GIF)
                 dialog.dismiss()
             }
