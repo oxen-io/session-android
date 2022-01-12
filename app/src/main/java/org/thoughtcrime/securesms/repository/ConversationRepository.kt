@@ -26,7 +26,34 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class ConversationRepository @Inject constructor(
+interface ConversationRepository {
+    fun isOxenHostedOpenGroup(threadId: Long): Boolean
+    fun getRecipientForThreadId(threadId: Long): Recipient
+    fun saveDraft(threadId: Long, text: String)
+    fun getDraft(threadId: Long): String?
+    fun inviteContacts(threadId: Long, contacts: List<Recipient>)
+    fun unblock(recipient: Recipient)
+    fun deleteLocally(recipient: Recipient, message: MessageRecord)
+
+    suspend fun deleteForEveryone(
+        threadId: Long,
+        recipient: Recipient,
+        message: MessageRecord
+    ): ResultOf<Unit>
+
+    fun buildUnsendRequest(recipient: Recipient, message: MessageRecord): UnsendRequest?
+
+    suspend fun deleteMessageWithoutUnsendRequest(
+        threadId: Long,
+        messages: Set<MessageRecord>
+    ): ResultOf<Unit>
+
+    suspend fun banUser(threadId: Long, messages: Set<MessageRecord>): ResultOf<Unit>
+
+    suspend fun banAndDeleteAll(threadId: Long, messages: Set<MessageRecord>): ResultOf<Unit>
+}
+
+class DefaultConversationRepository @Inject constructor(
     private val textSecurePreferences: TextSecurePreferences,
     private val messageDataProvider: MessageDataProvider,
     private val threadDb: ThreadDatabase,
@@ -36,32 +63,32 @@ class ConversationRepository @Inject constructor(
     private val mmsDb: MmsDatabase,
     private val recipientDb: RecipientDatabase,
     private val lokiMessageDb: LokiMessageDatabase
-) {
+) : ConversationRepository {
 
-    fun isOxenHostedOpenGroup(threadId: Long): Boolean {
+    override fun isOxenHostedOpenGroup(threadId: Long): Boolean {
         val openGroup = lokiThreadDb.getOpenGroupChat(threadId)
         return openGroup?.room == "session" || openGroup?.room == "oxen"
                 || openGroup?.room == "lokinet" || openGroup?.room == "crypto"
     }
 
-    fun getRecipientForThreadId(threadId: Long): Recipient {
+    override fun getRecipientForThreadId(threadId: Long): Recipient {
         return threadDb.getRecipientForThreadId(threadId)!!
     }
 
-    fun saveDraft(threadId: Long, text: String) {
+    override fun saveDraft(threadId: Long, text: String) {
         if (text.isEmpty()) return
         val drafts = DraftDatabase.Drafts()
         drafts.add(DraftDatabase.Draft(DraftDatabase.Draft.TEXT, text))
         draftDb.insertDrafts(threadId, drafts)
     }
 
-    fun getDraft(threadId: Long): String? {
+    override fun getDraft(threadId: Long): String? {
         val drafts = draftDb.getDrafts(threadId)
         draftDb.clearDrafts(threadId)
         return drafts.find { it.type == DraftDatabase.Draft.TEXT }?.value
     }
 
-    fun inviteContacts(threadId: Long, contacts: List<Recipient>) {
+    override fun inviteContacts(threadId: Long, contacts: List<Recipient>) {
         val openGroup = lokiThreadDb.getOpenGroupChat(threadId) ?: return
         for (contact in contacts) {
             val message = VisibleMessage()
@@ -80,11 +107,11 @@ class ConversationRepository @Inject constructor(
         }
     }
 
-    fun unblock(recipient: Recipient) {
+    override fun unblock(recipient: Recipient) {
         recipientDb.setBlocked(recipient, false)
     }
 
-    fun deleteLocally(recipient: Recipient, message: MessageRecord) {
+    override fun deleteLocally(recipient: Recipient, message: MessageRecord) {
         buildUnsendRequest(recipient, message)?.let { unsendRequest ->
             textSecurePreferences.getLocalNumber()?.let {
                 MessageSender.send(unsendRequest, Address.fromSerialized(it))
@@ -93,7 +120,7 @@ class ConversationRepository @Inject constructor(
         messageDataProvider.deleteMessage(message.id, !message.isMms)
     }
 
-    suspend fun deleteForEveryone(
+    override suspend fun deleteForEveryone(
         threadId: Long,
         recipient: Recipient,
         message: MessageRecord
@@ -129,7 +156,7 @@ class ConversationRepository @Inject constructor(
         }
     }
 
-    private fun buildUnsendRequest(recipient: Recipient, message: MessageRecord): UnsendRequest? {
+    override fun buildUnsendRequest(recipient: Recipient, message: MessageRecord): UnsendRequest? {
         if (recipient.isOpenGroupRecipient) return null
         messageDataProvider.getServerHashForMessage(message.id) ?: return null
         val unsendRequest = UnsendRequest()
@@ -143,7 +170,7 @@ class ConversationRepository @Inject constructor(
         return unsendRequest
     }
 
-    suspend fun deleteMessageWithoutUnsendRequest(
+    override suspend fun deleteMessageWithoutUnsendRequest(
         threadId: Long,
         messages: Set<MessageRecord>
     ): ResultOf<Unit> = suspendCoroutine { continuation ->
@@ -175,7 +202,7 @@ class ConversationRepository @Inject constructor(
         continuation.resume(ResultOf.Success(Unit))
     }
 
-    suspend fun banUser(threadId: Long, messages: Set<MessageRecord>): ResultOf<Unit> =
+    override suspend fun banUser(threadId: Long, messages: Set<MessageRecord>): ResultOf<Unit> =
         suspendCoroutine { continuation ->
             val sessionID = messages.first().individualRecipient.address.toString()
             val openGroup = lokiThreadDb.getOpenGroupChat(threadId)!!
@@ -187,7 +214,7 @@ class ConversationRepository @Inject constructor(
                 }
         }
 
-    suspend fun banAndDeleteAll(threadId: Long, messages: Set<MessageRecord>): ResultOf<Unit> =
+    override suspend fun banAndDeleteAll(threadId: Long, messages: Set<MessageRecord>): ResultOf<Unit> =
         suspendCoroutine { continuation ->
             val sessionID = messages.first().individualRecipient.address.toString()
             val openGroup = lokiThreadDb.getOpenGroupChat(threadId)!!

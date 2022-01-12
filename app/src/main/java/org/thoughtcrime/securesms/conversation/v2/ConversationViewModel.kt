@@ -49,6 +49,7 @@ class ConversationViewModel(
             repository.unblock(recipient)
         }
     }
+
     fun deleteLocally(message: MessageRecord) {
         repository.deleteLocally(recipient, message)
     }
