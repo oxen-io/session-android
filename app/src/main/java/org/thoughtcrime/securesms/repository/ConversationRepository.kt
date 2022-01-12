@@ -48,9 +48,9 @@ interface ConversationRepository {
         messages: Set<MessageRecord>
     ): ResultOf<Unit>
 
-    suspend fun banUser(threadId: Long, messages: Set<MessageRecord>): ResultOf<Unit>
+    suspend fun banUser(threadId: Long, recipient: Recipient): ResultOf<Unit>
 
-    suspend fun banAndDeleteAll(threadId: Long, messages: Set<MessageRecord>): ResultOf<Unit>
+    suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): ResultOf<Unit>
 }
 
 class DefaultConversationRepository @Inject constructor(
@@ -202,9 +202,9 @@ class DefaultConversationRepository @Inject constructor(
         continuation.resume(ResultOf.Success(Unit))
     }
 
-    override suspend fun banUser(threadId: Long, messages: Set<MessageRecord>): ResultOf<Unit> =
+    override suspend fun banUser(threadId: Long, recipient: Recipient): ResultOf<Unit> =
         suspendCoroutine { continuation ->
-            val sessionID = messages.first().individualRecipient.address.toString()
+            val sessionID = recipient.address.toString()
             val openGroup = lokiThreadDb.getOpenGroupChat(threadId)!!
             OpenGroupAPIV2.ban(sessionID, openGroup.room, openGroup.server)
                 .success {
@@ -214,9 +214,9 @@ class DefaultConversationRepository @Inject constructor(
                 }
         }
 
-    override suspend fun banAndDeleteAll(threadId: Long, messages: Set<MessageRecord>): ResultOf<Unit> =
+    override suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): ResultOf<Unit> =
         suspendCoroutine { continuation ->
-            val sessionID = messages.first().individualRecipient.address.toString()
+            val sessionID = recipient.address.toString()
             val openGroup = lokiThreadDb.getOpenGroupChat(threadId)!!
             OpenGroupAPIV2.banAndDeleteAll(sessionID, openGroup.room, openGroup.server)
                 .success {

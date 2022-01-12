@@ -1258,7 +1258,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         builder.setMessage("This will ban the selected user from this room. It won't ban them from other rooms.")
         builder.setCancelable(true)
         builder.setPositiveButton(R.string.ban) { _, _ ->
-            viewModel.banUser(messages)
+            viewModel.banUser(messages.first().individualRecipient)
             endActionMode()
         }
         builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
@@ -1274,7 +1274,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         builder.setMessage("This will ban the selected user from this room and delete all messages sent by them. It won't ban them from other rooms or delete the messages they sent there.")
         builder.setCancelable(true)
         builder.setPositiveButton(R.string.ban) { _, _ ->
-            viewModel.banAndDeleteAll(messages)
+            viewModel.banAndDeleteAll(messages.first().individualRecipient)
             endActionMode()
         }
         builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->

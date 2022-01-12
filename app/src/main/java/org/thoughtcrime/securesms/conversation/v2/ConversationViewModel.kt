@@ -68,8 +68,8 @@ class ConversationViewModel(
             }
     }
 
-    fun banUser(messages: Set<MessageRecord>) = viewModelScope.launch {
-        repository.banUser(threadId, messages)
+    fun banUser(recipient: Recipient) = viewModelScope.launch {
+        repository.banUser(threadId, recipient)
             .onSuccess {
                 showMessage("Successfully banned user")
             }
@@ -78,8 +78,8 @@ class ConversationViewModel(
             }
     }
 
-    fun banAndDeleteAll(messages: Set<MessageRecord>) = viewModelScope.launch {
-        repository.banAndDeleteAll(threadId, messages)
+    fun banAndDeleteAll(recipient: Recipient) = viewModelScope.launch {
+        repository.banAndDeleteAll(threadId, recipient)
             .onSuccess {
                 showMessage("Successfully banned user and deleted all their messages")
             }
