@@ -224,6 +224,17 @@ class VisibleMessageContentView : LinearLayout {
     }
 
     fun recycle() {
+        arrayOf(
+            deletedMessageView,
+            untrustedView,
+            voiceMessageView,
+            openGroupInvitationView,
+            documentView,
+            quoteView,
+            linkPreviewView,
+            albumThumbnailView,
+            bodyTextView
+        ).forEach { view -> view.isVisible = false }
     }
     // endregion
 
