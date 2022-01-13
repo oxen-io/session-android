@@ -99,7 +99,7 @@ class VisibleMessageContentView : LinearLayout {
         linkPreviewLayout.width = if (mediaThumbnailMessage) 0 else ViewGroup.LayoutParams.WRAP_CONTENT
         linkPreviewView.layoutParams = linkPreviewLayout
 
-        untrustedView.isVisible = !contactIsTrusted && message is MmsMessageRecord
+        untrustedView.isVisible = !contactIsTrusted && message is MmsMessageRecord && message.quote == null
         voiceMessageView.isVisible = contactIsTrusted && message is MmsMessageRecord && message.slideDeck.audioSlide != null
         documentView.isVisible = contactIsTrusted && message is MmsMessageRecord && message.slideDeck.documentSlide != null
         albumThumbnailView.isVisible = mediaThumbnailMessage
@@ -108,7 +108,6 @@ class VisibleMessageContentView : LinearLayout {
         var hideBody = false
 
         if (message is MmsMessageRecord && message.quote != null) {
-            // TODO: test if this looks fine for deleted messages using message.isDeleted when unsend is activated
             quoteView.isVisible = true
             val quote = message.quote!!
             // The max content width is the max message bubble size - 2 times the horizontal padding - 2
@@ -178,6 +177,8 @@ class VisibleMessageContentView : LinearLayout {
                     albumThumbnailView.calculateHitObject(event, message, thread)
                 }
             } else {
+                hideBody = true
+                albumThumbnailView.clearViews()
                 untrustedView.bind(UntrustedAttachmentView.AttachmentType.MEDIA, VisibleMessageContentView.getTextColor(context,message))
                 onContentClick.add { untrustedView.showTrustDialog(message.individualRecipient) }
             }

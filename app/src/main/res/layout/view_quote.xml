@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/mainQuoteViewContainer"
+<RelativeLayout android:id="@+id/mainQuoteViewContainer"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/input_bar_background"
-    android:paddingBottom="@dimen/small_spacing"
     android:paddingHorizontal="@dimen/medium_spacing">
 
     <View
@@ -22,6 +20,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentStart="true"
+        android:layout_marginVertical="@dimen/small_spacing"
         android:layout_centerVertical="true"
         android:background="@drawable/view_quote_attachment_preview_background">
 
@@ -48,6 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="30dp"
+        android:layout_marginVertical="@dimen/small_spacing"
         android:gravity="center_vertical"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"

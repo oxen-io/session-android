@@ -6,7 +6,6 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
-import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -23,7 +22,6 @@ import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact.ContactContext
 import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
 import org.session.libsession.utilities.ViewUtil
-import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.ThreadUtils
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.database.*
@@ -164,7 +162,7 @@ class VisibleMessageView : LinearLayout {
         if (profilePictureContainer.visibility != View.GONE) { maxWidth -= profilePictureContainer.width }
         // Populate content view
         messageContentView.indexInAdapter = indexInAdapter
-        messageContentView.bind(message, isStartOfMessageCluster, isEndOfMessageCluster, glide, maxWidth, thread, searchQuery, isGroupThread || (contact?.isTrusted ?: false))
+        messageContentView.bind(message, isStartOfMessageCluster, isEndOfMessageCluster, glide, maxWidth, thread, searchQuery, message.isOutgoing || isGroupThread || (contact?.isTrusted ?: false))
         messageContentView.delegate = contentViewDelegate
         onDoubleTap = { messageContentView.onContentDoubleTap?.invoke() }
     }
