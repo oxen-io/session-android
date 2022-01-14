@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.view.View
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -19,24 +18,22 @@ import androidx.lifecycle.lifecycleScope
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_home.*
-import kotlinx.android.synthetic.main.seed_reminder_stub.*
-import kotlinx.android.synthetic.main.seed_reminder_stub.view.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
+import network.loki.messenger.databinding.ActivityHomeBinding
+import network.loki.messenger.databinding.SeedReminderStubBinding
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.sending_receiving.MessageSender
-import org.session.libsession.utilities.*
-import org.session.libsession.utilities.Util
-import org.session.libsignal.utilities.ThreadUtils
+import org.session.libsession.utilities.GroupUtil
+import org.session.libsession.utilities.ProfilePictureModifiedEvent
+import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.MuteDialog
@@ -59,13 +56,20 @@ import org.thoughtcrime.securesms.notifications.MarkReadReceiver
 import org.thoughtcrime.securesms.onboarding.SeedActivity
 import org.thoughtcrime.securesms.onboarding.SeedReminderViewDelegate
 import org.thoughtcrime.securesms.preferences.SettingsActivity
-import org.thoughtcrime.securesms.util.*
+import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
+import org.thoughtcrime.securesms.util.IP2Country
+import org.thoughtcrime.securesms.util.disableClipping
+import org.thoughtcrime.securesms.util.getColorWithID
+import org.thoughtcrime.securesms.util.push
+import org.thoughtcrime.securesms.util.show
 import java.io.IOException
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickListener,
     SeedReminderViewDelegate, NewConversationButtonSetViewDelegate, LoaderManager.LoaderCallbacks<Cursor> {
+
+    private lateinit var binding: ActivityHomeBinding
     private lateinit var glide: GlideRequests
     private var broadcastReceiver: BroadcastReceiver? = null
 
@@ -76,57 +80,57 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
     private val publicKey: String
         get() = TextSecurePreferences.getLocalNumber(this)!!
 
-    private val homeAdapter:HomeAdapter by lazy {
-        HomeAdapter(this, threadDb.conversationList)
+    private val homeAdapter: HomeAdapter by lazy {
+        HomeAdapter(context = this, cursor = threadDb.conversationList, listener = this)
     }
 
     // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {
         super.onCreate(savedInstanceState, isReady)
         // Set content view
-        setContentView(R.layout.activity_home)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         // Set custom toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         // Set up Glide
         glide = GlideApp.with(this)
         // Set up toolbar buttons
-        profileButton.glide = glide
-        profileButton.setOnClickListener { openSettings() }
-        pathStatusViewContainer.disableClipping()
-        pathStatusViewContainer.setOnClickListener { showPath() }
+        binding.profileButton.glide = glide
+        binding.profileButton.setOnClickListener { openSettings() }
+        binding.pathStatusViewContainer.disableClipping()
+        binding.pathStatusViewContainer.setOnClickListener { showPath() }
         // Set up seed reminder view
         val hasViewedSeed = TextSecurePreferences.getHasViewedSeed(this)
         if (!hasViewedSeed) {
-            seedReminderStub.inflate().apply {
-                val seedReminderView = this.seedReminderView
+            binding.seedReminderStub.setOnInflateListener { _, inflated ->
+                val stubBinding = SeedReminderStubBinding.bind(inflated)
                 val seedReminderViewTitle = SpannableString("You're almost finished! 80%") // Intentionally not yet translated
                 seedReminderViewTitle.setSpan(ForegroundColorSpan(resources.getColorWithID(R.color.accent, theme)), 24, 27, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                seedReminderView.title = seedReminderViewTitle
-                seedReminderView.subtitle = resources.getString(R.string.view_seed_reminder_subtitle_1)
-                seedReminderView.setProgress(80, false)
-                seedReminderView.delegate = this@HomeActivity
+                stubBinding.seedReminderView.title = seedReminderViewTitle
+                stubBinding.seedReminderView.subtitle = resources.getString(R.string.view_seed_reminder_subtitle_1)
+                stubBinding.seedReminderView.setProgress(80, false)
+                stubBinding.seedReminderView.delegate = this@HomeActivity
             }
+            binding.seedReminderStub.inflate()
         } else {
-            seedReminderStub.isVisible = false
+            binding.seedReminderStub.isVisible = false
         }
         // Set up recycler view
         homeAdapter.setHasStableIds(true)
         homeAdapter.glide = glide
-        homeAdapter.conversationClickListener = this
-        recyclerView.adapter = homeAdapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter = homeAdapter
         // Set up empty state view
-        createNewPrivateChatButton.setOnClickListener { createNewPrivateChat() }
+        binding.createNewPrivateChatButton.setOnClickListener { createNewPrivateChat() }
         IP2Country.configureIfNeeded(this@HomeActivity)
         // This is a workaround for the fact that CursorRecyclerViewAdapter doesn't actually auto-update (even though it says it will)
         LoaderManager.getInstance(this).restartLoader(0, null, this)
         // Set up new conversation button set
-        newConversationButtonSet.delegate = this
+        binding.newConversationButtonSet.delegate = this
         // Observe blocked contacts changed events
         val broadcastReceiver = object : BroadcastReceiver() {
 
             override fun onReceive(context: Context, intent: Intent) {
-                recyclerView.adapter!!.notifyDataSetChanged()
+                binding.recyclerView.adapter!!.notifyDataSetChanged()
             }
         }
         this.broadcastReceiver = broadcastReceiver
@@ -139,7 +143,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
                 // Set up typing observer
                 withContext(Dispatchers.Main) {
                     ApplicationContext.getInstance(this@HomeActivity).typingStatusRepository.typingThreads.observe(this@HomeActivity, Observer<Set<Long>> { threadIDs ->
-                        val adapter = recyclerView.adapter as HomeAdapter
+                        val adapter = binding.recyclerView.adapter as HomeAdapter
                         adapter.typingThreadIDs = threadIDs ?: setOf()
                     })
                     updateProfileButton()
@@ -178,11 +182,11 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
         ApplicationContext.getInstance(this).messageNotifier.setHomeScreenVisible(true)
         if (TextSecurePreferences.getLocalNumber(this) == null) { return; } // This can be the case after a secondary device is auto-cleared
         IdentityKeyUtil.checkUpdate(this)
-        profileButton.recycle() // clear cached image before update tje profilePictureView
-        profileButton.update()
+        binding.profileButton.recycle() // clear cached image before update tje profilePictureView
+        binding.profileButton.update()
         val hasViewedSeed = TextSecurePreferences.getHasViewedSeed(this)
         if (hasViewedSeed) {
-            seedReminderView?.isVisible = false
+            binding.seedReminderStub.isVisible = false
         }
         if (TextSecurePreferences.getConfigurationMessageSynced(this)) {
             lifecycleScope.launch(Dispatchers.IO) {
@@ -215,8 +219,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
 
     // region Updating
     private fun updateEmptyState() {
-        val threadCount = (recyclerView.adapter as HomeAdapter).itemCount
-        emptyStateContainer.visibility = if (threadCount == 0) View.VISIBLE else View.GONE
+        val threadCount = (binding.recyclerView.adapter as HomeAdapter).itemCount
+        binding.emptyStateContainer.isVisible = threadCount == 0
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -227,10 +231,10 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
     }
 
     private fun updateProfileButton() {
-        profileButton.publicKey = publicKey
-        profileButton.displayName = TextSecurePreferences.getProfileName(this)
-        profileButton.recycle()
-        profileButton.update()
+        binding.profileButton.publicKey = publicKey
+        binding.profileButton.displayName = TextSecurePreferences.getProfileName(this)
+        binding.profileButton.recycle()
+        binding.profileButton.update()
     }
     // endregion
 
@@ -240,13 +244,13 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
         show(intent)
     }
 
-    override fun onConversationClick(view: ConversationView) {
-        val thread = view.thread ?: return
-        openConversation(thread)
+    override fun onConversationClick(thread: ThreadRecord) {
+        val intent = Intent(this, ConversationActivityV2::class.java)
+        intent.putExtra(ConversationActivityV2.THREAD_ID, thread.threadId)
+        push(intent)
     }
 
-    override fun onLongConversationClick(view: ConversationView) {
-        val thread = view.thread ?: return
+    override fun onLongConversationClick(thread: ThreadRecord) {
         val bottomSheet = ConversationOptionsBottomSheet()
         bottomSheet.thread = thread
         bottomSheet.onViewDetailsTapped = {
@@ -287,15 +291,11 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
         }
         bottomSheet.onPinTapped = {
             bottomSheet.dismiss()
-            if (!thread.isPinned) {
-                pinConversation(thread)
-            }
+            setConversationPinned(thread.threadId, true)
         }
         bottomSheet.onUnpinTapped = {
             bottomSheet.dismiss()
-            if (thread.isPinned) {
-                unpinConversation(thread)
-            }
+            setConversationPinned(thread.threadId, false)
         }
         bottomSheet.onMarkAllAsReadTapped = {
             bottomSheet.dismiss()
@@ -310,10 +310,10 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
                 .setMessage(R.string.RecipientPreferenceActivity_you_will_no_longer_receive_messages_and_calls_from_this_contact)
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(R.string.RecipientPreferenceActivity_block) { dialog, _ ->
-                    ThreadUtils.queue {
+                    lifecycleScope.launch(Dispatchers.IO) {
                         recipientDatabase.setBlocked(thread.recipient, true)
-                        Util.runOnMain {
-                            recyclerView.adapter!!.notifyDataSetChanged()
+                        withContext(Dispatchers.Main) {
+                            binding.recyclerView.adapter!!.notifyDataSetChanged()
                             dialog.dismiss()
                         }
                     }
@@ -326,10 +326,10 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
                 .setMessage(R.string.RecipientPreferenceActivity_you_will_once_again_be_able_to_receive_messages_and_calls_from_this_contact)
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(R.string.RecipientPreferenceActivity_unblock) { dialog, _ ->
-                    ThreadUtils.queue {
+                    lifecycleScope.launch(Dispatchers.IO) {
                         recipientDatabase.setBlocked(thread.recipient, false)
-                        Util.runOnMain {
-                            recyclerView.adapter!!.notifyDataSetChanged()
+                        withContext(Dispatchers.Main) {
+                            binding.recyclerView.adapter!!.notifyDataSetChanged()
                             dialog.dismiss()
                         }
                     }
@@ -338,18 +338,18 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
 
     private fun setConversationMuted(thread: ThreadRecord, isMuted: Boolean) {
         if (!isMuted) {
-            ThreadUtils.queue {
+            lifecycleScope.launch(Dispatchers.IO) {
                 recipientDatabase.setMuted(thread.recipient, 0)
-                Util.runOnMain {
-                    recyclerView.adapter!!.notifyDataSetChanged()
+                withContext(Dispatchers.Main) {
+                    binding.recyclerView.adapter!!.notifyDataSetChanged()
                 }
             }
         } else {
             MuteDialog.show(this) { until: Long ->
-                ThreadUtils.queue {
+                lifecycleScope.launch(Dispatchers.IO) {
                     recipientDatabase.setMuted(thread.recipient, until)
-                    Util.runOnMain {
-                        recyclerView.adapter!!.notifyDataSetChanged()
+                    withContext(Dispatchers.Main) {
+                        binding.recyclerView.adapter!!.notifyDataSetChanged()
                     }
                 }
             }
@@ -357,28 +357,19 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
     }
 
     private fun setNotifyType(thread: ThreadRecord, newNotifyType: Int) {
-        ThreadUtils.queue {
+        lifecycleScope.launch(Dispatchers.IO) {
             recipientDatabase.setNotifyType(thread.recipient, newNotifyType)
-            Util.runOnMain {
-                recyclerView.adapter!!.notifyDataSetChanged()
+            withContext(Dispatchers.Main) {
+                binding.recyclerView.adapter!!.notifyDataSetChanged()
             }
         }
     }
 
-    private fun pinConversation(thread: ThreadRecord) {
-        ThreadUtils.queue {
-            threadDb.setPinned(thread.threadId, true)
-            Util.runOnMain {
-                LoaderManager.getInstance(this).restartLoader(0, null, this)
-            }
-        }
-    }
-
-    private fun unpinConversation(thread: ThreadRecord) {
-        ThreadUtils.queue {
-            threadDb.setPinned(thread.threadId, false)
-            Util.runOnMain {
-                LoaderManager.getInstance(this).restartLoader(0, null, this)
+    private fun setConversationPinned(threadId: Long, pinned: Boolean) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            threadDb.setPinned(threadId, pinned)
+            withContext(Dispatchers.Main) {
+                LoaderManager.getInstance(this@HomeActivity).restartLoader(0, null, this@HomeActivity)
             }
         }
     }
@@ -392,16 +383,15 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
     private fun deleteConversation(thread: ThreadRecord) {
         val threadID = thread.threadId
         val recipient = thread.recipient
-        val message: String
-        if (recipient.isGroupRecipient) {
+        val message = if (recipient.isGroupRecipient) {
             val group = groupDatabase.getGroup(recipient.address.toString()).orNull()
             if (group != null && group.admins.map { it.toString() }.contains(TextSecurePreferences.getLocalNumber(this))) {
-                message = "Because you are the creator of this group it will be deleted for everyone. This cannot be undone."
+                "Because you are the creator of this group it will be deleted for everyone. This cannot be undone."
             } else {
-                message = resources.getString(R.string.activity_home_leave_group_dialog_message)
+                resources.getString(R.string.activity_home_leave_group_dialog_message)
             }
         } else {
-            message = resources.getString(R.string.activity_home_delete_conversation_dialog_message)
+            resources.getString(R.string.activity_home_delete_conversation_dialog_message)
         }
         val dialog = AlertDialog.Builder(this)
         dialog.setMessage(message)
@@ -430,7 +420,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
                 if (v2OpenGroup != null) {
                     OpenGroupManager.delete(v2OpenGroup.server, v2OpenGroup.room, this@HomeActivity)
                 } else {
-                    ThreadUtils.queue {
+                    lifecycleScope.launch(Dispatchers.IO) {
                         threadDb.deleteConversation(threadID)
                     }
                 }
@@ -445,12 +435,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
             // Do nothing
         }
         dialog.create().show()
-    }
-
-    private fun openConversation(thread: ThreadRecord) {
-        val intent = Intent(this, ConversationActivityV2::class.java)
-        intent.putExtra(ConversationActivityV2.THREAD_ID, thread.threadId)
-        push(intent)
     }
 
     private fun openSettings() {
