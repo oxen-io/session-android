@@ -3,20 +3,23 @@ package org.thoughtcrime.securesms.search;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import com.annimon.stream.Stream;
 
-import org.thoughtcrime.securesms.contacts.ContactAccessor;
+import org.session.libsession.messaging.contacts.Contact;
 import org.session.libsession.utilities.Address;
+import org.session.libsession.utilities.recipients.Recipient;
+import org.session.libsignal.utilities.Log;
+import org.thoughtcrime.securesms.contacts.ContactAccessor;
 import org.thoughtcrime.securesms.database.CursorList;
 import org.thoughtcrime.securesms.database.MmsSmsColumns;
 import org.thoughtcrime.securesms.database.SearchDatabase;
+import org.thoughtcrime.securesms.database.SessionContactDatabase;
 import org.thoughtcrime.securesms.database.ThreadDatabase;
 import org.thoughtcrime.securesms.database.model.ThreadRecord;
-import org.session.libsignal.utilities.Log;
-import org.session.libsession.utilities.recipients.Recipient;
 import org.thoughtcrime.securesms.search.model.MessageResult;
 import org.thoughtcrime.securesms.search.model.SearchResult;
 import org.thoughtcrime.securesms.util.Stopwatch;
@@ -50,21 +53,24 @@ public class SearchRepository {
     }
   }
 
-  private final Context          context;
-  private final SearchDatabase   searchDatabase;
-  private final ThreadDatabase   threadDatabase;
-  private final ContactAccessor  contactAccessor;
-  private final Executor         executor;
+  private final Context                context;
+  private final SearchDatabase         searchDatabase;
+  private final ThreadDatabase         threadDatabase;
+  private final SessionContactDatabase contactDatabase;
+  private final ContactAccessor        contactAccessor;
+  private final Executor               executor;
 
   public SearchRepository(@NonNull Context context,
                           @NonNull SearchDatabase searchDatabase,
                           @NonNull ThreadDatabase threadDatabase,
+                          @NonNull SessionContactDatabase contactDatabase,
                           @NonNull ContactAccessor contactAccessor,
                           @NonNull Executor executor)
   {
     this.context          = context.getApplicationContext();
     this.searchDatabase   = searchDatabase;
     this.threadDatabase   = threadDatabase;
+    this.contactDatabase  = contactDatabase;
     this.contactAccessor  = contactAccessor;
     this.executor         = executor;
   }
@@ -81,7 +87,7 @@ public class SearchRepository {
       String cleanQuery = sanitizeQuery(query);
       timer.split("clean");
 
-      CursorList<Recipient> contacts = queryContacts(cleanQuery);
+      CursorList<Contact> contacts = queryContacts(cleanQuery);
       timer.split("contacts");
 
       CursorList<ThreadRecord> conversations = queryConversations(cleanQuery);
@@ -111,8 +117,11 @@ public class SearchRepository {
     });
   }
 
-  private CursorList<Recipient> queryContacts(String query) {
-    return CursorList.emptyList();
+  private CursorList<Contact> queryContacts(String query) {
+
+    Cursor contactsCursor = contactDatabase.queryDatabase(query);
+
+    return new CursorList<Contact>(contactsCursor, new ContactModelBuilder(contactDatabase));
     /* Loki - We don't need contacts permission
     if (!Permissions.hasAny(context, Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS)) {
       return CursorList.emptyList();
@@ -167,6 +176,20 @@ public class SearchRepository {
     }
 
     return out.toString();
+  }
+
+  private static class ContactModelBuilder implements CursorList.ModelBuilder<Contact> {
+
+    private final SessionContactDatabase contactDb;
+
+    public ContactModelBuilder(SessionContactDatabase contactDb) {
+      this.contactDb = contactDb;
+    }
+
+    @Override
+    public Contact build(@NonNull Cursor cursor) {
+      return null;
+    }
   }
 
   private static class RecipientModelBuilder implements CursorList.ModelBuilder<Recipient> {

@@ -87,4 +87,14 @@ class SessionContactDatabase(context: Context, helper: SQLCipherOpenHelper) : Da
         contact.isTrusted = cursor.getInt(isTrusted) != 0
         return contact
     }
+
+    fun queryDatabase(constraint: String): Cursor {
+        return databaseHelper.readableDatabase.query(
+            sessionContactTable, null, " $name LIKE ? OR $nickname LIKE ?", arrayOf(
+                "%$constraint%",
+                "%$constraint%"
+            ),
+            null, null, null
+        )
+    }
 }

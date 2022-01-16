@@ -11,6 +11,7 @@ import org.session.libsession.utilities.concurrent.SignalExecutors
 import org.thoughtcrime.securesms.contacts.ContactAccessor
 import org.thoughtcrime.securesms.database.CursorList
 import org.thoughtcrime.securesms.database.SearchDatabase
+import org.thoughtcrime.securesms.database.SessionContactDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.search.SearchRepository
 import org.thoughtcrime.securesms.search.model.MessageResult
@@ -22,12 +23,20 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     @ApplicationContext context: Context,
     searchDb: SearchDatabase,
-    threadDb: ThreadDatabase
+    threadDb: ThreadDatabase,
+    contactDb: SessionContactDatabase
 ) : ViewModel() {
 
-    private val searchRepository: SearchRepository
-    private val result: CloseableLiveData<SearchResult>
-    private val debouncer: Debouncer
+    private val searchRepository: SearchRepository = SearchRepository(
+        context,
+        searchDb,
+        threadDb,
+        contactDb,
+        ContactAccessor.getInstance(),
+        SignalExecutors.SERIAL
+    )
+    private val result: CloseableLiveData<SearchResult> = CloseableLiveData()
+    private val debouncer: Debouncer = Debouncer(500)
     private var firstSearch = false
     private var searchOpen = false
     private var activeQuery: String? = null
@@ -107,13 +116,4 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    init {
-        result = CloseableLiveData()
-        debouncer = Debouncer(500)
-        searchRepository = SearchRepository(context,
-            searchDb,
-            threadDb,
-            ContactAccessor.getInstance(),
-            SignalExecutors.SERIAL)
-    }
 }

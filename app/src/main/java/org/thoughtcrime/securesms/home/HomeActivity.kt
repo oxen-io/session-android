@@ -12,6 +12,7 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -53,6 +54,7 @@ import org.thoughtcrime.securesms.dms.CreatePrivateChatActivity
 import org.thoughtcrime.securesms.groups.CreateClosedGroupActivity
 import org.thoughtcrime.securesms.groups.JoinPublicChatActivity
 import org.thoughtcrime.securesms.groups.OpenGroupManager
+import org.thoughtcrime.securesms.home.search.GlobalSearchViewModel
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.onboarding.SeedActivity
@@ -78,6 +80,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
     private val homeAdapter:HomeAdapter by lazy {
         HomeAdapter(this, threadDb.conversationList)
     }
+
+    private val globalSearchViewModel by viewModels<GlobalSearchViewModel>()
 
     // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {

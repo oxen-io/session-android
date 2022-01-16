@@ -4,9 +4,9 @@ import android.database.ContentObserver;
 
 import androidx.annotation.NonNull;
 
+import org.session.libsession.messaging.contacts.Contact;
 import org.thoughtcrime.securesms.database.CursorList;
 import org.thoughtcrime.securesms.database.model.ThreadRecord;
-import org.session.libsession.utilities.recipients.Recipient;
 
 import java.util.List;
 
@@ -19,12 +19,12 @@ public class SearchResult {
   public static final SearchResult EMPTY = new SearchResult("", CursorList.emptyList(), CursorList.emptyList(), CursorList.emptyList());
 
   private final String                    query;
-  private final CursorList<Recipient>     contacts;
+  private final CursorList<Contact>     contacts;
   private final CursorList<ThreadRecord>  conversations;
   private final CursorList<MessageResult> messages;
 
   public SearchResult(@NonNull String                    query,
-                      @NonNull CursorList<Recipient>     contacts,
+                      @NonNull CursorList<Contact>     contacts,
                       @NonNull CursorList<ThreadRecord>  conversations,
                       @NonNull CursorList<MessageResult> messages)
   {
@@ -34,7 +34,7 @@ public class SearchResult {
     this.messages      = messages;
   }
 
-  public List<Recipient> getContacts() {
+  public List<Contact> getContacts() {
     return contacts;
   }
 
