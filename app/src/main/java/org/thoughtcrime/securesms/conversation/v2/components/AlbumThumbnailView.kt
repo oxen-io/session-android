@@ -92,7 +92,7 @@ class AlbumThumbnailView : FrameLayout {
     }
 
     fun clearViews() {
-        albumCellContainer.removeAllViews()
+        binding.albumCellContainer.removeAllViews()
         slideSize = -1
     }
 

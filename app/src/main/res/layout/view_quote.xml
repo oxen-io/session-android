@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/input_bar_background"
-    android:paddingHorizontal="@dimen/medium_spacing">
+    android:paddingHorizontal="@dimen/medium_spacing"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <View
         android:id="@+id/quoteViewAccentLine"
@@ -45,24 +46,25 @@
         android:id="@+id/quoteViewMainContentContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginVertical="@dimen/small_spacing"
-        android:gravity="center_vertical"
-        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
+        android:layout_marginVertical="@dimen/small_spacing"
+        android:layout_marginStart="@dimen/medium_spacing"
+        android:layout_marginEnd="@dimen/medium_spacing"
+        android:layout_toEndOf="@+id/quoteViewAttachmentPreviewContainer"
+        android:layout_toStartOf="@+id/quoteViewCancelButton"
+        android:gravity="center_vertical"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/quoteViewAuthorTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Spiderman"
-            android:textSize="@dimen/small_font_size"
-            android:textStyle="bold"
-            android:textColor="@color/text"
+            android:ellipsize="end"
             android:maxLines="1"
-            android:ellipsize="end" />
+            tools:text="Spiderman"
+            android:textColor="@color/text"
+            android:textSize="@dimen/small_font_size"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/quoteViewBodyTextView"
@@ -70,7 +72,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="3"
-            android:text="Yo, I need your help here!"
+            tools:text="Yo, I need your help here!"
             android:textColor="@color/text"
             android:textSize="@dimen/small_font_size" />
 

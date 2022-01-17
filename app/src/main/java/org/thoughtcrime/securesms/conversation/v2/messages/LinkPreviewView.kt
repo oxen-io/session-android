@@ -62,9 +62,7 @@ class LinkPreviewView : LinearLayout {
         }
         binding.titleTextView.setTextColor(ResourcesCompat.getColor(resources, textColorID, context.theme))
         // Body
-        bodyTextView = VisibleMessageContentView.getBodyTextView(context, message, searchQuery)
-        binding.mainLinkPreviewContainer.addView(bodyTextView)
-        titleTextView.setTextColor(ResourcesCompat.getColor(resources, textColorID, context.theme))
+        binding.titleTextView.setTextColor(ResourcesCompat.getColor(resources, textColorID, context.theme))
         // Corner radii
         val cornerRadii = MessageBubbleUtilities.calculateRadii(context, isStartOfMessageCluster, isEndOfMessageCluster, message.isOutgoing)
         cornerMask.setTopLeftRadius(cornerRadii[0])

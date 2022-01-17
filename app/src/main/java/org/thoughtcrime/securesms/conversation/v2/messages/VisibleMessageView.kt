@@ -5,7 +5,6 @@ import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -224,10 +223,10 @@ class VisibleMessageView : LinearLayout {
     }
 
     private fun updateExpirationTimer(message: MessageRecord) {
-        val expirationTimerViewLayoutParams = expirationTimerView.layoutParams as MarginLayoutParams
-        val container = expirationTimerViewContainer
-        val content = container.messageContentView
-        val expiration = container.expirationTimerView
+        val expirationTimerViewLayoutParams = binding.expirationTimerView.layoutParams as MarginLayoutParams
+        val container = binding.expirationTimerViewContainer
+        val content = binding.messageContentView
+        val expiration = binding.expirationTimerView
         container.removeAllViewsInLayout()
         container.addView(if (message.isOutgoing) expiration else content)
         container.addView(if (message.isOutgoing) content else expiration)
