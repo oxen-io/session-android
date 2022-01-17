@@ -11,8 +11,8 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.view.children
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.album_thumbnail_view.view.*
 import network.loki.messenger.R
+import network.loki.messenger.databinding.AlbumThumbnailViewBinding
 import org.session.libsession.messaging.jobs.AttachmentDownloadJob
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress
@@ -27,6 +27,8 @@ import org.thoughtcrime.securesms.mms.Slide
 import org.thoughtcrime.securesms.util.ActivityDispatcher
 
 class AlbumThumbnailView : FrameLayout {
+
+    private lateinit var binding: AlbumThumbnailViewBinding
 
     companion object {
         const val MAX_ALBUM_DISPLAY_SIZE = 5
@@ -50,7 +52,7 @@ class AlbumThumbnailView : FrameLayout {
     private var slideSize: Int = 0
 
     private fun initialize() {
-        LayoutInflater.from(context).inflate(R.layout.album_thumbnail_view, this)
+        binding = AlbumThumbnailViewBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
     override fun dispatchDraw(canvas: Canvas?) {
@@ -67,7 +69,7 @@ class AlbumThumbnailView : FrameLayout {
         val eventRect = Rect(rawXInt, rawYInt, rawXInt, rawYInt)
         val testRect = Rect()
         // test each album child
-        albumCellContainer.findViewById<ViewGroup>(R.id.album_thumbnail_root)?.children?.forEachIndexed { index, child ->
+        binding.albumCellContainer.findViewById<ViewGroup>(R.id.album_thumbnail_root)?.children?.forEachIndexed { index, child ->
             child.getGlobalVisibleRect(testRect)
             if (testRect.contains(eventRect)) {
                 // hit intersects with this particular child
@@ -105,10 +107,10 @@ class AlbumThumbnailView : FrameLayout {
 
         // recreate cell views if different size to what we have already (for recycling)
         if (slides.size != this.slideSize) {
-            albumCellContainer.removeAllViews()
-            LayoutInflater.from(context).inflate(layoutRes(slides.size), albumCellContainer)
+            binding.albumCellContainer.removeAllViews()
+            LayoutInflater.from(context).inflate(layoutRes(slides.size), binding.albumCellContainer)
             val overflowed = slides.size > MAX_ALBUM_DISPLAY_SIZE
-            albumCellContainer.findViewById<TextView>(R.id.album_cell_overflow_text)?.let { overflowText ->
+            binding.albumCellContainer.findViewById<TextView>(R.id.album_cell_overflow_text)?.let { overflowText ->
                 // overflowText will be null if !overflowed
                 overflowText.isVisible = overflowed // more than max album size
                 overflowText.text = context.getString(R.string.AlbumThumbnailView_plus, slides.size - MAX_ALBUM_DISPLAY_SIZE)
@@ -135,11 +137,11 @@ class AlbumThumbnailView : FrameLayout {
     }
 
     fun getThumbnailView(position: Int): KThumbnailView = when (position) {
-        0 -> albumCellContainer.findViewById<ViewGroup>(R.id.albumCellContainer).findViewById(R.id.album_cell_1)
-        1 -> albumCellContainer.findViewById<ViewGroup>(R.id.albumCellContainer).findViewById(R.id.album_cell_2)
-        2 -> albumCellContainer.findViewById<ViewGroup>(R.id.albumCellContainer).findViewById(R.id.album_cell_3)
-        3 -> albumCellContainer.findViewById<ViewGroup>(R.id.albumCellContainer).findViewById(R.id.album_cell_4)
-        4 -> albumCellContainer.findViewById<ViewGroup>(R.id.albumCellContainer).findViewById(R.id.album_cell_5)
+        0 -> binding.albumCellContainer.findViewById<ViewGroup>(R.id.albumCellContainer).findViewById(R.id.album_cell_1)
+        1 -> binding.albumCellContainer.findViewById<ViewGroup>(R.id.albumCellContainer).findViewById(R.id.album_cell_2)
+        2 -> binding.albumCellContainer.findViewById<ViewGroup>(R.id.albumCellContainer).findViewById(R.id.album_cell_3)
+        3 -> binding.albumCellContainer.findViewById<ViewGroup>(R.id.albumCellContainer).findViewById(R.id.album_cell_4)
+        4 -> binding.albumCellContainer.findViewById<ViewGroup>(R.id.albumCellContainer).findViewById(R.id.album_cell_5)
         else -> throw Exception("Can't get thumbnail view for non-existent thumbnail at position: $position")
     }
 

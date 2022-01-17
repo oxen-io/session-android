@@ -23,8 +23,9 @@ import androidx.core.graphics.BlendModeCompat
 import androidx.core.text.getSpans
 import androidx.core.text.toSpannable
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.view_visible_message_content.view.*
+import androidx.core.view.children
 import network.loki.messenger.R
+import network.loki.messenger.databinding.ViewVisibleMessageContentBinding
 import okhttp3.HttpUrl
 import org.session.libsession.utilities.ThemeUtil
 import org.session.libsession.utilities.recipients.Recipient
@@ -38,14 +39,14 @@ import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.database.model.SmsMessageRecord
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.SearchUtil
-import org.thoughtcrime.securesms.util.SearchUtil.StyleFactory
 import org.thoughtcrime.securesms.util.UiModeUtilities
 import org.thoughtcrime.securesms.util.getColorWithID
 import org.thoughtcrime.securesms.util.toPx
-import java.util.*
+import java.util.Locale
 import kotlin.math.roundToInt
 
 class VisibleMessageContentView : LinearLayout {
+    private lateinit var binding:  ViewVisibleMessageContentBinding
     var onContentClick: MutableList<((event: MotionEvent) -> Unit)> = mutableListOf()
     var onContentDoubleTap: (() -> Unit)? = null
     var delegate: VisibleMessageContentViewDelegate? = null
@@ -57,7 +58,7 @@ class VisibleMessageContentView : LinearLayout {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) { initialize() }
 
     private fun initialize() {
-        LayoutInflater.from(context).inflate(R.layout.view_visible_message_content, this)
+        binding = ViewVisibleMessageContentBinding.inflate(LayoutInflater.from(context), this, true)
     }
     // endregion
 
@@ -211,15 +212,19 @@ class VisibleMessageContentView : LinearLayout {
 
     private fun getBackground(isOutgoing: Boolean, isStartOfMessageCluster: Boolean, isEndOfMessageCluster: Boolean): Drawable {
         val isSingleMessage = (isStartOfMessageCluster && isEndOfMessageCluster)
-        @DrawableRes val backgroundID: Int
-        if (isSingleMessage) {
-            backgroundID = if (isOutgoing) R.drawable.message_bubble_background_sent_alone else R.drawable.message_bubble_background_received_alone
-        } else if (isStartOfMessageCluster) {
-            backgroundID = if (isOutgoing) R.drawable.message_bubble_background_sent_start else R.drawable.message_bubble_background_received_start
-        } else if (isEndOfMessageCluster) {
-            backgroundID = if (isOutgoing) R.drawable.message_bubble_background_sent_end else R.drawable.message_bubble_background_received_end
-        } else {
-            backgroundID = if (isOutgoing) R.drawable.message_bubble_background_sent_middle else R.drawable.message_bubble_background_received_middle
+        @DrawableRes val backgroundID = when {
+            isSingleMessage -> {
+                if (isOutgoing) R.drawable.message_bubble_background_sent_alone else R.drawable.message_bubble_background_received_alone
+            }
+            isStartOfMessageCluster -> {
+                if (isOutgoing) R.drawable.message_bubble_background_sent_start else R.drawable.message_bubble_background_received_start
+            }
+            isEndOfMessageCluster -> {
+                if (isOutgoing) R.drawable.message_bubble_background_sent_end else R.drawable.message_bubble_background_received_end
+            }
+            else -> {
+                if (isOutgoing) R.drawable.message_bubble_background_sent_middle else R.drawable.message_bubble_background_received_middle
+            }
         }
         return ResourcesCompat.getDrawable(resources, backgroundID, context.theme)!!
     }
@@ -246,8 +251,10 @@ class VisibleMessageContentView : LinearLayout {
             var body = message.body.toSpannable()
 
             body = MentionUtilities.highlightMentions(body, message.isOutgoing, message.threadId, context)
-            body = SearchUtil.getHighlightedSpan(Locale.getDefault(), StyleFactory { BackgroundColorSpan(Color.WHITE) }, body, searchQuery)
-            body = SearchUtil.getHighlightedSpan(Locale.getDefault(), StyleFactory { ForegroundColorSpan(Color.BLACK) }, body, searchQuery)
+            body = SearchUtil.getHighlightedSpan(Locale.getDefault(),
+                { BackgroundColorSpan(Color.WHITE) }, body, searchQuery)
+            body = SearchUtil.getHighlightedSpan(Locale.getDefault(),
+                { ForegroundColorSpan(Color.BLACK) }, body, searchQuery)
 
             Linkify.addLinks(body, Linkify.WEB_URLS)
 
