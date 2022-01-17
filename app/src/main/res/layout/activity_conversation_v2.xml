@@ -115,7 +115,7 @@
 
         <RelativeLayout
             android:id="@+id/unreadCountIndicator"
-            android:layout_width="20dp"
+            android:layout_width="40dp"
             android:layout_height="20dp"
             android:layout_centerHorizontal="true"
             android:layout_alignParentTop="true"
