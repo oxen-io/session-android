@@ -61,6 +61,7 @@ import org.thoughtcrime.securesms.onboarding.SeedReminderViewDelegate
 import org.thoughtcrime.securesms.preferences.SettingsActivity
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.IP2Country
+import org.thoughtcrime.securesms.util.UiModeUtilities
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.getColorWithID
 import org.thoughtcrime.securesms.util.push
@@ -86,8 +87,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
     private val homeAdapter: HomeAdapter by lazy {
         HomeAdapter(context = this, cursor = threadDb.conversationList, listener = this)
     }
-
-    private val globalSearchViewModel by viewModels<GlobalSearchViewModel>()
 
     // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {
@@ -120,6 +119,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
         } else {
             binding.seedReminderStub.isVisible = false
         }
+        setupHeaderImage()
         // Set up recycler view
         homeAdapter.setHasStableIds(true)
         homeAdapter.glide = glide
@@ -167,6 +167,12 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
             }
         }
         EventBus.getDefault().register(this@HomeActivity)
+    }
+
+    private fun setupHeaderImage() {
+        val isDayUiMode = UiModeUtilities.isDayUiMode(this)
+        val headerTint = if (isDayUiMode) R.color.black else R.color.accent
+        binding.sessionHeaderImage.setColorFilter(getColor(headerTint))
     }
 
     override fun onCreateLoader(id: Int, bundle: Bundle?): Loader<Cursor> {
