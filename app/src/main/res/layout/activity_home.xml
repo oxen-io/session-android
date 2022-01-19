@@ -34,16 +34,17 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="9dp" />
 
-                <TextView
+                <ImageView
+                    android:id="@+id/sessionHeaderImage"
+                    android:layout_toEndOf="@+id/profileButton"
+                    android:layout_toStartOf="@+id/pathStatusViewContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="64dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="@string/app_name"
-                    android:textColor="@color/text"
-                    android:textSize="@dimen/very_large_font_size" />
+                    android:layout_centerInParent="true"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_session"
+                    android:padding="@dimen/medium_spacing"
+                    app:tint="@color/black" />
 
                 <RelativeLayout
                     android:id="@+id/pathStatusViewContainer"
@@ -52,14 +53,13 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true">
 
-                    <org.thoughtcrime.securesms.home.PathStatusView
-                        android:layout_width="@dimen/path_status_view_size"
-                        android:layout_height="@dimen/path_status_view_size"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="8dp" />
-
                 </RelativeLayout>
+
+                <org.thoughtcrime.securesms.home.PathStatusView
+                    android:layout_alignBottom="@+id/profileButton"
+                    android:layout_alignEnd="@id/profileButton"
+                    android:layout_width="@dimen/path_status_view_size"
+                    android:layout_height="@dimen/path_status_view_size" />
 
             </RelativeLayout>
 

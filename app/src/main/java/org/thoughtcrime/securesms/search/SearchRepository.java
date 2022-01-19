@@ -119,7 +119,7 @@ public class SearchRepository {
 
   private CursorList<Contact> queryContacts(String query) {
 
-    Cursor contactsCursor = contactDatabase.queryDatabase(query);
+    Cursor contactsCursor = contactDatabase.queryContactsByName(query);
 
     return new CursorList<Contact>(contactsCursor, new ContactModelBuilder(contactDatabase));
     /* Loki - We don't need contacts permission
@@ -188,7 +188,7 @@ public class SearchRepository {
 
     @Override
     public Contact build(@NonNull Cursor cursor) {
-      return null;
+      return contactDb.contactFromCursor(cursor);
     }
   }
 

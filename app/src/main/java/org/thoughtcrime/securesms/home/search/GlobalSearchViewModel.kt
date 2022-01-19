@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -41,35 +42,34 @@ class GlobalSearchViewModel @Inject constructor(
         SignalExecutors.SERIAL
     )
 
-    private val _result: MutableStateFlow<GlobalSearchResult> =
-        MutableStateFlow(GlobalSearchResult.EMPTY)
+    private val _result: MutableStateFlow<SearchResult> =
+        MutableStateFlow(SearchResult.EMPTY)
 
     private val _queryText: MutableStateFlow<CharSequence> = MutableStateFlow("")
 
     fun postQuery(charSequence: CharSequence) {
-        _queryText.value = charSequence // TODO: refactor to use new kotlin coroutines when #824 is merged
+        _queryText.value = charSequence
     }
 
     init {
+        //
         _queryText
-//             .debounce(1_000L) // may need to debounce for performance improvements
+            .debounce(1_000L) // may need to debounce for performance improvements
             .map { query ->
-                if (query.trim().length < 2) return@map GlobalSearchResult.EMPTY
+                if (query.trim().length < 2) return@map SearchResult.EMPTY
                 val settableFuture = SettableFuture<SearchResult>()
                 searchRepository.query(query.toString(), settableFuture::set)
-                val result = try {
+                try {
                     // search repository doesn't play nicely with suspend functions (yet)
                     settableFuture.get()
                 } catch (e: Exception) {
-                    GlobalSearchResult.EMPTY
+                    SearchResult.EMPTY
                 }
-                val conversations = result
-                GlobalSearchResult.EMPTY
             }
             .onEach { result ->
-                Log.d("Loki-test", "Result contacts: ${result.contacts.joinToString { it.name.orEmpty() }}")
-                Log.d("Loki-test", "Result group threads: ${result.threads.joinToString { it.recipient.name.orEmpty() }}")
-                Log.d("Loki-test", "Result messages: ${result.messages.joinToString { message -> message.bodySnippet }}")
+                // update the latest _result value
+                // n.b. it's the cursor recycler adapter's job to close the previous result as closing them here could cause exceptions
+                _result.value = result
             }
             .launchIn(executor)
     }

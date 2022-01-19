@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms.database
 
 import android.content.ContentValues
 import android.content.Context
+import androidx.core.database.getStringOrNull
 import net.sqlcipher.Cursor
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsignal.utilities.Base64
@@ -73,7 +74,7 @@ class SessionContactDatabase(context: Context, helper: SQLCipherOpenHelper) : Da
         notifyConversationListListeners()
     }
 
-    private fun contactFromCursor(cursor: Cursor): Contact {
+    fun contactFromCursor(cursor: Cursor): Contact {
         val sessionID = cursor.getString(sessionID)
         val contact = Contact(sessionID)
         contact.name = cursor.getStringOrNull(name)
@@ -88,7 +89,22 @@ class SessionContactDatabase(context: Context, helper: SQLCipherOpenHelper) : Da
         return contact
     }
 
-    fun queryDatabase(constraint: String): Cursor {
+    fun contactFromCursor(cursor: android.database.Cursor): Contact {
+        val sessionID = cursor.getString(cursor.getColumnIndex(sessionID))
+        val contact = Contact(sessionID)
+        contact.name = cursor.getStringOrNull(cursor.getColumnIndex(name))
+        contact.nickname = cursor.getStringOrNull(cursor.getColumnIndex(nickname))
+        contact.profilePictureURL = cursor.getStringOrNull(cursor.getColumnIndex(profilePictureURL))
+        contact.profilePictureFileName = cursor.getStringOrNull(cursor.getColumnIndex(profilePictureFileName))
+        cursor.getStringOrNull(cursor.getColumnIndex(profilePictureEncryptionKey))?.let {
+            contact.profilePictureEncryptionKey = Base64.decode(it)
+        }
+        contact.threadID = cursor.getLong(cursor.getColumnIndex(threadID))
+        contact.isTrusted = cursor.getInt(cursor.getColumnIndex(isTrusted)) != 0
+        return contact
+    }
+
+    fun queryContactsByName(constraint: String): Cursor {
         return databaseHelper.readableDatabase.query(
             sessionContactTable, null, " $name LIKE ? OR $nickname LIKE ?", arrayOf(
                 "%$constraint%",
