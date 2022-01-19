@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp"
+        android:background="@drawable/search_background"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/search_cancel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/ic_baseline_search_24"
+            android:scaleType="centerInside"
+            app:tint="?searchIconColor"
+            android:contentDescription="@string/SearchToolbar_search" />
+        <androidx.appcompat.widget.AppCompatEditText
+            android:textSize="12sp"
+            android:background="@null"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:src="@drawable/ic_close_white_18dp"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            app:tint="?searchIconColor" />
+    </LinearLayout>
+    <TextView
+
+        android:layout_centerVertical="true"
+        android:text="@string/cancel"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/search_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>

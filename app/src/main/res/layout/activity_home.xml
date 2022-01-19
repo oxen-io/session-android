@@ -75,6 +75,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <org.thoughtcrime.securesms.home.search.GlobalSearchInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
         </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>
@@ -93,6 +97,14 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="6"
             tools:listitem="@layout/view_conversation" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/globalSearchRecycler"
+            android:background="?colorPrimary"
+            android:layout_width="match_parent"
+            tools:listitem="@layout/view_global_search_result"
+            tools:itemCount="6"
+            android:layout_height="match_parent"/>
 
         <View
             android:id="@+id/gradientView"
