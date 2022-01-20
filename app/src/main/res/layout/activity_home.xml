@@ -53,15 +53,19 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true">
 
+                    <org.thoughtcrime.securesms.home.PathStatusView
+                        android:layout_width="@dimen/path_status_view_size"
+                        android:layout_height="@dimen/path_status_view_size"
+                        android:layout_centerInParent="true" />
+
                 </RelativeLayout>
 
-                <org.thoughtcrime.securesms.home.PathStatusView
-                    android:layout_alignBottom="@+id/profileButton"
-                    android:layout_alignEnd="@id/profileButton"
-                    android:layout_width="@dimen/path_status_view_size"
-                    android:layout_height="@dimen/path_status_view_size" />
-
             </RelativeLayout>
+
+            <org.thoughtcrime.securesms.home.search.GlobalSearchInputLayout
+                android:id="@+id/globalSearchInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
             <View
                 android:layout_width="match_parent"
@@ -74,10 +78,6 @@
                 android:layout="@layout/seed_reminder_stub"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-
-            <org.thoughtcrime.securesms.home.search.GlobalSearchInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 
@@ -99,9 +99,10 @@
             tools:listitem="@layout/view_conversation" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:visibility="gone"
             android:id="@+id/globalSearchRecycler"
-            android:background="?colorPrimary"
             android:layout_width="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/view_global_search_result"
             tools:itemCount="6"
             android:layout_height="match_parent"/>

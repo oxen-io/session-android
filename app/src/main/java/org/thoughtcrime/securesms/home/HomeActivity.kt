@@ -22,7 +22,11 @@ import androidx.loader.content.Loader
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.observeOn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
@@ -31,11 +35,13 @@ import network.loki.messenger.databinding.SeedReminderStubBinding
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.ProfilePictureModifiedEvent
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.ApplicationContext
@@ -53,6 +59,8 @@ import org.thoughtcrime.securesms.dms.CreatePrivateChatActivity
 import org.thoughtcrime.securesms.groups.CreateClosedGroupActivity
 import org.thoughtcrime.securesms.groups.JoinPublicChatActivity
 import org.thoughtcrime.securesms.groups.OpenGroupManager
+import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter
+import org.thoughtcrime.securesms.home.search.GlobalSearchInputLayout
 import org.thoughtcrime.securesms.home.search.GlobalSearchViewModel
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.mms.GlideRequests
@@ -71,8 +79,12 @@ import java.io.IOException
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickListener,
-    SeedReminderViewDelegate, NewConversationButtonSetViewDelegate, LoaderManager.LoaderCallbacks<Cursor> {
+class HomeActivity : PassphraseRequiredActionBarActivity(),
+        ConversationClickListener,
+        SeedReminderViewDelegate,
+        NewConversationButtonSetViewDelegate,
+        LoaderManager.LoaderCallbacks<Cursor>,
+        GlobalSearchInputLayout.GlobalSearchInputLayoutListener {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var glide: GlideRequests
@@ -82,12 +94,16 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
     @Inject lateinit var recipientDatabase: RecipientDatabase
     @Inject lateinit var groupDatabase: GroupDatabase
 
+    private val globalSearchViewModel by viewModels<GlobalSearchViewModel>()
+
     private val publicKey: String
         get() = TextSecurePreferences.getLocalNumber(this)!!
 
     private val homeAdapter: HomeAdapter by lazy {
         HomeAdapter(context = this, cursor = threadDb.conversationList, listener = this)
     }
+
+    private val globalSearchAdapter = GlobalSearchAdapter()
 
     // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {
@@ -122,9 +138,11 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
         }
         setupHeaderImage()
         // Set up recycler view
+        binding.globalSearchInputLayout.listener = this
         homeAdapter.setHasStableIds(true)
         homeAdapter.glide = glide
         binding.recyclerView.adapter = homeAdapter
+        binding.globalSearchRecycler.adapter = globalSearchAdapter
         // Set up empty state view
         binding.createNewPrivateChatButton.setOnClickListener { createNewPrivateChat() }
         IP2Country.configureIfNeeded(this@HomeActivity)
@@ -166,6 +184,41 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
                     JobQueue.shared.resumePendingJobs()
                 }
             }
+            // monitor the global search VM query and populate data for global search adapter
+            launch {
+                binding.globalSearchInputLayout.query
+                        .onEach(globalSearchViewModel::postQuery)
+                        .collect()
+            }
+            launch {
+                globalSearchViewModel.result.collect { result ->
+
+                    val contactResults : MutableList<GlobalSearchAdapter.Model> = result.contacts
+                            .map { GlobalSearchAdapter.Model.Contact(it) }.toMutableList()
+
+                    if (contactResults.isNotEmpty()) {
+                        contactResults.add(0, GlobalSearchAdapter.Model.Header(R.string.app_name))
+                    }
+
+                    val threadResults: MutableList<GlobalSearchAdapter.Model> = result.threads
+                            .map { GlobalSearchAdapter.Model.Conversation(it) }.toMutableList()
+
+                    if (threadResults.isNotEmpty()) {
+                        threadResults.add(0, GlobalSearchAdapter.Model.Header(R.string.app_name)) //TODO: proper string resources
+                    }
+
+                    val messageResults: MutableList<GlobalSearchAdapter.Model> = result.messages
+                            .map { GlobalSearchAdapter.Model.Message(it) }.toMutableList()
+
+                    if (messageResults.isNotEmpty()) {
+                        messageResults.add(0, GlobalSearchAdapter.Model.Header(R.string.app_name))
+                    }
+
+                    val newData = contactResults + threadResults + messageResults
+
+                    globalSearchAdapter.setNewData(result.query, newData)
+                }
+            }
         }
         EventBus.getDefault().register(this@HomeActivity)
     }
@@ -174,6 +227,20 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
         val isDayUiMode = UiModeUtilities.isDayUiMode(this)
         val headerTint = if (isDayUiMode) R.color.black else R.color.accent
         binding.sessionHeaderImage.setColorFilter(getColor(headerTint))
+    }
+
+    override fun onInputFocusChanged(hasFocus: Boolean) {
+        if (hasFocus) {
+            setSearchShown(true)
+        } else {
+            setSearchShown(!binding.globalSearchInputLayout.query.value.isNullOrEmpty())
+        }
+    }
+
+    private fun setSearchShown(isShown: Boolean) {
+        binding.recyclerView.isVisible = !isShown
+        binding.globalSearchRecycler.isVisible = isShown
+        binding.newConversationButtonSet.isVisible = !isShown
     }
 
     override fun onCreateLoader(id: Int, bundle: Bundle?): Loader<Cursor> {
