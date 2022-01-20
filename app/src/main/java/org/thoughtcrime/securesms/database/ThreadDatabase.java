@@ -376,17 +376,26 @@ public class ThreadDatabase extends Database {
   }
 
   public Cursor getConversationList() {
-    return getConversationList("0");
+    return getConversationList("0", true);
+  }
+
+  public Cursor getUntrustedConversationList() {
+    return getConversationList("0", false);
   }
 
   public Cursor getArchivedConversationList() {
-    return getConversationList("1");
+    return getConversationList("1", true);
   }
 
-  private Cursor getConversationList(String archived) {
+  private Cursor getConversationList(String archived, boolean hasSent) {
     SQLiteDatabase db     = databaseHelper.getReadableDatabase();
     String         where  = "(" + MESSAGE_COUNT + " != 0 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') " +
-                            "AND " + ARCHIVED + " = ?";
+                            "AND " + ARCHIVED + " = ? ";
+    if (hasSent) {
+      where += "AND (" + HAS_SENT + " = 1 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') ";
+    } else {
+      where += "AND (" + HAS_SENT + " = 0 AND " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " IS NULL) ";
+    }
     String         query  = createQuery(where, 0);
     Cursor         cursor = db.rawQuery(query, new String[]{archived});
 

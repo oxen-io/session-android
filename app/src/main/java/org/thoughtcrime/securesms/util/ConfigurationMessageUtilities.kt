@@ -19,7 +19,14 @@ object ConfigurationMessageUtilities {
         val contacts = ContactUtilities.getAllContacts(context).filter { recipient ->
             !recipient.isBlocked && !recipient.name.isNullOrEmpty() && !recipient.isLocalNumber && recipient.address.serialize().isNotEmpty()
         }.map { recipient ->
-            ConfigurationMessage.Contact(recipient.address.serialize(), recipient.name!!, recipient.profileAvatar, recipient.profileKey)
+            ConfigurationMessage.Contact(
+                publicKey = recipient.address.serialize(),
+                name = recipient.name!!,
+                profilePicture = recipient.profileAvatar,
+                profileKey = recipient.profileKey,
+                isApproved = true,
+                isBlocked = false
+            )
         }
         val configurationMessage = ConfigurationMessage.getCurrent(contacts) ?: return
         MessageSender.send(configurationMessage, Address.fromSerialized(userPublicKey))
@@ -31,7 +38,14 @@ object ConfigurationMessageUtilities {
         val contacts = ContactUtilities.getAllContacts(context).filter { recipient ->
             !recipient.isGroupRecipient && !recipient.isBlocked && !recipient.name.isNullOrEmpty() && !recipient.isLocalNumber && recipient.address.serialize().isNotEmpty()
         }.map { recipient ->
-            ConfigurationMessage.Contact(recipient.address.serialize(), recipient.name!!, recipient.profileAvatar, recipient.profileKey)
+            ConfigurationMessage.Contact(
+                publicKey = recipient.address.serialize(),
+                name = recipient.name!!,
+                profilePicture = recipient.profileAvatar,
+                profileKey = recipient.profileKey,
+                isApproved = true,
+                isBlocked = false
+            )
         }
         val configurationMessage = ConfigurationMessage.getCurrent(contacts) ?: return Promise.ofSuccess(Unit)
         val promise = MessageSender.send(configurationMessage, Destination.from(Address.fromSerialized(userPublicKey)))

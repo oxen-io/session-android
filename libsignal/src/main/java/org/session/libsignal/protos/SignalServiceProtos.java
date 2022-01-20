@@ -16099,6 +16099,26 @@ public final class SignalServiceProtos {
        * <code>optional bytes profileKey = 4;</code>
        */
       com.google.protobuf.ByteString getProfileKey();
+
+      // optional bool isApproved = 5;
+      /**
+       * <code>optional bool isApproved = 5;</code>
+       */
+      boolean hasIsApproved();
+      /**
+       * <code>optional bool isApproved = 5;</code>
+       */
+      boolean getIsApproved();
+
+      // optional bool isBlocked = 6;
+      /**
+       * <code>optional bool isBlocked = 6;</code>
+       */
+      boolean hasIsBlocked();
+      /**
+       * <code>optional bool isBlocked = 6;</code>
+       */
+      boolean getIsBlocked();
     }
     /**
      * Protobuf type {@code signalservice.ConfigurationMessage.Contact}
@@ -16169,6 +16189,16 @@ public final class SignalServiceProtos {
               case 34: {
                 bitField0_ |= 0x00000008;
                 profileKey_ = input.readBytes();
+                break;
+              }
+              case 40: {
+                bitField0_ |= 0x00000010;
+                isApproved_ = input.readBool();
+                break;
+              }
+              case 48: {
+                bitField0_ |= 0x00000020;
+                isBlocked_ = input.readBool();
                 break;
               }
             }
@@ -16349,11 +16379,45 @@ public final class SignalServiceProtos {
         return profileKey_;
       }
 
+      // optional bool isApproved = 5;
+      public static final int ISAPPROVED_FIELD_NUMBER = 5;
+      private boolean isApproved_;
+      /**
+       * <code>optional bool isApproved = 5;</code>
+       */
+      public boolean hasIsApproved() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional bool isApproved = 5;</code>
+       */
+      public boolean getIsApproved() {
+        return isApproved_;
+      }
+
+      // optional bool isBlocked = 6;
+      public static final int ISBLOCKED_FIELD_NUMBER = 6;
+      private boolean isBlocked_;
+      /**
+       * <code>optional bool isBlocked = 6;</code>
+       */
+      public boolean hasIsBlocked() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      /**
+       * <code>optional bool isBlocked = 6;</code>
+       */
+      public boolean getIsBlocked() {
+        return isBlocked_;
+      }
+
       private void initFields() {
         publicKey_ = com.google.protobuf.ByteString.EMPTY;
         name_ = "";
         profilePicture_ = "";
         profileKey_ = com.google.protobuf.ByteString.EMPTY;
+        isApproved_ = false;
+        isBlocked_ = false;
       }
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
@@ -16387,6 +16451,12 @@ public final class SignalServiceProtos {
         if (((bitField0_ & 0x00000008) == 0x00000008)) {
           output.writeBytes(4, profileKey_);
         }
+        if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          output.writeBool(5, isApproved_);
+        }
+        if (((bitField0_ & 0x00000020) == 0x00000020)) {
+          output.writeBool(6, isBlocked_);
+        }
         getUnknownFields().writeTo(output);
       }
 
@@ -16411,6 +16481,14 @@ public final class SignalServiceProtos {
         if (((bitField0_ & 0x00000008) == 0x00000008)) {
           size += com.google.protobuf.CodedOutputStream
             .computeBytesSize(4, profileKey_);
+        }
+        if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBoolSize(5, isApproved_);
+        }
+        if (((bitField0_ & 0x00000020) == 0x00000020)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBoolSize(6, isBlocked_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSerializedSize = size;
@@ -16536,6 +16614,10 @@ public final class SignalServiceProtos {
           bitField0_ = (bitField0_ & ~0x00000004);
           profileKey_ = com.google.protobuf.ByteString.EMPTY;
           bitField0_ = (bitField0_ & ~0x00000008);
+          isApproved_ = false;
+          bitField0_ = (bitField0_ & ~0x00000010);
+          isBlocked_ = false;
+          bitField0_ = (bitField0_ & ~0x00000020);
           return this;
         }
 
@@ -16580,6 +16662,14 @@ public final class SignalServiceProtos {
             to_bitField0_ |= 0x00000008;
           }
           result.profileKey_ = profileKey_;
+          if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+            to_bitField0_ |= 0x00000010;
+          }
+          result.isApproved_ = isApproved_;
+          if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+            to_bitField0_ |= 0x00000020;
+          }
+          result.isBlocked_ = isBlocked_;
           result.bitField0_ = to_bitField0_;
           onBuilt();
           return result;
@@ -16611,6 +16701,12 @@ public final class SignalServiceProtos {
           }
           if (other.hasProfileKey()) {
             setProfileKey(other.getProfileKey());
+          }
+          if (other.hasIsApproved()) {
+            setIsApproved(other.getIsApproved());
+          }
+          if (other.hasIsBlocked()) {
+            setIsBlocked(other.getIsBlocked());
           }
           this.mergeUnknownFields(other.getUnknownFields());
           return this;
@@ -16903,6 +16999,72 @@ public final class SignalServiceProtos {
         public Builder clearProfileKey() {
           bitField0_ = (bitField0_ & ~0x00000008);
           profileKey_ = getDefaultInstance().getProfileKey();
+          onChanged();
+          return this;
+        }
+
+        // optional bool isApproved = 5;
+        private boolean isApproved_ ;
+        /**
+         * <code>optional bool isApproved = 5;</code>
+         */
+        public boolean hasIsApproved() {
+          return ((bitField0_ & 0x00000010) == 0x00000010);
+        }
+        /**
+         * <code>optional bool isApproved = 5;</code>
+         */
+        public boolean getIsApproved() {
+          return isApproved_;
+        }
+        /**
+         * <code>optional bool isApproved = 5;</code>
+         */
+        public Builder setIsApproved(boolean value) {
+          bitField0_ |= 0x00000010;
+          isApproved_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional bool isApproved = 5;</code>
+         */
+        public Builder clearIsApproved() {
+          bitField0_ = (bitField0_ & ~0x00000010);
+          isApproved_ = false;
+          onChanged();
+          return this;
+        }
+
+        // optional bool isBlocked = 6;
+        private boolean isBlocked_ ;
+        /**
+         * <code>optional bool isBlocked = 6;</code>
+         */
+        public boolean hasIsBlocked() {
+          return ((bitField0_ & 0x00000020) == 0x00000020);
+        }
+        /**
+         * <code>optional bool isBlocked = 6;</code>
+         */
+        public boolean getIsBlocked() {
+          return isBlocked_;
+        }
+        /**
+         * <code>optional bool isBlocked = 6;</code>
+         */
+        public Builder setIsBlocked(boolean value) {
+          bitField0_ |= 0x00000020;
+          isBlocked_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional bool isBlocked = 6;</code>
+         */
+        public Builder clearIsBlocked() {
+          bitField0_ = (bitField0_ & ~0x00000020);
+          isBlocked_ = false;
           onChanged();
           return this;
         }
@@ -22269,7 +22431,7 @@ public final class SignalServiceProtos {
       "CRYPTION_KEY_PAIR\020\003\022\017\n\013NAME_CHANGE\020\004\022\021\n\r" +
       "MEMBERS_ADDED\020\005\022\023\n\017MEMBERS_REMOVED\020\006\022\017\n\013" +
       "MEMBER_LEFT\020\007\"$\n\005Flags\022\033\n\027EXPIRATION_TIM" +
-      "ER_UPDATE\020\002\"\347\003\n\024ConfigurationMessage\022E\n\014" +
+      "ER_UPDATE\020\002\"\216\004\n\024ConfigurationMessage\022E\n\014" +
       "closedGroups\030\001 \003(\0132/.signalservice.Confi" +
       "gurationMessage.ClosedGroup\022\022\n\nopenGroup" +
       "s\030\002 \003(\t\022\023\n\013displayName\030\003 \001(\t\022\026\n\016profileP" +
@@ -22279,25 +22441,26 @@ public final class SignalServiceProtos {
       "cKey\030\001 \001(\014\022\014\n\004name\030\002 \001(\t\0221\n\021encryptionKe" +
       "yPair\030\003 \001(\0132\026.signalservice.KeyPair\022\017\n\007m" +
       "embers\030\004 \003(\014\022\016\n\006admins\030\005 \003(\014\022\027\n\017expirati" +
-      "onTimer\030\006 \001(\r\032V\n\007Contact\022\021\n\tpublicKey\030\001 " +
+      "onTimer\030\006 \001(\r\032}\n\007Contact\022\021\n\tpublicKey\030\001 " +
       "\002(\014\022\014\n\004name\030\002 \002(\t\022\026\n\016profilePicture\030\003 \001(" +
-      "\t\022\022\n\nprofileKey\030\004 \001(\014\"u\n\016ReceiptMessage\022" +
-      "0\n\004type\030\001 \002(\0162\".signalservice.ReceiptMes" +
-      "sage.Type\022\021\n\ttimestamp\030\002 \003(\004\"\036\n\004Type\022\014\n\010" +
-      "DELIVERY\020\000\022\010\n\004READ\020\001\"\354\001\n\021AttachmentPoint",
-      "er\022\n\n\002id\030\001 \002(\006\022\023\n\013contentType\030\002 \001(\t\022\013\n\003k" +
-      "ey\030\003 \001(\014\022\014\n\004size\030\004 \001(\r\022\021\n\tthumbnail\030\005 \001(" +
-      "\014\022\016\n\006digest\030\006 \001(\014\022\020\n\010fileName\030\007 \001(\t\022\r\n\005f" +
-      "lags\030\010 \001(\r\022\r\n\005width\030\t \001(\r\022\016\n\006height\030\n \001(" +
-      "\r\022\017\n\007caption\030\013 \001(\t\022\013\n\003url\030e \001(\t\"\032\n\005Flags" +
-      "\022\021\n\rVOICE_MESSAGE\020\001\"\365\001\n\014GroupContext\022\n\n\002" +
-      "id\030\001 \001(\014\022.\n\004type\030\002 \001(\0162 .signalservice.G" +
-      "roupContext.Type\022\014\n\004name\030\003 \001(\t\022\017\n\007member" +
-      "s\030\004 \003(\t\0220\n\006avatar\030\005 \001(\0132 .signalservice." +
-      "AttachmentPointer\022\016\n\006admins\030\006 \003(\t\"H\n\004Typ",
-      "e\022\013\n\007UNKNOWN\020\000\022\n\n\006UPDATE\020\001\022\013\n\007DELIVER\020\002\022" +
-      "\010\n\004QUIT\020\003\022\020\n\014REQUEST_INFO\020\004B3\n\034org.sessi" +
-      "on.libsignal.protosB\023SignalServiceProtos"
+      "\t\022\022\n\nprofileKey\030\004 \001(\014\022\022\n\nisApproved\030\005 \001(" +
+      "\010\022\021\n\tisBlocked\030\006 \001(\010\"u\n\016ReceiptMessage\0220" +
+      "\n\004type\030\001 \002(\0162\".signalservice.ReceiptMess" +
+      "age.Type\022\021\n\ttimestamp\030\002 \003(\004\"\036\n\004Type\022\014\n\010D",
+      "ELIVERY\020\000\022\010\n\004READ\020\001\"\354\001\n\021AttachmentPointe" +
+      "r\022\n\n\002id\030\001 \002(\006\022\023\n\013contentType\030\002 \001(\t\022\013\n\003ke" +
+      "y\030\003 \001(\014\022\014\n\004size\030\004 \001(\r\022\021\n\tthumbnail\030\005 \001(\014" +
+      "\022\016\n\006digest\030\006 \001(\014\022\020\n\010fileName\030\007 \001(\t\022\r\n\005fl" +
+      "ags\030\010 \001(\r\022\r\n\005width\030\t \001(\r\022\016\n\006height\030\n \001(\r" +
+      "\022\017\n\007caption\030\013 \001(\t\022\013\n\003url\030e \001(\t\"\032\n\005Flags\022" +
+      "\021\n\rVOICE_MESSAGE\020\001\"\365\001\n\014GroupContext\022\n\n\002i" +
+      "d\030\001 \001(\014\022.\n\004type\030\002 \001(\0162 .signalservice.Gr" +
+      "oupContext.Type\022\014\n\004name\030\003 \001(\t\022\017\n\007members" +
+      "\030\004 \003(\t\0220\n\006avatar\030\005 \001(\0132 .signalservice.A",
+      "ttachmentPointer\022\016\n\006admins\030\006 \003(\t\"H\n\004Type" +
+      "\022\013\n\007UNKNOWN\020\000\022\n\n\006UPDATE\020\001\022\013\n\007DELIVER\020\002\022\010" +
+      "\n\004QUIT\020\003\022\020\n\014REQUEST_INFO\020\004B3\n\034org.sessio" +
+      "n.libsignal.protosB\023SignalServiceProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -22405,7 +22568,7 @@ public final class SignalServiceProtos {
           internal_static_signalservice_ConfigurationMessage_Contact_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_signalservice_ConfigurationMessage_Contact_descriptor,
-              new java.lang.String[] { "PublicKey", "Name", "ProfilePicture", "ProfileKey", });
+              new java.lang.String[] { "PublicKey", "Name", "ProfilePicture", "ProfileKey", "IsApproved", "IsBlocked", });
           internal_static_signalservice_ReceiptMessage_descriptor =
             getDescriptor().getMessageTypes().get(8);
           internal_static_signalservice_ReceiptMessage_fieldAccessorTable = new
