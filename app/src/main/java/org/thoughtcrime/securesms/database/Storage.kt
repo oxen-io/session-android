@@ -581,7 +581,13 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
             recipientDatabase.setProfileSharing(recipient, true)
             recipientDatabase.setRegistered(recipient, Recipient.RegisteredState.REGISTERED)
             // create Thread if needed
-            threadDatabase.getOrCreateThreadIdFor(recipient)
+            val threadId = threadDatabase.getOrCreateThreadIdFor(recipient)
+            if (contact.isApproved == true) {
+                threadDatabase.setHasSent(threadId, true)
+            }
+            if (contact.isBlocked == true) {
+                recipientDatabase.setBlocked(recipient, true)
+            }
         }
         if (contacts.isNotEmpty()) {
             threadDatabase.notifyConversationListListeners()

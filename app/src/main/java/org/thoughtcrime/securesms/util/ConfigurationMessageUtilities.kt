@@ -25,7 +25,7 @@ object ConfigurationMessageUtilities {
                 profilePicture = recipient.profileAvatar,
                 profileKey = recipient.profileKey,
                 isApproved = true,
-                isBlocked = false
+                isBlocked = recipient.isBlocked
             )
         }
         val configurationMessage = ConfigurationMessage.getCurrent(contacts) ?: return
@@ -44,7 +44,7 @@ object ConfigurationMessageUtilities {
                 profilePicture = recipient.profileAvatar,
                 profileKey = recipient.profileKey,
                 isApproved = true,
-                isBlocked = false
+                isBlocked = recipient.isBlocked
             )
         }
         val configurationMessage = ConfigurationMessage.getCurrent(contacts) ?: return Promise.ofSuccess(Unit)
