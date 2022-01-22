@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.view.Menu
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.os.bundleOf
@@ -24,8 +23,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.observeOn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -35,14 +32,12 @@ import network.loki.messenger.databinding.SeedReminderStubBinding
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.ProfilePictureModifiedEvent
 import org.session.libsession.utilities.TextSecurePreferences
-import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.ApplicationContext
@@ -65,7 +60,6 @@ import org.thoughtcrime.securesms.home.search.GlobalSearchInputLayout
 import org.thoughtcrime.securesms.home.search.GlobalSearchViewModel
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.mms.GlideRequests
-import org.thoughtcrime.securesms.notifications.MarkReadReceiver
 import org.thoughtcrime.securesms.onboarding.SeedActivity
 import org.thoughtcrime.securesms.onboarding.SeedReminderViewDelegate
 import org.thoughtcrime.securesms.preferences.SettingsActivity
@@ -223,28 +217,23 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             launch {
                 globalSearchViewModel.result.collect { result ->
 
-                    val contactResults : MutableList<GlobalSearchAdapter.Model> = result.contacts
-                            .map { GlobalSearchAdapter.Model.Contact(it) }.toMutableList()
+                    val contactAndGroupList = result.contacts.map { GlobalSearchAdapter.Model.Contact(it) } +
+                            result.threads.map { GlobalSearchAdapter.Model.Conversation(it) }
+
+                    val contactResults = contactAndGroupList.toMutableList()
 
                     if (contactResults.isNotEmpty()) {
-                        contactResults.add(0, GlobalSearchAdapter.Model.Header(R.string.app_name))
-                    }
-
-                    val threadResults: MutableList<GlobalSearchAdapter.Model> = result.threads
-                            .map { GlobalSearchAdapter.Model.Conversation(it) }.toMutableList()
-
-                    if (threadResults.isNotEmpty()) {
-                        threadResults.add(0, GlobalSearchAdapter.Model.Header(R.string.app_name)) //TODO: proper string resources
+                        contactResults.add(0, GlobalSearchAdapter.Model.Header(R.string.global_search_contacts_groups))
                     }
 
                     val messageResults: MutableList<GlobalSearchAdapter.Model> = result.messages
                             .map { GlobalSearchAdapter.Model.Message(it) }.toMutableList()
 
                     if (messageResults.isNotEmpty()) {
-                        messageResults.add(0, GlobalSearchAdapter.Model.Header(R.string.app_name))
+                        messageResults.add(0, GlobalSearchAdapter.Model.Header(R.string.global_search_messages))
                     }
 
-                    val newData = contactResults + threadResults + messageResults
+                    val newData = contactResults + messageResults
 
                     globalSearchAdapter.setNewData(result.query, newData)
                 }

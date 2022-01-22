@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?selectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,10 +14,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/search_result_text_parent"
         android:layout_marginVertical="@dimen/small_spacing"
-        android:layout_marginStart="@dimen/very_large_spacing"
-        android:layout_marginEnd="@dimen/small_spacing"
-        android:layout_width="@dimen/medium_profile_picture_size"
-        android:layout_height="@dimen/medium_profile_picture_size"
+        android:layout_marginStart="@dimen/large_spacing"
+        android:layout_marginEnd="@dimen/large_spacing"
+        android:layout_width="@dimen/small_profile_picture_size"
+        android:layout_height="@dimen/small_profile_picture_size"
         />
 
     <LinearLayout

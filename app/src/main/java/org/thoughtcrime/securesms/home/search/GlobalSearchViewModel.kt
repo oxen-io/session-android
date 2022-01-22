@@ -7,11 +7,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.plus
@@ -65,6 +65,10 @@ class GlobalSearchViewModel @Inject constructor(
                     if (query.trim().length < 2) {
                         SearchResult.EMPTY
                     } else {
+                        // user input delay here in case we get a new query within a few hundred ms
+                        // this coroutine will be cancelled and expensive query will not be run if typing quickly
+                        // first query of 2 characters will be instant however
+                        if (query.trim().length > 2) delay(300)
                         val settableFuture = SettableFuture<SearchResult>()
                         searchRepository.query(query.toString(), settableFuture::set)
                         try {
