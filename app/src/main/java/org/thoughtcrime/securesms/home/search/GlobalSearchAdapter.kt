@@ -17,7 +17,7 @@ import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.search.model.MessageResult
 import java.security.InvalidParameterException
 
-class GlobalSearchAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class GlobalSearchAdapter(private val modelCallback: (Model)->Unit): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         const val HEADER_VIEW_TYPE = 0
@@ -43,7 +43,7 @@ class GlobalSearchAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         if (viewType == HEADER_VIEW_TYPE) {
             HeaderView(LayoutInflater.from(parent.context).inflate(R.layout.view_global_search_header, parent, false))
         } else {
-            ContentView(LayoutInflater.from(parent.context).inflate(R.layout.view_global_search_result, parent, false))
+            ContentView(LayoutInflater.from(parent.context).inflate(R.layout.view_global_search_result, parent, false), modelCallback)
         }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -63,9 +63,13 @@ class GlobalSearchAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    class ContentView(view: View): RecyclerView.ViewHolder(view) {
+    class ContentView(view: View, private val modelCallback: (Model) -> Unit): RecyclerView.ViewHolder(view) {
+
+        val binding = ViewGlobalSearchResultBinding.bind(view)
+
         fun bind(model: Model) {
             if (model is Model.Header) throw InvalidParameterException("Can't display Model.Header as ContentView")
+            binding.root.setOnClickListener { modelCallback(model) }
         }
     }
 

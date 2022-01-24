@@ -119,20 +119,10 @@ public class SearchRepository {
 
   private CursorList<Contact> queryContacts(String query) {
 
-    Cursor contactsCursor = contactDatabase.queryContactsByName(query);
+    Cursor individualRecipients = threadDatabase.getOneOnOneConversationList();
 
-    return new CursorList<Contact>(contactsCursor, new ContactModelBuilder(contactDatabase));
-    /* Loki - We don't need contacts permission
-    if (!Permissions.hasAny(context, Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS)) {
-      return CursorList.emptyList();
-    }
+    return new CursorList<Contact>(individualRecipients, new ContactModelBuilder(contactDatabase, threadDatabase));
 
-    Cursor      textSecureContacts = contactsDatabase.queryTextSecureContacts(query);
-    Cursor      systemContacts     = contactsDatabase.querySystemContacts(query);
-    MergeCursor contacts           = new MergeCursor(new Cursor[]{ textSecureContacts, systemContacts });
-
-    return new CursorList<>(contacts, new RecipientModelBuilder(context));
-     */
   }
 
   private CursorList<ThreadRecord> queryConversations(@NonNull String query) {
@@ -181,14 +171,17 @@ public class SearchRepository {
   private static class ContactModelBuilder implements CursorList.ModelBuilder<Contact> {
 
     private final SessionContactDatabase contactDb;
+    private final ThreadDatabase threadDb;
 
-    public ContactModelBuilder(SessionContactDatabase contactDb) {
+    public ContactModelBuilder(SessionContactDatabase contactDb, ThreadDatabase threadDb) {
       this.contactDb = contactDb;
+      this.threadDb = threadDb;
     }
 
     @Override
     public Contact build(@NonNull Cursor cursor) {
-      return contactDb.contactFromCursor(cursor);
+      ThreadRecord threadRecord = threadDb.readerFor(cursor).getCurrent();
+      return contactDb.getContactWithSessionID(threadRecord.getRecipient().getAddress().serialize());
     }
   }
 

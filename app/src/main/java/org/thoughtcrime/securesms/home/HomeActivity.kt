@@ -38,6 +38,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.sending_receiving.MessageSender
+import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.ProfilePictureModifiedEvent
 import org.session.libsession.utilities.TextSecurePreferences
@@ -103,7 +104,36 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         HomeAdapter(context = this, cursor = threadDb.conversationList, listener = this)
     }
 
-    private val globalSearchAdapter = GlobalSearchAdapter()
+    private val globalSearchAdapter = GlobalSearchAdapter { model ->
+        when (model) {
+            is GlobalSearchAdapter.Model.Message -> {
+                val threadId = model.messageResult.threadId
+                val timestamp = model.messageResult.receivedTimestampMs
+                val author = model.messageResult.messageRecipient.address
+
+                val intent = Intent(this, ConversationActivityV2::class.java)
+                intent.putExtra(ConversationActivityV2.THREAD_ID, threadId)
+                intent.putExtra(ConversationActivityV2.SCROLL_MESSAGE_ID, timestamp)
+                intent.putExtra(ConversationActivityV2.SCROLL_MESSAGE_AUTHOR, author)
+                push(intent)
+            }
+            is GlobalSearchAdapter.Model.Contact -> {
+                val address = model.contact.sessionID
+
+                val intent = Intent(this, ConversationActivityV2::class.java)
+                intent.putExtra(ConversationActivityV2.ADDRESS, Address.fromSerialized(address))
+                push(intent)
+            }
+            is GlobalSearchAdapter.Model.Conversation -> {
+                val intent = Intent(this, ConversationActivityV2::class.java)
+                intent.putExtra(ConversationActivityV2.THREAD_ID, model.conversation.threadId)
+                push(intent)
+            }
+            else -> {
+                Log.d("Loki", "callback with model: $model")
+            }
+        }
+    }
 
     // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {

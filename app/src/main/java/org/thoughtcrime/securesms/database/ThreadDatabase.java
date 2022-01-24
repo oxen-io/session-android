@@ -17,6 +17,7 @@
  */
 package org.thoughtcrime.securesms.database;
 
+import static org.session.libsession.utilities.GroupUtil.CLOSED_GROUP_PREFIX;
 import static org.session.libsession.utilities.GroupUtil.OPEN_GROUP_PREFIX;
 import static org.thoughtcrime.securesms.database.GroupDatabase.GROUP_ID;
 
@@ -381,6 +382,19 @@ public class ThreadDatabase extends Database {
 
   public Cursor getArchivedConversationList() {
     return getConversationList("1");
+  }
+
+  public Cursor getOneOnOneConversationList() {
+    SQLiteDatabase db     = databaseHelper.getReadableDatabase();
+    String         where  = "(" + MESSAGE_COUNT + " != 0 AND NOT (" + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '"+OPEN_GROUP_PREFIX+"' AND "+
+            GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '"+CLOSED_GROUP_PREFIX+"')) " +
+            "AND " + ARCHIVED + " = ?";
+    String         query  = createQuery(where, 0);
+    Cursor         cursor = db.rawQuery(query, new String[]{"0"});
+
+    setNotifyConverationListListeners(cursor);
+
+    return cursor;
   }
 
   private Cursor getConversationList(String archived) {
