@@ -38,6 +38,7 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.ProfilePictureModifiedEvent
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.ApplicationContext

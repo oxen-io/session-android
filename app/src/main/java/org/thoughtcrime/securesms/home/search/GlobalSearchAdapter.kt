@@ -88,9 +88,6 @@ class GlobalSearchAdapter (private val modelCallback: (Model)->Unit): RecyclerVi
 
     class ContentView(view: View, private val modelCallback: (Model) -> Unit) : RecyclerView.ViewHolder(view) {
 
-        val binding = ViewGlobalSearchResultBinding.bind(view)
-
-
         val binding = ViewGlobalSearchResultBinding.bind(view).apply {
             searchResultProfilePicture.glide = GlideApp.with(root)
         }
