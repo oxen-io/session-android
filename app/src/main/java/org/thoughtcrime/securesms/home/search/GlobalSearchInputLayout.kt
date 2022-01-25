@@ -65,10 +65,18 @@ class GlobalSearchInputLayout @JvmOverloads constructor(
 
     override fun onClick(v: View?) {
         if (v === binding.searchCancel) {
-            binding.searchInput.text = null
-            binding.searchInput.clearFocus()
+            clearSearch(true)
         } else if (v === binding.searchClear) {
-            binding.searchInput.text = null
+            clearSearch(binding.searchInput.length() == 0)
+        }
+    }
+
+    fun clearSearch(clearFocus: Boolean) {
+        binding.searchInput.text = null
+        if (clearFocus) {
+            if (binding.searchInput.hasFocus()) {
+                binding.searchInput.clearFocus()
+            }
         }
     }
 

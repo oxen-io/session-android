@@ -21,20 +21,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    @ApplicationContext context: Context,
-    searchDb: SearchDatabase,
-    threadDb: ThreadDatabase,
-    contactDb: SessionContactDatabase
+    private val searchRepository: SearchRepository
 ) : ViewModel() {
 
-    private val searchRepository: SearchRepository = SearchRepository(
-        context,
-        searchDb,
-        threadDb,
-        contactDb,
-        ContactAccessor.getInstance(),
-        SignalExecutors.SERIAL
-    )
     private val result: CloseableLiveData<SearchResult> = CloseableLiveData()
     private val debouncer: Debouncer = Debouncer(500)
     private var firstSearch = false

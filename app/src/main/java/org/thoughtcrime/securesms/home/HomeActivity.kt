@@ -209,12 +209,13 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                     JobQueue.shared.resumePendingJobs()
                 }
             }
-            // monitor the global search VM query and populate data for global search adapter
+            // monitor the global search VM query
             launch {
                 binding.globalSearchInputLayout.query
                         .onEach(globalSearchViewModel::postQuery)
                         .collect()
             }
+            // Get group results and display them
             launch {
                 globalSearchViewModel.result.collect { result ->
 
@@ -338,6 +339,14 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     // endregion
 
     // region Interaction
+    override fun onBackPressed() {
+        if (binding.globalSearchRecycler.isVisible) {
+            binding.globalSearchInputLayout.clearSearch(true)
+            return
+        }
+        super.onBackPressed()
+    }
+
     override fun handleSeedReminderViewContinueButtonTapped() {
         val intent = Intent(this, SeedActivity::class.java)
         show(intent)

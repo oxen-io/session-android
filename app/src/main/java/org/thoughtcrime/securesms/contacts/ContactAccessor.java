@@ -80,11 +80,11 @@ public class ContactAccessor {
         reader.close();
     }
 
-    if (context.getString(R.string.note_to_self).toLowerCase().contains(constraint.toLowerCase()) &&
-        !numberList.contains(TextSecurePreferences.getLocalNumber(context)))
-    {
-      numberList.add(TextSecurePreferences.getLocalNumber(context));
-    }
+//    if (context.getString(R.string.note_to_self).toLowerCase().contains(constraint.toLowerCase()) &&
+//        !numberList.contains(TextSecurePreferences.getLocalNumber(context)))
+//    {
+//      numberList.add(TextSecurePreferences.getLocalNumber(context));
+//    }
 
     return numberList;
   }

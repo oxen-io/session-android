@@ -27,23 +27,9 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
-class GlobalSearchViewModel @Inject constructor(
-        @ApplicationContext context: Context,
-        searchDb: SearchDatabase,
-        threadDb: ThreadDatabase,
-        contactDb: SessionContactDatabase
-) : ViewModel() {
+class GlobalSearchViewModel @Inject constructor(private val searchRepository: SearchRepository) : ViewModel() {
 
     private val executor = viewModelScope + SupervisorJob()
-
-    private val searchRepository = SearchRepository(
-            context,
-            searchDb,
-            threadDb,
-            contactDb,
-            ContactAccessor.getInstance(),
-            SignalExecutors.SERIAL
-    )
 
     private val _result: MutableStateFlow<GlobalSearchResult> =
             MutableStateFlow(GlobalSearchResult.EMPTY)

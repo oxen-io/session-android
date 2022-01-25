@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.search;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.database.MergeCursor;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -11,10 +12,12 @@ import com.annimon.stream.Stream;
 
 import org.session.libsession.messaging.contacts.Contact;
 import org.session.libsession.utilities.Address;
+import org.session.libsession.utilities.GroupRecord;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.contacts.ContactAccessor;
 import org.thoughtcrime.securesms.database.CursorList;
+import org.thoughtcrime.securesms.database.GroupDatabase;
 import org.thoughtcrime.securesms.database.MmsSmsColumns;
 import org.thoughtcrime.securesms.database.SearchDatabase;
 import org.thoughtcrime.securesms.database.SessionContactDatabase;
@@ -29,6 +32,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
+
+import kotlin.Pair;
 
 /**
  * Manages data retrieval for search.
@@ -57,6 +62,7 @@ public class SearchRepository {
   private final Context                context;
   private final SearchDatabase         searchDatabase;
   private final ThreadDatabase         threadDatabase;
+  private final GroupDatabase          groupDatabase;
   private final SessionContactDatabase contactDatabase;
   private final ContactAccessor        contactAccessor;
   private final Executor               executor;
@@ -64,6 +70,7 @@ public class SearchRepository {
   public SearchRepository(@NonNull Context context,
                           @NonNull SearchDatabase searchDatabase,
                           @NonNull ThreadDatabase threadDatabase,
+                          @NonNull GroupDatabase groupDatabase,
                           @NonNull SessionContactDatabase contactDatabase,
                           @NonNull ContactAccessor contactAccessor,
                           @NonNull Executor executor)
@@ -71,6 +78,7 @@ public class SearchRepository {
     this.context          = context.getApplicationContext();
     this.searchDatabase   = searchDatabase;
     this.threadDatabase   = threadDatabase;
+    this.groupDatabase    = groupDatabase;
     this.contactDatabase  = contactDatabase;
     this.contactAccessor  = contactAccessor;
     this.executor         = executor;
@@ -88,10 +96,10 @@ public class SearchRepository {
       String cleanQuery = sanitizeQuery(query);
       timer.split("clean");
 
-      CursorList<Contact> contacts = queryContacts(cleanQuery);
+      Pair<CursorList<Contact>, List<String>> contacts = queryContacts(cleanQuery);
       timer.split("contacts");
 
-      CursorList<ThreadRecord> conversations = queryConversations(cleanQuery);
+      CursorList<ThreadRecord> conversations = queryConversations(cleanQuery, contacts.getSecond());
       timer.split("conversations");
 
       CursorList<MessageResult> messages = queryMessages(cleanQuery);
@@ -99,7 +107,7 @@ public class SearchRepository {
 
       timer.stop(TAG);
 
-      callback.onResult(new SearchResult(cleanQuery, contacts, conversations, messages));
+      callback.onResult(new SearchResult(cleanQuery, contacts.getFirst(), conversations, messages));
     });
   }
 
@@ -118,15 +126,19 @@ public class SearchRepository {
     });
   }
 
-  private CursorList<Contact> queryContacts(String query) {
+  private Pair<CursorList<Contact>, List<String>> queryContacts(String query) {
 
     Cursor contacts = contactDatabase.queryContactsByName(query);
     List<Address> contactList = new ArrayList<>();
+    List<String> contactStrings = new ArrayList<>();
 
     while (contacts.moveToNext()) {
       try {
-        Address address = Address.fromSerialized(contactDatabase.contactFromCursor(contacts).getSessionID());
+        Contact contact = contactDatabase.contactFromCursor(contacts);
+        String contactSessionId = contact.getSessionID();
+        Address address = Address.fromSerialized(contactSessionId);
         contactList.add(address);
+        contactStrings.add(contactSessionId);
       } catch (Exception e) {
         Log.e("Loki", "Error building Contact from cursor in query", e);
       }
@@ -136,20 +148,34 @@ public class SearchRepository {
 
     Cursor individualRecipients = threadDatabase.getFilteredConversationList(contactList);
     if (individualRecipients == null) {
-      return CursorList.emptyList();
+      return new Pair<>(CursorList.emptyList(),contactStrings);
     }
 
-    return new CursorList<>(individualRecipients, new ContactModelBuilder(contactDatabase, threadDatabase));
+    return new Pair<>(new CursorList<>(individualRecipients, new ContactModelBuilder(contactDatabase, threadDatabase)), contactStrings);
 
   }
 
-  private CursorList<ThreadRecord> queryConversations(@NonNull String query) {
+  private CursorList<ThreadRecord> queryConversations(@NonNull String query, List<String> matchingAddresses) {
     List<String>  numbers   = contactAccessor.getNumbersForThreadSearchFilter(context, query);
-    List<Address> addresses = Stream.of(numbers).map(number -> Address.fromExternal(context, number)).toList();
+    Set<Address> addresses = new HashSet<>(Stream.of(numbers).map(number -> Address.fromExternal(context, number)).toList());
 
-    Cursor conversations = threadDatabase.getFilteredConversationList(addresses);
+    Cursor membersGroupList = groupDatabase.getGroupsFilteredByMembers(matchingAddresses);
+    if (membersGroupList != null) {
+      GroupDatabase.Reader reader = new GroupDatabase.Reader(membersGroupList);
+      while (membersGroupList.moveToNext()) {
+        GroupRecord record = reader.getCurrent();
+        if (record == null) continue;
+
+        addresses.add(Address.fromSerialized(record.getEncodedId()));
+      }
+      membersGroupList.close();
+    }
+
+
+    Cursor conversations = threadDatabase.getFilteredConversationList(new ArrayList<>(addresses));
+
     return conversations != null ? new CursorList<>(conversations, new ThreadModelBuilder(threadDatabase))
-                                 : CursorList.emptyList();
+            : CursorList.emptyList();
   }
 
   private CursorList<MessageResult> queryMessages(@NonNull String query) {
