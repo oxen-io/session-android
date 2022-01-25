@@ -2,8 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginHorizontal="@dimen/medium_spacing"
-    android:layout_marginBottom="@dimen/small_spacing"
     android:animateLayoutChanges="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">

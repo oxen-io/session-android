@@ -21,6 +21,7 @@
             android:orientation="vertical">
 
             <RelativeLayout
+                android:id="@+id/session_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_marginLeft="20dp"
@@ -53,19 +54,28 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true">
 
-                    <org.thoughtcrime.securesms.home.PathStatusView
-                        android:layout_width="@dimen/path_status_view_size"
-                        android:layout_height="@dimen/path_status_view_size"
-                        android:layout_centerInParent="true" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_baseline_search_24"
+                        app:tint="@color/text" />
 
                 </RelativeLayout>
 
             </RelativeLayout>
 
-            <org.thoughtcrime.securesms.home.search.GlobalSearchInputLayout
-                android:id="@+id/globalSearchInputLayout"
+            <RelativeLayout
+                android:id="@+id/search_toolbar"
+                android:layout_marginHorizontal="@dimen/medium_spacing"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="?actionBarSize">
+                <org.thoughtcrime.securesms.home.search.GlobalSearchInputLayout
+                    android:layout_centerVertical="true"
+                    android:id="@+id/globalSearchInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"

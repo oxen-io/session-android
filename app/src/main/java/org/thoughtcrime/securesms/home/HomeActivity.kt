@@ -144,7 +144,10 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         binding.profileButton.glide = glide
         binding.profileButton.setOnClickListener { openSettings() }
         binding.pathStatusViewContainer.disableClipping()
-        binding.pathStatusViewContainer.setOnClickListener { showPath() }
+        binding.pathStatusViewContainer.setOnClickListener {
+            TODO("open the search dialog")
+            // showPath()
+        }
         // Set up seed reminder view
         val hasViewedSeed = TextSecurePreferences.getHasViewedSeed(this)
         if (!hasViewedSeed) {
