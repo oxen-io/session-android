@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
+import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.ContentView
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.Conversation
@@ -96,6 +97,7 @@ fun ContentView.bindModel(query: String?, model: Conversation) {
 }
 
 fun ContentView.bindModel(query: String?, model: ContactModel) {
+
     binding.searchResultSubtitle.isVisible = false
     binding.searchResultSubtitle.text = null
     val recipient =

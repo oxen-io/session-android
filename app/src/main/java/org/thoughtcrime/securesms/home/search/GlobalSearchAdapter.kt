@@ -94,7 +94,6 @@ class GlobalSearchAdapter (private val modelCallback: (Model)->Unit): RecyclerVi
 
         fun bindPayload(newQuery: String, model: Model) {
             bindQuery(newQuery, model)
-            binding.root.setOnClickListener { modelCallback(model) }
         }
 
         fun bind(query: String, model: Model) {
@@ -105,6 +104,7 @@ class GlobalSearchAdapter (private val modelCallback: (Model)->Unit): RecyclerVi
                 is Model.Message -> bindModel(query, model)
                 is Model.Header -> throw InvalidParameterException("Can't display Model.Header as ContentView")
             }
+            binding.root.setOnClickListener { modelCallback(model) }
         }
 
     }

@@ -24,6 +24,7 @@ import org.thoughtcrime.securesms.search.model.MessageResult;
 import org.thoughtcrime.securesms.search.model.SearchResult;
 import org.thoughtcrime.securesms.util.Stopwatch;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -119,9 +120,26 @@ public class SearchRepository {
 
   private CursorList<Contact> queryContacts(String query) {
 
-    Cursor individualRecipients = threadDatabase.getOneOnOneConversationList();
+    Cursor contacts = contactDatabase.queryContactsByName(query);
+    List<Address> contactList = new ArrayList<>();
 
-    return new CursorList<Contact>(individualRecipients, new ContactModelBuilder(contactDatabase, threadDatabase));
+    while (contacts.moveToNext()) {
+      try {
+        Address address = Address.fromSerialized(contactDatabase.contactFromCursor(contacts).getSessionID());
+        contactList.add(address);
+      } catch (Exception e) {
+        Log.e("Loki", "Error building Contact from cursor in query", e);
+      }
+    }
+
+    contacts.close();
+
+    Cursor individualRecipients = threadDatabase.getFilteredConversationList(contactList);
+    if (individualRecipients == null) {
+      return CursorList.emptyList();
+    }
+
+    return new CursorList<>(individualRecipients, new ContactModelBuilder(contactDatabase, threadDatabase));
 
   }
 
