@@ -1,6 +1,8 @@
 package org.thoughtcrime.securesms.home.search
 
 import android.graphics.Typeface
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -41,21 +43,27 @@ private val BoldStyleFactory = { StyleSpan(Typeface.BOLD) }
 
 fun ContentView.bindQuery(query: String, model: GlobalSearchAdapter.Model) {
     when (model) {
-        is ContactModel -> bindHighlight(
-            query,
-            model.contact.getSearchName(),
-            binding.searchResultTitle
-        )
-        is Message -> bindHighlight(
-            query,
-            model.messageResult.bodySnippet,
-            binding.searchResultSubtitle
-        )
-        is Conversation -> {
-            bindHighlight(
+        is ContactModel -> {
+            binding.searchResultTitle.text = getHighlight(
                 query,
-                model.conversation.recipient.name.orEmpty(),
-                binding.searchResultTitle
+                model.contact.getSearchName()
+            )
+        }
+        is Message -> {
+            val textSpannable = SpannableStringBuilder()
+            if (model.messageResult.conversationRecipient != model.messageResult.messageRecipient) {
+                // group chat, bind
+
+            }
+            binding.searchResultSubtitle.text = getHighlight(
+                query,
+                model.messageResult.bodySnippet
+            )
+        }
+        is Conversation -> {
+            binding.searchResultTitle.text = getHighlight(
+                query,
+                model.conversation.recipient.name.orEmpty()
             )
             // TODO: monitor performance and improve
             val groupMembers = DatabaseComponent.get(binding.root.context)
@@ -66,24 +74,23 @@ fun ContentView.bindQuery(query: String, model: GlobalSearchAdapter.Model) {
                 val address = it.address.serialize()
                 it.name ?: "${address.take(4)}...${address.takeLast(4)}"
             }
-            bindHighlight(query, membersString, binding.searchResultSubtitle)
+            binding.searchResultSubtitle.text = getHighlight(query, membersString)
         }
     }
 }
 
-private fun bindHighlight(query: String?, toSearch: String, textView: TextView) {
+private fun getHighlight(query: String?, toSearch: String): Spannable? {
     val normalizedQuery = query.orEmpty().lowercase()
     val normalizedSearch = toSearch.lowercase()
 
-    textView.text =
-        SearchUtil.getHighlightedSpan(Locale.getDefault(), BoldStyleFactory, toSearch, query)
+    return SearchUtil.getHighlightedSpan(Locale.getDefault(), BoldStyleFactory, toSearch, query)
 }
 
 fun ContentView.bindModel(query: String?, model: Conversation) {
     binding.searchResultSubtitle.isVisible = true
     binding.searchResultProfilePicture.update(model.conversation.recipient)
     val nameString = model.conversation.recipient.toShortString()
-    bindHighlight(query, nameString, binding.searchResultTitle)
+    binding.searchResultTitle.text = getHighlight(query, nameString)
 
     val groupMembers = DatabaseComponent.get(binding.root.context)
         .groupDatabase()
@@ -93,7 +100,7 @@ fun ContentView.bindModel(query: String?, model: Conversation) {
         val address = it.address.serialize()
         it.name ?: "${address.take(4)}...${address.takeLast(4)}"
     }
-    bindHighlight(query, membersString, binding.searchResultSubtitle)
+    binding.searchResultSubtitle.text = getHighlight(query, membersString)
 }
 
 fun ContentView.bindModel(query: String?, model: ContactModel) {
@@ -104,14 +111,14 @@ fun ContentView.bindModel(query: String?, model: ContactModel) {
         Recipient.from(binding.root.context, Address.fromSerialized(model.contact.sessionID), false)
     binding.searchResultProfilePicture.update(recipient)
     val nameString = model.contact.getSearchName()
-    bindHighlight(query, nameString, binding.searchResultTitle)
+    binding.searchResultTitle.text = getHighlight(query, nameString)
 }
 
 fun ContentView.bindModel(query: String?, model: Message) {
     binding.searchResultProfilePicture.update(model.messageResult.messageRecipient)
     binding.searchResultTitle.text = model.messageResult.messageRecipient.toShortString()
     binding.searchResultSubtitle.isVisible = true
-    bindHighlight(query, model.messageResult.bodySnippet, binding.searchResultSubtitle)
+    binding.searchResultSubtitle.text = getHighlight(query, model.messageResult.bodySnippet)
 }
 
 fun Contact.getSearchName(): String =

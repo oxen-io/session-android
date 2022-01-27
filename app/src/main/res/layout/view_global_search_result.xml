@@ -32,6 +32,7 @@
         <TextView
             tools:text="@tools:sample/full_names"
             android:id="@+id/search_result_title"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"

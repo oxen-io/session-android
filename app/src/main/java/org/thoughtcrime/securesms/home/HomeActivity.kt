@@ -10,6 +10,8 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.view.FocusFinder
+import android.view.View.FOCUS_DOWN
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.os.bundleOf
@@ -145,8 +147,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         binding.profileButton.setOnClickListener { openSettings() }
         binding.pathStatusViewContainer.disableClipping()
         binding.pathStatusViewContainer.setOnClickListener {
-            TODO("open the search dialog")
-            // showPath()
+            binding.globalSearchInputLayout.requestFocus(FOCUS_DOWN)
         }
         // Set up seed reminder view
         val hasViewedSeed = TextSecurePreferences.getHasViewedSeed(this)
@@ -262,7 +263,10 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 
     private fun setSearchShown(isShown: Boolean) {
+        binding.searchToolbar.isVisible = isShown
+        binding.sessionToolbar.isVisible = !isShown
         binding.recyclerView.isVisible = !isShown
+        binding.gradientView.isVisible = !isShown
         binding.globalSearchRecycler.isVisible = isShown
         binding.newConversationButtonSet.isVisible = !isShown
     }
