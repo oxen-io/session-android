@@ -391,10 +391,12 @@ public class ThreadDatabase extends Database {
     SQLiteDatabase db     = databaseHelper.getReadableDatabase();
     String         where  = "(" + MESSAGE_COUNT + " != 0 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') " +
                             "AND " + ARCHIVED + " = ? ";
-    if (hasSent) {
-      where += "AND (" + HAS_SENT + " = 1 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') ";
-    } else {
-      where += "AND (" + HAS_SENT + " = 0 AND " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " IS NULL) ";
+    if (TextSecurePreferences.isMessageRequestsEnabled(context)) {
+      if (hasSent) {
+        where += "AND (" + HAS_SENT + " = 1 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') ";
+      } else {
+        where += "AND (" + HAS_SENT + " = 0 AND " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " IS NULL) ";
+      }
     }
     String         query  = createQuery(where, 0);
     Cursor         cursor = db.rawQuery(query, new String[]{archived});
