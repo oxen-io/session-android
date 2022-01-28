@@ -44,8 +44,6 @@
     </LinearLayout>
     <TextView
         android:layout_marginStart="@dimen/small_spacing"
-        tools:visibility="visible"
-        android:visibility="gone"
         android:layout_centerVertical="true"
         android:text="@string/cancel"
         app:layout_constraintStart_toEndOf="@+id/search_input_parent"
