@@ -66,6 +66,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                tools:visibility="visible"
                 android:visibility="gone"
                 android:id="@+id/search_toolbar"
                 android:layout_marginHorizontal="@dimen/medium_spacing"

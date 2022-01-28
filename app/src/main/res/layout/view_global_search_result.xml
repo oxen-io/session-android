@@ -24,6 +24,7 @@
         android:id="@+id/search_result_text_parent"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/large_spacing"
         app:layout_constraintStart_toEndOf="@+id/search_result_profile_picture"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

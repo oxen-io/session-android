@@ -3,14 +3,15 @@ package org.thoughtcrime.securesms.home.search
 import android.graphics.Typeface
 import android.text.Spannable
 import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
-import android.widget.TextView
+import android.util.TypedValue
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
+import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
-import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.ContentView
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.Conversation
@@ -53,12 +54,22 @@ fun ContentView.bindQuery(query: String, model: GlobalSearchAdapter.Model) {
             val textSpannable = SpannableStringBuilder()
             if (model.messageResult.conversationRecipient != model.messageResult.messageRecipient) {
                 // group chat, bind
-
+                val typedValue = TypedValue()
+                val theme = binding.root.context.theme
+                theme.resolveAttribute(R.attr.searchHighlightTint, typedValue, true)
+                val color = typedValue.data
+                val span = ForegroundColorSpan(color)
+                val text = "${model.messageResult.messageRecipient.getSearchName()}: "
+                textSpannable.append(text)
+                textSpannable.setSpan(span,0,text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
-            binding.searchResultSubtitle.text = getHighlight(
-                query,
-                model.messageResult.bodySnippet
-            )
+            textSpannable.append(getHighlight(
+                    query,
+                    model.messageResult.bodySnippet
+            ))
+            binding.searchResultSubtitle.text = textSpannable
+            binding.searchResultSubtitle.isVisible = true
+            binding.searchResultTitle.text = model.messageResult.conversationRecipient.toShortString()
         }
         is Conversation -> {
             binding.searchResultTitle.text = getHighlight(
@@ -80,9 +91,6 @@ fun ContentView.bindQuery(query: String, model: GlobalSearchAdapter.Model) {
 }
 
 private fun getHighlight(query: String?, toSearch: String): Spannable? {
-    val normalizedQuery = query.orEmpty().lowercase()
-    val normalizedSearch = toSearch.lowercase()
-
     return SearchUtil.getHighlightedSpan(Locale.getDefault(), BoldStyleFactory, toSearch, query)
 }
 
@@ -115,17 +123,30 @@ fun ContentView.bindModel(query: String?, model: ContactModel) {
 }
 
 fun ContentView.bindModel(query: String?, model: Message) {
-    binding.searchResultProfilePicture.update(model.messageResult.messageRecipient)
-    binding.searchResultTitle.text = model.messageResult.messageRecipient.toShortString()
+    binding.searchResultProfilePicture.update(model.messageResult.conversationRecipient)
+    val textSpannable = SpannableStringBuilder()
+    if (model.messageResult.conversationRecipient != model.messageResult.messageRecipient) {
+        // group chat, bind
+        val typedValue = TypedValue()
+        val theme = binding.root.context.theme
+        theme.resolveAttribute(R.attr.searchHighlightTint, typedValue, true)
+        val color = typedValue.data
+        val span = ForegroundColorSpan(color)
+        val text = "${model.messageResult.messageRecipient.getSearchName()}: "
+        textSpannable.append(text)
+        textSpannable.setSpan(span,0,text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+    }
+    textSpannable.append(getHighlight(
+            query,
+            model.messageResult.bodySnippet
+    ))
+    binding.searchResultSubtitle.text = textSpannable
+    binding.searchResultTitle.text = model.messageResult.conversationRecipient.toShortString()
     binding.searchResultSubtitle.isVisible = true
-    binding.searchResultSubtitle.text = getHighlight(query, model.messageResult.bodySnippet)
 }
 
+fun Recipient.getSearchName(): String = name ?: address.serialize().let { address -> "${address.take(4)}...${address.takeLast(4)}" }
+
 fun Contact.getSearchName(): String =
-    if (nickname.isNullOrEmpty()) name.orEmpty() else "${
-        name ?: "${sessionID.take(4)}...${
-            sessionID.takeLast(
-                4
-            )
-        }"
-    } ($nickname)"
+        if (nickname.isNullOrEmpty()) name ?: "${sessionID.take(4)}...${sessionID.takeLast(4)}"
+        else "${name ?: "${sessionID.take(4)}...${sessionID.takeLast(4)}"} ($nickname)"
