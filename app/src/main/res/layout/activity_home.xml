@@ -118,6 +118,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:visibility="gone"
+            android:scrollbars="vertical"
             android:id="@+id/globalSearchRecycler"
             android:layout_width="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
