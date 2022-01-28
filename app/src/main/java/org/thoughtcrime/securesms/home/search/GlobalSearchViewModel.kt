@@ -54,7 +54,7 @@ class GlobalSearchViewModel @Inject constructor(private val searchRepository: Se
                         // user input delay here in case we get a new query within a few hundred ms
                         // this coroutine will be cancelled and expensive query will not be run if typing quickly
                         // first query of 2 characters will be instant however
-                        if (query.trim().length > 2) delay(300)
+                        delay(300)
                         val settableFuture = SettableFuture<SearchResult>()
                         searchRepository.query(query.toString(), settableFuture::set)
                         try {
