@@ -60,6 +60,7 @@ import org.thoughtcrime.securesms.notifications.MarkReadReceiver;
 import org.thoughtcrime.securesms.util.SessionMetaProtocol;
 
 import java.io.Closeable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -383,6 +384,32 @@ public class ThreadDatabase extends Database {
     return getConversationList("0", false);
   }
 
+  public int getUntrustedConversationCount() {
+    SQLiteDatabase db = databaseHelper.getReadableDatabase();
+    Cursor cursor     = null;
+
+    try {
+      String where    = "SELECT COUNT (*) FROM " + TABLE_NAME +
+              " LEFT OUTER JOIN " + GroupDatabase.TABLE_NAME +
+              " ON " + TABLE_NAME + "." + ADDRESS + " = " + GroupDatabase.TABLE_NAME + "." + GROUP_ID +
+              " WHERE " + MESSAGE_COUNT + " != 0 AND " + ARCHIVED + " = 0 " +"AND " + HAS_SENT + " = 0 AND " +
+              GroupDatabase.TABLE_NAME + "." + GROUP_ID + " IS NULL ";
+      cursor          = db.rawQuery(where, null);
+
+      if (cursor != null && cursor.moveToFirst())
+        return cursor.getInt(0);
+    } finally {
+      if (cursor != null)
+        cursor.close();
+    }
+
+    return 0;
+  }
+
+  public long getLatestUntrustedConversationTimestamp() {
+    return new Date().getTime();
+  }
+
   public Cursor getArchivedConversationList() {
     return getConversationList("1", true);
   }
@@ -391,12 +418,10 @@ public class ThreadDatabase extends Database {
     SQLiteDatabase db     = databaseHelper.getReadableDatabase();
     String         where  = "(" + MESSAGE_COUNT + " != 0 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') " +
                             "AND " + ARCHIVED + " = ? ";
-    if (TextSecurePreferences.isMessageRequestsEnabled(context)) {
-      if (hasSent) {
-        where += "AND (" + HAS_SENT + " = 1 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') ";
-      } else {
-        where += "AND (" + HAS_SENT + " = 0 AND " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " IS NULL) ";
-      }
+    if (hasSent) {
+      where += "AND (" + HAS_SENT + " = 1 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') ";
+    } else {
+      where += "AND (" + HAS_SENT + " = 0 AND " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " IS NULL) ";
     }
     String         query  = createQuery(where, 0);
     Cursor         cursor = db.rawQuery(query, new String[]{archived});

@@ -151,7 +151,8 @@ interface TextSecurePreferences {
     fun setLastOpenDate()
     fun hasSeenLinkPreviewSuggestionDialog(): Boolean
     fun setHasSeenLinkPreviewSuggestionDialog()
-    fun isMessageRequestsEnabled(): Boolean
+    fun hasHiddenMessageRequests(): Boolean
+    fun setHasHiddenMessageRequests()
     fun clearAll()
 
     companion object {
@@ -228,7 +229,7 @@ interface TextSecurePreferences {
         const val CONFIGURATION_SYNCED = "pref_configuration_synced"
         const val LAST_PROFILE_UPDATE_TIME = "pref_last_profile_update_time"
         const val LAST_OPEN_DATE = "pref_last_open_date"
-        const val MESSAGE_REQUESTS_ENABLED = "pref_message_requests_enabled"
+        const val HAS_HIDDEN_MESSAGE_REQUESTS = "pref_message_requests_hidden"
 
         @JvmStatic
         fun getLastConfigurationSyncTime(context: Context): Long {
@@ -873,11 +874,6 @@ interface TextSecurePreferences {
         }
 
         @JvmStatic
-        fun isMessageRequestsEnabled(context: Context): Boolean {
-            return getBooleanPreference(context, MESSAGE_REQUESTS_ENABLED, false)
-        }
-
-        @JvmStatic
         fun clearAll(context: Context) {
             getDefaultSharedPreferences(context).edit().clear().commit()
         }
@@ -1433,8 +1429,12 @@ class AppTextSecurePreferences @Inject constructor(
         setBooleanPreference("has_seen_link_preview_suggestion_dialog", true)
     }
 
-    override fun isMessageRequestsEnabled(): Boolean {
-        return getBooleanPreference(TextSecurePreferences.MESSAGE_REQUESTS_ENABLED, false)
+    override fun hasHiddenMessageRequests(): Boolean {
+        return getBooleanPreference(TextSecurePreferences.HAS_HIDDEN_MESSAGE_REQUESTS, false)
+    }
+
+    override fun setHasHiddenMessageRequests() {
+        setBooleanPreference(TextSecurePreferences.HAS_HIDDEN_MESSAGE_REQUESTS, true)
     }
 
     override fun clearAll() {

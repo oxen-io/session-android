@@ -755,6 +755,7 @@
     <string name="activity_settings_display_name_too_long_error">Please pick a shorter display name</string>
     <string name="activity_settings_privacy_button_title">Privacy</string>
     <string name="activity_settings_notifications_button_title">Notifications</string>
+    <string name="activity_settings_message_requests_button_title">Message Requests</string>
     <string name="activity_settings_chats_button_title">Chats</string>
     <string name="activity_settings_devices_button_title">Devices</string>
     <string name="activity_settings_invite_button_title">Invite a Friend</string>
@@ -820,7 +821,7 @@
     <string name="activity_select_contacts_title">Select Contacts</string>
 
     <string name="view_reset_secure_session_done_message">Secure session reset done</string>
-    
+
     <string name="dialog_ui_mode_title">Theme</string>
     <string name="dialog_ui_mode_option_day">Day</string>
     <string name="dialog_ui_mode_option_night">Night</string>
@@ -905,5 +906,6 @@
     <string name="conversation_pin">Pin</string>
     <string name="conversation_unpin">Unpin</string>
     <string name="mark_all_as_read">Mark all as read</string>
+    <string name="activity_message_requests_title">Message Requests</string>
 
 </resources>

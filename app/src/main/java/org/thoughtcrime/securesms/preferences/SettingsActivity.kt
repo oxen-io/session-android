@@ -34,6 +34,7 @@ import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol
 import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.avatar.AvatarSelection
+import org.thoughtcrime.securesms.messagerequests.MessageRequestsActivity
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.permissions.Permissions
@@ -86,6 +87,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             shareButton.setOnClickListener { sharePublicKey() }
             privacyButton.setOnClickListener { showPrivacySettings() }
             notificationsButton.setOnClickListener { showNotificationSettings() }
+            messageRequestsButton.setOnClickListener { showMessageRequests() }
             chatsButton.setOnClickListener { showChatSettings() }
             sendInvitationButton.setOnClickListener { sendInvitation() }
             faqButton.setOnClickListener { showFAQ() }
@@ -275,6 +277,11 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
     private fun showNotificationSettings() {
         val intent = Intent(this, NotificationSettingsActivity::class.java)
+        push(intent)
+    }
+
+    private fun showMessageRequests() {
+        val intent = Intent(this, MessageRequestsActivity::class.java)
         push(intent)
     }
 
