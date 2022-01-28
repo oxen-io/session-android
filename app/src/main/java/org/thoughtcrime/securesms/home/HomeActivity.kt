@@ -40,6 +40,7 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.ProfilePictureModifiedEvent
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils
 import org.session.libsignal.utilities.toHexString
@@ -128,9 +129,13 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 push(intent)
             }
             is GlobalSearchAdapter.Model.GroupConversation -> {
-                val intent = Intent(this, ConversationActivityV2::class.java)
-                intent.putExtra(ConversationActivityV2.ADDRESS, model.groupRecord.encodedId)
-                push(intent)
+                val groupAddress = Address.fromSerialized(model.groupRecord.encodedId)
+                val threadId = threadDb.getThreadIdIfExistsFor(Recipient.from(this, groupAddress, false))
+                if (threadId >= 0) {
+                    val intent = Intent(this, ConversationActivityV2::class.java)
+                    intent.putExtra(ConversationActivityV2.THREAD_ID, threadId)
+                    push(intent)
+                }
             }
             else -> {
                 Log.d("Loki", "callback with model: $model")
