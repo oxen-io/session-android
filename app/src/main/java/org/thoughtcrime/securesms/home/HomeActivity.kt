@@ -91,6 +91,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     @Inject lateinit var threadDb: ThreadDatabase
     @Inject lateinit var recipientDatabase: RecipientDatabase
     @Inject lateinit var groupDatabase: GroupDatabase
+    @Inject lateinit var textSecurePreferences: TextSecurePreferences
 
     private val globalSearchViewModel by viewModels<GlobalSearchViewModel>()
 
@@ -114,6 +115,11 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 intent.putExtra(ConversationActivityV2.SCROLL_MESSAGE_AUTHOR, author)
                 push(intent)
             }
+            is GlobalSearchAdapter.Model.SavedMessages -> {
+                val intent = Intent(this, ConversationActivityV2::class.java)
+                intent.putExtra(ConversationActivityV2.ADDRESS, Address.fromSerialized(model.currentUserPublicKey))
+                push(intent)
+            }
             is GlobalSearchAdapter.Model.Contact -> {
                 val address = model.contact.sessionID
 
@@ -121,9 +127,9 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 intent.putExtra(ConversationActivityV2.ADDRESS, Address.fromSerialized(address))
                 push(intent)
             }
-            is GlobalSearchAdapter.Model.Conversation -> {
+            is GlobalSearchAdapter.Model.GroupConversation -> {
                 val intent = Intent(this, ConversationActivityV2::class.java)
-                intent.putExtra(ConversationActivityV2.THREAD_ID, model.conversation.threadId)
+                intent.putExtra(ConversationActivityV2.ADDRESS, model.groupRecord.encodedId)
                 push(intent)
             }
             else -> {
@@ -222,11 +228,20 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             // Get group results and display them
             launch {
                 globalSearchViewModel.result.collect { result ->
-
+                    val currentUserPublicKey = publicKey
                     val contactAndGroupList = result.contacts.map { GlobalSearchAdapter.Model.Contact(it) } +
-                            result.threads.map { GlobalSearchAdapter.Model.Conversation(it) }
+                            result.threads.map { GlobalSearchAdapter.Model.GroupConversation(it) }
 
                     val contactResults = contactAndGroupList.toMutableList()
+
+                    if (contactResults.isEmpty()) {
+                        contactResults.add(GlobalSearchAdapter.Model.SavedMessages(currentUserPublicKey))
+                    }
+
+                    val userIndex = contactResults.indexOfFirst { it is GlobalSearchAdapter.Model.Contact && it.contact.sessionID == currentUserPublicKey }
+                    if (userIndex >= 0) {
+                        contactResults[userIndex] = GlobalSearchAdapter.Model.SavedMessages(currentUserPublicKey)
+                    }
 
                     if (contactResults.isNotEmpty()) {
                         contactResults.add(0, GlobalSearchAdapter.Model.Header(R.string.global_search_contacts_groups))

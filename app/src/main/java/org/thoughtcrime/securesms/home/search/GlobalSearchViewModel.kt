@@ -1,10 +1,8 @@
 package org.thoughtcrime.securesms.home.search
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
@@ -15,12 +13,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.plus
-import org.session.libsession.utilities.concurrent.SignalExecutors
 import org.session.libsignal.utilities.SettableFuture
-import org.thoughtcrime.securesms.contacts.ContactAccessor
-import org.thoughtcrime.securesms.database.SearchDatabase
-import org.thoughtcrime.securesms.database.SessionContactDatabase
-import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.search.SearchRepository
 import org.thoughtcrime.securesms.search.model.SearchResult
 import java.util.concurrent.TimeUnit

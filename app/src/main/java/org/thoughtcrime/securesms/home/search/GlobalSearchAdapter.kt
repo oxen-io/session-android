@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewGlobalSearchHeaderBinding
 import network.loki.messenger.databinding.ViewGlobalSearchResultBinding
+import org.session.libsession.utilities.GroupRecord
+import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.search.model.MessageResult
@@ -99,9 +101,10 @@ class GlobalSearchAdapter (private val modelCallback: (Model)->Unit): RecyclerVi
         fun bind(query: String, model: Model) {
             binding.searchResultProfilePicture.recycle()
             when (model) {
-                is Model.Conversation -> bindModel(query, model)
+                is Model.GroupConversation -> bindModel(query, model)
                 is Model.Contact -> bindModel(query, model)
                 is Model.Message -> bindModel(query, model)
+                is Model.SavedMessages -> bindModel(model)
                 is Model.Header -> throw InvalidParameterException("Can't display Model.Header as ContentView")
             }
             binding.root.setOnClickListener { modelCallback(model) }
@@ -109,10 +112,17 @@ class GlobalSearchAdapter (private val modelCallback: (Model)->Unit): RecyclerVi
 
     }
 
+    data class MessageModel(
+            val threadRecipient: Recipient,
+            val messageRecipient: Recipient,
+            val messageSnippet: String
+    )
+
     sealed class Model {
         data class Header(@StringRes val title: Int) : Model()
+        data class SavedMessages(val currentUserPublicKey: String): Model()
         data class Contact(val contact: ContactModel) : Model()
-        data class Conversation(val conversation: ThreadRecord) : Model()
+        data class GroupConversation(val groupRecord: GroupRecord) : Model()
         data class Message(val messageResult: MessageResult) : Model()
     }
 

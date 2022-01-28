@@ -99,7 +99,7 @@ public class SearchRepository {
       Pair<CursorList<Contact>, List<String>> contacts = queryContacts(cleanQuery);
       timer.split("contacts");
 
-      CursorList<ThreadRecord> conversations = queryConversations(cleanQuery, contacts.getSecond());
+      CursorList<GroupRecord> conversations = queryConversations(cleanQuery, contacts.getSecond());
       timer.split("conversations");
 
       CursorList<MessageResult> messages = queryMessages(cleanQuery);
@@ -155,7 +155,7 @@ public class SearchRepository {
 
   }
 
-  private CursorList<ThreadRecord> queryConversations(@NonNull String query, List<String> matchingAddresses) {
+  private CursorList<GroupRecord> queryConversations(@NonNull String query, List<String> matchingAddresses) {
     List<String>  numbers   = contactAccessor.getNumbersForThreadSearchFilter(context, query);
     Set<Address> addresses = new HashSet<>(Stream.of(numbers).map(number -> Address.fromExternal(context, number)).toList());
 
@@ -174,7 +174,7 @@ public class SearchRepository {
 
     Cursor conversations = threadDatabase.getFilteredConversationList(new ArrayList<>(addresses));
 
-    return conversations != null ? new CursorList<>(conversations, new ThreadModelBuilder(threadDatabase))
+    return conversations != null ? new CursorList<>(conversations, new GroupModelBuilder(threadDatabase, groupDatabase))
             : CursorList.emptyList();
   }
 
@@ -241,6 +241,22 @@ public class SearchRepository {
     public Recipient build(@NonNull Cursor cursor) {
       Address address = Address.fromExternal(context, cursor.getString(1));
       return Recipient.from(context, address, false);
+    }
+  }
+
+  private static class GroupModelBuilder implements CursorList.ModelBuilder<GroupRecord> {
+    private final ThreadDatabase threadDatabase;
+    private final GroupDatabase groupDatabase;
+
+    public GroupModelBuilder(ThreadDatabase threadDatabase, GroupDatabase groupDatabase) {
+      this.threadDatabase = threadDatabase;
+      this.groupDatabase = groupDatabase;
+    }
+
+    @Override
+    public GroupRecord build(@NonNull Cursor cursor) {
+      ThreadRecord threadRecord = threadDatabase.readerFor(cursor).getCurrent();
+      return groupDatabase.getGroup(threadRecord.getRecipient().getAddress().toGroupString()).get();
     }
   }
 

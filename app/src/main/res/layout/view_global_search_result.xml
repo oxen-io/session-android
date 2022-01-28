@@ -7,8 +7,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <org.thoughtcrime.securesms.components.ProfilePictureView
-        android:id="@+id/search_result_profile_picture"
+    <FrameLayout
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -16,16 +15,32 @@
         android:layout_marginVertical="@dimen/small_spacing"
         android:layout_marginStart="@dimen/large_spacing"
         android:layout_marginEnd="@dimen/large_spacing"
-        android:layout_width="@dimen/small_profile_picture_size"
-        android:layout_height="@dimen/small_profile_picture_size"
-        />
+        android:id="@+id/search_result_profile_picture_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <org.thoughtcrime.securesms.components.ProfilePictureView
+            android:visibility="gone"
+            android:id="@+id/search_result_profile_picture"
+            android:layout_width="@dimen/small_profile_picture_size"
+            android:layout_height="@dimen/small_profile_picture_size"
+            />
+        <ImageView
+            android:background="@drawable/circle_tintable"
+            android:backgroundTint="?colorAccent"
+            android:src="@drawable/ic_outline_bookmark_border_24"
+            android:padding="4dp"
+            android:id="@+id/search_result_saved_messages"
+            android:layout_width="@dimen/small_profile_picture_size"
+            android:layout_height="@dimen/small_profile_picture_size"
+            app:tint="@color/white" />
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/search_result_text_parent"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/large_spacing"
-        app:layout_constraintStart_toEndOf="@+id/search_result_profile_picture"
+        app:layout_constraintStart_toEndOf="@+id/search_result_profile_picture_parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

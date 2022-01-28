@@ -112,7 +112,7 @@ public class GroupDatabase extends Database implements LokiOpenGroupDatabaseProt
     }
   }
 
-  Optional<GroupRecord> getGroup(Cursor cursor) {
+  public Optional<GroupRecord> getGroup(Cursor cursor) {
     Reader reader = new Reader(cursor);
     return Optional.fromNullable(reader.getCurrent());
   }
