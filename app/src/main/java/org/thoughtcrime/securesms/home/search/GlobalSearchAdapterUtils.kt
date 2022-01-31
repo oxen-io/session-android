@@ -17,7 +17,7 @@ import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.GroupCon
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.Message
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.SavedMessages
 import org.thoughtcrime.securesms.util.SearchUtil
-import java.util.*
+import java.util.Locale
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.Contact as ContactModel
 
 
@@ -93,7 +93,7 @@ private fun getHighlight(query: String?, toSearch: String): Spannable? {
 fun ContentView.bindModel(query: String?, model: GroupConversation) {
     binding.searchResultProfilePicture.isVisible = true
     binding.searchResultSavedMessages.isVisible = false
-    binding.searchResultSubtitle.isVisible = true
+    binding.searchResultSubtitle.isVisible = model.groupRecord.isClosedGroup
     val threadRecipient = Recipient.from(binding.root.context, Address.fromSerialized(model.groupRecord.encodedId), false)
     binding.searchResultProfilePicture.update(threadRecipient)
     val nameString = model.groupRecord.title
@@ -105,7 +105,9 @@ fun ContentView.bindModel(query: String?, model: GroupConversation) {
         val address = it.address.serialize()
         it.name ?: "${address.take(4)}...${address.takeLast(4)}"
     }
-    binding.searchResultSubtitle.text = getHighlight(query, membersString)
+    if (model.groupRecord.isClosedGroup) {
+        binding.searchResultSubtitle.text = getHighlight(query, membersString)
+    }
 }
 
 fun ContentView.bindModel(query: String?, model: ContactModel) {

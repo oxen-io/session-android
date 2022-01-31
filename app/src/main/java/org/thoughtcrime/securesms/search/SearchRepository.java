@@ -3,7 +3,6 @@ package org.thoughtcrime.securesms.search;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
-import android.database.MergeCursor;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -13,6 +12,7 @@ import com.annimon.stream.Stream;
 import org.session.libsession.messaging.contacts.Contact;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.GroupRecord;
+import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.contacts.ContactAccessor;
@@ -157,6 +157,10 @@ public class SearchRepository {
 
   private CursorList<GroupRecord> queryConversations(@NonNull String query, List<String> matchingAddresses) {
     List<String>  numbers   = contactAccessor.getNumbersForThreadSearchFilter(context, query);
+    String localUserNumber = TextSecurePreferences.getLocalNumber(context);
+    if (localUserNumber != null) {
+      matchingAddresses.remove(localUserNumber);
+    }
     Set<Address> addresses = new HashSet<>(Stream.of(numbers).map(number -> Address.fromExternal(context, number)).toList());
 
     Cursor membersGroupList = groupDatabase.getGroupsFilteredByMembers(matchingAddresses);

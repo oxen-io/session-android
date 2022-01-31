@@ -11,10 +11,6 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
-import androidx.databinding.adapters.TextViewBindingAdapter
-import androidx.databinding.adapters.TextViewBindingAdapter.setTextWatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import network.loki.messenger.databinding.ViewGlobalSearchInputBinding
@@ -66,16 +62,14 @@ class GlobalSearchInputLayout @JvmOverloads constructor(
         if (v === binding.searchCancel) {
             clearSearch(true)
         } else if (v === binding.searchClear) {
-            clearSearch(binding.searchInput.length() == 0)
+            clearSearch(false)
         }
     }
 
     fun clearSearch(clearFocus: Boolean) {
         binding.searchInput.text = null
         if (clearFocus) {
-            if (binding.searchInput.hasFocus()) {
-                binding.searchInput.clearFocus()
-            }
+            binding.searchInput.clearFocus()
         }
     }
 
