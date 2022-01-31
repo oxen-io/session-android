@@ -7,10 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.database.Cursor
 import android.os.Bundle
-import android.text.Spannable
 import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
-import android.view.FocusFinder
 import android.view.View.FOCUS_DOWN
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -30,7 +27,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityHomeBinding
-import network.loki.messenger.databinding.SeedReminderStubBinding
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -71,7 +67,6 @@ import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.IP2Country
 import org.thoughtcrime.securesms.util.UiModeUtilities
 import org.thoughtcrime.securesms.util.disableClipping
-import org.thoughtcrime.securesms.util.getColorWithID
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
 import java.io.IOException
@@ -163,18 +158,13 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         // Set up seed reminder view
         val hasViewedSeed = TextSecurePreferences.getHasViewedSeed(this)
         if (!hasViewedSeed) {
-            binding.seedReminderStub.setOnInflateListener { _, inflated ->
-                val stubBinding = SeedReminderStubBinding.bind(inflated)
-                val seedReminderViewTitle = SpannableString("You're almost finished! 80%") // Intentionally not yet translated
-                seedReminderViewTitle.setSpan(ForegroundColorSpan(resources.getColorWithID(R.color.accent, theme)), 24, 27, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                stubBinding.seedReminderView.title = seedReminderViewTitle
-                stubBinding.seedReminderView.subtitle = resources.getString(R.string.view_seed_reminder_subtitle_1)
-                stubBinding.seedReminderView.setProgress(80, false)
-                stubBinding.seedReminderView.delegate = this@HomeActivity
-            }
-            binding.seedReminderStub.inflate()
+            binding.seedReminderView.isVisible = true
+            binding.seedReminderView.title = SpannableString("You're almost finished! 80%") // Intentionally not yet translated
+            binding.seedReminderView.subtitle = resources.getString(R.string.view_seed_reminder_subtitle_1)
+            binding.seedReminderView.setProgress(80, false)
+            binding.seedReminderView.delegate = this@HomeActivity
         } else {
-            binding.seedReminderStub.isVisible = false
+            binding.seedReminderView.isVisible = false
         }
         setupHeaderImage()
         // Set up recycler view
@@ -286,6 +276,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         binding.searchToolbar.isVisible = isShown
         binding.sessionToolbar.isVisible = !isShown
         binding.recyclerView.isVisible = !isShown
+        binding.emptyStateContainer.isVisible = (binding.recyclerView.adapter as HomeAdapter).itemCount == 0 && binding.recyclerView.isVisible
+        binding.seedReminderView.isVisible = !TextSecurePreferences.getHasViewedSeed(this) && !isShown
         binding.gradientView.isVisible = !isShown
         binding.globalSearchRecycler.isVisible = isShown
         binding.newConversationButtonSet.isVisible = !isShown
@@ -313,7 +305,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         binding.profileButton.update()
         val hasViewedSeed = TextSecurePreferences.getHasViewedSeed(this)
         if (hasViewedSeed) {
-            binding.seedReminderStub.isVisible = false
+            binding.seedReminderView.isVisible = false
         }
         if (TextSecurePreferences.getConfigurationMessageSynced(this)) {
             lifecycleScope.launch(Dispatchers.IO) {
@@ -347,7 +339,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     // region Updating
     private fun updateEmptyState() {
         val threadCount = (binding.recyclerView.adapter as HomeAdapter).itemCount
-        binding.emptyStateContainer.isVisible = threadCount == 0
+        binding.emptyStateContainer.isVisible = threadCount == 0 && binding.recyclerView.isVisible
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
