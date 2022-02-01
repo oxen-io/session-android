@@ -907,5 +907,11 @@
     <string name="conversation_unpin">Unpin</string>
     <string name="mark_all_as_read">Mark all as read</string>
     <string name="activity_message_requests_title">Message Requests</string>
+    <string name="message_requests_send_notice">Sending a message to this user will automatically accept their message request and reveal your Session ID.</string>
+    <string name="accept">Accept</string>
+    <string name="decline">Decline</string>
+    <string name="message_requests_clear_all">Clear All</string>
+    <string name="message_requests_delete_message">Are you sure you want to delete this message request?</string>
+    <string name="message_requests_deleted">Message request deleted</string>
 
 </resources>

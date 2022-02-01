@@ -407,7 +407,25 @@ public class ThreadDatabase extends Database {
   }
 
   public long getLatestUntrustedConversationTimestamp() {
-    return new Date().getTime();
+    SQLiteDatabase db = databaseHelper.getReadableDatabase();
+    Cursor cursor     = null;
+
+    try {
+      String where    = "SELECT " + DATE + " FROM " + TABLE_NAME +
+              " LEFT OUTER JOIN " + GroupDatabase.TABLE_NAME +
+              " ON " + TABLE_NAME + "." + ADDRESS + " = " + GroupDatabase.TABLE_NAME + "." + GROUP_ID +
+              " WHERE " + MESSAGE_COUNT + " != 0 AND " + ARCHIVED + " = 0 " +"AND " + HAS_SENT + " = 0 AND " +
+              GroupDatabase.TABLE_NAME + "." + GROUP_ID + " IS NULL ORDER BY " + DATE + " DESC LIMIT 1";
+      cursor          = db.rawQuery(where, null);
+
+      if (cursor != null && cursor.moveToFirst())
+        return cursor.getLong(0);
+    } finally {
+      if (cursor != null)
+        cursor.close();
+    }
+
+    return 0;
   }
 
   public Cursor getArchivedConversationList() {

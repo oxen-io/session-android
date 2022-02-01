@@ -297,6 +297,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         setUpSearchResultObserver()
         scrollToFirstUnreadMessageIfNeeded()
         showOrHideInputIfNeeded()
+        binding.messageRequestBar.isVisible = isMessageRequestThread()
         if (viewModel.recipient.isOpenGroupRecipient) {
             val openGroup = lokiThreadDb.getOpenGroupChat(viewModel.threadId)
             if (openGroup == null) {
@@ -335,7 +336,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private fun setUpRecyclerView() {
         binding.conversationRecyclerView.adapter = adapter
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, !isMessageRequestThread())
         binding.conversationRecyclerView.layoutManager = layoutManager
         // Workaround for the fact that CursorRecyclerViewAdapter doesn't auto-update automatically (even though it says it will)
         LoaderManager.getInstance(this).restartLoader(0, null, object : LoaderManager.LoaderCallbacks<Cursor> {
@@ -521,7 +522,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        ConversationMenuHelper.onPrepareOptionsMenu(menu, menuInflater, viewModel.recipient, viewModel.threadId, this) { onOptionsItemSelected(it) }
+        if (!isMessageRequestThread()) {
+            ConversationMenuHelper.onPrepareOptionsMenu(menu, menuInflater, viewModel.recipient, viewModel.threadId, this) { onOptionsItemSelected(it) }
+        }
         super.onPrepareOptionsMenu(menu)
         return true
     }
@@ -552,6 +555,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         } else {
             binding.inputBar.showInput = true
         }
+    }
+
+    private fun isMessageRequestThread(): Boolean {
+        return !(viewModel.recipient.isGroupRecipient || threadDb.getLastSeenAndHasSent(viewModel.threadId).second())
     }
 
     override fun inputBarHeightChanged(newValue: Int) {
