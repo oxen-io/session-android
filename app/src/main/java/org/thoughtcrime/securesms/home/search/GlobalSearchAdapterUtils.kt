@@ -16,6 +16,7 @@ import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.ContentView
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.GroupConversation
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.Message
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.SavedMessages
+import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.SearchUtil
 import java.util.Locale
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.Contact as ContactModel
@@ -54,14 +55,8 @@ fun ContentView.bindQuery(query: String, model: GlobalSearchAdapter.Model) {
             val textSpannable = SpannableStringBuilder()
             if (model.messageResult.conversationRecipient != model.messageResult.messageRecipient) {
                 // group chat, bind
-                val typedValue = TypedValue()
-                val theme = binding.root.context.theme
-                theme.resolveAttribute(R.attr.searchHighlightTint, typedValue, true)
-                val color = typedValue.data
-                val span = ForegroundColorSpan(color)
                 val text = "${model.messageResult.messageRecipient.getSearchName()}: "
                 textSpannable.append(text)
-                textSpannable.setSpan(span,0,text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             textSpannable.append(getHighlight(
                     query,
@@ -94,6 +89,7 @@ fun ContentView.bindModel(query: String?, model: GroupConversation) {
     binding.searchResultProfilePicture.isVisible = true
     binding.searchResultSavedMessages.isVisible = false
     binding.searchResultSubtitle.isVisible = model.groupRecord.isClosedGroup
+    binding.searchResultTimestamp.isVisible = false
     val threadRecipient = Recipient.from(binding.root.context, Address.fromSerialized(model.groupRecord.encodedId), false)
     binding.searchResultProfilePicture.update(threadRecipient)
     val nameString = model.groupRecord.title
@@ -114,6 +110,7 @@ fun ContentView.bindModel(query: String?, model: ContactModel) {
     binding.searchResultProfilePicture.isVisible = true
     binding.searchResultSavedMessages.isVisible = false
     binding.searchResultSubtitle.isVisible = false
+    binding.searchResultTimestamp.isVisible = false
     binding.searchResultSubtitle.text = null
     val recipient =
         Recipient.from(binding.root.context, Address.fromSerialized(model.contact.sessionID), false)
@@ -124,6 +121,7 @@ fun ContentView.bindModel(query: String?, model: ContactModel) {
 
 fun ContentView.bindModel(model: SavedMessages) {
     binding.searchResultSubtitle.isVisible = false
+    binding.searchResultTimestamp.isVisible = false
     binding.searchResultTitle.setText(R.string.note_to_self)
     binding.searchResultProfilePicture.isVisible = false
     binding.searchResultSavedMessages.isVisible = true
@@ -132,18 +130,19 @@ fun ContentView.bindModel(model: SavedMessages) {
 fun ContentView.bindModel(query: String?, model: Message) {
     binding.searchResultProfilePicture.isVisible = true
     binding.searchResultSavedMessages.isVisible = false
+    binding.searchResultTimestamp.isVisible = true
+//    val hasUnreads = model.unread > 0
+//    binding.unreadCountIndicator.isVisible = hasUnreads
+//    if (hasUnreads) {
+//        binding.unreadCountTextView.text = model.unread.toString()
+//    }
+    binding.searchResultTimestamp.text = DateUtils.getDisplayFormattedTimeSpanString(binding.root.context, Locale.getDefault(), model.messageResult.receivedTimestampMs)
     binding.searchResultProfilePicture.update(model.messageResult.conversationRecipient)
     val textSpannable = SpannableStringBuilder()
     if (model.messageResult.conversationRecipient != model.messageResult.messageRecipient) {
         // group chat, bind
-        val typedValue = TypedValue()
-        val theme = binding.root.context.theme
-        theme.resolveAttribute(R.attr.searchHighlightTint, typedValue, true)
-        val color = typedValue.data
-        val span = ForegroundColorSpan(color)
         val text = "${model.messageResult.messageRecipient.getSearchName()}: "
         textSpannable.append(text)
-        textSpannable.setSpan(span,0,text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
     textSpannable.append(getHighlight(
             query,

@@ -1326,7 +1326,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun resendMessage(messages: Set<MessageRecord>) {
-        messages.forEach { messageRecord ->
+        messages.iterator().forEach { messageRecord ->
             ResendMessageUtilities.resend(messageRecord)
         }
         endActionMode()

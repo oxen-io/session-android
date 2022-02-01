@@ -26,8 +26,10 @@
             app:tint="?searchIconColor"
             android:contentDescription="@string/SearchToolbar_search" />
         <EditText
+            android:hint="@string/global_search_messages"
             android:imeOptions="actionSearch"
             android:id="@+id/search_input"
+            android:paddingHorizontal="@dimen/small_spacing"
             android:textSize="16sp"
             android:background="@null"
             android:layout_weight="1"

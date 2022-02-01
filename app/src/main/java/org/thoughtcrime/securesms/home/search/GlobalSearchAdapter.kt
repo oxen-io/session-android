@@ -123,7 +123,7 @@ class GlobalSearchAdapter (private val modelCallback: (Model)->Unit): RecyclerVi
         data class SavedMessages(val currentUserPublicKey: String): Model()
         data class Contact(val contact: ContactModel) : Model()
         data class GroupConversation(val groupRecord: GroupRecord) : Model()
-        data class Message(val messageResult: MessageResult) : Model()
+        data class Message(val messageResult: MessageResult, val unread: Int) : Model()
     }
 
 }

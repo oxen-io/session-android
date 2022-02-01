@@ -47,6 +47,7 @@ import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.utilities.NotificationUtils
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
 import org.thoughtcrime.securesms.database.GroupDatabase
+import org.thoughtcrime.securesms.database.MmsSmsDatabase
 import org.thoughtcrime.securesms.database.RecipientDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.ThreadRecord
@@ -85,6 +86,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     private var broadcastReceiver: BroadcastReceiver? = null
 
     @Inject lateinit var threadDb: ThreadDatabase
+    @Inject lateinit var mmsSmsDatabase: MmsSmsDatabase
     @Inject lateinit var recipientDatabase: RecipientDatabase
     @Inject lateinit var groupDatabase: GroupDatabase
     @Inject lateinit var textSecurePreferences: TextSecurePreferences
@@ -182,7 +184,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         binding.newConversationButtonSet.delegate = this
         // Observe blocked contacts changed events
         val broadcastReceiver = object : BroadcastReceiver() {
-
             override fun onReceive(context: Context, intent: Intent) {
                 binding.recyclerView.adapter!!.notifyDataSetChanged()
             }
@@ -242,8 +243,18 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                         contactResults.add(0, GlobalSearchAdapter.Model.Header(R.string.global_search_contacts_groups))
                     }
 
+                    val unreadThreadMap = result.messages
+                            .groupBy { it.threadId }.keys
+                            .map { it to mmsSmsDatabase.getUnreadCount(it) }
+                            .toMap()
+
                     val messageResults: MutableList<GlobalSearchAdapter.Model> = result.messages
-                            .map { GlobalSearchAdapter.Model.Message(it) }.toMutableList()
+                            .map { messageResult ->
+                                GlobalSearchAdapter.Model.Message(
+                                        messageResult,
+                                        unreadThreadMap[messageResult.threadId] ?: 0
+                                )
+                            }.toMutableList()
 
                     if (messageResults.isNotEmpty()) {
                         messageResults.add(0, GlobalSearchAdapter.Model.Header(R.string.global_search_messages))
