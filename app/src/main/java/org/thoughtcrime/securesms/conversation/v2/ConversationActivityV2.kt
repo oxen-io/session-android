@@ -34,6 +34,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.DimenRes
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -384,6 +385,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun setUpInputBar() {
+        binding.inputBar.isInvisible = !canSendMessages()
         binding.inputBar.delegate = this
         binding.inputBarRecordingView.delegate = this
         // GIF button
@@ -561,7 +563,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun setUpMessageRequestsBar() {
-        binding.messageRequestBar.isVisible = isMessageRequestThread()
+        binding.messageRequestBar.isVisible = isIncomingMessageRequestThread()
         binding.acceptMessageRequestButton.setOnClickListener {
             viewModel.acceptMessageRequest()
             lifecycleScope.launch(Dispatchers.IO) {
@@ -577,7 +579,22 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun isMessageRequestThread(): Boolean {
-        return !(viewModel.recipient.isGroupRecipient || threadDb.getLastSeenAndHasSent(viewModel.threadId).second())
+        val hasSent = threadDb.getLastSeenAndHasSent(viewModel.threadId).second()
+        return (!viewModel.recipient.isGroupRecipient && !hasSent) ||
+                (!viewModel.recipient.isGroupRecipient && hasSent && !viewModel.recipient.hasApprovedMe())
+    }
+
+    private fun isIncomingMessageRequestThread(): Boolean {
+        return !viewModel.recipient.isGroupRecipient &&
+                !threadDb.getLastSeenAndHasSent(viewModel.threadId).second() &&
+                threadDb.getMessageCount(viewModel.threadId) > 0
+    }
+
+    private fun canSendMessages(): Boolean {
+        val hasSent = threadDb.getLastSeenAndHasSent(viewModel.threadId).second()
+        val messageCount = threadDb.getMessageCount(viewModel.threadId)
+        return viewModel.recipient.isGroupRecipient || viewModel.recipient.hasApprovedMe() ||
+                (!viewModel.recipient.hasApprovedMe() && messageCount == 0) || (!hasSent && messageCount > 0)
     }
 
     override fun inputBarHeightChanged(newValue: Int) {

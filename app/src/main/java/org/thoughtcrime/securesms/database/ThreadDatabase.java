@@ -60,7 +60,6 @@ import org.thoughtcrime.securesms.notifications.MarkReadReceiver;
 import org.thoughtcrime.securesms.util.SessionMetaProtocol;
 
 import java.io.Closeable;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -376,15 +375,7 @@ public class ThreadDatabase extends Database {
     return db.rawQuery(query, null);
   }
 
-  public Cursor getConversationList() {
-    return getConversationList("0", true);
-  }
-
-  public Cursor getUntrustedConversationList() {
-    return getConversationList("0", false);
-  }
-
-  public int getUntrustedConversationCount() {
+  public int getUnapprovedConversationCount() {
     SQLiteDatabase db = databaseHelper.getReadableDatabase();
     Cursor cursor     = null;
 
@@ -406,7 +397,7 @@ public class ThreadDatabase extends Database {
     return 0;
   }
 
-  public long getLatestUntrustedConversationTimestamp() {
+  public long getLatestUnapprovedConversationTimestamp() {
     SQLiteDatabase db = databaseHelper.getReadableDatabase();
     Cursor cursor     = null;
 
@@ -428,6 +419,18 @@ public class ThreadDatabase extends Database {
     return 0;
   }
 
+  public Cursor getConversationList() {
+    return getConversationList("0", false);
+  }
+
+  public Cursor getApprovedConversationList() {
+    return getConversationList("0", true);
+  }
+
+  public Cursor getUnapprovedConversationList() {
+    return getConversationList("0", false);
+  }
+
   public Cursor getArchivedConversationList() {
     return getConversationList("1", true);
   }
@@ -439,7 +442,7 @@ public class ThreadDatabase extends Database {
     if (hasSent) {
       where += "AND (" + HAS_SENT + " = 1 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') ";
     } else {
-      where += "AND (" + HAS_SENT + " = 0 AND " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " IS NULL) ";
+      where += "AND " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " IS NULL ";
     }
     String         query  = createQuery(where, 0);
     Cursor         cursor = db.rawQuery(query, new String[]{archived});
@@ -492,6 +495,19 @@ public class ThreadDatabase extends Database {
       return -1L;
     } finally {
       if (cursor != null) cursor.close();
+    }
+  }
+
+  public int getMessageCount(long threadId) {
+    SQLiteDatabase db      = databaseHelper.getReadableDatabase();
+    String[]       columns = new String[]{MESSAGE_COUNT};
+    String[]       args    = new String[]{String.valueOf(threadId)};
+    try (Cursor cursor = db.query(TABLE_NAME, columns, ID_WHERE, args, null, null, null)) {
+      if (cursor != null && cursor.moveToFirst()) {
+        return cursor.getInt(0);
+      }
+
+      return 0;
     }
   }
 

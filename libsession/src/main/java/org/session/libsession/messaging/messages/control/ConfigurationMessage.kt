@@ -60,9 +60,9 @@ class ConfigurationMessage(var closedGroups: List<ClosedGroup>, var openGroups: 
         }
     }
 
-    class Contact(var publicKey: String, var name: String, var profilePicture: String?, var profileKey: ByteArray?, var isApproved: Boolean?, var isBlocked: Boolean?) {
+    class Contact(var publicKey: String, var name: String, var profilePicture: String?, var profileKey: ByteArray?, var isApproved: Boolean?, var isBlocked: Boolean?, var didApproveMe: Boolean?) {
 
-        internal constructor() : this("", "", null, null, null, null)
+        internal constructor() : this("", "", null, null, null, null, null)
 
         companion object {
 
@@ -74,7 +74,8 @@ class ConfigurationMessage(var closedGroups: List<ClosedGroup>, var openGroups: 
                 val profileKey = if (proto.hasProfileKey()) proto.profileKey.toByteArray() else null
                 val isApproved = if (proto.hasIsApproved()) proto.isApproved else null
                 val isBlocked = if (proto.hasIsBlocked()) proto.isBlocked else null
-                return Contact(publicKey, name, profilePicture, profileKey, isApproved, isBlocked)
+                val didApproveMe = if (proto.hasDidApproveMe()) proto.didApproveMe else null
+                return Contact(publicKey, name, profilePicture, profileKey, isApproved, isBlocked, didApproveMe)
             }
         }
 
@@ -96,6 +97,7 @@ class ConfigurationMessage(var closedGroups: List<ClosedGroup>, var openGroups: 
             }
             result.isApproved = isApproved == true
             result.isBlocked = isBlocked == true
+            result.didApproveMe = didApproveMe == true
             return result.build()
         }
     }

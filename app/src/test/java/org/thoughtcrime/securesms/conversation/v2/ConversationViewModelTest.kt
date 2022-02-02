@@ -162,7 +162,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
     fun `should accept message request`() {
         viewModel.acceptMessageRequest()
 
-        verify(repository).acceptMessageRequest(threadId)
+        verify(repository).acceptMessageRequest(recipient)
     }
 
     @Test

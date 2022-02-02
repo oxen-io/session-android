@@ -156,4 +156,5 @@ interface StorageProtocol {
      */
     fun persist(message: VisibleMessage, quotes: QuoteModel?, linkPreview: List<LinkPreview?>, groupPublicKey: String?, openGroupID: String?, attachments: List<Attachment>): Long?
     fun insertDataExtractionNotificationMessage(senderPublicKey: String, message: DataExtractionNotificationInfoMessage, sentTimestamp: Long)
+    fun insertMessageRequestResponse(senderPublicKey: String, approved: Boolean, sentTimestamp: Long)
 }

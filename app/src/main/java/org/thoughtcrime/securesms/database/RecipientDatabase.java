@@ -35,6 +35,8 @@ public class RecipientDatabase extends Database {
   private static final String ID                       = "_id";
   public  static final String ADDRESS                  = "recipient_ids";
   private static final String BLOCK                    = "block";
+          static final String APPROVED                 = "approved";
+  private static final String APPROVED_ME              = "approved_me";
   private static final String NOTIFICATION             = "notification";
   private static final String VIBRATE                  = "vibrate";
   private static final String MUTE_UNTIL               = "mute_until";
@@ -137,6 +139,8 @@ public class RecipientDatabase extends Database {
 
   Optional<RecipientSettings> getRecipientSettings(@NonNull Cursor cursor) {
     boolean blocked                = cursor.getInt(cursor.getColumnIndexOrThrow(BLOCK))                == 1;
+    boolean approved               = cursor.getInt(cursor.getColumnIndexOrThrow(BLOCK))                == 1;
+    boolean approvedMe             = cursor.getInt(cursor.getColumnIndexOrThrow(BLOCK))                == 1;
     String  messageRingtone        = cursor.getString(cursor.getColumnIndexOrThrow(NOTIFICATION));
     String  callRingtone           = cursor.getString(cursor.getColumnIndexOrThrow(CALL_RINGTONE));
     int     messageVibrateState    = cursor.getInt(cursor.getColumnIndexOrThrow(VIBRATE));
@@ -178,7 +182,7 @@ public class RecipientDatabase extends Database {
       }
     }
 
-    return Optional.of(new RecipientSettings(blocked, muteUntil,
+    return Optional.of(new RecipientSettings(blocked, approved, approvedMe, muteUntil,
                                              notifyType,
                                              Recipient.VibrateState.fromId(messageVibrateState),
                                              Recipient.VibrateState.fromId(callVibrateState),
@@ -211,6 +215,14 @@ public class RecipientDatabase extends Database {
     contentValues.put(FORCE_SMS_SELECTION, forceSmsSelection ? 1 : 0);
     updateOrInsert(recipient.getAddress(), contentValues);
     recipient.resolve().setForceSmsSelection(forceSmsSelection);
+  }
+
+  public void setApproved(@NonNull Recipient recipient, boolean approved) {
+    ContentValues values = new ContentValues();
+    values.put(APPROVED, approved ? 1 : 0);
+    values.put(APPROVED_ME, approved ? 1 : 0);
+    updateOrInsert(recipient.getAddress(), values);
+    recipient.resolve().setApproved(approved);
   }
 
   public void setBlocked(@NonNull Recipient recipient, boolean blocked) {

@@ -89,7 +89,7 @@ class ConversationViewModel(
     }
 
     fun acceptMessageRequest() {
-        repository.acceptMessageRequest(threadId)
+        repository.acceptMessageRequest(recipient)
     }
 
     fun declineMessageRequest() {

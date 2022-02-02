@@ -31,7 +31,7 @@ class MessageRequestsActivity : BaseActionBarActivity(), ConversationClickListen
     private val viewModel: MessageRequestsViewModel by viewModels()
 
     private val adapter: MessageRequestsAdapter by lazy {
-        MessageRequestsAdapter(context = this, cursor = threadDb.untrustedConversationList, listener = this)
+        MessageRequestsAdapter(context = this, cursor = threadDb.unapprovedConversationList, listener = this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -87,7 +87,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
         get() = textSecurePreferences.getLocalNumber()!!
 
     private val homeAdapter: HomeAdapter by lazy {
-        HomeAdapter(context = this, cursor = threadDb.conversationList, listener = this)
+        HomeAdapter(context = this, cursor = threadDb.approvedConversationList, listener = this)
     }
 
     // region Lifecycle
@@ -121,7 +121,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
         } else {
             binding.seedReminderStub.isVisible = false
         }
-        val messageRequestCount = threadDb.untrustedConversationCount
+        val messageRequestCount = threadDb.unapprovedConversationCount
         // Set up message requests
         if (messageRequestCount > 0 && !textSecurePreferences.hasHiddenMessageRequests()) {
             with(ViewMessageRequestsBinding.inflate(layoutInflater)) {
@@ -129,7 +129,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(), ConversationClickLis
                 timestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(
                     this@HomeActivity,
                     Locale.getDefault(),
-                    threadDb.latestUntrustedConversationTimestamp
+                    threadDb.latestUnapprovedConversationTimestamp
                 )
                 root.setOnClickListener { showMessageRequests() }
                 root.setOnLongClickListener { hideMessageRequests(); true }

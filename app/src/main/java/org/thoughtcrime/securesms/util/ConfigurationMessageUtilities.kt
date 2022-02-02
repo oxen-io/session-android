@@ -7,7 +7,6 @@ import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.TextSecurePreferences
-import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 
 object ConfigurationMessageUtilities {
 
@@ -17,7 +16,6 @@ object ConfigurationMessageUtilities {
         val lastSyncTime = TextSecurePreferences.getLastConfigurationSyncTime(context)
         val now = System.currentTimeMillis()
         if (now - lastSyncTime < 7 * 24 * 60 * 60 * 1000) return
-        val threadDb = DatabaseComponent.get(context).threadDatabase()
         val contacts = ContactUtilities.getAllContacts(context).filter { recipient ->
             !recipient.name.isNullOrEmpty() && !recipient.isLocalNumber && recipient.address.serialize().isNotEmpty()
         }.map { recipient ->
@@ -26,8 +24,9 @@ object ConfigurationMessageUtilities {
                 name = recipient.name!!,
                 profilePicture = recipient.profileAvatar,
                 profileKey = recipient.profileKey,
-                isApproved = threadDb.getLastSeenAndHasSent(threadDb.getOrCreateThreadIdFor(recipient)).second(),
-                isBlocked = recipient.isBlocked
+                isApproved = recipient.isApproved,
+                isBlocked = recipient.isBlocked,
+                didApproveMe = recipient.hasApprovedMe()
             )
         }
         val configurationMessage = ConfigurationMessage.getCurrent(contacts) ?: return
@@ -37,7 +36,6 @@ object ConfigurationMessageUtilities {
 
     fun forceSyncConfigurationNowIfNeeded(context: Context): Promise<Unit, Exception> {
         val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return Promise.ofSuccess(Unit)
-        val threadDb = DatabaseComponent.get(context).threadDatabase()
         val contacts = ContactUtilities.getAllContacts(context).filter { recipient ->
             !recipient.isGroupRecipient && !recipient.name.isNullOrEmpty() && !recipient.isLocalNumber && recipient.address.serialize().isNotEmpty()
         }.map { recipient ->
@@ -46,8 +44,9 @@ object ConfigurationMessageUtilities {
                 name = recipient.name!!,
                 profilePicture = recipient.profileAvatar,
                 profileKey = recipient.profileKey,
-                isApproved = threadDb.getLastSeenAndHasSent(threadDb.getOrCreateThreadIdFor(recipient)).second(),
-                isBlocked = recipient.isBlocked
+                isApproved = recipient.isApproved,
+                isBlocked = recipient.isBlocked,
+                didApproveMe = recipient.hasApprovedMe()
             )
         }
         val configurationMessage = ConfigurationMessage.getCurrent(contacts) ?: return Promise.ofSuccess(Unit)

@@ -632,4 +632,13 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
 
         database.insertSecureDecryptedMessageInbox(mediaMessage, -1)
     }
+
+    override fun insertMessageRequestResponse(senderPublicKey: String, approved: Boolean, sentTimestamp: Long) {
+        val recipientDb = DatabaseComponent.get(context).recipientDatabase()
+        val address = fromSerialized(senderPublicKey)
+        val recipient = Recipient.from(context, address, false)
+        recipientDb.setApproved(recipient, true)
+        //TODO: add message indicating message request acceptance
+    }
+
 }
