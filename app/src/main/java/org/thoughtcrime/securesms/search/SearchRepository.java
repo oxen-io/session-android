@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.search;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.database.MergeCursor;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -146,12 +147,14 @@ public class SearchRepository {
 
     contacts.close();
 
+    Cursor addressThreads = threadDatabase.searchConversationAddresses(query);
     Cursor individualRecipients = threadDatabase.getFilteredConversationList(contactList);
-    if (individualRecipients == null) {
+    if (individualRecipients == null && addressThreads == null) {
       return new Pair<>(CursorList.emptyList(),contactStrings);
     }
+    MergeCursor merged = new MergeCursor(new Cursor[]{addressThreads, individualRecipients});
 
-    return new Pair<>(new CursorList<>(individualRecipients, new ContactModelBuilder(contactDatabase, threadDatabase)), contactStrings);
+    return new Pair<>(new CursorList<>(merged, new ContactModelBuilder(contactDatabase, threadDatabase)), contactStrings);
 
   }
 
@@ -229,7 +232,12 @@ public class SearchRepository {
     @Override
     public Contact build(@NonNull Cursor cursor) {
       ThreadRecord threadRecord = threadDb.readerFor(cursor).getCurrent();
-      return contactDb.getContactWithSessionID(threadRecord.getRecipient().getAddress().serialize());
+      Contact contact = contactDb.getContactWithSessionID(threadRecord.getRecipient().getAddress().serialize());
+      if (contact == null) {
+        contact = new Contact(threadRecord.getRecipient().getAddress().serialize());
+        contact.setThreadID(threadRecord.getThreadId());
+      }
+      return contact;
     }
   }
 

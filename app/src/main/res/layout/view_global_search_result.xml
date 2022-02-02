@@ -70,7 +70,6 @@
                 android:layout_marginStart="4dp"
                 android:layout_gravity="center"
                 android:visibility="gone"
-                tools:visibility="visible"
                 android:background="@drawable/rounded_rectangle"
                 android:backgroundTint="@color/conversation_unread_count_indicator_background">
 
@@ -103,6 +102,7 @@
             android:id="@+id/search_result_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/text"
             android:maxLines="1"
             android:ellipsize="end"
             />

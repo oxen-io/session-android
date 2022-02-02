@@ -17,7 +17,6 @@
  */
 package org.thoughtcrime.securesms.database;
 
-import static org.session.libsession.utilities.GroupUtil.CLOSED_GROUP_PREFIX;
 import static org.session.libsession.utilities.GroupUtil.OPEN_GROUP_PREFIX;
 import static org.thoughtcrime.securesms.database.GroupDatabase.GROUP_ID;
 
@@ -338,6 +337,19 @@ public class ThreadDatabase extends Database {
       if (cursor != null) cursor.close();
     }
 
+  }
+
+  public Cursor searchConversationAddresses(String addressQuery) {
+    if (addressQuery == null || addressQuery.isEmpty()) {
+      return null;
+    }
+
+    SQLiteDatabase db = databaseHelper.getReadableDatabase();
+    String   selection      = TABLE_NAME + "." + ADDRESS + " LIKE ? AND " + TABLE_NAME + "." + MESSAGE_COUNT + " != 0";
+    String[] selectionArgs  = new String[]{addressQuery+"%"};
+    String query = createQuery(selection, 0);
+    Cursor cursor = db.rawQuery(query, selectionArgs);
+    return cursor;
   }
 
   public Cursor getFilteredConversationList(@Nullable List<Address> filter) {
