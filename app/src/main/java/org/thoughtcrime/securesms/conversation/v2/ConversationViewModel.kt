@@ -88,6 +88,14 @@ class ConversationViewModel(
             }
     }
 
+    fun acceptMessageRequest() {
+        repository.acceptMessageRequest(threadId)
+    }
+
+    fun declineMessageRequest() {
+        repository.declineMessageRequest(recipient)
+    }
+
     private fun showMessage(message: String) {
         _uiState.update { currentUiState ->
             val messages = currentUiState.uiMessages + UiMessage(

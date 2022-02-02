@@ -44,6 +44,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.annimon.stream.Stream
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityConversationV2ActionBarBinding
 import network.loki.messenger.databinding.ActivityConversationV2Binding
@@ -126,6 +128,7 @@ import org.thoughtcrime.securesms.mms.SlideDeck
 import org.thoughtcrime.securesms.mms.VideoSlide
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.util.ActivityDispatcher
+import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.SaveAttachmentTask
@@ -297,7 +300,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         setUpSearchResultObserver()
         scrollToFirstUnreadMessageIfNeeded()
         showOrHideInputIfNeeded()
-        binding.messageRequestBar.isVisible = isMessageRequestThread()
+        setUpMessageRequestsBar()
         if (viewModel.recipient.isOpenGroupRecipient) {
             val openGroup = lokiThreadDb.getOpenGroupChat(viewModel.threadId)
             if (openGroup == null) {
@@ -554,6 +557,22 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             binding.inputBar.showInput = isActive
         } else {
             binding.inputBar.showInput = true
+        }
+    }
+
+    private fun setUpMessageRequestsBar() {
+        binding.messageRequestBar.isVisible = isMessageRequestThread()
+        binding.acceptMessageRequestButton.setOnClickListener {
+            viewModel.acceptMessageRequest()
+            lifecycleScope.launch(Dispatchers.IO) {
+                ConfigurationMessageUtilities.syncConfigurationIfNeeded(this@ConversationActivityV2)
+            }
+        }
+        binding.declineMessageRequestButton.setOnClickListener {
+            viewModel.declineMessageRequest()
+            lifecycleScope.launch(Dispatchers.IO) {
+                ConfigurationMessageUtilities.syncConfigurationIfNeeded(this@ConversationActivityV2)
+            }
         }
     }
 

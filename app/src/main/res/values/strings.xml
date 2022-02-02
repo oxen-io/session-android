@@ -913,5 +913,7 @@
     <string name="message_requests_clear_all">Clear All</string>
     <string name="message_requests_delete_message">Are you sure you want to delete this message request?</string>
     <string name="message_requests_deleted">Message request deleted</string>
+    <string name="message_requests_clear_all_message">Are you sure you want to clear all message requests?</string>
+    <string name="message_requests_cleared">Message requests deleted</string>
 
 </resources>

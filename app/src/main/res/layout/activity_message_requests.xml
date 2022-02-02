@@ -5,8 +5,7 @@
     android:id="@+id/contentView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="org.thoughtcrime.securesms.home.HomeActivity">
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -17,8 +16,8 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="172dp"
             android:clipToPadding="false"
+            android:paddingBottom="172dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="6"
             tools:listitem="@layout/view_conversation" />
@@ -50,7 +49,7 @@
 
         <Button
             style="@style/Widget.Session.Button.Common.DestructiveOutline"
-            android:id="@+id/createNewPrivateChatButton"
+            android:id="@+id/clearAllMessageRequestsButton"
             android:layout_width="196dp"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"

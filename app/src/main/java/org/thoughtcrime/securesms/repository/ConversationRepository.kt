@@ -18,9 +18,11 @@ import org.thoughtcrime.securesms.database.LokiMessageDatabase
 import org.thoughtcrime.securesms.database.LokiThreadDatabase
 import org.thoughtcrime.securesms.database.MmsDatabase
 import org.thoughtcrime.securesms.database.RecipientDatabase
+import org.thoughtcrime.securesms.database.SessionJobDatabase
 import org.thoughtcrime.securesms.database.SmsDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
+import org.thoughtcrime.securesms.database.model.ThreadRecord
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -51,6 +53,15 @@ interface ConversationRepository {
     suspend fun banUser(threadId: Long, recipient: Recipient): ResultOf<Unit>
 
     suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): ResultOf<Unit>
+
+    suspend fun deleteMessageRequest(thread: ThreadRecord): ResultOf<Unit>
+
+    suspend fun clearAllMessageRequests(): ResultOf<Unit>
+
+    fun acceptMessageRequest(threadId: Long)
+
+    fun declineMessageRequest(recipient: Recipient)
+
 }
 
 class DefaultConversationRepository @Inject constructor(
@@ -62,7 +73,8 @@ class DefaultConversationRepository @Inject constructor(
     private val smsDb: SmsDatabase,
     private val mmsDb: MmsDatabase,
     private val recipientDb: RecipientDatabase,
-    private val lokiMessageDb: LokiMessageDatabase
+    private val lokiMessageDb: LokiMessageDatabase,
+    private val sessionJobDb: SessionJobDatabase
 ) : ConversationRepository {
 
     override fun isOxenHostedOpenGroup(threadId: Long): Boolean {
@@ -225,5 +237,29 @@ class DefaultConversationRepository @Inject constructor(
                     continuation.resumeWithException(error)
                 }
         }
+
+    override suspend fun deleteMessageRequest(thread: ThreadRecord): ResultOf<Unit> {
+        sessionJobDb.cancelPendingMessageSendJobs(thread.threadId)
+        threadDb.deleteConversation(thread.threadId)
+        recipientDb.setBlocked(thread.recipient, true)
+        return ResultOf.Success(Unit)
+    }
+
+    override suspend fun clearAllMessageRequests(): ResultOf<Unit> {
+        threadDb.readerFor(threadDb.untrustedConversationList).use { reader ->
+            while (reader.next != null) {
+                deleteMessageRequest(reader.current)
+            }
+        }
+        return ResultOf.Success(Unit)
+    }
+
+    override fun acceptMessageRequest(threadId: Long) {
+        threadDb.setHasSent(threadId, true)
+    }
+
+    override fun declineMessageRequest(recipient: Recipient) {
+        recipientDb.setBlocked(recipient, true)
+    }
 
 }

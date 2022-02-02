@@ -159,6 +159,20 @@ class ConversationViewModelTest: BaseViewModelTest() {
     }
 
     @Test
+    fun `should accept message request`() {
+        viewModel.acceptMessageRequest()
+
+        verify(repository).acceptMessageRequest(threadId)
+    }
+
+    @Test
+    fun `should decline message request`() {
+        viewModel.declineMessageRequest()
+
+        verify(repository).declineMessageRequest(recipient)
+    }
+
+    @Test
     fun `should remove shown message`() = runBlockingTest {
         // Given that a message is generated
         whenever(repository.banUser(anyLong(), any())).thenReturn(ResultOf.Success(Unit))

@@ -196,7 +196,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/acceptButton"
+                android:id="@+id/acceptMessageRequestButton"
                 style="@style/Widget.Session.Button.Common.ProminentOutline"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/medium_button_height"
@@ -204,7 +204,7 @@
                 android:text="@string/accept" />
 
             <Button
-                android:id="@+id/declineButton"
+                android:id="@+id/declineMessageRequestButton"
                 style="@style/Widget.Session.Button.Common.DestructiveOutline"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/medium_button_height"

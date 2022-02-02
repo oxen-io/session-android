@@ -1,27 +1,20 @@
 package org.thoughtcrime.securesms.messagerequests
 
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
-import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityMessageRequestsBinding
 import org.thoughtcrime.securesms.BaseActionBarActivity
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
-import org.thoughtcrime.securesms.database.RecipientDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.ThreadRecord
-import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.home.HomeAdapter
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.push
@@ -34,7 +27,8 @@ class MessageRequestsActivity : BaseActionBarActivity(), ConversationClickListen
     private lateinit var glide: GlideRequests
 
     @Inject lateinit var threadDb: ThreadDatabase
-    @Inject lateinit var recipientDatabase: RecipientDatabase
+
+    private val viewModel: MessageRequestsViewModel by viewModels()
 
     private val adapter: MessageRequestsAdapter by lazy {
         MessageRequestsAdapter(context = this, cursor = threadDb.untrustedConversationList, listener = this)
@@ -50,6 +44,8 @@ class MessageRequestsActivity : BaseActionBarActivity(), ConversationClickListen
         adapter.setHasStableIds(true)
         adapter.glide = glide
         binding.recyclerView.adapter = adapter
+
+        binding.clearAllMessageRequestsButton.setOnClickListener { deleteAllAndBlock() }
 
         LoaderManager.getInstance(this).restartLoader(0, null, this)
     }
@@ -77,24 +73,7 @@ class MessageRequestsActivity : BaseActionBarActivity(), ConversationClickListen
         val dialog = AlertDialog.Builder(this)
         dialog.setMessage(resources.getString(R.string.message_requests_delete_message))
         dialog.setPositiveButton(R.string.yes) { _, _ ->
-            lifecycleScope.launch(Dispatchers.Main) {
-                val context = this@MessageRequestsActivity as Context
-                // Cancel any outstanding jobs
-                DatabaseComponent.get(context).sessionJobDatabase()
-                    .cancelPendingMessageSendJobs(thread.threadId)
-                // Delete the conversation
-                lifecycleScope.launch(Dispatchers.IO) {
-                    threadDb.deleteConversation(thread.threadId)
-                }
-                // Block the recipient
-                recipientDatabase.setBlocked(thread.recipient, true)
-                // Notify the user
-                Toast.makeText(
-                    context,
-                    R.string.message_requests_deleted,
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+            viewModel.deleteMessageRequest(thread)
         }
         dialog.setNegativeButton(R.string.no) { _, _ ->
             // Do nothing
@@ -107,4 +86,15 @@ class MessageRequestsActivity : BaseActionBarActivity(), ConversationClickListen
         binding.emptyStateContainer.isVisible = threadCount == 0
     }
 
+    private fun deleteAllAndBlock() {
+        val dialog = AlertDialog.Builder(this)
+        dialog.setMessage(resources.getString(R.string.message_requests_clear_all_message))
+        dialog.setPositiveButton(R.string.yes) { _, _ ->
+            viewModel.clearAllMessageRequests()
+        }
+        dialog.setNegativeButton(R.string.no) { _, _ ->
+            // Do nothing
+        }
+        dialog.create().show()
+    }
 }
