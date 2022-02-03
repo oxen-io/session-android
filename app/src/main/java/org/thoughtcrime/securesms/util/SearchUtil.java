@@ -79,7 +79,7 @@ public class SearchUtil {
       do {
         index = normalizedText.indexOf(highlightToken, lastHighlightEndIndex);
         lastHighlightEndIndex = index + highlightToken.length();
-      } while (index > 0 && !Character.isSpaceChar(normalizedText.charAt(index - 1)));
+      } while (index > 0 && !Character.isWhitespace(normalizedText.charAt(index - 1)));
 
       if (index >= 0) {
         ranges.add(new Pair<>(index, lastHighlightEndIndex));
