@@ -1,7 +1,7 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    package="network.loki.messenger">
-    <application>
+    package="network.loki.messenger.test">
+    <application android:name="network.loki.messenger.TestApplication">
         <uses-library android:name="android.test.runner"
             android:required="false" />
     </application>

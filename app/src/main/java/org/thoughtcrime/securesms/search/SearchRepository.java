@@ -296,7 +296,7 @@ public class SearchRepository {
 
     @Override
     public MessageResult build(@NonNull Cursor cursor) {
-      Address   conversationAddress   = Address.fromSerialized(cursor.getString(cursor.getColumnIndex(SearchDatabase.CONVERSATION_ADDRESS)));
+      Address   conversationAddress   = Address.fromSerialized(cursor.getString(cursor.getColumnIndexOrThrow(SearchDatabase.CONVERSATION_ADDRESS)));
       Address   messageAddress        = Address.fromSerialized(cursor.getString(cursor.getColumnIndexOrThrow(SearchDatabase.MESSAGE_ADDRESS)));
       Recipient conversationRecipient = Recipient.from(context, conversationAddress, false);
       Recipient messageRecipient      = Recipient.from(context, messageAddress, false);

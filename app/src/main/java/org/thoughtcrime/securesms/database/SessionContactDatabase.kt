@@ -90,17 +90,17 @@ class SessionContactDatabase(context: Context, helper: SQLCipherOpenHelper) : Da
     }
 
     fun contactFromCursor(cursor: android.database.Cursor): Contact {
-        val sessionID = cursor.getString(cursor.getColumnIndex(sessionID))
+        val sessionID = cursor.getString(cursor.getColumnIndexOrThrow(sessionID))
         val contact = Contact(sessionID)
-        contact.name = cursor.getStringOrNull(cursor.getColumnIndex(name))
-        contact.nickname = cursor.getStringOrNull(cursor.getColumnIndex(nickname))
-        contact.profilePictureURL = cursor.getStringOrNull(cursor.getColumnIndex(profilePictureURL))
-        contact.profilePictureFileName = cursor.getStringOrNull(cursor.getColumnIndex(profilePictureFileName))
-        cursor.getStringOrNull(cursor.getColumnIndex(profilePictureEncryptionKey))?.let {
+        contact.name = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(name))
+        contact.nickname = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(nickname))
+        contact.profilePictureURL = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(profilePictureURL))
+        contact.profilePictureFileName = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(profilePictureFileName))
+        cursor.getStringOrNull(cursor.getColumnIndexOrThrow(profilePictureEncryptionKey))?.let {
             contact.profilePictureEncryptionKey = Base64.decode(it)
         }
-        contact.threadID = cursor.getLong(cursor.getColumnIndex(threadID))
-        contact.isTrusted = cursor.getInt(cursor.getColumnIndex(isTrusted)) != 0
+        contact.threadID = cursor.getLong(cursor.getColumnIndexOrThrow(threadID))
+        contact.isTrusted = cursor.getInt(cursor.getColumnIndexOrThrow(isTrusted)) != 0
         return contact
     }
 
