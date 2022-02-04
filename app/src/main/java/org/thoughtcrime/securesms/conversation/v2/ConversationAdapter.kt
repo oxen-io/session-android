@@ -15,7 +15,7 @@ import org.thoughtcrime.securesms.mms.GlideRequests
 
 class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPress: (MessageRecord, Int, VisibleMessageView, MotionEvent) -> Unit,
     private val onItemSwipeToReply: (MessageRecord, Int) -> Unit, private val onItemLongPress: (MessageRecord, Int) -> Unit,
-    private val glide: GlideRequests)
+    private val glide: GlideRequests, private val onDeselect: (MessageRecord, Int) -> Unit)
     : CursorRecyclerViewAdapter<ViewHolder>(context, cursor) {
     private val messageDB = DatabaseComponent.get(context).mmsSmsDatabase()
     var selectedItems = mutableSetOf<MessageRecord>()
@@ -104,6 +104,27 @@ class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPr
         // one for the cursor because the layout is reversed
         if (!cursor.moveToPosition(position - 1)) { return null }
         return messageDB.readerFor(cursor).current
+    }
+
+    override fun changeCursor(cursor: Cursor?) {
+        super.changeCursor(cursor)
+        val toRemove = mutableSetOf<MessageRecord>()
+        val toDeselect = mutableSetOf<Pair<Int, MessageRecord>>()
+        for (selected in selectedItems) {
+            val position = getItemPositionForTimestamp(selected.timestamp)
+            if (position == null || position == -1) {
+                toRemove += selected
+            } else {
+                val item = getMessage(getCursorAtPositionOrThrow(position))
+                if (item == null || item.isDeleted) {
+                    toDeselect += position to selected
+                }
+            }
+        }
+        selectedItems -= toRemove
+        toDeselect.iterator().forEach { (pos, record) ->
+            onDeselect(record, pos)
+        }
     }
 
     fun toggleSelection(message: MessageRecord, position: Int) {
