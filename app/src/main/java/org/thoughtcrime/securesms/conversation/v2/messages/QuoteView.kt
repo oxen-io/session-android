@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.annotation.ColorInt
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.toSpannable
 import androidx.core.view.isVisible
@@ -61,10 +62,6 @@ class QuoteView : LinearLayout {
             Mode.Regular -> {
                 binding.quoteViewCancelButton.isVisible = false
                 binding.mainQuoteViewContainer.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.transparent, context.theme))
-                val quoteViewMainContentContainerLayoutParams = binding.quoteViewMainContentContainer.layoutParams as RelativeLayout.LayoutParams
-                // Since we're not showing the cancel button we can shorten the end margin
-                quoteViewMainContentContainerLayoutParams.marginEnd = resources.getDimension(R.dimen.medium_spacing).roundToInt()
-                // binding.quoteViewMainContentContainer.layoutParams = quoteViewMainContentContainerLayoutParams
             }
         }
     }
@@ -110,7 +107,7 @@ class QuoteView : LinearLayout {
 
     // region Updating
     fun bind(authorPublicKey: String, body: String?, attachments: SlideDeck?, thread: Recipient,
-        isOutgoingMessage: Boolean, maxContentWidth: Int, isOpenGroupInvitation: Boolean, threadID: Long,
+        isOutgoingMessage: Boolean, isOpenGroupInvitation: Boolean, threadID: Long,
         isOriginalMissing: Boolean, glide: GlideRequests) {
         // Reduce the max body text view line count to 2 if this is a group thread because
         // we'll be showing the author text view and we don't want the overall quote view height
@@ -132,9 +129,6 @@ class QuoteView : LinearLayout {
         binding.quoteViewAccentLine.isVisible = !hasAttachments
         binding.quoteViewAttachmentPreviewContainer.isVisible = hasAttachments
         if (!hasAttachments) {
-            val accentLineLayoutParams = binding.quoteViewAccentLine.layoutParams as RelativeLayout.LayoutParams
-            accentLineLayoutParams.height = getIntrinsicContentHeight(maxContentWidth) // Match the intrinsic * content * height
-            // binding.quoteViewAccentLine.layoutParams = accentLineLayoutParams
             binding.quoteViewAccentLine.setBackgroundColor(getLineColor(isOutgoingMessage))
         } else if (attachments != null) {
             binding.quoteViewAttachmentPreviewImageView.imageTintList = ColorStateList.valueOf(ResourcesCompat.getColor(resources, R.color.white, context.theme))
