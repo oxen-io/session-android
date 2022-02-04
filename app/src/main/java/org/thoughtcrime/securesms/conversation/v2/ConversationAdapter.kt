@@ -69,6 +69,10 @@ class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPr
                     view.onPress = { event -> onItemPress(message, viewHolder.adapterPosition, view, event) }
                     view.onSwipeToReply = { onItemSwipeToReply(message, viewHolder.adapterPosition) }
                     view.onLongPress = { onItemLongPress(message, viewHolder.adapterPosition) }
+                } else {
+                    view.onPress = null
+                    view.onSwipeToReply = null
+                    view.onLongPress = null
                 }
                 view.contentViewDelegate = visibleMessageContentViewDelegate
             }
