@@ -153,10 +153,10 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         // Set up toolbar buttons
         binding.profileButton.glide = glide
         binding.profileButton.setOnClickListener { openSettings() }
-        binding.pathStatusViewContainer.disableClipping()
-        binding.pathStatusViewContainer.setOnClickListener {
-            binding.globalSearchInputLayout.requestFocus(FOCUS_DOWN)
+        binding.searchViewContainer.setOnClickListener {
+            binding.globalSearchInputLayout.requestFocus()
         }
+        binding.sessionToolbar.disableClipping()
         // Set up seed reminder view
         val hasViewedSeed = TextSecurePreferences.getHasViewedSeed(this)
         if (!hasViewedSeed) {

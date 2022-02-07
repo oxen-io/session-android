@@ -35,20 +35,27 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="9dp" />
 
+                <org.thoughtcrime.securesms.home.PathStatusView
+                    android:id="@+id/pathStatusView"
+                    android:layout_alignBottom="@+id/profileButton"
+                    android:layout_alignEnd="@+id/profileButton"
+                    android:layout_width="@dimen/path_status_view_size"
+                    android:layout_height="@dimen/path_status_view_size"/>
+
                 <ImageView
                     android:id="@+id/sessionHeaderImage"
-                    android:layout_toEndOf="@+id/profileButton"
-                    android:layout_toStartOf="@+id/pathStatusViewContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
+                    android:layout_toStartOf="@+id/searchViewContainer"
+                    android:layout_toEndOf="@+id/profileButton"
+                    android:padding="@dimen/medium_spacing"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_session"
-                    android:padding="@dimen/medium_spacing"
                     app:tint="@color/black" />
 
                 <RelativeLayout
-                    android:id="@+id/pathStatusViewContainer"
+                    android:id="@+id/searchViewContainer"
                     android:layout_width="@dimen/small_profile_picture_size"
                     android:layout_height="@dimen/small_profile_picture_size"
                     android:layout_alignParentRight="true"
@@ -66,7 +73,6 @@
             </RelativeLayout>
 
             <RelativeLayout
-                tools:visibility="visible"
                 android:visibility="gone"
                 android:id="@+id/search_toolbar"
                 android:layout_marginHorizontal="@dimen/medium_spacing"
