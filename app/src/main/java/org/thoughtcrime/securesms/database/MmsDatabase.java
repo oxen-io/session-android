@@ -178,6 +178,11 @@ public class MmsDatabase extends MessagingDatabase {
   private final EarlyReceiptCache earlyDeliveryReceiptCache = new EarlyReceiptCache();
   private final EarlyReceiptCache earlyReadReceiptCache     = new EarlyReceiptCache();
 
+  public static String getCreateMessageRequestResponseCommand() {
+    return "ALTER TABLE "+ TABLE_NAME + " " +
+            "ADD COLUMN " + MESSAGE_REQUEST_RESPONSE + " INTEGER DEFAULT 0;";
+  }
+
   public MmsDatabase(Context context, SQLCipherOpenHelper databaseHelper) {
     super(context, databaseHelper);
   }
@@ -664,6 +669,7 @@ public class MmsDatabase extends MessagingDatabase {
     contentValues.put(EXPIRES_IN, retrieved.getExpiresIn());
     contentValues.put(READ, retrieved.isExpirationUpdate() ? 1 : 0);
     contentValues.put(UNIDENTIFIED, retrieved.isUnidentified());
+    contentValues.put(MESSAGE_REQUEST_RESPONSE, retrieved.isMessageRequestResponse());
 
     if (!contentValues.containsKey(DATE_SENT)) {
       contentValues.put(DATE_SENT, contentValues.getAsLong(DATE_RECEIVED));
@@ -748,6 +754,10 @@ public class MmsDatabase extends MessagingDatabase {
 
     if (retrieved.isMediaSavedDataExtraction()) {
       type |= Types.MEDIA_SAVED_EXTRACTION_BIT;
+    }
+
+    if (retrieved.isMessageRequestResponse()) {
+      type |= Types.MESSAGE_REQUEST_RESPONSE_BIT;
     }
 
     return insertMessageInbox(retrieved, "", threadId, type, serverTimestamp);

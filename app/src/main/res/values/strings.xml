@@ -918,5 +918,6 @@
     <string name="message_requests_clear_all_message">Are you sure you want to clear all message requests?</string>
     <string name="message_requests_cleared">Message requests deleted</string>
     <string name="message_requests_accepted">Your message request has been accepted.</string>
+    <string name="message_requests_pending">Your message request is currently pending.</string>
 
 </resources>

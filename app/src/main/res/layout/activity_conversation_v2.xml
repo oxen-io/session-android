@@ -216,4 +216,29 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/pendingMessageRequestLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/input_bar_background"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/separator" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_spacing"
+            android:alpha="0.6"
+            android:gravity="center_horizontal"
+            android:text="@string/message_requests_pending"
+            android:textColor="@color/text"
+            android:textSize="@dimen/small_font_size" />
+
+    </LinearLayout>
+
 </RelativeLayout>

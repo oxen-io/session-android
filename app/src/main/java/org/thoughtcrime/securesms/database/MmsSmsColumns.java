@@ -20,6 +20,7 @@ public interface MmsSmsColumns {
   public static final String EXPIRE_STARTED           = "expire_started";
   public static final String NOTIFIED                 = "notified";
   public static final String UNIDENTIFIED             = "unidentified";
+  public static final String MESSAGE_REQUEST_RESPONSE = "message_request_response";
 
   public static class Types {
     protected static final long TOTAL_MASK = 0xFFFFFFFF;
@@ -80,6 +81,8 @@ public interface MmsSmsColumns {
     // Data Extraction Notification
     protected static final long MEDIA_SAVED_EXTRACTION_BIT = 0x01000;
     protected static final long SCREENSHOT_EXTRACTION_BIT  = 0x02000;
+
+    protected static final long MESSAGE_REQUEST_RESPONSE_BIT  = 0x03000;
 
     // Open Group Invitation
     protected static final long OPEN_GROUP_INVITATION_BIT  = 0x04000;

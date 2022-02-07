@@ -619,16 +619,21 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
 
         if (recipient.isBlocked) return
 
-        val mediaMessage = IncomingMediaMessage(address, sentTimestamp, -1,
-                0, false,
-                false,
-                Optional.absent(),
-                Optional.absent(),
-                Optional.absent(),
-                Optional.absent(),
-                Optional.absent(),
-                Optional.absent(),
-                Optional.of(message))
+        val mediaMessage = IncomingMediaMessage(
+            address,
+            sentTimestamp,
+            -1,
+            0, false,
+            false,
+            false,
+            Optional.absent(),
+            Optional.absent(),
+            Optional.absent(),
+            Optional.absent(),
+            Optional.absent(),
+            Optional.absent(),
+            Optional.of(message)
+        )
 
         database.insertSecureDecryptedMessageInbox(mediaMessage, -1)
     }
@@ -638,11 +643,28 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         approved: Boolean,
         sentTimestamp: Long
     ) {
+        val mmsDb = DatabaseComponent.get(context).mmsDatabase()
         val recipientDb = DatabaseComponent.get(context).recipientDatabase()
         val address = fromSerialized(senderPublicKey)
         val recipient = Recipient.from(context, address, false)
         recipientDb.setApproved(recipient, true)
-        //TODO: add message indicating message request acceptance
+        val message = IncomingMediaMessage(
+            address,
+            sentTimestamp,
+            -1,
+            0, false,
+            false,
+            true,
+            Optional.absent(),
+            Optional.absent(),
+            Optional.absent(),
+            Optional.absent(),
+            Optional.absent(),
+            Optional.absent(),
+            Optional.absent()
+        )
+        val threadId = getOrCreateThreadIdFor(address)
+        mmsDb.insertSecureDecryptedMessageInbox(message, threadId)
     }
 
 }
