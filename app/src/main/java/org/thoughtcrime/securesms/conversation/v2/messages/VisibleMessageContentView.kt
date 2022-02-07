@@ -90,6 +90,14 @@ class VisibleMessageContentView : LinearLayout {
             binding.deletedMessageView.isVisible = false
         }
 
+        if (message.isMessageRequestResponse) {
+            binding.messageRequestResponseView.isVisible = true
+            binding.messageRequestResponseView.bind(message, getTextColor(context, message))
+            return
+        } else {
+            binding.messageRequestResponseView.isVisible = false
+        }
+
         binding.quoteView.isVisible = message is MmsMessageRecord && message.quote != null
 
         binding.linkPreviewView.isVisible = message is MmsMessageRecord && message.linkPreviews.isNotEmpty()

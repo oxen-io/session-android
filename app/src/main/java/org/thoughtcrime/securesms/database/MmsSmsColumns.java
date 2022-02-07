@@ -41,6 +41,7 @@ public interface MmsSmsColumns {
     protected static final long BASE_PENDING_INSECURE_SMS_FALLBACK = 26;
     public    static final long BASE_DRAFT_TYPE                    = 27;
     protected static final long BASE_DELETED_TYPE                  = 28;
+    protected static final long BASE_MESSAGE_REQUEST_RESPONSE_TYPE = 29;
 
     protected static final long[] OUTGOING_MESSAGE_TYPES = {BASE_OUTBOX_TYPE, BASE_SENT_TYPE,
                                                             BASE_SENDING_TYPE, BASE_SENT_FAILED_TYPE,
@@ -272,6 +273,10 @@ public interface MmsSmsColumns {
     public static boolean isLegacyType(long type) {
       return (type & ENCRYPTION_REMOTE_LEGACY_BIT) != 0 ||
              (type & ENCRYPTION_REMOTE_BIT) != 0;
+    }
+
+    public static boolean isMessageRequestResponse(long type) {
+      return (type & BASE_TYPE_MASK) == BASE_MESSAGE_REQUEST_RESPONSE_TYPE;
     }
 
     public static long translateFromSystemBaseType(long theirType) {
