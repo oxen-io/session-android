@@ -407,6 +407,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private fun setUpInputBar() {
         binding.inputBar.isInvisible = !canSendMessages()
+        binding.pendingMessageRequestLayout.isVisible = !canSendMessages()
         binding.inputBar.delegate = this
         binding.inputBarRecordingView.delegate = this
         // GIF button
