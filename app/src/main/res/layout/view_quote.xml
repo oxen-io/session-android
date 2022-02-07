@@ -77,7 +77,7 @@
         <TextView
             tools:visibility="gone"
             android:id="@+id/quoteViewAuthorTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
@@ -88,7 +88,7 @@
 
         <TextView
             android:id="@+id/quoteViewBodyTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="3"
@@ -98,6 +98,7 @@
     </LinearLayout>
 
     <ImageView
+        tools:visibility="gone"
         android:id="@+id/quoteViewCancelButton"
         android:layout_width="32dp"
         android:layout_height="32dp"
@@ -106,9 +107,7 @@
         android:padding="6dp"
         android:src="@drawable/ic_close_white_48dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/quoteTextParent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/text" />
 

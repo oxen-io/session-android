@@ -2,12 +2,11 @@ package org.thoughtcrime.securesms.conversation.v2.messages
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.text.StaticLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import androidx.annotation.ColorInt
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.toSpannable
 import androidx.core.view.isVisible
@@ -19,6 +18,8 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities
 import org.thoughtcrime.securesms.conversation.v2.utilities.TextUtilities
 import org.thoughtcrime.securesms.database.SessionContactDatabase
+import org.thoughtcrime.securesms.database.model.Quote
+import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.mms.SlideDeck
 import org.thoughtcrime.securesms.util.MediaUtil
@@ -27,7 +28,6 @@ import org.thoughtcrime.securesms.util.toPx
 import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.roundToInt
 
 // There's quite some calculation going on here. It's a bit complex so don't make changes
 // if you don't need to. If you do then test:
@@ -72,7 +72,7 @@ class QuoteView : LinearLayout {
         // If we're showing an attachment thumbnail, just constrain to the height of that
         if (binding.quoteViewAttachmentPreviewContainer.isVisible) { return toPx(40, resources) }
         var result = 0
-        var authorTextViewIntrinsicHeight = 0
+        val authorTextViewIntrinsicHeight: Int
         if (binding.quoteViewAuthorTextView.isVisible) {
             val author = binding.quoteViewAuthorTextView.text
             authorTextViewIntrinsicHeight = TextUtilities.getIntrinsicHeight(author, binding.quoteViewAuthorTextView.paint, maxContentWidth)
@@ -122,7 +122,7 @@ class QuoteView : LinearLayout {
         }
         binding.quoteViewAuthorTextView.isVisible = thread.isGroupRecipient
         // Body
-        binding.quoteViewBodyTextView.text = if (isOpenGroupInvitation) resources.getString(R.string.open_group_invitation_view__open_group_invitation) else MentionUtilities.highlightMentions((body ?: "").toSpannable(), threadID, context);
+        binding.quoteViewBodyTextView.text = if (isOpenGroupInvitation) resources.getString(R.string.open_group_invitation_view__open_group_invitation) else MentionUtilities.highlightMentions((body ?: "").toSpannable(), threadID, context)
         binding.quoteViewBodyTextView.setTextColor(getTextColor(isOutgoingMessage))
         // Accent line / attachment preview
         val hasAttachments = (attachments != null && attachments.asAttachments().isNotEmpty()) && !isOriginalMissing
@@ -158,11 +158,6 @@ class QuoteView : LinearLayout {
                 }
             }
         }
-        //mainQuoteViewContainer.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, getIntrinsicHeight(maxContentWidth))
-//        val quoteViewMainContentContainerLayoutParams = quoteViewMainContentContainer.layoutParams as RelativeLayout.LayoutParams
-        // The start margin is different if we just show the accent line vs if we show an attachment thumbnail
-//        quoteViewMainContentContainerLayoutParams.marginStart = if (!hasAttachments) toPx(16, resources) else toPx(48, resources)
-//        quoteViewMainContentContainer.layoutParams = quoteViewMainContentContainerLayoutParams
     }
     // endregion
 
@@ -194,6 +189,31 @@ class QuoteView : LinearLayout {
         } else {
             ResourcesCompat.getColor(resources, R.color.white, context.theme)
         }
+    }
+
+    fun calculateWidth(quote: Quote, bodyWidth: Int, maxContentWidth: Int, thread: Recipient): Int {
+        binding.quoteViewAuthorTextView.isVisible = thread.isGroupRecipient
+        var paddingWidth = resources.getDimensionPixelSize(R.dimen.medium_spacing) * 5 // initial horizontal padding
+        with (binding) {
+            if (quoteViewAttachmentPreviewContainer.isVisible) {
+                paddingWidth += toPx(40, resources)
+            }
+            if (quoteViewAccentLine.isVisible) {
+                paddingWidth += resources.getDimensionPixelSize(R.dimen.accent_line_thickness)
+            }
+        }
+        val quoteBodyWidth = StaticLayout.getDesiredWidth(quote.text, binding.quoteViewBodyTextView.paint).toInt() + paddingWidth
+
+        val quoteAuthorWidth = if (thread.isGroupRecipient) {
+            val authorPublicKey = quote.author.serialize()
+            val author = contactDb.getContactWithSessionID(authorPublicKey)
+            val authorDisplayName = author?.displayName(Contact.contextForRecipient(thread)) ?: authorPublicKey
+            StaticLayout.getDesiredWidth(authorDisplayName, binding.quoteViewBodyTextView.paint).toInt() + paddingWidth
+        } else 0
+
+        val quoteWidth = max(quoteBodyWidth, quoteAuthorWidth)
+        val usedWidth = max(quoteWidth, bodyWidth)
+        return min(maxContentWidth, usedWidth)
     }
     // endregion
 }
