@@ -202,7 +202,7 @@ class QuoteView : LinearLayout {
                 paddingWidth += resources.getDimensionPixelSize(R.dimen.accent_line_thickness)
             }
         }
-        val quoteBodyWidth = StaticLayout.getDesiredWidth(quote.text, binding.quoteViewBodyTextView.paint).toInt() + paddingWidth
+        val quoteBodyWidth = StaticLayout.getDesiredWidth(binding.quoteViewBodyTextView.text, binding.quoteViewBodyTextView.paint).toInt() + paddingWidth
 
         val quoteAuthorWidth = if (thread.isGroupRecipient) {
             val authorPublicKey = quote.author.serialize()
