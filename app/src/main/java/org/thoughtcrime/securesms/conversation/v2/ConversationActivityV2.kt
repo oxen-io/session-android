@@ -137,6 +137,8 @@ import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.toPx
 import java.util.Locale
 import java.util.concurrent.ExecutionException
+import java.util.concurrent.atomic.AtomicLong
+import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
@@ -236,7 +238,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             onItemLongPress = { message, position ->
                 handleLongPress(message, position)
             },
-            glide
+            glide,
+            onDeselect = { message, position ->
+                actionMode?.let {
+                    onDeselect(message, position, it)
+                }
+            }
         )
         adapter.visibleMessageContentViewDelegate = this
         adapter
@@ -248,12 +255,16 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private val documentButton by lazy { InputBarButton(this, R.drawable.ic_document_small_dark, hasOpaqueBackground = true) }
     private val libraryButton by lazy { InputBarButton(this, R.drawable.ic_baseline_photo_library_24, hasOpaqueBackground = true) }
     private val cameraButton by lazy { InputBarButton(this, R.drawable.ic_baseline_photo_camera_24, hasOpaqueBackground = true) }
+    private val messageToScrollTimestamp = AtomicLong(-1)
+    private val messageToScrollAuthor = AtomicReference<Address?>(null)
 
     // region Settings
     companion object {
         // Extras
         const val THREAD_ID = "thread_id"
         const val ADDRESS = "address"
+        const val SCROLL_MESSAGE_ID = "scroll_message_id"
+        const val SCROLL_MESSAGE_AUTHOR = "scroll_message_author"
         // Request codes
         const val PICK_DOCUMENT = 2
         const val TAKE_PHOTO = 7
@@ -271,6 +282,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         super.onCreate(savedInstanceState, isReady)
         binding = ActivityConversationV2Binding.inflate(layoutInflater)
         setContentView(binding.root)
+        // messageIdToScroll
+        messageToScrollTimestamp.set(intent.getLongExtra(SCROLL_MESSAGE_ID, -1))
+        messageToScrollAuthor.set(intent.getParcelableExtra(SCROLL_MESSAGE_AUTHOR))
         val thread = threadDb.getRecipientForThreadId(viewModel.threadId)
         if (thread == null) {
             Toast.makeText(this, "This thread has been deleted.", Toast.LENGTH_LONG).show()
@@ -351,6 +365,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
             override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
                 adapter.changeCursor(cursor)
+                if (cursor != null) {
+                    val messageTimestamp = messageToScrollTimestamp.getAndSet(-1)
+                    val author = messageToScrollAuthor.getAndSet(null)
+                    if (author != null && messageTimestamp >= 0) {
+                        jumpToMessage(author, messageTimestamp, null)
+                    }
+                }
             }
 
             override fun onLoaderReset(cursor: Loader<Cursor>) {
@@ -598,29 +619,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun inputBarHeightChanged(newValue: Int) {
-        @Suppress("NAME_SHADOWING") val newValue = max(newValue, resources.getDimension(R.dimen.input_bar_height).roundToInt())
-        // 36 DP is the exact height of the typing indicator view. It's also exactly 18 * 2, and 18 is the large message
-        // corner radius. This makes 36 DP look "correct" in the context of other messages on the screen.
-        val typingIndicatorHeight = if (binding.typingIndicatorViewContainer.isVisible) toPx(36, resources) else 0
-        // Recycler view
-        val recyclerViewLayoutParams = binding.conversationRecyclerView.layoutParams as RelativeLayout.LayoutParams
-        recyclerViewLayoutParams.bottomMargin = newValue + typingIndicatorHeight
-        binding.conversationRecyclerView.layoutParams = recyclerViewLayoutParams
-        // Additional content container
-        val additionalContentContainerLayoutParams = binding.additionalContentContainer.layoutParams as RelativeLayout.LayoutParams
-        additionalContentContainerLayoutParams.bottomMargin = newValue
-        binding.additionalContentContainer.layoutParams = additionalContentContainerLayoutParams
-        // Attachment options
-        val attachmentButtonHeight = binding.inputBar.attachmentButtonsContainerHeight
-        val bottomMargin = (newValue - binding.inputBar.additionalContentHeight - attachmentButtonHeight) / 2
-        val margin = toPx(8, resources)
-        val attachmentOptionsContainerLayoutParams = binding.attachmentOptionsContainer.layoutParams as RelativeLayout.LayoutParams
-        attachmentOptionsContainerLayoutParams.bottomMargin = bottomMargin + attachmentButtonHeight + margin
-        binding.attachmentOptionsContainer.layoutParams = attachmentOptionsContainerLayoutParams
-        // Scroll to bottom button
-        val scrollToBottomButtonLayoutParams = binding.scrollToBottomButton.layoutParams as RelativeLayout.LayoutParams
-        scrollToBottomButtonLayoutParams.bottomMargin = newValue + binding.additionalContentContainer.height + toPx(12, resources)
-        binding.scrollToBottomButton.layoutParams = scrollToBottomButtonLayoutParams
     }
 
     override fun inputBarEditTextContentChanged(newContent: CharSequence) {
@@ -842,20 +840,24 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private fun handlePress(message: MessageRecord, position: Int, view: VisibleMessageView, event: MotionEvent) {
         val actionMode = this.actionMode
         if (actionMode != null) {
-            adapter.toggleSelection(message, position)
-            val actionModeCallback = ConversationActionModeCallback(adapter, viewModel.threadId, this)
-            actionModeCallback.delegate = this
-            actionModeCallback.updateActionModeMenu(actionMode.menu)
-            if (adapter.selectedItems.isEmpty()) {
-                actionMode.finish()
-                this.actionMode = null
-            }
+            onDeselect(message, position, actionMode)
         } else {
             // NOTE:
             // We have to use onContentClick (rather than a click listener directly on
             // the view) so as to not interfere with all the other gestures. Do not add
             // onClickListeners directly to message content views.
             view.onContentClick(event)
+        }
+    }
+
+    private fun onDeselect(message: MessageRecord, position: Int, actionMode: ActionMode) {
+        adapter.toggleSelection(message, position)
+        val actionModeCallback = ConversationActionModeCallback(adapter, viewModel.threadId, this)
+        actionModeCallback.delegate = this
+        actionModeCallback.updateActionModeMenu(actionMode.menu)
+        if (adapter.selectedItems.isEmpty()) {
+            actionMode.finish()
+            this.actionMode = null
         }
     }
 
@@ -1353,7 +1355,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun resendMessage(messages: Set<MessageRecord>) {
-        messages.forEach { messageRecord ->
+        messages.iterator().forEach { messageRecord ->
             ResendMessageUtilities.resend(messageRecord)
         }
         endActionMode()

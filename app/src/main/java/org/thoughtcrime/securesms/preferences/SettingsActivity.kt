@@ -34,6 +34,7 @@ import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol
 import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.avatar.AvatarSelection
+import org.thoughtcrime.securesms.home.PathActivity
 import org.thoughtcrime.securesms.messagerequests.MessageRequestsActivity
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.mms.GlideRequests
@@ -43,7 +44,9 @@ import org.thoughtcrime.securesms.util.BitmapDecodingException
 import org.thoughtcrime.securesms.util.BitmapUtil
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.UiModeUtilities
+import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.push
+import org.thoughtcrime.securesms.util.show
 import java.io.File
 import java.security.SecureRandom
 import java.util.Date
@@ -85,6 +88,8 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             publicKeyTextView.text = hexEncodedPublicKey
             copyButton.setOnClickListener { copyPublicKey() }
             shareButton.setOnClickListener { sharePublicKey() }
+            pathButton.setOnClickListener { showPath() }
+            pathContainer.disableClipping()
             privacyButton.setOnClickListener { showPrivacySettings() }
             notificationsButton.setOnClickListener { showNotificationSettings() }
             messageRequestsButton.setOnClickListener { showMessageRequests() }
@@ -308,6 +313,11 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         } catch (e: Exception) {
             Toast.makeText(this, "Can't open URL", Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun showPath() {
+        val intent = Intent(this, PathActivity::class.java)
+        show(intent)
     }
 
     private fun showSurvey() {
