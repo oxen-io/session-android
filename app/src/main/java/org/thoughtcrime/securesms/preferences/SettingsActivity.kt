@@ -7,7 +7,11 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.*
+import android.os.AsyncTask
+import android.os.Build
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
@@ -35,10 +39,16 @@ import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.profiles.ProfileMediaConstraints
-import org.thoughtcrime.securesms.util.*
+import org.thoughtcrime.securesms.util.BitmapDecodingException
+import org.thoughtcrime.securesms.util.BitmapUtil
+import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
+import org.thoughtcrime.securesms.util.UiModeUtilities
+import org.thoughtcrime.securesms.util.disableClipping
+import org.thoughtcrime.securesms.util.push
+import org.thoughtcrime.securesms.util.show
 import java.io.File
 import java.security.SecureRandom
-import java.util.*
+import java.util.Date
 
 class SettingsActivity : PassphraseRequiredActionBarActivity() {
     private lateinit var binding: ActivitySettingsBinding

@@ -8,7 +8,6 @@ import android.content.IntentFilter
 import android.database.Cursor
 import android.os.Bundle
 import android.text.SpannableString
-import android.view.View.FOCUS_DOWN
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.os.bundleOf
