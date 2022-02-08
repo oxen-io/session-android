@@ -79,7 +79,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     tools:text="8"
-                    android:textColor="@color/text"
+                    android:textColor="@color/conversation_unread_count_indicator_text"
                     android:textSize="@dimen/very_small_font_size"
                     android:textStyle="bold" />
 
