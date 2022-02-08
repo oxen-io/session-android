@@ -88,8 +88,16 @@ class ConversationViewModel(
             }
     }
 
-    fun acceptMessageRequest() {
+    fun acceptMessageRequest() = viewModelScope.launch {
         repository.acceptMessageRequest(recipient)
+            .onSuccess {
+                _uiState.update {
+                    it.copy(isMessageRequestAccepted = true)
+                }
+            }
+            .onFailure {
+                showMessage("Couldn't accept message request due to error: $it")
+            }
     }
 
     fun declineMessageRequest() {
@@ -134,5 +142,6 @@ data class UiMessage(val id: Long, val message: String)
 
 data class ConversationUiState(
     val isOxenHostedOpenGroup: Boolean = false,
-    val uiMessages: List<UiMessage> = emptyList()
+    val uiMessages: List<UiMessage> = emptyList(),
+    val isMessageRequestAccepted: Boolean? = null
 )

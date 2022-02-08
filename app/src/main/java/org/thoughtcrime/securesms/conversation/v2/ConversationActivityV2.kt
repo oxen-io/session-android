@@ -34,6 +34,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.DimenRes
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -537,6 +538,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     viewModel.messageShown(it.id)
                 }
                 addOpenGroupGuidelinesIfNeeded(uiState.isOxenHostedOpenGroup)
+                binding.messageRequestBar.isGone = uiState.isMessageRequestAccepted == true
             }
         }
     }

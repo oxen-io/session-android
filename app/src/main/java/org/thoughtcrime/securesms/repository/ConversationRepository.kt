@@ -1,6 +1,7 @@
 package org.thoughtcrime.securesms.repository
 
 import org.session.libsession.database.MessageDataProvider
+import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.signal.OutgoingTextMessage
@@ -59,7 +60,7 @@ interface ConversationRepository {
 
     suspend fun clearAllMessageRequests(): ResultOf<Unit>
 
-    fun acceptMessageRequest(recipient: Recipient)
+    suspend fun acceptMessageRequest(recipient: Recipient): ResultOf<Unit>
 
     fun declineMessageRequest(recipient: Recipient)
 
@@ -255,11 +256,16 @@ class DefaultConversationRepository @Inject constructor(
         return ResultOf.Success(Unit)
     }
 
-    override fun acceptMessageRequest(recipient: Recipient) {
+    override suspend fun acceptMessageRequest(recipient: Recipient): ResultOf<Unit> = suspendCoroutine { continuation ->
         recipientDb.setApproved(recipient, true)
         val profileKey = recipient.address.serialize().toByteArray()
         val message = MessageRequestResponse(profileKey, true)
-        MessageSender.send(message, recipient.address)
+        MessageSender.send(message, Destination.from(recipient.address))
+            .success {
+                continuation.resume(ResultOf.Success(Unit))
+            }.fail { error ->
+                continuation.resumeWithException(error)
+            }
     }
 
     override fun declineMessageRequest(recipient: Recipient) {

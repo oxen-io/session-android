@@ -159,7 +159,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
     }
 
     @Test
-    fun `should accept message request`() {
+    fun `should accept message request`() = runBlockingTest {
         viewModel.acceptMessageRequest()
 
         verify(repository).acceptMessageRequest(recipient)
