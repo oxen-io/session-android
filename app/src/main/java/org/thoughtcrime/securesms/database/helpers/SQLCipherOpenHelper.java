@@ -139,6 +139,8 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
     db.execSQL(RecipientDatabase.getCreateNotificationTypeCommand());
     db.execSQL(ThreadDatabase.getCreatePinnedCommand());
     db.execSQL(GroupDatabase.getCreateUpdatedTimestampCommand());
+    db.execSQL(RecipientDatabase.getCreateApprovedCommand());
+    db.execSQL(RecipientDatabase.getCreateApprovedMeCommand());
     db.execSQL(MmsDatabase.getCreateMessageRequestResponseCommand());
 
     executeStatements(db, SmsDatabase.CREATE_INDEXS);
@@ -323,6 +325,8 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
       }
 
       if (oldVersion < lokiV31) {
+        db.execSQL(RecipientDatabase.getCreateApprovedCommand());
+        db.execSQL(RecipientDatabase.getCreateApprovedMeCommand());
         db.execSQL(MmsDatabase.getCreateMessageRequestResponseCommand());
       }
 
