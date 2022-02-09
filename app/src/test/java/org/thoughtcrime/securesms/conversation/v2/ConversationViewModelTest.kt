@@ -162,7 +162,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
     fun `should accept message request`() = runBlockingTest {
         viewModel.acceptMessageRequest()
 
-        verify(repository).acceptMessageRequest(recipient)
+        verify(repository).acceptMessageRequest(threadId, recipient)
     }
 
     @Test

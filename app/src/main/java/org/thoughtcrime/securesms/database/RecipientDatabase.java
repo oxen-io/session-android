@@ -34,7 +34,7 @@ public class RecipientDatabase extends Database {
           static final String TABLE_NAME               = "recipient_preferences";
   private static final String ID                       = "_id";
   public  static final String ADDRESS                  = "recipient_ids";
-  private static final String BLOCK                    = "block";
+          static final String BLOCK                    = "block";
           static final String APPROVED                 = "approved";
   private static final String APPROVED_ME              = "approved_me";
   private static final String NOTIFICATION             = "notification";

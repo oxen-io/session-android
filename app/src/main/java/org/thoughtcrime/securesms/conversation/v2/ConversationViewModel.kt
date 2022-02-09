@@ -89,7 +89,7 @@ class ConversationViewModel(
     }
 
     fun acceptMessageRequest() = viewModelScope.launch {
-        repository.acceptMessageRequest(recipient)
+        repository.acceptMessageRequest(threadId, recipient)
             .onSuccess {
                 _uiState.update {
                     it.copy(isMessageRequestAccepted = true)

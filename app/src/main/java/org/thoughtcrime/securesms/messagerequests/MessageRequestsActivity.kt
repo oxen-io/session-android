@@ -11,7 +11,7 @@ import androidx.loader.content.Loader
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityMessageRequestsBinding
-import org.thoughtcrime.securesms.BaseActionBarActivity
+import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.ThreadRecord
@@ -21,7 +21,7 @@ import org.thoughtcrime.securesms.util.push
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MessageRequestsActivity : BaseActionBarActivity(), ConversationClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), ConversationClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private lateinit var binding: ActivityMessageRequestsBinding
     private lateinit var glide: GlideRequests
@@ -34,8 +34,8 @@ class MessageRequestsActivity : BaseActionBarActivity(), ConversationClickListen
         MessageRequestsAdapter(context = this, cursor = threadDb.unapprovedConversationList, listener = this)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?, ready: Boolean) {
+        super.onCreate(savedInstanceState, ready)
         binding = ActivityMessageRequestsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

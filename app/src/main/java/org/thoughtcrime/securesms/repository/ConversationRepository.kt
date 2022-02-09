@@ -60,7 +60,7 @@ interface ConversationRepository {
 
     suspend fun clearAllMessageRequests(): ResultOf<Unit>
 
-    suspend fun acceptMessageRequest(recipient: Recipient): ResultOf<Unit>
+    suspend fun acceptMessageRequest(threadId: Long, recipient: Recipient): ResultOf<Unit>
 
     fun declineMessageRequest(recipient: Recipient)
 
@@ -256,12 +256,13 @@ class DefaultConversationRepository @Inject constructor(
         return ResultOf.Success(Unit)
     }
 
-    override suspend fun acceptMessageRequest(recipient: Recipient): ResultOf<Unit> = suspendCoroutine { continuation ->
+    override suspend fun acceptMessageRequest(threadId: Long, recipient: Recipient): ResultOf<Unit> = suspendCoroutine { continuation ->
         recipientDb.setApproved(recipient, true)
         val profileKey = recipient.address.serialize().toByteArray()
         val message = MessageRequestResponse(profileKey, true)
         MessageSender.send(message, Destination.from(recipient.address))
             .success {
+                threadDb.setHasSent(threadId, true)
                 continuation.resume(ResultOf.Success(Unit))
             }.fail { error ->
                 continuation.resumeWithException(error)

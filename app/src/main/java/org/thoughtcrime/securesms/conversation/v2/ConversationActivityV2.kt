@@ -538,7 +538,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     viewModel.messageShown(it.id)
                 }
                 addOpenGroupGuidelinesIfNeeded(uiState.isOxenHostedOpenGroup)
-                binding.messageRequestBar.isGone = uiState.isMessageRequestAccepted == true
+                if (uiState.isMessageRequestAccepted == true) {
+                    binding.messageRequestBar.visibility = View.GONE
+                }
             }
         }
     }
@@ -599,6 +601,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             lifecycleScope.launch(Dispatchers.IO) {
                 ConfigurationMessageUtilities.syncConfigurationIfNeeded(this@ConversationActivityV2)
             }
+            finish()
         }
     }
 

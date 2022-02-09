@@ -394,10 +394,13 @@ public class ThreadDatabase extends Database {
 
     try {
       String where    = "SELECT COUNT (*) FROM " + TABLE_NAME +
+              " LEFT OUTER JOIN " + RecipientDatabase.TABLE_NAME +
+              " ON " + TABLE_NAME + "." + ADDRESS + " = " + RecipientDatabase.TABLE_NAME + "." + RecipientDatabase.ADDRESS +
               " LEFT OUTER JOIN " + GroupDatabase.TABLE_NAME +
               " ON " + TABLE_NAME + "." + ADDRESS + " = " + GroupDatabase.TABLE_NAME + "." + GROUP_ID +
               " WHERE " + MESSAGE_COUNT + " != 0 AND " + ARCHIVED + " = 0 " +"AND " + HAS_SENT + " = 0 AND " +
-              GroupDatabase.TABLE_NAME + "." + GROUP_ID + " IS NULL ";
+              RecipientDatabase.TABLE_NAME + "." + RecipientDatabase.BLOCK + " = 0 AND " +
+              GroupDatabase.TABLE_NAME + "." + GROUP_ID + " IS NULL";
       cursor          = db.rawQuery(where, null);
 
       if (cursor != null && cursor.moveToFirst())
@@ -433,32 +436,34 @@ public class ThreadDatabase extends Database {
   }
 
   public Cursor getConversationList() {
-    return getConversationList("0", false);
+    String where  = "(" + MESSAGE_COUNT + " != 0 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') " +
+            "AND " + ARCHIVED + " = 0 ";
+    return getConversationList(where);
   }
 
   public Cursor getApprovedConversationList() {
-    return getConversationList("0", true);
+    String where  = "((" + MESSAGE_COUNT + " != 0 AND " + HAS_SENT + " = 1) OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') " +
+            "AND " + ARCHIVED + " = 0 ";
+    return getConversationList(where);
   }
 
   public Cursor getUnapprovedConversationList() {
-    return getConversationList("0", false);
+    String where  = MESSAGE_COUNT + " != 0 AND " + ARCHIVED + " = 0 AND " + HAS_SENT + " = 0 AND " +
+            GroupDatabase.TABLE_NAME + "." + GROUP_ID + " IS NULL AND " +
+            RecipientDatabase.TABLE_NAME + "." + RecipientDatabase.BLOCK + " = 0";
+    return getConversationList(where);
   }
 
   public Cursor getArchivedConversationList() {
-    return getConversationList("1", true);
+    String where  = "(" + MESSAGE_COUNT + " != 0 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') " +
+            "AND " + ARCHIVED + " = 1 ";
+    return getConversationList(where);
   }
 
-  private Cursor getConversationList(String archived, boolean hasSent) {
+  private Cursor getConversationList(String where) {
     SQLiteDatabase db     = databaseHelper.getReadableDatabase();
-    String         where  = "(" + MESSAGE_COUNT + " != 0 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') " +
-                            "AND " + ARCHIVED + " = ? ";
-    if (hasSent) {
-      where += "AND (" + HAS_SENT + " = 1 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') ";
-    } else {
-      where += "AND " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " IS NULL ";
-    }
     String         query  = createQuery(where, 0);
-    Cursor         cursor = db.rawQuery(query, new String[]{archived});
+    Cursor         cursor = db.rawQuery(query, new String[]{});
 
     setNotifyConverationListListeners(cursor);
 
