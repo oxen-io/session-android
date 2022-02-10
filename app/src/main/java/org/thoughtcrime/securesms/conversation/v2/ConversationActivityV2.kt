@@ -622,7 +622,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val hasSent = threadDb.getLastSeenAndHasSent(viewModel.threadId).second()
         val messageCount = threadDb.getMessageCount(viewModel.threadId)
         return viewModel.recipient.isGroupRecipient || viewModel.recipient.hasApprovedMe() ||
-                (!viewModel.recipient.hasApprovedMe() && messageCount == 0) || (!hasSent && messageCount > 0)
+                (!viewModel.recipient.hasApprovedMe() && messageCount == 0) ||
+                (!viewModel.recipient.hasApprovedMe() && !hasSent && messageCount > 0)
     }
 
     override fun inputBarHeightChanged(newValue: Int) {
