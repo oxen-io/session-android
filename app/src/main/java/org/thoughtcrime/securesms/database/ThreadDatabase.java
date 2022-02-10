@@ -400,6 +400,7 @@ public class ThreadDatabase extends Database {
               " ON " + TABLE_NAME + "." + ADDRESS + " = " + GroupDatabase.TABLE_NAME + "." + GROUP_ID +
               " WHERE " + MESSAGE_COUNT + " != 0 AND " + ARCHIVED + " = 0 " +"AND " + HAS_SENT + " = 0 AND " +
               RecipientDatabase.TABLE_NAME + "." + RecipientDatabase.BLOCK + " = 0 AND " +
+              RecipientDatabase.TABLE_NAME + "." + RecipientDatabase.APPROVED + " = 0 AND " +
               GroupDatabase.TABLE_NAME + "." + GROUP_ID + " IS NULL";
       cursor          = db.rawQuery(where, null);
 
@@ -442,15 +443,16 @@ public class ThreadDatabase extends Database {
   }
 
   public Cursor getApprovedConversationList() {
-    String where  = "((" + MESSAGE_COUNT + " != 0 AND " + HAS_SENT + " = 1) OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') " +
+    String where  = "((" + MESSAGE_COUNT + " != 0 AND (" + HAS_SENT + " = 1 OR " + RecipientDatabase.APPROVED + " = 1)) OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') " +
             "AND " + ARCHIVED + " = 0 ";
     return getConversationList(where);
   }
 
   public Cursor getUnapprovedConversationList() {
     String where  = MESSAGE_COUNT + " != 0 AND " + ARCHIVED + " = 0 AND " + HAS_SENT + " = 0 AND " +
-            GroupDatabase.TABLE_NAME + "." + GROUP_ID + " IS NULL AND " +
-            RecipientDatabase.TABLE_NAME + "." + RecipientDatabase.BLOCK + " = 0";
+            RecipientDatabase.TABLE_NAME + "." + RecipientDatabase.APPROVED + " = 0 AND " +
+            RecipientDatabase.TABLE_NAME + "." + RecipientDatabase.BLOCK + " = 0 AND " +
+            GroupDatabase.TABLE_NAME + "." + GROUP_ID + " IS NULL";
     return getConversationList(where);
   }
 

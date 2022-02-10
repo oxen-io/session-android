@@ -327,6 +327,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
       if (oldVersion < lokiV31) {
         db.execSQL(RecipientDatabase.getCreateApprovedCommand());
         db.execSQL(RecipientDatabase.getCreateApprovedMeCommand());
+        db.execSQL(RecipientDatabase.getUpdateApprovedCommand());
         db.execSQL(MmsDatabase.getCreateMessageRequestResponseCommand());
       }
 

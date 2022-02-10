@@ -613,6 +613,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private fun isIncomingMessageRequestThread(): Boolean {
         return !viewModel.recipient.isGroupRecipient &&
+                !viewModel.recipient.isApproved &&
                 !threadDb.getLastSeenAndHasSent(viewModel.threadId).second() &&
                 threadDb.getMessageCount(viewModel.threadId) > 0
     }

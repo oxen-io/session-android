@@ -1,5 +1,7 @@
 package org.thoughtcrime.securesms.database;
 
+import static org.session.libsession.utilities.GroupUtil.OPEN_GROUP_PREFIX;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -109,10 +111,15 @@ public class RecipientDatabase extends Database {
             "ADD COLUMN " + APPROVED + " INTEGER DEFAULT 0;";
   }
 
-
   public static String getCreateApprovedMeCommand() {
     return "ALTER TABLE "+ TABLE_NAME + " " +
             "ADD COLUMN " + APPROVED_ME + " INTEGER DEFAULT 0;";
+  }
+
+  public static String getUpdateApprovedCommand() {
+    return "UPDATE "+ TABLE_NAME + " " +
+            "SET " + APPROVED + " = 1, " + APPROVED_ME + " = 1 " +
+            "WHERE " + ADDRESS + " NOT LIKE '" + OPEN_GROUP_PREFIX + "%'";
   }
 
   public static final int NOTIFY_TYPE_ALL = 0;
