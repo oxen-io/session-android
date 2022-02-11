@@ -42,7 +42,6 @@ public interface MmsSmsColumns {
     protected static final long BASE_PENDING_INSECURE_SMS_FALLBACK = 26;
     public    static final long BASE_DRAFT_TYPE                    = 27;
     protected static final long BASE_DELETED_TYPE                  = 28;
-    protected static final long BASE_MESSAGE_REQUEST_RESPONSE_TYPE = 29;
 
     protected static final long[] OUTGOING_MESSAGE_TYPES = {BASE_OUTBOX_TYPE, BASE_SENT_TYPE,
                                                             BASE_SENDING_TYPE, BASE_SENT_FAILED_TYPE,
@@ -82,8 +81,6 @@ public interface MmsSmsColumns {
     protected static final long MEDIA_SAVED_EXTRACTION_BIT = 0x01000;
     protected static final long SCREENSHOT_EXTRACTION_BIT  = 0x02000;
 
-    protected static final long MESSAGE_REQUEST_RESPONSE_BIT  = 0x03000;
-
     // Open Group Invitation
     protected static final long OPEN_GROUP_INVITATION_BIT  = 0x04000;
 
@@ -100,6 +97,8 @@ public interface MmsSmsColumns {
     // Loki
     protected static final long ENCRYPTION_LOKI_SESSION_RESTORE_SENT_BIT = 0x01000000;
     protected static final long ENCRYPTION_LOKI_SESSION_RESTORE_DONE_BIT = 0x00100000;
+
+    protected static final long MESSAGE_REQUEST_RESPONSE_BIT  = 0x00400000;
 
     public static boolean isDraftMessageType(long type) {
       return (type & BASE_TYPE_MASK) == BASE_DRAFT_TYPE;
@@ -279,7 +278,7 @@ public interface MmsSmsColumns {
     }
 
     public static boolean isMessageRequestResponse(long type) {
-      return (type & BASE_TYPE_MASK) == BASE_MESSAGE_REQUEST_RESPONSE_TYPE;
+      return (type & MESSAGE_REQUEST_RESPONSE_BIT) != 0;
     }
 
     public static long translateFromSystemBaseType(long theirType) {

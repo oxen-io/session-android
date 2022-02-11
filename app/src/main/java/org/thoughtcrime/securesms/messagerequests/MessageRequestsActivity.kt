@@ -84,6 +84,7 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
     private fun updateEmptyState() {
         val threadCount = (binding.recyclerView.adapter as MessageRequestsAdapter).itemCount
         binding.emptyStateContainer.isVisible = threadCount == 0
+        binding.clearAllMessageRequestsButton.isVisible = threadCount != 0
     }
 
     private fun deleteAllAndBlock() {

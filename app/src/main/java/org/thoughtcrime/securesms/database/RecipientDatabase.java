@@ -241,6 +241,7 @@ public class RecipientDatabase extends Database {
     values.put(APPROVED_ME, approved ? 1 : 0);
     updateOrInsert(recipient.getAddress(), values);
     recipient.resolve().setApproved(approved);
+    recipient.resolve().setHasApprovedMe(approved);
   }
 
   public void setBlocked(@NonNull Recipient recipient, boolean blocked) {
