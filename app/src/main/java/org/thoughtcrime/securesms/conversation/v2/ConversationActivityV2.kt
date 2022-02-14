@@ -591,17 +591,21 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private fun setUpMessageRequestsBar() {
         binding.messageRequestBar.isVisible = isIncomingMessageRequestThread()
         binding.acceptMessageRequestButton.setOnClickListener {
-            viewModel.acceptMessageRequest()
-            lifecycleScope.launch(Dispatchers.IO) {
-                ConfigurationMessageUtilities.syncConfigurationIfNeeded(this@ConversationActivityV2)
-            }
+            acceptMessageRequest()
         }
         binding.declineMessageRequestButton.setOnClickListener {
             viewModel.declineMessageRequest()
             lifecycleScope.launch(Dispatchers.IO) {
-                ConfigurationMessageUtilities.syncConfigurationIfNeeded(this@ConversationActivityV2)
+                ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@ConversationActivityV2)
             }
             finish()
+        }
+    }
+
+    private fun acceptMessageRequest() {
+        viewModel.acceptMessageRequest()
+        lifecycleScope.launch(Dispatchers.IO) {
+            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@ConversationActivityV2)
         }
     }
 
@@ -975,6 +979,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun sendMessage() {
+        if (isIncomingMessageRequestThread()) {
+            acceptMessageRequest()
+        }
         if (viewModel.recipient.isContactRecipient && viewModel.recipient.isBlocked) {
             BlockedDialog(viewModel.recipient).show(supportFragmentManager, "Blocked Dialog")
             return

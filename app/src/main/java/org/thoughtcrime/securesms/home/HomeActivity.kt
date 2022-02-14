@@ -172,22 +172,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         } else {
             binding.seedReminderView.isVisible = false
         }
-        val messageRequestCount = threadDb.unapprovedConversationCount
-        // Set up message requests
-        if (messageRequestCount > 0 && !textSecurePreferences.hasHiddenMessageRequests()) {
-            with(ViewMessageRequestsBinding.inflate(layoutInflater)) {
-                unreadCountTextView.text = messageRequestCount.toString()
-                timestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(
-                    this@HomeActivity,
-                    Locale.getDefault(),
-                    threadDb.latestUnapprovedConversationTimestamp
-                )
-                root.setOnClickListener { showMessageRequests() }
-                root.setOnLongClickListener { hideMessageRequests(); true }
-                root.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
-                homeAdapter.headerView = root
-            }
-        }
+        setupMessageRequestsBanner()
         setupHeaderImage()
         // Set up recycler view
         binding.globalSearchInputLayout.listener = this
@@ -313,12 +298,32 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         binding.newConversationButtonSet.isVisible = !isShown
     }
 
+    private fun setupMessageRequestsBanner() {
+        val messageRequestCount = threadDb.unapprovedConversationCount
+        // Set up message requests
+        if (messageRequestCount > 0 && !textSecurePreferences.hasHiddenMessageRequests()) {
+            with(ViewMessageRequestsBinding.inflate(layoutInflater)) {
+                unreadCountTextView.text = messageRequestCount.toString()
+                timestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(
+                    this@HomeActivity,
+                    Locale.getDefault(),
+                    threadDb.latestUnapprovedConversationTimestamp
+                )
+                root.setOnClickListener { showMessageRequests() }
+                root.setOnLongClickListener { hideMessageRequests(); true }
+                root.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
+                homeAdapter.headerView = root
+            }
+        }
+    }
+
     override fun onCreateLoader(id: Int, bundle: Bundle?): Loader<Cursor> {
         return HomeLoader(this@HomeActivity)
     }
 
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
         homeAdapter.changeCursor(cursor)
+        setupMessageRequestsBanner()
         updateEmptyState()
     }
 
@@ -341,6 +346,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 ConfigurationMessageUtilities.syncConfigurationIfNeeded(this@HomeActivity)
             }
         }
+        setupMessageRequestsBanner()
     }
 
     override fun onPause() {
