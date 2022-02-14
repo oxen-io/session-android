@@ -11,6 +11,7 @@ import android.text.SpannableString
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.os.bundleOf
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -314,6 +315,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 root.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
                 homeAdapter.headerView = root
             }
+        } else {
+            homeAdapter.headerView = null
         }
     }
 
@@ -619,6 +622,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             .setMessage("Hide message requests?")
             .setPositiveButton(R.string.yes) { _, _ ->
                 textSecurePreferences.setHasHiddenMessageRequests()
+                setupMessageRequestsBanner()
                 LoaderManager.getInstance(this).restartLoader(0, null, this)
             }
             .setNegativeButton(R.string.no) { _, _ ->

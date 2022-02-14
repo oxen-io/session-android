@@ -398,7 +398,7 @@ public class ThreadDatabase extends Database {
               " ON " + TABLE_NAME + "." + ADDRESS + " = " + RecipientDatabase.TABLE_NAME + "." + RecipientDatabase.ADDRESS +
               " LEFT OUTER JOIN " + GroupDatabase.TABLE_NAME +
               " ON " + TABLE_NAME + "." + ADDRESS + " = " + GroupDatabase.TABLE_NAME + "." + GROUP_ID +
-              " WHERE " + MESSAGE_COUNT + " != 0 AND " + ARCHIVED + " = 0 " +"AND " + HAS_SENT + " = 0 AND " +
+              " WHERE " + MESSAGE_COUNT + " != 0 AND " + ARCHIVED + " = 0 AND " + HAS_SENT + " = 0 AND " +
               RecipientDatabase.TABLE_NAME + "." + RecipientDatabase.BLOCK + " = 0 AND " +
               RecipientDatabase.TABLE_NAME + "." + RecipientDatabase.APPROVED + " = 0 AND " +
               GroupDatabase.TABLE_NAME + "." + GROUP_ID + " IS NULL";
@@ -465,7 +465,7 @@ public class ThreadDatabase extends Database {
   private Cursor getConversationList(String where) {
     SQLiteDatabase db     = databaseHelper.getReadableDatabase();
     String         query  = createQuery(where, 0);
-    Cursor         cursor = db.rawQuery(query, new String[]{});
+    Cursor         cursor = db.rawQuery(query, null);
 
     setNotifyConverationListListeners(cursor);
 

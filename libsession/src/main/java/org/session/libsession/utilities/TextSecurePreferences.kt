@@ -873,6 +873,10 @@ interface TextSecurePreferences {
             setBooleanPreference(context, "has_seen_link_preview_suggestion_dialog", true)
         }
 
+        fun removeHasHiddenMessageRequests(context: Context) {
+            removePreference(context, HAS_HIDDEN_MESSAGE_REQUESTS)
+        }
+
         @JvmStatic
         fun clearAll(context: Context) {
             getDefaultSharedPreferences(context).edit().clear().commit()
