@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.home.ConversationView
 import org.thoughtcrime.securesms.mms.GlideRequests
 
 class MessageRequestsAdapter(
@@ -18,10 +17,10 @@ class MessageRequestsAdapter(
     private val threadDatabase = DatabaseComponent.get(context).threadDatabase()
     lateinit var glide: GlideRequests
 
-    class ViewHolder(val view: ConversationView) : RecyclerView.ViewHolder(view)
+    class ViewHolder(val view: MessageRequestView) : RecyclerView.ViewHolder(view)
 
     override fun onCreateItemViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = ConversationView(context)
+        val view = MessageRequestView(context)
         view.setOnClickListener { view.thread?.let { listener.onConversationClick(it) } }
         view.setOnLongClickListener {
             view.thread?.let { listener.onLongConversationClick(it) }
@@ -32,7 +31,7 @@ class MessageRequestsAdapter(
 
     override fun onBindItemViewHolder(viewHolder: ViewHolder, cursor: Cursor) {
         val thread = getThread(cursor)!!
-        viewHolder.view.bind(thread, false, glide)
+        viewHolder.view.bind(thread, glide)
     }
 
     override fun onItemViewRecycled(holder: ViewHolder?) {

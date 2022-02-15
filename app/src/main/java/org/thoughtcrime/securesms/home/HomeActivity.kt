@@ -11,7 +11,6 @@ import android.text.SpannableString
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.os.bundleOf
-import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -28,7 +27,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityHomeBinding
-import network.loki.messenger.databinding.ViewMessageRequestsBinding
+import network.loki.messenger.databinding.ViewMessageRequestBannerBinding
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -303,7 +302,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         val messageRequestCount = threadDb.unapprovedConversationCount
         // Set up message requests
         if (messageRequestCount > 0 && !textSecurePreferences.hasHiddenMessageRequests()) {
-            with(ViewMessageRequestsBinding.inflate(layoutInflater)) {
+            with(ViewMessageRequestBannerBinding.inflate(layoutInflater)) {
                 unreadCountTextView.text = messageRequestCount.toString()
                 timestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(
                     this@HomeActivity,

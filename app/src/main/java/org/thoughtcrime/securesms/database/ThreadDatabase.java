@@ -393,7 +393,7 @@ public class ThreadDatabase extends Database {
     Cursor cursor     = null;
 
     try {
-      String where    = "SELECT COUNT (*) FROM " + TABLE_NAME +
+      String query    = "SELECT COUNT (*) FROM " + TABLE_NAME +
               " LEFT OUTER JOIN " + RecipientDatabase.TABLE_NAME +
               " ON " + TABLE_NAME + "." + ADDRESS + " = " + RecipientDatabase.TABLE_NAME + "." + RecipientDatabase.ADDRESS +
               " LEFT OUTER JOIN " + GroupDatabase.TABLE_NAME +
@@ -402,7 +402,7 @@ public class ThreadDatabase extends Database {
               RecipientDatabase.TABLE_NAME + "." + RecipientDatabase.BLOCK + " = 0 AND " +
               RecipientDatabase.TABLE_NAME + "." + RecipientDatabase.APPROVED + " = 0 AND " +
               GroupDatabase.TABLE_NAME + "." + GROUP_ID + " IS NULL";
-      cursor          = db.rawQuery(where, null);
+      cursor          = db.rawQuery(query, null);
 
       if (cursor != null && cursor.moveToFirst())
         return cursor.getInt(0);
