@@ -407,8 +407,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun setUpInputBar() {
-        binding.inputBar.isInvisible = !canSendMessages()
-        binding.pendingMessageRequestLayout.isVisible = !canSendMessages()
+        val canSendMessages = canSendMessages()
+        binding.inputBar.isInvisible = !canSendMessages
+        binding.pendingMessageRequestLayout.isVisible = !canSendMessages
         binding.inputBar.delegate = this
         binding.inputBarRecordingView.delegate = this
         // GIF button
@@ -625,9 +626,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private fun canSendMessages(): Boolean {
         val hasSent = threadDb.getLastSeenAndHasSent(viewModel.threadId).second()
         val messageCount = threadDb.getMessageCount(viewModel.threadId)
-        return viewModel.recipient.isGroupRecipient || viewModel.recipient.hasApprovedMe() ||
-                (!viewModel.recipient.hasApprovedMe() && messageCount == 0) ||
-                (!viewModel.recipient.hasApprovedMe() && !hasSent && messageCount > 0)
+        val hasApprovedMe = viewModel.recipient.hasApprovedMe()
+        return viewModel.recipient.isGroupRecipient || hasApprovedMe || (hasSent && messageCount > 1) ||
+                (!hasApprovedMe && messageCount == 0) || (!hasApprovedMe && !hasSent && messageCount > 0)
     }
 
     override fun inputBarHeightChanged(newValue: Int) {

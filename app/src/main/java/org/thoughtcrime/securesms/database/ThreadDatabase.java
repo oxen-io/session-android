@@ -420,9 +420,13 @@ public class ThreadDatabase extends Database {
 
     try {
       String where    = "SELECT " + DATE + " FROM " + TABLE_NAME +
+              " LEFT OUTER JOIN " + RecipientDatabase.TABLE_NAME +
+              " ON " + TABLE_NAME + "." + ADDRESS + " = " + RecipientDatabase.TABLE_NAME + "." + RecipientDatabase.ADDRESS +
               " LEFT OUTER JOIN " + GroupDatabase.TABLE_NAME +
               " ON " + TABLE_NAME + "." + ADDRESS + " = " + GroupDatabase.TABLE_NAME + "." + GROUP_ID +
-              " WHERE " + MESSAGE_COUNT + " != 0 AND " + ARCHIVED + " = 0 " +"AND " + HAS_SENT + " = 0 AND " +
+              " WHERE " + MESSAGE_COUNT + " != 0 AND " + ARCHIVED + " = 0 AND " + HAS_SENT + " = 0 AND " +
+              RecipientDatabase.TABLE_NAME + "." + RecipientDatabase.BLOCK + " = 0 AND " +
+              RecipientDatabase.TABLE_NAME + "." + RecipientDatabase.APPROVED + " = 0 AND " +
               GroupDatabase.TABLE_NAME + "." + GROUP_ID + " IS NULL ORDER BY " + DATE + " DESC LIMIT 1";
       cursor          = db.rawQuery(where, null);
 
