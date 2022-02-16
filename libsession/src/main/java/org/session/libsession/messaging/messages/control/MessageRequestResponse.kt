@@ -1,12 +1,18 @@
 package org.session.libsession.messaging.messages.control
 
+import com.google.protobuf.ByteString
 import org.session.libsignal.protos.SignalServiceProtos
+import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.toHexString
 
-class MessageRequestResponse(val isApproved: Boolean) : ControlMessage() {
+class MessageRequestResponse(val publicKey: String, val isApproved: Boolean) : ControlMessage() {
+
+    override val isSelfSendValid: Boolean = true
 
     override fun toProto(): SignalServiceProtos.Content? {
         val messageRequestResponseProto = SignalServiceProtos.MessageRequestResponse.newBuilder()
+            .setPublicKey(ByteString.copyFrom(Hex.fromStringCondensed(publicKey)))
             .setIsApproved(isApproved)
         return try {
             SignalServiceProtos.Content.newBuilder()
@@ -22,11 +28,10 @@ class MessageRequestResponse(val isApproved: Boolean) : ControlMessage() {
         const val TAG = "MessageRequestResponse"
 
         fun fromProto(proto: SignalServiceProtos.Content): MessageRequestResponse? {
-            return if (proto.hasMessageRequestResponse()) {
-                MessageRequestResponse(proto.messageRequestResponse.isApproved)
-            } else {
-                return null
-            }
+            val messageRequestResponseProto = if (proto.hasMessageRequestResponse()) proto.messageRequestResponse else return null
+            val publicKey = messageRequestResponseProto.publicKey.toByteArray().toHexString()
+            val isApproved = messageRequestResponseProto.isApproved
+            return MessageRequestResponse(publicKey, isApproved)
         }
     }
 

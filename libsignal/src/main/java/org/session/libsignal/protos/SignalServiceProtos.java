@@ -18761,6 +18761,24 @@ public final class SignalServiceProtos {
   public interface MessageRequestResponseOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
+    // required bytes publicKey = 1;
+    /**
+     * <code>required bytes publicKey = 1;</code>
+     *
+     * <pre>
+     * @required
+     * </pre>
+     */
+    boolean hasPublicKey();
+    /**
+     * <code>required bytes publicKey = 1;</code>
+     *
+     * <pre>
+     * @required
+     * </pre>
+     */
+    com.google.protobuf.ByteString getPublicKey();
+
     // required bool isApproved = 2;
     /**
      * <code>required bool isApproved = 2;</code>
@@ -18830,8 +18848,13 @@ public final class SignalServiceProtos {
               }
               break;
             }
-            case 16: {
+            case 10: {
               bitField0_ |= 0x00000001;
+              publicKey_ = input.readBytes();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
               isApproved_ = input.readBool();
               break;
             }
@@ -18875,6 +18898,30 @@ public final class SignalServiceProtos {
     }
 
     private int bitField0_;
+    // required bytes publicKey = 1;
+    public static final int PUBLICKEY_FIELD_NUMBER = 1;
+    private com.google.protobuf.ByteString publicKey_;
+    /**
+     * <code>required bytes publicKey = 1;</code>
+     *
+     * <pre>
+     * @required
+     * </pre>
+     */
+    public boolean hasPublicKey() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required bytes publicKey = 1;</code>
+     *
+     * <pre>
+     * @required
+     * </pre>
+     */
+    public com.google.protobuf.ByteString getPublicKey() {
+      return publicKey_;
+    }
+
     // required bool isApproved = 2;
     public static final int ISAPPROVED_FIELD_NUMBER = 2;
     private boolean isApproved_;
@@ -18886,7 +18933,7 @@ public final class SignalServiceProtos {
      * </pre>
      */
     public boolean hasIsApproved() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
+      return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
      * <code>required bool isApproved = 2;</code>
@@ -18900,6 +18947,7 @@ public final class SignalServiceProtos {
     }
 
     private void initFields() {
+      publicKey_ = com.google.protobuf.ByteString.EMPTY;
       isApproved_ = false;
     }
     private byte memoizedIsInitialized = -1;
@@ -18907,6 +18955,10 @@ public final class SignalServiceProtos {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
+      if (!hasPublicKey()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
       if (!hasIsApproved()) {
         memoizedIsInitialized = 0;
         return false;
@@ -18919,6 +18971,9 @@ public final class SignalServiceProtos {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, publicKey_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeBool(2, isApproved_);
       }
       getUnknownFields().writeTo(output);
@@ -18931,6 +18986,10 @@ public final class SignalServiceProtos {
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, publicKey_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(2, isApproved_);
       }
@@ -19050,8 +19109,10 @@ public final class SignalServiceProtos {
 
       public Builder clear() {
         super.clear();
-        isApproved_ = false;
+        publicKey_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000001);
+        isApproved_ = false;
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -19083,6 +19144,10 @@ public final class SignalServiceProtos {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
+        result.publicKey_ = publicKey_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
         result.isApproved_ = isApproved_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -19100,6 +19165,9 @@ public final class SignalServiceProtos {
 
       public Builder mergeFrom(org.session.libsignal.protos.SignalServiceProtos.MessageRequestResponse other) {
         if (other == org.session.libsignal.protos.SignalServiceProtos.MessageRequestResponse.getDefaultInstance()) return this;
+        if (other.hasPublicKey()) {
+          setPublicKey(other.getPublicKey());
+        }
         if (other.hasIsApproved()) {
           setIsApproved(other.getIsApproved());
         }
@@ -19108,6 +19176,10 @@ public final class SignalServiceProtos {
       }
 
       public final boolean isInitialized() {
+        if (!hasPublicKey()) {
+          
+          return false;
+        }
         if (!hasIsApproved()) {
           
           return false;
@@ -19134,6 +19206,58 @@ public final class SignalServiceProtos {
       }
       private int bitField0_;
 
+      // required bytes publicKey = 1;
+      private com.google.protobuf.ByteString publicKey_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>required bytes publicKey = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public boolean hasPublicKey() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required bytes publicKey = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public com.google.protobuf.ByteString getPublicKey() {
+        return publicKey_;
+      }
+      /**
+       * <code>required bytes publicKey = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public Builder setPublicKey(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        publicKey_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required bytes publicKey = 1;</code>
+       *
+       * <pre>
+       * @required
+       * </pre>
+       */
+      public Builder clearPublicKey() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        publicKey_ = getDefaultInstance().getPublicKey();
+        onChanged();
+        return this;
+      }
+
       // required bool isApproved = 2;
       private boolean isApproved_ ;
       /**
@@ -19144,7 +19268,7 @@ public final class SignalServiceProtos {
        * </pre>
        */
       public boolean hasIsApproved() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
+        return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
        * <code>required bool isApproved = 2;</code>
@@ -19164,7 +19288,7 @@ public final class SignalServiceProtos {
        * </pre>
        */
       public Builder setIsApproved(boolean value) {
-        bitField0_ |= 0x00000001;
+        bitField0_ |= 0x00000002;
         isApproved_ = value;
         onChanged();
         return this;
@@ -19177,7 +19301,7 @@ public final class SignalServiceProtos {
        * </pre>
        */
       public Builder clearIsApproved() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ = (bitField0_ & ~0x00000002);
         isApproved_ = false;
         onChanged();
         return this;
@@ -23172,25 +23296,25 @@ public final class SignalServiceProtos {
       " \001(\r\032\223\001\n\007Contact\022\021\n\tpublicKey\030\001 \002(\014\022\014\n\004n" +
       "ame\030\002 \002(\t\022\026\n\016profilePicture\030\003 \001(\t\022\022\n\npro" +
       "fileKey\030\004 \001(\014\022\022\n\nisApproved\030\005 \001(\010\022\021\n\tisB" +
-      "locked\030\006 \001(\010\022\024\n\014didApproveMe\030\007 \001(\010\",\n\026Me",
-      "ssageRequestResponse\022\022\n\nisApproved\030\002 \002(\010" +
-      "\"u\n\016ReceiptMessage\0220\n\004type\030\001 \002(\0162\".signa" +
-      "lservice.ReceiptMessage.Type\022\021\n\ttimestam" +
-      "p\030\002 \003(\004\"\036\n\004Type\022\014\n\010DELIVERY\020\000\022\010\n\004READ\020\001\"" +
-      "\354\001\n\021AttachmentPointer\022\n\n\002id\030\001 \002(\006\022\023\n\013con" +
-      "tentType\030\002 \001(\t\022\013\n\003key\030\003 \001(\014\022\014\n\004size\030\004 \001(" +
-      "\r\022\021\n\tthumbnail\030\005 \001(\014\022\016\n\006digest\030\006 \001(\014\022\020\n\010" +
-      "fileName\030\007 \001(\t\022\r\n\005flags\030\010 \001(\r\022\r\n\005width\030\t" +
-      " \001(\r\022\016\n\006height\030\n \001(\r\022\017\n\007caption\030\013 \001(\t\022\013\n" +
-      "\003url\030e \001(\t\"\032\n\005Flags\022\021\n\rVOICE_MESSAGE\020\001\"\365",
-      "\001\n\014GroupContext\022\n\n\002id\030\001 \001(\014\022.\n\004type\030\002 \001(" +
-      "\0162 .signalservice.GroupContext.Type\022\014\n\004n" +
-      "ame\030\003 \001(\t\022\017\n\007members\030\004 \003(\t\0220\n\006avatar\030\005 \001" +
-      "(\0132 .signalservice.AttachmentPointer\022\016\n\006" +
-      "admins\030\006 \003(\t\"H\n\004Type\022\013\n\007UNKNOWN\020\000\022\n\n\006UPD" +
-      "ATE\020\001\022\013\n\007DELIVER\020\002\022\010\n\004QUIT\020\003\022\020\n\014REQUEST_" +
-      "INFO\020\004B3\n\034org.session.libsignal.protosB\023" +
-      "SignalServiceProtos"
+      "locked\030\006 \001(\010\022\024\n\014didApproveMe\030\007 \001(\010\"?\n\026Me",
+      "ssageRequestResponse\022\021\n\tpublicKey\030\001 \002(\014\022" +
+      "\022\n\nisApproved\030\002 \002(\010\"u\n\016ReceiptMessage\0220\n" +
+      "\004type\030\001 \002(\0162\".signalservice.ReceiptMessa" +
+      "ge.Type\022\021\n\ttimestamp\030\002 \003(\004\"\036\n\004Type\022\014\n\010DE" +
+      "LIVERY\020\000\022\010\n\004READ\020\001\"\354\001\n\021AttachmentPointer" +
+      "\022\n\n\002id\030\001 \002(\006\022\023\n\013contentType\030\002 \001(\t\022\013\n\003key" +
+      "\030\003 \001(\014\022\014\n\004size\030\004 \001(\r\022\021\n\tthumbnail\030\005 \001(\014\022" +
+      "\016\n\006digest\030\006 \001(\014\022\020\n\010fileName\030\007 \001(\t\022\r\n\005fla" +
+      "gs\030\010 \001(\r\022\r\n\005width\030\t \001(\r\022\016\n\006height\030\n \001(\r\022" +
+      "\017\n\007caption\030\013 \001(\t\022\013\n\003url\030e \001(\t\"\032\n\005Flags\022\021",
+      "\n\rVOICE_MESSAGE\020\001\"\365\001\n\014GroupContext\022\n\n\002id" +
+      "\030\001 \001(\014\022.\n\004type\030\002 \001(\0162 .signalservice.Gro" +
+      "upContext.Type\022\014\n\004name\030\003 \001(\t\022\017\n\007members\030" +
+      "\004 \003(\t\0220\n\006avatar\030\005 \001(\0132 .signalservice.At" +
+      "tachmentPointer\022\016\n\006admins\030\006 \003(\t\"H\n\004Type\022" +
+      "\013\n\007UNKNOWN\020\000\022\n\n\006UPDATE\020\001\022\013\n\007DELIVER\020\002\022\010\n" +
+      "\004QUIT\020\003\022\020\n\014REQUEST_INFO\020\004B3\n\034org.session" +
+      ".libsignal.protosB\023SignalServiceProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -23304,7 +23428,7 @@ public final class SignalServiceProtos {
           internal_static_signalservice_MessageRequestResponse_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_signalservice_MessageRequestResponse_descriptor,
-              new java.lang.String[] { "IsApproved", });
+              new java.lang.String[] { "PublicKey", "IsApproved", });
           internal_static_signalservice_ReceiptMessage_descriptor =
             getDescriptor().getMessageTypes().get(9);
           internal_static_signalservice_ReceiptMessage_fieldAccessorTable = new

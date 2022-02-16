@@ -174,10 +174,7 @@ fun MessageReceiver.handleUnsendRequest(message: UnsendRequest) {
 }
 
 fun handleMessageRequestResponse(message: MessageRequestResponse) {
-    val storage = MessagingModuleConfiguration.shared.storage
-    val userPublicKey = storage.getUserPublicKey()
-    if (userPublicKey == null || userPublicKey != message.recipient) return
-    storage.insertMessageRequestResponse(message.sender!!, message.isApproved, message.sentTimestamp!!)
+    MessagingModuleConfiguration.shared.storage.insertMessageRequestResponse(message)
 }
 //endregion
 
