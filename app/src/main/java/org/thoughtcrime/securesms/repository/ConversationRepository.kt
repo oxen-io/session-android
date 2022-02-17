@@ -258,7 +258,7 @@ class DefaultConversationRepository @Inject constructor(
 
     override suspend fun acceptMessageRequest(threadId: Long, recipient: Recipient): ResultOf<Unit> = suspendCoroutine { continuation ->
         recipientDb.setApproved(recipient, true)
-        val message = MessageRequestResponse(recipient.address.serialize(), true)
+        val message = MessageRequestResponse(true)
         MessageSender.send(message, Destination.from(recipient.address))
             .success {
                 threadDb.setHasSent(threadId, true)

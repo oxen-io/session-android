@@ -686,7 +686,8 @@ public class MmsDatabase extends MessagingDatabase {
       quoteAttachments = retrieved.getQuote().getAttachments();
     }
 
-    if (retrieved.isPushMessage() && isDuplicate(retrieved, threadId)) {
+    if ((retrieved.isPushMessage() && isDuplicate(retrieved, threadId)) ||
+            retrieved.isMessageRequestResponse() && isDuplicateMessageRequestResponse(retrieved, threadId)) {
       Log.w(TAG, "Ignoring duplicate media message (" + retrieved.getSentTimeMillis() + ")");
       return Optional.absent();
     }
@@ -1008,6 +1009,19 @@ public class MmsDatabase extends MessagingDatabase {
       }
     }
     return linkPreviewJson.toString();
+  }
+
+  private boolean isDuplicateMessageRequestResponse(IncomingMediaMessage message, long threadId) {
+    SQLiteDatabase database = databaseHelper.getReadableDatabase();
+    Cursor         cursor   = database.query(TABLE_NAME, null, MESSAGE_REQUEST_RESPONSE + " = 1 AND " + ADDRESS + " = ? AND " + THREAD_ID + " = ?",
+            new String[]{message.getFrom().serialize(), String.valueOf(threadId)},
+            null, null, null, "1");
+
+    try {
+      return cursor != null && cursor.moveToFirst();
+    } finally {
+      if (cursor != null) cursor.close();
+    }
   }
 
   private boolean isDuplicate(IncomingMediaMessage message, long threadId) {

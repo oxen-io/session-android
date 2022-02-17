@@ -645,50 +645,38 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         val userPublicKey = getUserPublicKey()
         val senderPublicKey = response.sender!!
         val recipientPublicKey = response.recipient!!
-        val responsePublicKey = response.publicKey
-        if (userPublicKey == null || (senderPublicKey == recipientPublicKey && responsePublicKey == userPublicKey) ||
-            (userPublicKey != recipientPublicKey && userPublicKey != senderPublicKey)) return
+        if (userPublicKey == null || (userPublicKey != recipientPublicKey && userPublicKey != senderPublicKey)) return
         val recipientDb = DatabaseComponent.get(context).recipientDatabase()
         val threadDB = DatabaseComponent.get(context).threadDatabase()
-        when {
-            senderPublicKey == recipientPublicKey -> {
-                val recipient = Recipient.from(context, fromSerialized(responsePublicKey), false)
-                recipientDb.setApproved(recipient, true)
-                val threadId = threadDB.getOrCreateThreadIdFor(recipient)
-                threadDB.setHasSent(threadId, true)
-            }
-            userPublicKey == senderPublicKey -> {
-                val threadDB = DatabaseComponent.get(context).threadDatabase()
-                val requestRecipient = Recipient.from(context, fromSerialized(recipientPublicKey), false)
-                recipientDb.setApproved(requestRecipient, true)
-                val threadId = threadDB.getOrCreateThreadIdFor(requestRecipient)
-                threadDB.setHasSent(threadId, true)
-            }
-            else -> {
-                val mmsDb = DatabaseComponent.get(context).mmsDatabase()
-                val senderAddress = fromSerialized(senderPublicKey)
-                val requestSender = Recipient.from(context, senderAddress, false)
-                recipientDb.setApproved(requestSender, true)
+        if (userPublicKey == senderPublicKey) {
+            val requestRecipient = Recipient.from(context, fromSerialized(recipientPublicKey), false)
+            recipientDb.setApproved(requestRecipient, true)
+            val threadId = threadDB.getOrCreateThreadIdFor(requestRecipient)
+            threadDB.setHasSent(threadId, true)
+        } else {
+            val mmsDb = DatabaseComponent.get(context).mmsDatabase()
+            val senderAddress = fromSerialized(senderPublicKey)
+            val requestSender = Recipient.from(context, senderAddress, false)
+            recipientDb.setApproved(requestSender, true)
 
-                val message = IncomingMediaMessage(
-                    senderAddress,
-                    response.sentTimestamp!!,
-                    -1,
-                    0,
-                    false,
-                    false,
-                    true,
-                    Optional.absent(),
-                    Optional.absent(),
-                    Optional.absent(),
-                    Optional.absent(),
-                    Optional.absent(),
-                    Optional.absent(),
-                    Optional.absent()
-                )
-                val threadId = getOrCreateThreadIdFor(senderAddress)
-                mmsDb.insertSecureDecryptedMessageInbox(message, threadId)
-            }
+            val message = IncomingMediaMessage(
+                senderAddress,
+                response.sentTimestamp!!,
+                -1,
+                0,
+                false,
+                false,
+                true,
+                Optional.absent(),
+                Optional.absent(),
+                Optional.absent(),
+                Optional.absent(),
+                Optional.absent(),
+                Optional.absent(),
+                Optional.absent()
+            )
+            val threadId = getOrCreateThreadIdFor(senderAddress)
+            mmsDb.insertSecureDecryptedMessageInbox(message, threadId)
         }
     }
 

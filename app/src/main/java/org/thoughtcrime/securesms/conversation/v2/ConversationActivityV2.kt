@@ -34,7 +34,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.DimenRes
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -142,7 +141,6 @@ import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 import kotlin.math.abs
-import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
@@ -407,9 +405,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun setUpInputBar() {
-        val canSendMessages = canSendMessages()
-        binding.inputBar.isInvisible = !canSendMessages
-        binding.pendingMessageRequestLayout.isVisible = !canSendMessages
         binding.inputBar.delegate = this
         binding.inputBarRecordingView.delegate = this
         // GIF button
@@ -589,7 +584,15 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
+    private fun showOrHidePendingRequestIfNeeded() {
+        val canSendMessages = canSendMessages()
+        binding.inputBar.isInvisible = !canSendMessages
+        binding.pendingMessageRequestLayout.isVisible = !canSendMessages
+    }
+
     private fun setUpMessageRequestsBar() {
+        showOrHidePendingRequestIfNeeded()
+        binding.inputBar.showMediaControls = !isOutgoingMessageRequestThread()
         binding.messageRequestBar.isVisible = isIncomingMessageRequestThread()
         binding.acceptMessageRequestButton.setOnClickListener {
             acceptMessageRequest()
@@ -604,6 +607,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun acceptMessageRequest() {
+        binding.messageRequestBar.isVisible = false
         viewModel.acceptMessageRequest()
         lifecycleScope.launch(Dispatchers.IO) {
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@ConversationActivityV2)
@@ -614,6 +618,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val hasSent = threadDb.getLastSeenAndHasSent(viewModel.threadId).second()
         return (!viewModel.recipient.isGroupRecipient && !hasSent) ||
                 (!viewModel.recipient.isGroupRecipient && hasSent && !viewModel.recipient.hasApprovedMe())
+    }
+
+    private fun isOutgoingMessageRequestThread(): Boolean {
+        val hasSent = threadDb.getLastSeenAndHasSent(viewModel.threadId).second()
+        return (!viewModel.recipient.isGroupRecipient && (!hasSent || !viewModel.recipient.isApproved || !viewModel.recipient.hasApprovedMe()))
     }
 
     private fun isIncomingMessageRequestThread(): Boolean {
@@ -992,6 +1001,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         } else {
             sendTextOnlyMessage()
         }
+        showOrHidePendingRequestIfNeeded()
     }
 
     override fun commitInputContent(contentUri: Uri) {

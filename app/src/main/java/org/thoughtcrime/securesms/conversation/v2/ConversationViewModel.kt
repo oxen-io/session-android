@@ -22,9 +22,8 @@ class ConversationViewModel(
     private val _uiState = MutableStateFlow(ConversationUiState())
     val uiState: StateFlow<ConversationUiState> = _uiState
 
-    val recipient: Recipient by lazy {
-        repository.getRecipientForThreadId(threadId)
-    }
+    val recipient: Recipient
+        get() = repository.getRecipientForThreadId(threadId)
 
     init {
         _uiState.update {
