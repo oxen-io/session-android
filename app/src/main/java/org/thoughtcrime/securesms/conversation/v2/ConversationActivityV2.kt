@@ -584,14 +584,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
-    private fun showOrHidePendingRequestIfNeeded() {
-        val canSendMessages = canSendMessages()
-        binding.inputBar.isInvisible = !canSendMessages
-        binding.pendingMessageRequestLayout.isVisible = !canSendMessages
-    }
-
     private fun setUpMessageRequestsBar() {
-        showOrHidePendingRequestIfNeeded()
         binding.inputBar.showMediaControls = !isOutgoingMessageRequestThread()
         binding.messageRequestBar.isVisible = isIncomingMessageRequestThread()
         binding.acceptMessageRequestButton.setOnClickListener {
@@ -621,8 +614,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun isOutgoingMessageRequestThread(): Boolean {
-        val hasSent = threadDb.getLastSeenAndHasSent(viewModel.threadId).second()
-        return (!viewModel.recipient.isGroupRecipient && (!hasSent || !viewModel.recipient.isApproved || !viewModel.recipient.hasApprovedMe()))
+        return !viewModel.recipient.isGroupRecipient && !viewModel.recipient.hasApprovedMe()
     }
 
     private fun isIncomingMessageRequestThread(): Boolean {
@@ -630,14 +622,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 !viewModel.recipient.isApproved &&
                 !threadDb.getLastSeenAndHasSent(viewModel.threadId).second() &&
                 threadDb.getMessageCount(viewModel.threadId) > 0
-    }
-
-    private fun canSendMessages(): Boolean {
-        val hasSent = threadDb.getLastSeenAndHasSent(viewModel.threadId).second()
-        val messageCount = threadDb.getMessageCount(viewModel.threadId)
-        val hasApprovedMe = viewModel.recipient.hasApprovedMe()
-        return viewModel.recipient.isGroupRecipient || hasApprovedMe || (hasSent && messageCount > 1) ||
-                (!hasApprovedMe && messageCount == 0) || (!hasApprovedMe && !hasSent && messageCount > 0)
     }
 
     override fun inputBarHeightChanged(newValue: Int) {
@@ -1001,7 +985,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         } else {
             sendTextOnlyMessage()
         }
-        showOrHidePendingRequestIfNeeded()
     }
 
     override fun commitInputContent(contentUri: Uri) {

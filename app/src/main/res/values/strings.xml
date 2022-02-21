@@ -919,6 +919,6 @@
     <string name="message_requests_cleared">Message requests deleted</string>
     <string name="message_requests_accepted">Your message request has been accepted.</string>
     <string name="message_requests_pending">Your message request is currently pending.</string>
-    <string name="message_request_empty_state_message">You do not have any message requests</string>
+    <string name="message_request_empty_state_message">No pending message requests</string>
 
 </resources>
