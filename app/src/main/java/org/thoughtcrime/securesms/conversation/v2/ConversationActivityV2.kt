@@ -137,7 +137,6 @@ import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 import kotlin.math.abs
-import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
@@ -744,8 +743,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         if (isTypingIndicatorVisibleAfter != wasTypingIndicatorVisibleBefore) {
             inputBarHeightChanged(binding.inputBar.height)
         }
-        binding.scrollToBottomButton.isVisible = !isScrolledToBottom
-        unreadCount = min(unreadCount, layoutManager.findFirstVisibleItemPosition())
+        binding.scrollToBottomButton.isVisible = !isScrolledToBottom && adapter.itemCount > 0
+        unreadCount = min(unreadCount, layoutManager.findFirstVisibleItemPosition()).coerceAtLeast(0)
         updateUnreadCountIndicator()
     }
 
