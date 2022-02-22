@@ -120,6 +120,10 @@ class ConversationViewModel(
         }
     }
 
+    fun hasReceived(): Boolean {
+        return repository.hasReceived(threadId)
+    }
+
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {
         fun create(threadId: Long): Factory

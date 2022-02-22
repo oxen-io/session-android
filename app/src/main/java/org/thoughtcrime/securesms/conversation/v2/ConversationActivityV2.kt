@@ -34,7 +34,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.DimenRes
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -601,6 +600,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private fun acceptMessageRequest() {
         binding.messageRequestBar.isVisible = false
+        binding.conversationRecyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
         viewModel.acceptMessageRequest()
         lifecycleScope.launch(Dispatchers.IO) {
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@ConversationActivityV2)
@@ -610,11 +611,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private fun isMessageRequestThread(): Boolean {
         val hasSent = threadDb.getLastSeenAndHasSent(viewModel.threadId).second()
         return (!viewModel.recipient.isGroupRecipient && !hasSent) ||
-                (!viewModel.recipient.isGroupRecipient && hasSent && !viewModel.recipient.hasApprovedMe())
+                (!viewModel.recipient.isGroupRecipient && hasSent && !(viewModel.recipient.hasApprovedMe() || viewModel.hasReceived()))
     }
 
     private fun isOutgoingMessageRequestThread(): Boolean {
-        return !viewModel.recipient.isGroupRecipient && !viewModel.recipient.hasApprovedMe()
+        return !viewModel.recipient.isGroupRecipient &&
+                !(viewModel.recipient.hasApprovedMe() || viewModel.hasReceived())
     }
 
     private fun isIncomingMessageRequestThread(): Boolean {

@@ -32,6 +32,7 @@ import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 
+import java.io.Closeable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -406,7 +407,7 @@ public class MmsSmsDatabase extends Database {
     return new Reader(cursor);
   }
 
-  public class Reader {
+  public class Reader implements Closeable {
 
     private final Cursor                 cursor;
     private       SmsDatabase.Reader     smsReader;
@@ -448,7 +449,9 @@ public class MmsSmsDatabase extends Database {
     }
 
     public void close() {
-      cursor.close();
+      if (cursor != null) {
+        cursor.close();
+      }
     }
   }
 }
