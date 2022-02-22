@@ -882,5 +882,8 @@
     <string name="mark_all_as_read">Mark all as read</string>
     <string name="global_search_contacts_groups">Contacts and Groups</string>
     <string name="global_search_messages">Messages</string>
+    <string name="NewConversationButton_SessionTooltip">Direct Message</string>
+    <string name="NewConversationButton_ClosedGroupTooltip">Closed Group</string>
+    <string name="NewConversationButton_OpenGroupTooltip">Open Group</string>
 
 </resources>
