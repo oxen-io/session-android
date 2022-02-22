@@ -584,7 +584,12 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
             recipientDatabase.setRegistered(recipient, Recipient.RegisteredState.REGISTERED)
             // create Thread if needed
             val threadId = threadDatabase.getOrCreateThreadIdFor(recipient)
+            if (contact.didApproveMe == true) {
+                recipientDatabase.setApproved(recipient, true)
+                threadDatabase.setHasSent(threadId, true)
+            }
             if (contact.isApproved == true) {
+                recipientDatabase.setApproved(recipient, true)
                 threadDatabase.setHasSent(threadId, true)
             }
             if (contact.isBlocked == true) {

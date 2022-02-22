@@ -95,9 +95,18 @@ class ConfigurationMessage(var closedGroups: List<ClosedGroup>, var openGroups: 
             if (profileKey != null) {
                 result.profileKey = ByteString.copyFrom(profileKey)
             }
-            result.isApproved = isApproved == true
-            result.isBlocked = isBlocked == true
-            result.didApproveMe = didApproveMe == true
+            val isApproved = isApproved
+            if (isApproved != null) {
+                result.isApproved = isApproved
+            }
+            val isBlocked = isBlocked
+            if (isBlocked != null) {
+                result.isBlocked = isBlocked
+            }
+            val didApproveMe = didApproveMe
+            if (didApproveMe != null) {
+                result.didApproveMe = didApproveMe
+            }
             return result.build()
         }
     }
