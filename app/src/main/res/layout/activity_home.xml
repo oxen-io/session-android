@@ -161,8 +161,8 @@
             android:id="@+id/newConversationButtonSet"
             android:layout_width="276dp"
             android:layout_height="236dp"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true" />
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
 
