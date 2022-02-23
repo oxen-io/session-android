@@ -100,7 +100,7 @@ class ConversationViewModel(
     }
 
     fun declineMessageRequest() {
-        repository.declineMessageRequest(recipient)
+        repository.declineMessageRequest(threadId, recipient)
     }
 
     private fun showMessage(message: String) {

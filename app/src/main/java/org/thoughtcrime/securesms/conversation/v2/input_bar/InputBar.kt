@@ -24,8 +24,6 @@ import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.toDp
 import org.thoughtcrime.securesms.util.toPx
-import kotlin.math.max
-import kotlin.math.roundToInt
 
 class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, LinkPreviewDraftViewDelegate {
     private lateinit var binding: ViewInputBarBinding
@@ -168,6 +166,9 @@ class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, Li
 
     private fun showOrHideMediaControlsIfNeeded() {
         setOf(attachmentsButton, microphoneButton).forEach { it.isVisible = showMediaControls }
+        if (!showMediaControls) {
+            binding.inputBarEditText.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+        }
     }
 
     fun addTextChangedListener(textWatcher: TextWatcher) {

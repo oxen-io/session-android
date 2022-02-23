@@ -63,7 +63,7 @@ interface ConversationRepository {
 
     suspend fun acceptMessageRequest(threadId: Long, recipient: Recipient): ResultOf<Unit>
 
-    fun declineMessageRequest(recipient: Recipient)
+    fun declineMessageRequest(threadId: Long, recipient: Recipient)
 
     fun hasReceived(threadId: Long): Boolean
 
@@ -272,8 +272,9 @@ class DefaultConversationRepository @Inject constructor(
             }
     }
 
-    override fun declineMessageRequest(recipient: Recipient) {
+    override fun declineMessageRequest(threadId: Long, recipient: Recipient) {
         recipientDb.setBlocked(recipient, true)
+        threadDb.deleteConversation(threadId)
     }
 
     override fun hasReceived(threadId: Long): Boolean {

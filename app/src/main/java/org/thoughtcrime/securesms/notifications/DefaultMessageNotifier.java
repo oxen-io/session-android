@@ -171,35 +171,33 @@ public class DefaultMessageNotifier implements MessageNotifier {
   }
 
   private void cancelOrphanedNotifications(@NonNull Context context, NotificationState notificationState) {
-    if (Build.VERSION.SDK_INT >= 23) {
-      try {
-        NotificationManager     notifications       = ServiceUtil.getNotificationManager(context);
-        StatusBarNotification[] activeNotifications = notifications.getActiveNotifications();
+    try {
+      NotificationManager     notifications       = ServiceUtil.getNotificationManager(context);
+      StatusBarNotification[] activeNotifications = notifications.getActiveNotifications();
 
-        for (StatusBarNotification notification : activeNotifications) {
-          boolean validNotification = false;
+      for (StatusBarNotification notification : activeNotifications) {
+        boolean validNotification = false;
 
-          if (notification.getId() != SUMMARY_NOTIFICATION_ID &&
-              notification.getId() != KeyCachingService.SERVICE_RUNNING_ID          &&
-              notification.getId() != FOREGROUND_ID         &&
-              notification.getId() != PENDING_MESSAGES_ID)
-          {
-            for (NotificationItem item : notificationState.getNotifications()) {
-              if (notification.getId() == (SUMMARY_NOTIFICATION_ID + item.getThreadId())) {
-                validNotification = true;
-                break;
-              }
-            }
-
-            if (!validNotification) {
-              notifications.cancel(notification.getId());
+        if (notification.getId() != SUMMARY_NOTIFICATION_ID &&
+            notification.getId() != KeyCachingService.SERVICE_RUNNING_ID          &&
+            notification.getId() != FOREGROUND_ID         &&
+            notification.getId() != PENDING_MESSAGES_ID)
+        {
+          for (NotificationItem item : notificationState.getNotifications()) {
+            if (notification.getId() == (SUMMARY_NOTIFICATION_ID + item.getThreadId())) {
+              validNotification = true;
+              break;
             }
           }
+
+          if (!validNotification) {
+            notifications.cancel(notification.getId());
+          }
         }
-      } catch (Throwable e) {
-        // XXX Android ROM Bug, see #6043
-        Log.w(TAG, e);
       }
+    } catch (Throwable e) {
+      // XXX Android ROM Bug, see #6043
+      Log.w(TAG, e);
     }
   }
 
@@ -229,15 +227,15 @@ public class DefaultMessageNotifier implements MessageNotifier {
     boolean    isVisible  = visibleThread == threadId;
 
     ThreadDatabase threads    = DatabaseComponent.get(context).threadDatabase();
-    Recipient      recipients = threads.getRecipientForThreadId(threadId);
+    Recipient      recipient = threads.getRecipientForThreadId(threadId);
 
-    if (isVisible && recipients != null) {
+    if (isVisible && recipient != null) {
       List<MarkedMessageInfo> messageIds = threads.setRead(threadId, false);
-      if (SessionMetaProtocol.shouldSendReadReceipt(recipients.getAddress())) { MarkReadReceiver.process(context, messageIds); }
+      if (SessionMetaProtocol.shouldSendReadReceipt(recipient)) { MarkReadReceiver.process(context, messageIds); }
     }
 
     if (!TextSecurePreferences.isNotificationsEnabled(context) ||
-        (recipients != null && recipients.isMuted()))
+        (recipient != null && recipient.isMuted()))
     {
       return;
     }

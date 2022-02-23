@@ -169,7 +169,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
     fun `should decline message request`() {
         viewModel.declineMessageRequest()
 
-        verify(repository).declineMessageRequest(recipient)
+        verify(repository).declineMessageRequest(threadId, recipient)
     }
 
     @Test
