@@ -150,8 +150,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         ConversationActionModeCallbackDelegate, VisibleMessageContentViewDelegate, RecipientModifiedListener,
         SearchBottomBar.EventListener, VoiceMessageViewDelegate {
 
-    private lateinit var binding: ActivityConversationV2Binding
-    private lateinit var actionBarBinding: ActivityConversationV2ActionBarBinding
+    private var binding: ActivityConversationV2Binding? = null
+    private var actionBarBinding: ActivityConversationV2ActionBarBinding? = null
 
     @Inject lateinit var textSecurePreferences: TextSecurePreferences
     @Inject lateinit var threadDb: ThreadDatabase
@@ -201,12 +201,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private val isScrolledToBottom: Boolean
         get() {
-            val position = layoutManager.findFirstCompletelyVisibleItemPosition()
+            val position = layoutManager?.findFirstCompletelyVisibleItemPosition() ?: 0
             return position == 0
         }
 
-    private val layoutManager: LinearLayoutManager
-        get() { return binding.conversationRecyclerView.layoutManager as LinearLayoutManager }
+    private val layoutManager: LinearLayoutManager?
+        get() { return binding?.conversationRecyclerView?.layoutManager as LinearLayoutManager? }
 
     private val seed by lazy {
         var hexEncodedSeed = IdentityKeyUtil.retrieve(this, IdentityKeyUtil.LOKI_SEED)
@@ -276,7 +276,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {
         super.onCreate(savedInstanceState, isReady)
         binding = ActivityConversationV2Binding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(binding!!.root)
         // messageIdToScroll
         messageToScrollTimestamp.set(intent.getLongExtra(SCROLL_MESSAGE_ID, -1))
         messageToScrollAuthor.set(intent.getParcelableExtra(SCROLL_MESSAGE_AUTHOR))
@@ -291,12 +291,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         setUpLinkPreviewObserver()
         restoreDraftIfNeeded()
         setUpUiStateObserver()
-        binding.scrollToBottomButton.setOnClickListener {
-            val layoutManager = binding.conversationRecyclerView.layoutManager ?: return@setOnClickListener
+        binding!!.scrollToBottomButton.setOnClickListener {
+            val layoutManager = binding?.conversationRecyclerView?.layoutManager ?: return@setOnClickListener
             if (layoutManager.isSmoothScrolling) {
-                binding.conversationRecyclerView.scrollToPosition(0)
+                binding?.conversationRecyclerView?.scrollToPosition(0)
             } else {
-                binding.conversationRecyclerView.smoothScrollToPosition(0)
+                binding?.conversationRecyclerView?.smoothScrollToPosition(0)
             }
         }
         unreadCount = mmsSmsDb.getUnreadCount(viewModel.threadId)
@@ -306,7 +306,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         updateSubtitle()
         getLatestOpenGroupInfoIfNeeded()
         setUpBlockedBanner()
-        binding.searchBottomBar.setEventListener(this)
+        binding!!.searchBottomBar.setEventListener(this)
         setUpSearchResultObserver()
         scrollToFirstUnreadMessageIfNeeded()
         showOrHideInputIfNeeded()
@@ -346,10 +346,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         baseDialog.show(supportFragmentManager, tag)
     }
 
+    // called from onCreate
     private fun setUpRecyclerView() {
-        binding.conversationRecyclerView.adapter = adapter
+        binding!!.conversationRecyclerView.adapter = adapter
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
-        binding.conversationRecyclerView.layoutManager = layoutManager
+        binding!!.conversationRecyclerView.layoutManager = layoutManager
         // Workaround for the fact that CursorRecyclerViewAdapter doesn't auto-update automatically (even though it says it will)
         LoaderManager.getInstance(this).restartLoader(0, null, object : LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -372,7 +373,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 adapter.changeCursor(null)
             }
         })
-        binding.conversationRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding!!.conversationRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 handleRecyclerViewScrolled()
@@ -380,50 +381,53 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         })
     }
 
+    // called from onCreate
     private fun setUpToolBar() {
         val actionBar = supportActionBar!!
         actionBarBinding = ActivityConversationV2ActionBarBinding.inflate(layoutInflater)
         actionBar.title = ""
-        actionBar.customView = actionBarBinding.root
+        actionBar.customView = actionBarBinding!!.root
         actionBar.setDisplayShowCustomEnabled(true)
-        actionBarBinding.conversationTitleView.text = viewModel.recipient.toShortString()
+        actionBarBinding!!.conversationTitleView.text = viewModel.recipient.toShortString()
         @DimenRes val sizeID: Int = if (viewModel.recipient.isClosedGroupRecipient) {
             R.dimen.medium_profile_picture_size
         } else {
             R.dimen.small_profile_picture_size
         }
         val size = resources.getDimension(sizeID).roundToInt()
-        actionBarBinding.profilePictureView.layoutParams = LinearLayout.LayoutParams(size, size)
-        actionBarBinding.profilePictureView.glide = glide
+        actionBarBinding!!.profilePictureView.layoutParams = LinearLayout.LayoutParams(size, size)
+        actionBarBinding!!.profilePictureView.glide = glide
         MentionManagerUtilities.populateUserPublicKeyCacheIfNeeded(viewModel.threadId, this)
-        actionBarBinding.profilePictureView.update(viewModel.recipient)
+        actionBarBinding!!.profilePictureView.update(viewModel.recipient)
     }
 
+    // called from onCreate
     private fun setUpInputBar() {
-        binding.inputBar.delegate = this
-        binding.inputBarRecordingView.delegate = this
+        binding!!.inputBar.delegate = this
+        binding!!.inputBarRecordingView.delegate = this
         // GIF button
-        binding.gifButtonContainer.addView(gifButton)
+        binding!!.gifButtonContainer.addView(gifButton)
         gifButton.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)
         gifButton.onUp = { showGIFPicker() }
         gifButton.snIsEnabled = false
         // Document button
-        binding.documentButtonContainer.addView(documentButton)
+        binding!!.documentButtonContainer.addView(documentButton)
         documentButton.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)
         documentButton.onUp = { showDocumentPicker() }
         documentButton.snIsEnabled = false
         // Library button
-        binding.libraryButtonContainer.addView(libraryButton)
+        binding!!.libraryButtonContainer.addView(libraryButton)
         libraryButton.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)
         libraryButton.onUp = { pickFromLibrary() }
         libraryButton.snIsEnabled = false
         // Camera button
-        binding.cameraButtonContainer.addView(cameraButton)
+        binding!!.cameraButtonContainer.addView(cameraButton)
         cameraButton.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)
         cameraButton.onUp = { showCamera() }
         cameraButton.snIsEnabled = false
     }
 
+    // called from onCreate
     private fun restoreDraftIfNeeded() {
         val mediaURI = intent.data
         val mediaType = AttachmentManager.MediaType.from(intent.type)
@@ -447,33 +451,34 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             }
         } else if (intent.hasExtra(Intent.EXTRA_TEXT)) {
             val dataTextExtra = intent.getCharSequenceExtra(Intent.EXTRA_TEXT) ?: ""
-            binding.inputBar.text = dataTextExtra.toString()
+            binding!!.inputBar.text = dataTextExtra.toString()
         } else {
             viewModel.getDraft()?.let { text ->
-                binding.inputBar.text = text
+                binding!!.inputBar.text = text
             }
         }
     }
 
     private fun addOpenGroupGuidelinesIfNeeded(isOxenHostedOpenGroup: Boolean) {
         if (!isOxenHostedOpenGroup) { return }
-        binding.openGroupGuidelinesView.visibility = View.VISIBLE
-        val recyclerViewLayoutParams = binding.conversationRecyclerView.layoutParams as RelativeLayout.LayoutParams
+        binding?.openGroupGuidelinesView?.visibility = View.VISIBLE
+        val recyclerViewLayoutParams = binding?.conversationRecyclerView?.layoutParams as RelativeLayout.LayoutParams? ?: return
         recyclerViewLayoutParams.topMargin = toPx(57, resources) // The height of the open group guidelines view is hardcoded to this
-        binding.conversationRecyclerView.layoutParams = recyclerViewLayoutParams
+        binding?.conversationRecyclerView?.layoutParams = recyclerViewLayoutParams
     }
 
+    // called from onCreate
     private fun setUpTypingObserver() {
         ApplicationContext.getInstance(this).typingStatusRepository.getTypists(viewModel.threadId).observe(this) { state ->
             val recipients = if (state != null) state.typists else listOf()
             // FIXME: Also checking isScrolledToBottom is a quick fix for an issue where the
             //        typing indicator overlays the recycler view when scrolled up
-            binding.typingIndicatorViewContainer.isVisible = recipients.isNotEmpty() && isScrolledToBottom
-            binding.typingIndicatorViewContainer.setTypists(recipients)
-            inputBarHeightChanged(binding.inputBar.height)
+            val viewContainer = binding?.typingIndicatorViewContainer ?: return@observe
+            viewContainer.isVisible = recipients.isNotEmpty() && isScrolledToBottom
+            viewContainer.setTypists(recipients)
         }
         if (textSecurePreferences.isTypingIndicatorsEnabled()) {
-            binding.inputBar.addTextChangedListener(object : SimpleTextWatcher() {
+            binding!!.inputBar.addTextChangedListener(object : SimpleTextWatcher() {
 
                 override fun onTextChanged(text: String?) {
                     ApplicationContext.getInstance(this@ConversationActivityV2).typingStatusSender.onTypingStarted(viewModel.threadId)
@@ -491,14 +496,15 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         OpenGroupAPIV2.getMemberCount(openGroup.room, openGroup.server).successUi { updateSubtitle() }
     }
 
+    // called from onCreate
     private fun setUpBlockedBanner() {
         if (viewModel.recipient.isGroupRecipient) { return }
         val sessionID = viewModel.recipient.address.toString()
         val contact = sessionContactDb.getContactWithSessionID(sessionID)
         val name = contact?.displayName(Contact.ContactContext.REGULAR) ?: sessionID
-        binding.blockedBannerTextView.text = resources.getString(R.string.activity_conversation_blocked_banner_text, name)
-        binding.blockedBanner.isVisible = viewModel.recipient.isBlocked
-        binding.blockedBanner.setOnClickListener { viewModel.unblock() }
+        binding?.blockedBannerTextView?.text = resources.getString(R.string.activity_conversation_blocked_banner_text, name)
+        binding?.blockedBanner?.isVisible = viewModel.recipient.isBlocked
+        binding?.blockedBanner?.setOnClickListener { viewModel.unblock() }
     }
 
     private fun setUpLinkPreviewObserver() {
@@ -509,13 +515,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             if (previewState == null) return@observe
             when {
                 previewState.isLoading -> {
-                    binding.inputBar.draftLinkPreview()
+                    binding?.inputBar?.draftLinkPreview()
                 }
                 previewState.linkPreview.isPresent -> {
-                    binding.inputBar.updateLinkPreviewDraft(glide, previewState.linkPreview.get())
+                    binding?.inputBar?.updateLinkPreviewDraft(glide, previewState.linkPreview.get())
                 }
                 else -> {
-                    binding.inputBar.cancelLinkPreviewDraft()
+                    binding?.inputBar?.cancelLinkPreviewDraft()
                 }
             }
         }
@@ -537,7 +543,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val lastSeenTimestamp = threadDb.getLastSeenAndHasSent(viewModel.threadId).first()
         val lastSeenItemPosition = adapter.findLastSeenItemPosition(lastSeenTimestamp) ?: return
         if (lastSeenItemPosition <= 3) { return }
-        binding.conversationRecyclerView.scrollToPosition(lastSeenItemPosition)
+        binding?.conversationRecyclerView?.scrollToPosition(lastSeenItemPosition)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
@@ -547,8 +553,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun onDestroy() {
-        viewModel.saveDraft(binding.inputBar.text.trim())
+        viewModel.saveDraft(binding?.inputBar?.text?.trim() ?: "")
         super.onDestroy()
+        binding = null
+        actionBarBinding = null
     }
     // endregion
 
@@ -556,11 +564,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     override fun onModified(recipient: Recipient) {
         runOnUiThread {
             if (viewModel.recipient.isContactRecipient) {
-                binding.blockedBanner.isVisible = viewModel.recipient.isBlocked
+                binding?.blockedBanner?.isVisible = viewModel.recipient.isBlocked
             }
             updateSubtitle()
             showOrHideInputIfNeeded()
-            actionBarBinding.profilePictureView.update(recipient)
+            actionBarBinding?.profilePictureView?.update(recipient)
         }
     }
 
@@ -568,18 +576,16 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         if (viewModel.recipient.isClosedGroupRecipient) {
             val group = groupDb.getGroup(viewModel.recipient.address.toGroupString()).orNull()
             val isActive = (group?.isActive == true)
-            binding.inputBar.showInput = isActive
+            binding?.inputBar?.showInput = isActive
         } else {
-            binding.inputBar.showInput = true
+            binding?.inputBar?.showInput = true
         }
     }
 
-    override fun inputBarHeightChanged(newValue: Int) {
-    }
-
     override fun inputBarEditTextContentChanged(newContent: CharSequence) {
+        val inputBarText = binding?.inputBar?.text ?: return // TODO check if we should be referencing newContent here instead
         if (textSecurePreferences.isLinkPreviewsEnabled()) {
-            linkPreviewViewModel.onTextChanged(this, binding.inputBar.text, 0, 0)
+            linkPreviewViewModel.onTextChanged(this, inputBarText, 0, 0)
         }
         showOrHideMentionCandidatesIfNeeded(newContent)
         if (LinkPreviewUtil.findWhitelistedUrls(newContent.toString()).isNotEmpty()
@@ -587,7 +593,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             LinkPreviewDialog {
                 setUpLinkPreviewObserver()
                 linkPreviewViewModel.onEnabled()
-                linkPreviewViewModel.onTextChanged(this, binding.inputBar.text, 0, 0)
+                linkPreviewViewModel.onTextChanged(this, inputBarText, 0, 0)
             }.show(supportFragmentManager, "Link Preview Dialog")
             textSecurePreferences.setHasSeenLinkPreviewSuggestionDialog()
         }
@@ -629,12 +635,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun showOrUpdateMentionCandidatesIfNeeded(query: String = "") {
+        val additionalContentContainer = binding?.additionalContentContainer ?: return
         if (!isShowingMentionCandidatesView) {
-            binding.additionalContentContainer.removeAllViews()
+            additionalContentContainer.removeAllViews()
             val view = MentionCandidatesView(this)
             view.glide = glide
             view.onCandidateSelected = { handleMentionSelected(it) }
-            binding.additionalContentContainer.addView(view)
+            additionalContentContainer.addView(view)
             val candidates = MentionsManager.getMentionCandidates(query, viewModel.threadId, viewModel.recipient.isOpenGroupRecipient)
             this.mentionCandidatesView = view
             view.show(candidates, viewModel.threadId)
@@ -652,7 +659,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             animation.duration = 250L
             animation.addUpdateListener { animator ->
                 mentionCandidatesView.alpha = animator.animatedValue as Float
-                if (animator.animatedFraction == 1.0f) { binding.additionalContentContainer.removeAllViews() }
+                if (animator.animatedFraction == 1.0f) { binding?.additionalContentContainer?.removeAllViews() }
             }
             animation.start()
         }
@@ -661,7 +668,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     override fun toggleAttachmentOptions() {
         val targetAlpha = if (isShowingAttachmentOptions) 0.0f else 1.0f
-        val allButtonContainers = listOf( binding.cameraButtonContainer, binding.libraryButtonContainer, binding.documentButtonContainer, binding.gifButtonContainer)
+        val allButtonContainers = listOfNotNull(
+            binding?.cameraButtonContainer,
+            binding?.libraryButtonContainer,
+            binding?.documentButtonContainer,
+            binding?.gifButtonContainer
+        )
         val isReversed = isShowingAttachmentOptions // Run the animation in reverse
         val count = allButtonContainers.size
         allButtonContainers.indices.forEach { index ->
@@ -680,32 +692,34 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun showVoiceMessageUI() {
-        binding.inputBarRecordingView.show()
-        binding.inputBar.alpha = 0.0f
+        binding?.inputBarRecordingView?.show()
+        binding?.inputBar?.alpha = 0.0f
         val animation = ValueAnimator.ofObject(FloatEvaluator(), 1.0f, 0.0f)
         animation.duration = 250L
         animation.addUpdateListener { animator ->
-            binding.inputBar.alpha = animator.animatedValue as Float
+            binding?.inputBar?.alpha = animator.animatedValue as Float
         }
         animation.start()
     }
 
     private fun expandVoiceMessageLockView() {
-        val animation = ValueAnimator.ofObject(FloatEvaluator(), binding.inputBarRecordingView.lockView.scaleX, 1.10f)
+        val lockView = binding?.inputBarRecordingView?.lockView ?: return
+        val animation = ValueAnimator.ofObject(FloatEvaluator(), lockView.scaleX, 1.10f)
         animation.duration = 250L
         animation.addUpdateListener { animator ->
-            binding.inputBarRecordingView.lockView.scaleX = animator.animatedValue as Float
-            binding.inputBarRecordingView.lockView.scaleY = animator.animatedValue as Float
+            lockView.scaleX = animator.animatedValue as Float
+            lockView.scaleY = animator.animatedValue as Float
         }
         animation.start()
     }
 
     private fun collapseVoiceMessageLockView() {
-        val animation = ValueAnimator.ofObject(FloatEvaluator(), binding.inputBarRecordingView.lockView.scaleX, 1.0f)
+        val lockView = binding?.inputBarRecordingView?.lockView ?: return
+        val animation = ValueAnimator.ofObject(FloatEvaluator(), lockView.scaleX, 1.0f)
         animation.duration = 250L
         animation.addUpdateListener { animator ->
-            binding.inputBarRecordingView.lockView.scaleX = animator.animatedValue as Float
-            binding.inputBarRecordingView.lockView.scaleY = animator.animatedValue as Float
+            lockView.scaleX = animator.animatedValue as Float
+            lockView.scaleY = animator.animatedValue as Float
         }
         animation.start()
     }
