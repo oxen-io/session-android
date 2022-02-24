@@ -67,7 +67,7 @@ class ConfigurationMessage(var closedGroups: List<ClosedGroup>, var openGroups: 
         companion object {
 
             fun fromProto(proto: SignalServiceProtos.ConfigurationMessage.Contact): Contact? {
-                if (!proto.hasName() || !proto.hasProfileKey()) return null
+                if (!proto.hasName()) return null
                 val publicKey = proto.publicKey.toByteArray().toHexString()
                 val name = proto.name
                 val profilePicture = if (proto.hasProfilePicture()) proto.profilePicture else null
