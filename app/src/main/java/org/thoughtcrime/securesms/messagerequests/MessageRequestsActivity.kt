@@ -17,6 +17,7 @@ import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.mms.GlideRequests
+import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.push
 import javax.inject.Inject
 
@@ -46,7 +47,10 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
         binding.recyclerView.adapter = adapter
 
         binding.clearAllMessageRequestsButton.setOnClickListener { deleteAllAndBlock() }
+    }
 
+    override fun onResume() {
+        super.onResume()
         LoaderManager.getInstance(this).restartLoader(0, null, this)
     }
 
@@ -92,6 +96,7 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
         dialog.setMessage(resources.getString(R.string.message_requests_clear_all_message))
         dialog.setPositiveButton(R.string.yes) { _, _ ->
             viewModel.clearAllMessageRequests()
+            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this)
         }
         dialog.setNegativeButton(R.string.no) { _, _ ->
             // Do nothing

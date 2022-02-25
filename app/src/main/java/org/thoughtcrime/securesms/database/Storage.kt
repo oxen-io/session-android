@@ -594,6 +594,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
             }
             if (contact.isBlocked == true) {
                 recipientDatabase.setBlocked(recipient, true)
+                threadDatabase.deleteConversation(threadId)
             }
         }
         if (contacts.isNotEmpty()) {

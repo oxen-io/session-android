@@ -246,7 +246,6 @@ class DefaultConversationRepository @Inject constructor(
 
     override suspend fun deleteMessageRequest(thread: ThreadRecord): ResultOf<Unit> {
         sessionJobDb.cancelPendingMessageSendJobs(thread.threadId)
-        threadDb.deleteConversation(thread.threadId)
         recipientDb.setBlocked(thread.recipient, true)
         return ResultOf.Success(Unit)
     }
@@ -274,7 +273,6 @@ class DefaultConversationRepository @Inject constructor(
 
     override fun declineMessageRequest(threadId: Long, recipient: Recipient) {
         recipientDb.setBlocked(recipient, true)
-        threadDb.deleteConversation(threadId)
     }
 
     override fun hasReceived(threadId: Long): Boolean {

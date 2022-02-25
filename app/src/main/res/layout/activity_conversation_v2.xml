@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:visibility="gone"
-        android:layout_above="@+id/inputBar"
+        android:layout_above="@+id/messageRequestBar"
         />
 
     <org.thoughtcrime.securesms.conversation.v2.input_bar.InputBar
@@ -90,9 +90,9 @@
         android:id="@+id/scrollToBottomButton"
         android:layout_width="40dp"
         android:layout_height="50dp"
-        android:layout_alignParentRight="true"
-        android:layout_above="@+id/inputBar"
-        android:layout_marginRight="12dp"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/messageRequestBar"
+        android:layout_marginEnd="12dp"
         android:layout_marginBottom="32dp">
 
         <RelativeLayout
