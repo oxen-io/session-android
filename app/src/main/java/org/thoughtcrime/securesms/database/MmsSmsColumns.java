@@ -98,7 +98,7 @@ public interface MmsSmsColumns {
     protected static final long ENCRYPTION_LOKI_SESSION_RESTORE_SENT_BIT = 0x01000000;
     protected static final long ENCRYPTION_LOKI_SESSION_RESTORE_DONE_BIT = 0x00100000;
 
-    protected static final long MESSAGE_REQUEST_RESPONSE_BIT  = 0x00400000;
+    protected static final long MESSAGE_REQUEST_RESPONSE_BIT  = 0x010000;
 
     public static boolean isDraftMessageType(long type) {
       return (type & BASE_TYPE_MASK) == BASE_DRAFT_TYPE;
