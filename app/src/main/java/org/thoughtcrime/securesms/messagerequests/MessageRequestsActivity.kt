@@ -6,9 +6,12 @@ import android.database.Cursor
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityMessageRequestsBinding
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
@@ -78,6 +81,10 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
         dialog.setMessage(resources.getString(R.string.message_requests_delete_message))
         dialog.setPositiveButton(R.string.yes) { _, _ ->
             viewModel.deleteMessageRequest(thread)
+            LoaderManager.getInstance(this).restartLoader(0, null, this)
+            lifecycleScope.launch(Dispatchers.IO) {
+                ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@MessageRequestsActivity)
+            }
         }
         dialog.setNegativeButton(R.string.no) { _, _ ->
             // Do nothing
@@ -96,7 +103,10 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
         dialog.setMessage(resources.getString(R.string.message_requests_clear_all_message))
         dialog.setPositiveButton(R.string.yes) { _, _ ->
             viewModel.clearAllMessageRequests()
-            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this)
+            LoaderManager.getInstance(this).restartLoader(0, null, this)
+            lifecycleScope.launch(Dispatchers.IO) {
+                ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@MessageRequestsActivity)
+            }
         }
         dialog.setNegativeButton(R.string.no) { _, _ ->
             // Do nothing
