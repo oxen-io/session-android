@@ -491,6 +491,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         viewModel.recipient.addListener(this)
     }
 
+    private fun tearDownRecipientObserver() {
+        viewModel.recipient.removeListener(this)
+    }
+
     private fun getLatestOpenGroupInfoIfNeeded() {
         val openGroup = lokiThreadDb.getOpenGroupChat(viewModel.threadId) ?: return
         OpenGroupAPIV2.getMemberCount(openGroup.room, openGroup.server).successUi { updateSubtitle() }
@@ -554,6 +558,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     override fun onDestroy() {
         viewModel.saveDraft(binding?.inputBar?.text?.trim() ?: "")
+        tearDownRecipientObserver()
         super.onDestroy()
         binding = null
         actionBarBinding = null
