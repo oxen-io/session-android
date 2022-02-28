@@ -276,7 +276,7 @@ class DefaultConversationRepository @Inject constructor(
     }
 
     override fun hasReceived(threadId: Long): Boolean {
-        val cursor = mmsSmsDb.getConversation(threadId)
+        val cursor = mmsSmsDb.getConversation(threadId, true)
         mmsSmsDb.readerFor(cursor).use { reader ->
             while (reader.next != null) {
                 if (!reader.current.isOutgoing) {

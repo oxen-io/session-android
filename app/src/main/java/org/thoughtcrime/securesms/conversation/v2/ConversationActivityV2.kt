@@ -223,7 +223,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private val adapter by lazy {
-        val cursor = mmsSmsDb.getConversation(viewModel.threadId)
+        val cursor = mmsSmsDb.getConversation(viewModel.threadId, !isIncomingMessageRequestThread())
         val adapter = ConversationAdapter(
             this,
             cursor,
@@ -352,13 +352,14 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private fun setUpRecyclerView() {
         binding.conversationRecyclerView.adapter = adapter
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, !isIncomingMessageRequestThread())
+        val reverseLayout = !isIncomingMessageRequestThread()
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, reverseLayout)
         binding.conversationRecyclerView.layoutManager = layoutManager
         // Workaround for the fact that CursorRecyclerViewAdapter doesn't auto-update automatically (even though it says it will)
         LoaderManager.getInstance(this).restartLoader(0, null, object : LoaderManager.LoaderCallbacks<Cursor> {
 
             override fun onCreateLoader(id: Int, bundle: Bundle?): Loader<Cursor> {
-                return ConversationLoader(viewModel.threadId, this@ConversationActivityV2)
+                return ConversationLoader(viewModel.threadId, reverseLayout, this@ConversationActivityV2)
             }
 
             override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
