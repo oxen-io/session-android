@@ -184,7 +184,6 @@ class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, Li
 
 interface InputBarDelegate {
 
-    fun inputBarHeightChanged(newValue: Int)
     fun inputBarEditTextContentChanged(newContent: CharSequence)
     fun toggleAttachmentOptions()
     fun showVoiceMessageUI()
