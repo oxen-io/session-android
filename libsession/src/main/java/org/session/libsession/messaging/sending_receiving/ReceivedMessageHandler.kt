@@ -267,11 +267,7 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage, proto: SignalS
     // Cancel any typing indicators if needed
     cancelTypingIndicatorsIfNeeded(message.sender!!)
     // Notify the user if needed
-    if (recipient.isGroupRecipient || recipient.isApproved) {
-        SSKEnvironment.shared.notificationManager.updateNotification(context, threadID)
-    } else {
-        TextSecurePreferences.removeHasHiddenMessageRequests(MessagingModuleConfiguration.shared.context)
-    }
+    SSKEnvironment.shared.notificationManager.updateNotification(context, threadID)
 }
 //endregion
 

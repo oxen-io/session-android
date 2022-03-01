@@ -229,6 +229,9 @@ public class DefaultMessageNotifier implements MessageNotifier {
     ThreadDatabase threads    = DatabaseComponent.get(context).threadDatabase();
     Recipient      recipient = threads.getRecipientForThreadId(threadId);
 
+    if (!recipient.isGroupRecipient() && !(recipient.isApproved() || threads.getLastSeenAndHasSent(threadId).second())) {
+      TextSecurePreferences.removeHasHiddenMessageRequests(context);
+    }
     if (isVisible && recipient != null) {
       List<MarkedMessageInfo> messageIds = threads.setRead(threadId, false);
       if (SessionMetaProtocol.shouldSendReadReceipt(recipient)) { MarkReadReceiver.process(context, messageIds); }
