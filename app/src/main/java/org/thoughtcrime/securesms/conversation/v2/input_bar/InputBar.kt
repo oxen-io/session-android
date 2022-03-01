@@ -169,7 +169,7 @@ class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, Li
     }
 
     private fun showOrHideMediaControlsIfNeeded() {
-        setOf(attachmentsButton, microphoneButton).forEach { it.isVisible = showMediaControls }
+        setOf(attachmentsButton, microphoneButton).forEach { it.snIsEnabled = showMediaControls }
     }
 
     fun addTextChangedListener(textWatcher: TextWatcher) {
