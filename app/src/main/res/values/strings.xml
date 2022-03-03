@@ -898,5 +898,6 @@
     <string name="NewConversationButton_SessionTooltip">Direct Message</string>
     <string name="NewConversationButton_ClosedGroupTooltip">Closed Group</string>
     <string name="NewConversationButton_OpenGroupTooltip">Open Group</string>
+    <string name="message_requests_notification">You have a new message request</string>
 
 </resources>

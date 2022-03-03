@@ -229,7 +229,8 @@ public class DefaultMessageNotifier implements MessageNotifier {
     ThreadDatabase threads    = DatabaseComponent.get(context).threadDatabase();
     Recipient      recipient = threads.getRecipientForThreadId(threadId);
 
-    if (!recipient.isGroupRecipient() && !(recipient.isApproved() || threads.getLastSeenAndHasSent(threadId).second())) {
+    if (!recipient.isGroupRecipient() && threads.getMessageCount(threadId) == 1 &&
+            !(recipient.isApproved() || threads.getLastSeenAndHasSent(threadId).second())) {
       TextSecurePreferences.removeHasHiddenMessageRequests(context);
     }
     if (isVisible && recipient != null) {
@@ -485,7 +486,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
   {
     NotificationState     notificationState = new NotificationState();
     MmsSmsDatabase.Reader reader            = DatabaseComponent.get(context).mmsSmsDatabase().readerFor(cursor);
-
+    ThreadDatabase        threadDatabase    = DatabaseComponent.get(context).threadDatabase();
     MessageRecord record;
 
     while ((record = reader.getNext()) != null) {
@@ -498,13 +499,20 @@ public class DefaultMessageNotifier implements MessageNotifier {
       Recipient    threadRecipients      = null;
       SlideDeck    slideDeck             = null;
       long         timestamp             = record.getTimestamp();
+      boolean      messageRequest        = false;
 
 
       if (threadId != -1) {
-        threadRecipients = DatabaseComponent.get(context).threadDatabase().getRecipientForThreadId(threadId);
+        threadRecipients = threadDatabase.getRecipientForThreadId(threadId);
+        messageRequest = threadRecipients != null && !threadRecipients.isGroupRecipient() &&
+                !threadRecipients.isApproved() && !threadDatabase.getLastSeenAndHasSent(threadId).second();
+        if (messageRequest && (threadDatabase.getMessageCount(threadId) > 1 || !TextSecurePreferences.hasHiddenMessageRequests(context))) {
+          continue;
+        }
       }
-
-      if (KeyCachingService.isLocked(context)) {
+      if (messageRequest) {
+        body = SpanUtil.italic(context.getString(R.string.message_requests_notification));
+      } else if (KeyCachingService.isLocked(context)) {
         body = SpanUtil.italic(context.getString(R.string.MessageNotifier_locked_message));
       } else if (record.isMms() && !((MmsMessageRecord) record).getSharedContacts().isEmpty()) {
         Contact contact = ((MmsMessageRecord) record).getSharedContacts().get(0);

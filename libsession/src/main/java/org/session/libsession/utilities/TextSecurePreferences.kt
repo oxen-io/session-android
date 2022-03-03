@@ -874,6 +874,11 @@ interface TextSecurePreferences {
         }
 
         @JvmStatic
+        fun hasHiddenMessageRequests(context: Context): Boolean {
+            return getBooleanPreference(context, HAS_HIDDEN_MESSAGE_REQUESTS, false)
+        }
+
+        @JvmStatic
         fun removeHasHiddenMessageRequests(context: Context) {
             removePreference(context, HAS_HIDDEN_MESSAGE_REQUESTS)
         }
