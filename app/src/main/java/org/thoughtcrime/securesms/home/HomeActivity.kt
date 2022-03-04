@@ -313,6 +313,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 root.setOnLongClickListener { hideMessageRequests(); true }
                 root.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
                 homeAdapter.headerView = root
+                homeAdapter.notifyItemChanged(0)
             }
         } else {
             homeAdapter.headerView = null
@@ -348,7 +349,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 ConfigurationMessageUtilities.syncConfigurationIfNeeded(this@HomeActivity)
             }
         }
-        setupMessageRequestsBanner()
     }
 
     override fun onPause() {
