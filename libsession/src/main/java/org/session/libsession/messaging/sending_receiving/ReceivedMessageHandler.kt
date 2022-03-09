@@ -125,7 +125,7 @@ private fun handleConfigurationMessage(message: ConfigurationMessage) {
     val userPublicKey = storage.getUserPublicKey()
     if (userPublicKey == null || message.sender != storage.getUserPublicKey()) return
 
-    val firstTimeSync = TextSecurePreferences.getConfigurationMessageSynced(context)
+    val firstTimeSync = !TextSecurePreferences.getConfigurationMessageSynced(context)
 
     TextSecurePreferences.setConfigurationMessageSynced(context, true)
     TextSecurePreferences.setLastProfileUpdateTime(context, message.sentTimestamp!!)
