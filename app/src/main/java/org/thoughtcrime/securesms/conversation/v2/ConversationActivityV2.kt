@@ -618,6 +618,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         binding?.messageRequestBar?.isVisible = false
         binding?.conversationRecyclerView?.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
+        adapter.notifyDataSetChanged()
         viewModel.acceptMessageRequest()
         lifecycleScope.launch(Dispatchers.IO) {
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@ConversationActivityV2)
@@ -999,12 +1000,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun sendMessage() {
-        if (isIncomingMessageRequestThread()) {
-            acceptMessageRequest()
-        } else if (!viewModel.recipient.isApproved) {
-            // edge case for new outgoing thread on new recipient without sending approval messages
-            viewModel.setRecipientApproved()
-        }
         if (viewModel.recipient.isContactRecipient && viewModel.recipient.isBlocked) {
             BlockedDialog(viewModel.recipient).show(supportFragmentManager, "Blocked Dialog")
             return
@@ -1022,7 +1017,17 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         startActivityForResult(MediaSendActivity.buildEditorIntent(this, listOf( media ), viewModel.recipient, getMessageBody()), PICK_FROM_LIBRARY)
     }
 
+    private fun processMessageRequestApproval() {
+        if (isIncomingMessageRequestThread()) {
+            acceptMessageRequest()
+        } else if (!viewModel.recipient.isApproved) {
+            // edge case for new outgoing thread on new recipient without sending approval messages
+            viewModel.setRecipientApproved()
+        }
+    }
+
     private fun sendTextOnlyMessage(hasPermissionToSendSeed: Boolean = false) {
+        processMessageRequestApproval()
         val text = getMessageBody()
         val userPublicKey = textSecurePreferences.getLocalNumber()
         val isNoteToSelf = (viewModel.recipient.isContactRecipient && viewModel.recipient.address.toString() == userPublicKey)
@@ -1052,6 +1057,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun sendAttachments(attachments: List<Attachment>, body: String?, quotedMessage: MessageRecord? = null, linkPreview: LinkPreview? = null) {
+        processMessageRequestApproval()
         // Create the message
         val message = VisibleMessage()
         message.sentTimestamp = System.currentTimeMillis()
