@@ -151,7 +151,7 @@ import kotlin.math.sqrt
 class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDelegate,
         InputBarRecordingViewDelegate, AttachmentManager.AttachmentListener, ActivityDispatcher,
         ConversationActionModeCallbackDelegate, VisibleMessageContentViewDelegate, RecipientModifiedListener,
-        SearchBottomBar.EventListener, VoiceMessageViewDelegate {
+        SearchBottomBar.EventListener, VoiceMessageViewDelegate, LoaderManager.LoaderCallbacks<Cursor> {
 
     private var binding: ActivityConversationV2Binding? = null
     private var actionBarBinding: ActivityConversationV2ActionBarBinding? = null
@@ -350,34 +350,32 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         baseDialog.show(supportFragmentManager, tag)
     }
 
+    override fun onCreateLoader(id: Int, bundle: Bundle?): Loader<Cursor> {
+        return ConversationLoader(viewModel.threadId, !isIncomingMessageRequestThread(), this@ConversationActivityV2)
+    }
+
+    override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
+        adapter.changeCursor(cursor)
+        if (cursor != null) {
+            val messageTimestamp = messageToScrollTimestamp.getAndSet(-1)
+            val author = messageToScrollAuthor.getAndSet(null)
+            if (author != null && messageTimestamp >= 0) {
+                jumpToMessage(author, messageTimestamp, null)
+            }
+        }
+    }
+
+    override fun onLoaderReset(cursor: Loader<Cursor>) {
+        adapter.changeCursor(null)
+    }
+
     // called from onCreate
     private fun setUpRecyclerView() {
         binding!!.conversationRecyclerView.adapter = adapter
-        val reverseLayout = !isIncomingMessageRequestThread()
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, reverseLayout)
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, !isIncomingMessageRequestThread())
         binding!!.conversationRecyclerView.layoutManager = layoutManager
         // Workaround for the fact that CursorRecyclerViewAdapter doesn't auto-update automatically (even though it says it will)
-        LoaderManager.getInstance(this).restartLoader(0, null, object : LoaderManager.LoaderCallbacks<Cursor> {
-
-            override fun onCreateLoader(id: Int, bundle: Bundle?): Loader<Cursor> {
-                return ConversationLoader(viewModel.threadId, reverseLayout, this@ConversationActivityV2)
-            }
-
-            override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
-                adapter.changeCursor(cursor)
-                if (cursor != null) {
-                    val messageTimestamp = messageToScrollTimestamp.getAndSet(-1)
-                    val author = messageToScrollAuthor.getAndSet(null)
-                    if (author != null && messageTimestamp >= 0) {
-                        jumpToMessage(author, messageTimestamp, null)
-                    }
-                }
-            }
-
-            override fun onLoaderReset(cursor: Loader<Cursor>) {
-                adapter.changeCursor(null)
-            }
-        })
+        LoaderManager.getInstance(this).restartLoader(0, null, this)
         binding!!.conversationRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -620,6 +618,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
         adapter.notifyDataSetChanged()
         viewModel.acceptMessageRequest()
+        LoaderManager.getInstance(this).restartLoader(0, null, this)
         lifecycleScope.launch(Dispatchers.IO) {
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@ConversationActivityV2)
         }
