@@ -14,6 +14,7 @@ import android.text.TextUtils
 import network.loki.messenger.R
 import java.math.BigInteger
 import java.security.MessageDigest
+import java.util.Locale
 
 object AvatarPlaceholderGenerator {
 
@@ -33,7 +34,7 @@ object AvatarPlaceholderGenerator {
         val colorPrimary = colorArray[(hash % colorArray.size).toInt()]
 
         val labelText = when {
-            !TextUtils.isEmpty(displayName) -> extractLabel(displayName!!.capitalize())
+            !TextUtils.isEmpty(displayName) -> extractLabel(displayName!!.capitalize(Locale.ROOT))
             !TextUtils.isEmpty(hashString) -> extractLabel(hashString)
             else -> EMPTY_LABEL
         }
