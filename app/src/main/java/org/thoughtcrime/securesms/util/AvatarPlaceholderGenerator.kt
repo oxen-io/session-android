@@ -63,17 +63,17 @@ object AvatarPlaceholderGenerator {
         return BitmapDrawable(context.resources, bitmap)
     }
 
-    private fun extractLabel(content: String): String {
-        var content = content.trim()
-        if (content.isEmpty()) return EMPTY_LABEL
-        return if (content.length > 2 && content.startsWith("05")) {
-            content[2].toString()
+    fun extractLabel(content: String): String {
+        val trimmedContent = content.trim()
+        if (trimmedContent.isEmpty()) return EMPTY_LABEL
+        return if (trimmedContent.length > 2 && trimmedContent.startsWith("05")) {
+            trimmedContent[2].toString()
         } else {
-            val splitWords = content.split(Regex("\\W"))
+            val splitWords = trimmedContent.split(Regex("\\W"))
             if (splitWords.size < 2) {
-                content.take(2)
+                trimmedContent.take(2)
             } else {
-                splitWords.take(2).filter { word -> word.isNotEmpty() }.map { it.first() }.joinToString("")
+                splitWords.filter { word -> word.isNotEmpty() }.take(2).map { it.first() }.joinToString("")
             }
         }.uppercase()
     }
