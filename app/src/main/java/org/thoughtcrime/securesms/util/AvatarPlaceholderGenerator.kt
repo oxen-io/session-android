@@ -1,14 +1,19 @@
 package org.thoughtcrime.securesms.util
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.RectF
+import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.text.TextPaint
 import android.text.TextUtils
 import network.loki.messenger.R
 import java.math.BigInteger
 import java.security.MessageDigest
-import java.util.*
 
 object AvatarPlaceholderGenerator {
 
@@ -61,10 +66,15 @@ object AvatarPlaceholderGenerator {
         var content = content.trim()
         if (content.isEmpty()) return EMPTY_LABEL
         return if (content.length > 2 && content.startsWith("05")) {
-            content[2].toString().toUpperCase(Locale.ROOT)
+            content[2].toString()
         } else {
-            content.first().toString().toUpperCase(Locale.ROOT)
-        }
+            val splitWords = content.split(Regex("\\W"))
+            if (splitWords.size < 2) {
+                content.take(2)
+            } else {
+                splitWords.take(2).filter { word -> word.isNotEmpty() }.map { it.first() }.joinToString("")
+            }
+        }.uppercase()
     }
 
     private fun getSha512(input: String): String {
