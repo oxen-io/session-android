@@ -3,14 +3,14 @@ package org.thoughtcrime.securesms.attachments;
 
 import android.content.Context;
 import android.net.Uri;
+
 import androidx.annotation.NonNull;
 
+import org.session.libsession.messaging.sending_receiving.attachments.Attachment;
+import org.session.libsession.utilities.Util;
+import org.session.libsignal.utilities.Hex;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.mms.PartAuthority;
-
-import org.session.libsignal.utilities.Hex;
-import org.session.libsession.utilities.Util;
-import org.session.libsession.messaging.sending_receiving.attachments.Attachment;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -228,7 +228,7 @@ public class AttachmentServer implements Runnable {
         }
       }
       catch (SocketException socketException) {
-        Log.e(TAG, "SocketException() thrown, proxy client has probably closed. This can exit harmlessly");
+        Log.e(TAG, "SocketException() thrown, proxy client has probably closed. This can exit harmlessly", socketException);
       }
       catch (Exception e) {
         Log.e(TAG, "Exception thrown from streaming task:");
