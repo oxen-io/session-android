@@ -235,7 +235,7 @@ object MessageSender {
                         sentTimestamp = message.sentTimestamp!!,
                         base64EncodedData = Base64.encodeBytes(plaintext),
                     )
-                    OpenGroupAPIV2.send(openGroupMessage,room,server).success {
+                    OpenGroupApiV4.send(openGroupMessage,room,server).success {
                         message.openGroupServerMessageID = it.serverID
                         handleSuccessfulMessageSend(message, destination, openGroupSentTimestamp = it.sentTimestamp)
                         deferred.resolve(Unit)

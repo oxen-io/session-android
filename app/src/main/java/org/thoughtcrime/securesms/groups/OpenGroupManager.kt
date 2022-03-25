@@ -4,18 +4,17 @@ import android.content.Context
 import androidx.annotation.WorkerThread
 import okhttp3.HttpUrl
 import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
+import org.session.libsession.messaging.open_groups.OpenGroupApiV4
 import org.session.libsession.messaging.open_groups.OpenGroupV2
-import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPollerV2
+import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPollerV4
 import org.session.libsession.utilities.Util
 import org.session.libsignal.utilities.ThreadUtils
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.util.BitmapUtil
 import java.util.concurrent.Executors
 
 object OpenGroupManager {
     private val executorService = Executors.newScheduledThreadPool(4)
-    private var pollers = mutableMapOf<String, OpenGroupPollerV2>() // One for each server
+    private var pollers = mutableMapOf<String, OpenGroupPollerV4>() // One for each server
     private var isPolling = false
 
     val isAllCaughtUp: Boolean
@@ -42,7 +41,7 @@ object OpenGroupManager {
         val servers = storage.getAllV2OpenGroups().values.map { it.server }.toSet()
         servers.forEach { server ->
             pollers[server]?.stop() // Shouldn't be necessary
-            val poller = OpenGroupPollerV2(server, executorService)
+            val poller = OpenGroupPollerV4(server, executorService)
             poller.startIfNeeded()
             pollers[server] = poller
         }
@@ -68,18 +67,20 @@ object OpenGroupManager {
         // Store the public key
         storage.setOpenGroupPublicKey(server,publicKey)
         // Get an auth token
-        OpenGroupAPIV2.getAuthToken(room, server).get()
+        OpenGroupApiV4.getAuthToken(room, server).get()
+        // Get capabilities
+        val capabilities = OpenGroupApiV4.getCapabilities(room, server).get()
         // Get group info
-        val info = OpenGroupAPIV2.getInfo(room, server).get()
+        val info = OpenGroupApiV4.getInfo(room, server).get()
         // Create the group locally if not available already
         if (threadID < 0) {
             threadID = GroupManager.createOpenGroup(openGroupID, context, null, info.name).threadId
         }
-        val openGroup = OpenGroupV2(server, room, info.name, publicKey)
+        val openGroup = OpenGroupV2(server, room, info.name, publicKey, capabilities)
         threadDB.setOpenGroupChat(openGroup, threadID)
         // Start the poller if needed
         pollers[server]?.startIfNeeded() ?: run {
-            val poller = OpenGroupPollerV2(server, executorService)
+            val poller = OpenGroupPollerV4(server, executorService)
             Util.runOnMain { poller.startIfNeeded() }
             pollers[server] = poller
         }

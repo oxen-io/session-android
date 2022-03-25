@@ -4,19 +4,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
-import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
+import org.session.libsession.messaging.open_groups.OpenGroupApiV4
 import org.thoughtcrime.securesms.util.State
 
-typealias DefaultGroups = List<OpenGroupAPIV2.DefaultGroup>
+typealias DefaultGroups = List<OpenGroupApiV4.DefaultGroup>
 typealias GroupState = State<DefaultGroups>
 
 class DefaultGroupsViewModel : ViewModel() {
 
     init {
-        OpenGroupAPIV2.getDefaultRoomsIfNeeded()
+        OpenGroupApiV4.getDefaultRoomsIfNeeded()
     }
 
-    val defaultRooms = OpenGroupAPIV2.defaultRooms.map<DefaultGroups, GroupState> {
+    val defaultRooms = OpenGroupApiV4.defaultRooms.map<DefaultGroups, GroupState> {
         State.Success(it)
     }.onStart {
         emit(State.Loading)

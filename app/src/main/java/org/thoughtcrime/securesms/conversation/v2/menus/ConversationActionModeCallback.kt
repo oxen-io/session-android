@@ -5,7 +5,7 @@ import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
 import network.loki.messenger.R
-import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
+import org.session.libsession.messaging.open_groups.OpenGroupApiV4
 import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.ConversationAdapter
@@ -41,13 +41,13 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
             if (!ConversationActivityV2.IS_UNSEND_REQUESTS_ENABLED) {
                 if (openGroup == null) { return true }
                 if (allSentByCurrentUser) { return true }
-                return OpenGroupAPIV2.isUserModerator(userPublicKey, openGroup.room, openGroup.server)
+                return OpenGroupApiV4.isUserModerator(userPublicKey, openGroup.room, openGroup.server)
             }
 
             val allReceivedByCurrentUser = selectedItems.all { !it.isOutgoing }
             if (openGroup == null) { return allSentByCurrentUser || allReceivedByCurrentUser }
             if (allSentByCurrentUser) { return true }
-            return OpenGroupAPIV2.isUserModerator(userPublicKey, openGroup.room, openGroup.server)
+            return OpenGroupApiV4.isUserModerator(userPublicKey, openGroup.room, openGroup.server)
         }
         fun userCanBanSelectedUsers(): Boolean {
             if (openGroup == null) { return false }
@@ -55,7 +55,7 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
             if (anySentByCurrentUser) { return false } // Users can't ban themselves
             val selectedUsers = selectedItems.map { it.recipient.address.toString() }.toSet()
             if (selectedUsers.size > 1) { return false }
-            return OpenGroupAPIV2.isUserModerator(userPublicKey, openGroup.room, openGroup.server)
+            return OpenGroupApiV4.isUserModerator(userPublicKey, openGroup.room, openGroup.server)
         }
         // Delete message
         menu.findItem(R.id.menu_context_delete_message).isVisible = userCanDeleteSelectedItems()

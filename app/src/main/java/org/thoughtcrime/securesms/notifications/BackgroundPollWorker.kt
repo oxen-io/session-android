@@ -3,14 +3,20 @@ package org.thoughtcrime.securesms.notifications
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import androidx.work.*
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.all
 import nl.komponents.kovenant.functional.map
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.MessageReceiveJob
 import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPollerV2
-import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPollerV2
+import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPollerV4
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.Log
@@ -68,9 +74,9 @@ class BackgroundPollWorker(val context: Context, params: WorkerParameters) : Wor
             val v2OpenGroupServers = v2OpenGroups.map { it.value.server }.toSet()
 
             for (server in v2OpenGroupServers) {
-                val poller = OpenGroupPollerV2(server, null)
+                val poller = OpenGroupPollerV4(server, null)
                 poller.hasStarted = true
-                promises.add(poller.poll(true))
+                promises.add(poller.poll())
             }
 
             // Wait until all the promises are resolved

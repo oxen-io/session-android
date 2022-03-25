@@ -9,6 +9,7 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.file_server.FileServerAPIV2
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
+import org.session.libsession.messaging.open_groups.OpenGroupApiV4
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.utilities.Data
 import org.session.libsession.utilities.DecodedAudio
@@ -53,7 +54,7 @@ class AttachmentUploadJob(val attachmentID: Long, val threadID: String, val mess
             val v2OpenGroup = storage.getV2OpenGroup(threadID.toLong())
             if (v2OpenGroup != null) {
                 val keyAndResult = upload(attachment, v2OpenGroup.server, false) {
-                    OpenGroupAPIV2.upload(it, v2OpenGroup.room, v2OpenGroup.server)
+                    OpenGroupApiV4.upload(it, v2OpenGroup.room, v2OpenGroup.server)
                 }
                 handleSuccess(attachment, keyAndResult.first, keyAndResult.second)
             } else {

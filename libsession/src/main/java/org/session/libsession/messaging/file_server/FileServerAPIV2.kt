@@ -6,10 +6,10 @@ import okhttp3.Headers
 import okhttp3.HttpUrl
 import okhttp3.MediaType
 import okhttp3.RequestBody
-import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
+import org.session.libsession.messaging.open_groups.OpenGroupApiV4
 import org.session.libsession.snode.OnionRequestAPI
-import org.session.libsignal.utilities.HTTP
 import org.session.libsignal.utilities.Base64
+import org.session.libsignal.utilities.HTTP
 import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
 
@@ -53,7 +53,7 @@ object FileServerAPIV2 {
     }
 
     private fun send(request: Request): Promise<Map<*, *>, Exception> {
-        val url = HttpUrl.parse(server) ?: return Promise.ofFail(OpenGroupAPIV2.Error.InvalidURL)
+        val url = HttpUrl.parse(server) ?: return Promise.ofFail(OpenGroupApiV4.Error.InvalidURL)
         val urlBuilder = HttpUrl.Builder()
             .scheme(url.scheme())
             .host(url.host())
@@ -87,7 +87,7 @@ object FileServerAPIV2 {
         val parameters = mapOf( "file" to base64EncodedFile )
         val request = Request(verb = HTTP.Verb.POST, endpoint = "files", parameters = parameters)
         return send(request).map { json ->
-            json["result"] as? Long ?: throw OpenGroupAPIV2.Error.ParsingFailed
+            json["result"] as? Long ?: throw OpenGroupApiV4.Error.ParsingFailed
         }
     }
 

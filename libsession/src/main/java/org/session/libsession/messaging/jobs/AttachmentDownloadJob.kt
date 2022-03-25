@@ -3,6 +3,7 @@ package org.session.libsession.messaging.jobs
 import okhttp3.HttpUrl
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
+import org.session.libsession.messaging.open_groups.OpenGroupApiV4
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentState
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
@@ -102,7 +103,7 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
             } else {
                 val url = HttpUrl.parse(attachment.url)!!
                 val fileID = url.pathSegments().last()
-                OpenGroupAPIV2.download(fileID.toLong(), openGroupV2.room, openGroupV2.server).get().let {
+                OpenGroupApiV4.download(fileID.toLong(), openGroupV2.room, openGroupV2.server).get().let {
                     tempFile.writeBytes(it)
                 }
             }

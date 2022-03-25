@@ -530,7 +530,7 @@ object SnodeAPI {
             400, 500, 502, 503 -> { // Usually indicates that the snode isn't up to date
                 handleBadSnode()
             }
-            406 -> {
+            425 -> {
                 Log.d("Loki", "The user's clock is out of sync with the service node network.")
                 broadcaster.broadcast("clockOutOfSync")
                 return Error.ClockOutOfSync

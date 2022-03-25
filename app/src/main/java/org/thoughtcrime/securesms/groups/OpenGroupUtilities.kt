@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.annotation.WorkerThread
 import org.greenrobot.eventbus.EventBus
 import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
+import org.session.libsession.messaging.open_groups.OpenGroupApiV4
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
@@ -29,8 +30,8 @@ object OpenGroupUtilities {
             throw IllegalStateException("Attempt to update open group info for non-existent DB record: $groupId")
         }
 
-        val info = OpenGroupAPIV2.getInfo(room, server).get() // store info again?
-        OpenGroupAPIV2.getMemberCount(room, server).get()
+        val info = OpenGroupApiV4.getInfo(room, server).get() // store info again?
+        OpenGroupApiV4.getMemberCount(room, server).get()
 
         EventBus.getDefault().post(GroupInfoUpdatedEvent(server, room = room))
     }
