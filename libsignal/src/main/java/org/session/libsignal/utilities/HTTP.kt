@@ -1,7 +1,10 @@
 package org.session.libsignal.utilities
 
-import okhttp3.*
-import java.lang.IllegalStateException
+import okhttp3.MediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.Response
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
@@ -68,26 +71,26 @@ object HTTP {
     /**
      * Sync. Don't call from the main thread.
      */
-    fun execute(verb: Verb, url: String, timeout: Long = HTTP.timeout, useSeedNodeConnection: Boolean = false): Map<*, *> {
+    fun execute(verb: Verb, url: String, timeout: Long = HTTP.timeout, useSeedNodeConnection: Boolean = false): ByteArray {
         return execute(verb = verb, url = url, body = null, timeout = timeout, useSeedNodeConnection = useSeedNodeConnection)
     }
 
     /**
      * Sync. Don't call from the main thread.
      */
-    fun execute(verb: Verb, url: String, parameters: Map<String, Any>?, timeout: Long = HTTP.timeout, useSeedNodeConnection: Boolean = false): Map<*, *> {
-        if (parameters != null) {
+    fun execute(verb: Verb, url: String, parameters: Map<String, Any>?, timeout: Long = HTTP.timeout, useSeedNodeConnection: Boolean = false): ByteArray {
+        return if (parameters != null) {
             val body = JsonUtil.toJson(parameters).toByteArray()
-            return execute(verb = verb, url = url, body = body, timeout = timeout, useSeedNodeConnection = useSeedNodeConnection)
+            execute(verb = verb, url = url, body = body, timeout = timeout, useSeedNodeConnection = useSeedNodeConnection)
         } else {
-            return execute(verb = verb, url = url, body = null, timeout = timeout, useSeedNodeConnection = useSeedNodeConnection)
+            execute(verb = verb, url = url, body = null, timeout = timeout, useSeedNodeConnection = useSeedNodeConnection)
         }
     }
 
     /**
      * Sync. Don't call from the main thread.
      */
-    fun execute(verb: Verb, url: String, body: ByteArray?, timeout: Long = HTTP.timeout, useSeedNodeConnection: Boolean = false): Map<*, *> {
+    fun execute(verb: Verb, url: String, body: ByteArray?, timeout: Long = HTTP.timeout, useSeedNodeConnection: Boolean = false): ByteArray {
         val request = Request.Builder().url(url)
             .removeHeader("User-Agent").addHeader("User-Agent", "WhatsApp") // Set a fake value
             .removeHeader("Accept-Language").addHeader("Accept-Language", "en-us") // Set a fake value
@@ -103,14 +106,13 @@ object HTTP {
         }
         lateinit var response: Response
         try {
-            val connection: OkHttpClient
-            if (timeout != HTTP.timeout) { // Custom timeout
+            val connection = if (timeout != HTTP.timeout) { // Custom timeout
                 if (useSeedNodeConnection) {
                     throw IllegalStateException("Setting a custom timeout is only allowed for requests to snodes.")
                 }
-                connection = getDefaultConnection(timeout)
+                getDefaultConnection(timeout)
             } else {
-                connection = if (useSeedNodeConnection) seedNodeConnection else defaultConnection
+                if (useSeedNodeConnection) seedNodeConnection else defaultConnection
             }
             response = connection.newCall(request.build()).execute()
         } catch (exception: Exception) {
@@ -118,14 +120,9 @@ object HTTP {
             // Override the actual error so that we can correctly catch failed requests in OnionRequestAPI
             throw HTTPRequestFailedException(0, null)
         }
-        when (val statusCode = response.code()) {
+        return when (val statusCode = response.code()) {
             200 -> {
-                val bodyAsString = response.body()?.string() ?: throw Exception("An error occurred.")
-                try {
-                    return JsonUtil.fromJson(bodyAsString, Map::class.java)
-                } catch (exception: Exception) {
-                    return mapOf( "result" to bodyAsString)
-                }
+                response.body()?.bytes() ?: throw Exception("An error occurred.")
             }
             else -> {
                 Log.d("Loki", "${verb.rawValue} request to $url failed with status code: $statusCode.")

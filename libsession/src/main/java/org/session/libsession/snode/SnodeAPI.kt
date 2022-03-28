@@ -74,16 +74,23 @@ object SnodeAPI {
     }
 
     // Internal API
-    internal fun invoke(method: Snode.Method, snode: Snode, publicKey: String? = null, parameters: Map<String, Any>): RawResponsePromise {
+    internal fun invoke(
+        method: Snode.Method,
+        snode: Snode,
+        parameters: Map<String, Any>,
+        publicKey: String? = null,
+        version: OnionRequestAPI.Version = OnionRequestAPI.Version.V3
+    ): RawResponsePromise {
         val url = "${snode.address}:${snode.port}/storage_rpc/v1"
         if (useOnionRequests) {
-            return OnionRequestAPI.sendOnionRequest(method, parameters, snode, publicKey)
+            return OnionRequestAPI.sendOnionRequest(method, parameters, snode, version, publicKey)
         } else {
             val deferred = deferred<Map<*, *>, Exception>()
             ThreadUtils.queue {
                 val payload = mapOf( "method" to method.rawValue, "params" to parameters )
                 try {
-                    val json = HTTP.execute(HTTP.Verb.POST, url, payload)
+                    val response = HTTP.execute(HTTP.Verb.POST, url, payload).toString()
+                    val json = JsonUtil.fromJson(response, Map::class.java)
                     deferred.resolve(json)
                 } catch (exception: Exception) {
                     val httpRequestFailedException = exception as? HTTP.HTTPRequestFailedException
@@ -117,7 +124,12 @@ object SnodeAPI {
             deferred<Snode, Exception>()
             ThreadUtils.queue {
                 try {
-                    val json = HTTP.execute(HTTP.Verb.POST, url, parameters, useSeedNodeConnection = true)
+                    val response = HTTP.execute(HTTP.Verb.POST, url, parameters, useSeedNodeConnection = true).toString()
+                    val json = try {
+                        JsonUtil.fromJson(response, Map::class.java)
+                    } catch (exception: Exception) {
+                        mapOf( "result" to response)
+                    }
                     val intermediate = json["result"] as? Map<*, *>
                     val rawSnodes = intermediate?.get("service_node_states") as? List<*>
                     if (rawSnodes != null) {
@@ -192,7 +204,7 @@ object SnodeAPI {
         val promises = (1..validationCount).map {
             getRandomSnode().bind { snode ->
                 retryIfNeeded(maxRetryCount) {
-                    invoke(Snode.Method.OxenDaemonRPCCall, snode, null, parameters)
+                    invoke(Snode.Method.OxenDaemonRPCCall, snode, parameters)
                 }
             }
         }
@@ -268,7 +280,7 @@ object SnodeAPI {
         } else {
             val parameters = mapOf( "pubKey" to if (useTestnet) publicKey.removing05PrefixIfNeeded() else publicKey )
             return getRandomSnode().bind {
-                invoke(Snode.Method.GetSwarm, it, publicKey, parameters)
+                invoke(Snode.Method.GetSwarm, it, parameters, publicKey)
             }.map {
                 parseSnodes(it).toSet()
             }.success {
@@ -299,7 +311,7 @@ object SnodeAPI {
 //            "pubkey_ed25519" to ed25519PublicKey,
 //            "signature" to Base64.encodeBytes(signature)
         )
-        return invoke(Snode.Method.GetMessages, snode, publicKey, parameters)
+        return invoke(Snode.Method.GetMessages, snode, parameters, publicKey)
     }
 
     fun getMessages(publicKey: String): MessageListPromise {
@@ -311,7 +323,7 @@ object SnodeAPI {
     }
 
     private fun getNetworkTime(snode: Snode): Promise<Pair<Snode,Long>, Exception> {
-        return invoke(Snode.Method.Info, snode, null, emptyMap()).map { rawResponse ->
+        return invoke(Snode.Method.Info, snode, emptyMap()).map { rawResponse ->
             val timestamp = rawResponse["timestamp"] as? Long ?: -1
             snode to timestamp
         }
@@ -323,7 +335,7 @@ object SnodeAPI {
             getTargetSnodes(destination).map { swarm ->
                 swarm.map { snode ->
                     val parameters = message.toJSON()
-                    invoke(Snode.Method.SendMessage, snode, destination, parameters)
+                    invoke(Snode.Method.SendMessage, snode, parameters, destination)
                 }.toSet()
             }
         }
@@ -345,7 +357,7 @@ object SnodeAPI {
                         "messages" to serverHashes,
                         "signature" to Base64.encodeBytes(signature)
                     )
-                    invoke(Snode.Method.DeleteMessage, snode, publicKey, deleteMessageParams).map { rawResponse ->
+                    invoke(Snode.Method.DeleteMessage, snode, deleteMessageParams, publicKey).map { rawResponse ->
                         val swarms = rawResponse["swarm"] as? Map<String, Any> ?: return@map mapOf()
                         val result = swarms.mapNotNull { (hexSnodePublicKey, rawJSON) ->
                             val json = rawJSON as? Map<String, Any> ?: return@mapNotNull null
@@ -415,7 +427,7 @@ object SnodeAPI {
                             "timestamp" to timestamp,
                             "signature" to Base64.encodeBytes(signature)
                         )
-                        invoke(Snode.Method.DeleteAll, snode, userPublicKey, deleteMessageParams).map {
+                        invoke(Snode.Method.DeleteAll, snode, deleteMessageParams, userPublicKey).map {
                             rawResponse -> parseDeletions(userPublicKey, timestamp, rawResponse)
                         }.fail { e ->
                             Log.e("Loki", "Failed to clear data", e)
@@ -530,7 +542,7 @@ object SnodeAPI {
             400, 500, 502, 503 -> { // Usually indicates that the snode isn't up to date
                 handleBadSnode()
             }
-            425 -> {
+            406 -> {
                 Log.d("Loki", "The user's clock is out of sync with the service node network.")
                 broadcaster.broadcast("clockOutOfSync")
                 return Error.ClockOutOfSync

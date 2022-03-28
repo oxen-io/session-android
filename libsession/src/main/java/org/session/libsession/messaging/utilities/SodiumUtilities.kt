@@ -47,8 +47,8 @@ object SodiumUtilities {
 
     /* Constructs a "blinded" key pair (`ka, kA`) based on an open group server `publicKey` and an ed25519 `keyPair` */
     fun blindedKeyPair(serverPublicKey: String, edKeyPair: KeyPair): KeyPair?  {
-//        if (edKeyPair.publicKey.asBytes.size != Sign.PUBLICKEYBYTES ||
-//            edKeyPair.secretKey.asBytes.size != Sign.SECRETKEYBYTES) return null
+        if (edKeyPair.publicKey.asBytes.size != Sign.PUBLICKEYBYTES ||
+            edKeyPair.secretKey.asBytes.size != Sign.SECRETKEYBYTES) return null
         val kBytes = generateBlindingFactor(serverPublicKey)
         val aBytes = generatePrivateKeyScalar(edKeyPair.secretKey.asBytes)
         // Generate the blinded key pair `ka`, `kA`
@@ -183,17 +183,17 @@ object SodiumUtilities {
         }
 
         val hexString
-            get() = prefix?.prefix + publicKey
+            get() = prefix?.value + publicKey
     }
 
-    enum class IdPrefix(val prefix: String) {
+    enum class IdPrefix(val value: String) {
         STANDARD("05"), BLINDED("15"), UN_BLINDED("00");
 
         companion object {
-            fun fromValue(prefix: String): IdPrefix? = when(prefix) {
-                STANDARD.prefix -> STANDARD
-                BLINDED.prefix -> BLINDED
-                UN_BLINDED.prefix -> UN_BLINDED
+            fun fromValue(rawValue: String): IdPrefix? = when(rawValue) {
+                STANDARD.value -> STANDARD
+                BLINDED.value -> BLINDED
+                UN_BLINDED.value -> UN_BLINDED
                 else -> null
             }
         }

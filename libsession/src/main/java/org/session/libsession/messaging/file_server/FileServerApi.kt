@@ -13,7 +13,7 @@ import org.session.libsignal.utilities.HTTP
 import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
 
-object FileServerAPIV2 {
+object FileServerApi {
 
     private const val serverPublicKey = "da21e1d886c6fbaea313f75298bd64aab03a97ce985b46bb2dad9f2089c8ee59"
     const val server = "http://filev2.getsession.org"
@@ -73,12 +73,12 @@ object FileServerAPIV2 {
             HTTP.Verb.POST -> requestBuilder.post(createBody(request.parameters)!!)
             HTTP.Verb.DELETE -> requestBuilder.delete(createBody(request.parameters))
         }
-        if (request.useOnionRouting) {
-            return OnionRequestAPI.sendOnionRequest(requestBuilder.build(), server, serverPublicKey).fail { e ->
+        return if (request.useOnionRouting) {
+            OnionRequestAPI.sendOnionRequest(requestBuilder.build(), server, serverPublicKey).fail { e ->
                 Log.e("Loki", "File server request failed.", e)
             }
         } else {
-            return Promise.ofFail(IllegalStateException("It's currently not allowed to send non onion routed requests."))
+            Promise.ofFail(IllegalStateException("It's currently not allowed to send non onion routed requests."))
         }
     }
 

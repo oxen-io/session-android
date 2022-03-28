@@ -38,7 +38,7 @@ class NotifyPNServerJob(val message: SnodeMessage) : Job {
         val body = RequestBody.create(MediaType.get("application/json"), JsonUtil.toJson(parameters))
         val request = Request.Builder().url(url).post(body)
         retryIfNeeded(4) {
-            OnionRequestAPI.sendOnionRequest(request.build(), server, PushNotificationAPI.serverPublicKey, "/loki/v2/lsrpc").map { json ->
+            OnionRequestAPI.sendOnionRequest(request.build(), server, PushNotificationAPI.serverPublicKey, OnionRequestAPI.Version.V2).map { json ->
                 val code = json["code"] as? Int
                 if (code == null || code == 0) {
                     Log.d("Loki", "Couldn't notify PN server due to error: ${json["message"] as? String ?: "null"}.")

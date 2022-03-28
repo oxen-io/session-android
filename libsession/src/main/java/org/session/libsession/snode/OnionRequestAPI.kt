@@ -1,27 +1,58 @@
 package org.session.libsession.snode
 
+import nl.komponents.kovenant.Deferred
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.all
 import nl.komponents.kovenant.deferred
 import nl.komponents.kovenant.functional.bind
 import nl.komponents.kovenant.functional.map
 import okhttp3.Request
-import org.session.libsession.messaging.file_server.FileServerAPIV2
+import org.session.libsession.messaging.file_server.FileServerApi
 import org.session.libsession.utilities.AESGCM
-import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.Base64
-import org.session.libsignal.utilities.*
-import org.session.libsignal.utilities.Snode
 import org.session.libsession.utilities.AESGCM.EncryptionResult
 import org.session.libsession.utilities.getBodyForOnionRequest
 import org.session.libsession.utilities.getHeadersForOnionRequest
 import org.session.libsignal.crypto.getRandomElement
 import org.session.libsignal.crypto.getRandomElementOrNull
+import org.session.libsignal.database.LokiAPIDatabaseProtocol
+import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Broadcaster
 import org.session.libsignal.utilities.HTTP
-import org.session.libsignal.database.LokiAPIDatabaseProtocol
-import java.util.*
-import kotlin.math.abs
+import org.session.libsignal.utilities.JsonUtil
+import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.Snode
+import org.session.libsignal.utilities.ThreadUtils
+import org.session.libsignal.utilities.recover
+import org.session.libsignal.utilities.toHexString
+import java.util.Date
+import kotlin.collections.List
+import kotlin.collections.Map
+import kotlin.collections.Set
+import kotlin.collections.any
+import kotlin.collections.contains
+import kotlin.collections.count
+import kotlin.collections.dropLast
+import kotlin.collections.filter
+import kotlin.collections.first
+import kotlin.collections.firstOrNull
+import kotlin.collections.flatten
+import kotlin.collections.forEach
+import kotlin.collections.get
+import kotlin.collections.indexOfFirst
+import kotlin.collections.isNotEmpty
+import kotlin.collections.last
+import kotlin.collections.listOf
+import kotlin.collections.map
+import kotlin.collections.mapOf
+import kotlin.collections.minus
+import kotlin.collections.mutableMapOf
+import kotlin.collections.mutableSetOf
+import kotlin.collections.plus
+import kotlin.collections.set
+import kotlin.collections.setOf
+import kotlin.collections.toMutableList
+import kotlin.collections.toSet
+import kotlin.collections.toString
 
 private typealias Path = List<Snode>
 
@@ -96,7 +127,8 @@ object OnionRequestAPI {
         ThreadUtils.queue { // No need to block the shared context for this
             val url = "${snode.address}:${snode.port}/get_stats/v1"
             try {
-                val json = HTTP.execute(HTTP.Verb.GET, url, 3)
+                val response = HTTP.execute(HTTP.Verb.GET, url, 3).decodeToString()
+                val json = JsonUtil.fromJson(response, Map::class.java)
                 val version = json["version"] as? String
                 if (version == null) { deferred.reject(Exception("Missing snode version.")); return@queue }
                 if (version >= "2.0.7") {
@@ -209,26 +241,30 @@ object OnionRequestAPI {
         }
         OnionRequestAPI.guardSnodes = guardSnodes
         fun getPath(paths: List<Path>): Path {
-            if (snodeToExclude != null) {
-                return paths.filter { !it.contains(snodeToExclude) }.getRandomElement()
+            return if (snodeToExclude != null) {
+                paths.filter { !it.contains(snodeToExclude) }.getRandomElement()
             } else {
-                return paths.getRandomElement()
+                paths.getRandomElement()
             }
         }
-        if (paths.count() >= targetPathCount) {
-            return Promise.of(getPath(paths))
-        } else if (paths.isNotEmpty()) {
-            if (paths.any { !it.contains(snodeToExclude) }) {
-                buildPaths(paths) // Re-build paths in the background
+        when {
+            paths.count() >= targetPathCount -> {
                 return Promise.of(getPath(paths))
-            } else {
-                return buildPaths(paths).map { newPaths ->
-                    getPath(newPaths)
+            }
+            paths.isNotEmpty() -> {
+                return if (paths.any { !it.contains(snodeToExclude) }) {
+                    buildPaths(paths) // Re-build paths in the background
+                    Promise.of(getPath(paths))
+                } else {
+                    buildPaths(paths).map { newPaths ->
+                        getPath(newPaths)
+                    }
                 }
             }
-        } else {
-            return buildPaths(listOf()).map { newPaths ->
-                getPath(newPaths)
+            else -> {
+                return buildPaths(listOf()).map { newPaths ->
+                    getPath(newPaths)
+                }
             }
         }
     }
@@ -270,7 +306,11 @@ object OnionRequestAPI {
     /**
      * Builds an onion around `payload` and returns the result.
      */
-    private fun buildOnionForDestination(payload: Map<*, *>, destination: Destination): Promise<OnionBuildingResult, Exception> {
+    private fun buildOnionForDestination(
+        payload: ByteArray,
+        destination: Destination,
+        version: Version
+    ): Promise<OnionBuildingResult, Exception> {
         lateinit var guardSnode: Snode
         lateinit var destinationSymmetricKey: ByteArray // Needed by LokiAPI to decrypt the response sent back by the destination
         lateinit var encryptionResult: EncryptionResult
@@ -281,19 +321,19 @@ object OnionRequestAPI {
         return getPath(snodeToExclude).bind { path ->
             guardSnode = path.first()
             // Encrypt in reverse order, i.e. the destination first
-            OnionRequestEncryption.encryptPayloadForDestination(payload, destination).bind { r ->
+            OnionRequestEncryption.encryptPayloadForDestination(payload, destination, version).bind { r ->
                 destinationSymmetricKey = r.symmetricKey
                 // Recursively encrypt the layers of the onion (again in reverse order)
                 encryptionResult = r
                 @Suppress("NAME_SHADOWING") var path = path
                 var rhs = destination
                 fun addLayer(): Promise<EncryptionResult, Exception> {
-                    if (path.isEmpty()) {
-                        return Promise.of(encryptionResult)
+                    return if (path.isEmpty()) {
+                        Promise.of(encryptionResult)
                     } else {
                         val lhs = Destination.Snode(path.last())
                         path = path.dropLast(1)
-                        return OnionRequestEncryption.encryptHop(lhs, rhs, encryptionResult).bind { r ->
+                        OnionRequestEncryption.encryptHop(lhs, rhs, encryptionResult).bind { r ->
                             encryptionResult = r
                             rhs = lhs
                             addLayer()
@@ -308,15 +348,15 @@ object OnionRequestAPI {
     /**
      * Sends an onion request to `destination`. Builds new paths as needed.
      */
-    private fun sendOnionRequest(destination: Destination, payload: Map<*, *>): Promise<Map<*, *>, Exception> {
+    private fun sendOnionRequest(destination: Destination, payload: ByteArray, version: Version): Promise<Map<*, *>, Exception> {
         val deferred = deferred<Map<*, *>, Exception>()
         lateinit var guardSnode: Snode
-        buildOnionForDestination(payload, destination).success { result ->
+        buildOnionForDestination(payload, destination, version).success { result ->
             guardSnode = result.guardSnode
             val url = "${guardSnode.address}:${guardSnode.port}/onion_req/v2"
             val finalEncryptionResult = result.finalEncryptionResult
             val onion = finalEncryptionResult.ciphertext
-            if (destination is Destination.Server && onion.count().toDouble() > 0.75 * FileServerAPIV2.maxFileSize.toDouble()) {
+            if (destination is Destination.Server && onion.count().toDouble() > 0.75 * FileServerApi.maxFileSize.toDouble()) {
                 Log.d("Loki", "Approaching request size limit: ~${onion.count()} bytes.")
             }
             @Suppress("NAME_SHADOWING") val parameters = mapOf(
@@ -331,49 +371,8 @@ object OnionRequestAPI {
             val destinationSymmetricKey = result.destinationSymmetricKey
             ThreadUtils.queue {
                 try {
-                    val json = HTTP.execute(HTTP.Verb.POST, url, body)
-                    val base64EncodedIVAndCiphertext = json["result"] as? String ?: return@queue deferred.reject(Exception("Invalid JSON"))
-                    val ivAndCiphertext = Base64.decode(base64EncodedIVAndCiphertext)
-                    try {
-                        val plaintext = AESGCM.decrypt(ivAndCiphertext, destinationSymmetricKey)
-                        try {
-                            @Suppress("NAME_SHADOWING") val json = JsonUtil.fromJson(plaintext.toString(Charsets.UTF_8), Map::class.java)
-                            val statusCode = json["status_code"] as? Int ?: json["status"] as Int
-                            if (statusCode == 406) {
-                                @Suppress("NAME_SHADOWING") val body = mapOf( "result" to "Your clock is out of sync with the service node network." )
-                                val exception = HTTPRequestFailedAtDestinationException(statusCode, body, destination.description)
-                                return@queue deferred.reject(exception)
-                            } else if (json["body"] != null) {
-                                @Suppress("NAME_SHADOWING") val body: Map<*, *>
-                                if (json["body"] is Map<*, *>) {
-                                    body = json["body"] as Map<*, *>
-                                } else {
-                                    val bodyAsString = json["body"] as String
-                                    body = JsonUtil.fromJson(bodyAsString, Map::class.java)
-                                }
-                                if (body["t"] != null) {
-                                    val timestamp = body["t"] as Long
-                                    val offset = timestamp - Date().time
-                                    SnodeAPI.clockOffset = offset
-                                }
-                                if (statusCode != 200) {
-                                    val exception = HTTPRequestFailedAtDestinationException(statusCode, body, destination.description)
-                                    return@queue deferred.reject(exception)
-                                }
-                                deferred.resolve(body)
-                            } else {
-                                if (statusCode != 200) {
-                                    val exception = HTTPRequestFailedAtDestinationException(statusCode, json, destination.description)
-                                    return@queue deferred.reject(exception)
-                                }
-                                deferred.resolve(json)
-                            }
-                        } catch (exception: Exception) {
-                            deferred.reject(Exception("Invalid JSON: ${plaintext.toString(Charsets.UTF_8)}."))
-                        }
-                    } catch (exception: Exception) {
-                        deferred.reject(exception)
-                    }
+                    val response = HTTP.execute(HTTP.Verb.POST, url, body)
+                    handleResponse(response, destinationSymmetricKey, destination, version, deferred)
                 } catch (exception: Exception) {
                     deferred.reject(exception)
                 }
@@ -440,12 +439,13 @@ object OnionRequestAPI {
     /**
      * Sends an onion request to `snode`. Builds new paths as needed.
      */
-    internal fun sendOnionRequest(method: Snode.Method, parameters: Map<*, *>, snode: Snode, publicKey: String? = null): Promise<Map<*, *>, Exception> {
+    internal fun sendOnionRequest(method: Snode.Method, parameters: Map<*, *>, snode: Snode, version: Version, publicKey: String? = null): Promise<Map<*, *>, Exception> {
         val payload = mapOf(
             "method" to method.rawValue,
             "params" to parameters
         )
-        return sendOnionRequest(Destination.Snode(snode), payload).recover { exception ->
+        val payloadData = JsonUtil.toJson(payload).toByteArray()
+        return sendOnionRequest(Destination.Snode(snode), payloadData, version).recover { exception ->
             val error = when (exception) {
                 is HTTP.HTTPRequestFailedException -> SnodeAPI.handleSnodeError(exception.statusCode, exception.json, snode, publicKey)
                 is HTTPRequestFailedAtDestinationException -> SnodeAPI.handleSnodeError(exception.statusCode, exception.json, snode, publicKey)
@@ -461,27 +461,198 @@ object OnionRequestAPI {
      *
      * `publicKey` is the hex encoded public key of the user the call is associated with. This is needed for swarm cache maintenance.
      */
-    fun sendOnionRequest(request: Request, server: String, x25519PublicKey: String, target: String = "/loki/v3/lsrpc"): Promise<Map<*, *>, Exception> {
-        val headers = request.getHeadersForOnionRequest()
+    fun sendOnionRequest(request: Request, server: String, x25519PublicKey: String, version: Version = Version.V4): Promise<Map<*, *>, Exception> {
+        val url = request.url()
+        val payload = generatePayload(request, server, version)
+        val destination = Destination.Server(url.host(), version.value, x25519PublicKey, url.scheme(), url.port())
+        return sendOnionRequest(destination, payload, version).recover { exception ->
+            Log.d("Loki", "Couldn't reach server: $url due to error: $exception.")
+            throw exception
+        }
+    }
+
+    private fun generatePayload(request: Request, server: String, version: Version): ByteArray {
+        val headers = request.getHeadersForOnionRequest().toMutableMap()
         val url = request.url()
         val urlAsString = url.toString()
-        val host = url.host()
+        val body = request.getBodyForOnionRequest() ?: "null"
         val endpoint = when {
             server.count() < urlAsString.count() -> urlAsString.substringAfter(server).removePrefix("/")
             else -> ""
         }
-        val body = request.getBodyForOnionRequest() ?: "null"
-        val payload = mapOf(
-            "body" to body,
-            "endpoint" to endpoint,
-            "method" to request.method(),
-            "headers" to headers
-        )
-        val destination = Destination.Server(host, target, x25519PublicKey, url.scheme(), url.port())
-        return sendOnionRequest(destination, payload).recover { exception ->
-            Log.d("Loki", "Couldn't reach server: $urlAsString due to error: $exception.")
-            throw exception
+        return if (version == Version.V4) {
+            if (request.body() != null && !headers.containsKey("Content-Type")) {
+                headers["Content-Type"] = "application/json"
+            }
+            val requestPayload = mapOf(
+                "endpoint" to endpoint,
+                "method" to request.method(),
+                "headers" to headers
+            )
+            val requestData = JsonUtil.toJson(requestPayload).toByteArray()
+            val prefixData = "l${requestData.size}".toByteArray()
+            val suffixData = "e".toByteArray()
+            if (request.body() != null) {
+                val bodyPayload = mapOf(
+                    "body" to body
+                )
+                val bodyData = JsonUtil.toJson(bodyPayload).toByteArray()
+                val bodyLengthData = "${bodyData.size}".toByteArray()
+                    prefixData + requestData + bodyLengthData + bodyData + suffixData
+            } else {
+                prefixData + requestData + suffixData
+            }
+        } else {
+            val payload = mapOf(
+                "body" to body,
+                "endpoint" to endpoint,
+                "method" to request.method(),
+                "headers" to headers
+            )
+            JsonUtil.toJson(payload).toByteArray()
+        }
+    }
+
+    private fun handleResponse(
+        response: ByteArray,
+        destinationSymmetricKey: ByteArray,
+        destination: Destination,
+        version: Version,
+        deferred: Deferred<Map<*, *>, Exception>
+    ) {
+        if (version == Version.V4) {
+            try {
+                if (response.size <= AESGCM.ivSize) return deferred.reject(Exception("Invalid response"))
+                // The data will be in the form of `l123:jsone` or `l123:json456:bodye` so we need to break the data into
+                // parts to properly process it
+                val plaintext = AESGCM.decrypt(response, destinationSymmetricKey)
+                val plaintextString = plaintext.decodeToString()
+                if (!plaintextString.startsWith("l")) return deferred.reject(Exception("Invalid response"))
+                val infoParts = plaintextString.split(":")
+                val infoLength = infoParts.firstOrNull()?.drop(1)?.toIntOrNull()
+                if (infoParts.size <= 1 || infoLength == null) return deferred.reject(Exception("Invalid response"))
+                val infoStartIndex = "l$infoLength".length + 1
+                val infoEndIndex = infoStartIndex + infoLength
+                val info = plaintextString.substring(infoStartIndex, infoEndIndex)
+                val responseInfo = JsonUtil.fromJson(info, Map::class.java)
+                when (val statusCode = responseInfo["code"].toString().toInt()) {
+                    // Custom handle a clock out of sync error (v4 returns '425' but included the '406' just in case)
+                    406, 425 -> {
+                        @Suppress("NAME_SHADOWING")
+                        val body =
+                            mapOf("result" to "Your clock is out of sync with the service node network.")
+                        val exception = HTTPRequestFailedAtDestinationException(
+                            statusCode,
+                            body,
+                            destination.description
+                        )
+                        return deferred.reject(exception)
+                    }
+                    // Handle error status codes
+                    !in 200..299 -> {
+                        val exception = HTTPRequestFailedAtDestinationException(
+                            statusCode,
+                            responseInfo,
+                            destination.description
+                        )
+                        return deferred.reject(exception)
+                    }
+                }
+
+                // If there is no data in the response then just return the ResponseInfo
+                if (info.length < "l${infoLength}${info}e".length) {
+                    return deferred.resolve(JsonUtil.fromJson(info, Map::class.java))
+                }
+                // Extract the response data as well
+                val data = plaintextString.substring(infoEndIndex)
+                val dataParts = data.split(":")
+                val dataLength = dataParts.firstOrNull()?.length
+                if (dataParts.size <= 1 || dataLength == null) return deferred.reject(Exception("Invalid JSON"))
+                val dataString = dataParts.last().dropLast(1)
+                return deferred.resolve(JsonUtil.fromJson(dataString, Map::class.java))
+            } catch (exception: Exception) {
+                deferred.reject(exception)
+            }
+        } else {
+            val bodyAsString = response.decodeToString()
+            val json = try {
+                JsonUtil.fromJson(bodyAsString, Map::class.java)
+            } catch (exception: Exception) {
+                mapOf( "result" to bodyAsString)
+            }
+            val base64EncodedIVAndCiphertext = json["result"] as? String ?: return deferred.reject(Exception("Invalid JSON"))
+            val ivAndCiphertext = Base64.decode(base64EncodedIVAndCiphertext)
+            try {
+                val plaintext = AESGCM.decrypt(ivAndCiphertext, destinationSymmetricKey)
+                try {
+                    @Suppress("NAME_SHADOWING") val json =
+                        JsonUtil.fromJson(plaintext.toString(Charsets.UTF_8), Map::class.java)
+                    val statusCode = json["status_code"] as? Int ?: json["status"] as Int
+                    when {
+                        statusCode == 406 -> {
+                            @Suppress("NAME_SHADOWING")
+                            val body =
+                                mapOf("result" to "Your clock is out of sync with the service node network.")
+                            val exception = HTTPRequestFailedAtDestinationException(
+                                statusCode,
+                                body,
+                                destination.description
+                            )
+                            return deferred.reject(exception)
+                        }
+                        json["body"] != null -> {
+                            @Suppress("NAME_SHADOWING")
+                            val body = if (json["body"] is Map<*, *>) {
+                                json["body"] as Map<*, *>
+                            } else {
+                                val bodyAsString = json["body"] as String
+                                JsonUtil.fromJson(bodyAsString, Map::class.java)
+                            }
+                            if (body["t"] != null) {
+                                val timestamp = body["t"] as Long
+                                val offset = timestamp - Date().time
+                                SnodeAPI.clockOffset = offset
+                            }
+                            if (statusCode != 200) {
+                                val exception = HTTPRequestFailedAtDestinationException(
+                                    statusCode,
+                                    body,
+                                    destination.description
+                                )
+                                return deferred.reject(exception)
+                            }
+                            deferred.resolve(body)
+                        }
+                        else -> {
+                            if (statusCode != 200) {
+                                val exception = HTTPRequestFailedAtDestinationException(
+                                    statusCode,
+                                    json,
+                                    destination.description
+                                )
+                                return deferred.reject(exception)
+                            }
+                            deferred.resolve(json)
+                        }
+                    }
+                } catch (exception: Exception) {
+                    deferred.reject(Exception("Invalid JSON: ${plaintext.toString(Charsets.UTF_8)}."))
+                }
+            } catch (exception: Exception) {
+                deferred.reject(exception)
+            }
         }
     }
     // endregion
+
+    enum class Version(val value: String) {
+        V2("/loki/v2/lsrpc"),
+        V3("/loki/v3/lsrpc"),
+        V4("/oxen/v4/lsrpc");
+    }
+
+    data class ResponseInfo(
+        val code: String,
+        val headers: Map<String, String>
+    )
 }

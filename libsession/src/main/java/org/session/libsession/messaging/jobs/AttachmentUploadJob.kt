@@ -6,9 +6,8 @@ import com.esotericsoftware.kryo.io.Output
 import nl.komponents.kovenant.Promise
 import okio.Buffer
 import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.messaging.file_server.FileServerAPIV2
+import org.session.libsession.messaging.file_server.FileServerApi
 import org.session.libsession.messaging.messages.Message
-import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
 import org.session.libsession.messaging.open_groups.OpenGroupApiV4
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.utilities.Data
@@ -58,8 +57,8 @@ class AttachmentUploadJob(val attachmentID: Long, val threadID: String, val mess
                 }
                 handleSuccess(attachment, keyAndResult.first, keyAndResult.second)
             } else {
-                val keyAndResult = upload(attachment, FileServerAPIV2.server, true) {
-                    FileServerAPIV2.upload(it)
+                val keyAndResult = upload(attachment, FileServerApi.server, true) {
+                    FileServerApi.upload(it)
                 }
                 handleSuccess(attachment, keyAndResult.first, keyAndResult.second)
             }

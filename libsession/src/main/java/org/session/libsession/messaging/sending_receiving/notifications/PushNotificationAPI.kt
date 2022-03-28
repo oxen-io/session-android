@@ -38,7 +38,7 @@ object PushNotificationAPI {
         val body = RequestBody.create(MediaType.get("application/json"), JsonUtil.toJson(parameters))
         val request = Request.Builder().url(url).post(body)
         retryIfNeeded(maxRetryCount) {
-            OnionRequestAPI.sendOnionRequest(request.build(), server, serverPublicKey, "/loki/v2/lsrpc").map { json ->
+            OnionRequestAPI.sendOnionRequest(request.build(), server, serverPublicKey, OnionRequestAPI.Version.V2).map { json ->
                 val code = json["code"] as? Int
                 if (code != null && code != 0) {
                     TextSecurePreferences.setIsUsingFCM(context, false)
@@ -66,7 +66,7 @@ object PushNotificationAPI {
         val body = RequestBody.create(MediaType.get("application/json"), JsonUtil.toJson(parameters))
         val request = Request.Builder().url(url).post(body)
         retryIfNeeded(maxRetryCount) {
-            OnionRequestAPI.sendOnionRequest(request.build(), server, serverPublicKey, "/loki/v2/lsrpc").map { json ->
+            OnionRequestAPI.sendOnionRequest(request.build(), server, serverPublicKey, OnionRequestAPI.Version.V2).map { json ->
                 val code = json["code"] as? Int
                 if (code != null && code != 0) {
                     TextSecurePreferences.setIsUsingFCM(context, true)
@@ -93,7 +93,7 @@ object PushNotificationAPI {
         val body = RequestBody.create(MediaType.get("application/json"), JsonUtil.toJson(parameters))
         val request = Request.Builder().url(url).post(body)
         retryIfNeeded(maxRetryCount) {
-            OnionRequestAPI.sendOnionRequest(request.build(), server, serverPublicKey, "/loki/v2/lsrpc").map { json ->
+            OnionRequestAPI.sendOnionRequest(request.build(), server, serverPublicKey, OnionRequestAPI.Version.V2).map { json ->
                 val code = json["code"] as? Int
                 if (code == null || code == 0) {
                     Log.d("Loki", "Couldn't subscribe/unsubscribe closed group: $closedGroupPublicKey due to error: ${json["message"] as? String ?: "null"}.")

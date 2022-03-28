@@ -20,7 +20,6 @@ import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.utilities.AESGCM
 import org.session.libsession.utilities.TextSecurePreferences
-import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Base64.decode
 import org.session.libsignal.utilities.Base64.encodeBytes
 import org.session.libsignal.utilities.HTTP
