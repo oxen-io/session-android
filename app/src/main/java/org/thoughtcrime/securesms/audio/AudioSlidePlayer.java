@@ -12,10 +12,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.util.Pair;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.util.Pair;
-import android.widget.Toast;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -31,25 +31,25 @@ import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.TransferListener;
 
 import org.jetbrains.annotations.NotNull;
-import org.thoughtcrime.securesms.attachments.AttachmentServer;
-import org.session.libsignal.utilities.Log;
-import org.thoughtcrime.securesms.mms.AudioSlide;
 import org.session.libsession.utilities.ServiceUtil;
-
 import org.session.libsession.utilities.Util;
-
+import org.session.libsignal.utilities.Log;
 import org.session.libsignal.utilities.guava.Optional;
+import org.thoughtcrime.securesms.attachments.KAttachmentServer;
+import org.thoughtcrime.securesms.mms.AudioSlide;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import network.loki.messenger.BuildConfig;
-import network.loki.messenger.R;
 
-public class AudioSlidePlayer implements SensorEventListener {
+public class AudioSlidePlayer implements SensorEventListener, TransferListener {
 
   private static final String TAG = AudioSlidePlayer.class.getSimpleName();
 
@@ -65,7 +65,8 @@ public class AudioSlidePlayer implements SensorEventListener {
 
   private @NonNull  WeakReference<Listener> listener;
   private @Nullable SimpleExoPlayer         mediaPlayer;
-  private @Nullable AttachmentServer        audioAttachmentServer;
+//  private @Nullable AttachmentServer        audioAttachmentServer;
+  private @Nullable KAttachmentServer       audioAttachmentServer;
   private           long                    startTime;
 
   public synchronized static AudioSlidePlayer createFor(@NonNull Context context,
@@ -108,10 +109,8 @@ public class AudioSlidePlayer implements SensorEventListener {
 
     LoadControl loadControl    = new DefaultLoadControl.Builder().setBufferDurationsMs(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE).createDefaultLoadControl();
     this.mediaPlayer           = ExoPlayerFactory.newSimpleInstance(context, new DefaultRenderersFactory(context), new DefaultTrackSelector(), loadControl);
-    this.audioAttachmentServer = new AttachmentServer(context, slide.asAttachment());
+    this.audioAttachmentServer = new KAttachmentServer(context, slide.asAttachment());
     this.startTime             = System.currentTimeMillis();
-
-    audioAttachmentServer.start();
 
     mediaPlayer.prepare(createMediaSource(audioAttachmentServer.getUri()));
     mediaPlayer.setPlayWhenReady(true);
@@ -169,9 +168,7 @@ public class AudioSlidePlayer implements SensorEventListener {
               sensorManager.unregisterListener(AudioSlidePlayer.this);
 
               if (wakeLock != null && wakeLock.isHeld()) {
-                if (Build.VERSION.SDK_INT >= 21) {
-                  wakeLock.release(PowerManager.RELEASE_FLAG_WAIT_FOR_NO_PROXIMITY);
-                }
+                wakeLock.release(PowerManager.RELEASE_FLAG_WAIT_FOR_NO_PROXIMITY);
               }
             }
 
@@ -209,9 +206,30 @@ public class AudioSlidePlayer implements SensorEventListener {
   }
 
   private MediaSource createMediaSource(@NonNull Uri uri) {
-    return new ExtractorMediaSource.Factory(new DefaultDataSourceFactory(context, BuildConfig.USER_AGENT))
+    Log.i(TAG, "createMediaSource called");
+    return new ExtractorMediaSource.Factory(new DefaultDataSourceFactory(context, BuildConfig.USER_AGENT, this))
                                    .setExtractorsFactory(new DefaultExtractorsFactory().setConstantBitrateSeekingEnabled(true))
                                    .createMediaSource(uri);
+  }
+
+  @Override
+  public void onTransferInitializing(DataSource source, DataSpec dataSpec, boolean isNetwork) {
+    Log.i(TAG,"onTransferInitializing");
+  }
+
+  @Override
+  public void onTransferStart(DataSource source, DataSpec dataSpec, boolean isNetwork) {
+    Log.i(TAG,"onTransferStart");
+  }
+
+  @Override
+  public void onBytesTransferred(DataSource source, DataSpec dataSpec, boolean isNetwork, int bytesTransferred) {
+    Log.i(TAG,"onBytesTransferred: "+bytesTransferred);
+  }
+
+  @Override
+  public void onTransferEnd(DataSource source, DataSpec dataSpec, boolean isNetwork) {
+    Log.i(TAG,"onTransferEnd");
   }
 
   public synchronized void stop() {
