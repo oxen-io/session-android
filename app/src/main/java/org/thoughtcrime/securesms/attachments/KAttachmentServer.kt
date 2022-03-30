@@ -4,20 +4,18 @@ import android.content.Context
 import android.net.Uri
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import okio.buffer
+import okio.sink
+import okio.source
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.utilities.Util
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.mms.PartAuthority
-import java.io.BufferedOutputStream
 import java.io.BufferedReader
-import java.io.ByteArrayInputStream
 import java.io.IOException
-import java.io.InputStreamReader
-import java.io.OutputStream
 import java.net.InetAddress
 import java.net.ServerSocket
 import java.net.Socket
@@ -26,35 +24,37 @@ import java.security.MessageDigest
 import java.util.Properties
 import java.util.StringTokenizer
 
-class KAttachmentServer(private val context: Context,
-                        private val attachment: Attachment) {
+class KAttachmentServer(
+    private val context: Context,
+    private val attachment: Attachment
+) {
     companion object {
         const val TAG = "KAttachmentServer"
     }
-    private val socket = ServerSocket(0, 0, InetAddress.getByAddress(byteArrayOf(127, 0, 0, 1))).apply {
-        soTimeout = 5000
-    }
+
+    private val socket =
+        ServerSocket(0, 0, InetAddress.getByAddress(byteArrayOf(127, 0, 0, 1))).apply {
+            soTimeout = 5000
+        }
     private val port = socket.localPort
     private val auth = Hex.toStringCondensed(Util.getSecretBytes(16))
 
     fun getUri(): Uri = Uri.parse("http://127.0.0.1:$port/$auth")
+    private val dispatcher = CoroutineScope(Dispatchers.Default)
 
-    private val dispatcher = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val job = dispatcher.launch {
         while (isActive) {
             try {
                 socket.accept().use { client ->
-                    while (client.keepAlive) {
-                        val task = StreamToMediaPlayerTask(client, "/$auth", context, attachment)
-                        if (task.process()) {
-                            task.execute()
-                        }
+                    val task = StreamToMediaPlayerTask(client, "/$auth", context, attachment)
+                    if (task.process()) {
+                        task.execute()
                     }
                 }
             } catch (e: Exception) {
                 when (e) {
-                    is IOException -> Log.e(TAG,"Error connecting to client", e)
-                    else -> Log.e(TAG,e)
+                    is IOException -> Log.e(TAG, "Error connecting to client", e)
+                    else -> Log.e(TAG, e)
                 }
             }
         }
@@ -64,39 +64,29 @@ class KAttachmentServer(private val context: Context,
         job.cancel()
     }
 
-    private class StreamToMediaPlayerTask(private val client: Socket,
-                                          private val auth: String,
-                                          private val context: Context,
-                                          private val attachment: Attachment) {
+    private class StreamToMediaPlayerTask(
+        private val client: Socket,
+        private val auth: String,
+        private val context: Context,
+        private val attachment: Attachment
+    ) {
 
         var cbSkip = 0L
 
-        suspend fun process(): Boolean {
-            val iStream = client.getInputStream()
-            val bufferSize = 8192
-            val buffer = ByteArray(bufferSize)
-            var splitByte = 0
-            var readLength = 0
+        fun process(): Boolean {
+            val source = client.source().buffer()
 
-            var read = iStream.read(buffer, 0, bufferSize)
-            while (read > 0) {
-                readLength += read
-                splitByte = findHeaderEnd(buffer, readLength)
-                if (splitByte > 0) break
-                read = iStream.read(buffer, readLength, bufferSize - readLength)
-            }
             // Create a BufferedReader for parsing the header.
 
             // Create a BufferedReader for parsing the header.
-            val hbis = ByteArrayInputStream(buffer, 0, readLength)
-            val hin = BufferedReader(InputStreamReader(hbis))
+            val hin = source.buffer
 
             val request = Properties()
             val parameters = Properties()
             val requestHeaders = Properties()
 
             try {
-                decodeHeader(hin, request, parameters, requestHeaders)
+                decodeHeader(BufferedReader(hin), request, parameters, requestHeaders)
             } catch (e1: InterruptedException) {
                 Log.e(TAG, "Exception: " + e1.message)
                 e1.printStackTrace()
@@ -126,7 +116,11 @@ class KAttachmentServer(private val context: Context,
 
             val receivedAuth: String? = request.getProperty("uri")
 
-            if (receivedAuth == null || !MessageDigest.isEqual(receivedAuth.toByteArray(), auth.toByteArray())) {
+            if (receivedAuth == null || !MessageDigest.isEqual(
+                    receivedAuth.toByteArray(),
+                    auth.toByteArray()
+                )
+            ) {
                 Log.w(TAG, "Bad auth token!")
                 return false
             }
@@ -134,56 +128,42 @@ class KAttachmentServer(private val context: Context,
             return true
         }
 
-        suspend fun execute() {
+        fun execute() {
+            val sink = client.sink().buffer()
             val inputStream = PartAuthority.getAttachmentStream(context, attachment.dataUri!!)
             val fileSize: Long = attachment.size
 
             var headers = ""
             if (cbSkip > 0) { // It is a seek or skip request if there's a Range
                 // header
-                headers += "HTTP/1.1 206 Partial Content\r\n"
                 headers += """
-              Content-Type: ${attachment.contentType}
-              
-              """.trimIndent()
-                headers += "Accept-Ranges: bytes\r\n"
-                headers += """
-              Content-Length: ${fileSize - cbSkip}
-              
-              """.trimIndent()
-                headers += """
-              Content-Range: bytes $cbSkip-${fileSize - 1}/$fileSize
-              
-              """.trimIndent()
-                headers += "Connection: Keep-Alive\r\n"
-                headers += "\r\n"
+                        HTTP/1.1 206 Partial Content
+                        Content-Type: ${attachment.contentType}
+                        Content-Length: ${fileSize - cbSkip}
+                        Content-Range: bytes $cbSkip-${fileSize - 1}/$fileSize
+                        Connection: Keep-Alive
+                    """.trimIndent()
             } else {
-                headers += "HTTP/1.1 200 OK\r\n"
                 headers += """
-              Content-Type: ${attachment.contentType}
-              
-              """.trimIndent()
-                headers += "Accept-Ranges: bytes\r\n"
-                headers += "Content-Length: $fileSize\r\n"
-                headers += "Connection: Keep-Alive\r\n"
-                headers += "\r\n"
+                    HTTP/1.1. 200 OK
+                    Content-Type: ${attachment.contentType}
+                    Content-Length: $fileSize
+                    Connection: Keep-Alive
+                """.trimIndent()
             }
+
+            val headerSource = headers.encodeToByteArray()
 
             Log.i(TAG, "headers: $headers")
 
-            var output: OutputStream? = null
-            val buff = ByteArray(10 * 1024 * 1024)
             try {
-                output = BufferedOutputStream(client.getOutputStream(), 32 * 1024)
-                output.write(headers.toByteArray())
+                sink.write(headerSource)
                 inputStream.skip(cbSkip)
                 //        dataSource.skipFully(data, cbSkip);//try to skip as much as possible
 
                 // Loop as long as there's stuff to send and client has not closed
-                var cbRead: Int = inputStream.read(buff, 0, buff.size)
-                while (!client.isClosed && cbRead != -1) {
-                    output.write(buff, 0, cbRead)
-                    cbRead = inputStream.read(buff, 0, buff.size)
+                inputStream.buffered().source().use { input ->
+                    sink.writeAll(input)
                 }
             } catch (socketException: SocketException) {
                 Log.e(
@@ -196,15 +176,6 @@ class KAttachmentServer(private val context: Context,
             }
 
             // Cleanup
-
-            // Cleanup
-            try {
-                output?.close()
-            } catch (e: IOException) {
-                Log.e(TAG, "IOException while cleaning up streaming task:")
-                Log.e(TAG, e.javaClass.name + " : " + e.localizedMessage)
-                e.printStackTrace()
-            }
         }
 
         private fun findHeaderEnd(buf: ByteArray, rlen: Int): Int {
