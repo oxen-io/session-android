@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming
 import com.fasterxml.jackson.databind.type.TypeFactory
 import com.goterl.lazysodium.LazySodiumAndroid
 import com.goterl.lazysodium.SodiumAndroid
+import com.goterl.lazysodium.interfaces.GenericHash
 import kotlinx.coroutines.flow.MutableSharedFlow
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.functional.bind
@@ -153,8 +154,27 @@ object OpenGroupApiV4 {
                         SodiumUtilities.IdPrefix.BLINDED,
                         keyPair.publicKey.asBytes
                     ).hexString
+                    var bodyHash = ByteArray(0)
+                    if (request.parameters != null) {
+                        val parameterBytes = JsonUtil.toJson(request.parameters).toByteArray()
+                        val parameterHash = ByteArray(GenericHash.BYTES_MAX)
+                        if (sodium.cryptoGenericHash(
+                            parameterHash,
+                            parameterHash.size,
+                            parameterBytes,
+                            parameterBytes.size.toLong()
+                        )) {
+                            bodyHash = parameterHash
+                        }
+                    }
+                    val messageBytes = publicKey.toByteArray()
+                        .plus(nonce)
+                        .plus("$timestamp".toByteArray(Charsets.US_ASCII))
+                        .plus(request.verb.rawValue.toByteArray())
+                        .plus(urlRequest.url().toString().toByteArray())
+                        .plus(bodyHash)
                     signature = SodiumUtilities.sogsSignature(
-                        urlRequest.toString().toByteArray(),
+                        messageBytes,
                         ed25519KeyPair.secretKey.asBytes,
                         keyPair.secretKey.asBytes,
                         keyPair.publicKey.asBytes
@@ -630,7 +650,8 @@ object OpenGroupApiV4 {
             room = null,
             server = server,
             endpoint = "rooms",
-            isAuthRequired = false
+            isAuthRequired = false,
+            isBlinded = true
         )
         return send(request).map { json ->
             val rawRooms = json["rooms"] as? List<Map<*, *>> ?: throw Error.ParsingFailed

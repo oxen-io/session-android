@@ -8,7 +8,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.session.libsession.messaging.utilities.SodiumUtilities
-import org.session.libsignal.utilities.toHexString
+import org.session.libsignal.utilities.Base64
 
 @RunWith(AndroidJUnit4::class)
 class SodiumUtilitiesTest {
@@ -27,26 +27,24 @@ class SodiumUtilitiesTest {
     }
 
     @Test
-    fun sharedBlindedEncryptionKey() {
-        val key = ByteArray(0)
-        val encryptionKey = SodiumUtilities.sharedBlindedEncryptionKey(key, key, key, key)
-    }
-
-    @Test
     fun sogsSignature() {
-//        val expectedSignature = "K1N3A+H4dxV/wiN6Mr9cEj9TWUUqxESDoGW1cmoqDp7zMzCuCraTQKPX1tIiPuOBmFvB8VSUuYsHZrfGis1hDA=="
-//        val expectedSignature = "xxLpXHbomAJMB9AtGMyqvBsXrdd2040y+Ol/IKzElWfKJa3EYZRv1GLO6CTLhrDFUwVQe8PPltyGs54Kd7O5Cg=="
-        val expectedSignature = "gYqpWZX6fnF4Gb2xQM3xaXs0WIYEI49+B8q4mUUEg8Rw0ObaHUWfoWjMHMArAtP9QlORfiydsKWz1o6zdPVeCQ=="
+        val expectedSignature = "K1N3A+H4dxV/wiN6Mr9cEj9TWUUqxESDoGW1cmoqDp7zMzCuCraTQKPX1tIiPuOBmFvB8VSUuYsHZrfGis1hDA=="
         val keyPair = SodiumUtilities.blindedKeyPair(serverPublicKey, KeyPair(pubKey, secKey))!!
 
-        val signature = SodiumUtilities.sogsSignature(
-            ByteArray(0),
+        val message = serverPublicKey.toByteArray()
+            .plus(Base64.decode("CaLsVaBSL9jarS5SwzJd8g=="))
+            .plus("1647896537".toByteArray(Charsets.US_ASCII))
+            .plus("GET".toByteArray())
+            .plus("/room/sudoku/messages/recent?limit=25".toByteArray())
+            .plus(ByteArray(0))
+        val signature = Base64.encodeBytes(SodiumUtilities.sogsSignature(
+            message,
             secKey.asBytes,
             keyPair.secretKey.asBytes,
             keyPair.publicKey.asBytes
-        )!!
+        )!!)
 
-        assertThat(signature.toHexString(), equalTo(expectedSignature))
+        assertThat(signature, equalTo(expectedSignature))
     }
 
 }

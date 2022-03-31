@@ -490,14 +490,14 @@ object OnionRequestAPI {
                 "headers" to headers
             )
             val requestData = JsonUtil.toJson(requestPayload).toByteArray()
-            val prefixData = "l${requestData.size}".toByteArray()
-            val suffixData = "e".toByteArray()
+            val prefixData = "l${requestData.size}".toByteArray(Charsets.US_ASCII)
+            val suffixData = "e".toByteArray(Charsets.US_ASCII)
             if (request.body() != null) {
                 val bodyPayload = mapOf(
                     "body" to body
                 )
                 val bodyData = JsonUtil.toJson(bodyPayload).toByteArray()
-                val bodyLengthData = "${bodyData.size}".toByteArray()
+                val bodyLengthData = "${bodyData.size}".toByteArray(Charsets.US_ASCII)
                     prefixData + requestData + bodyLengthData + bodyData + suffixData
             } else {
                 prefixData + requestData + suffixData
