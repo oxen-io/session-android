@@ -477,7 +477,7 @@ object OnionRequestAPI {
         val urlAsString = url.toString()
         val body = request.getBodyForOnionRequest() ?: "null"
         val endpoint = when {
-            server.count() < urlAsString.count() -> urlAsString.substringAfter(server).removePrefix("/")
+            server.count() < urlAsString.count() -> urlAsString.substringAfter(server)
             else -> ""
         }
         return if (version == Version.V4) {
@@ -505,7 +505,7 @@ object OnionRequestAPI {
         } else {
             val payload = mapOf(
                 "body" to body,
-                "endpoint" to endpoint,
+                "endpoint" to endpoint.removePrefix("/"),
                 "method" to request.method(),
                 "headers" to headers
             )
@@ -555,6 +555,9 @@ object OnionRequestAPI {
                             responseInfo,
                             destination.description
                         )
+                        val message = plaintextString.substring(infoEndIndex)
+                            .split(":").last().dropLast(1)
+                        Log.d("Loki", "Response body: $message")
                         return deferred.reject(exception)
                     }
                 }
@@ -651,8 +654,4 @@ object OnionRequestAPI {
         V4("/oxen/v4/lsrpc");
     }
 
-    data class ResponseInfo(
-        val code: String,
-        val headers: Map<String, String>
-    )
 }
