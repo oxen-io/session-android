@@ -171,7 +171,7 @@ object OpenGroupApiV4 {
                         .plus(nonce)
                         .plus("$timestamp".toByteArray(Charsets.US_ASCII))
                         .plus(request.verb.rawValue.toByteArray())
-                        .plus(urlRequest.url().toString().toByteArray())
+                        .plus(urlRequest.encodedPath().toByteArray())
                         .plus(bodyHash)
                     signature = SodiumUtilities.sogsSignature(
                         messageBytes,
