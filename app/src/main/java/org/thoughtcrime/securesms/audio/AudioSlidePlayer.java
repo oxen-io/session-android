@@ -31,17 +31,13 @@ import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.upstream.TransferListener;
 
 import org.jetbrains.annotations.NotNull;
 import org.session.libsession.utilities.ServiceUtil;
 import org.session.libsession.utilities.Util;
 import org.session.libsignal.utilities.Log;
 import org.session.libsignal.utilities.guava.Optional;
-import org.thoughtcrime.securesms.attachments.KAttachmentServer;
 import org.thoughtcrime.securesms.mms.AudioSlide;
 
 import java.io.IOException;
@@ -49,7 +45,7 @@ import java.lang.ref.WeakReference;
 
 import network.loki.messenger.BuildConfig;
 
-public class AudioSlidePlayer implements SensorEventListener, TransferListener {
+public class AudioSlidePlayer implements SensorEventListener {
 
   private static final String TAG = AudioSlidePlayer.class.getSimpleName();
 
@@ -65,8 +61,6 @@ public class AudioSlidePlayer implements SensorEventListener, TransferListener {
 
   private @NonNull  WeakReference<Listener> listener;
   private @Nullable SimpleExoPlayer         mediaPlayer;
-//  private @Nullable AttachmentServer        audioAttachmentServer;
-  private @Nullable KAttachmentServer       audioAttachmentServer;
   private           long                    startTime;
 
   public synchronized static AudioSlidePlayer createFor(@NonNull Context context,
@@ -93,11 +87,7 @@ public class AudioSlidePlayer implements SensorEventListener, TransferListener {
     this.sensorManager        = (SensorManager)context.getSystemService(Context.SENSOR_SERVICE);
     this.proximitySensor      = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
-    if (Build.VERSION.SDK_INT >= 21) {
-      this.wakeLock = ServiceUtil.getPowerManager(context).newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, TAG);
-    } else {
-      this.wakeLock = null;
-    }
+    this.wakeLock = ServiceUtil.getPowerManager(context).newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, TAG);
   }
 
   public void play(final double progress) throws IOException {
@@ -106,13 +96,15 @@ public class AudioSlidePlayer implements SensorEventListener, TransferListener {
 
   private void play(final double progress, boolean earpiece) throws IOException {
     if (this.mediaPlayer != null) { stop(); }
+    Uri attachmentUri = slide.asAttachment().getDataUri();
+    if (attachmentUri == null) {
+      return;
+    }
 
     LoadControl loadControl    = new DefaultLoadControl.Builder().setBufferDurationsMs(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE).createDefaultLoadControl();
     this.mediaPlayer           = ExoPlayerFactory.newSimpleInstance(context, new DefaultRenderersFactory(context), new DefaultTrackSelector(), loadControl);
-    this.audioAttachmentServer = new KAttachmentServer(context, slide.asAttachment());
     this.startTime             = System.currentTimeMillis();
-
-    mediaPlayer.prepare(createMediaSource(audioAttachmentServer.getUri()));
+    mediaPlayer.prepare(createMediaSource(attachmentUri));
     mediaPlayer.setPlayWhenReady(true);
     mediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
                                                       .setContentType(earpiece ? C.CONTENT_TYPE_SPEECH : C.CONTENT_TYPE_MUSIC)
@@ -138,10 +130,6 @@ public class AudioSlidePlayer implements SensorEventListener, TransferListener {
 
               started = true;
 
-              if (progress > 0) {
-                mediaPlayer.seekTo((long) (mediaPlayer.getDuration() * progress));
-              }
-
               sensorManager.registerListener(AudioSlidePlayer.this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
 
               setPlaying(AudioSlidePlayer.this);
@@ -159,11 +147,6 @@ public class AudioSlidePlayer implements SensorEventListener, TransferListener {
             synchronized (AudioSlidePlayer.this) {
               mediaPlayer.release();
               mediaPlayer = null;
-
-              if (audioAttachmentServer != null) {
-                audioAttachmentServer.stop();
-                audioAttachmentServer = null;
-              }
 
               sensorManager.unregisterListener(AudioSlidePlayer.this);
 
@@ -185,11 +168,6 @@ public class AudioSlidePlayer implements SensorEventListener, TransferListener {
         synchronized (AudioSlidePlayer.this) {
           mediaPlayer = null;
 
-          if (audioAttachmentServer != null) {
-            audioAttachmentServer.stop();
-            audioAttachmentServer = null;
-          }
-
           sensorManager.unregisterListener(AudioSlidePlayer.this);
 
           if (wakeLock != null && wakeLock.isHeld()) {
@@ -207,29 +185,9 @@ public class AudioSlidePlayer implements SensorEventListener, TransferListener {
 
   private MediaSource createMediaSource(@NonNull Uri uri) {
     Log.i(TAG, "createMediaSource called");
-    return new ExtractorMediaSource.Factory(new DefaultDataSourceFactory(context, BuildConfig.USER_AGENT, this))
+    return new ExtractorMediaSource.Factory(new DefaultDataSourceFactory(context, BuildConfig.USER_AGENT, null))
                                    .setExtractorsFactory(new DefaultExtractorsFactory().setConstantBitrateSeekingEnabled(true))
                                    .createMediaSource(uri);
-  }
-
-  @Override
-  public void onTransferInitializing(DataSource source, DataSpec dataSpec, boolean isNetwork) {
-    Log.i(TAG,"onTransferInitializing");
-  }
-
-  @Override
-  public void onTransferStart(DataSource source, DataSpec dataSpec, boolean isNetwork) {
-    Log.i(TAG,"onTransferStart");
-  }
-
-  @Override
-  public void onBytesTransferred(DataSource source, DataSpec dataSpec, boolean isNetwork, int bytesTransferred) {
-    Log.i(TAG,"onBytesTransferred: "+bytesTransferred);
-  }
-
-  @Override
-  public void onTransferEnd(DataSource source, DataSpec dataSpec, boolean isNetwork) {
-    Log.i(TAG,"onTransferEnd");
   }
 
   public synchronized void stop() {
@@ -242,14 +200,9 @@ public class AudioSlidePlayer implements SensorEventListener, TransferListener {
       this.mediaPlayer.release();
     }
 
-    if (this.audioAttachmentServer != null) {
-      this.audioAttachmentServer.stop();
-    }
-
     sensorManager.unregisterListener(AudioSlidePlayer.this);
 
     this.mediaPlayer           = null;
-    this.audioAttachmentServer = null;
   }
 
   public synchronized static void stopAll() {
