@@ -28,15 +28,14 @@ class SodiumUtilitiesTest {
 
     @Test
     fun sogsSignature() {
-        val expectedSignature = "K1N3A+H4dxV/wiN6Mr9cEj9TWUUqxESDoGW1cmoqDp7zMzCuCraTQKPX1tIiPuOBmFvB8VSUuYsHZrfGis1hDA=="
+        val expectedSignature = "gYqpWZX6fnF4Gb2xQM3xaXs0WIYEI49+B8q4mUUEg8Rw0ObaHUWfoWjMHMArAtP9QlORfiydsKWz1o6zdPVeCQ="
         val keyPair = SodiumUtilities.blindedKeyPair(serverPublicKey, KeyPair(pubKey, secKey))!!
 
         val message = serverPublicKey.toByteArray()
-            .plus(Base64.decode("CaLsVaBSL9jarS5SwzJd8g=="))
-            .plus("1647896537".toByteArray(Charsets.US_ASCII))
+            .plus(Base64.decode("CdB5nyKVmQGCw6s0Bvv8Ww=="))
+            .plus("1642472103".toByteArray(Charsets.US_ASCII))
             .plus("GET".toByteArray())
             .plus("/room/sudoku/messages/recent?limit=25".toByteArray())
-            .plus(ByteArray(0))
         val signature = Base64.encodeBytes(SodiumUtilities.sogsSignature(
             message,
             secKey.asBytes,
