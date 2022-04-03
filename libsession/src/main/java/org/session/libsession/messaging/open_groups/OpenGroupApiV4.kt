@@ -167,7 +167,7 @@ object OpenGroupApiV4 {
                             bodyHash = parameterHash
                         }
                     }
-                    val messageBytes = publicKey.toByteArray()
+                    val messageBytes = Hex.fromStringCondensed(publicKey)
                         .plus(nonce)
                         .plus("$timestamp".toByteArray(Charsets.US_ASCII))
                         .plus(request.verb.rawValue.toByteArray())

@@ -3,6 +3,7 @@ package org.session.libsession.messaging.utilities
 import com.goterl.lazysodium.LazySodiumAndroid
 import com.goterl.lazysodium.SodiumAndroid
 import com.goterl.lazysodium.interfaces.GenericHash
+import com.goterl.lazysodium.interfaces.Hash
 import com.goterl.lazysodium.utils.Key
 import com.goterl.lazysodium.utils.KeyPair
 import org.session.libsignal.utilities.Hex
@@ -12,11 +13,11 @@ import kotlin.experimental.inv
 object SodiumUtilities {
     private val sodium by lazy { LazySodiumAndroid(SodiumAndroid()) }
 
-    private const val scalarLength: Int = 32 // crypto_core_ed25519_scalarbytes
-    private const val noClampLength: Int = 32 // crypto_scalarmult_ed25519_bytes
-    private const val scalarMultLength: Int = 32 // crypto_scalarmult_bytes
-    private const val publicKeyLength: Int = 32 // crypto_scalarmult_bytes
-    private const val secretKeyLength: Int = 64 //crypto_sign_secretkeybytes
+    private const val SCALAR_LENGTH: Int = 32 // crypto_core_ed25519_scalarbytes
+    private const val NO_CLAMP_LENGTH: Int = 32 // crypto_scalarmult_ed25519_bytes
+    private const val SCALAR_MULT_LENGTH: Int = 32 // crypto_scalarmult_bytes
+    private const val PUBLIC_KEY_LENGTH: Int = 32 // crypto_scalarmult_bytes
+    private const val SECRET_KEY_LENGTH: Int = 64 //crypto_sign_secretkeybytes
 
     /* 64-byte blake2b hash then reduce to get the blinding factor */
     private fun generateBlindingFactor(serverPublicKey: String): ByteArray? {
@@ -27,7 +28,7 @@ object SodiumUtilities {
             return null
         }
         // Reduce the server public key into an ed25519 scalar (`k`)
-        val x25519PublicKey = ByteArray(scalarLength)
+        val x25519PublicKey = ByteArray(SCALAR_LENGTH)
         sodium.cryptoCoreEd25519ScalarReduce(x25519PublicKey, serverPubKeyHash)
         return if (x25519PublicKey.any { it.toInt() != 0 }) {
             x25519PublicKey
@@ -42,7 +43,7 @@ object SodiumUtilities {
     */
     private fun generatePrivateKeyScalar(secretKey: ByteArray): ByteArray? {
         // a = s.to_curve25519_private_key().encode()
-        val aBytes = ByteArray(scalarMultLength)
+        val aBytes = ByteArray(SCALAR_MULT_LENGTH)
         return if (sodium.convertSecretKeyEd25519ToCurve25519(aBytes, secretKey)) {
             aBytes
         } else null
@@ -55,11 +56,11 @@ object SodiumUtilities {
         val kBytes = generateBlindingFactor(serverPublicKey)
         val aBytes = generatePrivateKeyScalar(edKeyPair.secretKey.asBytes)
         // Generate the blinded key pair `ka`, `kA`
-        val kaBytes = ByteArray(secretKeyLength)
+        val kaBytes = ByteArray(SECRET_KEY_LENGTH)
         sodium.cryptoCoreEd25519ScalarMul(kaBytes, kBytes, aBytes)
         if (kaBytes.all { it.toInt() == 0 }) return null
 
-        val kABytes = ByteArray(publicKeyLength)
+        val kABytes = ByteArray(PUBLIC_KEY_LENGTH)
         return if (sodium.cryptoScalarMultE25519BaseNoClamp(kABytes, kaBytes)) {
             KeyPair(Key.fromBytes(kABytes), Key.fromBytes(kaBytes))
         } else {
@@ -79,44 +80,54 @@ object SodiumUtilities {
         blindedPublicKey: ByteArray /*kA*/
     ): ByteArray? {
         // H_rh = sha512(s.encode()).digest()[32:]
-        val h_rh = ByteArray(GenericHash.BYTES)
-        if (!sodium.cryptoHashSha512(h_rh, secretKey, secretKey.size.toLong())) return null
+        val digest = ByteArray(Hash.SHA512_BYTES)
+        val h_rh = if (sodium.cryptoHashSha512(digest, secretKey, secretKey.size.toLong())) {
+            digest.takeLast(32).toByteArray()
+        } else return null
 
         // r = salt.crypto_core_ed25519_scalar_reduce(sha512_multipart(H_rh, kA, message_parts))
-        val combinedData = h_rh + blindedPublicKey + message
-        val combinedHash = ByteArray(GenericHash.BYTES)
-        if (!sodium.cryptoHashSha512(combinedHash, combinedData, combinedData.size.toLong())) return null
-        val rHash = ByteArray(scalarLength)
-        sodium.cryptoCoreEd25519ScalarReduce(rHash, combinedHash)
-        if (rHash.all { it.toInt() == 0 }) return null
+        val rHash = sha512Multipart(listOf(h_rh, blindedPublicKey, message)) ?: return null
+        val r = ByteArray(SCALAR_LENGTH)
+        sodium.cryptoCoreEd25519ScalarReduce(r, rHash)
+        if (r.all { it.toInt() == 0 }) return null
 
         // sig_R = salt.crypto_scalarmult_ed25519_base_noclamp(r)
-        val sig_R = ByteArray(noClampLength)
-        if (!sodium.cryptoScalarMultE25519BaseNoClamp(sig_R, rHash)) return null
+        val sig_R = ByteArray(NO_CLAMP_LENGTH)
+        if (!sodium.cryptoScalarMultE25519BaseNoClamp(sig_R, r)) return null
 
         // HRAM = salt.crypto_core_ed25519_scalar_reduce(sha512_multipart(sig_R, kA, message_parts))
-        val hRamData = sig_R + blindedPublicKey + message
-        val hRamHash = ByteArray(scalarLength)
-        if (!sodium.cryptoHashSha512(hRamHash, hRamData, hRamData.size.toLong())) return null
-        val hRam = ByteArray(scalarLength)
+        val hRamHash = sha512Multipart(listOf(sig_R, blindedPublicKey, message)) ?: return null
+        val hRam = ByteArray(SCALAR_LENGTH)
         sodium.cryptoCoreEd25519ScalarReduce(hRam, hRamHash)
         if (hRam.all { it.toInt() == 0 }) return null
 
         // sig_s = salt.crypto_core_ed25519_scalar_add(r, salt.crypto_core_ed25519_scalar_mul(HRAM, ka))
-        val sig_sMul = ByteArray(scalarLength)
-        val sig_s = ByteArray(scalarLength)
+        val sig_sMul = ByteArray(SCALAR_LENGTH)
+        val sig_s = ByteArray(SCALAR_LENGTH)
         sodium.cryptoCoreEd25519ScalarMul(sig_sMul, hRam, blindedSecretKey)
         if (sig_sMul.any { it.toInt() != 0 }) {
-            sodium.cryptoCoreEd25519ScalarAdd(sig_s,  rHash, sig_sMul)
+            sodium.cryptoCoreEd25519ScalarAdd(sig_s,  r, sig_sMul)
             if (sig_s.all { it.toInt() == 0 }) return null
         } else return null
 
         return sig_R + sig_s
     }
 
+    private fun sha512Multipart(parts: List<ByteArray>): ByteArray? {
+        val state = Hash.State512()
+        sodium.cryptoHashSha512Init(state)
+        parts.forEach {
+            sodium.cryptoHashSha512Update(state, it, it.size.toLong())
+        }
+        val finalHash = ByteArray(Hash.SHA512_BYTES)
+        return if (sodium.cryptoHashSha512Final(state, finalHash)) {
+            finalHash
+        } else null
+    }
+
     /* Combines two keys (`kA`) */
     private fun combineKeys(lhsKey: ByteArray, rhsKey: ByteArray): ByteArray? {
-        val kA = ByteArray(noClampLength)
+        val kA = ByteArray(NO_CLAMP_LENGTH)
         return if (sodium.cryptoScalarMultE25519NoClamp(kA, lhsKey, rhsKey)) {
             kA
         } else null
