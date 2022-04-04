@@ -3,8 +3,12 @@ package org.session.libsession.messaging.sending_receiving.pollers
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.functional.map
 import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.messaging.jobs.*
-import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
+import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
+import org.session.libsession.messaging.jobs.GroupAvatarDownloadJob
+import org.session.libsession.messaging.jobs.JobQueue
+import org.session.libsession.messaging.jobs.MessageReceiveJob
+import org.session.libsession.messaging.jobs.MessageReceiveParameters
+import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.open_groups.OpenGroupMessageV2
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
@@ -15,7 +19,7 @@ import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
-class OpenGroupPollerV2(private val server: String, private val executorService: ScheduledExecutorService?) {
+class OpenGroupPoller(private val server: String, private val executorService: ScheduledExecutorService?) {
     var hasStarted = false
     var isCaughtUp = false
     var secondToLastJob: MessageReceiveJob? = null
@@ -37,25 +41,29 @@ class OpenGroupPollerV2(private val server: String, private val executorService:
         hasStarted = false
     }
 
-    fun poll(isBackgroundPoll: Boolean = false): Promise<Unit, Exception> {
+    fun poll(): Promise<Unit, Exception> {
         val storage = MessagingModuleConfiguration.shared.storage
         val rooms = storage.getAllV2OpenGroups().values.filter { it.server == server }.map { it.room }
         rooms.forEach { downloadGroupAvatarIfNeeded(it) }
-        return OpenGroupAPIV2.compactPoll(rooms, server).successBackground { responses ->
+        return OpenGroupApi.batch(rooms, server).successBackground { responses ->
             responses.forEach { (room, response) ->
                 val openGroupID = "$server.$room"
-                handleNewMessages(room, openGroupID, response.messages, isBackgroundPoll)
+                handleNewMessages(room, openGroupID, response.messages)
                 handleDeletedMessages(room, openGroupID, response.deletions)
                 if (secondToLastJob == null && !isCaughtUp) {
                     isCaughtUp = true
                 }
             }
         }.always {
-            executorService?.schedule(this@OpenGroupPollerV2::poll, pollInterval, TimeUnit.MILLISECONDS)
+            executorService?.schedule(this@OpenGroupPoller::poll, pollInterval, TimeUnit.MILLISECONDS)
         }.map { }
     }
 
-    private fun handleNewMessages(room: String, openGroupID: String, messages: List<OpenGroupMessageV2>, isBackgroundPoll: Boolean) {
+    private fun handleNewMessages(
+        room: String,
+        openGroupID: String,
+        messages: List<OpenGroupMessageV2>
+    ) {
         val storage = MessagingModuleConfiguration.shared.storage
         val groupID = GroupUtil.getEncodedOpenGroupID(openGroupID.toByteArray())
         // check thread still exists
@@ -87,7 +95,7 @@ class OpenGroupPollerV2(private val server: String, private val executorService:
         }
     }
 
-    private fun handleDeletedMessages(room: String, openGroupID: String, deletions: List<OpenGroupAPIV2.MessageDeletion>) {
+    private fun handleDeletedMessages(room: String, openGroupID: String, deletions: List<OpenGroupApi.MessageDeletion>) {
         val storage = MessagingModuleConfiguration.shared.storage
         val dataProvider = MessagingModuleConfiguration.shared.messageDataProvider
         val groupID = GroupUtil.getEncodedOpenGroupID(openGroupID.toByteArray())

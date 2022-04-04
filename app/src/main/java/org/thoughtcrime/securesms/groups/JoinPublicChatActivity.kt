@@ -25,7 +25,7 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityJoinPublicChatBinding
 import network.loki.messenger.databinding.FragmentEnterChatUrlBinding
 import okhttp3.HttpUrl
-import org.session.libsession.messaging.open_groups.OpenGroupApiV4.DefaultGroup
+import org.session.libsession.messaging.open_groups.OpenGroupApi.DefaultGroup
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.recipients.Recipient

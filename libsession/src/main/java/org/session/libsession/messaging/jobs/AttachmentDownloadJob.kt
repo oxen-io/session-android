@@ -2,8 +2,7 @@ package org.session.libsession.messaging.jobs
 
 import okhttp3.HttpUrl
 import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
-import org.session.libsession.messaging.open_groups.OpenGroupApiV4
+import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentState
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
@@ -18,7 +17,6 @@ import org.session.libsignal.utilities.Log
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
-import java.lang.NullPointerException
 
 class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long) : Job {
     override var delegate: JobDelegate? = null
@@ -103,7 +101,7 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
             } else {
                 val url = HttpUrl.parse(attachment.url)!!
                 val fileID = url.pathSegments().last()
-                OpenGroupApiV4.download(fileID.toLong(), openGroupV2.room, openGroupV2.server).get().let {
+                OpenGroupApi.download(fileID.toLong(), openGroupV2.room, openGroupV2.server).get().let {
                     tempFile.writeBytes(it)
                 }
             }

@@ -24,7 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewVisibleMessageBinding
 import org.session.libsession.messaging.contacts.Contact.ContactContext
-import org.session.libsession.messaging.open_groups.OpenGroupApiV4
+import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.utilities.ViewUtil
 import org.session.libsignal.utilities.ThreadUtils
 import org.thoughtcrime.securesms.ApplicationContext
@@ -127,7 +127,7 @@ class VisibleMessageView : LinearLayout {
             }
             if (thread.isOpenGroupRecipient) {
                 val openGroup = lokiThreadDb.getOpenGroupChat(threadID) ?: return
-                val isModerator = OpenGroupApiV4.isUserModerator(senderSessionID, openGroup.room, openGroup.server)
+                val isModerator = OpenGroupApi.isUserModerator(senderSessionID, openGroup.room, openGroup.server)
                 binding.moderatorIconImageView.visibility = if (isModerator) View.VISIBLE else View.INVISIBLE
             } else {
                 binding.moderatorIconImageView.visibility = View.INVISIBLE

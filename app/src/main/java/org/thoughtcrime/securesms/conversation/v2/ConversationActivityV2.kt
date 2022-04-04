@@ -57,7 +57,7 @@ import org.session.libsession.messaging.messages.control.DataExtractionNotificat
 import org.session.libsession.messaging.messages.signal.OutgoingMediaMessage
 import org.session.libsession.messaging.messages.signal.OutgoingTextMessage
 import org.session.libsession.messaging.messages.visible.VisibleMessage
-import org.session.libsession.messaging.open_groups.OpenGroupApiV4
+import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
@@ -500,7 +500,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private fun getLatestOpenGroupInfoIfNeeded() {
         val openGroup = lokiThreadDb.getOpenGroupChat(viewModel.threadId) ?: return
-        OpenGroupApiV4.getMemberCount(openGroup.room, openGroup.server).successUi { updateSubtitle() }
+        OpenGroupApi.getMemberCount(openGroup.room, openGroup.server).successUi { updateSubtitle() }
     }
 
     // called from onCreate
