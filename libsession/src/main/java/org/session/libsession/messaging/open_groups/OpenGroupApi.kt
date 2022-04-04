@@ -7,9 +7,9 @@ import com.fasterxml.jackson.databind.type.TypeFactory
 import com.goterl.lazysodium.LazySodiumAndroid
 import com.goterl.lazysodium.SodiumAndroid
 import com.goterl.lazysodium.interfaces.GenericHash
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.flow.MutableSharedFlow
 import nl.komponents.kovenant.Promise
-import nl.komponents.kovenant.functional.bind
 import nl.komponents.kovenant.functional.map
 import okhttp3.Headers
 import okhttp3.HttpUrl
@@ -19,7 +19,7 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPoller.Companion.maxInactivityPeriod
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.snode.OnionRequestAPI
-import org.session.libsession.utilities.AESGCM
+import org.session.libsession.snode.OnionResponse
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.Base64.decode
 import org.session.libsignal.utilities.Base64.encodeBytes
@@ -32,9 +32,7 @@ import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.removing05PrefixIfNeeded
-import org.session.libsignal.utilities.toHexString
 import org.whispersystems.curve25519.Curve25519
-import java.util.concurrent.TimeUnit
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.collections.set
@@ -109,7 +107,6 @@ object OpenGroupApi {
         val queryParameters: Map<String, String> = mapOf(),
         val parameters: Any? = null,
         val headers: Map<String, String> = mapOf(),
-        val isAuthRequired: Boolean = true,
         /**
          * Always `true` under normal circumstances. You might want to disable
          * this when running over Lokinet.
@@ -124,7 +121,13 @@ object OpenGroupApi {
         return RequestBody.create(MediaType.get("application/json"), parametersAsJSON)
     }
 
-    private fun send(request: Request): Promise<Map<*, *>, Exception> {
+    private fun getResponseBodyJson(request: Request): Promise<Map<*, *>, Exception> {
+        return send(request).map {
+            JsonUtil.fromJson(it.body, Map::class.java)
+        }
+    }
+
+    private fun send(request: Request): Promise<OnionResponse, Exception> {
         val url = HttpUrl.parse(request.server) ?: return Promise.ofFail(Error.InvalidURL)
         val urlBuilder = HttpUrl.Builder()
             .scheme(url.scheme())
@@ -136,7 +139,7 @@ object OpenGroupApi {
                 urlBuilder.addQueryParameter(key, value)
             }
         }
-        fun execute(token: String?): Promise<Map<*, *>, Exception> {
+        fun execute(): Promise<OnionResponse, Exception> {
             val publicKey =
                 MessagingModuleConfiguration.shared.storage.getOpenGroupPublicKey(request.server)
                     ?: return Promise.ofFail(Error.NoPublicKey)
@@ -191,15 +194,10 @@ object OpenGroupApi {
             headers["X-SOGS-Timestamp"] = "$timestamp"
             headers["X-SOGS-Pubkey"] = pubKey
             headers["X-SOGS-Signature"] = encodeBytes(signature)
-            headers.forEach { entry -> Log.d("Loki", "${entry.key}: ${entry.value}") }
 
             val requestBuilder = okhttp3.Request.Builder()
                 .url(urlRequest)
                 .headers(Headers.of(headers))
-            if (request.isAuthRequired) {
-                if (token.isNullOrEmpty()) throw IllegalStateException("No auth token for request.")
-                requestBuilder.header("Authorization", token)
-            }
             when (request.verb) {
                 GET -> requestBuilder.get()
                 PUT -> requestBuilder.put(createBody(request.parameters)!!)
@@ -209,31 +207,13 @@ object OpenGroupApi {
             if (!request.room.isNullOrEmpty()) {
                 requestBuilder.header("Room", request.room)
             }
-            if (request.useOnionRouting) {
-                return OnionRequestAPI.sendOnionRequest(
-                    requestBuilder.build(),
-                    request.server,
-                    publicKey
-                ).fail { e ->
-                    // A 401 means that we didn't provide a (valid) auth token for a route that required one. We use this as an
-                    // indication that the token we're using has expired. Note that a 403 has a different meaning; it means that
-                    // we provided a valid token but it doesn't have a high enough permission level for the route in question.
-                    if (e is OnionRequestAPI.HTTPRequestFailedAtDestinationException && e.statusCode == 401) {
-                        val storage = MessagingModuleConfiguration.shared.storage
-                        if (request.room != null) {
-                            storage.removeAuthToken(request.room, request.server)
-                        }
-                    }
-                }
+            return if (request.useOnionRouting) {
+                OnionRequestAPI.sendOnionRequest(requestBuilder.build(), request.server, publicKey)
             } else {
-                return Promise.ofFail(IllegalStateException("It's currently not allowed to send non onion routed requests."))
+                Promise.ofFail(IllegalStateException("It's currently not allowed to send non onion routed requests."))
             }
         }
-        return if (request.isAuthRequired) {
-            getAuthToken(request.room!!, request.server).bind { execute(it) }
-        } else {
-            execute(null)
-        }
+        return execute()
     }
 
     fun downloadOpenGroupProfilePicture(
@@ -244,77 +224,13 @@ object OpenGroupApi {
             verb = GET,
             room = roomID,
             server = server,
-            endpoint = "rooms/$roomID/image",
-            isAuthRequired = false
+            endpoint = "rooms/$roomID/image"
         )
-        return send(request).map { json ->
+        return getResponseBodyJson(request).map { json ->
             val result = json["result"] as? String ?: throw Error.ParsingFailed
             decode(result)
         }
     }
-
-    // region Authorization
-    fun getAuthToken(room: String, server: String): Promise<String, Exception> {
-        val storage = MessagingModuleConfiguration.shared.storage
-        return storage.getAuthToken(room, server)?.let {
-            Promise.of(it)
-        } ?: run {
-            requestNewAuthToken(room, server)
-                .bind { claimAuthToken(it, room, server) }
-                .success { authToken ->
-                    storage.setAuthToken(room, server, authToken)
-                }
-        }
-    }
-
-    fun requestNewAuthToken(room: String, server: String): Promise<String, Exception> {
-        val (publicKey, privateKey) = MessagingModuleConfiguration.shared.storage.getUserX25519KeyPair()
-            .let { it.publicKey.serialize() to it.privateKey.serialize() }
-            ?: return Promise.ofFail(Error.Generic)
-        val queryParameters = mutableMapOf("public_key" to publicKey.toHexString())
-        val request = Request(
-            GET,
-            room,
-            server,
-            "auth_token_challenge",
-            queryParameters,
-            isAuthRequired = false,
-            parameters = null
-        )
-        return send(request).map { json ->
-            val challenge = json["challenge"] as? Map<*, *> ?: throw Error.ParsingFailed
-            val base64EncodedCiphertext =
-                challenge["ciphertext"] as? String ?: throw Error.ParsingFailed
-            val base64EncodedEphemeralPublicKey =
-                challenge["ephemeral_public_key"] as? String ?: throw Error.ParsingFailed
-            val ciphertext = decode(base64EncodedCiphertext)
-            val ephemeralPublicKey = decode(base64EncodedEphemeralPublicKey)
-            val symmetricKey = AESGCM.generateSymmetricKey(ephemeralPublicKey, privateKey)
-            val tokenAsData = try {
-                AESGCM.decrypt(ciphertext, symmetricKey)
-            } catch (e: Exception) {
-                throw Error.DecryptionFailed
-            }
-            tokenAsData.toHexString()
-        }
-    }
-
-    fun claimAuthToken(
-        authToken: String,
-        room: String,
-        server: String
-    ): Promise<String, Exception> {
-        val parameters =
-            mapOf("public_key" to MessagingModuleConfiguration.shared.storage.getUserPublicKey()!!)
-        val headers = mapOf("Authorization" to authToken)
-        val request = Request(
-            verb = POST, room = room, server = server, endpoint = "claim_auth_token",
-            parameters = parameters, headers = headers, isAuthRequired = false
-        )
-        return send(request).map { authToken }
-    }
-
-    // endregion
 
     // region Upload/Download
     fun upload(file: ByteArray, room: String, server: String): Promise<Long, Exception> {
@@ -327,14 +243,14 @@ object OpenGroupApi {
             endpoint = "files",
             parameters = parameters
         )
-        return send(request).map { json ->
+        return getResponseBodyJson(request).map { json ->
             (json["result"] as? Number)?.toLong() ?: throw Error.ParsingFailed
         }
     }
 
     fun download(file: Long, room: String, server: String): Promise<ByteArray, Exception> {
         val request = Request(verb = GET, room = room, server = server, endpoint = "files/$file")
-        return send(request).map { json ->
+        return getResponseBodyJson(request).map { json ->
             val base64EncodedFile = json["result"] as? String ?: throw Error.ParsingFailed
             decode(base64EncodedFile) ?: throw Error.ParsingFailed
         }
@@ -356,7 +272,7 @@ object OpenGroupApi {
             endpoint = "messages",
             parameters = jsonMessage
         )
-        return send(request).map { json ->
+        return getResponseBodyJson(request).map { json ->
             @Suppress("UNCHECKED_CAST") val rawMessage = json["message"] as? Map<String, Any>
                 ?: throw Error.ParsingFailed
             val result = OpenGroupMessageV2.fromJSON(rawMessage) ?: throw Error.ParsingFailed
@@ -381,7 +297,7 @@ object OpenGroupApi {
             endpoint = "messages",
             queryParameters = queryParameters
         )
-        return send(request).map { json ->
+        return getResponseBodyJson(request).map { json ->
             @Suppress("UNCHECKED_CAST") val rawMessages =
                 json["messages"] as? List<Map<String, Any>>
                     ?: throw Error.ParsingFailed
@@ -443,7 +359,8 @@ object OpenGroupApi {
             endpoint = "deleted_messages",
             queryParameters = queryParameters
         )
-        return send(request).map { json ->
+        return send(request).map { response ->
+            val json = JsonUtil.fromJson(response.body, Map::class.java)
             val type = TypeFactory.defaultInstance()
                 .constructCollectionType(List::class.java, MessageDeletion::class.java)
             val idsAsString = JsonUtil.toJson(json["ids"])
@@ -466,7 +383,7 @@ object OpenGroupApi {
 
     fun getModerators(room: String, server: String): Promise<List<String>, Exception> {
         val request = Request(verb = GET, room = room, server = server, endpoint = "moderators")
-        return send(request).map { json ->
+        return getResponseBodyJson(request).map { json ->
             @Suppress("UNCHECKED_CAST") val moderatorsJson = json["moderators"] as? List<String>
                 ?: throw Error.ParsingFailed
             val id = "$server.$room"
@@ -519,11 +436,10 @@ object OpenGroupApi {
 
     // region General
     @Suppress("UNCHECKED_CAST")
-    fun batch(
+    fun poll(
         rooms: List<String>,
         server: String
     ): Promise<Map<String, BatchResult>, Exception> {
-        val authTokenRequests = rooms.associateWith { room -> getAuthToken(room, server) }
         val storage = MessagingModuleConfiguration.shared.storage
         val context = MessagingModuleConfiguration.shared.context
         val timeSinceLastOpen = this.timeSinceLastOpen
@@ -535,15 +451,9 @@ object OpenGroupApi {
             TextSecurePreferences.setLastOpenDate(context)
         }
         val requests = rooms.mapNotNull { room ->
-            val authToken = try {
-                authTokenRequests[room]?.get()
-            } catch (e: Exception) {
-                Log.e("Loki", "Failed to get auth token for $room.", e)
-                null
-            } ?: return@mapNotNull null
             BatchRequest(
                 roomID = room,
-                authToken = authToken,
+                authToken = "",
                 fromDeletionServerID = if (useMessageLimit) null else storage.getLastDeletionServerID(
                     room,
                     server
@@ -559,22 +469,13 @@ object OpenGroupApi {
             room = null,
             server = server,
             endpoint = "batch",
-            isAuthRequired = false,
             parameters = mapOf("requests" to requests)
         )
-        return send(request = request).map { json ->
+        return getResponseBodyJson(request = request).map { json ->
             val results = json["results"] as? List<*> ?: throw Error.ParsingFailed
             results.mapNotNull { json ->
                 if (json !is Map<*, *>) return@mapNotNull null
                 val roomID = json["room_id"] as? String ?: return@mapNotNull null
-                // A 401 means that we didn't provide a (valid) auth token for a route that required one. We use this as an
-                // indication that the token we're using has expired. Note that a 403 has a different meaning; it means that
-                // we provided a valid token but it doesn't have a high enough permission level for the route in question.
-                val statusCode = json["status_code"] as? Int ?: return@mapNotNull null
-                if (statusCode == 401) {
-                    // delete auth token and return null
-                    storage.removeAuthToken(roomID, server)
-                }
                 // Moderators
                 val moderators = json["moderators"] as? List<String> ?: return@mapNotNull null
                 handleModerators("$server.$roomID", moderators)
@@ -632,10 +533,9 @@ object OpenGroupApi {
             verb = GET,
             room = null,
             server = server,
-            endpoint = "rooms/$room",
-            isAuthRequired = false
+            endpoint = "rooms/$room"
         )
-        return send(request).map { json ->
+        return getResponseBodyJson(request).map { json ->
             val rawRoom = json["room"] as? Map<*, *> ?: throw Error.ParsingFailed
             val id = rawRoom["id"] as? String ?: throw Error.ParsingFailed
             val name = rawRoom["name"] as? String ?: throw Error.ParsingFailed
@@ -650,14 +550,13 @@ object OpenGroupApi {
             room = null,
             server = server,
             endpoint = "rooms",
-            isAuthRequired = false,
             isBlinded = true
         )
-        return send(request).map { json ->
-            val rawRooms = json["rooms"] as? List<Map<*, *>> ?: throw Error.ParsingFailed
+        return send(request).map { response ->
+            val rawRooms = JsonUtil.fromJson(response.body, List::class.java) ?: throw Error.ParsingFailed
             rawRooms.mapNotNull {
                 val roomJson = it as? Map<*, *> ?: return@mapNotNull null
-                val id = roomJson["id"] as? String ?: return@mapNotNull null
+                val id = roomJson["token"] as? String ?: return@mapNotNull null
                 val name = roomJson["name"] as? String ?: return@mapNotNull null
                 val imageID = roomJson["image_id"] as? String
                 Info(id, name, imageID)
@@ -667,7 +566,7 @@ object OpenGroupApi {
 
     fun getMemberCount(room: String, server: String): Promise<Int, Exception> {
         val request = Request(verb = GET, room = room, server = server, endpoint = "active_users")
-        return send(request).map { json ->
+        return getResponseBodyJson(request).map { json ->
             val activeUserCount = json["active_users"] as? Int ?: throw Error.ParsingFailed
             val storage = MessagingModuleConfiguration.shared.storage
             storage.setUserCount(room, server, activeUserCount)
@@ -677,7 +576,7 @@ object OpenGroupApi {
 
     fun getCapabilities(room: String, server: String): Promise<List<String>, Exception> {
         val request = Request(verb = GET, room = room, server = server, endpoint = "capabilities")
-        return send(request).map { json ->
+        return getResponseBodyJson(request).map { json ->
             json["capabilities"] as? List<String> ?: throw Error.ParsingFailed
         }
     }

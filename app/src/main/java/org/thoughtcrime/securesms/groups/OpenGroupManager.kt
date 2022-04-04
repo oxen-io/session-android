@@ -66,8 +66,6 @@ object OpenGroupManager {
         storage.removeLastMessageServerID(room, server)
         // Store the public key
         storage.setOpenGroupPublicKey(server,publicKey)
-        // Get an auth token
-        OpenGroupApi.getAuthToken(room, server).get()
         // Get capabilities
         val capabilities = OpenGroupApi.getCapabilities(room, server).get()
         // Get group info

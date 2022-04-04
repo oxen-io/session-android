@@ -348,8 +348,12 @@ object OnionRequestAPI {
     /**
      * Sends an onion request to `destination`. Builds new paths as needed.
      */
-    private fun sendOnionRequest(destination: Destination, payload: ByteArray, version: Version): Promise<Map<*, *>, Exception> {
-        val deferred = deferred<Map<*, *>, Exception>()
+    private fun sendOnionRequest(
+        destination: Destination,
+        payload: ByteArray,
+        version: Version
+    ): Promise<OnionResponse, Exception> {
+        val deferred = deferred<OnionResponse, Exception>()
         lateinit var guardSnode: Snode
         buildOnionForDestination(payload, destination, version).success { result ->
             guardSnode = result.guardSnode
@@ -439,7 +443,13 @@ object OnionRequestAPI {
     /**
      * Sends an onion request to `snode`. Builds new paths as needed.
      */
-    internal fun sendOnionRequest(method: Snode.Method, parameters: Map<*, *>, snode: Snode, version: Version, publicKey: String? = null): Promise<Map<*, *>, Exception> {
+    internal fun sendOnionRequest(
+        method: Snode.Method,
+        parameters: Map<*, *>,
+        snode: Snode,
+        version: Version,
+        publicKey: String? = null
+    ): Promise<OnionResponse, Exception> {
         val payload = mapOf(
             "method" to method.rawValue,
             "params" to parameters
@@ -461,7 +471,12 @@ object OnionRequestAPI {
      *
      * `publicKey` is the hex encoded public key of the user the call is associated with. This is needed for swarm cache maintenance.
      */
-    fun sendOnionRequest(request: Request, server: String, x25519PublicKey: String, version: Version = Version.V4): Promise<Map<*, *>, Exception> {
+    fun sendOnionRequest(
+        request: Request,
+        server: String,
+        x25519PublicKey: String,
+        version: Version = Version.V4
+    ): Promise<OnionResponse, Exception> {
         val url = request.url()
         val payload = generatePayload(request, server, version)
         val destination = Destination.Server(url.host(), version.value, x25519PublicKey, url.scheme(), url.port())
@@ -518,7 +533,7 @@ object OnionRequestAPI {
         destinationSymmetricKey: ByteArray,
         destination: Destination,
         version: Version,
-        deferred: Deferred<Map<*, *>, Exception>
+        deferred: Deferred<OnionResponse, Exception>
     ) {
         if (version == Version.V4) {
             try {
@@ -563,25 +578,24 @@ object OnionRequestAPI {
                 }
 
                 // If there is no data in the response then just return the ResponseInfo
-                if (info.length < "l${infoLength}${info}e".length) {
-                    return deferred.resolve(JsonUtil.fromJson(info, Map::class.java))
+                if (plaintextString.length <= "l${infoLength}${info}e".length) {
+                    return deferred.resolve(OnionResponse(responseInfo, null))
                 }
                 // Extract the response data as well
                 val data = plaintextString.substring(infoEndIndex)
-                val dataParts = data.split(":")
-                val dataLength = dataParts.firstOrNull()?.length
-                if (dataParts.size <= 1 || dataLength == null) return deferred.reject(Exception("Invalid JSON"))
+                val dataParts = data.split(":".toRegex(), 2)
+                val dataLength = dataParts.firstOrNull()?.toIntOrNull()
+                if (dataParts.size <= 1 || dataLength == null) return deferred.reject(Exception("Invalid response"))
                 val dataString = dataParts.last().dropLast(1)
-                return deferred.resolve(JsonUtil.fromJson(dataString, Map::class.java))
+                return deferred.resolve(OnionResponse(responseInfo, dataString.encodeToByteArray()))
             } catch (exception: Exception) {
                 deferred.reject(exception)
             }
         } else {
-            val bodyAsString = response.decodeToString()
             val json = try {
-                JsonUtil.fromJson(bodyAsString, Map::class.java)
+                JsonUtil.fromJson(response, Map::class.java)
             } catch (exception: Exception) {
-                mapOf( "result" to bodyAsString)
+                mapOf( "result" to response.decodeToString())
             }
             val base64EncodedIVAndCiphertext = json["result"] as? String ?: return deferred.reject(Exception("Invalid JSON"))
             val ivAndCiphertext = Base64.decode(base64EncodedIVAndCiphertext)
@@ -624,7 +638,7 @@ object OnionRequestAPI {
                                 )
                                 return deferred.reject(exception)
                             }
-                            deferred.resolve(body)
+                            deferred.resolve(OnionResponse(body, JsonUtil.toJson(body).toByteArray()))
                         }
                         else -> {
                             if (statusCode != 200) {
@@ -635,7 +649,7 @@ object OnionRequestAPI {
                                 )
                                 return deferred.reject(exception)
                             }
-                            deferred.resolve(json)
+                            deferred.resolve(OnionResponse(json, JsonUtil.toJson(json).toByteArray()))
                         }
                     }
                 } catch (exception: Exception) {
@@ -647,11 +661,15 @@ object OnionRequestAPI {
         }
     }
     // endregion
-
-    enum class Version(val value: String) {
-        V2("/loki/v2/lsrpc"),
-        V3("/loki/v3/lsrpc"),
-        V4("/oxen/v4/lsrpc");
-    }
-
 }
+
+enum class Version(val value: String) {
+    V2("/loki/v2/lsrpc"),
+    V3("/loki/v3/lsrpc"),
+    V4("/oxen/v4/lsrpc");
+}
+
+data class OnionResponse(
+    val info: Map<*, *>,
+    val body: ByteArray? = null
+)

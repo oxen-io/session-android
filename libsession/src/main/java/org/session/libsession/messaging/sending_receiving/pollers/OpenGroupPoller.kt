@@ -45,7 +45,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         val storage = MessagingModuleConfiguration.shared.storage
         val rooms = storage.getAllV2OpenGroups().values.filter { it.server == server }.map { it.room }
         rooms.forEach { downloadGroupAvatarIfNeeded(it) }
-        return OpenGroupApi.batch(rooms, server).successBackground { responses ->
+        return OpenGroupApi.poll(rooms, server).successBackground { responses ->
             responses.forEach { (room, response) ->
                 val openGroupID = "$server.$room"
                 handleNewMessages(room, openGroupID, response.messages)

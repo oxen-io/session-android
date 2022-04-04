@@ -74,7 +74,9 @@ object FileServerApi {
             HTTP.Verb.DELETE -> requestBuilder.delete(createBody(request.parameters))
         }
         return if (request.useOnionRouting) {
-            OnionRequestAPI.sendOnionRequest(requestBuilder.build(), server, serverPublicKey).fail { e ->
+            OnionRequestAPI.sendOnionRequest(requestBuilder.build(), server, serverPublicKey).map {
+                JsonUtil.fromJson(it.body, Map::class.java)
+            }.fail { e ->
                 Log.e("Loki", "File server request failed.", e)
             }
         } else {

@@ -35,12 +35,12 @@ object OnionRequestEncryption {
     internal fun encryptPayloadForDestination(
         payload: ByteArray,
         destination: Destination,
-        version: OnionRequestAPI.Version
+        version: Version
     ): Promise<EncryptionResult, Exception> {
         val deferred = deferred<EncryptionResult, Exception>()
         ThreadUtils.queue {
             try {
-                val plaintext = if (version == OnionRequestAPI.Version.V4) {
+                val plaintext = if (version == Version.V4) {
                     payload
                 } else {
                     // Wrapping isn't needed for file server or open group onion requests

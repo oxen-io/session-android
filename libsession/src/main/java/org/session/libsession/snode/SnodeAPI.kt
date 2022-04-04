@@ -79,13 +79,15 @@ object SnodeAPI {
         snode: Snode,
         parameters: Map<String, Any>,
         publicKey: String? = null,
-        version: OnionRequestAPI.Version = OnionRequestAPI.Version.V3
+        version: Version = Version.V3
     ): RawResponsePromise {
         val url = "${snode.address}:${snode.port}/storage_rpc/v1"
+        val deferred = deferred<Map<*, *>, Exception>()
         if (useOnionRequests) {
-            return OnionRequestAPI.sendOnionRequest(method, parameters, snode, version, publicKey)
+            OnionRequestAPI.sendOnionRequest(method, parameters, snode, version, publicKey).map {
+                deferred.resolve(JsonUtil.fromJson(it.body, Map::class.java))
+            }.fail { deferred.reject(it) }
         } else {
-            val deferred = deferred<Map<*, *>, Exception>()
             ThreadUtils.queue {
                 val payload = mapOf( "method" to method.rawValue, "params" to parameters )
                 try {
@@ -102,8 +104,8 @@ object SnodeAPI {
                     deferred.reject(exception)
                 }
             }
-            return deferred.promise
         }
+        return deferred.promise
     }
 
     internal fun getRandomSnode(): Promise<Snode, Exception> {

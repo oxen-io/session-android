@@ -12,8 +12,12 @@ import org.session.libsession.messaging.messages.control.ClosedGroupControlMessa
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
 import org.session.libsession.messaging.messages.control.UnsendRequest
-import org.session.libsession.messaging.messages.visible.*
-import org.session.libsession.messaging.open_groups.*
+import org.session.libsession.messaging.messages.visible.LinkPreview
+import org.session.libsession.messaging.messages.visible.Profile
+import org.session.libsession.messaging.messages.visible.Quote
+import org.session.libsession.messaging.messages.visible.VisibleMessage
+import org.session.libsession.messaging.open_groups.OpenGroupApi
+import org.session.libsession.messaging.open_groups.OpenGroupMessageV2
 import org.session.libsession.messaging.utilities.MessageWrapper
 import org.session.libsession.snode.RawResponsePromise
 import org.session.libsession.snode.SnodeAPI
