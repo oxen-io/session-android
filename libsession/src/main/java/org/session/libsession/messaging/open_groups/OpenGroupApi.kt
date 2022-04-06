@@ -71,12 +71,11 @@ object OpenGroupApi {
         val joinURL: String get() = "$defaultServer/$id?public_key=$defaultServerPublicKey"
     }
 
-    data class Info(val id: String, val name: String, val imageID: String?)
+    data class Info(val id: String, val name: String, val imageID: Int?)
 
     @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
     data class BatchRequest(
         val roomID: String,
-        val authToken: String,
         val fromDeletionServerID: Long?,
         val fromMessageServerID: Long?
     )
@@ -217,19 +216,17 @@ object OpenGroupApi {
     }
 
     fun downloadOpenGroupProfilePicture(
+        server: String,
         roomID: String,
-        server: String
+        imageId: Int?
     ): Promise<ByteArray, Exception> {
         val request = Request(
             verb = GET,
             room = roomID,
             server = server,
-            endpoint = "rooms/$roomID/image"
+            endpoint = "room/$roomID/file/$imageId"
         )
-        return getResponseBodyJson(request).map { json ->
-            val result = json["result"] as? String ?: throw Error.ParsingFailed
-            decode(result)
-        }
+        return send(request).map { it.body ?: throw Error.ParsingFailed }
     }
 
     // region Upload/Download
@@ -249,11 +246,8 @@ object OpenGroupApi {
     }
 
     fun download(file: Long, room: String, server: String): Promise<ByteArray, Exception> {
-        val request = Request(verb = GET, room = room, server = server, endpoint = "files/$file")
-        return getResponseBodyJson(request).map { json ->
-            val base64EncodedFile = json["result"] as? String ?: throw Error.ParsingFailed
-            decode(base64EncodedFile) ?: throw Error.ParsingFailed
-        }
+        val request = Request(verb = GET, room = room, server = server, endpoint = "file/$file")
+        return send(request).map { it.body ?: throw Error.ParsingFailed }
     }
     // endregion
 
@@ -450,10 +444,9 @@ object OpenGroupApi {
             hasUpdatedLastOpenDate = true
             TextSecurePreferences.setLastOpenDate(context)
         }
-        val requests = rooms.mapNotNull { room ->
+        val requests = rooms.map { room ->
             BatchRequest(
                 roomID = room,
-                authToken = "",
                 fromDeletionServerID = if (useMessageLimit) null else storage.getLastDeletionServerID(
                     room,
                     server
@@ -512,7 +505,7 @@ object OpenGroupApi {
                 }
             }
             val images = groups.associate { group ->
-                group.id to downloadOpenGroupProfilePicture(group.id, defaultServer)
+                group.id to downloadOpenGroupProfilePicture(defaultServer, group.id, group.imageID)
             }
             groups.map { group ->
                 val image = try {
@@ -528,23 +521,23 @@ object OpenGroupApi {
         }
     }
 
-    fun getInfo(room: String, server: String): Promise<Info, Exception> {
+    fun getInfo(roomToken: String, server: String): Promise<Info, Exception> {
         val request = Request(
             verb = GET,
             room = null,
             server = server,
-            endpoint = "rooms/$room"
+            endpoint = "room/$roomToken"
         )
         return getResponseBodyJson(request).map { json ->
             val rawRoom = json["room"] as? Map<*, *> ?: throw Error.ParsingFailed
             val id = rawRoom["id"] as? String ?: throw Error.ParsingFailed
             val name = rawRoom["name"] as? String ?: throw Error.ParsingFailed
-            val imageID = rawRoom["image_id"] as? String
+            val imageID = rawRoom["image_id"] as? Int
             Info(id = id, name = name, imageID = imageID)
         }
     }
 
-    fun getAllRooms(server: String): Promise<List<Info>, Exception> {
+    private fun getAllRooms(server: String): Promise<List<Info>, Exception> {
         val request = Request(
             verb = GET,
             room = null,
@@ -558,7 +551,7 @@ object OpenGroupApi {
                 val roomJson = it as? Map<*, *> ?: return@mapNotNull null
                 val id = roomJson["token"] as? String ?: return@mapNotNull null
                 val name = roomJson["name"] as? String ?: return@mapNotNull null
-                val imageID = roomJson["image_id"] as? String
+                val imageID = roomJson["image_id"] as? Int
                 Info(id, name, imageID)
             }
         }

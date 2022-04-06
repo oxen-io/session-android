@@ -541,7 +541,7 @@ object OnionRequestAPI {
                 // The data will be in the form of `l123:jsone` or `l123:json456:bodye` so we need to break the data into
                 // parts to properly process it
                 val plaintext = AESGCM.decrypt(response, destinationSymmetricKey)
-                val plaintextString = plaintext.decodeToString()
+                val plaintextString = plaintext.toString(Charsets.US_ASCII)
                 if (!plaintextString.startsWith("l")) return deferred.reject(Exception("Invalid response"))
                 val infoParts = plaintextString.split(":")
                 val infoLength = infoParts.firstOrNull()?.drop(1)?.toIntOrNull()
@@ -587,7 +587,7 @@ object OnionRequestAPI {
                 val dataLength = dataParts.firstOrNull()?.toIntOrNull()
                 if (dataParts.size <= 1 || dataLength == null) return deferred.reject(Exception("Invalid response"))
                 val dataString = dataParts.last().dropLast(1)
-                return deferred.resolve(OnionResponse(responseInfo, dataString.encodeToByteArray()))
+                return deferred.resolve(OnionResponse(responseInfo, dataString.toByteArray(Charsets.US_ASCII)))
             } catch (exception: Exception) {
                 deferred.reject(exception)
             }
