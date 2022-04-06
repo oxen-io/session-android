@@ -4,13 +4,14 @@ import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.functional.bind
 import nl.komponents.kovenant.functional.map
 import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
 import org.session.libsession.messaging.jobs.JobQueue
-import org.session.libsession.messaging.jobs.MessageReceiveJob
+import org.session.libsession.messaging.jobs.MessageReceiveParameters
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsignal.crypto.getRandomElementOrNull
 import org.session.libsignal.utilities.Log
-import java.util.*
+import java.util.Date
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
@@ -100,8 +101,11 @@ class ClosedGroupPollerV2 {
         }
         promise.success { envelopes ->
             if (!isPolling(groupPublicKey)) { return@success }
-            envelopes.iterator().forEach { (envelope, serverHash) ->
-                val job = MessageReceiveJob(envelope.toByteArray(), serverHash)
+            val parameters = envelopes.map { (envelope, serverHash) ->
+                MessageReceiveParameters(envelope.toByteArray(), serverHash = serverHash)
+            }
+            parameters.chunked(100).forEach { chunk ->
+                val job = BatchMessageReceiveJob(chunk)
                 JobQueue.shared.add(job)
             }
         }

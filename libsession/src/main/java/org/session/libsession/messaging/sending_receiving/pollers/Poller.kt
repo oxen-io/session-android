@@ -1,7 +1,11 @@
 package org.session.libsession.messaging.sending_receiving.pollers
 
-import nl.komponents.kovenant.*
+import nl.komponents.kovenant.Deferred
+import nl.komponents.kovenant.Promise
+import nl.komponents.kovenant.deferred
 import nl.komponents.kovenant.functional.bind
+import nl.komponents.kovenant.resolve
+import nl.komponents.kovenant.task
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
 import org.session.libsession.messaging.jobs.JobQueue
@@ -11,7 +15,8 @@ import org.session.libsession.snode.SnodeModule
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Snode
 import java.security.SecureRandom
-import java.util.*
+import java.util.Timer
+import java.util.TimerTask
 
 private class PromiseCanceledException : Exception("Promise canceled.")
 
@@ -95,7 +100,7 @@ class Poller {
                 val parameters = messages.map { (envelope, serverHash) ->
                     MessageReceiveParameters(envelope.toByteArray(), serverHash = serverHash)
                 }
-                parameters.chunked(20).forEach { chunk ->
+                parameters.chunked(100).forEach { chunk ->
                     val job = BatchMessageReceiveJob(chunk)
                     JobQueue.shared.add(job)
                 }
