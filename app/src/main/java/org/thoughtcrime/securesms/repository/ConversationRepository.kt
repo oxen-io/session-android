@@ -86,8 +86,7 @@ class DefaultConversationRepository @Inject constructor(
 
     override fun isOxenHostedOpenGroup(threadId: Long): Boolean {
         val openGroup = lokiThreadDb.getOpenGroupChat(threadId)
-        return openGroup?.room == "session" || openGroup?.room == "oxen"
-                || openGroup?.room == "lokinet" || openGroup?.room == "crypto"
+        return openGroup?.publicKey == OpenGroupAPIV2.defaultServerPublicKey
     }
 
     override fun getRecipientForThreadId(threadId: Long): Recipient {

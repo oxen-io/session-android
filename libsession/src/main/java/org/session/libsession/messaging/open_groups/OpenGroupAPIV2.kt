@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import com.fasterxml.jackson.databind.type.TypeFactory
-import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.functional.bind
@@ -18,11 +17,41 @@ import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPolle
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.utilities.AESGCM
 import org.session.libsession.utilities.TextSecurePreferences
-import org.session.libsignal.utilities.*
-import org.session.libsignal.utilities.Base64.*
-import org.session.libsignal.utilities.HTTP.Verb.*
+import org.session.libsignal.utilities.Base64.decode
+import org.session.libsignal.utilities.Base64.encodeBytes
+import org.session.libsignal.utilities.HTTP
+import org.session.libsignal.utilities.HTTP.Verb.DELETE
+import org.session.libsignal.utilities.HTTP.Verb.GET
+import org.session.libsignal.utilities.HTTP.Verb.POST
+import org.session.libsignal.utilities.HTTP.Verb.PUT
+import org.session.libsignal.utilities.Hex
+import org.session.libsignal.utilities.JsonUtil
+import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.removing05PrefixIfNeeded
+import org.session.libsignal.utilities.toHexString
 import org.whispersystems.curve25519.Curve25519
-import java.util.*
+import kotlin.collections.HashMap
+import kotlin.collections.List
+import kotlin.collections.Map
+import kotlin.collections.Set
+import kotlin.collections.associateWith
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.firstOrNull
+import kotlin.collections.get
+import kotlin.collections.hashMapOf
+import kotlin.collections.isNotEmpty
+import kotlin.collections.iterator
+import kotlin.collections.map
+import kotlin.collections.mapNotNull
+import kotlin.collections.mapOf
+import kotlin.collections.maxByOrNull
+import kotlin.collections.mutableMapOf
+import kotlin.collections.none
+import kotlin.collections.plusAssign
+import kotlin.collections.set
+import kotlin.collections.toMap
+import kotlin.collections.toMutableSet
 
 object OpenGroupAPIV2 {
     private val moderators: HashMap<String, Set<String>> = hashMapOf() // Server URL to (channel ID to set of moderator IDs)
@@ -38,7 +67,7 @@ object OpenGroupAPIV2 {
         now - lastOpenDate
     }
 
-    private const val defaultServerPublicKey = "a03c383cf63c3c4efe67acc52112a6dd734b3a946b9545f488aaa93da7991238"
+    const val defaultServerPublicKey = "a03c383cf63c3c4efe67acc52112a6dd734b3a946b9545f488aaa93da7991238"
     const val defaultServer = "http://116.203.70.33"
 
     sealed class Error(message: String) : Exception(message) {
