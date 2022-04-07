@@ -170,8 +170,6 @@ class JobQueue : JobDelegate {
             val replacementParameters = job.failures
             val newJob = BatchMessageReceiveJob(replacementParameters, job.openGroupID)
             add(newJob)
-            handleJobFailedPermanently(job, error)
-            return
         }
 
         // Regular job failure

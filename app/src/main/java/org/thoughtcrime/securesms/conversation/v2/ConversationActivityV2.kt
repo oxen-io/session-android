@@ -241,7 +241,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 actionMode?.let {
                     onDeselect(message, position, it)
                 }
-            }
+            },
+            lifecycleCoroutineScope = lifecycleScope
         )
         adapter.visibleMessageContentViewDelegate = this
         adapter

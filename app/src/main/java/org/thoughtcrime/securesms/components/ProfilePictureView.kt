@@ -106,13 +106,13 @@ class ProfilePictureView : RelativeLayout {
             val avatar = (signalProfilePicture as? ProfileContactPhoto)?.avatarObject
             if (signalProfilePicture != null && avatar != "0" && avatar != "") {
                 glide.clear(imageView)
-                glide.load(signalProfilePicture).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).circleCrop().into(imageView)
+                glide.load(signalProfilePicture).diskCacheStrategy(DiskCacheStrategy.NONE).circleCrop().into(imageView)
                 profilePicturesCache[publicKey] = recipient.profileAvatar
             } else {
                 val sizeInPX = resources.getDimensionPixelSize(sizeResId)
                 glide.clear(imageView)
                 glide.load(AvatarPlaceholderGenerator.generate(context, sizeInPX, publicKey, displayName))
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop().into(imageView)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE).circleCrop().into(imageView)
                 profilePicturesCache[publicKey] = recipient.profileAvatar
             }
         } else {

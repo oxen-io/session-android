@@ -4,7 +4,15 @@ import android.content.Context
 import android.database.Cursor
 import android.view.MotionEvent
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.dropbox.android.external.store4.Fetcher
+import com.dropbox.android.external.store4.StoreBuilder
+import com.dropbox.android.external.store4.StoreRequest
+import com.dropbox.android.external.store4.StoreResponse
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import org.session.libsession.messaging.contacts.Contact
 import org.thoughtcrime.securesms.conversation.v2.messages.ControlMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageContentViewDelegate
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
@@ -15,12 +23,21 @@ import org.thoughtcrime.securesms.mms.GlideRequests
 
 class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPress: (MessageRecord, Int, VisibleMessageView, MotionEvent) -> Unit,
     private val onItemSwipeToReply: (MessageRecord, Int) -> Unit, private val onItemLongPress: (MessageRecord, Int) -> Unit,
-    private val glide: GlideRequests, private val onDeselect: (MessageRecord, Int) -> Unit)
+    private val glide: GlideRequests, private val onDeselect: (MessageRecord, Int) -> Unit, private val lifecycleCoroutineScope: LifecycleCoroutineScope)
     : CursorRecyclerViewAdapter<ViewHolder>(context, cursor) {
-    private val messageDB = DatabaseComponent.get(context).mmsSmsDatabase()
+    private val messageDB by lazy { DatabaseComponent.get(context).mmsSmsDatabase() }
+    private val contactDB by lazy { DatabaseComponent.get(context).sessionContactDatabase() }
     var selectedItems = mutableSetOf<MessageRecord>()
     private var searchQuery: String? = null
     var visibleMessageContentViewDelegate: VisibleMessageContentViewDelegate? = null
+
+    private val userInfoCache = StoreBuilder.from(
+        fetcher = Fetcher.of { message: MessageRecord ->
+            val id = message.individualRecipient.address.serialize()
+            val contact = contactDB.getContactWithSessionID(id)
+            contact to id
+        }
+    ).build()
 
     sealed class ViewType(val rawValue: Int) {
         object Visible : ViewType(0)
@@ -35,7 +52,10 @@ class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPr
         }
     }
 
-    class VisibleMessageViewHolder(val view: VisibleMessageView) : ViewHolder(view)
+    class VisibleMessageViewHolder(val view: VisibleMessageView) : ViewHolder(view) {
+        private val infoLoadJob: Job? = null
+        fun observe(receiver: StoreResponse<>)
+    }
     class ControlMessageViewHolder(val view: ControlMessageView) : ViewHolder(view)
 
     override fun getItemViewType(cursor: Cursor): Int {
@@ -54,17 +74,27 @@ class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPr
         }
     }
 
+    private fun getSenderInfo(message: MessageRecord): Flow<StoreResponse<Pair<Contact?, String>>> {
+        return userInfoCache.stream(
+            StoreRequest.cached(message, refresh = true)
+        )
+    }
+
     override fun onBindItemViewHolder(viewHolder: ViewHolder, cursor: Cursor) {
         val message = getMessage(cursor)!!
         val position = viewHolder.adapterPosition
         val messageBefore = getMessageBefore(position, cursor)
         when (viewHolder) {
             is VisibleMessageViewHolder -> {
+                viewHolder.observe(getSenderInfo(message)) {
+
+                }
                 val view = viewHolder.view
                 val isSelected = selectedItems.contains(message)
                 view.snIsSelected = isSelected
                 view.indexInAdapter = position
-                view.bind(message, messageBefore, getMessageAfter(position, cursor), glide, searchQuery)
+                val (contact, senderId) = getSenderInfo(message)
+                view.bind(message, messageBefore, getMessageAfter(position, cursor), glide, searchQuery, contact, senderId)
                 if (!message.isDeleted) {
                     view.onPress = { event -> onItemPress(message, viewHolder.adapterPosition, view, event) }
                     view.onSwipeToReply = { onItemSwipeToReply(message, viewHolder.adapterPosition) }
