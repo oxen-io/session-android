@@ -50,10 +50,10 @@ class AttachmentUploadJob(val attachmentID: Long, val threadID: String, val mess
             val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
             val attachment = messageDataProvider.getScaledSignalAttachmentStream(attachmentID)
                 ?: return handleFailure(Error.NoAttachment)
-            val v2OpenGroup = storage.getV2OpenGroup(threadID.toLong())
-            if (v2OpenGroup != null) {
-                val keyAndResult = upload(attachment, v2OpenGroup.server, false) {
-                    OpenGroupApi.upload(it, v2OpenGroup.room, v2OpenGroup.server)
+            val openGroup = storage.getOpenGroup(threadID.toLong())
+            if (openGroup != null) {
+                val keyAndResult = upload(attachment, openGroup.server, false) {
+                    OpenGroupApi.upload(it, openGroup.room, openGroup.server)
                 }
                 handleSuccess(attachment, keyAndResult.first, keyAndResult.second)
             } else {

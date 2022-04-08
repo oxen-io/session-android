@@ -95,13 +95,13 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
             }
             messageDataProvider.setAttachmentState(AttachmentState.STARTED, attachment.attachmentId, this.databaseMessageID)
             tempFile = createTempFile()
-            val openGroupV2 = storage.getV2OpenGroup(threadID)
-            if (openGroupV2 == null) {
+            val openGroup = storage.getOpenGroup(threadID)
+            if (openGroup == null) {
                 DownloadUtilities.downloadFile(tempFile, attachment.url)
             } else {
                 val url = HttpUrl.parse(attachment.url)!!
                 val fileID = url.pathSegments().last()
-                OpenGroupApi.download(fileID.toLong(), openGroupV2.room, openGroupV2.server).get().let {
+                OpenGroupApi.download(fileID.toLong(), openGroup.room, openGroup.server).get().let {
                     tempFile.writeBytes(it)
                 }
             }

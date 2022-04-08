@@ -1,6 +1,7 @@
 package org.session.libsession.messaging.open_groups
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import com.fasterxml.jackson.databind.type.TypeFactory
@@ -71,19 +72,100 @@ object OpenGroupApi {
         val joinURL: String get() = "$defaultServer/$id?public_key=$defaultServerPublicKey"
     }
 
-    data class Info(val id: String, val name: String, val imageID: Int?)
-
-    @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
-    data class BatchRequest(
-        val roomID: String,
-        val fromDeletionServerID: Long?,
-        val fromMessageServerID: Long?
+    data class RoomInfo(
+        val token: String = "",
+        val name: String = "",
+        val description: String = "",
+        val info_updates: Int = 0,
+        val message_sequence: Long = 0,
+        val created: Long = 0,
+        val active_users: Int = 0,
+        val active_users_cutoff: Int = 0,
+        val image_id: Int? = null,
+        val pinned_messages: List<PinnedMessage> = emptyList(),
+        val admin: Boolean = false,
+        val global_admin: Boolean = false,
+        val admins: List<String> = emptyList(),
+        val hiddenAdmins: List<String> = emptyList(),
+        val moderator: Boolean = false,
+        val global_moderator: Boolean = false,
+        val moderators: List<String> = emptyList(),
+        val hiddenModerators: List<String> = emptyList(),
+        val read: Boolean = false,
+        val default_read: Boolean = false,
+        val default_accessible: Boolean = false,
+        val write: Boolean = false,
+        val default_write: Boolean = false,
+        val upload: Boolean = false,
+        val default_upload: Boolean = false,
     )
 
-    data class BatchResult(
-        val messages: List<OpenGroupMessageV2>,
-        val deletions: List<MessageDeletion>,
-        val moderators: List<String>
+    data class PinnedMessage(
+        val id: Long = 0,
+        val pinned_at: Long = 0,
+        val pinned_by: String = ""
+    )
+
+    @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
+    data class BatchRequestInfo<T>(
+        val request: BatchRequest,
+        val responseType: TypeReference<T>
+    )
+
+    data class BatchRequest(
+        val method: String,
+        val path: String
+    )
+
+    data class BatchResponse<T>(
+        val endpoint: String,
+        val code: Int,
+        val headers: Map<String, String>,
+        val body: T?
+    )
+
+    data class Capabilities(
+        val capabilities: List<String> = emptyList(),
+        val missing: List<String> = emptyList()
+    )
+
+    data class RoomPollInfo(
+        val token: String = "",
+        val active_users: Long = 0,
+        val admin: Boolean = false,
+        val global_admin: Boolean = false,
+        val moderator: Boolean = false,
+        val global_moderator: Boolean = false,
+        val read: Boolean = false,
+        val default_read: Boolean = false,
+        val default_accessible: Boolean = false,
+        val write: Boolean = false,
+        val default_write: Boolean = false,
+        val upload: Boolean = false,
+        val default_upload: Boolean = false,
+        val details: List<RoomInfo> = emptyList()
+    )
+
+    data class DirectMessage(
+        val id: Long = 0,
+        val sender: String = "",
+        val recipient: String = "",
+        val posted_at: Long = 0,
+        val expires_at: Long = 0,
+        val message: String = "",
+    )
+
+    data class Message(
+        val id : Long = 0,
+        val session_id: String = "",
+        val posted: Long = 0,
+        val edited: Long = 0,
+        val seqno: Long = 0,
+        val whisper: Boolean = false,
+        val whisper_mods: String = "",
+        val whisper_to: String = "",
+        val data: String = "",
+        val signature: String = ""
     )
 
     data class MessageDeletion(
@@ -218,7 +300,7 @@ object OpenGroupApi {
     fun downloadOpenGroupProfilePicture(
         server: String,
         roomID: String,
-        imageId: Int?
+        imageId: Int
     ): Promise<ByteArray, Exception> {
         val request = Request(
             verb = GET,
@@ -433,61 +515,120 @@ object OpenGroupApi {
     fun poll(
         rooms: List<String>,
         server: String
-    ): Promise<Map<String, BatchResult>, Exception> {
+    ): Promise<List<BatchResponse<*>>, Exception> {
         val storage = MessagingModuleConfiguration.shared.storage
         val context = MessagingModuleConfiguration.shared.context
         val timeSinceLastOpen = this.timeSinceLastOpen
-        val useMessageLimit = (hasPerformedInitialPoll[server] != true
+        val shouldRetrieveRecentMessages = (hasPerformedInitialPoll[server] != true
                 && timeSinceLastOpen > maxInactivityPeriod)
         hasPerformedInitialPoll[server] = true
         if (!hasUpdatedLastOpenDate) {
             hasUpdatedLastOpenDate = true
             TextSecurePreferences.setLastOpenDate(context)
         }
-        val requests = rooms.map { room ->
-            BatchRequest(
-                roomID = room,
-                fromDeletionServerID = if (useMessageLimit) null else storage.getLastDeletionServerID(
-                    room,
-                    server
+        val lastInboxMessageId = storage.getLastInboxMessageId(server)
+        val lastOutboxMessageId = storage.getLastOutboxMessageId(server)
+        val requests = mutableListOf<BatchRequestInfo<*>>(
+            BatchRequestInfo(
+                request = BatchRequest(
+                    method = "GET",
+                    path = "/capabilities"
                 ),
-                fromMessageServerID = if (useMessageLimit) null else storage.getLastMessageServerID(
-                    room,
-                    server
+                responseType = object : TypeReference<Capabilities>(){}
+            )
+        )
+        rooms.forEach { room ->
+            requests.add(
+                BatchRequestInfo(
+                    request = BatchRequest(
+                        method = "GET",
+                        path = "/room/$room/pollInfo/${storage.getOpenGroup(room, server)?.infoUpdates}"
+                    ),
+                    responseType = object : TypeReference<RoomPollInfo>(){}
+                )
+            )
+            requests.add(
+                BatchRequestInfo(
+                    request = BatchRequest(
+                        method = "GET",
+                        path = if (shouldRetrieveRecentMessages) {
+                            "/room/$room/messages/recent"
+                        } else {
+                            "/room/$room/messages/since/${storage.getLastMessageServerID(room, server)}"
+                        }
+                    ),
+                    responseType = object : TypeReference<List<Message>>(){}
                 )
             )
         }
+        requests.add(
+            BatchRequestInfo(
+                request = BatchRequest(
+                    method = "GET",
+                    path = if (lastInboxMessageId == null) "/inbox" else "/inbox/since/$lastInboxMessageId"
+                ),
+                responseType = object : TypeReference<List<DirectMessage>>() {}
+            )
+        )
+        requests.add(
+            BatchRequestInfo(
+                request = BatchRequest(
+                    method = "GET",
+                    path = if (lastOutboxMessageId == null) "/outbox" else "/outbox/since/$lastOutboxMessageId"
+                ),
+                responseType = object : TypeReference<List<DirectMessage>>() {}
+            )
+        )
+
+        return batch(server, requests)
+    }
+
+    private fun batch(
+        server: String,
+        requests: MutableList<BatchRequestInfo<*>>
+    ): Promise<List<BatchResponse<*>>, Exception> {
         val request = Request(
             verb = POST,
             room = null,
             server = server,
             endpoint = "batch",
-            parameters = mapOf("requests" to requests)
+            parameters = requests.map { it.request }
         )
-        return getResponseBodyJson(request = request).map { json ->
-            val results = json["results"] as? List<*> ?: throw Error.ParsingFailed
-            results.mapNotNull { json ->
-                if (json !is Map<*, *>) return@mapNotNull null
-                val roomID = json["room_id"] as? String ?: return@mapNotNull null
-                // Moderators
-                val moderators = json["moderators"] as? List<String> ?: return@mapNotNull null
-                handleModerators("$server.$roomID", moderators)
-                // Deletions
-                val type = TypeFactory.defaultInstance()
-                    .constructCollectionType(List::class.java, MessageDeletion::class.java)
-                val idsAsString = JsonUtil.toJson(json["deletions"])
-                val deletions = JsonUtil.fromJson<List<MessageDeletion>>(idsAsString, type)
-                    ?: throw Error.ParsingFailed
-                // Messages
-                val rawMessages =
-                    json["messages"] as? List<Map<String, Any>> ?: return@mapNotNull null
-                val messages = parseMessages(roomID, server, rawMessages)
-                roomID to BatchResult(
-                    messages = messages,
-                    deletions = deletions,
-                    moderators = moderators
+        return getBatchResponseJson(request, requests)
+    }
+
+    private fun sequence(
+        server: String,
+        requests: MutableList<BatchRequestInfo<*>>
+    ): Promise<List<BatchResponse<*>>, Exception> {
+        val request = Request(
+            verb = POST,
+            room = null,
+            server = server,
+            endpoint = "sequence",
+            parameters = requests.map { it.request }
+        )
+        return getBatchResponseJson(request, requests)
+    }
+
+    private fun getBatchResponseJson(
+        request: Request,
+        requests: MutableList<BatchRequestInfo<*>>
+    ): Promise<List<BatchResponse<*>>, Exception> {
+        return send(request).map {
+            val results = JsonUtil.fromJson(it.body, List::class.java) ?: throw Error.ParsingFailed
+            results.mapIndexed { idx, result ->
+                val response = result as? Map<*, *> ?: throw Error.ParsingFailed
+                val code = response["code"] as Int
+                BatchResponse(
+                    endpoint = "",
+                    code = code,
+                    headers = response["headers"] as Map<String, String>,
+                    body = if (code in 200..299) {
+                        JsonUtil.fromJson(JsonUtil.toJson(response["body"]), requests[idx].responseType)
+                    } else null
                 )
-            }.toMap()
+            }
         }
     }
 
@@ -496,7 +637,7 @@ object OpenGroupApi {
         storage.setOpenGroupPublicKey(defaultServer, defaultServerPublicKey)
         return getAllRooms(defaultServer).map { groups ->
             val earlyGroups = groups.map { group ->
-                DefaultGroup(group.id, group.name, null)
+                DefaultGroup(group.token, group.name, null)
             }
             // See if we have any cached rooms, and if they already have images don't overwrite them with early non-image results
             defaultRooms.replayCache.firstOrNull()?.let { replayed ->
@@ -505,65 +646,54 @@ object OpenGroupApi {
                 }
             }
             val images = groups.associate { group ->
-                group.id to downloadOpenGroupProfilePicture(defaultServer, group.id, group.imageID)
+                group.token to group.image_id?.let { downloadOpenGroupProfilePicture(defaultServer, group.token, it) }
             }
             groups.map { group ->
                 val image = try {
-                    images[group.id]!!.get()
+                    images[group.token]!!.get()
                 } catch (e: Exception) {
                     // No image or image failed to download
                     null
                 }
-                DefaultGroup(group.id, group.name, image)
+                DefaultGroup(group.token, group.name, image)
             }
         }.success { new ->
             defaultRooms.tryEmit(new)
         }
     }
 
-    fun getInfo(roomToken: String, server: String): Promise<Info, Exception> {
+    fun getRoomInfo(roomToken: String, server: String): Promise<RoomInfo, Exception> {
         val request = Request(
             verb = GET,
             room = null,
             server = server,
             endpoint = "room/$roomToken"
         )
-        return getResponseBodyJson(request).map { json ->
-            val rawRoom = json["room"] as? Map<*, *> ?: throw Error.ParsingFailed
-            val id = rawRoom["id"] as? String ?: throw Error.ParsingFailed
-            val name = rawRoom["name"] as? String ?: throw Error.ParsingFailed
-            val imageID = rawRoom["image_id"] as? Int
-            Info(id = id, name = name, imageID = imageID)
+        return send(request).map { response ->
+            JsonUtil.fromJson(response.body, RoomInfo::class.java)
         }
     }
 
-    private fun getAllRooms(server: String): Promise<List<Info>, Exception> {
+    private fun getAllRooms(server: String): Promise<List<RoomInfo>, Exception> {
         val request = Request(
             verb = GET,
             room = null,
             server = server,
-            endpoint = "rooms",
-            isBlinded = true
+            endpoint = "rooms"
         )
         return send(request).map { response ->
             val rawRooms = JsonUtil.fromJson(response.body, List::class.java) ?: throw Error.ParsingFailed
             rawRooms.mapNotNull {
-                val roomJson = it as? Map<*, *> ?: return@mapNotNull null
-                val id = roomJson["token"] as? String ?: return@mapNotNull null
-                val name = roomJson["name"] as? String ?: return@mapNotNull null
-                val imageID = roomJson["image_id"] as? Int
-                Info(id, name, imageID)
+                JsonUtil.fromJson(JsonUtil.toJson(it), RoomInfo::class.java)
             }
         }
     }
 
     fun getMemberCount(room: String, server: String): Promise<Int, Exception> {
-        val request = Request(verb = GET, room = room, server = server, endpoint = "active_users")
-        return getResponseBodyJson(request).map { json ->
-            val activeUserCount = json["active_users"] as? Int ?: throw Error.ParsingFailed
+        return getRoomInfo(room, server).map { info ->
             val storage = MessagingModuleConfiguration.shared.storage
-            storage.setUserCount(room, server, activeUserCount)
-            activeUserCount
+            storage.setUserCount(room, server, info.active_users)
+            info.active_users
         }
     }
 
@@ -573,5 +703,30 @@ object OpenGroupApi {
             json["capabilities"] as? List<String> ?: throw Error.ParsingFailed
         }
     }
+
+    fun getCapabilitiesAndRoomInfo(room: String, server: String): Promise<Pair<Capabilities, RoomInfo>, Exception> {
+        val requests = mutableListOf<BatchRequestInfo<*>>(
+            BatchRequestInfo(
+                request = BatchRequest(
+                    method = "GET",
+                    path = "/capabilities"
+                ),
+                responseType = object : TypeReference<Capabilities>(){}
+            ),
+            BatchRequestInfo(
+                request = BatchRequest(
+                    method = "GET",
+                    path = "/room/$room"
+                ),
+                responseType = object : TypeReference<RoomInfo>(){}
+            )
+        )
+        return sequence(server, requests).map {
+            val capabilities = it.firstOrNull()?.body as? Capabilities ?: throw Error.ParsingFailed
+            val roomInfo = it.lastOrNull()?.body as? RoomInfo ?: throw Error.ParsingFailed
+            capabilities to roomInfo
+        }
+    }
+
     // endregion
 }

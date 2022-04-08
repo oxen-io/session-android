@@ -10,7 +10,7 @@ import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.visible.Attachment
 import org.session.libsession.messaging.messages.visible.VisibleMessage
-import org.session.libsession.messaging.open_groups.OpenGroupV2
+import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage
@@ -54,10 +54,11 @@ interface StorageProtocol {
     fun removeAuthToken(room: String, server: String)
 
     // Open Groups
-    fun getAllV2OpenGroups(): Map<Long, OpenGroupV2>
-    fun getV2OpenGroup(threadId: Long): OpenGroupV2?
+    fun getAllOpenGroups(): Map<Long, OpenGroup>
+    fun getOpenGroup(threadId: Long): OpenGroup?
     fun addOpenGroup(urlAsString: String)
     fun setOpenGroupServerMessageID(messageID: Long, serverID: Long, threadID: Long, isSms: Boolean)
+    fun getOpenGroup(room: String, server: String): OpenGroup?
 
     // Open Group Public Keys
     fun getOpenGroupPublicKey(server: String): String?
@@ -159,4 +160,15 @@ interface StorageProtocol {
     fun insertMessageRequestResponse(response: MessageRequestResponse)
     fun setRecipientApproved(recipient: Recipient, approved: Boolean)
     fun setRecipientApprovedMe(recipient: Recipient, approvedMe: Boolean)
+
+    // Last Inbox Message Id
+    fun getLastInboxMessageId(server: String): Long?
+    fun setLastInboxMessageId(server: String, messageId: Long)
+    fun removeLastInboxMessageId(server: String)
+
+    // Last Outbox Message Id
+    fun getLastOutboxMessageId(server: String): Long?
+    fun setLastOutboxMessageId(server: String, messageId: Long)
+    fun removeLastOutboxMessageId(server: String)
+
 }

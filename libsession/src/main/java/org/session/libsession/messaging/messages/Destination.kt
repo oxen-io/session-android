@@ -1,7 +1,6 @@
 package org.session.libsession.messaging.messages
 
 import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.messaging.open_groups.OpenGroupV2
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsignal.utilities.toHexString
@@ -33,8 +32,8 @@ sealed class Destination {
                 address.isOpenGroup -> {
                     val storage = MessagingModuleConfiguration.shared.storage
                     val threadID = storage.getThreadId(address)!!
-                    when (val openGroup = storage.getV2OpenGroup(threadID)) {
-                        is org.session.libsession.messaging.open_groups.OpenGroupV2
+                    when (val openGroup = storage.getOpenGroup(threadID)) {
+                        is org.session.libsession.messaging.open_groups.OpenGroup
                             -> Destination.OpenGroupV2(openGroup.room, openGroup.server)
                         else -> throw Exception("Missing open group for thread with ID: $threadID.")
                     }

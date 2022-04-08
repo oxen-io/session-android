@@ -5,7 +5,7 @@ import androidx.annotation.WorkerThread
 import okhttp3.HttpUrl
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroupApi
-import org.session.libsession.messaging.open_groups.OpenGroupV2
+import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPoller
 import org.session.libsession.utilities.Util
 import org.session.libsignal.utilities.ThreadUtils
@@ -38,7 +38,7 @@ object OpenGroupManager {
         if (isPolling) { return }
         isPolling = true
         val storage = MessagingModuleConfiguration.shared.storage
-        val servers = storage.getAllV2OpenGroups().values.map { it.server }.toSet()
+        val servers = storage.getAllOpenGroups().values.map { it.server }.toSet()
         servers.forEach { server ->
             pollers[server]?.stop() // Shouldn't be necessary
             val poller = OpenGroupPoller(server, executorService)
@@ -64,17 +64,18 @@ object OpenGroupManager {
         // Clear any existing data if needed
         storage.removeLastDeletionServerID(room, server)
         storage.removeLastMessageServerID(room, server)
+        storage.removeLastInboxMessageId(server)
+        storage.removeLastOutboxMessageId(server)
         // Store the public key
         storage.setOpenGroupPublicKey(server,publicKey)
-        // Get capabilities
-        val capabilities = OpenGroupApi.getCapabilities(room, server).get()
-        // Get group info
-        val info = OpenGroupApi.getInfo(room, server).get()
+        // Get capabilities and room info
+        val (capabilities, info) = OpenGroupApi.getCapabilitiesAndRoomInfo(room, server).get()
+        storage.setUserCount(room, server, info.active_users)
         // Create the group locally if not available already
         if (threadID < 0) {
             threadID = GroupManager.createOpenGroup(openGroupID, context, null, info.name).threadId
         }
-        val openGroup = OpenGroupV2(server, room, info.name, publicKey, capabilities)
+        val openGroup = OpenGroup(server, room, info.name, info.info_updates, publicKey, capabilities.capabilities)
         threadDB.setOpenGroupChat(openGroup, threadID)
         // Start the poller if needed
         pollers[server]?.startIfNeeded() ?: run {
@@ -92,7 +93,7 @@ object OpenGroupManager {
         val recipient = threadDB.getRecipientForThreadId(threadID) ?: return
         val groupID = recipient.address.serialize()
         // Stop the poller if needed
-        val openGroups = storage.getAllV2OpenGroups().filter { it.value.server == server }
+        val openGroups = storage.getAllOpenGroups().filter { it.value.server == server }
         if (openGroups.count() == 1) {
             val poller = pollers[server]
             poller?.stop()
@@ -101,6 +102,8 @@ object OpenGroupManager {
         // Delete
         storage.removeLastDeletionServerID(room, server)
         storage.removeLastMessageServerID(room, server)
+        storage.removeLastInboxMessageId(server)
+        storage.removeLastOutboxMessageId(server)
         val lokiThreadDB = DatabaseComponent.get(context).lokiThreadDatabase()
         lokiThreadDB.removeOpenGroupChat(threadID)
         ThreadUtils.queue {

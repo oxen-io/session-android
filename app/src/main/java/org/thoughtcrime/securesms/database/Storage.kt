@@ -22,7 +22,7 @@ import org.session.libsession.messaging.messages.signal.OutgoingMediaMessage
 import org.session.libsession.messaging.messages.signal.OutgoingTextMessage
 import org.session.libsession.messaging.messages.visible.Attachment
 import org.session.libsession.messaging.messages.visible.VisibleMessage
-import org.session.libsession.messaging.open_groups.OpenGroupV2
+import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage
@@ -237,12 +237,12 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         DatabaseComponent.get(context).lokiAPIDatabase().setAuthToken(id, null)
     }
 
-    override fun getV2OpenGroup(threadId: Long): OpenGroupV2? {
+    override fun getOpenGroup(threadId: Long): OpenGroup? {
         if (threadId.toInt() < 0) { return null }
         val database = databaseHelper.readableDatabase
         return database.get(LokiThreadDatabase.publicChatTable, "${LokiThreadDatabase.threadID} = ?", arrayOf( threadId.toString() )) { cursor ->
             val publicChatAsJson = cursor.getString(LokiThreadDatabase.publicChat)
-            OpenGroupV2.fromJSON(publicChatAsJson)
+            OpenGroup.fromJSON(publicChatAsJson)
         }
     }
 
@@ -285,6 +285,10 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
     override fun setOpenGroupServerMessageID(messageID: Long, serverID: Long, threadID: Long, isSms: Boolean) {
         DatabaseComponent.get(context).lokiMessageDatabase().setServerID(messageID, serverID, isSms)
         DatabaseComponent.get(context).lokiMessageDatabase().setOriginalThreadID(messageID, serverID, threadID)
+    }
+
+    override fun getOpenGroup(room: String, server: String): OpenGroup? {
+        return getAllOpenGroups().values.firstOrNull { it.server == server && it.room == room }
     }
 
     override fun isDuplicateMessage(timestamp: Long): Boolean {
@@ -506,8 +510,8 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         DatabaseComponent.get(context).recipientDatabase().setExpireMessages(recipient, duration);
     }
 
-    override fun getAllV2OpenGroups(): Map<Long, OpenGroupV2> {
-        return DatabaseComponent.get(context).lokiThreadDatabase().getAllV2OpenGroups()
+    override fun getAllOpenGroups(): Map<Long, OpenGroup> {
+        return DatabaseComponent.get(context).lokiThreadDatabase().getAllOpenGroups()
     }
 
     override fun getAllGroups(): List<GroupRecord> {
@@ -714,6 +718,30 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
 
     override fun setRecipientApprovedMe(recipient: Recipient, approvedMe: Boolean) {
         DatabaseComponent.get(context).recipientDatabase().setApprovedMe(recipient, approvedMe)
+    }
+
+    override fun getLastInboxMessageId(server: String): Long? {
+        return null
+    }
+
+    override fun setLastInboxMessageId(server: String, messageId: Long) {
+        // TODO("Not yet implemented")
+    }
+
+    override fun removeLastInboxMessageId(server: String) {
+        // TODO("Not yet implemented")
+    }
+
+    override fun getLastOutboxMessageId(server: String): Long? {
+        return null
+    }
+
+    override fun setLastOutboxMessageId(server: String, messageId: Long) {
+        // TODO("Not yet implemented")
+    }
+
+    override fun removeLastOutboxMessageId(server: String) {
+        // TODO("Not yet implemented")
     }
 
 }

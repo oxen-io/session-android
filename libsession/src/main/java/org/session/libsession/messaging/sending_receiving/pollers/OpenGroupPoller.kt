@@ -43,13 +43,16 @@ class OpenGroupPoller(private val server: String, private val executorService: S
 
     fun poll(): Promise<Unit, Exception> {
         val storage = MessagingModuleConfiguration.shared.storage
-        val rooms = storage.getAllV2OpenGroups().values.filter { it.server == server }.map { it.room }
+        val rooms = storage.getAllOpenGroups().values.filter { it.server == server }.map { it.room }
         rooms.forEach { downloadGroupAvatarIfNeeded(it) }
         return OpenGroupApi.poll(rooms, server).successBackground { responses ->
-            responses.forEach { (room, response) ->
-                val openGroupID = "$server.$room"
-                handleNewMessages(room, openGroupID, response.messages)
-                handleDeletedMessages(room, openGroupID, response.deletions)
+            responses.forEach { response ->
+                when (response.body) {
+                    is OpenGroupApi.Capabilities -> handleCapabilities(server, response.body)
+                    is OpenGroupApi.RoomPollInfo -> handleRoomPollInfo(server, response.body)
+                    is OpenGroupApi.Message -> handleMessages(server, response.body)
+                    is OpenGroupApi.DirectMessage -> handleDirectMessages(server, response.body)
+                }
                 if (secondToLastJob == null && !isCaughtUp) {
                     isCaughtUp = true
                 }
@@ -123,4 +126,21 @@ class OpenGroupPoller(private val server: String, private val executorService: S
             }
         }
     }
+
+    private fun handleCapabilities(server: String, capabilities: OpenGroupApi.Capabilities) {
+        //TODO: handleCapabilities
+    }
+
+    private fun handleRoomPollInfo(server: String, pollInfo: OpenGroupApi.RoomPollInfo) {
+        //TODO: handleRoomPollInfo
+    }
+
+    private fun handleMessages(server: String, message: OpenGroupApi.Message) {
+
+    }
+
+    private fun handleDirectMessages(server: String, message: OpenGroupApi.DirectMessage) {
+        //TODO: handleDirectMessages
+    }
+
 }

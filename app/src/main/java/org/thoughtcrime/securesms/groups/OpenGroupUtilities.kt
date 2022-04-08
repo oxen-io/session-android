@@ -29,8 +29,7 @@ object OpenGroupUtilities {
             throw IllegalStateException("Attempt to update open group info for non-existent DB record: $groupId")
         }
 
-        val info = OpenGroupApi.getInfo(room, server).get() // store info again?
-        OpenGroupApi.getMemberCount(room, server).get()
+        val info = OpenGroupApi.getRoomInfo(room, server).get() // store info again?
 
         EventBus.getDefault().post(GroupInfoUpdatedEvent(server, room = room))
     }

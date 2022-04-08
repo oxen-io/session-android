@@ -70,10 +70,10 @@ class BackgroundPollWorker(val context: Context, params: WorkerParameters) : Wor
 
             // Open Groups
             val threadDB = DatabaseComponent.get(context).lokiThreadDatabase()
-            val v2OpenGroups = threadDB.getAllV2OpenGroups()
-            val v2OpenGroupServers = v2OpenGroups.map { it.value.server }.toSet()
+            val openGroups = threadDB.getAllOpenGroups()
+            val openGroupServers = openGroups.map { it.value.server }.toSet()
 
-            for (server in v2OpenGroupServers) {
+            for (server in openGroupServers) {
                 val poller = OpenGroupPoller(server, null)
                 poller.hasStarted = true
                 promises.add(poller.poll())

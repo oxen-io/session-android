@@ -496,7 +496,8 @@ object OnionRequestAPI {
             else -> ""
         }
         return if (version == Version.V4) {
-            if (request.body() != null && !headers.containsKey("Content-Type")) {
+            if (request.body() != null &&
+                headers.keys.find { it.equals("Content-Type", true) } == null) {
                 headers["Content-Type"] = "application/json"
             }
             val requestPayload = mapOf(
@@ -508,10 +509,7 @@ object OnionRequestAPI {
             val prefixData = "l${requestData.size}:".toByteArray(Charsets.US_ASCII)
             val suffixData = "e".toByteArray(Charsets.US_ASCII)
             if (request.body() != null) {
-                val bodyPayload = mapOf(
-                    "body" to body
-                )
-                val bodyData = JsonUtil.toJson(bodyPayload).toByteArray()
+                val bodyData = body.toString().toByteArray()
                 val bodyLengthData = "${bodyData.size}:".toByteArray(Charsets.US_ASCII)
                 prefixData + requestData + bodyLengthData + bodyData + suffixData
             } else {
