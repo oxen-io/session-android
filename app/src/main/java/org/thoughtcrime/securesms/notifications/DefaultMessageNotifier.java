@@ -259,10 +259,8 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
     try {
       telcoCursor = DatabaseComponent.get(context).mmsSmsDatabase().getUnread();
-      pushCursor  = DatabaseComponent.get(context).pushDatabase().getPending();
 
-      if (((telcoCursor == null || telcoCursor.isAfterLast()) &&
-          (pushCursor == null || pushCursor.isAfterLast())) || !TextSecurePreferences.hasSeenWelcomeScreen(context))
+      if ((telcoCursor == null || telcoCursor.isAfterLast()) || !TextSecurePreferences.hasSeenWelcomeScreen(context))
       {
         cancelActiveNotifications(context);
         updateBadge(context, 0);
@@ -296,7 +294,6 @@ public class DefaultMessageNotifier implements MessageNotifier {
       }
     } finally {
       if (telcoCursor != null) telcoCursor.close();
-      if (pushCursor != null)  pushCursor.close();
     }
   }
 
@@ -331,11 +328,18 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
     builder.putStringExtra(LATEST_MESSAGE_ID_TAG, messageIdTag);
 
+    CharSequence text = notifications.get(0).getText();
+    String trimmedText = "";
+    if (text != null) {
+      int trimEnd = Math.min(text.length(), 50);
+      trimmedText = text.subSequence(0,trimEnd) + (text.length() > 50 ? "..." : "");
+    }
+
     builder.setThread(notifications.get(0).getRecipient());
     builder.setMessageCount(notificationState.getMessageCount());
     MentionManagerUtilities.INSTANCE.populateUserPublicKeyCacheIfNeeded(notifications.get(0).getThreadId(),context);
     builder.setPrimaryMessageBody(recipient, notifications.get(0).getIndividualRecipient(),
-                                  MentionUtilities.highlightMentions(notifications.get(0).getText(),
+                                  MentionUtilities.highlightMentions(trimmedText,
                                           notifications.get(0).getThreadId(),
                                           context),
                                   notifications.get(0).getSlideDeck());
