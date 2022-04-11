@@ -280,7 +280,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
         for (long threadId : notificationState.getThreads()) {
           sendSingleThreadNotification(context, new NotificationState(notificationState.getNotificationsForThread(threadId)), false, true);
         }
-        sendMultipleThreadNotification(context, notificationState, signal);
+//        sendMultipleThreadNotification(context, notificationState, signal);
       } else if (notificationState.getMessageCount() > 0){
         sendSingleThreadNotification(context, notificationState, signal, false);
       } else {
@@ -444,8 +444,8 @@ public class DefaultMessageNotifier implements MessageNotifier {
     builder.putStringExtra(LATEST_MESSAGE_ID_TAG, messageIdTag);
 
     Notification notification = builder.build();
-    NotificationManagerCompat.from(context).notify(SUMMARY_NOTIFICATION_ID, builder.build());
-    Log.i(TAG, "Posted notification. " + notification.toString());
+    NotificationManagerCompat.from(context).notify(SUMMARY_NOTIFICATION_ID, notification);
+    Log.i(TAG, "Posted notification. " + notification);
   }
 
   private void sendInThreadNotification(Context context, Recipient recipient) {
