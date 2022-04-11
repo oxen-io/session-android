@@ -511,19 +511,23 @@ class CallManager(context: Context, audioManager: AudioManagerCompat, private va
             val offer = connection.createOffer(MediaConstraints())
             connection.setLocalDescription(offer)
 
+            Log.d("Loki", "Sending pre-offer")
             return MessageSender.sendNonDurably(CallMessage.preOffer(
                 callId
             ), recipient.address).bind {
+                Log.d("Loki", "Sent pre-offer")
+                Log.d("Loki", "Sending offer")
                 MessageSender.sendNonDurably(CallMessage.offer(
                     offer.description,
                     callId
-                ), recipient.address)
+                ), recipient.address).success {
+                    Log.d("Loki", "Sent offer")
+                }.fail {
+                    Log.e("Loki", "Failed to send offer", it)
+                }
             }
         }
     }
-
-    fun callNotSetup(): Boolean =
-            peerConnection == null || dataChannel == null || recipient == null || callId == null
 
     fun handleDenyCall() {
         val callId = callId ?: return

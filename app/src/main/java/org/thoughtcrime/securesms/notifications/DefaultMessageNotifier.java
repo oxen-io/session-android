@@ -297,6 +297,15 @@ public class DefaultMessageNotifier implements MessageNotifier {
     }
   }
 
+  private String getTrimmedText(CharSequence text) {
+    String trimmedText = "";
+    if (text != null) {
+      int trimEnd = Math.min(text.length(), 50);
+      trimmedText = text.subSequence(0,trimEnd) + (text.length() > 50 ? "..." : "");
+    }
+    return trimmedText;
+  }
+
   private void sendSingleThreadNotification(@NonNull  Context context,
                                             @NonNull  NotificationState notificationState,
                                             boolean signal, boolean bundled)
@@ -329,11 +338,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
     builder.putStringExtra(LATEST_MESSAGE_ID_TAG, messageIdTag);
 
     CharSequence text = notifications.get(0).getText();
-    String trimmedText = "";
-    if (text != null) {
-      int trimEnd = Math.min(text.length(), 50);
-      trimmedText = text.subSequence(0,trimEnd) + (text.length() > 50 ? "..." : "");
-    }
+    String trimmedText = getTrimmedText(text);
 
     builder.setThread(notifications.get(0).getRecipient());
     builder.setMessageCount(notificationState.getMessageCount());
