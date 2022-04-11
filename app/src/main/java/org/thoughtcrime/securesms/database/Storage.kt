@@ -10,7 +10,6 @@ import org.session.libsession.messaging.jobs.Job
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageReceiveJob
 import org.session.libsession.messaging.jobs.MessageSendJob
-import org.session.libsession.messaging.jobs.TrimThreadJob
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.signal.IncomingEncryptedMessage
@@ -171,7 +170,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         val threadID = message.threadID
         // open group trim thread job is scheduled after processing in OpenGroupPollerV2
         if (openGroupID.isNullOrEmpty() && threadID != null && threadID >= 0) {
-            JobQueue.shared.add(TrimThreadJob(threadID))
+            JobQueue.shared.queueThreadForTrim(threadID)
         }
         message.serverHash?.let { serverHash ->
             messageID?.let { id ->

@@ -25,10 +25,12 @@ class JobQueue : JobDelegate {
     private var hasResumedPendingJobs = false // Just for debugging
     private val jobTimestampMap = ConcurrentHashMap<Long, AtomicInteger>()
     private val rxDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
+    private val rxMediaDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
     private val txDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
     private val scope = GlobalScope + SupervisorJob()
     private val queue = Channel<Job>(UNLIMITED)
     private val pendingJobIds = mutableSetOf<String>()
+    private val pendingTrimThreadIds = mutableSetOf<Long>()
 
     val timer = Timer()
 
@@ -46,25 +48,37 @@ class JobQueue : JobDelegate {
     init {
         // Process jobs
         scope.launch {
-            val rxQueue = Channel<Job>(capacity = 4096)
-            val txQueue = Channel<Job>(capacity = 4096)
+            val rxQueue = Channel<Job>(capacity = 50_000)
+            val txQueue = Channel<Job>(capacity = 50_000)
+            val mediaQueue = Channel<Job>(capacity = 50_000)
+
 
             val receiveJob = processWithDispatcher(rxQueue, rxDispatcher)
             val txJob = processWithDispatcher(txQueue, txDispatcher)
+            val mediaJob = processWithDispatcher(mediaQueue, rxMediaDispatcher)
 
             while (isActive) {
-                for (job in queue) {
-                    when (job) {
-                        is NotifyPNServerJob, is AttachmentUploadJob, is MessageSendJob -> {
-                            txQueue.send(job)
-                        }
-                        is MessageReceiveJob, is TrimThreadJob, is BatchMessageReceiveJob,
-                        is AttachmentDownloadJob, is GroupAvatarDownloadJob -> {
-                            rxQueue.send(job)
-                        }
-                        else -> {
-                            throw IllegalStateException("Unexpected job type.")
-                        }
+                if (queue.isEmpty && pendingTrimThreadIds.isNotEmpty()) {
+                    // process trim thread jobs
+                    val pendingThreads = pendingTrimThreadIds.toList()
+                    pendingTrimThreadIds.clear()
+                    for (thread in pendingThreads) {
+                        Log.d("Loki", "Trimming thread $thread")
+                        queue.trySend(TrimThreadJob(thread))
+                    }
+                }
+                when (val job = queue.receive()) {
+                    is NotifyPNServerJob, is AttachmentUploadJob, is MessageSendJob -> {
+                        txQueue.send(job)
+                    }
+                    is AttachmentDownloadJob, is GroupAvatarDownloadJob -> {
+                        mediaQueue.send(job)
+                    }
+                    is MessageReceiveJob, is TrimThreadJob, is BatchMessageReceiveJob -> {
+                        rxQueue.send(job)
+                    }
+                    else -> {
+                        throw IllegalStateException("Unexpected job type.")
                     }
                 }
             }
@@ -72,7 +86,7 @@ class JobQueue : JobDelegate {
             // The job has been cancelled
             receiveJob.cancel()
             txJob.cancel()
-
+            mediaJob.cancel()
         }
     }
 
@@ -80,6 +94,10 @@ class JobQueue : JobDelegate {
 
         @JvmStatic
         val shared: JobQueue by lazy { JobQueue() }
+    }
+
+    fun queueThreadForTrim(threadId: Long) {
+        pendingTrimThreadIds += threadId
     }
 
     fun add(job: Job) {
@@ -167,7 +185,7 @@ class JobQueue : JobDelegate {
         }
         // Batch message receive job, re-queue non-permanently failed jobs
         if (job is BatchMessageReceiveJob) {
-            val replacementParameters = job.failures
+            val replacementParameters = job.failures.toList()
             val newJob = BatchMessageReceiveJob(replacementParameters, job.openGroupID)
             add(newJob)
         }
