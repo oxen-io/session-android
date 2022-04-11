@@ -4,14 +4,14 @@ import android.content.Context
 import android.database.Cursor
 import android.view.MotionEvent
 import android.view.ViewGroup
+import androidx.annotation.WorkerThread
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.dropbox.android.external.store4.Fetcher
-import com.dropbox.android.external.store4.StoreBuilder
-import com.dropbox.android.external.store4.StoreRequest
-import com.dropbox.android.external.store4.StoreResponse
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import org.session.libsession.messaging.contacts.Contact
 import org.thoughtcrime.securesms.conversation.v2.messages.ControlMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageContentViewDelegate
@@ -20,10 +20,11 @@ import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
+import java.util.concurrent.ConcurrentHashMap
 
 class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPress: (MessageRecord, Int, VisibleMessageView, MotionEvent) -> Unit,
     private val onItemSwipeToReply: (MessageRecord, Int) -> Unit, private val onItemLongPress: (MessageRecord, Int) -> Unit,
-    private val glide: GlideRequests, private val onDeselect: (MessageRecord, Int) -> Unit, private val lifecycleCoroutineScope: LifecycleCoroutineScope)
+    private val glide: GlideRequests, private val onDeselect: (MessageRecord, Int) -> Unit, lifecycleCoroutineScope: LifecycleCoroutineScope)
     : CursorRecyclerViewAdapter<ViewHolder>(context, cursor) {
     private val messageDB by lazy { DatabaseComponent.get(context).mmsSmsDatabase() }
     private val contactDB by lazy { DatabaseComponent.get(context).sessionContactDatabase() }
@@ -31,13 +32,22 @@ class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPr
     private var searchQuery: String? = null
     var visibleMessageContentViewDelegate: VisibleMessageContentViewDelegate? = null
 
-    private val userInfoCache = StoreBuilder.from(
-        fetcher = Fetcher.of { message: MessageRecord ->
-            val id = message.individualRecipient.address.serialize()
-            val contact = contactDB.getContactWithSessionID(id)
-            contact to id
+    private val updateQueue = Channel<String>(1024, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val contactCache = ConcurrentHashMap<String, Contact?>(100)
+    init {
+        lifecycleCoroutineScope.launch(IO) {
+            while (isActive) {
+                val item = updateQueue.receive()
+                val contact = getSenderInfo(item)
+                contactCache[item] = contact
+            }
         }
-    ).build()
+    }
+
+    @WorkerThread
+    private fun getSenderInfo(sender: String): Contact? {
+        return contactDB.getContactWithSessionID(sender)
+    }
 
     sealed class ViewType(val rawValue: Int) {
         object Visible : ViewType(0)
@@ -52,10 +62,7 @@ class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPr
         }
     }
 
-    class VisibleMessageViewHolder(val view: VisibleMessageView) : ViewHolder(view) {
-        private val infoLoadJob: Job? = null
-        fun observe(receiver: StoreResponse<>)
-    }
+    class VisibleMessageViewHolder(val view: VisibleMessageView) : ViewHolder(view)
     class ControlMessageViewHolder(val view: ControlMessageView) : ViewHolder(view)
 
     override fun getItemViewType(cursor: Cursor): Int {
@@ -74,26 +81,21 @@ class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPr
         }
     }
 
-    private fun getSenderInfo(message: MessageRecord): Flow<StoreResponse<Pair<Contact?, String>>> {
-        return userInfoCache.stream(
-            StoreRequest.cached(message, refresh = true)
-        )
-    }
-
     override fun onBindItemViewHolder(viewHolder: ViewHolder, cursor: Cursor) {
         val message = getMessage(cursor)!!
         val position = viewHolder.adapterPosition
         val messageBefore = getMessageBefore(position, cursor)
         when (viewHolder) {
             is VisibleMessageViewHolder -> {
-                viewHolder.observe(getSenderInfo(message)) {
-
-                }
                 val view = viewHolder.view
                 val isSelected = selectedItems.contains(message)
                 view.snIsSelected = isSelected
                 view.indexInAdapter = position
-                val (contact, senderId) = getSenderInfo(message)
+                val senderId = message.individualRecipient.address.serialize()
+                updateQueue.trySend(senderId)
+                val contact = contactCache.getOrPut(senderId) {
+                    getSenderInfo(senderId)
+                }
                 view.bind(message, messageBefore, getMessageAfter(position, cursor), glide, searchQuery, contact, senderId)
                 if (!message.isDeleted) {
                     view.onPress = { event -> onItemPress(message, viewHolder.adapterPosition, view, event) }
