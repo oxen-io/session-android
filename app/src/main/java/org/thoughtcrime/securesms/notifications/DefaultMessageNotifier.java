@@ -276,15 +276,19 @@ public class DefaultMessageNotifier implements MessageNotifier {
         lastAudibleNotification = System.currentTimeMillis();
       }
 
-      if (notificationState.hasMultipleThreads()) {
-        for (long threadId : notificationState.getThreads()) {
-          sendSingleThreadNotification(context, new NotificationState(notificationState.getNotificationsForThread(threadId)), false, true);
+      try {
+        if (notificationState.hasMultipleThreads()) {
+          for (long threadId : notificationState.getThreads()) {
+            sendSingleThreadNotification(context, new NotificationState(notificationState.getNotificationsForThread(threadId)), false, true);
+          }
+          sendMultipleThreadNotification(context, notificationState, signal);
+        } else if (notificationState.getMessageCount() > 0){
+          sendSingleThreadNotification(context, notificationState, signal, false);
+        } else {
+          cancelActiveNotifications(context);
         }
-//        sendMultipleThreadNotification(context, notificationState, signal);
-      } else if (notificationState.getMessageCount() > 0){
-        sendSingleThreadNotification(context, notificationState, signal, false);
-      } else {
-        cancelActiveNotifications(context);
+      } catch (Exception e) {
+        Log.e(TAG, "Error creating notification",e);
       }
       cancelOrphanedNotifications(context, notificationState);
       updateBadge(context, notificationState.getMessageCount());
