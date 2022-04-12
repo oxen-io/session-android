@@ -37,6 +37,7 @@ import org.session.libsignal.messages.SignalServiceGroup
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.ThreadUtils
 import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.removing05PrefixIfNeeded
 import org.session.libsignal.utilities.toHexString
@@ -141,7 +142,9 @@ private fun handleConfigurationMessage(message: ConfigurationMessage) {
     val allV2OpenGroups = storage.getAllV2OpenGroups().map { it.value.joinURL }
     for (openGroup in message.openGroups) {
         if (allV2OpenGroups.contains(openGroup)) continue
-        storage.addOpenGroup(openGroup)
+        ThreadUtils.queue {
+            storage.addOpenGroup(openGroup)
+        }
     }
     val profileManager = SSKEnvironment.shared.profileManager
     val recipient = Recipient.from(context, Address.fromSerialized(userPublicKey), false)

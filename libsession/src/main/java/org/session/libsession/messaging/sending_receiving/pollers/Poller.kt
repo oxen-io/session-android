@@ -92,11 +92,11 @@ class Poller {
     private fun poll(snode: Snode, deferred: Deferred<Unit, Exception>): Promise<Unit, Exception> {
         if (!hasStarted) { return Promise.ofFail(PromiseCanceledException()) }
         return SnodeAPI.getRawMessages(snode, userPublicKey).bind { rawResponse ->
-            isCaughtUp = true
             if (deferred.promise.isDone()) {
                 task { Unit } // The long polling connection has been canceled; don't recurse
             } else {
                 val messages = SnodeAPI.parseRawMessagesResponse(rawResponse, snode, userPublicKey)
+                isCaughtUp = messages.isEmpty()
                 val parameters = messages.map { (envelope, serverHash) ->
                     MessageReceiveParameters(envelope.toByteArray(), serverHash = serverHash)
                 }

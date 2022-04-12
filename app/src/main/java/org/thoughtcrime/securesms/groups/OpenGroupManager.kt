@@ -7,10 +7,9 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
 import org.session.libsession.messaging.open_groups.OpenGroupV2
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPollerV2
-import org.session.libsession.utilities.Util
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.util.BitmapUtil
 import java.util.concurrent.Executors
 
 object OpenGroupManager {
@@ -68,7 +67,12 @@ object OpenGroupManager {
         // Store the public key
         storage.setOpenGroupPublicKey(server,publicKey)
         // Get an auth token
-        OpenGroupAPIV2.getAuthToken(room, server).get()
+        try {
+            OpenGroupAPIV2.getAuthToken(room, server).get()
+        } catch (e: Exception) {
+            // exception getting base auth token, open group functions might not work immediately (will be retried)
+            Log.e("Loki", "Error fetching token on $server, it might not be enabled?")
+        }
         // Get group info
         val info = OpenGroupAPIV2.getInfo(room, server).get()
         // Create the group locally if not available already
@@ -80,8 +84,8 @@ object OpenGroupManager {
         // Start the poller if needed
         pollers[server]?.startIfNeeded() ?: run {
             val poller = OpenGroupPollerV2(server, executorService)
-            Util.runOnMain { poller.startIfNeeded() }
             pollers[server] = poller
+            poller.startIfNeeded()
         }
     }
 
