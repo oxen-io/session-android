@@ -4,10 +4,8 @@ import android.content.Context
 import androidx.annotation.WorkerThread
 import okhttp3.HttpUrl
 import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
 import org.session.libsession.messaging.open_groups.OpenGroupV2
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPollerV2
-import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import java.util.concurrent.Executors
@@ -66,20 +64,12 @@ object OpenGroupManager {
         storage.removeLastMessageServerID(room, server)
         // Store the public key
         storage.setOpenGroupPublicKey(server,publicKey)
-        // Get an auth token
-        try {
-            OpenGroupAPIV2.getAuthToken(room, server).get()
-        } catch (e: Exception) {
-            // exception getting base auth token, open group functions might not work immediately (will be retried)
-            Log.e("Loki", "Error fetching token on $server, it might not be enabled?")
-        }
         // Get group info
-        val info = OpenGroupAPIV2.getInfo(room, server).get()
         // Create the group locally if not available already
         if (threadID < 0) {
-            threadID = GroupManager.createOpenGroup(openGroupID, context, null, info.name).threadId
+            threadID = GroupManager.createOpenGroup(openGroupID, context, null, room).threadId
         }
-        val openGroup = OpenGroupV2(server, room, info.name, publicKey)
+        val openGroup = OpenGroupV2(server, room, room, publicKey)
         threadDB.setOpenGroupChat(openGroup, threadID)
         // Start the poller if needed
         pollers[server]?.startIfNeeded() ?: run {

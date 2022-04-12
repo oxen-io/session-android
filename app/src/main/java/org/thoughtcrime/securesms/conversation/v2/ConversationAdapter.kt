@@ -38,7 +38,7 @@ class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPr
         lifecycleCoroutineScope.launch(IO) {
             while (isActive) {
                 val item = updateQueue.receive()
-                val contact = getSenderInfo(item)
+                val contact = getSenderInfo(item) ?: continue
                 contactCache[item] = contact
             }
         }
@@ -93,9 +93,7 @@ class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPr
                 view.indexInAdapter = position
                 val senderId = message.individualRecipient.address.serialize()
                 updateQueue.trySend(senderId)
-                val contact = contactCache.getOrPut(senderId) {
-                    getSenderInfo(senderId)
-                }
+                val contact = contactCache[senderId]
                 view.bind(message, messageBefore, getMessageAfter(position, cursor), glide, searchQuery, contact, senderId)
                 if (!message.isDeleted) {
                     view.onPress = { event -> onItemPress(message, viewHolder.adapterPosition, view, event) }
