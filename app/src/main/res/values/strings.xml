@@ -921,5 +921,8 @@
     <string name="CallNotificationBuilder_first_call_message">You missed a call because you need to enable the \'Voice and video calls\' permission in the Privacy Settings.</string>
     <string name="WebRtcCallActivity_Session_Call">Session Call</string>
     <string name="WebRtcCallActivity_Reconnecting">Reconnecting…</string>
+    <string name="CallNotificationBuilder_system_notification_title">Notifications</string>
+    <string name="CallNotificationBuilder_system_notification_message">Having notifications disabled will prevent you from receiving calls, go to Session notification settings?</string>
+    <string name="dismiss">Dismiss</string>
 
 </resources>

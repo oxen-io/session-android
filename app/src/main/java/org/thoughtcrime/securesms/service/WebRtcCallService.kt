@@ -4,6 +4,8 @@ import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.IntentFilter
 import android.media.AudioManager
 import android.os.IBinder
@@ -640,6 +642,13 @@ class WebRtcCallService: Service(), CallManager.WebRtcListener {
                 CallNotificationBuilder.WEBRTC_NOTIFICATION,
                 CallNotificationBuilder.getCallInProgressNotification(this, type, recipient)
         )
+        if (!CallNotificationBuilder.areNotificationsEnabled(this) && type == TYPE_INCOMING_PRE_OFFER) {
+            // start an intent for the fullscreen
+            val foregroundIntent = Intent(this, WebRtcCallActivity::class.java)
+                .setFlags(FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_BROUGHT_TO_FRONT)
+                .setAction(WebRtcCallActivity.ACTION_FULL_SCREEN_INTENT)
+            startActivity(foregroundIntent)
+        }
     }
 
     private fun getOptionalRemoteRecipient(intent: Intent): Recipient? =

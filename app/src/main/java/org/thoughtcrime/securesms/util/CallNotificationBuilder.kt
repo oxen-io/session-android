@@ -1,14 +1,17 @@
 package org.thoughtcrime.securesms.util
 
 import android.app.Notification
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.os.Build
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import network.loki.messenger.R
-import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.calls.WebRtcCallActivity
 import org.thoughtcrime.securesms.notifications.NotificationChannels
@@ -25,6 +28,20 @@ class CallNotificationBuilder {
         const val TYPE_ESTABLISHED = 3
         const val TYPE_INCOMING_CONNECTING = 4
         const val TYPE_INCOMING_PRE_OFFER = 5
+
+        @JvmStatic
+        fun areNotificationsEnabled(context: Context): Boolean {
+            val notificationManager = NotificationManagerCompat.from(context)
+            return when {
+                !notificationManager.areNotificationsEnabled() -> false
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
+                    notificationManager.notificationChannels.firstOrNull { channel ->
+                        channel.importance == NotificationManager.IMPORTANCE_NONE
+                    } == null
+                }
+                else -> true
+            }
+        }
 
         @JvmStatic
         fun getFirstCallNotification(context: Context): Notification {
@@ -59,7 +76,6 @@ class CallNotificationBuilder {
                     .setSmallIcon(R.drawable.ic_baseline_call_24)
                     .setContentIntent(pendingIntent)
                     .setOngoing(true)
-                    .setPriority(NotificationCompat.PRIORITY_MIN)
 
 
             recipient?.name?.let { name ->
@@ -81,8 +97,9 @@ class CallNotificationBuilder {
                             R.drawable.ic_close_grey600_32dp,
                             R.string.NotificationBarManager__deny_call
                     ))
+                    // if notifications aren't enabled, we will trigger the intent from WebRtcCallService
                     builder.setFullScreenIntent(getFullScreenPendingIntent(
-                            context
+                        context
                     ), true)
                     builder.addAction(getActivityNotificationAction(
                             context,
@@ -90,7 +107,7 @@ class CallNotificationBuilder {
                             R.drawable.ic_phone_grey600_32dp,
                             R.string.NotificationBarManager__answer_call
                     ))
-                    builder.priority = NotificationCompat.PRIORITY_HIGH
+                    builder.priority = NotificationCompat.PRIORITY_MAX
                 }
                 TYPE_OUTGOING_RINGING -> {
                     builder.setContentText(context.getString(R.string.NotificationBarManager__establishing_signal_call))
@@ -99,7 +116,7 @@ class CallNotificationBuilder {
                             WebRtcCallService.ACTION_LOCAL_HANGUP,
                             R.drawable.ic_call_end_grey600_32dp,
                             R.string.NotificationBarManager__cancel_call
-                    )).setNotificationSilent()
+                    ))
                 }
                 else -> {
                     builder.setContentText(context.getString(R.string.NotificationBarManager_call_in_progress))
@@ -108,7 +125,7 @@ class CallNotificationBuilder {
                             WebRtcCallService.ACTION_LOCAL_HANGUP,
                             R.drawable.ic_call_end_grey600_32dp,
                             R.string.NotificationBarManager__end_call
-                    )).setNotificationSilent().setUsesChronometer(true)
+                    )).setUsesChronometer(true)
                 }
             }
 
@@ -126,7 +143,8 @@ class CallNotificationBuilder {
 
         private fun getFullScreenPendingIntent(context: Context): PendingIntent {
             val intent = Intent(context, WebRtcCallActivity::class.java)
-                    .setAction(WebRtcCallActivity.ACTION_FULL_SCREEN_INTENT)
+                .setFlags(FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
+                .setAction(WebRtcCallActivity.ACTION_FULL_SCREEN_INTENT)
 
             return PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         }

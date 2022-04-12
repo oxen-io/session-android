@@ -6,7 +6,9 @@ import android.app.AlertDialog;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,14 +20,14 @@ import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.components.SwitchPreferenceCompat;
 import org.thoughtcrime.securesms.permissions.Permissions;
 import org.thoughtcrime.securesms.service.KeyCachingService;
+import org.thoughtcrime.securesms.util.CallNotificationBuilder;
+import org.thoughtcrime.securesms.util.IntentUtils;
 
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Inject;
-
-import dagger.hilt.android.AndroidEntryPoint;
 import kotlin.jvm.functions.Function1;
 import mobi.upod.timedurationpicker.TimeDurationPickerDialog;
+import network.loki.messenger.BuildConfig;
 import network.loki.messenger.R;
 
 public class AppProtectionPreferenceFragment extends CorrectedPreferenceFragment {
@@ -52,6 +54,35 @@ public class AppProtectionPreferenceFragment extends CorrectedPreferenceFragment
 
   private Void setCall(boolean isEnabled) {
     ((SwitchPreferenceCompat)findPreference(TextSecurePreferences.CALL_NOTIFICATIONS_ENABLED)).setChecked(isEnabled);
+    if (isEnabled && !CallNotificationBuilder.areNotificationsEnabled(requireActivity())) {
+      // show a dialog saying that calls won't work properly if you don't have notifications on at a system level
+      new AlertDialog.Builder(requireActivity())
+              .setTitle(R.string.CallNotificationBuilder_system_notification_title)
+              .setMessage(R.string.CallNotificationBuilder_system_notification_message)
+              .setPositiveButton(R.string.activity_notification_settings_title, (d, w) -> {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                  Intent settingsIntent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                          .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                          .putExtra(Settings.EXTRA_APP_PACKAGE, BuildConfig.APPLICATION_ID);
+                  if (IntentUtils.isResolvable(requireContext(), settingsIntent)) {
+                    startActivity(settingsIntent);
+                  }
+                } else {
+                  Intent settingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                          .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                          .setData(Uri.parse("package:"+BuildConfig.APPLICATION_ID));
+                  if (IntentUtils.isResolvable(requireContext(), settingsIntent)) {
+                    startActivity(settingsIntent);
+                  }
+                }
+                d.dismiss();
+              })
+              .setNeutralButton(R.string.dismiss, (d, w) -> {
+                // do nothing, user might have broken notifications
+                d.dismiss();
+              })
+              .show();
+    }
     return null;
   }
 
