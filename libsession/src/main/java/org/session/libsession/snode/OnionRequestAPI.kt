@@ -8,20 +8,50 @@ import nl.komponents.kovenant.functional.map
 import okhttp3.Request
 import org.session.libsession.messaging.file_server.FileServerAPIV2
 import org.session.libsession.utilities.AESGCM
-import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.Base64
-import org.session.libsignal.utilities.*
-import org.session.libsignal.utilities.Snode
 import org.session.libsession.utilities.AESGCM.EncryptionResult
 import org.session.libsession.utilities.getBodyForOnionRequest
 import org.session.libsession.utilities.getHeadersForOnionRequest
 import org.session.libsignal.crypto.getRandomElement
 import org.session.libsignal.crypto.getRandomElementOrNull
+import org.session.libsignal.database.LokiAPIDatabaseProtocol
+import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Broadcaster
 import org.session.libsignal.utilities.HTTP
-import org.session.libsignal.database.LokiAPIDatabaseProtocol
-import java.util.*
-import kotlin.math.abs
+import org.session.libsignal.utilities.JsonUtil
+import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.Snode
+import org.session.libsignal.utilities.ThreadUtils
+import org.session.libsignal.utilities.recover
+import org.session.libsignal.utilities.toHexString
+import java.util.Date
+import kotlin.collections.List
+import kotlin.collections.Map
+import kotlin.collections.Set
+import kotlin.collections.any
+import kotlin.collections.contains
+import kotlin.collections.count
+import kotlin.collections.dropLast
+import kotlin.collections.filter
+import kotlin.collections.first
+import kotlin.collections.firstOrNull
+import kotlin.collections.flatten
+import kotlin.collections.forEach
+import kotlin.collections.get
+import kotlin.collections.indexOfFirst
+import kotlin.collections.isNotEmpty
+import kotlin.collections.last
+import kotlin.collections.listOf
+import kotlin.collections.map
+import kotlin.collections.mapOf
+import kotlin.collections.minus
+import kotlin.collections.mutableMapOf
+import kotlin.collections.mutableSetOf
+import kotlin.collections.plus
+import kotlin.collections.set
+import kotlin.collections.setOf
+import kotlin.collections.toMutableList
+import kotlin.collections.toSet
+import kotlin.collections.toString
 
 private typealias Path = List<Snode>
 
@@ -136,13 +166,7 @@ object OnionRequestAPI {
                     testSnode(candidate).success {
                         deferred.resolve(candidate)
                     }.fail {
-                        getGuardSnode().success {
-                            deferred.resolve(candidate)
-                        }.fail { exception ->
-                            if (exception is InsufficientSnodesException) {
-                                deferred.reject(exception)
-                            }
-                        }
+                        deferred.reject(it)
                     }
                     return deferred.promise
                 }

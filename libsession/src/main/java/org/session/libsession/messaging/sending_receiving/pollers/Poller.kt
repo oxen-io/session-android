@@ -28,7 +28,8 @@ class Poller {
 
     // region Settings
     companion object {
-        private val retryInterval: Long = 1 * 1000
+        private const val retryInterval: Long = 2 * 1000
+        private const val maxInterval: Long = 15 * 1000
     }
     // endregion
 
@@ -37,7 +38,7 @@ class Poller {
         if (hasStarted) { return }
         Log.d("Loki", "Started polling.")
         hasStarted = true
-        setUpPolling()
+        setUpPolling(retryInterval)
     }
 
     fun stopIfNeeded() {
@@ -48,7 +49,7 @@ class Poller {
     // endregion
 
     // region Private API
-    private fun setUpPolling() {
+    private fun setUpPolling(delay: Long) {
         if (!hasStarted) { return; }
         val thread = Thread.currentThread()
         SnodeAPI.getSwarm(userPublicKey).bind {
@@ -56,13 +57,19 @@ class Poller {
             val deferred = deferred<Unit, Exception>()
             pollNextSnode(deferred)
             deferred.promise
-        }.always {
+        }.success {
             Timer().schedule(object : TimerTask() {
-
                 override fun run() {
-                    thread.run { setUpPolling() }
+                    thread.run { setUpPolling(retryInterval) }
                 }
             }, retryInterval)
+        }.fail {
+            val nextDelay = minOf(maxInterval, (delay * 1.2).toLong())
+            Timer().schedule(object : TimerTask() {
+                override fun run() {
+                    thread.run { setUpPolling(nextDelay) }
+                }
+            }, nextDelay)
         }
     }
 
