@@ -57,6 +57,8 @@ interface StorageProtocol {
     fun getAllV2OpenGroups(): Map<Long, OpenGroupV2>
     fun getV2OpenGroup(threadId: Long): OpenGroupV2?
     fun addOpenGroup(urlAsString: String)
+    fun onOpenGroupAdded(urlAsString: String)
+    fun hasBackgroundGroupAddJob(groupJoinUrl: String): Boolean
     fun setOpenGroupServerMessageID(messageID: Long, serverID: Long, threadID: Long, isSms: Boolean)
 
     // Open Group Public Keys

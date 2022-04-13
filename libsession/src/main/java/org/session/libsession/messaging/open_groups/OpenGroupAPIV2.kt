@@ -30,28 +30,9 @@ import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.removing05PrefixIfNeeded
 import org.session.libsignal.utilities.toHexString
 import org.whispersystems.curve25519.Curve25519
-import kotlin.collections.HashMap
-import kotlin.collections.List
-import kotlin.collections.Map
-import kotlin.collections.Set
-import kotlin.collections.associateWith
 import kotlin.collections.component1
 import kotlin.collections.component2
-import kotlin.collections.firstOrNull
-import kotlin.collections.get
-import kotlin.collections.hashMapOf
-import kotlin.collections.isNotEmpty
-import kotlin.collections.iterator
-import kotlin.collections.map
-import kotlin.collections.mapNotNull
-import kotlin.collections.mapOf
-import kotlin.collections.maxByOrNull
-import kotlin.collections.mutableMapOf
-import kotlin.collections.none
-import kotlin.collections.plusAssign
 import kotlin.collections.set
-import kotlin.collections.toMap
-import kotlin.collections.toMutableSet
 
 object OpenGroupAPIV2 {
     private val moderators: HashMap<String, Set<String>> = hashMapOf() // Server URL to (channel ID to set of moderator IDs)
@@ -196,6 +177,9 @@ object OpenGroupAPIV2 {
                 .bind { claimAuthToken(it, room, server) }
                 .success { authToken ->
                     storage.setAuthToken(room, server, authToken)
+                }
+                .fail { exception ->
+                    Log.e("Loki", "Failed to get auth token", exception)
                 }
         }
     }

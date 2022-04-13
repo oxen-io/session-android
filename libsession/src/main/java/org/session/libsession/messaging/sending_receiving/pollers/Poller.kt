@@ -100,6 +100,7 @@ class Poller {
         if (!hasStarted) { return Promise.ofFail(PromiseCanceledException()) }
         return SnodeAPI.getRawMessages(snode, userPublicKey).bind { rawResponse ->
             if (deferred.promise.isDone()) {
+                isCaughtUp = true
                 task { Unit } // The long polling connection has been canceled; don't recurse
             } else {
                 val messages = SnodeAPI.parseRawMessagesResponse(rawResponse, snode, userPublicKey)

@@ -200,6 +200,13 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 // Double check that the long poller is up
                 (applicationContext as ApplicationContext).startPollingIfNeeded()
                 // update things based on TextSecurePrefs (profile info etc)
+                // Set up remaining components if needed
+                val application = ApplicationContext.getInstance(this@HomeActivity)
+                application.registerForFCMIfNeeded(false)
+                if (textSecurePreferences.getLocalNumber() != null) {
+                    OpenGroupManager.startPolling()
+                    JobQueue.shared.resumePendingJobs()
+                }
                 // Set up typing observer
                 withContext(Dispatchers.Main) {
                     ApplicationContext.getInstance(this@HomeActivity).typingStatusRepository.typingThreads.observe(this@HomeActivity, Observer<Set<Long>> { threadIDs ->
@@ -210,13 +217,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                     TextSecurePreferences.events.filter { it == TextSecurePreferences.PROFILE_NAME_PREF }.collect {
                         updateProfileButton()
                     }
-                }
-                // Set up remaining components if needed
-                val application = ApplicationContext.getInstance(this@HomeActivity)
-                application.registerForFCMIfNeeded(false)
-                if (textSecurePreferences.getLocalNumber() != null) {
-                    OpenGroupManager.startPolling()
-                    JobQueue.shared.resumePendingJobs()
                 }
             }
             // monitor the global search VM query

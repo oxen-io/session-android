@@ -7,7 +7,8 @@ import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
 object ThreadUtils {
-    val executorPool = Executors.newFixedThreadPool(2)
+
+    val executorPool = Executors.newCachedThreadPool()
 
     @JvmStatic
     fun queue(target: Runnable) {

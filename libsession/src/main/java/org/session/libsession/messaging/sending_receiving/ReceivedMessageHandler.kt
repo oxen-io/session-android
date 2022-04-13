@@ -4,6 +4,7 @@ import android.text.TextUtils
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.AttachmentDownloadJob
+import org.session.libsession.messaging.jobs.BackgroundGroupAddJob
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.ClosedGroupControlMessage
@@ -141,7 +142,9 @@ private fun handleConfigurationMessage(message: ConfigurationMessage) {
     val allV2OpenGroups = storage.getAllV2OpenGroups().map { it.value.joinURL }
     for (openGroup in message.openGroups) {
         if (allV2OpenGroups.contains(openGroup)) continue
-        storage.addOpenGroup(openGroup)
+        if (!storage.hasBackgroundGroupAddJob(openGroup)) {
+            JobQueue.shared.add(BackgroundGroupAddJob(openGroup))
+        }
     }
     val profileManager = SSKEnvironment.shared.profileManager
     val recipient = Recipient.from(context, Address.fromSerialized(userPublicKey), false)

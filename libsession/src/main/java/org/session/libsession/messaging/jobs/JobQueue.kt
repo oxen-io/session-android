@@ -71,10 +71,11 @@ class JobQueue : JobDelegate {
                     is NotifyPNServerJob, is AttachmentUploadJob, is MessageSendJob -> {
                         txQueue.send(job)
                     }
-                    is AttachmentDownloadJob, is GroupAvatarDownloadJob -> {
+                    is AttachmentDownloadJob, is BackgroundGroupAddJob -> {
                         mediaQueue.send(job)
                     }
-                    is MessageReceiveJob, is TrimThreadJob, is BatchMessageReceiveJob -> {
+                    is MessageReceiveJob, is TrimThreadJob,
+                    is BatchMessageReceiveJob, is GroupAvatarDownloadJob -> {
                         rxQueue.send(job)
                     }
                     else -> {
@@ -159,7 +160,8 @@ class JobQueue : JobDelegate {
             MessageSendJob.KEY,
             NotifyPNServerJob.KEY,
             BatchMessageReceiveJob.KEY,
-            GroupAvatarDownloadJob.KEY
+            GroupAvatarDownloadJob.KEY,
+            BackgroundGroupAddJob.KEY,
         )
         allJobTypes.forEach { type ->
             resumePendingJobs(type)

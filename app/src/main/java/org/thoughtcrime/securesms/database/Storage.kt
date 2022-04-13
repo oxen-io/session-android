@@ -517,6 +517,16 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         OpenGroupManager.addOpenGroup(urlAsString, context)
     }
 
+    override fun onOpenGroupAdded(urlAsString: String) {
+        val server = OpenGroupV2.getServer(urlAsString)
+        OpenGroupManager.restartPollerForServer(server.toString().removeSuffix("/"))
+    }
+
+    override fun hasBackgroundGroupAddJob(groupJoinUrl: String): Boolean {
+        val jobDb = DatabaseComponent.get(context).sessionJobDatabase()
+        return jobDb.hasBackgroundGroupAddJob(groupJoinUrl)
+    }
+
     override fun setProfileSharing(address: Address, value: Boolean) {
         val recipient = Recipient.from(context, address, false)
         DatabaseComponent.get(context).recipientDatabase().setProfileSharing(recipient, value)
