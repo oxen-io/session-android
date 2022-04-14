@@ -582,6 +582,16 @@ public class ThreadDatabase extends Database {
     return getOrCreateThreadIdFor(recipient, DistributionTypes.DEFAULT);
   }
 
+  public void setThreadArchived(long threadId) {
+    ContentValues contentValues = new ContentValues(1);
+    contentValues.put(ARCHIVED, 1);
+
+    databaseHelper.getWritableDatabase().update(TABLE_NAME, contentValues, ID_WHERE,
+            new String[] {String.valueOf(threadId)});
+
+    notifyConversationListeners(threadId);
+  }
+
   public long getOrCreateThreadIdFor(Recipient recipient, int distributionType) {
     SQLiteDatabase db            = databaseHelper.getReadableDatabase();
     String         where         = ADDRESS + " = ?";

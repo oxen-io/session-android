@@ -26,6 +26,7 @@ class JobQueue : JobDelegate {
     private val jobTimestampMap = ConcurrentHashMap<Long, AtomicInteger>()
     private val rxDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
     private val rxMediaDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
+    private val openGroupDispatcher = Executors.newCachedThreadPool().asCoroutineDispatcher()
     private val txDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
     private val scope = GlobalScope + SupervisorJob()
     private val queue = Channel<Job>(UNLIMITED)
@@ -48,14 +49,16 @@ class JobQueue : JobDelegate {
     init {
         // Process jobs
         scope.launch {
-            val rxQueue = Channel<Job>(capacity = 50_000)
-            val txQueue = Channel<Job>(capacity = 50_000)
-            val mediaQueue = Channel<Job>(capacity = 50_000)
+            val rxQueue = Channel<Job>(capacity = UNLIMITED)
+            val txQueue = Channel<Job>(capacity = UNLIMITED)
+            val mediaQueue = Channel<Job>(capacity = UNLIMITED)
+            val openGroupQueue = Channel<Job>(capacity = UNLIMITED)
 
 
             val receiveJob = processWithDispatcher(rxQueue, rxDispatcher)
             val txJob = processWithDispatcher(txQueue, txDispatcher)
             val mediaJob = processWithDispatcher(mediaQueue, rxMediaDispatcher)
+            val openGroupJob = processWithDispatcher(openGroupQueue, openGroupDispatcher)
 
             while (isActive) {
                 if (queue.isEmpty && pendingTrimThreadIds.isNotEmpty()) {
@@ -71,12 +74,19 @@ class JobQueue : JobDelegate {
                     is NotifyPNServerJob, is AttachmentUploadJob, is MessageSendJob -> {
                         txQueue.send(job)
                     }
-                    is AttachmentDownloadJob, is BackgroundGroupAddJob -> {
+                    is AttachmentDownloadJob -> {
                         mediaQueue.send(job)
                     }
+                    is GroupAvatarDownloadJob, is BackgroundGroupAddJob -> {
+                        openGroupQueue.send(job)
+                    }
                     is MessageReceiveJob, is TrimThreadJob,
-                    is BatchMessageReceiveJob, is GroupAvatarDownloadJob -> {
-                        rxQueue.send(job)
+                    is BatchMessageReceiveJob -> {
+                        if (job is BatchMessageReceiveJob && !job.openGroupID.isNullOrEmpty()) {
+                            openGroupQueue.send(job)
+                        } else {
+                            rxQueue.send(job)
+                        }
                     }
                     else -> {
                         throw IllegalStateException("Unexpected job type.")
@@ -88,6 +98,7 @@ class JobQueue : JobDelegate {
             receiveJob.cancel()
             txJob.cancel()
             mediaJob.cancel()
+            openGroupJob.cancel()
         }
     }
 

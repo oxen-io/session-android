@@ -2,9 +2,13 @@ package org.thoughtcrime.securesms.conversation.v2
 
 import android.content.Context
 import android.database.Cursor
+import android.util.SparseArray
+import android.util.SparseBooleanArray
 import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.annotation.WorkerThread
+import androidx.core.util.getOrDefault
+import androidx.core.util.set
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import kotlinx.coroutines.Dispatchers.IO
@@ -20,7 +24,6 @@ import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
-import java.util.concurrent.ConcurrentHashMap
 
 class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPress: (MessageRecord, Int, VisibleMessageView, MotionEvent) -> Unit,
     private val onItemSwipeToReply: (MessageRecord, Int) -> Unit, private val onItemLongPress: (MessageRecord, Int) -> Unit,
@@ -33,13 +36,15 @@ class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPr
     var visibleMessageContentViewDelegate: VisibleMessageContentViewDelegate? = null
 
     private val updateQueue = Channel<String>(1024, onBufferOverflow = BufferOverflow.DROP_OLDEST)
-    private val contactCache = ConcurrentHashMap<String, Contact?>(100)
+    private val contactCache = SparseArray<Contact>(100)
+    private val contactLoadedCache = SparseBooleanArray(100)
     init {
         lifecycleCoroutineScope.launch(IO) {
             while (isActive) {
                 val item = updateQueue.receive()
                 val contact = getSenderInfo(item) ?: continue
-                contactCache[item] = contact
+                contactCache[item.hashCode()] = contact
+                contactLoadedCache[item.hashCode()] = true
             }
         }
     }
@@ -92,8 +97,15 @@ class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPr
                 view.snIsSelected = isSelected
                 view.indexInAdapter = position
                 val senderId = message.individualRecipient.address.serialize()
+                val senderIdHash = senderId.hashCode()
                 updateQueue.trySend(senderId)
-                val contact = contactCache[senderId]
+                if (contactCache[senderIdHash] != null && !contactLoadedCache.getOrDefault(senderIdHash, false)) {
+                    getSenderInfo(senderId)?.let { contact ->
+                        contactCache[senderIdHash] = contact
+                    }
+                }
+                val contact = contactCache[senderIdHash]
+
                 view.bind(message, messageBefore, getMessageAfter(position, cursor), glide, searchQuery, contact, senderId)
                 if (!message.isDeleted) {
                     view.onPress = { event -> onItemPress(message, viewHolder.adapterPosition, view, event) }

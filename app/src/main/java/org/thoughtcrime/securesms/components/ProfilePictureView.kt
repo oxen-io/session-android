@@ -10,13 +10,15 @@ import androidx.annotation.DimenRes
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewProfilePictureBinding
+import org.session.libsession.avatars.ContactColors
+import org.session.libsession.avatars.PlaceholderAvatarPhoto
 import org.session.libsession.avatars.ProfileContactPhoto
+import org.session.libsession.avatars.ResourceContactPhoto
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
-import org.thoughtcrime.securesms.util.AvatarPlaceholderGenerator
 
 class ProfilePictureView : RelativeLayout {
     private lateinit var binding: ViewProfilePictureBinding
@@ -28,6 +30,9 @@ class ProfilePictureView : RelativeLayout {
     var isLarge = false
 
     private val profilePicturesCache = mutableMapOf<String, String?>()
+    private val unknownRecipientDrawable = ResourceContactPhoto(R.drawable.ic_profile_default)
+        .asDrawable(context, ContactColors.UNKNOWN_COLOR.toConversationColor(context), false)
+
 
     // region Lifecycle
     constructor(context: Context) : super(context) { initialize() }
@@ -106,15 +111,19 @@ class ProfilePictureView : RelativeLayout {
             val avatar = (signalProfilePicture as? ProfileContactPhoto)?.avatarObject
             if (signalProfilePicture != null && avatar != "0" && avatar != "") {
                 glide.clear(imageView)
-                glide.load(signalProfilePicture).diskCacheStrategy(DiskCacheStrategy.NONE).circleCrop().into(imageView)
-                profilePicturesCache[publicKey] = recipient.profileAvatar
+                glide.load(signalProfilePicture)
+                    .placeholder(unknownRecipientDrawable)
+                    .error(unknownRecipientDrawable)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .circleCrop()
+                    .into(imageView)
             } else {
-                val sizeInPX = resources.getDimensionPixelSize(sizeResId)
                 glide.clear(imageView)
-                glide.load(AvatarPlaceholderGenerator.generate(context, sizeInPX, publicKey, displayName))
+                val placeholder = PlaceholderAvatarPhoto(publicKey, displayName ?: "${publicKey.take(4)}...${publicKey.takeLast(4)}")
+                glide.load(placeholder)
                     .diskCacheStrategy(DiskCacheStrategy.NONE).circleCrop().into(imageView)
-                profilePicturesCache[publicKey] = recipient.profileAvatar
             }
+            profilePicturesCache[publicKey] = recipient.profileAvatar
         } else {
             imageView.setImageDrawable(null)
         }
