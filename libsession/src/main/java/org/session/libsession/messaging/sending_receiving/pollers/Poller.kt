@@ -108,7 +108,7 @@ class Poller {
                 val parameters = messages.map { (envelope, serverHash) ->
                     MessageReceiveParameters(envelope.toByteArray(), serverHash = serverHash)
                 }
-                parameters.chunked(256).forEach { chunk ->
+                parameters.chunked(BatchMessageReceiveJob.BATCH_DEFAULT_NUMBER).forEach { chunk ->
                     val job = BatchMessageReceiveJob(chunk)
                     JobQueue.shared.add(job)
                 }

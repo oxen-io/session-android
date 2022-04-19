@@ -6,6 +6,7 @@ import nl.komponents.kovenant.functional.map
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
 import org.session.libsession.messaging.jobs.JobQueue
+import org.session.libsession.messaging.jobs.MessageReceiveJob
 import org.session.libsession.messaging.jobs.MessageReceiveParameters
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.GroupUtil
@@ -101,10 +102,11 @@ class ClosedGroupPollerV2 {
         }
         promise.success { envelopes ->
             if (!isPolling(groupPublicKey)) { return@success }
+
             val parameters = envelopes.map { (envelope, serverHash) ->
                 MessageReceiveParameters(envelope.toByteArray(), serverHash = serverHash)
             }
-            parameters.chunked(256).forEach { chunk ->
+            parameters.chunked(BatchMessageReceiveJob.BATCH_DEFAULT_NUMBER).iterator().forEach { chunk ->
                 val job = BatchMessageReceiveJob(chunk)
                 JobQueue.shared.add(job)
             }

@@ -1,6 +1,8 @@
 package org.thoughtcrime.securesms.conversation.v2
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.util.SparseArray
 import android.util.SparseBooleanArray
@@ -16,6 +18,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact
 import org.thoughtcrime.securesms.conversation.v2.messages.ControlMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageContentViewDelegate
@@ -24,6 +27,7 @@ import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
+import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
 
 class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPress: (MessageRecord, Int, VisibleMessageView, MotionEvent) -> Unit,
     private val onItemSwipeToReply: (MessageRecord, Int) -> Unit, private val onItemLongPress: (MessageRecord, Int) -> Unit,
@@ -118,7 +122,26 @@ class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPr
                 }
                 view.contentViewDelegate = visibleMessageContentViewDelegate
             }
-            is ControlMessageViewHolder -> viewHolder.view.bind(message, messageBefore)
+            is ControlMessageViewHolder -> {
+                viewHolder.view.bind(message, messageBefore)
+                if (message.isCallLog && message.isFirstMissedCall) {
+                    viewHolder.view.setOnClickListener {
+                        AlertDialog.Builder(context)
+                            .setTitle(R.string.CallNotificationBuilder_first_call_title)
+                            .setMessage(R.string.CallNotificationBuilder_first_call_message)
+                            .setPositiveButton(R.string.activity_settings_title) { _, _ ->
+                                val intent = Intent(context, PrivacySettingsActivity::class.java)
+                                context.startActivity(intent)
+                            }
+                            .setNeutralButton(R.string.cancel) { d, _ ->
+                                d.dismiss()
+                            }
+                            .show()
+                    }
+                } else {
+                    viewHolder.view.setOnClickListener(null)
+                }
+            }
         }
     }
 
