@@ -278,10 +278,10 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
       try {
         if (notificationState.hasMultipleThreads()) {
+          sendMultipleThreadNotification(context, notificationState, signal);
           for (long threadId : notificationState.getThreads()) {
             sendSingleThreadNotification(context, new NotificationState(notificationState.getNotificationsForThread(threadId)), false, true);
           }
-          sendMultipleThreadNotification(context, notificationState, signal);
         } else if (notificationState.getMessageCount() > 0){
           sendSingleThreadNotification(context, notificationState, signal, false);
         } else {

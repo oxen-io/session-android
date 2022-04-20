@@ -3,7 +3,12 @@ package org.session.libsession.messaging.sending_receiving.pollers
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.functional.map
 import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.messaging.jobs.*
+import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
+import org.session.libsession.messaging.jobs.GroupAvatarDownloadJob
+import org.session.libsession.messaging.jobs.JobQueue
+import org.session.libsession.messaging.jobs.MessageReceiveJob
+import org.session.libsession.messaging.jobs.MessageReceiveParameters
+import org.session.libsession.messaging.jobs.OpenGroupDeleteJob
 import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
 import org.session.libsession.messaging.open_groups.OpenGroupMessageV2
 import org.session.libsession.utilities.Address
@@ -89,15 +94,18 @@ class OpenGroupPollerV2(private val server: String, private val executorService:
 
     private fun handleDeletedMessages(room: String, openGroupID: String, deletions: List<OpenGroupAPIV2.MessageDeletion>) {
         val storage = MessagingModuleConfiguration.shared.storage
-        val dataProvider = MessagingModuleConfiguration.shared.messageDataProvider
         val groupID = GroupUtil.getEncodedOpenGroupID(openGroupID.toByteArray())
         val threadID = storage.getThreadId(Address.fromSerialized(groupID)) ?: return
-        val deletedMessageIDs = deletions.mapNotNull { deletion ->
-            dataProvider.getMessageID(deletion.deletedMessageServerID, threadID)
+
+        val serverIds = deletions.map { deletion ->
+            deletion.deletedMessageServerID
         }
-        deletedMessageIDs.forEach { (messageId, isSms) ->
-            MessagingModuleConfiguration.shared.messageDataProvider.deleteMessage(messageId, isSms)
+
+        if (serverIds.isNotEmpty()) {
+            val deleteJob = OpenGroupDeleteJob(serverIds.toLongArray(), threadID)
+            JobQueue.shared.add(deleteJob)
         }
+
         val currentMax = storage.getLastDeletionServerID(room, server) ?: 0L
         val latestMax = deletions.map { it.id }.maxOrNull() ?: 0L
         if (latestMax > currentMax && latestMax != 0L) {

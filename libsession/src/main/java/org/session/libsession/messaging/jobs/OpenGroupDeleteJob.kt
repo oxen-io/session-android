@@ -1,12 +1,16 @@
 package org.session.libsession.messaging.jobs
 
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.utilities.Data
+import org.session.libsignal.utilities.Log
 
-class OpenGroupDeleteJob(val messageIds: LongArray): Job {
+class OpenGroupDeleteJob(private val messageServerIds: LongArray, private val threadId: Long): Job {
 
     companion object {
+        private const val TAG = "OpenGroupDeleteJob"
         const val KEY = "OpenGroupDeleteJob"
         private const val MESSAGE_IDS = "messageIds"
+        private const val THREAD_ID = "threadId"
     }
 
     override var delegate: JobDelegate? = null
@@ -15,19 +19,28 @@ class OpenGroupDeleteJob(val messageIds: LongArray): Job {
     override val maxFailureCount: Int = 1
 
     override fun execute() {
-        TODO("Not yet implemented")
+        val dataProvider = MessagingModuleConfiguration.shared.messageDataProvider
+        val numberToDelete = messageServerIds.size
+        Log.d(TAG, "Deleting $numberToDelete messages")
+        messageServerIds.forEach { serverId ->
+            val (messageId, isSms) = dataProvider.getMessageID(serverId, threadId) ?: return@forEach
+            dataProvider.deleteMessage(messageId, isSms)
+        }
+        Log.d(TAG, "Deleted $numberToDelete messages successfully")
     }
 
     override fun serialize(): Data = Data.Builder()
-            .putLongArray(MESSAGE_IDS, messageIds)
-            .build()
+        .putLongArray(MESSAGE_IDS, messageServerIds)
+        .putLong(THREAD_ID, threadId)
+        .build()
 
     override fun getFactoryKey(): String = KEY
 
     class Factory: Job.Factory<OpenGroupDeleteJob> {
         override fun create(data: Data): OpenGroupDeleteJob {
-            val messageIds = data.getLongArray(MESSAGE_IDS)
-            return OpenGroupDeleteJob(messageIds)
+            val messageServerIds = data.getLongArray(MESSAGE_IDS)
+            val threadId = data.getLong(THREAD_ID)
+            return OpenGroupDeleteJob(messageServerIds, threadId)
         }
     }
 

@@ -81,7 +81,7 @@ class JobQueue : JobDelegate {
                         openGroupQueue.send(job)
                     }
                     is MessageReceiveJob, is TrimThreadJob,
-                    is BatchMessageReceiveJob -> {
+                    is BatchMessageReceiveJob, is OpenGroupDeleteJob -> {
                         if (job is BatchMessageReceiveJob && !job.openGroupID.isNullOrEmpty()) {
                             openGroupQueue.send(job)
                         } else {
@@ -173,6 +173,7 @@ class JobQueue : JobDelegate {
             BatchMessageReceiveJob.KEY,
             GroupAvatarDownloadJob.KEY,
             BackgroundGroupAddJob.KEY,
+            OpenGroupDeleteJob.KEY,
         )
         allJobTypes.forEach { type ->
             resumePendingJobs(type)

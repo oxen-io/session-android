@@ -15,6 +15,7 @@ class SessionJobManagerFactories {
                 BatchMessageReceiveJob.KEY to BatchMessageReceiveJob.Factory(),
                 GroupAvatarDownloadJob.KEY to GroupAvatarDownloadJob.Factory(),
                 BackgroundGroupAddJob.KEY to BackgroundGroupAddJob.Factory(),
+                OpenGroupDeleteJob.KEY to OpenGroupDeleteJob.Factory(),
             )
         }
     }
