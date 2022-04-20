@@ -11,19 +11,59 @@ import com.goterl.lazysodium.interfaces.PwHash
 import com.goterl.lazysodium.interfaces.SecretBox
 import com.goterl.lazysodium.interfaces.Sign
 import com.goterl.lazysodium.utils.Key
-import nl.komponents.kovenant.*
+import nl.komponents.kovenant.Promise
+import nl.komponents.kovenant.all
+import nl.komponents.kovenant.deferred
 import nl.komponents.kovenant.functional.bind
 import nl.komponents.kovenant.functional.map
+import nl.komponents.kovenant.task
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.utilities.MessageWrapper
 import org.session.libsignal.crypto.getRandomElement
 import org.session.libsignal.database.LokiAPIDatabaseProtocol
 import org.session.libsignal.protos.SignalServiceProtos
-import org.session.libsignal.utilities.*
 import org.session.libsignal.utilities.Base64
+import org.session.libsignal.utilities.Broadcaster
+import org.session.libsignal.utilities.HTTP
+import org.session.libsignal.utilities.Hex
+import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.Snode
+import org.session.libsignal.utilities.ThreadUtils
+import org.session.libsignal.utilities.prettifiedDescription
+import org.session.libsignal.utilities.removing05PrefixIfNeeded
+import org.session.libsignal.utilities.retryIfNeeded
 import java.security.SecureRandom
-import java.util.*
-import kotlin.Pair
+import java.util.Locale
+import kotlin.collections.List
+import kotlin.collections.Map
+import kotlin.collections.MutableMap
+import kotlin.collections.Set
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.count
+import kotlin.collections.emptyMap
+import kotlin.collections.filter
+import kotlin.collections.first
+import kotlin.collections.fold
+import kotlin.collections.get
+import kotlin.collections.isNotEmpty
+import kotlin.collections.lastOrNull
+import kotlin.collections.listOf
+import kotlin.collections.map
+import kotlin.collections.mapNotNull
+import kotlin.collections.mapOf
+import kotlin.collections.minus
+import kotlin.collections.mutableListOf
+import kotlin.collections.mutableMapOf
+import kotlin.collections.mutableSetOf
+import kotlin.collections.random
+import kotlin.collections.set
+import kotlin.collections.setOf
+import kotlin.collections.shuffled
+import kotlin.collections.take
+import kotlin.collections.toMap
+import kotlin.collections.toMutableSet
+import kotlin.collections.toSet
 
 object SnodeAPI {
     private val sodium by lazy { LazySodiumAndroid(SodiumAndroid()) }
@@ -448,7 +488,8 @@ object SnodeAPI {
     }
 
     private fun removeDuplicates(publicKey: String, rawMessages: List<*>): List<*> {
-        val receivedMessageHashValues = database.getReceivedMessageHashValues(publicKey)?.toMutableSet() ?: mutableSetOf()
+        val originalMessageHashValues = database.getReceivedMessageHashValues(publicKey)?.toMutableSet() ?: mutableSetOf()
+        val receivedMessageHashValues = originalMessageHashValues.toMutableSet()
         val result = rawMessages.filter { rawMessage ->
             val rawMessageAsJSON = rawMessage as? Map<*, *>
             val hashValue = rawMessageAsJSON?.get("hash") as? String
@@ -461,7 +502,9 @@ object SnodeAPI {
                 false
             }
         }
-        database.setReceivedMessageHashValues(publicKey, receivedMessageHashValues)
+        if (originalMessageHashValues != receivedMessageHashValues) {
+            database.setReceivedMessageHashValues(publicKey, receivedMessageHashValues)
+        }
         return result
     }
 

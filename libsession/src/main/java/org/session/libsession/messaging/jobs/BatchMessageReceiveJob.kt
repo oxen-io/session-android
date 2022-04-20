@@ -23,7 +23,7 @@ class BatchMessageReceiveJob(
     override var delegate: JobDelegate? = null
     override var id: String? = null
     override var failureCount: Int = 0
-    override val maxFailureCount: Int = 10 // handled in JobQueue onJobFailed
+    override val maxFailureCount: Int = 1 // handled in JobQueue onJobFailed
     // Failure Exceptions must be retryable if they're a  MessageReceiver.Error
     val failures = mutableListOf<MessageReceiveParameters>()
 

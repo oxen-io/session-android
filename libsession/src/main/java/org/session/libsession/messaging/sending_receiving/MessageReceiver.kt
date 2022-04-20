@@ -2,10 +2,19 @@ package org.session.libsession.messaging.sending_receiving
 
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.Message
-import org.session.libsession.messaging.messages.control.*
+import org.session.libsession.messaging.messages.control.CallMessage
+import org.session.libsession.messaging.messages.control.ClosedGroupControlMessage
+import org.session.libsession.messaging.messages.control.ConfigurationMessage
+import org.session.libsession.messaging.messages.control.DataExtractionNotification
+import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
+import org.session.libsession.messaging.messages.control.MessageRequestResponse
+import org.session.libsession.messaging.messages.control.ReadReceipt
+import org.session.libsession.messaging.messages.control.TypingIndicator
+import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsignal.crypto.PushTransportDetails
 import org.session.libsignal.protos.SignalServiceProtos
+import org.session.libsignal.utilities.Log
 
 object MessageReceiver {
 
@@ -73,6 +82,7 @@ object MessageReceiver {
                                 encryptionKeyPair = encryptionKeyPairs.removeLast()
                                 decrypt()
                             } else {
+                                Log.e("Loki", "Failed to decrypt group message", e)
                                 throw e
                             }
                         }

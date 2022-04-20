@@ -85,9 +85,10 @@ class OpenGroupPollerV2(private val server: String, private val executorService:
             JobQueue.shared.add(BatchMessageReceiveJob(parameters, openGroupID))
         }
 
+        val indicatedMax = messages.mapNotNull { it.serverID }.maxOrNull() ?: 0
         val currentLastMessageServerID = storage.getLastMessageServerID(room, server) ?: 0
-        val actualMax = max(messages.mapNotNull { it.serverID }.maxOrNull() ?: 0, currentLastMessageServerID)
-        if (actualMax > 0) {
+        val actualMax = max(indicatedMax, currentLastMessageServerID)
+        if (actualMax > 0 && indicatedMax > currentLastMessageServerID) {
             storage.setLastMessageServerID(room, server, actualMax)
         }
     }
