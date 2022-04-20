@@ -8,6 +8,7 @@ import org.session.libsession.messaging.jobs.GroupAvatarDownloadJob
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageReceiveJob
 import org.session.libsession.messaging.jobs.MessageReceiveParameters
+import org.session.libsession.messaging.open_groups.Endpoint
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.open_groups.OpenGroupMessageV2
 import org.session.libsession.utilities.Address
@@ -47,11 +48,19 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         rooms.forEach { downloadGroupAvatarIfNeeded(it) }
         return OpenGroupApi.poll(rooms, server).successBackground { responses ->
             responses.forEach { response ->
-                when (response.body) {
-                    is OpenGroupApi.Capabilities -> handleCapabilities(server, response.body)
-                    is OpenGroupApi.RoomPollInfo -> handleRoomPollInfo(server, response.body)
-                    is OpenGroupApi.Message -> handleMessages(server, response.body)
-                    is OpenGroupApi.DirectMessage -> handleDirectMessages(server, response.body)
+                when (response.endpoint) {
+                    is Endpoint.Capabilities -> {
+                        handleCapabilities(server, response.body as OpenGroupApi.Capabilities)
+                    }
+                    is Endpoint.RoomPollInfo -> {
+                        handleRoomPollInfo(server, response.body as OpenGroupApi.RoomPollInfo)
+                    }
+                    is Endpoint.Message -> {
+                        handleMessages(server, response.body as OpenGroupApi.Message)
+                    }
+                    is Endpoint.DirectMessage -> {
+                        handleDirectMessages(server, response.body as OpenGroupApi.DirectMessage)
+                    }
                 }
                 if (secondToLastJob == null && !isCaughtUp) {
                     isCaughtUp = true

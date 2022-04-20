@@ -109,6 +109,7 @@ object OpenGroupApi {
     @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
     data class BatchRequestInfo<T>(
         val request: BatchRequest,
+        val endpoint: Endpoint,
         val responseType: TypeReference<T>
     )
 
@@ -118,7 +119,7 @@ object OpenGroupApi {
     )
 
     data class BatchResponse<T>(
-        val endpoint: String,
+        val endpoint: Endpoint,
         val code: Int,
         val headers: Map<String, String>,
         val body: T?
@@ -534,16 +535,19 @@ object OpenGroupApi {
                     method = "GET",
                     path = "/capabilities"
                 ),
+                endpoint = Endpoint.Capabilities,
                 responseType = object : TypeReference<Capabilities>(){}
             )
         )
         rooms.forEach { room ->
+            val infoUpdates = storage.getOpenGroup(room, server)?.infoUpdates
             requests.add(
                 BatchRequestInfo(
                     request = BatchRequest(
                         method = "GET",
-                        path = "/room/$room/pollInfo/${storage.getOpenGroup(room, server)?.infoUpdates}"
+                        path = "/room/$room/pollInfo/$infoUpdates"
                     ),
+                    endpoint = Endpoint.RoomPollInfo(room, infoUpdates),
                     responseType = object : TypeReference<RoomPollInfo>(){}
                 )
             )
@@ -557,6 +561,7 @@ object OpenGroupApi {
                             "/room/$room/messages/since/${storage.getLastMessageServerID(room, server)}"
                         }
                     ),
+                    endpoint = Endpoint.RoomMessagesRecent(room),
                     responseType = object : TypeReference<List<Message>>(){}
                 )
             )
@@ -621,7 +626,7 @@ object OpenGroupApi {
                 val response = result as? Map<*, *> ?: throw Error.ParsingFailed
                 val code = response["code"] as Int
                 BatchResponse(
-                    endpoint = "",
+                    endpoint = requests[idx].endpoint,
                     code = code,
                     headers = response["headers"] as Map<String, String>,
                     body = if (code in 200..299) {
