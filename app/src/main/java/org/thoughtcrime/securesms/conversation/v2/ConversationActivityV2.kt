@@ -399,10 +399,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             R.dimen.small_profile_picture_size
         }
         val size = resources.getDimension(sizeID).roundToInt()
-        actionBarBinding!!.profilePictureView.layoutParams = LinearLayout.LayoutParams(size, size)
-        actionBarBinding!!.profilePictureView.glide = glide
+        actionBarBinding!!.profilePictureView.root.layoutParams = LinearLayout.LayoutParams(size, size)
+        actionBarBinding!!.profilePictureView.root.glide = glide
         MentionManagerUtilities.populateUserPublicKeyCacheIfNeeded(viewModel.threadId, this)
-        actionBarBinding!!.profilePictureView.update(viewModel.recipient)
+        actionBarBinding!!.profilePictureView.root.update(viewModel.recipient)
     }
 
     // called from onCreate
@@ -590,7 +590,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             invalidateOptionsMenu()
             updateSubtitle()
             showOrHideInputIfNeeded()
-            actionBarBinding?.profilePictureView?.update(recipient)
+            actionBarBinding?.profilePictureView?.root?.update(recipient)
             actionBarBinding?.conversationTitleView?.text = recipient.toShortString()
         }
     }

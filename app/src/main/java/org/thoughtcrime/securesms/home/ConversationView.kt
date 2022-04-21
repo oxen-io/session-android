@@ -47,7 +47,7 @@ class ConversationView : LinearLayout {
             binding.conversationViewDisplayNameTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
             ContextCompat.getDrawable(context, R.drawable.conversation_view_background)
         }
-        binding.profilePictureView.glide = glide
+        binding.profilePictureView.root.glide = glide
         val unreadCount = thread.unreadCount
         if (thread.recipient.isBlocked) {
             binding.accentView.setBackgroundResource(R.color.destructive)
@@ -104,12 +104,12 @@ class ConversationView : LinearLayout {
             else -> binding.statusIndicatorImageView.setImageResource(R.drawable.ic_circle_check)
         }
         post {
-            binding.profilePictureView.update(thread.recipient)
+            binding.profilePictureView.root.update(thread.recipient)
         }
     }
 
     fun recycle() {
-        binding.profilePictureView.recycle()
+        binding.profilePictureView.root.recycle()
     }
 
     private fun getUserDisplayName(recipient: Recipient): String? {

@@ -40,9 +40,9 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
             val groupId = GroupUtil.getEncodedOpenGroupID("$server.$room".toByteArray())
             // get info and auth token
             storage.addOpenGroup(joinUrl)
+            storage.onOpenGroupAdded(joinUrl)
             storage.updateProfilePicture(groupId, bytes)
             storage.updateTimestampUpdated(groupId, System.currentTimeMillis())
-            storage.onOpenGroupAdded(joinUrl)
         } catch (e: Exception) {
             delegate?.handleJobFailedPermanently(this, e)
         }

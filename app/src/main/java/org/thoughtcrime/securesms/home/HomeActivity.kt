@@ -156,8 +156,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         // Set up Glide
         glide = GlideApp.with(this)
         // Set up toolbar buttons
-        binding.profileButton.glide = glide
-        binding.profileButton.setOnClickListener { openSettings() }
+        binding.profileButton.root.glide = glide
+        binding.profileButton.root.setOnClickListener { openSettings() }
         binding.searchViewContainer.setOnClickListener {
             binding.globalSearchInputLayout.requestFocus()
         }
@@ -341,8 +341,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         ApplicationContext.getInstance(this).messageNotifier.setHomeScreenVisible(true)
         if (textSecurePreferences.getLocalNumber() == null) { return; } // This can be the case after a secondary device is auto-cleared
         IdentityKeyUtil.checkUpdate(this)
-        binding.profileButton.recycle() // clear cached image before update tje profilePictureView
-        binding.profileButton.update()
+        binding.profileButton.root.recycle() // clear cached image before update tje profilePictureView
+        binding.profileButton.root.update()
         if (textSecurePreferences.getHasViewedSeed()) {
             binding.seedReminderView.isVisible = false
         }
@@ -389,10 +389,10 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 
     private fun updateProfileButton() {
-        binding.profileButton.publicKey = publicKey
-        binding.profileButton.displayName = textSecurePreferences.getProfileName()
-        binding.profileButton.recycle()
-        binding.profileButton.update()
+        binding.profileButton.root.publicKey = publicKey
+        binding.profileButton.root.displayName = textSecurePreferences.getProfileName()
+        binding.profileButton.root.recycle()
+        binding.profileButton.root.update()
     }
     // endregion
 

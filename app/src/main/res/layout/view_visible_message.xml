@@ -28,11 +28,12 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <org.thoughtcrime.securesms.components.ProfilePictureView
+            <include layout="@layout/view_profile_picture"
                 android:id="@+id/profilePictureView"
                 android:layout_width="@dimen/very_small_profile_picture_size"
                 android:layout_height="@dimen/very_small_profile_picture_size"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                />
 
             <ImageView
                 android:id="@+id/moderatorIconImageView"

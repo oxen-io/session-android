@@ -94,6 +94,10 @@ class VisibleMessageView : LinearLayout {
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) { initialize() }
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) { initialize() }
 
+    override fun onFinishInflate() {
+        super.onFinishInflate()
+    }
+
     private fun initialize() {
         binding = ViewVisibleMessageBinding.inflate(LayoutInflater.from(context), this, true)
         layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -117,10 +121,10 @@ class VisibleMessageView : LinearLayout {
         // the message is incoming
         if (isGroupThread && !message.isOutgoing) {
             binding.profilePictureContainer.visibility = if (isEndOfMessageCluster) View.VISIBLE else View.INVISIBLE
-            binding.profilePictureView.publicKey = senderSessionID
-            binding.profilePictureView.glide = glide
-            binding.profilePictureView.update(message.individualRecipient)
-            binding.profilePictureView.setOnClickListener {
+            binding.profilePictureView.root.publicKey = senderSessionID
+            binding.profilePictureView.root.glide = glide
+            binding.profilePictureView.root.update(message.individualRecipient)
+            binding.profilePictureView.root.setOnClickListener {
                 showUserDetails(senderSessionID, threadID)
             }
             if (thread.isOpenGroupRecipient) {
@@ -291,7 +295,7 @@ class VisibleMessageView : LinearLayout {
     }
 
     fun recycle() {
-        binding.profilePictureView.recycle()
+        binding.profilePictureView.root.recycle()
         binding.messageContentView.recycle()
     }
     // endregion

@@ -2,7 +2,6 @@ package org.thoughtcrime.securesms.components
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -20,8 +19,10 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
 
-class ProfilePictureView : RelativeLayout {
-    private lateinit var binding: ViewProfilePictureBinding
+class ProfilePictureView @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet? = null
+) : RelativeLayout(context, attrs) {
+    private val binding: ViewProfilePictureBinding by lazy { ViewProfilePictureBinding.bind(this) }
     lateinit var glide: GlideRequests
     var publicKey: String? = null
     var displayName: String? = null
@@ -33,16 +34,6 @@ class ProfilePictureView : RelativeLayout {
     private val unknownRecipientDrawable = ResourceContactPhoto(R.drawable.ic_profile_default)
         .asDrawable(context, ContactColors.UNKNOWN_COLOR.toConversationColor(context), false)
 
-
-    // region Lifecycle
-    constructor(context: Context) : super(context) { initialize() }
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) { initialize() }
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) { initialize() }
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) { initialize() }
-
-    private fun initialize() {
-        binding = ViewProfilePictureBinding.inflate(LayoutInflater.from(context), this, true)
-    }
     // endregion
 
     // region Updating

@@ -79,7 +79,6 @@ object OpenGroupManager {
         }
         val openGroup = OpenGroupV2(server, room, info.name, publicKey)
         threadDB.setOpenGroupChat(openGroup, threadID)
-        DatabaseComponent.get(context).threadDatabase().archivedConversationList
     }
 
     fun restartPollerForServer(server: String) {
