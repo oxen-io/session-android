@@ -9,6 +9,7 @@ import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageReceiveJob
 import org.session.libsession.messaging.jobs.MessageReceiveParameters
 import org.session.libsession.messaging.open_groups.Endpoint
+import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.open_groups.OpenGroupMessageV2
 import org.session.libsession.utilities.Address
@@ -25,6 +26,8 @@ class OpenGroupPoller(private val server: String, private val executorService: S
     var isCaughtUp = false
     var secondToLastJob: MessageReceiveJob? = null
     private var future: ScheduledFuture<*>? = null
+    private val moderators = mutableMapOf<String, Set<String>>()
+    private val admins = mutableMapOf<String, Set<String>>()
 
     companion object {
         private const val pollInterval: Long = 4000L
@@ -53,13 +56,14 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                         handleCapabilities(server, response.body as OpenGroupApi.Capabilities)
                     }
                     is Endpoint.RoomPollInfo -> {
-                        handleRoomPollInfo(server, response.body as OpenGroupApi.RoomPollInfo)
+                        handleRoomPollInfo(server, response.endpoint.roomToken, response.body as OpenGroupApi.RoomPollInfo)
                     }
-                    is Endpoint.Message -> {
-                        handleMessages(server, response.body as OpenGroupApi.Message)
+                    is Endpoint.RoomMessagesRecent  -> {
+                        handleMessages(server, response.endpoint.roomToken, response.body as List<OpenGroupApi.Message>)
                     }
-                    is Endpoint.DirectMessage -> {
-                        handleDirectMessages(server, response.body as OpenGroupApi.DirectMessage)
+                    is Endpoint.Inbox, Endpoint.Outbox -> {
+                        val fromOutbox = response.endpoint.value.startsWith("outbox", ignoreCase = true)
+                        handleDirectMessages(server, fromOutbox, response.body as List<OpenGroupApi.DirectMessage>)
                     }
                 }
                 if (secondToLastJob == null && !isCaughtUp) {
@@ -69,6 +73,84 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         }.always {
             executorService?.schedule(this@OpenGroupPoller::poll, pollInterval, TimeUnit.MILLISECONDS)
         }.map { }
+    }
+
+    private fun handleCapabilities(server: String, capabilities: OpenGroupApi.Capabilities) {
+        val storage = MessagingModuleConfiguration.shared.storage
+        storage.setOpenGroupSever(server, capabilities.capabilities)
+    }
+
+    private fun handleRoomPollInfo(
+        server: String,
+        roomToken: String,
+        pollInfo: OpenGroupApi.RoomPollInfo
+    ) {
+        val storage = MessagingModuleConfiguration.shared.storage
+        val groupId = "$server.$roomToken"
+        val openGroupId = GroupUtil.getEncodedOpenGroupID(groupId.toByteArray())
+        val threadId = storage.getThreadId(openGroupId)
+        val userPublicKey = storage.getUserPublicKey() ?: ""
+
+        val existingOpenGroup = storage.getOpenGroup(roomToken, server)
+        val publicKey = existingOpenGroup?.publicKey ?: return
+        val openGroup = OpenGroup(
+            server = server,
+            room = pollInfo.token,
+            name = pollInfo.details?.name ?: "",
+            infoUpdates = pollInfo.details?.info_updates ?: 0,
+            publicKey = publicKey,
+            capabilities = listOf()
+        )
+        // - Open Group changes
+        storage.setOpenGroup(openGroup)
+
+        // - User Count
+        storage.setUserCount(roomToken, server, pollInfo.active_users)
+
+        // - Moderators
+        pollInfo.details?.moderators?.let {
+            moderators[groupId] = it.toMutableSet()
+        }
+        // - Admins
+        pollInfo.details?.admins?.let {
+            admins[groupId] = it.toMutableSet()
+        }
+    }
+
+    private fun handleMessages(
+        server: String,
+        roomToken: String,
+        messages: List<OpenGroupApi.Message>
+    ) {
+        val openGroupId = "$server.$roomToken"
+        val msgs = messages.map {
+            OpenGroupMessageV2(
+                serverID = it.id,
+                sender = it.session_id,
+                sentTimestamp = it.posted,
+                base64EncodedData = it.data,
+                base64EncodedSignature = it.signature
+            )
+        }
+        handleNewMessages(roomToken, openGroupId, msgs)
+    }
+
+    private fun handleDirectMessages(
+        server: String,
+        fromOutbox: Boolean,
+        messages: List<OpenGroupApi.DirectMessage>
+    ) {
+        if (messages.isEmpty()) return
+        val storage = MessagingModuleConfiguration.shared.storage
+        val serverPublicKey = storage.getOpenGroupPublicKey(server)
+        val sortedMessages = messages.sortedBy { it.id }
+        val lastMessageId = sortedMessages.last().id
+        if (fromOutbox) {
+            storage.setLastOutboxMessageId(server, lastMessageId)
+        } else {
+            storage.setLastInboxMessageId(server, lastMessageId)
+        }
+
     }
 
     private fun handleNewMessages(
@@ -134,22 +216,6 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                 JobQueue.shared.add(GroupAvatarDownloadJob(room, server))
             }
         }
-    }
-
-    private fun handleCapabilities(server: String, capabilities: OpenGroupApi.Capabilities) {
-        //TODO: handleCapabilities
-    }
-
-    private fun handleRoomPollInfo(server: String, pollInfo: OpenGroupApi.RoomPollInfo) {
-        //TODO: handleRoomPollInfo
-    }
-
-    private fun handleMessages(server: String, message: OpenGroupApi.Message) {
-
-    }
-
-    private fun handleDirectMessages(server: String, message: OpenGroupApi.DirectMessage) {
-        //TODO: handleDirectMessages
     }
 
 }

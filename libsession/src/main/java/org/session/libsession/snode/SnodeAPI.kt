@@ -126,11 +126,11 @@ object SnodeAPI {
             deferred<Snode, Exception>()
             ThreadUtils.queue {
                 try {
-                    val response = HTTP.execute(HTTP.Verb.POST, url, parameters, useSeedNodeConnection = true).toString()
+                    val response = HTTP.execute(HTTP.Verb.POST, url, parameters, useSeedNodeConnection = true)
                     val json = try {
                         JsonUtil.fromJson(response, Map::class.java)
                     } catch (exception: Exception) {
-                        mapOf( "result" to response)
+                        mapOf( "result" to response.toString())
                     }
                     val intermediate = json["result"] as? Map<*, *>
                     val rawSnodes = intermediate?.get("service_node_states") as? List<*>

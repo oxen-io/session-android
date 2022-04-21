@@ -11,7 +11,7 @@ sealed class Endpoint(val value: String) {
 
     object Rooms : Endpoint("rooms")
     data class Room(val roomToken: String) : Endpoint("room/$roomToken")
-    data class RoomPollInfo(val roomToken: String, val infoUpdated: Long) :
+    data class RoomPollInfo(val roomToken: String, val infoUpdated: Int) :
         Endpoint("room/$roomToken/pollInfo/$infoUpdated")
 
     // Messages
@@ -19,7 +19,7 @@ sealed class Endpoint(val value: String) {
     data class RoomMessage(val roomToken: String) :
         Endpoint("room/$roomToken/message")
 
-    data class RoomMessageIndividual(val roomToken: String, val messageId) :
+    data class RoomMessageIndividual(val roomToken: String, val messageId: Long) :
         Endpoint("room/$roomToken/message/$messageId")
 
     data class RoomMessagesRecent(val roomToken: String) :
@@ -28,24 +28,27 @@ sealed class Endpoint(val value: String) {
     data class RoomMessagesBefore(val roomToken: String, val messageId: Long) :
         Endpoint("room/$roomToken/messages/before/$messageId")
 
-    data class RoomMessagesSince(val roomToken: String, val seqNo) :
+    data class RoomMessagesSince(val roomToken: String, val seqNo: Long) :
         Endpoint("room/$roomToken/messages/since/$seqNo")
 
-    data class RoomDeleteMessages(val roomToken: String, val sessionId) :
+    data class RoomDeleteMessages(val roomToken: String, val sessionId: String) :
         Endpoint("room/$roomToken/all/$sessionId")
 
     // Pinning
 
-    data class RoomPinMessage(val roomToken: String, val messageId) :
+    data class RoomPinMessage(val roomToken: String, val messageId: Long) :
         Endpoint("room/$roomToken/pin/$messageId")
 
-    data class RoomUnpinMessage(val roomToken: String, val messageId) :
+    data class RoomUnpinMessage(val roomToken: String, val messageId: Long) :
         Endpoint("room/$roomToken/unpin/$messageId")
 
     data class RoomUnpinAll(val roomToken: String) :
         Endpoint("room/$roomToken/unpin/all")
 
     // Files
+
+    object File: Endpoint("file")
+    data class FileIndividual(val fileId: Long): Endpoint("file/$fileId")
 
     data class RoomFile(val roomToken: String) : Endpoint("room/$roomToken/file")
     data class RoomFileIndividual(

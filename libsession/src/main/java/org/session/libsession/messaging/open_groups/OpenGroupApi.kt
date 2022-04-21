@@ -81,7 +81,7 @@ object OpenGroupApi {
         val created: Long = 0,
         val active_users: Int = 0,
         val active_users_cutoff: Int = 0,
-        val image_id: Int? = null,
+        val image_id: Long? = null,
         val pinned_messages: List<PinnedMessage> = emptyList(),
         val admin: Boolean = false,
         val global_admin: Boolean = false,
@@ -115,7 +115,8 @@ object OpenGroupApi {
 
     data class BatchRequest(
         val method: String,
-        val path: String
+        val path: String,
+        val body: Any? = null
     )
 
     data class BatchResponse<T>(
@@ -132,7 +133,7 @@ object OpenGroupApi {
 
     data class RoomPollInfo(
         val token: String = "",
-        val active_users: Long = 0,
+        val active_users: Int = 0,
         val admin: Boolean = false,
         val global_admin: Boolean = false,
         val moderator: Boolean = false,
@@ -144,7 +145,7 @@ object OpenGroupApi {
         val default_write: Boolean = false,
         val upload: Boolean = false,
         val default_upload: Boolean = false,
-        val details: List<RoomInfo> = emptyList()
+        val details: RoomInfo? = null
     )
 
     data class DirectMessage(
@@ -185,7 +186,7 @@ object OpenGroupApi {
         val verb: HTTP.Verb,
         val room: String?,
         val server: String,
-        val endpoint: String,
+        val endpoint: Endpoint,
         val queryParameters: Map<String, String> = mapOf(),
         val parameters: Any? = null,
         val headers: Map<String, String> = mapOf(),
@@ -215,7 +216,7 @@ object OpenGroupApi {
             .scheme(url.scheme())
             .host(url.host())
             .port(url.port())
-            .addPathSegments(request.endpoint)
+            .addPathSegments(request.endpoint.value)
         if (request.verb == GET) {
             for ((key, value) in request.queryParameters) {
                 urlBuilder.addQueryParameter(key, value)
@@ -301,13 +302,13 @@ object OpenGroupApi {
     fun downloadOpenGroupProfilePicture(
         server: String,
         roomID: String,
-        imageId: Int
+        imageId: Long
     ): Promise<ByteArray, Exception> {
         val request = Request(
             verb = GET,
             room = roomID,
             server = server,
-            endpoint = "room/$roomID/file/$imageId"
+            endpoint = Endpoint.RoomFileIndividual(roomID, imageId)
         )
         return send(request).map { it.body ?: throw Error.ParsingFailed }
     }
@@ -320,7 +321,7 @@ object OpenGroupApi {
             verb = POST,
             room = room,
             server = server,
-            endpoint = "files",
+            endpoint = Endpoint.File,
             parameters = parameters
         )
         return getResponseBodyJson(request).map { json ->
@@ -328,8 +329,8 @@ object OpenGroupApi {
         }
     }
 
-    fun download(file: Long, room: String, server: String): Promise<ByteArray, Exception> {
-        val request = Request(verb = GET, room = room, server = server, endpoint = "file/$file")
+    fun download(fileId: Long, room: String, server: String): Promise<ByteArray, Exception> {
+        val request = Request(verb = GET, room = room, server = server, endpoint = Endpoint.FileIndividual(fileId))
         return send(request).map { it.body ?: throw Error.ParsingFailed }
     }
     // endregion
@@ -346,7 +347,7 @@ object OpenGroupApi {
             verb = POST,
             room = room,
             server = server,
-            endpoint = "messages",
+            endpoint = Endpoint.RoomMessage(room),
             parameters = jsonMessage
         )
         return getResponseBodyJson(request).map { json ->
@@ -371,7 +372,7 @@ object OpenGroupApi {
             verb = GET,
             room = room,
             server = server,
-            endpoint = "messages",
+            endpoint = Endpoint.RoomMessage(room),
             queryParameters = queryParameters
         )
         return getResponseBodyJson(request).map { json ->
@@ -433,7 +434,7 @@ object OpenGroupApi {
             verb = GET,
             room = room,
             server = server,
-            endpoint = "deleted_messages",
+            endpoint = Endpoint.RoomDeleteMessages(room, storage.getUserPublicKey() ?: ""),
             queryParameters = queryParameters
         )
         return send(request).map { response ->
@@ -454,21 +455,6 @@ object OpenGroupApi {
     // endregion
 
     // region Moderation
-    private fun handleModerators(serverRoomId: String, moderatorList: List<String>) {
-        moderators[serverRoomId] = moderatorList.toMutableSet()
-    }
-
-    fun getModerators(room: String, server: String): Promise<List<String>, Exception> {
-        val request = Request(verb = GET, room = room, server = server, endpoint = "moderators")
-        return getResponseBodyJson(request).map { json ->
-            @Suppress("UNCHECKED_CAST") val moderatorsJson = json["moderators"] as? List<String>
-                ?: throw Error.ParsingFailed
-            val id = "$server.$room"
-            handleModerators(id, moderatorsJson)
-            moderatorsJson
-        }
-    }
-
     @JvmStatic
     fun ban(publicKey: String, room: String, server: String): Promise<Unit, Exception> {
         val parameters = mapOf("public_key" to publicKey)
@@ -476,7 +462,7 @@ object OpenGroupApi {
             verb = POST,
             room = room,
             server = server,
-            endpoint = "block_list",
+            endpoint = Endpoint.UserBan(publicKey),
             parameters = parameters
         )
         return send(request).map {
@@ -485,22 +471,30 @@ object OpenGroupApi {
     }
 
     fun banAndDeleteAll(publicKey: String, room: String, server: String): Promise<Unit, Exception> {
-        val parameters = mapOf("public_key" to publicKey)
-        val request = Request(
-            verb = POST,
-            room = room,
-            server = server,
-            endpoint = "ban_and_delete_all",
-            parameters = parameters
+        val requests = mutableListOf<BatchRequestInfo<*>>(
+            BatchRequestInfo(
+                request = BatchRequest(
+                    method = "POST",
+                    path = "user/$publicKey/ban",
+                    body = mapOf("roomTokens" to listOf(room))
+                ),
+                endpoint = Endpoint.UserBan(publicKey),
+                responseType = object: TypeReference<Nothing>(){}
+            ),
+            BatchRequestInfo(
+                request = BatchRequest("DELETE", "room/$room/all/$publicKey"),
+                endpoint = Endpoint.RoomDeleteMessages(room, publicKey),
+                responseType = object: TypeReference<Nothing>(){}
+            )
         )
-        return send(request).map {
+        return sequentialBatch(server, requests).map {
             Log.d("Loki", "Banned user: $publicKey from: $server.$room.")
         }
     }
 
     fun unban(publicKey: String, room: String, server: String): Promise<Unit, Exception> {
         val request =
-            Request(verb = DELETE, room = room, server = server, endpoint = "block_list/$publicKey")
+            Request(verb = DELETE, room = room, server = server, endpoint = Endpoint.UserUnban(publicKey))
         return send(request).map {
             Log.d("Loki", "Unbanned user: $publicKey from: $server.$room")
         }
@@ -540,7 +534,7 @@ object OpenGroupApi {
             )
         )
         rooms.forEach { room ->
-            val infoUpdates = storage.getOpenGroup(room, server)?.infoUpdates
+            val infoUpdates = storage.getOpenGroup(room, server)?.infoUpdates ?: 0
             requests.add(
                 BatchRequestInfo(
                     request = BatchRequest(
@@ -552,43 +546,75 @@ object OpenGroupApi {
                 )
             )
             requests.add(
-                BatchRequestInfo(
-                    request = BatchRequest(
-                        method = "GET",
-                        path = if (shouldRetrieveRecentMessages) {
-                            "/room/$room/messages/recent"
-                        } else {
-                            "/room/$room/messages/since/${storage.getLastMessageServerID(room, server)}"
-                        }
-                    ),
-                    endpoint = Endpoint.RoomMessagesRecent(room),
-                    responseType = object : TypeReference<List<Message>>(){}
-                )
+                if (shouldRetrieveRecentMessages) {
+                    BatchRequestInfo(
+                        request = BatchRequest(
+                            method = "GET",
+                            path = "/room/$room/messages/recent"
+                        ),
+                        endpoint = Endpoint.RoomMessagesRecent(room),
+                        responseType = object : TypeReference<List<Message>>(){}
+                    )
+                } else {
+                    val lastMessageServerId = storage.getLastMessageServerID(room, server) ?: 0L
+                    BatchRequestInfo(
+                        request = BatchRequest(
+                            method = "GET",
+                            path = "/room/$room/messages/since/$lastMessageServerId"
+                        ),
+                        endpoint = Endpoint.RoomMessagesSince(room, lastMessageServerId),
+                        responseType = object : TypeReference<List<Message>>(){}
+                    )
+                }
             )
         }
         requests.add(
-            BatchRequestInfo(
-                request = BatchRequest(
-                    method = "GET",
-                    path = if (lastInboxMessageId == null) "/inbox" else "/inbox/since/$lastInboxMessageId"
-                ),
-                responseType = object : TypeReference<List<DirectMessage>>() {}
-            )
+            if (lastInboxMessageId == null) {
+                BatchRequestInfo(
+                    request = BatchRequest(
+                        method = "GET",
+                        path = "/inbox"
+                    ),
+                    endpoint = Endpoint.Inbox,
+                    responseType = object : TypeReference<List<DirectMessage>>() {}
+                )
+            } else {
+                BatchRequestInfo(
+                    request = BatchRequest(
+                        method = "GET",
+                        path = "/inbox/since/$lastInboxMessageId"
+                    ),
+                    endpoint = Endpoint.InboxSince(lastInboxMessageId),
+                    responseType = object : TypeReference<List<DirectMessage>>() {}
+                )
+            }
         )
         requests.add(
-            BatchRequestInfo(
-                request = BatchRequest(
-                    method = "GET",
-                    path = if (lastOutboxMessageId == null) "/outbox" else "/outbox/since/$lastOutboxMessageId"
-                ),
-                responseType = object : TypeReference<List<DirectMessage>>() {}
-            )
+            if (lastOutboxMessageId == null) {
+                BatchRequestInfo(
+                    request = BatchRequest(
+                        method = "GET",
+                        path = "/outbox"
+                    ),
+                    endpoint = Endpoint.Outbox,
+                    responseType = object : TypeReference<List<DirectMessage>>() {}
+                )
+            } else {
+                BatchRequestInfo(
+                    request = BatchRequest(
+                        method = "GET",
+                        path = "/outbox/since/$lastOutboxMessageId"
+                    ),
+                    endpoint = Endpoint.OutboxSince(lastOutboxMessageId),
+                    responseType = object : TypeReference<List<DirectMessage>>() {}
+                )
+            }
         )
 
-        return batch(server, requests)
+        return parallelBatch(server, requests)
     }
 
-    private fun batch(
+    private fun parallelBatch(
         server: String,
         requests: MutableList<BatchRequestInfo<*>>
     ): Promise<List<BatchResponse<*>>, Exception> {
@@ -596,13 +622,13 @@ object OpenGroupApi {
             verb = POST,
             room = null,
             server = server,
-            endpoint = "batch",
+            endpoint = Endpoint.Batch,
             parameters = requests.map { it.request }
         )
         return getBatchResponseJson(request, requests)
     }
 
-    private fun sequence(
+    private fun sequentialBatch(
         server: String,
         requests: MutableList<BatchRequestInfo<*>>
     ): Promise<List<BatchResponse<*>>, Exception> {
@@ -610,7 +636,7 @@ object OpenGroupApi {
             verb = POST,
             room = null,
             server = server,
-            endpoint = "sequence",
+            endpoint = Endpoint.Sequence,
             parameters = requests.map { it.request }
         )
         return getBatchResponseJson(request, requests)
@@ -672,7 +698,7 @@ object OpenGroupApi {
             verb = GET,
             room = null,
             server = server,
-            endpoint = "room/$roomToken"
+            endpoint = Endpoint.Room(roomToken)
         )
         return send(request).map { response ->
             JsonUtil.fromJson(response.body, RoomInfo::class.java)
@@ -684,7 +710,7 @@ object OpenGroupApi {
             verb = GET,
             room = null,
             server = server,
-            endpoint = "rooms"
+            endpoint = Endpoint.Rooms
         )
         return send(request).map { response ->
             val rawRooms = JsonUtil.fromJson(response.body, List::class.java) ?: throw Error.ParsingFailed
@@ -703,7 +729,7 @@ object OpenGroupApi {
     }
 
     fun getCapabilities(room: String, server: String): Promise<List<String>, Exception> {
-        val request = Request(verb = GET, room = room, server = server, endpoint = "capabilities")
+        val request = Request(verb = GET, room = room, server = server, endpoint = Endpoint.Capabilities)
         return getResponseBodyJson(request).map { json ->
             json["capabilities"] as? List<String> ?: throw Error.ParsingFailed
         }
@@ -716,6 +742,7 @@ object OpenGroupApi {
                     method = "GET",
                     path = "/capabilities"
                 ),
+                endpoint = Endpoint.Capabilities,
                 responseType = object : TypeReference<Capabilities>(){}
             ),
             BatchRequestInfo(
@@ -723,10 +750,11 @@ object OpenGroupApi {
                     method = "GET",
                     path = "/room/$room"
                 ),
+                endpoint = Endpoint.Room(room),
                 responseType = object : TypeReference<RoomInfo>(){}
             )
         )
-        return sequence(server, requests).map {
+        return sequentialBatch(server, requests).map {
             val capabilities = it.firstOrNull()?.body as? Capabilities ?: throw Error.ParsingFailed
             val roomInfo = it.lastOrNull()?.body as? RoomInfo ?: throw Error.ParsingFailed
             capabilities to roomInfo
