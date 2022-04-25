@@ -58,12 +58,17 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                     is Endpoint.RoomPollInfo -> {
                         handleRoomPollInfo(server, response.endpoint.roomToken, response.body as OpenGroupApi.RoomPollInfo)
                     }
-                    is Endpoint.RoomMessagesRecent  -> {
+                    is Endpoint.RoomMessagesRecent -> {
                         handleMessages(server, response.endpoint.roomToken, response.body as List<OpenGroupApi.Message>)
                     }
-                    is Endpoint.Inbox, Endpoint.Outbox -> {
-                        val fromOutbox = response.endpoint.value.startsWith("outbox", ignoreCase = true)
-                        handleDirectMessages(server, fromOutbox, response.body as List<OpenGroupApi.DirectMessage>)
+                    is Endpoint.RoomMessagesSince  -> {
+                        handleMessages(server, response.endpoint.roomToken, response.body as List<OpenGroupApi.Message>)
+                    }
+                    is Endpoint.Inbox, is Endpoint.InboxSince -> {
+                        handleDirectMessages(server, false, response.body as List<OpenGroupApi.DirectMessage>)
+                    }
+                    is Endpoint.Outbox, is Endpoint.OutboxSince -> {
+                        handleDirectMessages(server, true, response.body as List<OpenGroupApi.DirectMessage>)
                     }
                 }
                 if (secondToLastJob == null && !isCaughtUp) {
@@ -77,7 +82,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
 
     private fun handleCapabilities(server: String, capabilities: OpenGroupApi.Capabilities) {
         val storage = MessagingModuleConfiguration.shared.storage
-        storage.setOpenGroupSever(server, capabilities.capabilities)
+        storage.updateOpenGroupCapabilities(server, capabilities.capabilities)
     }
 
     private fun handleRoomPollInfo(
@@ -102,7 +107,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
             capabilities = listOf()
         )
         // - Open Group changes
-        storage.setOpenGroup(openGroup)
+        storage.updateOpenGroup(openGroup)
 
         // - User Count
         storage.setUserCount(roomToken, server, pollInfo.active_users)
@@ -123,7 +128,8 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         messages: List<OpenGroupApi.Message>
     ) {
         val openGroupId = "$server.$roomToken"
-        val msgs = messages.map {
+        val (additions, deletions) = messages.sortedBy { it.seqno }.partition { it.data.isNotBlank() }
+        handleNewMessages(roomToken, openGroupId, additions.map {
             OpenGroupMessageV2(
                 serverID = it.id,
                 sender = it.session_id,
@@ -131,8 +137,10 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                 base64EncodedData = it.data,
                 base64EncodedSignature = it.signature
             )
-        }
-        handleNewMessages(roomToken, openGroupId, msgs)
+        })
+        handleDeletedMessages(roomToken, openGroupId, deletions.map {
+            OpenGroupApi.MessageDeletion(it.id, it.seqno)
+        })
     }
 
     private fun handleDirectMessages(

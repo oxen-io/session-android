@@ -55,10 +55,13 @@ interface StorageProtocol {
 
     // Open Groups
     fun getAllOpenGroups(): Map<Long, OpenGroup>
+    fun updateOpenGroup(openGroup: OpenGroup)
     fun getOpenGroup(threadId: Long): OpenGroup?
     fun addOpenGroup(urlAsString: String)
     fun setOpenGroupServerMessageID(messageID: Long, serverID: Long, threadID: Long, isSms: Boolean)
     fun getOpenGroup(room: String, server: String): OpenGroup?
+    fun updateOpenGroupCapabilities(server: String, capabilities: List<String>)
+    fun getOpenGroupServer(server: String): List<String>
 
     // Open Group Public Keys
     fun getOpenGroupPublicKey(server: String): String?

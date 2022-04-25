@@ -124,4 +124,11 @@ object OpenGroupManager {
         val publicKey = url.queryParameter("public_key") ?: return
         add(server.toString().removeSuffix("/"), room, publicKey, context)
     }
+
+    fun updateOpenGroup(openGroup: OpenGroup, context: Context) {
+        val threadDB = DatabaseComponent.get(context).lokiThreadDatabase()
+        val openGroupID = "${openGroup.server}.${openGroup.room}"
+        val threadID = GroupManager.getOpenGroupThreadID(openGroupID, context)
+        threadDB.setOpenGroupChat(openGroup, threadID)
+    }
 }
