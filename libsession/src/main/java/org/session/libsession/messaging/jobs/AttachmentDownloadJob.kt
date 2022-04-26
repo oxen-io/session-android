@@ -17,7 +17,6 @@ import org.session.libsignal.utilities.Log
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
-import java.lang.NullPointerException
 
 class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long) : Job {
     override var delegate: JobDelegate? = null
@@ -33,7 +32,7 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
     }
 
     // Settings
-    override val maxFailureCount: Int = 100
+    override val maxFailureCount: Int = 2
 
     companion object {
         val KEY: String = "AttachmentDownloadJob"

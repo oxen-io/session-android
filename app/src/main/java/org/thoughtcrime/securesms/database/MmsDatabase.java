@@ -19,6 +19,7 @@ package org.thoughtcrime.securesms.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Trace;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -935,6 +936,16 @@ public class MmsDatabase extends MessagingDatabase {
     reader.close();
   }
 
+  public void deleteMessages(String[] messageIds) {
+    // don't need thread IDs
+    AttachmentDatabase attachmentDatabase = DatabaseComponent.get(context).attachmentDatabase();
+    ThreadUtils.queue(()->attachmentDatabase.deleteAttachmentsForMessages(messageIds));
+
+    GroupReceiptDatabase groupReceiptDatabase = DatabaseComponent.get(context).groupReceiptDatabase();
+    groupReceiptDatabase.deleteRowsForMessages(messageIds);
+
+  }
+
   @Override
   public boolean deleteMessage(long messageId) {
     long threadId = getThreadIdForMessage(messageId);
@@ -942,17 +953,25 @@ public class MmsDatabase extends MessagingDatabase {
     ThreadUtils.queue(() -> attachmentDatabase.deleteAttachmentsForMessage(messageId));
 
     GroupReceiptDatabase groupReceiptDatabase = DatabaseComponent.get(context).groupReceiptDatabase();
+    Trace.beginSection("groupreceipt-deleterows");
     groupReceiptDatabase.deleteRowsForMessage(messageId);
+    Trace.endSection();
 
     MessageRecord toDelete;
     try (Cursor messageCursor = getMessage(messageId)) {
+      Trace.beginSection("fetchToDelete");
       toDelete = readerFor(messageCursor).getNext();
+      Trace.endSection();
     }
 
+    Trace.beginSection("deleteQuoted");
     deleteQuotedFromMessages(toDelete);
+    Trace.endSection();
     SQLiteDatabase database = databaseHelper.getWritableDatabase();
     database.delete(TABLE_NAME, ID_WHERE, new String[] {messageId+""});
+    Trace.beginSection("updateThreadDb");
     boolean threadDeleted = DatabaseComponent.get(context).threadDatabase().update(threadId, false);
+    Trace.endSection();
     notifyConversationListeners(threadId);
     notifyStickerListeners();
     notifyStickerPackListeners();
@@ -1073,10 +1092,13 @@ public class MmsDatabase extends MessagingDatabase {
     where = where.substring(0, where.length() - 4);
 
     try {
+      Trace.beginSection("db-query");
       cursor = db.query(TABLE_NAME, new String[] {ID}, where, null, null, null, null);
-
+      Trace.endSection();
       while (cursor != null && cursor.moveToNext()) {
+        Trace.beginSection("db-deletemessage");
         deleteMessage(cursor.getLong(0));
+        Trace.endSection();
       }
 
     } finally {

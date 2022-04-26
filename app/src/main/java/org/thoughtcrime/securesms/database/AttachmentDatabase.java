@@ -17,6 +17,7 @@
 package org.thoughtcrime.securesms.database;
 
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -52,6 +53,7 @@ import org.thoughtcrime.securesms.crypto.ClassicDecryptingPartInputStream;
 import org.thoughtcrime.securesms.crypto.ModernDecryptingPartInputStream;
 import org.thoughtcrime.securesms.crypto.ModernEncryptingPartOutputStream;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
+import org.thoughtcrime.securesms.database.model.MmsAttachmentInfo;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import org.thoughtcrime.securesms.mms.MediaStream;
 import org.thoughtcrime.securesms.mms.MmsException;
@@ -67,6 +69,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -266,6 +269,25 @@ public class AttachmentDatabase extends Database {
     return attachments;
   }
 
+  void deleteAttachmentsForMessages(String[] mmsIds) {
+    SQLiteDatabase database = databaseHelper.getWritableDatabase();
+    Cursor cursor = null;
+    List<MmsAttachmentInfo> attachmentInfos = new ArrayList<>();
+    try {
+      cursor = database.query(TABLE_NAME, new String[] { DATA, THUMBNAIL, CONTENT_TYPE}, MMS_ID + " IN (?)", mmsIds, null, null, null);
+      while (cursor != null && cursor.moveToNext()) {
+        attachmentInfos.add(new MmsAttachmentInfo(cursor.getString(0), cursor.getString(1), cursor.getString(2)));
+      }
+    } finally {
+      if (cursor != null) {
+        cursor.close();
+      }
+    }
+    deleteAttachmentsOnDisk(attachmentInfos);
+    database.delete(TABLE_NAME, MMS_ID + " IN (?)", mmsIds);
+    notifyAttachmentListeners();
+  }
+
   @SuppressWarnings("ResultOfMethodCallIgnored")
   void deleteAttachmentsForMessage(long mmsId) {
     SQLiteDatabase database = databaseHelper.getWritableDatabase();
@@ -325,6 +347,25 @@ public class AttachmentDatabase extends Database {
     }
 
     notifyAttachmentListeners();
+  }
+
+  private void deleteAttachmentsOnDisk(List<MmsAttachmentInfo> mmsAttachmentInfos) {
+    ContentResolver resolver = context.getContentResolver();
+    for (MmsAttachmentInfo info : mmsAttachmentInfos) {
+      if (!TextUtils.isEmpty(info.getDataFile())) {
+        resolver.delete(Uri.parse(info.getDataFile()), null, null);
+      }
+      if (!TextUtils.isEmpty(info.getThumbnailFile())) {
+        resolver.delete(Uri.parse(info.getThumbnailFile()), null, null);
+      }
+    }
+
+    boolean anyImageType = MmsAttachmentInfo.anyImages(mmsAttachmentInfos);
+    boolean anyThumbnail = MmsAttachmentInfo.anyThumbnailNonNull(mmsAttachmentInfos);
+
+    if (anyImageType || anyThumbnail) {
+      Glide.get(context).clearDiskCache();
+    }
   }
 
   @SuppressWarnings("ResultOfMethodCallIgnored")

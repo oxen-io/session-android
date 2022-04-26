@@ -25,7 +25,7 @@ class JobQueue : JobDelegate {
     private var hasResumedPendingJobs = false // Just for debugging
     private val jobTimestampMap = ConcurrentHashMap<Long, AtomicInteger>()
     private val rxDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
-    private val rxMediaDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
+    private val rxMediaDispatcher = Executors.newFixedThreadPool(4).asCoroutineDispatcher()
     private val openGroupDispatcher = Executors.newCachedThreadPool().asCoroutineDispatcher()
     private val txDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
     private val scope = GlobalScope + SupervisorJob()

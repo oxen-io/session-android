@@ -29,7 +29,7 @@ public class GroupManager {
   }
 
   public static long getThreadIDFromGroupID(String groupID, @NonNull  Context context) {
-    final Recipient groupRecipient = Recipient.from(context, Address.fromSerialized(groupID), false);
+    final Recipient groupRecipient = Recipient.from(context, Address.fromSerialized(groupID), true);
     return DatabaseComponent.get(context).threadDatabase().getThreadIdIfExistsFor(groupRecipient);
   }
 

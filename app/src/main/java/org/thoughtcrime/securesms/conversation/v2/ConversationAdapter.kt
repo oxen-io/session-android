@@ -6,7 +6,9 @@ import android.content.Intent
 import android.database.Cursor
 import android.util.SparseArray
 import android.util.SparseBooleanArray
+import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.WorkerThread
 import androidx.core.util.getOrDefault
@@ -19,6 +21,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
+import network.loki.messenger.databinding.ViewVisibleMessageBinding
 import org.session.libsession.messaging.contacts.Contact
 import org.thoughtcrime.securesms.conversation.v2.messages.ControlMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageContentViewDelegate
@@ -71,7 +74,7 @@ class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPr
         }
     }
 
-    class VisibleMessageViewHolder(val view: VisibleMessageView) : ViewHolder(view)
+    class VisibleMessageViewHolder(val view: View) : ViewHolder(view)
     class ControlMessageViewHolder(val view: ControlMessageView) : ViewHolder(view)
 
     override fun getItemViewType(cursor: Cursor): Int {
@@ -84,7 +87,7 @@ class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPr
         @Suppress("NAME_SHADOWING")
         val viewType = ViewType.allValues[viewType]
         return when (viewType) {
-            ViewType.Visible -> VisibleMessageViewHolder(VisibleMessageView(context))
+            ViewType.Visible -> VisibleMessageViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_visible_message, parent, false))
             ViewType.Control -> ControlMessageViewHolder(ControlMessageView(context))
             else -> throw IllegalStateException("Unexpected view type: $viewType.")
         }
@@ -97,9 +100,10 @@ class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPr
         when (viewHolder) {
             is VisibleMessageViewHolder -> {
                 val view = viewHolder.view
+                val visibleMessageView = ViewVisibleMessageBinding.bind(viewHolder.view).visibleMessageView
                 val isSelected = selectedItems.contains(message)
-                view.snIsSelected = isSelected
-                view.indexInAdapter = position
+                visibleMessageView.snIsSelected = isSelected
+                visibleMessageView.indexInAdapter = position
                 val senderId = message.individualRecipient.address.serialize()
                 val senderIdHash = senderId.hashCode()
                 updateQueue.trySend(senderId)
@@ -110,17 +114,17 @@ class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPr
                 }
                 val contact = contactCache[senderIdHash]
 
-                view.bind(message, messageBefore, getMessageAfter(position, cursor), glide, searchQuery, contact, senderId)
+                visibleMessageView.bind(message, messageBefore, getMessageAfter(position, cursor), glide, searchQuery, contact, senderId)
                 if (!message.isDeleted) {
-                    view.onPress = { event -> onItemPress(message, viewHolder.adapterPosition, view, event) }
-                    view.onSwipeToReply = { onItemSwipeToReply(message, viewHolder.adapterPosition) }
-                    view.onLongPress = { onItemLongPress(message, viewHolder.adapterPosition) }
+                    visibleMessageView.onPress = { event -> onItemPress(message, viewHolder.adapterPosition, visibleMessageView, event) }
+                    visibleMessageView.onSwipeToReply = { onItemSwipeToReply(message, viewHolder.adapterPosition) }
+                    visibleMessageView.onLongPress = { onItemLongPress(message, viewHolder.adapterPosition) }
                 } else {
-                    view.onPress = null
-                    view.onSwipeToReply = null
-                    view.onLongPress = null
+                    visibleMessageView.onPress = null
+                    visibleMessageView.onSwipeToReply = null
+                    visibleMessageView.onLongPress = null
                 }
-                view.contentViewDelegate = visibleMessageContentViewDelegate
+                visibleMessageView.contentViewDelegate = visibleMessageContentViewDelegate
             }
             is ControlMessageViewHolder -> {
                 viewHolder.view.bind(message, messageBefore)
@@ -147,7 +151,7 @@ class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPr
 
     override fun onItemViewRecycled(viewHolder: ViewHolder?) {
         when (viewHolder) {
-            is VisibleMessageViewHolder -> viewHolder.view.recycle()
+            is VisibleMessageViewHolder -> viewHolder.view.findViewById<VisibleMessageView>(R.id.visibleMessageView).recycle()
             is ControlMessageViewHolder -> viewHolder.view.recycle()
         }
         super.onItemViewRecycled(viewHolder)

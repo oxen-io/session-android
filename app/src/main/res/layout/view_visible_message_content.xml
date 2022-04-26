@@ -8,7 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- Content that will only show on its own -->
-    <org.thoughtcrime.securesms.conversation.v2.messages.DeletedMessageView
+    <include layout="@layout/view_deleted_message"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -16,8 +16,10 @@
         android:visibility="gone"
         android:id="@+id/deletedMessageView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <org.thoughtcrime.securesms.conversation.v2.messages.UntrustedAttachmentView
+        android:layout_height="wrap_content"
+        />
+
+    <include layout="@layout/view_untrusted_attachment"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +28,8 @@
         android:id="@+id/untrustedView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-    <org.thoughtcrime.securesms.conversation.v2.messages.VoiceMessageView
+
+    <include layout="@layout/view_voice_message"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,7 +38,8 @@
         android:id="@+id/voiceMessageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-    <org.thoughtcrime.securesms.conversation.v2.messages.OpenGroupInvitationView
+
+    <include layout="@layout/view_open_group_invitation"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +48,8 @@
         android:id="@+id/openGroupInvitationView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-    <org.thoughtcrime.securesms.conversation.v2.messages.DocumentView
+
+    <include layout="@layout/view_document"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -56,7 +61,7 @@
 
     <!-- Content that will show with other elements -->
 
-    <org.thoughtcrime.securesms.conversation.v2.messages.QuoteView
+    <include layout="@layout/view_quote"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:visibility="visible"

@@ -1,5 +1,6 @@
 package org.session.libsession.messaging.sending_receiving
 
+import android.os.Trace
 import android.text.TextUtils
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -53,17 +54,22 @@ internal fun MessageReceiver.isBlocked(publicKey: String): Boolean {
 }
 
 fun MessageReceiver.handle(message: Message, proto: SignalServiceProtos.Content, openGroupID: String?) {
-    when (message) {
-        is ReadReceipt -> handleReadReceipt(message)
-        is TypingIndicator -> handleTypingIndicator(message)
-        is ClosedGroupControlMessage -> handleClosedGroupControlMessage(message)
-        is ExpirationTimerUpdate -> handleExpirationTimerUpdate(message)
-        is DataExtractionNotification -> handleDataExtractionNotification(message)
-        is ConfigurationMessage -> handleConfigurationMessage(message)
-        is UnsendRequest -> handleUnsendRequest(message)
-        is MessageRequestResponse -> handleMessageRequestResponse(message)
-        is VisibleMessage -> handleVisibleMessage(message, proto, openGroupID)
-        is CallMessage -> handleCallMessage(message)
+    try {
+        Trace.beginSection("MessageReceiver-handle")
+        when (message) {
+            is ReadReceipt -> handleReadReceipt(message)
+            is TypingIndicator -> handleTypingIndicator(message)
+            is ClosedGroupControlMessage -> handleClosedGroupControlMessage(message)
+            is ExpirationTimerUpdate -> handleExpirationTimerUpdate(message)
+            is DataExtractionNotification -> handleDataExtractionNotification(message)
+            is ConfigurationMessage -> handleConfigurationMessage(message)
+            is UnsendRequest -> handleUnsendRequest(message)
+            is MessageRequestResponse -> handleMessageRequestResponse(message)
+            is VisibleMessage -> handleVisibleMessage(message, proto, openGroupID)
+            is CallMessage -> handleCallMessage(message)
+        }
+    } finally {
+        Trace.endSection()
     }
 }
 

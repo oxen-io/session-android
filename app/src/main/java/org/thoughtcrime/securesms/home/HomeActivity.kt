@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.database.Cursor
 import android.os.Bundle
+import android.os.Trace
 import android.text.SpannableString
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -584,7 +585,9 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 // Delete the conversation
                 val v2OpenGroup = DatabaseComponent.get(this@HomeActivity).lokiThreadDatabase().getOpenGroupChat(threadID)
                 if (v2OpenGroup != null) {
+                    Trace.beginSection("OpenGroupManager.delete")
                     OpenGroupManager.delete(v2OpenGroup.server, v2OpenGroup.room, this@HomeActivity)
+                    Trace.endSection()
                 } else {
                     lifecycleScope.launch(Dispatchers.IO) {
                         threadDb.deleteConversation(threadID)
