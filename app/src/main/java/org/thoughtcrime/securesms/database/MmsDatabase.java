@@ -992,7 +992,7 @@ public class MmsDatabase extends MessagingDatabase {
     deleteQuotedFromMessages(toDeleteList);
     Trace.endSection();
     SQLiteDatabase database = databaseHelper.getWritableDatabase();
-    database.rawQuery("DELETE FROM "+TABLE_NAME+" WHERE _id IN (?)", new String[]{idsAsString});
+    database.delete(TABLE_NAME, THREAD_ID+" = ?", new String[]{thread});
     notifyConversationListListeners();
     notifyStickerListeners();
     notifyStickerPackListeners();
