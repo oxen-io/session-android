@@ -36,7 +36,7 @@ object ProfilePictureUtilities {
                 deferred.reject(e)
             }
             TextSecurePreferences.setLastProfilePictureUpload(context, Date().time)
-            val url = "${FileServerApi.server}/files/$id"
+            val url = "${FileServerApi.server}/file/$id"
             TextSecurePreferences.setProfilePictureURL(context, url)
             deferred.resolve(Unit)
         }

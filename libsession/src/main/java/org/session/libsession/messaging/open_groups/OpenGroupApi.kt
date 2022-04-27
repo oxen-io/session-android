@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory
 import com.goterl.lazysodium.LazySodiumAndroid
 import com.goterl.lazysodium.SodiumAndroid
 import com.goterl.lazysodium.interfaces.GenericHash
+import com.goterl.lazysodium.interfaces.Sign
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.flow.MutableSharedFlow
 import nl.komponents.kovenant.Promise
@@ -166,8 +167,8 @@ object OpenGroupApi {
         val whisper: Boolean = false,
         val whisper_mods: String = "",
         val whisper_to: String = "",
-        val data: String = "",
-        val signature: String = ""
+        val data: String? = null,
+        val signature: String? = null
     )
 
     data class MessageDeletion(
@@ -194,8 +195,7 @@ object OpenGroupApi {
          * Always `true` under normal circumstances. You might want to disable
          * this when running over Lokinet.
          */
-        val useOnionRouting: Boolean = true,
-        val isBlinded: Boolean = true
+        val useOnionRouting: Boolean = true
     )
 
     private fun createBody(parameters: Any?): RequestBody? {
@@ -223,6 +223,7 @@ object OpenGroupApi {
             }
         }
         fun execute(): Promise<OnionResponse, Exception> {
+            val serverCapabilities = MessagingModuleConfiguration.shared.storage.getOpenGroupServer(request.server)
             val publicKey =
                 MessagingModuleConfiguration.shared.storage.getOpenGroupPublicKey(request.server)
                     ?: return Promise.ofFail(Error.NoPublicKey)
@@ -233,32 +234,33 @@ object OpenGroupApi {
             val nonce = sodium.nonce(16)
             val timestamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())
             var pubKey = ""
-            var signature = ByteArray(0)
-            if (request.isBlinded) {
+            var signature = ByteArray(Sign.BYTES)
+            var bodyHash = ByteArray(0)
+            if (request.parameters != null) {
+                val parameterBytes = JsonUtil.toJson(request.parameters).toByteArray()
+                val parameterHash = ByteArray(GenericHash.BYTES_MAX)
+                if (sodium.cryptoGenericHash(
+                        parameterHash,
+                        parameterHash.size,
+                        parameterBytes,
+                        parameterBytes.size.toLong()
+                    )) {
+                    bodyHash = parameterHash
+                }
+            }
+            val messageBytes = Hex.fromStringCondensed(publicKey)
+                .plus(nonce)
+                .plus("$timestamp".toByteArray(Charsets.US_ASCII))
+                .plus(request.verb.rawValue.toByteArray())
+                .plus(urlRequest.encodedPath().toByteArray())
+                .plus(bodyHash)
+            if (serverCapabilities.contains("blind")) {
                 SodiumUtilities.blindedKeyPair(publicKey, ed25519KeyPair)?.let { keyPair ->
                     pubKey = SodiumUtilities.SessionId(
                         SodiumUtilities.IdPrefix.BLINDED,
                         keyPair.publicKey.asBytes
                     ).hexString
-                    var bodyHash = ByteArray(0)
-                    if (request.parameters != null) {
-                        val parameterBytes = JsonUtil.toJson(request.parameters).toByteArray()
-                        val parameterHash = ByteArray(GenericHash.BYTES_MAX)
-                        if (sodium.cryptoGenericHash(
-                            parameterHash,
-                            parameterHash.size,
-                            parameterBytes,
-                            parameterBytes.size.toLong()
-                        )) {
-                            bodyHash = parameterHash
-                        }
-                    }
-                    val messageBytes = Hex.fromStringCondensed(publicKey)
-                        .plus(nonce)
-                        .plus("$timestamp".toByteArray(Charsets.US_ASCII))
-                        .plus(request.verb.rawValue.toByteArray())
-                        .plus(urlRequest.encodedPath().toByteArray())
-                        .plus(bodyHash)
+
                     signature = SodiumUtilities.sogsSignature(
                         messageBytes,
                         ed25519KeyPair.secretKey.asBytes,
@@ -271,7 +273,7 @@ object OpenGroupApi {
                     SodiumUtilities.IdPrefix.UN_BLINDED,
                     ed25519KeyPair.publicKey.asBytes
                 ).hexString
-                signature = ByteArray(0)
+                sodium.cryptoSignDetached(signature, messageBytes, messageBytes.size.toLong(), ed25519KeyPair.secretKey.asBytes)
             }
             headers["X-SOGS-Nonce"] = encodeBytes(nonce)
             headers["X-SOGS-Timestamp"] = "$timestamp"
@@ -330,7 +332,12 @@ object OpenGroupApi {
     }
 
     fun download(fileId: Long, room: String, server: String): Promise<ByteArray, Exception> {
-        val request = Request(verb = GET, room = room, server = server, endpoint = Endpoint.FileIndividual(fileId))
+        val request = Request(
+            verb = GET,
+            room = room,
+            server = server,
+            endpoint = Endpoint.RoomFileIndividual(room, fileId)
+        )
         return send(request).map { it.body ?: throw Error.ParsingFailed }
     }
     // endregion
@@ -415,7 +422,7 @@ object OpenGroupApi {
     @JvmStatic
     fun deleteMessage(serverID: Long, room: String, server: String): Promise<Unit, Exception> {
         val request =
-            Request(verb = DELETE, room = room, server = server, endpoint = "messages/$serverID")
+            Request(verb = DELETE, room = room, server = server, endpoint = Endpoint.RoomMessageIndividual(room, serverID))
         return send(request).map {
             Log.d("Loki", "Message deletion successful.")
         }
@@ -568,49 +575,51 @@ object OpenGroupApi {
                 }
             )
         }
-        requests.add(
-            if (lastInboxMessageId == null) {
-                BatchRequestInfo(
-                    request = BatchRequest(
-                        method = "GET",
-                        path = "/inbox"
-                    ),
-                    endpoint = Endpoint.Inbox,
-                    responseType = object : TypeReference<List<DirectMessage>>() {}
-                )
-            } else {
-                BatchRequestInfo(
-                    request = BatchRequest(
-                        method = "GET",
-                        path = "/inbox/since/$lastInboxMessageId"
-                    ),
-                    endpoint = Endpoint.InboxSince(lastInboxMessageId),
-                    responseType = object : TypeReference<List<DirectMessage>>() {}
-                )
-            }
-        )
-        requests.add(
-            if (lastOutboxMessageId == null) {
-                BatchRequestInfo(
-                    request = BatchRequest(
-                        method = "GET",
-                        path = "/outbox"
-                    ),
-                    endpoint = Endpoint.Outbox,
-                    responseType = object : TypeReference<List<DirectMessage>>() {}
-                )
-            } else {
-                BatchRequestInfo(
-                    request = BatchRequest(
-                        method = "GET",
-                        path = "/outbox/since/$lastOutboxMessageId"
-                    ),
-                    endpoint = Endpoint.OutboxSince(lastOutboxMessageId),
-                    responseType = object : TypeReference<List<DirectMessage>>() {}
-                )
-            }
-        )
-
+        val serverCapabilities = storage.getOpenGroupServer(server)
+        if (serverCapabilities.contains("blind")) {
+            requests.add(
+                if (lastInboxMessageId == null) {
+                    BatchRequestInfo(
+                        request = BatchRequest(
+                            method = "GET",
+                            path = "/inbox"
+                        ),
+                        endpoint = Endpoint.Inbox,
+                        responseType = object : TypeReference<List<DirectMessage>>() {}
+                    )
+                } else {
+                    BatchRequestInfo(
+                        request = BatchRequest(
+                            method = "GET",
+                            path = "/inbox/since/$lastInboxMessageId"
+                        ),
+                        endpoint = Endpoint.InboxSince(lastInboxMessageId),
+                        responseType = object : TypeReference<List<DirectMessage>>() {}
+                    )
+                }
+            )
+            requests.add(
+                if (lastOutboxMessageId == null) {
+                    BatchRequestInfo(
+                        request = BatchRequest(
+                            method = "GET",
+                            path = "/outbox"
+                        ),
+                        endpoint = Endpoint.Outbox,
+                        responseType = object : TypeReference<List<DirectMessage>>() {}
+                    )
+                } else {
+                    BatchRequestInfo(
+                        request = BatchRequest(
+                            method = "GET",
+                            path = "/outbox/since/$lastOutboxMessageId"
+                        ),
+                        endpoint = Endpoint.OutboxSince(lastOutboxMessageId),
+                        responseType = object : TypeReference<List<DirectMessage>>() {}
+                    )
+                }
+            )
+        }
         return parallelBatch(server, requests)
     }
 
@@ -666,7 +675,7 @@ object OpenGroupApi {
     fun getDefaultRoomsIfNeeded(): Promise<List<DefaultGroup>, Exception> {
         val storage = MessagingModuleConfiguration.shared.storage
         storage.setOpenGroupPublicKey(defaultServer, defaultServerPublicKey)
-        return getAllRooms(defaultServer).map { groups ->
+        return getAllRooms().map { groups ->
             val earlyGroups = groups.map { group ->
                 DefaultGroup(group.token, group.name, null)
             }
@@ -705,11 +714,11 @@ object OpenGroupApi {
         }
     }
 
-    private fun getAllRooms(server: String): Promise<List<RoomInfo>, Exception> {
+    private fun getAllRooms(): Promise<List<RoomInfo>, Exception> {
         val request = Request(
             verb = GET,
             room = null,
-            server = server,
+            server = defaultServer,
             endpoint = Endpoint.Rooms
         )
         return send(request).map { response ->

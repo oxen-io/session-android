@@ -100,7 +100,7 @@ class AttachmentUploadJob(val attachmentID: Long, val threadID: String, val mess
         val id = upload(data).get()
         val digest = drb.transmittedDigest
         // Return
-        return Pair(key, UploadResult(id, "${server}/files/$id", digest))
+        return Pair(key, UploadResult(id, "${server}/file/$id", digest))
     }
 
     private fun handleSuccess(attachment: SignalServiceAttachmentStream, attachmentKey: ByteArray, uploadResult: UploadResult) {

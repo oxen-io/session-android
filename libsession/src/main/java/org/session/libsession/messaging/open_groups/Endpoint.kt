@@ -16,8 +16,7 @@ sealed class Endpoint(val value: String) {
 
     // Messages
 
-    data class RoomMessage(val roomToken: String) :
-        Endpoint("room/$roomToken/message")
+    data class RoomMessage(val roomToken: String) : Endpoint("room/$roomToken/message")
 
     data class RoomMessageIndividual(val roomToken: String, val messageId: Long) :
         Endpoint("room/$roomToken/message/$messageId")
@@ -42,8 +41,7 @@ sealed class Endpoint(val value: String) {
     data class RoomUnpinMessage(val roomToken: String, val messageId: Long) :
         Endpoint("room/$roomToken/unpin/$messageId")
 
-    data class RoomUnpinAll(val roomToken: String) :
-        Endpoint("room/$roomToken/unpin/all")
+    data class RoomUnpinAll(val roomToken: String) : Endpoint("room/$roomToken/unpin/all")
 
     // Files
 

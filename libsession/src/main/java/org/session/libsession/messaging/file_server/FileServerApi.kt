@@ -87,14 +87,22 @@ object FileServerApi {
     fun upload(file: ByteArray): Promise<Long, Exception> {
         val base64EncodedFile = Base64.encodeBytes(file)
         val parameters = mapOf( "file" to base64EncodedFile )
-        val request = Request(verb = HTTP.Verb.POST, endpoint = "files", parameters = parameters)
+        val request = Request(
+            verb = HTTP.Verb.POST,
+            endpoint = "file",
+            parameters = parameters,
+            headers = mapOf(
+                "Content-Disposition" to "attachment",
+                "Content-Type" to "application/octet-stream"
+            )
+        )
         return send(request).map { json ->
             json["result"] as? Long ?: throw OpenGroupApi.Error.ParsingFailed
         }
     }
 
     fun download(file: Long): Promise<ByteArray, Exception> {
-        val request = Request(verb = HTTP.Verb.GET, endpoint = "files/$file")
+        val request = Request(verb = HTTP.Verb.GET, endpoint = "file/$file")
         return send(request).map { json ->
             val base64EncodedFile = json["result"] as? String ?: throw Error.ParsingFailed
             Base64.decode(base64EncodedFile) ?: throw Error.ParsingFailed
