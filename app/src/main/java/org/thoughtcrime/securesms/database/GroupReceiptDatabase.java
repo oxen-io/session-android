@@ -92,9 +92,9 @@ public class GroupReceiptDatabase extends Database {
     return results;
   }
 
-  void deleteRowsForMessages(String[] mmsIds) {
+  void deleteRowsForMessages(String idsAsString) {
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
-    db.delete(TABLE_NAME, MMS_ID + " IN (?)", mmsIds);
+    db.delete(TABLE_NAME, MMS_ID + " IN (?)", new String[]{idsAsString});
   }
 
   void deleteRowsForMessage(long mmsId) {

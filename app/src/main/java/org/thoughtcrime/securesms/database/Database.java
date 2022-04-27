@@ -32,6 +32,7 @@ import java.util.Set;
 public abstract class Database {
 
   protected static final String ID_WHERE = "_id = ?";
+  protected static final String ID_IN = "_id IN (?)";
 
   protected       SQLCipherOpenHelper databaseHelper;
   protected final Context             context;

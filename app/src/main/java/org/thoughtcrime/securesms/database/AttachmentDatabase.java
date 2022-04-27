@@ -269,12 +269,12 @@ public class AttachmentDatabase extends Database {
     return attachments;
   }
 
-  void deleteAttachmentsForMessages(String[] mmsIds) {
-    SQLiteDatabase database = databaseHelper.getWritableDatabase();
+  void deleteAttachmentsForMessages(String idsAsString) {
+    SQLiteDatabase database = databaseHelper.getReadableDatabase();
     Cursor cursor = null;
     List<MmsAttachmentInfo> attachmentInfos = new ArrayList<>();
     try {
-      cursor = database.query(TABLE_NAME, new String[] { DATA, THUMBNAIL, CONTENT_TYPE}, MMS_ID + " IN (?)", mmsIds, null, null, null);
+      cursor = database.query(TABLE_NAME, new String[] { DATA, THUMBNAIL, CONTENT_TYPE}, MMS_ID + " IN (?)", new String[]{idsAsString}, null, null, null);
       while (cursor != null && cursor.moveToNext()) {
         attachmentInfos.add(new MmsAttachmentInfo(cursor.getString(0), cursor.getString(1), cursor.getString(2)));
       }
@@ -284,7 +284,7 @@ public class AttachmentDatabase extends Database {
       }
     }
     deleteAttachmentsOnDisk(attachmentInfos);
-    database.delete(TABLE_NAME, MMS_ID + " IN (?)", mmsIds);
+    database.delete(TABLE_NAME, MMS_ID + " IN (?)", new String[]{idsAsString});
     notifyAttachmentListeners();
   }
 

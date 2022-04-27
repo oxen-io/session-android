@@ -229,7 +229,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
     ThreadDatabase threads    = DatabaseComponent.get(context).threadDatabase();
     Recipient      recipient = threads.getRecipientForThreadId(threadId);
 
-    if (!recipient.isGroupRecipient() && threads.getMessageCount(threadId) == 1 &&
+    if (recipient != null && !recipient.isGroupRecipient() && threads.getMessageCount(threadId) == 1 &&
             !(recipient.isApproved() || threads.getLastSeenAndHasSent(threadId).second())) {
       TextSecurePreferences.removeHasHiddenMessageRequests(context);
     }
