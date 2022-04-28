@@ -36,7 +36,7 @@ object DownloadUtilities {
         val url = HttpUrl.parse(urlAsString)!!
         val fileID = url.pathSegments().last()
         try {
-            FileServerApi.download(fileID.toLong()).get().let {
+            FileServerApi.download(fileID).get().let {
                 outputStream.write(it)
             }
         } catch (e: Exception) {

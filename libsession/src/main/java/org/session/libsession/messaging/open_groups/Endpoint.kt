@@ -51,7 +51,7 @@ sealed class Endpoint(val value: String) {
     data class RoomFile(val roomToken: String) : Endpoint("room/$roomToken/file")
     data class RoomFileIndividual(
         val roomToken: String,
-        val fileId: Long
+        val fileId: String
     ) : Endpoint("room/$roomToken/file/$fileId")
 
     // Inbox/Outbox (Message Requests)

@@ -6,7 +6,6 @@ import okhttp3.Headers
 import okhttp3.HttpUrl
 import okhttp3.MediaType
 import okhttp3.RequestBody
-import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.HTTP
@@ -52,8 +51,8 @@ object FileServerApi {
         return RequestBody.create(MediaType.get("application/json"), parametersAsJSON)
     }
 
-    private fun send(request: Request): Promise<Map<*, *>, Exception> {
-        val url = HttpUrl.parse(server) ?: return Promise.ofFail(OpenGroupApi.Error.InvalidURL)
+    private fun send(request: Request): Promise<ByteArray, Exception> {
+        val url = HttpUrl.parse(server) ?: return Promise.ofFail(Error.InvalidURL)
         val urlBuilder = HttpUrl.Builder()
             .scheme(url.scheme())
             .host(url.host())
@@ -75,7 +74,7 @@ object FileServerApi {
         }
         return if (request.useOnionRouting) {
             OnionRequestAPI.sendOnionRequest(requestBuilder.build(), server, serverPublicKey).map {
-                JsonUtil.fromJson(it.body, Map::class.java)
+                it.body ?: throw Error.ParsingFailed
             }.fail { e ->
                 Log.e("Loki", "File server request failed.", e)
             }
@@ -96,16 +95,14 @@ object FileServerApi {
                 "Content-Type" to "application/octet-stream"
             )
         )
-        return send(request).map { json ->
-            json["result"] as? Long ?: throw OpenGroupApi.Error.ParsingFailed
+        return send(request).map { response ->
+            val json = JsonUtil.fromJson(response, Map::class.java)
+            json["result"] as? Long ?: throw Error.ParsingFailed
         }
     }
 
-    fun download(file: Long): Promise<ByteArray, Exception> {
+    fun download(file: String): Promise<ByteArray, Exception> {
         val request = Request(verb = HTTP.Verb.GET, endpoint = "file/$file")
-        return send(request).map { json ->
-            val base64EncodedFile = json["result"] as? String ?: throw Error.ParsingFailed
-            Base64.decode(base64EncodedFile) ?: throw Error.ParsingFailed
-        }
+        return send(request)
     }
 }

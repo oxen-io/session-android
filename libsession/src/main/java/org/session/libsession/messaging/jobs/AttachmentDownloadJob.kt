@@ -101,7 +101,7 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
             } else {
                 val url = HttpUrl.parse(attachment.url)!!
                 val fileID = url.pathSegments().last()
-                OpenGroupApi.download(fileID.toLong(), openGroup.room, openGroup.server).get().let {
+                OpenGroupApi.download(fileID, openGroup.room, openGroup.server).get().let {
                     tempFile.writeBytes(it)
                 }
             }

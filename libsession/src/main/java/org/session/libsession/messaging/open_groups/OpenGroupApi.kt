@@ -310,20 +310,19 @@ object OpenGroupApi {
             verb = GET,
             room = roomID,
             server = server,
-            endpoint = Endpoint.RoomFileIndividual(roomID, imageId)
+            endpoint = Endpoint.RoomFileIndividual(roomID, imageId.toString())
         )
         return send(request).map { it.body ?: throw Error.ParsingFailed }
     }
 
     // region Upload/Download
     fun upload(file: ByteArray, room: String, server: String): Promise<Long, Exception> {
-        val base64EncodedFile = encodeBytes(file)
-        val parameters = mapOf("file" to base64EncodedFile)
+        val parameters = mapOf("file" to file)
         val request = Request(
             verb = POST,
             room = room,
             server = server,
-            endpoint = Endpoint.File,
+            endpoint = Endpoint.RoomFile(room),
             parameters = parameters
         )
         return getResponseBodyJson(request).map { json ->
@@ -331,7 +330,7 @@ object OpenGroupApi {
         }
     }
 
-    fun download(fileId: Long, room: String, server: String): Promise<ByteArray, Exception> {
+    fun download(fileId: String, room: String, server: String): Promise<ByteArray, Exception> {
         val request = Request(
             verb = GET,
             room = room,
