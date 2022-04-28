@@ -183,7 +183,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
             builder.build() to message.serverID
         }
 
-        envelopes.chunked(256).forEach { list ->
+        envelopes.chunked(BatchMessageReceiveJob.BATCH_DEFAULT_NUMBER).forEach { list ->
             val parameters = list.map { (message, serverId) ->
                 MessageReceiveParameters(message.toByteArray(), openGroupMessageServerID = serverId)
             }
