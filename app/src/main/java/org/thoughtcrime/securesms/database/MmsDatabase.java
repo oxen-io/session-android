@@ -345,7 +345,7 @@ public class MmsDatabase extends MessagingDatabase {
   }
 
   public Cursor getMessages(String idsAsString) {
-    return rawQuery(RAW_ID_IN, new String[]{ idsAsString });
+    return rawQuery(idsAsString, null);
   }
 
   public Cursor getMessage(long messageId) {
@@ -929,17 +929,20 @@ public class MmsDatabase extends MessagingDatabase {
 
   public void deleteQuotedFromMessages(List<MessageRecord> toDeleteRecords) {
     if (toDeleteRecords.isEmpty()) return;
-    String[] recordIds = new String[toDeleteRecords.size()];
+    StringBuilder queryBuilder = new StringBuilder();
     for (int i = 0; i < toDeleteRecords.size(); i++) {
-      recordIds[i] = String.valueOf(toDeleteRecords.get(i).getId());
+      queryBuilder.append(QUOTE_ID + " = ").append(toDeleteRecords.get(i).getId());
+      if (i+1 < toDeleteRecords.size()) {
+        queryBuilder.append(" OR ");
+      }
     }
-    String query = QUOTE_ID + " IN (?)";
+    String query = queryBuilder.toString();
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
     ContentValues values = new ContentValues(3);
     values.put(QUOTE_MISSING, 1);
     values.put(QUOTE_BODY, "");
     values.put(QUOTE_AUTHOR, "");
-    db.update(TABLE_NAME, values, query, recordIds);
+    db.update(TABLE_NAME, values, query, null);
   }
 
   public void deleteQuotedFromMessages(MessageRecord toDeleteRecord) {
@@ -962,21 +965,24 @@ public class MmsDatabase extends MessagingDatabase {
    * @param messageIds a String array representation of regularly Long types representing message IDs
    */
   public void deleteMessages(String[] messageIds) {
+    if (messageIds.length == 0) {
+      return;
+    }
     // don't need thread IDs
     StringBuilder queryBuilder = new StringBuilder();
     for (int i = 0; i < messageIds.length; i++) {
-      queryBuilder.append(messageIds[i]);
+      queryBuilder.append(TABLE_NAME+"."+ID).append(" = ").append(messageIds[i]);
       if (i+1 < messageIds.length) {
-        queryBuilder.append(',');
+        queryBuilder.append(" OR ");
       }
     }
     String idsAsString = queryBuilder.toString();
     AttachmentDatabase attachmentDatabase = DatabaseComponent.get(context).attachmentDatabase();
-    ThreadUtils.queue(()->attachmentDatabase.deleteAttachmentsForMessages(idsAsString));
+    ThreadUtils.queue(()->attachmentDatabase.deleteAttachmentsForMessages(messageIds));
 
     GroupReceiptDatabase groupReceiptDatabase = DatabaseComponent.get(context).groupReceiptDatabase();
     Trace.beginSection("groupreceipt-deleterows");
-    groupReceiptDatabase.deleteRowsForMessages(idsAsString);
+    groupReceiptDatabase.deleteRowsForMessages(messageIds);
     Trace.endSection();
     List<MessageRecord> toDeleteList = new ArrayList<>();
 
@@ -992,7 +998,7 @@ public class MmsDatabase extends MessagingDatabase {
     deleteQuotedFromMessages(toDeleteList);
     Trace.endSection();
     SQLiteDatabase database = databaseHelper.getWritableDatabase();
-    database.delete(TABLE_NAME, THREAD_ID+" = ?", new String[]{thread});
+    database.delete(TABLE_NAME, idsAsString, null);
     notifyConversationListListeners();
     notifyStickerListeners();
     notifyStickerPackListeners();
@@ -1138,14 +1144,14 @@ public class MmsDatabase extends MessagingDatabase {
     Cursor cursor     = null;
 
     for (long threadId : threadIds) {
-      where.append(threadId).append(",");
+      where.append(THREAD_ID).append(" = '").append(threadId).append("' OR ");
     }
 
-    String whereString = where.substring(0, where.length() - 1);
+    String whereString = where.substring(0, where.length() - 4);
 
     try {
       Trace.beginSection("db-query");
-      cursor = db.query(TABLE_NAME, new String[] {ID}, THREAD_ID+" IN (?)", new String[]{whereString}, null, null, null);
+      cursor = db.query(TABLE_NAME, new String[] {ID}, whereString, null, null, null, null);
       Trace.endSection();
       Trace.beginSection("db-deletemessage");
       String[] toDeleteStringMessageIds = new String[cursor.getCount()];

@@ -17,7 +17,6 @@
 package org.thoughtcrime.securesms.database;
 
 import android.annotation.SuppressLint;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -269,12 +268,20 @@ public class AttachmentDatabase extends Database {
     return attachments;
   }
 
-  void deleteAttachmentsForMessages(String idsAsString) {
+  void deleteAttachmentsForMessages(String[] messageIds) {
+    StringBuilder queryBuilder = new StringBuilder();
+    for (int i = 0; i < messageIds.length; i++) {
+      queryBuilder.append(MMS_ID+" = ").append(messageIds[i]);
+      if (i+1 < messageIds.length) {
+        queryBuilder.append(" OR ");
+      }
+    }
+    String idsAsString = queryBuilder.toString();
     SQLiteDatabase database = databaseHelper.getReadableDatabase();
     Cursor cursor = null;
     List<MmsAttachmentInfo> attachmentInfos = new ArrayList<>();
     try {
-      cursor = database.query(TABLE_NAME, new String[] { DATA, THUMBNAIL, CONTENT_TYPE}, MMS_ID + " IN (?)", new String[]{idsAsString}, null, null, null);
+      cursor = database.query(TABLE_NAME, new String[] { DATA, THUMBNAIL, CONTENT_TYPE}, idsAsString, null, null, null, null);
       while (cursor != null && cursor.moveToNext()) {
         attachmentInfos.add(new MmsAttachmentInfo(cursor.getString(0), cursor.getString(1), cursor.getString(2)));
       }
@@ -284,7 +291,7 @@ public class AttachmentDatabase extends Database {
       }
     }
     deleteAttachmentsOnDisk(attachmentInfos);
-    database.delete(TABLE_NAME, MMS_ID + " IN (?)", new String[]{idsAsString});
+    database.delete(TABLE_NAME, idsAsString, null);
     notifyAttachmentListeners();
   }
 
@@ -350,13 +357,18 @@ public class AttachmentDatabase extends Database {
   }
 
   private void deleteAttachmentsOnDisk(List<MmsAttachmentInfo> mmsAttachmentInfos) {
-    ContentResolver resolver = context.getContentResolver();
     for (MmsAttachmentInfo info : mmsAttachmentInfos) {
-      if (!TextUtils.isEmpty(info.getDataFile())) {
-        resolver.delete(Uri.parse(info.getDataFile()), null, null);
+      if (info.getDataFile() != null && !TextUtils.isEmpty(info.getDataFile())) {
+        File data = new File(info.getDataFile());
+        if (data.exists()) {
+          data.delete();
+        }
       }
-      if (!TextUtils.isEmpty(info.getThumbnailFile())) {
-        resolver.delete(Uri.parse(info.getThumbnailFile()), null, null);
+      if (info.getThumbnailFile() != null && !TextUtils.isEmpty(info.getThumbnailFile())) {
+        File thumbnail = new File(info.getThumbnailFile());
+        if (thumbnail.exists()) {
+          thumbnail.delete();
+        }
       }
     }
 
