@@ -27,6 +27,7 @@ class OpenGroupDeleteJob(private val messageServerIds: LongArray, private val th
             dataProvider.deleteMessage(messageId, isSms)
         }
         Log.d(TAG, "Deleted $numberToDelete messages successfully")
+        delegate?.handleJobSucceeded(this)
     }
 
     override fun serialize(): Data = Data.Builder()
