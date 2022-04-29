@@ -107,7 +107,7 @@ class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPr
                 val senderId = message.individualRecipient.address.serialize()
                 val senderIdHash = senderId.hashCode()
                 updateQueue.trySend(senderId)
-                if (contactCache[senderIdHash] != null && !contactLoadedCache.getOrDefault(senderIdHash, false)) {
+                if (contactCache[senderIdHash] == null && !contactLoadedCache.getOrDefault(senderIdHash, false)) {
                     getSenderInfo(senderId)?.let { contact ->
                         contactCache[senderIdHash] = contact
                     }

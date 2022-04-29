@@ -55,7 +55,7 @@ internal fun MessageReceiver.isBlocked(publicKey: String): Boolean {
 
 fun MessageReceiver.handle(message: Message, proto: SignalServiceProtos.Content, openGroupID: String?) {
     try {
-        Trace.beginSection("MessageReceiver-handle")
+        Trace.beginSection("MessageReceiver-handle: ${message.javaClass.simpleName}")
         when (message) {
             is ReadReceipt -> handleReadReceipt(message)
             is TypingIndicator -> handleTypingIndicator(message)

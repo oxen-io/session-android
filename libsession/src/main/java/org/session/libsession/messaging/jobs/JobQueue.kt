@@ -1,5 +1,6 @@
 package org.session.libsession.messaging.jobs
 
+import android.os.Trace
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
@@ -37,12 +38,15 @@ class JobQueue : JobDelegate {
 
     private fun CoroutineScope.processWithDispatcher(
         channel: Channel<Job>,
-        dispatcher: CoroutineDispatcher
+        dispatcher: CoroutineDispatcher,
+        name: String
     ) = launch(dispatcher) {
         for (job in channel) {
             if (!isActive) break
+            Trace.beginSection("[$name] processJob: ${job.javaClass.simpleName}")
             job.delegate = this@JobQueue
             job.execute()
+            Trace.endSection()
         }
     }
 
@@ -55,10 +59,10 @@ class JobQueue : JobDelegate {
             val openGroupQueue = Channel<Job>(capacity = UNLIMITED)
 
 
-            val receiveJob = processWithDispatcher(rxQueue, rxDispatcher)
-            val txJob = processWithDispatcher(txQueue, txDispatcher)
-            val mediaJob = processWithDispatcher(mediaQueue, rxMediaDispatcher)
-            val openGroupJob = processWithDispatcher(openGroupQueue, openGroupDispatcher)
+            val receiveJob = processWithDispatcher(rxQueue, rxDispatcher, "rx")
+            val txJob = processWithDispatcher(txQueue, txDispatcher, "tx")
+            val mediaJob = processWithDispatcher(mediaQueue, rxMediaDispatcher, "media")
+            val openGroupJob = processWithDispatcher(openGroupQueue, openGroupDispatcher, "openGroup")
 
             while (isActive) {
                 if (queue.isEmpty && pendingTrimThreadIds.isNotEmpty()) {
