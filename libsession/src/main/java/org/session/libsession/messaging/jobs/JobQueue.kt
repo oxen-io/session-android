@@ -201,9 +201,11 @@ class JobQueue : JobDelegate {
         // Batch message receive job, re-queue non-permanently failed jobs
         if (job is BatchMessageReceiveJob && job.failureCount <= 0) {
             val replacementParameters = job.failures.toList()
-            val newJob = BatchMessageReceiveJob(replacementParameters, job.openGroupID)
-            newJob.failureCount = job.failureCount + 1
-            add(newJob)
+            if (replacementParameters.isNotEmpty()) {
+                val newJob = BatchMessageReceiveJob(replacementParameters, job.openGroupID)
+                newJob.failureCount = job.failureCount + 1
+                add(newJob)
+            }
         }
 
         // Regular job failure

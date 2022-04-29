@@ -45,6 +45,7 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
             storage.updateTimestampUpdated(groupId, System.currentTimeMillis())
         } catch (e: Exception) {
             delegate?.handleJobFailedPermanently(this, e)
+            return
         }
         Log.d("Loki", "Group added successfully")
         delegate?.handleJobSucceeded(this)
