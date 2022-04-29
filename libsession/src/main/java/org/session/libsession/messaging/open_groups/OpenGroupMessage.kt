@@ -9,7 +9,7 @@ import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.toHexString
 import org.whispersystems.curve25519.Curve25519
 
-data class OpenGroupMessageV2(
+data class OpenGroupMessage(
     val serverID: Long? = null,
     val sender: String?,
     val sentTimestamp: Long,
@@ -27,13 +27,13 @@ data class OpenGroupMessageV2(
     companion object {
         private val curve = Curve25519.getInstance(Curve25519.BEST)
 
-        fun fromJSON(json: Map<String, Any>): OpenGroupMessageV2? {
+        fun fromJSON(json: Map<String, Any>): OpenGroupMessage? {
             val base64EncodedData = json["data"] as? String ?: return null
-            val sentTimestamp = json["timestamp"] as? Long ?: return null
-            val serverID = json["server_id"] as? Int
-            val sender = json["public_key"] as? String
+            val sentTimestamp = json["posted"] as? Long ?: return null
+            val serverID = json["id"] as? Int
+            val sender = json["session_id"] as? String
             val base64EncodedSignature = json["signature"] as? String
-            return OpenGroupMessageV2(
+            return OpenGroupMessage(
                 serverID = serverID?.toLong(),
                 sender = sender,
                 sentTimestamp = sentTimestamp,
@@ -44,7 +44,7 @@ data class OpenGroupMessageV2(
 
     }
 
-    fun sign(): OpenGroupMessageV2? {
+    fun sign(): OpenGroupMessage? {
         if (base64EncodedData.isEmpty()) return null
         val (publicKey, privateKey) = MessagingModuleConfiguration.shared.storage.getUserX25519KeyPair().let { it.publicKey to it.privateKey }
         if (sender != publicKey.serialize().toHexString()) return null

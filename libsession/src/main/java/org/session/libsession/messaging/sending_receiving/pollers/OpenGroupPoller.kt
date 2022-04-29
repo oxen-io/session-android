@@ -11,7 +11,7 @@ import org.session.libsession.messaging.jobs.MessageReceiveParameters
 import org.session.libsession.messaging.open_groups.Endpoint
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
-import org.session.libsession.messaging.open_groups.OpenGroupMessageV2
+import org.session.libsession.messaging.open_groups.OpenGroupMessage
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsignal.protos.SignalServiceProtos
@@ -102,7 +102,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
             server = server,
             room = pollInfo.token,
             name = pollInfo.details?.name ?: "",
-            infoUpdates = pollInfo.details?.info_updates ?: 0,
+            infoUpdates = pollInfo.details?.infoUpdates ?: 0,
             publicKey = publicKey,
             capabilities = listOf()
         )
@@ -110,7 +110,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         storage.updateOpenGroup(openGroup)
 
         // - User Count
-        storage.setUserCount(roomToken, server, pollInfo.active_users)
+        storage.setUserCount(roomToken, server, pollInfo.activeUsers)
 
         // - Moderators
         pollInfo.details?.moderators?.let {
@@ -130,9 +130,9 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         val openGroupId = "$server.$roomToken"
         val (deletions, additions) = messages.sortedBy { it.seqno }.partition { it.data.isNullOrBlank() }
         handleNewMessages(roomToken, openGroupId, additions.map {
-            OpenGroupMessageV2(
+            OpenGroupMessage(
                 serverID = it.id,
-                sender = it.session_id,
+                sender = it.sessionId,
                 sentTimestamp = it.posted,
                 base64EncodedData = it.data!!,
                 base64EncodedSignature = it.signature
@@ -164,7 +164,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
     private fun handleNewMessages(
         room: String,
         openGroupID: String,
-        messages: List<OpenGroupMessageV2>
+        messages: List<OpenGroupMessage>
     ) {
         val storage = MessagingModuleConfiguration.shared.storage
         val groupID = GroupUtil.getEncodedOpenGroupID(openGroupID.toByteArray())

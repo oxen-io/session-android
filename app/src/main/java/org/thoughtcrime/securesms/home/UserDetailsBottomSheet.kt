@@ -84,7 +84,6 @@ class UserDetailsBottomSheet : BottomSheetDialogFragment() {
             nameTextView.text = recipient.name ?: publicKey // Uses the Contact API internally
 
             publicKeyTextView.isVisible = !threadRecipient.isOpenGroupRecipient
-            messageButton.isVisible = !threadRecipient.isOpenGroupRecipient
             publicKeyTextView.text = publicKey
             publicKeyTextView.setOnLongClickListener {
                 val clipboard =

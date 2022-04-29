@@ -16,7 +16,7 @@ class GroupAvatarDownloadJob(val room: String, val server: String) : Job {
         val storage = MessagingModuleConfiguration.shared.storage
         try {
             val info = OpenGroupApi.getRoomInfo(room, server).get()
-            val imageId = info.image_id ?: return
+            val imageId = info.imageId ?: return
             val bytes = OpenGroupApi.downloadOpenGroupProfilePicture(server, info.token, imageId).get()
             val groupId = GroupUtil.getEncodedOpenGroupID("$server.$room".toByteArray())
             storage.updateProfilePicture(groupId, bytes)

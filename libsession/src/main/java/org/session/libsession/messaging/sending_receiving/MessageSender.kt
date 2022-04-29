@@ -14,7 +14,7 @@ import org.session.libsession.messaging.messages.visible.Profile
 import org.session.libsession.messaging.messages.visible.Quote
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.OpenGroupApi
-import org.session.libsession.messaging.open_groups.OpenGroupMessageV2
+import org.session.libsession.messaging.open_groups.OpenGroupMessage
 import org.session.libsession.messaging.utilities.MessageWrapper
 import org.session.libsession.snode.RawResponsePromise
 import org.session.libsession.snode.SnodeAPI
@@ -55,10 +55,10 @@ object MessageSender {
 
     // Convenience
     fun send(message: Message, destination: Destination): Promise<Unit, Exception> {
-        if (destination is Destination.OpenGroupV2) {
-            return sendToOpenGroupDestination(destination, message)
+        return if (destination is Destination.LegacyOpenGroup || destination is Destination.OpenGroup) {
+            sendToOpenGroupDestination(destination, message)
         } else {
-            return sendToSnodeDestination(destination, message)
+            sendToSnodeDestination(destination, message)
         }
     }
 
@@ -86,7 +86,7 @@ object MessageSender {
             when (destination) {
                 is Destination.Contact -> message.recipient = destination.publicKey
                 is Destination.ClosedGroup -> message.recipient = destination.groupPublicKey
-                is Destination.OpenGroupV2 -> throw IllegalStateException("Destination should not be an open group.")
+                else -> throw IllegalStateException("Destination should not be an open group.")
             }
             // Validate the message
             if (!message.isValid()) { throw Error.InvalidMessage }
@@ -117,14 +117,13 @@ object MessageSender {
             // Serialize the protobuf
             val plaintext = PushTransportDetails.getPaddedMessageBody(proto.toByteArray())
             // Encrypt the serialized protobuf
-            val ciphertext: ByteArray
-            when (destination) {
-                is Destination.Contact -> ciphertext = MessageEncrypter.encrypt(plaintext, destination.publicKey)
+            val ciphertext = when (destination) {
+                is Destination.Contact -> MessageEncrypter.encrypt(plaintext, destination.publicKey)
                 is Destination.ClosedGroup -> {
                     val encryptionKeyPair = MessagingModuleConfiguration.shared.storage.getLatestClosedGroupEncryptionKeyPair(destination.groupPublicKey)!!
-                    ciphertext = MessageEncrypter.encrypt(plaintext, encryptionKeyPair.hexEncodedPublicKey)
+                    MessageEncrypter.encrypt(plaintext, encryptionKeyPair.hexEncodedPublicKey)
                 }
-                is Destination.OpenGroupV2 -> throw IllegalStateException("Destination should not be open group.")
+                else -> throw IllegalStateException("Destination should not be open group.")
             }
             // Wrap the result
             val kind: SignalServiceProtos.Envelope.Type
@@ -138,7 +137,7 @@ object MessageSender {
                     kind = SignalServiceProtos.Envelope.Type.CLOSED_GROUP_MESSAGE
                     senderPublicKey = destination.groupPublicKey
                 }
-                is Destination.OpenGroupV2 -> throw IllegalStateException("Destination should not be open group.")
+                else -> throw IllegalStateException("Destination should not be open group.")
             }
             val wrappedMessage = MessageWrapper.wrap(kind, message.sentTimestamp!!, senderPublicKey, ciphertext)
             // Send the result
@@ -208,35 +207,32 @@ object MessageSender {
             deferred.reject(error)
         }
         try {
+            // Attach the user's profile if needed
+            if (message is VisibleMessage) {
+                val displayName = storage.getUserDisplayName()!!
+                val profileKey = storage.getUserProfileKey()
+                val profilePictureUrl = storage.getUserProfilePictureURL()
+                if (profileKey != null && profilePictureUrl != null) {
+                    message.profile = Profile(displayName, profileKey, profilePictureUrl)
+                } else {
+                    message.profile = Profile(displayName)
+                }
+            }
+            // Validate the message
+            if (message !is VisibleMessage || !message.isValid()) {
+                throw Error.InvalidMessage
+            }
+            val messageBody = message.toProto()?.toByteArray()!!
+            val plaintext = PushTransportDetails.getPaddedMessageBody(messageBody)
             when (destination) {
-                is Destination.Contact, is Destination.ClosedGroup -> throw IllegalStateException("Invalid destination.")
-                is Destination.OpenGroupV2 -> {
-                    message.recipient = "${destination.server}.${destination.room}"
-                    val server = destination.server
-                    val room = destination.room
-                    // Attach the user's profile if needed
-                    if (message is VisibleMessage) {
-                        val displayName = storage.getUserDisplayName()!!
-                        val profileKey = storage.getUserProfileKey()
-                        val profilePictureUrl = storage.getUserProfilePictureURL()
-                        if (profileKey != null && profilePictureUrl != null) {
-                            message.profile = Profile(displayName, profileKey, profilePictureUrl)
-                        } else {
-                            message.profile = Profile(displayName)
-                        }
-                    }
-                    // Validate the message
-                    if (message !is VisibleMessage || !message.isValid()) {
-                        throw Error.InvalidMessage
-                    }
-                    val proto = message.toProto()!!
-                    val plaintext = PushTransportDetails.getPaddedMessageBody(proto.toByteArray())
-                    val openGroupMessage = OpenGroupMessageV2(
+                is Destination.LegacyOpenGroup -> {
+                    message.recipient = "${destination.server}.${destination.roomToken}"
+                    val openGroupMessage = OpenGroupMessage(
                         sender = message.sender,
                         sentTimestamp = message.sentTimestamp!!,
                         base64EncodedData = Base64.encodeBytes(plaintext),
                     )
-                    OpenGroupApi.send(openGroupMessage,room,server).success {
+                    OpenGroupApi.send(openGroupMessage, destination.roomToken, destination.server).success {
                         message.openGroupServerMessageID = it.serverID
                         handleSuccessfulMessageSend(message, destination, openGroupSentTimestamp = it.sentTimestamp)
                         deferred.resolve(Unit)
@@ -244,6 +240,33 @@ object MessageSender {
                         handleFailure(it)
                     }
                 }
+                is Destination.OpenGroup -> {
+                    message.recipient = "${destination.server}.${destination.roomToken}"
+                    val openGroupMessage = OpenGroupMessage(
+                        sender = message.sender,
+                        sentTimestamp = message.sentTimestamp!!,
+                        base64EncodedData = Base64.encodeBytes(plaintext),
+                    )
+                    OpenGroupApi.send(openGroupMessage, destination.roomToken, destination.server).success {
+                        message.openGroupServerMessageID = it.serverID
+                        handleSuccessfulMessageSend(message, destination, openGroupSentTimestamp = it.sentTimestamp)
+                        deferred.resolve(Unit)
+                    }.fail {
+                        handleFailure(it)
+                    }
+                }
+                is Destination.OpenGroupInbox -> {
+                    message.recipient = destination.blinkedPublicKey
+                    val base64EncodedData = Base64.encodeBytes(plaintext)
+                    OpenGroupApi.sendDirectMessage(base64EncodedData, destination.blinkedPublicKey, destination.server).success {
+                        message.openGroupServerMessageID = it.id
+                        handleSuccessfulMessageSend(message, destination, openGroupSentTimestamp = it.postedAt)
+                        deferred.resolve(Unit)
+                    }.fail {
+                        handleFailure(it)
+                    }
+                }
+                else -> throw IllegalStateException("Invalid destination.")
             }
         } catch (exception: Exception) {
             handleFailure(exception)
@@ -270,8 +293,8 @@ object MessageSender {
                 storage.setMessageServerHash(messageID, it)
             }
             // Track the open group server message ID
-            if (message.openGroupServerMessageID != null && destination is Destination.OpenGroupV2) {
-                val encoded = GroupUtil.getEncodedOpenGroupID("${destination.server}.${destination.room}".toByteArray())
+            if (message.openGroupServerMessageID != null && destination is Destination.LegacyOpenGroup) {
+                val encoded = GroupUtil.getEncodedOpenGroupID("${destination.server}.${destination.roomToken}".toByteArray())
                 val threadID = storage.getThreadId(Address.fromSerialized(encoded))
                 if (threadID != null && threadID >= 0) {
                     storage.setOpenGroupServerMessageID(messageID, message.openGroupServerMessageID!!, threadID, !(message as VisibleMessage).isMediaMessage())

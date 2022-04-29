@@ -70,12 +70,12 @@ object OpenGroupManager {
         storage.setOpenGroupPublicKey(server,publicKey)
         // Get capabilities and room info
         val (capabilities, info) = OpenGroupApi.getCapabilitiesAndRoomInfo(room, server).get()
-        storage.setUserCount(room, server, info.active_users)
+        storage.setUserCount(room, server, info.activeUsers)
         // Create the group locally if not available already
         if (threadID < 0) {
             threadID = GroupManager.createOpenGroup(openGroupID, context, null, info.name).threadId
         }
-        val openGroup = OpenGroup(server, room, info.name, info.info_updates, publicKey, capabilities.capabilities)
+        val openGroup = OpenGroup(server, room, info.name, info.infoUpdates, publicKey, capabilities.capabilities)
         threadDB.setOpenGroupChat(openGroup, threadID)
         // Start the poller if needed
         pollers[server]?.startIfNeeded() ?: run {

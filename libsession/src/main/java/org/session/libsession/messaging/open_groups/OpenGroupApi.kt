@@ -1,5 +1,6 @@
 package org.session.libsession.messaging.open_groups
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
@@ -73,38 +74,40 @@ object OpenGroupApi {
         val joinURL: String get() = "$defaultServer/$id?public_key=$defaultServerPublicKey"
     }
 
+    @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
     data class RoomInfo(
         val token: String = "",
         val name: String = "",
         val description: String = "",
-        val info_updates: Int = 0,
-        val message_sequence: Long = 0,
+        val infoUpdates: Int = 0,
+        val messageSequence: Long = 0,
         val created: Long = 0,
-        val active_users: Int = 0,
-        val active_users_cutoff: Int = 0,
-        val image_id: Long? = null,
-        val pinned_messages: List<PinnedMessage> = emptyList(),
+        val activeUsers: Int = 0,
+        val activeUsersCutoff: Int = 0,
+        val imageId: Long? = null,
+        val pinnedMessages: List<PinnedMessage> = emptyList(),
         val admin: Boolean = false,
-        val global_admin: Boolean = false,
+        val globalAdmin: Boolean = false,
         val admins: List<String> = emptyList(),
         val hiddenAdmins: List<String> = emptyList(),
         val moderator: Boolean = false,
-        val global_moderator: Boolean = false,
+        val globalModerator: Boolean = false,
         val moderators: List<String> = emptyList(),
         val hiddenModerators: List<String> = emptyList(),
         val read: Boolean = false,
-        val default_read: Boolean = false,
-        val default_accessible: Boolean = false,
+        val defaultRead: Boolean = false,
+        val defaultAccessible: Boolean = false,
         val write: Boolean = false,
-        val default_write: Boolean = false,
+        val defaultWrite: Boolean = false,
         val upload: Boolean = false,
-        val default_upload: Boolean = false,
+        val defaultUpload: Boolean = false,
     )
 
+    @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
     data class PinnedMessage(
         val id: Long = 0,
-        val pinned_at: Long = 0,
-        val pinned_by: String = ""
+        val pinnedAt: Long = 0,
+        val pinnedBy: String = ""
     )
 
     @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
@@ -114,10 +117,14 @@ object OpenGroupApi {
         val responseType: TypeReference<T>
     )
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     data class BatchRequest(
-        val method: String,
+        val method: HTTP.Verb,
         val path: String,
-        val body: Any? = null
+        val headers: Map<String, String> = emptyMap(),
+        val json: Map<String, Any>? = null,
+        val b64: String? = null,
+        val bytes: ByteArray? = null,
     )
 
     data class BatchResponse<T>(
@@ -132,41 +139,44 @@ object OpenGroupApi {
         val missing: List<String> = emptyList()
     )
 
+    @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
     data class RoomPollInfo(
         val token: String = "",
-        val active_users: Int = 0,
+        val activeUsers: Int = 0,
         val admin: Boolean = false,
-        val global_admin: Boolean = false,
+        val globalAdmin: Boolean = false,
         val moderator: Boolean = false,
-        val global_moderator: Boolean = false,
+        val globalModerator: Boolean = false,
         val read: Boolean = false,
-        val default_read: Boolean = false,
-        val default_accessible: Boolean = false,
+        val defaultRead: Boolean = false,
+        val defaultAccessible: Boolean = false,
         val write: Boolean = false,
-        val default_write: Boolean = false,
+        val defaultWrite: Boolean = false,
         val upload: Boolean = false,
-        val default_upload: Boolean = false,
+        val defaultUpload: Boolean = false,
         val details: RoomInfo? = null
     )
 
+    @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
     data class DirectMessage(
         val id: Long = 0,
         val sender: String = "",
         val recipient: String = "",
-        val posted_at: Long = 0,
-        val expires_at: Long = 0,
+        val postedAt: Long = 0,
+        val expiresAt: Long = 0,
         val message: String = "",
     )
 
+    @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
     data class Message(
         val id : Long = 0,
-        val session_id: String = "",
+        val sessionId: String = "",
         val posted: Long = 0,
         val edited: Long = 0,
         val seqno: Long = 0,
         val whisper: Boolean = false,
-        val whisper_mods: String = "",
-        val whisper_to: String = "",
+        val whisperMods: String = "",
+        val whisperTo: String = "",
         val data: String? = null,
         val signature: String? = null
     )
@@ -343,10 +353,10 @@ object OpenGroupApi {
 
     // region Sending
     fun send(
-        message: OpenGroupMessageV2,
+        message: OpenGroupMessage,
         room: String,
         server: String
-    ): Promise<OpenGroupMessageV2, Exception> {
+    ): Promise<OpenGroupMessage, Exception> {
         val signedMessage = message.sign() ?: return Promise.ofFail(Error.SigningFailed)
         val jsonMessage = signedMessage.toJSON()
         val request = Request(
@@ -357,9 +367,9 @@ object OpenGroupApi {
             parameters = jsonMessage
         )
         return getResponseBodyJson(request).map { json ->
-            @Suppress("UNCHECKED_CAST") val rawMessage = json["message"] as? Map<String, Any>
+            @Suppress("UNCHECKED_CAST") val rawMessage = json as? Map<String, Any>
                 ?: throw Error.ParsingFailed
-            val result = OpenGroupMessageV2.fromJSON(rawMessage) ?: throw Error.ParsingFailed
+            val result = OpenGroupMessage.fromJSON(rawMessage) ?: throw Error.ParsingFailed
             val storage = MessagingModuleConfiguration.shared.storage
             storage.addReceivedMessageTimestamp(result.sentTimestamp)
             result
@@ -368,7 +378,7 @@ object OpenGroupApi {
     // endregion
 
     // region Messages
-    fun getMessages(room: String, server: String): Promise<List<OpenGroupMessageV2>, Exception> {
+    fun getMessages(room: String, server: String): Promise<List<OpenGroupMessage>, Exception> {
         val storage = MessagingModuleConfiguration.shared.storage
         val queryParameters = mutableMapOf<String, String>()
         storage.getLastMessageServerID(room, server)?.let { lastId ->
@@ -393,11 +403,11 @@ object OpenGroupApi {
         room: String,
         server: String,
         rawMessages: List<Map<*, *>>
-    ): List<OpenGroupMessageV2> {
+    ): List<OpenGroupMessage> {
         val messages = rawMessages.mapNotNull { json ->
             json as Map<String, Any>
             try {
-                val message = OpenGroupMessageV2.fromJSON(json) ?: return@mapNotNull null
+                val message = OpenGroupMessage.fromJSON(json) ?: return@mapNotNull null
                 if (message.serverID == null || message.sender.isNullOrEmpty()) return@mapNotNull null
                 val sender = message.sender
                 val data = decode(message.base64EncodedData)
@@ -480,15 +490,15 @@ object OpenGroupApi {
         val requests = mutableListOf<BatchRequestInfo<*>>(
             BatchRequestInfo(
                 request = BatchRequest(
-                    method = "POST",
+                    method = POST,
                     path = "user/$publicKey/ban",
-                    body = mapOf("roomTokens" to listOf(room))
+                    json = mapOf("roomTokens" to listOf(room))
                 ),
                 endpoint = Endpoint.UserBan(publicKey),
                 responseType = object: TypeReference<Nothing>(){}
             ),
             BatchRequestInfo(
-                request = BatchRequest("DELETE", "room/$room/all/$publicKey"),
+                request = BatchRequest(DELETE, "room/$room/all/$publicKey"),
                 endpoint = Endpoint.RoomDeleteMessages(room, publicKey),
                 responseType = object: TypeReference<Nothing>(){}
             )
@@ -532,7 +542,7 @@ object OpenGroupApi {
         val requests = mutableListOf<BatchRequestInfo<*>>(
             BatchRequestInfo(
                 request = BatchRequest(
-                    method = "GET",
+                    method = GET,
                     path = "/capabilities"
                 ),
                 endpoint = Endpoint.Capabilities,
@@ -544,7 +554,7 @@ object OpenGroupApi {
             requests.add(
                 BatchRequestInfo(
                     request = BatchRequest(
-                        method = "GET",
+                        method = GET,
                         path = "/room/$room/pollInfo/$infoUpdates"
                     ),
                     endpoint = Endpoint.RoomPollInfo(room, infoUpdates),
@@ -555,7 +565,7 @@ object OpenGroupApi {
                 if (shouldRetrieveRecentMessages) {
                     BatchRequestInfo(
                         request = BatchRequest(
-                            method = "GET",
+                            method = GET,
                             path = "/room/$room/messages/recent"
                         ),
                         endpoint = Endpoint.RoomMessagesRecent(room),
@@ -565,7 +575,7 @@ object OpenGroupApi {
                     val lastMessageServerId = storage.getLastMessageServerID(room, server) ?: 0L
                     BatchRequestInfo(
                         request = BatchRequest(
-                            method = "GET",
+                            method = GET,
                             path = "/room/$room/messages/since/$lastMessageServerId"
                         ),
                         endpoint = Endpoint.RoomMessagesSince(room, lastMessageServerId),
@@ -580,7 +590,7 @@ object OpenGroupApi {
                 if (lastInboxMessageId == null) {
                     BatchRequestInfo(
                         request = BatchRequest(
-                            method = "GET",
+                            method = GET,
                             path = "/inbox"
                         ),
                         endpoint = Endpoint.Inbox,
@@ -589,7 +599,7 @@ object OpenGroupApi {
                 } else {
                     BatchRequestInfo(
                         request = BatchRequest(
-                            method = "GET",
+                            method = GET,
                             path = "/inbox/since/$lastInboxMessageId"
                         ),
                         endpoint = Endpoint.InboxSince(lastInboxMessageId),
@@ -601,7 +611,7 @@ object OpenGroupApi {
                 if (lastOutboxMessageId == null) {
                     BatchRequestInfo(
                         request = BatchRequest(
-                            method = "GET",
+                            method = GET,
                             path = "/outbox"
                         ),
                         endpoint = Endpoint.Outbox,
@@ -610,7 +620,7 @@ object OpenGroupApi {
                 } else {
                     BatchRequestInfo(
                         request = BatchRequest(
-                            method = "GET",
+                            method = GET,
                             path = "/outbox/since/$lastOutboxMessageId"
                         ),
                         endpoint = Endpoint.OutboxSince(lastOutboxMessageId),
@@ -685,7 +695,7 @@ object OpenGroupApi {
                 }
             }
             val images = groups.associate { group ->
-                group.token to group.image_id?.let { downloadOpenGroupProfilePicture(defaultServer, group.token, it) }
+                group.token to group.imageId?.let { downloadOpenGroupProfilePicture(defaultServer, group.token, it) }
             }
             groups.map { group ->
                 val image = try {
@@ -731,15 +741,8 @@ object OpenGroupApi {
     fun getMemberCount(room: String, server: String): Promise<Int, Exception> {
         return getRoomInfo(room, server).map { info ->
             val storage = MessagingModuleConfiguration.shared.storage
-            storage.setUserCount(room, server, info.active_users)
-            info.active_users
-        }
-    }
-
-    fun getCapabilities(room: String, server: String): Promise<List<String>, Exception> {
-        val request = Request(verb = GET, room = room, server = server, endpoint = Endpoint.Capabilities)
-        return getResponseBodyJson(request).map { json ->
-            json["capabilities"] as? List<String> ?: throw Error.ParsingFailed
+            storage.setUserCount(room, server, info.activeUsers)
+            info.activeUsers
         }
     }
 
@@ -747,7 +750,7 @@ object OpenGroupApi {
         val requests = mutableListOf<BatchRequestInfo<*>>(
             BatchRequestInfo(
                 request = BatchRequest(
-                    method = "GET",
+                    method = GET,
                     path = "/capabilities"
                 ),
                 endpoint = Endpoint.Capabilities,
@@ -755,7 +758,7 @@ object OpenGroupApi {
             ),
             BatchRequestInfo(
                 request = BatchRequest(
-                    method = "GET",
+                    method = GET,
                     path = "/room/$room"
                 ),
                 endpoint = Endpoint.Room(room),
@@ -766,6 +769,19 @@ object OpenGroupApi {
             val capabilities = it.firstOrNull()?.body as? Capabilities ?: throw Error.ParsingFailed
             val roomInfo = it.lastOrNull()?.body as? RoomInfo ?: throw Error.ParsingFailed
             capabilities to roomInfo
+        }
+    }
+
+    fun sendDirectMessage(message: String, blindedSessionId: String, server: String): Promise<DirectMessage, Exception> {
+        val request = Request(
+            verb = POST,
+            room = null,
+            server = server,
+            endpoint = Endpoint.InboxFor(blindedSessionId),
+            parameters = mapOf("message" to message)
+        )
+        return send(request).map { response ->
+            JsonUtil.fromJson(response.body, DirectMessage::class.java)
         }
     }
 

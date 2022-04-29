@@ -1,6 +1,7 @@
 package org.session.libsession.messaging.messages
 
 import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsignal.utilities.toHexString
@@ -13,16 +14,39 @@ sealed class Destination {
     class ClosedGroup(var groupPublicKey: String) : Destination() {
         internal constructor(): this("")
     }
-    class OpenGroupV2(var room: String, var server: String) : Destination() {
+    class LegacyOpenGroup(var roomToken: String, var server: String) : Destination() {
         internal constructor(): this("", "")
     }
+
+    class OpenGroup(
+        val roomToken: String,
+        val server: String,
+        val whisperTo: String? = null,
+        val whisperMods: Boolean = false,
+        val fileIds: List<String> = emptyList()
+    ) : Destination()
+
+    class OpenGroupInbox(
+        val server: String,
+        val serverPublicKey: String,
+        val blinkedPublicKey: String
+    ) : Destination()
 
     companion object {
 
         fun from(address: Address): Destination {
             return when {
                 address.isContact -> {
-                    Contact(address.contactIdentifier())
+                    val contact = address.contactIdentifier()
+                    if (SodiumUtilities.SessionId(contact).prefix == SodiumUtilities.IdPrefix.BLINDED) {
+                        OpenGroupInbox(
+                            server = TODO(),
+                            serverPublicKey = TODO(),
+                            blinkedPublicKey = contact
+                        )
+                    } else {
+                        Contact(address.contactIdentifier())
+                    }
                 }
                 address.isClosedGroup -> {
                     val groupID = address.toGroupString()
@@ -34,7 +58,7 @@ sealed class Destination {
                     val threadID = storage.getThreadId(address)!!
                     when (val openGroup = storage.getOpenGroup(threadID)) {
                         is org.session.libsession.messaging.open_groups.OpenGroup
-                            -> Destination.OpenGroupV2(openGroup.room, openGroup.server)
+                            -> LegacyOpenGroup(openGroup.room, openGroup.server)
                         else -> throw Exception("Missing open group for thread with ID: $threadID.")
                     }
                 }
