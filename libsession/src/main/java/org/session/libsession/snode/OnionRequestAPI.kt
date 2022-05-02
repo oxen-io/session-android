@@ -539,15 +539,15 @@ object OnionRequestAPI {
                 // The data will be in the form of `l123:jsone` or `l123:json456:bodye` so we need to break the data into
                 // parts to properly process it
                 val plaintext = AESGCM.decrypt(response, destinationSymmetricKey)
-                val plaintextString = plaintext.toString(Charsets.US_ASCII)
-                if (!plaintextString.startsWith("l")) return deferred.reject(Exception("Invalid response"))
-                val infoParts = plaintextString.split(":")
-                val infoLength = infoParts.firstOrNull()?.drop(1)?.toIntOrNull()
+                if (plaintext.first() != "l".toByte()) return deferred.reject(Exception("Invalid response"))
+                val infoSepIdx = plaintext.indexOf(":".toByte())
+                val infoParts = plaintext.slice(0 until infoSepIdx)
+                val infoLength = infoParts.drop(1).toString().toIntOrNull()
                 if (infoParts.size <= 1 || infoLength == null) return deferred.reject(Exception("Invalid response"))
                 val infoStartIndex = "l$infoLength".length + 1
                 val infoEndIndex = infoStartIndex + infoLength
-                val info = plaintextString.substring(infoStartIndex, infoEndIndex)
-                val responseInfo = JsonUtil.fromJson(info, Map::class.java)
+                val info = plaintext.slice(infoStartIndex until infoEndIndex)
+                val responseInfo = JsonUtil.fromJson(info.toByteArray(), Map::class.java)
                 when (val statusCode = responseInfo["code"].toString().toInt()) {
                     // Custom handle a clock out of sync error (v4 returns '425' but included the '406' just in case)
                     406, 425 -> {
@@ -568,24 +568,21 @@ object OnionRequestAPI {
                             responseInfo,
                             destination.description
                         )
-                        val message = plaintextString.substring(infoEndIndex)
-                            .split(":").last().dropLast(1)
-                        Log.d("Loki", "Response body: $message")
                         return deferred.reject(exception)
                     }
                 }
 
                 // If there is no data in the response then just return the ResponseInfo
-                if (plaintextString.length <= "l${infoLength}${info}e".length) {
+                if (plaintext.size <= "l${infoLength}${info}e".length) {
                     return deferred.resolve(OnionResponse(responseInfo, null))
                 }
                 // Extract the response data as well
-                val data = plaintextString.substring(infoEndIndex)
-                val dataParts = data.split(":".toRegex(), 2)
-                val dataLength = dataParts.firstOrNull()?.toIntOrNull()
-                if (dataParts.size <= 1 || dataLength == null) return deferred.reject(Exception("Invalid response"))
-                val dataString = dataParts.last().dropLast(1)
-                return deferred.resolve(OnionResponse(responseInfo, dataString.toByteArray(Charsets.US_ASCII)))
+                val data = plaintext.slice(infoEndIndex until plaintext.size - 1)
+                val dataSepIdx = data.indexOf(":".toByte())
+                data.slice(0 until dataSepIdx).toString().toIntOrNull()
+                    ?: return deferred.reject(Exception("Invalid response"))
+                val dataString = data.slice(dataSepIdx until data.size - 1)
+                return deferred.resolve(OnionResponse(responseInfo, dataString.toByteArray()))
             } catch (exception: Exception) {
                 deferred.reject(exception)
             }

@@ -28,6 +28,7 @@ import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.hexEncodedPublicKey
+import java.util.concurrent.TimeUnit
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment as SignalAttachment
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview as SignalLinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel as SignalQuote
@@ -260,7 +261,7 @@ object MessageSender {
                     val base64EncodedData = Base64.encodeBytes(plaintext)
                     OpenGroupApi.sendDirectMessage(base64EncodedData, destination.blinkedPublicKey, destination.server).success {
                         message.openGroupServerMessageID = it.id
-                        handleSuccessfulMessageSend(message, destination, openGroupSentTimestamp = it.postedAt)
+                        handleSuccessfulMessageSend(message, destination, openGroupSentTimestamp = TimeUnit.SECONDS.toMillis(it.postedAt))
                         deferred.resolve(Unit)
                     }.fail {
                         handleFailure(it)
