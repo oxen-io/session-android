@@ -539,11 +539,11 @@ object OnionRequestAPI {
                 // The data will be in the form of `l123:jsone` or `l123:json456:bodye` so we need to break the data into
                 // parts to properly process it
                 val plaintext = AESGCM.decrypt(response, destinationSymmetricKey)
-                if (plaintext.first() != "l".toByte()) return deferred.reject(Exception("Invalid response"))
-                val infoSepIdx = plaintext.indexOf(":".toByte())
-                val infoParts = plaintext.slice(0 until infoSepIdx)
-                val infoLength = infoParts.drop(1).toString().toIntOrNull()
-                if (infoParts.size <= 1 || infoLength == null) return deferred.reject(Exception("Invalid response"))
+                if (!byteArrayOf(plaintext.first()).contentEquals("l".toByteArray())) return deferred.reject(Exception("Invalid response"))
+                val infoSepIdx = plaintext.indexOfFirst { byteArrayOf(it).contentEquals(":".toByteArray()) }
+                val infoLenSlice = plaintext.slice(1 until infoSepIdx)
+                val infoLength = infoLenSlice.toByteArray().toString(Charsets.US_ASCII).toIntOrNull()
+                if (infoLenSlice.size <= 1 || infoLength == null) return deferred.reject(Exception("Invalid response"))
                 val infoStartIndex = "l$infoLength".length + 1
                 val infoEndIndex = infoStartIndex + infoLength
                 val info = plaintext.slice(infoStartIndex until infoEndIndex)
@@ -577,12 +577,10 @@ object OnionRequestAPI {
                     return deferred.resolve(OnionResponse(responseInfo, null))
                 }
                 // Extract the response data as well
-                val data = plaintext.slice(infoEndIndex until plaintext.size - 1)
-                val dataSepIdx = data.indexOf(":".toByte())
-                data.slice(0 until dataSepIdx).toString().toIntOrNull()
-                    ?: return deferred.reject(Exception("Invalid response"))
-                val dataString = data.slice(dataSepIdx until data.size - 1)
-                return deferred.resolve(OnionResponse(responseInfo, dataString.toByteArray()))
+                val dataSlice = plaintext.slice(infoEndIndex + 1 until plaintext.size - 1)
+                val dataSepIdx = dataSlice.indexOfFirst { byteArrayOf(it).contentEquals(":".toByteArray()) }
+                val responseBody = dataSlice.slice(dataSepIdx + 1 until dataSlice.size)
+                return deferred.resolve(OnionResponse(responseInfo, responseBody.toByteArray()))
             } catch (exception: Exception) {
                 deferred.reject(exception)
             }
