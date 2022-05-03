@@ -5,6 +5,7 @@ import com.goterl.lazysodium.LazySodiumAndroid
 import com.goterl.lazysodium.SodiumAndroid
 import com.goterl.lazysodium.interfaces.Box
 import com.goterl.lazysodium.interfaces.Sign
+import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.hexEncodedPublicKey
@@ -55,6 +56,7 @@ object MessageDecrypter {
         val senderX25519PublicKey = ByteArray(Sign.CURVE25519_PUBLICKEYBYTES)
         sodium.convertPublicKeyEd25519ToCurve25519(senderX25519PublicKey, senderED25519PublicKey)
 
-        return Pair(plaintext, "05" + senderX25519PublicKey.toHexString())
+        val id = SessionId(IdPrefix.STANDARD, senderX25519PublicKey)
+        return Pair(plaintext, id.hexString)
     }
 }

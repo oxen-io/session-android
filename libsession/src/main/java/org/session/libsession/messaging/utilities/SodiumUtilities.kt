@@ -181,22 +181,28 @@ object SodiumUtilities {
                 SessionId(IdPrefix.BLINDED, pk2).publicKey == blindedId.publicKey
     }
 
-    class SessionId {
-        var prefix: IdPrefix?
-        var publicKey: String
+}
 
-        constructor(id: String) {
-            prefix = IdPrefix.fromValue(id)
-            publicKey = id.drop(2)
-        }
+class SessionId {
+    var prefix: IdPrefix?
+    var publicKey: String
 
-        constructor(prefix: IdPrefix, publicKey: ByteArray) {
-            this.prefix = prefix
-            this.publicKey = publicKey.toHexString()
-        }
-
-        val hexString
-            get() = prefix?.value + publicKey
+    constructor(id: String) {
+        prefix = IdPrefix.fromValue(id)
+        publicKey = id.drop(2)
     }
 
+    constructor(prefix: IdPrefix, publicKey: ByteArray) {
+        this.prefix = prefix
+        this.publicKey = publicKey.toHexString()
+    }
+
+    val hexString
+        get() = prefix?.value + publicKey
 }
+
+data class BlindedIdMapping(
+    val blindedId: String,
+    val sessionId: String,
+    val serverPublicKey: String
+)

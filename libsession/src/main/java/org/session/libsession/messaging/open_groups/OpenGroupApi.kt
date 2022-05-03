@@ -20,6 +20,7 @@ import okhttp3.MediaType
 import okhttp3.RequestBody
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPoller.Companion.maxInactivityPeriod
+import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.snode.OnionResponse
@@ -267,7 +268,7 @@ object OpenGroupApi {
                 .plus(bodyHash)
             if (serverCapabilities.contains("blind")) {
                 SodiumUtilities.blindedKeyPair(publicKey, ed25519KeyPair)?.let { keyPair ->
-                    pubKey = SodiumUtilities.SessionId(
+                    pubKey = SessionId(
                         IdPrefix.BLINDED,
                         keyPair.publicKey.asBytes
                     ).hexString
@@ -280,7 +281,7 @@ object OpenGroupApi {
                     ) ?: return Promise.ofFail(Error.SigningFailed)
                 } ?: return Promise.ofFail(Error.SigningFailed)
             } else {
-                pubKey = SodiumUtilities.SessionId(
+                pubKey = SessionId(
                     IdPrefix.UN_BLINDED,
                     ed25519KeyPair.publicKey.asBytes
                 ).hexString

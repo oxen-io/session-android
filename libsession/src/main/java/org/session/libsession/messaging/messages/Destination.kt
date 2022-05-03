@@ -1,10 +1,8 @@
 package org.session.libsession.messaging.messages
 
 import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
-import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.toHexString
 
 sealed class Destination {
@@ -38,16 +36,7 @@ sealed class Destination {
         fun from(address: Address): Destination {
             return when {
                 address.isContact -> {
-                    val contact = address.contactIdentifier()
-                    if (SodiumUtilities.SessionId(contact).prefix == IdPrefix.BLINDED) {
-                        OpenGroupInbox(
-                            server = TODO(),
-                            serverPublicKey = TODO(),
-                            blinkedPublicKey = contact
-                        )
-                    } else {
-                        Contact(address.contactIdentifier())
-                    }
+                    Contact(address.contactIdentifier())
                 }
                 address.isClosedGroup -> {
                     val groupID = address.toGroupString()
@@ -62,6 +51,14 @@ sealed class Destination {
                             -> LegacyOpenGroup(openGroup.room, openGroup.server)
                         else -> throw Exception("Missing open group for thread with ID: $threadID.")
                     }
+                }
+                address.isOpenGroupInbox -> {
+                    val groupInboxId = GroupUtil.getDecodedGroupID(address.serialize()).split(".")
+                    OpenGroupInbox(
+                        groupInboxId.dropLast(2).joinToString("."),
+                        groupInboxId.dropLast(1).last(),
+                        groupInboxId.last()
+                    )
                 }
                 else -> {
                     throw Exception("TODO: Handle legacy closed groups.")

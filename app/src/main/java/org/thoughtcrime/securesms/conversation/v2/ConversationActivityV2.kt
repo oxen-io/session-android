@@ -62,14 +62,17 @@ import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
+import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Address.Companion.fromSerialized
+import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.MediaTypes
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.concurrent.SimpleTask
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.recipients.RecipientModifiedListener
 import org.session.libsignal.crypto.MnemonicCodec
+import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.ListenableFuture
 import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.hexEncodedPrivateKey
@@ -129,6 +132,7 @@ import org.thoughtcrime.securesms.mms.VideoSlide
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.util.ActivityDispatcher
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
+import org.thoughtcrime.securesms.util.ContactUtilities
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.SaveAttachmentTask
@@ -176,7 +180,19 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private val viewModel: ConversationViewModel by viewModels {
         var threadId = intent.getLongExtra(THREAD_ID, -1L)
         if (threadId == -1L) {
-            intent.getParcelableExtra<Address>(ADDRESS)?.let { address ->
+            intent.getParcelableExtra<Address>(ADDRESS)?.let { it ->
+                val sessionId = SessionId(it.serialize())
+                val openGroup = lokiThreadDb.getOpenGroupChat(intent.getLongExtra(FROM_OPEN_GROUP_THREAD_ID, -1))
+                val address = if (sessionId.prefix == IdPrefix.BLINDED &&  openGroup != null) {
+                    ContactUtilities.getBlindedIdMapping(this, sessionId.publicKey, openGroup.publicKey)?.let {
+                        fromSerialized(it.sessionId)
+                    } ?: run {
+                        val openGroupInboxId = "${openGroup.server}.${openGroup.publicKey}.${sessionId.hexString}".toByteArray()
+                        fromSerialized(GroupUtil.getEncodedOpenGroupInboxID(openGroupInboxId))
+                    }
+                } else {
+                    it
+                }
                 val recipient = Recipient.from(this, address, false)
                 threadId = threadDb.getOrCreateThreadIdFor(recipient)
             } ?: finish()
@@ -261,6 +277,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // Extras
         const val THREAD_ID = "thread_id"
         const val ADDRESS = "address"
+        const val FROM_OPEN_GROUP_THREAD_ID = "from_open_group_id"
         const val SCROLL_MESSAGE_ID = "scroll_message_id"
         const val SCROLL_MESSAGE_AUTHOR = "scroll_message_author"
         // Request codes

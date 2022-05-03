@@ -16,6 +16,8 @@ import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.open_groups.OpenGroupMessage
 import org.session.libsession.messaging.utilities.MessageWrapper
+import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.snode.RawResponsePromise
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.snode.SnodeMessage
@@ -26,6 +28,7 @@ import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsignal.crypto.PushTransportDetails
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Base64
+import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.hexEncodedPublicKey
 import java.util.concurrent.TimeUnit
@@ -56,7 +59,7 @@ object MessageSender {
 
     // Convenience
     fun send(message: Message, destination: Destination): Promise<Unit, Exception> {
-        return if (destination is Destination.LegacyOpenGroup || destination is Destination.OpenGroup) {
+        return if (destination is Destination.LegacyOpenGroup || destination is Destination.OpenGroup || destination is Destination.OpenGroupInbox) {
             sendToOpenGroupDestination(destination, message)
         } else {
             sendToSnodeDestination(destination, message)
@@ -201,7 +204,14 @@ object MessageSender {
         if (message.sentTimestamp == null) {
             message.sentTimestamp = System.currentTimeMillis()
         }
-        message.sender = storage.getUserPublicKey()
+        val openGroup = storage.getOpenGroup(message.threadID!!)
+        val userEdKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!
+        val blindedKeyPair = SodiumUtilities.blindedKeyPair(openGroup?.publicKey!!, userEdKeyPair)
+        message.sender = if (openGroup.capabilities.contains("blind") && blindedKeyPair != null) {
+            SessionId(IdPrefix.BLINDED, blindedKeyPair.publicKey.asBytes).hexString
+        } else {
+            SessionId(IdPrefix.UN_BLINDED, userEdKeyPair.publicKey.asBytes).hexString
+        }
         // Set the failure handler (need it here already for precondition failure handling)
         fun handleFailure(error: Exception) {
             handleFailedMessageSend(message, error)

@@ -8,10 +8,16 @@ import kotlin.jvm.Throws
 object GroupUtil {
     const val CLOSED_GROUP_PREFIX = "__textsecure_group__!"
     const val OPEN_GROUP_PREFIX = "__loki_public_chat_group__!"
+    const val OPEN_GROUP_INBOX_PREFIX = "__loki_public_chat_group_inbox__!"
 
     @JvmStatic
     fun getEncodedOpenGroupID(groupID: ByteArray): String {
         return OPEN_GROUP_PREFIX + Hex.toStringCondensed(groupID)
+    }
+
+    @JvmStatic
+    fun getEncodedOpenGroupInboxID(groupInboxID: ByteArray): String {
+        return OPEN_GROUP_INBOX_PREFIX + Hex.toStringCondensed(groupInboxID)
     }
 
     @JvmStatic
@@ -46,12 +52,18 @@ object GroupUtil {
     }
 
     fun isEncodedGroup(groupId: String): Boolean {
-        return groupId.startsWith(CLOSED_GROUP_PREFIX) || groupId.startsWith(OPEN_GROUP_PREFIX)
+        return groupId.startsWith(CLOSED_GROUP_PREFIX) || groupId.startsWith(OPEN_GROUP_PREFIX) ||
+                groupId.startsWith(OPEN_GROUP_INBOX_PREFIX)
     }
 
     @JvmStatic
     fun isOpenGroup(groupId: String): Boolean {
         return groupId.startsWith(OPEN_GROUP_PREFIX)
+    }
+
+    @JvmStatic
+    fun isOpenGroupInbox(groupId: String): Boolean {
+        return groupId.startsWith(OPEN_GROUP_INBOX_PREFIX)
     }
 
     @JvmStatic
