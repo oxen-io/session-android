@@ -102,8 +102,8 @@ class ClosedGroupPollerV2 {
             TODO: add here the -10 namespace without requiring auth
                 (will continue working after hardfork and transition however no messages will be deposited into it until start of HF period)
              */
-            SnodeAPI
-            SnodeAPI.getRawMessages(snode, groupPublicKey, ).map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey) }
+            SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = -10).map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey) }
+            SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = 0).map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey) }
         }
         promise.success { envelopes ->
             if (!isPolling(groupPublicKey)) { return@success }

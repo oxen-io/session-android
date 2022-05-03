@@ -35,36 +35,9 @@ import org.session.libsignal.utilities.retryIfNeeded
 import java.security.SecureRandom
 import java.util.Date
 import java.util.Locale
-import kotlin.collections.List
-import kotlin.collections.Map
-import kotlin.collections.MutableMap
-import kotlin.collections.Set
 import kotlin.collections.component1
 import kotlin.collections.component2
-import kotlin.collections.count
-import kotlin.collections.emptyMap
-import kotlin.collections.filter
-import kotlin.collections.first
-import kotlin.collections.fold
-import kotlin.collections.get
-import kotlin.collections.isNotEmpty
-import kotlin.collections.lastOrNull
-import kotlin.collections.listOf
-import kotlin.collections.map
-import kotlin.collections.mapNotNull
-import kotlin.collections.mapOf
-import kotlin.collections.minus
-import kotlin.collections.mutableListOf
-import kotlin.collections.mutableMapOf
-import kotlin.collections.mutableSetOf
-import kotlin.collections.random
 import kotlin.collections.set
-import kotlin.collections.setOf
-import kotlin.collections.shuffled
-import kotlin.collections.take
-import kotlin.collections.toMap
-import kotlin.collections.toMutableSet
-import kotlin.collections.toSet
 import kotlin.properties.Delegates.observable
 
 object SnodeAPI {
@@ -484,7 +457,7 @@ object SnodeAPI {
         }
     }
 
-    fun parseRawMessagesResponse(rawResponse: RawResponse, snode: Snode, publicKey: String): List<Pair<SignalServiceProtos.Envelope, String?>> {
+    fun parseRawMessagesResponse(rawResponse: RawResponse, snode: Snode, publicKey: String, namespace: Int = 0): List<Pair<SignalServiceProtos.Envelope, String?>> {
         val messages = rawResponse["messages"] as? List<*>
         return if (messages != null) {
             updateLastMessageHashValueIfPossible(snode, publicKey, messages)
