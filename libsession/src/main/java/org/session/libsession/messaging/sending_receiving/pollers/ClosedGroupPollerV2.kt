@@ -6,13 +6,12 @@ import nl.komponents.kovenant.functional.map
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
 import org.session.libsession.messaging.jobs.JobQueue
-import org.session.libsession.messaging.jobs.MessageReceiveJob
 import org.session.libsession.messaging.jobs.MessageReceiveParameters
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsignal.crypto.getRandomElementOrNull
 import org.session.libsignal.utilities.Log
-import java.util.*
+import java.util.Date
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
@@ -98,7 +97,13 @@ class ClosedGroupPollerV2 {
         val promise = SnodeAPI.getSwarm(groupPublicKey).bind { swarm ->
             val snode = swarm.getRandomElementOrNull() ?: throw InsufficientSnodesException() // Should be cryptographically secure
             if (!isPolling(groupPublicKey)) { throw PollingCanceledException() }
-            SnodeAPI.getRawMessages(snode, groupPublicKey).map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey) }
+            // TODO: add here the default namespace without requiring auth (will break after hardfork and transition)
+            /*
+            TODO: add here the -10 namespace without requiring auth
+                (will continue working after hardfork and transition however no messages will be deposited into it until start of HF period)
+             */
+            SnodeAPI
+            SnodeAPI.getRawMessages(snode, groupPublicKey, ).map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey) }
         }
         promise.success { envelopes ->
             if (!isPolling(groupPublicKey)) { return@success }

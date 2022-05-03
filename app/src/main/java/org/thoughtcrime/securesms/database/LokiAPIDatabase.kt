@@ -7,20 +7,16 @@ import org.session.libsignal.crypto.ecc.DjbECPrivateKey
 import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.database.LokiAPIDatabaseProtocol
-import org.session.libsignal.utilities.*
+import org.session.libsignal.utilities.ForkInfo
+import org.session.libsignal.utilities.Hex
+import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.PublicKeyValidation
+import org.session.libsignal.utilities.Snode
+import org.session.libsignal.utilities.removing05PrefixIfNeeded
+import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
-import org.thoughtcrime.securesms.database.*
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
-import org.thoughtcrime.securesms.util.*
-import java.util.*
-import kotlin.Array
-import kotlin.Boolean
-import kotlin.Int
-import kotlin.Long
-import kotlin.Pair
-import kotlin.String
-import kotlin.arrayOf
-import kotlin.to
+import java.util.Date
 
 class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(context, helper), LokiAPIDatabaseProtocol {
 
@@ -97,6 +93,14 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         public val groupPublicKey = "group_public_key"
         @JvmStatic
         val createClosedGroupPublicKeysTable = "CREATE TABLE $closedGroupPublicKeysTable ($groupPublicKey STRING PRIMARY KEY)"
+        // Hard fork service node info
+        const val FORK_INFO_TABLE = "fork_info"
+        const val DUMMY_KEY = "dummy_key"
+        const val DUMMY_VALUE = "1"
+        const val HF_VALUE = "hf_value"
+        const val SF_VALUE = "sf_value"
+        const val CREATE_FORK_INFO_TABLE_COMMAND = "CREATE TABLE $FORK_INFO_TABLE ($DUMMY_KEY INTEGER PRIMARY KEY, $HF_VALUE INTEGER, $SF_VALUE INTEGER);"
+        const val CREATE_DEFAULT_FORK_INFO_COMMAND = "INSERT INTO $FORK_INFO_TABLE ($DUMMY_KEY, $HF_VALUE, $SF_VALUE) VALUES ($DUMMY_VALUE, 18, 1);"
 
         // region Deprecated
         private val deviceLinkCache = "loki_pairing_authorisation_cache"
@@ -440,6 +444,23 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
     fun removeClosedGroupPublicKey(groupPublicKey: String) {
         val database = databaseHelper.writableDatabase
         database.delete(closedGroupPublicKeysTable, "${Companion.groupPublicKey} = ?", wrap(groupPublicKey))
+    }
+
+    override fun getForkInfo(): ForkInfo {
+        val database = databaseHelper.writableDatabase
+        val queryCursor = database.query(FORK_INFO_TABLE, arrayOf(HF_VALUE, SF_VALUE), "$DUMMY_KEY = $DUMMY_VALUE", null, null, null, null)
+        val forkInfo = queryCursor.use { cursor ->
+            if (!cursor.moveToNext()) {
+                ForkInfo(18, 1) // no HF info, none set will at least be the version
+            } else {
+                ForkInfo(cursor.getInt(0), cursor.getInt(1))
+            }
+        }
+        return forkInfo
+    }
+
+    override fun setForkInfo(forkInfo: ForkInfo) {
+
     }
 }
 

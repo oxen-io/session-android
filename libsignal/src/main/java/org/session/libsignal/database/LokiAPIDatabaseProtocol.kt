@@ -1,8 +1,9 @@
 package org.session.libsignal.database
 
 import org.session.libsignal.crypto.ecc.ECKeyPair
+import org.session.libsignal.utilities.ForkInfo
 import org.session.libsignal.utilities.Snode
-import java.util.*
+import java.util.Date
 
 interface LokiAPIDatabaseProtocol {
 
@@ -33,4 +34,7 @@ interface LokiAPIDatabaseProtocol {
     fun getClosedGroupEncryptionKeyPairs(groupPublicKey: String): List<ECKeyPair>
     fun getLatestClosedGroupEncryptionKeyPair(groupPublicKey: String): ECKeyPair?
     fun isClosedGroup(groupPublicKey: String): Boolean
+    fun getForkInfo(): ForkInfo
+    fun setForkInfo(forkInfo: ForkInfo)
+
 }
