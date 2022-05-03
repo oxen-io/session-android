@@ -21,6 +21,7 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsignal.utilities.IdPrefix
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
@@ -84,6 +85,7 @@ class UserDetailsBottomSheet : BottomSheetDialogFragment() {
             nameTextView.text = recipient.name ?: publicKey // Uses the Contact API internally
 
             publicKeyTextView.isVisible = !threadRecipient.isOpenGroupRecipient
+            messageButton.isVisible = IdPrefix.fromValue(publicKey) == IdPrefix.BLINDED
             publicKeyTextView.text = publicKey
             publicKeyTextView.setOnLongClickListener {
                 val clipboard =

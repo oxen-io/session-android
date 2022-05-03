@@ -7,6 +7,7 @@ import com.goterl.lazysodium.interfaces.Hash
 import com.goterl.lazysodium.utils.Key
 import com.goterl.lazysodium.utils.KeyPair
 import org.session.libsignal.utilities.Hex
+import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.toHexString
 import kotlin.experimental.inv
 
@@ -185,7 +186,7 @@ object SodiumUtilities {
         var publicKey: String
 
         constructor(id: String) {
-            prefix = IdPrefix.fromValue(id.take(2))
+            prefix = IdPrefix.fromValue(id)
             publicKey = id.drop(2)
         }
 
@@ -198,17 +199,4 @@ object SodiumUtilities {
             get() = prefix?.value + publicKey
     }
 
-    enum class IdPrefix(val value: String) {
-        STANDARD("05"), BLINDED("15"), UN_BLINDED("00");
-
-        companion object {
-            fun fromValue(rawValue: String): IdPrefix? = when(rawValue) {
-                STANDARD.value -> STANDARD
-                BLINDED.value -> BLINDED
-                UN_BLINDED.value -> UN_BLINDED
-                else -> null
-            }
-        }
-
-    }
 }

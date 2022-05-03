@@ -4,6 +4,7 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
+import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.toHexString
 
 sealed class Destination {
@@ -38,7 +39,7 @@ sealed class Destination {
             return when {
                 address.isContact -> {
                     val contact = address.contactIdentifier()
-                    if (SodiumUtilities.SessionId(contact).prefix == SodiumUtilities.IdPrefix.BLINDED) {
+                    if (SodiumUtilities.SessionId(contact).prefix == IdPrefix.BLINDED) {
                         OpenGroupInbox(
                             server = TODO(),
                             serverPublicKey = TODO(),

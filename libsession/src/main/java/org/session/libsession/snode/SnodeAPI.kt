@@ -280,7 +280,7 @@ object SnodeAPI {
             cachedSwarmCopy.addAll(cachedSwarm)
             return task { cachedSwarmCopy }
         } else {
-            val parameters = mapOf( "pubKey" to if (useTestnet) publicKey.removing05PrefixIfNeeded() else publicKey )
+            val parameters = mapOf( "pubKey" to if (useTestnet) publicKey.removingIdPrefixIfNeeded() else publicKey )
             return getRandomSnode().bind {
                 invoke(Snode.Method.GetSwarm, it, parameters, publicKey)
             }.map {
@@ -307,7 +307,7 @@ object SnodeAPI {
 //        }
         // Make the request
         val parameters = mapOf(
-            "pubKey" to if (useTestnet) publicKey.removing05PrefixIfNeeded() else publicKey,
+            "pubKey" to if (useTestnet) publicKey.removingIdPrefixIfNeeded() else publicKey,
             "lastHash" to lastHashValue,
 //            "timestamp" to timestamp,
 //            "pubkey_ed25519" to ed25519PublicKey,
@@ -332,7 +332,7 @@ object SnodeAPI {
     }
 
     fun sendMessage(message: SnodeMessage): Promise<Set<RawResponsePromise>, Exception> {
-        val destination = if (useTestnet) message.recipient.removing05PrefixIfNeeded() else message.recipient
+        val destination = if (useTestnet) message.recipient.removingIdPrefixIfNeeded() else message.recipient
         return retryIfNeeded(maxRetryCount) {
             getTargetSnodes(destination).map { swarm ->
                 swarm.map { snode ->

@@ -1,6 +1,6 @@
 package org.session.libsession.snode
 
-import org.session.libsignal.utilities.removing05PrefixIfNeeded
+import org.session.libsignal.utilities.removingIdPrefixIfNeeded
 
 data class SnodeMessage(
     /**
@@ -25,7 +25,7 @@ data class SnodeMessage(
 
     internal fun toJSON(): Map<String, String> {
         return mapOf(
-            "pubKey" to if (SnodeAPI.useTestnet) recipient.removing05PrefixIfNeeded() else recipient,
+            "pubKey" to if (SnodeAPI.useTestnet) recipient.removingIdPrefixIfNeeded() else recipient,
             "data" to data,
             "ttl" to ttl.toString(),
             "timestamp" to timestamp.toString(),

@@ -32,9 +32,10 @@ import org.session.libsignal.utilities.HTTP.Verb.GET
 import org.session.libsignal.utilities.HTTP.Verb.POST
 import org.session.libsignal.utilities.HTTP.Verb.PUT
 import org.session.libsignal.utilities.Hex
+import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.removing05PrefixIfNeeded
+import org.session.libsignal.utilities.removingIdPrefixIfNeeded
 import org.whispersystems.curve25519.Curve25519
 import kotlin.collections.component1
 import kotlin.collections.component2
@@ -267,7 +268,7 @@ object OpenGroupApi {
             if (serverCapabilities.contains("blind")) {
                 SodiumUtilities.blindedKeyPair(publicKey, ed25519KeyPair)?.let { keyPair ->
                     pubKey = SodiumUtilities.SessionId(
-                        SodiumUtilities.IdPrefix.BLINDED,
+                        IdPrefix.BLINDED,
                         keyPair.publicKey.asBytes
                     ).hexString
 
@@ -280,7 +281,7 @@ object OpenGroupApi {
                 } ?: return Promise.ofFail(Error.SigningFailed)
             } else {
                 pubKey = SodiumUtilities.SessionId(
-                    SodiumUtilities.IdPrefix.UN_BLINDED,
+                    IdPrefix.UN_BLINDED,
                     ed25519KeyPair.publicKey.asBytes
                 ).hexString
                 sodium.cryptoSignDetached(signature, messageBytes, messageBytes.size.toLong(), ed25519KeyPair.secretKey.asBytes)
@@ -412,7 +413,7 @@ object OpenGroupApi {
                 val sender = message.sender
                 val data = decode(message.base64EncodedData)
                 val signature = decode(message.base64EncodedSignature)
-                val publicKey = Hex.fromStringCondensed(sender.removing05PrefixIfNeeded())
+                val publicKey = Hex.fromStringCondensed(sender.removingIdPrefixIfNeeded())
                 val isValid = curve.verifySignature(publicKey, data, signature)
                 if (!isValid) {
                     Log.d("Loki", "Ignoring message with invalid signature.")
