@@ -324,8 +324,9 @@ object SnodeAPI {
 
         // If the namespace is default (0) here it will be implicitly read as 0 on the storage server
         // we only need to specify it explicitly if we want to (in future) or if it is non-zero
+        parameters["namespace"] = namespace
         if (namespace != 0) {
-            parameters["namespace"] = namespace
+
         }
 
         // Make the request

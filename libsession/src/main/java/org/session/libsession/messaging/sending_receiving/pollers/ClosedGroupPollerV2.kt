@@ -106,7 +106,7 @@ class ClosedGroupPollerV2 {
             } else if (currentForkInfo.hasNamespaces()) {
                 task {
                     val unAuthed = SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = -10).map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, -10) }
-                    val default = SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = 0).map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey) }
+                    val default = SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = 0).map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, 0) }
                     val unAuthedResult = unAuthed.get()
                     val defaultResult = default.get()
                     unAuthedResult + defaultResult
