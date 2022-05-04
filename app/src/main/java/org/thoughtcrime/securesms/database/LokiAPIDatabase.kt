@@ -40,13 +40,15 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         private val swarm = "swarm"
         @JvmStatic val createSwarmTableCommand = "CREATE TABLE $swarmTable ($swarmPublicKey TEXT PRIMARY KEY, $swarm TEXT);"
         // Last message hash values
-        private val lastMessageHashValueTable2 = "last_message_hash_value_table"
-        private val lastMessageHashValue = "last_message_hash_value"
+        private const val lastMessageHashValueTable2 = "last_message_hash_value_table"
+        private const val lastMessageHashValue = "last_message_hash_value"
+        private const val lastMessageHashNamespace = "last_message_namespace"
         @JvmStatic val createLastMessageHashValueTable2Command
             = "CREATE TABLE $lastMessageHashValueTable2 ($snode TEXT, $publicKey TEXT, $lastMessageHashValue TEXT, PRIMARY KEY ($snode, $publicKey));"
         // Received message hash values
-        private val receivedMessageHashValuesTable3 = "received_message_hash_values_table_3"
-        private val receivedMessageHashValues = "received_message_hash_values"
+        private const val receivedMessageHashValuesTable3 = "received_message_hash_values_table_3"
+        private const val receivedMessageHashValues = "received_message_hash_values"
+        private const val receivedMessageHashNamespace = "received_message_namespace"
         @JvmStatic val createReceivedMessageHashValuesTable3Command
             = "CREATE TABLE $receivedMessageHashValuesTable3 ($publicKey STRING PRIMARY KEY, $receivedMessageHashValues TEXT);"
         // Open group auth tokens
@@ -101,6 +103,9 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         const val SF_VALUE = "sf_value"
         const val CREATE_FORK_INFO_TABLE_COMMAND = "CREATE TABLE $FORK_INFO_TABLE ($DUMMY_KEY INTEGER PRIMARY KEY, $HF_VALUE INTEGER, $SF_VALUE INTEGER);"
         const val CREATE_DEFAULT_FORK_INFO_COMMAND = "INSERT INTO $FORK_INFO_TABLE ($DUMMY_KEY, $HF_VALUE, $SF_VALUE) VALUES ($DUMMY_VALUE, 18, 1);"
+
+        const val UPDATE_HASHES_INCLUDE_NAMESPACE_COMMAND = "ALTER TABLE $lastMessageHashValueTable2 ADD COLUMN $lastMessageHashNamespace INTEGER DEFAULT 0;" +
+                "ALTER TABLE $receivedMessageHashValuesTable3 ADD COLUMN $receivedMessageHashNamespace INTEGER DEFAULT 0;"
 
         // region Deprecated
         private val deviceLinkCache = "loki_pairing_authorisation_cache"
@@ -236,36 +241,45 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         database.insertOrUpdate(swarmTable, row, "${Companion.swarmPublicKey} = ?", wrap(publicKey))
     }
 
-    override fun getLastMessageHashValue(snode: Snode, publicKey: String): String? {
+    override fun getLastMessageHashValue(snode: Snode, publicKey: String, namespace: Int): String? {
         val database = databaseHelper.readableDatabase
-        val query = "${Companion.snode} = ? AND ${Companion.publicKey} = ?"
-        return database.get(lastMessageHashValueTable2, query, arrayOf( snode.toString(), publicKey )) { cursor ->
+        val query = "${Companion.snode} = ? AND ${Companion.publicKey} = ? AND $lastMessageHashNamespace = ?"
+        return database.get(lastMessageHashValueTable2, query, arrayOf( snode.toString(), publicKey, namespace.toString() )) { cursor ->
             cursor.getString(cursor.getColumnIndexOrThrow(lastMessageHashValue))
         }
     }
 
-    override fun setLastMessageHashValue(snode: Snode, publicKey: String, newValue: String) {
+    override fun setLastMessageHashValue(snode: Snode, publicKey: String, newValue: String, namespace: Int) {
         val database = databaseHelper.writableDatabase
-        val row = wrap(mapOf( Companion.snode to snode.toString(), Companion.publicKey to publicKey, lastMessageHashValue to newValue ))
-        val query = "${Companion.snode} = ? AND ${Companion.publicKey} = ?"
-        database.insertOrUpdate(lastMessageHashValueTable2, row, query, arrayOf( snode.toString(), publicKey ))
+        val row = wrap(mapOf(
+            Companion.snode to snode.toString(),
+            Companion.publicKey to publicKey,
+            lastMessageHashValue to newValue,
+            lastMessageHashNamespace to namespace.toString()
+        ))
+        val query = "${Companion.snode} = ? AND ${Companion.publicKey} = ? AND $lastMessageHashNamespace = ?"
+        database.insertOrUpdate(lastMessageHashValueTable2, row, query, arrayOf( snode.toString(), publicKey, namespace.toString() ))
     }
 
-    override fun getReceivedMessageHashValues(publicKey: String): Set<String>? {
+    override fun getReceivedMessageHashValues(publicKey: String, namespace: Int): Set<String>? {
         val database = databaseHelper.readableDatabase
-        val query = "${Companion.publicKey} = ?"
-        return database.get(receivedMessageHashValuesTable3, query, arrayOf( publicKey )) { cursor ->
+        val query = "${Companion.publicKey} = ? AND ${Companion.receivedMessageHashNamespace} = ?"
+        return database.get(receivedMessageHashValuesTable3, query, arrayOf( publicKey, namespace.toString() )) { cursor ->
             val receivedMessageHashValuesAsString = cursor.getString(cursor.getColumnIndexOrThrow(Companion.receivedMessageHashValues))
             receivedMessageHashValuesAsString.split("-").toSet()
         }
     }
 
-    override fun setReceivedMessageHashValues(publicKey: String, newValue: Set<String>) {
+    override fun setReceivedMessageHashValues(publicKey: String, newValue: Set<String>, namespace: Int) {
         val database = databaseHelper.writableDatabase
         val receivedMessageHashValuesAsString = newValue.joinToString("-")
-        val row = wrap(mapOf( Companion.publicKey to publicKey, Companion.receivedMessageHashValues to receivedMessageHashValuesAsString ))
-        val query = "${Companion.publicKey} = ?"
-        database.insertOrUpdate(receivedMessageHashValuesTable3, row, query, arrayOf( publicKey ))
+        val row = wrap(mapOf(
+            Companion.publicKey to publicKey,
+            Companion.receivedMessageHashValues to receivedMessageHashValuesAsString,
+            Companion.receivedMessageHashNamespace to namespace.toString()
+        ))
+        val query = "${Companion.publicKey} = ? AND $receivedMessageHashNamespace"
+        database.insertOrUpdate(receivedMessageHashValuesTable3, row, query, arrayOf( publicKey, namespace.toString() ))
     }
 
     override fun getAuthToken(server: String): String? {

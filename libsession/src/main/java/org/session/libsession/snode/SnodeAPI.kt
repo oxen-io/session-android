@@ -300,7 +300,7 @@ object SnodeAPI {
     fun getRawMessages(snode: Snode, publicKey: String, requiresAuth: Boolean = true, namespace: Int = 0): RawResponsePromise {
         val userED25519KeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return Promise.ofFail(Error.NoKeyPair)
         // Get last message hash
-        val lastHashValue = database.getLastMessageHashValue(snode, publicKey) ?: ""
+        val lastHashValue = database.getLastMessageHashValue(snode, publicKey, namespace) ?: ""
         val parameters = mutableMapOf<String,Any>(
             "pubKey" to if (useTestnet) publicKey.removing05PrefixIfNeeded() else publicKey,
             "lastHash" to lastHashValue,
@@ -460,26 +460,26 @@ object SnodeAPI {
     fun parseRawMessagesResponse(rawResponse: RawResponse, snode: Snode, publicKey: String, namespace: Int = 0): List<Pair<SignalServiceProtos.Envelope, String?>> {
         val messages = rawResponse["messages"] as? List<*>
         return if (messages != null) {
-            updateLastMessageHashValueIfPossible(snode, publicKey, messages)
-            val newRawMessages = removeDuplicates(publicKey, messages)
+            updateLastMessageHashValueIfPossible(snode, publicKey, messages, namespace)
+            val newRawMessages = removeDuplicates(publicKey, messages, namespace)
             return parseEnvelopes(newRawMessages);
         } else {
             listOf()
         }
     }
 
-    private fun updateLastMessageHashValueIfPossible(snode: Snode, publicKey: String, rawMessages: List<*>) {
+    private fun updateLastMessageHashValueIfPossible(snode: Snode, publicKey: String, rawMessages: List<*>, namespace: Int) {
         val lastMessageAsJSON = rawMessages.lastOrNull() as? Map<*, *>
         val hashValue = lastMessageAsJSON?.get("hash") as? String
         if (hashValue != null) {
-            database.setLastMessageHashValue(snode, publicKey, hashValue)
+            database.setLastMessageHashValue(snode, publicKey, hashValue, namespace)
         } else if (rawMessages.isNotEmpty()) {
             Log.d("Loki", "Failed to update last message hash value from: ${rawMessages.prettifiedDescription()}.")
         }
     }
 
-    private fun removeDuplicates(publicKey: String, rawMessages: List<*>): List<*> {
-        val receivedMessageHashValues = database.getReceivedMessageHashValues(publicKey)?.toMutableSet() ?: mutableSetOf()
+    private fun removeDuplicates(publicKey: String, rawMessages: List<*>, namespace: Int): List<*> {
+        val receivedMessageHashValues = database.getReceivedMessageHashValues(publicKey, namespace)?.toMutableSet() ?: mutableSetOf()
         val result = rawMessages.filter { rawMessage ->
             val rawMessageAsJSON = rawMessage as? Map<*, *>
             val hashValue = rawMessageAsJSON?.get("hash") as? String
@@ -492,7 +492,7 @@ object SnodeAPI {
                 false
             }
         }
-        database.setReceivedMessageHashValues(publicKey, receivedMessageHashValues)
+        database.setReceivedMessageHashValues(publicKey, receivedMessageHashValues, namespace)
         return result
     }
 
