@@ -3,6 +3,7 @@ package org.session.libsession.messaging.sending_receiving.pollers
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.functional.bind
 import nl.komponents.kovenant.functional.map
+import nl.komponents.kovenant.task
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
 import org.session.libsession.messaging.jobs.JobQueue
@@ -11,6 +12,8 @@ import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsignal.crypto.getRandomElementOrNull
 import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.defaultRequiresAuth
+import org.session.libsignal.utilities.hasNamespaces
 import java.util.Date
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
@@ -97,14 +100,20 @@ class ClosedGroupPollerV2 {
         val promise = SnodeAPI.getSwarm(groupPublicKey).bind { swarm ->
             val snode = swarm.getRandomElementOrNull() ?: throw InsufficientSnodesException() // Should be cryptographically secure
             if (!isPolling(groupPublicKey)) { throw PollingCanceledException() }
-            // TODO: add here the default namespace without requiring auth (will break after hardfork and transition)
-            /*
-            TODO: add here the -10 namespace without requiring auth
-                (will continue working after hardfork and transition however no messages will be deposited into it until start of HF period)
-             */
-
-            SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = -10).map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, -10) }
-            SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = 0).map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey) }
+            val currentForkInfo = SnodeAPI.forkInfo
+            if (currentForkInfo.defaultRequiresAuth()) {
+                SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = -10).map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, -10) }
+            } else if (currentForkInfo.hasNamespaces()) {
+                task {
+                    val unAuthed = SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = -10).map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, -10) }
+                    val default = SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = 0).map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey) }
+                    val unAuthedResult = unAuthed.get()
+                    val defaultResult = default.get()
+                    unAuthedResult + defaultResult
+                }
+            } else {
+                SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = 0).map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey) }
+            }
         }
         promise.success { envelopes ->
             if (!isPolling(groupPublicKey)) { return@success }

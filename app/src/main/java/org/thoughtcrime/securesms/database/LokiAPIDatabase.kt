@@ -104,8 +104,8 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         const val CREATE_FORK_INFO_TABLE_COMMAND = "CREATE TABLE $FORK_INFO_TABLE ($DUMMY_KEY INTEGER PRIMARY KEY, $HF_VALUE INTEGER, $SF_VALUE INTEGER);"
         const val CREATE_DEFAULT_FORK_INFO_COMMAND = "INSERT INTO $FORK_INFO_TABLE ($DUMMY_KEY, $HF_VALUE, $SF_VALUE) VALUES ($DUMMY_VALUE, 18, 1);"
 
-        const val UPDATE_HASHES_INCLUDE_NAMESPACE_COMMAND = "ALTER TABLE $lastMessageHashValueTable2 ADD COLUMN $lastMessageHashNamespace INTEGER DEFAULT 0;" +
-                "ALTER TABLE $receivedMessageHashValuesTable3 ADD COLUMN $receivedMessageHashNamespace INTEGER DEFAULT 0;"
+        const val UPDATE_HASHES_INCLUDE_NAMESPACE_COMMAND = "ALTER TABLE $lastMessageHashValueTable2 ADD COLUMN $lastMessageHashNamespace INTEGER DEFAULT 0; "
+        const val UPDATE_RECEIVED_INCLUDE_NAMESPACE_COMMAND = "ALTER TABLE $receivedMessageHashValuesTable3 ADD COLUMN $receivedMessageHashNamespace INTEGER DEFAULT 0;"
 
         // region Deprecated
         private val deviceLinkCache = "loki_pairing_authorisation_cache"
@@ -278,7 +278,7 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
             Companion.receivedMessageHashValues to receivedMessageHashValuesAsString,
             Companion.receivedMessageHashNamespace to namespace.toString()
         ))
-        val query = "${Companion.publicKey} = ? AND $receivedMessageHashNamespace"
+        val query = "${Companion.publicKey} = ? AND $receivedMessageHashNamespace = ?"
         database.insertOrUpdate(receivedMessageHashValuesTable3, row, query, arrayOf( publicKey, namespace.toString() ))
     }
 

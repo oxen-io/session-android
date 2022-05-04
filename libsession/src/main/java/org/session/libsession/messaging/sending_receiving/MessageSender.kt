@@ -8,9 +8,17 @@ import org.session.libsession.messaging.jobs.MessageSendJob
 import org.session.libsession.messaging.jobs.NotifyPNServerJob
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.Message
-import org.session.libsession.messaging.messages.control.*
-import org.session.libsession.messaging.messages.visible.*
-import org.session.libsession.messaging.open_groups.*
+import org.session.libsession.messaging.messages.control.CallMessage
+import org.session.libsession.messaging.messages.control.ClosedGroupControlMessage
+import org.session.libsession.messaging.messages.control.ConfigurationMessage
+import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
+import org.session.libsession.messaging.messages.control.UnsendRequest
+import org.session.libsession.messaging.messages.visible.LinkPreview
+import org.session.libsession.messaging.messages.visible.Profile
+import org.session.libsession.messaging.messages.visible.Quote
+import org.session.libsession.messaging.messages.visible.VisibleMessage
+import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
+import org.session.libsession.messaging.open_groups.OpenGroupMessageV2
 import org.session.libsession.messaging.utilities.MessageWrapper
 import org.session.libsession.snode.RawResponsePromise
 import org.session.libsession.snode.SnodeAPI
@@ -23,6 +31,7 @@ import org.session.libsignal.crypto.PushTransportDetails
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.hasNamespaces
 import org.session.libsignal.utilities.hexEncodedPublicKey
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment as SignalAttachment
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview as SignalLinkPreview
@@ -125,6 +134,8 @@ object MessageSender {
             // Wrap the result
             val kind: SignalServiceProtos.Envelope.Type
             val senderPublicKey: String
+            // TODO: this might change in future for config messages
+            val namespace: Int = if (destination is Destination.ClosedGroup && SnodeAPI.forkInfo.hasNamespaces()) -10 else 0
             when (destination) {
                 is Destination.Contact -> {
                     kind = SignalServiceProtos.Envelope.Type.SESSION_MESSAGE
@@ -148,7 +159,7 @@ object MessageSender {
             if (destination is Destination.Contact && message is VisibleMessage && !isSelfSend) {
                 SnodeModule.shared.broadcaster.broadcast("sendingMessage", message.sentTimestamp!!)
             }
-            SnodeAPI.sendMessage(snodeMessage).success { promises: Set<RawResponsePromise> ->
+            SnodeAPI.sendMessage(snodeMessage, requiresAuth = false, namespace = namespace).success { promises: Set<RawResponsePromise> ->
                 var isSuccess = false
                 val promiseCount = promises.size
                 var errorCount = 0

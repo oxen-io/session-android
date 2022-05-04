@@ -16,5 +16,5 @@ data class ForkInfo(val hf: Int, val sf: Int) {
 }
 
 // add info here for when various features are active
-fun ForkInfo.hasBatchMessaging() = hf >= 19
+fun ForkInfo.hasNamespaces() = hf >= 19
 fun ForkInfo.defaultRequiresAuth() = hf >= 19 && sf >= 1

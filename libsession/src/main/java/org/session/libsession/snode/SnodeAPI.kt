@@ -30,7 +30,6 @@ import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Snode
 import org.session.libsignal.utilities.ThreadUtils
 import org.session.libsignal.utilities.prettifiedDescription
-import org.session.libsignal.utilities.removing05PrefixIfNeeded
 import org.session.libsignal.utilities.retryIfNeeded
 import java.security.SecureRandom
 import java.util.Date
@@ -79,7 +78,7 @@ object SnodeAPI {
     private val targetSwarmSnodeCount = 2
     private val useOnionRequests = true
 
-    internal val useTestnet = false
+    internal val useTestnet = true
 
     // Error
     internal sealed class Error(val description: String) : Exception(description) {
@@ -286,7 +285,7 @@ object SnodeAPI {
             cachedSwarmCopy.addAll(cachedSwarm)
             return task { cachedSwarmCopy }
         } else {
-            val parameters = mapOf( "pubKey" to if (useTestnet) publicKey.removing05PrefixIfNeeded() else publicKey )
+            val parameters = mapOf( "pubKey" to publicKey )
             return getRandomSnode().bind {
                 invoke(Snode.Method.GetSwarm, it, publicKey, parameters)
             }.map {
@@ -302,7 +301,7 @@ object SnodeAPI {
         // Get last message hash
         val lastHashValue = database.getLastMessageHashValue(snode, publicKey, namespace) ?: ""
         val parameters = mutableMapOf<String,Any>(
-            "pubKey" to if (useTestnet) publicKey.removing05PrefixIfNeeded() else publicKey,
+            "pubKey" to publicKey,
             "lastHash" to lastHashValue,
         )
         // Construct signature
@@ -348,12 +347,35 @@ object SnodeAPI {
         }
     }
 
-    fun sendMessage(message: SnodeMessage): Promise<Set<RawResponsePromise>, Exception> {
-        val destination = if (useTestnet) message.recipient.removing05PrefixIfNeeded() else message.recipient
+    fun sendMessage(message: SnodeMessage, requiresAuth: Boolean = false, namespace: Int = 0): Promise<Set<RawResponsePromise>, Exception> {
+        val destination = message.recipient
         return retryIfNeeded(maxRetryCount) {
+            val module = MessagingModuleConfiguration.shared
+            val userED25519KeyPair = module.getUserED25519KeyPair() ?: return@retryIfNeeded Promise.ofFail(Error.NoKeyPair)
+            val parameters = message.toJSON().toMutableMap<String,Any>()
+            // Construct signature
+            if (requiresAuth) {
+                val sigTimestamp = System.currentTimeMillis() + SnodeAPI.clockOffset
+                val ed25519PublicKey = userED25519KeyPair.publicKey.asHexString
+                val signature = ByteArray(Sign.BYTES)
+                // assume namespace here is non-zero, as zero namespace doesn't require auth
+                val verificationData = "store$namespace$sigTimestamp".toByteArray()
+                try {
+                    sodium.cryptoSignDetached(signature, verificationData, verificationData.size.toLong(), userED25519KeyPair.secretKey.asBytes)
+                } catch (exception: Exception) {
+                    return@retryIfNeeded Promise.ofFail(Error.SigningFailed)
+                }
+                parameters["sig_timestamp"] = sigTimestamp
+                parameters["pubkey_ed25519"] = ed25519PublicKey
+                parameters["signature"] = Base64.encodeBytes(signature)
+            }
+            // If the namespace is default (0) here it will be implicitly read as 0 on the storage server
+            // we only need to specify it explicitly if we want to (in future) or if it is non-zero
+            if (namespace != 0) {
+                parameters["namespace"] = namespace
+            }
             getTargetSnodes(destination).map { swarm ->
                 swarm.map { snode ->
-                    val parameters = message.toJSON()
                     invoke(Snode.Method.SendMessage, snode, destination, parameters)
                 }.toSet()
             }
