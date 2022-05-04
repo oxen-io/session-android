@@ -461,7 +461,7 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
     }
 
     override fun getForkInfo(): ForkInfo {
-        val database = databaseHelper.writableDatabase
+        val database = databaseHelper.readableDatabase
         val queryCursor = database.query(FORK_INFO_TABLE, arrayOf(HF_VALUE, SF_VALUE), "$DUMMY_KEY = $DUMMY_VALUE", null, null, null, null)
         val forkInfo = queryCursor.use { cursor ->
             if (!cursor.moveToNext()) {
@@ -474,7 +474,13 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
     }
 
     override fun setForkInfo(forkInfo: ForkInfo) {
-
+        val database = databaseHelper.writableDatabase
+        val query = "$DUMMY_KEY = $DUMMY_VALUE"
+        val contentValues = ContentValues(3)
+        contentValues.put(DUMMY_KEY, DUMMY_VALUE)
+        contentValues.put(HF_VALUE, forkInfo.hf)
+        contentValues.put(SF_VALUE, forkInfo.sf)
+        database.insertOrUpdate(FORK_INFO_TABLE, contentValues, query, emptyArray())
     }
 }
 
