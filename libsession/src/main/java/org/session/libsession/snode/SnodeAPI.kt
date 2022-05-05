@@ -302,7 +302,7 @@ object SnodeAPI {
         val lastHashValue = database.getLastMessageHashValue(snode, publicKey, namespace) ?: ""
         val parameters = mutableMapOf<String,Any>(
             "pubKey" to publicKey,
-            "lastHash" to lastHashValue,
+            "last_hash" to lastHashValue,
         )
         // Construct signature
         if (requiresAuth) {

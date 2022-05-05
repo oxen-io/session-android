@@ -359,16 +359,16 @@ object OnionRequestAPI {
                                     val timestamp = body["t"] as Long
                                     val offset = timestamp - Date().time
                                     SnodeAPI.clockOffset = offset
-                                    if (body.containsKey("hf")) {
-                                        @Suppress("UNCHECKED_CAST")
-                                        val currentHf = body["hf"] as List<Int>
-                                        if (currentHf.size < 2) {
-                                            Log.e("Loki", "Response contains fork information but doesn't have a hard and soft number")
-                                        } else {
-                                            val hf = currentHf[0]
-                                            val sf = currentHf[1]
-                                            SnodeAPI.forkInfo = ForkInfo(hf,sf)
-                                        }
+                                }
+                                if (body.containsKey("hf")) {
+                                    @Suppress("UNCHECKED_CAST")
+                                    val currentHf = body["hf"] as List<Int>
+                                    if (currentHf.size < 2) {
+                                        Log.e("Loki", "Response contains fork information but doesn't have a hard and soft number")
+                                    } else {
+                                        val hf = currentHf[0]
+                                        val sf = currentHf[1]
+                                        SnodeAPI.forkInfo = ForkInfo(hf,sf)
                                     }
                                 }
                                 if (statusCode != 200) {

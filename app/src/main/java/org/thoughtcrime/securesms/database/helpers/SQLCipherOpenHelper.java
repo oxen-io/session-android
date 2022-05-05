@@ -145,6 +145,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
     db.execSQL(RecipientDatabase.getCreateApprovedMeCommand());
     db.execSQL(MmsDatabase.getCreateMessageRequestResponseCommand());
     db.execSQL(LokiAPIDatabase.CREATE_FORK_INFO_TABLE_COMMAND);
+    db.execSQL(LokiAPIDatabase.CREATE_DEFAULT_FORK_INFO_COMMAND);
     db.execSQL(LokiAPIDatabase.UPDATE_HASHES_INCLUDE_NAMESPACE_COMMAND);
     db.execSQL(LokiAPIDatabase.UPDATE_RECEIVED_INCLUDE_NAMESPACE_COMMAND);
 
