@@ -31,6 +31,7 @@ import org.session.libsignal.crypto.PushTransportDetails
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.Namespace
 import org.session.libsignal.utilities.hasNamespaces
 import org.session.libsignal.utilities.hexEncodedPublicKey
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment as SignalAttachment
@@ -135,7 +136,9 @@ object MessageSender {
             val kind: SignalServiceProtos.Envelope.Type
             val senderPublicKey: String
             // TODO: this might change in future for config messages
-            val namespace: Int = if (destination is Destination.ClosedGroup && SnodeAPI.forkInfo.hasNamespaces()) -10 else 0
+            val namespace: Int =
+                if (destination is Destination.ClosedGroup && SnodeAPI.forkInfo.hasNamespaces()) Namespace.UNAUTHENTICATED_CLOSED_GROUP
+                else Namespace.DEFAULT
             when (destination) {
                 is Destination.Contact -> {
                     kind = SignalServiceProtos.Envelope.Type.SESSION_MESSAGE
