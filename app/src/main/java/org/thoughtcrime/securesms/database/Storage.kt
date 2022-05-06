@@ -750,28 +750,29 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
 
         return database.getLastSeenAndHasSent(threadId).second() ?: false
     }
+
     override fun getLastInboxMessageId(server: String): Long? {
-        return null
+        return DatabaseComponent.get(context).lokiAPIDatabase().getLastInboxMessageId(server)
     }
 
     override fun setLastInboxMessageId(server: String, messageId: Long) {
-
+        DatabaseComponent.get(context).lokiAPIDatabase().setLastInboxMessageId(server, messageId)
     }
 
     override fun removeLastInboxMessageId(server: String) {
-
+        DatabaseComponent.get(context).lokiAPIDatabase().removeLastInboxMessageId(server)
     }
 
     override fun getLastOutboxMessageId(server: String): Long? {
-        return null
+        return DatabaseComponent.get(context).lokiAPIDatabase().getLastOutboxMessageId(server)
     }
 
     override fun setLastOutboxMessageId(server: String, messageId: Long) {
-
+        DatabaseComponent.get(context).lokiAPIDatabase().setLastOutboxMessageId(server, messageId)
     }
 
     override fun removeLastOutboxMessageId(server: String) {
-
+        DatabaseComponent.get(context).lokiAPIDatabase().removeLastOutboxMessageId(server)
     }
 
 }

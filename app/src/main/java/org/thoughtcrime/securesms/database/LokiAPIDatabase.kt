@@ -95,6 +95,16 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         public val groupPublicKey = "group_public_key"
         @JvmStatic
         val createClosedGroupPublicKeysTable = "CREATE TABLE $closedGroupPublicKeysTable ($groupPublicKey STRING PRIMARY KEY)"
+        // Last inbox message server IDs
+        private val lastInboxMessageServerIdTable = "loki_api_last_inbox_message_server_id_cache"
+        private val lastInboxMessageServerId = "last_inbox_message_server_id"
+        @JvmStatic
+        val createLastInboxMessageServerIdCommand = "CREATE TABLE $lastInboxMessageServerIdTable($server STRING PRIMARY KEY, $lastInboxMessageServerId INTEGER DEFAULT 0)"
+        // Last outbox message server IDs
+        private val lastOutboxMessageServerIdTable = "loki_api_last_outbox_message_server_id_cache"
+        private val lastOutboxMessageServerId = "last_outbox_message_server_id"
+        @JvmStatic
+        val createLastOutboxMessageServerIdCommand = "CREATE TABLE $lastOutboxMessageServerIdTable($server STRING PRIMARY KEY, $lastOutboxMessageServerId INTEGER DEFAULT 0)"
 
         // region Deprecated
         private val deviceLinkCache = "loki_pairing_authorisation_cache"
@@ -439,6 +449,41 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         val database = databaseHelper.writableDatabase
         database.delete(closedGroupPublicKeysTable, "${Companion.groupPublicKey} = ?", wrap(groupPublicKey))
     }
+
+    fun setLastInboxMessageId(serverName: String, newValue: Long) {
+        val database = databaseHelper.writableDatabase
+        val row = wrap(mapOf(server to serverName, lastInboxMessageServerId to newValue.toString()))
+        database.insertOrUpdate(lastInboxMessageServerIdTable, row, "$server = ?", wrap(serverName))
+    }
+
+    fun getLastInboxMessageId(serverName: String): Long? {
+        val database = databaseHelper.writableDatabase
+        return database.get(lastInboxMessageServerIdTable, "$server = ?", wrap(serverName)) { cursor ->
+            cursor.getInt(lastInboxMessageServerId)
+        }?.toLong()
+    }
+
+    fun removeLastInboxMessageId(serverName: String) {
+        databaseHelper.writableDatabase.delete(lastInboxMessageServerIdTable, "$server = ?", wrap(serverName))
+    }
+
+    fun setLastOutboxMessageId(serverName: String, newValue: Long) {
+        val database = databaseHelper.writableDatabase
+        val row = wrap(mapOf(server to serverName, lastOutboxMessageServerId to newValue.toString()))
+        database.insertOrUpdate(lastOutboxMessageServerIdTable, row, "$server = ?", wrap(serverName))
+    }
+
+    fun getLastOutboxMessageId(serverName: String): Long? {
+        val database = databaseHelper.writableDatabase
+        return database.get(lastOutboxMessageServerIdTable, "$server = ?", wrap(serverName)) { cursor ->
+            cursor.getInt(lastOutboxMessageServerId)
+        }?.toLong()
+    }
+
+    fun removeLastOutboxMessageId(serverName: String) {
+        databaseHelper.writableDatabase.delete(lastOutboxMessageServerIdTable, "$server = ?", wrap(serverName))
+    }
+
 }
 
 // region Convenience
