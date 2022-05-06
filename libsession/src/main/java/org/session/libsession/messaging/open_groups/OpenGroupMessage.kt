@@ -1,10 +1,12 @@
 package org.session.libsession.messaging.open_groups
 
 import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsignal.crypto.PushTransportDetails
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Base64.decode
+import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.toHexString
 import org.whispersystems.curve25519.Curve25519
@@ -29,30 +31,47 @@ data class OpenGroupMessage(
 
         fun fromJSON(json: Map<String, Any>): OpenGroupMessage? {
             val base64EncodedData = json["data"] as? String ?: return null
-            val sentTimestamp = json["posted"] as? Long ?: return null
+            val sentTimestamp = json["posted"] as? Double ?: return null
             val serverID = json["id"] as? Int
             val sender = json["session_id"] as? String
             val base64EncodedSignature = json["signature"] as? String
             return OpenGroupMessage(
                 serverID = serverID?.toLong(),
                 sender = sender,
-                sentTimestamp = sentTimestamp,
+                sentTimestamp = (sentTimestamp * 1000).toLong(),
                 base64EncodedData = base64EncodedData,
                 base64EncodedSignature = base64EncodedSignature
             )
         }
-
     }
 
-    fun sign(): OpenGroupMessage? {
+    fun sign(room: String, server: String, fallbackSigningType: IdPrefix): OpenGroupMessage? {
         if (base64EncodedData.isEmpty()) return null
-        val (publicKey, privateKey) = MessagingModuleConfiguration.shared.storage.getUserX25519KeyPair().let { it.publicKey to it.privateKey }
-        if (sender != publicKey.serialize().toHexString()) return null
-        val signature = try {
-            curve.calculateSignature(privateKey.serialize(), decode(base64EncodedData))
-        } catch (e: Exception) {
-            Log.w("Loki", "Couldn't sign open group message.", e)
-            return null
+        val userEdKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return null
+        val openGroup = MessagingModuleConfiguration.shared.storage.getOpenGroup(room, server) ?: return null
+        val signature = when {
+            openGroup.capabilities.contains("blind") -> {
+                val blindedKeyPair = SodiumUtilities.blindedKeyPair(openGroup.publicKey, userEdKeyPair) ?: return null
+                SodiumUtilities.sogsSignature(
+                    decode(base64EncodedData),
+                    userEdKeyPair.secretKey.asBytes,
+                    blindedKeyPair.secretKey.asBytes,
+                    blindedKeyPair.publicKey.asBytes
+                ) ?: return null
+            }
+            fallbackSigningType == IdPrefix.UN_BLINDED -> {
+                curve.calculateSignature(userEdKeyPair.secretKey.asBytes, decode(base64EncodedData))
+            }
+            else -> {
+                val (publicKey, privateKey) = MessagingModuleConfiguration.shared.storage.getUserX25519KeyPair().let { it.publicKey to it.privateKey }
+                if (sender != publicKey.serialize().toHexString()) return null
+                try {
+                    curve.calculateSignature(privateKey.serialize(), decode(base64EncodedData))
+                } catch (e: Exception) {
+                    Log.w("Loki", "Couldn't sign open group message.", e)
+                    return null
+                }
+            }
         }
         return copy(base64EncodedSignature = Base64.encodeBytes(signature))
     }

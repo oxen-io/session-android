@@ -8,7 +8,7 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.sending_receiving.MessageSender.Error
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.removing05PrefixIfNeeded
+import org.session.libsignal.utilities.removingIdPrefixIfNeeded
 
 object MessageEncrypter {
 
@@ -24,7 +24,7 @@ object MessageEncrypter {
      */
     internal fun encrypt(plaintext: ByteArray, recipientHexEncodedX25519PublicKey: String): ByteArray {
         val userED25519KeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: throw Error.NoUserED25519KeyPair
-        val recipientX25519PublicKey = Hex.fromStringCondensed(recipientHexEncodedX25519PublicKey.removing05PrefixIfNeeded())
+        val recipientX25519PublicKey = Hex.fromStringCondensed(recipientHexEncodedX25519PublicKey.removingIdPrefixIfNeeded())
 
         val verificationData = plaintext + userED25519KeyPair.publicKey.asBytes + recipientX25519PublicKey
         val signature = ByteArray(Sign.BYTES)

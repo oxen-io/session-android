@@ -229,15 +229,15 @@ object MessageSender {
                     message.profile = Profile(displayName)
                 }
             }
-            // Validate the message
-            if (message !is VisibleMessage || !message.isValid()) {
-                throw Error.InvalidMessage
-            }
-            val messageBody = message.toProto()?.toByteArray()!!
-            val plaintext = PushTransportDetails.getPaddedMessageBody(messageBody)
             when (destination) {
                 is Destination.LegacyOpenGroup -> {
                     message.recipient = "${destination.server}.${destination.roomToken}"
+                    // Validate the message
+                    if (message !is VisibleMessage || !message.isValid()) {
+                        throw Error.InvalidMessage
+                    }
+                    val messageBody = message.toProto()?.toByteArray()!!
+                    val plaintext = PushTransportDetails.getPaddedMessageBody(messageBody)
                     val openGroupMessage = OpenGroupMessage(
                         sender = message.sender,
                         sentTimestamp = message.sentTimestamp!!,
@@ -253,6 +253,12 @@ object MessageSender {
                 }
                 is Destination.OpenGroup -> {
                     message.recipient = "${destination.server}.${destination.roomToken}"
+                    // Validate the message
+                    if (message !is VisibleMessage || !message.isValid()) {
+                        throw Error.InvalidMessage
+                    }
+                    val messageBody = message.toProto()?.toByteArray()!!
+                    val plaintext = PushTransportDetails.getPaddedMessageBody(messageBody)
                     val openGroupMessage = OpenGroupMessage(
                         sender = message.sender,
                         sentTimestamp = message.sentTimestamp!!,
@@ -268,6 +274,12 @@ object MessageSender {
                 }
                 is Destination.OpenGroupInbox -> {
                     message.recipient = destination.blinkedPublicKey
+                    // Validate the message
+                    if (message !is VisibleMessage || !message.isValid()) {
+                        throw Error.InvalidMessage
+                    }
+                    val messageBody = message.toProto()?.toByteArray()!!
+                    val plaintext = PushTransportDetails.getPaddedMessageBody(messageBody)
                     val base64EncodedData = Base64.encodeBytes(plaintext)
                     OpenGroupApi.sendDirectMessage(base64EncodedData, destination.blinkedPublicKey, destination.server).success {
                         message.openGroupServerMessageID = it.id

@@ -359,7 +359,7 @@ object OpenGroupApi {
         room: String,
         server: String
     ): Promise<OpenGroupMessage, Exception> {
-        val signedMessage = message.sign() ?: return Promise.ofFail(Error.SigningFailed)
+        val signedMessage = message.sign(room, server, fallbackSigningType = IdPrefix.STANDARD) ?: return Promise.ofFail(Error.SigningFailed)
         val jsonMessage = signedMessage.toJSON()
         val request = Request(
             verb = POST,

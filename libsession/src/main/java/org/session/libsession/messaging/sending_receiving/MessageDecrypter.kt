@@ -8,9 +8,9 @@ import com.goterl.lazysodium.interfaces.Sign
 import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.utilities.Hex
+import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.hexEncodedPublicKey
-import org.session.libsignal.utilities.removing05PrefixIfNeeded
-import org.session.libsignal.utilities.toHexString
+import org.session.libsignal.utilities.removingIdPrefixIfNeeded
 
 object MessageDecrypter {
 
@@ -26,7 +26,7 @@ object MessageDecrypter {
      */
     public fun decrypt(ciphertext: ByteArray, x25519KeyPair: ECKeyPair): Pair<ByteArray, String> {
         val recipientX25519PrivateKey = x25519KeyPair.privateKey.serialize()
-        val recipientX25519PublicKey = Hex.fromStringCondensed(x25519KeyPair.hexEncodedPublicKey.removing05PrefixIfNeeded())
+        val recipientX25519PublicKey = Hex.fromStringCondensed(x25519KeyPair.hexEncodedPublicKey.removingIdPrefixIfNeeded())
         val signatureSize = Sign.BYTES
         val ed25519PublicKeySize = Sign.PUBLICKEYBYTES
 
