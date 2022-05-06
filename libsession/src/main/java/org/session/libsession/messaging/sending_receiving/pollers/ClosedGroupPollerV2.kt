@@ -12,6 +12,7 @@ import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsignal.crypto.getRandomElementOrNull
 import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.Namespace
 import org.session.libsignal.utilities.defaultRequiresAuth
 import org.session.libsignal.utilities.hasNamespaces
 import java.util.Date
@@ -101,18 +102,20 @@ class ClosedGroupPollerV2 {
             val snode = swarm.getRandomElementOrNull() ?: throw InsufficientSnodesException() // Should be cryptographically secure
             if (!isPolling(groupPublicKey)) { throw PollingCanceledException() }
             val currentForkInfo = SnodeAPI.forkInfo
-            if (currentForkInfo.defaultRequiresAuth()) {
-                SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = -10).map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, -10) }
-            } else if (currentForkInfo.hasNamespaces()) {
-                task {
-                    val unAuthed = SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = -10).map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, -10) }
-                    val default = SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = 0).map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, 0) }
+            when {
+                currentForkInfo.defaultRequiresAuth() -> SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = Namespace.UNAUTHENTICATED_CLOSED_GROUP)
+                    .map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, Namespace.UNAUTHENTICATED_CLOSED_GROUP) }
+                currentForkInfo.hasNamespaces() -> task {
+                    val unAuthed = SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = Namespace.UNAUTHENTICATED_CLOSED_GROUP)
+                        .map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, Namespace.UNAUTHENTICATED_CLOSED_GROUP) }
+                    val default = SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = Namespace.DEFAULT)
+                        .map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, Namespace.DEFAULT) }
                     val unAuthedResult = unAuthed.get()
                     val defaultResult = default.get()
                     unAuthedResult + defaultResult
                 }
-            } else {
-                SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = 0).map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey) }
+                else -> SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = 0)
+                    .map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey) }
             }
         }
         promise.success { envelopes ->
