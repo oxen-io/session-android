@@ -28,7 +28,6 @@ import org.session.libsession.messaging.contacts.Contact.ContactContext
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.ViewUtil
-import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.ThreadUtils
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
@@ -127,7 +126,7 @@ class VisibleMessageView : LinearLayout {
             binding.profilePictureView.glide = glide
             binding.profilePictureView.update(message.individualRecipient)
             binding.profilePictureView.setOnClickListener {
-                if (thread.isOpenGroupRecipient && IdPrefix.fromValue(senderSessionID) == IdPrefix.BLINDED) {
+                if (thread.isOpenGroupRecipient) {
                     val intent = Intent(context, ConversationActivityV2::class.java)
                     intent.putExtra(ConversationActivityV2.FROM_OPEN_GROUP_THREAD_ID, threadID)
                     intent.putExtra(ConversationActivityV2.ADDRESS, Address.fromSerialized(senderSessionID))
