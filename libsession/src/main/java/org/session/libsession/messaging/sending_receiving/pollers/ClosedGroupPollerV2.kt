@@ -15,6 +15,7 @@ import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Namespace
 import org.session.libsignal.utilities.defaultRequiresAuth
 import org.session.libsignal.utilities.hasNamespaces
+import java.text.DateFormat
 import java.util.Date
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
@@ -112,9 +113,13 @@ class ClosedGroupPollerV2 {
                         .map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, Namespace.DEFAULT) }
                     val unAuthedResult = unAuthed.get()
                     val defaultResult = default.get()
+                    val format = DateFormat.getTimeInstance()
+                    if (unAuthedResult.isNotEmpty() && defaultResult.isNotEmpty()) {
+                        Log.d("Poller", "@${format.format(Date())}Polled ${unAuthedResult.size} from -10, ${defaultResult.size} from 0")
+                    }
                     unAuthedResult + defaultResult
                 }
-                else -> SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = 0)
+                else -> SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = Namespace.DEFAULT)
                     .map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey) }
             }
         }
