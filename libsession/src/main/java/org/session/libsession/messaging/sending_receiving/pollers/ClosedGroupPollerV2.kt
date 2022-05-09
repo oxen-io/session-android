@@ -114,7 +114,7 @@ class ClosedGroupPollerV2 {
                     val unAuthedResult = unAuthed.get()
                     val defaultResult = default.get()
                     val format = DateFormat.getTimeInstance()
-                    if (unAuthedResult.isNotEmpty() && defaultResult.isNotEmpty()) {
+                    if (unAuthedResult.isNotEmpty() || defaultResult.isNotEmpty()) {
                         Log.d("Poller", "@${format.format(Date())}Polled ${unAuthedResult.size} from -10, ${defaultResult.size} from 0")
                     }
                     unAuthedResult + defaultResult
