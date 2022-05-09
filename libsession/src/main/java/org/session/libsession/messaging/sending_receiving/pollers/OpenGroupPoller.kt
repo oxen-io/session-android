@@ -1,5 +1,6 @@
 package org.session.libsession.messaging.sending_receiving.pollers
 
+import com.google.protobuf.ByteString
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.functional.map
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -12,9 +13,12 @@ import org.session.libsession.messaging.open_groups.Endpoint
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.open_groups.OpenGroupMessage
+import org.session.libsession.messaging.sending_receiving.MessageReceiver
+import org.session.libsession.messaging.sending_receiving.handle
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsignal.protos.SignalServiceProtos
+import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.successBackground
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
@@ -92,9 +96,6 @@ class OpenGroupPoller(private val server: String, private val executorService: S
     ) {
         val storage = MessagingModuleConfiguration.shared.storage
         val groupId = "$server.$roomToken"
-        val openGroupId = GroupUtil.getEncodedOpenGroupID(groupId.toByteArray())
-        val threadId = storage.getThreadId(openGroupId)
-        val userPublicKey = storage.getUserPublicKey() ?: ""
 
         val existingOpenGroup = storage.getOpenGroup(roomToken, server)
         val publicKey = existingOpenGroup?.publicKey ?: return
@@ -158,7 +159,17 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         } else {
             storage.setLastInboxMessageId(server, lastMessageId)
         }
-
+        sortedMessages.forEach {
+            val encodedMessage = Base64.decode(it.base64EncodedMessage)
+            val envelope = SignalServiceProtos.Envelope.newBuilder()
+                .setTimestamp(TimeUnit.SECONDS.toMillis(it.postedAt))
+                .setType(SignalServiceProtos.Envelope.Type.SESSION_MESSAGE)
+                .setContent(ByteString.copyFrom(encodedMessage))
+                .setSource(it.sender)
+                .build()
+            val (message, proto) = MessageReceiver.parse(envelope.toByteArray(), it.id, fromOutbox)
+            MessageReceiver.handle(message, proto, null)
+        }
     }
 
     private fun handleNewMessages(

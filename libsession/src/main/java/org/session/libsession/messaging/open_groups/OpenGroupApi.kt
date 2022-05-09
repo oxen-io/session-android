@@ -166,7 +166,8 @@ object OpenGroupApi {
         val recipient: String = "",
         val postedAt: Long = 0,
         val expiresAt: Long = 0,
-        val message: String = "",
+        @JsonProperty("message")
+        val base64EncodedMessage: String = "",
     )
 
     @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)

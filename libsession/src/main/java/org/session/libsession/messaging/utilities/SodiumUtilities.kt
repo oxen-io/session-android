@@ -2,8 +2,10 @@ package org.session.libsession.messaging.utilities
 
 import com.goterl.lazysodium.LazySodiumAndroid
 import com.goterl.lazysodium.SodiumAndroid
+import com.goterl.lazysodium.interfaces.AEAD
 import com.goterl.lazysodium.interfaces.GenericHash
 import com.goterl.lazysodium.interfaces.Hash
+import com.goterl.lazysodium.interfaces.Sign
 import com.goterl.lazysodium.utils.Key
 import com.goterl.lazysodium.utils.KeyPair
 import org.session.libsignal.utilities.Hex
@@ -21,7 +23,7 @@ object SodiumUtilities {
     private const val SECRET_KEY_LENGTH: Int = 64 //crypto_sign_secretkeybytes
 
     /* 64-byte blake2b hash then reduce to get the blinding factor */
-    private fun generateBlindingFactor(serverPublicKey: String): ByteArray? {
+    internal fun generateBlindingFactor(serverPublicKey: String): ByteArray? {
         // k = salt.crypto_core_ed25519_scalar_reduce(blake2b(server_pk, digest_size=64).digest())
         val serverPubKeyData = Hex.fromStringCondensed(serverPublicKey)
         val serverPubKeyHash = ByteArray(GenericHash.BLAKE2B_BYTES_MAX)
@@ -125,7 +127,7 @@ object SodiumUtilities {
     }
 
     /* Combines two keys (`kA`) */
-    private fun combineKeys(lhsKey: ByteArray, rhsKey: ByteArray): ByteArray? {
+    internal fun combineKeys(lhsKey: ByteArray, rhsKey: ByteArray): ByteArray? {
         val kA = ByteArray(NO_CLAMP_LENGTH)
         return if (sodium.cryptoScalarMultE25519NoClamp(kA, lhsKey, rhsKey)) {
             kA
@@ -179,6 +181,41 @@ object SodiumUtilities {
 
         return SessionId(IdPrefix.BLINDED, pk1).publicKey == blindedId.publicKey ||
                 SessionId(IdPrefix.BLINDED, pk2).publicKey == blindedId.publicKey
+    }
+
+    fun encrypt(message: ByteArray, secretKey: ByteArray, nonce: ByteArray, additionalData: ByteArray? = null): ByteArray? {
+        val authenticatedCipherText = ByteArray(message.size)
+        return if (sodium.cryptoAeadChaCha20Poly1305IetfEncrypt(
+            authenticatedCipherText,
+            longArrayOf(0),
+            message,
+            message.size.toLong(),
+            additionalData,
+            (additionalData?.size ?: 0).toLong(),
+            null,
+            nonce,
+            secretKey
+        )) {
+            authenticatedCipherText
+        } else null
+    }
+
+    fun decrypt(ciphertext: ByteArray, decryptionKey: ByteArray, nonce: ByteArray): ByteArray? {
+        val plaintext = ByteArray(0)
+        return if (sodium.cryptoAeadChaCha20Poly1305IetfDecrypt(
+                plaintext,
+                longArrayOf(0), null, ciphertext, ciphertext.size.toLong(), null, 0L, decryptionKey, nonce
+            )
+        ) {
+            plaintext
+        } else null
+    }
+
+    fun toX25519(ed25519PublicKey: ByteArray): ByteArray? {
+        val x25519PublicKey = ByteArray(PUBLIC_KEY_LENGTH)
+        return if (sodium.convertPublicKeyEd25519ToCurve25519(x25519PublicKey, ed25519PublicKey)) {
+            x25519PublicKey
+        } else null
     }
 
 }

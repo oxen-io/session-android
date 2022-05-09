@@ -6,6 +6,7 @@ import org.session.libsession.messaging.messages.control.*
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsignal.crypto.PushTransportDetails
 import org.session.libsignal.protos.SignalServiceProtos
+import org.session.libsignal.utilities.IdPrefix
 
 object MessageReceiver {
 
@@ -22,6 +23,7 @@ object MessageReceiver {
         object SelfSend: Error("Message addressed at self.")
         object InvalidGroupPublicKey: Error("Invalid group public key.")
         object NoGroupKeyPair: Error("Missing group key pair.")
+        object NoUserED25519KeyPair : Error("Couldn't find user ED25519 key pair.")
 
         internal val isRetryable: Boolean = when (this) {
             is DuplicateMessage, is InvalidMessage, is UnknownMessage,
@@ -31,7 +33,13 @@ object MessageReceiver {
         }
     }
 
-    internal fun parse(data: ByteArray, openGroupServerID: Long?): Pair<Message, SignalServiceProtos.Content> {
+    internal fun parse(
+        data: ByteArray,
+        openGroupServerID: Long?,
+        isOutgoing: Boolean? = null,
+        openGroupPublicKey: String? = null,
+        otherBlindedPublicKey: String? = null
+    ): Pair<Message, SignalServiceProtos.Content> {
         val storage = MessagingModuleConfiguration.shared.storage
         val userPublicKey = storage.getUserPublicKey()
         val isOpenGroupMessage = (openGroupServerID != null)
@@ -48,10 +56,23 @@ object MessageReceiver {
         } else {
             when (envelope.type) {
                 SignalServiceProtos.Envelope.Type.SESSION_MESSAGE -> {
-                    val userX25519KeyPair = MessagingModuleConfiguration.shared.storage.getUserX25519KeyPair()
-                    val decryptionResult = MessageDecrypter.decrypt(ciphertext.toByteArray(), userX25519KeyPair)
-                    plaintext = decryptionResult.first
-                    sender = decryptionResult.second
+                    if (IdPrefix.fromValue(envelope.source) == IdPrefix.BLINDED) {
+                        otherBlindedPublicKey ?: throw Error.NoData
+                        openGroupPublicKey ?: throw Error.InvalidGroupPublicKey
+                        val decryptionResult = MessageDecrypter.decryptBlinded(
+                            ciphertext.toByteArray(),
+                            isOutgoing ?: false,
+                            otherBlindedPublicKey,
+                            openGroupPublicKey
+                        )
+                        plaintext = decryptionResult.first
+                        sender = decryptionResult.second
+                    } else {
+                        val userX25519KeyPair = MessagingModuleConfiguration.shared.storage.getUserX25519KeyPair()
+                        val decryptionResult = MessageDecrypter.decrypt(ciphertext.toByteArray(), userX25519KeyPair)
+                        plaintext = decryptionResult.first
+                        sender = decryptionResult.second
+                    }
                 }
                 SignalServiceProtos.Envelope.Type.CLOSED_GROUP_MESSAGE -> {
                     val hexEncodedGroupPublicKey = envelope.source

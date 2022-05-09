@@ -5,7 +5,10 @@ import com.goterl.lazysodium.LazySodiumAndroid
 import com.goterl.lazysodium.SodiumAndroid
 import com.goterl.lazysodium.interfaces.Box
 import com.goterl.lazysodium.interfaces.Sign
+import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.sending_receiving.MessageReceiver.Error
 import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
@@ -36,9 +39,9 @@ object MessageDecrypter {
             sodium.cryptoBoxSealOpen(plaintextWithMetadata, ciphertext, ciphertext.size.toLong(), recipientX25519PublicKey, recipientX25519PrivateKey)
         } catch (exception: Exception) {
             Log.d("Loki", "Couldn't decrypt message due to error: $exception.")
-            throw MessageReceiver.Error.DecryptionFailed
+            throw Error.DecryptionFailed
         }
-        if (plaintextWithMetadata.size <= (signatureSize + ed25519PublicKeySize)) { throw MessageReceiver.Error.DecryptionFailed }
+        if (plaintextWithMetadata.size <= (signatureSize + ed25519PublicKeySize)) { throw Error.DecryptionFailed }
         // 2. ) Get the message parts
         val signature = plaintextWithMetadata.sliceArray(plaintextWithMetadata.size - signatureSize until plaintextWithMetadata.size)
         val senderED25519PublicKey = plaintextWithMetadata.sliceArray(plaintextWithMetadata.size - (signatureSize + ed25519PublicKeySize) until plaintextWithMetadata.size - signatureSize)
@@ -47,14 +50,59 @@ object MessageDecrypter {
         val verificationData = (plaintext + senderED25519PublicKey + recipientX25519PublicKey)
         try {
             val isValid = sodium.cryptoSignVerifyDetached(signature, verificationData, verificationData.size, senderED25519PublicKey)
-            if (!isValid) { throw MessageReceiver.Error.InvalidSignature }
+            if (!isValid) { throw Error.InvalidSignature }
         } catch (exception: Exception) {
             Log.d("Loki", "Couldn't verify message signature due to error: $exception.")
-            throw MessageReceiver.Error.InvalidSignature
+            throw Error.InvalidSignature
         }
         // 4. ) Get the sender's X25519 public key
         val senderX25519PublicKey = ByteArray(Sign.CURVE25519_PUBLICKEYBYTES)
         sodium.convertPublicKeyEd25519ToCurve25519(senderX25519PublicKey, senderED25519PublicKey)
+
+        val id = SessionId(IdPrefix.STANDARD, senderX25519PublicKey)
+        return Pair(plaintext, id.hexString)
+    }
+
+    fun decryptBlinded(
+        message: ByteArray,
+        isOutgoing: Boolean,
+        otherBlindedPublicKey: String,
+        serverPublicKey: String
+    ): Pair<ByteArray, String> {
+        if (message.size < Box.NONCEBYTES + 2) throw Error.DecryptionFailed
+        val userEdKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: throw Error.NoUserED25519KeyPair
+        val blindedKeyPair = SodiumUtilities.blindedKeyPair(serverPublicKey, userEdKeyPair) ?: throw Error.DecryptionFailed
+        // Calculate the shared encryption key, receiving from A to B
+        val otherKeyBytes = otherBlindedPublicKey.removingIdPrefixIfNeeded().toByteArray()
+        val kA = if (isOutgoing) blindedKeyPair.publicKey.asBytes else otherKeyBytes
+        val decryptionKey = SodiumUtilities.sharedBlindedEncryptionKey(
+            userEdKeyPair.secretKey.asBytes,
+            otherKeyBytes,
+            kA,
+            if (isOutgoing) otherKeyBytes else userEdKeyPair.publicKey.asBytes
+        ) ?: throw Error.DecryptionFailed
+
+        // v, ct, nc = data[0], data[1:-24], data[-24:size]
+        val version = byteArrayOf(message.first()).toString().toInt()
+        if (version != 0) throw Error.DecryptionFailed
+        val ciphertext = message.slice(1..Box.NONCEBYTES).toByteArray()
+        val nonce = message.slice(Box.NONCEBYTES..message.size).toByteArray()
+
+        // Decrypt the message
+        val innerBytes = SodiumUtilities.decrypt(ciphertext, decryptionKey, nonce) ?: throw Error.DecryptionFailed
+        if (innerBytes.size < Sign.PUBLICKEYBYTES) throw Error.DecryptionFailed
+
+        // Split up: the last 32 bytes are the sender's *unblinded* ed25519 key
+        val plaintext = innerBytes.slice(0..innerBytes.size - Sign.PUBLICKEYBYTES).toByteArray()
+        val senderEdPublicKey = innerBytes.slice((innerBytes.size - Sign.PUBLICKEYBYTES..innerBytes.size)).toByteArray()
+
+        // Verify that the inner senderEdPublicKey (A) yields the same outer kA we got with the message
+        val blindingFactor = SodiumUtilities.generateBlindingFactor(serverPublicKey) ?: throw Error.DecryptionFailed
+        val sharedSecret = SodiumUtilities.combineKeys(blindingFactor, senderEdPublicKey) ?: throw Error.DecryptionFailed
+        if (!kA.contentEquals(sharedSecret)) throw Error.InvalidSignature
+
+        // Get the sender's X25519 public key
+        val senderX25519PublicKey = SodiumUtilities.toX25519(senderEdPublicKey) ?: throw Error.InvalidSignature
 
         val id = SessionId(IdPrefix.STANDARD, senderX25519PublicKey)
         return Pair(plaintext, id.hexString)
