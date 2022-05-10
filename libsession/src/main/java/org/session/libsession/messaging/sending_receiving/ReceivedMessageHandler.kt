@@ -145,13 +145,19 @@ private fun handleConfigurationMessage(message: ConfigurationMessage) {
 
     TextSecurePreferences.setConfigurationMessageSynced(context, true)
     TextSecurePreferences.setLastProfileUpdateTime(context, message.sentTimestamp!!)
-    if (firstTimeSync) {
-        val allClosedGroupPublicKeys = storage.getAllClosedGroupPublicKeys()
-        for (closedGroup in message.closedGroups) {
-            if (allClosedGroupPublicKeys.contains(closedGroup.publicKey)) continue
+    val allClosedGroupPublicKeys = storage.getAllClosedGroupPublicKeys()
+    for (closedGroup in message.closedGroups) {
+        if (allClosedGroupPublicKeys.contains(closedGroup.publicKey)) {
+            // just handle the closed group encryption key pairs to avoid sync'd devices getting out of sync
+            storage.addClosedGroupEncryptionKeyPair(closedGroup.encryptionKeyPair!!, closedGroup.publicKey)
+        } else if (firstTimeSync) {
+            // only handle new closed group if it's first time sync
             handleNewClosedGroup(message.sender!!, message.sentTimestamp!!, closedGroup.publicKey, closedGroup.name,
                 closedGroup.encryptionKeyPair!!, closedGroup.members, closedGroup.admins, message.sentTimestamp!!, closedGroup.expirationTimer)
         }
+    }
+    if (firstTimeSync) {
+
     }
     val allV2OpenGroups = storage.getAllV2OpenGroups().map { it.value.joinURL }
     for (openGroup in message.openGroups) {
