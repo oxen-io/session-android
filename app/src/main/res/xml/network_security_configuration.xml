@@ -3,11 +3,11 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">127.0.0.1</domain>
     </domain-config>
-    <domain-config cleartextTrafficPermitted="true">
+    <domain-config cleartextTrafficPermitted="false">
         <domain includeSubdomains="false">public.loki.foundation</domain>
-<!--        <trust-anchors>-->
-<!--            <certificates src="@raw/lf_session_cert"/>-->
-<!--        </trust-anchors>-->
+        <trust-anchors>
+            <certificates src="@raw/lf_session_cert"/>
+        </trust-anchors>
     </domain-config>
     <domain-config cleartextTrafficPermitted="false">
         <domain includeSubdomains="false">storage.seed1.loki.network</domain>

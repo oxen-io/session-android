@@ -368,7 +368,12 @@ object OnionRequestAPI {
                                     } else {
                                         val hf = currentHf[0]
                                         val sf = currentHf[1]
-                                        SnodeAPI.forkInfo = ForkInfo(hf,sf)
+                                        val newForkInfo = ForkInfo(hf, sf)
+                                        if (newForkInfo > SnodeAPI.forkInfo) {
+                                            SnodeAPI.forkInfo = ForkInfo(hf,sf)
+                                        } else if (newForkInfo < SnodeAPI.forkInfo) {
+                                            Log.w("Loki", "Got a new snode info fork version that was $newForkInfo, less than current known ${SnodeAPI.forkInfo}")
+                                        }
                                     }
                                 }
                                 if (statusCode != 200) {

@@ -57,6 +57,7 @@ object SnodeAPI {
     internal var clockOffset = 0L
     internal var forkInfo by observable(database.getForkInfo()) { _, oldValue, newValue ->
         if (newValue > oldValue) {
+            Log.d("Loki", "Setting new fork info new: $newValue, old: $oldValue")
             database.setForkInfo(newValue)
         }
     }
@@ -78,7 +79,7 @@ object SnodeAPI {
     private val targetSwarmSnodeCount = 2
     private val useOnionRequests = true
 
-    internal val useTestnet = true
+    internal val useTestnet = false
 
     // Error
     internal sealed class Error(val description: String) : Exception(description) {
