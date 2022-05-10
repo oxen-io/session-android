@@ -280,7 +280,12 @@ object MessageSender {
                     }
                     val messageBody = message.toProto()?.toByteArray()!!
                     val plaintext = PushTransportDetails.getPaddedMessageBody(messageBody)
-                    val base64EncodedData = Base64.encodeBytes(plaintext)
+                    val ciphertext = MessageEncrypter.encryptBlinded(
+                        plaintext,
+                        destination.blinkedPublicKey,
+                        destination.serverPublicKey
+                    )
+                    val base64EncodedData = Base64.encodeBytes(ciphertext)
                     OpenGroupApi.sendDirectMessage(base64EncodedData, destination.blinkedPublicKey, destination.server).success {
                         message.openGroupServerMessageID = it.id
                         handleSuccessfulMessageSend(message, destination, openGroupSentTimestamp = TimeUnit.SECONDS.toMillis(it.postedAt))

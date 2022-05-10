@@ -182,7 +182,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         if (threadId == -1L) {
             intent.getParcelableExtra<Address>(ADDRESS)?.let { it ->
                 val sessionId = SessionId(it.serialize())
-                val openGroup = lokiThreadDb.getOpenGroupChat(intent.getLongExtra(FROM_OPEN_GROUP_THREAD_ID, -1))
+                val openGroup = lokiThreadDb.getOpenGroupChat(intent.getLongExtra(FROM_GROUP_THREAD_ID, -1))
                 val address = if (sessionId.prefix == IdPrefix.BLINDED &&  openGroup != null) {
                     ContactUtilities.getBlindedIdMapping(this, sessionId.publicKey, openGroup.publicKey)?.let {
                         fromSerialized(it.sessionId)
@@ -277,7 +277,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // Extras
         const val THREAD_ID = "thread_id"
         const val ADDRESS = "address"
-        const val FROM_OPEN_GROUP_THREAD_ID = "from_open_group_id"
+        const val FROM_GROUP_THREAD_ID = "from_group_thread_id"
         const val SCROLL_MESSAGE_ID = "scroll_message_id"
         const val SCROLL_MESSAGE_AUTHOR = "scroll_message_author"
         // Request codes

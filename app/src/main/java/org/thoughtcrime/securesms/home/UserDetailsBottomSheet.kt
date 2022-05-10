@@ -85,7 +85,7 @@ class UserDetailsBottomSheet : BottomSheetDialogFragment() {
             nameTextView.text = recipient.name ?: publicKey // Uses the Contact API internally
 
             publicKeyTextView.isVisible = !threadRecipient.isOpenGroupRecipient
-            messageButton.isVisible = IdPrefix.fromValue(publicKey) == IdPrefix.BLINDED
+            messageButton.isVisible = !threadRecipient.isOpenGroupRecipient || IdPrefix.fromValue(publicKey) == IdPrefix.BLINDED
             publicKeyTextView.text = publicKey
             publicKeyTextView.setOnLongClickListener {
                 val clipboard =
@@ -104,6 +104,7 @@ class UserDetailsBottomSheet : BottomSheetDialogFragment() {
                 )
                 intent.putExtra(ConversationActivityV2.ADDRESS, recipient.address)
                 intent.putExtra(ConversationActivityV2.THREAD_ID, threadId ?: -1)
+                intent.putExtra(ConversationActivityV2.FROM_GROUP_THREAD_ID, threadID)
                 startActivity(intent)
                 dismiss()
             }

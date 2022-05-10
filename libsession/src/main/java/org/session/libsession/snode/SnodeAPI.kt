@@ -85,7 +85,8 @@ object SnodeAPI {
         val deferred = deferred<Map<*, *>, Exception>()
         if (useOnionRequests) {
             OnionRequestAPI.sendOnionRequest(method, parameters, snode, version, publicKey).map {
-                deferred.resolve(JsonUtil.fromJson(it.body, Map::class.java))
+                val body = it.body ?: throw Error.Generic
+                deferred.resolve(JsonUtil.fromJson(body, Map::class.java))
             }.fail { deferred.reject(it) }
         } else {
             ThreadUtils.queue {

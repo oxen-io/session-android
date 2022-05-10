@@ -217,6 +217,12 @@ object OpenGroupApi {
         return RequestBody.create(MediaType.get("application/json"), parametersAsJSON)
     }
 
+    private fun getResponseBody(request: Request): Promise<ByteArray, Exception> {
+        return send(request).map { response ->
+            response.body ?: throw Error.ParsingFailed
+        }
+    }
+
     private fun getResponseBodyJson(request: Request): Promise<Map<*, *>, Exception> {
         return send(request).map {
             JsonUtil.fromJson(it.body, Map::class.java)
@@ -325,7 +331,7 @@ object OpenGroupApi {
             server = server,
             endpoint = Endpoint.RoomFileIndividual(roomID, imageId.toString())
         )
-        return send(request).map { it.body ?: throw Error.ParsingFailed }
+        return getResponseBody(request)
     }
 
     // region Upload/Download
@@ -350,7 +356,7 @@ object OpenGroupApi {
             server = server,
             endpoint = Endpoint.RoomFileIndividual(room, fileId)
         )
-        return send(request).map { it.body ?: throw Error.ParsingFailed }
+        return getResponseBody(request)
     }
     // endregion
 
@@ -456,8 +462,8 @@ object OpenGroupApi {
             endpoint = Endpoint.RoomDeleteMessages(room, storage.getUserPublicKey() ?: ""),
             queryParameters = queryParameters
         )
-        return send(request).map { response ->
-            val json = JsonUtil.fromJson(response.body, Map::class.java)
+        return getResponseBody(request).map { response ->
+            val json = JsonUtil.fromJson(response, Map::class.java)
             val type = TypeFactory.defaultInstance()
                 .constructCollectionType(List::class.java, MessageDeletion::class.java)
             val idsAsString = JsonUtil.toJson(json["ids"])
@@ -667,8 +673,8 @@ object OpenGroupApi {
         request: Request,
         requests: MutableList<BatchRequestInfo<*>>
     ): Promise<List<BatchResponse<*>>, Exception> {
-        return send(request).map {
-            val results = JsonUtil.fromJson(it.body, List::class.java) ?: throw Error.ParsingFailed
+        return getResponseBody(request).map {
+            val results = JsonUtil.fromJson(it, List::class.java) ?: throw Error.ParsingFailed
             results.mapIndexed { idx, result ->
                 val response = result as? Map<*, *> ?: throw Error.ParsingFailed
                 val code = response["code"] as Int
@@ -721,8 +727,8 @@ object OpenGroupApi {
             server = server,
             endpoint = Endpoint.Room(roomToken)
         )
-        return send(request).map { response ->
-            JsonUtil.fromJson(response.body, RoomInfo::class.java)
+        return getResponseBody(request).map { response ->
+            JsonUtil.fromJson(response, RoomInfo::class.java)
         }
     }
 
@@ -733,8 +739,8 @@ object OpenGroupApi {
             server = defaultServer,
             endpoint = Endpoint.Rooms
         )
-        return send(request).map { response ->
-            val rawRooms = JsonUtil.fromJson(response.body, List::class.java) ?: throw Error.ParsingFailed
+        return getResponseBody(request).map { response ->
+            val rawRooms = JsonUtil.fromJson(response, List::class.java) ?: throw Error.ParsingFailed
             rawRooms.mapNotNull {
                 JsonUtil.fromJson(JsonUtil.toJson(it), RoomInfo::class.java)
             }
@@ -783,8 +789,8 @@ object OpenGroupApi {
             endpoint = Endpoint.InboxFor(blindedSessionId),
             parameters = mapOf("message" to message)
         )
-        return send(request).map { response ->
-            JsonUtil.fromJson(response.body, DirectMessage::class.java)
+        return getResponseBody(request).map { response ->
+            JsonUtil.fromJson(response, DirectMessage::class.java)
         }
     }
 

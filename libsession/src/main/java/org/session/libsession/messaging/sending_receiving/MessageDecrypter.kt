@@ -85,8 +85,8 @@ object MessageDecrypter {
         // v, ct, nc = data[0], data[1:-24], data[-24:size]
         val version = byteArrayOf(message.first()).toString().toInt()
         if (version != 0) throw Error.DecryptionFailed
-        val ciphertext = message.slice(1..Box.NONCEBYTES).toByteArray()
-        val nonce = message.slice(Box.NONCEBYTES..message.size).toByteArray()
+        val ciphertext = message.drop(1).dropLast(Box.NONCEBYTES).toByteArray()
+        val nonce = message.takeLast(Box.NONCEBYTES).toByteArray()
 
         // Decrypt the message
         val innerBytes = SodiumUtilities.decrypt(ciphertext, decryptionKey, nonce) ?: throw Error.DecryptionFailed
