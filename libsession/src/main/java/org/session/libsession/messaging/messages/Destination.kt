@@ -20,9 +20,9 @@ sealed class Destination {
     class OpenGroup(
         val roomToken: String,
         val server: String,
-        val whisperTo: String? = null,
+        val whisperTo: List<String>? = null,
         val whisperMods: Boolean = false,
-        val fileIds: List<String> = emptyList()
+        val fileIds: List<String>? = null
     ) : Destination()
 
     class OpenGroupInbox(
@@ -33,7 +33,7 @@ sealed class Destination {
 
     companion object {
 
-        fun from(address: Address): Destination {
+        fun from(address: Address, fileIds: List<String>? = null): Destination {
             return when {
                 address.isContact -> {
                     Contact(address.contactIdentifier())
@@ -46,11 +46,9 @@ sealed class Destination {
                 address.isOpenGroup -> {
                     val storage = MessagingModuleConfiguration.shared.storage
                     val threadID = storage.getThreadId(address)!!
-                    when (val openGroup = storage.getOpenGroup(threadID)) {
-                        is org.session.libsession.messaging.open_groups.OpenGroup
-                            -> LegacyOpenGroup(openGroup.room, openGroup.server)
-                        else -> throw Exception("Missing open group for thread with ID: $threadID.")
-                    }
+                    storage.getOpenGroup(threadID)?.let {
+                        OpenGroup(roomToken = it.room, server = it.server, fileIds = fileIds)
+                    } ?: throw Exception("Missing open group for thread with ID: $threadID.")
                 }
                 address.isOpenGroupInbox -> {
                     val groupInboxId = GroupUtil.getDecodedGroupID(address.serialize()).split(".")

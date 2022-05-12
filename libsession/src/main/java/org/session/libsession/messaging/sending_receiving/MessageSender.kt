@@ -205,9 +205,10 @@ object MessageSender {
             message.sentTimestamp = System.currentTimeMillis()
         }
         val openGroup = storage.getOpenGroup(message.threadID!!)
+        val serverCapabilities = storage.getServerCapabilities(openGroup?.server!!)
         val userEdKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!
-        val blindedKeyPair = SodiumUtilities.blindedKeyPair(openGroup?.publicKey!!, userEdKeyPair)
-        message.sender = if (openGroup.capabilities.contains("blind") && blindedKeyPair != null) {
+        val blindedKeyPair = SodiumUtilities.blindedKeyPair(openGroup.publicKey, userEdKeyPair)
+        message.sender = if (serverCapabilities.contains("blind") && blindedKeyPair != null) {
             SessionId(IdPrefix.BLINDED, blindedKeyPair.publicKey.asBytes).hexString
         } else {
             SessionId(IdPrefix.UN_BLINDED, userEdKeyPair.publicKey.asBytes).hexString
@@ -230,29 +231,9 @@ object MessageSender {
                 }
             }
             when (destination) {
-                is Destination.LegacyOpenGroup -> {
-                    message.recipient = "${destination.server}.${destination.roomToken}"
-                    // Validate the message
-                    if (message !is VisibleMessage || !message.isValid()) {
-                        throw Error.InvalidMessage
-                    }
-                    val messageBody = message.toProto()?.toByteArray()!!
-                    val plaintext = PushTransportDetails.getPaddedMessageBody(messageBody)
-                    val openGroupMessage = OpenGroupMessage(
-                        sender = message.sender,
-                        sentTimestamp = message.sentTimestamp!!,
-                        base64EncodedData = Base64.encodeBytes(plaintext),
-                    )
-                    OpenGroupApi.send(openGroupMessage, destination.roomToken, destination.server).success {
-                        message.openGroupServerMessageID = it.serverID
-                        handleSuccessfulMessageSend(message, destination, openGroupSentTimestamp = it.sentTimestamp)
-                        deferred.resolve(Unit)
-                    }.fail {
-                        handleFailure(it)
-                    }
-                }
                 is Destination.OpenGroup -> {
-                    message.recipient = "${destination.server}.${destination.roomToken}"
+                    val whisperMods = if (destination.whisperTo.isNullOrEmpty() && destination.whisperMods) "mods" else null
+                    message.recipient = "${destination.server}.${destination.roomToken}.${destination.whisperTo}.$whisperMods"
                     // Validate the message
                     if (message !is VisibleMessage || !message.isValid()) {
                         throw Error.InvalidMessage
@@ -264,7 +245,7 @@ object MessageSender {
                         sentTimestamp = message.sentTimestamp!!,
                         base64EncodedData = Base64.encodeBytes(plaintext),
                     )
-                    OpenGroupApi.send(openGroupMessage, destination.roomToken, destination.server).success {
+                    OpenGroupApi.send(openGroupMessage, destination.roomToken, destination.server, destination.whisperTo, destination.whisperMods, destination.fileIds).success {
                         message.openGroupServerMessageID = it.serverID
                         handleSuccessfulMessageSend(message, destination, openGroupSentTimestamp = it.sentTimestamp)
                         deferred.resolve(Unit)

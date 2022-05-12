@@ -86,7 +86,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
 
     private fun handleCapabilities(server: String, capabilities: OpenGroupApi.Capabilities) {
         val storage = MessagingModuleConfiguration.shared.storage
-        storage.updateOpenGroupCapabilities(server, capabilities.capabilities)
+        storage.setServerCapabilities(server, capabilities.capabilities)
     }
 
     private fun handleRoomPollInfo(
@@ -105,7 +105,6 @@ class OpenGroupPoller(private val server: String, private val executorService: S
             name = pollInfo.details?.name ?: "",
             infoUpdates = pollInfo.details?.infoUpdates ?: 0,
             publicKey = publicKey,
-            capabilities = listOf()
         )
         // - Open Group changes
         storage.updateOpenGroup(openGroup)

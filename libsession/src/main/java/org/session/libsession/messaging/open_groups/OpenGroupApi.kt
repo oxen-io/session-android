@@ -184,6 +184,15 @@ object OpenGroupApi {
         val signature: String? = null
     )
 
+    @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
+    data class SendMessageRequest(
+        val data: String? = null,
+        val signature: String? = null,
+        val whisperTo: List<String>? = null,
+        val whisperMods: Boolean? = null,
+        val files: List<String>? = null
+    )
+
     data class MessageDeletion(
         @JsonProperty("id")
         val id: Long = 0,
@@ -242,7 +251,7 @@ object OpenGroupApi {
             }
         }
         fun execute(): Promise<OnionResponse, Exception> {
-            val serverCapabilities = MessagingModuleConfiguration.shared.storage.getOpenGroupServer(request.server)
+            val serverCapabilities = MessagingModuleConfiguration.shared.storage.getServerCapabilities(request.server)
             val publicKey =
                 MessagingModuleConfiguration.shared.storage.getOpenGroupPublicKey(request.server)
                     ?: return Promise.ofFail(Error.NoPublicKey)
@@ -364,16 +373,25 @@ object OpenGroupApi {
     fun send(
         message: OpenGroupMessage,
         room: String,
-        server: String
+        server: String,
+        whisperTo: List<String>? = null,
+        whisperMods: Boolean? = null,
+        fileIds: List<String>? = null
     ): Promise<OpenGroupMessage, Exception> {
         val signedMessage = message.sign(room, server, fallbackSigningType = IdPrefix.STANDARD) ?: return Promise.ofFail(Error.SigningFailed)
-        val jsonMessage = signedMessage.toJSON()
+        val messageRequest = SendMessageRequest(
+            data = signedMessage.base64EncodedData,
+            signature = signedMessage.base64EncodedSignature,
+            whisperTo = whisperTo,
+            whisperMods = whisperMods,
+            files = fileIds
+        )
         val request = Request(
             verb = POST,
             room = room,
             server = server,
             endpoint = Endpoint.RoomMessage(room),
-            parameters = jsonMessage
+            parameters = messageRequest
         )
         return getResponseBodyJson(request).map { json ->
             @Suppress("UNCHECKED_CAST") val rawMessage = json as? Map<String, Any>
@@ -593,7 +611,7 @@ object OpenGroupApi {
                 }
             )
         }
-        val serverCapabilities = storage.getOpenGroupServer(server)
+        val serverCapabilities = storage.getServerCapabilities(server)
         if (serverCapabilities.contains("blind")) {
             requests.add(
                 if (lastInboxMessageId == null) {
@@ -690,6 +708,13 @@ object OpenGroupApi {
         }
     }
 
+    fun getDefaultServerCapabilities(): Promise<Capabilities, Exception> {
+        return getCapabilities(defaultServer).map {
+            MessagingModuleConfiguration.shared.storage.setServerCapabilities(defaultServer, it.capabilities)
+            it
+        }
+    }
+
     fun getDefaultRoomsIfNeeded(): Promise<List<DefaultGroup>, Exception> {
         val storage = MessagingModuleConfiguration.shared.storage
         storage.setOpenGroupPublicKey(defaultServer, defaultServerPublicKey)
@@ -752,6 +777,13 @@ object OpenGroupApi {
             val storage = MessagingModuleConfiguration.shared.storage
             storage.setUserCount(room, server, info.activeUsers)
             info.activeUsers
+        }
+    }
+
+    fun getCapabilities(server: String): Promise<Capabilities, Exception> {
+        val request = Request(verb = GET, room = null, server = server, endpoint = Endpoint.Capabilities)
+        return getResponseBody(request).map { response ->
+            JsonUtil.fromJson(response, Capabilities::class.java)
         }
     }
 

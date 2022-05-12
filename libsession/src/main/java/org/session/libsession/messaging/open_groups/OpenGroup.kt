@@ -11,17 +11,15 @@ data class OpenGroup(
     val name: String,
     val publicKey: String,
     val infoUpdates: Int,
-    val capabilities: List<String>
 ) {
 
-    constructor(server: String, room: String, name: String, infoUpdates: Int, publicKey: String, capabilities: List<String>) : this(
+    constructor(server: String, room: String, name: String, infoUpdates: Int, publicKey: String) : this(
         server = server,
         room = room,
         id = "$server.$room",
         name = name,
         publicKey = publicKey,
         infoUpdates = infoUpdates,
-        capabilities = capabilities,
     )
 
     companion object {
@@ -36,7 +34,7 @@ data class OpenGroup(
                 val publicKey = json.get("publicKey").asText()
                 val infoUpdates = json.get("infoUpdates")?.asText()?.toIntOrNull() ?: 0
                 val capabilities = json.get("capabilities")?.asText()?.split(",") ?: emptyList()
-                OpenGroup(server, room, displayName, infoUpdates, publicKey, capabilities)
+                OpenGroup(server, room, displayName, infoUpdates, publicKey)
             } catch (e: Exception) {
                 Log.w("Loki", "Couldn't parse open group from JSON: $jsonAsString.", e);
                 null
@@ -51,7 +49,6 @@ data class OpenGroup(
         "displayName" to name,
         "publicKey" to publicKey,
         "infoUpdates" to infoUpdates.toString(),
-        "capabilities" to capabilities.joinToString(","),
     )
 
     val joinURL: String get() = "$server/$room?public_key=$publicKey"

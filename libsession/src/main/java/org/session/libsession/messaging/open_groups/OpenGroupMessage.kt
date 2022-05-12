@@ -49,8 +49,9 @@ data class OpenGroupMessage(
         if (base64EncodedData.isEmpty()) return null
         val userEdKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return null
         val openGroup = MessagingModuleConfiguration.shared.storage.getOpenGroup(room, server) ?: return null
+        val serverCapabilities = MessagingModuleConfiguration.shared.storage.getServerCapabilities(server)
         val signature = when {
-            openGroup.capabilities.contains("blind") -> {
+            serverCapabilities.contains("blind") -> {
                 val blindedKeyPair = SodiumUtilities.blindedKeyPair(openGroup.publicKey, userEdKeyPair) ?: return null
                 SodiumUtilities.sogsSignature(
                     decode(base64EncodedData),

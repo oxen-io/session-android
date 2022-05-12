@@ -126,6 +126,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
     db.execSQL(LokiAPIDatabase.getCreateOpenGroupProfilePictureTableCommand());
     db.execSQL(LokiAPIDatabase.getCreateClosedGroupEncryptionKeyPairsTable());
     db.execSQL(LokiAPIDatabase.getCreateClosedGroupPublicKeysTable());
+    db.execSQL(LokiAPIDatabase.getCreateServerCapabilitiesCommand());
     db.execSQL(LokiAPIDatabase.getCreateLastInboxMessageServerIdCommand());
     db.execSQL(LokiAPIDatabase.getCreateLastOutboxMessageServerIdCommand());
     db.execSQL(LokiMessageDatabase.getCreateMessageIDTableCommand());
@@ -341,6 +342,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
       }
 
       if (oldVersion < lokiV33) {
+        db.execSQL(LokiAPIDatabase.getCreateServerCapabilitiesCommand());
         db.execSQL(LokiAPIDatabase.getCreateLastInboxMessageServerIdCommand());
         db.execSQL(LokiAPIDatabase.getCreateLastOutboxMessageServerIdCommand());
       }

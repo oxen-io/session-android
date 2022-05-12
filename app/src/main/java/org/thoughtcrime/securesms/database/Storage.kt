@@ -292,16 +292,6 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         return getAllOpenGroups().values.firstOrNull { it.server == server && it.room == room }
     }
 
-    override fun updateOpenGroupCapabilities(server: String, capabilities: List<String>) {
-        getAllOpenGroups().values.filter { it.server == server }
-            .map { it.copy(capabilities = it.capabilities) }
-            .forEach(this::updateOpenGroup)
-    }
-
-    override fun getOpenGroupServer(server: String): List<String> {
-        return getAllOpenGroups().values.firstOrNull { it.server == server }?.capabilities ?: emptyList()
-    }
-
     override fun isDuplicateMessage(timestamp: Long): Boolean {
         return getReceivedMessageTimestamps().contains(timestamp)
     }
@@ -519,6 +509,14 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
     override fun setExpirationTimer(groupID: String, duration: Int) {
         val recipient = Recipient.from(context, fromSerialized(groupID), false)
         DatabaseComponent.get(context).recipientDatabase().setExpireMessages(recipient, duration);
+    }
+
+    override fun setServerCapabilities(server: String, capabilities: List<String>) {
+        return DatabaseComponent.get(context).lokiAPIDatabase().setServerCapabilities(server, capabilities)
+    }
+
+    override fun getServerCapabilities(server: String): List<String> {
+        return DatabaseComponent.get(context).lokiAPIDatabase().getServerCapabilities(server)
     }
 
     override fun getAllOpenGroups(): Map<Long, OpenGroup> {

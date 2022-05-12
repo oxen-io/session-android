@@ -54,6 +54,10 @@ interface StorageProtocol {
     fun setAuthToken(room: String, server: String, newValue: String)
     fun removeAuthToken(room: String, server: String)
 
+    // Servers
+    fun setServerCapabilities(server: String, capabilities: List<String>)
+    fun getServerCapabilities(server: String): List<String>
+
     // Open Groups
     fun getAllOpenGroups(): Map<Long, OpenGroup>
     fun updateOpenGroup(openGroup: OpenGroup)
@@ -61,8 +65,6 @@ interface StorageProtocol {
     fun addOpenGroup(urlAsString: String)
     fun setOpenGroupServerMessageID(messageID: Long, serverID: Long, threadID: Long, isSms: Boolean)
     fun getOpenGroup(room: String, server: String): OpenGroup?
-    fun updateOpenGroupCapabilities(server: String, capabilities: List<String>)
-    fun getOpenGroupServer(server: String): List<String>
 
     // Open Group Public Keys
     fun getOpenGroupPublicKey(server: String): String?
