@@ -75,11 +75,10 @@ object SnodeAPI {
             setOf( "https://storage.seed1.loki.network:$seedNodePort", "https://storage.seed3.loki.network:$seedNodePort", "https://public.loki.foundation:$seedNodePort" )
         }
     }
-    private val snodeFailureThreshold = 3
-    private val targetSwarmSnodeCount = 2
-    private val useOnionRequests = true
+    private const val snodeFailureThreshold = 3
+    private const val useOnionRequests = true
 
-    internal val useTestnet = false
+    const val useTestnet = false
 
     // Error
     internal sealed class Error(val description: String) : Exception(description) {
@@ -274,11 +273,6 @@ object SnodeAPI {
         return promise
     }
 
-    fun getTargetSnodes(publicKey: String): Promise<List<Snode>, Exception> {
-        // SecureRandom() should be cryptographically secure
-        return getSwarm(publicKey).map { it.shuffled(SecureRandom()).take(targetSwarmSnodeCount) }
-    }
-
     fun getSwarm(publicKey: String): Promise<Set<Snode>, Exception> {
         val cachedSwarm = database.getSwarm(publicKey)
         if (cachedSwarm != null && cachedSwarm.size >= minimumSwarmSnodeCount) {
@@ -348,7 +342,7 @@ object SnodeAPI {
         }
     }
 
-    fun sendMessage(message: SnodeMessage, requiresAuth: Boolean = false, namespace: Int = 0): Promise<Set<RawResponsePromise>, Exception> {
+    fun sendMessage(message: SnodeMessage, requiresAuth: Boolean = false, namespace: Int = 0): RawResponsePromise {
         val destination = message.recipient
         return retryIfNeeded(maxRetryCount) {
             val module = MessagingModuleConfiguration.shared
@@ -375,10 +369,8 @@ object SnodeAPI {
             if (namespace != 0) {
                 parameters["namespace"] = namespace
             }
-            getTargetSnodes(destination).map { swarm ->
-                swarm.map { snode ->
-                    invoke(Snode.Method.SendMessage, snode, destination, parameters)
-                }.toSet()
+            getSingleTargetSnode(destination).bind { snode ->
+                invoke(Snode.Method.SendMessage, snode, destination, parameters)
             }
         }
     }
