@@ -461,7 +461,7 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
     fun getServerCapabilities(serverName: String): List<String> {
         val database = databaseHelper.writableDatabase
         return database.get(serverCapabilitiesTable, "$server = ?", wrap(serverName)) { cursor ->
-            cursor.getString(server)
+            cursor.getString(capabilities)
         }?.split(",") ?: emptyList()
     }
 

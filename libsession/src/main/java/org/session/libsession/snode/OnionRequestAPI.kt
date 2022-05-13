@@ -572,8 +572,8 @@ object OnionRequestAPI {
                     }
                 }
 
-                // If there is no data in the response then just return the ResponseInfo
-                if (plaintext.size <= "l${infoLength}${info}e".length) {
+                // If there is no data in the response, i.e. only `l123:jsone`, then just return the ResponseInfo
+                if (plaintext.size <= "l${infoLength}${info.toByteArray()}e".length) {
                     return deferred.resolve(OnionResponse(responseInfo, null))
                 }
                 // Extract the response data as well

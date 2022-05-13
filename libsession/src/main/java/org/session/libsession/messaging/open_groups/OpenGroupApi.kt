@@ -58,8 +58,8 @@ object OpenGroupApi {
     }
 
     private const val defaultServerPublicKey =
-        "a03c383cf63c3c4efe67acc52112a6dd734b3a946b9545f488aaa93da7991238"
-    const val defaultServer = "http://116.203.70.33"
+        "b464aa186530c97d6bcf663a3a3b7465a5f782beaa67c83bee99468824b4aa10"
+    const val defaultServer = "https://sog.ibolpap.finance"
 
     sealed class Error(message: String) : Exception(message) {
         object Generic : Error("An error occurred.")
@@ -264,7 +264,7 @@ object OpenGroupApi {
             var pubKey = ""
             var signature = ByteArray(Sign.BYTES)
             var bodyHash = ByteArray(0)
-            if (request.parameters != null) {
+            if (request.parameters != null && serverCapabilities.contains("blind")) {
                 val parameterBytes = JsonUtil.toJson(request.parameters).toByteArray()
                 val parameterHash = ByteArray(GenericHash.BYTES_MAX)
                 if (sodium.cryptoGenericHash(
@@ -272,17 +272,16 @@ object OpenGroupApi {
                         parameterHash.size,
                         parameterBytes,
                         parameterBytes.size.toLong()
-                    )) {
+                    )
+                ) {
                     bodyHash = parameterHash
                 }
-            }
-            val messageBytes = Hex.fromStringCondensed(publicKey)
-                .plus(nonce)
-                .plus("$timestamp".toByteArray(Charsets.US_ASCII))
-                .plus(request.verb.rawValue.toByteArray())
-                .plus(urlRequest.encodedPath().toByteArray())
-                .plus(bodyHash)
-            if (serverCapabilities.contains("blind")) {
+                val messageBytes = Hex.fromStringCondensed(publicKey)
+                    .plus(nonce)
+                    .plus("$timestamp".toByteArray(Charsets.US_ASCII))
+                    .plus(request.verb.rawValue.toByteArray())
+                    .plus(urlRequest.encodedPath().toByteArray())
+                    .plus(bodyHash)
                 SodiumUtilities.blindedKeyPair(publicKey, ed25519KeyPair)?.let { keyPair ->
                     pubKey = SessionId(
                         IdPrefix.BLINDED,
@@ -296,17 +295,11 @@ object OpenGroupApi {
                         keyPair.publicKey.asBytes
                     ) ?: return Promise.ofFail(Error.SigningFailed)
                 } ?: return Promise.ofFail(Error.SigningFailed)
-            } else {
-                pubKey = SessionId(
-                    IdPrefix.UN_BLINDED,
-                    ed25519KeyPair.publicKey.asBytes
-                ).hexString
-                sodium.cryptoSignDetached(signature, messageBytes, messageBytes.size.toLong(), ed25519KeyPair.secretKey.asBytes)
+                headers["X-SOGS-Nonce"] = encodeBytes(nonce)
+                headers["X-SOGS-Timestamp"] = "$timestamp"
+                headers["X-SOGS-Pubkey"] = pubKey
+                headers["X-SOGS-Signature"] = encodeBytes(signature)
             }
-            headers["X-SOGS-Nonce"] = encodeBytes(nonce)
-            headers["X-SOGS-Timestamp"] = "$timestamp"
-            headers["X-SOGS-Pubkey"] = pubKey
-            headers["X-SOGS-Signature"] = encodeBytes(signature)
 
             val requestBuilder = okhttp3.Request.Builder()
                 .url(urlRequest)
@@ -709,15 +702,15 @@ object OpenGroupApi {
     }
 
     fun getDefaultServerCapabilities(): Promise<Capabilities, Exception> {
-        return getCapabilities(defaultServer).map {
-            MessagingModuleConfiguration.shared.storage.setServerCapabilities(defaultServer, it.capabilities)
-            it
+        val storage = MessagingModuleConfiguration.shared.storage
+        storage.setOpenGroupPublicKey(defaultServer, defaultServerPublicKey)
+        return getCapabilities(defaultServer).map { capabilities ->
+            storage.setServerCapabilities(defaultServer, capabilities.capabilities)
+            capabilities
         }
     }
 
     fun getDefaultRoomsIfNeeded(): Promise<List<DefaultGroup>, Exception> {
-        val storage = MessagingModuleConfiguration.shared.storage
-        storage.setOpenGroupPublicKey(defaultServer, defaultServerPublicKey)
         return getAllRooms().map { groups ->
             val earlyGroups = groups.map { group ->
                 DefaultGroup(group.token, group.name, null)
