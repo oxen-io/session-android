@@ -34,36 +34,9 @@ import org.session.libsignal.utilities.removing05PrefixIfNeeded
 import org.session.libsignal.utilities.retryIfNeeded
 import java.security.SecureRandom
 import java.util.Locale
-import kotlin.collections.List
-import kotlin.collections.Map
-import kotlin.collections.MutableMap
-import kotlin.collections.Set
 import kotlin.collections.component1
 import kotlin.collections.component2
-import kotlin.collections.count
-import kotlin.collections.emptyMap
-import kotlin.collections.filter
-import kotlin.collections.first
-import kotlin.collections.fold
-import kotlin.collections.get
-import kotlin.collections.isNotEmpty
-import kotlin.collections.lastOrNull
-import kotlin.collections.listOf
-import kotlin.collections.map
-import kotlin.collections.mapNotNull
-import kotlin.collections.mapOf
-import kotlin.collections.minus
-import kotlin.collections.mutableListOf
-import kotlin.collections.mutableMapOf
-import kotlin.collections.mutableSetOf
-import kotlin.collections.random
 import kotlin.collections.set
-import kotlin.collections.setOf
-import kotlin.collections.shuffled
-import kotlin.collections.take
-import kotlin.collections.toMap
-import kotlin.collections.toMutableSet
-import kotlin.collections.toSet
 
 object SnodeAPI {
     private val sodium by lazy { LazySodiumAndroid(SodiumAndroid()) }
@@ -96,7 +69,7 @@ object SnodeAPI {
         }
     }
     private val snodeFailureThreshold = 3
-    private val targetSwarmSnodeCount = 2
+    private val targetSwarmSnodeCount = 1
     private val useOnionRequests = true
 
     internal val useTestnet = false

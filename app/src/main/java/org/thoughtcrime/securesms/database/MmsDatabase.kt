@@ -1165,7 +1165,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         database!!.query(
             TABLE_NAME,
             arrayOf(MESSAGE_BOX),
-            ID + " = ?",
+            "$ID = ?",
             arrayOf<String?>(messageId.toString()),
             null,
             null,
@@ -1194,13 +1194,16 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                 db!!.query(TABLE_NAME, arrayOf<String?>(ID), whereString, null, null, null, null)
             Trace.endSection()
             Trace.beginSection("db-deletemessage")
-            val toDeleteStringMessageIds = arrayOfNulls<String?>(cursor.getCount())
-            var index = 0
+            val toDeleteStringMessageIds = mutableListOf<String>()
             while (cursor.moveToNext()) {
-                toDeleteStringMessageIds[index++] = cursor.getLong(0).toString()
+                toDeleteStringMessageIds += cursor.getLong(0).toString()
             }
-            // TODO: chunk here to fix crash in large message ID deletion
-            deleteMessages(toDeleteStringMessageIds)
+            // TODO: this can probably be optimized out,
+            //  currently attachmentDB uses MmsID not threadID which makes it difficult to delete
+            //  and clean up on threadID alone
+            toDeleteStringMessageIds.toList().chunked(50).forEach { sublist ->
+                deleteMessages(sublist.toTypedArray())
+            }
             Trace.endSection()
         } finally {
             cursor?.close()

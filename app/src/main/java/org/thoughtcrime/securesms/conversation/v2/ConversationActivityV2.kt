@@ -1090,7 +1090,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // Reset attachments button if needed
         if (isShowingAttachmentOptions) { toggleAttachmentOptions() }
         // Put the message in the database
-        message.id = mmsDb.insertMessageOutbox(outgoingTextMessage, viewModel.threadId, false) { }
+        message.id = mmsDb.insertMessageOutbox(outgoingTextMessage, viewModel.threadId, false, null)
         // Send it
         MessageSender.send(message, viewModel.recipient.address, attachments, quote, linkPreview)
         // Send a typing stopped message
