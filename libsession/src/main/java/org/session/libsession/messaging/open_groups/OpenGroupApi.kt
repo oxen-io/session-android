@@ -363,7 +363,7 @@ object OpenGroupApi {
     // endregion
 
     // region Sending
-    fun send(
+    fun sendMessage(
         message: OpenGroupMessage,
         room: String,
         server: String,
@@ -684,8 +684,8 @@ object OpenGroupApi {
         request: Request,
         requests: MutableList<BatchRequestInfo<*>>
     ): Promise<List<BatchResponse<*>>, Exception> {
-        return getResponseBody(request).map {
-            val results = JsonUtil.fromJson(it, List::class.java) ?: throw Error.ParsingFailed
+        return getResponseBody(request).map { batch ->
+            val results = JsonUtil.fromJson(batch, List::class.java) ?: throw Error.ParsingFailed
             results.mapIndexed { idx, result ->
                 val response = result as? Map<*, *> ?: throw Error.ParsingFailed
                 val code = response["code"] as Int
@@ -694,7 +694,9 @@ object OpenGroupApi {
                     code = code,
                     headers = response["headers"] as Map<String, String>,
                     body = if (code in 200..299) {
-                        JsonUtil.fromJson(JsonUtil.toJson(response["body"]), requests[idx].responseType)
+                        JsonUtil.toJson(response["body"]).takeIf { it != "[]" }?.let {
+                            JsonUtil.fromJson(it, requests[idx].responseType)
+                        }
                     } else null
                 )
             }

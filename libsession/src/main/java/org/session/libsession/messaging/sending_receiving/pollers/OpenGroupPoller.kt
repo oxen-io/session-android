@@ -54,7 +54,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         val rooms = storage.getAllOpenGroups().values.filter { it.server == server }.map { it.room }
         rooms.forEach { downloadGroupAvatarIfNeeded(it) }
         return OpenGroupApi.poll(rooms, server).successBackground { responses ->
-            responses.forEach { response ->
+            responses.filterNot { it.body == null }.forEach { response ->
                 when (response.endpoint) {
                     is Endpoint.Capabilities -> {
                         handleCapabilities(server, response.body as OpenGroupApi.Capabilities)
