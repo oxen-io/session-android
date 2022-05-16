@@ -27,7 +27,7 @@ class JobQueue : JobDelegate {
     private val jobTimestampMap = ConcurrentHashMap<Long, AtomicInteger>()
     private val rxDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
     private val rxMediaDispatcher = Executors.newFixedThreadPool(4).asCoroutineDispatcher()
-    private val openGroupDispatcher = Executors.newCachedThreadPool().asCoroutineDispatcher()
+    private val openGroupDispatcher = Executors.newFixedThreadPool(4).asCoroutineDispatcher()
     private val txDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
     private val scope = GlobalScope + SupervisorJob()
     private val queue = Channel<Job>(UNLIMITED)
@@ -43,10 +43,12 @@ class JobQueue : JobDelegate {
     ) = launch(dispatcher) {
         for (job in channel) {
             if (!isActive) break
-            Trace.beginSection("[$name] processJob: ${job.javaClass.simpleName}")
-            job.delegate = this@JobQueue
-            job.execute()
-            Trace.endSection()
+            launch(dispatcher) {
+                Trace.beginSection("[$name] processJob: ${job.javaClass.simpleName}")
+                job.delegate = this@JobQueue
+                job.execute()
+                Trace.endSection()
+            }
         }
     }
 

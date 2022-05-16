@@ -5,12 +5,11 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import org.session.libsession.utilities.Debouncer
-import org.thoughtcrime.securesms.ApplicationContext
 
 class ConversationNotificationDebouncer(private val context: Context) {
     private val threadIDs = mutableSetOf<Long>()
     private val handler = Handler(Looper.getMainLooper())
-    private val debouncer = Debouncer(handler, 250);
+    private val debouncer = Debouncer(handler, 200)
 
     companion object {
         @SuppressLint("StaticFieldLeak")
