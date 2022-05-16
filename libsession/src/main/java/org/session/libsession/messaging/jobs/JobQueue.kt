@@ -3,7 +3,7 @@ package org.session.libsession.messaging.jobs
 import android.os.Trace
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
@@ -29,12 +29,20 @@ class JobQueue : JobDelegate {
     private val rxMediaDispatcher = Executors.newFixedThreadPool(4).asCoroutineDispatcher()
     private val openGroupDispatcher = Executors.newFixedThreadPool(4).asCoroutineDispatcher()
     private val txDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
-    private val scope = GlobalScope + SupervisorJob()
+    private val scope = CoroutineScope(Dispatchers.Default) + SupervisorJob()
     private val queue = Channel<Job>(UNLIMITED)
     private val pendingJobIds = mutableSetOf<String>()
     private val pendingTrimThreadIds = mutableSetOf<Long>()
 
     val timer = Timer()
+
+    private fun CoroutineScope.processWithOpenGroupDispatcher(
+        channe: Channel<Job>,
+        dispatcher: CoroutineDispatcher,
+        name: String
+    ) {
+
+    }
 
     private fun CoroutineScope.processWithDispatcher(
         channel: Channel<Job>,
@@ -64,7 +72,7 @@ class JobQueue : JobDelegate {
             val receiveJob = processWithDispatcher(rxQueue, rxDispatcher, "rx")
             val txJob = processWithDispatcher(txQueue, txDispatcher, "tx")
             val mediaJob = processWithDispatcher(mediaQueue, rxMediaDispatcher, "media")
-            val openGroupJob = processWithDispatcher(openGroupQueue, openGroupDispatcher, "openGroup")
+            val openGroupJob = processWithOpenGroupDispatcher(openGroupQueue, openGroupDispatcher, "openGroup")
 
             while (isActive) {
                 if (queue.isEmpty && pendingTrimThreadIds.isNotEmpty()) {
