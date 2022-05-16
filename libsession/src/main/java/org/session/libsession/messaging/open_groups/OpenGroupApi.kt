@@ -58,8 +58,8 @@ object OpenGroupApi {
     }
 
     private const val defaultServerPublicKey =
-        "b464aa186530c97d6bcf663a3a3b7465a5f782beaa67c83bee99468824b4aa10"
-    const val defaultServer = "https://sog.ibolpap.finance"
+        "a03c383cf63c3c4efe67acc52112a6dd734b3a946b9545f488aaa93da7991238"
+    const val defaultServer = "http://116.203.70.33"
 
     sealed class Error(message: String) : Exception(message) {
         object Generic : Error("An error occurred.")
@@ -372,19 +372,12 @@ object OpenGroupApi {
         fileIds: List<String>? = null
     ): Promise<OpenGroupMessage, Exception> {
         val signedMessage = message.sign(room, server, fallbackSigningType = IdPrefix.STANDARD) ?: return Promise.ofFail(Error.SigningFailed)
-        val messageRequest = SendMessageRequest(
-            data = signedMessage.base64EncodedData,
-            signature = signedMessage.base64EncodedSignature,
-            whisperTo = whisperTo,
-            whisperMods = whisperMods,
-            files = fileIds
-        )
         val request = Request(
             verb = POST,
             room = room,
             server = server,
             endpoint = Endpoint.RoomMessage(room),
-            parameters = messageRequest
+            parameters = signedMessage.toJSON()
         )
         return getResponseBodyJson(request).map { json ->
             @Suppress("UNCHECKED_CAST") val rawMessage = json as? Map<String, Any>
