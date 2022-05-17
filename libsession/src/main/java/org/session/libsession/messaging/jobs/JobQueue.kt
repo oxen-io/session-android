@@ -27,37 +27,81 @@ class JobQueue : JobDelegate {
     private val jobTimestampMap = ConcurrentHashMap<Long, AtomicInteger>()
     private val rxDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
     private val rxMediaDispatcher = Executors.newFixedThreadPool(4).asCoroutineDispatcher()
-    private val openGroupDispatcher = Executors.newFixedThreadPool(4).asCoroutineDispatcher()
+    private val openGroupDispatcher = Executors.newCachedThreadPool().asCoroutineDispatcher()
     private val txDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
     private val scope = CoroutineScope(Dispatchers.Default) + SupervisorJob()
     private val queue = Channel<Job>(UNLIMITED)
     private val pendingJobIds = mutableSetOf<String>()
     private val pendingTrimThreadIds = mutableSetOf<Long>()
 
+    private val openGroupChannels = mutableMapOf<String, Channel<Job>>()
+
     val timer = Timer()
 
     private fun CoroutineScope.processWithOpenGroupDispatcher(
-        channe: Channel<Job>,
-        dispatcher: CoroutineDispatcher,
-        name: String
-    ) {
-
-    }
-
-    private fun CoroutineScope.processWithDispatcher(
         channel: Channel<Job>,
         dispatcher: CoroutineDispatcher,
         name: String
     ) = launch(dispatcher) {
         for (job in channel) {
             if (!isActive) break
-            launch(dispatcher) {
-                Trace.beginSection("[$name] processJob: ${job.javaClass.simpleName}")
-                job.delegate = this@JobQueue
-                job.execute()
-                Trace.endSection()
+            val openGroupId = when (job) {
+                is BatchMessageReceiveJob -> job.openGroupID
+                is OpenGroupDeleteJob -> job.openGroupId
+                is TrimThreadJob -> job.openGroupId
+                is BackgroundGroupAddJob -> job.openGroupId
+                is GroupAvatarDownloadJob -> "${job.server}.${job.room}"
+                else -> null
+            }
+            if (openGroupId.isNullOrEmpty()) {
+                Log.e("OpenGroupDispatcher", "Open Group ID was null on ${job.javaClass.simpleName}")
+                handleJobFailedPermanently(job, NullPointerException("Open Group ID was null"))
+            } else {
+                val groupChannel = if (!openGroupChannels.containsKey(openGroupId)) {
+                    Log.d("OpenGroupDispatcher", "Creating $openGroupId channel")
+                    val newGroupChannel = Channel<Job>(UNLIMITED)
+                    launch(dispatcher) {
+                        for (groupJob in newGroupChannel) {
+                            if (!isActive) break
+                            groupJob.process(name)
+                        }
+                    }
+                    openGroupChannels[openGroupId] = newGroupChannel
+                    newGroupChannel
+                } else {
+                    Log.d("OpenGroupDispatcher", "Re-using channel")
+                    openGroupChannels[openGroupId]!!
+                }
+                Log.d("OpenGroupDispatcher", "Sending to channel $groupChannel")
+                groupChannel.send(job)
             }
         }
+    }
+
+    private fun CoroutineScope.processWithDispatcher(
+        channel: Channel<Job>,
+        dispatcher: CoroutineDispatcher,
+        name: String,
+        asynchronous: Boolean = true
+    ) = launch(dispatcher) {
+        for (job in channel) {
+            if (!isActive) break
+            if (asynchronous) {
+                launch(dispatcher) {
+                    job.process(name)
+                }
+            } else {
+                job.process(name)
+            }
+        }
+    }
+
+    private fun Job.process(dispatcherName: String) {
+        Trace.beginSection("[$dispatcherName] processJob: ${javaClass.simpleName}")
+        Log.d(dispatcherName,"processJob: ${javaClass.simpleName}")
+        delegate = this@JobQueue
+        execute()
+        Trace.endSection()
     }
 
     init {
@@ -68,8 +112,7 @@ class JobQueue : JobDelegate {
             val mediaQueue = Channel<Job>(capacity = UNLIMITED)
             val openGroupQueue = Channel<Job>(capacity = UNLIMITED)
 
-
-            val receiveJob = processWithDispatcher(rxQueue, rxDispatcher, "rx")
+            val receiveJob = processWithDispatcher(rxQueue, rxDispatcher, "rx", asynchronous = false)
             val txJob = processWithDispatcher(txQueue, txDispatcher, "tx")
             val mediaJob = processWithDispatcher(mediaQueue, rxMediaDispatcher, "media")
             val openGroupJob = processWithOpenGroupDispatcher(openGroupQueue, openGroupDispatcher, "openGroup")
@@ -81,7 +124,7 @@ class JobQueue : JobDelegate {
                     pendingTrimThreadIds.clear()
                     for (thread in pendingThreads) {
                         Log.d("Loki", "Trimming thread $thread")
-                        queue.trySend(TrimThreadJob(thread))
+                        queue.trySend(TrimThreadJob(thread, null))
                     }
                 }
                 when (val job = queue.receive()) {
@@ -91,12 +134,15 @@ class JobQueue : JobDelegate {
                     is AttachmentDownloadJob -> {
                         mediaQueue.send(job)
                     }
-                    is GroupAvatarDownloadJob, is BackgroundGroupAddJob -> {
+                    is GroupAvatarDownloadJob,
+                    is BackgroundGroupAddJob,
+                    is OpenGroupDeleteJob -> {
                         openGroupQueue.send(job)
                     }
                     is MessageReceiveJob, is TrimThreadJob,
-                    is BatchMessageReceiveJob, is OpenGroupDeleteJob -> {
-                        if (job is BatchMessageReceiveJob && !job.openGroupID.isNullOrEmpty()) {
+                    is BatchMessageReceiveJob -> {
+                        if ((job is BatchMessageReceiveJob && !job.openGroupID.isNullOrEmpty())
+                            || (job is TrimThreadJob && !job.openGroupId.isNullOrEmpty())) {
                             openGroupQueue.send(job)
                         } else {
                             rxQueue.send(job)

@@ -4,13 +4,14 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.utilities.Data
 import org.session.libsignal.utilities.Log
 
-class OpenGroupDeleteJob(private val messageServerIds: LongArray, private val threadId: Long): Job {
+class OpenGroupDeleteJob(private val messageServerIds: LongArray, private val threadId: Long, val openGroupId: String): Job {
 
     companion object {
         private const val TAG = "OpenGroupDeleteJob"
         const val KEY = "OpenGroupDeleteJob"
         private const val MESSAGE_IDS = "messageIds"
         private const val THREAD_ID = "threadId"
+        private const val OPEN_GROUP_ID = "openGroupId"
     }
 
     override var delegate: JobDelegate? = null
@@ -33,6 +34,7 @@ class OpenGroupDeleteJob(private val messageServerIds: LongArray, private val th
     override fun serialize(): Data = Data.Builder()
         .putLongArray(MESSAGE_IDS, messageServerIds)
         .putLong(THREAD_ID, threadId)
+        .putString(OPEN_GROUP_ID, openGroupId)
         .build()
 
     override fun getFactoryKey(): String = KEY
@@ -41,7 +43,8 @@ class OpenGroupDeleteJob(private val messageServerIds: LongArray, private val th
         override fun create(data: Data): OpenGroupDeleteJob {
             val messageServerIds = data.getLongArray(MESSAGE_IDS)
             val threadId = data.getLong(THREAD_ID)
-            return OpenGroupDeleteJob(messageServerIds, threadId)
+            val openGroupId = data.getString(OPEN_GROUP_ID)
+            return OpenGroupDeleteJob(messageServerIds, threadId, openGroupId)
         }
     }
 

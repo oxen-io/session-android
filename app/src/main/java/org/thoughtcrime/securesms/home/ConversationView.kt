@@ -103,9 +103,7 @@ class ConversationView : LinearLayout {
             thread.isRead -> binding.statusIndicatorImageView.setImageResource(R.drawable.ic_filled_circle_check)
             else -> binding.statusIndicatorImageView.setImageResource(R.drawable.ic_circle_check)
         }
-        post {
-            binding.profilePictureView.root.update(thread.recipient)
-        }
+        binding.profilePictureView.root.update(thread.recipient)
     }
 
     fun recycle() {

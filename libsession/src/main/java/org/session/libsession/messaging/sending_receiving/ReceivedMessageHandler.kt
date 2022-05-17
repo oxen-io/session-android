@@ -4,7 +4,6 @@ import android.os.Trace
 import android.text.TextUtils
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.messaging.jobs.AttachmentDownloadJob
 import org.session.libsession.messaging.jobs.BackgroundGroupAddJob
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.messages.Message
@@ -156,13 +155,12 @@ private fun handleConfigurationMessage(message: ConfigurationMessage) {
                 closedGroup.encryptionKeyPair!!, closedGroup.members, closedGroup.admins, message.sentTimestamp!!, closedGroup.expirationTimer)
         }
     }
-    if (firstTimeSync) {
-
-    }
     val allV2OpenGroups = storage.getAllV2OpenGroups().map { it.value.joinURL }
     for (openGroup in message.openGroups) {
         if (allV2OpenGroups.contains(openGroup)) continue
+        Log.d("OpenGroup", "All open groups doesn't contain $openGroup")
         if (!storage.hasBackgroundGroupAddJob(openGroup)) {
+            Log.d("OpenGroup", "Doesn't contain background job for $openGroup, adding")
             JobQueue.shared.add(BackgroundGroupAddJob(openGroup))
         }
     }
@@ -285,14 +283,6 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage, proto: SignalS
     // Persist the message
     message.threadID = threadID
     val messageID = storage.persist(message, quoteModel, linkPreviews, message.groupPublicKey, openGroupID, attachments) ?: throw MessageReceiver.Error.DuplicateMessage
-    // Parse & persist attachments
-    // Start attachment downloads if needed
-    storage.getAttachmentsForMessage(messageID).iterator().forEach { attachment ->
-        attachment.attachmentId?.let { id ->
-            val downloadJob = AttachmentDownloadJob(id.rowId, messageID)
-            JobQueue.shared.add(downloadJob)
-        }
-    }
     val openGroupServerID = message.openGroupServerMessageID
     if (openGroupServerID != null) {
         val isSms = !(message.isMediaMessage() || attachments.isNotEmpty())

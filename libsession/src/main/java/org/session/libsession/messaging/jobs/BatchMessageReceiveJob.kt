@@ -31,7 +31,7 @@ class BatchMessageReceiveJob(
         const val TAG = "BatchMessageReceiveJob"
         const val KEY = "BatchMessageReceiveJob"
 
-        const val BATCH_DEFAULT_NUMBER = 100
+        const val BATCH_DEFAULT_NUMBER = 256
 
         // Keys used for database storage
         private val NUM_MESSAGES_KEY = "numMessages"
@@ -47,7 +47,7 @@ class BatchMessageReceiveJob(
 
     fun executeAsync(): Promise<Unit, Exception> {
         return task {
-            messages.iterator().forEach { messageParameters ->
+            messages.forEach { messageParameters ->
                 val (data, serverHash, openGroupMessageServerID) = messageParameters
                 try {
                     val (message, proto) = MessageReceiver.parse(data, openGroupMessageServerID)

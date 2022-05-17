@@ -9,6 +9,7 @@ import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageReceiveJob
 import org.session.libsession.messaging.jobs.MessageReceiveParameters
 import org.session.libsession.messaging.jobs.OpenGroupDeleteJob
+import org.session.libsession.messaging.jobs.TrimThreadJob
 import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
 import org.session.libsession.messaging.open_groups.OpenGroupMessageV2
 import org.session.libsession.utilities.Address
@@ -85,6 +86,10 @@ class OpenGroupPollerV2(private val server: String, private val executorService:
             JobQueue.shared.add(BatchMessageReceiveJob(parameters, openGroupID))
         }
 
+        if (envelopes.isNotEmpty()) {
+            JobQueue.shared.add(TrimThreadJob(threadId,openGroupID))
+        }
+
         val indicatedMax = messages.mapNotNull { it.serverID }.maxOrNull() ?: 0
         val currentLastMessageServerID = storage.getLastMessageServerID(room, server) ?: 0
         val actualMax = max(indicatedMax, currentLastMessageServerID)
@@ -103,7 +108,7 @@ class OpenGroupPollerV2(private val server: String, private val executorService:
         }
 
         if (serverIds.isNotEmpty()) {
-            val deleteJob = OpenGroupDeleteJob(serverIds.toLongArray(), threadID)
+            val deleteJob = OpenGroupDeleteJob(serverIds.toLongArray(), threadID, openGroupID)
             JobQueue.shared.add(deleteJob)
         }
 

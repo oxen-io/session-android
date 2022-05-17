@@ -20,7 +20,6 @@ class LandingActivity : BaseActionBarActivity() {
         with(binding) {
             fakeChatView.startAnimating()
             registerButton.setOnClickListener { register() }
-            restoreButton.setOnClickListener { restore() }
             linkButton.setOnClickListener { link() }
         }
         IdentityKeyUtil.generateIdentityKeyPair(this)
