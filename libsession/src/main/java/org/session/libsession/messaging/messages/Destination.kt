@@ -18,22 +18,22 @@ sealed class Destination {
     }
 
     class OpenGroup(
-        val roomToken: String,
-        val server: String,
-        val whisperTo: List<String>? = null,
-        val whisperMods: Boolean = false,
-        val fileIds: List<String>? = null
+        var roomToken: String = "",
+        var server: String = "",
+        var whisperTo: List<String> = emptyList(),
+        var whisperMods: Boolean = false,
+        var fileIds: List<String> = emptyList()
     ) : Destination()
 
     class OpenGroupInbox(
-        val server: String,
-        val serverPublicKey: String,
-        val blinkedPublicKey: String
+        var server: String,
+        var serverPublicKey: String,
+        var blinkedPublicKey: String
     ) : Destination()
 
     companion object {
 
-        fun from(address: Address, fileIds: List<String>? = null): Destination {
+        fun from(address: Address, fileIds: List<String> = emptyList()): Destination {
             return when {
                 address.isContact -> {
                     Contact(address.contactIdentifier())

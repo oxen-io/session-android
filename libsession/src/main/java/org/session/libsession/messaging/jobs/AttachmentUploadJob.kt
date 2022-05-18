@@ -7,6 +7,7 @@ import nl.komponents.kovenant.Promise
 import okio.Buffer
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.file_server.FileServerApi
+import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.MessageSender
@@ -122,7 +123,25 @@ class AttachmentUploadJob(val attachmentID: Long, val threadID: String, val mess
                 Log.e("Loki", "Couldn't process audio attachment", e)
             }
         }
-        MessagingModuleConfiguration.shared.storage.resumeMessageSendJobIfNeeded(messageSendJobID)
+        val storage = MessagingModuleConfiguration.shared.storage
+        storage.getMessageSendJob(messageSendJobID)?.let {
+            val destination = it.destination as? Destination.OpenGroup ?: return@let
+            val updatedJob = MessageSendJob(
+                message = it.message,
+                destination = Destination.OpenGroup(
+                    destination.roomToken,
+                    destination.server,
+                    destination.whisperTo,
+                    destination.whisperMods,
+                    destination.fileIds + uploadResult.id.toString()
+                )
+            )
+            updatedJob.id = it.id
+            updatedJob.delegate = it.delegate
+            updatedJob.failureCount = it.failureCount
+            storage.persistJob(updatedJob)
+        }
+        storage.resumeMessageSendJobIfNeeded(messageSendJobID)
     }
 
     private fun handlePermanentFailure(e: Exception) {

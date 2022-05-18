@@ -347,7 +347,7 @@ object OpenGroupApi {
             parameters = parameters
         )
         return getResponseBodyJson(request).map { json ->
-            (json["result"] as? Number)?.toLong() ?: throw Error.ParsingFailed
+            (json["id"] as? Number)?.toLong() ?: throw Error.ParsingFailed
         }
     }
 
