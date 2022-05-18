@@ -18,9 +18,8 @@ android {
 
 dependencies {
     implementation project(":libsignal")
-    implementation project(":liblazysodium")
-//    implementation 'com.goterl:lazysodium-android:5.0.2@aar'
-    implementation "net.java.dev.jna:jna:5.8.0@aar"
+    implementation 'com.github.oxen-io:session-lazysodium-android:master-SNAPSHOT@aar'
+    implementation "net.java.dev.jna:jna:5.9.0@aar"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'

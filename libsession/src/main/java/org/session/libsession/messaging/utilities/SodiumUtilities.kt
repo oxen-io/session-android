@@ -2,10 +2,8 @@ package org.session.libsession.messaging.utilities
 
 import com.goterl.lazysodium.LazySodiumAndroid
 import com.goterl.lazysodium.SodiumAndroid
-import com.goterl.lazysodium.interfaces.AEAD
 import com.goterl.lazysodium.interfaces.GenericHash
 import com.goterl.lazysodium.interfaces.Hash
-import com.goterl.lazysodium.interfaces.Sign
 import com.goterl.lazysodium.utils.Key
 import com.goterl.lazysodium.utils.KeyPair
 import org.session.libsignal.utilities.Hex
@@ -62,7 +60,7 @@ object SodiumUtilities {
         if (kaBytes.all { it.toInt() == 0 }) return null
 
         val kABytes = ByteArray(PUBLIC_KEY_LENGTH)
-        return if (sodium.cryptoScalarMultE25519BaseNoClamp(kABytes, kaBytes)) {
+        return if (sodium.cryptoScalarMultEd25519BaseNoClamp(kABytes, kaBytes)) {
             KeyPair(Key.fromBytes(kABytes), Key.fromBytes(kaBytes))
         } else {
             null
@@ -94,7 +92,7 @@ object SodiumUtilities {
 
         // sig_R = salt.crypto_scalarmult_ed25519_base_noclamp(r)
         val sig_R = ByteArray(NO_CLAMP_LENGTH)
-        if (!sodium.cryptoScalarMultE25519BaseNoClamp(sig_R, r)) return null
+        if (!sodium.cryptoScalarMultEd25519BaseNoClamp(sig_R, r)) return null
 
         // HRAM = salt.crypto_core_ed25519_scalar_reduce(sha512_multipart(sig_R, kA, message_parts))
         val hRamHash = sha512Multipart(listOf(sig_R, blindedPublicKey, message)) ?: return null
@@ -129,7 +127,7 @@ object SodiumUtilities {
     /* Combines two keys (`kA`) */
     internal fun combineKeys(lhsKey: ByteArray, rhsKey: ByteArray): ByteArray? {
         val kA = ByteArray(NO_CLAMP_LENGTH)
-        return if (sodium.cryptoScalarMultE25519NoClamp(kA, lhsKey, rhsKey)) {
+        return if (sodium.cryptoScalarMultEd25519NoClamp(kA, lhsKey, rhsKey)) {
             kA
         } else null
     }
