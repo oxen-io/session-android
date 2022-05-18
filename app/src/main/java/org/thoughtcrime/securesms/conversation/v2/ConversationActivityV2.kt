@@ -639,12 +639,14 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private fun isOutgoingMessageRequestThread(): Boolean {
         return !viewModel.recipient.isGroupRecipient &&
+                !viewModel.recipient.isLocalNumber &&
                 !(viewModel.recipient.hasApprovedMe() || viewModel.hasReceived())
     }
 
     private fun isIncomingMessageRequestThread(): Boolean {
         return !viewModel.recipient.isGroupRecipient &&
                 !viewModel.recipient.isApproved &&
+                !viewModel.recipient.isLocalNumber &&
                 !threadDb.getLastSeenAndHasSent(viewModel.threadId).second() &&
                 threadDb.getMessageCount(viewModel.threadId) > 0
     }
