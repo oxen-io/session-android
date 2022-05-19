@@ -78,7 +78,6 @@ class VisibleMessageView : LinearLayout {
             binding.messageTimestampTextView.isVisible = isSelected
             handleIsSelectedChanged()
         }
-    var onPress: ((event: MotionEvent) -> Unit)? = null
     var onSwipeToReply: (() -> Unit)? = null
     var onLongPress: (() -> Unit)? = null
     var contentViewDelegate: VisibleMessageContentViewDelegate? = null
@@ -300,7 +299,7 @@ class VisibleMessageView : LinearLayout {
 
     // region Interaction
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (onPress == null || onSwipeToReply == null || onLongPress == null) { return false }
+        if (onSwipeToReply == null || onLongPress == null) { return false }
         when (event.action) {
             MotionEvent.ACTION_DOWN -> onDown(event)
             MotionEvent.ACTION_MOVE -> onMove(event)
@@ -361,9 +360,9 @@ class VisibleMessageView : LinearLayout {
                 this.pressCallback = null
                 onDoubleTap?.invoke()
             } else {
-                val newPressCallback = Runnable { onPress(event) }
+                val newPressCallback = Runnable { this.pressCallback = null }
                 this.pressCallback = newPressCallback
-                gestureHandler.postDelayed(newPressCallback, VisibleMessageView.maxDoubleTapInterval)
+                gestureHandler.postDelayed(newPressCallback, maxDoubleTapInterval)
             }
         }
         resetPosition()
@@ -391,11 +390,6 @@ class VisibleMessageView : LinearLayout {
 
     fun onContentClick(event: MotionEvent) {
         binding.messageContentView.onContentClick.iterator().forEach { clickHandler -> clickHandler.invoke(event) }
-    }
-
-    private fun onPress(event: MotionEvent) {
-        onPress?.invoke(event)
-        pressCallback = null
     }
 
     private fun showUserDetails(publicKey: String, threadID: Long) {
