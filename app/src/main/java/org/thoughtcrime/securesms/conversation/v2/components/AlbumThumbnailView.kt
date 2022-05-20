@@ -13,6 +13,7 @@ import androidx.core.view.children
 import androidx.core.view.isVisible
 import network.loki.messenger.R
 import network.loki.messenger.databinding.AlbumThumbnailViewBinding
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.AttachmentDownloadJob
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress
@@ -104,6 +105,15 @@ class AlbumThumbnailView : FrameLayout {
             return
         }
         calculateRadius(isStart, isEnd, message.isOutgoing)
+        message.slideDeck.asAttachments().forEach { attach ->
+            val dbAttachment = attach as? DatabaseAttachment ?: return@forEach
+            val attachmentId = dbAttachment.attachmentId.rowId
+            if (attach.transferState == AttachmentTransferProgress.TRANSFER_PROGRESS_PENDING
+                && MessagingModuleConfiguration.shared.storage.getAttachmentUploadJob(attachmentId) == null) {
+                // start download
+                JobQueue.shared.add(AttachmentDownloadJob(attachmentId, dbAttachment.mmsId))
+            }
+        }
 
         // recreate cell views if different size to what we have already (for recycling)
         if (slides.size != this.slideSize) {
@@ -118,7 +128,7 @@ class AlbumThumbnailView : FrameLayout {
             this.slideSize = slides.size
         }
         // iterate binding
-        slides.take(5).forEachIndexed { position, slide ->
+        slides.take(MAX_ALBUM_DISPLAY_SIZE).forEachIndexed { position, slide ->
             val thumbnailView = getThumbnailView(position)
             thumbnailView.setImageResource(glideRequests, slide, isPreview = false, mms = message)
         }

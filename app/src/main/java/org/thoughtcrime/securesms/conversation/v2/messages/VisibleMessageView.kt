@@ -8,7 +8,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
-import android.view.Gravity
 import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.View
@@ -17,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
@@ -101,7 +101,7 @@ class VisibleMessageView : LinearLayout {
         isHapticFeedbackEnabled = true
         setWillNotDraw(false)
         binding.expirationTimerViewContainer.disableClipping()
-        binding.messageContentContainer.disableClipping()
+        binding.messageContentView.disableClipping()
     }
     // endregion
 
@@ -142,21 +142,10 @@ class VisibleMessageView : LinearLayout {
         binding.dateBreakTextView.showDateBreak(message, previous)
         // Timestamp
         binding.messageTimestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), message.timestamp)
-        // Margins
-        val startPadding = if (isGroupThread) {
-            if (message.isOutgoing) resources.getDimensionPixelSize(R.dimen.very_large_spacing) else toPx(50,resources)
-        } else {
-            if (message.isOutgoing) resources.getDimensionPixelSize(R.dimen.very_large_spacing)
-            else resources.getDimensionPixelSize(R.dimen.medium_spacing)
-        }
-        val endPadding = if (message.isOutgoing) resources.getDimensionPixelSize(R.dimen.medium_spacing)
-            else resources.getDimensionPixelSize(R.dimen.very_large_spacing)
-        binding.messageContentContainer.setPaddingRelative(startPadding, 0, endPadding, 0)
         // Set inter-message spacing
         setMessageSpacing(isStartOfMessageCluster, isEndOfMessageCluster)
         // Gravity
-        val gravity = if (message.isOutgoing) Gravity.END else Gravity.START
-        binding.mainContainer.gravity = gravity or Gravity.BOTTOM
+        // TODO: gravity
         // Message status indicator
         val (iconID, iconColor) = getMessageStatusImage(message)
         if (iconID != null) {
@@ -175,11 +164,9 @@ class VisibleMessageView : LinearLayout {
         // Expiration timer
         updateExpirationTimer(message)
         // Calculate max message bubble width
-        var maxWidth = screenWidth - startPadding - endPadding
-        if (binding.profilePictureContainer.visibility != View.GONE) { maxWidth -= binding.profilePictureContainer.width }
         // Populate content view
         binding.messageContentView.indexInAdapter = indexInAdapter
-        binding.messageContentView.bind(message, isStartOfMessageCluster, isEndOfMessageCluster, glide, maxWidth, thread, searchQuery, message.isOutgoing || isGroupThread || (contact?.isTrusted ?: false))
+        binding.messageContentView.bind(message, isStartOfMessageCluster, isEndOfMessageCluster, glide, thread, searchQuery, message.isOutgoing || isGroupThread || (contact?.isTrusted ?: false))
         binding.messageContentView.delegate = contentViewDelegate
         onDoubleTap = { binding.messageContentView.onContentDoubleTap?.invoke() }
     }
@@ -222,21 +209,16 @@ class VisibleMessageView : LinearLayout {
     }
 
     private fun updateExpirationTimer(message: MessageRecord) {
-        val expirationTimerViewLayoutParams = binding.expirationTimerView.layoutParams as MarginLayoutParams
         val container = binding.expirationTimerViewContainer
         val content = binding.messageContentView
         val expiration = binding.expirationTimerView
-        container.removeAllViewsInLayout()
-        container.addView(if (message.isOutgoing) expiration else content)
-        container.addView(if (message.isOutgoing) content else expiration)
-        val expirationTimerViewSize = toPx(12, resources)
-        val smallSpacing = resources.getDimension(R.dimen.small_spacing).roundToInt()
-        expirationTimerViewLayoutParams.marginStart = if (message.isOutgoing) -(smallSpacing + expirationTimerViewSize) else 0
-        expirationTimerViewLayoutParams.marginEnd = if (message.isOutgoing) 0 else -(smallSpacing + expirationTimerViewSize)
-        binding.expirationTimerView.layoutParams = expirationTimerViewLayoutParams
+        val spacing = binding.messageSpacing
+//        container.addView(if (message.isOutgoing) expiration else content)
+//        container.addView(if (message.isOutgoing) content else expiration)
+//        container.addView(spacing, if (message.isOutgoing) 0 else 2)
         if (message.expiresIn > 0 && !message.isPending) {
             binding.expirationTimerView.setColorFilter(ResourcesCompat.getColor(resources, R.color.text, context.theme))
-            binding.expirationTimerView.isVisible = true
+            binding.expirationTimerView.isInvisible = false
             binding.expirationTimerView.setPercentComplete(0.0f)
             if (message.expireStarted > 0) {
                 binding.expirationTimerView.setExpirationTime(message.expireStarted, message.expiresIn)
@@ -259,7 +241,7 @@ class VisibleMessageView : LinearLayout {
                 binding.expirationTimerView.setPercentComplete(0.0f)
             }
         } else {
-            binding.expirationTimerView.isVisible = false
+            binding.expirationTimerView.isInvisible = true
         }
         container.requestLayout()
     }
@@ -278,9 +260,9 @@ class VisibleMessageView : LinearLayout {
             val threshold = swipeToReplyThreshold
             val iconSize = toPx(24, context.resources)
             val bottomVOffset = paddingBottom + binding.messageStatusImageView.height + (binding.messageContentView.height - iconSize) / 2
-            swipeToReplyIconRect.left = binding.messageContentContainer.right - binding.messageContentContainer.paddingEnd + spacing
+            swipeToReplyIconRect.left = binding.messageContentView.right - binding.messageContentView.paddingEnd + spacing
             swipeToReplyIconRect.top = height - bottomVOffset - iconSize
-            swipeToReplyIconRect.right = binding.messageContentContainer.right - binding.messageContentContainer.paddingEnd + iconSize + spacing
+            swipeToReplyIconRect.right = binding.messageContentView.right - binding.messageContentView.paddingEnd + iconSize + spacing
             swipeToReplyIconRect.bottom = height - bottomVOffset
             swipeToReplyIcon.bounds = swipeToReplyIconRect
             swipeToReplyIcon.alpha = (255.0f * (min(abs(translationX), threshold) / threshold)).roundToInt()

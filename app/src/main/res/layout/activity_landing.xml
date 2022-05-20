@@ -40,12 +40,21 @@
         android:text="@string/activity_landing_register_button_title" />
 
     <Button
+        style="@style/Widget.Session.Button.Common.ProminentOutline"
+        android:id="@+id/restoreButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/medium_button_height"
+        android:layout_marginLeft="@dimen/massive_spacing"
+        android:layout_marginTop="@dimen/small_spacing"
+        android:layout_marginRight="@dimen/massive_spacing"
+        android:text="@string/activity_landing_restore_button_title" />
+
+    <Button
         android:id="@+id/linkButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/onboarding_button_bottom_offset"
         android:layout_marginLeft="@dimen/massive_spacing"
         android:layout_marginRight="@dimen/massive_spacing"
-        android:layout_marginVertical="@dimen/medium_spacing"
         android:gravity="center"
         android:background="@color/transparent"
         android:textAllCaps="false"

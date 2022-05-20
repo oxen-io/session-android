@@ -2,7 +2,6 @@ package org.thoughtcrime.securesms.conversation.v2.messages
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.text.StaticLayout
 import android.util.AttributeSet
 import androidx.annotation.ColorInt
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -16,17 +15,13 @@ import network.loki.messenger.databinding.ViewQuoteBinding
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities
-import org.thoughtcrime.securesms.conversation.v2.utilities.TextUtilities
 import org.thoughtcrime.securesms.database.SessionContactDatabase
-import org.thoughtcrime.securesms.database.model.Quote
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.mms.SlideDeck
 import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.UiModeUtilities
 import org.thoughtcrime.securesms.util.toPx
 import javax.inject.Inject
-import kotlin.math.max
-import kotlin.math.min
 
 // There's quite some calculation going on here. It's a bit complex so don't make changes
 // if you don't need to. If you do then test:
@@ -64,36 +59,6 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                 binding.quoteViewCancelButton.isVisible = false
                 binding.mainQuoteViewContainer.setBackgroundColor(ResourcesCompat.getColor(resources, R.color.transparent, context.theme))
             }
-        }
-    }
-    // endregion
-
-    // region General
-    fun getIntrinsicContentHeight(maxContentWidth: Int): Int {
-        // If we're showing an attachment thumbnail, just constrain to the height of that
-        if (binding.quoteViewAttachmentPreviewContainer.isVisible) { return toPx(40, resources) }
-        var result = 0
-        val authorTextViewIntrinsicHeight: Int
-        if (binding.quoteViewAuthorTextView.isVisible) {
-            val author = binding.quoteViewAuthorTextView.text
-            authorTextViewIntrinsicHeight = TextUtilities.getIntrinsicHeight(author, binding.quoteViewAuthorTextView.paint, maxContentWidth)
-            result += authorTextViewIntrinsicHeight
-        }
-        val body = binding.quoteViewBodyTextView.text
-        val bodyTextViewIntrinsicHeight = TextUtilities.getIntrinsicHeight(body, binding.quoteViewBodyTextView.paint, maxContentWidth)
-        val staticLayout = TextUtilities.getIntrinsicLayout(body, binding.quoteViewBodyTextView.paint, maxContentWidth)
-        result += bodyTextViewIntrinsicHeight
-        if (!binding.quoteViewAuthorTextView.isVisible) {
-            // We want to at least be as high as the cancel button 36DP, and no higher than 3 lines of text.
-            // Height from intrinsic layout is the height of the text before truncation so we shorten
-            // proportionally to our max lines setting.
-            return max(toPx(32, resources) ,min((result / staticLayout.lineCount) * 3, result))
-        } else {
-            // Because we're showing the author text view, we should have a height of at least 32 DP
-            // anyway, so there's no need to constrain to that. We constrain to a max height of 56 DP
-            // because that's approximately the height of the author text view + 2 lines of the body
-            // text view.
-            return min(result, toPx(56, resources))
         }
     }
     // endregion
@@ -184,30 +149,6 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         }
     }
 
-    fun calculateWidth(quote: Quote, bodyWidth: Int, maxContentWidth: Int, thread: Recipient): Int {
-        binding.quoteViewAuthorTextView.isVisible = thread.isGroupRecipient
-        var paddingWidth = resources.getDimensionPixelSize(R.dimen.medium_spacing) * 5 // initial horizontal padding
-        with (binding) {
-            if (quoteViewAttachmentPreviewContainer.isVisible) {
-                paddingWidth += toPx(40, resources)
-            }
-            if (quoteViewAccentLine.isVisible) {
-                paddingWidth += resources.getDimensionPixelSize(R.dimen.accent_line_thickness)
-            }
-        }
-        val quoteBodyWidth = StaticLayout.getDesiredWidth(binding.quoteViewBodyTextView.text, binding.quoteViewBodyTextView.paint).toInt() + paddingWidth
-
-        val quoteAuthorWidth = if (thread.isGroupRecipient) {
-            val authorPublicKey = quote.author.serialize()
-            val author = contactDb.getContactWithSessionID(authorPublicKey)
-            val authorDisplayName = author?.displayName(Contact.contextForRecipient(thread)) ?: authorPublicKey
-            StaticLayout.getDesiredWidth(authorDisplayName, binding.quoteViewBodyTextView.paint).toInt() + paddingWidth
-        } else 0
-
-        val quoteWidth = max(quoteBodyWidth, quoteAuthorWidth)
-        val usedWidth = max(quoteWidth, bodyWidth)
-        return min(maxContentWidth, usedWidth)
-    }
     // endregion
 }
 

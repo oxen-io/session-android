@@ -20,6 +20,7 @@ class LandingActivity : BaseActionBarActivity() {
         with(binding) {
             fakeChatView.startAnimating()
             registerButton.setOnClickListener { register() }
+            restoreButton.setOnClickListener { link() }
             linkButton.setOnClickListener { link() }
         }
         IdentityKeyUtil.generateIdentityKeyPair(this)
@@ -30,11 +31,6 @@ class LandingActivity : BaseActionBarActivity() {
 
     private fun register() {
         val intent = Intent(this, RegisterActivity::class.java)
-        push(intent)
-    }
-
-    private fun restore() {
-        val intent = Intent(this, RecoveryPhraseRestoreActivity::class.java)
         push(intent)
     }
 

@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.text.Spannable
-import android.text.StaticLayout
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.URLSpan
@@ -42,7 +41,6 @@ import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.SearchUtil
 import org.thoughtcrime.securesms.util.UiModeUtilities
 import org.thoughtcrime.securesms.util.getColorWithID
-import org.thoughtcrime.securesms.util.toPx
 import java.util.Locale
 import kotlin.math.roundToInt
 
@@ -65,7 +63,7 @@ class VisibleMessageContentView : LinearLayout {
 
     // region Updating
     fun bind(message: MessageRecord, isStartOfMessageCluster: Boolean, isEndOfMessageCluster: Boolean,
-        glide: GlideRequests, maxWidth: Int, thread: Recipient, searchQuery: String?, contactIsTrusted: Boolean) {
+        glide: GlideRequests, thread: Recipient, searchQuery: String?, contactIsTrusted: Boolean) {
         // Background
         val background = getBackground(message.isOutgoing, isStartOfMessageCluster, isEndOfMessageCluster)
         val colorID = if (message.isOutgoing) R.attr.message_sent_background_color else R.attr.message_received_background_color
@@ -89,6 +87,9 @@ class VisibleMessageContentView : LinearLayout {
         } else {
             binding.deletedMessageView.root.isVisible = false
         }
+        // clear the
+        binding.bodyTextView.text = null
+
 
         binding.quoteView.root.isVisible = message is MmsMessageRecord && message.quote != null
 
@@ -109,10 +110,6 @@ class VisibleMessageContentView : LinearLayout {
         if (message is MmsMessageRecord && message.quote != null) {
             binding.quoteView.root.isVisible = true
             val quote = message.quote!!
-            // The max content width is the max message bubble size - 2 times the horizontal padding - 2
-            // times the horizontal margin. This unfortunately has to be calculated manually
-            // here to get the layout right.
-            val maxContentWidth = (maxWidth - 2 * resources.getDimension(R.dimen.medium_spacing) - 2 * toPx(16, resources)).roundToInt()
             val quoteText = if (quote.isOriginalMissing) {
                 context.getString(R.string.QuoteView_original_missing)
             } else {
@@ -191,21 +188,8 @@ class VisibleMessageContentView : LinearLayout {
 
         // set it to use constraints if not only a text message, otherwise wrap content to whatever width it wants
         val params = binding.bodyTextView.layoutParams
-        params.width = if (onlyBodyMessage || binding.barrierViewsGone()) ViewGroup.LayoutParams.WRAP_CONTENT else 0
+        params.width = if (onlyBodyMessage || binding.barrierViewsGone()) ViewGroup.LayoutParams.MATCH_PARENT else 0
         binding.bodyTextView.layoutParams = params
-        binding.bodyTextView.maxWidth = maxWidth
-
-        val bodyWidth = with (binding.bodyTextView) {
-            StaticLayout.getDesiredWidth(text, paint).roundToInt()
-        }
-
-        val quote = (message as? MmsMessageRecord)?.quote
-        val quoteLayoutParams = binding.quoteView.root.layoutParams
-        quoteLayoutParams.width =
-            if (mediaThumbnailMessage || quote == null) 0
-            else binding.quoteView.root.calculateWidth(quote, bodyWidth, maxWidth, thread)
-
-        binding.quoteView.root.layoutParams = quoteLayoutParams
 
         if (message.body.isNotEmpty() && !hideBody) {
             val color = getTextColor(context, message)

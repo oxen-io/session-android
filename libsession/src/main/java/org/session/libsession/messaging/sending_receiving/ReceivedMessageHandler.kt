@@ -283,6 +283,14 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage, proto: SignalS
     // Persist the message
     message.threadID = threadID
     val messageID = storage.persist(message, quoteModel, linkPreviews, message.groupPublicKey, openGroupID, attachments) ?: throw MessageReceiver.Error.DuplicateMessage
+    // Parse & persist attachments
+    // Start attachment downloads if needed
+//    storage.getAttachmentsForMessage(messageID).iterator().forEach { attachment ->
+//        attachment.attachmentId?.let { id ->
+//            val downloadJob = AttachmentDownloadJob(id.rowId, messageID)
+//            JobQueue.shared.add(downloadJob)
+//        }
+//    }
     val openGroupServerID = message.openGroupServerMessageID
     if (openGroupServerID != null) {
         val isSms = !(message.isMediaMessage() || attachments.isNotEmpty())
