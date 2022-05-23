@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.thoughtcrime.securesms.conversation.v2.messages.QuoteView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<org.thoughtcrime.securesms.conversation.v2.messages.QuoteView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainQuoteViewContainer"
     android:layout_width="wrap_content"
-    android:minWidth="300dp"
     android:layout_height="wrap_content"
     android:background="@color/input_bar_background"
-    android:paddingHorizontal="@dimen/medium_spacing"
-    android:paddingVertical="@dimen/small_spacing"
+    android:minWidth="300dp"
+    android:minHeight="52dp"
+    android:paddingVertical="12dp"
+    android:paddingHorizontal="12dp"
     app:quote_mode="regular">
 
     <View
         android:id="@+id/quoteViewAccentLine"
         android:layout_width="@dimen/accent_line_thickness"
         android:layout_height="0dp"
-        android:layout_centerVertical="true"
-        android:layout_marginVertical="4dp"
+        android:layout_marginVertical="2dp"
         android:background="@color/text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0"
@@ -25,15 +24,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <RelativeLayout
-        tools:visibility="visible"
         android:id="@+id/quoteViewAttachmentPreviewContainer"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_centerVertical="true"
         android:layout_marginVertical="@dimen/small_spacing"
         android:background="@drawable/view_quote_attachment_preview_background"
-        app:layout_constraintHorizontal_bias="0"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -65,38 +64,41 @@
     <TextView
         android:id="@+id/quoteViewAuthorTextView"
         android:layout_width="wrap_content"
-        app:layout_constraintHorizontal_bias="0"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/quoteStartBarrier"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="@dimen/small_spacing"
         android:layout_marginStart="@dimen/medium_spacing"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/text"
         android:textSize="@dimen/small_font_size"
         android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/quoteViewBodyTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@+id/quoteStartBarrier"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
         tools:text="Spiderman" />
 
     <TextView
         android:id="@+id/quoteViewBodyTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintHorizontal_bias="0"
         android:layout_marginStart="@dimen/medium_spacing"
-        android:layout_marginBottom="@dimen/small_spacing"
-        app:layout_constraintStart_toEndOf="@+id/quoteStartBarrier"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/quoteViewAuthorTextView"
         android:ellipsize="end"
         android:maxLines="3"
         android:textColor="@color/text"
         android:textSize="@dimen/small_font_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/quoteStartBarrier"
+        app:layout_constraintTop_toBottomOf="@+id/quoteViewAuthorTextView"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:maxLines="1"
         tools:text="@tools:sample/lorem/random" />
 
     <ImageView
-        tools:visibility="gone"
         android:id="@+id/quoteViewCancelButton"
         android:layout_width="32dp"
         android:layout_height="32dp"
@@ -107,6 +109,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/text" />
+        app:tint="@color/text"
+        tools:visibility="gone" />
 
 </org.thoughtcrime.securesms.conversation.v2.messages.QuoteView>

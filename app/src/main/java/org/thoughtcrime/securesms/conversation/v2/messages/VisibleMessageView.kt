@@ -13,10 +13,10 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
-import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
@@ -117,25 +117,29 @@ class VisibleMessageView : LinearLayout {
         // Show profile picture and sender name if this is a group thread AND
         // the message is incoming
         if (isGroupThread && !message.isOutgoing) {
-            binding.profilePictureContainer.visibility = if (isEndOfMessageCluster) View.VISIBLE else View.INVISIBLE
-            binding.profilePictureView.root.publicKey = senderSessionID
-            binding.profilePictureView.root.glide = glide
-            binding.profilePictureView.root.update(message.individualRecipient)
-            binding.profilePictureView.root.setOnClickListener {
-                showUserDetails(senderSessionID, threadID)
-            }
-            if (thread.isOpenGroupRecipient) {
-                val openGroup = lokiThreadDb.getOpenGroupChat(threadID) ?: return
-                val isModerator = OpenGroupAPIV2.isUserModerator(senderSessionID, openGroup.room, openGroup.server)
-                binding.moderatorIconImageView.visibility = if (isModerator) View.VISIBLE else View.INVISIBLE
+            binding.profilePictureView.root.visibility = if (isEndOfMessageCluster) View.VISIBLE else View.INVISIBLE
+            if (isEndOfMessageCluster) {
+                binding.profilePictureView.root.publicKey = senderSessionID
+                binding.profilePictureView.root.glide = glide
+                binding.profilePictureView.root.update(message.individualRecipient)
+                binding.profilePictureView.root.setOnClickListener {
+                    showUserDetails(senderSessionID, threadID)
+                }
+                if (thread.isOpenGroupRecipient) {
+                    val openGroup = lokiThreadDb.getOpenGroupChat(threadID) ?: return
+                    val isModerator = OpenGroupAPIV2.isUserModerator(senderSessionID, openGroup.room, openGroup.server)
+                    binding.moderatorIconImageView.isVisible = isModerator
+                } else {
+                    binding.moderatorIconImageView.isVisible = false
+                }
             } else {
-                binding.moderatorIconImageView.visibility = View.INVISIBLE
+                binding.moderatorIconImageView.isVisible = false
             }
             binding.senderNameTextView.isVisible = isStartOfMessageCluster
             val context = if (thread.isOpenGroupRecipient) ContactContext.OPEN_GROUP else ContactContext.REGULAR
             binding.senderNameTextView.text = contact?.displayName(context) ?: senderSessionID
         } else {
-            binding.profilePictureContainer.visibility = View.GONE
+            binding.profilePictureView.root.visibility = View.GONE
             binding.senderNameTextView.visibility = View.GONE
         }
         // Date break
@@ -212,13 +216,17 @@ class VisibleMessageView : LinearLayout {
         val container = binding.expirationTimerViewContainer
         val content = binding.messageContentView
         val expiration = binding.expirationTimerView
-        val spacing = binding.messageSpacing
-//        container.addView(if (message.isOutgoing) expiration else content)
-//        container.addView(if (message.isOutgoing) content else expiration)
-//        container.addView(spacing, if (message.isOutgoing) 0 else 2)
+        val spacing = binding.messageContentSpacing
+        container.removeAllViewsInLayout()
+        container.addView(if (message.isOutgoing) expiration else content)
+        container.addView(if (message.isOutgoing) content else expiration)
+        container.addView(spacing, if (message.isOutgoing) 0 else 2)
+        val containerParams = container.layoutParams as ConstraintLayout.LayoutParams
+        containerParams.horizontalBias = if (message.isOutgoing) 1f else 0f
+        container.layoutParams = containerParams
         if (message.expiresIn > 0 && !message.isPending) {
             binding.expirationTimerView.setColorFilter(ResourcesCompat.getColor(resources, R.color.text, context.theme))
-            binding.expirationTimerView.isInvisible = false
+            binding.expirationTimerView.isVisible = true
             binding.expirationTimerView.setPercentComplete(0.0f)
             if (message.expireStarted > 0) {
                 binding.expirationTimerView.setExpirationTime(message.expireStarted, message.expiresIn)
@@ -241,7 +249,7 @@ class VisibleMessageView : LinearLayout {
                 binding.expirationTimerView.setPercentComplete(0.0f)
             }
         } else {
-            binding.expirationTimerView.isInvisible = true
+            binding.expirationTimerView.isVisible = false
         }
         container.requestLayout()
     }
