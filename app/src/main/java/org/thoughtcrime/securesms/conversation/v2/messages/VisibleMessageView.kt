@@ -41,7 +41,6 @@ import org.thoughtcrime.securesms.util.getColorWithID
 import org.thoughtcrime.securesms.util.toDp
 import org.thoughtcrime.securesms.util.toPx
 import java.util.Date
-import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.min
@@ -72,7 +71,6 @@ class VisibleMessageView : LinearLayout {
     var snIsSelected = false
         set(value) {
             field = value
-            binding.messageTimestampTextView.isVisible = isSelected
             handleIsSelectedChanged()
         }
     var onPress: ((event: MotionEvent) -> Unit)? = null
@@ -145,11 +143,9 @@ class VisibleMessageView : LinearLayout {
         // Date break
         binding.dateBreakTextView.showDateBreak(message, previous)
         // Timestamp
-        binding.messageTimestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), message.timestamp)
+        // binding.messageTimestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), message.timestamp)
         // Set inter-message spacing
         setMessageSpacing(isStartOfMessageCluster, isEndOfMessageCluster)
-        // Gravity
-        // TODO: gravity
         // Message status indicator
         val (iconID, iconColor) = getMessageStatusImage(message)
         if (iconID != null) {
