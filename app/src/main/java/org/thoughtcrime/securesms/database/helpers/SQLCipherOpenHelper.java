@@ -66,9 +66,10 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
   private static final int lokiV32                          = 53;
   private static final int lokiV33                          = 54;
   private static final int lokiV34                          = 55;
+  private static final int lokiV35                          = 55;
 
   // Loki - onUpgrade(...) must be updated to use Loki version numbers if Signal makes any database changes
-  private static final int    DATABASE_VERSION = lokiV33;
+  private static final int    DATABASE_VERSION = lokiV35;
   private static final String DATABASE_NAME    = "signal.db";
 
   private final Context        context;
@@ -152,6 +153,10 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
     db.execSQL(LokiAPIDatabase.CREATE_DEFAULT_FORK_INFO_COMMAND);
     db.execSQL(LokiAPIDatabase.UPDATE_HASHES_INCLUDE_NAMESPACE_COMMAND);
     db.execSQL(LokiAPIDatabase.UPDATE_RECEIVED_INCLUDE_NAMESPACE_COMMAND);
+    db.execSQL(LokiAPIDatabase.INSERT_LAST_HASH_DATA);
+    db.execSQL(LokiAPIDatabase.DROP_LEGACY_LAST_HASH);
+    db.execSQL(LokiAPIDatabase.INSERT_RECEIVED_HASHES_DATA);
+    db.execSQL(LokiAPIDatabase.DROP_LEGACY_RECEIVED_HASHES);
 
     executeStatements(db, SmsDatabase.CREATE_INDEXS);
     executeStatements(db, MmsDatabase.CREATE_INDEXS);
@@ -354,6 +359,13 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
       }
 
       if (oldVersion < lokiV34) {
+        db.execSQL(LokiAPIDatabase.INSERT_LAST_HASH_DATA);
+        db.execSQL(LokiAPIDatabase.DROP_LEGACY_LAST_HASH);
+        db.execSQL(LokiAPIDatabase.INSERT_RECEIVED_HASHES_DATA);
+        db.execSQL(LokiAPIDatabase.DROP_LEGACY_RECEIVED_HASHES);
+      }
+
+      if (oldVersion < lokiV35) {
         db.execSQL(LokiAPIDatabase.getCreateServerCapabilitiesCommand());
         db.execSQL(LokiAPIDatabase.getCreateLastInboxMessageServerIdCommand());
         db.execSQL(LokiAPIDatabase.getCreateLastOutboxMessageServerIdCommand());
