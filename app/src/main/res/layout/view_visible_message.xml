@@ -10,7 +10,8 @@
     <TextView
         android:id="@+id/dateBreakTextView"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/large_spacing"
+        tools:text="@tools:sample/date/hhmmss"
         android:gravity="center"
         android:textColor="@color/text"
         android:textSize="@dimen/very_small_font_size"
@@ -26,10 +27,11 @@
             android:id="@+id/startSpacing"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_width="18dp"
+            android:layout_width="8dp"
             android:layout_height="1dp"/>
 
         <include
+            tools:visibility="gone"
             android:id="@+id/profilePictureView"
             layout="@layout/view_profile_picture"
             android:layout_marginBottom="@dimen/small_spacing"
@@ -58,12 +60,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
-            android:layout_marginBottom="4dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/text"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/profilePictureView"
+            tools:text="@tools:sample/full_names"
+            android:paddingBottom="4dp"
+            app:layout_constraintStart_toStartOf="@+id/expirationTimerViewContainer"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <LinearLayout
@@ -75,12 +78,6 @@
             app:layout_constraintEnd_toStartOf="@+id/messageTimestampContainer"
             app:layout_constraintStart_toEndOf="@+id/profilePictureView"
             app:layout_constraintTop_toBottomOf="@+id/senderNameTextView">
-
-            <View
-                android:id="@+id/messageContentSpacing"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="0dp"/>
 
             <org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageContentView
                 android:id="@+id/messageContentView"
@@ -96,6 +93,13 @@
                 android:layout_height="12dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginHorizontal="@dimen/small_spacing" />
+
+            <View
+                android:id="@+id/messageContentSpacing"
+                android:minWidth="@dimen/very_large_spacing"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"/>
 
         </LinearLayout>
 

@@ -17,6 +17,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
@@ -114,8 +115,16 @@ class VisibleMessageView : LinearLayout {
         val isEndOfMessageCluster = isEndOfMessageCluster(message, next, isGroupThread)
         // Show profile picture and sender name if this is a group thread AND
         // the message is incoming
+        binding.moderatorIconImageView.isVisible = false
+        binding.profilePictureView.root.isInvisible = !isEndOfMessageCluster || message.isOutgoing
+
+        val avatarLayoutParams = binding.profilePictureView.root.layoutParams as MarginLayoutParams
+        avatarLayoutParams.bottomMargin =
+            if (isEndOfMessageCluster) resources.getDimensionPixelSize(R.dimen.small_spacing)
+            else ViewUtil.dpToPx(context,2)
+        binding.profilePictureView.root.layoutParams = avatarLayoutParams
+
         if (isGroupThread && !message.isOutgoing) {
-            binding.profilePictureView.root.visibility = if (isEndOfMessageCluster) View.VISIBLE else View.INVISIBLE
             if (isEndOfMessageCluster) {
                 binding.profilePictureView.root.publicKey = senderSessionID
                 binding.profilePictureView.root.glide = glide
@@ -125,19 +134,19 @@ class VisibleMessageView : LinearLayout {
                 }
                 if (thread.isOpenGroupRecipient) {
                     val openGroup = lokiThreadDb.getOpenGroupChat(threadID) ?: return
-                    val isModerator = OpenGroupAPIV2.isUserModerator(senderSessionID, openGroup.room, openGroup.server)
-                    binding.moderatorIconImageView.isVisible = isModerator
-                } else {
-                    binding.moderatorIconImageView.isVisible = false
+                    val isModerator = OpenGroupAPIV2.isUserModerator(
+                        senderSessionID,
+                        openGroup.room,
+                        openGroup.server
+                    )
+                    binding.moderatorIconImageView.isVisible = !message.isOutgoing && isModerator
                 }
-            } else {
-                binding.moderatorIconImageView.isVisible = false
             }
             binding.senderNameTextView.isVisible = isStartOfMessageCluster
-            val context = if (thread.isOpenGroupRecipient) ContactContext.OPEN_GROUP else ContactContext.REGULAR
+            val context =
+                if (thread.isOpenGroupRecipient) ContactContext.OPEN_GROUP else ContactContext.REGULAR
             binding.senderNameTextView.text = contact?.displayName(context) ?: senderSessionID
         } else {
-            binding.profilePictureView.root.visibility = View.GONE
             binding.senderNameTextView.visibility = View.GONE
         }
         // Date break
@@ -145,7 +154,6 @@ class VisibleMessageView : LinearLayout {
         // Timestamp
         // binding.messageTimestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), message.timestamp)
         // Set inter-message spacing
-        setMessageSpacing(isStartOfMessageCluster, isEndOfMessageCluster)
         // Message status indicator
         val (iconID, iconColor) = getMessageStatusImage(message)
         if (iconID != null) {
@@ -157,7 +165,8 @@ class VisibleMessageView : LinearLayout {
         }
         if (message.isOutgoing) {
             val lastMessageID = mmsSmsDb.getLastMessageID(message.threadId)
-            binding.messageStatusImageView.isVisible = !message.isSent || message.id == lastMessageID
+            binding.messageStatusImageView.isVisible =
+                !message.isSent || message.id == lastMessageID
         } else {
             binding.messageStatusImageView.isVisible = false
         }
@@ -166,16 +175,17 @@ class VisibleMessageView : LinearLayout {
         // Calculate max message bubble width
         // Populate content view
         binding.messageContentView.indexInAdapter = indexInAdapter
-        binding.messageContentView.bind(message, isStartOfMessageCluster, isEndOfMessageCluster, glide, thread, searchQuery, message.isOutgoing || isGroupThread || (contact?.isTrusted ?: false))
+        binding.messageContentView.bind(
+            message,
+            isStartOfMessageCluster,
+            isEndOfMessageCluster,
+            glide,
+            thread,
+            searchQuery,
+            message.isOutgoing || isGroupThread || (contact?.isTrusted ?: false)
+        )
         binding.messageContentView.delegate = contentViewDelegate
         onDoubleTap = { binding.messageContentView.onContentDoubleTap?.invoke() }
-    }
-
-    private fun setMessageSpacing(isStartOfMessageCluster: Boolean, isEndOfMessageCluster: Boolean) {
-        val topPadding = if (isStartOfMessageCluster) R.dimen.conversation_vertical_message_spacing_default else R.dimen.conversation_vertical_message_spacing_collapse
-        ViewUtil.setPaddingTop(this, resources.getDimension(topPadding).roundToInt())
-        val bottomPadding = if (isEndOfMessageCluster) R.dimen.conversation_vertical_message_spacing_default else R.dimen.conversation_vertical_message_spacing_collapse
-        ViewUtil.setPaddingBottom(this, resources.getDimension(bottomPadding).roundToInt())
     }
 
     private fun isStartOfMessageCluster(current: MessageRecord, previous: MessageRecord?, isGroupThread: Boolean): Boolean {

@@ -105,5 +105,6 @@
         android:paddingVertical="@dimen/small_spacing"
         android:id="@+id/bodyTextView"
         android:layout_width="0dp"
+        android:maxWidth="300dp"
         android:layout_height="wrap_content"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

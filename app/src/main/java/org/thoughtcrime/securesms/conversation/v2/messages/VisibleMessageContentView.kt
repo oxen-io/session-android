@@ -27,6 +27,11 @@ import androidx.core.view.isVisible
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewVisibleMessageContentBinding
 import okhttp3.HttpUrl
+import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.jobs.AttachmentDownloadJob
+import org.session.libsession.messaging.jobs.JobQueue
+import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress
+import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.session.libsession.utilities.ThemeUtil
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
@@ -123,6 +128,18 @@ class VisibleMessageContentView : LinearLayout {
                 binding.quoteView.root.getGlobalVisibleRect(r)
                 if (r.contains(event.rawX.roundToInt(), event.rawY.roundToInt())) {
                     delegate?.scrollToMessageIfPossible(quote.id)
+                }
+            }
+        }
+
+        if (message is MmsMessageRecord) {
+            message.slideDeck.asAttachments().forEach { attach ->
+                val dbAttachment = attach as? DatabaseAttachment ?: return@forEach
+                val attachmentId = dbAttachment.attachmentId.rowId
+                if (attach.transferState == AttachmentTransferProgress.TRANSFER_PROGRESS_PENDING
+                    && MessagingModuleConfiguration.shared.storage.getAttachmentUploadJob(attachmentId) == null) {
+                    // start download
+                    JobQueue.shared.add(AttachmentDownloadJob(attachmentId, dbAttachment.mmsId))
                 }
             }
         }

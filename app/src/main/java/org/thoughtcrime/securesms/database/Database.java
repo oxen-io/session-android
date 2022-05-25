@@ -23,7 +23,7 @@ import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 
-import org.session.libsession.utilities.Debouncer;
+import org.session.libsession.utilities.WindowDebouncer;
 import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 
@@ -36,13 +36,15 @@ public abstract class Database {
 
   protected       SQLCipherOpenHelper databaseHelper;
   protected final Context             context;
-  private final   Debouncer           conversationListNotificationDebouncer;
+  private   final WindowDebouncer     conversationListNotificationDebouncer;
+  private   final Runnable            conversationListUpdater;
 
   @SuppressLint("WrongConstant")
   public Database(Context context, SQLCipherOpenHelper databaseHelper) {
     this.context = context;
+    this.conversationListUpdater = ()-> context.getContentResolver().notifyChange(DatabaseContentProviders.ConversationList.CONTENT_URI, null);
     this.databaseHelper = databaseHelper;
-    this.conversationListNotificationDebouncer = new Debouncer(ApplicationContext.getInstance(context).getConversationListNotificationHandler(), 200);
+    this.conversationListNotificationDebouncer = new WindowDebouncer(ApplicationContext.getInstance(context).getConversationListNotificationHandler(), 2000);
   }
 
   protected void notifyConversationListeners(Set<Long> threadIds) {
@@ -55,7 +57,7 @@ public abstract class Database {
   }
 
   protected void notifyConversationListListeners() {
-    conversationListNotificationDebouncer.publish(()->context.getContentResolver().notifyChange(DatabaseContentProviders.ConversationList.CONTENT_URI, null));
+    conversationListNotificationDebouncer.publish(conversationListUpdater);
   }
 
   protected void notifyStickerListeners() {

@@ -15,7 +15,8 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewConversationBinding
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities.highlightMentions
-import org.thoughtcrime.securesms.database.RecipientDatabase
+import org.thoughtcrime.securesms.database.RecipientDatabase.NOTIFY_TYPE_ALL
+import org.thoughtcrime.securesms.database.RecipientDatabase.NOTIFY_TYPE_NONE
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.DateUtils
@@ -73,15 +74,15 @@ class ConversationView : LinearLayout {
         binding.conversationViewDisplayNameTextView.text = senderDisplayName
         binding.timestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), thread.date)
         val recipient = thread.recipient
-        binding.muteIndicatorImageView.isVisible = recipient.isMuted || recipient.notifyType != RecipientDatabase.NOTIFY_TYPE_ALL
-        val drawableRes = if (recipient.isMuted || recipient.notifyType == RecipientDatabase.NOTIFY_TYPE_NONE) {
+        binding.muteIndicatorImageView.isVisible = recipient.isMuted || recipient.notifyType != NOTIFY_TYPE_ALL
+        val drawableRes = if (recipient.isMuted || recipient.notifyType == NOTIFY_TYPE_NONE) {
             R.drawable.ic_outline_notifications_off_24
         } else {
             R.drawable.ic_notifications_mentions
         }
         binding.muteIndicatorImageView.setImageResource(drawableRes)
         val rawSnippet = thread.getDisplayBody(context)
-        val snippet = highlightMentions(rawSnippet, thread.threadId, context)
+        val snippet = highlightMentions(rawSnippet, recipient.isOpenGroupRecipient, context)
         binding.snippetTextView.text = snippet
         binding.snippetTextView.typeface = if (unreadCount > 0 && !thread.isRead) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
         binding.snippetTextView.visibility = if (isTyping) View.GONE else View.VISIBLE

@@ -73,7 +73,7 @@
         android:textStyle="bold"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/quoteViewBodyTextView"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/quoteViewBodyTextView"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@+id/quoteStartBarrier"
         app:layout_constraintTop_toTopOf="parent"
@@ -95,10 +95,11 @@
         app:layout_constraintStart_toEndOf="@+id/quoteStartBarrier"
         app:layout_constraintTop_toBottomOf="@+id/quoteViewAuthorTextView"
         app:layout_constraintVertical_chainStyle="packed"
+        android:maxWidth="240dp"
         tools:maxLines="1"
         tools:text="@tools:sample/lorem/random" />
 
-    <ImageView
+    <View
         android:id="@+id/quoteViewCancelButton"
         android:layout_width="32dp"
         android:layout_height="32dp"
