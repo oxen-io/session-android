@@ -24,7 +24,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Looper;
+import android.os.HandlerThread;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.DefaultLifecycleObserver;
@@ -127,6 +127,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     public Poller poller = null;
     public Broadcaster broadcaster = null;
     private Job firebaseInstanceIdJob;
+    private HandlerThread conversationListHandlerThread;
     private Handler conversationListNotificationHandler;
     private PersistentLogger persistentLogger;
 
@@ -148,8 +149,12 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     }
 
     public Handler getConversationListNotificationHandler() {
+        if (this.conversationListHandlerThread == null) {
+            conversationListHandlerThread = new HandlerThread("ConversationListHandler");
+            conversationListHandlerThread.start();
+        }
         if (this.conversationListNotificationHandler == null) {
-            conversationListNotificationHandler = new Handler(Looper.getMainLooper());
+            conversationListNotificationHandler = new Handler(conversationListHandlerThread.getLooper());
         }
         return this.conversationListNotificationHandler;
     }

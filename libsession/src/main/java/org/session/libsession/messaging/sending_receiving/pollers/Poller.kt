@@ -58,11 +58,12 @@ class Poller {
             pollNextSnode(deferred)
             deferred.promise
         }.success {
+            val nextDelay = if (isCaughtUp) retryInterval else 0
             Timer().schedule(object : TimerTask() {
                 override fun run() {
                     thread.run { setUpPolling(retryInterval) }
                 }
-            }, retryInterval)
+            }, nextDelay)
         }.fail {
             val nextDelay = minOf(maxInterval, (delay * 1.2).toLong())
             Timer().schedule(object : TimerTask() {
@@ -104,7 +105,7 @@ class Poller {
                 task { Unit } // The long polling connection has been canceled; don't recurse
             } else {
                 val messages = SnodeAPI.parseRawMessagesResponse(rawResponse, snode, userPublicKey)
-                isCaughtUp = messages.isEmpty()
+                isCaughtUp = messages.size < 100
                 val parameters = messages.map { (envelope, serverHash) ->
                     MessageReceiveParameters(envelope.toByteArray(), serverHash = serverHash)
                 }

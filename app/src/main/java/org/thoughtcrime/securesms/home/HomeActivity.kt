@@ -211,25 +211,27 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                     JobQueue.shared.resumePendingJobs()
                 }
                 // Set up typing observer
+                ApplicationContext.getInstance(this@HomeActivity).typingStatusRepository.typingThreads.observe(this@HomeActivity, Observer<Set<Long>> { threadIDs ->
+                    val adapter = binding.recyclerView.adapter as HomeAdapter
+                    adapter.typingThreadIDs = threadIDs ?: setOf()
+                })
                 withContext(Dispatchers.Main) {
-                    ApplicationContext.getInstance(this@HomeActivity).typingStatusRepository.typingThreads.observe(this@HomeActivity, Observer<Set<Long>> { threadIDs ->
-                        val adapter = binding.recyclerView.adapter as HomeAdapter
-                        adapter.typingThreadIDs = threadIDs ?: setOf()
-                    })
                     updateProfileButton()
-                    TextSecurePreferences.events.filter { it == TextSecurePreferences.PROFILE_NAME_PREF }.collect {
+                }
+                TextSecurePreferences.events.filter { it == TextSecurePreferences.PROFILE_NAME_PREF }.collect {
+                    withContext(Dispatchers.Main) {
                         updateProfileButton()
                     }
                 }
             }
             // monitor the global search VM query
-            launch {
+            launch(Dispatchers.IO) {
                 binding.globalSearchInputLayout.query
                         .onEach(globalSearchViewModel::postQuery)
                         .collect()
             }
             // Get group results and display them
-            launch {
+            launch(Dispatchers.IO) {
                 globalSearchViewModel.result.collect { result ->
                     val currentUserPublicKey = publicKey
                     val contactAndGroupList = result.contacts.map { GlobalSearchAdapter.Model.Contact(it) } +
