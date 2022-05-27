@@ -1,6 +1,5 @@
 package org.thoughtcrime.securesms.components.emoji;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -9,27 +8,26 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.widget.TextView;
 
-import network.loki.messenger.R;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import org.session.libsession.utilities.FutureTaskListener;
+import org.session.libsession.utilities.Util;
+import org.session.libsignal.utilities.Log;
+import org.session.libsignal.utilities.Pair;
 import org.thoughtcrime.securesms.components.emoji.parsing.EmojiDrawInfo;
 import org.thoughtcrime.securesms.components.emoji.parsing.EmojiPageBitmap;
 import org.thoughtcrime.securesms.components.emoji.parsing.EmojiParser;
 import org.thoughtcrime.securesms.components.emoji.parsing.EmojiTree;
-import org.session.libsignal.utilities.Log;
-
-import org.session.libsession.utilities.FutureTaskListener;
-import org.session.libsession.utilities.Util;
-import org.session.libsignal.utilities.Pair;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
+import network.loki.messenger.R;
 
 class EmojiProvider {
 
@@ -168,10 +166,9 @@ class EmojiProvider {
                         paint);
     }
 
-    @TargetApi(VERSION_CODES.HONEYCOMB_MR1)
     public void setBitmap(Bitmap bitmap) {
       Util.assertMainThread();
-      if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB_MR1 || bmp == null || !bmp.sameAs(bitmap)) {
+      if (bmp == null || !bmp.sameAs(bitmap)) {
         bmp = bitmap;
         invalidateSelf();
       }

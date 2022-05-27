@@ -28,6 +28,8 @@ import org.session.libsession.utilities.recipients.Recipient;
 import org.thoughtcrime.securesms.database.MmsDatabase;
 import org.thoughtcrime.securesms.database.SmsDatabase.Status;
 import org.thoughtcrime.securesms.mms.SlideDeck;
+
+import java.util.Collections;
 import java.util.List;
 import network.loki.messenger.R;
 
@@ -57,7 +59,7 @@ public class MediaMmsMessageRecord extends MmsMessageRecord {
     super(id, body, conversationRecipient, individualRecipient, dateSent,
       dateReceived, threadId, Status.STATUS_NONE, deliveryReceiptCount, mailbox, mismatches, failures,
       expiresIn, expireStarted, slideDeck, readReceiptCount, quote, contacts,
-      linkPreviews, unidentified);
+      linkPreviews, unidentified, Collections.emptyList());
     this.partCount = partCount;
   }
 

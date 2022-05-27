@@ -48,6 +48,7 @@ import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -694,7 +695,7 @@ public class SmsDatabase extends MessagingDatabase {
                                   0, message.isSecureMessage() ? MmsSmsColumns.Types.getOutgoingEncryptedMessageType() : MmsSmsColumns.Types.getOutgoingSmsMessageType(),
                                   threadId, 0, new LinkedList<IdentityKeyMismatch>(),
                                   message.getExpiresIn(),
-                                  System.currentTimeMillis(), 0, false);
+                                  System.currentTimeMillis(), 0, false, Collections.emptyList());
     }
   }
 
@@ -747,7 +748,7 @@ public class SmsDatabase extends MessagingDatabase {
                                   recipient,
                                   dateSent, dateReceived, deliveryReceiptCount, type,
                                   threadId, status, mismatches,
-                                  expiresIn, expireStarted, readReceiptCount, unidentified);
+                                  expiresIn, expireStarted, readReceiptCount, unidentified, Collections.emptyList());
     }
 
     private List<IdentityKeyMismatch> getMismatches(String document) {
