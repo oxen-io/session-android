@@ -6,9 +6,11 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import network.loki.messenger.R
 import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
+import org.session.libsession.messaging.open_groups.OpenGroupV2
 import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord
 import org.thoughtcrime.securesms.database.model.MessageRecord
+import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 
 object ConversationMenuItemHelper {
@@ -58,30 +60,44 @@ object ConversationMenuItemHelper {
     }
 
     fun onMenuItemSelected(item: MenuItem, message: MessageRecord, delegate: ConversationActionModeCallbackDelegate) {
-        val selectedItems = setOf(message)
         when (item.itemId) {
-            R.id.menu_context_delete_message -> delegate.deleteMessages(selectedItems)
-            R.id.menu_context_ban_user -> delegate.banUser(selectedItems)
-            R.id.menu_context_ban_and_delete_all -> delegate.banAndDeleteAll(selectedItems)
-            R.id.menu_context_copy -> delegate.copyMessages(selectedItems)
-            R.id.menu_context_copy_public_key -> delegate.copySessionID(selectedItems)
-            R.id.menu_context_resend -> delegate.resendMessage(selectedItems)
-            R.id.menu_message_details -> delegate.showMessageDetail(selectedItems)
-            R.id.menu_context_save_attachment -> delegate.saveAttachment(selectedItems)
-            R.id.menu_context_reply -> delegate.reply(selectedItems)
+            R.id.menu_context_delete_message -> delegate.deleteMessage(message)
+            R.id.menu_context_ban_user -> delegate.banUser(message)
+            R.id.menu_context_ban_and_delete_all -> delegate.banAndDeleteAll(message)
+            R.id.menu_context_copy -> delegate.copyMessage(message)
+            R.id.menu_context_copy_public_key -> delegate.copySessionID(message)
+            R.id.menu_context_resend -> delegate.resendMessage(message)
+            R.id.menu_message_details -> delegate.showMessageDetail(message)
+            R.id.menu_context_save_attachment -> delegate.saveAttachment(message as MmsMessageRecord)
+            R.id.menu_context_reply -> delegate.reply(message)
         }
     }
+
+    @JvmStatic
+    fun userCanDeleteSelectedItems(message: MessageRecord, openGroup: OpenGroupV2?, userPublicKey: String): Boolean {
+        if (openGroup  == null) return message.isOutgoing || !message.isOutgoing
+        if (message.isOutgoing) return true
+        return OpenGroupAPIV2.isUserModerator(userPublicKey, openGroup.room, openGroup.server)
+    }
+
+    @JvmStatic
+    fun userCanBanSelectedUsers(message: MessageRecord, openGroup: OpenGroupV2?, userPublicKey: String): Boolean {
+        if (openGroup == null)  return false
+        if (message.isOutgoing) return false // Users can't ban themselves
+        return OpenGroupAPIV2.isUserModerator(userPublicKey, openGroup.room, openGroup.server)
+    }
+
 }
 
 interface ConversationActionModeCallbackDelegate {
 
-    fun deleteMessages(messages: Set<MessageRecord>)
-    fun banUser(messages: Set<MessageRecord>)
-    fun banAndDeleteAll(messages: Set<MessageRecord>)
-    fun copyMessages(messages: Set<MessageRecord>)
-    fun copySessionID(messages: Set<MessageRecord>)
-    fun resendMessage(messages: Set<MessageRecord>)
-    fun showMessageDetail(messages: Set<MessageRecord>)
-    fun saveAttachment(messages: Set<MessageRecord>)
-    fun reply(messages: Set<MessageRecord>)
+    fun deleteMessage(message: MessageRecord)
+    fun banUser(message: MessageRecord)
+    fun banAndDeleteAll(message: MessageRecord)
+    fun copyMessage(message: MessageRecord)
+    fun copySessionID(message: MessageRecord)
+    fun resendMessage(message: MessageRecord)
+    fun showMessageDetail(message: MessageRecord)
+    fun saveAttachment(message: MmsMessageRecord)
+    fun reply(message: MessageRecord)
 }

@@ -81,6 +81,7 @@ class VisibleMessageView : LinearLayout {
     var onSwipeToReply: (() -> Unit)? = null
     var onLongPress: (() -> Unit)? = null
     var contentViewDelegate: VisibleMessageContentViewDelegate? = null
+    val messageContentView: VisibleMessageContentView by lazy { binding.messageContentView }
 
     companion object {
         const val swipeToReplyThreshold = 64.0f // dp

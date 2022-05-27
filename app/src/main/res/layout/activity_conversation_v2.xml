@@ -42,6 +42,21 @@
         android:visibility="gone"/>
 
     <FrameLayout
+        android:id="@+id/reactions_shade"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/reactions_screen_light_shade_color"
+        android:foreground="@color/reactions_screen_dark_shade_color"
+        android:visibility="gone" />
+
+    <ViewStub
+        android:id="@+id/conversation_reaction_scrubber_stub"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inflatedId="@+id/conversation_reaction_scrubber"
+        android:layout="@layout/conversation_reaction_scrubber"/>
+
+    <FrameLayout
         android:id="@+id/additionalContentContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

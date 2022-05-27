@@ -22,19 +22,18 @@ import android.text.TextUtils
 import android.util.Log
 import android.util.Pair
 import android.util.TypedValue
-import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.LinearLayout
-import android.widget.PopupMenu
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.DimenRes
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -66,6 +65,7 @@ import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Address.Companion.fromSerialized
 import org.session.libsession.utilities.MediaTypes
+import org.session.libsession.utilities.Stub
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.concurrent.SimpleTask
 import org.session.libsession.utilities.recipients.Recipient
@@ -79,6 +79,8 @@ import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.audio.AudioRecorder
 import org.thoughtcrime.securesms.contacts.SelectContactsActivity.Companion.selectedContactsKey
 import org.thoughtcrime.securesms.contactshare.SimpleTextWatcher
+import org.thoughtcrime.securesms.conversation.v2.ConversationReactionOverlay.OnActionSelectedListener
+import org.thoughtcrime.securesms.conversation.v2.ConversationReactionOverlay.OnReactionSelectedListener
 import org.thoughtcrime.securesms.conversation.v2.dialogs.BlockedDialog
 import org.thoughtcrime.securesms.conversation.v2.dialogs.LinkPreviewDialog
 import org.thoughtcrime.securesms.conversation.v2.dialogs.SendSeedDialog
@@ -88,7 +90,6 @@ import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarRecordingVie
 import org.thoughtcrime.securesms.conversation.v2.input_bar.mentions.MentionCandidatesView
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationActionModeCallbackDelegate
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationMenuHelper
-import org.thoughtcrime.securesms.conversation.v2.menus.ConversationMenuItemHelper
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageContentViewDelegate
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VoiceMessageViewDelegate
@@ -133,7 +134,6 @@ import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.SaveAttachmentTask
-import org.thoughtcrime.securesms.util.forceShowIcon
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.toPx
 import java.util.Locale
@@ -151,9 +151,10 @@ import kotlin.math.sqrt
 // price we pay is a bit of back and forth between the input bar and the conversation activity.
 @AndroidEntryPoint
 class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDelegate,
-        InputBarRecordingViewDelegate, AttachmentManager.AttachmentListener, ActivityDispatcher,
-        ConversationActionModeCallbackDelegate, VisibleMessageContentViewDelegate, RecipientModifiedListener,
-        SearchBottomBar.EventListener, VoiceMessageViewDelegate, LoaderManager.LoaderCallbacks<Cursor> {
+    InputBarRecordingViewDelegate, AttachmentManager.AttachmentListener, ActivityDispatcher,
+    ConversationActionModeCallbackDelegate, VisibleMessageContentViewDelegate, RecipientModifiedListener,
+    SearchBottomBar.EventListener, VoiceMessageViewDelegate, LoaderManager.LoaderCallbacks<Cursor>,
+    OnReactionSelectedListener {
 
     private var binding: ActivityConversationV2Binding? = null
     private var actionBarBinding: ActivityConversationV2ActionBarBinding? = null
@@ -249,6 +250,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private val messageToScrollTimestamp = AtomicLong(-1)
     private val messageToScrollAuthor = AtomicReference<Address?>(null)
 
+    private lateinit var reactionDelegate: ConversationReactionDelegate
+
     // region Settings
     companion object {
         // Extras
@@ -312,6 +315,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 return finish()
             }
         }
+
+        val reactionOverlayStub: Stub<ConversationReactionOverlay> =
+            ViewUtil.findStubById(this, R.id.conversation_reaction_scrubber_stub)
+        reactionDelegate = ConversationReactionDelegate(reactionOverlayStub)
     }
 
     override fun onResume() {
@@ -866,16 +873,49 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     // `position` is the adapter position; not the visual position
-    private fun handleLongPress(message: MessageRecord, view: VisibleMessageView) {
-        val popupMenu = PopupMenu(this, view, Gravity.CENTER, 0, R.style.PopupMenu_ConversationItem)
-        popupMenu.menuInflater.inflate(R.menu.menu_conversation_item_action, popupMenu.menu)
-        ConversationMenuItemHelper.onPrepareMenu(popupMenu.menu, popupMenu.menuInflater, message, this)
-        popupMenu.setOnMenuItemClickListener { menuItem ->
-            ConversationMenuItemHelper.onMenuItemSelected(menuItem, message, this)
-            true
-        }
-        popupMenu.forceShowIcon()
-        popupMenu.show()
+    private fun handleLongPress(message: MessageRecord, visibleMessageView: VisibleMessageView) {
+        ViewUtil.hideKeyboard(this, visibleMessageView);
+
+        binding?.conversationRecyclerView?.suppressLayout(true)
+        reactionDelegate.setOnActionSelectedListener(ReactionsToolbarListener(message))
+        reactionDelegate.setOnHideListener(object: ConversationReactionOverlay.OnHideListener {
+            override fun startHide() {
+                binding?.reactionsShade?.let {
+                    ViewUtil.fadeOut(it, resources.getInteger(R.integer.reaction_scrubber_hide_duration), View.GONE)
+                }
+            }
+
+            override fun onHide() {
+                binding?.conversationRecyclerView?.suppressLayout(false)
+
+                WindowUtil.setLightStatusBarFromTheme(this@ConversationActivityV2);
+                WindowUtil.setLightNavigationBarFromTheme(this@ConversationActivityV2);
+            }
+
+        })
+        val view = visibleMessageView.messageContentView
+        val selectedConversationModel = SelectedConversationModel(view.drawToBitmap(),
+            view.x,
+            view.getY() + binding!!.conversationRecyclerView.getTranslationY(),
+            view.getX(),
+            view.getY(),
+            view.getWidth(),
+            null,
+            message.isOutgoing,
+            view)
+        reactionDelegate.show(this, viewModel.recipient, message, false, selectedConversationModel);
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        return reactionDelegate.applyTouchEvent(ev) || super.dispatchTouchEvent(ev)
+    }
+
+    override fun onReactionSelected(messageRecord: MessageRecord, emoji: String?) {
+        reactionDelegate.hide()
+    }
+
+    override fun onCustomReactionSelected(messageRecord: MessageRecord, hasAddedCustomEmoji: Boolean) {
+        //TODO: apply and send
     }
 
     override fun onMicrophoneButtonMove(event: MotionEvent) {
@@ -1209,37 +1249,30 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         stopAudioHandler.removeCallbacks(stopVoiceMessageRecordingTask)
     }
 
-    override fun deleteMessages(messages: Set<MessageRecord>) {
-        val allSentByCurrentUser = messages.all { it.isOutgoing }
-        val allHasHash = messages.all { lokiMessageDb.getMessageServerHash(it.id) != null }
+    override fun deleteMessage(message: MessageRecord) {
+        val hasHash = lokiMessageDb.getMessageServerHash(message.id) != null
         if (viewModel.recipient.isOpenGroupRecipient) {
-            val messageCount = messages.size
+            val messageCount = 1
             val builder = AlertDialog.Builder(this)
             builder.setTitle(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
             builder.setMessage(resources.getQuantityString(R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages, messageCount, messageCount))
             builder.setCancelable(true)
             builder.setPositiveButton(R.string.delete) { _, _ ->
-                for (message in messages) {
-                    viewModel.deleteForEveryone(message)
-                }
+                viewModel.deleteForEveryone(message)
             }
             builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
                 dialog.dismiss()
             }
             builder.show()
-        } else if (allSentByCurrentUser && allHasHash) {
+        } else if (message.isOutgoing && hasHash) {
             val bottomSheet = DeleteOptionsBottomSheet()
             bottomSheet.recipient = viewModel.recipient
             bottomSheet.onDeleteForMeTapped = {
-                for (message in messages) {
-                    viewModel.deleteLocally(message)
-                }
+                viewModel.deleteLocally(message)
                 bottomSheet.dismiss()
             }
             bottomSheet.onDeleteForEveryoneTapped = {
-                for (message in messages) {
-                    viewModel.deleteForEveryone(message)
-                }
+                viewModel.deleteForEveryone(message)
                 bottomSheet.dismiss()
             }
             bottomSheet.onCancelTapped = {
@@ -1247,15 +1280,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             }
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)
         } else {
-            val messageCount = messages.size
+            val messageCount = 1
             val builder = AlertDialog.Builder(this)
             builder.setTitle(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
             builder.setMessage(resources.getQuantityString(R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages, messageCount, messageCount))
             builder.setCancelable(true)
             builder.setPositiveButton(R.string.delete) { _, _ ->
-                for (message in messages) {
-                    viewModel.deleteLocally(message)
-                }
+                viewModel.deleteLocally(message)
             }
             builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
                 dialog.dismiss()
@@ -1264,13 +1295,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
-    override fun banUser(messages: Set<MessageRecord>) {
+    override fun banUser(message: MessageRecord) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.ConversationFragment_ban_selected_user)
         builder.setMessage("This will ban the selected user from this room. It won't ban them from other rooms.")
         builder.setCancelable(true)
         builder.setPositiveButton(R.string.ban) { _, _ ->
-            viewModel.banUser(messages.first().individualRecipient)
+            viewModel.banUser(message.individualRecipient)
         }
         builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
             dialog.dismiss()
@@ -1278,13 +1309,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         builder.show()
     }
 
-    override fun banAndDeleteAll(messages: Set<MessageRecord>) {
+    override fun banAndDeleteAll(message: MessageRecord) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.ConversationFragment_ban_selected_user)
         builder.setMessage("This will ban the selected user from this room and delete all messages sent by them. It won't ban them from other rooms or delete the messages they sent there.")
         builder.setCancelable(true)
         builder.setPositiveButton(R.string.ban) { _, _ ->
-            viewModel.banAndDeleteAll(messages.first().individualRecipient)
+            viewModel.banAndDeleteAll(message.individualRecipient)
         }
         builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
             dialog.dismiss()
@@ -1292,57 +1323,33 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         builder.show()
     }
 
-    override fun copyMessages(messages: Set<MessageRecord>) {
-        val sortedMessages = messages.sortedBy { it.dateSent }
-        val messageSize = sortedMessages.size
-        val builder = StringBuilder()
-        val messageIterator = sortedMessages.iterator()
-        while (messageIterator.hasNext()) {
-            val message = messageIterator.next()
-            val body = MentionUtilities.highlightMentions(message.body, viewModel.threadId, this)
-            if (TextUtils.isEmpty(body)) { continue }
-            if (messageSize > 1) {
-                val formattedTimestamp = DateUtils.getDisplayFormattedTimeSpanString(this, Locale.getDefault(), message.timestamp)
-                builder.append("$formattedTimestamp: ")
-            }
-            builder.append(body)
-            if (messageIterator.hasNext()) {
-                builder.append('\n')
-            }
-        }
-        if (builder.isNotEmpty() && builder[builder.length - 1] == '\n') {
-            builder.deleteCharAt(builder.length - 1)
-        }
-        val result = builder.toString()
-        if (TextUtils.isEmpty(result)) { return }
+    override fun copyMessage(message: MessageRecord) {
+        val body = MentionUtilities.highlightMentions(message.body, viewModel.threadId, this)
+        if (TextUtils.isEmpty(body)) { return }
         val manager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-        manager.setPrimaryClip(ClipData.newPlainText("Message Content", result))
+        manager.setPrimaryClip(ClipData.newPlainText("Message Content", body))
         Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
     }
 
-    override fun copySessionID(messages: Set<MessageRecord>) {
-        val sessionID = messages.first().individualRecipient.address.toString()
+    override fun copySessionID(message: MessageRecord) {
+        val sessionID = message.individualRecipient.address.toString()
         val clip = ClipData.newPlainText("Session ID", sessionID)
         val manager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         manager.setPrimaryClip(clip)
         Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
     }
 
-    override fun resendMessage(messages: Set<MessageRecord>) {
-        messages.iterator().forEach { messageRecord ->
-            ResendMessageUtilities.resend(messageRecord)
-        }
+    override fun resendMessage(message: MessageRecord) {
+        ResendMessageUtilities.resend(message)
     }
 
-    override fun showMessageDetail(messages: Set<MessageRecord>) {
-        val message = messages.first()
+    override fun showMessageDetail(message: MessageRecord) {
         val intent = Intent(this, MessageDetailActivity::class.java)
         intent.putExtra(MessageDetailActivity.MESSAGE_TIMESTAMP, message.timestamp)
         push(intent)
     }
 
-    override fun saveAttachment(messages: Set<MessageRecord>) {
-        val message = messages.first() as MmsMessageRecord
+    override fun saveAttachment(message: MmsMessageRecord) {
         SaveAttachmentTask.showWarningDialog(this, { _, _ ->
             Permissions.with(this)
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -1372,8 +1379,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         })
     }
 
-    override fun reply(messages: Set<MessageRecord>) {
-        binding?.inputBar?.draftQuote(viewModel.recipient, messages.first(), glide)
+    override fun reply(message: MessageRecord) {
+        binding?.inputBar?.draftQuote(viewModel.recipient, message, glide)
     }
 
     private fun sendMediaSavedNotification() {
@@ -1458,4 +1465,19 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
     // endregion
+
+    inner class ReactionsToolbarListener constructor(val message: MessageRecord) : OnActionSelectedListener {
+
+        override fun onActionSelected(action: ConversationReactionOverlay.Action) {
+            when (action) {
+                ConversationReactionOverlay.Action.REPLY -> reply(message)
+                ConversationReactionOverlay.Action.RESEND -> resendMessage(message)
+                ConversationReactionOverlay.Action.DOWNLOAD -> saveAttachment(message as MmsMessageRecord)
+                ConversationReactionOverlay.Action.COPY_MESSAGE -> copyMessage(message)
+                ConversationReactionOverlay.Action.VIEW_INFO -> showMessageDetail(message)
+                ConversationReactionOverlay.Action.DELETE -> deleteMessage(message)
+            }
+        }
+    }
+
 }
