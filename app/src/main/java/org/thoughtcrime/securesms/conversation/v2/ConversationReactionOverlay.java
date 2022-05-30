@@ -23,7 +23,6 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
@@ -66,11 +65,9 @@ public final class ConversationReactionOverlay extends FrameLayout {
   private final PointF   deadzoneTouchPoint      = new PointF();
 
   private Activity                  activity;
-  private Recipient                 conversationRecipient;
   private MessageRecord             messageRecord;
   private SelectedConversationModel selectedConversationModel;
   private OverlayState              overlayState = OverlayState.HIDDEN;
-  private boolean                   isNonAdminInAnnouncementGroup;
   private RecentEmojiPageModel      recentEmojiPageModel;
 
   private boolean downIsOurs;
@@ -80,8 +77,6 @@ public final class ConversationReactionOverlay extends FrameLayout {
   private int     originalNavigationBarColor;
 
   private View             dropdownAnchor;
-  private View             toolbarShade;
-  private View             inputShade;
   private View             conversationItem;
   private View             backgroundView;
   private ConstraintLayout foregroundView;
@@ -119,8 +114,6 @@ public final class ConversationReactionOverlay extends FrameLayout {
     super.onFinishInflate();
 
     dropdownAnchor   = findViewById(R.id.dropdown_anchor);
-    toolbarShade     = findViewById(R.id.toolbar_shade);
-    inputShade       = findViewById(R.id.input_shade);
     conversationItem = findViewById(R.id.conversation_item);
     backgroundView   = findViewById(R.id.conversation_reaction_scrubber_background);
     foregroundView   = findViewById(R.id.conversation_reaction_scrubber_foreground);
@@ -149,10 +142,8 @@ public final class ConversationReactionOverlay extends FrameLayout {
   }
 
   public void show(@NonNull Activity activity,
-                   @NonNull Recipient conversationRecipient,
                    @NonNull MessageRecord messageRecord,
                    @NonNull PointF lastSeenDownPoint,
-                   boolean isNonAdminInAnnouncementGroup,
                    @NonNull SelectedConversationModel selectedConversationModel)
   {
     if (overlayState != OverlayState.HIDDEN) {
@@ -160,9 +151,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
     }
 
     this.messageRecord                 = messageRecord;
-    this.conversationRecipient         = conversationRecipient;
     this.selectedConversationModel     = selectedConversationModel;
-    this.isNonAdminInAnnouncementGroup = isNonAdminInAnnouncementGroup;
     overlayState                       = OverlayState.UNINITAILIZED;
     selected                           = -1;
     recentEmojiPageModel               = new RecentEmojiPageModel(activity);
@@ -178,12 +167,6 @@ public final class ConversationReactionOverlay extends FrameLayout {
     if (zeroNavigationBarHeightForConfiguration()) {
       bottomNavigationBarHeight = 0;
     }
-
-    toolbarShade.setVisibility(VISIBLE);
-    toolbarShade.setAlpha(1f);
-
-    inputShade.setVisibility(VISIBLE);
-    inputShade.setAlpha(1f);
 
     Bitmap conversationItemSnapshot = selectedConversationModel.getBitmap();
 
@@ -210,9 +193,6 @@ public final class ConversationReactionOverlay extends FrameLayout {
                                @NonNull MessageRecord messageRecord,
                                @NonNull PointF lastSeenDownPoint,
                                boolean isMessageOnLeft) {
-    //TODO: updateToolbarShade(activity);
-    //TODO: updateInputShade(activity);
-
     contextMenu = new ConversationContextMenu(dropdownAnchor, getMenuActionItems(messageRecord));
 
     conversationItem.setX(selectedConversationModel.getBubbleX());
@@ -393,29 +373,6 @@ public final class ConversationReactionOverlay extends FrameLayout {
     return Math.max(reactionStartingPoint - reactionBarOffset - reactionBarHeight, spaceNeededBetweenTopOfScreenAndTopOfReactionBar);
   }
 
-  private void updateToolbarShade(@NonNull Activity activity) {
-    View toolbar         = ((AppCompatActivity) activity).getSupportActionBar().getCustomView();
-    View bannerContainer = activity.findViewById(R.id.blockedBanner);
-
-    LayoutParams layoutParams = (LayoutParams) toolbarShade.getLayoutParams();
-    layoutParams.height = toolbar.getHeight() + bannerContainer.getHeight();
-    toolbarShade.setLayoutParams(layoutParams);
-  }
-
-  private void updateInputShade(@NonNull Activity activity) {
-    LayoutParams layoutParams = (LayoutParams) inputShade.getLayoutParams();
-    layoutParams.bottomMargin = bottomNavigationBarHeight;
-    layoutParams.height = getInputPanelHeight(activity);
-    inputShade.setLayoutParams(layoutParams);
-  }
-
-  private int getInputPanelHeight(@NonNull Activity activity) {
-    View bottomPanel = activity.findViewById(R.id.inputBar);
-    View emojiDrawer = activity.findViewById(R.id.emoji_drawer);
-
-    return bottomPanel.getHeight() + (emojiDrawer != null && emojiDrawer.getVisibility() == VISIBLE ? emojiDrawer.getHeight() : 0);
-  }
-
   /**
    * Returns true when the device is in a configuration where the navigation bar doesn't take up
    * space at the bottom of the screen.
@@ -474,9 +431,6 @@ public final class ConversationReactionOverlay extends FrameLayout {
     animatorSet.addListener(new AnimationCompleteListener() {
       @Override public void onAnimationEnd(Animator animation) {
         animatorSet.removeListener(this);
-
-        toolbarShade.setVisibility(INVISIBLE);
-        inputShade.setVisibility(INVISIBLE);
 
         if (onHideListener != null) {
           onHideListener.onHide();
@@ -891,20 +845,6 @@ public final class ConversationReactionOverlay extends FrameLayout {
     itemYAnim.setTarget(conversationItem);
     itemYAnim.setDuration(duration);
     animators.add(itemYAnim);
-
-    ObjectAnimator toolbarShadeAnim = new ObjectAnimator();
-    toolbarShadeAnim.setProperty(View.ALPHA);
-    toolbarShadeAnim.setFloatValues(0f);
-    toolbarShadeAnim.setTarget(toolbarShade);
-    toolbarShadeAnim.setDuration(duration);
-    animators.add(toolbarShadeAnim);
-
-    ObjectAnimator inputShadeAnim = new ObjectAnimator();
-    inputShadeAnim.setProperty(View.ALPHA);
-    inputShadeAnim.setFloatValues(0f);
-    inputShadeAnim.setTarget(inputShade);
-    inputShadeAnim.setDuration(duration);
-    animators.add(inputShadeAnim);
 
     if (activity != null) {
       ValueAnimator statusBarAnim = ValueAnimator.ofArgb(activity.getWindow().getStatusBarColor(), originalStatusBarColor);

@@ -377,4 +377,13 @@ object MessageSender {
     fun explicitLeave(groupPublicKey: String, notifyUser: Boolean): Promise<Unit, Exception> {
         return leave(groupPublicKey, notifyUser)
     }
+
+    fun sendReactionRemoval(messageId: Long, oldRecord: String) {
+        //TODO
+    }
+
+    fun sendNewReaction(messageId: Long, emoji: String?) {
+        //TODO
+    }
+
 }

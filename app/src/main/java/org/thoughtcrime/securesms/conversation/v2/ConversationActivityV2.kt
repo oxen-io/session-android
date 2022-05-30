@@ -67,6 +67,7 @@ import org.session.libsession.utilities.Address.Companion.fromSerialized
 import org.session.libsession.utilities.MediaTypes
 import org.session.libsession.utilities.Stub
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.concurrent.SignalExecutors
 import org.session.libsession.utilities.concurrent.SimpleTask
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.recipients.RecipientModifiedListener
@@ -875,7 +876,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     // `position` is the adapter position; not the visual position
     private fun handleLongPress(message: MessageRecord, visibleMessageView: VisibleMessageView) {
         ViewUtil.hideKeyboard(this, visibleMessageView);
-
+        binding?.reactionsShade?.isVisible = true
         binding?.conversationRecyclerView?.suppressLayout(true)
         reactionDelegate.setOnActionSelectedListener(ReactionsToolbarListener(message))
         reactionDelegate.setOnHideListener(object: ConversationReactionOverlay.OnHideListener {
@@ -903,7 +904,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             null,
             message.isOutgoing,
             view)
-        reactionDelegate.show(this, viewModel.recipient, message, false, selectedConversationModel);
+        reactionDelegate.show(this, message, selectedConversationModel);
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
@@ -912,10 +913,32 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     override fun onReactionSelected(messageRecord: MessageRecord, emoji: String?) {
         reactionDelegate.hide()
+        val oldRecord = Stream.of(messageRecord.reactions)
+            .filter { record -> record.author == textSecurePreferences.getLocalNumber() }
+            .findFirst()
+            .orElse(null)
+        if (oldRecord != null && oldRecord.emoji == emoji) {
+            MessageSender.sendReactionRemoval(messageRecord.id, oldRecord.emoji)
+        } else {
+            MessageSender.sendNewReaction(messageRecord.id, emoji)
+        }
     }
 
     override fun onCustomReactionSelected(messageRecord: MessageRecord, hasAddedCustomEmoji: Boolean) {
-        //TODO: apply and send
+        val oldRecord = Stream.of(messageRecord.reactions)
+            .filter { record -> record.author == textSecurePreferences.getLocalNumber() }
+            .findFirst()
+            .orElse(null)
+
+        if (oldRecord != null && hasAddedCustomEmoji) {
+            reactionDelegate.hide()
+            SignalExecutors.BOUNDED.execute {
+                MessageSender.sendReactionRemoval(messageRecord.id, oldRecord.emoji)
+            }
+        } else {
+            reactionDelegate.hideForReactWithAny()
+            //TODO: show all emojis
+        }
     }
 
     override fun onMicrophoneButtonMove(event: MotionEvent) {
