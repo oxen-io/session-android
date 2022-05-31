@@ -53,4 +53,35 @@
     <color name="reactions_screen_light_shade_color">@color/transparent_white_87</color>
     <color name="reactions_status_bar_shade">#4d4d4d</color>
 
+    <color name="signal_text_primary">@color/core_grey_90</color>
+    <color name="text_primary_disabled">@color/core_grey_25</color>
+    <color name="signal_text_primary_dialog">@color/core_grey_65</color>
+
+    <color name="react_with_any_background">@color/core_white</color>
+    <color name="react_with_any_search_background">@color/core_grey_05</color>
+    <color name="react_with_any_search_hint">@color/core_grey_60</color>
+    <color name="react_with_any_customize_background">@color/core_white</color>
+
+    <color name="signal_inverse_transparent">@color/transparent_black</color>
+    <color name="signal_inverse_transparent_40">@color/transparent_black_40</color>
+
+
+    <color name="signal_icon_tint_tab_selected">@color/core_grey_75</color>
+    <color name="signal_icon_tint_tab_unselected">@color/core_grey_45</color>
+
+
+    <color name="signal_text_secondary">@color/core_grey_60</color>
+    <color name="signal_text_selected">@color/core_black</color>
+
+    <color name="signal_text_hint">@color/core_grey_45</color>
+
+    <color name="signal_button_primary_ripple">@color/transparent_black_15</color>
+    <color name="signal_button_primary_text">@color/core_white</color>
+    <color name="signal_button_primary_text_disabled">@color/transparent_white_20</color>
+
+    <color name="signal_button_secondary">@color/core_grey_05</color>
+    <color name="signal_button_secondary_ripple">@color/core_grey_02</color>
+    <color name="signal_button_secondary_text_disabled">@color/core_grey_25</color>
+    <color name="signal_button_secondary_stroke">@color/core_grey_15</color>
+
 </resources>

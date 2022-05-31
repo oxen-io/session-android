@@ -130,6 +130,7 @@ import org.thoughtcrime.securesms.mms.Slide
 import org.thoughtcrime.securesms.mms.SlideDeck
 import org.thoughtcrime.securesms.mms.VideoSlide
 import org.thoughtcrime.securesms.permissions.Permissions
+import org.thoughtcrime.securesms.reactions.any.ReactWithAnyEmojiBottomSheetDialogFragment
 import org.thoughtcrime.securesms.util.ActivityDispatcher
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.DateUtils
@@ -155,7 +156,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     InputBarRecordingViewDelegate, AttachmentManager.AttachmentListener, ActivityDispatcher,
     ConversationActionModeCallbackDelegate, VisibleMessageContentViewDelegate, RecipientModifiedListener,
     SearchBottomBar.EventListener, VoiceMessageViewDelegate, LoaderManager.LoaderCallbacks<Cursor>,
-    OnReactionSelectedListener {
+    OnReactionSelectedListener, ReactWithAnyEmojiBottomSheetDialogFragment.Callback {
 
     private var binding: ActivityConversationV2Binding? = null
     private var actionBarBinding: ActivityConversationV2ActionBarBinding? = null
@@ -252,6 +253,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private val messageToScrollAuthor = AtomicReference<Address?>(null)
 
     private lateinit var reactionDelegate: ConversationReactionDelegate
+    private val reactWithAnyEmojiStartPage = -1
 
     // region Settings
     companion object {
@@ -320,6 +322,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val reactionOverlayStub: Stub<ConversationReactionOverlay> =
             ViewUtil.findStubById(this, R.id.conversation_reaction_scrubber_stub)
         reactionDelegate = ConversationReactionDelegate(reactionOverlayStub)
+        reactionDelegate.setOnReactionSelectedListener(this)
     }
 
     override fun onResume() {
@@ -937,8 +940,19 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             }
         } else {
             reactionDelegate.hideForReactWithAny()
-            //TODO: show all emojis
+
+            ReactWithAnyEmojiBottomSheetDialogFragment
+                .createForMessageRecord(messageRecord, reactWithAnyEmojiStartPage)
+                .show(supportFragmentManager, "BOTTOM");
         }
+    }
+
+    override fun onReactWithAnyEmojiDialogDismissed() {
+        reactionDelegate.hide()
+    }
+
+    override fun onReactWithAnyEmojiSelected(emoji: String) {
+        reactionDelegate.hide()
     }
 
     override fun onMicrophoneButtonMove(event: MotionEvent) {

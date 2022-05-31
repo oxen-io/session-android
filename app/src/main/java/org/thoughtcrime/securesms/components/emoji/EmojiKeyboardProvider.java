@@ -136,8 +136,8 @@ public class EmojiKeyboardProvider implements MediaKeyboardProvider,
 
     @Override
     public @NonNull Object instantiateItem(@NonNull ViewGroup container, int position) {
-      EmojiPageView page = new EmojiPageView(context, emojiSelectionListener, variationSelectorListener);
-      page.setModel(pages.get(position));
+      EmojiPageView page = new EmojiPageView(context, emojiSelectionListener, variationSelectorListener, false);
+      //TODO: page.setModel(pages.get(position));
       container.addView(page);
       return page;
     }

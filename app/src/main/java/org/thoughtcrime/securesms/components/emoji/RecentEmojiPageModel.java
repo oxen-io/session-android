@@ -2,10 +2,12 @@ package org.thoughtcrime.securesms.components.emoji;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.annimon.stream.Stream;
 import com.fasterxml.jackson.databind.type.CollectionType;
@@ -27,6 +29,7 @@ public class RecentEmojiPageModel implements EmojiPageModel {
   private static final String TAG                  = RecentEmojiPageModel.class.getSimpleName();
   private static final String EMOJI_LRU_PREFERENCE = "pref_recent_emoji2";
   private static final int    EMOJI_LRU_SIZE       = 50;
+  public static final  String KEY                  = "Recents";
   public static final List<String> DEFAULT_REACTIONS_LIST = Arrays.asList("\u2764\ufe0f",
           "\ud83d\udc4d", "\ud83d\udc4e", "\ud83d\ude02", "\ud83d\ude2e", "\ud83d\ude22");
 
@@ -48,6 +51,11 @@ public class RecentEmojiPageModel implements EmojiPageModel {
       Log.w(TAG, e);
       return new LinkedHashSet<>();
     }
+  }
+
+  @Override
+  public String getKey() {
+    return KEY;
   }
 
   @Override public int getIconAttr() {
@@ -77,7 +85,9 @@ public class RecentEmojiPageModel implements EmojiPageModel {
     return false;
   }
 
-  @Override public String getSprite() {
+  @Nullable
+  @Override
+  public Uri getSpriteUri() {
     return null;
   }
 

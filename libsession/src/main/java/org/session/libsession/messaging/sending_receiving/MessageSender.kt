@@ -378,10 +378,12 @@ object MessageSender {
         return leave(groupPublicKey, notifyUser)
     }
 
+    @JvmStatic
     fun sendReactionRemoval(messageId: Long, oldRecord: String) {
         //TODO
     }
 
+    @JvmStatic
     fun sendNewReaction(messageId: Long, emoji: String?) {
         //TODO
     }

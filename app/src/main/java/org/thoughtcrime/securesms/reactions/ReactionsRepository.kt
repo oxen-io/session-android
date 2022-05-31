@@ -1,0 +1,36 @@
+package org.thoughtcrime.securesms.reactions
+
+import io.reactivex.Observable
+import io.reactivex.ObservableEmitter
+import io.reactivex.schedulers.Schedulers
+import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.recipients.Recipient
+import org.thoughtcrime.securesms.components.emoji.EmojiUtil
+import org.thoughtcrime.securesms.database.model.MessageId
+import org.thoughtcrime.securesms.database.model.ReactionRecord
+
+class ReactionsRepository {
+
+    fun getReactions(messageId: MessageId): Observable<List<ReactionDetails>> {
+        return Observable.create { emitter: ObservableEmitter<List<ReactionDetails>> ->
+            //TODO: fetch reactions
+            emitter.onNext(fetchReactionDetails(messageId))
+        }.subscribeOn(Schedulers.io())
+    }
+
+    private fun fetchReactionDetails(messageId: MessageId): List<ReactionDetails> {
+
+        val reactions: List<ReactionRecord> = listOf() //TODO: fetch reactions
+        val context = MessagingModuleConfiguration.shared.context
+
+        return reactions.map { reaction ->
+            ReactionDetails(
+                sender = Recipient.from(context, Address.fromSerialized(reaction.author), false),
+                baseEmoji = EmojiUtil.getCanonicalRepresentation(reaction.emoji),
+                displayEmoji = reaction.emoji,
+                timestamp = reaction.dateReceived
+            )
+        }
+    }
+}

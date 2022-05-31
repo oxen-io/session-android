@@ -33,7 +33,7 @@ public class EmojiImageView extends AppCompatImageView {
     if (isInEditMode()) {
       setImageResource(R.drawable.ic_emoji);
     } else {
-      setImageDrawable(EmojiProvider.getInstance(getContext()).getEmojiDrawable(emoji));
+      setImageDrawable(EmojiProvider.getEmojiDrawable(getContext(), emoji));
     }
   }
 }
