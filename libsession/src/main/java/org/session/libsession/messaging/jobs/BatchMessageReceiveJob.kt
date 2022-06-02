@@ -1,11 +1,23 @@
 package org.session.libsession.messaging.jobs
 
 import com.google.protobuf.ByteString
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.runBlocking
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
+import org.session.libsession.database.StorageProtocol
+import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.messages.Message
+import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
+import org.session.libsession.messaging.messages.visible.ParsedMessage
+import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.sending_receiving.MessageReceiver
 import org.session.libsession.messaging.sending_receiving.handle
+import org.session.libsession.messaging.sending_receiving.handleVisibleMessage
 import org.session.libsession.messaging.utilities.Data
+import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsignal.protos.UtilProtos
 import org.session.libsignal.utilities.Log
 
@@ -41,18 +53,38 @@ class BatchMessageReceiveJob(
         private val OPEN_GROUP_ID_KEY = "open_group_id"
     }
 
+    private fun getThreadId(message: Message, storage: StorageProtocol): Long {
+        val senderOrSync = when (message) {
+            is VisibleMessage -> message.syncTarget ?: message.sender!!
+            is ExpirationTimerUpdate -> message.syncTarget ?: message.sender!!
+            else -> message.sender!!
+        }
+        return storage.getOrCreateThreadIdFor(senderOrSync, message.groupPublicKey, openGroupID)
+    }
+
     override fun execute() {
         executeAsync().get()
     }
 
     fun executeAsync(): Promise<Unit, Exception> {
         return task {
+            val threadMap = mutableMapOf<Long, MutableList<ParsedMessage>>()
+            val storage = MessagingModuleConfiguration.shared.storage
+            val context = MessagingModuleConfiguration.shared.context
+
+            // parse and collect IDs
             messages.forEach { messageParameters ->
                 val (data, serverHash, openGroupMessageServerID) = messageParameters
                 try {
                     val (message, proto) = MessageReceiver.parse(data, openGroupMessageServerID)
                     message.serverHash = serverHash
-                    MessageReceiver.handle(message, proto, this.openGroupID)
+                    val threadID = getThreadId(message, storage)
+                    val parsedParams = ParsedMessage(messageParameters, message, proto)
+                    if (!threadMap.containsKey(threadID)) {
+                        threadMap[threadID] = mutableListOf(parsedParams)
+                    } else {
+                        threadMap[threadID]!! += parsedParams
+                    }
                 } catch (e: Exception) {
                     Log.e(TAG, "Couldn't receive message.", e)
                     if (e is MessageReceiver.Error && !e.isRetryable) {
@@ -63,6 +95,46 @@ class BatchMessageReceiveJob(
                     }
                 }
             }
+
+            // iterate over threads and persist them (persistence is the longest constant in the batch process operation)
+            runBlocking(Dispatchers.IO) {
+                val deferredThreadMap = threadMap.entries.map { (threadId, messages) ->
+                    async {
+                        val messageIds = mutableListOf<Long>()
+                        messages.forEach { (parameters, message, proto) ->
+                            try {
+                                if (message is VisibleMessage) {
+                                    val messageId = MessageReceiver.handleVisibleMessage(message, proto, openGroupID,
+                                        runIncrement = false,
+                                        runThreadUpdate = false
+                                    )
+                                    if (messageId != null) {
+                                        messageIds += messageId
+                                    }
+                                } else {
+                                    MessageReceiver.handle(message, proto, openGroupID)
+                                }
+                            } catch (e: Exception) {
+                                Log.e(TAG, "Couldn't process message.", e)
+                                if (e is MessageReceiver.Error && !e.isRetryable) {
+                                    Log.e(TAG, "Message failed permanently",e)
+                                } else {
+                                    Log.e(TAG, "Message failed",e)
+                                    failures += parameters
+                                }
+                            }
+                        }
+                        // increment unreads, notify, and update thread
+                        SSKEnvironment.shared.notificationManager.updateNotification(context, threadId)
+                        storage.incrementUnread(threadId, messageIds.size)
+                        storage.updateThread(threadId, true)
+                    }
+                }
+
+                // await all thread processing
+                deferredThreadMap.awaitAll()
+            }
+
             if (failures.isEmpty()) {
                 handleSuccess()
             } else {

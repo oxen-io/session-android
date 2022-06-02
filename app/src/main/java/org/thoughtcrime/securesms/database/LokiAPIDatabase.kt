@@ -265,13 +265,14 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
     override fun getLastMessageHashValue(snode: Snode, publicKey: String, namespace: Int): String? {
         val database = databaseHelper.readableDatabase
         val query = "${Companion.snode} = ? AND ${Companion.publicKey} = ? AND $lastMessageHashNamespace = ?"
-        return database.get(lastMessageHashValueTable2, query, arrayOf( snode.toString(), publicKey, namespace.toString() )) { cursor ->
+        return database.get(lastMessageHashValueTable2, query, arrayOf(snode.toString(), publicKey, namespace.toString())) { cursor ->
             cursor.getString(cursor.getColumnIndexOrThrow(lastMessageHashValue))
         }
     }
 
     override fun setLastMessageHashValue(snode: Snode, publicKey: String, newValue: String, namespace: Int) {
         val database = databaseHelper.writableDatabase
+        Log.d("Loki-hash", "setting last hash for $snode, $publicKey, $namespace to $newValue")
         val row = wrap(mapOf(
             Companion.snode to snode.toString(),
             Companion.publicKey to publicKey,
@@ -279,7 +280,8 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
             lastMessageHashNamespace to namespace.toString()
         ))
         val query = "${Companion.snode} = ? AND ${Companion.publicKey} = ? AND $lastMessageHashNamespace = ?"
-        database.insertOrUpdate(lastMessageHashValueTable2, row, query, arrayOf( snode.toString(), publicKey, namespace.toString() ))
+        val lastHash = database.insertOrUpdate(lastMessageHashValueTable2, row, query, arrayOf( snode.toString(), publicKey, namespace.toString() ))
+        Log.d("Loki-hash", "last hash update result: $lastHash")
     }
 
     override fun getReceivedMessageHashValues(publicKey: String, namespace: Int): Set<String>? {

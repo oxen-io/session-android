@@ -8,7 +8,7 @@ import org.thoughtcrime.securesms.ApplicationContext
 class ConversationNotificationDebouncer(private val context: Context) {
     private val threadIDs = mutableSetOf<Long>()
     private val handler = (context.applicationContext as ApplicationContext).conversationListNotificationHandler
-    private val debouncer = Debouncer(handler, 500)
+    private val debouncer = Debouncer(handler, 1000)
 
     companion object {
         @SuppressLint("StaticFieldLeak")

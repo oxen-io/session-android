@@ -41,7 +41,7 @@ import kotlin.properties.Delegates.observable
 
 object SnodeAPI {
     private val sodium by lazy { LazySodiumAndroid(SodiumAndroid()) }
-    private val database: LokiAPIDatabaseProtocol
+    internal val database: LokiAPIDatabaseProtocol
         get() = SnodeModule.shared.storage
     private val broadcaster: Broadcaster
         get() = SnodeModule.shared.broadcaster
@@ -477,7 +477,7 @@ object SnodeAPI {
         return if (messages != null) {
             updateLastMessageHashValueIfPossible(snode, publicKey, messages, namespace)
             val newRawMessages = removeDuplicates(publicKey, messages, namespace)
-            return parseEnvelopes(newRawMessages);
+            return parseEnvelopes(newRawMessages)
         } else {
             listOf()
         }

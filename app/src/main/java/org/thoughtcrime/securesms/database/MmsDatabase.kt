@@ -628,7 +628,9 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         retrieved: IncomingMediaMessage,
         contentLocation: String,
         threadId: Long, mailbox: Long,
-        serverTimestamp: Long
+        serverTimestamp: Long,
+        runIncrement: Boolean,
+        runThreadUpdate: Boolean
     ): Optional<InsertResult> {
         var threadId = threadId
         if (threadId == -1L || retrieved.isGroupMessage) {
@@ -689,11 +691,15 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             retrieved.sharedContacts,
             retrieved.linkPreviews,
             contentValues,
-            null
+            null,
         )
         if (!MmsSmsColumns.Types.isExpirationTimerUpdate(mailbox)) {
-            get(context).threadDatabase().incrementUnread(threadId, 1)
-            get(context).threadDatabase().update(threadId, true)
+            if (runIncrement) {
+                get(context).threadDatabase().incrementUnread(threadId, 1)
+            }
+            if (runThreadUpdate) {
+                get(context).threadDatabase().update(threadId, true)
+            }
         }
         notifyConversationListeners(threadId)
         return Optional.of(InsertResult(messageId, threadId))
@@ -703,7 +709,8 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
     fun insertSecureDecryptedMessageOutbox(
         retrieved: OutgoingMediaMessage,
         threadId: Long,
-        serverTimestamp: Long
+        serverTimestamp: Long,
+        runThreadUpdate: Boolean
     ): Optional<InsertResult> {
         var threadId = threadId
         if (threadId == -1L) {
@@ -726,7 +733,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                 threadId = get(context).threadDatabase().getOrCreateThreadIdFor(retrieved.recipient)
             }
         }
-        val messageId = insertMessageOutbox(retrieved, threadId, false, null, serverTimestamp)
+        val messageId = insertMessageOutbox(retrieved, threadId, false, null, serverTimestamp, runThreadUpdate)
         if (messageId == -1L) {
             return Optional.absent()
         }
@@ -739,7 +746,9 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
     fun insertSecureDecryptedMessageInbox(
         retrieved: IncomingMediaMessage,
         threadId: Long,
-        serverTimestamp: Long = 0
+        serverTimestamp: Long = 0,
+        runIncrement: Boolean,
+        runThreadUpdate: Boolean
     ): Optional<InsertResult> {
         var type = MmsSmsColumns.Types.BASE_INBOX_TYPE or MmsSmsColumns.Types.SECURE_MESSAGE_BIT
         if (retrieved.isPushMessage) {
@@ -757,7 +766,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         if (retrieved.isMessageRequestResponse) {
             type = type or MmsSmsColumns.Types.MESSAGE_REQUEST_RESPONSE_BIT
         }
-        return insertMessageInbox(retrieved, "", threadId, type, serverTimestamp)
+        return insertMessageInbox(retrieved, "", threadId, type, serverTimestamp, runIncrement, runThreadUpdate)
     }
 
     @JvmOverloads
@@ -766,7 +775,8 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         message: OutgoingMediaMessage,
         threadId: Long, forceSms: Boolean,
         insertListener: InsertListener?,
-        serverTimestamp: Long = 0
+        serverTimestamp: Long = 0,
+        runThreadUpdate: Boolean
     ): Long {
         var type = MmsSmsColumns.Types.BASE_SENDING_TYPE
         if (message.isSecure) type =
@@ -815,6 +825,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             Log.w(TAG, "Ignoring duplicate media message (" + message.sentTimeMillis + ")")
             return -1
         }
+        Trace.beginSection("persist insertMedia")
         val messageId = insertMediaMessage(
             message.body,
             message.attachments,
@@ -822,8 +833,9 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             message.sharedContacts,
             message.linkPreviews,
             contentValues,
-            insertListener
+            insertListener,
         )
+        Trace.endSection()
         if (message.recipient.address.isGroup) {
             val members = get(context).groupDatabase()
                 .getGroupMembers(message.recipient.address.toGroupString(), false)
@@ -845,8 +857,13 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                 -1
             )
         }
-        get(context).threadDatabase().setLastSeen(threadId)
-        get(context).threadDatabase().setHasSent(threadId, true)
+        with (get(context).threadDatabase()) {
+            setLastSeen(threadId)
+            setHasSent(threadId, true)
+            if (runThreadUpdate) {
+                update(threadId, true)
+            }
+        }
         return messageId
     }
 
@@ -858,9 +875,11 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         sharedContacts: List<Contact>,
         linkPreviews: List<LinkPreview>,
         contentValues: ContentValues,
-        insertListener: InsertListener?
+        insertListener: InsertListener?,
     ): Long {
+        Trace.beginSection("persist getWritableDB")
         val db = databaseHelper.writableDatabase
+        Trace.endSection()
         val partsDatabase = get(context).attachmentDatabase()
         val allAttachments: MutableList<Attachment?> = LinkedList()
         val contactAttachments =
@@ -876,6 +895,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         allAttachments.addAll(previewAttachments)
         contentValues.put(BODY, body)
         contentValues.put(PART_COUNT, allAttachments.size)
+        Trace.beginSection("persist beginTransaction")
         db.beginTransaction()
         return try {
             val messageId = db.insert(TABLE_NAME, null, contentValues)
@@ -916,12 +936,13 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                 }
             }
             db.setTransactionSuccessful()
+            Trace.endSection()
             messageId
         } finally {
             db.endTransaction()
+            Trace.endSection()
             insertListener?.onComplete()
             notifyConversationListeners(contentValues.getAsLong(THREAD_ID))
-            get(context).threadDatabase().update(contentValues.getAsLong(THREAD_ID), true)
         }
     }
 

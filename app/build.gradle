@@ -110,6 +110,7 @@ dependencies {
     implementation "com.google.protobuf:protobuf-java:$protobufVersion"
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    implementation 'app.cash.copper:copper-flow:1.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     implementation "nl.komponents.kovenant:kovenant:$kovenantVersion"

@@ -42,9 +42,11 @@ public abstract class Database {
   @SuppressLint("WrongConstant")
   public Database(Context context, SQLCipherOpenHelper databaseHelper) {
     this.context = context;
-    this.conversationListUpdater = ()-> context.getContentResolver().notifyChange(DatabaseContentProviders.ConversationList.CONTENT_URI, null);
+    this.conversationListUpdater = () -> {
+      context.getContentResolver().notifyChange(DatabaseContentProviders.ConversationList.CONTENT_URI, null);
+    };
     this.databaseHelper = databaseHelper;
-    this.conversationListNotificationDebouncer = new WindowDebouncer(ApplicationContext.getInstance(context).getConversationListNotificationHandler(), 2000);
+    this.conversationListNotificationDebouncer = ApplicationContext.getInstance(context).getConversationListDebouncer();
   }
 
   protected void notifyConversationListeners(Set<Long> threadIds) {

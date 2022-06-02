@@ -17,7 +17,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
-import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
@@ -116,13 +115,24 @@ class VisibleMessageView : LinearLayout {
         // Show profile picture and sender name if this is a group thread AND
         // the message is incoming
         binding.moderatorIconImageView.isVisible = false
-        binding.profilePictureView.root.isInvisible = !isEndOfMessageCluster || message.isOutgoing
+        binding.profilePictureView.root.visibility = when {
+            thread.isGroupRecipient && !message.isOutgoing && isEndOfMessageCluster -> View.VISIBLE
+            thread.isGroupRecipient -> View.INVISIBLE
+            else -> View.GONE
+        }
 
-        val avatarLayoutParams = binding.profilePictureView.root.layoutParams as MarginLayoutParams
-        avatarLayoutParams.bottomMargin =
-            if (isEndOfMessageCluster) resources.getDimensionPixelSize(R.dimen.small_spacing)
-            else ViewUtil.dpToPx(context,2)
-        binding.profilePictureView.root.layoutParams = avatarLayoutParams
+        val bottomMargin = if (isEndOfMessageCluster) resources.getDimensionPixelSize(R.dimen.small_spacing)
+        else ViewUtil.dpToPx(context,2)
+
+        if (binding.profilePictureView.root.visibility == View.GONE) {
+            val expirationParams = binding.expirationTimerViewContainer.layoutParams as MarginLayoutParams
+            expirationParams.bottomMargin = bottomMargin
+            binding.expirationTimerViewContainer.layoutParams = expirationParams
+        } else {
+            val avatarLayoutParams = binding.profilePictureView.root.layoutParams as MarginLayoutParams
+            avatarLayoutParams.bottomMargin = bottomMargin
+            binding.profilePictureView.root.layoutParams = avatarLayoutParams
+        }
 
         if (isGroupThread && !message.isOutgoing) {
             if (isEndOfMessageCluster) {

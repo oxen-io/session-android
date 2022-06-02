@@ -44,6 +44,7 @@ import org.session.libsession.utilities.ProfilePictureUtilities;
 import org.session.libsession.utilities.SSKEnvironment;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.Util;
+import org.session.libsession.utilities.WindowDebouncer;
 import org.session.libsession.utilities.dynamiclanguage.DynamicLanguageContextWrapper;
 import org.session.libsession.utilities.dynamiclanguage.LocaleParser;
 import org.session.libsignal.utilities.Log;
@@ -93,6 +94,7 @@ import java.security.Security;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Timer;
 
 import javax.inject.Inject;
 
@@ -127,8 +129,9 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     public Poller poller = null;
     public Broadcaster broadcaster = null;
     private Job firebaseInstanceIdJob;
+    private WindowDebouncer conversationListDebouncer;
     private HandlerThread conversationListHandlerThread;
-    private Handler conversationListNotificationHandler;
+    private Handler conversationListHandler;
     private PersistentLogger persistentLogger;
 
     @Inject LokiAPIDatabase lokiAPIDatabase;
@@ -137,8 +140,17 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     @Inject JobDatabase jobDatabase;
     @Inject TextSecurePreferences textSecurePreferences;
     CallMessageProcessor callMessageProcessor;
+    MessagingModuleConfiguration messagingModuleConfiguration;
 
     private volatile boolean isAppVisible;
+
+    @Override
+    public Object getSystemService(String name) {
+        if (MessagingModuleConfiguration.MESSAGING_MODULE_SERVICE.equals(name)) {
+            return messagingModuleConfiguration;
+        }
+        return super.getSystemService(name);
+    }
 
     public static ApplicationContext getInstance(Context context) {
         return (ApplicationContext) context.getApplicationContext();
@@ -153,10 +165,17 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
             conversationListHandlerThread = new HandlerThread("ConversationListHandler");
             conversationListHandlerThread.start();
         }
-        if (this.conversationListNotificationHandler == null) {
-            conversationListNotificationHandler = new Handler(conversationListHandlerThread.getLooper());
+        if (this.conversationListHandler == null) {
+            conversationListHandler = new Handler(conversationListHandlerThread.getLooper());
         }
-        return this.conversationListNotificationHandler;
+        return conversationListHandler;
+    }
+
+    public WindowDebouncer getConversationListDebouncer() {
+        if (conversationListDebouncer == null) {
+            conversationListDebouncer = new WindowDebouncer(1000, new Timer());
+        }
+        return conversationListDebouncer;
     }
 
     public PersistentLogger getPersistentLogger() {
@@ -166,7 +185,12 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     @Override
     public void onCreate() {
         DatabaseModule.init(this);
+        MessagingModuleConfiguration.configure(this);
         super.onCreate();
+        messagingModuleConfiguration = new MessagingModuleConfiguration(this,
+                storage,
+                messageDataProvider,
+                ()-> KeyPairUtilities.INSTANCE.getUserED25519KeyPair(this));
         callMessageProcessor = new CallMessageProcessor(this, textSecurePreferences, ProcessLifecycleOwner.get().getLifecycle(), storage);
         Log.i(TAG, "onCreate()");
         startKovenant();
@@ -179,11 +203,6 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         messageNotifier = new OptimizedMessageNotifier(new DefaultMessageNotifier());
         broadcaster = new Broadcaster(this);
         LokiAPIDatabase apiDB = getDatabaseComponent().lokiAPIDatabase();
-        MessagingModuleConfiguration.Companion.configure(this,
-                storage,
-                messageDataProvider,
-                ()-> KeyPairUtilities.INSTANCE.getUserED25519KeyPair(this)
-        );
         SnodeModule.Companion.configure(apiDB, broadcaster);
         String userPublicKey = TextSecurePreferences.getLocalNumber(this);
         if (userPublicKey != null) {

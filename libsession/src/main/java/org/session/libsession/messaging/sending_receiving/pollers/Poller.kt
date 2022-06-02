@@ -80,7 +80,7 @@ class Poller {
         if (unusedSnodes.isNotEmpty()) {
             val index = SecureRandom().nextInt(unusedSnodes.size)
             val nextSnode = unusedSnodes.elementAt(index)
-            usedSnodes.add(nextSnode)
+//            usedSnodes.add(nextSnode)
             Log.d("Loki", "Polling $nextSnode.")
             poll(nextSnode, deferred).fail { exception ->
                 if (exception is PromiseCanceledException) {
@@ -104,7 +104,12 @@ class Poller {
                 isCaughtUp = true
                 task { Unit } // The long polling connection has been canceled; don't recurse
             } else {
+                val rawMessages = rawResponse["messages"] as? List<*>
                 val messages = SnodeAPI.parseRawMessagesResponse(rawResponse, snode, userPublicKey)
+                Log.d("Loki-hash", "raw messages: ${rawMessages?.size ?: 0}")
+                Log.d("Loki-hash", "parsed messages: ${messages.size}")
+                Log.d("Loki-hash", "hashes:")
+                Log.d("Loki-hash", messages.map { it.second }.joinToString())
                 isCaughtUp = messages.size < 100
                 val parameters = messages.map { (envelope, serverHash) ->
                     MessageReceiveParameters(envelope.toByteArray(), serverHash = serverHash)

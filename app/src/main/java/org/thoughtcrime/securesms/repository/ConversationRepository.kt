@@ -120,7 +120,7 @@ class DefaultConversationRepository @Inject constructor(
                 contact,
                 message.sentTimestamp
             )
-            smsDb.insertMessageOutbox(-1, outgoingTextMessage, message.sentTimestamp!!)
+            smsDb.insertMessageOutbox(-1, outgoingTextMessage, message.sentTimestamp!!, true)
             MessageSender.send(message, contact.address)
         }
     }

@@ -1085,7 +1085,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         currentMentionStartIndex = -1
         mentions.clear()
         // Put the message in the database
-        message.id = smsDb.insertMessageOutbox(viewModel.threadId, outgoingTextMessage, false, message.sentTimestamp!!) { }
+        message.id = smsDb.insertMessageOutbox(viewModel.threadId, outgoingTextMessage, false, message.sentTimestamp!!, null, true)
         // Send it
         MessageSender.send(message, recipient.address)
         // Send a typing stopped message
@@ -1118,7 +1118,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // Reset attachments button if needed
         if (isShowingAttachmentOptions) { toggleAttachmentOptions() }
         // Put the message in the database
-        message.id = mmsDb.insertMessageOutbox(outgoingTextMessage, viewModel.threadId, false, null)
+        message.id = mmsDb.insertMessageOutbox(outgoingTextMessage, viewModel.threadId, false, null, runThreadUpdate = true)
         // Send it
         MessageSender.send(message, recipient.address, attachments, quote, linkPreview)
         // Send a typing stopped message

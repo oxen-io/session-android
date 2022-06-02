@@ -64,7 +64,7 @@ fun MessageReceiver.handle(message: Message, proto: SignalServiceProtos.Content,
             is ConfigurationMessage -> handleConfigurationMessage(message)
             is UnsendRequest -> handleUnsendRequest(message)
             is MessageRequestResponse -> handleMessageRequestResponse(message)
-            is VisibleMessage -> handleVisibleMessage(message, proto, openGroupID)
+            is VisibleMessage -> handleVisibleMessage(message, proto, openGroupID, runIncrement = true, runThreadUpdate = true)
             is CallMessage -> handleCallMessage(message)
         }
     } finally {
@@ -205,8 +205,11 @@ fun handleMessageRequestResponse(message: MessageRequestResponse) {
 }
 //endregion
 
-// region Visible Messages
-fun MessageReceiver.handleVisibleMessage(message: VisibleMessage, proto: SignalServiceProtos.Content, openGroupID: String?) {
+fun MessageReceiver.handleVisibleMessage(message: VisibleMessage,
+                                         proto: SignalServiceProtos.Content,
+                                         openGroupID: String?,
+                                         runIncrement: Boolean,
+                                         runThreadUpdate: Boolean): Long? {
     val storage = MessagingModuleConfiguration.shared.storage
     val context = MessagingModuleConfiguration.shared.context
     val userPublicKey = storage.getUserPublicKey()
@@ -272,8 +275,8 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage, proto: SignalS
         }
     }
     // Parse attachments if needed
-    val attachments = proto.dataMessage.attachmentsList.mapNotNull { proto ->
-        val attachment = Attachment.fromProto(proto)
+    val attachments = proto.dataMessage.attachmentsList.mapNotNull { attachmentProto ->
+        val attachment = Attachment.fromProto(attachmentProto)
         if (!attachment.isValid()) {
             return@mapNotNull null
         } else {
@@ -282,15 +285,11 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage, proto: SignalS
     }
     // Persist the message
     message.threadID = threadID
-    val messageID = storage.persist(message, quoteModel, linkPreviews, message.groupPublicKey, openGroupID, attachments) ?: throw MessageReceiver.Error.DuplicateMessage
-    // Parse & persist attachments
-    // Start attachment downloads if needed
-//    storage.getAttachmentsForMessage(messageID).iterator().forEach { attachment ->
-//        attachment.attachmentId?.let { id ->
-//            val downloadJob = AttachmentDownloadJob(id.rowId, messageID)
-//            JobQueue.shared.add(downloadJob)
-//        }
-//    }
+    val messageID = storage.persist(
+        message, quoteModel, linkPreviews,
+        message.groupPublicKey, openGroupID,
+        attachments, runIncrement, runThreadUpdate
+    ) ?: return null
     val openGroupServerID = message.openGroupServerMessageID
     if (openGroupServerID != null) {
         val isSms = !(message.isMediaMessage() || attachments.isNotEmpty())
@@ -298,8 +297,7 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage, proto: SignalS
     }
     // Cancel any typing indicators if needed
     cancelTypingIndicatorsIfNeeded(message.sender!!)
-    // Notify the user if needed
-    SSKEnvironment.shared.notificationManager.updateNotification(context, threadID)
+    return messageID
 }
 //endregion
 
