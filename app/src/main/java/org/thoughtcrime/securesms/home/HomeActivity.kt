@@ -380,6 +380,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     fun onUpdateProfileEvent(event: ProfilePictureModifiedEvent) {
         if (event.recipient.isLocalNumber) {
             updateProfileButton()
+        } else {
+            homeViewModel.tryUpdateChannel()
         }
     }
 
