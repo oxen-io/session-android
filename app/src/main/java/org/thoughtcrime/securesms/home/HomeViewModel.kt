@@ -9,8 +9,8 @@ import app.cash.copper.flow.observeQuery
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
@@ -28,26 +28,30 @@ class HomeViewModel @Inject constructor(private val threadDb: ThreadDatabase): V
     private val _conversations = MutableLiveData<List<ThreadRecord>>()
     val conversations: LiveData<List<ThreadRecord>> = _conversations
 
+    private val listUpdateChannel = Channel<Unit>()
+
+    fun tryUpdateChannel() = listUpdateChannel.trySend(Unit)
+
     fun getObservable(context: Context): LiveData<List<ThreadRecord>> {
         executor.launch(Dispatchers.IO) {
             context.contentResolver
                 .observeQuery(CONTENT_URI)
-                .map {
-                    threadDb.approvedConversationList.use { openCursor ->
-                        val reader = threadDb.readerFor(openCursor)
-                        val threads = mutableListOf<ThreadRecord>()
-                        while (true) {
-                            threads += reader.next ?: break
-                        }
-                        threads
-                    }
-                }
-                .onEach { newConversations ->
-                    withContext(Dispatchers.Main) {
-                        _conversations.value = newConversations
-                    }
-                }
+                .onEach { listUpdateChannel.trySend(Unit) }
                 .collect()
+        }
+        executor.launch(Dispatchers.IO) {
+            for (update in listUpdateChannel) {
+                threadDb.approvedConversationList.use { openCursor ->
+                    val reader = threadDb.readerFor(openCursor)
+                    val threads = mutableListOf<ThreadRecord>()
+                    while (true) {
+                        threads += reader.next ?: break
+                    }
+                    withContext(Dispatchers.Main) {
+                        _conversations.value = threads
+                    }
+                }
+            }
         }
         return conversations
     }

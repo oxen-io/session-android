@@ -4,9 +4,12 @@ import android.content.Context
 import androidx.recyclerview.widget.DiffUtil
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 
-class HomeDiffUtil(private val old: List<ThreadRecord>,
-                   private val new: List<ThreadRecord>,
-                   private val context: Context): DiffUtil.Callback() {
+class HomeDiffUtil(
+    private val old: List<ThreadRecord>,
+    private val new: List<ThreadRecord>,
+    private val context: Context
+): DiffUtil.Callback() {
+
     override fun getOldListSize(): Int = old.size
 
     override fun getNewListSize(): Int = new.size
@@ -15,10 +18,19 @@ class HomeDiffUtil(private val old: List<ThreadRecord>,
         old[oldItemPosition].threadId == new[newItemPosition].threadId
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val sameCount = old[oldItemPosition].count == new[newItemPosition].count
-        val sameSnippet = old[oldItemPosition].getDisplayBody(context) == new[newItemPosition].getDisplayBody(context)
-        val sameUnreads = old[oldItemPosition].unreadCount == new[newItemPosition].unreadCount
-        return sameCount && sameSnippet && sameUnreads
+        val oldItem = old[oldItemPosition]
+        val newItem = new[newItemPosition]
+
+        // return early to save getDisplayBody or expensive calls
+        val sameCount = oldItem.count == newItem.count
+        if (!sameCount) return false
+        val sameUnreads = oldItem.unreadCount == newItem.unreadCount
+        if (!sameUnreads) return false
+        val sameSnippet = oldItem.getDisplayBody(context) == newItem.getDisplayBody(context)
+        if (!sameSnippet) return false
+
+        // all same
+        return true
     }
 
 }
