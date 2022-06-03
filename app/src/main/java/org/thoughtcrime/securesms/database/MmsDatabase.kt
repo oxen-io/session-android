@@ -19,7 +19,6 @@ package org.thoughtcrime.securesms.database
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.os.Trace
 import android.text.TextUtils
 import com.annimon.stream.Stream
 import com.google.android.mms.pdu_alt.NotificationInd
@@ -825,7 +824,6 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             Log.w(TAG, "Ignoring duplicate media message (" + message.sentTimeMillis + ")")
             return -1
         }
-        Trace.beginSection("persist insertMedia")
         val messageId = insertMediaMessage(
             message.body,
             message.attachments,
@@ -835,7 +833,6 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             contentValues,
             insertListener,
         )
-        Trace.endSection()
         if (message.recipient.address.isGroup) {
             val members = get(context).groupDatabase()
                 .getGroupMembers(message.recipient.address.toGroupString(), false)
@@ -877,9 +874,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         contentValues: ContentValues,
         insertListener: InsertListener?,
     ): Long {
-        Trace.beginSection("persist getWritableDB")
         val db = databaseHelper.writableDatabase
-        Trace.endSection()
         val partsDatabase = get(context).attachmentDatabase()
         val allAttachments: MutableList<Attachment?> = LinkedList()
         val contactAttachments =
@@ -895,7 +890,6 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         allAttachments.addAll(previewAttachments)
         contentValues.put(BODY, body)
         contentValues.put(PART_COUNT, allAttachments.size)
-        Trace.beginSection("persist beginTransaction")
         db.beginTransaction()
         return try {
             val messageId = db.insert(TABLE_NAME, null, contentValues)
@@ -936,11 +930,9 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                 }
             }
             db.setTransactionSuccessful()
-            Trace.endSection()
             messageId
         } finally {
             db.endTransaction()
-            Trace.endSection()
             insertListener?.onComplete()
             notifyConversationListeners(contentValues.getAsLong(THREAD_ID))
         }
@@ -1004,20 +996,14 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         val attachmentDatabase = get(context).attachmentDatabase()
         queue(Runnable { attachmentDatabase.deleteAttachmentsForMessages(messageIds) })
         val groupReceiptDatabase = get(context).groupReceiptDatabase()
-        Trace.beginSection("groupreceipt-deleterows")
         groupReceiptDatabase.deleteRowsForMessages(messageIds)
-        Trace.endSection()
         val toDeleteList: MutableList<MessageRecord> = ArrayList()
-        Trace.beginSection("fetchToDelete")
         getMessages(idsAsString).use { messageCursor ->
             while (messageCursor.moveToNext()) {
                 toDeleteList.add(readerFor(messageCursor).current)
             }
         }
-        Trace.endSection()
-        Trace.beginSection("deleteQuoted")
         deleteQuotedFromMessages(toDeleteList)
-        Trace.endSection()
         val database = databaseHelper.writableDatabase
         database.delete(TABLE_NAME, idsAsString, null)
         notifyConversationListListeners()
@@ -1030,23 +1016,15 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         val attachmentDatabase = get(context).attachmentDatabase()
         queue(Runnable { attachmentDatabase.deleteAttachmentsForMessage(messageId) })
         val groupReceiptDatabase = get(context).groupReceiptDatabase()
-        Trace.beginSection("groupreceipt-deleterows")
         groupReceiptDatabase.deleteRowsForMessage(messageId)
-        Trace.endSection()
         var toDelete: MessageRecord?
         getMessage(messageId).use { messageCursor ->
-            Trace.beginSection("fetchToDelete")
             toDelete = readerFor(messageCursor).next
-            Trace.endSection()
         }
-        Trace.beginSection("deleteQuoted")
         deleteQuotedFromMessages(toDelete)
-        Trace.endSection()
         val database = databaseHelper.writableDatabase
         database!!.delete(TABLE_NAME, ID_WHERE, arrayOf<String>(messageId.toString()))
-        Trace.beginSection("updateThreadDb")
         val threadDeleted = get(context).threadDatabase().update(threadId, false)
-        Trace.endSection()
         notifyConversationListeners(threadId)
         notifyStickerListeners()
         notifyStickerPackListeners()
@@ -1210,11 +1188,8 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         }
         val whereString = where.substring(0, where.length - 4)
         try {
-            Trace.beginSection("db-query")
             cursor =
                 db!!.query(TABLE_NAME, arrayOf<String?>(ID), whereString, null, null, null, null)
-            Trace.endSection()
-            Trace.beginSection("db-deletemessage")
             val toDeleteStringMessageIds = mutableListOf<String>()
             while (cursor.moveToNext()) {
                 toDeleteStringMessageIds += cursor.getLong(0).toString()
@@ -1225,17 +1200,14 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             toDeleteStringMessageIds.toList().chunked(50).forEach { sublist ->
                 deleteMessages(sublist.toTypedArray())
             }
-            Trace.endSection()
         } finally {
             cursor?.close()
         }
-        Trace.beginSection("updateThreadDb")
         val threadDb = get(context).threadDatabase()
         for (threadId in threadIds) {
             val threadDeleted = threadDb.update(threadId, false)
             notifyConversationListeners(threadId)
         }
-        Trace.endSection()
         notifyStickerListeners()
         notifyStickerPackListeners()
     }

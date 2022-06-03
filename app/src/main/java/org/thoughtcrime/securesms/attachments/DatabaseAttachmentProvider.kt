@@ -1,7 +1,6 @@
 package org.thoughtcrime.securesms.attachments
 
 import android.content.Context
-import android.os.Trace
 import android.text.TextUtils
 import com.google.protobuf.ByteString
 import org.greenrobot.eventbus.EventBus
@@ -180,15 +179,9 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
     override fun deleteMessage(messageID: Long, isSms: Boolean) {
         val messagingDatabase: MessagingDatabase = if (isSms)  DatabaseComponent.get(context).smsDatabase()
                                                    else DatabaseComponent.get(context).mmsDatabase()
-        Trace.beginSection("messagingDatabase deleteMessage")
         messagingDatabase.deleteMessage(messageID)
-        Trace.endSection()
-        Trace.beginSection("lokiMessageDatabase deleteMessage")
         DatabaseComponent.get(context).lokiMessageDatabase().deleteMessage(messageID, isSms)
-        Trace.endSection()
-        Trace.beginSection("lokiMessageDatabase deleteServerHash")
         DatabaseComponent.get(context).lokiMessageDatabase().deleteMessageServerHash(messageID)
-        Trace.endSection()
     }
 
     override fun updateMessageAsDeleted(timestamp: Long, author: String) {

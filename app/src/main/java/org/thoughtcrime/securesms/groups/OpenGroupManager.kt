@@ -1,7 +1,6 @@
 package org.thoughtcrime.securesms.groups
 
 import android.content.Context
-import android.os.Trace
 import androidx.annotation.WorkerThread
 import okhttp3.HttpUrl
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -95,19 +94,14 @@ object OpenGroupManager {
     }
 
     fun delete(server: String, room: String, context: Context) {
-        Trace.beginSection("OpenGroupManager.getGroupInfo")
         val storage = MessagingModuleConfiguration.shared.storage
         val threadDB = DatabaseComponent.get(context).threadDatabase()
         val openGroupID = "$server.$room"
         val threadID = GroupManager.getOpenGroupThreadID(openGroupID, context)
         val recipient = threadDB.getRecipientForThreadId(threadID) ?: return
-        Trace.endSection()
-        Trace.beginSection("OpenGroupManager.setThreadArchived")
         threadDB.setThreadArchived(threadID)
-        Trace.endSection()
         val groupID = recipient.address.serialize()
         // Stop the poller if needed
-        Trace.beginSection("OpenGroupManager.stopPoller")
         val openGroups = storage.getAllV2OpenGroups().filter { it.value.server == server }
         if (openGroups.count() == 1) {
             synchronized(pollUpdaterLock) {
@@ -116,19 +110,14 @@ object OpenGroupManager {
                 pollers.remove(server)
             }
         }
-        Trace.endSection()
         // Delete
-        Trace.beginSection("OpenGroupManager.delete")
         storage.removeLastDeletionServerID(room, server)
         storage.removeLastMessageServerID(room, server)
         val lokiThreadDB = DatabaseComponent.get(context).lokiThreadDatabase()
         lokiThreadDB.removeOpenGroupChat(threadID)
-        Trace.endSection()
         ThreadUtils.queue {
-            Trace.beginSection("deleteConversation/group")
             threadDB.deleteConversation(threadID) // Must be invoked on a background thread
             GroupManager.deleteGroup(groupID, context) // Must be invoked on a background thread
-            Trace.endSection()
         }
     }
 

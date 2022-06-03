@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlinx.coroutines.withContext
-import org.thoughtcrime.securesms.database.DatabaseContentProviders.ConversationList.CONTENT_URI
+import org.thoughtcrime.securesms.database.DatabaseContentProviders
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import javax.inject.Inject
@@ -35,7 +35,7 @@ class HomeViewModel @Inject constructor(private val threadDb: ThreadDatabase): V
     fun getObservable(context: Context): LiveData<List<ThreadRecord>> {
         executor.launch(Dispatchers.IO) {
             context.contentResolver
-                .observeQuery(CONTENT_URI)
+                .observeQuery(DatabaseContentProviders.ConversationList.CONTENT_URI)
                 .onEach { listUpdateChannel.trySend(Unit) }
                 .collect()
         }

@@ -26,7 +26,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.MergeCursor;
 import android.net.Uri;
-import android.os.Trace;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -538,30 +537,14 @@ public class ThreadDatabase extends Database {
   }
 
   public void deleteConversation(long threadId) {
-    Trace.beginSection("deleteConversation/group/smsDb");
     DatabaseComponent.get(context).smsDatabase().deleteThread(threadId);
-    Trace.endSection();
-    Trace.beginSection("deleteConversation/group/mmsDb");
     DatabaseComponent.get(context).mmsDatabase().deleteThread(threadId);
-    Trace.endSection();
-    Trace.beginSection("deleteConversation/group/drafts");
     DatabaseComponent.get(context).draftDatabase().clearDrafts(threadId);
-    Trace.endSection();
-    Trace.beginSection("deleteConversation/group/lokiMessageDBDeleteThread");
     DatabaseComponent.get(context).lokiMessageDatabase().deleteThread(threadId);
-    Trace.endSection();
-    Trace.beginSection("deleteConversation/group/threadDbDeleteThread");
     deleteThread(threadId);
-    Trace.endSection();
-    Trace.beginSection("deleteConversation/group/notifyConversationListeners");
     notifyConversationListeners(threadId);
-    Trace.endSection();
-    Trace.beginSection("deleteConversation/group/threadDbDeleteThread");
     notifyConversationListListeners();
-    Trace.endSection();
-    Trace.beginSection("deleteConversation/group/threadDbDeleteThread");
     SessionMetaProtocol.clearReceivedMessages();
-    Trace.endSection();
   }
 
   public long getThreadIdIfExistsFor(String address) {

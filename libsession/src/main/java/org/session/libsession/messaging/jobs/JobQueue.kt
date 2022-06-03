@@ -1,6 +1,5 @@
 package org.session.libsession.messaging.jobs
 
-import android.os.Trace
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -97,11 +96,9 @@ class JobQueue : JobDelegate {
     }
 
     private fun Job.process(dispatcherName: String) {
-        Trace.beginSection("[$dispatcherName] processJob: ${javaClass.simpleName}")
         Log.d(dispatcherName,"processJob: ${javaClass.simpleName}")
         delegate = this@JobQueue
         execute()
-        Trace.endSection()
     }
 
     init {

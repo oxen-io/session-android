@@ -74,7 +74,7 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         // Author
         if (thread.isGroupRecipient) {
             val author = contactDb.getContactWithSessionID(authorPublicKey)
-            val authorDisplayName = author?.displayName(Contact.contextForRecipient(thread)) ?: authorPublicKey
+            val authorDisplayName = author?.displayName(Contact.contextForRecipient(thread)) ?: "${authorPublicKey.take(4)}...${authorPublicKey.takeLast(4)}"
             binding.quoteViewAuthorTextView.text = authorDisplayName
             binding.quoteViewAuthorTextView.setTextColor(getTextColor(isOutgoingMessage))
         }

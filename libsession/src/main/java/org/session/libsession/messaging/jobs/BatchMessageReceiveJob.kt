@@ -43,7 +43,7 @@ class BatchMessageReceiveJob(
         const val TAG = "BatchMessageReceiveJob"
         const val KEY = "BatchMessageReceiveJob"
 
-        const val BATCH_DEFAULT_NUMBER = 256
+        const val BATCH_DEFAULT_NUMBER = 512
 
         // Keys used for database storage
         private val NUM_MESSAGES_KEY = "numMessages"

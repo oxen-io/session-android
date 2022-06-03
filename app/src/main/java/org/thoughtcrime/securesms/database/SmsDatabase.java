@@ -20,7 +20,6 @@ package org.thoughtcrime.securesms.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Trace;
 import android.text.TextUtils;
 import android.util.Pair;
 
@@ -438,23 +437,15 @@ public class SmsDatabase extends MessagingDatabase {
       Log.w(TAG, "Duplicate message (" + message.getSentTimestampMillis() + "), ignoring...");
       return Optional.absent();
     } else {
-      Trace.beginSection("persist getWritableDB");
       SQLiteDatabase db        = databaseHelper.getWritableDatabase();
-      Trace.endSection();
-      Trace.beginSection("persist insert");
       long           messageId = db.insert(TABLE_NAME, null, values);
-      Trace.endSection();
 
       if (unread && runIncrement) {
-        Trace.beginSection("persist incrementUnread");
         DatabaseComponent.get(context).threadDatabase().incrementUnread(threadId, 1);
-        Trace.endSection();
       }
 
       if (runThreadUpdate) {
-        Trace.beginSection("persist update threadDB");
         DatabaseComponent.get(context).threadDatabase().update(threadId, true);
-        Trace.endSection();
       }
 
       if (message.getSubscriptionId() != -1) {
