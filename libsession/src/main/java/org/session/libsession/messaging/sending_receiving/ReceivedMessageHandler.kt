@@ -61,7 +61,11 @@ fun MessageReceiver.handle(message: Message, proto: SignalServiceProtos.Content,
         is ConfigurationMessage -> handleConfigurationMessage(message)
         is UnsendRequest -> handleUnsendRequest(message)
         is MessageRequestResponse -> handleMessageRequestResponse(message)
-        is VisibleMessage -> handleVisibleMessage(message, proto, openGroupID, runIncrement = true, runThreadUpdate = true)
+        is VisibleMessage -> handleVisibleMessage(message, proto, openGroupID,
+            runIncrement = true,
+            runThreadUpdate = true,
+            runProfileUpdate = true
+        )
         is CallMessage -> handleCallMessage(message)
     }
 }
@@ -203,7 +207,8 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage,
                                          proto: SignalServiceProtos.Content,
                                          openGroupID: String?,
                                          runIncrement: Boolean,
-                                         runThreadUpdate: Boolean): Long? {
+                                         runThreadUpdate: Boolean,
+                                         runProfileUpdate: Boolean): Long? {
     val storage = MessagingModuleConfiguration.shared.storage
     val context = MessagingModuleConfiguration.shared.context
     val userPublicKey = storage.getUserPublicKey()
@@ -219,23 +224,25 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage,
     }
     // Update profile if needed
     val recipient = Recipient.from(context, Address.fromSerialized(messageSender!!), false)
-    val profile = message.profile
-    if (profile != null && userPublicKey != messageSender) {
-        val profileManager = SSKEnvironment.shared.profileManager
-        val name = profile.displayName!!
-        if (name.isNotEmpty()) {
-            profileManager.setName(context, recipient, name)
-        }
-        val newProfileKey = profile.profileKey
+    if (runProfileUpdate) {
+        val profile = message.profile
+        if (profile != null && userPublicKey != messageSender) {
+            val profileManager = SSKEnvironment.shared.profileManager
+            val name = profile.displayName!!
+            if (name.isNotEmpty()) {
+                profileManager.setName(context, recipient, name)
+            }
+            val newProfileKey = profile.profileKey
 
-        val needsProfilePicture = !AvatarHelper.avatarFileExists(context, Address.fromSerialized(messageSender))
-        val profileKeyValid = newProfileKey?.isNotEmpty() == true && (newProfileKey.size == 16 || newProfileKey.size == 32) && profile.profilePictureURL?.isNotEmpty() == true
-        val profileKeyChanged = (recipient.profileKey == null || !MessageDigest.isEqual(recipient.profileKey, newProfileKey))
+            val needsProfilePicture = !AvatarHelper.avatarFileExists(context, Address.fromSerialized(messageSender))
+            val profileKeyValid = newProfileKey?.isNotEmpty() == true && (newProfileKey.size == 16 || newProfileKey.size == 32) && profile.profilePictureURL?.isNotEmpty() == true
+            val profileKeyChanged = (recipient.profileKey == null || !MessageDigest.isEqual(recipient.profileKey, newProfileKey))
 
-        if ((profileKeyValid && profileKeyChanged) || (profileKeyValid && needsProfilePicture)) {
-            profileManager.setProfileKey(context, recipient, newProfileKey!!)
-            profileManager.setUnidentifiedAccessMode(context, recipient, Recipient.UnidentifiedAccessMode.UNKNOWN)
-            profileManager.setProfilePictureURL(context, recipient, profile.profilePictureURL!!)
+            if ((profileKeyValid && profileKeyChanged) || (profileKeyValid && needsProfilePicture)) {
+                profileManager.setProfileKey(context, recipient, newProfileKey!!)
+                profileManager.setUnidentifiedAccessMode(context, recipient, Recipient.UnidentifiedAccessMode.UNKNOWN)
+                profileManager.setProfilePictureURL(context, recipient, profile.profilePictureURL!!)
+            }
         }
     }
     // Parse quote if needed

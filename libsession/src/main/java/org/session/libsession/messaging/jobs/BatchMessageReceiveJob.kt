@@ -71,7 +71,7 @@ class BatchMessageReceiveJob(
             val threadMap = mutableMapOf<Long, MutableList<ParsedMessage>>()
             val storage = MessagingModuleConfiguration.shared.storage
             val context = MessagingModuleConfiguration.shared.context
-            val localUserPublickey = storage.getUserPublicKey()
+            val localUserPublicKey = storage.getUserPublicKey()
 
             // parse and collect IDs
             messages.forEach { messageParameters ->
@@ -107,10 +107,11 @@ class BatchMessageReceiveJob(
                                 if (message is VisibleMessage) {
                                     val messageId = MessageReceiver.handleVisibleMessage(message, proto, openGroupID,
                                         runIncrement = false,
-                                        runThreadUpdate = false
+                                        runThreadUpdate = false,
+                                        runProfileUpdate = true
                                     )
                                     if (messageId != null) {
-                                        messageIds += messageId to (message.sender == localUserPublickey)
+                                        messageIds += messageId to (message.sender == localUserPublicKey)
                                     }
                                 } else {
                                     MessageReceiver.handle(message, proto, openGroupID)
