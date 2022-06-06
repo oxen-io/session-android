@@ -28,7 +28,7 @@ class HomeViewModel @Inject constructor(private val threadDb: ThreadDatabase): V
     private val _conversations = MutableLiveData<List<ThreadRecord>>()
     val conversations: LiveData<List<ThreadRecord>> = _conversations
 
-    private val listUpdateChannel = Channel<Unit>()
+    private val listUpdateChannel = Channel<Unit>(capacity = Channel.CONFLATED)
 
     fun tryUpdateChannel() = listUpdateChannel.trySend(Unit)
 
