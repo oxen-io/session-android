@@ -7,6 +7,7 @@ import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.components.emoji.Emoji
 import org.thoughtcrime.securesms.components.emoji.EmojiPageModel
 import org.thoughtcrime.securesms.components.emoji.StaticEmojiPageModel
+import org.thoughtcrime.securesms.components.emoji.parsing.EmojiDrawInfo
 import org.thoughtcrime.securesms.components.emoji.parsing.EmojiTree
 import org.thoughtcrime.securesms.util.ScreenDensity
 import java.io.InputStream
@@ -66,7 +67,7 @@ class EmojiSource(
         page.displayEmoji.forEach { emoji: Emoji ->
           emoji.variations.forEachIndexed { variationIndex, variation ->
             val raw = emoji.getRawVariation(variationIndex)
-            //TODO:tree.add(variation, EmojiDrawInfo(emojiPage, overallIndex++, variation, raw, jumboPages[raw]))
+            tree.add(variation, EmojiDrawInfo(emojiPage, overallIndex++, variation, raw, jumboPages[raw]))
           }
         }
       }
