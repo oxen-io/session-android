@@ -101,6 +101,11 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         return database.getAttachmentsForMessage(messageID)
     }
 
+    override fun markConversationAsRead(threadId: Long, updateLastSeen: Boolean) {
+        val threadDb = DatabaseComponent.get(context).threadDatabase()
+        threadDb.setRead(threadId, updateLastSeen)
+    }
+
     override fun incrementUnread(threadId: Long, amount: Int) {
         val threadDb = DatabaseComponent.get(context).threadDatabase()
         threadDb.incrementUnread(threadId, amount)

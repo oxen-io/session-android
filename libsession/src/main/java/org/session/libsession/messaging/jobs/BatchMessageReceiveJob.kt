@@ -71,6 +71,7 @@ class BatchMessageReceiveJob(
             val threadMap = mutableMapOf<Long, MutableList<ParsedMessage>>()
             val storage = MessagingModuleConfiguration.shared.storage
             val context = MessagingModuleConfiguration.shared.context
+            val localUserPublickey = storage.getUserPublicKey()
 
             // parse and collect IDs
             messages.forEach { messageParameters ->
@@ -100,7 +101,7 @@ class BatchMessageReceiveJob(
             runBlocking(Dispatchers.IO) {
                 val deferredThreadMap = threadMap.entries.map { (threadId, messages) ->
                     async {
-                        val messageIds = mutableListOf<Long>()
+                        val messageIds = mutableListOf<Pair<Long, Boolean>>()
                         messages.forEach { (parameters, message, proto) ->
                             try {
                                 if (message is VisibleMessage) {
@@ -109,7 +110,7 @@ class BatchMessageReceiveJob(
                                         runThreadUpdate = false
                                     )
                                     if (messageId != null) {
-                                        messageIds += messageId
+                                        messageIds += messageId to (message.sender == localUserPublickey)
                                     }
                                 } else {
                                     MessageReceiver.handle(message, proto, openGroupID)
@@ -125,8 +126,14 @@ class BatchMessageReceiveJob(
                             }
                         }
                         // increment unreads, notify, and update thread
+                        val unreadFromMine = messageIds.indexOfLast { (_,fromMe) -> fromMe }
+                        var trueUnreadCount = messageIds.size
+                        if (unreadFromMine >= 0) {
+                            trueUnreadCount -= (unreadFromMine + 1)
+                            storage.markConversationAsRead(threadId, false)
+                        }
                         SSKEnvironment.shared.notificationManager.updateNotification(context, threadId)
-                        storage.incrementUnread(threadId, messageIds.size)
+                        storage.incrementUnread(threadId, trueUnreadCount)
                         storage.updateThread(threadId, true)
                     }
                 }
