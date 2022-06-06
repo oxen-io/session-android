@@ -193,6 +193,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             setupMessageRequestsBanner()
             updateEmptyState()
         }
+        homeViewModel.tryUpdateChannel()
         // Set up new conversation button set
         binding.newConversationButtonSet.delegate = this
         // Observe blocked contacts changed events
