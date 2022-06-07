@@ -96,4 +96,51 @@
 
     <color name="default_background_start">#121212</color>
     <color name="default_background_end">#171717</color>
+
+    <color name="classic_dark_accent">#31F196</color>
+    <color name="classic_dark_0">#111111</color>
+    <color name="classic_dark_1">#1B1B1B</color>
+    <color name="classic_dark_2">#2D2D2D</color>
+    <color name="classic_dark_3">#414141</color>
+    <color name="classic_dark_4">#767676</color>
+    <color name="classic_dark_5">#A1A2A1</color>
+    <color name="classic_dark_6">#FFFFFF</color>
+
+    <color name="classic_light_accent">#31F196</color>
+    <color name="classic_light_0">#111111</color>
+    <color name="classic_light_1">#6D6D6D</color>
+    <color name="classic_light_2">#A1A2A1</color>
+    <color name="classic_light_3">#DFDFDF</color>
+    <color name="classic_light_4">#F0F0F0</color>
+    <color name="classic_light_5">#F9F9F9</color>
+    <color name="classic_light_6">#FFFFFF</color>
+
+    <color name="ocean_dark_accent">#57C9FA</color>
+    <color name="ocean_dark_0">#111111</color>
+    <color name="ocean_dark_1">#1A1C28</color>
+    <color name="ocean_dark_2">#252735</color>
+    <color name="ocean_dark_3">#2B2D40</color>
+    <color name="ocean_dark_4">#3D4A5D</color>
+    <color name="ocean_dark_5">#A6A9CE</color>
+    <color name="ocean_dark_6">#FFFFFF</color>
+
+    <color name="ocean_light_accent">#57C9FA</color>
+    <color name="ocean_light_0">#19345D</color>
+    <color name="ocean_light_1">#6A6E90</color>
+    <color name="ocean_light_2">#5CAACC</color>
+    <color name="ocean_light_3">#B3EDF2</color>
+    <color name="ocean_light_4">#E7F3F4</color>
+    <color name="ocean_light_5">#ECFAFB</color>
+    <color name="ocean_light_6">#FCFFFF</color>
+
+    <color name="accent_green">#31F196</color>
+    <color name="accent_blue">#57C9FA</color>
+    <color name="accent_purple">#C993FF</color>
+    <color name="accent_pink">#FF95EF</color>
+    <color name="accent_red">#FF9C8E</color>
+    <color name="accent_orange">#FCB159</color>
+    <color name="accent_yellow">#FAD657</color>
+
+    <color name="danger">#EA5545</color>
+
 </resources>
