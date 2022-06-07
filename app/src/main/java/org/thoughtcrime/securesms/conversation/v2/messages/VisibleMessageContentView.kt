@@ -146,6 +146,14 @@ class VisibleMessageContentView : LinearLayout {
                     JobQueue.shared.add(AttachmentDownloadJob(attachmentId, dbAttachment.mmsId))
                 }
             }
+            message.linkPreviews.forEach { preview ->
+                val previewThumbnail = preview.getThumbnail().orNull() as? DatabaseAttachment ?: return@forEach
+                val attachmentId = previewThumbnail.attachmentId.rowId
+                if (previewThumbnail.transferState == AttachmentTransferProgress.TRANSFER_PROGRESS_PENDING
+                    && MessagingModuleConfiguration.shared.storage.getAttachmentUploadJob(attachmentId) == null) {
+                    JobQueue.shared.add(AttachmentDownloadJob(attachmentId, previewThumbnail.mmsId))
+                }
+            }
         }
 
         if (message is MmsMessageRecord && message.linkPreviews.isNotEmpty()) {
