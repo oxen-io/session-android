@@ -5616,30 +5616,19 @@ public final class SignalServiceProtos {
     org.session.libsignal.protos.SignalServiceProtos.DataMessage.PreviewOrBuilder getPreviewOrBuilder(
         int index);
 
-    // repeated .signalservice.DataMessage.Reaction reaction = 11;
+    // optional .signalservice.DataMessage.Reaction reaction = 11;
     /**
-     * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
+     * <code>optional .signalservice.DataMessage.Reaction reaction = 11;</code>
      */
-    java.util.List<org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction> 
-        getReactionList();
+    boolean hasReaction();
     /**
-     * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
+     * <code>optional .signalservice.DataMessage.Reaction reaction = 11;</code>
      */
-    org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction getReaction(int index);
+    org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction getReaction();
     /**
-     * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
+     * <code>optional .signalservice.DataMessage.Reaction reaction = 11;</code>
      */
-    int getReactionCount();
-    /**
-     * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
-     */
-    java.util.List<? extends org.session.libsignal.protos.SignalServiceProtos.DataMessage.ReactionOrBuilder> 
-        getReactionOrBuilderList();
-    /**
-     * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
-     */
-    org.session.libsignal.protos.SignalServiceProtos.DataMessage.ReactionOrBuilder getReactionOrBuilder(
-        int index);
+    org.session.libsignal.protos.SignalServiceProtos.DataMessage.ReactionOrBuilder getReactionOrBuilder();
 
     // optional .signalservice.DataMessage.LokiProfile profile = 101;
     /**
@@ -5817,16 +5806,21 @@ public final class SignalServiceProtos {
               break;
             }
             case 90: {
-              if (!((mutable_bitField0_ & 0x00000200) == 0x00000200)) {
-                reaction_ = new java.util.ArrayList<org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction>();
-                mutable_bitField0_ |= 0x00000200;
+              org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000080) == 0x00000080)) {
+                subBuilder = reaction_.toBuilder();
               }
-              reaction_.add(input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.PARSER, extensionRegistry));
+              reaction_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(reaction_);
+                reaction_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000080;
               break;
             }
             case 810: {
               org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000080) == 0x00000080)) {
+              if (((bitField0_ & 0x00000100) == 0x00000100)) {
                 subBuilder = profile_.toBuilder();
               }
               profile_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.PARSER, extensionRegistry);
@@ -5834,12 +5828,12 @@ public final class SignalServiceProtos {
                 subBuilder.mergeFrom(profile_);
                 profile_ = subBuilder.buildPartial();
               }
-              bitField0_ |= 0x00000080;
+              bitField0_ |= 0x00000100;
               break;
             }
             case 818: {
               org.session.libsignal.protos.SignalServiceProtos.DataMessage.OpenGroupInvitation.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000100) == 0x00000100)) {
+              if (((bitField0_ & 0x00000200) == 0x00000200)) {
                 subBuilder = openGroupInvitation_.toBuilder();
               }
               openGroupInvitation_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.OpenGroupInvitation.PARSER, extensionRegistry);
@@ -5847,12 +5841,12 @@ public final class SignalServiceProtos {
                 subBuilder.mergeFrom(openGroupInvitation_);
                 openGroupInvitation_ = subBuilder.buildPartial();
               }
-              bitField0_ |= 0x00000100;
+              bitField0_ |= 0x00000200;
               break;
             }
             case 834: {
               org.session.libsignal.protos.SignalServiceProtos.DataMessage.ClosedGroupControlMessage.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000200) == 0x00000200)) {
+              if (((bitField0_ & 0x00000400) == 0x00000400)) {
                 subBuilder = closedGroupControlMessage_.toBuilder();
               }
               closedGroupControlMessage_ = input.readMessage(org.session.libsignal.protos.SignalServiceProtos.DataMessage.ClosedGroupControlMessage.PARSER, extensionRegistry);
@@ -5860,11 +5854,11 @@ public final class SignalServiceProtos {
                 subBuilder.mergeFrom(closedGroupControlMessage_);
                 closedGroupControlMessage_ = subBuilder.buildPartial();
               }
-              bitField0_ |= 0x00000200;
+              bitField0_ |= 0x00000400;
               break;
             }
             case 842: {
-              bitField0_ |= 0x00000400;
+              bitField0_ |= 0x00000800;
               syncTarget_ = input.readBytes();
               break;
             }
@@ -5881,9 +5875,6 @@ public final class SignalServiceProtos {
         }
         if (((mutable_bitField0_ & 0x00000100) == 0x00000100)) {
           preview_ = java.util.Collections.unmodifiableList(preview_);
-        }
-        if (((mutable_bitField0_ & 0x00000200) == 0x00000200)) {
-          reaction_ = java.util.Collections.unmodifiableList(reaction_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -14010,40 +14001,26 @@ public final class SignalServiceProtos {
       return preview_.get(index);
     }
 
-    // repeated .signalservice.DataMessage.Reaction reaction = 11;
+    // optional .signalservice.DataMessage.Reaction reaction = 11;
     public static final int REACTION_FIELD_NUMBER = 11;
-    private java.util.List<org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction> reaction_;
+    private org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction reaction_;
     /**
-     * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
+     * <code>optional .signalservice.DataMessage.Reaction reaction = 11;</code>
      */
-    public java.util.List<org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction> getReactionList() {
+    public boolean hasReaction() {
+      return ((bitField0_ & 0x00000080) == 0x00000080);
+    }
+    /**
+     * <code>optional .signalservice.DataMessage.Reaction reaction = 11;</code>
+     */
+    public org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction getReaction() {
       return reaction_;
     }
     /**
-     * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
+     * <code>optional .signalservice.DataMessage.Reaction reaction = 11;</code>
      */
-    public java.util.List<? extends org.session.libsignal.protos.SignalServiceProtos.DataMessage.ReactionOrBuilder> 
-        getReactionOrBuilderList() {
+    public org.session.libsignal.protos.SignalServiceProtos.DataMessage.ReactionOrBuilder getReactionOrBuilder() {
       return reaction_;
-    }
-    /**
-     * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
-     */
-    public int getReactionCount() {
-      return reaction_.size();
-    }
-    /**
-     * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
-     */
-    public org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction getReaction(int index) {
-      return reaction_.get(index);
-    }
-    /**
-     * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
-     */
-    public org.session.libsignal.protos.SignalServiceProtos.DataMessage.ReactionOrBuilder getReactionOrBuilder(
-        int index) {
-      return reaction_.get(index);
     }
 
     // optional .signalservice.DataMessage.LokiProfile profile = 101;
@@ -14053,7 +14030,7 @@ public final class SignalServiceProtos {
      * <code>optional .signalservice.DataMessage.LokiProfile profile = 101;</code>
      */
     public boolean hasProfile() {
-      return ((bitField0_ & 0x00000080) == 0x00000080);
+      return ((bitField0_ & 0x00000100) == 0x00000100);
     }
     /**
      * <code>optional .signalservice.DataMessage.LokiProfile profile = 101;</code>
@@ -14075,7 +14052,7 @@ public final class SignalServiceProtos {
      * <code>optional .signalservice.DataMessage.OpenGroupInvitation openGroupInvitation = 102;</code>
      */
     public boolean hasOpenGroupInvitation() {
-      return ((bitField0_ & 0x00000100) == 0x00000100);
+      return ((bitField0_ & 0x00000200) == 0x00000200);
     }
     /**
      * <code>optional .signalservice.DataMessage.OpenGroupInvitation openGroupInvitation = 102;</code>
@@ -14097,7 +14074,7 @@ public final class SignalServiceProtos {
      * <code>optional .signalservice.DataMessage.ClosedGroupControlMessage closedGroupControlMessage = 104;</code>
      */
     public boolean hasClosedGroupControlMessage() {
-      return ((bitField0_ & 0x00000200) == 0x00000200);
+      return ((bitField0_ & 0x00000400) == 0x00000400);
     }
     /**
      * <code>optional .signalservice.DataMessage.ClosedGroupControlMessage closedGroupControlMessage = 104;</code>
@@ -14119,7 +14096,7 @@ public final class SignalServiceProtos {
      * <code>optional string syncTarget = 105;</code>
      */
     public boolean hasSyncTarget() {
-      return ((bitField0_ & 0x00000400) == 0x00000400);
+      return ((bitField0_ & 0x00000800) == 0x00000800);
     }
     /**
      * <code>optional string syncTarget = 105;</code>
@@ -14165,7 +14142,7 @@ public final class SignalServiceProtos {
       timestamp_ = 0L;
       quote_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.Quote.getDefaultInstance();
       preview_ = java.util.Collections.emptyList();
-      reaction_ = java.util.Collections.emptyList();
+      reaction_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.getDefaultInstance();
       profile_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance();
       openGroupInvitation_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.OpenGroupInvitation.getDefaultInstance();
       closedGroupControlMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.ClosedGroupControlMessage.getDefaultInstance();
@@ -14200,8 +14177,8 @@ public final class SignalServiceProtos {
           return false;
         }
       }
-      for (int i = 0; i < getReactionCount(); i++) {
-        if (!getReaction(i).isInitialized()) {
+      if (hasReaction()) {
+        if (!getReaction().isInitialized()) {
           memoizedIsInitialized = 0;
           return false;
         }
@@ -14252,19 +14229,19 @@ public final class SignalServiceProtos {
       for (int i = 0; i < preview_.size(); i++) {
         output.writeMessage(10, preview_.get(i));
       }
-      for (int i = 0; i < reaction_.size(); i++) {
-        output.writeMessage(11, reaction_.get(i));
-      }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
-        output.writeMessage(101, profile_);
+        output.writeMessage(11, reaction_);
       }
       if (((bitField0_ & 0x00000100) == 0x00000100)) {
-        output.writeMessage(102, openGroupInvitation_);
+        output.writeMessage(101, profile_);
       }
       if (((bitField0_ & 0x00000200) == 0x00000200)) {
-        output.writeMessage(104, closedGroupControlMessage_);
+        output.writeMessage(102, openGroupInvitation_);
       }
       if (((bitField0_ & 0x00000400) == 0x00000400)) {
+        output.writeMessage(104, closedGroupControlMessage_);
+      }
+      if (((bitField0_ & 0x00000800) == 0x00000800)) {
         output.writeBytes(105, getSyncTargetBytes());
       }
       getUnknownFields().writeTo(output);
@@ -14312,23 +14289,23 @@ public final class SignalServiceProtos {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(10, preview_.get(i));
       }
-      for (int i = 0; i < reaction_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(11, reaction_.get(i));
-      }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(101, profile_);
+          .computeMessageSize(11, reaction_);
       }
       if (((bitField0_ & 0x00000100) == 0x00000100)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(102, openGroupInvitation_);
+          .computeMessageSize(101, profile_);
       }
       if (((bitField0_ & 0x00000200) == 0x00000200)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(104, closedGroupControlMessage_);
+          .computeMessageSize(102, openGroupInvitation_);
       }
       if (((bitField0_ & 0x00000400) == 0x00000400)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(104, closedGroupControlMessage_);
+      }
+      if (((bitField0_ & 0x00000800) == 0x00000800)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(105, getSyncTargetBytes());
       }
@@ -14491,11 +14468,11 @@ public final class SignalServiceProtos {
           previewBuilder_.clear();
         }
         if (reactionBuilder_ == null) {
-          reaction_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000200);
+          reaction_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.getDefaultInstance();
         } else {
           reactionBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000200);
         if (profileBuilder_ == null) {
           profile_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.LokiProfile.getDefaultInstance();
         } else {
@@ -14598,17 +14575,16 @@ public final class SignalServiceProtos {
         } else {
           result.preview_ = previewBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
+          to_bitField0_ |= 0x00000080;
+        }
         if (reactionBuilder_ == null) {
-          if (((bitField0_ & 0x00000200) == 0x00000200)) {
-            reaction_ = java.util.Collections.unmodifiableList(reaction_);
-            bitField0_ = (bitField0_ & ~0x00000200);
-          }
           result.reaction_ = reaction_;
         } else {
           result.reaction_ = reactionBuilder_.build();
         }
         if (((from_bitField0_ & 0x00000400) == 0x00000400)) {
-          to_bitField0_ |= 0x00000080;
+          to_bitField0_ |= 0x00000100;
         }
         if (profileBuilder_ == null) {
           result.profile_ = profile_;
@@ -14616,7 +14592,7 @@ public final class SignalServiceProtos {
           result.profile_ = profileBuilder_.build();
         }
         if (((from_bitField0_ & 0x00000800) == 0x00000800)) {
-          to_bitField0_ |= 0x00000100;
+          to_bitField0_ |= 0x00000200;
         }
         if (openGroupInvitationBuilder_ == null) {
           result.openGroupInvitation_ = openGroupInvitation_;
@@ -14624,7 +14600,7 @@ public final class SignalServiceProtos {
           result.openGroupInvitation_ = openGroupInvitationBuilder_.build();
         }
         if (((from_bitField0_ & 0x00001000) == 0x00001000)) {
-          to_bitField0_ |= 0x00000200;
+          to_bitField0_ |= 0x00000400;
         }
         if (closedGroupControlMessageBuilder_ == null) {
           result.closedGroupControlMessage_ = closedGroupControlMessage_;
@@ -14632,7 +14608,7 @@ public final class SignalServiceProtos {
           result.closedGroupControlMessage_ = closedGroupControlMessageBuilder_.build();
         }
         if (((from_bitField0_ & 0x00002000) == 0x00002000)) {
-          to_bitField0_ |= 0x00000400;
+          to_bitField0_ |= 0x00000800;
         }
         result.syncTarget_ = syncTarget_;
         result.bitField0_ = to_bitField0_;
@@ -14726,31 +14702,8 @@ public final class SignalServiceProtos {
             }
           }
         }
-        if (reactionBuilder_ == null) {
-          if (!other.reaction_.isEmpty()) {
-            if (reaction_.isEmpty()) {
-              reaction_ = other.reaction_;
-              bitField0_ = (bitField0_ & ~0x00000200);
-            } else {
-              ensureReactionIsMutable();
-              reaction_.addAll(other.reaction_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.reaction_.isEmpty()) {
-            if (reactionBuilder_.isEmpty()) {
-              reactionBuilder_.dispose();
-              reactionBuilder_ = null;
-              reaction_ = other.reaction_;
-              bitField0_ = (bitField0_ & ~0x00000200);
-              reactionBuilder_ = 
-                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                   getReactionFieldBuilder() : null;
-            } else {
-              reactionBuilder_.addAllMessages(other.reaction_);
-            }
-          }
+        if (other.hasReaction()) {
+          mergeReaction(other.getReaction());
         }
         if (other.hasProfile()) {
           mergeProfile(other.getProfile());
@@ -14795,8 +14748,8 @@ public final class SignalServiceProtos {
             return false;
           }
         }
-        for (int i = 0; i < getReactionCount(); i++) {
-          if (!getReaction(i).isInitialized()) {
+        if (hasReaction()) {
+          if (!getReaction().isInitialized()) {
             
             return false;
           }
@@ -15758,239 +15711,116 @@ public final class SignalServiceProtos {
         return previewBuilder_;
       }
 
-      // repeated .signalservice.DataMessage.Reaction reaction = 11;
-      private java.util.List<org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction> reaction_ =
-        java.util.Collections.emptyList();
-      private void ensureReactionIsMutable() {
-        if (!((bitField0_ & 0x00000200) == 0x00000200)) {
-          reaction_ = new java.util.ArrayList<org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction>(reaction_);
-          bitField0_ |= 0x00000200;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilder<
+      // optional .signalservice.DataMessage.Reaction reaction = 11;
+      private org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction reaction_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
           org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction, org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.ReactionOrBuilder> reactionBuilder_;
-
       /**
-       * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
+       * <code>optional .signalservice.DataMessage.Reaction reaction = 11;</code>
        */
-      public java.util.List<org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction> getReactionList() {
+      public boolean hasReaction() {
+        return ((bitField0_ & 0x00000200) == 0x00000200);
+      }
+      /**
+       * <code>optional .signalservice.DataMessage.Reaction reaction = 11;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction getReaction() {
         if (reactionBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(reaction_);
+          return reaction_;
         } else {
-          return reactionBuilder_.getMessageList();
+          return reactionBuilder_.getMessage();
         }
       }
       /**
-       * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
+       * <code>optional .signalservice.DataMessage.Reaction reaction = 11;</code>
        */
-      public int getReactionCount() {
+      public Builder setReaction(org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction value) {
         if (reactionBuilder_ == null) {
-          return reaction_.size();
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          reaction_ = value;
+          onChanged();
         } else {
-          return reactionBuilder_.getCount();
+          reactionBuilder_.setMessage(value);
         }
+        bitField0_ |= 0x00000200;
+        return this;
       }
       /**
-       * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
-       */
-      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction getReaction(int index) {
-        if (reactionBuilder_ == null) {
-          return reaction_.get(index);
-        } else {
-          return reactionBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
+       * <code>optional .signalservice.DataMessage.Reaction reaction = 11;</code>
        */
       public Builder setReaction(
-          int index, org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction value) {
-        if (reactionBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureReactionIsMutable();
-          reaction_.set(index, value);
-          onChanged();
-        } else {
-          reactionBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
-       */
-      public Builder setReaction(
-          int index, org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.Builder builderForValue) {
-        if (reactionBuilder_ == null) {
-          ensureReactionIsMutable();
-          reaction_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          reactionBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
-       */
-      public Builder addReaction(org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction value) {
-        if (reactionBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureReactionIsMutable();
-          reaction_.add(value);
-          onChanged();
-        } else {
-          reactionBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
-       */
-      public Builder addReaction(
-          int index, org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction value) {
-        if (reactionBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureReactionIsMutable();
-          reaction_.add(index, value);
-          onChanged();
-        } else {
-          reactionBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
-       */
-      public Builder addReaction(
           org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.Builder builderForValue) {
         if (reactionBuilder_ == null) {
-          ensureReactionIsMutable();
-          reaction_.add(builderForValue.build());
+          reaction_ = builderForValue.build();
           onChanged();
         } else {
-          reactionBuilder_.addMessage(builderForValue.build());
+          reactionBuilder_.setMessage(builderForValue.build());
         }
+        bitField0_ |= 0x00000200;
         return this;
       }
       /**
-       * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
+       * <code>optional .signalservice.DataMessage.Reaction reaction = 11;</code>
        */
-      public Builder addReaction(
-          int index, org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.Builder builderForValue) {
+      public Builder mergeReaction(org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction value) {
         if (reactionBuilder_ == null) {
-          ensureReactionIsMutable();
-          reaction_.add(index, builderForValue.build());
+          if (((bitField0_ & 0x00000200) == 0x00000200) &&
+              reaction_ != org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.getDefaultInstance()) {
+            reaction_ =
+              org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.newBuilder(reaction_).mergeFrom(value).buildPartial();
+          } else {
+            reaction_ = value;
+          }
           onChanged();
         } else {
-          reactionBuilder_.addMessage(index, builderForValue.build());
+          reactionBuilder_.mergeFrom(value);
         }
+        bitField0_ |= 0x00000200;
         return this;
       }
       /**
-       * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
-       */
-      public Builder addAllReaction(
-          java.lang.Iterable<? extends org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction> values) {
-        if (reactionBuilder_ == null) {
-          ensureReactionIsMutable();
-          super.addAll(values, reaction_);
-          onChanged();
-        } else {
-          reactionBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
+       * <code>optional .signalservice.DataMessage.Reaction reaction = 11;</code>
        */
       public Builder clearReaction() {
         if (reactionBuilder_ == null) {
-          reaction_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000200);
+          reaction_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.getDefaultInstance();
           onChanged();
         } else {
           reactionBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000200);
         return this;
       }
       /**
-       * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
+       * <code>optional .signalservice.DataMessage.Reaction reaction = 11;</code>
        */
-      public Builder removeReaction(int index) {
-        if (reactionBuilder_ == null) {
-          ensureReactionIsMutable();
-          reaction_.remove(index);
-          onChanged();
-        } else {
-          reactionBuilder_.remove(index);
-        }
-        return this;
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.Builder getReactionBuilder() {
+        bitField0_ |= 0x00000200;
+        onChanged();
+        return getReactionFieldBuilder().getBuilder();
       }
       /**
-       * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
+       * <code>optional .signalservice.DataMessage.Reaction reaction = 11;</code>
        */
-      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.Builder getReactionBuilder(
-          int index) {
-        return getReactionFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
-       */
-      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.ReactionOrBuilder getReactionOrBuilder(
-          int index) {
-        if (reactionBuilder_ == null) {
-          return reaction_.get(index);  } else {
-          return reactionBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
-       */
-      public java.util.List<? extends org.session.libsignal.protos.SignalServiceProtos.DataMessage.ReactionOrBuilder> 
-           getReactionOrBuilderList() {
+      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.ReactionOrBuilder getReactionOrBuilder() {
         if (reactionBuilder_ != null) {
-          return reactionBuilder_.getMessageOrBuilderList();
+          return reactionBuilder_.getMessageOrBuilder();
         } else {
-          return java.util.Collections.unmodifiableList(reaction_);
+          return reaction_;
         }
       }
       /**
-       * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
+       * <code>optional .signalservice.DataMessage.Reaction reaction = 11;</code>
        */
-      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.Builder addReactionBuilder() {
-        return getReactionFieldBuilder().addBuilder(
-            org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
-       */
-      public org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.Builder addReactionBuilder(
-          int index) {
-        return getReactionFieldBuilder().addBuilder(
-            index, org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .signalservice.DataMessage.Reaction reaction = 11;</code>
-       */
-      public java.util.List<org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.Builder> 
-           getReactionBuilderList() {
-        return getReactionFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilder<
+      private com.google.protobuf.SingleFieldBuilder<
           org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction, org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.ReactionOrBuilder> 
           getReactionFieldBuilder() {
         if (reactionBuilder_ == null) {
-          reactionBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+          reactionBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction, org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.Builder, org.session.libsignal.protos.SignalServiceProtos.DataMessage.ReactionOrBuilder>(
                   reaction_,
-                  ((bitField0_ & 0x00000200) == 0x00000200),
                   getParentForChildren(),
                   isClean());
           reaction_ = null;
@@ -26034,7 +25864,7 @@ public final class SignalServiceProtos {
       "\022\022\n\nprofileKey\030\006 \001(\014\022\021\n\ttimestamp\030\007 \001(\004\022" +
       "/\n\005quote\030\010 \001(\0132 .signalservice.DataMessa" +
       "ge.Quote\0223\n\007preview\030\n \003(\0132\".signalservic" +
-      "e.DataMessage.Preview\0225\n\010reaction\030\013 \003(\0132" +
+      "e.DataMessage.Preview\0225\n\010reaction\030\013 \001(\0132" +
       "#.signalservice.DataMessage.Reaction\0227\n\007" +
       "profile\030e \001(\0132&.signalservice.DataMessag" +
       "e.LokiProfile\022K\n\023openGroupInvitation\030f \001" +

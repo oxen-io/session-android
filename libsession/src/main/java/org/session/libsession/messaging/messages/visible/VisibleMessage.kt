@@ -23,6 +23,7 @@ class VisibleMessage : Message()  {
     var linkPreview: LinkPreview? = null
     var profile: Profile? = null
     var openGroupInvitation: OpenGroupInvitation? = null
+    var reaction: Reaction? = null
 
     override val isSelfSendValid: Boolean = true
 
@@ -65,6 +66,11 @@ class VisibleMessage : Message()  {
             // TODO Contact
             val profile = Profile.fromProto(dataMessage)
             if (profile != null) { result.profile = profile }
+            val reactionProto = if (dataMessage.hasQuote()) dataMessage.reaction else null
+            if (reactionProto != null) {
+                val reaction = Reaction.fromProto(reactionProto)
+                result.reaction = reaction
+            }
             return  result
         }
     }

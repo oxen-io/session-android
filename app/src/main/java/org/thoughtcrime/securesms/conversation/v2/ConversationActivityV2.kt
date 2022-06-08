@@ -914,7 +914,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         return reactionDelegate.applyTouchEvent(ev) || super.dispatchTouchEvent(ev)
     }
 
-    override fun onReactionSelected(messageRecord: MessageRecord, emoji: String?) {
+    override fun onReactionSelected(messageRecord: MessageRecord, emoji: String) {
         reactionDelegate.hide()
         val oldRecord = Stream.of(messageRecord.reactions)
             .filter { record -> record.author == textSecurePreferences.getLocalNumber() }
