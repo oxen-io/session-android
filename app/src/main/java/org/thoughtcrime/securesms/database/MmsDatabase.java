@@ -44,6 +44,7 @@ import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment;
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview;
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel;
+import org.session.libsession.messaging.sending_receiving.reactions.ReactionModel;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.Contact;
 import org.session.libsession.utilities.GroupUtil;
@@ -66,6 +67,7 @@ import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord;
 import org.thoughtcrime.securesms.database.model.NotificationMmsMessageRecord;
 import org.thoughtcrime.securesms.database.model.Quote;
+import org.thoughtcrime.securesms.database.model.ReactionRecord;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import org.thoughtcrime.securesms.mms.MmsException;
 import org.thoughtcrime.securesms.mms.SlideDeck;
@@ -103,6 +105,12 @@ public class MmsDatabase extends MessagingDatabase {
           static final String QUOTE_BODY       = "quote_body";
           static final String QUOTE_ATTACHMENT = "quote_attachment";
           static final String QUOTE_MISSING    = "quote_missing";
+
+          static final String REACTION_ID      = "reaction_id";
+          static final String REACTION_AUTHOR  = "reaction_author";
+          static final String REACTION_EMOJI   = "reaction_emoji";
+          static final String REACTION_REACT   = "reaction_react";
+          static final String REACTION_MISSING = "reaction_missing";
 
           static final String SHARED_CONTACTS = "shared_contacts";
           static final String LINK_PREVIEWS   = "previews";
@@ -147,6 +155,7 @@ public class MmsDatabase extends MessagingDatabase {
       BODY, PART_COUNT, ADDRESS, ADDRESS_DEVICE_ID,
       DELIVERY_RECEIPT_COUNT, READ_RECEIPT_COUNT, MISMATCHED_IDENTITIES, NETWORK_FAILURE, SUBSCRIPTION_ID,
       EXPIRES_IN, EXPIRE_STARTED, NOTIFIED, QUOTE_ID, QUOTE_AUTHOR, QUOTE_BODY, QUOTE_ATTACHMENT, QUOTE_MISSING,
+      REACTION_ID, REACTION_AUTHOR, REACTION_EMOJI, REACTION_REACT, REACTION_MISSING,
       SHARED_CONTACTS, LINK_PREVIEWS, UNIDENTIFIED,
       "json_group_array(json_object(" +
           "'" + AttachmentDatabase.ROW_ID + "', " + AttachmentDatabase.TABLE_NAME + "." + AttachmentDatabase.ROW_ID + ", " +
@@ -509,6 +518,11 @@ public class MmsDatabase extends MessagingDatabase {
         String            quoteText          = cursor.getString(cursor.getColumnIndexOrThrow(QUOTE_BODY));
         boolean           quoteMissing       = cursor.getInt(cursor.getColumnIndexOrThrow(QUOTE_MISSING)) == 1;
         List<Attachment>  quoteAttachments   = Stream.of(associatedAttachments).filter(Attachment::isQuote).map(a -> (Attachment)a).toList();
+        long              reactionId         = cursor.getLong(cursor.getColumnIndexOrThrow(REACTION_ID));
+        String            reactionAuthor     = cursor.getString(cursor.getColumnIndexOrThrow(REACTION_AUTHOR));
+        String            reactionEmoji      = cursor.getString(cursor.getColumnIndexOrThrow(REACTION_EMOJI));
+        boolean           reactionReact    = cursor.getInt(cursor.getColumnIndexOrThrow(REACTION_REACT)) == 1;
+        boolean           reactionMissing    = cursor.getInt(cursor.getColumnIndexOrThrow(REACTION_MISSING)) == 1;
         List<Contact>     contacts           = getSharedContacts(cursor, associatedAttachments);
         Set<Attachment>   contactAttachments = new HashSet<>(Stream.of(contacts).map(Contact::getAvatarAttachment).filter(a -> a != null).toList());
         List<LinkPreview> previews           = getLinkPreviews(cursor, associatedAttachments);
@@ -522,9 +536,14 @@ public class MmsDatabase extends MessagingDatabase {
         List<NetworkFailure>      networkFailures = new LinkedList<>();
         List<IdentityKeyMismatch> mismatches      = new LinkedList<>();
         QuoteModel                quote           = null;
+        ReactionModel             reaction        = null;
 
         if (quoteId > 0 && (!TextUtils.isEmpty(quoteText) || !quoteAttachments.isEmpty())) {
           quote = new QuoteModel(quoteId, Address.fromSerialized(quoteAuthor), quoteText, quoteMissing, quoteAttachments);
+        }
+
+        if (reactionId > 0 && !TextUtils.isEmpty(reactionEmoji)) {
+          reaction = new ReactionModel(reactionId, Address.fromSerialized(reactionAuthor), reactionEmoji, reactionReact, reactionMissing);
         }
 
         if (!TextUtils.isEmpty(mismatchDocument)) {
@@ -543,7 +562,7 @@ public class MmsDatabase extends MessagingDatabase {
           }
         }
 
-        OutgoingMediaMessage message = new OutgoingMediaMessage(recipient, body, attachments, timestamp, subscriptionId, expiresIn, distributionType, quote, contacts, previews, networkFailures, mismatches);
+        OutgoingMediaMessage message = new OutgoingMediaMessage(recipient, body, attachments, timestamp, subscriptionId, expiresIn, distributionType, quote, reaction, contacts, previews, networkFailures, mismatches);
 
         if (Types.isSecureType(outboxType)) {
           return new OutgoingSecureMediaMessage(message);
@@ -684,6 +703,14 @@ public class MmsDatabase extends MessagingDatabase {
       contentValues.put(QUOTE_MISSING, retrieved.getQuote().getMissing() ? 1 : 0);
 
       quoteAttachments = retrieved.getQuote().getAttachments();
+    }
+
+    if (retrieved.getReaction() != null) {
+      contentValues.put(REACTION_ID, retrieved.getReaction().getId());
+      contentValues.put(REACTION_EMOJI, retrieved.getReaction().getEmoji());
+      contentValues.put(REACTION_AUTHOR, retrieved.getReaction().getAuthor().serialize());
+      contentValues.put(REACTION_REACT, retrieved.getReaction().getReact() ? 1 : 0);
+      contentValues.put(REACTION_MISSING, retrieved.getReaction().getMissing() ? 1 : 0);
     }
 
     if ((retrieved.isPushMessage() && isDuplicate(retrieved, threadId)) ||
@@ -827,6 +854,14 @@ public class MmsDatabase extends MessagingDatabase {
       quoteAttachments.addAll(message.getOutgoingQuote().getAttachments());
     }
 
+    if (message.getOutgoingReaction() != null) {
+      contentValues.put(REACTION_ID, message.getOutgoingReaction().getId());
+      contentValues.put(REACTION_AUTHOR, message.getOutgoingReaction().getAuthor().serialize());
+      contentValues.put(REACTION_EMOJI, message.getOutgoingReaction().getEmoji());
+      contentValues.put(REACTION_REACT, message.getOutgoingReaction().getReact() ? 1 : 0);
+      contentValues.put(REACTION_MISSING, message.getOutgoingReaction().getMissing() ? 1 : 0);
+    }
+
     if (isDuplicate(message, threadId)) {
       Log.w(TAG, "Ignoring duplicate media message (" + message.getSentTimeMillis() + ")");
       return -1;
@@ -929,6 +964,21 @@ public class MmsDatabase extends MessagingDatabase {
 
     while ((messageRecord = (MmsMessageRecord) reader.getNext()) != null) {
       if (messageRecord.getQuote() != null && toDeleteRecord.getDateSent() == messageRecord.getQuote().getId()) {
+        setQuoteMissing(messageRecord.getId());
+      }
+    }
+    reader.close();
+  }
+
+  public void deleteReactionFromMessage(MessageRecord toDeleteRecord) {
+    if (toDeleteRecord == null) { return; }
+    String query = THREAD_ID + " = ?";
+    Cursor threadMmsCursor = rawQuery(query, new String[]{String.valueOf(toDeleteRecord.getThreadId())});
+    Reader reader = readerFor(threadMmsCursor);
+    MmsMessageRecord messageRecord;
+
+    while ((messageRecord = (MmsMessageRecord) reader.getNext()) != null) {
+      if (messageRecord.getReaction() != null && toDeleteRecord.getDateSent() == messageRecord.getReaction().getId()) {
         setQuoteMissing(messageRecord.getId());
       }
     }
@@ -1186,6 +1236,13 @@ public class MmsDatabase extends MessagingDatabase {
                                                      message.getOutgoingQuote().getMissing(),
                                                      new SlideDeck(context, message.getOutgoingQuote().getAttachments())) :
                                            null,
+                                       message.getOutgoingReaction() != null ?
+                                           new ReactionRecord(message.getOutgoingReaction().getId(),
+                                                     message.getOutgoingReaction().getAuthor(),
+                                                     message.getOutgoingReaction().getEmoji(),
+                                                     message.getOutgoingReaction().getReact(),
+                                                     message.getOutgoingReaction().getMissing()) :
+                                           null,
                                        message.getSharedContacts(), message.getLinkPreviews(), false);
     }
   }
@@ -1290,12 +1347,13 @@ public class MmsDatabase extends MessagingDatabase {
       Set<Attachment>           previewAttachments = Stream.of(previews).filter(lp -> lp.getThumbnail().isPresent()).map(lp -> lp.getThumbnail().get()).collect(Collectors.toSet());
       SlideDeck                 slideDeck          = getSlideDeck(Stream.of(attachments).filterNot(contactAttachments::contains).filterNot(previewAttachments::contains).toList());
       Quote                     quote              = getQuote(cursor);
+      ReactionRecord            reaction           = getReaction(cursor);
 
       return new MediaMmsMessageRecord(id, recipient, recipient,
                                        addressDeviceId, dateSent, dateReceived, deliveryReceiptCount,
                                        threadId, body, slideDeck, partCount, box, mismatches,
                                        networkFailures, subscriptionId, expiresIn, expireStarted,
-                                       readReceiptCount, quote, contacts, previews, unidentified);
+                                       readReceiptCount, quote, reaction, contacts, previews, unidentified);
     }
 
     private Recipient getRecipientFor(String serialized) {
@@ -1352,6 +1410,19 @@ public class MmsDatabase extends MessagingDatabase {
 
       if (quoteId > 0 && !TextUtils.isEmpty(quoteAuthor)) {
         return new Quote(quoteId, Address.fromExternal(context, quoteAuthor), quoteText, quoteMissing, quoteDeck);
+      } else {
+        return null;
+      }
+    }
+
+    private @Nullable ReactionRecord getReaction(@NonNull Cursor cursor) {
+      long                       reactionId          = cursor.getLong(cursor.getColumnIndexOrThrow(MmsDatabase.REACTION_ID));
+      String                     reactionAuthor      = cursor.getString(cursor.getColumnIndexOrThrow(MmsDatabase.REACTION_AUTHOR));
+      String                     reactionEmoji       = cursor.getString(cursor.getColumnIndexOrThrow(MmsDatabase.REACTION_EMOJI));
+      boolean                    reactionReact       = cursor.getInt(cursor.getColumnIndexOrThrow(MmsDatabase.REACTION_REACT)) == 1;
+      boolean                    reactionMissing     = cursor.getInt(cursor.getColumnIndexOrThrow(MmsDatabase.REACTION_MISSING)) == 1;
+      if (reactionId > 0 && !TextUtils.isEmpty(reactionAuthor)) {
+        return new ReactionRecord(reactionId, Address.fromExternal(context, reactionAuthor), reactionEmoji, reactionReact, reactionMissing);
       } else {
         return null;
       }

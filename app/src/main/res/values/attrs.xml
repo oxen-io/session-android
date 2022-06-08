@@ -226,6 +226,10 @@
         <attr name="forceJumbo" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="EmojiReactionsView">
+        <attr name="erv_outgoing" format="boolean" />
+    </declare-styleable>
+
     <declare-styleable name="ColorPickerPreference">
         <attr name="currentColor" format="reference" />
         <attr name="colors" format="reference" />

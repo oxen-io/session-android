@@ -29,6 +29,7 @@ import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAt
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
+import org.session.libsession.messaging.sending_receiving.reactions.ReactionModel
 import org.session.libsession.messaging.utilities.UpdateMessageData
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.utilities.Address
@@ -74,7 +75,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
     }
 
     override fun setUserProfilePictureURL(newValue: String) {
-        val ourRecipient = Address.fromSerialized(getUserPublicKey()!!).let {
+        val ourRecipient = fromSerialized(getUserPublicKey()!!).let {
             Recipient.from(context, it, false)
         }
         TextSecurePreferences.setProfilePictureURL(context, newValue)
@@ -102,9 +103,9 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         return database.getAttachmentsForMessage(messageID)
     }
 
-    override fun persist(message: VisibleMessage, quotes: QuoteModel?, linkPreview: List<LinkPreview?>, groupPublicKey: String?, openGroupID: String?, attachments: List<Attachment>): Long? {
+    override fun persist(message: VisibleMessage, quotes: QuoteModel?, reactionModel: ReactionModel?, linkPreview: List<LinkPreview?>, groupPublicKey: String?, openGroupID: String?, attachments: List<Attachment>): Long? {
         var messageID: Long? = null
-        val senderAddress = Address.fromSerialized(message.sender!!)
+        val senderAddress = fromSerialized(message.sender!!)
         val isUserSender = (message.sender!! == getUserPublicKey())
         val group: Optional<SignalServiceGroup> = when {
             openGroupID != null -> Optional.of(SignalServiceGroup(openGroupID.toByteArray(), SignalServiceGroup.GroupType.PUBLIC_CHAT))
@@ -118,9 +119,9 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
             it.toSignalAttachment()
         }
         val targetAddress = if (isUserSender && !message.syncTarget.isNullOrEmpty()) {
-            Address.fromSerialized(message.syncTarget!!)
+            fromSerialized(message.syncTarget!!)
         } else if (group.isPresent) {
-            Address.fromSerialized(GroupUtil.getEncodedId(group.get()))
+            fromSerialized(GroupUtil.getEncodedId(group.get()))
         } else {
             senderAddress
         }
@@ -135,17 +136,18 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         }
         if (message.isMediaMessage() || attachments.isNotEmpty()) {
             val quote: Optional<QuoteModel> = if (quotes != null) Optional.of(quotes) else Optional.absent()
+            val reaction: Optional<ReactionModel> = if (reactionModel != null) Optional.of(reactionModel) else Optional.absent()
             val linkPreviews: Optional<List<LinkPreview>> = if (linkPreview.isEmpty()) Optional.absent() else Optional.of(linkPreview.mapNotNull { it!! })
             val mmsDatabase = DatabaseComponent.get(context).mmsDatabase()
             val insertResult = if (message.sender == getUserPublicKey()) {
-                val mediaMessage = OutgoingMediaMessage.from(message, targetRecipient, pointers, quote.orNull(), linkPreviews.orNull()?.firstOrNull())
+                val mediaMessage = OutgoingMediaMessage.from(message, targetRecipient, pointers, quote.orNull(), linkPreviews.orNull()?.firstOrNull(), reaction.orNull())
                 mmsDatabase.insertSecureDecryptedMessageOutbox(mediaMessage, message.threadID ?: -1, message.sentTimestamp!!)
             } else {
                 // It seems like we have replaced SignalServiceAttachment with SessionServiceAttachment
                 val signalServiceAttachments = attachments.mapNotNull {
                     it.toSignalPointer()
                 }
-                val mediaMessage = IncomingMediaMessage.from(message, senderAddress, targetRecipient.expireMessages * 1000L, group, signalServiceAttachments, quote, linkPreviews)
+                val mediaMessage = IncomingMediaMessage.from(message, senderAddress, targetRecipient.expireMessages * 1000L, group, signalServiceAttachments, quote, linkPreviews, reaction)
                 mmsDatabase.insertSecureDecryptedMessageInbox(mediaMessage, message.threadID ?: -1, message.receivedTimestamp ?: 0)
             }
             if (insertResult.isPresent) {
@@ -314,7 +316,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
 
     override fun getMessageIdInDatabase(timestamp: Long, author: String): Long? {
         val database = DatabaseComponent.get(context).mmsSmsDatabase()
-        val address = Address.fromSerialized(author)
+        val address = fromSerialized(author)
         return database.getMessageFor(timestamp, address)?.getId()
     }
 
@@ -432,7 +434,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
 
     override fun insertIncomingInfoMessage(context: Context, senderPublicKey: String, groupID: String, type: SignalServiceGroup.Type, name: String, members: Collection<String>, admins: Collection<String>, sentTimestamp: Long) {
         val group = SignalServiceGroup(type, GroupUtil.getDecodedGroupIDAsData(groupID), SignalServiceGroup.GroupType.SIGNAL, name, members.toList(), null, admins.toList())
-        val m = IncomingTextMessage(Address.fromSerialized(senderPublicKey), 1, sentTimestamp, "", Optional.of(group), 0, true)
+        val m = IncomingTextMessage(fromSerialized(senderPublicKey), 1, sentTimestamp, "", Optional.of(group), 0, true)
         val updateData = UpdateMessageData.buildGroupUpdate(type, name, members)?.toJSON()
         val infoMessage = IncomingGroupMessage(m, groupID, updateData, true)
         val smsDB = DatabaseComponent.get(context).smsDatabase()
@@ -441,10 +443,10 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
 
     override fun insertOutgoingInfoMessage(context: Context, groupID: String, type: SignalServiceGroup.Type, name: String, members: Collection<String>, admins: Collection<String>, threadID: Long, sentTimestamp: Long) {
         val userPublicKey = getUserPublicKey()
-        val recipient = Recipient.from(context, Address.fromSerialized(groupID), false)
+        val recipient = Recipient.from(context, fromSerialized(groupID), false)
 
         val updateData = UpdateMessageData.buildGroupUpdate(type, name, members)?.toJSON() ?: ""
-        val infoMessage = OutgoingGroupMediaMessage(recipient, updateData, groupID, null, sentTimestamp, 0, true, null, listOf(), listOf())
+        val infoMessage = OutgoingGroupMediaMessage(recipient, updateData, groupID, null, sentTimestamp, 0, true, null, null, listOf(), listOf())
         val mmsDB = DatabaseComponent.get(context).mmsDatabase()
         val mmsSmsDB = DatabaseComponent.get(context).mmsSmsDatabase()
         if (mmsSmsDB.getMessageFor(sentTimestamp, userPublicKey) != null) return
@@ -454,7 +456,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
 
     override fun isClosedGroup(publicKey: String): Boolean {
         val isClosedGroup = DatabaseComponent.get(context).lokiAPIDatabase().isClosedGroup(publicKey)
-        val address = Address.fromSerialized(publicKey)
+        val address = fromSerialized(publicKey)
         return address.isClosedGroup || isClosedGroup
     }
 
@@ -532,19 +534,19 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
     override fun getOrCreateThreadIdFor(publicKey: String, groupPublicKey: String?, openGroupID: String?): Long {
         val database = DatabaseComponent.get(context).threadDatabase()
         if (!openGroupID.isNullOrEmpty()) {
-            val recipient = Recipient.from(context, Address.fromSerialized(GroupUtil.getEncodedOpenGroupID(openGroupID.toByteArray())), false)
+            val recipient = Recipient.from(context, fromSerialized(GroupUtil.getEncodedOpenGroupID(openGroupID.toByteArray())), false)
             return database.getThreadIdIfExistsFor(recipient)
         } else if (!groupPublicKey.isNullOrEmpty()) {
-            val recipient = Recipient.from(context, Address.fromSerialized(GroupUtil.doubleEncodeGroupID(groupPublicKey)), false)
+            val recipient = Recipient.from(context, fromSerialized(GroupUtil.doubleEncodeGroupID(groupPublicKey)), false)
             return database.getOrCreateThreadIdFor(recipient)
         } else {
-            val recipient = Recipient.from(context, Address.fromSerialized(publicKey), false)
+            val recipient = Recipient.from(context, fromSerialized(publicKey), false)
             return database.getOrCreateThreadIdFor(recipient)
         }
     }
 
     override fun getThreadId(publicKeyOrOpenGroupID: String): Long? {
-        val address = Address.fromSerialized(publicKeyOrOpenGroupID)
+        val address = fromSerialized(publicKeyOrOpenGroupID)
         return getThreadId(address)
     }
 
@@ -592,7 +594,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         val recipientDatabase = DatabaseComponent.get(context).recipientDatabase()
         val threadDatabase = DatabaseComponent.get(context).threadDatabase()
         for (contact in contacts) {
-            val address = Address.fromSerialized(contact.publicKey)
+            val address = fromSerialized(contact.publicKey)
             val recipient = Recipient.from(context, address, true)
             if (!contact.profilePicture.isNullOrEmpty()) {
                 recipientDatabase.setProfileAvatar(recipient, contact.profilePicture)
@@ -664,6 +666,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
             Optional.absent(),
             Optional.absent(),
             Optional.absent(),
+            Optional.absent(),
             Optional.of(message)
         )
 
@@ -696,6 +699,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
                 false,
                 false,
                 true,
+                Optional.absent(),
                 Optional.absent(),
                 Optional.absent(),
                 Optional.absent(),

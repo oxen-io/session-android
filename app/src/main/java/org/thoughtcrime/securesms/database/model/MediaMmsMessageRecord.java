@@ -45,20 +45,20 @@ public class MediaMmsMessageRecord extends MmsMessageRecord {
   private final int partCount;
 
   public MediaMmsMessageRecord(long id, Recipient conversationRecipient,
-    Recipient individualRecipient, int recipientDeviceId,
-    long dateSent, long dateReceived, int deliveryReceiptCount,
-    long threadId, String body,
-    @NonNull SlideDeck slideDeck,
-    int partCount, long mailbox,
-    List<IdentityKeyMismatch> mismatches,
-    List<NetworkFailure> failures, int subscriptionId,
-    long expiresIn, long expireStarted, int readReceiptCount,
-    @Nullable Quote quote, @NonNull List<Contact> contacts,
-    @NonNull List<LinkPreview> linkPreviews, boolean unidentified)
+                               Recipient individualRecipient, int recipientDeviceId,
+                               long dateSent, long dateReceived, int deliveryReceiptCount,
+                               long threadId, String body,
+                               @NonNull SlideDeck slideDeck,
+                               int partCount, long mailbox,
+                               List<IdentityKeyMismatch> mismatches,
+                               List<NetworkFailure> failures, int subscriptionId,
+                               long expiresIn, long expireStarted, int readReceiptCount,
+                               @Nullable Quote quote, @Nullable ReactionRecord reaction, @NonNull List<Contact> contacts,
+                               @NonNull List<LinkPreview> linkPreviews, boolean unidentified)
   {
     super(id, body, conversationRecipient, individualRecipient, dateSent,
       dateReceived, threadId, Status.STATUS_NONE, deliveryReceiptCount, mailbox, mismatches, failures,
-      expiresIn, expireStarted, slideDeck, readReceiptCount, quote, contacts,
+      expiresIn, expireStarted, slideDeck, readReceiptCount, quote, reaction, contacts,
       linkPreviews, unidentified, Collections.emptyList());
     this.partCount = partCount;
   }

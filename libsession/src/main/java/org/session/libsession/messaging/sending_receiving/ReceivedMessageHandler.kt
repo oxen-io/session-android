@@ -23,6 +23,7 @@ import org.session.libsession.messaging.sending_receiving.link_preview.LinkPrevi
 import org.session.libsession.messaging.sending_receiving.notifications.PushNotificationAPI
 import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPollerV2
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
+import org.session.libsession.messaging.sending_receiving.reactions.ReactionModel
 import org.session.libsession.messaging.utilities.WebRtcUtils
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
@@ -228,18 +229,32 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage, proto: SignalS
             profileManager.setProfilePictureURL(context, recipient, profile.profilePictureURL!!)
         }
     }
+    // Parse reaction if needed
+    var reactionModel: ReactionModel? = null
+    if (message.reaction != null && proto.dataMessage.hasReaction()) {
+        val reaction = proto.dataMessage.reaction
+        val author = Address.fromSerialized(reaction.author)
+        val react = reaction.action == SignalServiceProtos.DataMessage.Reaction.Action.REACT
+        val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
+        val messageInfo = messageDataProvider.getMessageFor(reaction.id, author)
+        reactionModel = if (messageInfo != null) {
+            ReactionModel(reaction.id, author, messageDataProvider.getMessageBodyFor(reaction.id, reaction.author), react, false)
+        } else {
+            ReactionModel(reaction.id, author, reaction.emoji, react = true, missing = true)
+        }
+    }
     // Parse quote if needed
     var quoteModel: QuoteModel? = null
     if (message.quote != null && proto.dataMessage.hasQuote()) {
         val quote = proto.dataMessage.quote
         val author = Address.fromSerialized(quote.author)
         val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
-        val messageInfo = messageDataProvider.getMessageForQuote(quote.id, author)
-        if (messageInfo != null) {
+        val messageInfo = messageDataProvider.getMessageFor(quote.id, author)
+        quoteModel = if (messageInfo != null) {
             val attachments = if (messageInfo.second) messageDataProvider.getAttachmentsAndLinkPreviewFor(messageInfo.first) else ArrayList()
-            quoteModel = QuoteModel(quote.id, author, messageDataProvider.getMessageBodyFor(quote.id, quote.author), false, attachments)
+            QuoteModel(quote.id, author, messageDataProvider.getMessageBodyFor(quote.id, quote.author), false, attachments)
         } else {
-            quoteModel = QuoteModel(quote.id, author, quote.text, true, PointerAttachment.forPointers(proto.dataMessage.quote.attachmentsList))
+            QuoteModel(quote.id, author, quote.text, true, PointerAttachment.forPointers(proto.dataMessage.quote.attachmentsList))
         }
     }
     // Parse link preview if needed
@@ -269,7 +284,7 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage, proto: SignalS
     }
     // Persist the message
     message.threadID = threadID
-    val messageID = storage.persist(message, quoteModel, linkPreviews, message.groupPublicKey, openGroupID, attachments) ?: throw MessageReceiver.Error.DuplicateMessage
+    val messageID = storage.persist(message, quoteModel, reactionModel, linkPreviews, message.groupPublicKey, openGroupID, attachments) ?: throw MessageReceiver.Error.DuplicateMessage
     // Parse & persist attachments
     // Start attachment downloads if needed
     storage.getAttachmentsForMessage(messageID).iterator().forEach { attachment ->

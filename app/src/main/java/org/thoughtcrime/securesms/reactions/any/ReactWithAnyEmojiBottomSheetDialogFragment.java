@@ -56,7 +56,6 @@ public final class ReactWithAnyEmojiBottomSheetDialogFragment extends BottomShee
   private static final String ARG_START_PAGE = "arg_start_page";
   private static final String ARG_SHADOWS    = "arg_shadows";
   private static final String ARG_RECENT_KEY = "arg_recent_key";
-  private static final String ARG_EDIT       = "arg_edit";
 
   private ReactWithAnyEmojiViewModel viewModel;
   private Callback                   callback;
@@ -76,7 +75,6 @@ public final class ReactWithAnyEmojiBottomSheetDialogFragment extends BottomShee
     args.putBoolean(ARG_IS_MMS, messageRecord.isMms());
     args.putInt(ARG_START_PAGE, startingPage);
     args.putString(ARG_RECENT_KEY, REACTION_STORAGE_KEY);
-    args.putBoolean(ARG_EDIT, true);
     fragment.setArguments(args);
 
     return fragment;
@@ -165,12 +163,6 @@ public final class ReactWithAnyEmojiBottomSheetDialogFragment extends BottomShee
                                     false);
     RecyclerView categoriesRecycler = tabBar.findViewById(R.id.emoji_categories_recycler);
     categoriesRecycler.setAdapter(categoriesAdapter);
-
-    if (requireArguments().getBoolean(ARG_EDIT, false)) {
-      View customizeReactions = tabBar.findViewById(R.id.customize_reactions_frame);
-      customizeReactions.setVisibility(View.VISIBLE);
-      //TODO:customizeReactions.setOnClickListener(v -> startActivity(new Intent(requireContext(), EditReactionsActivity.class)));
-    }
 
     container.addView(tabBar);
 

@@ -62,6 +62,7 @@ import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
+import org.session.libsession.messaging.sending_receiving.reactions.ReactionModel
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Address.Companion.fromSerialized
 import org.session.libsession.utilities.MediaTypes
@@ -917,25 +918,40 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     override fun onReactionSelected(messageRecord: MessageRecord, emoji: String) {
         reactionDelegate.hide()
         val oldRecord = Stream.of(messageRecord.reactions)
-            .filter { record -> record.author == textSecurePreferences.getLocalNumber() }
+            .filter { record -> record.author.serialize() == textSecurePreferences.getLocalNumber() }
             .findFirst()
             .orElse(null)
         if (oldRecord != null && oldRecord.emoji == emoji) {
+            mmsDb.deleteReactionFromMessage(messageRecord)
             MessageSender.sendReactionRemoval(messageRecord.id, oldRecord.emoji)
         } else {
-            MessageSender.sendNewReaction(messageRecord.id, emoji)
+            sendEmojiReaction(messageRecord, emoji)
         }
+    }
+
+    private fun sendEmojiReaction(messageRecord: MessageRecord, emoji: String) {
+        // Create the message
+        val message = VisibleMessage()
+        message.sentTimestamp = System.currentTimeMillis()
+        val sender = if (messageRecord.isOutgoing) fromSerialized(textSecurePreferences.getLocalNumber()!!) else messageRecord.individualRecipient.address
+        val reaction = ReactionModel(messageRecord.dateSent, sender, emoji, react = true, missing = false)
+        val outgoingTextMessage = OutgoingMediaMessage.from(message, viewModel.recipient, emptyList(), null, null, reaction)
+        // Put the message in the database
+        message.id = mmsDb.insertMessageOutbox(outgoingTextMessage, viewModel.threadId, false) { }
+        // Send it
+        MessageSender.sendNewReaction(message, viewModel.recipient.address)
     }
 
     override fun onCustomReactionSelected(messageRecord: MessageRecord, hasAddedCustomEmoji: Boolean) {
         val oldRecord = Stream.of(messageRecord.reactions)
-            .filter { record -> record.author == textSecurePreferences.getLocalNumber() }
+            .filter { record -> record.author.serialize() == textSecurePreferences.getLocalNumber() }
             .findFirst()
             .orElse(null)
 
         if (oldRecord != null && hasAddedCustomEmoji) {
             reactionDelegate.hide()
             SignalExecutors.BOUNDED.execute {
+                mmsDb.deleteReactionFromMessage(messageRecord)
                 MessageSender.sendReactionRemoval(messageRecord.id, oldRecord.emoji)
             }
         } else {
@@ -1110,7 +1126,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             val sender = if (it.isOutgoing) fromSerialized(textSecurePreferences.getLocalNumber()!!) else it.individualRecipient.address
             QuoteModel(it.dateSent, sender, it.body, false, quotedAttachments)
         }
-        val outgoingTextMessage = OutgoingMediaMessage.from(message, viewModel.recipient, attachments, quote, linkPreview)
+        val outgoingTextMessage = OutgoingMediaMessage.from(message, viewModel.recipient, attachments, quote, linkPreview, null)
         // Clear the input bar
         binding?.inputBar?.text = ""
         binding?.inputBar?.cancelQuoteDraft()

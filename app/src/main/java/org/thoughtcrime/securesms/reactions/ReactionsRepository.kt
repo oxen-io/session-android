@@ -4,7 +4,6 @@ import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.schedulers.Schedulers
 import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.components.emoji.EmojiUtil
 import org.thoughtcrime.securesms.database.model.MessageId
@@ -26,10 +25,10 @@ class ReactionsRepository {
 
         return reactions.map { reaction ->
             ReactionDetails(
-                sender = Recipient.from(context, Address.fromSerialized(reaction.author), false),
+                sender = Recipient.from(context, reaction.author, false),
                 baseEmoji = EmojiUtil.getCanonicalRepresentation(reaction.emoji),
                 displayEmoji = reaction.emoji,
-                timestamp = reaction.dateReceived
+                timestamp = 0
             )
         }
     }

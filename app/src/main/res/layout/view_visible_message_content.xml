@@ -99,4 +99,12 @@
         android:id="@+id/bodyTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"/>
+    <org.thoughtcrime.securesms.conversation.v2.messages.EmojiReactionsView
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible"
+        android:visibility="gone"
+        android:id="@+id/emojiReactionsView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

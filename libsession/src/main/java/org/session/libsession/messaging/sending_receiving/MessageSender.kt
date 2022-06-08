@@ -16,11 +16,9 @@ import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.visible.LinkPreview
 import org.session.libsession.messaging.messages.visible.Profile
 import org.session.libsession.messaging.messages.visible.Quote
-import org.session.libsession.messaging.messages.visible.Reaction
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
 import org.session.libsession.messaging.open_groups.OpenGroupMessageV2
-import org.session.libsession.messaging.sending_receiving.reactions.ReactionModel
 import org.session.libsession.messaging.utilities.MessageWrapper
 import org.session.libsession.snode.RawResponsePromise
 import org.session.libsession.snode.SnodeAPI
@@ -64,10 +62,10 @@ object MessageSender {
 
     // Convenience
     fun send(message: Message, destination: Destination): Promise<Unit, Exception> {
-        if (destination is Destination.OpenGroupV2) {
-            return sendToOpenGroupDestination(destination, message)
+        return if (destination is Destination.OpenGroupV2) {
+            sendToOpenGroupDestination(destination, message)
         } else {
-            return sendToSnodeDestination(destination, message)
+            sendToSnodeDestination(destination, message)
         }
     }
 
@@ -382,18 +380,12 @@ object MessageSender {
 
     @JvmStatic
     fun sendReactionRemoval(messageId: Long, oldEmoji: String) {
-        val storage = MessagingModuleConfiguration.shared.storage
-        val author = Address.fromSerialized(storage.getUserPublicKey()!!)
-        val message = VisibleMessage()
-        message.reaction = Reaction.from(ReactionModel(messageId, author, oldEmoji, false))
+
     }
 
     @JvmStatic
-    fun sendNewReaction(messageId: Long, emoji: String) {
-        val storage = MessagingModuleConfiguration.shared.storage
-        val author = Address.fromSerialized(storage.getUserPublicKey()!!)
-        val message = VisibleMessage()
-        message.reaction = Reaction.from(ReactionModel(messageId, author, emoji, true))
+    fun sendNewReaction(messageId: VisibleMessage, emoji: Address) {
+
     }
 
 }

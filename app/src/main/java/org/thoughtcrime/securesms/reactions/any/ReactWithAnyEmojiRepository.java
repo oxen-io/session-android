@@ -71,9 +71,11 @@ final class ReactWithAnyEmojiRepository {
                                         .orElse(null)*/;
 
       if (oldRecord != null && oldRecord.getEmoji().equals(emoji)) {
+        //TODO: remove locally
         MessageSender.sendReactionRemoval(messageId.getId(), oldRecord.getEmoji());
       } else {
-        MessageSender.sendNewReaction(messageId.getId(), emoji);
+        //TODO: add locally
+//        MessageSender.sendNewReaction(messageId.getId(), emoji);
 //        ThreadUtil.runOnMain(() -> recentEmojiPageModel.onCodePointSelected(emoji));
       }
     });

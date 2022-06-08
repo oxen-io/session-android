@@ -67,7 +67,7 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
         attachmentDatabase.setTransferState(messageID, attachmentId, attachmentState.value)
     }
 
-    override fun getMessageForQuote(timestamp: Long, author: Address): Pair<Long, Boolean>? {
+    override fun getMessageFor(timestamp: Long, author: Address): Pair<Long, Boolean>? {
         val messagingDatabase = DatabaseComponent.get(context).mmsSmsDatabase()
         val message = messagingDatabase.getMessageFor(timestamp, author)
         return if (message != null) Pair(message.id, message.isMms) else null

@@ -81,7 +81,7 @@ public class RemoteReplyReceiver extends BroadcastReceiver {
 
           switch (replyMethod) {
             case GroupMessage: {
-              OutgoingMediaMessage reply = OutgoingMediaMessage.from(message, recipient, Collections.emptyList(), null, null);
+              OutgoingMediaMessage reply = OutgoingMediaMessage.from(message, recipient, Collections.emptyList(), null, null, null);
               try {
                 DatabaseComponent.get(context).mmsDatabase().insertMessageOutbox(reply, threadId, false, null);
                 MessageSender.send(message, address);

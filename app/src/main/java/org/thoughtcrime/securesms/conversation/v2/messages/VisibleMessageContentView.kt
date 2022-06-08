@@ -84,7 +84,7 @@ class VisibleMessageContentView : LinearLayout {
 
         if (message.isDeleted) {
             binding.deletedMessageView.isVisible = true
-            binding.deletedMessageView.bind(message, VisibleMessageContentView.getTextColor(context,message))
+            binding.deletedMessageView.bind(message, getTextColor(context, message))
             return
         } else {
             binding.deletedMessageView.isVisible = false
@@ -130,61 +130,78 @@ class VisibleMessageContentView : LinearLayout {
             }
         }
 
-        if (message is MmsMessageRecord && message.linkPreviews.isNotEmpty()) {
-            binding.linkPreviewView.bind(message, glide, isStartOfMessageCluster, isEndOfMessageCluster)
-            onContentClick.add { event -> binding.linkPreviewView.calculateHit(event) }
-            // Body text view is inside the link preview for layout convenience
-        } else if (message is MmsMessageRecord && message.slideDeck.audioSlide != null) {
-            hideBody = true
-            // Audio attachment
-            if (contactIsTrusted || message.isOutgoing) {
-                binding.voiceMessageView.indexInAdapter = indexInAdapter
-                binding.voiceMessageView.delegate = context as? ConversationActivityV2
-                binding.voiceMessageView.bind(message, isStartOfMessageCluster, isEndOfMessageCluster)
-                // We have to use onContentClick (rather than a click listener directly on the voice
-                // message view) so as to not interfere with all the other gestures.
-                onContentClick.add { binding.voiceMessageView.togglePlayback() }
-                onContentDoubleTap = { binding.voiceMessageView.handleDoubleTap() }
-            } else {
-                // TODO: move this out to its own area
-                binding.untrustedView.bind(UntrustedAttachmentView.AttachmentType.AUDIO, VisibleMessageContentView.getTextColor(context,message))
-                onContentClick.add { binding.untrustedView.showTrustDialog(message.individualRecipient) }
+        if (message.reactions.isNotEmpty()) {
+            binding.emojiReactionsView.isVisible = true
+            binding.emojiReactionsView.setReactions(message.reactions, binding.bodyTextView.width)
+        }
+
+        when {
+            message is MmsMessageRecord && message.linkPreviews.isNotEmpty() -> {
+                binding.linkPreviewView.bind(message, glide, isStartOfMessageCluster, isEndOfMessageCluster)
+                onContentClick.add { event -> binding.linkPreviewView.calculateHit(event) }
+                // Body text view is inside the link preview for layout convenience
             }
-        } else if (message is MmsMessageRecord && message.slideDeck.documentSlide != null) {
-            hideBody = true
-            // Document attachment
-            if (contactIsTrusted || message.isOutgoing) {
-                binding.documentView.bind(message, VisibleMessageContentView.getTextColor(context, message))
-            } else {
-                binding.untrustedView.bind(UntrustedAttachmentView.AttachmentType.DOCUMENT, VisibleMessageContentView.getTextColor(context,message))
-                onContentClick.add { binding.untrustedView.showTrustDialog(message.individualRecipient) }
+            message is MmsMessageRecord && message.slideDeck.audioSlide != null -> {
+                hideBody = true
+                // Audio attachment
+                if (contactIsTrusted || message.isOutgoing) {
+                    binding.voiceMessageView.indexInAdapter = indexInAdapter
+                    binding.voiceMessageView.delegate = context as? ConversationActivityV2
+                    binding.voiceMessageView.bind(message, isStartOfMessageCluster, isEndOfMessageCluster)
+                    // We have to use onContentClick (rather than a click listener directly on the voice
+                    // message view) so as to not interfere with all the other gestures.
+                    onContentClick.add { binding.voiceMessageView.togglePlayback() }
+                    onContentDoubleTap = { binding.voiceMessageView.handleDoubleTap() }
+                } else {
+                    // TODO: move this out to its own area
+                    binding.untrustedView.bind(UntrustedAttachmentView.AttachmentType.AUDIO,
+                        getTextColor(context,message)
+                    )
+                    onContentClick.add { binding.untrustedView.showTrustDialog(message.individualRecipient) }
+                }
             }
-        } else if (message is MmsMessageRecord && message.slideDeck.asAttachments().isNotEmpty()) {
-            /*
-             *    Images / Video attachment
-             */
-            if (contactIsTrusted || message.isOutgoing) {
-                // isStart and isEnd of cluster needed for calculating the mask for full bubble image groups
-                // bind after add view because views are inflated and calculated during bind
-                binding.albumThumbnailView.bind(
+            message is MmsMessageRecord && message.slideDeck.documentSlide != null -> {
+                hideBody = true
+                // Document attachment
+                if (contactIsTrusted || message.isOutgoing) {
+                    binding.documentView.bind(message, getTextColor(context, message))
+                } else {
+                    binding.untrustedView.bind(UntrustedAttachmentView.AttachmentType.DOCUMENT,
+                        getTextColor(context,message)
+                    )
+                    onContentClick.add { binding.untrustedView.showTrustDialog(message.individualRecipient) }
+                }
+            }
+            message is MmsMessageRecord && message.slideDeck.asAttachments().isNotEmpty() -> {
+                /*
+                 *    Images / Video attachment
+                 */
+                if (contactIsTrusted || message.isOutgoing) {
+                    // isStart and isEnd of cluster needed for calculating the mask for full bubble image groups
+                    // bind after add view because views are inflated and calculated during bind
+                    binding.albumThumbnailView.bind(
                         glideRequests = glide,
                         message = message,
                         isStart = isStartOfMessageCluster,
                         isEnd = isEndOfMessageCluster
-                )
-                onContentClick.add { event ->
-                    binding.albumThumbnailView.calculateHitObject(event, message, thread)
+                    )
+                    onContentClick.add { event ->
+                        binding.albumThumbnailView.calculateHitObject(event, message, thread)
+                    }
+                } else {
+                    hideBody = true
+                    binding.albumThumbnailView.clearViews()
+                    binding.untrustedView.bind(UntrustedAttachmentView.AttachmentType.MEDIA,
+                        getTextColor(context,message)
+                    )
+                    onContentClick.add { binding.untrustedView.showTrustDialog(message.individualRecipient) }
                 }
-            } else {
-                hideBody = true
-                binding.albumThumbnailView.clearViews()
-                binding.untrustedView.bind(UntrustedAttachmentView.AttachmentType.MEDIA, VisibleMessageContentView.getTextColor(context,message))
-                onContentClick.add { binding.untrustedView.showTrustDialog(message.individualRecipient) }
             }
-        } else if (message.isOpenGroupInvitation) {
-            hideBody = true
-            binding.openGroupInvitationView.bind(message, VisibleMessageContentView.getTextColor(context, message))
-            onContentClick.add { binding.openGroupInvitationView.joinOpenGroup() }
+            message.isOpenGroupInvitation -> {
+                hideBody = true
+                binding.openGroupInvitationView.bind(message, getTextColor(context, message))
+                onContentClick.add { binding.openGroupInvitationView.joinOpenGroup() }
+            }
         }
 
         binding.bodyTextView.isVisible = message.body.isNotEmpty() && !hideBody

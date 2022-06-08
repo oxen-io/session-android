@@ -80,10 +80,10 @@ class VisibleMessage : Message()  {
         val dataMessage: SignalServiceProtos.DataMessage.Builder
         // Profile
         val profileProto = profile?.toProto()
-        if (profileProto != null) {
-            dataMessage = profileProto.toBuilder()
+        dataMessage = if (profileProto != null) {
+            profileProto.toBuilder()
         } else {
-            dataMessage = SignalServiceProtos.DataMessage.newBuilder()
+            SignalServiceProtos.DataMessage.newBuilder()
         }
         // Text
         if (text != null) { dataMessage.body = text }
@@ -91,6 +91,11 @@ class VisibleMessage : Message()  {
         val quoteProto = quote?.toProto()
         if (quoteProto != null) {
             dataMessage.quote = quoteProto
+        }
+        // Reaction
+        val reactionProto = reaction?.toProto()
+        if (reactionProto != null) {
+            dataMessage.reaction = reactionProto
         }
         // Link preview
         val linkPreviewProto = linkPreview?.toProto()
@@ -138,12 +143,12 @@ class VisibleMessage : Message()  {
             dataMessage.syncTarget = syncTarget
         }
         // Build
-        try {
+        return try {
             proto.dataMessage = dataMessage.build()
-            return proto.build()
+            proto.build()
         } catch (e: Exception) {
             Log.w(TAG, "Couldn't construct visible message proto from: $this")
-            return null
+            null
         }
     }
     // endregion
@@ -157,6 +162,6 @@ class VisibleMessage : Message()  {
     }
 
     fun isMediaMessage(): Boolean {
-        return attachmentIDs.isNotEmpty() || quote != null || linkPreview != null
+        return attachmentIDs.isNotEmpty() || quote != null || linkPreview != null || reaction != null
     }
 }

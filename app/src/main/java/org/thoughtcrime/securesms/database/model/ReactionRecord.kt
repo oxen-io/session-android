@@ -1,11 +1,19 @@
 package org.thoughtcrime.securesms.database.model
 
-/**
- * Represents an individual reaction to a message.
- */
-data class ReactionRecord(
-  val emoji: String,
-  val author: String,
-  val dateSent: Long,
-  val dateReceived: Long
-)
+import org.session.libsession.messaging.sending_receiving.reactions.ReactionModel
+import org.session.libsession.utilities.Address
+
+class ReactionRecord(val id: Long, val author: Address, emoji: String, react: Boolean, missing: Boolean) {
+    val emoji: String
+    val isReact: Boolean
+    val isMissing: Boolean
+
+    init {
+        this.emoji = emoji
+        isReact = react
+        isMissing = missing
+    }
+
+    val reactionModel: ReactionModel
+        get() = ReactionModel(id, author, emoji, isReact, isMissing)
+}
