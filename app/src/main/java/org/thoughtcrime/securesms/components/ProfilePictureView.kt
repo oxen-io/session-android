@@ -106,6 +106,7 @@ class ProfilePictureView @JvmOverloads constructor(
                 glide.clear(imageView)
                 glide.load(signalProfilePicture)
                     .placeholder(unknownRecipientDrawable)
+                    .centerCrop()
                     .error(unknownRecipientDrawable)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .circleCrop()
@@ -114,6 +115,7 @@ class ProfilePictureView @JvmOverloads constructor(
                 glide.clear(imageView)
                 glide.load(placeholder)
                     .placeholder(unknownRecipientDrawable)
+                    .centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.NONE).circleCrop().into(imageView)
             }
             profilePicturesCache[publicKey] = recipient.profileAvatar
