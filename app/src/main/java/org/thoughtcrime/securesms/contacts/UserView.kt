@@ -83,7 +83,7 @@ class UserView : LinearLayout {
     }
 
     fun unbind() {
-
+        binding.profilePictureView.root.recycle()
     }
     // endregion
 }
