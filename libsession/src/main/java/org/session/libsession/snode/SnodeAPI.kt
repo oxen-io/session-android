@@ -292,7 +292,6 @@ object SnodeAPI {
     }
 
     fun getRawMessages(snode: Snode, publicKey: String, requiresAuth: Boolean = true, namespace: Int = 0): RawResponsePromise {
-        val userED25519KeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return Promise.ofFail(Error.NoKeyPair)
         // Get last message hash
         val lastHashValue = database.getLastMessageHashValue(snode, publicKey, namespace) ?: ""
         val parameters = mutableMapOf<String,Any>(
@@ -301,6 +300,12 @@ object SnodeAPI {
         )
         // Construct signature
         if (requiresAuth) {
+            val userED25519KeyPair = try {
+                MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return Promise.ofFail(Error.NoKeyPair)
+            } catch (e: Exception) {
+                Log.e("Loki", "Error getting KeyPair", e)
+                return Promise.ofFail(Error.NoKeyPair)
+            }
             val timestamp = Date().time + SnodeAPI.clockOffset
             val ed25519PublicKey = userED25519KeyPair.publicKey.asHexString
             val signature = ByteArray(Sign.BYTES)
