@@ -272,7 +272,6 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
 
     override fun setLastMessageHashValue(snode: Snode, publicKey: String, newValue: String, namespace: Int) {
         val database = databaseHelper.writableDatabase
-        Log.d("Loki-hash", "setting last hash for $snode, $publicKey, $namespace to $newValue")
         val row = wrap(mapOf(
             Companion.snode to snode.toString(),
             Companion.publicKey to publicKey,
@@ -281,7 +280,6 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         ))
         val query = "${Companion.snode} = ? AND ${Companion.publicKey} = ? AND $lastMessageHashNamespace = ?"
         val lastHash = database.insertOrUpdate(lastMessageHashValueTable2, row, query, arrayOf( snode.toString(), publicKey, namespace.toString() ))
-        Log.d("Loki-hash", "last hash update result: $lastHash")
     }
 
     override fun getReceivedMessageHashValues(publicKey: String, namespace: Int): Set<String>? {

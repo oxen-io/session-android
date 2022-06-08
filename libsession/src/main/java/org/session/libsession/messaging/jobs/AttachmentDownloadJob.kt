@@ -53,12 +53,23 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
                     || exception == Error.NoSender
                     || (exception is OnionRequestAPI.HTTPRequestFailedAtDestinationException && exception.statusCode == 400)) {
                 attachment?.let { id ->
+                    Log.d("AttachmentDownloadJob", "Setting attachment state = failed, have attachment")
                     messageDataProvider.setAttachmentState(AttachmentState.FAILED, id, databaseMessageID)
                 } ?: run {
+                    Log.d("AttachmentDownloadJob", "Setting attachment state = failed, don't have attachment")
                     messageDataProvider.setAttachmentState(AttachmentState.FAILED, AttachmentId(attachmentID,0), databaseMessageID)
                 }
                 this.handlePermanentFailure(exception)
             } else {
+                if (failureCount + 1 >= maxFailureCount) {
+                    attachment?.let { id ->
+                        Log.d("AttachmentDownloadJob", "Setting attachment state = failed from max failure count, have attachment")
+                        messageDataProvider.setAttachmentState(AttachmentState.FAILED, id, databaseMessageID)
+                    } ?: run {
+                        Log.d("AttachmentDownloadJob", "Setting attachment state = failed from max failure count, don't have attachment")
+                        messageDataProvider.setAttachmentState(AttachmentState.FAILED, AttachmentId(attachmentID,0), databaseMessageID)
+                    }
+                }
                 this.handleFailure(exception)
             }
         }
@@ -97,16 +108,20 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
             tempFile = createTempFile()
             val openGroupV2 = storage.getV2OpenGroup(threadID)
             if (openGroupV2 == null) {
+                Log.d("AttachmentDownloadJob", "downloading normal attachment")
                 DownloadUtilities.downloadFile(tempFile, attachment.url)
             } else {
+                Log.d("AttachmentDownloadJob", "downloading open group attachment")
                 val url = HttpUrl.parse(attachment.url)!!
                 val fileID = url.pathSegments().last()
                 OpenGroupAPIV2.download(fileID.toLong(), openGroupV2.room, openGroupV2.server).get().let {
                     tempFile.writeBytes(it)
                 }
             }
+            Log.d("AttachmentDownloadJob", "getting input stream")
             val inputStream = getInputStream(tempFile, attachment)
 
+            Log.d("AttachmentDownloadJob", "inserting attachment")
             messageDataProvider.insertAttachment(databaseMessageID, attachment.attachmentId, inputStream)
             if (attachment.contentType.startsWith("audio/")) {
                 // process the duration
@@ -123,9 +138,12 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
                         Log.e("Loki", "Couldn't process audio attachment", e)
                     }
             }
+            Log.d("AttachmentDownloadJob", "deleting tempfile")
             tempFile.delete()
+            Log.d("AttachmentDownloadJob", "succeeding job")
             handleSuccess()
         } catch (e: Exception) {
+            Log.e("AttachmentDownloadJob", "Error processing attachment download", e)
             tempFile?.delete()
             return handleFailure(e,null)
         }
@@ -134,8 +152,10 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
     private fun getInputStream(tempFile: File, attachment: DatabaseAttachment): InputStream {
         // Assume we're retrieving an attachment for an open group server if the digest is not set
         return if (attachment.digest?.size ?: 0 == 0 || attachment.key.isNullOrEmpty()) {
+            Log.d("AttachmentDownloadJob", "getting input stream with no attachment digest")
             FileInputStream(tempFile)
         } else {
+            Log.d("AttachmentDownloadJob", "getting input stream with attachment digest")
             AttachmentCipherInputStream.createForAttachment(tempFile, attachment.size, Base64.decode(attachment.key), attachment.digest)
         }
     }
