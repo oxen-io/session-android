@@ -79,14 +79,14 @@
 
     <style name="Widget.Session.Button.Common.ProminentOutline">
         <item name="android:background">@drawable/prominent_outline_button_medium_background</item>
-        <item name="android:textColor">@color/accent</item>
-        <item name="android:drawableTint" tools:ignore="NewApi">@color/accent</item>
+        <item name="android:textColor">?colorAccent</item>
+        <item name="android:drawableTint" tools:ignore="NewApi">?colorAccent</item>
     </style>
 
     <style name="Widget.Session.Button.Common.ProminentOutline.Accent">
         <item name="android:background">@drawable/prominent_outline_button_medium_background_accent</item>
-        <item name="android:textColor">@color/accent</item>
-        <item name="android:drawableTint" tools:ignore="NewApi">@color/accent</item>
+        <item name="android:textColor">?colorAccent</item>
+        <item name="android:drawableTint" tools:ignore="NewApi">?colorAccent</item>
     </style>
 
     <style name="Widget.Session.Button.Common.UnimportantFilled">

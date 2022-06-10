@@ -22,16 +22,8 @@ object AvatarPlaceholderGenerator {
 
     @JvmStatic
     fun generate(context: Context, pixelSize: Int, hashString: String, displayName: String?): BitmapDrawable {
-        val hash: Long
-        if (hashString.length >= 12 && hashString.matches(Regex("^[0-9A-Fa-f]+\$"))) {
-            hash = getSha512(hashString).substring(0 until 12).toLong(16)
-        } else {
-            hash = 0
-        }
-
         // Do not cache color array, it may be different depends on the current theme.
-        val colorArray = context.resources.getIntArray(R.array.profile_picture_placeholder_colors)
-        val colorPrimary = colorArray[(hash % colorArray.size).toInt()]
+        val colorPrimary = context.getColorFromAttr(R.attr.colorAccent)
 
         val labelText = when {
             !TextUtils.isEmpty(displayName) -> extractLabel(displayName!!.capitalize(Locale.ROOT))

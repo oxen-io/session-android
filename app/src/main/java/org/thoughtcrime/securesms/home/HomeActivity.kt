@@ -299,7 +299,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         binding.recyclerView.isVisible = !isShown
         binding.emptyStateContainer.isVisible = (binding.recyclerView.adapter as NewHomeAdapter).itemCount == 0 && binding.recyclerView.isVisible
         binding.seedReminderView.isVisible = !TextSecurePreferences.getHasViewedSeed(this) && !isShown
-        binding.gradientView.isVisible = !isShown
         binding.globalSearchRecycler.isVisible = isShown
         binding.newConversationButtonSet.isVisible = !isShown
     }

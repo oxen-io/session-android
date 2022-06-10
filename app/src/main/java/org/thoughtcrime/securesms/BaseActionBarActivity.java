@@ -21,6 +21,9 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    // New themes
+    setTheme(R.style.Ocean_Dark);
+
     ActionBar actionBar = getSupportActionBar();
     if (actionBar != null) {
       actionBar.setDisplayHomeAsUpEnabled(true);
