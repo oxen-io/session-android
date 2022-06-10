@@ -15,7 +15,6 @@ import java.util.List;
 public abstract class MmsMessageRecord extends MessageRecord {
   private final @NonNull  SlideDeck         slideDeck;
   private final @Nullable Quote             quote;
-  private final @Nullable ReactionRecord    reaction;
   private final @NonNull  List<Contact>     contacts     = new LinkedList<>();
   private final @NonNull  List<LinkPreview> linkPreviews = new LinkedList<>();
 
@@ -25,13 +24,12 @@ public abstract class MmsMessageRecord extends MessageRecord {
     long type, List<IdentityKeyMismatch> mismatches,
     List<NetworkFailure> networkFailures, long expiresIn,
     long expireStarted, @NonNull SlideDeck slideDeck, int readReceiptCount,
-    @Nullable Quote quote, @Nullable ReactionRecord reaction, @NonNull List<Contact> contacts,
+    @Nullable Quote quote, @NonNull List<Contact> contacts,
     @NonNull List<LinkPreview> linkPreviews, boolean unidentified, List<ReactionRecord> reactions)
   {
     super(id, body, conversationRecipient, individualRecipient, dateSent, dateReceived, threadId, deliveryStatus, deliveryReceiptCount, type, mismatches, networkFailures, expiresIn, expireStarted, readReceiptCount, unidentified, reactions);
     this.slideDeck = slideDeck;
     this.quote     = quote;
-    this.reaction  = reaction;
     this.contacts.addAll(contacts);
     this.linkPreviews.addAll(linkPreviews);
   }
@@ -62,9 +60,6 @@ public abstract class MmsMessageRecord extends MessageRecord {
   }
   public @Nullable Quote getQuote() {
     return quote;
-  }
-  public @Nullable ReactionRecord getReaction() {
-    return reaction;
   }
   public @NonNull List<Contact> getSharedContacts() {
     return contacts;

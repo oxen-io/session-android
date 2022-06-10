@@ -571,6 +571,11 @@ public class SmsDatabase extends MessagingDatabase {
     return threadDeleted;
   }
 
+  @Override
+  public MessageRecord getMessageRecord(long messageId) throws NoSuchMessageException {
+    return getMessage(messageId);
+  }
+
   private boolean isDuplicate(IncomingTextMessage message, long threadId) {
     SQLiteDatabase database = databaseHelper.getReadableDatabase();
     Cursor         cursor   = database.query(TABLE_NAME, null, DATE_SENT + " = ? AND " + ADDRESS + " = ? AND " + THREAD_ID + " = ?",

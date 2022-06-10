@@ -16,6 +16,8 @@ import org.session.libsignal.crypto.IdentityKey;
 
 import org.session.libsession.utilities.Address;
 import org.session.libsignal.utilities.JsonUtil;
+import org.thoughtcrime.securesms.database.model.MessageRecord;
+import org.thoughtcrime.securesms.util.SqlUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,6 +44,8 @@ public abstract class MessagingDatabase extends Database implements MmsSmsColumn
 
   public abstract boolean deleteMessage(long messageId);
 
+  public abstract MessageRecord getMessageRecord(long messageId) throws NoSuchMessageException;
+
   public void addMismatchedIdentity(long messageId, Address address, IdentityKey identityKey) {
     try {
       addToDocument(messageId, MISMATCHED_IDENTITIES,
@@ -59,6 +63,29 @@ public abstract class MessagingDatabase extends Database implements MmsSmsColumn
                          IdentityKeyMismatchList.class);
     } catch (IOException e) {
       Log.w(TAG, e);
+    }
+  }
+
+  void updateReactionsUnread(SQLiteDatabase db, long messageId, boolean hasReactions, boolean isRemoval) {
+    try {
+      boolean       isOutgoing = getMessageRecord(messageId).isOutgoing();
+      ContentValues values     = new ContentValues();
+
+      if (!hasReactions) {
+        values.put(REACTIONS_UNREAD, 0);
+      } else if (!isRemoval) {
+        values.put(REACTIONS_UNREAD, 1);
+      }
+
+      if (isOutgoing && hasReactions) {
+        values.put(NOTIFIED, 0);
+      }
+
+      if (values.size() > 0) {
+        db.update(getTableName(), values, ID_WHERE, SqlUtil.buildArgs(messageId));
+      }
+    } catch (NoSuchMessageException e) {
+      Log.w(TAG, "Failed to find message " + messageId);
     }
   }
 

@@ -233,14 +233,14 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage, proto: SignalS
     var reactionModel: ReactionModel? = null
     if (message.reaction != null && proto.dataMessage.hasReaction()) {
         val reaction = proto.dataMessage.reaction
-        val author = Address.fromSerialized(reaction.author)
+        val address = Address.fromSerialized(reaction.author)
         val react = reaction.action == SignalServiceProtos.DataMessage.Reaction.Action.REACT
         val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
-        val messageInfo = messageDataProvider.getMessageFor(reaction.id, author)
+        val messageInfo = messageDataProvider.getMessageFor(reaction.id, address)
         reactionModel = if (messageInfo != null) {
-            ReactionModel(reaction.id, author, messageDataProvider.getMessageBodyFor(reaction.id, reaction.author), react, false)
+            ReactionModel(reaction.id, reaction.author, messageDataProvider.getMessageBodyFor(reaction.id, reaction.author), react)
         } else {
-            ReactionModel(reaction.id, author, reaction.emoji, react = true, missing = true)
+            ReactionModel(reaction.id, reaction.author, reaction.emoji, react)
         }
     }
     // Parse quote if needed

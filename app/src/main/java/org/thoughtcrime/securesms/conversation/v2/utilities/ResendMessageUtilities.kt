@@ -4,7 +4,6 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.visible.LinkPreview
 import org.session.libsession.messaging.messages.visible.OpenGroupInvitation
 import org.session.libsession.messaging.messages.visible.Quote
-import org.session.libsession.messaging.messages.visible.Reaction
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.utilities.UpdateMessageData
@@ -45,9 +44,6 @@ object ResendMessageUtilities {
             }
             if (mmsMessageRecord.quote != null) {
                 message.quote = Quote.from(mmsMessageRecord.quote!!.quoteModel)
-            }
-            if (mmsMessageRecord.reaction != null) {
-                message.reaction = Reaction.from(mmsMessageRecord.reaction!!.reactionModel)
             }
             message.addSignalAttachments(mmsMessageRecord.slideDeck.asAttachments())
         }

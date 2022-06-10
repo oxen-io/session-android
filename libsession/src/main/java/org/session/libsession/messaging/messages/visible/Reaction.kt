@@ -25,7 +25,7 @@ class Reaction() {
 
         fun from(signalReaction: SignalReaction?): Reaction? {
             if (signalReaction == null) { return null }
-            return Reaction(signalReaction.id, signalReaction.author.serialize(), signalReaction.emoji, signalReaction.react)
+            return Reaction(signalReaction.id, signalReaction.author, signalReaction.emoji, signalReaction.react)
         }
     }
 

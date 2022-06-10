@@ -110,11 +110,14 @@ import org.thoughtcrime.securesms.database.LokiMessageDatabase
 import org.thoughtcrime.securesms.database.LokiThreadDatabase
 import org.thoughtcrime.securesms.database.MmsDatabase
 import org.thoughtcrime.securesms.database.MmsSmsDatabase
+import org.thoughtcrime.securesms.database.ReactionDatabase
 import org.thoughtcrime.securesms.database.SessionContactDatabase
 import org.thoughtcrime.securesms.database.SmsDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
+import org.thoughtcrime.securesms.database.model.MessageId
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
+import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.giph.ui.GiphyActivity
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewRepository
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewUtil
@@ -172,6 +175,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     @Inject lateinit var smsDb: SmsDatabase
     @Inject lateinit var mmsDb: MmsDatabase
     @Inject lateinit var lokiMessageDb: LokiMessageDatabase
+    @Inject lateinit var reactionDb: ReactionDatabase
     @Inject lateinit var viewModelFactory: ConversationViewModel.AssistedFactory
 
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels
@@ -918,11 +922,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     override fun onReactionSelected(messageRecord: MessageRecord, emoji: String) {
         reactionDelegate.hide()
         val oldRecord = Stream.of(messageRecord.reactions)
-            .filter { record -> record.author.serialize() == textSecurePreferences.getLocalNumber() }
+            .filter { record -> record.author == textSecurePreferences.getLocalNumber() }
             .findFirst()
             .orElse(null)
         if (oldRecord != null && oldRecord.emoji == emoji) {
-            mmsDb.deleteReactionFromMessage(messageRecord)
+            //TODO: deleteReactionFromMessage(messageRecord)
             MessageSender.sendReactionRemoval(messageRecord.id, oldRecord.emoji)
         } else {
             sendEmojiReaction(messageRecord, emoji)
@@ -932,26 +936,28 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private fun sendEmojiReaction(messageRecord: MessageRecord, emoji: String) {
         // Create the message
         val message = VisibleMessage()
-        message.sentTimestamp = System.currentTimeMillis()
+        val timestamp = System.currentTimeMillis()
+        message.sentTimestamp = timestamp
         val sender = if (messageRecord.isOutgoing) fromSerialized(textSecurePreferences.getLocalNumber()!!) else messageRecord.individualRecipient.address
-        val reaction = ReactionModel(messageRecord.dateSent, sender, emoji, react = true, missing = false)
+        val reaction = ReactionModel(messageRecord.dateSent, sender.serialize(), emoji, true)
         val outgoingTextMessage = OutgoingMediaMessage.from(message, viewModel.recipient, emptyList(), null, null, reaction)
         // Put the message in the database
-        message.id = mmsDb.insertMessageOutbox(outgoingTextMessage, viewModel.threadId, false) { }
+        reactionDb.addReaction(MessageId(messageRecord.id, messageRecord.isMms), ReactionRecord(messageRecord.id, sender.serialize(), emoji, timestamp, timestamp))
+        //message.id = mmsDb.insertMessageOutbox(outgoingTextMessage, viewModel.threadId, false) { }
         // Send it
-        MessageSender.sendNewReaction(message, viewModel.recipient.address)
+        //TODO: MessageSender.sendNewReaction(message, viewModel.recipient.address)
     }
 
     override fun onCustomReactionSelected(messageRecord: MessageRecord, hasAddedCustomEmoji: Boolean) {
         val oldRecord = Stream.of(messageRecord.reactions)
-            .filter { record -> record.author.serialize() == textSecurePreferences.getLocalNumber() }
+            .filter { record -> record.author == textSecurePreferences.getLocalNumber() }
             .findFirst()
             .orElse(null)
 
         if (oldRecord != null && hasAddedCustomEmoji) {
             reactionDelegate.hide()
             SignalExecutors.BOUNDED.execute {
-                mmsDb.deleteReactionFromMessage(messageRecord)
+                reactionDb.deleteReaction(MessageId(messageRecord.id, messageRecord.isMms), oldRecord.author)
                 MessageSender.sendReactionRemoval(messageRecord.id, oldRecord.emoji)
             }
         } else {

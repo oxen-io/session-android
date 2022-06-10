@@ -384,7 +384,7 @@ object MessageSender {
     }
 
     @JvmStatic
-    fun sendNewReaction(messageId: VisibleMessage, emoji: Address) {
+    fun sendNewReaction(messageId: VisibleMessage, address: Address) {
 
     }
 

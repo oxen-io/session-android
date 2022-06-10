@@ -23,6 +23,8 @@ import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.session.libsession.utilities.Debouncer;
 import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
@@ -85,6 +87,15 @@ public abstract class Database {
 
   public void reset(SQLCipherOpenHelper databaseHelper) {
     this.databaseHelper = databaseHelper;
+  }
+
+
+  protected SQLiteDatabase getReadableDatabase() {
+    return databaseHelper.getReadableDatabase();
+  }
+
+  protected SQLiteDatabase getWritableDatabase() {
+    return databaseHelper.getWritableDatabase();
   }
 
 }

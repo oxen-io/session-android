@@ -7,12 +7,14 @@ import androidx.annotation.NonNull;
 import com.annimon.stream.Stream;
 
 import org.session.libsession.messaging.sending_receiving.MessageSender;
+import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.concurrent.SignalExecutors;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.components.emoji.RecentEmojiPageModel;
 import org.thoughtcrime.securesms.database.model.MessageId;
 import org.thoughtcrime.securesms.database.model.ReactionRecord;
+import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import org.thoughtcrime.securesms.emoji.EmojiCategory;
 import org.thoughtcrime.securesms.emoji.EmojiSource;
 import org.thoughtcrime.securesms.reactions.ReactionDetails;
@@ -65,10 +67,10 @@ final class ReactWithAnyEmojiRepository {
 
   void addEmojiToMessage(@NonNull String emoji, @NonNull MessageId messageId) {
     SignalExecutors.BOUNDED.execute(() -> {
-      ReactionRecord  oldRecord = null/*TODO:Stream.of(SignalDatabase.reactions().getReactions(messageId))
-                                        .filter(record -> record.getAuthor().equals(Recipient.self().getId()))
+      ReactionRecord  oldRecord = Stream.of(DatabaseComponent.get(context).reactionDatabase().getReactions(messageId))
+                                        .filter(record -> record.getAuthor().equals(TextSecurePreferences.getLocalNumber(context)))
                                         .findFirst()
-                                        .orElse(null)*/;
+                                        .orElse(null);
 
       if (oldRecord != null && oldRecord.getEmoji().equals(emoji)) {
         //TODO: remove locally
