@@ -15,6 +15,7 @@ object HTTP {
 
     private val seedNodeConnection by lazy {
         OkHttpClient().newBuilder()
+            .callTimeout(timeout, TimeUnit.SECONDS)
             .connectTimeout(timeout, TimeUnit.SECONDS)
             .readTimeout(timeout, TimeUnit.SECONDS)
             .writeTimeout(timeout, TimeUnit.SECONDS)
@@ -34,6 +35,7 @@ object HTTP {
         OkHttpClient().newBuilder()
             .sslSocketFactory(sslContext.socketFactory, trustManager)
             .hostnameVerifier { _, _ -> true }
+            .callTimeout(timeout, TimeUnit.SECONDS)
             .connectTimeout(timeout, TimeUnit.SECONDS)
             .readTimeout(timeout, TimeUnit.SECONDS)
             .writeTimeout(timeout, TimeUnit.SECONDS)
@@ -53,13 +55,14 @@ object HTTP {
         return OkHttpClient().newBuilder()
             .sslSocketFactory(sslContext.socketFactory, trustManager)
             .hostnameVerifier { _, _ -> true }
+            .callTimeout(timeout, TimeUnit.SECONDS)
             .connectTimeout(timeout, TimeUnit.SECONDS)
             .readTimeout(timeout, TimeUnit.SECONDS)
             .writeTimeout(timeout, TimeUnit.SECONDS)
             .build()
     }
 
-    private const val timeout: Long = 10
+    private const val timeout: Long = 120
 
     class HTTPRequestFailedException(val statusCode: Int, val json: Map<*, *>?)
         : kotlin.Exception("HTTP request failed with status code $statusCode.")

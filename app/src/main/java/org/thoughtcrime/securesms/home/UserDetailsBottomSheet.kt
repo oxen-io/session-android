@@ -40,7 +40,7 @@ class UserDetailsBottomSheet : BottomSheetDialogFragment() {
         const val ARGUMENT_THREAD_ID = "threadId"
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentUserDetailsBottomSheetBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -52,10 +52,10 @@ class UserDetailsBottomSheet : BottomSheetDialogFragment() {
         val recipient = Recipient.from(requireContext(), Address.fromSerialized(publicKey), false)
         val threadRecipient = threadDb.getRecipientForThreadId(threadID) ?: return dismiss()
         with(binding) {
-            profilePictureView.publicKey = publicKey
-            profilePictureView.glide = GlideApp.with(this@UserDetailsBottomSheet)
-            profilePictureView.isLarge = true
-            profilePictureView.update(recipient)
+            profilePictureView.root.publicKey = publicKey
+            profilePictureView.root.glide = GlideApp.with(this@UserDetailsBottomSheet)
+            profilePictureView.root.isLarge = true
+            profilePictureView.root.update(recipient)
             nameTextViewContainer.visibility = View.VISIBLE
             nameTextViewContainer.setOnClickListener {
                 nameTextViewContainer.visibility = View.INVISIBLE
