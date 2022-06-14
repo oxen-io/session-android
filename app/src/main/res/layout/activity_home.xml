@@ -61,9 +61,9 @@
                     android:layout_centerVertical="true">
 
                     <ImageView
+                        android:layout_centerInParent="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
                         android:src="@drawable/ic_baseline_search_24"
                         app:tint="@color/text" />
 
@@ -74,7 +74,7 @@
             <RelativeLayout
                 android:visibility="gone"
                 android:id="@+id/search_toolbar"
-                android:layout_marginHorizontal="@dimen/medium_spacing"
+                android:layout_marginStart="@dimen/medium_spacing"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize">
                 <org.thoughtcrime.securesms.home.search.GlobalSearchInputLayout

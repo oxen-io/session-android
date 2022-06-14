@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/medium_spacing"
     android:orientation="vertical">
 
     <View
@@ -13,8 +14,6 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/very_large_spacing"
-        android:layout_marginRight="@dimen/very_large_spacing"
         android:textSize="@dimen/very_large_font_size"
         android:textStyle="bold"
         android:text="@string/activity_landing_title_2" />
@@ -35,8 +34,6 @@
         android:id="@+id/registerButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/medium_button_height"
-        android:layout_marginLeft="@dimen/massive_spacing"
-        android:layout_marginRight="@dimen/massive_spacing"
         android:text="@string/activity_landing_register_button_title" />
 
     <Button
@@ -44,21 +41,21 @@
         android:id="@+id/restoreButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/medium_button_height"
-        android:layout_marginLeft="@dimen/massive_spacing"
         android:layout_marginTop="@dimen/medium_spacing"
-        android:layout_marginRight="@dimen/massive_spacing"
         android:text="@string/activity_landing_restore_button_title" />
 
     <Button
         android:id="@+id/linkButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/onboarding_button_bottom_offset"
-        android:layout_marginLeft="@dimen/massive_spacing"
-        android:layout_marginRight="@dimen/massive_spacing"
         android:gravity="center"
         android:background="@color/transparent"
+        android:layout_marginTop="@dimen/medium_spacing"
         android:textAllCaps="false"
         android:textSize="@dimen/medium_font_size"
         android:text="@string/activity_link_device_link_device" />
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 </LinearLayout>

@@ -11,16 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+    <include layout="@layout/fill_vertical" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/very_large_spacing"
-        android:layout_marginRight="@dimen/very_large_spacing"
+        android:layout_marginHorizontal="@dimen/medium_spacing"
         android:textSize="19sp"
         android:textStyle="bold"
         android:textColor="@color/text"
@@ -29,9 +25,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/very_large_spacing"
+        android:layout_marginHorizontal="@dimen/medium_spacing"
         android:layout_marginTop="4dp"
-        android:layout_marginRight="@dimen/very_large_spacing"
         android:textSize="14sp"
         android:textColor="@color/text"
         android:text="@string/activity_seed_explanation" />
@@ -41,9 +36,8 @@
         android:id="@+id/seedTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/very_large_spacing"
+        android:layout_marginHorizontal="@dimen/medium_spacing"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="@dimen/very_large_spacing"
         android:gravity="center"
         android:textSize="14sp"
         android:textAlignment="center"
@@ -61,17 +55,16 @@
         android:visibility="gone"
         android:text="@string/activity_seed_reveal_button_title" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+    <include layout="@layout/fill_vertical" />
 
     <Button
         style="@style/Widget.Session.Button.Common.ProminentOutline"
         android:id="@+id/copyButton"
-        android:layout_width="196dp"
+        android:layout_marginHorizontal="@dimen/medium_spacing"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/medium_button_height"
         android:layout_marginBottom="@dimen/medium_spacing"
         android:text="@string/copy" />
 
+    <include layout="@layout/fill_vertical" />
 </LinearLayout>

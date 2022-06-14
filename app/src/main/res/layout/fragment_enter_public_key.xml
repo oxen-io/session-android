@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
+    android:padding="@dimen/medium_spacing"
     android:orientation="vertical">
 
     <View
@@ -19,9 +20,6 @@
         android:id="@+id/publicKeyEditText"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:layout_marginLeft="@dimen/large_spacing"
-        android:layout_marginTop="@dimen/large_spacing"
-        android:layout_marginRight="@dimen/large_spacing"
         android:paddingTop="0dp"
         android:paddingBottom="0dp"
         android:gravity="center_vertical"
@@ -33,9 +31,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/large_spacing"
         android:layout_marginTop="@dimen/medium_spacing"
-        android:layout_marginRight="@dimen/large_spacing"
         android:textSize="@dimen/very_small_font_size"
         android:textColor="@color/text"
         android:alpha="0.6"
@@ -52,17 +48,13 @@
             android:id="@+id/separatorView"
             android:layout_width="match_parent"
             android:layout_height="32dp"
-            android:layout_marginLeft="@dimen/large_spacing"
-            android:layout_marginTop="@dimen/large_spacing"
-            android:layout_marginRight="@dimen/large_spacing" />
+            android:layout_marginTop="@dimen/large_spacing"/>
 
         <TextView
             android:id="@+id/publicKeyTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/large_spacing"
             android:layout_marginTop="@dimen/large_spacing"
-            android:layout_marginRight="@dimen/large_spacing"
             android:textSize="@dimen/medium_font_size"
             android:textColor="@color/text"
             android:fontFamily="@font/space_mono_regular"
@@ -72,9 +64,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/large_spacing"
             android:layout_marginTop="@dimen/large_spacing"
-            android:layout_marginRight="@dimen/large_spacing"
             android:orientation="horizontal">
 
             <Button
@@ -107,9 +97,8 @@
     <Button
         style="@style/Widget.Session.Button.Common.ProminentOutline"
         android:id="@+id/createPrivateChatButton"
-        android:layout_width="196dp"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/medium_button_height"
-        android:layout_marginBottom="@dimen/medium_spacing"
         android:text="@string/next" />
 
 </LinearLayout>

@@ -7,8 +7,8 @@
     android:layout_height="wrap_content">
     <LinearLayout
         android:id="@+id/search_input_parent"
-        android:paddingHorizontal="8dp"
-        android:paddingVertical="4dp"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="12dp"
         android:background="@drawable/search_background"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -19,8 +19,8 @@
         android:orientation="horizontal">
         <ImageView
             android:layout_gravity="center_vertical"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             android:src="@drawable/ic_baseline_search_24"
             android:scaleType="centerInside"
             app:tint="?searchIconColor"
@@ -40,12 +40,12 @@
             android:id="@+id/search_clear"
             android:src="@drawable/ic_close_white_18dp"
             android:layout_gravity="center_vertical"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             app:tint="?searchIconColor" />
     </LinearLayout>
     <TextView
-        android:layout_marginStart="@dimen/small_spacing"
+        android:padding="@dimen/small_spacing"
         android:layout_centerVertical="true"
         android:text="@string/cancel"
         app:layout_constraintStart_toEndOf="@+id/search_input_parent"

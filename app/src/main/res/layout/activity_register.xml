@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/medium_spacing"
     android:orientation="vertical">
 
     <View
@@ -14,8 +15,6 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/very_large_spacing"
-        android:layout_marginRight="@dimen/very_large_spacing"
         android:textSize="@dimen/large_font_size"
         android:textStyle="bold"
         android:textColor="@color/text"
@@ -24,9 +23,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/very_large_spacing"
         android:layout_marginTop="4dp"
-        android:layout_marginRight="@dimen/very_large_spacing"
         android:textSize="@dimen/small_font_size"
         android:textColor="@color/text"
         android:text="@string/activity_register_explanation" />
@@ -37,9 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:layout_marginLeft="@dimen/very_large_spacing"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="@dimen/very_large_spacing"
         tools:text="05987d601943c267879be41830888066c6a024cbdc9a548d06813924bf3372ea78" />
 
     <View
@@ -52,8 +47,6 @@
         android:id="@+id/registerButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/medium_button_height"
-        android:layout_marginLeft="@dimen/massive_spacing"
-        android:layout_marginRight="@dimen/massive_spacing"
         android:text="@string/continue_2" />
 
     <Button
@@ -61,17 +54,14 @@
         android:id="@+id/copyButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/medium_button_height"
-        android:layout_marginLeft="@dimen/massive_spacing"
         android:layout_marginTop="@dimen/small_spacing"
-        android:layout_marginRight="@dimen/massive_spacing"
         android:text="@string/copy" />
 
     <TextView
         android:id="@+id/termsTextView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/onboarding_button_bottom_offset"
-        android:layout_marginLeft="@dimen/massive_spacing"
-        android:layout_marginRight="@dimen/massive_spacing"
+        android:layout_marginTop="@dimen/small_spacing"
         android:gravity="center"
         android:textColor="?android:textColorTertiary"
         android:textColorLink="?colorAccent"

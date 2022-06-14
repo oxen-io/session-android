@@ -45,7 +45,7 @@ object AvatarPlaceholderGenerator {
         // Draw background/frame
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
         paint.color = colorPrimary
-        canvas.drawCircle(pixelSize.toFloat() / 2, pixelSize.toFloat() / 2, pixelSize.toFloat() / 2, paint)
+        canvas.drawRoundRect(0f,0f,pixelSize.toFloat(), pixelSize.toFloat(),15f, 15f, paint)
 
         // Draw text
         val textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)

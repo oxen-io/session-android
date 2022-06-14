@@ -11,11 +11,11 @@
 
     <!-- Element Sizes -->
     <dimen name="small_button_height">34dp</dimen>
-    <dimen name="medium_button_height">38dp</dimen>
+    <dimen name="medium_button_height">45dp</dimen>
     <dimen name="large_button_height">54dp</dimen>
     <dimen name="medium_button_corner_radius">22dp</dimen>
-    <dimen name="accent_line_thickness">4dp</dimen>
-    <dimen name="very_small_profile_picture_size">26dp</dimen>
+    <dimen name="accent_line_thickness">2dp</dimen>
+    <dimen name="very_small_profile_picture_size">40dp</dimen>
     <dimen name="small_profile_picture_size">36dp</dimen>
     <dimen name="medium_profile_picture_size">46dp</dimen>
     <dimen name="large_profile_picture_size">76dp</dimen>
@@ -71,8 +71,8 @@
     <dimen name="album_5_cell_size_big">104dp</dimen>
     <dimen name="album_5_cell_size_small">69dp</dimen>
 
-    <dimen name="message_corner_radius">18dp</dimen>
-    <dimen name="message_corner_collapse_radius">4dp</dimen>
+    <dimen name="message_corner_radius">5dp</dimen>
+    <dimen name="message_corner_collapse_radius">1dp</dimen>
     <dimen name="message_bubble_corner_radius">2dp</dimen>
     <dimen name="message_bubble_shadow_distance">1.5dp</dimen>
     <dimen name="message_bubble_horizontal_padding">@dimen/medium_spacing</dimen>

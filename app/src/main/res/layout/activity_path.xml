@@ -5,18 +5,15 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:padding="@dimen/medium_spacing"
     android:gravity="center">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/large_spacing"
-        android:layout_marginTop="@dimen/large_spacing"
-        android:layout_marginRight="@dimen/large_spacing"
         android:textSize="@dimen/small_font_size"
         android:textColor="@color/text"
         android:alpha="0.6"
-        android:textAlignment="center"
         android:text="@string/activity_path_explanation" />
 
     <RelativeLayout
@@ -46,9 +43,8 @@
     <Button
         style="@style/Widget.Session.Button.Common.ProminentOutline"
         android:id="@+id/learnMoreButton"
-        android:layout_width="196dp"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/medium_button_height"
-        android:layout_marginBottom="@dimen/medium_spacing"
         android:text="@string/activity_path_learn_more_button_title" />
 
 </LinearLayout>

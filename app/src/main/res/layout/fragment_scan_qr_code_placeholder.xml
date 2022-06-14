@@ -2,32 +2,29 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="@dimen/medium_spacing">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_centerInParent="true"
         android:gravity="center_horizontal"
-        android:layout_centerInParent="true">
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/very_large_spacing"
-            android:layout_marginRight="@dimen/very_large_spacing"
-            android:textSize="@dimen/small_font_size"
+            android:text="@string/fragment_scan_qr_code_camera_access_explanation"
             android:textAlignment="center"
-            android:text="@string/fragment_scan_qr_code_camera_access_explanation" />
+            android:textSize="@dimen/small_font_size" />
 
         <Button
-            style="@style/Widget.Session.Button.Common.ProminentOutline"
             android:id="@+id/grantCameraAccessButton"
-            android:layout_width="wrap_content"
+            style="@style/Widget.Session.Button.Common.ProminentOutline"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/medium_button_height"
             android:layout_marginTop="@dimen/medium_spacing"
-            android:paddingLeft="@dimen/medium_spacing"
-            android:paddingRight="@dimen/medium_spacing"
             android:text="@string/fragment_scan_qr_code_grant_camera_access_button_title" />
 
     </LinearLayout>

@@ -3,6 +3,7 @@
     <color name="accent">#00F782</color>
     <color name="accent_alpha50">#8000F782</color>
     <color name="text">#FFFFFF</color>
+    <color name="unimportant_text">#888888</color>
     <color name="destructive">#FF453A</color>
     <color name="unimportant">#D8D8D8</color>
     <color name="profile_picture_background">#353535</color>

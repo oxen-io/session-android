@@ -6,7 +6,11 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.annotation.DimenRes
+import com.bumptech.glide.load.Transformation
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewProfilePictureBinding
 import org.session.libsession.avatars.ContactColors
@@ -106,17 +110,22 @@ class ProfilePictureView @JvmOverloads constructor(
                 glide.clear(imageView)
                 glide.load(signalProfilePicture)
                     .placeholder(unknownRecipientDrawable)
-                    .centerCrop()
+                    .apply(RequestOptions()
+                            .transforms(
+                                    CenterCrop(), RoundedCorners(15)
+                            ))
                     .error(unknownRecipientDrawable)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .circleCrop()
                     .into(imageView)
             } else {
                 glide.clear(imageView)
                 glide.load(placeholder)
                     .placeholder(unknownRecipientDrawable)
-                    .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.NONE).circleCrop().into(imageView)
+                        .apply(RequestOptions()
+                                .transforms(
+                                        CenterCrop(), RoundedCorners(15)
+                                ))
+                    .diskCacheStrategy(DiskCacheStrategy.NONE).into(imageView)
             }
             profilePicturesCache[publicKey] = recipient.profileAvatar
         } else {

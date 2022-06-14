@@ -2,7 +2,8 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="@dimen/medium_spacing">
 
     <LinearLayout
         android:id="@+id/contentView"
@@ -13,9 +14,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/very_large_spacing"
             android:layout_marginTop="@dimen/very_large_spacing"
-            android:layout_marginRight="@dimen/very_large_spacing"
             android:textSize="@dimen/large_font_size"
             android:textStyle="bold"
             android:textColor="@color/text"
@@ -24,9 +23,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/very_large_spacing"
             android:layout_marginTop="@dimen/medium_spacing"
-            android:layout_marginRight="@dimen/very_large_spacing"
             android:textSize="@dimen/medium_font_size"
             android:textColor="@color/text"
             android:text="@string/activity_pn_mode_explanation" />
@@ -35,9 +32,7 @@
             android:id="@+id/fcmOptionView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/very_large_spacing"
             android:layout_marginTop="@dimen/medium_spacing"
-            android:layout_marginRight="@dimen/very_large_spacing"
             android:padding="12dp"
             android:orientation="vertical"
             android:background="@drawable/pn_option_background">
@@ -73,9 +68,7 @@
             android:id="@+id/backgroundPollingOptionView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/very_large_spacing"
             android:layout_marginTop="@dimen/small_spacing"
-            android:layout_marginRight="@dimen/very_large_spacing"
             android:padding="12dp"
             android:orientation="vertical"
             android:background="@drawable/pn_option_background">
@@ -103,9 +96,7 @@
             android:id="@+id/registerButton"
             android:layout_width="match_parent"
             android:layout_height="@dimen/medium_button_height"
-            android:layout_marginLeft="@dimen/massive_spacing"
             android:layout_marginTop="20dp"
-            android:layout_marginRight="@dimen/massive_spacing"
             android:layout_marginBottom="@dimen/onboarding_button_bottom_offset"
             android:text="@string/continue_2" />
 

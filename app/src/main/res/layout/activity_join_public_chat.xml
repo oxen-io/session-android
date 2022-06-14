@@ -8,11 +8,11 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <com.google.android.material.tabs.TabLayout
-            style="@style/Widget.Session.TabLayout"
             android:id="@+id/tabLayout"
+            style="@style/Widget.Session.TabLayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/tab_bar_height" />
 

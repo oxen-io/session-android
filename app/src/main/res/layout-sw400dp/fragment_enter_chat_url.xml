@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
+    android:padding="@dimen/medium_spacing"
     android:orientation="vertical">
 
     <View
@@ -19,9 +20,7 @@
         android:id="@+id/chatURLEditText"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:layout_marginLeft="@dimen/large_spacing"
         android:layout_marginTop="@dimen/large_spacing"
-        android:layout_marginRight="@dimen/large_spacing"
         android:inputType="textWebEmailAddress|textMultiLine"
         android:paddingTop="0dp"
         android:paddingBottom="0dp"
@@ -58,7 +57,6 @@
             android:layout_marginVertical="16dp"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:paddingHorizontal="24dp"
             android:text="@string/activity_join_public_chat_join_rooms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -66,7 +64,6 @@
         <GridLayout
             android:id="@+id/defaultRoomsGridLayout"
             android:columnCount="2"
-            android:paddingHorizontal="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -80,9 +77,8 @@
     <Button
         style="@style/Widget.Session.Button.Common.ProminentOutline"
         android:id="@+id/joinPublicChatButton"
-        android:layout_width="196dp"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/medium_button_height"
-        android:layout_marginBottom="@dimen/medium_spacing"
         android:text="@string/next" />
 
 </LinearLayout>

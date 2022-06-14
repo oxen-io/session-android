@@ -5,15 +5,13 @@
     android:orientation="vertical"
     android:background="@color/transparent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="@dimen/medium_spacing">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingStart="@dimen/medium_spacing"
-        android:paddingTop="@dimen/very_large_spacing"
-        android:paddingEnd="@dimen/medium_spacing">
+        android:orientation="vertical">
 
         <TableLayout
             android:id="@+id/metadata_container"
@@ -24,8 +22,7 @@
             <TableRow
                 android:id="@+id/sent_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="@dimen/small_spacing">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -47,7 +44,6 @@
                 android:id="@+id/expires_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="@dimen/small_spacing"
                 android:layout_marginTop="@dimen/medium_spacing"
                 android:visibility="gone"
                 tools:visibility="visible">
@@ -71,7 +67,6 @@
             <TableRow
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="@dimen/small_spacing"
                 android:layout_marginTop="@dimen/medium_spacing">
 
                 <TextView
@@ -96,12 +91,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/very_large_spacing"
+            android:layout_marginTop="@dimen/large_spacing"
             android:gravity="start">
 
             <Button
                 android:id="@+id/resend_button"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/medium_button_height"
                 style="@style/Widget.Session.Button.Common.ProminentOutline"
                 android:text="@string/message_recipients_list_item__resend" />

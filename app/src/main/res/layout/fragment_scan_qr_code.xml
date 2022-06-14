@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:padding="@dimen/very_large_spacing"
+            android:padding="@dimen/large_spacing"
             android:gravity="center"
             android:text="@string/activity_create_private_chat_scan_qr_code_explanation"
             android:background="?android:windowBackground"

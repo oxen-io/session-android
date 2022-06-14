@@ -124,11 +124,11 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         val isLightMode = UiModeUtilities.isDayUiMode(context)
         return when {
             mode == Mode.Regular && isLightMode || mode == Mode.Draft && isLightMode -> {
-                ResourcesCompat.getColor(resources, R.color.black, context.theme)
+                ResourcesCompat.getColor(resources, R.color.unimportant_text, context.theme)
             }
             mode == Mode.Regular && !isLightMode -> {
                 if (isOutgoingMessage) {
-                    ResourcesCompat.getColor(resources, R.color.black, context.theme)
+                    ResourcesCompat.getColor(resources, R.color.unimportant_text, context.theme)
                 } else {
                     ResourcesCompat.getColor(resources, R.color.accent, context.theme)
                 }
@@ -140,12 +140,12 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     }
 
     @ColorInt private fun getTextColor(isOutgoingMessage: Boolean): Int {
-        if (mode == Mode.Draft) { return ResourcesCompat.getColor(resources, R.color.text, context.theme) }
+        if (mode == Mode.Draft) { return ResourcesCompat.getColor(resources, R.color.unimportant_text, context.theme) }
         val isLightMode = UiModeUtilities.isDayUiMode(context)
         return if (!isOutgoingMessage && !isLightMode) {
             ResourcesCompat.getColor(resources, R.color.white, context.theme)
         } else  {
-            ResourcesCompat.getColor(resources, R.color.black, context.theme)
+            ResourcesCompat.getColor(resources, R.color.unimportant_text, context.theme)
         }
     }
 

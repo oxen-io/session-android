@@ -14,9 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:gravity="center"
-        android:textColor="@color/text"
+        android:textColor="@color/unimportant_text"
         android:textSize="@dimen/very_small_font_size"
-        android:textStyle="bold"
         tools:text="@tools:sample/date/hhmm" />
 
     <ImageView
@@ -25,7 +24,7 @@
         android:layout_height="12dp"
         android:layout_marginBottom="@dimen/small_spacing"
         android:visibility="gone"
-        app:tint="@color/text"
+        app:tint="@color/unimportant_text"
         tools:src="@drawable/ic_timer"
         tools:visibility="visible"/>
 
@@ -34,9 +33,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="@color/text"
+        android:textColor="@color/unimportant_text"
         android:textSize="@dimen/very_small_font_size"
-        android:textStyle="bold"
         tools:text="@string/MessageRecord_you_disabled_disappearing_messages" />
 
 </LinearLayout>

@@ -16,63 +16,61 @@
           android:visibility="invisible"/>
 
     <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/shim">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/shim">
 
     </FrameLayout>
 
     <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_alignParentTop="true">
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="64dp"
-            android:src="@drawable/ic_launcher_foreground"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:src="@drawable/ic_launcher_foreground" />
 
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:layout_centerInParent="true"
-            android:padding="20dp">
+        android:layout_margin="@dimen/medium_spacing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
         <TextView
             style="@style/Signal.Text.Body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
             android:text="@string/activity_prompt_passphrase_session_locked"
-            android:textStyle="bold"
-            android:textSize="@dimen/large_font_size"
             android:textAlignment="center"
-            android:layout_marginBottom="32dp" />
+            android:textSize="@dimen/large_font_size"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/fingerprint_auth_container"
-            android:src="@drawable/ic_fingerprint_white_48dp"
-            android:background="@drawable/circle_tintable"
-            android:backgroundTint="?colorAccent"
-            android:padding="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="32dp"
-            tools:visibility="visible"/>
+            android:background="@drawable/circle_tintable"
+            android:backgroundTint="?colorAccent"
+            android:padding="20dp"
+            android:src="@drawable/ic_fingerprint_white_48dp"
+            tools:visibility="visible" />
 
         <Button
-            style="@style/Widget.Session.Button.Common.ProminentOutline"
             android:id="@+id/lock_screen_auth_container"
-            android:layout_width="196dp"
+            style="@style/Widget.Session.Button.Common.ProminentOutline"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/medium_button_height"
-            android:text="@string/activity_prompt_passphrase_tap_to_unlock"/>
+            android:text="@string/activity_prompt_passphrase_tap_to_unlock" />
     </LinearLayout>
 </RelativeLayout>

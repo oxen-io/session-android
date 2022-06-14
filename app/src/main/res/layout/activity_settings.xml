@@ -30,21 +30,20 @@
                 android:id="@+id/ctnGroupNameSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/large_spacing"
-                android:layout_marginTop="@dimen/small_spacing"
-                android:layout_marginRight="@dimen/large_spacing">
+                android:layout_marginHorizontal="@dimen/medium_spacing"
+                android:layout_marginTop="@dimen/small_spacing">
 
                 <EditText
-                    style="@style/SessionEditText"
                     android:id="@+id/displayNameEditText"
+                    style="@style/SessionEditText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:textAlignment="center"
+                    android:hint="@string/activity_settings_display_name_edit_text_hint"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
-                    android:visibility="invisible"
-                    android:hint="@string/activity_settings_display_name_edit_text_hint" />
+                    android:textAlignment="center"
+                    android:visibility="invisible" />
 
                 <TextView
                     android:id="@+id/btnGroupNameDisplay"
@@ -61,17 +60,15 @@
                 android:id="@+id/separatorView"
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
-                android:layout_marginLeft="@dimen/large_spacing"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="@dimen/large_spacing"/>
+                android:layout_marginHorizontal="@dimen/medium_spacing"
+                android:layout_marginTop="20dp"/>
 
             <TextView
                 android:id="@+id/publicKeyTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/large_spacing"
+                android:layout_marginHorizontal="@dimen/medium_spacing"
                 android:layout_marginTop="@dimen/large_spacing"
-                android:layout_marginRight="@dimen/large_spacing"
                 android:textSize="@dimen/large_font_size"
                 android:textColor="@color/text"
                 android:fontFamily="@font/space_mono_regular"
@@ -81,9 +78,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/large_spacing"
+                android:layout_marginHorizontal="@dimen/medium_spacing"
                 android:layout_marginTop="@dimen/large_spacing"
-                android:layout_marginRight="@dimen/large_spacing"
                 android:orientation="horizontal">
 
                 <Button
