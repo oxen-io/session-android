@@ -157,7 +157,7 @@
         <item name="android:background">@drawable/session_id_text_view_background</item>
         <item name="android:padding">@dimen/medium_spacing</item>
         <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/text</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:fontFamily">@font/space_mono_regular</item>
         <item name="android:textAlignment">viewStart</item>
     </style>
@@ -182,7 +182,7 @@
         <item name="android:paddingRight">@dimen/medium_spacing</item>
         <item name="android:paddingBottom">@dimen/medium_spacing</item>
         <item name="android:textSize">@dimen/small_font_size</item>
-        <item name="android:textColor">@color/text</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textCursorDrawable">@drawable/session_edit_text_cursor</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:maxLines">1</item>
