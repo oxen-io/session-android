@@ -18,8 +18,10 @@ package org.thoughtcrime.securesms.database.model;
 
 import android.content.Context;
 import android.text.SpannableString;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview;
 import org.session.libsession.utilities.Contact;
 import org.session.libsession.utilities.IdentityKeyMismatch;
@@ -29,8 +31,8 @@ import org.thoughtcrime.securesms.database.MmsDatabase;
 import org.thoughtcrime.securesms.database.SmsDatabase.Status;
 import org.thoughtcrime.securesms.mms.SlideDeck;
 
-import java.util.Collections;
 import java.util.List;
+
 import network.loki.messenger.R;
 
 /**
@@ -54,12 +56,13 @@ public class MediaMmsMessageRecord extends MmsMessageRecord {
                                List<NetworkFailure> failures, int subscriptionId,
                                long expiresIn, long expireStarted, int readReceiptCount,
                                @Nullable Quote quote, @NonNull List<Contact> contacts,
-                               @NonNull List<LinkPreview> linkPreviews, boolean unidentified)
+                               @NonNull List<LinkPreview> linkPreviews,
+                               @NonNull List<ReactionRecord> reactions, boolean unidentified)
   {
     super(id, body, conversationRecipient, individualRecipient, dateSent,
       dateReceived, threadId, Status.STATUS_NONE, deliveryReceiptCount, mailbox, mismatches, failures,
       expiresIn, expireStarted, slideDeck, readReceiptCount, quote, contacts,
-      linkPreviews, unidentified, Collections.emptyList());
+      linkPreviews, unidentified, reactions);
     this.partCount = partCount;
   }
 

@@ -148,6 +148,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
     db.execSQL(RecipientDatabase.getCreateApprovedMeCommand());
     db.execSQL(MmsDatabase.CREATE_MESSAGE_REQUEST_RESPONSE_COMMAND);
     db.execSQL(MmsDatabase.CREATE_REACTIONS_UNREAD_COMMAND);
+    db.execSQL(SmsDatabase.CREATE_REACTIONS_UNREAD_COMMAND);
     db.execSQL(MmsDatabase.CREATE_REACTIONS_LAST_SEEN_COMMAND);
     db.execSQL(LokiAPIDatabase.CREATE_FORK_INFO_TABLE_COMMAND);
     db.execSQL(LokiAPIDatabase.CREATE_DEFAULT_FORK_INFO_COMMAND);
@@ -370,6 +371,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
 
       if (oldVersion < lokiV35) {
         db.execSQL(MmsDatabase.CREATE_REACTIONS_UNREAD_COMMAND);
+        db.execSQL(SmsDatabase.CREATE_REACTIONS_UNREAD_COMMAND);
         db.execSQL(MmsDatabase.CREATE_REACTIONS_LAST_SEEN_COMMAND);
         db.execSQL(ReactionDatabase.CREATE_REACTION_TABLE_COMMAND);
         executeStatements(db, ReactionDatabase.CREATE_REACTION_TRIGGERS);

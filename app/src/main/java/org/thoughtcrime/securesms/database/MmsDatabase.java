@@ -62,10 +62,12 @@ import org.session.libsignal.utilities.guava.Optional;
 import org.thoughtcrime.securesms.attachments.MmsNotificationAttachment;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord;
+import org.thoughtcrime.securesms.database.model.MessageId;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord;
 import org.thoughtcrime.securesms.database.model.NotificationMmsMessageRecord;
 import org.thoughtcrime.securesms.database.model.Quote;
+import org.thoughtcrime.securesms.database.model.ReactionRecord;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import org.thoughtcrime.securesms.mms.MmsException;
 import org.thoughtcrime.securesms.mms.SlideDeck;
@@ -1204,7 +1206,7 @@ public class MmsDatabase extends MessagingDatabase {
                                                      message.getOutgoingQuote().getMissing(),
                                                      new SlideDeck(context, message.getOutgoingQuote().getAttachments())) :
                                            null,
-                                       message.getSharedContacts(), message.getLinkPreviews(), false);
+                                       message.getSharedContacts(), message.getLinkPreviews(), new LinkedList<>(),false);
     }
   }
 
@@ -1308,12 +1310,13 @@ public class MmsDatabase extends MessagingDatabase {
       Set<Attachment>           previewAttachments = Stream.of(previews).filter(lp -> lp.getThumbnail().isPresent()).map(lp -> lp.getThumbnail().get()).collect(Collectors.toSet());
       SlideDeck                 slideDeck          = getSlideDeck(Stream.of(attachments).filterNot(contactAttachments::contains).filterNot(previewAttachments::contains).toList());
       Quote                     quote              = getQuote(cursor);
+      List<ReactionRecord>      reactions          = DatabaseComponent.get(context).reactionDatabase().getReactions(new MessageId(id, true));
 
       return new MediaMmsMessageRecord(id, recipient, recipient,
                                        addressDeviceId, dateSent, dateReceived, deliveryReceiptCount,
                                        threadId, body, slideDeck, partCount, box, mismatches,
                                        networkFailures, subscriptionId, expiresIn, expireStarted,
-                                       readReceiptCount, quote, contacts, previews, unidentified);
+                                       readReceiptCount, quote, contacts, previews, reactions, unidentified);
     }
 
     private Recipient getRecipientFor(String serialized) {

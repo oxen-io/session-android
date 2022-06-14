@@ -69,7 +69,7 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
 
   fun getReactions(messageId: MessageId): List<ReactionRecord> {
     val query = "$MESSAGE_ID = ? AND $IS_MMS = ?"
-    val args = arrayOf("$messageId.id", "${if (messageId.mms) 1 else 0}")
+    val args = arrayOf("${messageId.id}", "${if (messageId.mms) 1 else 0}")
 
     val reactions: MutableList<ReactionRecord> = mutableListOf()
 
@@ -147,7 +147,7 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
     writableDatabase.beginTransaction()
     try {
       val query = "$MESSAGE_ID = ? AND $IS_MMS = ? AND $AUTHOR_ID = ?"
-      val args =  arrayOf("$messageId.id", "${if (messageId.mms)  1 else 0}", recipientId)
+      val args =  arrayOf("${messageId.id}", "${if (messageId.mms)  1 else 0}", recipientId)
 
       writableDatabase.delete(TABLE_NAME, query, args)
 
@@ -164,12 +164,12 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
   }
 
   fun deleteReactions(messageId: MessageId) {
-    writableDatabase.delete(TABLE_NAME, "$MESSAGE_ID = ? AND $IS_MMS = ?", arrayOf("$messageId.id", "${if (messageId.mms) 1 else 0}"))
+    writableDatabase.delete(TABLE_NAME, "$MESSAGE_ID = ? AND $IS_MMS = ?", arrayOf("${messageId.id}", "${if (messageId.mms) 1 else 0}"))
   }
 
   fun hasReaction(messageId: MessageId, reaction: ReactionRecord): Boolean {
     val query = "$MESSAGE_ID = ? AND $IS_MMS = ? AND $AUTHOR_ID = ? AND $EMOJI = ?"
-    val args = arrayOf("$messageId.id", "${if (messageId.mms) 1 else 0}", reaction.author, reaction.emoji)
+    val args = arrayOf("${messageId.id}", "${if (messageId.mms) 1 else 0}", reaction.author, reaction.emoji)
 
     readableDatabase.query(TABLE_NAME, arrayOf(MESSAGE_ID), query, args, null, null, null).use { cursor ->
       return cursor.moveToFirst()
@@ -178,7 +178,7 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
 
   private fun hasReactions(messageId: MessageId): Boolean {
     val query = "$MESSAGE_ID = ? AND $IS_MMS = ?"
-    val args = arrayOf("$messageId.id", "${if (messageId.mms) 1 else 0}")
+    val args = arrayOf("${messageId.id}", "${if (messageId.mms) 1 else 0}")
 
     readableDatabase.query(TABLE_NAME, arrayOf(MESSAGE_ID), query, args, null, null, null).use { cursor ->
       return cursor.moveToFirst()

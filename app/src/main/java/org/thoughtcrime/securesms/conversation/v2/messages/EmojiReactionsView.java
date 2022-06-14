@@ -112,11 +112,11 @@ public class EmojiReactionsView extends LinearLayout {
       String   baseEmoji = EmojiUtil.getCanonicalRepresentation(record.getEmoji());
       Reaction info      = counters.get(baseEmoji);
 
-      /*TODO:if (info == null) {
+      if (info == null) {
         info = new Reaction(baseEmoji, record.getEmoji(), 1, record.getDateReceived(), userPublicKey.equals(record.getAuthor()));
       } else {
         info.update(record.getEmoji(), record.getDateReceived(), userPublicKey.equals(record.getAuthor()));
-      }*/
+      }
 
       counters.put(baseEmoji, info);
     }

@@ -9,6 +9,7 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.components.emoji.EmojiUtil
 import org.thoughtcrime.securesms.database.model.MessageId
 import org.thoughtcrime.securesms.database.model.ReactionRecord
+import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 
 class ReactionsRepository {
 
@@ -20,16 +21,15 @@ class ReactionsRepository {
     }
 
     private fun fetchReactionDetails(messageId: MessageId): List<ReactionDetails> {
-
-        val reactions: List<ReactionRecord> = listOf() //TODO: fetch reactions
         val context = MessagingModuleConfiguration.shared.context
+        val reactions: List<ReactionRecord> = DatabaseComponent.get(context).reactionDatabase().getReactions(messageId)
 
         return reactions.map { reaction ->
             ReactionDetails(
                 sender = Recipient.from(context, Address.fromSerialized(reaction.author), false),
                 baseEmoji = EmojiUtil.getCanonicalRepresentation(reaction.emoji),
                 displayEmoji = reaction.emoji,
-                timestamp = 0
+                timestamp = reaction.dateReceived
             )
         }
     }

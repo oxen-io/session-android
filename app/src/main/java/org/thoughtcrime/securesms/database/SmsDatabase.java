@@ -42,7 +42,9 @@ import org.session.libsignal.utilities.JsonUtil;
 import org.session.libsignal.utilities.Log;
 import org.session.libsignal.utilities.guava.Optional;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
+import org.thoughtcrime.securesms.database.model.MessageId;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
+import org.thoughtcrime.securesms.database.model.ReactionRecord;
 import org.thoughtcrime.securesms.database.model.SmsMessageRecord;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 
@@ -101,6 +103,9 @@ public class SmsDatabase extends MessagingDatabase {
       MISMATCHED_IDENTITIES, SUBSCRIPTION_ID, EXPIRES_IN, EXPIRE_STARTED,
       NOTIFIED, READ_RECEIPT_COUNT, UNIDENTIFIED
   };
+
+  public static String CREATE_REACTIONS_UNREAD_COMMAND = "ALTER TABLE "+ TABLE_NAME + " " +
+          "ADD COLUMN " + REACTIONS_UNREAD + " INTEGER DEFAULT 0;";
 
   private static final EarlyReceiptCache earlyDeliveryReceiptCache = new EarlyReceiptCache();
   private static final EarlyReceiptCache earlyReadReceiptCache     = new EarlyReceiptCache();
@@ -748,12 +753,13 @@ public class SmsDatabase extends MessagingDatabase {
 
       List<IdentityKeyMismatch> mismatches = getMismatches(mismatchDocument);
       Recipient                 recipient  = Recipient.from(context, address, true);
+      List<ReactionRecord>      reactions  = DatabaseComponent.get(context).reactionDatabase().getReactions(new MessageId(messageId, false));
 
       return new SmsMessageRecord(messageId, body, recipient,
                                   recipient,
                                   dateSent, dateReceived, deliveryReceiptCount, type,
                                   threadId, status, mismatches,
-                                  expiresIn, expireStarted, readReceiptCount, unidentified, Collections.emptyList());
+                                  expiresIn, expireStarted, readReceiptCount, unidentified, reactions);
     }
 
     private List<IdentityKeyMismatch> getMismatches(String document) {
