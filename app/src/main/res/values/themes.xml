@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- The base theme is dark and the light one is implemented using "notnight" resources. -->
     <style name="Base.Theme.Session" parent="@style/Theme.AppCompat.DayNight.DarkActionBar">
@@ -110,6 +110,40 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
+    <style name="Theme.Session.DayNight.NoActionBar.Light">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionModeOverlay">true</item>
+
+        <item name="android:navigationBarColor">?android:navigationBarColor</item>
+        <item name="android:textColorHint">@color/gray50</item>
+
+        <item name="message_received_background_color">#F2F2F2</item>
+        <item name="message_sent_background_color">#00E076</item>
+
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+        <item name="android:statusBarColor">?colorPrimary</item>
+
+        <item name="attachment_type_selector_hide_button_background">@color/gray27</item>
+        <item name="attachment_document_icon_small">@drawable/ic_document_small_light</item>
+        <item name="attachment_document_icon_large">@drawable/ic_document_large_light</item>
+
+        <item name="conversation_emoji_toggle">@drawable/ic_emoji_outline_keyboard</item>
+        <item name="conversation_sticker_toggle">@drawable/ic_sticker_outline_keyboard</item>
+        <item name="conversation_keyboard_toggle">@drawable/ic_outline_keyboard_24</item>
+        <item name="conversation_input_background">@drawable/compose_background_light</item>
+
+        <item name="quick_camera_icon">@drawable/ic_outline_photo_camera_24</item>
+
+        <item name="media_keyboard_button_color">@color/core_grey_60</item>
+
+        <item name="menu_info_icon">@drawable/ic_outline_info_24</item>
+
+        <item name="conversation_item_audio_seek_bar_color_incoming">@color/accent</item>
+        <item name="conversation_item_audio_seek_bar_color_outgoing">@color/white</item>
+    </style>
+
     <style name="Theme.Session.DayNight.FlatActionBar">
         <item name="actionBarStyle">@style/Widget.Session.ActionBar.Flat</item>
     </style>
@@ -207,7 +241,7 @@
 
         <item name="device_link_item_card_background">@color/device_link_item_background_dark</item>
 
-        <item name="fab_color">@color/textsecure_primary_dark</item>
+        <item name="fab_color">?colorAccent</item>
         <item name="lower_right_divet">@drawable/divet_lower_right_light</item>
 
         <item name="conversation_background">@color/loki_darkest_gray</item>
@@ -230,7 +264,7 @@
         <item name="conversation_sticker_author_color">@color/core_grey_05</item>
 
         <item name="emoji_tab_strip_background">@color/compose_view_background</item>
-        <item name="emoji_tab_indicator">@color/accent</item>
+        <item name="emoji_tab_indicator">?colorAccent</item>
         <item name="emoji_tab_underline">@color/gray78</item>
         <item name="emoji_tab_seperator">@color/gray70</item>
         <item name="emoji_drawer_background">@color/compose_text_view_background</item>
@@ -326,7 +360,7 @@
         <item name="colorPrimaryDark">@color/classic_dark_0</item>
         <item name="searchBackgroundColor">#1B1B1B</item>
         <item name="searchIconColor">#E5E5E8</item>
-        <item name="searchHighlightTint">@color/accent</item>
+        <item name="searchHighlightTint">?colorAccent</item>
         <item name="colorAccent">@color/accent</item>
         <item name="colorControlNormal">?android:textColorPrimary</item>
         <item name="colorControlActivated">?colorAccent</item>
@@ -351,7 +385,7 @@
         <item name="android:colorBackgroundFloating">?colorPrimary</item>
     </style>
 
-    <style name="Classic.Light" parent="Theme.Session.DayNight.FlatActionBar">
+    <style name="Classic.Light" parent="Theme.Session.DayNight.NoActionBar.Light">
         <item name="sessionLogoTint">@color/classic_light_0</item>
         <item name="colorPrimary">@color/classic_light_6</item>
         <item name="colorPrimaryDark">@color/classic_light_6</item>
@@ -388,8 +422,10 @@
         <item name="colorPrimaryDark">@color/ocean_dark_2</item>
         <item name="searchBackgroundColor">@color/ocean_dark_3</item>
         <item name="searchIconColor">@color/ocean_dark_6</item>
-        <item name="colorAccent">@color/ocean_dark_accent</item>
+        <item name="searchHintColor">@color/ocean_dark_1</item>
+        <item name="searchTextColor">?android:textColorPrimary</item>
         <item name="searchHighlightTint">?colorAccent</item>
+        <item name="colorAccent">@color/ocean_dark_accent</item>
         <item name="colorControlNormal">@color/ocean_dark_6</item>
         <item name="colorControlActivated">?colorAccent</item>
         <item name="colorControlHighlight">?colorAccent</item>
@@ -415,14 +451,16 @@
         <item name="dialog_background_color">?colorPrimary</item>
     </style>
 
-    <style name="Ocean.Light" parent="Theme.Session.DayNight.NoActionBar">
+    <style name="Ocean.Light" parent="Theme.Session.DayNight.NoActionBar.Light">
         <item name="sessionLogoTint">@color/ocean_light_0</item>
         <item name="colorPrimary">@color/ocean_light_6</item>
         <item name="colorPrimaryDark">@color/ocean_light_5</item>
-        <item name="searchBackgroundColor">@color/ocean_light_3</item>
-        <item name="searchIconColor">@color/ocean_dark_6</item>
-        <item name="colorAccent">@color/ocean_dark_accent</item>
+        <item name="searchBackgroundColor">@color/ocean_light_4</item>
+        <item name="searchIconColor">@color/ocean_light_0</item>
+        <item name="searchHintColor">@color/ocean_light_1</item>
+        <item name="searchTextColor">@color/ocean_light_0</item>
         <item name="searchHighlightTint">?colorAccent</item>
+        <item name="colorAccent">@color/ocean_dark_accent</item>
         <item name="colorControlNormal">@color/ocean_dark_6</item>
         <item name="colorControlActivated">?colorAccent</item>
         <item name="colorControlHighlight">?colorAccent</item>
@@ -445,7 +483,7 @@
         <item name="unreadIndicatorBackgroundColor">@color/ocean_light_accent</item>
         <item name="unreadIndicatorTextColor">@color/ocean_light_0</item>
         <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>
-        <item name="dialog_background_color">@color/ocean_light_0</item>
+        <item name="dialog_background_color">@color/ocean_light_6</item>
     </style>
 
 </resources>
