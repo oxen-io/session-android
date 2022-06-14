@@ -321,6 +321,7 @@
     </style>
 
     <style name="Classic.Dark" parent="Theme.Session.DayNight.FlatActionBar">
+        <item name="sessionLogoTint">@color/classic_dark_6</item>
         <item name="colorPrimary">@color/classic_dark_0</item>
         <item name="colorPrimaryDark">@color/classic_dark_0</item>
         <item name="searchBackgroundColor">#1B1B1B</item>
@@ -351,6 +352,7 @@
     </style>
 
     <style name="Classic.Light" parent="Theme.Session.DayNight.FlatActionBar">
+        <item name="sessionLogoTint">@color/classic_light_0</item>
         <item name="colorPrimary">@color/classic_light_6</item>
         <item name="colorPrimaryDark">@color/classic_light_6</item>
         <item name="searchBackgroundColor">#1B1B1B</item>
@@ -381,6 +383,7 @@
     </style>
 
     <style name="Ocean.Dark" parent="Theme.Session.DayNight.NoActionBar">
+        <item name="sessionLogoTint">@color/ocean_dark_6</item>
         <item name="colorPrimary">@color/ocean_dark_2</item>
         <item name="colorPrimaryDark">@color/ocean_dark_2</item>
         <item name="searchBackgroundColor">@color/ocean_dark_3</item>
@@ -409,11 +412,11 @@
         <item name="unreadIndicatorBackgroundColor">@color/ocean_light_accent</item>
         <item name="unreadIndicatorTextColor">@color/ocean_dark_6</item>
         <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>
-        <item name="dialog_background_color">@color/ocean_dark_1</item>
-        <item name="android:colorBackgroundFloating">?colorPrimary</item>
+        <item name="dialog_background_color">?colorPrimary</item>
     </style>
 
-    <style name="Ocean.Light" parent="Theme.Session.DayNight.FlatActionBar">
+    <style name="Ocean.Light" parent="Theme.Session.DayNight.NoActionBar">
+        <item name="sessionLogoTint">@color/ocean_light_0</item>
         <item name="colorPrimary">@color/ocean_light_6</item>
         <item name="colorPrimaryDark">@color/ocean_light_5</item>
         <item name="searchBackgroundColor">@color/ocean_light_3</item>
@@ -442,7 +445,7 @@
         <item name="unreadIndicatorBackgroundColor">@color/ocean_light_accent</item>
         <item name="unreadIndicatorTextColor">@color/ocean_light_0</item>
         <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>
-        <item name="android:colorBackgroundFloating">?colorPrimary</item>
+        <item name="dialog_background_color">@color/ocean_light_0</item>
     </style>
 
 </resources>

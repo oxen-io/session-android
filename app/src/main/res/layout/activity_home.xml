@@ -51,7 +51,7 @@
                     android:layout_toEndOf="@+id/profileButton"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_session"
-                    app:tint="@color/black" />
+                    app:tint="?sessionLogoTint" />
 
                 <RelativeLayout
                     android:id="@+id/searchViewContainer"
@@ -65,7 +65,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:src="@drawable/ic_baseline_search_24"
-                        app:tint="@color/text" />
+                        app:tint="?sessionLogoTint" />
 
                 </RelativeLayout>
 

@@ -66,7 +66,6 @@ import org.thoughtcrime.securesms.preferences.SettingsActivity
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.IP2Country
-import org.thoughtcrime.securesms.util.UiModeUtilities
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
@@ -170,7 +169,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             binding.seedReminderView.isVisible = false
         }
         setupMessageRequestsBanner()
-        setupHeaderImage()
         // Set up recycler view
         binding.globalSearchInputLayout.listener = this
         homeAdapter.setHasStableIds(true)
@@ -277,12 +275,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             }
         }
         EventBus.getDefault().register(this@HomeActivity)
-    }
-
-    private fun setupHeaderImage() {
-        val isDayUiMode = UiModeUtilities.isDayUiMode(this)
-        val headerTint = if (isDayUiMode) R.color.black else R.color.white
-        binding.sessionHeaderImage.setColorFilter(getColor(headerTint))
     }
 
     override fun onInputFocusChanged(hasFocus: Boolean) {
