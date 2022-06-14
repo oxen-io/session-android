@@ -17,16 +17,15 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.util.GlowViewUtilities
 import org.thoughtcrime.securesms.util.NewConversationButtonImageView
-import org.thoughtcrime.securesms.util.UiModeUtilities
 import org.thoughtcrime.securesms.util.animateSizeChange
 import org.thoughtcrime.securesms.util.contains
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.distanceTo
+import org.thoughtcrime.securesms.util.getColorFromAttr
 import org.thoughtcrime.securesms.util.getColorWithID
 import org.thoughtcrime.securesms.util.isAbove
 import org.thoughtcrime.securesms.util.isLeftOf
@@ -124,14 +123,12 @@ class NewConversationButtonSetView : RelativeLayout {
             val size = collapsedSize.toInt()
             result.layoutParams = LayoutParams(size, size)
             result.setBackgroundResource(R.drawable.new_conversation_button_background)
-            @ColorRes val backgroundColorID = if (isMain) R.color.accent else R.color.new_conversation_button_collapsed_background
-            @ColorRes val shadowColorID = if (isMain) {
-                R.color.new_conversation_button_shadow
-            } else {
-                if (UiModeUtilities.isDayUiMode(context)) R.color.transparent_black_30 else R.color.black
-            }
-            result.mainColor = resources.getColorWithID(backgroundColorID, context.theme)
-            result.sessionShadowColor = resources.getColorWithID(shadowColorID, context.theme)
+            val backgroundColor = if (isMain) context.getColorFromAttr(R.attr.colorAccent)
+            else context.getColor(R.color.new_conversation_button_collapsed_background)
+
+            result.mainColor = backgroundColor
+            result.sessionShadowColor = if (isMain) context.getColorFromAttr(R.attr.conversation_shadow_main)
+            else context.getColorFromAttr(R.attr.conversation_shadow_non_main)
             result.scaleType = ImageView.ScaleType.CENTER
             result.setImageResource(iconID)
             result.imageTintList = if (isMain) {
@@ -161,17 +158,23 @@ class NewConversationButtonSetView : RelativeLayout {
         }
 
         fun expand() {
-            GlowViewUtilities.animateColorChange(context, imageView, R.color.new_conversation_button_collapsed_background, R.color.accent)
-            @ColorRes val startShadowColorID = if (UiModeUtilities.isDayUiMode(context)) R.color.transparent_black_30 else R.color.black
-            GlowViewUtilities.animateShadowColorChange(context, imageView, startShadowColorID, R.color.new_conversation_button_shadow)
+            val startColor = context.getColor(R.color.new_conversation_button_collapsed_background)
+            val endColor = context.getColorFromAttr(R.attr.colorAccent)
+            GlowViewUtilities.animateColorChange(imageView, startColor, endColor)
+            val startShadowColor = context.getColor(R.color.black)
+            val endShadowColor = context.getColor(R.color.new_conversation_button_shadow)
+            GlowViewUtilities.animateShadowColorChange(imageView, startShadowColor, endShadowColor)
             imageView.animateSizeChange(R.dimen.new_conversation_button_collapsed_size, R.dimen.new_conversation_button_expanded_size, animationDuration)
             animateImageViewPositionChange(collapsedImageViewPosition, expandedImageViewPosition)
         }
 
         fun collapse() {
-            GlowViewUtilities.animateColorChange(context, imageView, R.color.accent, R.color.new_conversation_button_collapsed_background)
-            @ColorRes val endShadowColorID = if (UiModeUtilities.isDayUiMode(context)) R.color.transparent_black_30 else R.color.black
-            GlowViewUtilities.animateShadowColorChange(context, imageView, R.color.new_conversation_button_shadow, endShadowColorID)
+            val startColor = context.getColorFromAttr(R.attr.colorAccent)
+            val endColor = context.getColor(R.color.new_conversation_button_collapsed_background)
+            GlowViewUtilities.animateColorChange(imageView, startColor, endColor)
+            val startShadowColor = context.getColor(R.color.new_conversation_button_shadow)
+            val endShadowColor = context.getColor(R.color.black)
+            GlowViewUtilities.animateShadowColorChange(imageView, startShadowColor, endShadowColor)
             imageView.animateSizeChange(R.dimen.new_conversation_button_expanded_size, R.dimen.new_conversation_button_collapsed_size, animationDuration)
             animateImageViewPositionChange(expandedImageViewPosition, collapsedImageViewPosition)
         }

@@ -19,12 +19,12 @@ import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.BaseActionBarActivity
 import org.thoughtcrime.securesms.home.HomeActivity
+import org.thoughtcrime.securesms.util.GlowViewUtilities
+import org.thoughtcrime.securesms.util.PNModeView
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.getColorWithID
 import org.thoughtcrime.securesms.util.setUpActionBarSessionLogo
 import org.thoughtcrime.securesms.util.show
-import org.thoughtcrime.securesms.util.GlowViewUtilities
-import org.thoughtcrime.securesms.util.PNModeView
 
 class PNModeActivity : BaseActionBarActivity() {
     private lateinit var binding: ActivityPnModeBinding
@@ -87,22 +87,22 @@ class PNModeActivity : BaseActionBarActivity() {
         when (selectedOptionView) {
             null -> {
                 performTransition(R.drawable.pn_option_background_select_transition, fcmOptionView)
-                GlowViewUtilities.animateShadowColorChange(this@PNModeActivity, fcmOptionView, R.color.transparent, R.color.accent)
+                GlowViewUtilities.animateShadowColorIdChange(this@PNModeActivity, fcmOptionView, R.color.transparent, R.color.accent)
                 animateStrokeColorChange(fcmOptionView, R.color.pn_option_border, R.color.accent)
                 selectedOptionView = fcmOptionView
             }
             fcmOptionView -> {
                 performTransition(R.drawable.pn_option_background_deselect_transition, fcmOptionView)
-                GlowViewUtilities.animateShadowColorChange(this@PNModeActivity, fcmOptionView, R.color.accent, R.color.transparent)
+                GlowViewUtilities.animateShadowColorIdChange(this@PNModeActivity, fcmOptionView, R.color.accent, R.color.transparent)
                 animateStrokeColorChange(fcmOptionView, R.color.accent, R.color.pn_option_border)
                 selectedOptionView = null
             }
             backgroundPollingOptionView -> {
                 performTransition(R.drawable.pn_option_background_select_transition, fcmOptionView)
-                GlowViewUtilities.animateShadowColorChange(this@PNModeActivity, fcmOptionView, R.color.transparent, R.color.accent)
+                GlowViewUtilities.animateShadowColorIdChange(this@PNModeActivity, fcmOptionView, R.color.transparent, R.color.accent)
                 animateStrokeColorChange(fcmOptionView, R.color.pn_option_border, R.color.accent)
                 performTransition(R.drawable.pn_option_background_deselect_transition, backgroundPollingOptionView)
-                GlowViewUtilities.animateShadowColorChange(this@PNModeActivity, backgroundPollingOptionView, R.color.accent, R.color.transparent)
+                GlowViewUtilities.animateShadowColorIdChange(this@PNModeActivity, backgroundPollingOptionView, R.color.accent, R.color.transparent)
                 animateStrokeColorChange(backgroundPollingOptionView, R.color.accent, R.color.pn_option_border)
                 selectedOptionView = fcmOptionView
             }
@@ -113,22 +113,22 @@ class PNModeActivity : BaseActionBarActivity() {
         when (selectedOptionView) {
             null -> {
                 performTransition(R.drawable.pn_option_background_select_transition, backgroundPollingOptionView)
-                GlowViewUtilities.animateShadowColorChange(this@PNModeActivity, backgroundPollingOptionView, R.color.transparent, R.color.accent)
+                GlowViewUtilities.animateShadowColorIdChange(this@PNModeActivity, backgroundPollingOptionView, R.color.transparent, R.color.accent)
                 animateStrokeColorChange(backgroundPollingOptionView, R.color.pn_option_border, R.color.accent)
                 selectedOptionView = backgroundPollingOptionView
             }
             backgroundPollingOptionView -> {
                 performTransition(R.drawable.pn_option_background_deselect_transition, backgroundPollingOptionView)
-                GlowViewUtilities.animateShadowColorChange(this@PNModeActivity, backgroundPollingOptionView, R.color.accent, R.color.transparent)
+                GlowViewUtilities.animateShadowColorIdChange(this@PNModeActivity, backgroundPollingOptionView, R.color.accent, R.color.transparent)
                 animateStrokeColorChange(backgroundPollingOptionView, R.color.accent, R.color.pn_option_border)
                 selectedOptionView = null
             }
             fcmOptionView -> {
                 performTransition(R.drawable.pn_option_background_select_transition, backgroundPollingOptionView)
-                GlowViewUtilities.animateShadowColorChange(this@PNModeActivity, backgroundPollingOptionView, R.color.transparent, R.color.accent)
+                GlowViewUtilities.animateShadowColorIdChange(this@PNModeActivity, backgroundPollingOptionView, R.color.transparent, R.color.accent)
                 animateStrokeColorChange(backgroundPollingOptionView, R.color.pn_option_border, R.color.accent)
                 performTransition(R.drawable.pn_option_background_deselect_transition, fcmOptionView)
-                GlowViewUtilities.animateShadowColorChange(this@PNModeActivity, fcmOptionView, R.color.accent, R.color.transparent)
+                GlowViewUtilities.animateShadowColorIdChange(this@PNModeActivity, fcmOptionView, R.color.accent, R.color.transparent)
                 animateStrokeColorChange(fcmOptionView, R.color.accent, R.color.pn_option_border)
                 selectedOptionView = backgroundPollingOptionView
             }

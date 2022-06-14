@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.WindowManager;
 
+import androidx.annotation.StyleRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,10 +20,15 @@ import network.loki.messenger.R;
 public abstract class BaseActionBarActivity extends AppCompatActivity {
   private static final String TAG = BaseActionBarActivity.class.getSimpleName();
 
+  @StyleRes
+  public int getDesiredTheme() {
+    return R.style.Ocean_Light;
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     // New themes
-    setTheme(R.style.Ocean_Dark);
+    setTheme(getDesiredTheme());
 
     ActionBar actionBar = getSupportActionBar();
     if (actionBar != null) {

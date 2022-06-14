@@ -320,6 +320,6 @@ class VisibleMessageContentView : LinearLayout {
 }
 
 interface VisibleMessageContentViewDelegate {
-
+    fun showUserDetails(publicKey: String, threadID: Long)
     fun scrollToMessageIfPossible(timestamp: Long)
 }

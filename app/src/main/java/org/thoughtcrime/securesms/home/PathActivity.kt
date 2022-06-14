@@ -255,13 +255,13 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
         private fun expand() {
             dotView.animateSizeChange(R.dimen.path_row_dot_size, R.dimen.path_row_expanded_dot_size)
             @ColorRes val startColorID = if (UiModeUtilities.isDayUiMode(context)) R.color.transparent_black_30 else R.color.black
-            GlowViewUtilities.animateShadowColorChange(context, dotView, startColorID, R.color.accent)
+            GlowViewUtilities.animateShadowColorIdChange(context, dotView, startColorID, R.color.accent)
         }
 
         private fun collapse() {
             dotView.animateSizeChange(R.dimen.path_row_expanded_dot_size, R.dimen.path_row_dot_size)
             @ColorRes val endColorID = if (UiModeUtilities.isDayUiMode(context)) R.color.transparent_black_30 else R.color.black
-            GlowViewUtilities.animateShadowColorChange(context, dotView, R.color.accent, endColorID)
+            GlowViewUtilities.animateShadowColorIdChange(context, dotView, R.color.accent, endColorID)
         }
     }
     // endregion

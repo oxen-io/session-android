@@ -66,22 +66,22 @@
 <!--        <item name="message_received_background_color">#2D2D2D</item>-->
 <!--        <item name="message_sent_background_color">#00E97B</item>-->
 
-<!--        <item name="menu_accept_icon">@drawable/ic_baseline_done_24</item>-->
-<!--        <item name="menu_trash_icon">@drawable/ic_baseline_delete_24</item>-->
-<!--        <item name="menu_block_icon">@drawable/ic_baseline_block_24</item>-->
-<!--        <item name="menu_forward_icon">@drawable/ic_baseline_forward_24</item>-->
-<!--        <item name="menu_save_icon">@drawable/ic_baseline_save_24</item>-->
-<!--        <item name="menu_photo_library_icon">@drawable/ic_baseline_photo_library_24</item>-->
-<!--        <item name="menu_delete_icon">@drawable/ic_baseline_delete_24</item>-->
-<!--        <item name="menu_copy_icon">@drawable/ic_baseline_file_copy_24</item>-->
-<!--        <item name="menu_reply_icon">@drawable/ic_baseline_reply_24</item>-->
-<!--        <item name="menu_selectall_icon">@drawable/ic_baseline_select_all_24</item>-->
-<!--        <item name="menu_split_icon">@drawable/ic_baseline_call_split_24</item>-->
-<!--        <item name="menu_popup_expand">@drawable/ic_baseline_launch_24</item>-->
-<!--        <item name="menu_info_icon">@drawable/ic_baseline_info_24</item>-->
-<!--        <item name="menu_pin_icon">@drawable/ic_outline_pin_24</item>-->
-<!--        <item name="menu_unpin_icon">@drawable/ic_outline_pin_off_24</item>-->
-<!--        <item name="menu_mark_all_as_read">@drawable/ic_outline_mark_chat_read_24</item>-->
+        <item name="menu_accept_icon">@drawable/ic_baseline_done_24</item>
+        <item name="menu_trash_icon">@drawable/ic_baseline_delete_24</item>
+        <item name="menu_block_icon">@drawable/ic_baseline_block_24</item>
+        <item name="menu_forward_icon">@drawable/ic_baseline_forward_24</item>
+        <item name="menu_save_icon">@drawable/ic_baseline_save_24</item>
+        <item name="menu_photo_library_icon">@drawable/ic_baseline_photo_library_24</item>
+        <item name="menu_delete_icon">@drawable/ic_baseline_delete_24</item>
+        <item name="menu_copy_icon">@drawable/ic_baseline_file_copy_24</item>
+        <item name="menu_reply_icon">@drawable/ic_baseline_reply_24</item>
+        <item name="menu_selectall_icon">@drawable/ic_baseline_select_all_24</item>
+        <item name="menu_split_icon">@drawable/ic_baseline_call_split_24</item>
+        <item name="menu_popup_expand">@drawable/ic_baseline_launch_24</item>
+        <item name="menu_info_icon">@drawable/ic_baseline_info_24</item>
+        <item name="menu_pin_icon">@drawable/ic_outline_pin_24</item>
+        <item name="menu_unpin_icon">@drawable/ic_outline_pin_off_24</item>
+        <item name="menu_mark_all_as_read">@drawable/ic_outline_mark_chat_read_24</item>
 
 <!--        <item name="conversation_emoji_toggle">@drawable/ic_emoji_filled_keyboard_24</item>-->
 <!--        <item name="conversation_sticker_toggle">@drawable/ic_sticker_filled_keyboard_24</item>-->
@@ -154,7 +154,6 @@
 
     <style name="Theme.Session.BottomSheet" parent="@style/Theme.AppCompat.DayNight.Dialog">
         <item name="colorControlNormal">?android:textColorPrimary</item>
-        <item name="android:textColorPrimary">@color/text</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>
         <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>
@@ -296,6 +295,31 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="Theme.Session.BottomSheet.Classic.Dark" parent="@style/Widget.Design.BottomSheet.Modal">
+        <item name="colorControlNormal">?android:textColorPrimary</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>
+        <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>
+    </style>
+    <style name="Theme.Session.BottomSheet.Classic.Light" parent="Classic.Light">
+        <item name="colorControlNormal">?android:textColorPrimary</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>
+        <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>
+    </style>
+    <style name="Theme.Session.BottomSheet.Ocean.Dark" parent="@style/Widget.Design.BottomSheet.Modal">
+        <item name="colorControlNormal">?android:textColorPrimary</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>
+        <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>
+    </style>
+    <style name="Theme.Session.BottomSheet.Ocean.Light" parent="Ocean.Light">
+        <item name="colorControlNormal">?android:textColorPrimary</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>
+        <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>
+    </style>
+
     <style name="Classic.Dark" parent="Theme.Session.DayNight.FlatActionBar">
         <item name="colorPrimary">@color/classic_dark_0</item>
         <item name="colorPrimaryDark">@color/classic_dark_0</item>
@@ -314,11 +338,21 @@
         <item name="android:windowBackground">@drawable/default_session_background</item>
         <item name="android:colorBackground">@color/default_background_start</item>
         <item name="android:navigationBarColor">@color/compose_view_background</item>
+        <item name="conversation_shadow_non_main">@color/black</item>
+        <item name="conversation_shadow_main">?colorAccent</item>
+        <item name="default_background_end">@color/classic_dark_0</item>
+        <item name="default_background_start">@color/classic_dark_1</item>
+        <item name="colorCellBackground">@color/classic_dark_1</item>
+        <item name="colorCellRipple">@color/classic_dark_3</item>
+        <item name="unreadIndicatorBackgroundColor">@color/classic_dark_3</item>
+        <item name="unreadIndicatorTextColor">@color/classic_dark_6</item>
+        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>
+        <item name="android:colorBackgroundFloating">?colorPrimary</item>
     </style>
 
     <style name="Classic.Light" parent="Theme.Session.DayNight.FlatActionBar">
-        <item name="colorPrimary">@color/action_bar_background</item>
-        <item name="colorPrimaryDark">@color/action_bar_background</item>
+        <item name="colorPrimary">@color/classic_light_6</item>
+        <item name="colorPrimaryDark">@color/classic_light_6</item>
         <item name="searchBackgroundColor">#1B1B1B</item>
         <item name="searchIconColor">#E5E5E8</item>
         <item name="searchHighlightTint">@color/accent</item>
@@ -334,6 +368,16 @@
         <item name="android:windowBackground">@drawable/default_session_background</item>
         <item name="android:colorBackground">@color/default_background_start</item>
         <item name="android:navigationBarColor">@color/compose_view_background</item>
+        <item name="conversation_shadow_non_main">@color/black</item>
+        <item name="conversation_shadow_main">@color/black</item>
+        <item name="default_background_end">@color/classic_light_6</item>
+        <item name="default_background_start">@color/classic_light_5</item>
+        <item name="colorCellBackground">@color/classic_light_6</item>
+        <item name="colorCellRipple">@color/classic_light_3</item>
+        <item name="unreadIndicatorBackgroundColor">@color/classic_light_3</item>
+        <item name="unreadIndicatorTextColor">@color/classic_light_0</item>
+        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>
+        <item name="android:colorBackgroundFloating">?colorPrimary</item>
     </style>
 
     <style name="Ocean.Dark" parent="Theme.Session.DayNight.NoActionBar">
@@ -356,10 +400,49 @@
         <item name="android:navigationBarColor">@color/compose_view_background</item>
         <item name="home_gradient_start">#00000000</item>
         <item name="home_gradient_end">@color/ocean_dark_3</item>
+        <item name="conversation_shadow_non_main">@color/black</item>
+        <item name="conversation_shadow_main">?colorAccent</item>
+        <item name="default_background_end">?colorPrimary</item>
+        <item name="default_background_start">?colorPrimaryDark</item>
+        <item name="colorCellBackground">@color/ocean_dark_3</item>
+        <item name="colorCellRipple">@color/ocean_dark_4</item>
+        <item name="unreadIndicatorBackgroundColor">@color/ocean_light_accent</item>
+        <item name="unreadIndicatorTextColor">@color/ocean_dark_6</item>
+        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>
+        <item name="dialog_background_color">@color/ocean_dark_1</item>
+        <item name="android:colorBackgroundFloating">?colorPrimary</item>
     </style>
 
     <style name="Ocean.Light" parent="Theme.Session.DayNight.FlatActionBar">
-
+        <item name="colorPrimary">@color/ocean_light_6</item>
+        <item name="colorPrimaryDark">@color/ocean_light_5</item>
+        <item name="searchBackgroundColor">@color/ocean_light_3</item>
+        <item name="searchIconColor">@color/ocean_dark_6</item>
+        <item name="colorAccent">@color/ocean_dark_accent</item>
+        <item name="searchHighlightTint">?colorAccent</item>
+        <item name="colorControlNormal">@color/ocean_dark_6</item>
+        <item name="colorControlActivated">?colorAccent</item>
+        <item name="colorControlHighlight">?colorAccent</item>
+        <item name="android:textColorPrimary">@color/ocean_light_0</item>
+        <item name="android:textColorSecondary">@color/ocean_light_1</item>
+        <item name="android:textColorTertiary">@color/unimportant</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:textColorHint">@color/ocean_light_5</item>
+        <item name="android:navigationBarColor">@color/ocean_light_6</item>
+        <item name="android:windowBackground">@drawable/default_session_background</item>
+        <item name="android:colorBackground">@color/default_background_start</item>
+        <item name="home_gradient_start">#00000000</item>
+        <item name="home_gradient_end">@color/ocean_light_6</item>
+        <item name="conversation_shadow_non_main">@color/black</item>
+        <item name="conversation_shadow_main">@color/black</item>
+        <item name="default_background_end">@color/ocean_light_6</item>
+        <item name="default_background_start">@color/ocean_light_5</item>
+        <item name="colorCellBackground">@color/ocean_light_5</item>
+        <item name="colorCellRipple">@color/ocean_light_3</item>
+        <item name="unreadIndicatorBackgroundColor">@color/ocean_light_accent</item>
+        <item name="unreadIndicatorTextColor">@color/ocean_light_0</item>
+        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>
+        <item name="android:colorBackgroundFloating">?colorPrimary</item>
     </style>
 
 </resources>

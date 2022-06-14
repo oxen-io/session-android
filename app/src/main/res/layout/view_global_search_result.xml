@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:clickable="true"
     android:focusable="true"
-    android:background="@color/cell_background"
+    android:background="@drawable/conversation_view_background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -85,7 +85,7 @@
 
             </RelativeLayout>
             <TextView
-                android:textColor="@color/text"
+                android:textColor="?android:textColor"
                 android:alpha="0.4"
                 android:layout_weight="1"
                 android:paddingStart="@dimen/small_spacing"
@@ -102,7 +102,7 @@
             android:id="@+id/search_result_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text"
+            android:textColor="?android:textColor"
             android:maxLines="1"
             android:ellipsize="end"
             />

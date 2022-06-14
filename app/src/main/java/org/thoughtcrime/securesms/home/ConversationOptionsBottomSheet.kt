@@ -28,7 +28,7 @@ class ConversationOptionsBottomSheet : BottomSheetDialogFragment(), View.OnClick
     var onNotificationTapped: (() -> Unit)? = null
     var onSetMuteTapped: ((Boolean) -> Unit)? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentConversationBottomSheetBinding.inflate(inflater, container, false)
         return binding.root
     }

@@ -16,8 +16,12 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.annotation.DrawableRes
 import network.loki.messenger.R
-import org.thoughtcrime.securesms.util.*
-import java.util.*
+import org.thoughtcrime.securesms.util.GlowViewUtilities
+import org.thoughtcrime.securesms.util.InputBarButtonImageViewContainer
+import org.thoughtcrime.securesms.util.animateSizeChange
+import org.thoughtcrime.securesms.util.getColorWithID
+import org.thoughtcrime.securesms.util.toPx
+import java.util.Date
 
 class InputBarButton : RelativeLayout {
     private val gestureHandler = Handler(Looper.getMainLooper())
@@ -104,13 +108,13 @@ class InputBarButton : RelativeLayout {
     fun getIconID() = iconID
 
     fun expand() {
-        GlowViewUtilities.animateColorChange(context, imageViewContainer, colorID, R.color.accent)
+        GlowViewUtilities.animateColorIdChange(context, imageViewContainer, colorID, R.color.accent)
         imageViewContainer.animateSizeChange(R.dimen.input_bar_button_collapsed_size, R.dimen.input_bar_button_expanded_size, animationDuration)
         animateImageViewContainerPositionChange(collapsedImageViewPosition, expandedImageViewPosition)
     }
 
     fun collapse() {
-        GlowViewUtilities.animateColorChange(context, imageViewContainer, R.color.accent, colorID)
+        GlowViewUtilities.animateColorIdChange(context, imageViewContainer, R.color.accent, colorID)
         imageViewContainer.animateSizeChange(R.dimen.input_bar_button_expanded_size, R.dimen.input_bar_button_collapsed_size, animationDuration)
         animateImageViewContainerPositionChange(expandedImageViewPosition, collapsedImageViewPosition)
     }

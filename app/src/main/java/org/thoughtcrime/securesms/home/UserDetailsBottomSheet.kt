@@ -29,7 +29,7 @@ import org.thoughtcrime.securesms.util.UiModeUtilities
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class UserDetailsBottomSheet : BottomSheetDialogFragment() {
+class UserDetailsBottomSheet(): BottomSheetDialogFragment() {
 
     @Inject lateinit var threadDb: ThreadDatabase
 

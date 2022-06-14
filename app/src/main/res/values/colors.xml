@@ -94,9 +94,6 @@
 
     <color name="avatar_background">@color/transparent_black_90</color>
 
-    <color name="default_background_start">#121212</color>
-    <color name="default_background_end">#171717</color>
-
     <color name="classic_dark_accent">#31F196</color>
     <color name="classic_dark_0">#111111</color>
     <color name="classic_dark_1">#1B1B1B</color>

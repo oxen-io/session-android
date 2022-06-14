@@ -12,11 +12,9 @@ import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
@@ -33,7 +31,6 @@ import org.thoughtcrime.securesms.database.MmsSmsDatabase
 import org.thoughtcrime.securesms.database.SmsDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
-import org.thoughtcrime.securesms.home.UserDetailsBottomSheet
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.disableClipping
@@ -404,14 +401,7 @@ class VisibleMessageView : LinearLayout {
     }
 
     private fun showUserDetails(publicKey: String, threadID: Long) {
-        val userDetailsBottomSheet = UserDetailsBottomSheet()
-        val bundle = bundleOf(
-                UserDetailsBottomSheet.ARGUMENT_PUBLIC_KEY to publicKey,
-                UserDetailsBottomSheet.ARGUMENT_THREAD_ID to threadID
-        )
-        userDetailsBottomSheet.arguments = bundle
-        val activity = context as AppCompatActivity
-        userDetailsBottomSheet.show(activity.supportFragmentManager, userDetailsBottomSheet.tag)
+        contentViewDelegate?.showUserDetails(publicKey, threadID)
     }
 
     fun playVoiceMessage() {
