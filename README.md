@@ -2,9 +2,11 @@
 
 [Download on the Google Play Store](https://getsession.org/android)
 
-Add the [F-Droid repo](https://fdroid.getsession.org/)
+[Download on F-Droid](https://f-droid.org/packages/network.loki.messenger.fdroid/)
 
-[Download the APK from here](https://github.com/loki-project/session-android/releases/latest)
+Add the [official Session F-Droid compatible repo](https://fdroid.getsession.org/)
+
+[Download the APK from the release section](https://github.com/loki-project/session-android/releases/latest)
 
 ## Summary
 
