@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.annotation.DimenRes
-import com.bumptech.glide.load.Transformation
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -22,6 +21,7 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
+import com.session.beautiful.util.DensityUtil
 
 class ProfilePictureView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
@@ -112,7 +112,7 @@ class ProfilePictureView @JvmOverloads constructor(
                     .placeholder(unknownRecipientDrawable)
                     .apply(RequestOptions()
                             .transforms(
-                                    CenterCrop(), RoundedCorners(15)
+                                    CenterCrop(), RoundedCorners(DensityUtil.dpToPx(imageView.context,15F))
                             ))
                     .error(unknownRecipientDrawable)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -123,7 +123,7 @@ class ProfilePictureView @JvmOverloads constructor(
                     .placeholder(unknownRecipientDrawable)
                         .apply(RequestOptions()
                                 .transforms(
-                                        CenterCrop(), RoundedCorners(15)
+                                        CenterCrop(), RoundedCorners(DensityUtil.dpToPx(imageView.context,15F))
                                 ))
                     .diskCacheStrategy(DiskCacheStrategy.NONE).into(imageView)
             }
