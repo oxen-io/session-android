@@ -10,6 +10,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.session.beautiful.config.Config
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewProfilePictureBinding
 import org.session.libsession.avatars.ContactColors
@@ -112,7 +113,7 @@ class ProfilePictureView @JvmOverloads constructor(
                     .placeholder(unknownRecipientDrawable)
                     .apply(RequestOptions()
                             .transforms(
-                                    CenterCrop(), RoundedCorners(DensityUtil.dpToPx(imageView.context,15F))
+                                    CenterCrop(), RoundedCorners(DensityUtil.dpToPx(imageView.context, Config.SMALL_CORNER))
                             ))
                     .error(unknownRecipientDrawable)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -123,7 +124,7 @@ class ProfilePictureView @JvmOverloads constructor(
                     .placeholder(unknownRecipientDrawable)
                         .apply(RequestOptions()
                                 .transforms(
-                                        CenterCrop(), RoundedCorners(DensityUtil.dpToPx(imageView.context,15F))
+                                        CenterCrop(), RoundedCorners(DensityUtil.dpToPx(imageView.context,Config.SMALL_CORNER))
                                 ))
                     .diskCacheStrategy(DiskCacheStrategy.NONE).into(imageView)
             }
