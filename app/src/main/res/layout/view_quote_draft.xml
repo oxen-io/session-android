@@ -6,7 +6,7 @@
     android:id="@+id/mainQuoteViewContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/input_bar_background"
+    android:background="?input_bar_background"
     android:paddingHorizontal="@dimen/medium_spacing"
     android:paddingVertical="@dimen/small_spacing"
     app:quote_mode="draft">

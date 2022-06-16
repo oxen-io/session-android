@@ -19,6 +19,8 @@ import network.loki.messenger.R
 import org.thoughtcrime.securesms.util.GlowViewUtilities
 import org.thoughtcrime.securesms.util.InputBarButtonImageViewContainer
 import org.thoughtcrime.securesms.util.animateSizeChange
+import org.thoughtcrime.securesms.util.getAccentColor
+import org.thoughtcrime.securesms.util.getColorFromAttr
 import org.thoughtcrime.securesms.util.getColorWithID
 import org.thoughtcrime.securesms.util.toPx
 import java.util.Date
@@ -47,11 +49,11 @@ class InputBarButton : RelativeLayout {
     private val collapsedImageViewPosition by lazy { PointF((expandedSize - collapsedSize) / 2, (expandedSize - collapsedSize) / 2) }
     private val colorID by lazy {
         if (hasOpaqueBackground) {
-            R.color.input_bar_button_background_opaque
+            R.attr.input_bar_button_background_opaque
         } else if (isSendButton) {
-            R.color.accent
+            R.attr.colorAccent // TODO: allow for customizable accent
         } else {
-            R.color.input_bar_button_background
+            R.attr.input_bar_button_background
         }
     }
 
@@ -63,9 +65,9 @@ class InputBarButton : RelativeLayout {
         val size = collapsedSize.toInt()
         result.layoutParams = LayoutParams(size, size)
         result.setBackgroundResource(R.drawable.input_bar_button_background)
-        result.mainColor = resources.getColorWithID(colorID, context.theme)
+        result.mainColor = context.getColorFromAttr(colorID)
         if (hasOpaqueBackground) {
-            result.strokeColor = resources.getColorWithID(R.color.input_bar_button_background_opaque_border, context.theme)
+            result.strokeColor = context.getColorFromAttr(R.attr.input_bar_button_background_opaque_border)
         }
         result
     }
@@ -108,13 +110,18 @@ class InputBarButton : RelativeLayout {
     fun getIconID() = iconID
 
     fun expand() {
-        GlowViewUtilities.animateColorIdChange(context, imageViewContainer, colorID, R.color.accent)
+        val fromColor = context.getColorFromAttr(colorID)
+        val toColor = context.getAccentColor()
+        GlowViewUtilities.animateColorChange(imageViewContainer, fromColor, toColor)
         imageViewContainer.animateSizeChange(R.dimen.input_bar_button_collapsed_size, R.dimen.input_bar_button_expanded_size, animationDuration)
         animateImageViewContainerPositionChange(collapsedImageViewPosition, expandedImageViewPosition)
     }
 
     fun collapse() {
-        GlowViewUtilities.animateColorIdChange(context, imageViewContainer, R.color.accent, colorID)
+        val fromColor = context.getAccentColor()
+        val toColor = context.getColorFromAttr(colorID)
+
+        GlowViewUtilities.animateColorChange(imageViewContainer, fromColor, toColor)
         imageViewContainer.animateSizeChange(R.dimen.input_bar_button_expanded_size, R.dimen.input_bar_button_collapsed_size, animationDuration)
         animateImageViewContainerPositionChange(expandedImageViewPosition, collapsedImageViewPosition)
     }

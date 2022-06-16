@@ -25,6 +25,7 @@ import org.thoughtcrime.securesms.util.animateSizeChange
 import org.thoughtcrime.securesms.util.contains
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.distanceTo
+import org.thoughtcrime.securesms.util.getAccentColor
 import org.thoughtcrime.securesms.util.getColorFromAttr
 import org.thoughtcrime.securesms.util.getColorWithID
 import org.thoughtcrime.securesms.util.isAbove
@@ -123,7 +124,7 @@ class NewConversationButtonSetView : RelativeLayout {
             val size = collapsedSize.toInt()
             result.layoutParams = LayoutParams(size, size)
             result.setBackgroundResource(R.drawable.new_conversation_button_background)
-            val backgroundColor = if (isMain) context.getColorFromAttr(R.attr.colorAccent)
+            val backgroundColor = if (isMain) context.getAccentColor()
             else context.getColor(R.color.new_conversation_button_collapsed_background)
 
             result.mainColor = backgroundColor
@@ -159,7 +160,7 @@ class NewConversationButtonSetView : RelativeLayout {
 
         fun expand() {
             val startColor = context.getColor(R.color.new_conversation_button_collapsed_background)
-            val endColor = context.getColorFromAttr(R.attr.colorAccent)
+            val endColor = context.getAccentColor()
             GlowViewUtilities.animateColorChange(imageView, startColor, endColor)
             val startShadowColor = context.getColor(R.color.black)
             val endShadowColor = context.getColor(R.color.new_conversation_button_shadow)
@@ -169,7 +170,7 @@ class NewConversationButtonSetView : RelativeLayout {
         }
 
         fun collapse() {
-            val startColor = context.getColorFromAttr(R.attr.colorAccent)
+            val startColor = context.getAccentColor()
             val endColor = context.getColor(R.color.new_conversation_button_collapsed_background)
             GlowViewUtilities.animateColorChange(imageView, startColor, endColor)
             val startShadowColor = context.getColor(R.color.new_conversation_button_shadow)

@@ -354,14 +354,23 @@
         <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>
     </style>
 
-    <style name="Classic.Dark" parent="Theme.Session.DayNight.FlatActionBar">
+    <style name="Classic">
+        <item name="message_received_background_color">#F2F2F2</item>
+        <item name="colorAccent">@color/classic_accent</item>
+    </style>
+
+    <style name="Ocean">
+        <item name="message_received_background_color">#F2F2F2</item>
+        <item name="colorAccent">@color/ocean_accent</item>
+    </style>
+
+    <style name="Classic.Dark">
         <item name="sessionLogoTint">@color/classic_dark_6</item>
         <item name="colorPrimary">@color/classic_dark_0</item>
         <item name="colorPrimaryDark">@color/classic_dark_0</item>
         <item name="searchBackgroundColor">#1B1B1B</item>
         <item name="searchIconColor">#E5E5E8</item>
         <item name="searchHighlightTint">?colorAccent</item>
-        <item name="colorAccent">@color/accent</item>
         <item name="colorControlNormal">?android:textColorPrimary</item>
         <item name="colorControlActivated">?colorAccent</item>
         <item name="colorControlHighlight">?colorAccent</item>
@@ -383,16 +392,29 @@
         <item name="unreadIndicatorTextColor">@color/classic_dark_6</item>
         <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>
         <item name="android:colorBackgroundFloating">?colorPrimary</item>
+        <item name="input_bar_background"></item>
+        <item name="input_bar_button_background"></item>
+        <item name="input_bar_button_background_opaque"></item>
+        <item name="input_bar_button_background_opaque_border"></item>
+        <item name="input_bar_lock_view_background"></item>
+        <item name="input_bar_lock_view_border"></item>
+        <item name="mention_candidates_view_background"></item>
+        <item name="mention_candidates_view_background_ripple"></item>
+        <item name="link_preview_background"></item>
+        <item name="scroll_to_bottom_button_background"></item>
+        <item name="scroll_to_bottom_button_border"></item>
+        <item name="conversation_unread_count_indicator_background"></item>
+        <item name="conversation_pinned_background"></item>
+        <item name="conversation_pinned_icon"></item>
     </style>
 
-    <style name="Classic.Light" parent="Theme.Session.DayNight.NoActionBar.Light">
+    <style name="Classic.Light">
         <item name="sessionLogoTint">@color/classic_light_0</item>
         <item name="colorPrimary">@color/classic_light_6</item>
         <item name="colorPrimaryDark">@color/classic_light_6</item>
         <item name="searchBackgroundColor">#1B1B1B</item>
         <item name="searchIconColor">#E5E5E8</item>
-        <item name="searchHighlightTint">@color/accent</item>
-        <item name="colorAccent">@color/accent</item>
+        <item name="searchHighlightTint">?colorAccent</item>
         <item name="colorControlNormal">?android:textColorPrimary</item>
         <item name="colorControlActivated">?colorAccent</item>
         <item name="colorControlHighlight">?colorAccent</item>
@@ -414,9 +436,25 @@
         <item name="unreadIndicatorTextColor">@color/classic_light_0</item>
         <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>
         <item name="android:colorBackgroundFloating">?colorPrimary</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+        <item name="input_bar_background"></item>
+        <item name="input_bar_button_background"></item>
+        <item name="input_bar_button_background_opaque"></item>
+        <item name="input_bar_button_background_opaque_border"></item>
+        <item name="input_bar_lock_view_background"></item>
+        <item name="input_bar_lock_view_border"></item>
+        <item name="mention_candidates_view_background"></item>
+        <item name="mention_candidates_view_background_ripple"></item>
+        <item name="link_preview_background"></item>
+        <item name="scroll_to_bottom_button_background"></item>
+        <item name="scroll_to_bottom_button_border"></item>
+        <item name="conversation_unread_count_indicator_background"></item>
+        <item name="conversation_pinned_background"></item>
+        <item name="conversation_pinned_icon"></item>
     </style>
 
-    <style name="Ocean.Dark" parent="Theme.Session.DayNight.NoActionBar">
+    <style name="Ocean.Dark">
         <item name="sessionLogoTint">@color/ocean_dark_6</item>
         <item name="colorPrimary">@color/ocean_dark_2</item>
         <item name="colorPrimaryDark">@color/ocean_dark_2</item>
@@ -425,7 +463,6 @@
         <item name="searchHintColor">@color/ocean_dark_1</item>
         <item name="searchTextColor">?android:textColorPrimary</item>
         <item name="searchHighlightTint">?colorAccent</item>
-        <item name="colorAccent">@color/ocean_dark_accent</item>
         <item name="colorControlNormal">@color/ocean_dark_6</item>
         <item name="colorControlActivated">?colorAccent</item>
         <item name="colorControlHighlight">?colorAccent</item>
@@ -445,13 +482,35 @@
         <item name="default_background_start">?colorPrimaryDark</item>
         <item name="colorCellBackground">@color/ocean_dark_3</item>
         <item name="colorCellRipple">@color/ocean_dark_4</item>
-        <item name="unreadIndicatorBackgroundColor">@color/ocean_light_accent</item>
+        <item name="unreadIndicatorBackgroundColor">?colorAccent</item>
         <item name="unreadIndicatorTextColor">@color/ocean_dark_6</item>
         <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>
         <item name="dialog_background_color">?colorPrimary</item>
+        <!-- Conversation -->
+        <item name="message_received_background_color">@color/ocean_dark_4</item>
+        <item name="message_received_text_color">@color/ocean_dark_6</item>
+        <item name="message_sent_background_color">?colorAccent</item>
+        <item name="message_sent_text_color">@color/ocean_dark_0</item>
+        <item name="input_bar_background">@color/ocean_dark_1</item>
+        <item name="input_bar_text_highlight">@color/ocean_dark_5</item>
+        <item name="input_bar_text_user">@color/ocean_dark_6</item>
+        <item name="input_bar_border">@color/ocean_dark_4</item>
+        <item name="input_bar_button_background">@color/ocean_dark_2</item>
+        <item name="input_bar_button_background_opaque">@color/ocean_dark_2</item>
+        <item name="input_bar_button_background_opaque_border">@color/ocean_dark_2</item>
+        <item name="input_bar_lock_view_background">?colorPrimary</item>
+        <item name="input_bar_lock_view_border">?colorPrimary</item>
+        <item name="mention_candidates_view_background">@color/ocean_dark_2</item>
+        <item name="mention_candidates_view_background_ripple">@color/ocean_dark_3</item>
+        <item name="link_preview_background">@color/ocean_dark_4</item>
+        <item name="scroll_to_bottom_button_background">@color/ocean_dark_4</item>
+        <item name="scroll_to_bottom_button_border">?colorPrimary</item>
+        <item name="conversation_unread_count_indicator_background">@color/ocean_dark_4</item>
+        <item name="conversation_pinned_background">@color/ocean_dark_5</item>
+        <item name="conversation_pinned_icon">?colorPrimary</item>
     </style>
 
-    <style name="Ocean.Light" parent="Theme.Session.DayNight.NoActionBar.Light">
+    <style name="Ocean.Light">
         <item name="sessionLogoTint">@color/ocean_light_0</item>
         <item name="colorPrimary">@color/ocean_light_6</item>
         <item name="colorPrimaryDark">@color/ocean_light_5</item>
@@ -460,7 +519,6 @@
         <item name="searchHintColor">@color/ocean_light_1</item>
         <item name="searchTextColor">@color/ocean_light_0</item>
         <item name="searchHighlightTint">?colorAccent</item>
-        <item name="colorAccent">@color/ocean_dark_accent</item>
         <item name="colorControlNormal">@color/ocean_dark_6</item>
         <item name="colorControlActivated">?colorAccent</item>
         <item name="colorControlHighlight">?colorAccent</item>
@@ -480,10 +538,31 @@
         <item name="default_background_start">@color/ocean_light_5</item>
         <item name="colorCellBackground">@color/ocean_light_5</item>
         <item name="colorCellRipple">@color/ocean_light_3</item>
-        <item name="unreadIndicatorBackgroundColor">@color/ocean_light_accent</item>
+        <item name="unreadIndicatorBackgroundColor">?colorAccent</item>
         <item name="unreadIndicatorTextColor">@color/ocean_light_0</item>
         <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>
         <item name="dialog_background_color">@color/ocean_light_6</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+        <!-- Conversation -->
+        <item name="message_received_background_color">@color/ocean_light_3</item>
+        <item name="message_received_text_color">@color/ocean_light_0</item>
+        <item name="message_sent_background_color">?colorAccent</item>
+        <item name="message_sent_text_color">@color/ocean_light_0</item>
+        <item name="input_bar_background"></item>
+        <item name="input_bar_button_background"></item>
+        <item name="input_bar_button_background_opaque"></item>
+        <item name="input_bar_button_background_opaque_border"></item>
+        <item name="input_bar_lock_view_background"></item>
+        <item name="input_bar_lock_view_border"></item>
+        <item name="mention_candidates_view_background"></item>
+        <item name="mention_candidates_view_background_ripple"></item>
+        <item name="link_preview_background"></item>
+        <item name="scroll_to_bottom_button_background"></item>
+        <item name="scroll_to_bottom_button_border"></item>
+        <item name="conversation_unread_count_indicator_background"></item>
+        <item name="conversation_pinned_background"></item>
+        <item name="conversation_pinned_icon"></item>
     </style>
 
 </resources>

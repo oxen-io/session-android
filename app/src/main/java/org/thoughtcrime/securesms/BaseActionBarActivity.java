@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -22,13 +23,19 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
 
   @StyleRes
   public int getDesiredTheme() {
-    return R.style.Ocean_Light;
+    return R.style.Ocean_Dark;
+  }
+
+  @Override
+  public Resources.Theme getTheme() {
+    // New themes
+    Resources.Theme modifiedTheme = super.getTheme();
+    modifiedTheme.applyStyle(getDesiredTheme(), true);
+    return modifiedTheme;
   }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    // New themes
-    setTheme(getDesiredTheme());
 
     ActionBar actionBar = getSupportActionBar();
     if (actionBar != null) {

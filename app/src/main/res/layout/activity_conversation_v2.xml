@@ -124,7 +124,7 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/rounded_rectangle"
-            android:backgroundTint="@color/conversation_unread_count_indicator_background">
+            android:backgroundTint="?conversation_unread_count_indicator_background">
 
             <TextView
                 android:id="@+id/unreadCountTextView"

@@ -12,6 +12,7 @@ import android.view.View
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.DimenRes
+import network.loki.messenger.R
 
 fun View.contains(point: PointF): Boolean {
     return hitRect.contains(point.x.toInt(), point.y.toInt())
@@ -23,6 +24,9 @@ val View.hitRect: Rect
         getHitRect(rect)
         return rect
     }
+
+@ColorInt
+fun Context.getAccentColor() = getColorFromAttr(R.attr.colorAccent) // TODO: allow for customizable accent
 
 @ColorInt
 fun Context.getColorFromAttr(

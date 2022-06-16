@@ -11,7 +11,6 @@ import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.text.TextPaint
 import android.text.TextUtils
-import network.loki.messenger.R
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.util.Locale
@@ -23,7 +22,7 @@ object AvatarPlaceholderGenerator {
     @JvmStatic
     fun generate(context: Context, pixelSize: Int, hashString: String, displayName: String?): BitmapDrawable {
         // Do not cache color array, it may be different depends on the current theme.
-        val colorPrimary = context.getColorFromAttr(R.attr.colorAccent)
+        val colorPrimary = context.getAccentColor()
 
         val labelText = when {
             !TextUtils.isEmpty(displayName) -> extractLabel(displayName!!.capitalize(Locale.ROOT))

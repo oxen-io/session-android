@@ -19,7 +19,8 @@ import org.thoughtcrime.securesms.database.SessionContactDatabase
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.mms.SlideDeck
 import org.thoughtcrime.securesms.util.MediaUtil
-import org.thoughtcrime.securesms.util.UiModeUtilities
+import org.thoughtcrime.securesms.util.getAccentColor
+import org.thoughtcrime.securesms.util.getColorFromAttr
 import org.thoughtcrime.securesms.util.toPx
 import javax.inject.Inject
 
@@ -90,8 +91,7 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
             binding.quoteViewAccentLine.setBackgroundColor(getLineColor(isOutgoingMessage))
         } else if (attachments != null) {
             binding.quoteViewAttachmentPreviewImageView.imageTintList = ColorStateList.valueOf(ResourcesCompat.getColor(resources, R.color.white, context.theme))
-            val backgroundColorID = if (UiModeUtilities.isDayUiMode(context)) R.color.black else R.color.accent
-            val backgroundColor = ResourcesCompat.getColor(resources, backgroundColorID, context.theme)
+            val backgroundColor = context.getAccentColor()
             binding.quoteViewAttachmentPreviewContainer.backgroundTintList = ColorStateList.valueOf(backgroundColor)
             binding.quoteViewAttachmentPreviewImageView.isVisible = false
             binding.quoteViewAttachmentThumbnailImageView.isVisible = false
@@ -121,31 +121,19 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
 
     // region Convenience
     @ColorInt private fun getLineColor(isOutgoingMessage: Boolean): Int {
-        val isLightMode = UiModeUtilities.isDayUiMode(context)
         return when {
-            mode == Mode.Regular && isLightMode || mode == Mode.Draft && isLightMode -> {
-                ResourcesCompat.getColor(resources, R.color.black, context.theme)
-            }
-            mode == Mode.Regular && !isLightMode -> {
-                if (isOutgoingMessage) {
-                    ResourcesCompat.getColor(resources, R.color.black, context.theme)
-                } else {
-                    ResourcesCompat.getColor(resources, R.color.accent, context.theme)
-                }
-            }
-            else -> { // Draft & dark mode
-                ResourcesCompat.getColor(resources, R.color.accent, context.theme)
-            }
+            mode == Mode.Regular && !isOutgoingMessage -> context.getColorFromAttr(R.attr.message_received_text_color)
+            mode == Mode.Regular -> context.getColorFromAttr(R.attr.message_sent_text_color)
+            else -> context.getColorFromAttr(R.attr.colorAccent)
         }
     }
 
     @ColorInt private fun getTextColor(isOutgoingMessage: Boolean): Int {
-        if (mode == Mode.Draft) { return ResourcesCompat.getColor(resources, R.color.text, context.theme) }
-        val isLightMode = UiModeUtilities.isDayUiMode(context)
-        return if (!isOutgoingMessage && !isLightMode) {
-            ResourcesCompat.getColor(resources, R.color.white, context.theme)
+        if (mode == Mode.Draft) { return context.getColorFromAttr(android.R.attr.textColorPrimary) }
+        return if (!isOutgoingMessage) {
+            context.getColorFromAttr(R.attr.message_received_text_color)
         } else  {
-            ResourcesCompat.getColor(resources, R.color.black, context.theme)
+            context.getColorFromAttr(R.attr.message_sent_text_color)
         }
     }
 

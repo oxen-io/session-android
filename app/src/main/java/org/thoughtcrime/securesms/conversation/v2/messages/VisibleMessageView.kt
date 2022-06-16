@@ -34,7 +34,7 @@ import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.disableClipping
-import org.thoughtcrime.securesms.util.getColorWithID
+import org.thoughtcrime.securesms.util.getColorFromAttr
 import org.thoughtcrime.securesms.util.toDp
 import org.thoughtcrime.securesms.util.toPx
 import java.util.Date
@@ -269,7 +269,7 @@ class VisibleMessageView : LinearLayout {
 
     private fun handleIsSelectedChanged() {
         background = if (snIsSelected) {
-            ColorDrawable(context.resources.getColorWithID(R.color.message_selected, context.theme))
+            ColorDrawable(context.getColorFromAttr(R.attr.message_selected))
         } else {
             null
         }

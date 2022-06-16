@@ -18,21 +18,6 @@
     <color name="new_conversation_button_shadow">#4D077C44</color>
     <color name="pn_option_background">#FCFCFC</color>
     <color name="open_group_chip_color">#0D000000</color>
-    <color name="message_selected">#888888</color>
-    <color name="input_bar_background">#FCFCFC</color>
-    <color name="input_bar_button_background">#0D000000</color>
-    <color name="input_bar_button_background_opaque">#EFEFEF</color>
-    <color name="input_bar_button_background_opaque_border">#33000000</color>
-    <color name="input_bar_lock_view_background">#FCFCFC</color>
-    <color name="input_bar_lock_view_border">#66000000</color>
-    <color name="mention_candidates_view_background">#FCFCFC</color>
-    <color name="mention_candidates_view_background_ripple">#DFDFDF</color>
-    <color name="link_preview_background">#0F000000</color>
-    <color name="scroll_to_bottom_button_background">#FCFCFC</color>
-    <color name="scroll_to_bottom_button_border">#99000000</color>
-    <color name="conversation_unread_count_indicator_background">#E0E0E0</color>
-    <color name="conversation_pinned_background">#F0F0F0</color>
-    <color name="conversation_pinned_icon">#606060</color>
 
     <color name="default_background_start">#ffffff</color>
     <color name="default_background_end">#fcfcfc</color>

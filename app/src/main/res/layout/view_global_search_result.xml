@@ -71,7 +71,7 @@
                 android:layout_gravity="center"
                 android:visibility="gone"
                 android:background="@drawable/rounded_rectangle"
-                android:backgroundTint="@color/conversation_unread_count_indicator_background">
+                android:backgroundTint="?conversation_unread_count_indicator_background">
 
                 <TextView
                     android:id="@+id/unreadCountTextView"

@@ -46,7 +46,7 @@
             android:maxLines="3"
             android:ellipsize="end"
             android:textColor="@color/text"
-            android:background="@color/link_preview_background" />
+            android:background="?link_preview_background" />
 
     </LinearLayout>
 

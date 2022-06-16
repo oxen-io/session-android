@@ -21,7 +21,7 @@ import org.thoughtcrime.securesms.database.RecipientDatabase.NOTIFY_TYPE_NONE
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.DateUtils
-import org.thoughtcrime.securesms.util.getColorFromAttr
+import org.thoughtcrime.securesms.util.getAccentColor
 import java.util.Locale
 
 class ConversationView : LinearLayout {
@@ -56,7 +56,7 @@ class ConversationView : LinearLayout {
             binding.accentView.setBackgroundResource(R.color.destructive)
             binding.accentView.visibility = View.VISIBLE
         } else {
-            val accentColor = context.getColorFromAttr(R.attr.colorAccent)
+            val accentColor = context.getAccentColor()
             val background = ColorDrawable(accentColor)
             binding.accentView.background = background
             // Using thread.isRead we can determine if the last message was our own, and display it as 'read' even though previous messages may not be
