@@ -3,12 +3,19 @@ package org.thoughtcrime.securesms.database
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import android.text.TextUtils
+import org.json.JSONArray
+import org.json.JSONException
+import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId
+import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
+import org.session.libsignal.utilities.JsonUtil.SaneJSONObject
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 import org.thoughtcrime.securesms.database.model.MessageId
 import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.util.CursorUtil
 import org.thoughtcrime.securesms.util.SqlUtil
+import java.util.LinkedList
 
 /**
  * Store reactions on messages.
@@ -17,19 +24,19 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
 
   companion object {
     const val TABLE_NAME = "reaction"
-
-    private const val ID = "_id"
+    const val REACTION_JSON_ALIAS = "reaction_json"
+    const val ROW_ID = "reaction_id"
     const val MESSAGE_ID = "message_id"
     const val IS_MMS = "is_mms"
-    private const val AUTHOR_ID = "author_id"
-    private const val EMOJI = "emoji"
-    private const val DATE_SENT = "date_sent"
-    private const val DATE_RECEIVED = "date_received"
+    const val AUTHOR_ID = "author_id"
+    const val EMOJI = "emoji"
+    const val DATE_SENT = "reaction_date_sent"
+    const val DATE_RECEIVED = "reaction_date_received"
 
     @JvmField
     val CREATE_REACTION_TABLE_COMMAND = """
       CREATE TABLE $TABLE_NAME (
-        $ID INTEGER PRIMARY KEY,
+        $ROW_ID INTEGER PRIMARY KEY,
         $MESSAGE_ID INTEGER NOT NULL,
         $IS_MMS INTEGER NOT NULL,
         $AUTHOR_ID INTEGER NOT NULL REFERENCES ${RecipientDatabase.TABLE_NAME} (${RecipientDatabase.ID}) ON DELETE CASCADE,
@@ -204,4 +211,44 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
 
     writableDatabase.delete(TABLE_NAME, query, null)
   }
+
+  fun getReactions(cursor: Cursor): List<ReactionRecord?> {
+    return try {
+      if (cursor.getColumnIndex(REACTION_JSON_ALIAS) != -1) {
+        if (cursor.isNull(cursor.getColumnIndexOrThrow(REACTION_JSON_ALIAS))) {
+          return listOf()
+        }
+        val result = mutableListOf<ReactionRecord?>()
+        val array = JSONArray(cursor.getString(cursor.getColumnIndexOrThrow(REACTION_JSON_ALIAS)))
+        for (i in 0 until array.length()) {
+          val `object` = SaneJSONObject(array.getJSONObject(i))
+          if (!`object`.isNull(ROW_ID)) {
+            result.add(
+              ReactionRecord(
+                `object`.getLong(MESSAGE_ID),
+                `object`.getString(AUTHOR_ID),
+                `object`.getString(EMOJI),
+                `object`.getLong(DATE_SENT),
+                `object`.getLong(DATE_RECEIVED)
+              )
+            )
+          }
+        }
+        result
+      } else {
+        listOf(
+          ReactionRecord(
+            cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_ID)),
+            cursor.getString(cursor.getColumnIndexOrThrow(AUTHOR_ID)),
+            cursor.getString(cursor.getColumnIndexOrThrow(EMOJI)),
+            cursor.getLong(cursor.getColumnIndexOrThrow(DATE_SENT)),
+            cursor.getLong(cursor.getColumnIndexOrThrow(DATE_RECEIVED))
+          )
+        )
+      }
+    } catch (e: JSONException) {
+      throw AssertionError(e)
+    }
+  }
+
 }

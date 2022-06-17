@@ -16,9 +16,11 @@ import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.visible.LinkPreview
 import org.session.libsession.messaging.messages.visible.Profile
 import org.session.libsession.messaging.messages.visible.Quote
+import org.session.libsession.messaging.messages.visible.Reaction
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
 import org.session.libsession.messaging.open_groups.OpenGroupMessageV2
+import org.session.libsession.messaging.sending_receiving.reactions.ReactionModel
 import org.session.libsession.messaging.utilities.MessageWrapper
 import org.session.libsession.snode.RawResponsePromise
 import org.session.libsession.snode.SnodeAPI
@@ -380,11 +382,6 @@ object MessageSender {
 
     @JvmStatic
     fun sendReactionRemoval(messageId: Long, oldEmoji: String) {
-
-    }
-
-    @JvmStatic
-    fun sendNewReaction(messageId: VisibleMessage, address: Address) {
 
     }
 

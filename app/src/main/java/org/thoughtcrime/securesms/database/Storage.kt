@@ -46,6 +46,8 @@ import org.session.libsignal.utilities.KeyHelper
 import org.session.libsignal.utilities.guava.Optional
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
+import org.thoughtcrime.securesms.database.model.MessageId
+import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.jobs.RetrieveProfileAvatarJob
@@ -103,7 +105,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         return database.getAttachmentsForMessage(messageID)
     }
 
-    override fun persist(message: VisibleMessage, quotes: QuoteModel?, reactionModel: ReactionModel?, linkPreview: List<LinkPreview?>, groupPublicKey: String?, openGroupID: String?, attachments: List<Attachment>): Long? {
+    override fun persist(message: VisibleMessage, quotes: QuoteModel?, linkPreview: List<LinkPreview?>, groupPublicKey: String?, openGroupID: String?, attachments: List<Attachment>): Long? {
         var messageID: Long? = null
         val senderAddress = fromSerialized(message.sender!!)
         val isUserSender = (message.sender!! == getUserPublicKey())
@@ -136,18 +138,17 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         }
         if (message.isMediaMessage() || attachments.isNotEmpty()) {
             val quote: Optional<QuoteModel> = if (quotes != null) Optional.of(quotes) else Optional.absent()
-            val reaction: Optional<ReactionModel> = if (reactionModel != null) Optional.of(reactionModel) else Optional.absent()
             val linkPreviews: Optional<List<LinkPreview>> = if (linkPreview.isEmpty()) Optional.absent() else Optional.of(linkPreview.mapNotNull { it!! })
             val mmsDatabase = DatabaseComponent.get(context).mmsDatabase()
             val insertResult = if (message.sender == getUserPublicKey()) {
-                val mediaMessage = OutgoingMediaMessage.from(message, targetRecipient, pointers, quote.orNull(), linkPreviews.orNull()?.firstOrNull(), reaction.orNull())
+                val mediaMessage = OutgoingMediaMessage.from(message, targetRecipient, pointers, quote.orNull(), linkPreviews.orNull()?.firstOrNull())
                 mmsDatabase.insertSecureDecryptedMessageOutbox(mediaMessage, message.threadID ?: -1, message.sentTimestamp!!)
             } else {
                 // It seems like we have replaced SignalServiceAttachment with SessionServiceAttachment
                 val signalServiceAttachments = attachments.mapNotNull {
                     it.toSignalPointer()
                 }
-                val mediaMessage = IncomingMediaMessage.from(message, senderAddress, targetRecipient.expireMessages * 1000L, group, signalServiceAttachments, quote, linkPreviews, reaction)
+                val mediaMessage = IncomingMediaMessage.from(message, senderAddress, targetRecipient.expireMessages * 1000L, group, signalServiceAttachments, quote, linkPreviews)
                 mmsDatabase.insertSecureDecryptedMessageInbox(mediaMessage, message.threadID ?: -1, message.receivedTimestamp ?: 0)
             }
             if (insertResult.isPresent) {
@@ -666,7 +667,6 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
             Optional.absent(),
             Optional.absent(),
             Optional.absent(),
-            Optional.absent(),
             Optional.of(message)
         )
 
@@ -705,7 +705,6 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
                 Optional.absent(),
                 Optional.absent(),
                 Optional.absent(),
-                Optional.absent(),
                 Optional.absent()
             )
             val threadId = getOrCreateThreadIdFor(senderAddress)
@@ -736,5 +735,17 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         if (threadId == -1L) return false
 
         return database.getLastSeenAndHasSent(threadId).second() ?: false
+    }
+
+    override fun updateReaction(reaction: ReactionModel) {
+        val messageRecord = DatabaseComponent.get(context).mmsSmsDatabase().getMessageFor(reaction.id, reaction.author) ?: return
+        val database = DatabaseComponent.get(context).reactionDatabase()
+        val messageId = MessageId(reaction.id, messageRecord.isMms)
+        if (reaction.react) {
+            val reactionRecord = ReactionRecord(reaction.id, reaction.author, reaction.emoji, 0, 0)
+            database.addReaction(messageId, reactionRecord)
+        } else {
+            database.deleteReaction(messageId, reaction.author)
+        }
     }
 }

@@ -229,20 +229,6 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage, proto: SignalS
             profileManager.setProfilePictureURL(context, recipient, profile.profilePictureURL!!)
         }
     }
-    // Parse reaction if needed
-    var reactionModel: ReactionModel? = null
-    if (message.reaction != null && proto.dataMessage.hasReaction()) {
-        val reaction = proto.dataMessage.reaction
-        val address = Address.fromSerialized(reaction.author)
-        val react = reaction.action == SignalServiceProtos.DataMessage.Reaction.Action.REACT
-        val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
-        val messageInfo = messageDataProvider.getMessageFor(reaction.id, address)
-        reactionModel = if (messageInfo != null) {
-            ReactionModel(reaction.id, reaction.author, messageDataProvider.getMessageBodyFor(reaction.id, reaction.author), react)
-        } else {
-            ReactionModel(reaction.id, reaction.author, reaction.emoji, react)
-        }
-    }
     // Parse quote if needed
     var quoteModel: QuoteModel? = null
     if (message.quote != null && proto.dataMessage.hasQuote()) {
@@ -282,21 +268,29 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage, proto: SignalS
             return@mapNotNull attachment
         }
     }
-    // Persist the message
-    message.threadID = threadID
-    val messageID = storage.persist(message, quoteModel, reactionModel, linkPreviews, message.groupPublicKey, openGroupID, attachments) ?: throw MessageReceiver.Error.DuplicateMessage
-    // Parse & persist attachments
-    // Start attachment downloads if needed
-    storage.getAttachmentsForMessage(messageID).iterator().forEach { attachment ->
-        attachment.attachmentId?.let { id ->
-            val downloadJob = AttachmentDownloadJob(id.rowId, messageID)
-            JobQueue.shared.add(downloadJob)
+    // Parse reaction if needed
+    if (message.reaction != null) {
+        val reaction = message.reaction!!
+        storage.updateReaction(ReactionModel(reaction.timestamp!!, reaction.publicKey!!, reaction.emoji!!, reaction.react!!))
+    } else {
+        // Persist the message
+        message.threadID = threadID
+        val messageID =
+            storage.persist(message, quoteModel, linkPreviews, message.groupPublicKey, openGroupID, attachments)
+                ?: throw MessageReceiver.Error.DuplicateMessage
+        // Parse & persist attachments
+        // Start attachment downloads if needed
+        storage.getAttachmentsForMessage(messageID).iterator().forEach { attachment ->
+            attachment.attachmentId?.let { id ->
+                val downloadJob = AttachmentDownloadJob(id.rowId, messageID)
+                JobQueue.shared.add(downloadJob)
+            }
         }
-    }
-    val openGroupServerID = message.openGroupServerMessageID
-    if (openGroupServerID != null) {
-        val isSms = !(message.isMediaMessage() || attachments.isNotEmpty())
-        storage.setOpenGroupServerMessageID(messageID, openGroupServerID, threadID, isSms)
+        val openGroupServerID = message.openGroupServerMessageID
+        if (openGroupServerID != null) {
+            val isSms = !(message.isMediaMessage() || attachments.isNotEmpty())
+            storage.setOpenGroupServerMessageID(messageID, openGroupServerID, threadID, isSms)
+        }
     }
     // Cancel any typing indicators if needed
     cancelTypingIndicatorsIfNeeded(message.sender!!)

@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.session.libsession.messaging.messages.visible.VisibleMessage;
-import org.session.libsession.messaging.sending_receiving.reactions.ReactionModel;
 import org.session.libsession.utilities.DistributionTypes;
 import org.session.libsession.utilities.IdentityKeyMismatch;
 import org.session.libsession.utilities.NetworkFailure;
@@ -28,7 +27,6 @@ public class OutgoingMediaMessage {
   private   final int                       subscriptionId;
   private   final long                      expiresIn;
   private   final QuoteModel                outgoingQuote;
-  private   final ReactionModel             outgoingReaction;
 
   private   final List<NetworkFailure>      networkFailures       = new LinkedList<>();
   private   final List<IdentityKeyMismatch> identityKeyMismatches = new LinkedList<>();
@@ -40,7 +38,6 @@ public class OutgoingMediaMessage {
                               int subscriptionId, long expiresIn,
                               int distributionType,
                               @Nullable QuoteModel outgoingQuote,
-                              @Nullable ReactionModel outgoingReaction,
                               @NonNull List<Contact> contacts,
                               @NonNull List<LinkPreview> linkPreviews,
                               @NonNull List<NetworkFailure> networkFailures,
@@ -54,7 +51,6 @@ public class OutgoingMediaMessage {
     this.subscriptionId        = subscriptionId;
     this.expiresIn             = expiresIn;
     this.outgoingQuote         = outgoingQuote;
-    this.outgoingReaction      = outgoingReaction;
 
     this.contacts.addAll(contacts);
     this.linkPreviews.addAll(linkPreviews);
@@ -71,7 +67,6 @@ public class OutgoingMediaMessage {
     this.subscriptionId      = that.subscriptionId;
     this.expiresIn           = that.expiresIn;
     this.outgoingQuote       = that.outgoingQuote;
-    this.outgoingReaction    = that.outgoingReaction;
 
     this.identityKeyMismatches.addAll(that.identityKeyMismatches);
     this.networkFailures.addAll(that.networkFailures);
@@ -83,15 +78,14 @@ public class OutgoingMediaMessage {
                                           Recipient recipient,
                                           List<Attachment> attachments,
                                           @Nullable QuoteModel outgoingQuote,
-                                          @Nullable LinkPreview linkPreview,
-                                          @Nullable ReactionModel outgoingReaction)
+                                          @Nullable LinkPreview linkPreview)
   {
     List<LinkPreview> previews = Collections.emptyList();
     if (linkPreview != null) {
       previews = Collections.singletonList(linkPreview);
     }
     return new OutgoingMediaMessage(recipient, message.getText(), attachments, message.getSentTimestamp(), -1,
-            recipient.getExpireMessages() * 1000, DistributionTypes.DEFAULT, outgoingQuote, outgoingReaction, Collections.emptyList(),
+            recipient.getExpireMessages() * 1000, DistributionTypes.DEFAULT, outgoingQuote, Collections.emptyList(),
             previews, Collections.emptyList(), Collections.emptyList());
   }
 
@@ -131,10 +125,6 @@ public class OutgoingMediaMessage {
 
   public @Nullable QuoteModel getOutgoingQuote() {
     return outgoingQuote;
-  }
-
-  public @Nullable ReactionModel getOutgoingReaction() {
-    return outgoingReaction;
   }
 
   public @NonNull List<Contact> getSharedContacts() {

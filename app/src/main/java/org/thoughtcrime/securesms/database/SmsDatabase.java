@@ -23,6 +23,9 @@ import android.database.Cursor;
 import android.text.TextUtils;
 import android.util.Pair;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.annimon.stream.Stream;
 
 import net.sqlcipher.database.SQLiteDatabase;
@@ -42,7 +45,6 @@ import org.session.libsignal.utilities.JsonUtil;
 import org.session.libsignal.utilities.Log;
 import org.session.libsignal.utilities.guava.Optional;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
-import org.thoughtcrime.securesms.database.model.MessageId;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.database.model.ReactionRecord;
 import org.thoughtcrime.securesms.database.model.SmsMessageRecord;
@@ -101,7 +103,15 @@ public class SmsDatabase extends MessagingDatabase {
       PROTOCOL, READ, STATUS, TYPE,
       REPLY_PATH_PRESENT, SUBJECT, BODY, SERVICE_CENTER, DELIVERY_RECEIPT_COUNT,
       MISMATCHED_IDENTITIES, SUBSCRIPTION_ID, EXPIRES_IN, EXPIRE_STARTED,
-      NOTIFIED, READ_RECEIPT_COUNT, UNIDENTIFIED
+      NOTIFIED, READ_RECEIPT_COUNT, UNIDENTIFIED,
+      "json_group_array(json_object(" +
+              "'" + ReactionDatabase.ROW_ID + "', " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.ROW_ID + ", " +
+              "'" + ReactionDatabase.MESSAGE_ID + "', " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.MESSAGE_ID + ", " +
+              "'" + ReactionDatabase.AUTHOR_ID + "', " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.AUTHOR_ID + ", " +
+              "'" + ReactionDatabase.EMOJI + "', " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.EMOJI + ", " +
+              "'" + ReactionDatabase.DATE_SENT + "', " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.DATE_SENT + ", " +
+              "'" + ReactionDatabase.DATE_RECEIVED + "', " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.DATE_RECEIVED +
+              ")) AS " + ReactionDatabase.REACTION_JSON_ALIAS
   };
 
   public static String CREATE_REACTIONS_UNREAD_COMMAND = "ALTER TABLE "+ TABLE_NAME + " " +
@@ -534,10 +544,17 @@ public class SmsDatabase extends MessagingDatabase {
     return messageId;
   }
 
+  private Cursor rawQuery(@NonNull String where, @Nullable String[] arguments) {
+    SQLiteDatabase database = databaseHelper.getReadableDatabase();
+    return database.rawQuery("SELECT " + Util.join(MESSAGE_PROJECTION, ",") +
+            " FROM " + SmsDatabase.TABLE_NAME +  " LEFT OUTER JOIN " + ReactionDatabase.TABLE_NAME +
+            " ON (" + SmsDatabase.TABLE_NAME + "." + SmsDatabase.ID + " = " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.MESSAGE_ID + ")" +
+            " WHERE " + where + " GROUP BY " + SmsDatabase.TABLE_NAME + "." + SmsDatabase.ID, arguments);
+  }
+
   public Cursor getExpirationStartedMessages() {
     String         where = EXPIRE_STARTED + " > 0";
-    SQLiteDatabase db    = databaseHelper.getReadableDatabase();
-    return db.query(TABLE_NAME, MESSAGE_PROJECTION, where, null, null, null, null);
+    return rawQuery(where, null);
   }
 
   public SmsMessageRecord getMessage(long messageId) throws NoSuchMessageException {
@@ -753,7 +770,7 @@ public class SmsDatabase extends MessagingDatabase {
 
       List<IdentityKeyMismatch> mismatches = getMismatches(mismatchDocument);
       Recipient                 recipient  = Recipient.from(context, address, true);
-      List<ReactionRecord>      reactions  = DatabaseComponent.get(context).reactionDatabase().getReactions(new MessageId(messageId, false));
+      List<ReactionRecord>      reactions  = DatabaseComponent.get(context).reactionDatabase().getReactions(cursor);
 
       return new SmsMessageRecord(messageId, body, recipient,
                                   recipient,

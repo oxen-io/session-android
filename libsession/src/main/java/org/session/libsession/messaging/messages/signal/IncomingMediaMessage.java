@@ -4,7 +4,6 @@ import org.session.libsession.messaging.messages.visible.VisibleMessage;
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment;
 import org.session.libsession.messaging.sending_receiving.attachments.PointerAttachment;
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage;
-import org.session.libsession.messaging.sending_receiving.reactions.ReactionModel;
 import org.session.libsession.utilities.Contact;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview;
@@ -33,7 +32,6 @@ public class IncomingMediaMessage {
 
   private final DataExtractionNotificationInfoMessage dataExtractionNotification;
   private final QuoteModel                            quote;
-  private final ReactionModel                         reaction;
 
   private final List<Attachment>  attachments    = new LinkedList<>();
   private final List<Contact>     sharedContacts = new LinkedList<>();
@@ -50,7 +48,6 @@ public class IncomingMediaMessage {
                               Optional<SignalServiceGroup> group,
                               Optional<List<SignalServiceAttachment>> attachments,
                               Optional<QuoteModel> quote,
-                              Optional<ReactionModel> reaction,
                               Optional<List<Contact>> sharedContacts,
                               Optional<List<LinkPreview>> linkPreviews,
                               Optional<DataExtractionNotificationInfoMessage> dataExtractionNotification)
@@ -64,7 +61,6 @@ public class IncomingMediaMessage {
     this.expirationUpdate           = expirationUpdate;
     this.dataExtractionNotification = dataExtractionNotification.orNull();
     this.quote                      = quote.orNull();
-    this.reaction                   = reaction.orNull();
     this.unidentified               = unidentified;
     this.messageRequestResponse     = messageRequestResponse;
 
@@ -82,11 +78,10 @@ public class IncomingMediaMessage {
                                           Optional<SignalServiceGroup> group,
                                           List<SignalServiceAttachment> attachments,
                                           Optional<QuoteModel> quote,
-                                          Optional<List<LinkPreview>> linkPreviews,
-                                          Optional<ReactionModel> reaction)
+                                          Optional<List<LinkPreview>> linkPreviews)
   {
     return new IncomingMediaMessage(from, message.getSentTimestamp(), -1, expiresIn, false,
-            false, false, Optional.fromNullable(message.getText()), group, Optional.fromNullable(attachments), quote, reaction, Optional.absent(), linkPreviews, Optional.absent());
+            false, false, Optional.fromNullable(message.getText()), group, Optional.fromNullable(attachments), quote, Optional.absent(), linkPreviews, Optional.absent());
   }
 
   public int getSubscriptionId() {
@@ -145,10 +140,6 @@ public class IncomingMediaMessage {
 
   public QuoteModel getQuote() {
     return quote;
-  }
-
-  public ReactionModel getReaction() {
-    return reaction;
   }
 
   public List<Contact> getSharedContacts() {

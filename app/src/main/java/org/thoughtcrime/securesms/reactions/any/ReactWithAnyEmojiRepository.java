@@ -9,9 +9,9 @@ import com.annimon.stream.Stream;
 import org.session.libsession.messaging.sending_receiving.MessageSender;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.concurrent.SignalExecutors;
-import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.components.emoji.RecentEmojiPageModel;
+import org.thoughtcrime.securesms.database.ReactionDatabase;
 import org.thoughtcrime.securesms.database.model.MessageId;
 import org.thoughtcrime.securesms.database.model.ReactionRecord;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import dagger.hilt.android.internal.ThreadUtil;
 import network.loki.messenger.R;
 
 final class ReactWithAnyEmojiRepository {
@@ -67,18 +66,22 @@ final class ReactWithAnyEmojiRepository {
 
   void addEmojiToMessage(@NonNull String emoji, @NonNull MessageId messageId) {
     SignalExecutors.BOUNDED.execute(() -> {
-      ReactionRecord  oldRecord = Stream.of(DatabaseComponent.get(context).reactionDatabase().getReactions(messageId))
-                                        .filter(record -> record.getAuthor().equals(TextSecurePreferences.getLocalNumber(context)))
+      ReactionDatabase reactionDb = DatabaseComponent.get(context).reactionDatabase();
+      String author = TextSecurePreferences.getLocalNumber(context);
+      ReactionRecord  oldRecord = Stream.of(reactionDb.getReactions(messageId))
+                                        .filter(record -> record.getAuthor().equals(author))
                                         .findFirst()
                                         .orElse(null);
 
       if (oldRecord != null && oldRecord.getEmoji().equals(emoji)) {
-        //TODO: remove locally
+        //TODO: DatabaseComponent.get(context).reactionDatabase().deleteReaction(messageId);
         MessageSender.sendReactionRemoval(messageId.getId(), oldRecord.getEmoji());
       } else {
-        //TODO: add locally
-//        MessageSender.sendNewReaction(messageId.getId(), emoji);
-//        ThreadUtil.runOnMain(() -> recentEmojiPageModel.onCodePointSelected(emoji));
+        long timestamp = System.currentTimeMillis();
+        ReactionRecord reaction = new ReactionRecord(messageId.getId(), author, emoji, timestamp, timestamp);
+        DatabaseComponent.get(context).reactionDatabase().addReaction(messageId, reaction);
+        /*TODO: MessageSender.sendNewReaction(messageId.getId(), emoji);
+        ThreadUtil.runOnMain(() -> recentEmojiPageModel.onCodePointSelected(emoji));*/
       }
     });
   }
