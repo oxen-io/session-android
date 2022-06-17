@@ -16,11 +16,11 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.annotation.DrawableRes
 import network.loki.messenger.R
+import org.session.libsession.utilities.getColorFromAttr
 import org.thoughtcrime.securesms.util.GlowViewUtilities
 import org.thoughtcrime.securesms.util.InputBarButtonImageViewContainer
 import org.thoughtcrime.securesms.util.animateSizeChange
 import org.thoughtcrime.securesms.util.getAccentColor
-import org.thoughtcrime.securesms.util.getColorFromAttr
 import org.thoughtcrime.securesms.util.getColorWithID
 import org.thoughtcrime.securesms.util.toPx
 import java.util.Date

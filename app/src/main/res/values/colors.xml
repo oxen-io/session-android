@@ -115,14 +115,6 @@
     <color name="ocean_light_5">#ECFAFB</color>
     <color name="ocean_light_6">#FCFFFF</color>
 
-    <color name="accent_green">#31F196</color>
-    <color name="accent_blue">#57C9FA</color>
-    <color name="accent_purple">#C993FF</color>
-    <color name="accent_pink">#FF95EF</color>
-    <color name="accent_red">#FF9C8E</color>
-    <color name="accent_orange">#FCB159</color>
-    <color name="accent_yellow">#FAD657</color>
-
     <color name="danger">#EA5545</color>
 
 </resources>

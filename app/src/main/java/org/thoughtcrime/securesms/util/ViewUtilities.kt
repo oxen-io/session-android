@@ -7,12 +7,12 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.PointF
 import android.graphics.Rect
-import android.util.TypedValue
 import android.view.View
-import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.DimenRes
 import network.loki.messenger.R
+import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.getColorFromAttr
 
 fun View.contains(point: PointF): Boolean {
     return hitRect.contains(point.x.toInt(), point.y.toInt())
@@ -26,17 +26,8 @@ val View.hitRect: Rect
     }
 
 @ColorInt
-fun Context.getAccentColor() = getColorFromAttr(R.attr.colorAccent) // TODO: allow for customizable accent
-
-@ColorInt
-fun Context.getColorFromAttr(
-    @AttrRes attrColor: Int,
-    typedValue: TypedValue = TypedValue(),
-    resolveRefs: Boolean = true
-): Int {
-    theme.resolveAttribute(attrColor, typedValue, resolveRefs)
-    return typedValue.data
-}
+fun Context.getAccentColor() = TextSecurePreferences.getAccentColor(this)
+    ?: getColorFromAttr(R.attr.colorAccent)
 
 fun View.animateSizeChange(@DimenRes startSizeID: Int, @DimenRes endSizeID: Int, animationDuration: Long = 250) {
     val startSize = resources.getDimension(startSizeID)

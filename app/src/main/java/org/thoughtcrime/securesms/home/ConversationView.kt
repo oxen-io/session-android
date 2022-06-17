@@ -71,6 +71,7 @@ class ConversationView : LinearLayout {
         binding.unreadCountTextView.text = formattedUnreadCount
         val textSize = if (unreadCount < 1000) 12.0f else 10.0f
         binding.unreadCountTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize)
+        binding.unreadCountIndicator.background.setTint(context.getAccentColor())
         binding.unreadCountIndicator.isVisible = (unreadCount != 0 && !thread.isRead)
         val senderDisplayName = getUserDisplayName(thread.recipient)
                 ?: thread.recipient.address.toString()

@@ -5,6 +5,8 @@ import android.hardware.Camera
 import android.net.Uri
 import android.provider.Settings
 import androidx.annotation.ArrayRes
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.core.app.NotificationCompat
 import androidx.preference.PreferenceManager.getDefaultSharedPreferences
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -165,6 +167,8 @@ interface TextSecurePreferences {
     fun setLastVacuumNow()
     fun getFingerprintKeyGenerated(): Boolean
     fun setFingerprintKeyGenerated()
+    @ColorInt fun getAccentColor(): Int?
+    fun setAccentColor(@ColorRes newColor: Int?)
     fun clearAll()
 
     companion object {
@@ -247,6 +251,14 @@ interface TextSecurePreferences {
         const val SHOWN_CALL_NOTIFICATION = "pref_shown_call_notification" // call notification is a promp to check privacy settings
         const val LAST_VACUUM_TIME = "pref_last_vacuum_time"
         const val FINGERPRINT_KEY_GENERATED = "fingerprint_key_generated"
+        const val SELECTED_ACCENT_COLOR = "selected_accent_color"
+        const val GREEN_ACCENT = "accent_green"
+        const val BLUE_ACCENT = "accent_blue"
+        const val PURPLE_ACCENT = "accent_purple"
+        const val PINK_ACCENT = "accent_pink"
+        const val RED_ACCENT = "accent_red"
+        const val ORANGE_ACCENT = "accent_orange"
+        const val YELLOW_ACCENT = "accent_yellow"
 
         @JvmStatic
         fun getLastConfigurationSyncTime(context: Context): Long {
@@ -936,6 +948,35 @@ interface TextSecurePreferences {
             setBooleanPreference(context, FINGERPRINT_KEY_GENERATED, true)
         }
 
+        @JvmStatic @ColorInt
+        fun getAccentColor(context: Context): Int? {
+            val colorId = when (getStringPreference(context, SELECTED_ACCENT_COLOR, PURPLE_ACCENT)) {
+                GREEN_ACCENT -> R.color.accent_green
+                BLUE_ACCENT -> R.color.accent_blue
+                PURPLE_ACCENT -> R.color.accent_purple
+                PINK_ACCENT -> R.color.accent_pink
+                RED_ACCENT -> R.color.accent_red
+                ORANGE_ACCENT -> R.color.accent_orange
+                YELLOW_ACCENT -> R.color.accent_yellow
+                else -> null
+            }
+            return colorId?.let { context.getColor(it) }
+        }
+
+        @JvmStatic
+        fun setAccentColor(context: Context, @ColorRes newColor: Int?) {
+            setStringPreference(context, SELECTED_ACCENT_COLOR, when (newColor) {
+                R.color.accent_green -> GREEN_ACCENT
+                R.color.accent_blue -> BLUE_ACCENT
+                R.color.accent_purple -> PURPLE_ACCENT
+                R.color.accent_pink -> PINK_ACCENT
+                R.color.accent_red -> RED_ACCENT
+                R.color.accent_orange -> ORANGE_ACCENT
+                R.color.accent_yellow -> YELLOW_ACCENT
+                else -> null
+            })
+        }
+
         @JvmStatic
         fun clearAll(context: Context) {
             getDefaultSharedPreferences(context).edit().clear().commit()
@@ -1544,6 +1585,40 @@ class AppTextSecurePreferences @Inject constructor(
         setBooleanPreference(TextSecurePreferences.FINGERPRINT_KEY_GENERATED, true)
     }
 
+    @ColorInt
+    override fun getAccentColor(): Int? {
+        val prefColor = TextSecurePreferences.getStringPreference(
+            context,
+            TextSecurePreferences.SELECTED_ACCENT_COLOR,
+            null
+        )
+        val colorId = when (prefColor) {
+            TextSecurePreferences.GREEN_ACCENT -> R.color.accent_green
+            TextSecurePreferences.BLUE_ACCENT -> R.color.accent_blue
+            TextSecurePreferences.PURPLE_ACCENT -> R.color.accent_purple
+            TextSecurePreferences.PINK_ACCENT -> R.color.accent_pink
+            TextSecurePreferences.RED_ACCENT -> R.color.accent_red
+            TextSecurePreferences.ORANGE_ACCENT -> R.color.accent_orange
+            TextSecurePreferences.YELLOW_ACCENT -> R.color.accent_yellow
+            else -> null
+        }
+        return colorId?.let { context.getColor(it) }
+    }
+
+    override fun setAccentColor(@ColorRes newColor: Int?) {
+        TextSecurePreferences.setStringPreference(
+            context, TextSecurePreferences.SELECTED_ACCENT_COLOR, when (newColor) {
+                R.color.accent_green -> TextSecurePreferences.GREEN_ACCENT
+                R.color.accent_blue -> TextSecurePreferences.BLUE_ACCENT
+                R.color.accent_purple -> TextSecurePreferences.PURPLE_ACCENT
+                R.color.accent_pink -> TextSecurePreferences.PINK_ACCENT
+                R.color.accent_red -> TextSecurePreferences.RED_ACCENT
+                R.color.accent_orange -> TextSecurePreferences.ORANGE_ACCENT
+                R.color.accent_yellow -> TextSecurePreferences.YELLOW_ACCENT
+                else -> null
+            }
+        )
+    }
 
     override fun clearAll() {
         getDefaultSharedPreferences(context).edit().clear().commit()

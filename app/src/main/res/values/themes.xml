@@ -549,20 +549,23 @@
         <item name="message_received_text_color">@color/ocean_light_0</item>
         <item name="message_sent_background_color">?colorAccent</item>
         <item name="message_sent_text_color">@color/ocean_light_0</item>
-        <item name="input_bar_background"></item>
-        <item name="input_bar_button_background"></item>
-        <item name="input_bar_button_background_opaque"></item>
-        <item name="input_bar_button_background_opaque_border"></item>
-        <item name="input_bar_lock_view_background"></item>
-        <item name="input_bar_lock_view_border"></item>
-        <item name="mention_candidates_view_background"></item>
-        <item name="mention_candidates_view_background_ripple"></item>
-        <item name="link_preview_background"></item>
-        <item name="scroll_to_bottom_button_background"></item>
-        <item name="scroll_to_bottom_button_border"></item>
-        <item name="conversation_unread_count_indicator_background"></item>
-        <item name="conversation_pinned_background"></item>
-        <item name="conversation_pinned_icon"></item>
+        <item name="input_bar_background">@color/ocean_dark_1</item>
+        <item name="input_bar_text_highlight">@color/ocean_dark_5</item>
+        <item name="input_bar_text_user">@color/ocean_dark_6</item>
+        <item name="input_bar_border">@color/ocean_dark_4</item>
+        <item name="input_bar_button_background">@color/ocean_dark_2</item>
+        <item name="input_bar_button_background_opaque">@color/ocean_dark_2</item>
+        <item name="input_bar_button_background_opaque_border">@color/ocean_dark_2</item>
+        <item name="input_bar_lock_view_background">?colorPrimary</item>
+        <item name="input_bar_lock_view_border">?colorPrimary</item>
+        <item name="mention_candidates_view_background">@color/ocean_dark_2</item>
+        <item name="mention_candidates_view_background_ripple">@color/ocean_dark_3</item>
+        <item name="link_preview_background">@color/ocean_dark_4</item>
+        <item name="scroll_to_bottom_button_background">@color/ocean_dark_4</item>
+        <item name="scroll_to_bottom_button_border">?colorPrimary</item>
+        <item name="conversation_unread_count_indicator_background">@color/ocean_dark_4</item>
+        <item name="conversation_pinned_background">@color/ocean_dark_5</item>
+        <item name="conversation_pinned_icon">?colorPrimary</item>
     </style>
 
 </resources>

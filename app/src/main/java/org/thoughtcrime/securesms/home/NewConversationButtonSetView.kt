@@ -19,6 +19,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import network.loki.messenger.R
+import org.session.libsession.utilities.getColorFromAttr
 import org.thoughtcrime.securesms.util.GlowViewUtilities
 import org.thoughtcrime.securesms.util.NewConversationButtonImageView
 import org.thoughtcrime.securesms.util.animateSizeChange
@@ -26,7 +27,6 @@ import org.thoughtcrime.securesms.util.contains
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.distanceTo
 import org.thoughtcrime.securesms.util.getAccentColor
-import org.thoughtcrime.securesms.util.getColorFromAttr
 import org.thoughtcrime.securesms.util.getColorWithID
 import org.thoughtcrime.securesms.util.isAbove
 import org.thoughtcrime.securesms.util.isLeftOf

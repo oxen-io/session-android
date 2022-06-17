@@ -13,6 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewQuoteBinding
 import org.session.libsession.messaging.contacts.Contact
+import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities
 import org.thoughtcrime.securesms.database.SessionContactDatabase
@@ -20,7 +21,6 @@ import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.mms.SlideDeck
 import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.getAccentColor
-import org.thoughtcrime.securesms.util.getColorFromAttr
 import org.thoughtcrime.securesms.util.toPx
 import javax.inject.Inject
 

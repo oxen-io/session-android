@@ -32,7 +32,7 @@ import org.session.libsession.messaging.jobs.AttachmentDownloadJob
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
-import org.session.libsession.utilities.ThemeUtil
+import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.ModalUrlBottomSheet
@@ -45,6 +45,7 @@ import org.thoughtcrime.securesms.database.model.SmsMessageRecord
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.SearchUtil
 import org.thoughtcrime.securesms.util.UiModeUtilities
+import org.thoughtcrime.securesms.util.getAccentColor
 import org.thoughtcrime.securesms.util.getColorWithID
 import org.thoughtcrime.securesms.util.toPx
 import java.util.Locale
@@ -72,8 +73,8 @@ class VisibleMessageContentView : LinearLayout {
         glide: GlideRequests, thread: Recipient, searchQuery: String?, contactIsTrusted: Boolean) {
         // Background
         val background = getBackground(message.isOutgoing, isStartOfMessageCluster, isEndOfMessageCluster)
-        val colorID = if (message.isOutgoing) R.attr.message_sent_background_color else R.attr.message_received_background_color
-        val color = ThemeUtil.getThemedColor(context, colorID)
+        val color = if (message.isOutgoing) context.getAccentColor()
+        else context.getColorFromAttr(R.attr.message_received_background_color)
         val filter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(color, BlendModeCompat.SRC_IN)
         background.colorFilter = filter
         setBackground(background)
