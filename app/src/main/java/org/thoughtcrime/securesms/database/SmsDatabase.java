@@ -558,8 +558,7 @@ public class SmsDatabase extends MessagingDatabase {
   }
 
   public SmsMessageRecord getMessage(long messageId) throws NoSuchMessageException {
-    SQLiteDatabase db     = databaseHelper.getReadableDatabase();
-    Cursor         cursor = db.query(TABLE_NAME, MESSAGE_PROJECTION, ID_WHERE, new String[]{messageId + ""}, null, null, null);
+    Cursor         cursor = rawQuery(ID_WHERE, new String[]{messageId + ""});
     Reader         reader = new Reader(cursor);
     SmsMessageRecord record = reader.getNext();
 
