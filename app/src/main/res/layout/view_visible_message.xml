@@ -63,7 +63,7 @@
                 android:ellipsize="end" />
 
             <LinearLayout
-                android:id="@+id/expirationTimerViewContainer"
+                android:id="@+id/messageInnerContainer"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -82,7 +82,14 @@
 
             </LinearLayout>
 
+            <org.thoughtcrime.securesms.conversation.v2.messages.EmojiReactionsView
+                android:id="@+id/emojiReactionsView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
             <RelativeLayout
+                android:id="@+id/messageFooterContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 

@@ -100,7 +100,7 @@ class VisibleMessageView : LinearLayout {
         layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         isHapticFeedbackEnabled = true
         setWillNotDraw(false)
-        binding.expirationTimerViewContainer.disableClipping()
+        binding.messageInnerContainer.disableClipping()
         binding.messageContentContainer.disableClipping()
     }
     // endregion
@@ -142,6 +142,7 @@ class VisibleMessageView : LinearLayout {
         // Date break
         binding.dateBreakTextView.showDateBreak(message, previous)
         // Timestamp
+        binding.messageTimestampTextView.isVisible = message.reactions.isEmpty()
         binding.messageTimestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), message.timestamp)
         // Margins
         val startPadding = if (isGroupThread) {
@@ -178,6 +179,11 @@ class VisibleMessageView : LinearLayout {
         // Calculate max message bubble width
         var maxWidth = screenWidth - startPadding - endPadding
         if (binding.profilePictureContainer.visibility != View.GONE) { maxWidth -= binding.profilePictureContainer.width }
+        // Emoji Reactions
+        if (message.reactions.isNotEmpty()) {
+            binding.emojiReactionsView.isVisible = true
+            binding.emojiReactionsView.setReactions(message.reactions, binding.messageInnerContainer.width)
+        }
         // Populate content view
         binding.messageContentView.indexInAdapter = indexInAdapter
         binding.messageContentView.bind(message, isStartOfMessageCluster, isEndOfMessageCluster, glide, maxWidth, thread, searchQuery, message.isOutgoing || isGroupThread || (contact?.isTrusted ?: false))
@@ -224,7 +230,7 @@ class VisibleMessageView : LinearLayout {
 
     private fun updateExpirationTimer(message: MessageRecord) {
         val expirationTimerViewLayoutParams = binding.expirationTimerView.layoutParams as MarginLayoutParams
-        val container = binding.expirationTimerViewContainer
+        val container = binding.messageInnerContainer
         val content = binding.messageContentView
         val expiration = binding.expirationTimerView
         container.removeAllViewsInLayout()

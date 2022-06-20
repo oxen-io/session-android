@@ -130,11 +130,6 @@ class VisibleMessageContentView : LinearLayout {
             }
         }
 
-        if (message.reactions.isNotEmpty()) {
-            binding.emojiReactionsView.isVisible = true
-            binding.emojiReactionsView.setReactions(message.reactions, binding.bodyTextView.width)
-        }
-
         when {
             message is MmsMessageRecord && message.linkPreviews.isNotEmpty() -> {
                 binding.linkPreviewView.bind(message, glide, isStartOfMessageCluster, isEndOfMessageCluster)
