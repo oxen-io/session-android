@@ -22,6 +22,7 @@ import org.session.libsession.messaging.messages.signal.OutgoingGroupMediaMessag
 import org.session.libsession.messaging.messages.signal.OutgoingMediaMessage
 import org.session.libsession.messaging.messages.signal.OutgoingTextMessage
 import org.session.libsession.messaging.messages.visible.Attachment
+import org.session.libsession.messaging.messages.visible.Reaction
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.OpenGroupV2
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId
@@ -29,7 +30,6 @@ import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAt
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
-import org.session.libsession.messaging.sending_receiving.reactions.ReactionModel
 import org.session.libsession.messaging.utilities.UpdateMessageData
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.utilities.Address
@@ -737,17 +737,17 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         return database.getLastSeenAndHasSent(threadId).second() ?: false
     }
 
-    override fun addReaction(reaction: ReactionModel) {
-        val messageRecord = DatabaseComponent.get(context).mmsSmsDatabase().getMessageForTimestamp(reaction.timestamp) ?: return
+    override fun addReaction(reaction: Reaction) {
+        val messageRecord = DatabaseComponent.get(context).mmsSmsDatabase().getMessageForTimestamp(reaction.timestamp!!) ?: return
         val database = DatabaseComponent.get(context).reactionDatabase()
         val messageId = MessageId(messageRecord.id, messageRecord.isMms)
         database.addReaction(messageId, ReactionRecord(
             messageRecord.id,
-            reaction.author,
-            reaction.emoji,
-            reaction.serverId,
-            reaction.sentTimestamp,
-            reaction.receivedTimestamp
+            reaction.publicKey!!,
+            reaction.emoji!!,
+            reaction.serverId!!,
+            reaction.dateSent!!,
+            reaction.dateReceived!!
         ))
     }
 

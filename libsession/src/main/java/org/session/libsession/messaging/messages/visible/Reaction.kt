@@ -3,13 +3,15 @@ package org.session.libsession.messaging.messages.visible
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.protos.SignalServiceProtos.DataMessage.Reaction.Action
 import org.session.libsignal.utilities.Log
-import org.session.libsession.messaging.sending_receiving.reactions.ReactionModel as SignalReaction
 
 class Reaction() {
     var timestamp: Long? = 0
     var publicKey: String? = null
     var emoji: String? = null
     var react: Boolean? = true
+    var serverId: String? = null
+    var dateSent: Long? = 0
+    var dateReceived: Long? = 0
 
     fun isValid(): Boolean {
         return (timestamp != null && publicKey != null)
@@ -23,9 +25,8 @@ class Reaction() {
             return Reaction(proto.id, proto.author, proto.emoji, react)
         }
 
-        fun from(signalReaction: SignalReaction?): Reaction? {
-            if (signalReaction == null) { return null }
-            return Reaction(signalReaction.timestamp, signalReaction.author, signalReaction.emoji, true)
+        fun from(timestamp: Long, author: String, emoji: String): Reaction? {
+            return Reaction(timestamp, author, emoji, true)
         }
     }
 

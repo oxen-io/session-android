@@ -23,7 +23,6 @@ import org.session.libsession.messaging.sending_receiving.link_preview.LinkPrevi
 import org.session.libsession.messaging.sending_receiving.notifications.PushNotificationAPI
 import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPollerV2
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
-import org.session.libsession.messaging.sending_receiving.reactions.ReactionModel
 import org.session.libsession.messaging.utilities.WebRtcUtils
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
@@ -269,19 +268,14 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage, proto: SignalS
         }
     }
     // Parse reaction if needed
-    message.reaction?.let {
-        if (it.react == true) {
-            val serverId = message.openGroupServerMessageID?.toString() ?: message.serverHash.orEmpty()
-            storage.addReaction(ReactionModel(
-                it.timestamp!!,
-                it.publicKey!!,
-                it.emoji!!,
-                serverId,
-                message.sentTimestamp ?: 0,
-                message.receivedTimestamp ?: 0
-            ))
+    message.reaction?.let { reaction ->
+        if (reaction.react == true) {
+            reaction.serverId = message.openGroupServerMessageID?.toString() ?: message.serverHash.orEmpty()
+            reaction.dateSent = message.sentTimestamp ?: 0
+            reaction.dateReceived = message.receivedTimestamp ?: 0
+            storage.addReaction(reaction)
         } else {
-            storage.removeReaction(it.timestamp!!, it.publicKey!!)
+            storage.removeReaction(reaction.timestamp!!, reaction.publicKey!!)
         }
     } ?: run {
         // Persist the message

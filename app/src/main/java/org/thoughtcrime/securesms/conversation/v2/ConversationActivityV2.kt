@@ -63,7 +63,6 @@ import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
-import org.session.libsession.messaging.sending_receiving.reactions.ReactionModel
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Address.Companion.fromSerialized
 import org.session.libsession.utilities.MediaTypes
@@ -944,7 +943,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val reaction = ReactionRecord(messageRecord.id, sender.serialize(), emoji, dateSent = timestamp, dateReceived = timestamp)
         reactionDb.addReaction(MessageId(messageRecord.id, messageRecord.isMms), reaction)
         // Send it
-        message.reaction = Reaction.from(ReactionModel(messageRecord.timestamp, sender.serialize(), emoji))
+        message.reaction = Reaction.from(messageRecord.timestamp, sender.serialize(), emoji)
         MessageSender.send(message, viewModel.recipient.address)
     }
 
