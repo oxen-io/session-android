@@ -269,10 +269,21 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage, proto: SignalS
         }
     }
     // Parse reaction if needed
-    if (message.reaction != null) {
-        val reaction = message.reaction!!
-        storage.updateReaction(ReactionModel(reaction.timestamp!!, reaction.publicKey!!, reaction.emoji!!, reaction.react!!))
-    } else {
+    message.reaction?.let {
+        if (it.react == true) {
+            val serverId = message.openGroupServerMessageID?.toString() ?: message.serverHash.orEmpty()
+            storage.addReaction(ReactionModel(
+                it.timestamp!!,
+                it.publicKey!!,
+                it.emoji!!,
+                serverId,
+                message.sentTimestamp ?: 0,
+                message.receivedTimestamp ?: 0
+            ))
+        } else {
+            storage.removeReaction(it.timestamp!!, it.publicKey!!)
+        }
+    } ?: run {
         // Persist the message
         message.threadID = threadID
         val messageID =

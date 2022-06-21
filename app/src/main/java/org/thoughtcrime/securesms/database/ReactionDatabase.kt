@@ -3,11 +3,8 @@ package org.thoughtcrime.securesms.database
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.text.TextUtils
 import org.json.JSONArray
 import org.json.JSONException
-import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId
-import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.session.libsignal.utilities.JsonUtil.SaneJSONObject
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 import org.thoughtcrime.securesms.database.model.MessageId
@@ -15,7 +12,6 @@ import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.util.CursorUtil
 import org.thoughtcrime.securesms.util.SqlUtil
-import java.util.LinkedList
 
 /**
  * Store reactions on messages.
@@ -29,6 +25,7 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
     const val MESSAGE_ID = "message_id"
     const val IS_MMS = "is_mms"
     const val AUTHOR_ID = "author_id"
+    const val SERVER_ID = "server_id"
     const val EMOJI = "emoji"
     const val DATE_SENT = "reaction_date_sent"
     const val DATE_RECEIVED = "reaction_date_received"
@@ -41,6 +38,7 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
         $IS_MMS INTEGER NOT NULL,
         $AUTHOR_ID INTEGER NOT NULL REFERENCES ${RecipientDatabase.TABLE_NAME} (${RecipientDatabase.ID}) ON DELETE CASCADE,
         $EMOJI TEXT NOT NULL,
+        $SERVER_ID TEXT NOT NULL,
         $DATE_SENT INTEGER NOT NULL,
         $DATE_RECEIVED INTEGER NOT NULL,
         UNIQUE($MESSAGE_ID, $IS_MMS, $AUTHOR_ID) ON CONFLICT REPLACE
@@ -65,9 +63,10 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
 
     private fun readReaction(cursor: Cursor): ReactionRecord {
       return ReactionRecord(
-        id = CursorUtil.requireLong(cursor, MESSAGE_ID),
+        messageId = CursorUtil.requireLong(cursor, MESSAGE_ID),
         emoji = CursorUtil.requireString(cursor, EMOJI),
         author = CursorUtil.requireString(cursor, AUTHOR_ID),
+        serverId = CursorUtil.requireString(cursor, SERVER_ID),
         dateSent = CursorUtil.requireLong(cursor, DATE_SENT),
         dateReceived = CursorUtil.requireLong(cursor, DATE_RECEIVED)
       )
@@ -131,6 +130,7 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
         put(IS_MMS, if (messageId.mms) 1 else 0)
         put(EMOJI, reaction.emoji)
         put(AUTHOR_ID, reaction.author)
+        put(SERVER_ID, reaction.serverId)
         put(DATE_SENT, reaction.dateSent)
         put(DATE_RECEIVED, reaction.dateReceived)
       }
@@ -175,8 +175,8 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
   }
 
   fun hasReaction(messageId: MessageId, reaction: ReactionRecord): Boolean {
-    val query = "$MESSAGE_ID = ? AND $IS_MMS = ? AND $AUTHOR_ID = ? AND $EMOJI = ?"
-    val args = arrayOf("${messageId.id}", "${if (messageId.mms) 1 else 0}", reaction.author, reaction.emoji)
+    val query = "$MESSAGE_ID = ? AND $IS_MMS = ? AND $AUTHOR_ID = ? AND $EMOJI = ? AND $SERVER_ID = ?"
+    val args = arrayOf("${messageId.id}", "${if (messageId.mms) 1 else 0}", reaction.author, reaction.emoji, reaction.serverId)
 
     readableDatabase.query(TABLE_NAME, arrayOf(MESSAGE_ID), query, args, null, null, null).use { cursor ->
       return cursor.moveToFirst()
@@ -228,6 +228,7 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
                 `object`.getLong(MESSAGE_ID),
                 `object`.getString(AUTHOR_ID),
                 `object`.getString(EMOJI),
+                `object`.getString(SERVER_ID),
                 `object`.getLong(DATE_SENT),
                 `object`.getLong(DATE_RECEIVED)
               )
@@ -241,6 +242,7 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
             cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_ID)),
             cursor.getString(cursor.getColumnIndexOrThrow(AUTHOR_ID)),
             cursor.getString(cursor.getColumnIndexOrThrow(EMOJI)),
+            cursor.getString(cursor.getColumnIndexOrThrow(SERVER_ID)),
             cursor.getLong(cursor.getColumnIndexOrThrow(DATE_SENT)),
             cursor.getLong(cursor.getColumnIndexOrThrow(DATE_RECEIVED))
           )

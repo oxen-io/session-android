@@ -226,6 +226,7 @@ public class MmsSmsDatabase extends Database {
             "'" + ReactionDatabase.MESSAGE_ID + "', " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.MESSAGE_ID + ", " +
             "'" + ReactionDatabase.AUTHOR_ID + "', " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.AUTHOR_ID + ", " +
             "'" + ReactionDatabase.EMOJI + "', " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.EMOJI + ", " +
+            "'" + ReactionDatabase.SERVER_ID + "', " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.SERVER_ID + ", " +
             "'" + ReactionDatabase.DATE_SENT + "', " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.DATE_SENT + ", " +
             "'" + ReactionDatabase.DATE_RECEIVED + "', " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.DATE_RECEIVED +
             ")) AS " + ReactionDatabase.REACTION_JSON_ALIAS;
@@ -381,6 +382,7 @@ public class MmsSmsDatabase extends Database {
     mmsColumnsPresent.add(ReactionDatabase.MESSAGE_ID);
     mmsColumnsPresent.add(ReactionDatabase.AUTHOR_ID);
     mmsColumnsPresent.add(ReactionDatabase.EMOJI);
+    mmsColumnsPresent.add(ReactionDatabase.SERVER_ID);
     mmsColumnsPresent.add(ReactionDatabase.DATE_SENT);
     mmsColumnsPresent.add(ReactionDatabase.DATE_RECEIVED);
     mmsColumnsPresent.add(ReactionDatabase.REACTION_JSON_ALIAS);
@@ -409,6 +411,7 @@ public class MmsSmsDatabase extends Database {
     smsColumnsPresent.add(ReactionDatabase.MESSAGE_ID);
     smsColumnsPresent.add(ReactionDatabase.AUTHOR_ID);
     smsColumnsPresent.add(ReactionDatabase.EMOJI);
+    smsColumnsPresent.add(ReactionDatabase.SERVER_ID);
     smsColumnsPresent.add(ReactionDatabase.DATE_SENT);
     smsColumnsPresent.add(ReactionDatabase.DATE_RECEIVED);
     smsColumnsPresent.add(ReactionDatabase.REACTION_JSON_ALIAS);

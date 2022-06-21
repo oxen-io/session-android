@@ -941,9 +941,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         message.sentTimestamp = timestamp
         val sender = if (messageRecord.isOutgoing) fromSerialized(textSecurePreferences.getLocalNumber()!!) else messageRecord.individualRecipient.address
         // Put the message in the database
-        reactionDb.addReaction(MessageId(messageRecord.id, messageRecord.isMms), ReactionRecord(messageRecord.id, sender.serialize(), emoji, timestamp, timestamp))
+        val reaction = ReactionRecord(messageRecord.id, sender.serialize(), emoji, dateSent = timestamp, dateReceived = timestamp)
+        reactionDb.addReaction(MessageId(messageRecord.id, messageRecord.isMms), reaction)
         // Send it
-        message.reaction = Reaction.from(ReactionModel(messageRecord.dateSent, sender.serialize(), emoji, true))
+        message.reaction = Reaction.from(ReactionModel(messageRecord.timestamp, sender.serialize(), emoji))
         MessageSender.send(message, viewModel.recipient.address)
     }
 

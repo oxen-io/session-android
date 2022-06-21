@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment;
-import org.session.libsession.messaging.sending_receiving.reactions.ReactionModel;
 import org.session.libsession.utilities.Contact;
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview;
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel;
@@ -21,7 +20,6 @@ public class OutgoingSecureMediaMessage extends OutgoingMediaMessage {
                                     int distributionType,
                                     long expiresIn,
                                     @Nullable QuoteModel quote,
-                                    @Nullable ReactionModel reaction,
                                     @NonNull List<Contact> contacts,
                                     @NonNull List<LinkPreview> previews)
   {

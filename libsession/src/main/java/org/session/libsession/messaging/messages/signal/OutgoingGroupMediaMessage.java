@@ -3,7 +3,6 @@ package org.session.libsession.messaging.messages.signal;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.session.libsession.messaging.sending_receiving.reactions.ReactionModel;
 import org.session.libsession.utilities.DistributionTypes;
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment;
 import org.session.libsession.utilities.Contact;
@@ -27,14 +26,13 @@ public class OutgoingGroupMediaMessage extends OutgoingSecureMediaMessage {
                                    long expireIn,
                                    boolean updateMessage,
                                    @Nullable QuoteModel quote,
-                                   @Nullable ReactionModel reaction,
                                    @NonNull List<Contact> contacts,
                                    @NonNull List<LinkPreview> previews)
   {
     super(recipient, body,
           new LinkedList<Attachment>() {{if (avatar != null) add(avatar);}},
           sentTime,
-          DistributionTypes.CONVERSATION, expireIn, quote, reaction, contacts, previews);
+          DistributionTypes.CONVERSATION, expireIn, quote, contacts, previews);
 
     this.groupID = groupId;
     this.isUpdateMessage = updateMessage;

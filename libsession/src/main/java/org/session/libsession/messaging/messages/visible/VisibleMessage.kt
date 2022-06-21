@@ -32,9 +32,9 @@ class VisibleMessage : Message()  {
         if (!super.isValid()) return false
         if (attachmentIDs.isNotEmpty()) return true
         if (openGroupInvitation != null) return true
+        if (reaction != null) return true
         val text = text?.trim() ?: return false
-        if (text.isNotEmpty()) return true
-        return false
+        return text.isNotEmpty()
     }
     // endregion
 

@@ -1,8 +1,10 @@
 package org.session.libsession.messaging.sending_receiving.reactions
 
 class ReactionModel(
-    val id: Long,
+    val timestamp: Long,
     val author: String,
     val emoji: String,
-    val react: Boolean
+    val serverId: String = "",
+    val sentTimestamp: Long = 0,
+    val receivedTimestamp: Long = 0,
 )

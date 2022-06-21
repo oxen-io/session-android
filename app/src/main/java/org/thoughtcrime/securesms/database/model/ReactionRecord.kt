@@ -1,16 +1,10 @@
 package org.thoughtcrime.securesms.database.model
 
-import org.session.libsession.messaging.sending_receiving.reactions.ReactionModel
-
 class ReactionRecord(
-    val id: Long,
+    val messageId: Long,
     val author: String,
     val emoji: String,
-    val dateSent: Long,
-    val dateReceived: Long
-) {
-
-    val reactionModel: ReactionModel
-        get() = ReactionModel(id, author, emoji, true)
-
-}
+    val serverId: String = "",
+    val dateSent: Long = 0,
+    val dateReceived: Long = 0
+)

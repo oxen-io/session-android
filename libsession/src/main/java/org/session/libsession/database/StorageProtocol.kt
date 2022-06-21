@@ -163,5 +163,6 @@ interface StorageProtocol {
     fun setRecipientApprovedMe(recipient: Recipient, approvedMe: Boolean)
     fun insertCallMessage(senderPublicKey: String, callMessageType: CallMessageType, sentTimestamp: Long)
     fun conversationHasOutgoing(userPublicKey: String): Boolean
-    fun updateReaction(reaction: ReactionModel)
+    fun addReaction(reaction: ReactionModel)
+    fun removeReaction(messageTimestamp: Long, author: String)
 }

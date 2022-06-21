@@ -447,7 +447,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         val recipient = Recipient.from(context, fromSerialized(groupID), false)
 
         val updateData = UpdateMessageData.buildGroupUpdate(type, name, members)?.toJSON() ?: ""
-        val infoMessage = OutgoingGroupMediaMessage(recipient, updateData, groupID, null, sentTimestamp, 0, true, null, null, listOf(), listOf())
+        val infoMessage = OutgoingGroupMediaMessage(recipient, updateData, groupID, null, sentTimestamp, 0, true, null, listOf(), listOf())
         val mmsDB = DatabaseComponent.get(context).mmsDatabase()
         val mmsSmsDB = DatabaseComponent.get(context).mmsSmsDatabase()
         if (mmsSmsDB.getMessageFor(sentTimestamp, userPublicKey) != null) return
@@ -737,15 +737,24 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         return database.getLastSeenAndHasSent(threadId).second() ?: false
     }
 
-    override fun updateReaction(reaction: ReactionModel) {
-        val messageRecord = DatabaseComponent.get(context).mmsSmsDatabase().getMessageFor(reaction.id, reaction.author) ?: return
+    override fun addReaction(reaction: ReactionModel) {
+        val messageRecord = DatabaseComponent.get(context).mmsSmsDatabase().getMessageForTimestamp(reaction.timestamp) ?: return
         val database = DatabaseComponent.get(context).reactionDatabase()
-        val messageId = MessageId(reaction.id, messageRecord.isMms)
-        if (reaction.react) {
-            val reactionRecord = ReactionRecord(reaction.id, reaction.author, reaction.emoji, 0, 0)
-            database.addReaction(messageId, reactionRecord)
-        } else {
-            database.deleteReaction(messageId, reaction.author)
-        }
+        val messageId = MessageId(messageRecord.id, messageRecord.isMms)
+        database.addReaction(messageId, ReactionRecord(
+            messageRecord.id,
+            reaction.author,
+            reaction.emoji,
+            reaction.serverId,
+            reaction.sentTimestamp,
+            reaction.receivedTimestamp
+        ))
+    }
+
+    override fun removeReaction(messageTimestamp: Long, author: String) {
+        val messageRecord = DatabaseComponent.get(context).mmsSmsDatabase().getMessageForTimestamp(messageTimestamp) ?: return
+        val database = DatabaseComponent.get(context).reactionDatabase()
+        val messageId = MessageId(messageRecord.id, messageRecord.isMms)
+        database.deleteReaction(messageId, author)
     }
 }

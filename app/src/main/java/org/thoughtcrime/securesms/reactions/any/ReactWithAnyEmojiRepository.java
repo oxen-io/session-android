@@ -78,7 +78,7 @@ final class ReactWithAnyEmojiRepository {
         MessageSender.sendReactionRemoval(messageId.getId(), oldRecord.getEmoji());
       } else {
         long timestamp = System.currentTimeMillis();
-        ReactionRecord reaction = new ReactionRecord(messageId.getId(), author, emoji, timestamp, timestamp);
+        ReactionRecord reaction = new ReactionRecord(messageId.getId(), author, emoji, "", timestamp, timestamp);
         DatabaseComponent.get(context).reactionDatabase().addReaction(messageId, reaction);
         /*TODO: MessageSender.sendNewReaction(messageId.getId(), emoji);
         ThreadUtil.runOnMain(() -> recentEmojiPageModel.onCodePointSelected(emoji));*/
