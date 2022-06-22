@@ -1,6 +1,7 @@
 package org.thoughtcrime.securesms.database.model
 
-class ReactionRecord(
+data class ReactionRecord(
+    val id: Long = 0,
     val messageId: Long,
     val author: String,
     val emoji: String,

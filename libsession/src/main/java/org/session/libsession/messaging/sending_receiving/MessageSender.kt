@@ -297,6 +297,8 @@ object MessageSender {
             if (message is VisibleMessage && !isSyncMessage) {
                 SSKEnvironment.shared.messageExpirationManager.startAnyExpiration(message.sentTimestamp!!, message.sender?:userPublicKey)
             }
+        } ?: run {
+            storage.updateReactionIfNeeded(message, message.sender?:userPublicKey, openGroupSentTimestamp)
         }
         // Sync the message if:
         // • it's a visible message

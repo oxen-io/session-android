@@ -7,6 +7,7 @@ import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.AttachmentUploadJob
 import org.session.libsession.messaging.jobs.Job
 import org.session.libsession.messaging.jobs.MessageSendJob
+import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.visible.Attachment
@@ -165,4 +166,5 @@ interface StorageProtocol {
     fun conversationHasOutgoing(userPublicKey: String): Boolean
     fun addReaction(reaction: Reaction)
     fun removeReaction(messageTimestamp: Long, author: String)
+    fun updateReactionIfNeeded(message: Message, sender: String, openGroupSentTimestamp: Long)
 }

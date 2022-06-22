@@ -12,6 +12,7 @@ import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageReceiveJob
 import org.session.libsession.messaging.jobs.MessageSendJob
 import org.session.libsession.messaging.jobs.TrimThreadJob
+import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.signal.IncomingEncryptedMessage
@@ -739,22 +740,39 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
 
     override fun addReaction(reaction: Reaction) {
         val messageRecord = DatabaseComponent.get(context).mmsSmsDatabase().getMessageForTimestamp(reaction.timestamp!!) ?: return
-        val database = DatabaseComponent.get(context).reactionDatabase()
-        val messageId = MessageId(messageRecord.id, messageRecord.isMms)
-        database.addReaction(messageId, ReactionRecord(
-            messageRecord.id,
-            reaction.publicKey!!,
-            reaction.emoji!!,
-            reaction.serverId!!,
-            reaction.dateSent!!,
-            reaction.dateReceived!!
-        ))
+        DatabaseComponent.get(context).reactionDatabase().addReaction(
+            MessageId(messageRecord.id, messageRecord.isMms),
+            ReactionRecord(
+                messageId = messageRecord.id,
+                author = reaction.publicKey!!,
+                emoji = reaction.emoji!!,
+                serverId = reaction.serverId!!,
+                dateSent = reaction.dateSent!!,
+                dateReceived = reaction.dateReceived!!
+            )
+        )
     }
 
     override fun removeReaction(messageTimestamp: Long, author: String) {
         val messageRecord = DatabaseComponent.get(context).mmsSmsDatabase().getMessageForTimestamp(messageTimestamp) ?: return
-        val database = DatabaseComponent.get(context).reactionDatabase()
         val messageId = MessageId(messageRecord.id, messageRecord.isMms)
-        database.deleteReaction(messageId, author)
+        DatabaseComponent.get(context).reactionDatabase().deleteReaction(messageId, author)
     }
+
+    override fun updateReactionIfNeeded(message: Message, sender: String, openGroupSentTimestamp: Long) {
+        val database = DatabaseComponent.get(context).reactionDatabase()
+        var reaction = database.getReactionFor(message.sentTimestamp!!, sender) ?: return
+        if (openGroupSentTimestamp != -1L) {
+            addReceivedMessageTimestamp(openGroupSentTimestamp)
+            reaction = reaction.copy(dateSent = openGroupSentTimestamp)
+        }
+        message.serverHash?.let {
+            reaction = reaction.copy(serverId = it)
+        }
+        message.openGroupServerMessageID?.let {
+            reaction = reaction.copy(serverId = "$it")
+        }
+        database.updateReaction(reaction)
+    }
+
 }

@@ -183,6 +183,8 @@ class VisibleMessageView : LinearLayout {
         if (message.reactions.isNotEmpty()) {
             binding.emojiReactionsView.isVisible = true
             binding.emojiReactionsView.setReactions(message.reactions, binding.messageInnerContainer.width)
+        } else {
+            binding.emojiReactionsView.isVisible = false
         }
         // Populate content view
         binding.messageContentView.indexInAdapter = indexInAdapter

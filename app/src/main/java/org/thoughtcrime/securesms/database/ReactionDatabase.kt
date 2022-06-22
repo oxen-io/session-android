@@ -225,6 +225,7 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
           if (!`object`.isNull(ROW_ID)) {
             result.add(
               ReactionRecord(
+                `object`.getLong(ROW_ID),
                 `object`.getLong(MESSAGE_ID),
                 `object`.getString(AUTHOR_ID),
                 `object`.getString(EMOJI),
@@ -239,6 +240,7 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
       } else {
         listOf(
           ReactionRecord(
+            cursor.getLong(cursor.getColumnIndexOrThrow(ROW_ID)),
             cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_ID)),
             cursor.getString(cursor.getColumnIndexOrThrow(AUTHOR_ID)),
             cursor.getString(cursor.getColumnIndexOrThrow(EMOJI)),
@@ -250,6 +252,36 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
       }
     } catch (e: JSONException) {
       throw AssertionError(e)
+    }
+  }
+
+  fun getReactionFor(timestamp: Long, sender: String): ReactionRecord? {
+    val query = "$DATE_SENT = ? AND $AUTHOR_ID = ?"
+    val args = arrayOf("$timestamp", sender)
+
+    readableDatabase.query(TABLE_NAME, null, query, args, null, null, null).use { cursor ->
+      return if (cursor.moveToFirst()) readReaction(cursor) else null
+    }
+  }
+
+  fun updateReaction(reaction: ReactionRecord) {
+    writableDatabase.beginTransaction()
+    try {
+      val values = ContentValues().apply {
+        put(EMOJI, reaction.emoji)
+        put(AUTHOR_ID, reaction.author)
+        put(SERVER_ID, reaction.serverId)
+        put(DATE_SENT, reaction.dateSent)
+        put(DATE_RECEIVED, reaction.dateReceived)
+      }
+
+      val query = "$ROW_ID = ?"
+      val args = arrayOf("${reaction.id}")
+      writableDatabase.update(TABLE_NAME, values, query, args)
+
+      writableDatabase.setTransactionSuccessful()
+    } finally {
+      writableDatabase.endTransaction()
     }
   }
 
