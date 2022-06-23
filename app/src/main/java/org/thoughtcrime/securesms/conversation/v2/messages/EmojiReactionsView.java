@@ -63,7 +63,7 @@ public class EmojiReactionsView extends LinearLayout {
     removeAllViews();
   }
 
-  public void setReactions(@NonNull List<ReactionRecord> records, int bubbleWidth) {
+  public void setReactions(@NonNull List<ReactionRecord> records, boolean outgoing, int bubbleWidth) {
     if (records.equals(this.records) && this.bubbleWidth == bubbleWidth) {
       return;
     }
@@ -71,6 +71,7 @@ public class EmojiReactionsView extends LinearLayout {
     this.records.clear();
     this.records.addAll(records);
 
+    this.outgoing = outgoing;
     this.bubbleWidth = bubbleWidth;
 
     String userPublicKey     = TextSecurePreferences.getLocalNumber(getContext());
@@ -125,11 +126,13 @@ public class EmojiReactionsView extends LinearLayout {
 
     Collections.sort(reactions, Collections.reverseOrder());
 
-    if (reactions.size() > 3) {
-      List<Reaction> shortened = new ArrayList<>(3);
+    if (reactions.size() > 6) {
+      List<Reaction> shortened = new ArrayList<>(5);
       shortened.add(reactions.get(0));
       shortened.add(reactions.get(1));
-      shortened.add(Stream.of(reactions).skip(2).reduce(new Reaction(null, null, 0, 0, false), Reaction::merge));
+      shortened.add(reactions.get(2));
+      shortened.add(reactions.get(3));
+      shortened.add(Stream.of(reactions).skip(4).reduce(new Reaction(null, null, 0, 0, false), Reaction::merge));
 
       return shortened;
     } else {
@@ -155,7 +158,7 @@ public class EmojiReactionsView extends LinearLayout {
     } else {
       emojiView.setVisibility(GONE);
       spacer.setVisibility(GONE);
-      countView.setText(reaction.count);
+      countView.setText(context.getString(R.string.ReactionsConversationView_plus, reaction.count));
     }
 
     if (reaction.userWasSender) {

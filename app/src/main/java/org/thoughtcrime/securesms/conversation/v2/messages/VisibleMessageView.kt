@@ -156,12 +156,7 @@ class VisibleMessageView : LinearLayout {
             }
             binding.messageStatusImageView.setImageDrawable(drawable)
         }
-        if (message.isOutgoing) {
-            val lastMessageID = mmsSmsDb.getLastMessageID(message.threadId)
-            binding.messageStatusImageView.isVisible = !message.isSent || message.id == lastMessageID
-        } else {
-            binding.messageStatusImageView.isVisible = false
-        }
+        binding.messageStatusImageView.isVisible = message.isOutgoing && !message.isSent
         // Expiration timer
         updateExpirationTimer(message)
         // Calculate max message bubble width
@@ -170,7 +165,7 @@ class VisibleMessageView : LinearLayout {
         // Emoji Reactions
         if (message.reactions.isNotEmpty()) {
             binding.emojiReactionsView.isVisible = true
-            binding.emojiReactionsView.setReactions(message.reactions, binding.messageInnerContainer.width)
+            binding.emojiReactionsView.setReactions(message.reactions, message.isOutgoing, binding.messageInnerContainer.width)
             binding.emojiReactionsView.setOnClickListener {
                 delegate?.onReactionClicked(message.id, message.isMms)
             }

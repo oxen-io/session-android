@@ -22,7 +22,7 @@
         android:gravity="bottom">
 
         <FrameLayout
-            android:layout_alignBottom="@+id/messageContentContainer"
+            android:layout_alignStart="@+id/messageContentContainer"
             android:id="@+id/profilePictureContainer"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
 
             <org.thoughtcrime.securesms.conversation.v2.messages.EmojiReactionsView
                 android:id="@+id/emojiReactionsView"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone" />
 
