@@ -36,6 +36,7 @@ import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.ThemeUtil;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
+import org.thoughtcrime.securesms.components.emoji.EmojiUtil;
 import org.thoughtcrime.securesms.components.emoji.RecentEmojiPageModel;
 import org.thoughtcrime.securesms.components.menu.ActionItem;
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationMenuItemHelper;
@@ -561,7 +562,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
       view.setTranslationY(0);
 
       boolean isAtCustomIndex                      = i == customEmojiIndex;
-      boolean isNotAtCustomIndexAndOldEmojiMatches = !isAtCustomIndex && oldEmoji != null /*TODO: && EmojiUtil.isCanonicallyEqual(emojis.get(i), oldEmoji)*/;
+      boolean isNotAtCustomIndexAndOldEmojiMatches = !isAtCustomIndex && oldEmoji != null && EmojiUtil.isCanonicallyEqual(emojis.get(i), oldEmoji);
       boolean isAtCustomIndexAndOldEmojiExists     = isAtCustomIndex && oldEmoji != null;
 
       if (!foundSelected && (isNotAtCustomIndexAndOldEmojiMatches || isAtCustomIndexAndOldEmojiExists)) {

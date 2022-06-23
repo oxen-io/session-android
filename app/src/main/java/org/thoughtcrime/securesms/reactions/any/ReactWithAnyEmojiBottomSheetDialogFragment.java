@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,8 +18,6 @@ import androidx.core.view.ViewCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.app.LoaderManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -34,14 +31,7 @@ import org.thoughtcrime.securesms.components.emoji.EmojiPageView;
 import org.thoughtcrime.securesms.components.emoji.EmojiPageViewGridAdapter;
 import org.thoughtcrime.securesms.conversation.v2.ViewUtil;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
-import org.thoughtcrime.securesms.keyboard.emoji.EmojiKeyboardPageCategoriesAdapter;
-import org.thoughtcrime.securesms.keyboard.emoji.EmojiKeyboardPageCategoryMappingModel;
 import org.thoughtcrime.securesms.util.LifecycleDisposable;
-import org.thoughtcrime.securesms.util.adapter.mapping.MappingModel;
-
-import java.util.Optional;
-
-import static androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 import network.loki.messenger.R;
 
@@ -49,23 +39,16 @@ public final class ReactWithAnyEmojiBottomSheetDialogFragment extends BottomShee
                                                                                                            EmojiPageViewGridAdapter.VariationSelectorListener
 {
 
-  private static final String REACTION_STORAGE_KEY = "reactions_recent_emoji";
-
   private static final String ARG_MESSAGE_ID = "arg_message_id";
   private static final String ARG_IS_MMS     = "arg_is_mms";
   private static final String ARG_START_PAGE = "arg_start_page";
   private static final String ARG_SHADOWS    = "arg_shadows";
-  private static final String ARG_RECENT_KEY = "arg_recent_key";
 
   private ReactWithAnyEmojiViewModel viewModel;
   private Callback                   callback;
   private EmojiPageView              emojiPageView;
-  //TODO: private KeyboardPageSearchView     search;
-  private View                       tabBar;
 
   private final LifecycleDisposable disposables = new LifecycleDisposable();
-
-  private final UpdateCategorySelectionOnScroll categoryUpdateOnScroll = new UpdateCategorySelectionOnScroll();
 
   public static DialogFragment createForMessageRecord(@NonNull MessageRecord messageRecord, int startingPage) {
     DialogFragment fragment = new ReactWithAnyEmojiBottomSheetDialogFragment();
@@ -74,7 +57,6 @@ public final class ReactWithAnyEmojiBottomSheetDialogFragment extends BottomShee
     args.putLong(ARG_MESSAGE_ID, messageRecord.getId());
     args.putBoolean(ARG_IS_MMS, messageRecord.isMms());
     args.putInt(ARG_START_PAGE, startingPage);
-    args.putString(ARG_RECENT_KEY, REACTION_STORAGE_KEY);
     fragment.setArguments(args);
 
     return fragment;
@@ -145,53 +127,10 @@ public final class ReactWithAnyEmojiBottomSheetDialogFragment extends BottomShee
 
     emojiPageView = view.findViewById(R.id.react_with_any_emoji_page_view);
     emojiPageView.initialize(this, this, true);
-    emojiPageView.addOnScrollListener(categoryUpdateOnScroll);
-
-//    search = view.findViewById(R.id.react_with_any_emoji_search);
 
     initializeViewModel();
 
-    EmojiKeyboardPageCategoriesAdapter categoriesAdapter = new EmojiKeyboardPageCategoriesAdapter(key -> {
-      scrollTo(key);
-      viewModel.selectPage(key);
-    });
-
-    FrameLayout container = requireDialog().findViewById(R.id.container);
-    tabBar = LayoutInflater.from(requireContext())
-                           .inflate(R.layout.react_with_any_emoji_tabs,
-                                    container,
-                                    false);
-    RecyclerView categoriesRecycler = tabBar.findViewById(R.id.emoji_categories_recycler);
-    categoriesRecycler.setAdapter(categoriesAdapter);
-
-    container.addView(tabBar);
-
-    emojiPageView.addOnScrollListener(new TopAndBottomShadowHelper(requireView().findViewById(R.id.react_with_any_emoji_top_shadow),
-                                                                   tabBar.findViewById(R.id.react_with_any_emoji_bottom_shadow)));
-
     disposables.add(viewModel.getEmojiList().subscribe(pages -> emojiPageView.setList(pages, null)));
-    disposables.add(viewModel.getCategories().subscribe(categoriesAdapter::submitList));
-    disposables.add(viewModel.getSelectedKey().subscribe(key -> categoriesRecycler.post(() -> {
-      int index = categoriesAdapter.indexOfFirst(EmojiKeyboardPageCategoryMappingModel.class, m -> m.getKey().equals(key));
-
-      if (index != -1) {
-        categoriesRecycler.smoothScrollToPosition(index);
-      }
-    })));
-
-//    search.setCallbacks(new SearchCallbacks());
-  }
-
-  private void scrollTo(@NonNull String key) {
-    if (emojiPageView.getAdapter() != null) {
-      int index = emojiPageView.getAdapter().indexOfFirst(EmojiPageViewGridAdapter.EmojiHeader.class, m -> m.getKey().equals(key));
-
-      if (index != -1) {
-        ((BottomSheetDialog) requireDialog()).getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
-        categoryUpdateOnScroll.startAutoScrolling();
-        emojiPageView.smoothScrollToPositionTop(index);
-      }
-    }
   }
 
   @Override
@@ -209,7 +148,7 @@ public final class ReactWithAnyEmojiBottomSheetDialogFragment extends BottomShee
 
   private void initializeViewModel() {
     Bundle                             args       = requireArguments();
-    ReactWithAnyEmojiRepository        repository = new ReactWithAnyEmojiRepository(requireContext(), args.getString(ARG_RECENT_KEY, REACTION_STORAGE_KEY));
+    ReactWithAnyEmojiRepository        repository = new ReactWithAnyEmojiRepository(requireContext());
     ReactWithAnyEmojiViewModel.Factory factory    = new ReactWithAnyEmojiViewModel.Factory(repository, args.getLong(ARG_MESSAGE_ID), args.getBoolean(ARG_IS_MMS));
 
     viewModel = new ViewModelProvider(this, factory).get(ReactWithAnyEmojiViewModel.class);
@@ -235,64 +174,4 @@ public final class ReactWithAnyEmojiBottomSheetDialogFragment extends BottomShee
     void onReactWithAnyEmojiSelected(@NonNull String emoji);
   }
 
-  private class UpdateCategorySelectionOnScroll extends RecyclerView.OnScrollListener {
-
-    private boolean doneScrolling = true;
-
-    public void startAutoScrolling() {
-      doneScrolling = false;
-    }
-
-    @Override
-    public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-      if (newState == SCROLL_STATE_IDLE && !doneScrolling) {
-        doneScrolling = true;
-        onScrolled(recyclerView, 0, 0);
-      }
-    }
-
-    @Override
-    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-      if (doneScrolling && recyclerView.getLayoutManager() != null && emojiPageView.getAdapter() != null) {
-        LinearLayoutManager       layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-        int                       index         = layoutManager.findFirstCompletelyVisibleItemPosition();
-        Optional<MappingModel<?>> item          = emojiPageView.getAdapter().getModel(index);
-        /*TODO: if (item.isPresent() && item.get() instanceof EmojiPageViewGridAdapter.HasKey) {
-          viewModel.selectPage(((EmojiPageViewGridAdapter.HasKey) item.get()).getKey());
-        }*/
-      }
-    }
-  }
-
-  /*private class SearchCallbacks implements KeyboardPageSearchView.Callbacks {
-    @Override
-    public void onQueryChanged(@NonNull String query) {
-      boolean hasQuery = !TextUtils.isEmpty(query);
-      search.enableBackNavigation(hasQuery);
-      if (hasQuery) {
-        ViewUtil.fadeOut(tabBar, 250, View.INVISIBLE);
-      } else {
-        ViewUtil.fadeIn(tabBar, 250);
-      }
-      viewModel.onQueryChanged(query);
-    }
-
-    @Override
-    public void onNavigationClicked() {
-      search.clearQuery();
-      search.clearFocus();
-      ViewUtil.hideKeyboard(requireContext(), requireView());
-    }
-
-    @Override
-    public void onFocusGained() {
-      ((BottomSheetDialog) requireDialog()).getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
-    }
-
-    @Override
-    public void onClicked() { }
-
-    @Override
-    public void onFocusLost() { }
-  }*/
 }

@@ -109,8 +109,8 @@ public class EmojiPageView extends RecyclerView implements VariationSelectorList
 
     setLayoutManager(layoutManager);
 
-    /*TODO:Drawable drawable = DrawableUtil.tint(ContextUtil.requireDrawable(getContext(), R.drawable.triangle_bottom_right_corner), ContextCompat.getColor(getContext(), R.color.signal_button_secondary_text_disabled));
-    addItemDecoration(new EmojiItemDecoration(allowVariations, drawable));*/
+    Drawable drawable = DrawableUtil.tint(ContextUtil.requireDrawable(getContext(), R.drawable.triangle_bottom_right_corner), ContextCompat.getColor(getContext(), R.color.signal_button_secondary_text_disabled));
+    addItemDecoration(new EmojiItemDecoration(allowVariations, drawable));
   }
 
   public void presentForEmojiKeyboard() {

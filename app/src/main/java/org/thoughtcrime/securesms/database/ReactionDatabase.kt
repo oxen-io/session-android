@@ -41,7 +41,7 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
         $SERVER_ID TEXT NOT NULL,
         $DATE_SENT INTEGER NOT NULL,
         $DATE_RECEIVED INTEGER NOT NULL,
-        UNIQUE($MESSAGE_ID, $IS_MMS, $AUTHOR_ID) ON CONFLICT REPLACE
+        UNIQUE($MESSAGE_ID, $IS_MMS, $EMOJI, $AUTHOR_ID) ON CONFLICT REPLACE
       )
     """.trimIndent()
 

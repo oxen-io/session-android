@@ -35,7 +35,7 @@ public class EmojiEditText extends AppCompatEditText {
     boolean jumboEmoji = a.getBoolean(R.styleable.EmojiTextView_emoji_forceJumbo, false);
     a.recycle();
 
-    if (!isInEditMode() && (forceCustom /*TODO|| !SignalStore.settings().isPreferSystemEmoji()*/)) {
+    if (!isInEditMode() && forceCustom) {
       setFilters(appendEmojiFilter(this.getFilters(), jumboEmoji));
     }
   }

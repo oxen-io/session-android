@@ -1,5 +1,7 @@
 package org.thoughtcrime.securesms.components.emoji;
 
+import static org.session.libsession.utilities.Util.runOnMain;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -17,12 +19,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.session.libsession.utilities.FutureTaskListener;
-import org.session.libsession.utilities.Util;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.components.emoji.parsing.EmojiDrawInfo;
 import org.thoughtcrime.securesms.components.emoji.parsing.EmojiParser;
 import org.thoughtcrime.securesms.emoji.EmojiPageCache;
 import org.thoughtcrime.securesms.emoji.EmojiSource;
+import org.thoughtcrime.securesms.util.Util;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -90,7 +92,7 @@ public class EmojiProvider {
       return null;
     }
 
-    final int           lowMemoryDecodeScale = /*TODO:Util.isLowMemory(context) ? 2 :*/ 1;
+    final int           lowMemoryDecodeScale = Util.isLowMemory(context) ? 2 : 1;
     final EmojiSource   source               = EmojiSource.getLatest();
     final EmojiDrawable drawable             = new EmojiDrawable(source, drawInfo, lowMemoryDecodeScale);
     final AtomicBoolean jumboLoaded          = new AtomicBoolean(false);
@@ -98,12 +100,12 @@ public class EmojiProvider {
     EmojiPageCache.LoadResult loadResult = EmojiPageCache.INSTANCE.load(context, drawInfo.getPage(), lowMemoryDecodeScale);
 
     if (loadResult instanceof EmojiPageCache.LoadResult.Immediate) {
-      Util.runOnMain(() -> drawable.setBitmap(((EmojiPageCache.LoadResult.Immediate) loadResult).getBitmap()));
+      runOnMain(() -> drawable.setBitmap(((EmojiPageCache.LoadResult.Immediate) loadResult).getBitmap()));
     } else if (loadResult instanceof EmojiPageCache.LoadResult.Async) {
       ((EmojiPageCache.LoadResult.Async) loadResult).getTask().addListener(new FutureTaskListener<Bitmap>() {
         @Override
         public void onSuccess(Bitmap result) {
-          Util.runOnMain(() -> {
+          runOnMain(() -> {
             if (!jumboLoaded.get()) {
               drawable.setBitmap(result);
               if (onEmojiLoaded != null) {

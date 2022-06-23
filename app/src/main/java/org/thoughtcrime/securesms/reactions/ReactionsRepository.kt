@@ -15,7 +15,6 @@ class ReactionsRepository {
 
     fun getReactions(messageId: MessageId): Observable<List<ReactionDetails>> {
         return Observable.create { emitter: ObservableEmitter<List<ReactionDetails>> ->
-            //TODO: fetch reactions
             emitter.onNext(fetchReactionDetails(messageId))
         }.subscribeOn(Schedulers.io())
     }

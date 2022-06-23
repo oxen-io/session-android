@@ -17,9 +17,7 @@ import org.thoughtcrime.securesms.database.model.ReactionRecord;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import org.thoughtcrime.securesms.emoji.EmojiCategory;
 import org.thoughtcrime.securesms.emoji.EmojiSource;
-import org.thoughtcrime.securesms.reactions.ReactionDetails;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +32,7 @@ final class ReactWithAnyEmojiRepository {
   private final RecentEmojiPageModel        recentEmojiPageModel;
   private final List<ReactWithAnyEmojiPage> emojiPages;
 
-  ReactWithAnyEmojiRepository(@NonNull Context context, @NonNull String storageKey) {
+  ReactWithAnyEmojiRepository(@NonNull Context context) {
     this.context              = context;
     this.recentEmojiPageModel = new RecentEmojiPageModel(context);
     this.emojiPages           = new LinkedList<>();
@@ -45,20 +43,10 @@ final class ReactWithAnyEmojiRepository {
                             .toList());
   }
 
-  List<ReactWithAnyEmojiPage> getEmojiPageModels(@NonNull List<ReactionDetails> thisMessagesReactions) {
+  List<ReactWithAnyEmojiPage> getEmojiPageModels() {
     List<ReactWithAnyEmojiPage> pages       = new LinkedList<>();
-    List<String>                thisMessage = Stream.of(thisMessagesReactions)
-                                                    .map(ReactionDetails::getDisplayEmoji)
-                                                    .distinct()
-                                                    .toList();
 
-    if (thisMessage.isEmpty()) {
-      pages.add(new ReactWithAnyEmojiPage(Collections.singletonList(new ReactWithAnyEmojiPageBlock(R.string.ReactWithAnyEmojiBottomSheetDialogFragment__recently_used, recentEmojiPageModel))));
-    } else {
-      pages.add(new ReactWithAnyEmojiPage(Arrays.asList(new ReactWithAnyEmojiPageBlock(R.string.ReactWithAnyEmojiBottomSheetDialogFragment__this_message, new ThisMessageEmojiPageModel(thisMessage)),
-                                                        new ReactWithAnyEmojiPageBlock(R.string.ReactWithAnyEmojiBottomSheetDialogFragment__recently_used, recentEmojiPageModel))));
-    }
-
+    pages.add(new ReactWithAnyEmojiPage(Collections.singletonList(new ReactWithAnyEmojiPageBlock(R.string.ReactWithAnyEmojiBottomSheetDialogFragment__recently_used, recentEmojiPageModel))));
     pages.addAll(emojiPages);
 
     return pages;

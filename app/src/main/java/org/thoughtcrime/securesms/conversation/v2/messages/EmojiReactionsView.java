@@ -155,7 +155,7 @@ public class EmojiReactionsView extends LinearLayout {
     } else {
       emojiView.setVisibility(GONE);
       spacer.setVisibility(GONE);
-      //TODO:countView.setText(reaction.count);
+      countView.setText(reaction.count);
     }
 
     if (reaction.userWasSender) {
