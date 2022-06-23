@@ -92,9 +92,8 @@ import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarRecordingVie
 import org.thoughtcrime.securesms.conversation.v2.input_bar.mentions.MentionCandidatesView
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationActionModeCallbackDelegate
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationMenuHelper
-import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageContentViewDelegate
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
-import org.thoughtcrime.securesms.conversation.v2.messages.VoiceMessageViewDelegate
+import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageViewDelegate
 import org.thoughtcrime.securesms.conversation.v2.search.SearchBottomBar
 import org.thoughtcrime.securesms.conversation.v2.search.SearchViewModel
 import org.thoughtcrime.securesms.conversation.v2.utilities.AttachmentManager
@@ -134,6 +133,7 @@ import org.thoughtcrime.securesms.mms.Slide
 import org.thoughtcrime.securesms.mms.SlideDeck
 import org.thoughtcrime.securesms.mms.VideoSlide
 import org.thoughtcrime.securesms.permissions.Permissions
+import org.thoughtcrime.securesms.reactions.ReactionsBottomSheetDialogFragment
 import org.thoughtcrime.securesms.reactions.any.ReactWithAnyEmojiBottomSheetDialogFragment
 import org.thoughtcrime.securesms.util.ActivityDispatcher
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
@@ -158,8 +158,8 @@ import kotlin.math.sqrt
 @AndroidEntryPoint
 class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDelegate,
     InputBarRecordingViewDelegate, AttachmentManager.AttachmentListener, ActivityDispatcher,
-    ConversationActionModeCallbackDelegate, VisibleMessageContentViewDelegate, RecipientModifiedListener,
-    SearchBottomBar.EventListener, VoiceMessageViewDelegate, LoaderManager.LoaderCallbacks<Cursor>,
+    ConversationActionModeCallbackDelegate, VisibleMessageViewDelegate, RecipientModifiedListener,
+    SearchBottomBar.EventListener, LoaderManager.LoaderCallbacks<Cursor>,
     OnReactionSelectedListener, ReactWithAnyEmojiBottomSheetDialogFragment.Callback {
 
     private var binding: ActivityConversationV2Binding? = null
@@ -244,7 +244,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             },
             glide
         )
-        adapter.visibleMessageContentViewDelegate = this
+        adapter.visibleMessageViewDelegate = this
         adapter
     }
 
@@ -1061,6 +1061,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     override fun scrollToMessageIfPossible(timestamp: Long) {
         val lastSeenItemPosition = adapter.getItemPositionForTimestamp(timestamp) ?: return
         binding?.conversationRecyclerView?.scrollToPosition(lastSeenItemPosition)
+    }
+
+    override fun onReactionClicked(messageId: Long, isMms: Boolean) {
+        ReactionsBottomSheetDialogFragment.create(messageId, isMms).show(supportFragmentManager, null)
     }
 
     override fun playVoiceMessageAtIndexIfPossible(indexInAdapter: Int) {

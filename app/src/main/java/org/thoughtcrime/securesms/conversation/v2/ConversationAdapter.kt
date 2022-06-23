@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.conversation.v2.messages.ControlMessageView
-import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageContentViewDelegate
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
+import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageViewDelegate
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
@@ -25,7 +25,7 @@ class ConversationAdapter(
 ) : CursorRecyclerViewAdapter<ViewHolder>(context, cursor) {
     private val messageDB = DatabaseComponent.get(context).mmsSmsDatabase()
     private var searchQuery: String? = null
-    var visibleMessageContentViewDelegate: VisibleMessageContentViewDelegate? = null
+    var visibleMessageViewDelegate: VisibleMessageViewDelegate? = null
 
     sealed class ViewType(val rawValue: Int) {
         object Visible : ViewType(0)
@@ -75,7 +75,7 @@ class ConversationAdapter(
                     view.onSwipeToReply = null
                     view.onLongPress = null
                 }
-                view.contentViewDelegate = visibleMessageContentViewDelegate
+                view.delegate = visibleMessageViewDelegate
             }
             is ControlMessageViewHolder -> {
                 viewHolder.view.bind(message, messageBefore)

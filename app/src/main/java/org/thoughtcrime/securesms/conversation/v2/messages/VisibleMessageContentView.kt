@@ -50,7 +50,7 @@ class VisibleMessageContentView : LinearLayout {
     private lateinit var binding:  ViewVisibleMessageContentBinding
     var onContentClick: MutableList<((event: MotionEvent) -> Unit)> = mutableListOf()
     var onContentDoubleTap: (() -> Unit)? = null
-    var delegate: VisibleMessageContentViewDelegate? = null
+    var delegate: VisibleMessageViewDelegate? = null
     var indexInAdapter: Int = -1
 
     // region Lifecycle
@@ -316,9 +316,4 @@ class VisibleMessageContentView : LinearLayout {
         }
     }
     // endregion
-}
-
-interface VisibleMessageContentViewDelegate {
-
-    fun scrollToMessageIfPossible(timestamp: Long)
 }

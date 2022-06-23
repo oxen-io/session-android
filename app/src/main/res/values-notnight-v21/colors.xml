@@ -53,6 +53,12 @@
     <color name="reactions_screen_light_shade_color">@color/transparent_white_87</color>
     <color name="reactions_status_bar_shade">#4d4d4d</color>
 
+    <color name="signal_background_primary">@color/core_white</color>
+    <color name="signal_background_secondary">@color/core_grey_05</color>
+    <color name="signal_background_tertiary">@color/core_grey_02</color>
+    <color name="signal_background_dialog">@color/core_white</color>
+    <color name="signal_background_dialog_secondary">@color/signal_background_secondary</color>
+
     <color name="signal_text_primary">@color/core_grey_90</color>
     <color name="text_primary_disabled">@color/core_grey_25</color>
     <color name="signal_text_primary_dialog">@color/core_grey_65</color>

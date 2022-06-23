@@ -94,7 +94,7 @@ public final class ReactWithAnyEmojiBottomSheetDialogFragment extends BottomShee
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setStyle(DialogFragment.STYLE_NORMAL, R.style.Widget_Signal_ReactWithAny);
+    setStyle(DialogFragment.STYLE_NORMAL, R.style.Widget_TextSecure_ReactWithAny);
   }
 
   @Override

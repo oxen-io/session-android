@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Rect
-import android.graphics.drawable.ColorDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -39,11 +38,9 @@ import org.thoughtcrime.securesms.home.UserDetailsBottomSheet
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.disableClipping
-import org.thoughtcrime.securesms.util.getColorWithID
 import org.thoughtcrime.securesms.util.toDp
 import org.thoughtcrime.securesms.util.toPx
 import java.util.Date
-import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.min
@@ -72,15 +69,9 @@ class VisibleMessageView : LinearLayout {
     private var onDownTimestamp = 0L
     private var onDoubleTap: (() -> Unit)? = null
     var indexInAdapter: Int = -1
-    var snIsSelected = false
-        set(value) {
-            field = value
-            binding.messageTimestampTextView.isVisible = isSelected
-            handleIsSelectedChanged()
-        }
     var onSwipeToReply: (() -> Unit)? = null
     var onLongPress: (() -> Unit)? = null
-    var contentViewDelegate: VisibleMessageContentViewDelegate? = null
+    var delegate: VisibleMessageViewDelegate? = null
     val messageContentView: VisibleMessageContentView by lazy { binding.messageContentView }
 
     companion object {
@@ -141,9 +132,6 @@ class VisibleMessageView : LinearLayout {
         }
         // Date break
         binding.dateBreakTextView.showDateBreak(message, previous)
-        // Timestamp
-        binding.messageTimestampTextView.isVisible = message.reactions.isEmpty()
-        binding.messageTimestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), message.timestamp)
         // Margins
         val startPadding = if (isGroupThread) {
             if (message.isOutgoing) resources.getDimensionPixelSize(R.dimen.very_large_spacing) else toPx(50,resources)
@@ -183,13 +171,16 @@ class VisibleMessageView : LinearLayout {
         if (message.reactions.isNotEmpty()) {
             binding.emojiReactionsView.isVisible = true
             binding.emojiReactionsView.setReactions(message.reactions, binding.messageInnerContainer.width)
+            binding.emojiReactionsView.setOnClickListener {
+                delegate?.onReactionClicked(message.id, message.isMms)
+            }
         } else {
             binding.emojiReactionsView.isVisible = false
         }
         // Populate content view
         binding.messageContentView.indexInAdapter = indexInAdapter
         binding.messageContentView.bind(message, isStartOfMessageCluster, isEndOfMessageCluster, glide, maxWidth, thread, searchQuery, message.isOutgoing || isGroupThread || (contact?.isTrusted ?: false))
-        binding.messageContentView.delegate = contentViewDelegate
+        binding.messageContentView.delegate = delegate
         onDoubleTap = { binding.messageContentView.onContentDoubleTap?.invoke() }
     }
 
@@ -273,14 +264,6 @@ class VisibleMessageView : LinearLayout {
         container.requestLayout()
     }
 
-    private fun handleIsSelectedChanged() {
-        background = if (snIsSelected) {
-            ColorDrawable(context.resources.getColorWithID(R.color.message_selected, context.theme))
-        } else {
-            null
-        }
-    }
-
     override fun onDraw(canvas: Canvas) {
         if (translationX < 0 && !binding.expirationTimerView.isVisible) {
             val spacing = context.resources.getDimensionPixelSize(R.dimen.small_spacing)
@@ -329,7 +312,7 @@ class VisibleMessageView : LinearLayout {
 
     private fun onMove(event: MotionEvent) {
         val translationX = toDp(event.rawX + dx, context.resources)
-        if (abs(translationX) < longPressMovementThreshold || snIsSelected) {
+        if (abs(translationX) < longPressMovementThreshold) {
             return
         } else {
             longPressCallback?.let { gestureHandler.removeCallbacks(it) }

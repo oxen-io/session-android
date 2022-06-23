@@ -296,18 +296,54 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="Widget.Signal.ReactWithAny" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:windowSoftInputMode">adjustResize</item>
-        <item name="bottomSheetStyle">@style/Widget.Signal.ReactWithAny.BottomSheet</item>
+    <style name="Theme.TextSecure.Light.BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
     </style>
 
-    <style name="Widget.Signal.ReactWithAny.BottomSheet" parent="Widget.MaterialComponents.BottomSheet">
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Signal.BottomSheet.Rounded</item>
+    <style name="Theme.TextSecure.Light.BottomSheetDialog.Fixed">
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
+    <style name="Theme.TextSecure.BottomSheetDialog.Fixed" parent="Theme.Design.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
+    <style name="Theme.TextSecure.BottomSheetDialog.Fixed.ReactWithAny">
+        <item name="bottomSheetStyle">@style/Widget.TextSecure.BottomSheet.ReactWithAny</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="Theme.TextSecure.BottomSheetDialog.Fixed.ReactWithAny.Shadowless">
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="Widget.TextSecure.BottomSheet.ReactWithAny" parent="Widget.MaterialComponents.BottomSheet">
+        <item name="backgroundTint">@color/core_grey_75</item>
+        <item name="behavior_peekHeight">@dimen/react_with_any_emoji_bottom_sheet_dialog_fragment_min_height</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.TextSecure.BottomSheet.Rounded</item>
+    </style>
+
+    <style name="Theme.TextSecure.Light.BottomSheetDialog.Fixed.ReactWithAny">
+        <item name="bottomSheetStyle">@style/Widget.TextSecure.BottomSheet.ReactWithAny.Light</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.TextSecure.BottomSheet.Rounded</item>
+    </style>
+
+    <style name="Widget.TextSecure.BottomSheet.ReactWithAny.Light">
+        <item name="backgroundTint">@color/white</item>
+    </style>
+
+    <style name="Widget.TextSecure.ReactWithAny" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+        <item name="bottomSheetStyle">@style/Widget.TextSecure.ReactWithAny.BottomSheet</item>
+    </style>
+
+    <style name="Widget.TextSecure.ReactWithAny.BottomSheet" parent="Widget.MaterialComponents.BottomSheet">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.TextSecure.BottomSheet.Rounded</item>
         <item name="backgroundTint">@color/react_with_any_background</item>
     </style>
 
-    <style name="ShapeAppearanceOverlay.Signal.BottomSheet.Rounded" parent="">
+    <style name="ShapeAppearanceOverlay.TextSecure.BottomSheet.Rounded" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSizeTopRight">18dp</item>
         <item name="cornerSizeTopLeft">18dp</item>
