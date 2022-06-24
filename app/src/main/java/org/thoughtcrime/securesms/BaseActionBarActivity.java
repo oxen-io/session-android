@@ -31,7 +31,7 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
     // New themes
     Resources.Theme modifiedTheme = super.getTheme();
     modifiedTheme.applyStyle(getDesiredTheme(), true);
-    return modifiedTheme;
+    return modifiedTheme; // TODO: apply a singular override colorAccent theme instead of overriding in code
   }
 
   @Override
