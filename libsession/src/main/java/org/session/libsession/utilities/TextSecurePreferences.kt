@@ -7,6 +7,7 @@ import android.provider.Settings
 import androidx.annotation.ArrayRes
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
+import androidx.annotation.StyleRes
 import androidx.core.app.NotificationCompat
 import androidx.preference.PreferenceManager.getDefaultSharedPreferences
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -167,8 +168,8 @@ interface TextSecurePreferences {
     fun setLastVacuumNow()
     fun getFingerprintKeyGenerated(): Boolean
     fun setFingerprintKeyGenerated()
-    @ColorInt fun getAccentColor(): Int?
-    fun setAccentColor(@ColorRes newColor: Int?)
+    @StyleRes fun getAccentColorStyle(): Int?
+    fun setAccentColorStyle(@StyleRes newColorStyle: Int?)
     fun clearAll()
 
     companion object {
@@ -948,31 +949,30 @@ interface TextSecurePreferences {
             setBooleanPreference(context, FINGERPRINT_KEY_GENERATED, true)
         }
 
-        @JvmStatic @ColorInt
-        fun getAccentColor(context: Context): Int? {
-            val colorId = when (getStringPreference(context, SELECTED_ACCENT_COLOR, PURPLE_ACCENT)) {
-                GREEN_ACCENT -> R.color.accent_green
-                BLUE_ACCENT -> R.color.accent_blue
-                PURPLE_ACCENT -> R.color.accent_purple
-                PINK_ACCENT -> R.color.accent_pink
-                RED_ACCENT -> R.color.accent_red
-                ORANGE_ACCENT -> R.color.accent_orange
-                YELLOW_ACCENT -> R.color.accent_yellow
+        @JvmStatic @StyleRes
+        fun getAccentColorStyle(context: Context): Int? {
+            return when (getStringPreference(context, SELECTED_ACCENT_COLOR, PURPLE_ACCENT)) {
+                GREEN_ACCENT -> R.style.PrimaryGreen
+                BLUE_ACCENT -> R.style.PrimaryBlue
+                PURPLE_ACCENT -> R.style.PrimaryPurple
+                PINK_ACCENT -> R.style.PrimaryPink
+                RED_ACCENT -> R.style.PrimaryRed
+                ORANGE_ACCENT -> R.style.PrimaryOrange
+                YELLOW_ACCENT -> R.style.PrimaryYellow
                 else -> null
             }
-            return colorId?.let { context.getColor(it) }
         }
 
         @JvmStatic
-        fun setAccentColor(context: Context, @ColorRes newColor: Int?) {
+        fun setAccentColorStyle(context: Context, @StyleRes newColor: Int?) {
             setStringPreference(context, SELECTED_ACCENT_COLOR, when (newColor) {
-                R.color.accent_green -> GREEN_ACCENT
-                R.color.accent_blue -> BLUE_ACCENT
-                R.color.accent_purple -> PURPLE_ACCENT
-                R.color.accent_pink -> PINK_ACCENT
-                R.color.accent_red -> RED_ACCENT
-                R.color.accent_orange -> ORANGE_ACCENT
-                R.color.accent_yellow -> YELLOW_ACCENT
+                R.style.PrimaryGreen -> GREEN_ACCENT
+                R.style.PrimaryBlue -> BLUE_ACCENT
+                R.style.PrimaryPurple -> PURPLE_ACCENT
+                R.style.PrimaryPink -> PINK_ACCENT
+                R.style.PrimaryRed -> RED_ACCENT
+                R.style.PrimaryOrange -> ORANGE_ACCENT
+                R.style.PrimaryYellow -> YELLOW_ACCENT
                 else -> null
             })
         }
@@ -1585,36 +1585,35 @@ class AppTextSecurePreferences @Inject constructor(
         setBooleanPreference(TextSecurePreferences.FINGERPRINT_KEY_GENERATED, true)
     }
 
-    @ColorInt
-    override fun getAccentColor(): Int? {
+    @StyleRes
+    override fun getAccentColorStyle(): Int? {
         val prefColor = TextSecurePreferences.getStringPreference(
             context,
             TextSecurePreferences.SELECTED_ACCENT_COLOR,
             null
         )
-        val colorId = when (prefColor) {
-            TextSecurePreferences.GREEN_ACCENT -> R.color.accent_green
-            TextSecurePreferences.BLUE_ACCENT -> R.color.accent_blue
-            TextSecurePreferences.PURPLE_ACCENT -> R.color.accent_purple
-            TextSecurePreferences.PINK_ACCENT -> R.color.accent_pink
-            TextSecurePreferences.RED_ACCENT -> R.color.accent_red
-            TextSecurePreferences.ORANGE_ACCENT -> R.color.accent_orange
-            TextSecurePreferences.YELLOW_ACCENT -> R.color.accent_yellow
+        return when (prefColor) {
+            TextSecurePreferences.GREEN_ACCENT -> R.style.PrimaryGreen
+            TextSecurePreferences.BLUE_ACCENT -> R.style.PrimaryBlue
+            TextSecurePreferences.PURPLE_ACCENT -> R.style.PrimaryPurple
+            TextSecurePreferences.PINK_ACCENT -> R.style.PrimaryPink
+            TextSecurePreferences.RED_ACCENT -> R.style.PrimaryRed
+            TextSecurePreferences.ORANGE_ACCENT -> R.style.PrimaryOrange
+            TextSecurePreferences.YELLOW_ACCENT -> R.style.PrimaryYellow
             else -> null
         }
-        return colorId?.let { context.getColor(it) }
     }
 
-    override fun setAccentColor(@ColorRes newColor: Int?) {
+    override fun setAccentColorStyle(@StyleRes newColorStyle: Int?) {
         TextSecurePreferences.setStringPreference(
-            context, TextSecurePreferences.SELECTED_ACCENT_COLOR, when (newColor) {
-                R.color.accent_green -> TextSecurePreferences.GREEN_ACCENT
-                R.color.accent_blue -> TextSecurePreferences.BLUE_ACCENT
-                R.color.accent_purple -> TextSecurePreferences.PURPLE_ACCENT
-                R.color.accent_pink -> TextSecurePreferences.PINK_ACCENT
-                R.color.accent_red -> TextSecurePreferences.RED_ACCENT
-                R.color.accent_orange -> TextSecurePreferences.ORANGE_ACCENT
-                R.color.accent_yellow -> TextSecurePreferences.YELLOW_ACCENT
+            context, TextSecurePreferences.SELECTED_ACCENT_COLOR, when (newColorStyle) {
+                R.style.PrimaryGreen -> TextSecurePreferences.GREEN_ACCENT
+                R.style.PrimaryBlue -> TextSecurePreferences.BLUE_ACCENT
+                R.style.PrimaryPurple -> TextSecurePreferences.PURPLE_ACCENT
+                R.style.PrimaryPink -> TextSecurePreferences.PINK_ACCENT
+                R.style.PrimaryRed -> TextSecurePreferences.RED_ACCENT
+                R.style.PrimaryOrange -> TextSecurePreferences.ORANGE_ACCENT
+                R.style.PrimaryYellow -> TextSecurePreferences.YELLOW_ACCENT
                 else -> null
             }
         )

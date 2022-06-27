@@ -26,8 +26,7 @@ val View.hitRect: Rect
     }
 
 @ColorInt
-fun Context.getAccentColor() = TextSecurePreferences.getAccentColor(this)
-    ?: getColorFromAttr(R.attr.colorAccent)
+fun Context.getAccentColor() = getColorFromAttr(R.attr.colorAccent)
 
 fun View.animateSizeChange(@DimenRes startSizeID: Int, @DimenRes endSizeID: Int, animationDuration: Long = 250) {
     val startSize = resources.getDimension(startSizeID)

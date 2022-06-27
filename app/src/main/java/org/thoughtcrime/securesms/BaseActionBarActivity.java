@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.WindowManager;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,9 @@ import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.dynamiclanguage.DynamicLanguageActivityHelper;
 import org.session.libsession.utilities.dynamiclanguage.DynamicLanguageContextWrapper;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import network.loki.messenger.R;
 
 public abstract class BaseActionBarActivity extends AppCompatActivity {
@@ -26,17 +30,25 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
     return R.style.Ocean_Dark;
   }
 
+  @StyleRes @Nullable
+  public Integer getAccentTheme() {
+    return TextSecurePreferences.getAccentColorStyle(getApplicationContext());
+  }
+
   @Override
   public Resources.Theme getTheme() {
     // New themes
     Resources.Theme modifiedTheme = super.getTheme();
     modifiedTheme.applyStyle(getDesiredTheme(), true);
-    return modifiedTheme; // TODO: apply a singular override colorAccent theme instead of overriding in code
+    Integer accentTheme = getAccentTheme();
+    if (accentTheme != null) {
+      modifiedTheme.applyStyle(accentTheme, true);
+    }
+    return modifiedTheme;
   }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-
     ActionBar actionBar = getSupportActionBar();
     if (actionBar != null) {
       actionBar.setDisplayHomeAsUpEnabled(true);
