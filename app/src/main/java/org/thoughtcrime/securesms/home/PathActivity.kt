@@ -22,15 +22,7 @@ import network.loki.messenger.databinding.ActivityPathBinding
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsignal.utilities.Snode
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
-import org.thoughtcrime.securesms.util.GlowViewUtilities
-import org.thoughtcrime.securesms.util.IP2Country
-import org.thoughtcrime.securesms.util.PathDotView
-import org.thoughtcrime.securesms.util.UiModeUtilities
-import org.thoughtcrime.securesms.util.animateSizeChange
-import org.thoughtcrime.securesms.util.disableClipping
-import org.thoughtcrime.securesms.util.fadeIn
-import org.thoughtcrime.securesms.util.fadeOut
-import org.thoughtcrime.securesms.util.getColorWithID
+import org.thoughtcrime.securesms.util.*
 
 class PathActivity : PassphraseRequiredActionBarActivity() {
     private lateinit var binding: ActivityPathBinding
@@ -185,7 +177,7 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
         private val dotView by lazy {
             val result = PathDotView(context)
             result.setBackgroundResource(R.drawable.accent_dot)
-            result.mainColor = resources.getColorWithID(R.color.accent, context.theme)
+            result.mainColor = context.getAccentColor()
             result
         }
 
@@ -255,13 +247,17 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
         private fun expand() {
             dotView.animateSizeChange(R.dimen.path_row_dot_size, R.dimen.path_row_expanded_dot_size)
             @ColorRes val startColorID = if (UiModeUtilities.isDayUiMode(context)) R.color.transparent_black_30 else R.color.black
-            GlowViewUtilities.animateShadowColorIdChange(context, dotView, startColorID, R.color.accent)
+            val startColor = context.resources.getColorWithID(startColorID, context.theme)
+            val endColor = context.getAccentColor()
+            GlowViewUtilities.animateShadowColorChange(dotView, startColor, endColor)
         }
 
         private fun collapse() {
             dotView.animateSizeChange(R.dimen.path_row_expanded_dot_size, R.dimen.path_row_dot_size)
             @ColorRes val endColorID = if (UiModeUtilities.isDayUiMode(context)) R.color.transparent_black_30 else R.color.black
-            GlowViewUtilities.animateShadowColorIdChange(context, dotView, R.color.accent, endColorID)
+            val startColor = context.getAccentColor()
+            val endColor = context.resources.getColorWithID(endColorID, context.theme)
+            GlowViewUtilities.animateShadowColorChange(dotView, startColor, endColor)
         }
     }
     // endregion

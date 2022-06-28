@@ -32,11 +32,11 @@
     </style>
 
     <style name="Widget.Session.AlertDialog.NegativeButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
-        <item name="android:textColor">@color/accent</item>
+        <item name="android:textColor">?colorAccent</item>
     </style>
 
     <style name="Widget.Session.AlertDialog.PositiveButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
-        <item name="android:textColor">@color/accent</item>
+        <item name="android:textColor">?colorAccent</item>
     </style>
 
     <style name="Widget.Session.AppBarLayout" parent="@style/Widget.Design.AppBarLayout">

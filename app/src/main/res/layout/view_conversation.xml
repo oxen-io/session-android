@@ -58,6 +58,7 @@
                         android:textSize="@dimen/medium_font_size"
                         android:textStyle="bold"
                         android:textColor="?android:textColorPrimary"
+                        app:drawableTint="?conversation_pinned_icon_color"
                         tools:drawableRight="@drawable/ic_pin"
                         tools:text="I'm a very long display name. What are you going to do about it?" />
 

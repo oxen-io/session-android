@@ -133,7 +133,9 @@
     <attr name="default_background_start" format="color|reference"/>
     <attr name="default_background_end" format="color|reference"/>
     <attr name="colorCellRipple" format="color|reference"/>
-    <attr name="colorCellBackground" format="color|reference"/>
+    <attr name="colorCellBackground" format="color|reference" />
+    <attr name="outlineButtonBorder" format="color|reference" />
+    <attr name="outlineButtonText" format="color|reference" />
     <attr name="unreadIndicatorBackgroundColor" format="color|reference"/>
     <attr name="unreadIndicatorTextColor" format="color|reference"/>
 
@@ -157,8 +159,6 @@
     <attr name="scroll_to_bottom_button_background" format="color|reference"/>
     <attr name="scroll_to_bottom_button_border" format="color|reference"/>
     <attr name="conversation_unread_count_indicator_background" format="color|reference"/>
-    <attr name="conversation_pinned_background" format="color|reference"/>
-    <attr name="conversation_pinned_icon" format="color|reference"/>
 
     <attr name="verification_background" format="color"/>
 

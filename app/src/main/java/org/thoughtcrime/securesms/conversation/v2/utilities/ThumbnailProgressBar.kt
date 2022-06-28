@@ -17,6 +17,7 @@ import android.view.animation.AnimationUtils
 import androidx.core.content.res.ResourcesCompat
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import network.loki.messenger.R
+import org.thoughtcrime.securesms.util.getAccentColor
 import kotlin.math.sin
 
 class ThumbnailProgressBar: View {
@@ -33,7 +34,7 @@ class ThumbnailProgressBar: View {
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
-        color = ResourcesCompat.getColor(resources, R.color.accent, null)
+        color = context.getAccentColor()
     }
 
     private val objectRect = Rect()

@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:textSize="@dimen/small_font_size"
-                android:textColor="@color/accent"
+                android:textColor="?colorAccent"
                 android:textStyle="bold"
                 android:text="@string/activity_pn_mode_recommended_option_tag" />
 

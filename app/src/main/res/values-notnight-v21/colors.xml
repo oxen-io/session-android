@@ -1,13 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
-    <color name="accent">#00E97B</color>
-    <color name="accent_alpha50">#8000E97B</color>
     <color name="text">#000000</color>
     <color name="destructive">#f26f55</color>
     <color name="unimportant">#606060</color>
     <color name="profile_picture_background">#B0B0B0</color>
-    <color name="cell_background">#FCFCFC</color>
-    <color name="cell_selected">#DFDFDF</color>
     <color name="separator">#B0B0B0</color>
     <color name="unimportant_button_background">@android:color/transparent</color>
     <color name="unimportant_dialog_button_background">@color/unimportant_button_background</color>

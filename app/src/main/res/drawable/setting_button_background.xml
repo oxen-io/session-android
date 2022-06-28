@@ -4,6 +4,6 @@
     android:color="@color/cell_selected">
 
     <item>
-        <color android:color="@color/cell_background" />
+        <color android:color="?colorCellBackground" />
     </item>
 </ripple>

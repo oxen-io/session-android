@@ -56,7 +56,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/small_button_height"
             android:layout_weight="1"
-            app:SpinKit_Color="@color/accent"
+            app:SpinKit_Color="?colorAccent"
             android:visibility="gone" />
 
     </LinearLayout>

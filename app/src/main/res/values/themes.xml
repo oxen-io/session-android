@@ -139,9 +139,6 @@
         <item name="media_keyboard_button_color">@color/core_grey_60</item>
 
         <item name="menu_info_icon">@drawable/ic_outline_info_24</item>
-
-        <item name="conversation_item_audio_seek_bar_color_incoming">@color/accent</item>
-        <item name="conversation_item_audio_seek_bar_color_outgoing">@color/white</item>
     </style>
 
     <style name="Theme.Session.DayNight.FlatActionBar">
@@ -404,8 +401,8 @@
         <item name="scroll_to_bottom_button_background"></item>
         <item name="scroll_to_bottom_button_border"></item>
         <item name="conversation_unread_count_indicator_background"></item>
-        <item name="conversation_pinned_background"></item>
-        <item name="conversation_pinned_icon"></item>
+        <item name="conversation_pinned_background_color"></item>
+        <item name="conversation_pinned_icon_color"></item>
     </style>
 
     <style name="Classic.Light">
@@ -450,8 +447,8 @@
         <item name="scroll_to_bottom_button_background"></item>
         <item name="scroll_to_bottom_button_border"></item>
         <item name="conversation_unread_count_indicator_background"></item>
-        <item name="conversation_pinned_background"></item>
-        <item name="conversation_pinned_icon"></item>
+        <item name="conversation_pinned_background_color"></item>
+        <item name="conversation_pinned_icon_color"></item>
     </style>
 
     <style name="Ocean.Dark">
@@ -506,8 +503,8 @@
         <item name="scroll_to_bottom_button_background">@color/ocean_dark_4</item>
         <item name="scroll_to_bottom_button_border">?colorPrimary</item>
         <item name="conversation_unread_count_indicator_background">@color/ocean_dark_4</item>
-        <item name="conversation_pinned_background">@color/ocean_dark_5</item>
-        <item name="conversation_pinned_icon">?colorPrimary</item>
+        <item name="conversation_pinned_background_color">@color/ocean_dark_4</item>
+        <item name="conversation_pinned_icon_color">?colorAccent</item>
     </style>
 
     <style name="Ocean.Light">
@@ -519,7 +516,7 @@
         <item name="searchHintColor">@color/ocean_light_1</item>
         <item name="searchTextColor">@color/ocean_light_0</item>
         <item name="searchHighlightTint">?colorAccent</item>
-        <item name="colorControlNormal">@color/ocean_dark_6</item>
+        <item name="colorControlNormal">@color/ocean_light_6</item>
         <item name="colorControlActivated">?colorAccent</item>
         <item name="colorControlHighlight">?colorAccent</item>
         <item name="android:textColorPrimary">@color/ocean_light_0</item>
@@ -564,8 +561,8 @@
         <item name="scroll_to_bottom_button_background">@color/ocean_dark_4</item>
         <item name="scroll_to_bottom_button_border">?colorPrimary</item>
         <item name="conversation_unread_count_indicator_background">@color/ocean_dark_4</item>
-        <item name="conversation_pinned_background">@color/ocean_dark_5</item>
-        <item name="conversation_pinned_icon">?colorPrimary</item>
+        <item name="conversation_pinned_background_color">@color/ocean_dark_4</item>
+        <item name="conversation_pinned_icon_color">?colorPrimary</item>
     </style>
 
 </resources>
