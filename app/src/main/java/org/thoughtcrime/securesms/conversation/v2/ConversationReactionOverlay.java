@@ -185,13 +185,12 @@ public final class ConversationReactionOverlay extends FrameLayout {
     updateSystemUiOnShow(activity);
 
     ViewKt.doOnLayout(this, v -> {
-      showAfterLayout(activity, messageRecord, lastSeenDownPoint, isMessageOnLeft);
+      showAfterLayout(messageRecord, lastSeenDownPoint, isMessageOnLeft);
       return Unit.INSTANCE;
     });
   }
 
-  private void showAfterLayout(@NonNull Activity activity,
-                               @NonNull MessageRecord messageRecord,
+  private void showAfterLayout(@NonNull MessageRecord messageRecord,
                                @NonNull PointF lastSeenDownPoint,
                                boolean isMessageOnLeft) {
     contextMenu = new ConversationContextMenu(dropdownAnchor, getMenuActionItems(messageRecord));

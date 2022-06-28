@@ -1,7 +1,6 @@
 package org.thoughtcrime.securesms.conversation.v2
 
 import android.graphics.Bitmap
-import android.net.Uri
 import android.view.View
 
 /**
@@ -15,7 +14,6 @@ data class SelectedConversationModel(
   val bubbleX: Float,
   val bubbleY: Float,
   val bubbleWidth: Int,
-  val audioUri: Uri? = null,
   val isOutgoing: Boolean,
   val focusedView: View?,
 )

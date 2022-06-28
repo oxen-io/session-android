@@ -905,11 +905,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val view = visibleMessageView.messageContentView
         val selectedConversationModel = SelectedConversationModel(view.drawToBitmap(),
             view.x,
-            view.getY() + binding!!.conversationRecyclerView.getTranslationY(),
-            view.getX(),
-            view.getY(),
-            view.getWidth(),
-            null,
+            view.y + binding!!.conversationRecyclerView.translationY,
+            view.x,
+            view.y,
+            view.width,
             message.isOutgoing,
             view)
         reactionDelegate.show(this, message, selectedConversationModel);
@@ -925,31 +924,32 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             .filter { record -> record.author == textSecurePreferences.getLocalNumber() }
             .findFirst()
             .orElse(null)
+        val messageId = MessageId(messageRecord.id, messageRecord.isMms)
         if (oldRecord != null && oldRecord.emoji == emoji) {
-            reactionDb.deleteReaction(MessageId(messageRecord.id, messageRecord.isMms), messageRecord.recipient.address.serialize())
+            reactionDb.deleteReaction(messageId, messageRecord.recipient.address.serialize())
             MessageSender.sendReactionRemoval(messageRecord.id, oldRecord.emoji)
         } else {
-            sendEmojiReaction(messageRecord, emoji)
+            sendEmojiReaction(emoji, messageId, messageRecord.timestamp)
         }
     }
 
-    private fun sendEmojiReaction(messageRecord: MessageRecord, emoji: String) {
+    private fun sendEmojiReaction(emoji: String, messageId: MessageId, messageTimestamp: Long) {
         // Create the message
         val message = VisibleMessage()
-        val timestamp = System.currentTimeMillis()
-        message.sentTimestamp = timestamp
+        val emojiTimestamp = System.currentTimeMillis()
+        message.sentTimestamp = emojiTimestamp
         val author = textSecurePreferences.getLocalNumber()!!
         // Put the message in the database
         val reaction = ReactionRecord(
-            messageId = messageRecord.id,
+            messageId = messageId.id,
             author = author,
             emoji = emoji,
-            dateSent = timestamp,
-            dateReceived = timestamp
+            dateSent = emojiTimestamp,
+            dateReceived = emojiTimestamp
         )
-        reactionDb.addReaction(MessageId(messageRecord.id, messageRecord.isMms), reaction)
+        reactionDb.addReaction(messageId, reaction)
         // Send it
-        message.reaction = Reaction.from(messageRecord.timestamp, author, emoji)
+        message.reaction = Reaction.from(messageTimestamp, author, emoji)
         MessageSender.send(message, viewModel.recipient.address)
     }
 
@@ -978,8 +978,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         reactionDelegate.hide()
     }
 
-    override fun onReactWithAnyEmojiSelected(emoji: String) {
+    override fun onReactWithAnyEmojiSelected(emoji: String, messageId: MessageId, timestamp: Long) {
         reactionDelegate.hide()
+        sendEmojiReaction(emoji, messageId, timestamp)
     }
 
     override fun onMicrophoneButtonMove(event: MotionEvent) {
