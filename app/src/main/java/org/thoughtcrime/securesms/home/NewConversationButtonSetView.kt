@@ -125,7 +125,7 @@ class NewConversationButtonSetView : RelativeLayout {
             result.layoutParams = LayoutParams(size, size)
             result.setBackgroundResource(R.drawable.new_conversation_button_background)
             val backgroundColor = if (isMain) context.getAccentColor()
-            else context.getColor(R.color.new_conversation_button_collapsed_background)
+            else context.getColorFromAttr(R.attr.conversation_color_non_main)
 
             result.mainColor = backgroundColor
             result.sessionShadowColor = if (isMain) context.getColorFromAttr(R.attr.conversation_shadow_main)
@@ -135,7 +135,7 @@ class NewConversationButtonSetView : RelativeLayout {
             result.imageTintList = if (isMain) {
                 ColorStateList.valueOf(resources.getColorWithID(android.R.color.white, context.theme))
             } else {
-                ColorStateList.valueOf(resources.getColorWithID(R.color.text, context.theme))
+                ColorStateList.valueOf(context.getColorFromAttr(android.R.attr.textColorPrimary))
             }
             result
         }

@@ -101,17 +101,12 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             seedButton.setOnClickListener { showSeed() }
             clearAllDataButton.setOnClickListener { clearAllData() }
             debugLogButton.setOnClickListener { shareLogs() }
-            val isLightMode = UiModeUtilities.isDayUiMode(this@SettingsActivity)
-            oxenLogoImageView.setImageResource(if (isLightMode) R.drawable.oxen_light_mode else R.drawable.oxen_dark_mode)
             versionTextView.text = String.format(getString(R.string.version_s), "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.settings_general, menu)
-        // Update UI mode menu icon
-        val uiMode = UiModeUtilities.getUserSelectedUiMode(this)
-        menu.findItem(R.id.action_change_theme).icon!!.level = uiMode.ordinal
         return true
     }
 

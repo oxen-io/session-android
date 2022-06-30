@@ -128,6 +128,8 @@
 
     <attr name="home_gradient_start" format="color|reference" />
     <attr name="home_gradient_end" format="color|reference" />
+    <attr name="conversation_color_non_main" format="color|reference"/>
+    <attr name="conversation_tint_non_main" format="color|reference"/>
     <attr name="conversation_shadow_non_main" format="color|reference"/>
     <attr name="conversation_shadow_main" format="color|reference"/>
     <attr name="default_background_start" format="color|reference"/>
@@ -145,17 +147,17 @@
     <attr name="message_sent_background_color" format="color|reference" />
     <attr name="message_sent_text_color" format="color|reference" />
     <attr name="input_bar_background" format="color|reference"/>
-    <attr name="input_bar_text_highlight" format="color|reference"/>
+    <attr name="input_bar_text_hint" format="color|reference"/>
     <attr name="input_bar_text_user" format="color|reference"/>
     <attr name="input_bar_border" format="color|reference"/>
     <attr name="input_bar_button_background" format="color|reference"/>
     <attr name="input_bar_button_background_opaque" format="color|reference"/>
     <attr name="input_bar_button_background_opaque_border" format="color|reference"/>
+    <attr name="input_bar_button_text_color" format="color|reference"/>
     <attr name="input_bar_lock_view_background" format="color|reference"/>
     <attr name="input_bar_lock_view_border" format="color|reference"/>
     <attr name="mention_candidates_view_background" format="color|reference"/>
     <attr name="mention_candidates_view_background_ripple" format="color|reference"/>
-    <attr name="link_preview_background" format="color|reference"/>
     <attr name="scroll_to_bottom_button_background" format="color|reference"/>
     <attr name="scroll_to_bottom_button_border" format="color|reference"/>
     <attr name="conversation_unread_count_indicator_background" format="color|reference"/>

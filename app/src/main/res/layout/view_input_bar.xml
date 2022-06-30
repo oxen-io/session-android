@@ -40,7 +40,7 @@
             android:background="@null"
             android:gravity="center_vertical"
             android:hint="@string/ConversationActivity_message"
-            android:textColorHint="?input_bar_text_highlight"
+            android:textColorHint="?attr/input_bar_text_hint"
             android:textColor="?input_bar_text_user"
             android:textSize="@dimen/small_font_size" />
 

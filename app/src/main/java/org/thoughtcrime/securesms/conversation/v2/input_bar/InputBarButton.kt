@@ -51,7 +51,7 @@ class InputBarButton : RelativeLayout {
         if (hasOpaqueBackground) {
             R.attr.input_bar_button_background_opaque
         } else if (isSendButton) {
-            R.attr.colorAccent // TODO: allow for customizable accent
+            R.attr.colorAccent
         } else {
             R.attr.input_bar_button_background
         }
@@ -78,8 +78,7 @@ class InputBarButton : RelativeLayout {
         result.layoutParams = LayoutParams(size, size)
         result.scaleType = ImageView.ScaleType.CENTER_INSIDE
         result.setImageResource(iconID)
-        val colorID = if (isSendButton) R.color.black else R.color.text
-        result.imageTintList = ColorStateList.valueOf(resources.getColorWithID(colorID, context.theme))
+        result.imageTintList = ColorStateList.valueOf(context.getColorFromAttr(R.attr.input_bar_button_text_color))
         result
     }
 

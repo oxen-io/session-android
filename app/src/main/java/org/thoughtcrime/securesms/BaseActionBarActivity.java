@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.dynamiclanguage.DynamicLanguageActivityHelper;
 import org.session.libsession.utilities.dynamiclanguage.DynamicLanguageContextWrapper;
+import org.session.libsignal.utilities.Log;
+import org.thoughtcrime.securesms.util.UiModeUtilities;
 
 import javax.inject.Inject;
 
@@ -27,12 +30,15 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
 
   @StyleRes
   public int getDesiredTheme() {
-    return R.style.Ocean_Dark;
+    boolean isDayUi = UiModeUtilities.isDayUiMode(this);
+    return isDayUi ? R.style.Classic_Dark : R.style.Classic_Light;
   }
 
   @StyleRes @Nullable
   public Integer getAccentTheme() {
-    return TextSecurePreferences.getAccentColorStyle(getApplicationContext());
+    boolean isDayUi = UiModeUtilities.isDayUiMode(this);
+    return isDayUi ? R.style.PrimaryOrange : R.style.PrimaryGreen;
+            // TextSecurePreferences.getAccentColorStyle(getApplicationContext());
   }
 
   @Override

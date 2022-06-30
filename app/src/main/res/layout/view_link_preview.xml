@@ -23,7 +23,7 @@
                 android:layout_height="24dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/ic_link"
-                app:tint="@color/text" />
+                app:tint="?android:textColorPrimary" />
 
             <org.thoughtcrime.securesms.conversation.v2.utilities.KThumbnailView
                 android:id="@+id/thumbnailImageView"
@@ -45,8 +45,7 @@
             android:minWidth="@dimen/media_bubble_min_width"
             android:maxLines="3"
             android:ellipsize="end"
-            android:textColor="@color/text"
-            android:background="?link_preview_background" />
+            android:textColor="@color/text"/>
 
     </LinearLayout>
 

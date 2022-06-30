@@ -208,7 +208,6 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         if (userPublicKey != null) {
             registerForFCMIfNeeded(false);
         }
-        UiModeUtilities.setupUiModeToUserSelected(this);
         initializeExpiringMessageManager();
         initializeTypingStatusRepository();
         initializeTypingStatusSender();

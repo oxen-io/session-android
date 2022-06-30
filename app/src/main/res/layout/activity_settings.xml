@@ -51,7 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:textColor="@color/text"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="@dimen/very_large_font_size"
                     android:textStyle="bold" />
 
@@ -73,7 +73,7 @@
                 android:layout_marginTop="@dimen/large_spacing"
                 android:layout_marginRight="@dimen/large_spacing"
                 android:textSize="@dimen/large_font_size"
-                android:textColor="@color/text"
+                android:textColor="?android:textColorPrimary"
                 android:fontFamily="@font/space_mono_regular"
                 android:textAlignment="center"
                 tools:text="05987d601943c267879be41830888066c6a024cbdc9a548d06813924bf3372ea78" />
@@ -95,7 +95,7 @@
                     android:text="@string/copy" />
 
                 <Button
-                    style="@style/Widget.Session.Button.Common.UnimportantOutline"
+                    style="@style/Widget.Session.Button.Common.ProminentOutline"
                     android:id="@+id/shareButton"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/medium_button_height"
@@ -107,7 +107,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1px"
+                android:layout_height="1dp"
                 android:layout_marginTop="@dimen/large_spacing"
                 android:background="?android:dividerHorizontal" />
 
@@ -123,7 +123,7 @@
                     android:id="@+id/pathText"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:textColor="@color/text"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="@dimen/medium_font_size"
                     android:layout_centerInParent="true"
                     android:textStyle="bold"
@@ -144,7 +144,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1px"
+                android:layout_height="1dp"
                 android:background="?android:dividerHorizontal" />
 
             <TextView
@@ -152,7 +152,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/setting_button_height"
                 android:background="@drawable/setting_button_background"
-                android:textColor="@color/text"
+                android:textColor="?android:textColorPrimary"
                 android:textSize="@dimen/medium_font_size"
                 android:textStyle="bold"
                 android:gravity="center"
@@ -160,7 +160,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1px"
+                android:layout_height="1dp"
                 android:background="?android:dividerHorizontal" />
 
             <TextView
@@ -168,7 +168,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/setting_button_height"
                 android:background="@drawable/setting_button_background"
-                android:textColor="@color/text"
+                android:textColor="?android:textColorPrimary"
                 android:textSize="@dimen/medium_font_size"
                 android:textStyle="bold"
                 android:gravity="center"
@@ -176,7 +176,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1px"
+                android:layout_height="1dp"
                 android:background="?android:dividerHorizontal" />
 
             <TextView
@@ -184,7 +184,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/setting_button_height"
                 android:background="@drawable/setting_button_background"
-                android:textColor="@color/text"
+                android:textColor="?android:textColorPrimary"
                 android:textSize="@dimen/medium_font_size"
                 android:textStyle="bold"
                 android:gravity="center"
@@ -192,7 +192,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1px"
+                android:layout_height="1dp"
                 android:background="?android:dividerHorizontal" />
 
             <TextView
@@ -200,7 +200,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/setting_button_height"
                 android:background="@drawable/setting_button_background"
-                android:textColor="@color/text"
+                android:textColor="?android:textColorPrimary"
                 android:textSize="@dimen/medium_font_size"
                 android:textStyle="bold"
                 android:gravity="center"
@@ -208,7 +208,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1px"
+                android:layout_height="1dp"
                 android:background="?android:dividerHorizontal" />
 
             <TextView
@@ -216,7 +216,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/setting_button_height"
                 android:background="@drawable/setting_button_background"
-                android:textColor="@color/text"
+                android:textColor="?android:textColorPrimary"
                 android:textSize="@dimen/medium_font_size"
                 android:textStyle="bold"
                 android:gravity="center"
@@ -224,7 +224,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1px"
+                android:layout_height="1dp"
                 android:background="?android:dividerHorizontal" />
 
             <TextView
@@ -240,7 +240,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1px"
+                android:layout_height="1dp"
                 android:layout_marginBottom="@dimen/medium_spacing"
                 android:background="?android:dividerHorizontal" />
 
@@ -249,7 +249,7 @@
                 android:id="@+id/sendInvitationButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text"
+                android:textColor="?android:textColorPrimary"
                 android:textSize="@dimen/medium_font_size"
                 android:textStyle="bold"
                 android:gravity="center"
@@ -261,7 +261,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/medium_spacing"
-                android:textColor="@color/text"
+                android:textColor="?android:textColorPrimary"
                 android:textSize="@dimen/medium_font_size"
                 android:textStyle="bold"
                 android:gravity="center"
@@ -273,7 +273,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/medium_spacing"
-                android:textColor="@color/text"
+                android:textColor="?android:textColorPrimary"
                 android:textSize="@dimen/medium_font_size"
                 android:textStyle="bold"
                 android:gravity="center"
@@ -285,7 +285,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/medium_spacing"
-                android:textColor="@color/text"
+                android:textColor="?android:textColorPrimary"
                 android:textSize="@dimen/medium_font_size"
                 android:textStyle="bold"
                 android:gravity="center"
@@ -297,7 +297,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/medium_spacing"
-                android:textColor="@color/text"
+                android:textColor="?android:textColorPrimary"
                 android:textSize="@dimen/medium_font_size"
                 android:textStyle="bold"
                 android:gravity="center"
@@ -308,6 +308,7 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                app:tint="?android:textColorPrimary"
                 android:src="@drawable/oxen_light_mode" />
 
             <TextView
@@ -318,7 +319,7 @@
                 android:layout_marginBottom="@dimen/medium_spacing"
                 android:gravity="center"
                 android:text="@string/version_s"
-                android:textColor="@color/text"
+                android:textColor="?android:textColorPrimary"
                 android:alpha="0.6"
                 android:textSize="@dimen/very_small_font_size" />
 

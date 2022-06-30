@@ -44,9 +44,7 @@ import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.database.model.SmsMessageRecord
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.SearchUtil
-import org.thoughtcrime.securesms.util.UiModeUtilities
 import org.thoughtcrime.securesms.util.getAccentColor
-import org.thoughtcrime.securesms.util.getColorWithID
 import org.thoughtcrime.securesms.util.toPx
 import java.util.Locale
 import kotlin.math.roundToInt
@@ -308,13 +306,14 @@ class VisibleMessageContentView : LinearLayout {
 
         @ColorInt
         fun getTextColor(context: Context, message: MessageRecord): Int {
-            val isDayUiMode = UiModeUtilities.isDayUiMode(context)
-            val colorID = if (message.isOutgoing) {
-                R.color.black
+            val colorAttribute = if (message.isOutgoing) {
+                // sent
+                R.attr.message_sent_text_color
             } else {
-                if (isDayUiMode) R.color.black else R.color.white
+                // received
+                R.attr.message_received_text_color
             }
-            return context.resources.getColorWithID(colorID, context.theme)
+            return context.getColorFromAttr(colorAttribute)
         }
     }
     // endregion
