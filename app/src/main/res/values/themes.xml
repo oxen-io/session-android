@@ -2,6 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="Base.Theme.Session" parent="@style/Theme.AppCompat.DayNight">
         <item name="actionModeBackground">?colorPrimary</item>
+        <item name="dialog_background_color">?colorPrimary</item>
 <!--        <item name="colorPrimary">@color/action_bar_background</item>-->
 <!--        <item name="colorPrimaryDark">@color/action_bar_background</item>-->
 <!--        <item name="searchBackgroundColor">#1B1B1B</item>-->
@@ -319,29 +320,29 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.Session.BottomSheet.Classic.Dark" parent="@style/Widget.Design.BottomSheet.Modal">
-        <item name="colorControlNormal">?android:textColorPrimary</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>
-        <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>
+    <style name="Theme.Session.BottomSheet.ClassicDark">
+<!--        <item name="colorControlNormal">?android:textColorPrimary</item>-->
+<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
+<!--        <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>-->
+<!--        <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>-->
     </style>
-    <style name="Theme.Session.BottomSheet.Classic.Light" parent="Classic.Light">
-        <item name="colorControlNormal">?android:textColorPrimary</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>
-        <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>
+    <style name="Theme.Session.BottomSheet.ClassicLight">
+<!--        <item name="colorControlNormal">?android:textColorPrimary</item>-->
+<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
+<!--        <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>-->
+<!--        <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>-->
     </style>
-    <style name="Theme.Session.BottomSheet.Ocean.Dark" parent="@style/Widget.Design.BottomSheet.Modal">
-        <item name="colorControlNormal">?android:textColorPrimary</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>
-        <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>
+    <style name="Theme.Session.BottomSheet.OceanDark">
+<!--        <item name="colorControlNormal">?android:textColorPrimary</item>-->
+<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
+<!--        <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>-->
+<!--        <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>-->
     </style>
-    <style name="Theme.Session.BottomSheet.Ocean.Light" parent="Ocean.Light">
-        <item name="colorControlNormal">?android:textColorPrimary</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>
-        <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>
+    <style name="Theme.Session.BottomSheet.OceanLight">
+<!--        <item name="colorControlNormal">?android:textColorPrimary</item>-->
+<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
+<!--        <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>-->
+<!--        <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>-->
     </style>
 
     <style name="Classic">
@@ -376,10 +377,9 @@
         <item name="android:navigationBarColor">@color/compose_view_background</item>
         <item name="default_background_end">@color/classic_dark_0</item>
         <item name="default_background_start">@color/classic_dark_1</item>
-        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>
+        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet.ClassicDark</item>
         <item name="colorCellBackground">@color/classic_dark_1</item>
         <item name="colorCellRipple">@color/classic_dark_3</item>
-        <item name="dialog_background_color">?colorPrimary</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
@@ -444,8 +444,7 @@
         <item name="default_background_start">@color/classic_light_5</item>
         <item name="colorCellBackground">@color/classic_light_6</item>
         <item name="colorCellRipple">@color/classic_light_3</item>
-        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>
-        <item name="dialog_background_color">?colorPrimary</item>
+        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet.ClassicLight</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
@@ -492,7 +491,7 @@
         <item name="input_bar_lock_view_border">@color/classic_light_2</item>
         <item name="mention_candidates_view_background">?colorCellBackground</item>
         <item name="mention_candidates_view_background_ripple">?colorCellRipple</item>
-        <item name="scroll_to_bottom_button_background">@color/classic_dark_1</item>
+        <item name="scroll_to_bottom_button_background">@color/classic_light_4</item>
         <item name="scroll_to_bottom_button_border">@color/classic_light_2</item>
         <item name="conversation_unread_count_indicator_background">@color/classic_dark_4</item>
 
@@ -518,8 +517,7 @@
         <item name="default_background_start">?colorPrimaryDark</item>
         <item name="colorCellBackground">@color/ocean_dark_3</item>
         <item name="colorCellRipple">@color/ocean_dark_4</item>
-        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>
-        <item name="dialog_background_color">?colorPrimary</item>
+        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet.OceanDark</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
@@ -586,8 +584,7 @@
         <item name="default_background_start">@color/ocean_light_5</item>
         <item name="colorCellBackground">@color/ocean_light_5</item>
         <item name="colorCellRipple">@color/ocean_light_3</item>
-        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>
-        <item name="dialog_background_color">?colorPrimary</item>
+        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet.OceanLight</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
