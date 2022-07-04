@@ -148,7 +148,7 @@
     </style>
 
     <style name="ThemeOverlay.Session.Settings" parent="PreferenceThemeOverlay.v14.Material" >
-        <item name="android:textColor">@color/text</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textColorSecondary">#99FFFFFF</item>
         <item name="android:textSize">@dimen/medium_font_size</item>
     </style>
@@ -169,7 +169,7 @@
         <item name="android:paddingRight">@dimen/medium_spacing</item>
         <item name="android:paddingBottom">30dp</item>
         <item name="android:textSize">@dimen/small_font_size</item>
-        <item name="android:textColor">@color/text</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textCursorDrawable">@drawable/session_edit_text_cursor</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:maxLines">1</item>

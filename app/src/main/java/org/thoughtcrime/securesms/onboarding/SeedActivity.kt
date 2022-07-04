@@ -12,13 +12,13 @@ import android.widget.Toast
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivitySeedBinding
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsignal.crypto.MnemonicCodec
 import org.session.libsignal.utilities.hexEncodedPrivateKey
 import org.thoughtcrime.securesms.BaseActionBarActivity
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
 import org.thoughtcrime.securesms.crypto.MnemonicUtilities
 import org.thoughtcrime.securesms.util.getAccentColor
-import org.thoughtcrime.securesms.util.getColorWithID
 
 class SeedActivity : BaseActionBarActivity() {
 
@@ -76,7 +76,7 @@ class SeedActivity : BaseActionBarActivity() {
             val seedTextViewLayoutParams = seedTextView.layoutParams as LinearLayout.LayoutParams
             seedTextViewLayoutParams.height = seedTextView.height
             seedTextView.layoutParams = seedTextViewLayoutParams
-            seedTextView.setTextColor(resources.getColorWithID(R.color.text, theme))
+            seedTextView.setTextColor(getColorFromAttr(android.R.attr.textColorPrimary))
             seedTextView.text = seed
         }
         TextSecurePreferences.setHasViewedSeed(this, true)

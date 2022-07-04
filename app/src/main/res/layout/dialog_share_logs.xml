@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/dialog_share_logs_title"
-        android:textColor="@color/text"
+        android:textColor="?android:textColorPrimary"
         android:textStyle="bold"
         android:textSize="@dimen/medium_font_size" />
 
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/large_spacing"
         android:text="@string/dialog_share_logs_explanation"
-        android:textColor="@color/text"
+        android:textColor="?android:textColorPrimary"
         android:textSize="@dimen/small_font_size"
         android:textAlignment="center" />
 

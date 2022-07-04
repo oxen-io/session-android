@@ -110,7 +110,7 @@
                 android:layout_centerInParent="true"
                 android:rotation="180"
                 android:src="@drawable/ic_chevron_up"
-                app:tint="@color/text" />
+                app:tint="?android:textColorPrimary" />
 
         </RelativeLayout>
 
@@ -132,7 +132,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:textSize="@dimen/very_small_font_size"
-                android:textColor="@color/text"
+                android:textColor="?android:textColorPrimary"
                 android:text="8" />
 
         </RelativeLayout>
@@ -186,7 +186,7 @@
             android:gravity="center_horizontal"
             android:layout_margin="@dimen/medium_spacing"
             android:text="@string/message_requests_send_notice"
-            android:textColor="@color/text"
+            android:textColor="?android:textColorPrimary"
             android:alpha="0.6"
             android:textSize="@dimen/small_font_size" />
 

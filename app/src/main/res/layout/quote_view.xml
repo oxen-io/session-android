@@ -43,7 +43,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/Signal.Text.Caption"
-                    android:textColor="@color/text"
+                    android:textColor="?android:textColorPrimary"
                     android:fontFamily="sans-serif-medium"
                     android:textSize="@dimen/small_font_size"
                     android:maxLines="1"

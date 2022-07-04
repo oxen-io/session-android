@@ -30,6 +30,7 @@ import org.session.libsession.messaging.sending_receiving.leave
 import org.session.libsession.utilities.ExpirationUtil
 import org.session.libsession.utilities.GroupUtil.doubleDecodeGroupID
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.toHexString
@@ -49,7 +50,6 @@ import org.thoughtcrime.securesms.groups.EditClosedGroupActivity.Companion.group
 import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
 import org.thoughtcrime.securesms.service.WebRtcCallService
 import org.thoughtcrime.securesms.util.BitmapUtil
-import org.thoughtcrime.securesms.util.getColorWithID
 import java.io.IOException
 
 object ConversationMenuHelper {
@@ -75,7 +75,7 @@ object ConversationMenuHelper {
                 val actionView = item.actionView
                 val iconView = actionView.findViewById<ImageView>(R.id.menu_badge_icon)
                 val badgeView = actionView.findViewById<TextView>(R.id.expiration_badge)
-                @ColorInt val color = context.resources.getColorWithID(R.color.text, context.theme)
+                @ColorInt val color = context.getColorFromAttr(android.R.attr.textColorPrimary)
                 iconView.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.MULTIPLY)
                 badgeView.text = ExpirationUtil.getExpirationAbbreviatedDisplayValue(context, thread.expireMessages)
                 actionView.setOnClickListener { onOptionsItemSelected(item) }

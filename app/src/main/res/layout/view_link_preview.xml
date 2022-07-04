@@ -45,7 +45,7 @@
             android:minWidth="@dimen/media_bubble_min_width"
             android:maxLines="3"
             android:ellipsize="end"
-            android:textColor="@color/text"/>
+            android:textColor="?android:textColorPrimary"/>
 
     </LinearLayout>
 

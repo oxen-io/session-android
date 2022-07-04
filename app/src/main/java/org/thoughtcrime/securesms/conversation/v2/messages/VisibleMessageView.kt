@@ -14,7 +14,6 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
@@ -238,7 +237,7 @@ class VisibleMessageView : LinearLayout {
         containerParams.horizontalBias = if (message.isOutgoing) 1f else 0f
         container.layoutParams = containerParams
         if (message.expiresIn > 0 && !message.isPending) {
-            binding.expirationTimerView.setColorFilter(ResourcesCompat.getColor(resources, R.color.text, context.theme))
+            binding.expirationTimerView.setColorFilter(context.getColorFromAttr(android.R.attr.textColorPrimary))
             binding.expirationTimerView.isVisible = true
             binding.expirationTimerView.setPercentComplete(0.0f)
             if (message.expireStarted > 0) {

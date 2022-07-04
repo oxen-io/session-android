@@ -129,7 +129,7 @@
             style="@style/SpinKitView.Large.ThreeBounce"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:SpinKit_Color="@color/text"
+            app:SpinKit_Color="?android:textColorPrimary"
             android:layout_gravity="center"
             tools:visibility="visible"
             android:visibility="gone" />

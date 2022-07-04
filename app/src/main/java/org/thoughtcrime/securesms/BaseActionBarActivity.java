@@ -2,7 +2,6 @@ package org.thoughtcrime.securesms;
 
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,12 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.dynamiclanguage.DynamicLanguageActivityHelper;
 import org.session.libsession.utilities.dynamiclanguage.DynamicLanguageContextWrapper;
-import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.util.UiModeUtilities;
 
-import javax.inject.Inject;
-
-import dagger.hilt.android.AndroidEntryPoint;
 import network.loki.messenger.R;
 
 public abstract class BaseActionBarActivity extends AppCompatActivity {
@@ -31,7 +26,7 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
   @StyleRes
   public int getDesiredTheme() {
     boolean isDayUi = UiModeUtilities.isDayUiMode(this);
-    return isDayUi ? R.style.Classic_Dark : R.style.Classic_Light;
+    return isDayUi ? R.style.Classic_Light : R.style.Classic_Dark;
   }
 
   @StyleRes @Nullable

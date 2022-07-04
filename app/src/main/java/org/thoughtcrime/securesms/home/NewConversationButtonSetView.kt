@@ -159,11 +159,11 @@ class NewConversationButtonSetView : RelativeLayout {
         }
 
         fun expand() {
-            val startColor = context.getColor(R.color.new_conversation_button_collapsed_background)
+            val startColor = context.getColorFromAttr(R.attr.colorPrimary)
             val endColor = context.getAccentColor()
             GlowViewUtilities.animateColorChange(imageView, startColor, endColor)
-            val startShadowColor = context.getColor(R.color.black)
-            val endShadowColor = context.getColor(R.color.new_conversation_button_shadow)
+            val startShadowColor = context.getColorFromAttr(R.attr.conversation_shadow_non_main)
+            val endShadowColor = context.getColorFromAttr(R.attr.conversation_shadow_non_main)
             GlowViewUtilities.animateShadowColorChange(imageView, startShadowColor, endShadowColor)
             imageView.animateSizeChange(R.dimen.new_conversation_button_collapsed_size, R.dimen.new_conversation_button_expanded_size, animationDuration)
             animateImageViewPositionChange(collapsedImageViewPosition, expandedImageViewPosition)
@@ -171,10 +171,10 @@ class NewConversationButtonSetView : RelativeLayout {
 
         fun collapse() {
             val startColor = context.getAccentColor()
-            val endColor = context.getColor(R.color.new_conversation_button_collapsed_background)
+            val endColor = context.getColorFromAttr(R.attr.colorPrimary)
             GlowViewUtilities.animateColorChange(imageView, startColor, endColor)
-            val startShadowColor = context.getColor(R.color.new_conversation_button_shadow)
-            val endShadowColor = context.getColor(R.color.black)
+            val startShadowColor = context.getColorFromAttr(R.attr.conversation_shadow_non_main)
+            val endShadowColor = context.getColorFromAttr(R.attr.conversation_shadow_non_main)
             GlowViewUtilities.animateShadowColorChange(imageView, startShadowColor, endShadowColor)
             imageView.animateSizeChange(R.dimen.new_conversation_button_expanded_size, R.dimen.new_conversation_button_collapsed_size, animationDuration)
             animateImageViewPositionChange(expandedImageViewPosition, collapsedImageViewPosition)
