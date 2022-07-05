@@ -212,13 +212,13 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
     writableDatabase.delete(TABLE_NAME, query, null)
   }
 
-  fun getReactions(cursor: Cursor): List<ReactionRecord?> {
+  fun getReactions(cursor: Cursor): List<ReactionRecord> {
     return try {
       if (cursor.getColumnIndex(REACTION_JSON_ALIAS) != -1) {
         if (cursor.isNull(cursor.getColumnIndexOrThrow(REACTION_JSON_ALIAS))) {
           return listOf()
         }
-        val result = mutableListOf<ReactionRecord?>()
+        val result = mutableListOf<ReactionRecord>()
         val array = JSONArray(cursor.getString(cursor.getColumnIndexOrThrow(REACTION_JSON_ALIAS)))
         for (i in 0 until array.length()) {
           val `object` = SaneJSONObject(array.getJSONObject(i))
@@ -236,7 +236,7 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
             )
           }
         }
-        result
+        result.sortedBy { it.dateSent }
       } else {
         listOf(
           ReactionRecord(

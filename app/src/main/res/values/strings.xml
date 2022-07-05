@@ -947,5 +947,6 @@
 
     <!-- ReactionsRecipientAdapter -->
     <string name="ReactionsRecipientAdapter_you">You</string>
+    <string name="reaction_notification">%1$s reacted to a message %2$s</string>
 
 </resources>

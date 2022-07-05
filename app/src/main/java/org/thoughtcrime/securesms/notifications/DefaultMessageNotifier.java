@@ -39,6 +39,9 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.annimon.stream.Optional;
+import com.annimon.stream.Stream;
+
 import org.session.libsession.messaging.sending_receiving.notifications.MessageNotifier;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.Contact;
@@ -60,6 +63,7 @@ import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord;
 import org.thoughtcrime.securesms.database.model.Quote;
+import org.thoughtcrime.securesms.database.model.ReactionRecord;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import org.thoughtcrime.securesms.mms.SlideDeck;
 import org.thoughtcrime.securesms.service.KeyCachingService;
@@ -155,18 +159,16 @@ public class DefaultMessageNotifier implements MessageNotifier {
     NotificationManager notifications = ServiceUtil.getNotificationManager(context);
     notifications.cancel(SUMMARY_NOTIFICATION_ID);
 
-    if (Build.VERSION.SDK_INT >= 23) {
-      try {
-        StatusBarNotification[] activeNotifications = notifications.getActiveNotifications();
+    try {
+      StatusBarNotification[] activeNotifications = notifications.getActiveNotifications();
 
-        for (StatusBarNotification activeNotification : activeNotifications) {
-          notifications.cancel(activeNotification.getId());
-        }
-      } catch (Throwable e) {
-        // XXX Appears to be a ROM bug, see #6043
-        Log.w(TAG, e);
-        notifications.cancelAll();
+      for (StatusBarNotification activeNotification : activeNotifications) {
+        notifications.cancel(activeNotification.getId());
       }
+    } catch (Throwable e) {
+      // XXX Appears to be a ROM bug, see #6043
+      Log.w(TAG, e);
+      notifications.cancelAll();
     }
   }
 
@@ -233,13 +235,12 @@ public class DefaultMessageNotifier implements MessageNotifier {
             !(recipient.isApproved() || threads.getLastSeenAndHasSent(threadId).second())) {
       TextSecurePreferences.removeHasHiddenMessageRequests(context);
     }
-    if (isVisible && recipient != null) {
+    if (isVisible) {
       List<MarkedMessageInfo> messageIds = threads.setRead(threadId, false);
       if (SessionMetaProtocol.shouldSendReadReceipt(recipient)) { MarkReadReceiver.process(context, messageIds); }
     }
 
-    if (!TextSecurePreferences.isNotificationsEnabled(context) ||
-        (recipient != null && recipient.isMuted()))
+    if (!TextSecurePreferences.isNotificationsEnabled(context) || recipient.isMuted())
     {
       return;
     }
@@ -254,21 +255,16 @@ public class DefaultMessageNotifier implements MessageNotifier {
   @Override
   public void updateNotification(@NonNull Context context, boolean signal, int reminderCount)
   {
-    Cursor telcoCursor = null;
-    Cursor pushCursor  = null;
+    try (Cursor cursor = DatabaseComponent.get(context).mmsSmsDatabase().getUnread()) {
 
-    try {
-      telcoCursor = DatabaseComponent.get(context).mmsSmsDatabase().getUnread();
-
-      if ((telcoCursor == null || telcoCursor.isAfterLast()) || !TextSecurePreferences.hasSeenWelcomeScreen(context))
-      {
+      if ((cursor == null || cursor.isAfterLast()) || !TextSecurePreferences.hasSeenWelcomeScreen(context)) {
         cancelActiveNotifications(context);
         updateBadge(context, 0);
         clearReminder(context);
         return;
       }
 
-      NotificationState notificationState = constructNotificationState(context, telcoCursor);
+      NotificationState notificationState = constructNotificationState(context, cursor);
 
       if (signal && (System.currentTimeMillis() - lastAudibleNotification) < MIN_AUDIBLE_PERIOD_MILLIS) {
         signal = false;
@@ -282,13 +278,13 @@ public class DefaultMessageNotifier implements MessageNotifier {
             sendSingleThreadNotification(context, new NotificationState(notificationState.getNotificationsForThread(threadId)), false, true);
           }
           sendMultipleThreadNotification(context, notificationState, signal);
-        } else if (notificationState.getMessageCount() > 0){
+        } else if (notificationState.getMessageCount() > 0) {
           sendSingleThreadNotification(context, notificationState, signal, false);
         } else {
           cancelActiveNotifications(context);
         }
       } catch (Exception e) {
-        Log.e(TAG, "Error creating notification",e);
+        Log.e(TAG, "Error creating notification", e);
       }
       cancelOrphanedNotifications(context, notificationState);
       updateBadge(context, notificationState.getMessageCount());
@@ -296,8 +292,6 @@ public class DefaultMessageNotifier implements MessageNotifier {
       if (signal) {
         scheduleReminder(context, reminderCount);
       }
-    } finally {
-      if (telcoCursor != null) telcoCursor.close();
     }
   }
 
@@ -483,13 +477,9 @@ public class DefaultMessageNotifier implements MessageNotifier {
       return;
     }
 
-    if (Build.VERSION.SDK_INT >= 21) {
-      ringtone.setAudioAttributes(new AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_UNKNOWN)
-                                                               .setUsage(AudioAttributes.USAGE_NOTIFICATION_COMMUNICATION_INSTANT)
-                                                               .build());
-    } else {
-      ringtone.setStreamType(AudioManager.STREAM_NOTIFICATION);
-    }
+    ringtone.setAudioAttributes(new AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_UNKNOWN)
+                                                             .setUsage(AudioAttributes.USAGE_NOTIFICATION_COMMUNICATION_INSTANT)
+                                                             .build());
 
     ringtone.play();
   }
@@ -513,7 +503,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
       SlideDeck    slideDeck             = null;
       long         timestamp             = record.getTimestamp();
       boolean      messageRequest        = false;
-
+      Optional<ReactionRecord> lastReact = Stream.of(record.getReactions()).filter(r -> !r.getAuthor().equals(TextSecurePreferences.getLocalNumber(context))).findLast();
 
       if (threadId != -1) {
         threadRecipients = threadDatabase.getRecipientForThreadId(threadId);
@@ -558,6 +548,13 @@ public class DefaultMessageNotifier implements MessageNotifier {
           }
         } else if (threadRecipients != null && threadRecipients.notifyType == RecipientDatabase.NOTIFY_TYPE_NONE) {
           // do nothing, no notifications
+        } else if (lastReact.isPresent()) {
+          ReactionRecord reaction = lastReact.get();
+          Recipient reactor = Recipient.from(context, Address.fromSerialized(reaction.getAuthor()), false);
+          String emoji = context.getString(R.string.reaction_notification, reactor.toShortString(), reaction.getEmoji());
+          notificationState.addNotification(
+                  new NotificationItem(id, mms, reactor, reactor, threadRecipients, threadId, emoji, reaction.getDateSent(), slideDeck)
+          );
         } else {
           notificationState.addNotification(new NotificationItem(id, mms, recipient, conversationRecipient, threadRecipients, threadId, body, timestamp, slideDeck));
         }

@@ -60,6 +60,7 @@ import org.session.libsession.messaging.messages.visible.Reaction
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
 import org.session.libsession.messaging.sending_receiving.MessageSender
+import org.session.libsession.messaging.sending_receiving.MessageSender.sendReactionRemoval
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
@@ -980,7 +981,14 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     override fun onReactWithAnyEmojiSelected(emoji: String, messageId: MessageId, timestamp: Long) {
         reactionDelegate.hide()
-        sendEmojiReaction(emoji, messageId, timestamp)
+        val author = textSecurePreferences.getLocalNumber()!!
+        val oldRecord = reactionDb.getReactions(messageId).find { it.author == author }
+        if (oldRecord?.emoji == emoji) {
+            reactionDb.deleteReaction(messageId, author);
+            sendReactionRemoval(messageId.id, oldRecord.emoji)
+        } else {
+            sendEmojiReaction(emoji, messageId, timestamp)
+        }
     }
 
     override fun onMicrophoneButtonMove(event: MotionEvent) {
