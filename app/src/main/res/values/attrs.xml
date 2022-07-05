@@ -136,6 +136,7 @@
     <attr name="default_background_end" format="color|reference"/>
     <attr name="colorCellRipple" format="color|reference"/>
     <attr name="colorCellBackground" format="color|reference" />
+    <attr name="colorDividerBackground" format="color|reference" />
     <attr name="outlineButtonBorder" format="color|reference" />
     <attr name="outlineButtonText" format="color|reference" />
     <attr name="unreadIndicatorBackgroundColor" format="color|reference"/>

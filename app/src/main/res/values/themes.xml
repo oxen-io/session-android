@@ -379,6 +379,7 @@
         <item name="default_background_start">@color/classic_dark_1</item>
         <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet.ClassicDark</item>
         <item name="colorCellBackground">@color/classic_dark_1</item>
+        <item name="colorDividerBackground">@color/classic_dark_3</item>
         <item name="colorCellRipple">@color/classic_dark_3</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
         <item name="actionBarWidgetTheme">@null</item>
@@ -443,6 +444,7 @@
         <item name="default_background_end">@color/classic_light_6</item>
         <item name="default_background_start">@color/classic_light_5</item>
         <item name="colorCellBackground">@color/classic_light_6</item>
+        <item name="colorDividerBackground">@color/classic_light_2</item>
         <item name="colorCellRipple">@color/classic_light_3</item>
         <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet.ClassicLight</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
@@ -516,6 +518,7 @@
         <item name="default_background_end">?colorPrimary</item>
         <item name="default_background_start">?colorPrimaryDark</item>
         <item name="colorCellBackground">@color/ocean_dark_3</item>
+        <item name="colorDividerBackground">@color/ocean_dark_4</item>
         <item name="colorCellRipple">@color/ocean_dark_4</item>
         <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet.OceanDark</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
@@ -583,6 +586,7 @@
         <item name="default_background_end">@color/ocean_light_6</item>
         <item name="default_background_start">@color/ocean_light_5</item>
         <item name="colorCellBackground">@color/ocean_light_5</item>
+        <item name="colorDividerBackground">@color/ocean_light_2</item>
         <item name="colorCellRipple">@color/ocean_light_3</item>
         <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet.OceanLight</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
