@@ -25,8 +25,8 @@ class Reaction() {
             return Reaction(proto.id, proto.author, proto.emoji, react)
         }
 
-        fun from(timestamp: Long, author: String, emoji: String): Reaction? {
-            return Reaction(timestamp, author, emoji, true)
+        fun from(timestamp: Long, author: String, emoji: String, react: Boolean): Reaction? {
+            return Reaction(timestamp, author, emoji, react)
         }
     }
 

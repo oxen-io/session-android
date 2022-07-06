@@ -275,7 +275,7 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage, proto: SignalS
             reaction.dateReceived = message.receivedTimestamp ?: 0
             storage.addReaction(reaction)
         } else {
-            storage.removeReaction(reaction.timestamp!!, reaction.publicKey!!)
+            storage.removeReaction(reaction.emoji!!, reaction.timestamp!!, reaction.publicKey!!)
         }
     } ?: run {
         // Persist the message

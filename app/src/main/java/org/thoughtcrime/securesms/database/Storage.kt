@@ -753,10 +753,10 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         )
     }
 
-    override fun removeReaction(messageTimestamp: Long, author: String) {
+    override fun removeReaction(emoji: String, messageTimestamp: Long, author: String) {
         val messageRecord = DatabaseComponent.get(context).mmsSmsDatabase().getMessageForTimestamp(messageTimestamp) ?: return
         val messageId = MessageId(messageRecord.id, messageRecord.isMms)
-        DatabaseComponent.get(context).reactionDatabase().deleteReaction(messageId, author)
+        DatabaseComponent.get(context).reactionDatabase().deleteReaction(emoji, messageId, author)
     }
 
     override fun updateReactionIfNeeded(message: Message, sender: String, openGroupSentTimestamp: Long) {

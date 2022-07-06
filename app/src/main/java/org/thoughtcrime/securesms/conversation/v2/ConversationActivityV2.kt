@@ -60,7 +60,6 @@ import org.session.libsession.messaging.messages.visible.Reaction
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
 import org.session.libsession.messaging.sending_receiving.MessageSender
-import org.session.libsession.messaging.sending_receiving.MessageSender.sendReactionRemoval
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
@@ -69,7 +68,6 @@ import org.session.libsession.utilities.Address.Companion.fromSerialized
 import org.session.libsession.utilities.MediaTypes
 import org.session.libsession.utilities.Stub
 import org.session.libsession.utilities.TextSecurePreferences
-import org.session.libsession.utilities.concurrent.SignalExecutors
 import org.session.libsession.utilities.concurrent.SimpleTask
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.recipients.RecipientModifiedListener
@@ -921,14 +919,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     override fun onReactionSelected(messageRecord: MessageRecord, emoji: String) {
         reactionDelegate.hide()
-        val oldRecord = Stream.of(messageRecord.reactions)
-            .filter { record -> record.author == textSecurePreferences.getLocalNumber() }
-            .findFirst()
-            .orElse(null)
+        val oldRecord = messageRecord.reactions.find { it.author == textSecurePreferences.getLocalNumber() }
         val messageId = MessageId(messageRecord.id, messageRecord.isMms)
         if (oldRecord != null && oldRecord.emoji == emoji) {
-            reactionDb.deleteReaction(messageId, messageRecord.recipient.address.serialize())
-            MessageSender.sendReactionRemoval(messageRecord.id, oldRecord.emoji)
+            sendReactionRemoval(emoji, messageId, messageRecord.timestamp)
         } else {
             sendEmojiReaction(emoji, messageId, messageRecord.timestamp)
         }
@@ -950,22 +944,26 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         )
         reactionDb.addReaction(messageId, reaction)
         // Send it
-        message.reaction = Reaction.from(messageTimestamp, author, emoji)
+        message.reaction = Reaction.from(messageTimestamp, author, emoji, true)
+        MessageSender.send(message, viewModel.recipient.address)
+    }
+
+    private fun sendReactionRemoval(emoji: String, messageId: MessageId, messageTimestamp: Long) {
+        val message = VisibleMessage()
+        val emojiTimestamp = System.currentTimeMillis()
+        message.sentTimestamp = emojiTimestamp
+        val author = textSecurePreferences.getLocalNumber()!!
+        reactionDb.deleteReaction(emoji, messageId, author)
+        message.reaction = Reaction.from(messageTimestamp, author, emoji, false)
         MessageSender.send(message, viewModel.recipient.address)
     }
 
     override fun onCustomReactionSelected(messageRecord: MessageRecord, hasAddedCustomEmoji: Boolean) {
-        val oldRecord = Stream.of(messageRecord.reactions)
-            .filter { record -> record.author == textSecurePreferences.getLocalNumber() }
-            .findFirst()
-            .orElse(null)
+        val oldRecord = messageRecord.reactions.find { record -> record.author == textSecurePreferences.getLocalNumber() }
 
         if (oldRecord != null && hasAddedCustomEmoji) {
             reactionDelegate.hide()
-            SignalExecutors.BOUNDED.execute {
-                reactionDb.deleteReaction(MessageId(messageRecord.id, messageRecord.isMms), oldRecord.author)
-                MessageSender.sendReactionRemoval(messageRecord.id, oldRecord.emoji)
-            }
+            sendReactionRemoval(oldRecord.emoji, MessageId(messageRecord.id, messageRecord.isMms), messageRecord.timestamp)
         } else {
             reactionDelegate.hideForReactWithAny()
 
@@ -981,11 +979,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     override fun onReactWithAnyEmojiSelected(emoji: String, messageId: MessageId, timestamp: Long) {
         reactionDelegate.hide()
-        val author = textSecurePreferences.getLocalNumber()!!
-        val oldRecord = reactionDb.getReactions(messageId).find { it.author == author }
+        val oldRecord = reactionDb.getReactions(messageId).find { it.author == textSecurePreferences.getLocalNumber() }
         if (oldRecord?.emoji == emoji) {
-            reactionDb.deleteReaction(messageId, author);
-            sendReactionRemoval(messageId.id, oldRecord.emoji)
+            sendReactionRemoval(emoji, messageId, timestamp)
         } else {
             sendEmojiReaction(emoji, messageId, timestamp)
         }

@@ -165,6 +165,6 @@ interface StorageProtocol {
     fun insertCallMessage(senderPublicKey: String, callMessageType: CallMessageType, sentTimestamp: Long)
     fun conversationHasOutgoing(userPublicKey: String): Boolean
     fun addReaction(reaction: Reaction)
-    fun removeReaction(messageTimestamp: Long, author: String)
+    fun removeReaction(emoji: String, messageTimestamp: Long, author: String)
     fun updateReactionIfNeeded(message: Message, sender: String, openGroupSentTimestamp: Long)
 }

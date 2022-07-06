@@ -149,12 +149,12 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
     }
   }
 
-  fun deleteReaction(messageId: MessageId, recipientId: String) {
+  fun deleteReaction(emoji: String, messageId: MessageId, author: String) {
 
     writableDatabase.beginTransaction()
     try {
-      val query = "$MESSAGE_ID = ? AND $IS_MMS = ? AND $AUTHOR_ID = ?"
-      val args =  arrayOf("${messageId.id}", "${if (messageId.mms)  1 else 0}", recipientId)
+      val query = "$MESSAGE_ID = ? AND $IS_MMS = ? AND $EMOJI = ? AND $AUTHOR_ID = ?"
+      val args =  arrayOf("${messageId.id}", "${if (messageId.mms)  1 else 0}", emoji, author)
 
       writableDatabase.delete(TABLE_NAME, query, args)
 

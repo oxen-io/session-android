@@ -17,19 +17,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public final class ReactWithAnyEmojiViewModel extends ViewModel {
 
-  private final ReactWithAnyEmojiRepository repository;
-  private final long                        messageId;
-  private final boolean                     isMms;
-
-  private final Observable<MappingModelList>       emojiList;
+  private final ReactWithAnyEmojiRepository  repository;
+  private final Observable<MappingModelList> emojiList;
 
   private ReactWithAnyEmojiViewModel(@NonNull ReactWithAnyEmojiRepository repository,
                                      long messageId,
                                      boolean isMms)
   {
     this.repository            = repository;
-    this.messageId             = messageId;
-    this.isMms                 = isMms;
 
     Observable<List<ReactWithAnyEmojiPage>> emojiPages = new ReactionsRepository().getReactions(new MessageId(messageId, isMms))
                                                                                   .map(thisMessagesReactions -> repository.getEmojiPageModels());
@@ -55,9 +50,7 @@ public final class ReactWithAnyEmojiViewModel extends ViewModel {
   }
 
   void onEmojiSelected(@NonNull String emoji) {
-    if (messageId > 0) {
-      repository.addEmojiToMessage(emoji, new MessageId(messageId, isMms));
-    }
+    repository.addEmojiToMessage(emoji);
   }
 
   private static @NonNull MappingModelList toMappingModels(@NonNull EmojiPageModel model) {
