@@ -549,12 +549,14 @@ public class DefaultMessageNotifier implements MessageNotifier {
         } else if (threadRecipients != null && threadRecipients.notifyType == RecipientDatabase.NOTIFY_TYPE_NONE) {
           // do nothing, no notifications
         } else if (lastReact.isPresent()) {
-          ReactionRecord reaction = lastReact.get();
-          Recipient reactor = Recipient.from(context, Address.fromSerialized(reaction.getAuthor()), false);
-          String emoji = context.getString(R.string.reaction_notification, reactor.toShortString(), reaction.getEmoji());
-          notificationState.addNotification(
-                  new NotificationItem(id, mms, reactor, reactor, threadRecipients, threadId, emoji, reaction.getDateSent(), slideDeck)
-          );
+          if (threadRecipients != null && !threadRecipients.isGroupRecipient()) {
+            ReactionRecord reaction = lastReact.get();
+            Recipient reactor = Recipient.from(context, Address.fromSerialized(reaction.getAuthor()), false);
+            String emoji = context.getString(R.string.reaction_notification, reactor.toShortString(), reaction.getEmoji());
+            notificationState.addNotification(
+                    new NotificationItem(id, mms, reactor, reactor, threadRecipients, threadId, emoji, reaction.getDateSent(), slideDeck)
+            );
+          }
         } else {
           notificationState.addNotification(new NotificationItem(id, mms, recipient, conversationRecipient, threadRecipients, threadId, body, timestamp, slideDeck));
         }
