@@ -32,12 +32,18 @@
     <!--Home Page-->
     <string name="AccessibilityId_profile_picture">Profile picture</string>
     <string name="AccessibilityId_search_icon">Search icon</string>
+    <!--New conversation pop up-->
     <string name="AccessibilityId_new_conversation_button">New conversation button</string>
+    <string name="AccessibilityId_new_direct_message">New direct message</string>
+    <string name="AccessibilityId_create_group">Create group</string>
+    <string name="AccessibilityId_join_community">Join community</string>
     <!--Settings Page-->
     <string name="AccessibilityId_username">Username</string>
     <string name="AccessibilityId_show_recovery_phrase">Show recovery phrase</string>
 <!--    Recovery Phrase Dialog-->
     <string name="AccessibilityId_cancel_button">Cancel</string>
+
+
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">New message</string>
 

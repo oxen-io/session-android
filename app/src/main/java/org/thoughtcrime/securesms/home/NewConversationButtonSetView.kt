@@ -72,8 +72,8 @@ class NewConversationButtonSetView : RelativeLayout {
     // endregion
 
     // region Components
-    private val mainButton by lazy { Button(context, true, R.drawable.ic_plus) }
-    private val sessionButton by lazy { Button(context, false, R.drawable.ic_message) }
+    private val mainButton by lazy { Button(context, true, R.drawable.ic_plus).apply{contentDescription = context.getString(R.string.AccessibilityId_new_conversation_button)} }
+    private val sessionButton by lazy { Button(context, false, R.drawable.ic_message).apply {contentDescription = context.getString(R.string.AccessibilityId_new_direct_message)} }
     private val sessionTooltip by lazy {
         TextView(context).apply {
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
@@ -82,7 +82,7 @@ class NewConversationButtonSetView : RelativeLayout {
             isAllCaps = true
         }
     }
-    private val closedGroupButton by lazy { Button(context, false, R.drawable.ic_group) }
+    private val closedGroupButton by lazy { Button(context, false, R.drawable.ic_group).apply {contentDescription = context.getString(R.string.AccessibilityId_create_group)} }
     private val closedGroupTooltip by lazy {
         TextView(context).apply {
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
@@ -91,7 +91,7 @@ class NewConversationButtonSetView : RelativeLayout {
             isAllCaps = true
         }
     }
-    private val openGroupButton by lazy { Button(context, false, R.drawable.ic_globe) }
+    private val openGroupButton by lazy { Button(context, false, R.drawable.ic_globe).apply {contentDescription = context.getString(R.string.AccessibilityId_join_community)} }
     private val openGroupTooltip by lazy {
         TextView(context).apply {
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
