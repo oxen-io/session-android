@@ -159,6 +159,7 @@
 
         <org.thoughtcrime.securesms.home.NewConversationButtonSetView
             android:id="@+id/newConversationButtonSet"
+            android:contentDescription="@string/"
             android:layout_width="276dp"
             android:layout_height="236dp"
             android:layout_alignParentBottom="true"
