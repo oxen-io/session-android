@@ -64,6 +64,7 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
     private fun readReaction(cursor: Cursor): ReactionRecord {
       return ReactionRecord(
         messageId = CursorUtil.requireLong(cursor, MESSAGE_ID),
+        isMms = CursorUtil.requireInt(cursor, IS_MMS) == 1,
         emoji = CursorUtil.requireString(cursor, EMOJI),
         author = CursorUtil.requireString(cursor, AUTHOR_ID),
         serverId = CursorUtil.requireString(cursor, SERVER_ID),
@@ -227,6 +228,7 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
               ReactionRecord(
                 `object`.getLong(ROW_ID),
                 `object`.getLong(MESSAGE_ID),
+                `object`.getInt(IS_MMS) == 1,
                 `object`.getString(AUTHOR_ID),
                 `object`.getString(EMOJI),
                 `object`.getString(SERVER_ID),
@@ -242,6 +244,7 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
           ReactionRecord(
             cursor.getLong(cursor.getColumnIndexOrThrow(ROW_ID)),
             cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_ID)),
+            cursor.getInt(cursor.getColumnIndexOrThrow(IS_MMS)) == 1,
             cursor.getString(cursor.getColumnIndexOrThrow(AUTHOR_ID)),
             cursor.getString(cursor.getColumnIndexOrThrow(EMOJI)),
             cursor.getString(cursor.getColumnIndexOrThrow(SERVER_ID)),

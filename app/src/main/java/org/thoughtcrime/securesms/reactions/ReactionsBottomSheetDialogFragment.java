@@ -39,12 +39,12 @@ public final class ReactionsBottomSheetDialogFragment extends BottomSheetDialogF
 
   private final LifecycleDisposable disposables = new LifecycleDisposable();
 
-  public static DialogFragment create(long messageId, boolean isMms) {
+  public static DialogFragment create(MessageId messageId) {
     Bundle         args     = new Bundle();
     DialogFragment fragment = new ReactionsBottomSheetDialogFragment();
 
-    args.putLong(ARGS_MESSAGE_ID, messageId);
-    args.putBoolean(ARGS_IS_MMS, isMms);
+    args.putLong(ARGS_MESSAGE_ID, messageId.getId());
+    args.putBoolean(ARGS_IS_MMS, messageId.isMms());
 
     fragment.setArguments(args);
 

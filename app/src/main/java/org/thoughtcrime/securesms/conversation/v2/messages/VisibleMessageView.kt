@@ -33,6 +33,7 @@ import org.thoughtcrime.securesms.database.MmsSmsDatabase
 import org.thoughtcrime.securesms.database.SessionContactDatabase
 import org.thoughtcrime.securesms.database.SmsDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
+import org.thoughtcrime.securesms.database.model.MessageId
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.home.UserDetailsBottomSheet
 import org.thoughtcrime.securesms.mms.GlideRequests
@@ -165,10 +166,10 @@ class VisibleMessageView : LinearLayout {
         // Emoji Reactions
         if (message.reactions.isNotEmpty()) {
             binding.emojiReactionsView.isVisible = true
-            binding.emojiReactionsView.setReactions(message.reactions, message.isOutgoing, binding.messageInnerContainer.width)
+            binding.emojiReactionsView.setReactions(message.reactions, message.isOutgoing, binding.messageInnerContainer.width, delegate)
             binding.emojiReactionsView.setOnLongClickListener {
                 if (message.recipient.isClosedGroupRecipient) {
-                    delegate?.onReactionClicked(message.id, message.isMms)
+                    delegate?.onReactionLongClicked(MessageId(message.id, message.isMms))
                     return@setOnLongClickListener true
                 } else {
                     return@setOnLongClickListener false

@@ -19,6 +19,7 @@ import org.session.libsession.utilities.TextSecurePreferences;
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
 import org.thoughtcrime.securesms.components.emoji.EmojiUtil;
 import org.thoughtcrime.securesms.conversation.v2.ViewUtil;
+import org.thoughtcrime.securesms.database.model.MessageId;
 import org.thoughtcrime.securesms.database.model.ReactionRecord;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class EmojiReactionsView extends LinearLayout {
     removeAllViews();
   }
 
-  public void setReactions(@NonNull List<ReactionRecord> records, boolean outgoing, int bubbleWidth) {
+  public void setReactions(@NonNull List<ReactionRecord> records, boolean outgoing, int bubbleWidth, VisibleMessageViewDelegate delegate) {
     if (records.equals(this.records) && this.bubbleWidth == bubbleWidth) {
       return;
     }
@@ -82,6 +83,8 @@ public class EmojiReactionsView extends LinearLayout {
     for (Reaction reaction : reactions) {
       View pill = buildPill(getContext(), this, reaction);
       pill.setVisibility(bubbleWidth == 0 ? INVISIBLE : VISIBLE);
+      MessageId messageId = new MessageId(reaction.messageId, reaction.isMms);
+      pill.setOnClickListener(v -> delegate.onReactionClicked(reaction.displayEmoji, messageId, reaction.userWasSender));
       addView(pill);
     }
 
@@ -114,7 +117,7 @@ public class EmojiReactionsView extends LinearLayout {
       Reaction info      = counters.get(baseEmoji);
 
       if (info == null) {
-        info = new Reaction(baseEmoji, record.getEmoji(), 1, record.getDateReceived(), userPublicKey.equals(record.getAuthor()));
+        info = new Reaction(record.getMessageId(), record.isMms(), baseEmoji, record.getEmoji(), 1, record.getDateReceived(), userPublicKey.equals(record.getAuthor()));
       } else {
         info.update(record.getEmoji(), record.getDateReceived(), userPublicKey.equals(record.getAuthor()));
       }
@@ -132,7 +135,7 @@ public class EmojiReactionsView extends LinearLayout {
       shortened.add(reactions.get(1));
       shortened.add(reactions.get(2));
       shortened.add(reactions.get(3));
-      shortened.add(Stream.of(reactions).skip(4).reduce(new Reaction(null, null, 0, 0, false), Reaction::merge));
+      shortened.add(Stream.of(reactions).skip(4).reduce(new Reaction(0, false, null, null, 0, 0, false), Reaction::merge));
 
       return shortened;
     } else {
@@ -172,13 +175,17 @@ public class EmojiReactionsView extends LinearLayout {
   }
 
   private static class Reaction implements Comparable<Reaction> {
+    private long messageId;
+    private boolean isMms;
     private String  baseEmoji;
     private String  displayEmoji;
     private int     count;
     private long    lastSeen;
     private boolean userWasSender;
 
-    Reaction(@Nullable String baseEmoji, @Nullable String displayEmoji, int count, long lastSeen, boolean userWasSender) {
+    Reaction(long messageId, boolean isMms, @Nullable String baseEmoji, @Nullable String displayEmoji, int count, long lastSeen, boolean userWasSender) {
+      this.messageId     = messageId;
+      this.isMms         = isMms;
       this.baseEmoji     = baseEmoji;
       this.displayEmoji  = displayEmoji;
       this.count         = count;

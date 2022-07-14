@@ -224,6 +224,7 @@ public class MmsSmsDatabase extends Database {
     String reactionsColumn = "json_group_array(json_object(" +
             "'" + ReactionDatabase.ROW_ID + "', " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.ROW_ID + ", " +
             "'" + ReactionDatabase.MESSAGE_ID + "', " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.MESSAGE_ID + ", " +
+            "'" + ReactionDatabase.IS_MMS + "', " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.IS_MMS + ", " +
             "'" + ReactionDatabase.AUTHOR_ID + "', " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.AUTHOR_ID + ", " +
             "'" + ReactionDatabase.EMOJI + "', " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.EMOJI + ", " +
             "'" + ReactionDatabase.SERVER_ID + "', " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.SERVER_ID + ", " +
@@ -380,6 +381,7 @@ public class MmsSmsDatabase extends Database {
     mmsColumnsPresent.add(MmsDatabase.SHARED_CONTACTS);
     mmsColumnsPresent.add(MmsDatabase.LINK_PREVIEWS);
     mmsColumnsPresent.add(ReactionDatabase.MESSAGE_ID);
+    mmsColumnsPresent.add(ReactionDatabase.IS_MMS);
     mmsColumnsPresent.add(ReactionDatabase.AUTHOR_ID);
     mmsColumnsPresent.add(ReactionDatabase.EMOJI);
     mmsColumnsPresent.add(ReactionDatabase.SERVER_ID);
@@ -409,6 +411,7 @@ public class MmsSmsDatabase extends Database {
     smsColumnsPresent.add(SmsDatabase.UNIDENTIFIED);
     smsColumnsPresent.add(ReactionDatabase.ROW_ID);
     smsColumnsPresent.add(ReactionDatabase.MESSAGE_ID);
+    smsColumnsPresent.add(ReactionDatabase.IS_MMS);
     smsColumnsPresent.add(ReactionDatabase.AUTHOR_ID);
     smsColumnsPresent.add(ReactionDatabase.EMOJI);
     smsColumnsPresent.add(ReactionDatabase.SERVER_ID);

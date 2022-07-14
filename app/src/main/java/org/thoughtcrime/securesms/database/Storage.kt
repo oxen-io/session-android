@@ -744,6 +744,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
             MessageId(messageRecord.id, messageRecord.isMms),
             ReactionRecord(
                 messageId = messageRecord.id,
+                isMms = messageRecord.isMms,
                 author = reaction.publicKey!!,
                 emoji = reaction.emoji!!,
                 serverId = reaction.serverId!!,
