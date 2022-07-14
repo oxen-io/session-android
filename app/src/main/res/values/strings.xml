@@ -37,6 +37,14 @@
     <string name="AccessibilityId_new_direct_message">New direct message</string>
     <string name="AccessibilityId_create_group">Create group</string>
     <string name="AccessibilityId_join_community">Join community</string>
+    <!--New Session -->
+    <string name="AccessibilityId_session_id_input">Session id input box</string>
+    <string name="AccessibilityId_next">Next</string>
+    <!--Conversation screen -->
+    <string name="AccessibilityId_message_input">Message input box</string>
+    <string name="AccessibilityId_microphone_button">Microphone button</string>
+    <string name="AccessibilityId_send_message_button">Send message button</string>
+    <string name="AccessibilityId_attachments_button">Attachment button</string>
     <!--Settings Page-->
     <string name="AccessibilityId_username">Username</string>
     <string name="AccessibilityId_show_recovery_phrase">Show recovery phrase</string>
