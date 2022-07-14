@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
 
 import com.annimon.stream.Stream;
@@ -38,6 +39,9 @@ public class EmojiReactionsView extends LinearLayout {
   private boolean              outgoing;
   private List<ReactionRecord> records;
   private int                  bubbleWidth;
+  private ViewGroup            container;
+  private Group                showLess;
+  private VisibleMessageViewDelegate delegate;
 
   public EmojiReactionsView(Context context) {
     super(context);
@@ -50,6 +54,11 @@ public class EmojiReactionsView extends LinearLayout {
   }
 
   private void init(@Nullable AttributeSet attrs) {
+    inflate(getContext(), R.layout.view_emoji_reactions, this);
+
+    this.container = findViewById(R.id.layout_emoji_container);
+    this.showLess = findViewById(R.id.group_show_less);
+
     records = new ArrayList<>();
 
     if (attrs != null) {
@@ -61,7 +70,7 @@ public class EmojiReactionsView extends LinearLayout {
   public void clear() {
     this.records.clear();
     this.bubbleWidth = 0;
-    removeAllViews();
+    container.removeAllViews();
   }
 
   public void setReactions(@NonNull List<ReactionRecord> records, boolean outgoing, int bubbleWidth, VisibleMessageViewDelegate delegate) {
@@ -74,20 +83,32 @@ public class EmojiReactionsView extends LinearLayout {
 
     this.outgoing = outgoing;
     this.bubbleWidth = bubbleWidth;
+    this.delegate = delegate;
 
+    displayReactions(6);
+  }
+
+  private void displayReactions(int threshold) {
     String userPublicKey     = TextSecurePreferences.getLocalNumber(getContext());
-    List<Reaction> reactions = buildSortedReactionsList(records, userPublicKey);
+    List<Reaction> reactions = buildSortedReactionsList(records, userPublicKey, threshold);
 
-    removeAllViews();
+    container.removeAllViews();
 
     for (Reaction reaction : reactions) {
       View pill = buildPill(getContext(), this, reaction);
       pill.setVisibility(bubbleWidth == 0 ? INVISIBLE : VISIBLE);
-      MessageId messageId = new MessageId(reaction.messageId, reaction.isMms);
-      pill.setOnClickListener(v -> delegate.onReactionClicked(reaction.displayEmoji, messageId, reaction.userWasSender));
-      addView(pill);
+      pill.setOnClickListener(v -> onReactionClicked(reaction));
+      container.addView(pill);
     }
 
+    if (threshold == Integer.MAX_VALUE) {
+      showLess.setVisibility(VISIBLE);
+      for (int id : showLess.getReferencedIds()) {
+        findViewById(id).setOnClickListener(view -> displayReactions(6));
+      }
+    } else {
+      showLess.setVisibility(GONE);
+    }
     measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
 
     int railWidth = getMeasuredWidth();
@@ -109,7 +130,16 @@ public class EmojiReactionsView extends LinearLayout {
     }
   }
 
-  private static @NonNull List<Reaction> buildSortedReactionsList(@NonNull List<ReactionRecord> records, String userPublicKey) {
+  private void onReactionClicked(Reaction reaction) {
+    if (reaction.messageId != 0) {
+      MessageId messageId = new MessageId(reaction.messageId, reaction.isMms);
+      delegate.onReactionClicked(reaction.displayEmoji, messageId, reaction.userWasSender);
+    } else {
+      displayReactions(Integer.MAX_VALUE);
+    }
+  }
+
+  private static @NonNull List<Reaction> buildSortedReactionsList(@NonNull List<ReactionRecord> records, String userPublicKey, int threshold) {
     Map<String, Reaction> counters = new LinkedHashMap<>();
 
     for (ReactionRecord record : records) {
@@ -129,13 +159,10 @@ public class EmojiReactionsView extends LinearLayout {
 
     Collections.sort(reactions, Collections.reverseOrder());
 
-    if (reactions.size() > 6) {
-      List<Reaction> shortened = new ArrayList<>(5);
-      shortened.add(reactions.get(0));
-      shortened.add(reactions.get(1));
-      shortened.add(reactions.get(2));
-      shortened.add(reactions.get(3));
-      shortened.add(Stream.of(reactions).skip(4).reduce(new Reaction(0, false, null, null, 0, 0, false), Reaction::merge));
+    if (reactions.size() > threshold) {
+      List<Reaction> shortened = new ArrayList<>(threshold - 1);
+      shortened.addAll(reactions.subList(0, threshold - 2));
+      shortened.add(Stream.of(reactions).skip(threshold - 2).reduce(new Reaction(0, false, null, null, 0, 0, false), Reaction::merge));
 
       return shortened;
     } else {

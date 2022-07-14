@@ -947,6 +947,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // Send it
         message.reaction = Reaction.from(messageTimestamp, author, emoji, true)
         MessageSender.send(message, viewModel.recipient.address)
+        LoaderManager.getInstance(this).restartLoader(0, null, this)
     }
 
     private fun sendEmojiRemoval(emoji: String, messageId: MessageId, messageTimestamp: Long) {
@@ -957,6 +958,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         reactionDb.deleteReaction(emoji, messageId, author)
         message.reaction = Reaction.from(messageTimestamp, author, emoji, false)
         MessageSender.send(message, viewModel.recipient.address)
+        LoaderManager.getInstance(this).restartLoader(0, null, this)
     }
 
     override fun onCustomReactionSelected(messageRecord: MessageRecord, hasAddedCustomEmoji: Boolean) {

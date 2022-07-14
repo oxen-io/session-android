@@ -102,6 +102,7 @@
         <item name="emoji_category_flags">@drawable/ic_emoji_flag_light_20</item>
         <item name="emoji_category_emoticons">@drawable/ic_emoji_emoticon_light_20</item>
         <item name="emoji_variation_selector_background">@drawable/emoji_variation_selector_background_light</item>
+        <item name="emoji_show_less_icon">@drawable/ic_chevron_up_light</item>
 
         <item name="conversation_item_bubble_background">?message_sent_background_color</item>
         <item name="conversation_item_sent_text_primary_color">@color/core_grey_90</item>
