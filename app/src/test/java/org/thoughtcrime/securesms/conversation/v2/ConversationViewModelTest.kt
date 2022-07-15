@@ -77,7 +77,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
 
         viewModel.unblock()
 
-        verify(repository).unblock(recipient)
+        verify(repository).setBlocked(recipient, false)
     }
 
     @Test
@@ -169,7 +169,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
     fun `should decline message request`() {
         viewModel.declineMessageRequest()
 
-        verify(repository).declineMessageRequest(threadId, recipient)
+        verify(repository).declineMessageRequest(threadId)
     }
 
     @Test

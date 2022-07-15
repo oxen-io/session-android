@@ -47,7 +47,7 @@ class ConversationViewModel(
     fun unblock() {
         val recipient = recipient ?: return Log.w("Loki", "Recipient was null for unblock action")
         if (recipient.isContactRecipient) {
-            repository.unblock(recipient)
+            repository.setBlocked(recipient, false)
         }
     }
 
@@ -110,8 +110,7 @@ class ConversationViewModel(
     }
 
     fun declineMessageRequest() {
-        val recipient = recipient ?: return Log.w("Loki", "Recipient was null for decline message request action")
-        repository.declineMessageRequest(threadId, recipient)
+        repository.declineMessageRequest(threadId)
     }
 
     private fun showMessage(message: String) {
