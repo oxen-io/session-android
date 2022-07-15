@@ -49,7 +49,7 @@ object MentionUtilities {
             while (true) {
                 val publicKey = text.subSequence(matcher.start() + 1, matcher.end()).toString() // +1 to get rid of the @
                 val userDisplayName: String? = if (publicKey.equals(userPublicKey, ignoreCase = true)) {
-                    TextSecurePreferences.getProfileName(context)
+                    context.getString(R.string.MessageRecord_you)
                 } else {
                     val contact = DatabaseComponent.get(context).sessionContactDatabase().getContactWithSessionID(publicKey)
                     @Suppress("NAME_SHADOWING") val context = if (isOpenGroup) Contact.ContactContext.OPEN_GROUP else Contact.ContactContext.REGULAR
