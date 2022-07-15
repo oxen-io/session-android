@@ -15,6 +15,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -159,7 +161,7 @@ class VisibleMessageView : LinearLayout {
         val gravity = if (message.isOutgoing) Gravity.END else Gravity.START
         binding.mainContainer.gravity = gravity or Gravity.BOTTOM
         // Message status indicator
-        val (iconID, iconColor) = getMessageStatusImage(message)
+        val (iconID, iconColor, contentDescription) = getMessageStatusImage(message)
         if (iconID != null) {
             val drawable = ContextCompat.getDrawable(context, iconID)?.mutate()
             if (iconColor != null) {
@@ -167,6 +169,7 @@ class VisibleMessageView : LinearLayout {
             }
             binding.messageStatusImageView.setImageDrawable(drawable)
         }
+        binding.messageStatusImageView.contentDescription = contentDescription
         if (message.isOutgoing) {
             val lastMessageID = mmsSmsDb.getLastMessageID(message.threadId)
             binding.messageStatusImageView.isVisible = !message.isSent || message.id == lastMessageID
@@ -212,13 +215,15 @@ class VisibleMessageView : LinearLayout {
         }
     }
 
-    private fun getMessageStatusImage(message: MessageRecord): Pair<Int?,Int?> {
+    data class MessageStatusInfo(@DrawableRes val iconId: Int?, @ColorInt val iconTint: Int?, val contentDescription: String?)
+
+    private fun getMessageStatusImage(message: MessageRecord): MessageStatusInfo {
         return when {
-            !message.isOutgoing -> null to null
-            message.isFailed -> R.drawable.ic_error to resources.getColor(R.color.destructive, context.theme)
-            message.isPending -> R.drawable.ic_circle_dot_dot_dot to null
-            message.isRead -> R.drawable.ic_filled_circle_check to null
-            else -> R.drawable.ic_circle_check to null
+            !message.isOutgoing -> MessageStatusInfo(null, null, null)
+            message.isFailed -> MessageStatusInfo(R.drawable.ic_error, resources.getColor(R.color.destructive, context.theme), null)
+            message.isPending -> MessageStatusInfo(R.drawable.ic_circle_dot_dot_dot, null, context.getString(R.string.AccessibilityId_message_sent_status_pending))
+            message.isRead -> MessageStatusInfo(R.drawable.ic_filled_circle_check, null, null)
+            else -> MessageStatusInfo(R.drawable.ic_circle_check, null, context.getString(R.string.AccessibilityId_message_sent_status_tick))
         }
     }
 

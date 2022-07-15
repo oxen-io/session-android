@@ -32,6 +32,8 @@
     <!--Home Page-->
     <string name="AccessibilityId_profile_picture">Profile picture</string>
     <string name="AccessibilityId_search_icon">Search icon</string>
+    <string name="AccessibilityId_message_request_banner">Message requests banner</string>
+    <string name="AccessibilityId_message_request">Message request</string>
     <!--New conversation pop up-->
     <string name="AccessibilityId_new_conversation_button">New conversation button</string>
     <string name="AccessibilityId_new_direct_message">New direct message</string>
@@ -45,6 +47,11 @@
     <string name="AccessibilityId_microphone_button">Microphone button</string>
     <string name="AccessibilityId_send_message_button">Send message button</string>
     <string name="AccessibilityId_attachments_button">Attachment button</string>
+    <!-- Conversation View-->
+    <string name="AccessibilityId_message_sent_status_tick">Message sent status tick</string>
+    <string name="AccessibilityId_message_sent_status_pending">Message sent status pending</string>
+    <string name="AccessibilityId_message_request_config_message">Message request has been accepted</string>
+
     <!--Settings Page-->
     <string name="AccessibilityId_username">Username</string>
     <string name="AccessibilityId_show_recovery_phrase">Show recovery phrase</string>
