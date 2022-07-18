@@ -19,7 +19,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
-import android.util.Log
 import android.util.Pair
 import android.util.TypedValue
 import android.view.ActionMode
@@ -72,6 +71,7 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.recipients.RecipientModifiedListener
 import org.session.libsignal.crypto.MnemonicCodec
 import org.session.libsignal.utilities.ListenableFuture
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.hexEncodedPrivateKey
 import org.thoughtcrime.securesms.ApplicationContext
@@ -150,9 +150,10 @@ import kotlin.math.sqrt
 // price we pay is a bit of back and forth between the input bar and the conversation activity.
 @AndroidEntryPoint
 class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDelegate,
-        InputBarRecordingViewDelegate, AttachmentManager.AttachmentListener, ActivityDispatcher,
-        ConversationActionModeCallbackDelegate, VisibleMessageContentViewDelegate, RecipientModifiedListener,
-        SearchBottomBar.EventListener, VoiceMessageViewDelegate, LoaderManager.LoaderCallbacks<Cursor> {
+    InputBarRecordingViewDelegate, AttachmentManager.AttachmentListener, ActivityDispatcher,
+    ConversationActionModeCallbackDelegate, VisibleMessageContentViewDelegate, RecipientModifiedListener,
+    SearchBottomBar.EventListener, VoiceMessageViewDelegate, LoaderManager.LoaderCallbacks<Cursor>,
+    ConversationMenuHelper.ConversationMenuListener {
 
     private var binding: ActivityConversationV2Binding? = null
     private var actionBarBinding: ActivityConversationV2ActionBarBinding? = null
@@ -566,17 +567,21 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        val recipient = viewModel.recipient ?: return false
         if (!isMessageRequestThread()) {
-            val recipient = viewModel.recipient
-            if (recipient != null) {
-                ConversationMenuHelper.onPrepareOptionsMenu(
-                    menu,
-                    menuInflater,
-                    recipient,
-                    viewModel.threadId,
-                    this
-                ) { onOptionsItemSelected(it) }
-            }
+            ConversationMenuHelper.onPrepareOptionsMenu(
+                menu,
+                menuInflater,
+                recipient,
+                viewModel.threadId,
+                this
+            ) { onOptionsItemSelected(it) }
+        } else {
+            ConversationMenuHelper.onPrepareMessageRequestOptionsMenu(
+                menu,
+                menuInflater,
+                recipient
+            ) { onOptionsItemSelected(it) }
         }
         super.onPrepareOptionsMenu(menu)
         return true
@@ -892,6 +897,34 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         return viewModel.recipient?.let { recipient ->
             ConversationMenuHelper.onOptionItemSelected(this, item, recipient)
         } ?: false
+    }
+
+    override fun block(recipient: Recipient, deleteThread: Boolean) {
+        val title = R.string.RecipientPreferenceActivity_block_this_contact_question
+        val message = R.string.RecipientPreferenceActivity_you_will_no_longer_receive_messages_and_calls_from_this_contact
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage(message)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(R.string.RecipientPreferenceActivity_block) { _, _ ->
+                viewModel.block()
+                if (deleteThread) {
+                    viewModel.deleteThread()
+                    onNavigateUp()
+                }
+            }.show()
+    }
+
+    override fun unblock(recipient: Recipient) {
+        val title = R.string.ConversationActivity_unblock_this_contact_question
+        val message = R.string.ConversationActivity_you_will_once_again_be_able_to_receive_messages_and_calls_from_this_contact
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage(message)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(R.string.ConversationActivity_unblock) { _, _ ->
+                viewModel.unblock()
+            }.show()
     }
 
     // `position` is the adapter position; not the visual position

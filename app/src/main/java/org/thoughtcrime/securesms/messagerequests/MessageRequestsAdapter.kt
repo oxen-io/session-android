@@ -7,11 +7,11 @@ import android.database.Cursor
 import android.os.Build
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import network.loki.messenger.R
+import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
@@ -93,7 +93,7 @@ private fun PopupMenu.forceShowIcon() {
             menu.javaClass.getDeclaredMethod("setForceShowIcon", Boolean::class.java)
                 .invoke(menu, true)
         } catch (exception: Exception) {
-            Log.d("Loki", "Couldn't show message request popupmenu due to error: $exception.")
+            Log.e("Loki", "Couldn't show message request popupmenu due to error: $exception.")
         }
     }
 }

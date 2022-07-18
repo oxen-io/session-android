@@ -58,6 +58,8 @@ interface ConversationRepository {
 
     suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): ResultOf<Unit>
 
+    suspend fun deleteThread(threadId: Long): ResultOf<Unit>
+
     suspend fun deleteMessageRequest(thread: ThreadRecord): ResultOf<Unit>
 
     suspend fun clearAllMessageRequests(): ResultOf<Unit>
@@ -247,6 +249,12 @@ class DefaultConversationRepository @Inject constructor(
                     continuation.resumeWithException(error)
                 }
         }
+
+    override suspend fun deleteThread(threadId: Long): ResultOf<Unit> {
+        sessionJobDb.cancelPendingMessageSendJobs(threadId)
+        threadDb.deleteConversation(threadId)
+        return ResultOf.Success(Unit)
+    }
 
     override suspend fun deleteMessageRequest(thread: ThreadRecord): ResultOf<Unit> {
         sessionJobDb.cancelPendingMessageSendJobs(thread.threadId)

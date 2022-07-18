@@ -53,6 +53,26 @@ import org.thoughtcrime.securesms.util.getColorWithID
 import java.io.IOException
 
 object ConversationMenuHelper {
+
+    fun onPrepareMessageRequestOptionsMenu(
+        menu: Menu,
+        inflater: MenuInflater,
+        thread: Recipient,
+        onOptionsItemSelected: (MenuItem) -> Unit
+    ) {
+        // Prepare
+        menu.clear()
+        // this should only be called on a contact recipient
+        if (!thread.isContactRecipient) return
+        
+        if (!thread.isBlocked) {
+            inflater.inflate(R.menu.menu_conversation_block_icon, menu)
+            val blockDeleteItem =menu.findItem(R.id.menu_block_delete)
+            blockDeleteItem.actionView.setOnClickListener {
+                onOptionsItemSelected(blockDeleteItem)
+            }
+        }
+    }
     
     fun onPrepareOptionsMenu(
         menu: Menu,
@@ -157,6 +177,7 @@ object ConversationMenuHelper {
             R.id.menu_expiring_messages_off -> { showExpiringMessagesDialog(context, thread) }
             R.id.menu_unblock -> { unblock(context, thread) }
             R.id.menu_block -> { block(context, thread) }
+            R.id.menu_block_delete -> { blockAndDelete(context, thread) }
             R.id.menu_copy_session_id -> { copySessionID(context, thread) }
             R.id.menu_edit_group -> { editClosedGroup(context, thread) }
             R.id.menu_leave_group -> { leaveClosedGroup(context, thread) }
@@ -265,30 +286,20 @@ object ConversationMenuHelper {
 
     private fun unblock(context: Context, thread: Recipient) {
         if (!thread.isContactRecipient) { return }
-        val title = R.string.ConversationActivity_unblock_this_contact_question
-        val message = R.string.ConversationActivity_you_will_once_again_be_able_to_receive_messages_and_calls_from_this_contact
-        AlertDialog.Builder(context)
-            .setTitle(title)
-            .setMessage(message)
-            .setNegativeButton(android.R.string.cancel, null)
-            .setPositiveButton(R.string.ConversationActivity_unblock) { _, _ ->
-                DatabaseComponent.get(context).recipientDatabase()
-                    .setBlocked(thread, false)
-            }.show()
+        val listener = context as? ConversationMenuListener ?: return
+        listener.unblock(thread)
     }
 
     private fun block(context: Context, thread: Recipient) {
         if (!thread.isContactRecipient) { return }
-        val title = R.string.RecipientPreferenceActivity_block_this_contact_question
-        val message = R.string.RecipientPreferenceActivity_you_will_no_longer_receive_messages_and_calls_from_this_contact
-        AlertDialog.Builder(context)
-            .setTitle(title)
-            .setMessage(message)
-            .setNegativeButton(android.R.string.cancel, null)
-            .setPositiveButton(R.string.RecipientPreferenceActivity_block) { _, _ ->
-                DatabaseComponent.get(context).recipientDatabase()
-                    .setBlocked(thread, true)
-            }.show()
+        val listener = context as? ConversationMenuListener ?: return
+        listener.block(thread)
+    }
+
+    private fun blockAndDelete(context: Context, thread: Recipient) {
+        if (!thread.isContactRecipient) { return }
+        val listener = context as? ConversationMenuListener ?: return
+        listener.block(thread, deleteThread = true)
     }
 
     private fun copySessionID(context: Context, thread: Recipient) {
@@ -369,6 +380,11 @@ object ConversationMenuHelper {
         NotificationUtils.showNotifyDialog(context, thread) { notifyType ->
             DatabaseComponent.get(context).recipientDatabase().setNotifyType(thread, notifyType)
         }
+    }
+
+    interface ConversationMenuListener {
+        fun block(recipient: Recipient, deleteThread: Boolean = false)
+        fun unblock(recipient: Recipient)
     }
 
 }
