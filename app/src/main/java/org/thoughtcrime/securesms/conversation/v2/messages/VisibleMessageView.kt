@@ -145,17 +145,17 @@ class VisibleMessageView : LinearLayout {
                 binding.profilePictureView.root.update(message.individualRecipient)
                 binding.profilePictureView.root.setOnClickListener {
                     if (thread.isOpenGroupRecipient && IdPrefix.fromValue(senderSessionID) == IdPrefix.BLINDED) {
-                    val intent = Intent(context, ConversationActivityV2::class.java)
-                    intent.putExtra(ConversationActivityV2.FROM_GROUP_THREAD_ID, threadID)
-                    intent.putExtra(ConversationActivityV2.ADDRESS, Address.fromSerialized(senderSessionID))
-                    context.startActivity(intent)
-                } else {
-                    maybeShowUserDetails(senderSessionID, threadID)
+                        val intent = Intent(context, ConversationActivityV2::class.java)
+                        intent.putExtra(ConversationActivityV2.FROM_GROUP_THREAD_ID, threadID)
+                        intent.putExtra(ConversationActivityV2.ADDRESS, Address.fromSerialized(senderSessionID))
+                        context.startActivity(intent)
+                    } else {
+                        maybeShowUserDetails(senderSessionID, threadID)
+                    }
                 }
-            }
-            if (thread.isOpenGroupRecipient) {
-                val openGroup = lokiThreadDb.getOpenGroupChat(threadID) ?: return
-                val isModerator = OpenGroupApi.isUserModerator(
+                if (thread.isOpenGroupRecipient) {
+                    val openGroup = lokiThreadDb.getOpenGroupChat(threadID) ?: return
+                    val isModerator = OpenGroupApi.isUserModerator(
                         senderSessionID,
                         openGroup.room,
                         openGroup.server
