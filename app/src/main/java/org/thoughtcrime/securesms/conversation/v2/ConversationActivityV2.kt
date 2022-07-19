@@ -54,6 +54,7 @@ import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.mentions.Mention
 import org.session.libsession.messaging.mentions.MentionsManager
 import org.session.libsession.messaging.messages.control.DataExtractionNotification
+import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
 import org.session.libsession.messaging.messages.signal.OutgoingMediaMessage
 import org.session.libsession.messaging.messages.signal.OutgoingTextMessage
 import org.session.libsession.messaging.messages.visible.VisibleMessage
@@ -75,6 +76,7 @@ import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.hexEncodedPrivateKey
 import org.thoughtcrime.securesms.ApplicationContext
+import org.thoughtcrime.securesms.ExpirationDialog
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.audio.AudioRecorder
 import org.thoughtcrime.securesms.contacts.SelectContactsActivity.Companion.selectedContactsKey
@@ -107,6 +109,7 @@ import org.thoughtcrime.securesms.database.LokiMessageDatabase
 import org.thoughtcrime.securesms.database.LokiThreadDatabase
 import org.thoughtcrime.securesms.database.MmsDatabase
 import org.thoughtcrime.securesms.database.MmsSmsDatabase
+import org.thoughtcrime.securesms.database.RecipientDatabase
 import org.thoughtcrime.securesms.database.SessionContactDatabase
 import org.thoughtcrime.securesms.database.SmsDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
@@ -164,6 +167,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     @Inject lateinit var lokiThreadDb: LokiThreadDatabase
     @Inject lateinit var sessionContactDb: SessionContactDatabase
     @Inject lateinit var groupDb: GroupDatabase
+    @Inject lateinit var recipientDb: RecipientDatabase
     @Inject lateinit var lokiApiDb: LokiAPIDatabase
     @Inject lateinit var smsDb: SmsDatabase
     @Inject lateinit var mmsDb: MmsDatabase
@@ -576,7 +580,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 viewModel.threadId,
                 this
             ) { onOptionsItemSelected(it) }
-        } else {
+        } else if (isIncomingMessageRequestThread()) {
             ConversationMenuHelper.onPrepareMessageRequestOptionsMenu(
                 menu,
                 menuInflater,
@@ -913,6 +917,30 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     onNavigateUp()
                 }
             }.show()
+    }
+
+    override fun copySessionID(sessionId: String) {
+        val clip = ClipData.newPlainText("Session ID", sessionId)
+        val manager = getSystemService(PassphraseRequiredActionBarActivity.CLIPBOARD_SERVICE) as ClipboardManager
+        manager.setPrimaryClip(clip)
+        Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showExpiringMessagesDialog(thread: Recipient) {
+        if (thread.isClosedGroupRecipient) {
+            val group = groupDb.getGroup(thread.address.toGroupString()).orNull()
+            if (group?.isActive == false) { return }
+        }
+        ExpirationDialog.show(this, thread.expireMessages) { expirationTime: Int ->
+            recipientDb.setExpireMessages(thread, expirationTime)
+            val message = ExpirationTimerUpdate(expirationTime)
+            message.recipient = thread.address.serialize()
+            message.sentTimestamp = System.currentTimeMillis()
+            val expiringMessageManager = ApplicationContext.getInstance(this).expiringMessageManager
+            expiringMessageManager.setExpirationTimer(message)
+            MessageSender.send(message, thread.address)
+            invalidateOptionsMenu()
+        }
     }
 
     override fun unblock(recipient: Recipient) {

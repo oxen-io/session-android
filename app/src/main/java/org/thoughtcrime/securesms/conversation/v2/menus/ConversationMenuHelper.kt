@@ -1,8 +1,6 @@
 package org.thoughtcrime.securesms.conversation.v2.menus
 
 import android.annotation.SuppressLint
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -24,7 +22,6 @@ import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import network.loki.messenger.R
-import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.leave
 import org.session.libsession.utilities.ExpirationUtil
@@ -33,11 +30,8 @@ import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.toHexString
-import org.thoughtcrime.securesms.ApplicationContext
-import org.thoughtcrime.securesms.ExpirationDialog
 import org.thoughtcrime.securesms.MediaOverviewActivity
 import org.thoughtcrime.securesms.MuteDialog
-import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.ShortcutLauncherActivity
 import org.thoughtcrime.securesms.calls.WebRtcCallActivity
 import org.thoughtcrime.securesms.contacts.SelectContactsActivity
@@ -267,21 +261,8 @@ object ConversationMenuHelper {
     }
 
     private fun showExpiringMessagesDialog(context: Context, thread: Recipient) {
-        if (thread.isClosedGroupRecipient) {
-            val group = DatabaseComponent.get(context).groupDatabase().getGroup(thread.address.toGroupString()).orNull()
-            if (group?.isActive == false) { return }
-        }
-        ExpirationDialog.show(context, thread.expireMessages) { expirationTime: Int ->
-            DatabaseComponent.get(context).recipientDatabase().setExpireMessages(thread, expirationTime)
-            val message = ExpirationTimerUpdate(expirationTime)
-            message.recipient = thread.address.serialize()
-            message.sentTimestamp = System.currentTimeMillis()
-            val expiringMessageManager = ApplicationContext.getInstance(context).expiringMessageManager
-            expiringMessageManager.setExpirationTimer(message)
-            MessageSender.send(message, thread.address)
-            val activity = context as AppCompatActivity
-            activity.invalidateOptionsMenu()
-        }
+        val listener = context as? ConversationMenuListener ?: return
+        listener.showExpiringMessagesDialog(thread)
     }
 
     private fun unblock(context: Context, thread: Recipient) {
@@ -304,12 +285,8 @@ object ConversationMenuHelper {
 
     private fun copySessionID(context: Context, thread: Recipient) {
         if (!thread.isContactRecipient) { return }
-        val sessionID = thread.address.toString()
-        val clip = ClipData.newPlainText("Session ID", sessionID)
-        val activity = context as AppCompatActivity
-        val manager = activity.getSystemService(PassphraseRequiredActionBarActivity.CLIPBOARD_SERVICE) as ClipboardManager
-        manager.setPrimaryClip(clip)
-        Toast.makeText(context, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+        val listener = context as? ConversationMenuListener ?: return
+        listener.copySessionID(thread.address.toString())
     }
 
     private fun editClosedGroup(context: Context, thread: Recipient) {
@@ -385,6 +362,8 @@ object ConversationMenuHelper {
     interface ConversationMenuListener {
         fun block(recipient: Recipient, deleteThread: Boolean = false)
         fun unblock(recipient: Recipient)
+        fun copySessionID(sessionId: String)
+        fun showExpiringMessagesDialog(thread: Recipient)
     }
 
 }
