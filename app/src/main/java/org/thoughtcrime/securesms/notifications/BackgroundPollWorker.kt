@@ -12,9 +12,10 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.all
-import nl.komponents.kovenant.functional.map
+import nl.komponents.kovenant.functional.bind
 import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.messaging.jobs.MessageReceiveJob
+import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
+import org.session.libsession.messaging.jobs.MessageReceiveParameters
 import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPollerV2
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPoller
 import org.session.libsession.snode.SnodeAPI
@@ -54,13 +55,14 @@ class BackgroundPollWorker(val context: Context, params: WorkerParameters) : Wor
 
             // DMs
             val userPublicKey = TextSecurePreferences.getLocalNumber(context)!!
-            val dmsPromise = SnodeAPI.getMessages(userPublicKey).map { envelopes ->
-                envelopes.map { (envelope, serverHash) ->
+            val dmsPromise = SnodeAPI.getMessages(userPublicKey).bind { envelopes ->
+                val params = envelopes.map { (envelope, serverHash) ->
                     // FIXME: Using a job here seems like a bad idea...
-                    MessageReceiveJob(envelope.toByteArray(), serverHash).executeAsync()
+                    MessageReceiveParameters(envelope.toByteArray(), serverHash, null)
                 }
+                BatchMessageReceiveJob(params).executeAsync()
             }
-            promises.addAll(dmsPromise.get())
+            promises.add(dmsPromise)
 
             // Closed groups
             val closedGroupPoller = ClosedGroupPollerV2() // Intentionally don't use shared

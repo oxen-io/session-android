@@ -278,10 +278,10 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
       try {
         if (notificationState.hasMultipleThreads()) {
-          sendMultipleThreadNotification(context, notificationState, signal);
           for (long threadId : notificationState.getThreads()) {
             sendSingleThreadNotification(context, new NotificationState(notificationState.getNotificationsForThread(threadId)), false, true);
           }
+          sendMultipleThreadNotification(context, notificationState, signal);
         } else if (notificationState.getMessageCount() > 0){
           sendSingleThreadNotification(context, notificationState, signal, false);
         } else {
@@ -299,15 +299,6 @@ public class DefaultMessageNotifier implements MessageNotifier {
     } finally {
       if (telcoCursor != null) telcoCursor.close();
     }
-  }
-
-  private String getTrimmedText(CharSequence text) {
-    String trimmedText = "";
-    if (text != null) {
-      int trimEnd = Math.min(text.length(), 50);
-      trimmedText = text.subSequence(0,trimEnd) + (text.length() > 50 ? "..." : "");
-    }
-    return trimmedText;
   }
 
   private void sendSingleThreadNotification(@NonNull  Context context,
@@ -342,13 +333,12 @@ public class DefaultMessageNotifier implements MessageNotifier {
     builder.putStringExtra(LATEST_MESSAGE_ID_TAG, messageIdTag);
 
     CharSequence text = notifications.get(0).getText();
-    String trimmedText = getTrimmedText(text);
 
     builder.setThread(notifications.get(0).getRecipient());
     builder.setMessageCount(notificationState.getMessageCount());
     MentionManagerUtilities.INSTANCE.populateUserPublicKeyCacheIfNeeded(notifications.get(0).getThreadId(),context);
     builder.setPrimaryMessageBody(recipient, notifications.get(0).getIndividualRecipient(),
-                                  MentionUtilities.highlightMentions(trimmedText,
+                                  MentionUtilities.highlightMentions(text == null ? "" : text,
                                           notifications.get(0).getThreadId(),
                                           context),
                                   notifications.get(0).getSlideDeck());
