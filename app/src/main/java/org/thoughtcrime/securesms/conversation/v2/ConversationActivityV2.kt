@@ -396,8 +396,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         actionBar.title = ""
         actionBar.customView = actionBarBinding!!.root
         actionBar.setDisplayShowCustomEnabled(true)
-        actionBarBinding!!.conversationTitleView.text = viewModel.recipient?.toShortString()
-        @DimenRes val sizeID: Int = if (viewModel.recipient?.isClosedGroupRecipient == true) {
+        val recipient = viewModel.recipient ?: return
+        actionBarBinding!!.conversationTitleView.text = when {
+            recipient.isLocalNumber -> getString(R.string.note_to_self) // ID blinding might interfere with this+
+            else -> recipient.toShortString()
+        }
+        @DimenRes
+        val sizeID: Int = if (viewModel.recipient?.isClosedGroupRecipient == true) {
             R.dimen.medium_profile_picture_size
         } else {
             R.dimen.small_profile_picture_size
