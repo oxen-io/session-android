@@ -398,7 +398,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         actionBar.setDisplayShowCustomEnabled(true)
         val recipient = viewModel.recipient ?: return
         actionBarBinding!!.conversationTitleView.text = when {
-            recipient.isLocalNumber -> getString(R.string.note_to_self) // ID blinding might interfere with this+
+            recipient.isLocalNumber -> getString(R.string.note_to_self)
             else -> recipient.toShortString()
         }
         @DimenRes
