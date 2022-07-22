@@ -764,7 +764,7 @@ public class ThreadDatabase extends Database {
   }
 
   @NotNull
-  public List<ThreadRecord> getLegacyOxenOpenGroupIds() {
+  public List<ThreadRecord> getLegacyOxenOpenGroups() {
     String where = TABLE_NAME+"."+ADDRESS+" LIKE ?";
     String selection = OpenGroupMigrator.LEGACY_GROUP_ENCODED_ID+"%";
     SQLiteDatabase db     = databaseHelper.getReadableDatabase();
@@ -788,7 +788,7 @@ public class ThreadDatabase extends Database {
   }
 
   @NotNull
-  public List<ThreadRecord> getNewOxenOpenGroupIds() {
+  public List<ThreadRecord> getNewOxenOpenGroups() {
     String where = TABLE_NAME+"."+ADDRESS+" LIKE ?";
     String selection = OpenGroupMigrator.NEW_GROUP_ENCODED_ID+"%";
     SQLiteDatabase db     = databaseHelper.getReadableDatabase();
@@ -810,9 +810,12 @@ public class ThreadDatabase extends Database {
     return threads;
   }
 
-//  public void migrateLegacyOpenGroupds(List<Long>) {
-//
-//  }
+  public void migrateEncodedGroup(long threadId, @NotNull String newEncodedGroupId) {
+    ContentValues contentValues = new ContentValues(1);
+    contentValues.put(ADDRESS, newEncodedGroupId);
+    SQLiteDatabase db = databaseHelper.getWritableDatabase();
+    db.update(TABLE_NAME, contentValues, ID_WHERE, new String[] {threadId+""});
+  }
 
     public interface ProgressListener {
     void onProgress(int complete, int total);

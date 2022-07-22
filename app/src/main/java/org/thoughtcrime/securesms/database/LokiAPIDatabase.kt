@@ -362,18 +362,19 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         database.delete(lastDeletionServerIDTable, "$lastDeletionServerIDTableIndex = ?", wrap(index))
     }
 
-    fun removeLastDeletionServerID(group: Long, server: String) {
+    override fun migrateLegacyOpenGroup(legacyServerId: String, newServerId: String) {
         val database = databaseHelper.writableDatabase
-        val index = "$server.$group"
-        database.delete(lastDeletionServerIDTable,"$lastDeletionServerIDTableIndex = ?", wrap(index))
-    }
-
-    fun getUserCount(group: Long, server: String): Int? {
-        val database = databaseHelper.readableDatabase
-        val index = "$server.$group"
-        return database.get(userCountTable, "$publicChatID = ?", wrap(index)) { cursor ->
-            cursor.getInt(userCount)
-        }?.toInt()
+        database.beginTransaction()
+        val authRow = wrap(mapOf(server to newServerId))
+        database.update(openGroupAuthTokenTable, authRow, "$server = ?", wrap(legacyServerId))
+        val lastMessageRow = wrap(mapOf(lastMessageServerIDTableIndex to newServerId))
+        database.update(lastMessageServerIDTable, lastMessageRow,
+            "$lastMessageServerIDTableIndex = ?", wrap(legacyServerId))
+        val lastDeletionRow = wrap(mapOf(lastDeletionServerIDTableIndex to newServerId))
+        database.update(
+            lastDeletionServerIDTable, lastDeletionRow,
+            "$lastDeletionServerIDTableIndex = ?", wrap(legacyServerId))
+        database.endTransaction()
     }
 
     fun getUserCount(room: String, server: String): Int? {

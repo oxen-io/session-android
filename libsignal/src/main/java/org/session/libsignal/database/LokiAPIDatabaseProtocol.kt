@@ -36,5 +36,5 @@ interface LokiAPIDatabaseProtocol {
     fun isClosedGroup(groupPublicKey: String): Boolean
     fun getForkInfo(): ForkInfo
     fun setForkInfo(forkInfo: ForkInfo)
-
+    fun migrateLegacyOpenGroup(legacyServerId: String, newServerId: String)
 }
