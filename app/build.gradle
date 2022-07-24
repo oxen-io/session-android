@@ -106,7 +106,6 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxJsonVersion"
     implementation "org.whispersystems:curve25519-java:$curve25519Version"
     implementation project(":liblazysodium")
-//    implementation 'com.goterl:lazysodium-android:5.0.2@aar'
     implementation "net.java.dev.jna:jna:5.8.0@aar"
     implementation "com.google.protobuf:protobuf-java:$protobufVersion"
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"

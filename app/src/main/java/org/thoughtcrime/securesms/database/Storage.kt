@@ -28,6 +28,7 @@ import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAt
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
+import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.messaging.utilities.UpdateMessageData
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.utilities.Address
@@ -127,6 +128,8 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         var messageID: Long? = null
         val senderAddress = fromSerialized(message.sender!!)
         val isUserSender = (message.sender!! == getUserPublicKey())
+        val isUserBlindedSender = message.threadID?.takeIf { it >= 0 }?.let { getOpenGroup(it)?.publicKey }
+            ?.let { SodiumUtilities.sessionId(getUserPublicKey()!!, message.sender!!, it) } ?: false
         val group: Optional<SignalServiceGroup> = when {
             openGroupID != null -> Optional.of(SignalServiceGroup(openGroupID.toByteArray(), SignalServiceGroup.GroupType.PUBLIC_CHAT))
             groupPublicKey != null -> {
@@ -138,7 +141,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         val pointers = attachments.mapNotNull {
             it.toSignalAttachment()
         }
-        val targetAddress = if (isUserSender && !message.syncTarget.isNullOrEmpty()) {
+        val targetAddress = if ((isUserSender || isUserBlindedSender) && !message.syncTarget.isNullOrEmpty()) {
             fromSerialized(message.syncTarget!!)
         } else if (group.isPresent) {
             fromSerialized(GroupUtil.getEncodedId(group.get()))
@@ -148,7 +151,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         val targetRecipient = Recipient.from(context, targetAddress, false)
         if (!targetRecipient.isGroupRecipient) {
             val recipientDb = DatabaseComponent.get(context).recipientDatabase()
-            if (isUserSender) {
+            if (isUserSender || isUserBlindedSender) {
                 recipientDb.setApproved(targetRecipient, true)
             } else {
                 recipientDb.setApprovedMe(targetRecipient, true)
@@ -158,7 +161,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
             val quote: Optional<QuoteModel> = if (quotes != null) Optional.of(quotes) else Optional.absent()
             val linkPreviews: Optional<List<LinkPreview>> = if (linkPreview.isEmpty()) Optional.absent() else Optional.of(linkPreview.mapNotNull { it!! })
             val mmsDatabase = DatabaseComponent.get(context).mmsDatabase()
-            val insertResult = if (message.sender == getUserPublicKey()) {
+            val insertResult = if (message.sender == getUserPublicKey() || isUserBlindedSender) {
                 val mediaMessage = OutgoingMediaMessage.from(message, targetRecipient, pointers, quote.orNull(), linkPreviews.orNull()?.firstOrNull())
                 mmsDatabase.insertSecureDecryptedMessageOutbox(mediaMessage, message.threadID ?: -1, message.sentTimestamp!!, runThreadUpdate)
             } else {
@@ -176,7 +179,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
             val smsDatabase = DatabaseComponent.get(context).smsDatabase()
             val isOpenGroupInvitation = (message.openGroupInvitation != null)
 
-            val insertResult = if (message.sender == getUserPublicKey()) {
+            val insertResult = if (message.sender == getUserPublicKey() || isUserBlindedSender) {
                 val textMessage = if (isOpenGroupInvitation) OutgoingTextMessage.fromOpenGroupInvitation(message.openGroupInvitation, targetRecipient, message.sentTimestamp)
                 else OutgoingTextMessage.from(message, targetRecipient)
                 smsDatabase.insertMessageOutbox(message.threadID ?: -1, textMessage, message.sentTimestamp!!, runThreadUpdate)

@@ -14,8 +14,8 @@ import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsignal.crypto.PushTransportDetails
 import org.session.libsignal.protos.SignalServiceProtos
-import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.IdPrefix
+import org.session.libsignal.utilities.Log
 
 object MessageReceiver {
 
@@ -47,7 +47,6 @@ object MessageReceiver {
         openGroupServerID: Long?,
         isOutgoing: Boolean? = null,
         openGroupPublicKey: String? = null,
-        otherBlindedPublicKey: String? = null
     ): Pair<Message, SignalServiceProtos.Content> {
         val storage = MessagingModuleConfiguration.shared.storage
         val userPublicKey = storage.getUserPublicKey()
@@ -68,12 +67,11 @@ object MessageReceiver {
             when (envelope.type) {
                 SignalServiceProtos.Envelope.Type.SESSION_MESSAGE -> {
                     if (IdPrefix.fromValue(envelope.source) == IdPrefix.BLINDED) {
-                        otherBlindedPublicKey ?: throw Error.NoData
                         openGroupPublicKey ?: throw Error.InvalidGroupPublicKey
                         val decryptionResult = MessageDecrypter.decryptBlinded(
                             ciphertext.toByteArray(),
                             isOutgoing ?: false,
-                            otherBlindedPublicKey,
+                            envelope.source,
                             openGroupPublicKey
                         )
                         plaintext = decryptionResult.first

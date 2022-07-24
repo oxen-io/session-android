@@ -168,7 +168,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                 .setContent(ByteString.copyFrom(encodedMessage))
                 .setSource(it.sender)
                 .build()
-            val (message, proto) = MessageReceiver.parse(envelope.toByteArray(), it.id, fromOutbox)
+            val (message, proto) = MessageReceiver.parse(envelope.toByteArray(), it.id, fromOutbox, serverPublicKey)
             MessageReceiver.handle(message, proto, null)
         }
     }

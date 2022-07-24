@@ -77,7 +77,8 @@ class BatchMessageReceiveJob(
             messages.forEach { messageParameters ->
                 val (data, serverHash, openGroupMessageServerID) = messageParameters
                 try {
-                    val (message, proto) = MessageReceiver.parse(data, openGroupMessageServerID)
+                    val serverPublicKey = openGroupID?.let { storage.getOpenGroupPublicKey(it.split(".").dropLast(1).joinToString(".")) }
+                    val (message, proto) = MessageReceiver.parse(data, openGroupMessageServerID, openGroupPublicKey = serverPublicKey)
                     message.serverHash = serverHash
                     val threadID = getThreadId(message, storage)
                     val parsedParams = ParsedMessage(messageParameters, message, proto)

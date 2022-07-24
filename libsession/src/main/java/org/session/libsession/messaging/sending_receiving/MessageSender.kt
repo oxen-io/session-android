@@ -270,7 +270,7 @@ object MessageSender {
                     }
                 }
                 is Destination.OpenGroupInbox -> {
-                    message.recipient = destination.blinkedPublicKey
+                    message.recipient = destination.blindedPublicKey
                     // Validate the message
                     if (message !is VisibleMessage || !message.isValid()) {
                         throw Error.InvalidMessage
@@ -279,11 +279,11 @@ object MessageSender {
                     val plaintext = PushTransportDetails.getPaddedMessageBody(messageBody)
                     val ciphertext = MessageEncrypter.encryptBlinded(
                         plaintext,
-                        destination.blinkedPublicKey,
+                        destination.blindedPublicKey,
                         destination.serverPublicKey
                     )
                     val base64EncodedData = Base64.encodeBytes(ciphertext)
-                    OpenGroupApi.sendDirectMessage(base64EncodedData, destination.blinkedPublicKey, destination.server).success {
+                    OpenGroupApi.sendDirectMessage(base64EncodedData, destination.blindedPublicKey, destination.server).success {
                         message.openGroupServerMessageID = it.id
                         handleSuccessfulMessageSend(message, destination, openGroupSentTimestamp = TimeUnit.SECONDS.toMillis(it.postedAt))
                         deferred.resolve(Unit)

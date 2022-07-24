@@ -28,7 +28,7 @@ sealed class Destination {
     class OpenGroupInbox(
         var server: String,
         var serverPublicKey: String,
-        var blinkedPublicKey: String
+        var blindedPublicKey: String
     ) : Destination()
 
     companion object {
