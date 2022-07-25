@@ -23,6 +23,8 @@ import org.session.libsession.messaging.sending_receiving.link_preview.LinkPrevi
 import org.session.libsession.messaging.sending_receiving.notifications.PushNotificationAPI
 import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPollerV2
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
+import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.messaging.utilities.WebRtcUtils
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
@@ -38,6 +40,7 @@ import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.messages.SignalServiceGroup
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Base64
+import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.removingIdPrefixIfNeeded
@@ -226,7 +229,9 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage,
     val recipient = Recipient.from(context, Address.fromSerialized(messageSender!!), false)
     if (runProfileUpdate) {
         val profile = message.profile
-        if (profile != null && userPublicKey != messageSender) {
+        val isUserBlindedSender = messageSender == storage.getOpenGroup(threadID)?.publicKey?.let { SodiumUtilities.blindedKeyPair(it, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!) }?.let { SessionId(
+            IdPrefix.BLINDED, it.publicKey.asBytes).hexString }
+        if (profile != null && userPublicKey != messageSender && !isUserBlindedSender) {
             val profileManager = SSKEnvironment.shared.profileManager
             val name = profile.displayName!!
             if (name.isNotEmpty()) {
