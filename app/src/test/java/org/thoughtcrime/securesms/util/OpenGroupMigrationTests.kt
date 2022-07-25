@@ -4,16 +4,23 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.kotlin.KStubbing
-import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
+import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
+import org.session.libsession.messaging.open_groups.OpenGroupV2
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
+import org.thoughtcrime.securesms.database.LokiMessageDatabase
+import org.thoughtcrime.securesms.database.LokiThreadDatabase
+import org.thoughtcrime.securesms.database.MmsDatabase
+import org.thoughtcrime.securesms.database.SmsDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
@@ -77,7 +84,7 @@ class OpenGroupMigrationTests {
         val newThread = newThreadRecord()
 
         val expectedMapping = listOf(
-            OpenGroupMapping("oxen", LEGACY_THREAD_ID, NEW_THREAD_ID)
+            OpenGroupMapping(OXEN_STUB_HEX, LEGACY_THREAD_ID, NEW_THREAD_ID)
         )
 
         assertTrue(expectedMapping.containsAll(OpenGroupMigrator.getExistingMappings(listOf(legacyThread), listOf(newThread))))
@@ -101,7 +108,7 @@ class OpenGroupMigrationTests {
         val legacyThread = legacyThreadRecord()
         val mappings = OpenGroupMigrator.getExistingMappings(listOf(legacyThread), emptyList())
         val expectedMappings = listOf(
-            OpenGroupMapping("oxen", LEGACY_THREAD_ID, null)
+            OpenGroupMapping(OXEN_STUB_HEX, LEGACY_THREAD_ID, null)
         )
         assertTrue(expectedMappings.containsAll(mappings))
     }
@@ -123,39 +130,150 @@ class OpenGroupMigrationTests {
     }
 
     @Test
-    fun `test migration thread DB calls legacy and new open groups if non-zero legacy list`() {
-
+    fun `it should migrate on thread, group and loki dbs with correct values for legacy only migration`() {
         // mock threadDB
+        val capturedThreadId = argumentCaptor<Long>()
+        val capturedNewEncoded = argumentCaptor<String>()
         val mockedThreadDb = mock<ThreadDatabase> {
             val legacyThreadRecord = legacyThreadRecord()
             on { legacyOxenOpenGroups } doReturn listOf(legacyThreadRecord)
             on { newOxenOpenGroups } doReturn emptyList()
-            on { migrateEncodedGroup(any(), any()) } doAnswer {}
+            on { migrateEncodedGroup(capturedThreadId.capture(), capturedNewEncoded.capture()) } doAnswer {}
         }
 
         // mock groupDB
+        val capturedGroupLegacyEncoded = argumentCaptor<String>()
+        val capturedGroupNewEncoded = argumentCaptor<String>()
         val mockedGroupDb = mock<GroupDatabase> {
-            on { migrateEncodedGroup(any(), any()) } doAnswer {}
+            on {
+                migrateEncodedGroup(
+                    capturedGroupLegacyEncoded.capture(),
+                    capturedGroupNewEncoded.capture()
+                )
+            } doAnswer {}
         }
 
         // mock LokiAPIDB
+        val capturedLokiLegacyGroup = argumentCaptor<String>()
+        val capturedLokiNewGroup = argumentCaptor<String>()
         val mockedLokiApi = mock<LokiAPIDatabase> {
-            on { migrateLegacyOpenGroup(any(), any()) } doAnswer {}
+            on { migrateLegacyOpenGroup(capturedLokiLegacyGroup.capture(), capturedLokiNewGroup.capture()) } doAnswer {}
+        }
+
+        val pubKey = OpenGroupAPIV2.defaultServerPublicKey
+        val room = "oxen"
+        val legacyServer = OpenGroupAPIV2.legacyDefaultServer
+        val newServer = OpenGroupAPIV2.defaultServer
+
+        val lokiThreadOpenGroup = argumentCaptor<OpenGroupV2>()
+        val mockedLokiThreadDb = mock<LokiThreadDatabase> {
+            on { getOpenGroupChat(eq(LEGACY_THREAD_ID)) } doReturn OpenGroupV2(legacyServer, room, "Oxen", pubKey)
+            on { setOpenGroupChat(lokiThreadOpenGroup.capture(), eq(LEGACY_THREAD_ID)) } doAnswer {}
         }
 
         val mockedDbComponent = mock<DatabaseComponent> {
             on { threadDatabase() } doReturn mockedThreadDb
             on { groupDatabase() } doReturn mockedGroupDb
             on { lokiAPIDatabase() } doReturn mockedLokiApi
+            on { lokiThreadDatabase() } doReturn mockedLokiThreadDb
         }
 
         OpenGroupMigrator.migrate(mockedDbComponent)
 
-        verify(mockedDbComponent).threadDatabase()
-        verify(mockedThreadDb).legacyOxenOpenGroups
-        verify(mockedThreadDb).newOxenOpenGroups
-        verify(mockedThreadDb).migrateEncodedGroup(any(), any())
-        verifyNoMoreInteractions(mockedThreadDb)
+        // expect threadDB migration to reflect new thread values:
+        // thread ID = 1, encoded ID = new encoded ID
+        assertEquals(LEGACY_THREAD_ID, capturedThreadId.firstValue)
+        assertEquals(EXAMPLE_NEW_ENCODED_OPEN_GROUP, capturedNewEncoded.firstValue)
+
+        // expect groupDB migration to reflect new thread values:
+        // legacy encoded ID, new encoded ID
+        assertEquals(EXAMPLE_LEGACY_ENCODED_OPEN_GROUP, capturedGroupLegacyEncoded.firstValue)
+        assertEquals(EXAMPLE_NEW_ENCODED_OPEN_GROUP, capturedGroupNewEncoded.firstValue)
+
+        // expect Loki API DB migration to reflect new thread values:
+        assertEquals("${OpenGroupAPIV2.legacyDefaultServer}.oxen", capturedLokiLegacyGroup.firstValue)
+        assertEquals("${OpenGroupAPIV2.defaultServer}.oxen", capturedLokiNewGroup.firstValue)
+
+        assertEquals(newServer, lokiThreadOpenGroup.firstValue.server)
+
+    }
+
+    @Test
+    fun `it should migrate and delete legacy thread with conflicting new and old values`() {
+
+        // mock threadDB
+        val capturedThreadId = argumentCaptor<Long>()
+        val mockedThreadDb = mock<ThreadDatabase> {
+            val legacyThreadRecord = legacyThreadRecord()
+            val newThreadRecord = newThreadRecord()
+            on { legacyOxenOpenGroups } doReturn listOf(legacyThreadRecord)
+            on { newOxenOpenGroups } doReturn listOf(newThreadRecord)
+            on { deleteConversation(capturedThreadId.capture()) } doAnswer {}
+        }
+
+        // mock groupDB
+        val capturedGroupLegacyEncoded = argumentCaptor<String>()
+        val mockedGroupDb = mock<GroupDatabase> {
+            on { delete(capturedGroupLegacyEncoded.capture()) } doReturn true
+        }
+
+        // mock LokiAPIDB
+        val capturedLokiLegacyGroup = argumentCaptor<String>()
+        val capturedLokiNewGroup = argumentCaptor<String>()
+        val mockedLokiApi = mock<LokiAPIDatabase> {
+            on { migrateLegacyOpenGroup(capturedLokiLegacyGroup.capture(), capturedLokiNewGroup.capture()) } doAnswer {}
+        }
+
+        // mock messaging dbs
+        val migrateMmsFromThreadId = argumentCaptor<Long>()
+        val migrateMmsToThreadId = argumentCaptor<Long>()
+
+        val mockedMmsDb = mock<MmsDatabase> {
+            on { migrateThreadId(migrateMmsFromThreadId.capture(), migrateMmsToThreadId.capture()) } doAnswer {}
+        }
+
+        val migrateSmsFromThreadId = argumentCaptor<Long>()
+        val migrateSmsToThreadId = argumentCaptor<Long>()
+        val mockedSmsDb = mock<SmsDatabase> {
+            on { migrateThreadId(migrateSmsFromThreadId.capture(), migrateSmsToThreadId.capture()) } doAnswer {}
+        }
+
+        val lokiFromThreadId = argumentCaptor<Long>()
+        val lokiToThreadId = argumentCaptor<Long>()
+        val mockedLokiMessageDatabase = mock<LokiMessageDatabase> {
+            on { migrateThreadId(lokiFromThreadId.capture(), lokiToThreadId.capture()) } doAnswer {}
+        }
+
+        val mockedLokiThreadDb = mock<LokiThreadDatabase> {
+            on { removeOpenGroupChat(eq(LEGACY_THREAD_ID)) } doAnswer {}
+        }
+
+        val mockedDbComponent = mock<DatabaseComponent> {
+            on { threadDatabase() } doReturn mockedThreadDb
+            on { groupDatabase() } doReturn mockedGroupDb
+            on { lokiAPIDatabase() } doReturn mockedLokiApi
+            on { mmsDatabase() } doReturn mockedMmsDb
+            on { smsDatabase() } doReturn mockedSmsDb
+            on { lokiMessageDatabase() } doReturn mockedLokiMessageDatabase
+            on { lokiThreadDatabase() } doReturn mockedLokiThreadDb
+        }
+
+        OpenGroupMigrator.migrate(mockedDbComponent)
+
+        // should delete thread by thread ID
+        assertEquals(LEGACY_THREAD_ID, capturedThreadId.firstValue)
+
+        // should delete group by legacy encoded ID
+        assertEquals(EXAMPLE_LEGACY_ENCODED_OPEN_GROUP, capturedGroupLegacyEncoded.firstValue)
+
+        // should migrate SMS from legacy thread ID to new thread ID
+        assertEquals(LEGACY_THREAD_ID, migrateSmsFromThreadId.firstValue)
+        assertEquals(NEW_THREAD_ID, migrateSmsToThreadId.firstValue)
+
+        // should migrate MMS from legacy thread ID to new thread ID
+        assertEquals(LEGACY_THREAD_ID, migrateMmsFromThreadId.firstValue)
+        assertEquals(NEW_THREAD_ID, migrateMmsToThreadId.firstValue)
+
     }
 
 

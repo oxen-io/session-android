@@ -38,9 +38,8 @@ object OpenGroupMigrator {
         }
         return legacyStubsMapping.map { (legacyEncodedStub, legacyId) ->
             // get 'new' open group thread ID if stubs match
-            val legacyDecodedStub = Hex.fromStringCondensed(legacyEncodedStub).decodeToString()
             OpenGroupMapping(
-                legacyDecodedStub,
+                legacyEncodedStub,
                 legacyId,
                 newStubsMapping.firstOrNull { (newEncodedStub, _) -> newEncodedStub == legacyEncodedStub }?.second
             )
@@ -60,25 +59,39 @@ object OpenGroupMigrator {
 
         val groupDb = databaseComponent.groupDatabase()
         val lokiApiDb = databaseComponent.lokiAPIDatabase()
+        val smsDb = databaseComponent.smsDatabase()
+        val mmsDb = databaseComponent.mmsDatabase()
+        val lokiMessageDatabase = databaseComponent.lokiMessageDatabase()
+        val lokiThreadDatabase = databaseComponent.lokiThreadDatabase()
 
         mappings.forEach { (stub, old, new) ->
+            val legacyEncodedGroupId = LEGACY_GROUP_ENCODED_ID+stub
             if (new == null) {
                 val newEncodedGroupId = NEW_GROUP_ENCODED_ID+stub
-                val legacyEncodedGroupId = LEGACY_GROUP_ENCODED_ID+stub
-
                 // migrate thread and group encoded values
                 threadDb.migrateEncodedGroup(old, newEncodedGroupId)
                 groupDb.migrateEncodedGroup(legacyEncodedGroupId, newEncodedGroupId)
-
                 // migrate Loki API DB values
                 // decode the hex to bytes, decode byte array to string i.e. "oxen" or "session"
                 val decodedStub = Hex.fromStringCondensed(stub).decodeToString()
                 val legacyLokiServerId = "${OpenGroupAPIV2.legacyDefaultServer}.$decodedStub"
                 val newLokiServerId = "${OpenGroupAPIV2.defaultServer}.$decodedStub"
                 lokiApiDb.migrateLegacyOpenGroup(legacyLokiServerId, newLokiServerId)
+                // migrate loki thread db server info
+                val oldServerInfo = lokiThreadDatabase.getOpenGroupChat(old)
+                val newServerInfo = oldServerInfo!!.copy(server = OpenGroupAPIV2.defaultServer)
+                lokiThreadDatabase.setOpenGroupChat(newServerInfo, old)
             } else {
                 // has a legacy and a new one
                 // migrate SMS and MMS tables
+                smsDb.migrateThreadId(old, new)
+                mmsDb.migrateThreadId(old, new)
+                lokiMessageDatabase.migrateThreadId(old, new)
+                // delete group for legacy ID
+                groupDb.delete(legacyEncodedGroupId)
+                // delete thread for legacy ID
+                threadDb.deleteConversation(old)
+                lokiThreadDatabase.removeOpenGroupChat(old)
             }
             // maybe migrate jobs here
         }

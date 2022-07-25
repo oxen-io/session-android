@@ -20,7 +20,6 @@ interface LokiAPIDatabaseProtocol {
     fun setReceivedMessageHashValues(publicKey: String, newValue: Set<String>, namespace: Int)
     fun getAuthToken(server: String): String?
     fun setAuthToken(server: String, newValue: String?)
-    fun setUserCount(group: Long, server: String, newValue: Int)
     fun setUserCount(room: String, server: String, newValue: Int)
     fun getLastMessageServerID(room: String, server: String): Long?
     fun setLastMessageServerID(room: String, server: String, newValue: Long)
