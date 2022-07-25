@@ -1,5 +1,6 @@
 package org.session.libsession.messaging.sending_receiving
 
+import com.goterl.lazysodium.utils.KeyPair
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.deferred
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -221,9 +222,13 @@ object MessageSender {
             message.sentTimestamp = System.currentTimeMillis()
         }
         val openGroup = storage.getOpenGroup(message.threadID!!)
-        val serverCapabilities = storage.getServerCapabilities(openGroup?.server!!)
         val userEdKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!
-        val blindedKeyPair = SodiumUtilities.blindedKeyPair(openGroup.publicKey, userEdKeyPair)
+        var serverCapabilities = listOf<String>()
+        var blindedKeyPair: KeyPair? = null
+        if (openGroup != null) {
+            serverCapabilities = storage.getServerCapabilities(openGroup.server)
+            blindedKeyPair = SodiumUtilities.blindedKeyPair(openGroup.publicKey, userEdKeyPair)
+        }
         message.sender = if (serverCapabilities.contains("blind") && blindedKeyPair != null) {
             SessionId(IdPrefix.BLINDED, blindedKeyPair.publicKey.asBytes).hexString
         } else {
