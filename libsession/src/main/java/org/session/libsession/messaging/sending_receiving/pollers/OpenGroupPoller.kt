@@ -161,7 +161,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
             storage.setLastInboxMessageId(server, lastMessageId)
         }
         sortedMessages.forEach {
-            val encodedMessage = Base64.decode(it.base64EncodedMessage)
+            val encodedMessage = Base64.decode(it.message)
             val envelope = SignalServiceProtos.Envelope.newBuilder()
                 .setTimestamp(TimeUnit.SECONDS.toMillis(it.postedAt))
                 .setType(SignalServiceProtos.Envelope.Type.SESSION_MESSAGE)

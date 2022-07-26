@@ -2,10 +2,8 @@ package org.session.libsession.messaging.utilities
 
 import com.goterl.lazysodium.LazySodiumAndroid
 import com.goterl.lazysodium.SodiumAndroid
-import com.goterl.lazysodium.interfaces.AEAD
 import com.goterl.lazysodium.interfaces.GenericHash
 import com.goterl.lazysodium.interfaces.Hash
-import com.goterl.lazysodium.interfaces.Sign
 import com.goterl.lazysodium.utils.Key
 import com.goterl.lazysodium.utils.KeyPair
 import org.session.libsignal.utilities.Hex
@@ -23,9 +21,10 @@ object SodiumUtilities {
     private const val SECRET_KEY_LENGTH: Int = 64 //crypto_sign_secretkeybytes
 
     /* 64-byte blake2b hash then reduce to get the blinding factor */
-    internal fun generateBlindingFactor(serverPublicKey: String): ByteArray? {
+    fun generateBlindingFactor(serverPublicKey: String): ByteArray? {
         // k = salt.crypto_core_ed25519_scalar_reduce(blake2b(server_pk, digest_size=64).digest())
         val serverPubKeyData = Hex.fromStringCondensed(serverPublicKey)
+        if (serverPubKeyData.size != PUBLIC_KEY_LENGTH) return null
         val serverPubKeyHash = ByteArray(GenericHash.BLAKE2B_BYTES_MAX)
         if (!sodium.cryptoGenericHash(serverPubKeyHash, serverPubKeyHash.size, serverPubKeyData, serverPubKeyData.size.toLong())) {
             return null
@@ -44,7 +43,7 @@ object SodiumUtilities {
      same secret scalar secret (and so this is just the most convenient way to get 'a' out of
      a sodium Ed25519 secret key)
     */
-    private fun generatePrivateKeyScalar(secretKey: ByteArray): ByteArray? {
+    fun generatePrivateKeyScalar(secretKey: ByteArray): ByteArray? {
         // a = s.to_curve25519_private_key().encode()
         val aBytes = ByteArray(SCALAR_MULT_LENGTH)
         return if (sodium.convertSecretKeyEd25519ToCurve25519(aBytes, secretKey)) {
@@ -54,8 +53,9 @@ object SodiumUtilities {
 
     /* Constructs a "blinded" key pair (`ka, kA`) based on an open group server `publicKey` and an ed25519 `keyPair` */
     fun blindedKeyPair(serverPublicKey: String, edKeyPair: KeyPair): KeyPair?  {
-        val kBytes = generateBlindingFactor(serverPublicKey)
-        val aBytes = generatePrivateKeyScalar(edKeyPair.secretKey.asBytes)
+        if (edKeyPair.publicKey.asBytes.size != PUBLIC_KEY_LENGTH || edKeyPair.secretKey.asBytes.size != SECRET_KEY_LENGTH) return null
+        val kBytes = generateBlindingFactor(serverPublicKey) ?: return null
+        val aBytes = generatePrivateKeyScalar(edKeyPair.secretKey.asBytes) ?: return null
         // Generate the blinded key pair `ka`, `kA`
         val kaBytes = ByteArray(SECRET_KEY_LENGTH)
         sodium.cryptoCoreEd25519ScalarMul(kaBytes, kBytes, aBytes)
@@ -127,7 +127,7 @@ object SodiumUtilities {
     }
 
     /* Combines two keys (`kA`) */
-    internal fun combineKeys(lhsKey: ByteArray, rhsKey: ByteArray): ByteArray? {
+    fun combineKeys(lhsKey: ByteArray, rhsKey: ByteArray): ByteArray? {
         val kA = ByteArray(NO_CLAMP_LENGTH)
         return if (sodium.cryptoScalarMultEd25519NoClamp(kA, lhsKey, rhsKey)) {
             kA
