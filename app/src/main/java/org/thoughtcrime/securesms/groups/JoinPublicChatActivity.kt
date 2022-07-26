@@ -27,6 +27,7 @@ import network.loki.messenger.databinding.FragmentEnterChatUrlBinding
 import okhttp3.HttpUrl
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroupAPIV2.DefaultGroup
+import org.session.libsession.messaging.open_groups.migrateLegacyServerUrl
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.recipients.Recipient
@@ -99,10 +100,11 @@ class JoinPublicChatActivity : PassphraseRequiredActionBarActivity(), ScanQRCode
                         if (url.port() != 80 || url.port() != 443) { this.port(url.port()) } // Non-standard port; add to server
                     }.build()
 
-                    val sanitizedServer = server.toString().removeSuffix("/")
+                    val sanitizedServer = server.toString().removeSuffix("/").migrateLegacyServerUrl()
                     val openGroupID = "$sanitizedServer.${room!!}"
                     OpenGroupManager.add(sanitizedServer, room, publicKey!!, this@JoinPublicChatActivity)
-                    MessagingModuleConfiguration.shared.storage.onOpenGroupAdded(stringWithExplicitScheme)
+                    val storage = MessagingModuleConfiguration.shared.storage
+                    storage.onOpenGroupAdded(sanitizedServer)
                     val threadID = GroupManager.getOpenGroupThreadID(openGroupID, this@JoinPublicChatActivity)
                     val groupID = GroupUtil.getEncodedOpenGroupID(openGroupID.toByteArray())
                     threadID to groupID

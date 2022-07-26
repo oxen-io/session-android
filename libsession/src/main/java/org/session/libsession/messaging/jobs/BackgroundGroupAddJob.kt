@@ -4,6 +4,7 @@ import okhttp3.HttpUrl
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
 import org.session.libsession.messaging.open_groups.OpenGroupV2
+import org.session.libsession.messaging.open_groups.migrateLegacyServerUrl
 import org.session.libsession.messaging.utilities.Data
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsignal.utilities.Log
@@ -40,17 +41,18 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
             // get image
             val url = HttpUrl.parse(joinUrl) ?: throw Exception("Group joinUrl isn't valid")
             val server = OpenGroupV2.getServer(joinUrl)
-            val serverString = server.toString().removeSuffix("/")
+            val serverString = server.toString().removeSuffix("/").migrateLegacyServerUrl()
             val publicKey = url.queryParameter("public_key") ?: throw Exception("Group public key isn't valid")
             val room = url.pathSegments().firstOrNull() ?: throw Exception("Group room isn't valid")
+            val openGroup = "$serverString/$room?public_key=$publicKey" // this is less than ideal
             storage.setOpenGroupPublicKey(serverString,publicKey)
             val bytes = OpenGroupAPIV2.downloadOpenGroupProfilePicture(url.pathSegments().firstOrNull()!!, serverString).get()
-            val groupId = GroupUtil.getEncodedOpenGroupID("$server.$room".toByteArray())
+            val groupId = GroupUtil.getEncodedOpenGroupID("$serverString.$room".toByteArray())
             // get info and auth token
-            storage.addOpenGroup(joinUrl)
+            storage.addOpenGroup(openGroup)
             storage.updateProfilePicture(groupId, bytes)
             storage.updateTimestampUpdated(groupId, System.currentTimeMillis())
-            storage.onOpenGroupAdded(joinUrl)
+            storage.onOpenGroupAdded(serverString)
         } catch (e: Exception) {
             Log.e("OpenGroupDispatcher", "Failed to add group because",e)
             delegate?.handleJobFailed(this, e)

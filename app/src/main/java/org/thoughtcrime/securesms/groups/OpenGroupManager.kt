@@ -68,7 +68,7 @@ object OpenGroupManager {
         storage.removeLastDeletionServerID(room, server)
         storage.removeLastMessageServerID(room, server)
         // Store the public key
-        storage.setOpenGroupPublicKey(server,publicKey)
+        storage.setOpenGroupPublicKey(server, publicKey)
         // Get group info
         OpenGroupAPIV2.getAuthToken(room, server).get()
         // Get group info
@@ -126,6 +126,6 @@ object OpenGroupManager {
         val server = OpenGroupV2.getServer(urlAsString)
         val room = url.pathSegments().firstOrNull() ?: return
         val publicKey = url.queryParameter("public_key") ?: return
-        add(server.toString().removeSuffix("/"), room, publicKey, context)
+        add(server.toString().removeSuffix("/"), room, publicKey, context) // assume migrated from calling function
     }
 }

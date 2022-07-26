@@ -393,7 +393,7 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         return database.get(userCountTable, "$publicChatID = ?", wrap(index)) { cursor ->
             cursor.getInt(userCount)
         }?.toInt()
-    }s
+    }
 
     override fun setUserCount(room: String, server: String, newValue: Int) {
         val database = databaseHelper.writableDatabase

@@ -49,6 +49,7 @@ object OpenGroupAPIV2 {
     }
 
     const val defaultServerPublicKey = "a03c383cf63c3c4efe67acc52112a6dd734b3a946b9545f488aaa93da7991238"
+    const val legacyServerIP = "116.203.70.33"
     const val legacyDefaultServer = "http://116.203.70.33" // TODO: migrate all references to use new value
     const val defaultServer = "https://open.getsession.org"
 

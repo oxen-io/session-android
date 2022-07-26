@@ -1,6 +1,7 @@
 package org.session.libsession.utilities
 
 import okhttp3.HttpUrl
+import org.session.libsession.messaging.open_groups.migrateLegacyServerUrl
 
 object OpenGroupUrlParser {
 
@@ -20,7 +21,7 @@ object OpenGroupUrlParser {
         // If the URL is malformed, throw an exception
         val url = HttpUrl.parse(urlWithPrefix) ?: throw Error.MalformedURL
         // Parse components
-        val server = HttpUrl.Builder().scheme(url.scheme()).host(url.host()).port(url.port()).build().toString().removeSuffix(suffix)
+        val server = HttpUrl.Builder().scheme(url.scheme()).host(url.host()).port(url.port()).build().toString().removeSuffix(suffix).migrateLegacyServerUrl()
         val room = url.pathSegments().firstOrNull { !it.isNullOrEmpty() } ?: throw Error.NoRoom
         val publicKey = url.queryParameter(queryPrefix) ?: throw Error.NoPublicKey
         if (publicKey.length != 64) throw Error.InvalidPublicKey

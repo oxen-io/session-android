@@ -79,7 +79,7 @@ object OpenGroupMigrator {
                 lokiApiDb.migrateLegacyOpenGroup(legacyLokiServerId, newLokiServerId)
                 // migrate loki thread db server info
                 val oldServerInfo = lokiThreadDatabase.getOpenGroupChat(old)
-                val newServerInfo = oldServerInfo!!.copy(server = OpenGroupAPIV2.defaultServer)
+                val newServerInfo = oldServerInfo!!.copy(server = OpenGroupAPIV2.defaultServer, id = newLokiServerId)
                 lokiThreadDatabase.setOpenGroupChat(newServerInfo, old)
             } else {
                 // has a legacy and a new one

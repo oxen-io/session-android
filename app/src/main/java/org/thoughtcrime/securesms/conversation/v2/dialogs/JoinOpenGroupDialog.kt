@@ -38,7 +38,7 @@ class JoinOpenGroupDialog(private val name: String, private val url: String) : B
         val activity = requireContext() as AppCompatActivity
         ThreadUtils.queue {
             OpenGroupManager.add(openGroup.server, openGroup.room, openGroup.serverPublicKey, activity)
-            MessagingModuleConfiguration.shared.storage.onOpenGroupAdded(url)
+            MessagingModuleConfiguration.shared.storage.onOpenGroupAdded(openGroup.server)
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(activity)
         }
         dismiss()
