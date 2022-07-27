@@ -479,7 +479,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                 )
                 val quoteId = cursor.getLong(cursor.getColumnIndexOrThrow(QUOTE_ID))
                 val quoteAuthor = cursor.getString(cursor.getColumnIndexOrThrow(QUOTE_AUTHOR))
-                val quoteText = cursor.getString(cursor.getColumnIndexOrThrow(QUOTE_BODY))
+                val quoteText = cursor.getString(cursor.getColumnIndexOrThrow(QUOTE_BODY)) // TODO: this should be the referenced quote
                 val quoteMissing = cursor.getInt(cursor.getColumnIndexOrThrow(QUOTE_MISSING)) == 1
                 val quoteAttachments = associatedAttachments
                     .filter { obj: DatabaseAttachment -> obj.isQuote }
@@ -502,7 +502,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                     quote = QuoteModel(
                         quoteId,
                         fromSerialized(quoteAuthor),
-                        quoteText,
+                        quoteText, // TODO: refactor this to use referenced quote
                         quoteMissing,
                         quoteAttachments
                     )
@@ -669,7 +669,6 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         var quoteAttachments: List<Attachment?>? = LinkedList()
         if (retrieved.quote != null) {
             contentValues.put(QUOTE_ID, retrieved.quote.id)
-            contentValues.put(QUOTE_BODY, retrieved.quote.text)
             contentValues.put(QUOTE_AUTHOR, retrieved.quote.author.serialize())
             contentValues.put(QUOTE_MISSING, if (retrieved.quote.missing) 1 else 0)
             quoteAttachments = retrieved.quote.attachments
@@ -816,7 +815,6 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         if (message.outgoingQuote != null) {
             contentValues.put(QUOTE_ID, message.outgoingQuote!!.id)
             contentValues.put(QUOTE_AUTHOR, message.outgoingQuote!!.author.serialize())
-            contentValues.put(QUOTE_BODY, message.outgoingQuote!!.text)
             contentValues.put(QUOTE_MISSING, if (message.outgoingQuote!!.missing) 1 else 0)
             quoteAttachments.addAll(message.outgoingQuote!!.attachments!!)
         }
@@ -949,9 +947,8 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         }
         val query = queryBuilder.toString()
         val db = databaseHelper.writableDatabase
-        val values = ContentValues(3)
+        val values = ContentValues(2)
         values.put(QUOTE_MISSING, 1)
-        values.put(QUOTE_BODY, "")
         values.put(QUOTE_AUTHOR, "")
         db!!.update(TABLE_NAME, values, query, null)
     }
@@ -1287,7 +1284,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                     if (message.outgoingQuote != null) Quote(
                         message.outgoingQuote!!.id,
                         message.outgoingQuote!!.author,
-                        message.outgoingQuote!!.text,
+                        message.outgoingQuote!!.text, // TODO: use the referenced message's content
                         message.outgoingQuote!!.missing,
                         SlideDeck(context, message.outgoingQuote!!.attachments!!)
                     ) else null,
