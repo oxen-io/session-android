@@ -34,4 +34,6 @@ object OpenGroupUrlParser {
     }
 }
 
-class V2OpenGroupInfo(val server: String, val room: String, val serverPublicKey: String)
+class V2OpenGroupInfo(val server: String, val room: String, val serverPublicKey: String) {
+    fun joinUrl() = "$server/$room?public_key=$serverPublicKey"
+}
