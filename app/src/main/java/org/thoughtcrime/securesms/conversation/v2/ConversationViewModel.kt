@@ -26,12 +26,6 @@ class ConversationViewModel(
     val recipient: Recipient?
         get() = repository.maybeGetRecipientForThreadId(threadId)
 
-    init {
-        _uiState.update {
-            it.copy(isOxenHostedOpenGroup = repository.isOxenHostedOpenGroup(threadId))
-        }
-    }
-
     fun saveDraft(text: String) {
         repository.saveDraft(threadId, text)
     }
