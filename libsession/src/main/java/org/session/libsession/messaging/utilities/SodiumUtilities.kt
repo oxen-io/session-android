@@ -2,6 +2,7 @@ package org.session.libsession.messaging.utilities
 
 import com.goterl.lazysodium.LazySodiumAndroid
 import com.goterl.lazysodium.SodiumAndroid
+import com.goterl.lazysodium.interfaces.AEAD
 import com.goterl.lazysodium.interfaces.GenericHash
 import com.goterl.lazysodium.interfaces.Hash
 import com.goterl.lazysodium.utils.Key
@@ -9,10 +10,12 @@ import com.goterl.lazysodium.utils.KeyPair
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.toHexString
-import kotlin.experimental.inv
+import org.whispersystems.curve25519.Curve25519
+import kotlin.experimental.xor
 
 object SodiumUtilities {
     private val sodium by lazy { LazySodiumAndroid(SodiumAndroid()) }
+    private val curve by lazy { Curve25519.getInstance(Curve25519.BEST) }
 
     private const val SCALAR_LENGTH: Int = 32 // crypto_core_ed25519_scalarbytes
     private const val NO_CLAMP_LENGTH: Int = 32 // crypto_scalarmult_ed25519_bytes
@@ -168,17 +171,16 @@ object SodiumUtilities {
         if (blindedId.prefix != IdPrefix.BLINDED) return false
         val k = generateBlindingFactor(serverPublicKey) ?: return false
 
-        // From the session id (ignoring 05 prefix) we have two possible ed25519 pubkeys; the first is the positive (which is what
-        // Signal's XEd25519 conversion always uses)
-        val xEd25519Key = Key.fromHexString(sessionId.publicKey).asBytes
+        // From the session id (ignoring 05 prefix) we have two possible ed25519 pubkeys;
+        // the first is the positive (which is what Signal's XEd25519 conversion always uses)
+        val xEd25519Key = curve.convertToEd25519PublicKey(Key.fromHexString(sessionId.publicKey).asBytes)
 
         // Blind the positive public key
         val pk1 = combineKeys(k, xEd25519Key) ?: return false
 
         // For the negative, what we're going to get out of the above is simply the negative of pk1, so flip the sign bit to get pk2
         //     pk2 = pk1[0:31] + bytes([pk1[31] ^ 0b1000_0000])
-        val pk2 = pk1.take(31).toByteArray() + listOf(pk1.last().inv()).toByteArray()
-
+        val pk2 = pk1.take(31).toByteArray() + listOf(pk1.last().xor(128.toByte())).toByteArray()
         return SessionId(IdPrefix.BLINDED, pk1).publicKey == blindedId.publicKey ||
                 SessionId(IdPrefix.BLINDED, pk2).publicKey == blindedId.publicKey
     }
@@ -186,25 +188,34 @@ object SodiumUtilities {
     fun encrypt(message: ByteArray, secretKey: ByteArray, nonce: ByteArray, additionalData: ByteArray? = null): ByteArray? {
         val authenticatedCipherText = ByteArray(message.size)
         return if (sodium.cryptoAeadChaCha20Poly1305IetfEncrypt(
-            authenticatedCipherText,
-            longArrayOf(0),
-            message,
-            message.size.toLong(),
-            additionalData,
-            (additionalData?.size ?: 0).toLong(),
-            null,
-            nonce,
-            secretKey
-        )) {
+                authenticatedCipherText,
+                longArrayOf(0),
+                message,
+                message.size.toLong(),
+                additionalData,
+                (additionalData?.size ?: 0).toLong(),
+                null,
+                nonce,
+                secretKey
+            )
+        ) {
             authenticatedCipherText
         } else null
     }
 
     fun decrypt(ciphertext: ByteArray, decryptionKey: ByteArray, nonce: ByteArray): ByteArray? {
-        val plaintext = ByteArray(0)
+        val plaintextSize = ciphertext.size - AEAD.CHACHA20POLY1305_ABYTES
+        val plaintext = ByteArray(plaintextSize)
         return if (sodium.cryptoAeadChaCha20Poly1305IetfDecrypt(
                 plaintext,
-                longArrayOf(0), null, ciphertext, ciphertext.size.toLong(), null, 0L, decryptionKey, nonce
+                longArrayOf(plaintextSize.toLong()),
+                null,
+                ciphertext,
+                ciphertext.size.toLong(),
+                null,
+                0L,
+                nonce,
+                decryptionKey
             )
         ) {
             plaintext

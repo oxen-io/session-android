@@ -73,17 +73,17 @@ object MessageDecrypter {
         val userEdKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: throw Error.NoUserED25519KeyPair
         val blindedKeyPair = SodiumUtilities.blindedKeyPair(serverPublicKey, userEdKeyPair) ?: throw Error.DecryptionFailed
         // Calculate the shared encryption key, receiving from A to B
-        val otherKeyBytes = otherBlindedPublicKey.removingIdPrefixIfNeeded().toByteArray()
+        val otherKeyBytes = Hex.fromStringCondensed(otherBlindedPublicKey.removingIdPrefixIfNeeded())
         val kA = if (isOutgoing) blindedKeyPair.publicKey.asBytes else otherKeyBytes
         val decryptionKey = SodiumUtilities.sharedBlindedEncryptionKey(
             userEdKeyPair.secretKey.asBytes,
             otherKeyBytes,
             kA,
-            if (isOutgoing) otherKeyBytes else userEdKeyPair.publicKey.asBytes
+            if (isOutgoing) otherKeyBytes else blindedKeyPair.publicKey.asBytes
         ) ?: throw Error.DecryptionFailed
 
         // v, ct, nc = data[0], data[1:-24], data[-24:size]
-        val version = byteArrayOf(message.first()).toString().toInt()
+        val version = message.first().toInt()
         if (version != 0) throw Error.DecryptionFailed
         val ciphertext = message.drop(1).dropLast(Box.NONCEBYTES).toByteArray()
         val nonce = message.takeLast(Box.NONCEBYTES).toByteArray()

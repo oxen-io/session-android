@@ -57,7 +57,7 @@ object MessageEncrypter {
         val userEdKeyPair =
             MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: throw Error.NoUserED25519KeyPair
         val blindedKeyPair = SodiumUtilities.blindedKeyPair(serverPublicKey, userEdKeyPair) ?: throw Error.SigningFailed
-        val recipientBlindedPublicKey = recipientBlindedId.removingIdPrefixIfNeeded().toByteArray()
+        val recipientBlindedPublicKey = Hex.fromStringCondensed(recipientBlindedId.removingIdPrefixIfNeeded())
 
         // Calculate the shared encryption key, sending from A to B
         val encryptionKey = SodiumUtilities.sharedBlindedEncryptionKey(
