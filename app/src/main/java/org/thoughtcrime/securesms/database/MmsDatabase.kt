@@ -62,7 +62,6 @@ import org.thoughtcrime.securesms.database.SmsDatabase.InsertListener
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord
 import org.thoughtcrime.securesms.database.model.MessageRecord
-import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.database.model.NotificationMmsMessageRecord
 import org.thoughtcrime.securesms.database.model.Quote
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent.Companion.get
@@ -953,24 +952,6 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         db!!.update(TABLE_NAME, values, query, null)
     }
 
-    fun deleteQuotedFromMessages(toDeleteRecord: MessageRecord?) {
-        if (toDeleteRecord == null) {
-            return
-        }
-        val query = "$THREAD_ID = ?"
-        rawQuery(query, arrayOf(toDeleteRecord.threadId.toString())).use { threadMmsCursor ->
-            val reader = readerFor(threadMmsCursor)
-            var messageRecord: MmsMessageRecord? = reader.next as MmsMessageRecord?
-            while (messageRecord != null) {
-                if (messageRecord.quote != null && toDeleteRecord.dateSent == messageRecord.quote?.id) {
-                    setQuoteMissing(messageRecord.id)
-                }
-                messageRecord = reader.next as MmsMessageRecord?
-            }
-            reader.close()
-        }
-    }
-
     /**
      * Delete all the messages in single queries where possible
      * @param messageIds a String array representation of regularly Long types representing message IDs
@@ -994,13 +975,6 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         queue(Runnable { attachmentDatabase.deleteAttachmentsForMessages(messageIds) })
         val groupReceiptDatabase = get(context).groupReceiptDatabase()
         groupReceiptDatabase.deleteRowsForMessages(messageIds)
-        val toDeleteList: MutableList<MessageRecord> = ArrayList()
-        getMessages(idsAsString).use { messageCursor ->
-            while (messageCursor.moveToNext()) {
-                toDeleteList.add(readerFor(messageCursor).current)
-            }
-        }
-        deleteQuotedFromMessages(toDeleteList)
         val database = databaseHelper.writableDatabase
         database.delete(TABLE_NAME, idsAsString, null)
         notifyConversationListListeners()
@@ -1014,13 +988,8 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         queue(Runnable { attachmentDatabase.deleteAttachmentsForMessage(messageId) })
         val groupReceiptDatabase = get(context).groupReceiptDatabase()
         groupReceiptDatabase.deleteRowsForMessage(messageId)
-        var toDelete: MessageRecord?
-        getMessage(messageId).use { messageCursor ->
-            toDelete = readerFor(messageCursor).next
-        }
-        deleteQuotedFromMessages(toDelete)
         val database = databaseHelper.writableDatabase
-        database!!.delete(TABLE_NAME, ID_WHERE, arrayOf<String>(messageId.toString()))
+        database!!.delete(TABLE_NAME, ID_WHERE, arrayOf(messageId.toString()))
         val threadDeleted = get(context).threadDatabase().update(threadId, false)
         notifyConversationListeners(threadId)
         notifyStickerListeners()
@@ -1463,8 +1432,9 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         private fun getQuote(cursor: Cursor): Quote? {
             val quoteId = cursor.getLong(cursor.getColumnIndexOrThrow(QUOTE_ID))
             val quoteAuthor = cursor.getString(cursor.getColumnIndexOrThrow(QUOTE_AUTHOR))
-            val quoteText = cursor.getString(cursor.getColumnIndexOrThrow(QUOTE_BODY))
-            val quoteMissing = cursor.getInt(cursor.getColumnIndexOrThrow(QUOTE_MISSING)) == 1
+            val retrievedQuote = get(context).mmsSmsDatabase().getMessageFor(quoteId, quoteAuthor)
+            val quoteText = retrievedQuote?.body
+            val quoteMissing = retrievedQuote == null
             val attachments = get(context).attachmentDatabase().getAttachment(cursor)
             val quoteAttachments: List<Attachment?>? =
                 Stream.of(attachments).filter { obj: DatabaseAttachment? -> obj!!.isQuote }
