@@ -93,8 +93,9 @@ object MessageDecrypter {
         if (innerBytes.size < Sign.PUBLICKEYBYTES) throw Error.DecryptionFailed
 
         // Split up: the last 32 bytes are the sender's *unblinded* ed25519 key
-        val plaintext = innerBytes.slice(0..innerBytes.size - Sign.PUBLICKEYBYTES).toByteArray()
-        val senderEdPublicKey = innerBytes.slice((innerBytes.size - Sign.PUBLICKEYBYTES..innerBytes.size)).toByteArray()
+        val plaintextEndIndex = innerBytes.size - Sign.PUBLICKEYBYTES
+        val plaintext = innerBytes.slice(0..plaintextEndIndex).toByteArray()
+        val senderEdPublicKey = innerBytes.slice((plaintextEndIndex until innerBytes.size)).toByteArray()
 
         // Verify that the inner senderEdPublicKey (A) yields the same outer kA we got with the message
         val blindingFactor = SodiumUtilities.generateBlindingFactor(serverPublicKey) ?: throw Error.DecryptionFailed
