@@ -86,7 +86,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/medium_spacing"
         android:ellipsize="end"
-        android:maxLines="3"
+        android:maxLines="2"
         android:textColor="@color/text"
         android:textSize="@dimen/small_font_size"
         app:layout_constraintBottom_toBottomOf="parent"

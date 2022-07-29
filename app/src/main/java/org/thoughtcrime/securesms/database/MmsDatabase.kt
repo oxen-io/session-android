@@ -1568,8 +1568,6 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                     ")) AS " + AttachmentDatabase.ATTACHMENT_JSON_ALIAS
         )
         private const val RAW_ID_WHERE: String = "$TABLE_NAME._id = ?"
-        private const val RAW_ID_IN: String = "$TABLE_NAME._id IN (?)"
         const val createMessageRequestResponseCommand: String = "ALTER TABLE $TABLE_NAME ADD COLUMN $MESSAGE_REQUEST_RESPONSE INTEGER DEFAULT 0;"
-        const val DROP_QUOTE_DATA_COPY = "ALTER TABLE $TABLE_NAME REMOVE COLUMN $QUOTE_BODY;"
     }
 }

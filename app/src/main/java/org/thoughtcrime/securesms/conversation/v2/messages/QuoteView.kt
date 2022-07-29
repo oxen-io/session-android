@@ -67,10 +67,6 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     fun bind(authorPublicKey: String, body: String?, attachments: SlideDeck?, thread: Recipient,
         isOutgoingMessage: Boolean, isOpenGroupInvitation: Boolean, threadID: Long,
         isOriginalMissing: Boolean, glide: GlideRequests) {
-        // Reduce the max body text view line count to 2 if this is a group thread because
-        // we'll be showing the author text view and we don't want the overall quote view height
-        // to get too big.
-        binding.quoteViewBodyTextView.maxLines = if (thread.isGroupRecipient) 2 else 3
         // Author
         if (thread.isGroupRecipient) {
             val author = contactDb.getContactWithSessionID(authorPublicKey)
