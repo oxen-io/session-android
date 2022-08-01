@@ -21,6 +21,7 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Base64
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.successBackground
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
@@ -168,8 +169,12 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                 .setContent(ByteString.copyFrom(encodedMessage))
                 .setSource(it.sender)
                 .build()
-            val (message, proto) = MessageReceiver.parse(envelope.toByteArray(), it.id, fromOutbox, serverPublicKey)
-            MessageReceiver.handle(message, proto, null)
+            try {
+                val (message, proto) = MessageReceiver.parse(envelope.toByteArray(), it.id, fromOutbox, serverPublicKey)
+                MessageReceiver.handle(message, proto, null)
+            } catch (e: Exception) {
+                Log.e("Loki", "Couldn't handle direct message", e)
+            }
         }
     }
 

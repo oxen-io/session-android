@@ -62,7 +62,7 @@ object MessageReceiver {
         var plaintext: ByteArray? = null
         var sender: String? = null
         var groupPublicKey: String? = null
-        if (isOpenGroupMessage && isOutgoing == null) {
+        if (isOpenGroupMessage) {
             plaintext = envelope.content.toByteArray()
             sender = envelope.source
         } else {

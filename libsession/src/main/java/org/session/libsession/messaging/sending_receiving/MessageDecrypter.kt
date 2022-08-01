@@ -94,7 +94,7 @@ object MessageDecrypter {
 
         // Split up: the last 32 bytes are the sender's *unblinded* ed25519 key
         val plaintextEndIndex = innerBytes.size - Sign.PUBLICKEYBYTES
-        val plaintext = innerBytes.slice(0..plaintextEndIndex).toByteArray()
+        val plaintext = innerBytes.slice(0 until plaintextEndIndex).toByteArray()
         val senderEdPublicKey = innerBytes.slice((plaintextEndIndex until innerBytes.size)).toByteArray()
 
         // Verify that the inner senderEdPublicKey (A) yields the same outer kA we got with the message
