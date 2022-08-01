@@ -170,7 +170,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                 .setSource(it.sender)
                 .build()
             try {
-                val (message, proto) = MessageReceiver.parse(envelope.toByteArray(), it.id, fromOutbox, serverPublicKey)
+                val (message, proto) = MessageReceiver.parse(envelope.toByteArray(), null, fromOutbox, serverPublicKey)
                 MessageReceiver.handle(message, proto, null)
             } catch (e: Exception) {
                 Log.e("Loki", "Couldn't handle direct message", e)
