@@ -48,6 +48,7 @@ object MessageReceiver {
         data: ByteArray,
         openGroupServerID: Long?,
         isOutgoing: Boolean? = null,
+        otherBlindedPublicKey: String? = null,
         openGroupPublicKey: String? = null,
     ): Pair<Message, SignalServiceProtos.Content> {
         val storage = MessagingModuleConfiguration.shared.storage
@@ -70,10 +71,11 @@ object MessageReceiver {
                 SignalServiceProtos.Envelope.Type.SESSION_MESSAGE -> {
                     if (IdPrefix.fromValue(envelope.source) == IdPrefix.BLINDED) {
                         openGroupPublicKey ?: throw Error.InvalidGroupPublicKey
+                        otherBlindedPublicKey ?: throw Error.DecryptionFailed
                         val decryptionResult = MessageDecrypter.decryptBlinded(
                             ciphertext.toByteArray(),
                             isOutgoing ?: false,
-                            envelope.source,
+                            otherBlindedPublicKey,
                             openGroupPublicKey
                         )
                         plaintext = decryptionResult.first

@@ -221,19 +221,34 @@ object MessageSender {
         if (message.sentTimestamp == null) {
             message.sentTimestamp = System.currentTimeMillis()
         }
-        val openGroup = storage.getOpenGroup(message.threadID!!)
         val userEdKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!
         var serverCapabilities = listOf<String>()
-        var blindedKeyPair: KeyPair? = null
-        if (openGroup != null) {
-            serverCapabilities = storage.getServerCapabilities(openGroup.server)
-            blindedKeyPair = SodiumUtilities.blindedKeyPair(openGroup.publicKey, userEdKeyPair)
+        var blindedPublicKey: ByteArray? = null
+        when(destination) {
+            is Destination.OpenGroup -> {
+                serverCapabilities = storage.getServerCapabilities(destination.server)
+                storage.getOpenGroup(destination.server, destination.roomToken)?.let {
+                    blindedPublicKey = SodiumUtilities.blindedKeyPair(it.publicKey, userEdKeyPair)?.publicKey?.asBytes
+                }
+            }
+            is Destination.OpenGroupInbox -> {
+                serverCapabilities = storage.getServerCapabilities(destination.server)
+                blindedPublicKey = SodiumUtilities.blindedKeyPair(destination.serverPublicKey, userEdKeyPair)?.publicKey?.asBytes
+            }
+            is Destination.LegacyOpenGroup -> {
+                serverCapabilities = storage.getServerCapabilities(destination.server)
+                storage.getOpenGroup(destination.server, destination.roomToken)?.let {
+                    blindedPublicKey = SodiumUtilities.blindedKeyPair(it.publicKey, userEdKeyPair)?.publicKey?.asBytes
+                }
+            }
+            else -> {}
         }
-        message.sender = if (serverCapabilities.contains("blind") && blindedKeyPair != null) {
-            SessionId(IdPrefix.BLINDED, blindedKeyPair.publicKey.asBytes).hexString
+        val messageSender = if (serverCapabilities.contains("blind") && blindedPublicKey != null) {
+            SessionId(IdPrefix.BLINDED, blindedPublicKey!!).hexString
         } else {
             SessionId(IdPrefix.UN_BLINDED, userEdKeyPair.publicKey.asBytes).hexString
         }
+        message.sender = messageSender
         // Set the failure handler (need it here already for precondition failure handling)
         fun handleFailure(error: Exception) {
             handleFailedMessageSend(message, error)

@@ -74,7 +74,7 @@ object MessageEncrypter {
         val nonce = sodium.nonce(24)
         val ciphertext = SodiumUtilities.encrypt(message, encryptionKey, nonce) ?: throw Error.EncryptionFailed
         // data = b'\x00' + ciphertext + nonce
-        return "0".toByteArray() + ciphertext + nonce
+        return byteArrayOf(0.toByte()) + ciphertext + nonce
     }
 
 }
