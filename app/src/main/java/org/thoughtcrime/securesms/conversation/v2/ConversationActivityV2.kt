@@ -182,20 +182,24 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         var threadId = intent.getLongExtra(THREAD_ID, -1L)
         if (threadId == -1L) {
             intent.getParcelableExtra<Address>(ADDRESS)?.let { it ->
-                val sessionId = SessionId(it.serialize())
-                val openGroup = lokiThreadDb.getOpenGroupChat(intent.getLongExtra(FROM_GROUP_THREAD_ID, -1))
-                val address = if (sessionId.prefix == IdPrefix.BLINDED && openGroup != null) {
-                    ContactUtilities.getBlindedIdMapping(this, sessionId.hexString, openGroup.publicKey)?.let {
-                        fromSerialized(it.sessionId)
-                    } ?: run {
-                        val openGroupInboxId = "${openGroup.server}!${openGroup.publicKey}!${sessionId.hexString}".toByteArray()
-                        fromSerialized(GroupUtil.getEncodedOpenGroupInboxID(openGroupInboxId))
+                threadId = threadDb.getThreadIdIfExistsFor(it.serialize())
+                if (threadId == -1L) {
+                    val sessionId = SessionId(it.serialize())
+                    val openGroup = lokiThreadDb.getOpenGroupChat(intent.getLongExtra(FROM_GROUP_THREAD_ID, -1))
+                    val address = if (sessionId.prefix == IdPrefix.BLINDED && openGroup != null) {
+                        ContactUtilities.getBlindedIdMapping(this, sessionId.hexString, openGroup.publicKey)?.let {
+                            fromSerialized(it.sessionId)
+                        } ?: run {
+                            val openGroupInboxId =
+                                "${openGroup.server}!${openGroup.publicKey}!${sessionId.hexString}".toByteArray()
+                            fromSerialized(GroupUtil.getEncodedOpenGroupInboxID(openGroupInboxId))
+                        }
+                    } else {
+                        it
                     }
-                } else {
-                    it
+                    val recipient = Recipient.from(this, address, false)
+                    threadId = threadDb.getOrCreateThreadIdFor(recipient)
                 }
-                val recipient = Recipient.from(this, address, false)
-                threadId = threadDb.getOrCreateThreadIdFor(recipient)
             } ?: finish()
         }
         viewModelFactory.create(threadId)
