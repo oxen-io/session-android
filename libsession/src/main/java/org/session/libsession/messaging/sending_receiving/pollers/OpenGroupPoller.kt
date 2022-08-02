@@ -11,6 +11,8 @@ import org.session.libsession.messaging.jobs.MessageReceiveJob
 import org.session.libsession.messaging.jobs.MessageReceiveParameters
 import org.session.libsession.messaging.jobs.OpenGroupDeleteJob
 import org.session.libsession.messaging.jobs.TrimThreadJob
+import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
+import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.Endpoint
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
@@ -177,6 +179,12 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                     if (fromOutbox) it.recipient else it.sender,
                     serverPublicKey
                 )
+                val syncTarget = it.recipient
+                if (message is VisibleMessage) {
+                    message.syncTarget = syncTarget
+                } else if (message is ExpirationTimerUpdate) {
+                    message.syncTarget = syncTarget
+                }
                 MessageReceiver.handle(message, proto, null)
             } catch (e: Exception) {
                 Log.e("Loki", "Couldn't handle direct message", e)

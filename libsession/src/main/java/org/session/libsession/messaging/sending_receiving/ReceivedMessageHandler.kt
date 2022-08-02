@@ -219,8 +219,7 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage,
     // Get or create thread
     // FIXME: In case this is an open group this actually * doesn't * create the thread if it doesn't yet
     //        exist. This is intentional, but it's very non-obvious.
-    val threadID = storage.getOrCreateThreadIdFor(message.syncTarget
-        ?: messageSender!!, message.groupPublicKey, openGroupID)
+    val threadID = storage.getOrCreateThreadIdFor(message.syncTarget ?: messageSender!!, message.groupPublicKey, openGroupID)
     if (threadID < 0) {
         // Thread doesn't exist; should only be reached in a case where we are processing open group messages for a no longer existent thread
         throw MessageReceiver.Error.NoThread
