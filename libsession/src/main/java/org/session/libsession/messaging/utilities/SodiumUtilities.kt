@@ -186,7 +186,7 @@ object SodiumUtilities {
     }
 
     fun encrypt(message: ByteArray, secretKey: ByteArray, nonce: ByteArray, additionalData: ByteArray? = null): ByteArray? {
-        val authenticatedCipherText = ByteArray(message.size)
+        val authenticatedCipherText = ByteArray(message.size + AEAD.CHACHA20POLY1305_ABYTES)
         return if (sodium.cryptoAeadXChaCha20Poly1305IetfEncrypt(
                 authenticatedCipherText,
                 longArrayOf(0),
