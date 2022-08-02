@@ -46,7 +46,6 @@ import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.SearchUtil
 import org.thoughtcrime.securesms.util.UiModeUtilities
 import org.thoughtcrime.securesms.util.getColorWithID
-import org.thoughtcrime.securesms.util.toPx
 import java.util.Locale
 import kotlin.math.roundToInt
 
@@ -94,7 +93,7 @@ class VisibleMessageContentView : LinearLayout {
             binding.deletedMessageView.root.isVisible = false
         }
         // clear the
-        binding.bodyTextView.text = null
+        binding.bodyTextView.text = ""
 
 
         binding.quoteView.root.isVisible = message is MmsMessageRecord && message.quote != null
@@ -131,9 +130,7 @@ class VisibleMessageContentView : LinearLayout {
                     delegate?.scrollToMessageIfPossible(quote.id)
                 }
             }
-            val layoutParams = binding.quoteView.root.layoutParams as MarginLayoutParams
             val hasMedia = message.slideDeck.asAttachments().isNotEmpty()
-            binding.quoteView.root.minWidth = if (hasMedia) 0 else toPx(300,context.resources)
         }
 
         if (message is MmsMessageRecord) {
@@ -214,11 +211,6 @@ class VisibleMessageContentView : LinearLayout {
         }
 
         binding.bodyTextView.isVisible = message.body.isNotEmpty() && !hideBody
-
-        // set it to use constraints if not only a text message, otherwise wrap content to whatever width it wants
-        val params = binding.bodyTextView.layoutParams
-        params.width = if (onlyBodyMessage || binding.barrierViewsGone()) ViewGroup.LayoutParams.MATCH_PARENT else 0
-        binding.bodyTextView.layoutParams = params
 
         if (message.body.isNotEmpty() && !hideBody) {
             val color = getTextColor(context, message)
