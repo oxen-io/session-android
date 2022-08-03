@@ -3,6 +3,7 @@ package org.session.libsession.messaging.sending_receiving.pollers
 import com.google.protobuf.ByteString
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.functional.map
+import org.session.libsession.messaging.BlindedIdMapping
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
 import org.session.libsession.messaging.jobs.GroupAvatarDownloadJob
@@ -155,9 +156,10 @@ class OpenGroupPoller(private val server: String, private val executorService: S
     ) {
         if (messages.isEmpty()) return
         val storage = MessagingModuleConfiguration.shared.storage
-        val serverPublicKey = storage.getOpenGroupPublicKey(server)
+        val serverPublicKey = storage.getOpenGroupPublicKey(server)!!
         val sortedMessages = messages.sortedBy { it.id }
         val lastMessageId = sortedMessages.last().id
+        val mappingCache = mutableMapOf<String, BlindedIdMapping>()
         if (fromOutbox) {
             storage.setLastOutboxMessageId(server, lastMessageId)
         } else {
@@ -179,11 +181,20 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                     if (fromOutbox) it.recipient else it.sender,
                     serverPublicKey
                 )
-                val syncTarget = it.recipient
-                if (message is VisibleMessage) {
-                    message.syncTarget = syncTarget
-                } else if (message is ExpirationTimerUpdate) {
-                    message.syncTarget = syncTarget
+                if (fromOutbox) {
+                    val mapping = mappingCache[it.recipient] ?: storage.getOrCreateBlindedIdMapping(
+                        it.recipient,
+                        server,
+                        serverPublicKey,
+                        true
+                    )
+                    val syncTarget = mapping.sessionId ?: it.recipient
+                    if (message is VisibleMessage) {
+                        message.syncTarget = syncTarget
+                    } else if (message is ExpirationTimerUpdate) {
+                        message.syncTarget = syncTarget
+                    }
+                    mappingCache[it.recipient] = mapping
                 }
                 MessageReceiver.handle(message, proto, null)
             } catch (e: Exception) {

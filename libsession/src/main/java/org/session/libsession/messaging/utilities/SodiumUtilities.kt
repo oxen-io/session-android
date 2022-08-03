@@ -249,8 +249,3 @@ class SessionId {
         get() = prefix?.value + publicKey
 }
 
-data class BlindedIdMapping(
-    val blindedId: String,
-    val sessionId: String,
-    val serverPublicKey: String
-)
