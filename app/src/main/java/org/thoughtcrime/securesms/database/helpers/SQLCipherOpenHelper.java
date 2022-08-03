@@ -14,6 +14,7 @@ import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.crypto.DatabaseSecret;
 import org.thoughtcrime.securesms.database.AttachmentDatabase;
+import org.thoughtcrime.securesms.database.BlindedIdMappingDatabase;
 import org.thoughtcrime.securesms.database.DraftDatabase;
 import org.thoughtcrime.securesms.database.GroupDatabase;
 import org.thoughtcrime.securesms.database.GroupReceiptDatabase;
@@ -165,6 +166,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
     db.execSQL(LokiAPIDatabase.DROP_LEGACY_LAST_HASH);
     db.execSQL(LokiAPIDatabase.INSERT_RECEIVED_HASHES_DATA);
     db.execSQL(LokiAPIDatabase.DROP_LEGACY_RECEIVED_HASHES);
+    db.execSQL(BlindedIdMappingDatabase.CREATE_BLINDED_ID_MAPPING_TABLE_COMMAND);
 
     executeStatements(db, SmsDatabase.CREATE_INDEXS);
     executeStatements(db, MmsDatabase.CREATE_INDEXS);
@@ -377,6 +379,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
         db.execSQL(LokiAPIDatabase.getCreateServerCapabilitiesCommand());
         db.execSQL(LokiAPIDatabase.getCreateLastInboxMessageServerIdCommand());
         db.execSQL(LokiAPIDatabase.getCreateLastOutboxMessageServerIdCommand());
+        db.execSQL(BlindedIdMappingDatabase.CREATE_BLINDED_ID_MAPPING_TABLE_COMMAND);
       }
 
       db.setTransactionSuccessful();

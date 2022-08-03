@@ -28,6 +28,7 @@ import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAt
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
+import org.session.libsession.messaging.BlindedIdMapping
 import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.messaging.utilities.UpdateMessageData
@@ -737,12 +738,34 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
             threadDB.setHasSent(threadId, true)
         } else {
             val mmsDb = DatabaseComponent.get(context).mmsDatabase()
-            val senderAddress = fromSerialized(senderPublicKey)
-            val requestSender = Recipient.from(context, senderAddress, false)
-            recipientDb.setApprovedMe(requestSender, true)
+            val smsDb = DatabaseComponent.get(context).mmsDatabase()
+            val sender = Recipient.from(context, fromSerialized(senderPublicKey), false)
+            val threadId = threadDB.getOrCreateThreadIdFor(sender)
+            val mappingDb = DatabaseComponent.get(context).blindedIdMappingDatabase()
+            val mappings = mutableListOf<BlindedIdMapping>()
+            threadDB.readerFor(threadDB.blindedConversationList).use { reader ->
+                while (reader.next != null) {
+                    mappings.addAll(mappingDb.getBlindedIdMapping(reader.current.recipient.address.serialize()))
+                }
+            }
+            val blindedContactIds = mutableListOf<String>()
+            for (mapping in mappings) {
+                if (!SodiumUtilities.sessionId(senderPublicKey, mapping.blindedId, mapping.serverId)) {
+                    continue
+                }
+                mappingDb.addBlindedIdMapping(mapping.copy(sessionId = senderPublicKey))
+
+                blindedContactIds.add(mapping.blindedId)
+
+                val blindedThreadId = threadDB.getOrCreateThreadIdFor(Recipient.from(context, fromSerialized(mapping.blindedId), false))
+                mmsDb.updateThreadId(blindedThreadId, threadId)
+                smsDb.updateThreadId(blindedThreadId, threadId)
+                threadDB.deleteConversation(blindedThreadId)
+            }
+            recipientDb.setApprovedMe(sender, true)
 
             val message = IncomingMediaMessage(
-                senderAddress,
+                sender.address,
                 response.sentTimestamp!!,
                 -1,
                 0,
@@ -757,7 +780,6 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
                 Optional.absent(),
                 Optional.absent()
             )
-            val threadId = getOrCreateThreadIdFor(senderAddress)
             mmsDb.insertSecureDecryptedMessageInbox(message, threadId, runIncrement = true, runThreadUpdate = true)
         }
     }
@@ -810,4 +832,37 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         DatabaseComponent.get(context).lokiAPIDatabase().removeLastOutboxMessageId(server)
     }
 
+    override fun getOrCreateBlindedIdMapping(
+        blindedId: String,
+        server: String,
+        serverPublicKey: String,
+        fromOutbox: Boolean
+    ): BlindedIdMapping {
+        val db = DatabaseComponent.get(context).blindedIdMappingDatabase()
+        val mapping = db.getBlindedIdMapping(blindedId).firstOrNull() ?: BlindedIdMapping(blindedId, null, server, serverPublicKey)
+        if (mapping.sessionId != null) {
+            return mapping
+        }
+        val threadDb = DatabaseComponent.get(context).threadDatabase()
+        threadDb.readerFor(threadDb.conversationList).use { reader ->
+            while (reader.next != null) {
+                val recipient = reader.current.recipient
+                val sessionId = recipient.address.serialize()
+                if (!recipient.isGroupRecipient && SodiumUtilities.sessionId(sessionId, blindedId, serverPublicKey)) {
+                    val contactMapping = mapping.copy(sessionId = sessionId)
+                    db.addBlindedIdMapping(contactMapping)
+                    return@use contactMapping
+                }
+            }
+        }
+        db.getBlindedIdMappingsExceptFor(server).forEach {
+            if (SodiumUtilities.sessionId(it.sessionId!!, blindedId, serverPublicKey)) {
+                val otherMapping = mapping.copy(sessionId = it.sessionId)
+                db.addBlindedIdMapping(otherMapping)
+                return otherMapping
+            }
+        }
+        db.addBlindedIdMapping(mapping)
+        return mapping
+    }
 }

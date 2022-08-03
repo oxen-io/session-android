@@ -112,6 +112,7 @@ import org.thoughtcrime.securesms.database.MmsDatabase
 import org.thoughtcrime.securesms.database.MmsSmsDatabase
 import org.thoughtcrime.securesms.database.SessionContactDatabase
 import org.thoughtcrime.securesms.database.SmsDatabase
+import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
@@ -133,7 +134,6 @@ import org.thoughtcrime.securesms.mms.VideoSlide
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.util.ActivityDispatcher
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
-import org.thoughtcrime.securesms.util.ContactUtilities
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.SaveAttachmentTask
@@ -171,6 +171,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     @Inject lateinit var smsDb: SmsDatabase
     @Inject lateinit var mmsDb: MmsDatabase
     @Inject lateinit var lokiMessageDb: LokiMessageDatabase
+    @Inject lateinit var storage: Storage
     @Inject lateinit var viewModelFactory: ConversationViewModel.AssistedFactory
 
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels
@@ -187,8 +188,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     val sessionId = SessionId(it.serialize())
                     val openGroup = lokiThreadDb.getOpenGroupChat(intent.getLongExtra(FROM_GROUP_THREAD_ID, -1))
                     val address = if (sessionId.prefix == IdPrefix.BLINDED && openGroup != null) {
-                        ContactUtilities.getBlindedIdMapping(this, sessionId.hexString, openGroup.publicKey)?.let {
-                            fromSerialized(it.sessionId)
+                        storage.getOrCreateBlindedIdMapping(sessionId.hexString, openGroup.server, openGroup.publicKey).sessionId?.let {
+                            fromSerialized(it)
                         } ?: run {
                             val openGroupInboxId =
                                 "${openGroup.server}!${openGroup.publicKey}!${sessionId.hexString}".toByteArray()

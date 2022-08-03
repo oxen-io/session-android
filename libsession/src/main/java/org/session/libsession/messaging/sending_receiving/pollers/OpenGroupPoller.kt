@@ -155,7 +155,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
     ) {
         if (messages.isEmpty()) return
         val storage = MessagingModuleConfiguration.shared.storage
-        val serverPublicKey = storage.getOpenGroupPublicKey(server)
+        val serverPublicKey = storage.getOpenGroupPublicKey(server)!!
         val sortedMessages = messages.sortedBy { it.id }
         val lastMessageId = sortedMessages.last().id
         if (fromOutbox) {
@@ -179,11 +179,19 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                     if (fromOutbox) it.recipient else it.sender,
                     serverPublicKey
                 )
-                val syncTarget = it.recipient
-                if (message is VisibleMessage) {
-                    message.syncTarget = syncTarget
-                } else if (message is ExpirationTimerUpdate) {
-                    message.syncTarget = syncTarget
+                if (fromOutbox) {
+                    val mapping = storage.getOrCreateBlindedIdMapping(
+                        it.recipient,
+                        server,
+                        serverPublicKey,
+                        true
+                    )
+                    val syncTarget = mapping.sessionId ?: it.recipient
+                    if (message is VisibleMessage) {
+                        message.syncTarget = syncTarget
+                    } else if (message is ExpirationTimerUpdate) {
+                        message.syncTarget = syncTarget
+                    }
                 }
                 MessageReceiver.handle(message, proto, null)
             } catch (e: Exception) {
