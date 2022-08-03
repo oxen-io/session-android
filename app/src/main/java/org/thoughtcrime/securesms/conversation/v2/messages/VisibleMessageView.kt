@@ -41,6 +41,7 @@ import org.thoughtcrime.securesms.util.getColorWithID
 import org.thoughtcrime.securesms.util.toDp
 import org.thoughtcrime.securesms.util.toPx
 import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.min
@@ -152,18 +153,15 @@ class VisibleMessageView : LinearLayout {
                     binding.moderatorIconImageView.isVisible = !message.isOutgoing && isModerator
                 }
             }
-            binding.senderNameTextView.isVisible = isStartOfMessageCluster
-            val context =
-                if (thread.isOpenGroupRecipient) ContactContext.OPEN_GROUP else ContactContext.REGULAR
-            binding.senderNameTextView.text = contact?.displayName(context) ?: senderSessionID
-        } else {
-            binding.senderNameTextView.visibility = View.GONE
         }
+        binding.senderNameTextView.isVisible = !message.isOutgoing && (isStartOfMessageCluster && (isGroupThread || snIsSelected))
+        val contactContext =
+            if (thread.isOpenGroupRecipient) ContactContext.OPEN_GROUP else ContactContext.REGULAR
+        binding.senderNameTextView.text = contact?.displayName(contactContext) ?: senderSessionID
         // Date break
-        binding.dateBreakTextView.showDateBreak(message, previous)
-        // Timestamp
-        // binding.messageTimestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), message.timestamp)
-        // Set inter-message spacing
+        val showDateBreak = isStartOfMessageCluster || snIsSelected
+        binding.dateBreakTextView.text = if (showDateBreak) DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), message.timestamp) else null
+        binding.dateBreakTextView.isVisible = showDateBreak
         // Message status indicator
         val (iconID, iconColor) = getMessageStatusImage(message)
         if (iconID != null) {

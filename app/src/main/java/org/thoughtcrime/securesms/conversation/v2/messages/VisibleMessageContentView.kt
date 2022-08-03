@@ -13,11 +13,11 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
@@ -75,7 +75,7 @@ class VisibleMessageContentView : LinearLayout {
         val color = ThemeUtil.getThemedColor(context, colorID)
         val filter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(color, BlendModeCompat.SRC_IN)
         background.colorFilter = filter
-        setBackground(background)
+        binding.contentParent.background = background
 
         val onlyBodyMessage = message is SmsMessageRecord
         val mediaThumbnailMessage = contactIsTrusted && message is MmsMessageRecord && message.slideDeck.thumbnailSlide != null
@@ -99,10 +99,6 @@ class VisibleMessageContentView : LinearLayout {
         binding.quoteView.root.isVisible = message is MmsMessageRecord && message.quote != null
 
         binding.linkPreviewView.isVisible = message is MmsMessageRecord && message.linkPreviews.isNotEmpty()
-
-        val linkPreviewLayout = binding.linkPreviewView.layoutParams
-        linkPreviewLayout.width = if (mediaThumbnailMessage) 0 else ViewGroup.LayoutParams.WRAP_CONTENT
-        binding.linkPreviewView.layoutParams = linkPreviewLayout
 
         binding.untrustedView.root.isVisible = !contactIsTrusted && message is MmsMessageRecord && message.quote == null && message.linkPreviews.isEmpty()
         binding.voiceMessageView.root.isVisible = contactIsTrusted && message is MmsMessageRecord && message.slideDeck.audioSlide != null
@@ -195,6 +191,9 @@ class VisibleMessageContentView : LinearLayout {
                         isStart = isStartOfMessageCluster,
                         isEnd = isEndOfMessageCluster
                 )
+                val layoutParams = binding.albumThumbnailView.layoutParams as ConstraintLayout.LayoutParams
+                layoutParams.horizontalBias = if (message.isOutgoing) 1f else 0f
+                binding.albumThumbnailView.layoutParams = layoutParams
                 onContentClick.add { event ->
                     binding.albumThumbnailView.calculateHitObject(event, message, thread)
                 }
