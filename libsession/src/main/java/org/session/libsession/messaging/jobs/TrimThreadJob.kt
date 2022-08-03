@@ -15,14 +15,18 @@ class TrimThreadJob(val threadId: Long, val openGroupId: String?) : Job {
         const val KEY: String = "TrimThreadJob"
         const val THREAD_ID = "thread_id"
         const val OPEN_GROUP_ID = "open_group"
+
+        const val TRIM_TIME_LIMIT = 15552000000L;
+        const val THREAD_LENGTH_TRIGGER_SIZE = 2000
+
     }
 
     override fun execute() {
         val context = MessagingModuleConfiguration.shared.context
         val trimmingEnabled = TextSecurePreferences.isThreadLengthTrimmingEnabled(context)
-        val threadLengthLimit = TextSecurePreferences.getThreadTrimLength(context)
+
         if (trimmingEnabled) {
-            MessagingModuleConfiguration.shared.storage.trimThread(threadId, threadLengthLimit)
+            MessagingModuleConfiguration.shared.storage.trimThread(threadId, THREAD_LENGTH_TRIGGER_SIZE)
         }
         delegate?.handleJobSucceeded(this)
     }
