@@ -851,7 +851,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
                 if (!recipient.isGroupRecipient && SodiumUtilities.sessionId(sessionId, blindedId, serverPublicKey)) {
                     val contactMapping = mapping.copy(sessionId = sessionId)
                     db.addBlindedIdMapping(contactMapping)
-                    return@use contactMapping
+                    return contactMapping
                 }
             }
         }

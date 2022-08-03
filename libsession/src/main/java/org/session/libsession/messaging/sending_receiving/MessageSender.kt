@@ -325,7 +325,7 @@ object MessageSender {
         val userPublicKey = storage.getUserPublicKey()!!
         // Ignore future self-sends
         storage.addReceivedMessageTimestamp(message.sentTimestamp!!)
-        storage.getMessageIdInDatabase(message.sentTimestamp!!, message.sender?:userPublicKey)?.let { messageID ->
+        storage.getMessageIdInDatabase(message.sentTimestamp!!, userPublicKey)?.let { messageID ->
             if (openGroupSentTimestamp != -1L && message is VisibleMessage) {
                 storage.addReceivedMessageTimestamp(openGroupSentTimestamp)
                 storage.updateSentTimestamp(messageID, message.isMediaMessage(), openGroupSentTimestamp, message.threadID!!)
@@ -346,11 +346,11 @@ object MessageSender {
                 }
             }
             // Mark the message as sent
-            storage.markAsSent(message.sentTimestamp!!, message.sender?:userPublicKey)
-            storage.markUnidentified(message.sentTimestamp!!, message.sender?:userPublicKey)
+            storage.markAsSent(message.sentTimestamp!!, userPublicKey)
+            storage.markUnidentified(message.sentTimestamp!!, userPublicKey)
             // Start the disappearing messages timer if needed
             if (message is VisibleMessage && !isSyncMessage) {
-                SSKEnvironment.shared.messageExpirationManager.startAnyExpiration(message.sentTimestamp!!, message.sender?:userPublicKey)
+                SSKEnvironment.shared.messageExpirationManager.startAnyExpiration(message.sentTimestamp!!, userPublicKey)
             }
         }
         // Sync the message if:
