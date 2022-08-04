@@ -186,7 +186,7 @@
             android:paddingHorizontal="@dimen/massive_spacing"
             android:paddingVertical="@dimen/small_spacing"
             android:textSize="@dimen/text_size"
-            android:text="@string/recipient_preferences__block"
+            android:text="@string/activity_conversation_block_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
