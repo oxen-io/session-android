@@ -54,6 +54,7 @@
 
     <!--Settings Page-->
     <string name="AccessibilityId_username">Username</string>
+    <string name="AccessibilityId_privacy">Privacy</string>
     <string name="AccessibilityId_show_recovery_phrase">Show recovery phrase</string>
 <!--    Recovery Phrase Dialog-->
     <string name="AccessibilityId_cancel_button">Cancel</string>
