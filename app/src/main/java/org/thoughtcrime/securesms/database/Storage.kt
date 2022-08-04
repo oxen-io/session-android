@@ -666,6 +666,18 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         threadDB.trimThread(threadID, threadLimit)
     }
 
+    override fun trimThreadBefore(threadID: Long, timestamp: Long) {
+        val threadDB = DatabaseComponent.get(context).threadDatabase()
+        threadDB.trimThreadBefore(threadID, timestamp)
+    }
+
+    override fun getMessageCount(threadID: Long): Long {
+        val mmsSmsDb = DatabaseComponent.get(context).mmsSmsDatabase()
+        return mmsSmsDb.getConversationCount(threadID)
+    }
+
+
+
     override fun getAttachmentDataUri(attachmentId: AttachmentId): Uri {
         return PartAuthority.getAttachmentDataUri(attachmentId)
     }
