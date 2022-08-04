@@ -190,11 +190,6 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
                 messageID = result.messageId
             }
         }
-        val threadID = message.threadID
-        // open group trim thread job is scheduled after processing in OpenGroupPollerV2
-        if (openGroupID.isNullOrEmpty() && threadID != null && threadID >= 0 && TextSecurePreferences.isThreadLengthTrimmingEnabled(context)) {
-            JobQueue.shared.queueThreadForTrim(threadID)
-        }
         message.serverHash?.let { serverHash ->
             messageID?.let { id ->
                 DatabaseComponent.get(context).lokiMessageDatabase().setMessageServerHash(id, serverHash)
