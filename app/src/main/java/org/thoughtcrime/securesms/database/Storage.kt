@@ -645,7 +645,12 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
     override fun addContacts(contacts: List<ConfigurationMessage.Contact>) {
         val recipientDatabase = DatabaseComponent.get(context).recipientDatabase()
         val threadDatabase = DatabaseComponent.get(context).threadDatabase()
-        for (contact in contacts) {
+        val mappingDb = DatabaseComponent.get(context).blindedIdMappingDatabase()
+        val moreContacts = contacts.filter { contact ->
+            val id = SessionId(contact.publicKey)
+            id.prefix != IdPrefix.BLINDED || mappingDb.getBlindedIdMapping(contact.publicKey).none { it.sessionId != null }
+        }
+        for (contact in moreContacts) {
             val address = fromSerialized(contact.publicKey)
             val recipient = Recipient.from(context, address, true)
             if (!contact.profilePicture.isNullOrEmpty()) {

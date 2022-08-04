@@ -139,7 +139,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
             OpenGroupMessage(
                 serverID = it.id,
                 sender = it.sessionId,
-                sentTimestamp = TimeUnit.SECONDS.toMillis((it.posted * 1000).toLong()),
+                sentTimestamp = (it.posted * 1000).toLong(),
                 base64EncodedData = it.data!!,
                 base64EncodedSignature = it.signature
             )
