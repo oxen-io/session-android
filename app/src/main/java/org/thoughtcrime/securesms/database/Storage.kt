@@ -132,8 +132,8 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         var messageID: Long? = null
         val senderAddress = fromSerialized(message.sender!!)
         val isUserSender = (message.sender!! == getUserPublicKey())
-        val isUserBlindedSender = (message.sender!! == message.threadID?.takeIf { it >= 0 }?.let { getOpenGroup(it)?.publicKey }
-            ?.let { SodiumUtilities.blindedKeyPair(it, getUserED25519KeyPair(context)!!) }?.let { SessionId(IdPrefix.BLINDED, it.publicKey.asBytes).hexString })
+        val isUserBlindedSender = message.threadID?.takeIf { it >= 0 }?.let { getOpenGroup(it)?.publicKey }
+            ?.let { SodiumUtilities.sessionId(getUserPublicKey()!!, message.sender!!, it) } ?: false
         val group: Optional<SignalServiceGroup> = when {
             openGroupID != null -> Optional.of(SignalServiceGroup(openGroupID.toByteArray(), SignalServiceGroup.GroupType.PUBLIC_CHAT))
             groupPublicKey != null -> {

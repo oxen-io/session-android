@@ -173,7 +173,7 @@ object OpenGroupApi {
     data class Message(
         val id : Long = 0,
         val sessionId: String = "",
-        val posted: Long = 0,
+        val posted: Double = 0.0,
         val edited: Long = 0,
         val seqno: Long = 0,
         val whisper: Boolean = false,
