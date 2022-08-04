@@ -703,7 +703,7 @@ interface TextSecurePreferences {
 
         @JvmStatic
         fun isThreadLengthTrimmingEnabled(context: Context): Boolean {
-            return getBooleanPreference(context, THREAD_TRIM_ENABLED, false)
+            return getBooleanPreference(context, THREAD_TRIM_ENABLED, true)
         }
 
         @JvmStatic
@@ -1322,7 +1322,7 @@ class AppTextSecurePreferences @Inject constructor(
     }
 
     override fun isThreadLengthTrimmingEnabled(): Boolean {
-        return getBooleanPreference(TextSecurePreferences.THREAD_TRIM_ENABLED, false)
+        return getBooleanPreference(TextSecurePreferences.THREAD_TRIM_ENABLED, true)
     }
 
     override fun isSystemEmojiPreferred(): Boolean {
