@@ -580,12 +580,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 viewModel.threadId,
                 this
             ) { onOptionsItemSelected(it) }
-        } else if (isIncomingMessageRequestThread()) {
-            ConversationMenuHelper.onPrepareMessageRequestOptionsMenu(
-                menu,
-                menuInflater,
-                recipient
-            ) { onOptionsItemSelected(it) }
         }
         super.onPrepareOptionsMenu(menu)
         return true
@@ -634,6 +628,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         binding?.messageRequestBar?.isVisible = isIncomingMessageRequestThread()
         binding?.acceptMessageRequestButton?.setOnClickListener {
             acceptMessageRequest()
+        }
+        binding?.messageRequestBlock?.setOnClickListener {
+            val recipient = viewModel.recipient ?: return@setOnClickListener
+            block(recipient, deleteThread = true)
         }
         binding?.declineMessageRequestButton?.setOnClickListener {
             viewModel.declineMessageRequest()
@@ -914,7 +912,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 viewModel.block()
                 if (deleteThread) {
                     viewModel.deleteThread()
-                    onNavigateUp()
+                    finish()
                 }
             }.show()
     }

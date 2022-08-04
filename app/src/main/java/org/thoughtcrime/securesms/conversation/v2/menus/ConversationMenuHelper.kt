@@ -47,26 +47,6 @@ import org.thoughtcrime.securesms.util.getColorWithID
 import java.io.IOException
 
 object ConversationMenuHelper {
-
-    fun onPrepareMessageRequestOptionsMenu(
-        menu: Menu,
-        inflater: MenuInflater,
-        thread: Recipient,
-        onOptionsItemSelected: (MenuItem) -> Unit
-    ) {
-        // Prepare
-        menu.clear()
-        // this should only be called on a contact recipient
-        if (!thread.isContactRecipient) return
-        
-        if (!thread.isBlocked) {
-            inflater.inflate(R.menu.menu_conversation_block_icon, menu)
-            val blockDeleteItem =menu.findItem(R.id.menu_block_delete)
-            blockDeleteItem.actionView.setOnClickListener {
-                onOptionsItemSelected(blockDeleteItem)
-            }
-        }
-    }
     
     fun onPrepareOptionsMenu(
         menu: Menu,
