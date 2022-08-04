@@ -18,7 +18,6 @@ class TrimThreadJob(val threadId: Long, val openGroupId: String?) : Job {
 
         const val TRIM_TIME_LIMIT = 15552000000L // trim messages older than this
         const val THREAD_LENGTH_TRIGGER_SIZE = 2000
-
     }
 
     override fun execute() {
