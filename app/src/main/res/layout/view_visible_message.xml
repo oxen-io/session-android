@@ -87,7 +87,7 @@
 
             <org.thoughtcrime.securesms.conversation.v2.components.ExpirationTimerView
                 tools:visibility="visible"
-                android:visibility="gone"
+                android:visibility="invisible"
                 android:id="@+id/expirationTimerView"
                 android:layout_width="12dp"
                 android:layout_height="12dp"

@@ -223,6 +223,9 @@ class VisibleMessageContentView : LinearLayout {
                 }
             }
         }
+        val layoutParams = binding.contentParent.layoutParams as ConstraintLayout.LayoutParams
+        layoutParams.horizontalBias = if (message.isOutgoing) 1f else 0f
+        binding.contentParent.layoutParams = layoutParams
     }
 
     private fun ViewVisibleMessageContentBinding.barrierViewsGone(): Boolean =

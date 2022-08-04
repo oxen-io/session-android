@@ -3,6 +3,8 @@ package org.thoughtcrime.securesms.conversation.v2.messages
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Handler
@@ -17,6 +19,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
@@ -240,7 +243,7 @@ class VisibleMessageView : LinearLayout {
         container.layoutParams = containerParams
         if (message.expiresIn > 0 && !message.isPending) {
             binding.expirationTimerView.setColorFilter(ResourcesCompat.getColor(resources, R.color.text, context.theme))
-            binding.expirationTimerView.isVisible = true
+            binding.expirationTimerView.isInvisible = false
             binding.expirationTimerView.setPercentComplete(0.0f)
             if (message.expireStarted > 0) {
                 binding.expirationTimerView.setExpirationTime(message.expireStarted, message.expiresIn)
@@ -263,7 +266,7 @@ class VisibleMessageView : LinearLayout {
                 binding.expirationTimerView.setPercentComplete(0.0f)
             }
         } else {
-            binding.expirationTimerView.isVisible = false
+            binding.expirationTimerView.isInvisible = true
         }
         container.requestLayout()
     }
@@ -276,22 +279,34 @@ class VisibleMessageView : LinearLayout {
         }
     }
 
+    private val debugPaint = Paint().apply {
+        isAntiAlias = false
+        color = Color.MAGENTA
+        style = Paint.Style.FILL
+    }
+
     override fun onDraw(canvas: Canvas) {
+        val spacing = context.resources.getDimensionPixelSize(R.dimen.small_spacing)
+        val iconSize = toPx(24, context.resources)
+        val bottomVOffset = paddingBottom + binding.messageStatusImageView.height + (binding.messageContentView.height - iconSize) / 2
+        val left = binding.messageContentView.x + binding.messageContentView.width + spacing
+        val top = height - bottomVOffset - iconSize
+        val right = binding.messageContentView.x + binding.messageContentView.width + iconSize + spacing
+        val bottom = height - bottomVOffset
+        swipeToReplyIconRect.left = left.toInt()
+        swipeToReplyIconRect.top = top
+        swipeToReplyIconRect.right = right.toInt()
+        swipeToReplyIconRect.bottom = bottom
+
         if (translationX < 0 && !binding.expirationTimerView.isVisible) {
-            val spacing = context.resources.getDimensionPixelSize(R.dimen.small_spacing)
             val threshold = swipeToReplyThreshold
-            val iconSize = toPx(24, context.resources)
-            val bottomVOffset = paddingBottom + binding.messageStatusImageView.height + (binding.messageContentView.height - iconSize) / 2
-            swipeToReplyIconRect.left = binding.messageContentView.right - binding.messageContentView.paddingEnd + spacing
-            swipeToReplyIconRect.top = height - bottomVOffset - iconSize
-            swipeToReplyIconRect.right = binding.messageContentView.right - binding.messageContentView.paddingEnd + iconSize + spacing
-            swipeToReplyIconRect.bottom = height - bottomVOffset
             swipeToReplyIcon.bounds = swipeToReplyIconRect
             swipeToReplyIcon.alpha = (255.0f * (min(abs(translationX), threshold) / threshold)).roundToInt()
         } else {
             swipeToReplyIcon.alpha = 0
         }
         swipeToReplyIcon.draw(canvas)
+        canvas.drawRect(swipeToReplyIconRect, debugPaint)
         super.onDraw(canvas)
     }
 
