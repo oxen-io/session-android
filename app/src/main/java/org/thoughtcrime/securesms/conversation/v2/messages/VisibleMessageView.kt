@@ -3,8 +3,6 @@ package org.thoughtcrime.securesms.conversation.v2.messages
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Handler
@@ -21,6 +19,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import androidx.core.view.marginBottom
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewVisibleMessageBinding
@@ -279,23 +278,16 @@ class VisibleMessageView : LinearLayout {
         }
     }
 
-    private val debugPaint = Paint().apply {
-        isAntiAlias = false
-        color = Color.MAGENTA
-        style = Paint.Style.FILL
-    }
-
     override fun onDraw(canvas: Canvas) {
         val spacing = context.resources.getDimensionPixelSize(R.dimen.small_spacing)
         val iconSize = toPx(24, context.resources)
-        val bottomVOffset = paddingBottom + binding.messageStatusImageView.height + (binding.messageContentView.height - iconSize) / 2
-        val left = binding.messageContentView.x + binding.messageContentView.width + spacing
-        val top = height - bottomVOffset - iconSize
-        val right = binding.messageContentView.x + binding.messageContentView.width + iconSize + spacing
-        val bottom = height - bottomVOffset
-        swipeToReplyIconRect.left = left.toInt()
+        val left = binding.expirationTimerViewContainer.left + binding.messageContentView.right + spacing
+        val top = height - (binding.expirationTimerViewContainer.height / 2) - binding.profilePictureView.root.marginBottom - (iconSize / 2)
+        val right = left + iconSize
+        val bottom = top + iconSize
+        swipeToReplyIconRect.left = left
         swipeToReplyIconRect.top = top
-        swipeToReplyIconRect.right = right.toInt()
+        swipeToReplyIconRect.right = right
         swipeToReplyIconRect.bottom = bottom
 
         if (translationX < 0 && !binding.expirationTimerView.isVisible) {
@@ -306,7 +298,6 @@ class VisibleMessageView : LinearLayout {
             swipeToReplyIcon.alpha = 0
         }
         swipeToReplyIcon.draw(canvas)
-        canvas.drawRect(swipeToReplyIconRect, debugPaint)
         super.onDraw(canvas)
     }
 
