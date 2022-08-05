@@ -1036,7 +1036,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         contentValues.put(THREAD_ID, toId)
 
         val db = databaseHelper.writableDatabase
-        db.update(SmsDatabase.TABLE_NAME, contentValues, ID_WHERE, arrayOf(fromId.toString() + ""))
+        db.update(SmsDatabase.TABLE_NAME, contentValues, "$THREAD_ID = ?", arrayOf("$fromId"))
         notifyConversationListeners(toId)
         notifyConversationListListeners()
     }

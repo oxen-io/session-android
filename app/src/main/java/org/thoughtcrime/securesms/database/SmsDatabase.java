@@ -581,7 +581,7 @@ public class SmsDatabase extends MessagingDatabase {
     contentValues.put(MmsSmsColumns.THREAD_ID, toId);
 
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
-    db.update(TABLE_NAME, contentValues, ID_WHERE, new String[] {fromId + ""});
+    db.update(TABLE_NAME, contentValues, THREAD_ID + " = ?", new String[] {fromId + ""});
     notifyConversationListeners(toId);
     notifyConversationListListeners();
   }

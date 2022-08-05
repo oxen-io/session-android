@@ -746,40 +746,41 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
             val smsDb = DatabaseComponent.get(context).smsDatabase()
             val sender = Recipient.from(context, fromSerialized(senderPublicKey), false)
             val threadId = threadDB.getOrCreateThreadIdFor(sender)
+            threadDB.setHasSent(threadId, true)
             val mappingDb = DatabaseComponent.get(context).blindedIdMappingDatabase()
-            val mappings = mutableListOf<BlindedIdMapping>()
+            val mappings = mutableMapOf<String, BlindedIdMapping>()
             threadDB.readerFor(threadDB.conversationList).use { reader ->
                 while (reader.next != null) {
                     val recipient = reader.current.recipient
+                    val address = recipient.address.serialize()
                     val blindedId = when {
                         recipient.isGroupRecipient -> null
                         recipient.isOpenGroupInboxRecipient -> {
-                            GroupUtil.getDecodedOpenGroupInbox(recipient.address.serialize())
+                            GroupUtil.getDecodedOpenGroupInbox(address)
                         }
                         else -> {
-                            val sessionId = SessionId(recipient.address.serialize())
-                            if (sessionId.prefix == IdPrefix.BLINDED) {
-                                sessionId.hexString
+                            if (SessionId(address).prefix == IdPrefix.BLINDED) {
+                                address
                             } else null
                         }
                     } ?: continue
-                    mappings.addAll(mappingDb.getBlindedIdMapping(blindedId))
+                    mappingDb.getBlindedIdMapping(blindedId).firstOrNull()?.let {
+                        mappings[address] = it
+                    }
                 }
             }
-            val blindedContactIds = mutableListOf<String>()
             for (mapping in mappings) {
-                if (!SodiumUtilities.sessionId(senderPublicKey, mapping.blindedId, mapping.serverId)) {
+                if (!SodiumUtilities.sessionId(senderPublicKey, mapping.value.blindedId, mapping.value.serverId)) {
                     continue
                 }
-                mappingDb.addBlindedIdMapping(mapping.copy(sessionId = senderPublicKey))
+                mappingDb.addBlindedIdMapping(mapping.value.copy(sessionId = senderPublicKey))
 
-                blindedContactIds.add(mapping.blindedId)
-
-                val blindedThreadId = threadDB.getOrCreateThreadIdFor(Recipient.from(context, fromSerialized(mapping.blindedId), false))
+                val blindedThreadId = threadDB.getOrCreateThreadIdFor(Recipient.from(context, fromSerialized(mapping.key), false))
                 mmsDb.updateThreadId(blindedThreadId, threadId)
                 smsDb.updateThreadId(blindedThreadId, threadId)
                 threadDB.deleteConversation(blindedThreadId)
             }
+            recipientDb.setApproved(sender, true)
             recipientDb.setApprovedMe(sender, true)
 
             val message = IncomingMediaMessage(
