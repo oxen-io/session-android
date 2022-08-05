@@ -582,6 +582,8 @@ public class SmsDatabase extends MessagingDatabase {
 
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
     db.update(TABLE_NAME, contentValues, ID_WHERE, new String[] {fromId + ""});
+    notifyConversationListeners(toId);
+    notifyConversationListListeners();
   }
 
   private boolean isDuplicate(IncomingTextMessage message, long threadId) {

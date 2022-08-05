@@ -743,14 +743,27 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
             threadDB.setHasSent(threadId, true)
         } else {
             val mmsDb = DatabaseComponent.get(context).mmsDatabase()
-            val smsDb = DatabaseComponent.get(context).mmsDatabase()
+            val smsDb = DatabaseComponent.get(context).smsDatabase()
             val sender = Recipient.from(context, fromSerialized(senderPublicKey), false)
             val threadId = threadDB.getOrCreateThreadIdFor(sender)
             val mappingDb = DatabaseComponent.get(context).blindedIdMappingDatabase()
             val mappings = mutableListOf<BlindedIdMapping>()
-            threadDB.readerFor(threadDB.blindedConversationList).use { reader ->
+            threadDB.readerFor(threadDB.conversationList).use { reader ->
                 while (reader.next != null) {
-                    mappings.addAll(mappingDb.getBlindedIdMapping(reader.current.recipient.address.serialize()))
+                    val recipient = reader.current.recipient
+                    val blindedId = when {
+                        recipient.isGroupRecipient -> null
+                        recipient.isOpenGroupInboxRecipient -> {
+                            GroupUtil.getDecodedOpenGroupInbox(recipient.address.serialize())
+                        }
+                        else -> {
+                            val sessionId = SessionId(recipient.address.serialize())
+                            if (sessionId.prefix == IdPrefix.BLINDED) {
+                                sessionId.hexString
+                            } else null
+                        }
+                    } ?: continue
+                    mappings.addAll(mappingDb.getBlindedIdMapping(blindedId))
                 }
             }
             val blindedContactIds = mutableListOf<String>()

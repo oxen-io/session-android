@@ -1037,6 +1037,8 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
 
         val db = databaseHelper.writableDatabase
         db.update(SmsDatabase.TABLE_NAME, contentValues, ID_WHERE, arrayOf(fromId.toString() + ""))
+        notifyConversationListeners(toId)
+        notifyConversationListListeners()
     }
 
     fun deleteThread(threadId: Long) {
