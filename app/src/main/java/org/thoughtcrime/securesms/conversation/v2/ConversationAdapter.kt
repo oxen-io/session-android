@@ -7,7 +7,6 @@ import android.database.Cursor
 import android.util.SparseArray
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.WorkerThread
@@ -32,9 +31,14 @@ import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
 
-class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPress: (MessageRecord, Int, VisibleMessageView, MotionEvent) -> Unit,
-    private val onItemSwipeToReply: (MessageRecord, Int) -> Unit, private val onItemLongPress: (MessageRecord, Int) -> Unit,
-    private val glide: GlideRequests, private val onDeselect: (MessageRecord, Int) -> Unit, lifecycleCoroutineScope: LifecycleCoroutineScope)
+class ConversationAdapter(
+    context: Context,
+    cursor: Cursor,
+    private val onItemSwipeToReply: (MessageRecord, Int) -> Unit,
+    private val onItemLongPress: (MessageRecord, Int, VisibleMessageView) -> Unit,
+    private val glide: GlideRequests,
+    lifecycleCoroutineScope: LifecycleCoroutineScope
+)
     : CursorRecyclerViewAdapter<ViewHolder>(context, cursor) {
     private val messageDB by lazy { DatabaseComponent.get(context).mmsSmsDatabase() }
     private val contactDB by lazy { DatabaseComponent.get(context).sessionContactDatabase() }
@@ -102,7 +106,6 @@ class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPr
                 val view = viewHolder.view
                 val visibleMessageView = ViewVisibleMessageBinding.bind(viewHolder.view).visibleMessageView
                 val isSelected = selectedItems.contains(message)
-                visibleMessageView.snIsSelected = isSelected
                 visibleMessageView.indexInAdapter = position
                 val senderId = message.individualRecipient.address.serialize()
                 val senderIdHash = senderId.hashCode()
@@ -116,11 +119,9 @@ class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPr
 
                 visibleMessageView.bind(message, messageBefore, getMessageAfter(position, cursor), glide, searchQuery, contact, senderId)
                 if (!message.isDeleted) {
-                    visibleMessageView.onPress = { event -> onItemPress(message, viewHolder.adapterPosition, visibleMessageView, event) }
                     visibleMessageView.onSwipeToReply = { onItemSwipeToReply(message, viewHolder.adapterPosition) }
-                    visibleMessageView.onLongPress = { onItemLongPress(message, viewHolder.adapterPosition) }
+                    visibleMessageView.onLongPress = { onItemLongPress(message, viewHolder.adapterPosition, viewHolder.view as VisibleMessageView) }
                 } else {
-                    visibleMessageView.onPress = null
                     visibleMessageView.onSwipeToReply = null
                     visibleMessageView.onLongPress = null
                 }
@@ -147,6 +148,11 @@ class ConversationAdapter(context: Context, cursor: Cursor, private val onItemPr
                 }
             }
         }
+    }
+
+    fun toggleSelection(message: MessageRecord, position: Int) {
+        if (selectedItems.contains(message)) selectedItems.remove(message) else selectedItems.add(message)
+        notifyItemChanged(position)
     }
 
     override fun onItemViewRecycled(viewHolder: ViewHolder?) {

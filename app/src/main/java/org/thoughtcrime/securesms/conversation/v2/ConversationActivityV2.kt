@@ -22,6 +22,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.util.Pair
 import android.util.TypedValue
+import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -156,6 +157,7 @@ import kotlin.math.sqrt
 // part of the conversation activity layout. This is just because it makes the layout a lot simpler. The
 // price we pay is a bit of back and forth between the input bar and the conversation activity.
 @AndroidEntryPoint
+
 class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDelegate,
     InputBarRecordingViewDelegate, AttachmentManager.AttachmentListener, ActivityDispatcher,
     ConversationActionModeCallbackDelegate, VisibleMessageViewDelegate, RecipientModifiedListener,
@@ -193,6 +195,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
         viewModelFactory.create(threadId)
     }
+    private var actionMode: ActionMode? = null
     private var unreadCount = 0
     // Attachments
     private val audioRecorder = AudioRecorder(this)
@@ -236,18 +239,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val adapter = ConversationAdapter(
             this,
             cursor,
-            onItemSwipeToReply = { message, position ->
+            onItemSwipeToReply = { message, _ ->
                 handleSwipeToReply(message)
             },
-            onItemLongPress = { message, position, view ->
+            onItemLongPress = { message, _, view ->
                 handleLongPress(message, view)
             },
-            glide,
-            onDeselect = { message, position ->
-                actionMode?.let {
-                    onDeselect(message, position, it)
-                }
-            },
+            glide = glide,
             lifecycleCoroutineScope = lifecycleScope
         )
         adapter.visibleMessageViewDelegate = this
@@ -961,6 +959,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private fun sendEmojiReaction(emoji: String, messageId: MessageId, messageTimestamp: Long) {
         // Create the message
+        val recipient = viewModel.recipient ?: return
         val message = VisibleMessage()
         val emojiTimestamp = System.currentTimeMillis()
         message.sentTimestamp = emojiTimestamp
@@ -977,18 +976,19 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         reactionDb.addReaction(messageId, reaction)
         // Send it
         message.reaction = Reaction.from(messageTimestamp, author, emoji, true)
-        MessageSender.send(message, viewModel.recipient.address)
+        MessageSender.send(message, recipient.address)
         LoaderManager.getInstance(this).restartLoader(0, null, this)
     }
 
     private fun sendEmojiRemoval(emoji: String, messageId: MessageId, messageTimestamp: Long) {
+        val recipient = viewModel.recipient ?: return
         val message = VisibleMessage()
         val emojiTimestamp = System.currentTimeMillis()
         message.sentTimestamp = emojiTimestamp
         val author = textSecurePreferences.getLocalNumber()!!
         reactionDb.deleteReaction(emoji, messageId, author)
         message.reaction = Reaction.from(messageTimestamp, author, emoji, false)
-        MessageSender.send(message, viewModel.recipient.address)
+        MessageSender.send(message, recipient.address)
         LoaderManager.getInstance(this).restartLoader(0, null, this)
     }
 
@@ -1384,25 +1384,18 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         builder.setCancelable(true)
         builder.setPositiveButton(R.string.delete) { _, _ ->
             viewModel.deleteMessagesWithoutUnsendRequest(messages)
-            endActionMode()
         }
         builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
             dialog.dismiss()
-            endActionMode()
         }
         builder.show()
     }
 
-    override fun deleteMessages(messages: Set<MessageRecord>) {
+    override fun deleteMessage(message: MessageRecord) {
         val recipient = viewModel.recipient ?: return
-        if (!IS_UNSEND_REQUESTS_ENABLED) {
-            deleteMessagesWithoutUnsendRequest(messages)
-            return
-        }
-        val allSentByCurrentUser = messages.all { it.isOutgoing }
-        val allHasHash = messages.all { lokiMessageDb.getMessageServerHash(it.id) != null }
+        val hasHash = lokiMessageDb.getMessageServerHash(message.id) != null
         if (recipient.isOpenGroupRecipient) {
-            val messageCount = messages.size
+            val messageCount = 1
             val builder = AlertDialog.Builder(this)
             builder.setTitle(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
             builder.setMessage(resources.getQuantityString(R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages, messageCount, messageCount))

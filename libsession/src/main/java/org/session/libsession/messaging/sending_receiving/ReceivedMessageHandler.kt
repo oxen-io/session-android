@@ -306,10 +306,11 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage,
             val isSms = !(message.isMediaMessage() || attachments.isNotEmpty())
             storage.setOpenGroupServerMessageID(messageID, openGroupServerID, threadID, isSms)
         }
+        return messageID
     }
     // Cancel any typing indicators if needed
     cancelTypingIndicatorsIfNeeded(message.sender!!)
-    return messageID
+    return null
 }
 //endregion
 

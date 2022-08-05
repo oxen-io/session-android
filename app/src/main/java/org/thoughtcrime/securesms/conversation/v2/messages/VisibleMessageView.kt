@@ -67,11 +67,6 @@ class VisibleMessageView : LinearLayout {
     private var onDownTimestamp = 0L
     private var onDoubleTap: (() -> Unit)? = null
     var indexInAdapter: Int = -1
-    var snIsSelected = false
-        set(value) {
-            field = value
-            handleIsSelectedChanged()
-        }
     var onPress: ((event: MotionEvent) -> Unit)? = null
     var onSwipeToReply: (() -> Unit)? = null
     var onLongPress: (() -> Unit)? = null
