@@ -84,7 +84,7 @@ class UserDetailsBottomSheet : BottomSheetDialogFragment() {
             }
             nameTextView.text = recipient.name ?: publicKey // Uses the Contact API internally
 
-            publicKeyTextView.isVisible = !threadRecipient.isOpenGroupRecipient
+            publicKeyTextView.isVisible = !threadRecipient.isOpenGroupRecipient && !threadRecipient.isOpenGroupInboxRecipient
             messageButton.isVisible = !threadRecipient.isOpenGroupRecipient || IdPrefix.fromValue(publicKey) == IdPrefix.BLINDED
             publicKeyTextView.text = publicKey
             publicKeyTextView.setOnLongClickListener {
