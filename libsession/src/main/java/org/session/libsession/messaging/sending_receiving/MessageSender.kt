@@ -227,7 +227,7 @@ object MessageSender {
         when(destination) {
             is Destination.OpenGroup -> {
                 serverCapabilities = storage.getServerCapabilities(destination.server)
-                storage.getOpenGroup(destination.server, destination.roomToken)?.let {
+                storage.getOpenGroup(destination.roomToken, destination.server)?.let {
                     blindedPublicKey = SodiumUtilities.blindedKeyPair(it.publicKey, userEdKeyPair)?.publicKey?.asBytes
                 }
             }
@@ -237,7 +237,7 @@ object MessageSender {
             }
             is Destination.LegacyOpenGroup -> {
                 serverCapabilities = storage.getServerCapabilities(destination.server)
-                storage.getOpenGroup(destination.server, destination.roomToken)?.let {
+                storage.getOpenGroup(destination.roomToken, destination.server)?.let {
                     blindedPublicKey = SodiumUtilities.blindedKeyPair(it.publicKey, userEdKeyPair)?.publicKey?.asBytes
                 }
             }

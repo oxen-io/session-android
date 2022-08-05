@@ -134,8 +134,12 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         messages: List<OpenGroupApi.Message>
     ) {
         val openGroupId = "$server.$roomToken"
-        val (deletions, additions) = messages.sortedBy { it.seqno }.partition { it.data.isNullOrBlank() }
-        handleNewMessages(roomToken, openGroupId, additions.map {
+        val sortedMessages = messages.sortedBy { it.seqno }
+        sortedMessages.maxOfOrNull { it.seqno }?.let {
+            MessagingModuleConfiguration.shared.storage.setLastMessageServerID(roomToken, server, it)
+        }
+        val (deletions, additions) = sortedMessages.partition { it.deleted || it.data.isNullOrBlank() }
+        handleNewMessages(openGroupId, additions.map {
             OpenGroupMessage(
                 serverID = it.id,
                 sender = it.sessionId,
@@ -144,7 +148,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                 base64EncodedSignature = it.signature
             )
         })
-        handleDeletedMessages(roomToken, openGroupId, deletions.map {
+        handleDeletedMessages(openGroupId, deletions.map {
             OpenGroupApi.MessageDeletion(it.id, it.seqno)
         })
     }
@@ -203,11 +207,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         }
     }
 
-    private fun handleNewMessages(
-        room: String,
-        openGroupID: String,
-        messages: List<OpenGroupMessage>
-    ) {
+    private fun handleNewMessages(openGroupID: String, messages: List<OpenGroupMessage>) {
         val storage = MessagingModuleConfiguration.shared.storage
         val groupID = GroupUtil.getEncodedOpenGroupID(openGroupID.toByteArray())
         // check thread still exists
@@ -235,16 +235,9 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         if (envelopes.isNotEmpty()) {
             JobQueue.shared.add(TrimThreadJob(threadId,openGroupID))
         }
-
-        val indicatedMax = messages.mapNotNull { it.serverID }.maxOrNull() ?: 0
-        val currentLastMessageServerID = storage.getLastMessageServerID(room, server) ?: 0
-        val actualMax = max(indicatedMax, currentLastMessageServerID)
-        if (actualMax > 0 && indicatedMax > currentLastMessageServerID) {
-            storage.setLastMessageServerID(room, server, actualMax)
-        }
     }
 
-    private fun handleDeletedMessages(room: String, openGroupID: String, deletions: List<OpenGroupApi.MessageDeletion>) {
+    private fun handleDeletedMessages(openGroupID: String, deletions: List<OpenGroupApi.MessageDeletion>) {
         val storage = MessagingModuleConfiguration.shared.storage
         val groupID = GroupUtil.getEncodedOpenGroupID(openGroupID.toByteArray())
         val threadID = storage.getThreadId(Address.fromSerialized(groupID)) ?: return
@@ -256,12 +249,6 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         if (serverIds.isNotEmpty()) {
             val deleteJob = OpenGroupDeleteJob(serverIds.toLongArray(), threadID, openGroupID)
             JobQueue.shared.add(deleteJob)
-        }
-
-        val currentMax = storage.getLastDeletionServerID(room, server) ?: 0L
-        val latestMax = deletions.map { it.id }.maxOrNull() ?: 0L
-        if (latestMax > currentMax && latestMax != 0L) {
-            storage.setLastDeletionServerID(room, server, latestMax)
         }
     }
 

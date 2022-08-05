@@ -176,6 +176,7 @@ object OpenGroupApi {
         val posted: Double = 0.0,
         val edited: Long = 0,
         val seqno: Long = 0,
+        val deleted: Boolean = false,
         val whisper: Boolean = false,
         val whisperMods: String = "",
         val whisperTo: String = "",
