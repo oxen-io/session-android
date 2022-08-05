@@ -140,13 +140,7 @@ object OnionRequestAPI {
                     testSnode(candidate).success {
                         deferred.resolve(candidate)
                     }.fail {
-                        getGuardSnode().success {
-                            deferred.resolve(candidate)
-                        }.fail { exception ->
-                            if (exception is InsufficientSnodesException) {
-                                deferred.reject(exception)
-                            }
-                        }
+                        deferred.reject(it)
                     }
                     return deferred.promise
                 }
@@ -314,10 +308,11 @@ object OnionRequestAPI {
      */
     private fun sendOnionRequest(destination: Destination, payload: Map<*, *>): Promise<Map<*, *>, Exception> {
         val deferred = deferred<Map<*, *>, Exception>()
-        lateinit var guardSnode: Snode
+        var guardSnode: Snode? = null
         buildOnionForDestination(payload, destination).success { result ->
             guardSnode = result.guardSnode
-            val url = "${guardSnode.address}:${guardSnode.port}/onion_req/v2"
+            val nonNullGuardSnode = result.guardSnode
+            val url = "${nonNullGuardSnode.address}:${nonNullGuardSnode.port}/onion_req/v2"
             val finalEncryptionResult = result.finalEncryptionResult
             val onion = finalEncryptionResult.ciphertext
             if (destination is Destination.Server && onion.count().toDouble() > 0.75 * FileServerAPIV2.maxFileSize.toDouble()) {
@@ -404,13 +399,17 @@ object OnionRequestAPI {
         val promise = deferred.promise
         promise.fail { exception ->
             if (exception is HTTP.HTTPRequestFailedException && SnodeModule.isInitialized) {
-                val path = paths.firstOrNull { it.contains(guardSnode) }
+                val checkedGuardSnode = guardSnode
+                val path =
+                    if (checkedGuardSnode == null) null
+                    else paths.firstOrNull { it.contains(checkedGuardSnode) }
+
                 fun handleUnspecificError() {
                     if (path == null) { return }
                     var pathFailureCount = OnionRequestAPI.pathFailureCount[path] ?: 0
                     pathFailureCount += 1
                     if (pathFailureCount >= pathFailureThreshold) {
-                        dropGuardSnode(guardSnode)
+                        guardSnode?.let { dropGuardSnode(it) }
                         path.forEach { snode ->
                             @Suppress("ThrowableNotThrown")
                             SnodeAPI.handleSnodeError(exception.statusCode, exception.json, snode, null) // Intentionally don't throw

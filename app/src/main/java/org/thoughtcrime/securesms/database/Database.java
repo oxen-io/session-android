@@ -25,7 +25,7 @@ import androidx.annotation.NonNull;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
-import org.session.libsession.utilities.Debouncer;
+import org.session.libsession.utilities.WindowDebouncer;
 import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 
@@ -34,16 +34,21 @@ import java.util.Set;
 public abstract class Database {
 
   protected static final String ID_WHERE = "_id = ?";
+  protected static final String ID_IN = "_id IN (?)";
 
   protected       SQLCipherOpenHelper databaseHelper;
   protected final Context             context;
-  private final   Debouncer           conversationListNotificationDebouncer;
+  private   final WindowDebouncer     conversationListNotificationDebouncer;
+  private   final Runnable            conversationListUpdater;
 
   @SuppressLint("WrongConstant")
   public Database(Context context, SQLCipherOpenHelper databaseHelper) {
     this.context = context;
+    this.conversationListUpdater = () -> {
+      context.getContentResolver().notifyChange(DatabaseContentProviders.ConversationList.CONTENT_URI, null);
+    };
     this.databaseHelper = databaseHelper;
-    this.conversationListNotificationDebouncer = new Debouncer(ApplicationContext.getInstance(context).getConversationListNotificationHandler(), 250);
+    this.conversationListNotificationDebouncer = ApplicationContext.getInstance(context).getConversationListDebouncer();
   }
 
   protected void notifyConversationListeners(Set<Long> threadIds) {
@@ -56,7 +61,7 @@ public abstract class Database {
   }
 
   protected void notifyConversationListListeners() {
-    conversationListNotificationDebouncer.publish(()->context.getContentResolver().notifyChange(DatabaseContentProviders.ConversationList.CONTENT_URI, null));
+    conversationListNotificationDebouncer.publish(conversationListUpdater);
   }
 
   protected void notifyStickerListeners() {

@@ -10,6 +10,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteDatabaseHook;
 import net.sqlcipher.database.SQLiteOpenHelper;
 
+import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.crypto.DatabaseSecret;
 import org.thoughtcrime.securesms.database.AttachmentDatabase;
@@ -88,6 +89,13 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
       public void postKey(SQLiteDatabase db) {
         db.rawExecSQL("PRAGMA kdf_iter = '1';");
         db.rawExecSQL("PRAGMA cipher_page_size = 4096;");
+        // if not vacuumed in a while, perform that operation
+        long currentTime = System.currentTimeMillis();
+        // 7 days
+        if (currentTime - TextSecurePreferences.getLastVacuumTime(context) > 604_800_000) {
+          db.rawExecSQL("VACUUM;");
+          TextSecurePreferences.setLastVacuumNow(context);
+        }
       }
     });
 
@@ -146,6 +154,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
     db.execSQL(GroupDatabase.getCreateUpdatedTimestampCommand());
     db.execSQL(RecipientDatabase.getCreateApprovedCommand());
     db.execSQL(RecipientDatabase.getCreateApprovedMeCommand());
+    db.execSQL(MmsDatabase.createMessageRequestResponseCommand);
     db.execSQL(MmsDatabase.CREATE_MESSAGE_REQUEST_RESPONSE_COMMAND);
     db.execSQL(MmsDatabase.CREATE_REACTIONS_UNREAD_COMMAND);
     db.execSQL(SmsDatabase.CREATE_REACTIONS_UNREAD_COMMAND);
@@ -347,7 +356,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
         db.execSQL(RecipientDatabase.getCreateApprovedCommand());
         db.execSQL(RecipientDatabase.getCreateApprovedMeCommand());
         db.execSQL(RecipientDatabase.getUpdateApprovedCommand());
-        db.execSQL(MmsDatabase.CREATE_MESSAGE_REQUEST_RESPONSE_COMMAND);
+        db.execSQL(MmsDatabase.createMessageRequestResponseCommand);
       }
 
       if (oldVersion < lokiV32) {
