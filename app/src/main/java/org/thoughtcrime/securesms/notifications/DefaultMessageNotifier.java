@@ -39,12 +39,18 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.goterl.lazysodium.utils.KeyPair;
+
+import org.session.libsession.messaging.open_groups.OpenGroup;
 import org.session.libsession.messaging.sending_receiving.notifications.MessageNotifier;
+import org.session.libsession.messaging.utilities.SessionId;
+import org.session.libsession.messaging.utilities.SodiumUtilities;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.Contact;
 import org.session.libsession.utilities.ServiceUtil;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.recipients.Recipient;
+import org.session.libsignal.utilities.IdPrefix;
 import org.session.libsignal.utilities.Log;
 import org.session.libsignal.utilities.Util;
 import org.thoughtcrime.securesms.ApplicationContext;
@@ -52,6 +58,8 @@ import org.thoughtcrime.securesms.contactshare.ContactUtil;
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2;
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionManagerUtilities;
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities;
+import org.thoughtcrime.securesms.crypto.KeyPairUtilities;
+import org.thoughtcrime.securesms.database.LokiThreadDatabase;
 import org.thoughtcrime.securesms.database.MessagingDatabase.MarkedMessageInfo;
 import org.thoughtcrime.securesms.database.MmsSmsDatabase;
 import org.thoughtcrime.securesms.database.RecipientDatabase;
@@ -490,6 +498,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
     NotificationState     notificationState = new NotificationState();
     MmsSmsDatabase.Reader reader            = DatabaseComponent.get(context).mmsSmsDatabase().readerFor(cursor);
     ThreadDatabase        threadDatabase    = DatabaseComponent.get(context).threadDatabase();
+    LokiThreadDatabase lokiThreadDatabase   = DatabaseComponent.get(context).lokiThreadDatabase();
     MessageRecord record;
 
     while ((record = reader.getNext()) != null) {
@@ -534,16 +543,26 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
       if (threadRecipients == null || !threadRecipients.isMuted()) {
         if (threadRecipients != null && threadRecipients.notifyType == RecipientDatabase.NOTIFY_TYPE_MENTIONS) {
+          String userPublicKey = TextSecurePreferences.getLocalNumber(context);
+          OpenGroup openGroup = lokiThreadDatabase.getOpenGroupChat(threadId);
+          KeyPair edKeyPair = KeyPairUtilities.INSTANCE.getUserED25519KeyPair(context);
+          String blindedPublicKey = null;
+          if (openGroup != null && edKeyPair != null) {
+            KeyPair blindedKeyPair = SodiumUtilities.INSTANCE.blindedKeyPair(openGroup.getPublicKey(), edKeyPair);
+            if (blindedKeyPair != null) {
+              blindedPublicKey = new SessionId(IdPrefix.BLINDED, blindedKeyPair.getPublicKey().getAsBytes()).getHexString();
+            }
+          }
           // check if mentioned here
           boolean isQuoteMentioned = false;
           if (record instanceof MmsMessageRecord) {
             Quote quote = ((MmsMessageRecord) record).getQuote();
             Address quoteAddress = quote != null ? quote.getAuthor() : null;
             String serializedAddress = quoteAddress != null ? quoteAddress.serialize() : null;
-            isQuoteMentioned = serializedAddress != null && Objects.equals(TextSecurePreferences.getLocalNumber(context), serializedAddress);
+            isQuoteMentioned = (serializedAddress!= null && Objects.equals(userPublicKey, serializedAddress)) ||
+                    (blindedPublicKey != null && Objects.equals(userPublicKey, blindedPublicKey));
           }
-          if (body.toString().contains("@"+TextSecurePreferences.getLocalNumber(context))
-                  || isQuoteMentioned) {
+          if (body.toString().contains("@"+userPublicKey) || body.toString().contains("@"+blindedPublicKey) || isQuoteMentioned) {
             notificationState.addNotification(new NotificationItem(id, mms, recipient, conversationRecipient, threadRecipients, threadId, body, timestamp, slideDeck));
           }
         } else if (threadRecipients != null && threadRecipients.notifyType == RecipientDatabase.NOTIFY_TYPE_NONE) {
