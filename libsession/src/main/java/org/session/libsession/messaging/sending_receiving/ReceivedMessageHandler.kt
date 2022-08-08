@@ -251,12 +251,12 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage,
         val quote = proto.dataMessage.quote
         val author = Address.fromSerialized(quote.author)
         val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
-        val messageInfo = messageDataProvider.getMessageFor(quote.id, author)
+        val messageInfo = messageDataProvider.getMessageForQuote(quote.id, author)
         quoteModel = if (messageInfo != null) {
             val attachments = if (messageInfo.second) messageDataProvider.getAttachmentsAndLinkPreviewFor(messageInfo.first) else ArrayList()
-            QuoteModel(quote.id, author, messageDataProvider.getMessageBodyFor(quote.id, quote.author), false, attachments)
+            quoteModel = QuoteModel(quote.id, author,null,false, attachments)
         } else {
-            QuoteModel(quote.id, author, quote.text, true, PointerAttachment.forPointers(proto.dataMessage.quote.attachmentsList))
+            quoteModel = QuoteModel(quote.id, author,null, true, PointerAttachment.forPointers(proto.dataMessage.quote.attachmentsList))
         }
     }
     // Parse link preview if needed

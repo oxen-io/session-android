@@ -235,12 +235,13 @@ public class DefaultMessageNotifier implements MessageNotifier {
             !(recipient.isApproved() || threads.getLastSeenAndHasSent(threadId).second())) {
       TextSecurePreferences.removeHasHiddenMessageRequests(context);
     }
-    if (isVisible) {
+    if (isVisible && recipient != null) {
       List<MarkedMessageInfo> messageIds = threads.setRead(threadId, false);
       if (SessionMetaProtocol.shouldSendReadReceipt(recipient)) { MarkReadReceiver.process(context, messageIds); }
     }
 
-    if (!TextSecurePreferences.isNotificationsEnabled(context) || recipient.isMuted())
+    if (!TextSecurePreferences.isNotificationsEnabled(context) ||
+        (recipient != null && recipient.isMuted()))
     {
       return;
     }
@@ -255,16 +256,21 @@ public class DefaultMessageNotifier implements MessageNotifier {
   @Override
   public void updateNotification(@NonNull Context context, boolean signal, int reminderCount)
   {
-    try (Cursor cursor = DatabaseComponent.get(context).mmsSmsDatabase().getUnread()) {
+    Cursor telcoCursor = null;
+    Cursor pushCursor  = null;
 
-      if ((cursor == null || cursor.isAfterLast()) || !TextSecurePreferences.hasSeenWelcomeScreen(context)) {
+    try {
+      telcoCursor = DatabaseComponent.get(context).mmsSmsDatabase().getUnread(); // TODO: add a notification specific lighter query here
+
+      if ((telcoCursor == null || telcoCursor.isAfterLast()) || !TextSecurePreferences.hasSeenWelcomeScreen(context))
+      {
         cancelActiveNotifications(context);
         updateBadge(context, 0);
         clearReminder(context);
         return;
       }
 
-      NotificationState notificationState = constructNotificationState(context, cursor);
+      NotificationState notificationState = constructNotificationState(context, telcoCursor);
 
       if (signal && (System.currentTimeMillis() - lastAudibleNotification) < MIN_AUDIBLE_PERIOD_MILLIS) {
         signal = false;
@@ -292,6 +298,8 @@ public class DefaultMessageNotifier implements MessageNotifier {
       if (signal) {
         scheduleReminder(context, reminderCount);
       }
+    } finally {
+      if (telcoCursor != null) telcoCursor.close();
     }
   }
 
