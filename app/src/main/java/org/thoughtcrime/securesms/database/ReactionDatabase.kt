@@ -50,13 +50,13 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
       """
         CREATE TRIGGER reactions_sms_delete AFTER DELETE ON ${SmsDatabase.TABLE_NAME} 
         BEGIN 
-        	DELETE FROM $TABLE_NAME WHERE $MESSAGE_ID = old.${SmsDatabase.ID} AND $IS_MMS = 0;
+        	DELETE FROM $TABLE_NAME WHERE $MESSAGE_ID = old.${MmsSmsColumns.ID} AND $IS_MMS = 0;
         END
       """,
       """
         CREATE TRIGGER reactions_mms_delete AFTER DELETE ON ${MmsDatabase.TABLE_NAME} 
         BEGIN 
-        	DELETE FROM $TABLE_NAME WHERE $MESSAGE_ID = old.${MmsDatabase.ID} AND $IS_MMS = 1;
+        	DELETE FROM $TABLE_NAME WHERE $MESSAGE_ID = old.${MmsSmsColumns.ID} AND $IS_MMS = 1;
         END
       """
     )
@@ -205,9 +205,9 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
 
   fun deleteAbandonedReactions() {
     val query = """
-      ($IS_MMS = 0 AND $MESSAGE_ID NOT IN (SELECT ${SmsDatabase.ID} FROM ${SmsDatabase.TABLE_NAME}))
+      ($IS_MMS = 0 AND $MESSAGE_ID NOT IN (SELECT ${MmsSmsColumns.ID} FROM ${SmsDatabase.TABLE_NAME}))
       OR
-      ($IS_MMS = 1 AND $MESSAGE_ID NOT IN (SELECT ${MmsDatabase.ID} FROM ${MmsDatabase.TABLE_NAME}))
+      ($IS_MMS = 1 AND $MESSAGE_ID NOT IN (SELECT ${MmsSmsColumns.ID} FROM ${MmsDatabase.TABLE_NAME}))
     """.trimIndent()
 
     writableDatabase.delete(TABLE_NAME, query, null)
