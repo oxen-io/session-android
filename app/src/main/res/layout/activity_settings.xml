@@ -41,7 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:contentDescription="@string/AccessibilityId_username"
+                    android:contentDescription="@string/AccessibilityId_username_input"
                     android:hint="@string/activity_settings_display_name_edit_text_hint"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
@@ -53,7 +53,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:contentDescription="@string/AccessibilityId_username"
+                    android:contentDescription="@string/AccessibilityId_username_text"
                     android:textColor="@color/text"
                     android:textSize="@dimen/very_large_font_size"
                     android:textStyle="bold" />
