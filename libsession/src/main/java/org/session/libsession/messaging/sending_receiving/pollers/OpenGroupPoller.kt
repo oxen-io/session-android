@@ -20,6 +20,7 @@ import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.open_groups.OpenGroupMessage
 import org.session.libsession.messaging.sending_receiving.MessageReceiver
 import org.session.libsession.messaging.sending_receiving.handle
+import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsignal.protos.SignalServiceProtos
@@ -29,7 +30,6 @@ import org.session.libsignal.utilities.successBackground
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
-import kotlin.math.max
 
 class OpenGroupPoller(private val server: String, private val executorService: ScheduledExecutorService?) {
     var hasStarted = false
@@ -55,7 +55,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         hasStarted = false
     }
 
-    fun poll(): Promise<Unit, Exception> {
+    fun poll(isPostCapabilitiesRetry: Boolean = false): Promise<Unit, Exception> {
         val storage = MessagingModuleConfiguration.shared.storage
         val rooms = storage.getAllOpenGroups().values.filter { it.server == server }.map { it.room }
         rooms.forEach { downloadGroupAvatarIfNeeded(it) }
@@ -85,9 +85,21 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                     isCaughtUp = true
                 }
             }
+        }.fail {
+            updateCapabilitiesIfNeeded(isPostCapabilitiesRetry, it)
         }.always {
             executorService?.schedule(this@OpenGroupPoller::poll, pollInterval, TimeUnit.MILLISECONDS)
         }.map { }
+    }
+
+    private fun updateCapabilitiesIfNeeded(isPostCapabilitiesRetry: Boolean, exception: Exception) {
+        if (!isPostCapabilitiesRetry &&
+            exception is OnionRequestAPI.HTTPRequestFailedAtDestinationException && exception.statusCode == 400 &&
+            exception.message?.contains("Invalid authentication: this server requires the use of hyse") == true) {
+            OpenGroupApi.getCapabilities(server).map {
+                handleCapabilities(server, it)
+            }
+        }
     }
 
     private fun handleCapabilities(server: String, capabilities: OpenGroupApi.Capabilities) {

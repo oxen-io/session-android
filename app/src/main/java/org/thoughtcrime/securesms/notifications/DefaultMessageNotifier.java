@@ -36,6 +36,7 @@ import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -74,9 +75,11 @@ import org.thoughtcrime.securesms.service.KeyCachingService;
 import org.thoughtcrime.securesms.util.SessionMetaProtocol;
 import org.thoughtcrime.securesms.util.SpanUtil;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Executor;
@@ -498,8 +501,8 @@ public class DefaultMessageNotifier implements MessageNotifier {
     NotificationState     notificationState = new NotificationState();
     MmsSmsDatabase.Reader reader            = DatabaseComponent.get(context).mmsSmsDatabase().readerFor(cursor);
     ThreadDatabase        threadDatabase    = DatabaseComponent.get(context).threadDatabase();
-    LokiThreadDatabase lokiThreadDatabase   = DatabaseComponent.get(context).lokiThreadDatabase();
     MessageRecord record;
+    Map<Long, String> cache = new HashMap<Long, String>();
 
     while ((record = reader.getNext()) != null) {
       long         id                    = record.getId();
@@ -544,14 +547,10 @@ public class DefaultMessageNotifier implements MessageNotifier {
       if (threadRecipients == null || !threadRecipients.isMuted()) {
         if (threadRecipients != null && threadRecipients.notifyType == RecipientDatabase.NOTIFY_TYPE_MENTIONS) {
           String userPublicKey = TextSecurePreferences.getLocalNumber(context);
-          OpenGroup openGroup = lokiThreadDatabase.getOpenGroupChat(threadId);
-          KeyPair edKeyPair = KeyPairUtilities.INSTANCE.getUserED25519KeyPair(context);
-          String blindedPublicKey = null;
-          if (openGroup != null && edKeyPair != null) {
-            KeyPair blindedKeyPair = SodiumUtilities.INSTANCE.blindedKeyPair(openGroup.getPublicKey(), edKeyPair);
-            if (blindedKeyPair != null) {
-              blindedPublicKey = new SessionId(IdPrefix.BLINDED, blindedKeyPair.getPublicKey().getAsBytes()).getHexString();
-            }
+          String blindedPublicKey = cache.get(threadId);
+          if (blindedPublicKey == null) {
+            blindedPublicKey = generateBlindedId(threadId, context);
+            cache.put(threadId, blindedPublicKey);
           }
           // check if mentioned here
           boolean isQuoteMentioned = false;
@@ -575,6 +574,19 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
     reader.close();
     return notificationState;
+  }
+
+  private @Nullable String generateBlindedId(long threadId, Context context) {
+    LokiThreadDatabase lokiThreadDatabase   = DatabaseComponent.get(context).lokiThreadDatabase();
+    OpenGroup openGroup = lokiThreadDatabase.getOpenGroupChat(threadId);
+    KeyPair edKeyPair = KeyPairUtilities.INSTANCE.getUserED25519KeyPair(context);
+    if (openGroup != null && edKeyPair != null) {
+      KeyPair blindedKeyPair = SodiumUtilities.INSTANCE.blindedKeyPair(openGroup.getPublicKey(), edKeyPair);
+      if (blindedKeyPair != null) {
+        return new SessionId(IdPrefix.BLINDED, blindedKeyPair.getPublicKey().getAsBytes()).getHexString();
+      }
+    }
+    return null;
   }
 
   private void updateBadge(Context context, int count) {

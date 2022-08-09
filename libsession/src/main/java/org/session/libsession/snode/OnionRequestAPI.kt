@@ -525,11 +525,9 @@ object OnionRequestAPI {
                     // Custom handle a clock out of sync error (v4 returns '425' but included the '406' just in case)
                     406, 425 -> {
                         @Suppress("NAME_SHADOWING")
-                        val body =
-                            mapOf("result" to "Your clock is out of sync with the service node network.")
                         val exception = HTTPRequestFailedAtDestinationException(
                             statusCode,
-                            body,
+                            mapOf("result" to "Your clock is out of sync with the service node network."),
                             destination.description
                         )
                         return deferred.reject(exception)
