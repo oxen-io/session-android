@@ -85,10 +85,9 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                     isCaughtUp = true
                 }
             }
+            executorService?.schedule(this@OpenGroupPoller::poll, pollInterval, TimeUnit.MILLISECONDS)
         }.fail {
             updateCapabilitiesIfNeeded(isPostCapabilitiesRetry, it)
-        }.always {
-            executorService?.schedule(this@OpenGroupPoller::poll, pollInterval, TimeUnit.MILLISECONDS)
         }.map { }
     }
 
@@ -97,6 +96,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
             OpenGroupApi.getCapabilities(server).map {
                 handleCapabilities(server, it)
             }
+            executorService?.schedule({ poll(isPostCapabilitiesRetry = true) }, pollInterval, TimeUnit.MILLISECONDS)
         }
     }
 
