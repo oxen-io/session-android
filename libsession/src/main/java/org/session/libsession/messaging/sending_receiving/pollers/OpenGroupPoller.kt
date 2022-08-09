@@ -94,8 +94,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
 
     private fun updateCapabilitiesIfNeeded(isPostCapabilitiesRetry: Boolean, exception: Exception) {
         if (!isPostCapabilitiesRetry &&
-            exception is OnionRequestAPI.HTTPRequestFailedAtDestinationException && exception.statusCode == 400 &&
-            exception.message?.contains("Invalid authentication: this server requires the use of hyse") == true) {
+            exception is OnionRequestAPI.HTTPRequestFailedBlindingRequiredException) {
             OpenGroupApi.getCapabilities(server).map {
                 handleCapabilities(server, it)
             }
