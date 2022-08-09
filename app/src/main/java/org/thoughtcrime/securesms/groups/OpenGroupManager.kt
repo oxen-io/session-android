@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.annotation.WorkerThread
 import okhttp3.HttpUrl
 import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.open_groups.GroupMemberRole
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPoller
@@ -141,4 +142,14 @@ object OpenGroupManager {
         val threadID = GroupManager.getOpenGroupThreadID(openGroupID, context)
         threadDB.setOpenGroupChat(openGroup, threadID)
     }
+
+    fun isUserModerator(context: Context, groupId: String, standardPublicKey: String, blindedPublicKey: String? = null): Boolean {
+        val memberDatabase = DatabaseComponent.get(context).groupMemberDatabase()
+        val standardRoles = memberDatabase.getGroupMemberRoles(groupId, standardPublicKey)
+        val blindedRoles = blindedPublicKey?.let { memberDatabase.getGroupMemberRoles(groupId, it) } ?: emptyList()
+
+        return GroupMemberRole.ADMIN in standardRoles || GroupMemberRole.MODERATOR in standardRoles ||
+                GroupMemberRole.ADMIN in blindedRoles || GroupMemberRole.MODERATOR in blindedRoles
+    }
+
 }

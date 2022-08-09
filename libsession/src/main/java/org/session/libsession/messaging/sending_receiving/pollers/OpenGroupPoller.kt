@@ -15,6 +15,8 @@ import org.session.libsession.messaging.jobs.TrimThreadJob
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.Endpoint
+import org.session.libsession.messaging.open_groups.GroupMember
+import org.session.libsession.messaging.open_groups.GroupMemberRole
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.open_groups.OpenGroupMessage
@@ -36,8 +38,6 @@ class OpenGroupPoller(private val server: String, private val executorService: S
     var isCaughtUp = false
     var secondToLastJob: MessageReceiveJob? = null
     private var future: ScheduledFuture<*>? = null
-    private val moderators = mutableMapOf<String, Set<String>>()
-    private val admins = mutableMapOf<String, Set<String>>()
 
     companion object {
         private const val pollInterval: Long = 4000L
@@ -93,8 +93,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
     }
 
     private fun updateCapabilitiesIfNeeded(isPostCapabilitiesRetry: Boolean, exception: Exception) {
-        if (!isPostCapabilitiesRetry &&
-            exception is OnionRequestAPI.HTTPRequestFailedBlindingRequiredException) {
+        if (!isPostCapabilitiesRetry && exception is OnionRequestAPI.HTTPRequestFailedBlindingRequiredException) {
             OpenGroupApi.getCapabilities(server).map {
                 handleCapabilities(server, it)
             }
@@ -130,12 +129,12 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         storage.setUserCount(roomToken, server, pollInfo.activeUsers)
 
         // - Moderators
-        pollInfo.details?.moderators?.let {
-            moderators[groupId] = it.toMutableSet()
+        pollInfo.details?.moderators?.forEach {
+            storage.addGroupMember(GroupMember(groupId, it, GroupMemberRole.MODERATOR))
         }
         // - Admins
-        pollInfo.details?.admins?.let {
-            admins[groupId] = it.toMutableSet()
+        pollInfo.details?.admins?.forEach {
+            storage.addGroupMember(GroupMember(groupId, it, GroupMemberRole.ADMIN))
         }
     }
 

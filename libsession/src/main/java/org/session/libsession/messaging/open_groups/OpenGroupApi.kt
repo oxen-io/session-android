@@ -43,8 +43,6 @@ import kotlin.collections.component2
 import kotlin.collections.set
 
 object OpenGroupApi {
-    private val moderators: HashMap<String, Set<String>> =
-        hashMapOf() // Server URL to (channel ID to set of moderator IDs)
     private val curve = Curve25519.getInstance(Curve25519.BEST)
     val defaultRooms = MutableSharedFlow<List<DefaultGroup>>(replay = 1)
     private val hasPerformedInitialPoll = mutableMapOf<String, Boolean>()
@@ -546,10 +544,6 @@ object OpenGroupApi {
             Log.d("Loki", "Unbanned user: $publicKey from: $server.$room")
         }
     }
-
-    @JvmStatic
-    fun isUserModerator(publicKey: String, room: String, server: String): Boolean =
-        moderators["$server.$room"]?.contains(publicKey) ?: false
     // endregion
 
     // region General

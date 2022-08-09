@@ -44,7 +44,7 @@ class BlindedIdMappingDatabase(context: Context, helper: SQLCipherOpenHelper) : 
 
         val mappings: MutableList<BlindedIdMapping> = mutableListOf()
 
-        readableDatabase.query(TABLE_NAME, null, query, args, null, null, null, "1").use { cursor ->
+        readableDatabase.query(TABLE_NAME, null, query, args, null, null, null).use { cursor ->
             while (cursor.moveToNext()) {
                 mappings += readBlindedIdMapping(cursor)
             }
@@ -76,7 +76,7 @@ class BlindedIdMappingDatabase(context: Context, helper: SQLCipherOpenHelper) : 
 
         val mappings: MutableList<BlindedIdMapping> = mutableListOf()
 
-        readableDatabase.query(TABLE_NAME, null, query, args, null, null, null, "1").use { cursor ->
+        readableDatabase.query(TABLE_NAME, null, query, args, null, null, null).use { cursor ->
             while (cursor.moveToNext()) {
                 mappings += readBlindedIdMapping(cursor)
             }

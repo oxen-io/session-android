@@ -37,6 +37,7 @@ import org.thoughtcrime.securesms.database.MmsSmsDatabase
 import org.thoughtcrime.securesms.database.SmsDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
+import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.home.UserDetailsBottomSheet
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.DateUtils
@@ -155,11 +156,7 @@ class VisibleMessageView : LinearLayout {
                 }
                 if (thread.isOpenGroupRecipient) {
                     val openGroup = lokiThreadDb.getOpenGroupChat(threadID) ?: return
-                    val isModerator = OpenGroupApi.isUserModerator(
-                        senderSessionID,
-                        openGroup.room,
-                        openGroup.server
-                    )
+                    val isModerator = OpenGroupManager.isUserModerator(context, senderSessionID, openGroup.groupId)
                     binding.moderatorIconImageView.isVisible = !message.isOutgoing && isModerator
                 }
             }
