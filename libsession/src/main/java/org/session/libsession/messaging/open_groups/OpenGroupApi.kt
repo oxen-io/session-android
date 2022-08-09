@@ -10,7 +10,6 @@ import com.goterl.lazysodium.LazySodiumAndroid
 import com.goterl.lazysodium.SodiumAndroid
 import com.goterl.lazysodium.interfaces.GenericHash
 import com.goterl.lazysodium.interfaces.Sign
-import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.flow.MutableSharedFlow
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.functional.map
@@ -38,6 +37,7 @@ import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.removingIdPrefixIfNeeded
 import org.whispersystems.curve25519.Curve25519
+import java.util.concurrent.TimeUnit
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.collections.set
@@ -330,7 +330,9 @@ object OpenGroupApi {
                 requestBuilder.header("Room", request.room)
             }
             return if (request.useOnionRouting) {
-                OnionRequestAPI.sendOnionRequest(requestBuilder.build(), request.server, publicKey)
+                OnionRequestAPI.sendOnionRequest(requestBuilder.build(), request.server, publicKey).fail { e ->
+                    Log.e("SOGS", "Failed onion request", e)
+                }
             } else {
                 Promise.ofFail(IllegalStateException("It's currently not allowed to send non onion routed requests."))
             }

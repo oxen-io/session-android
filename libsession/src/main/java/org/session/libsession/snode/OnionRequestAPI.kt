@@ -77,7 +77,8 @@ object OnionRequestAPI {
     const val targetPathCount = 2 // A main path and a backup path for the case where the target snode is in the main path
     // endregion
 
-    class HTTPRequestFailedAtDestinationException(val statusCode: Int, val json: Map<*, *>, val destination: String)
+    class HTTPRequestFailedBlindingRequiredException(statusCode: Int, json: Map<*, *>, destination: String): HTTPRequestFailedAtDestinationException(statusCode, json, destination)
+    open class HTTPRequestFailedAtDestinationException(val statusCode: Int, val json: Map<*, *>, val destination: String)
         : Exception("HTTP request failed at destination ($destination) with status code $statusCode.")
     class InsufficientSnodesException : Exception("Couldn't find enough snodes to build a path.")
 
@@ -534,7 +535,11 @@ object OnionRequestAPI {
                     }
                     // Handle error status codes
                     !in 200..299 -> {
-                        val exception = HTTPRequestFailedAtDestinationException(
+                        val responseBody = if (destination is Destination.Server && statusCode == 400) plaintext.getBody(infoLength, infoEndIndex) else null
+                        val requireBlinding = "Invalid authentication: this server requires the use of blinded ids"
+                        val exception = if (responseBody != null && responseBody.decodeToString() == requireBlinding) {
+                            HTTPRequestFailedBlindingRequiredException(400, responseInfo, destination.description)
+                        } else HTTPRequestFailedAtDestinationException(
                             statusCode,
                             responseInfo,
                             destination.description
@@ -543,15 +548,13 @@ object OnionRequestAPI {
                     }
                 }
 
+                val responseBody = plaintext.getBody(infoLength, infoEndIndex)
+
                 // If there is no data in the response, i.e. only `l123:jsone`, then just return the ResponseInfo
-                if (plaintext.size <= "l${infoLength}${info.toByteArray()}e".length) {
+                if (responseBody.isEmpty()) {
                     return deferred.resolve(OnionResponse(responseInfo, null))
                 }
-                // Extract the response data as well
-                val dataSlice = plaintext.slice(infoEndIndex + 1 until plaintext.size - 1)
-                val dataSepIdx = dataSlice.indexOfFirst { byteArrayOf(it).contentEquals(":".toByteArray()) }
-                val responseBody = dataSlice.slice(dataSepIdx + 1 until dataSlice.size)
-                return deferred.resolve(OnionResponse(responseInfo, responseBody.toByteArray()))
+                return deferred.resolve(OnionResponse(responseInfo, responseBody))
             } catch (exception: Exception) {
                 deferred.reject(exception)
             }
@@ -640,6 +643,20 @@ object OnionRequestAPI {
             }
         }
     }
+
+    private fun ByteArray.getBody(infoLength: Int, infoEndIndex: Int): ByteArray {
+        // If there is no data in the response, i.e. only `l123:jsone`, then just return the ResponseInfo
+        val infoLengthStringLength = infoLength.toString().length
+        if (size <= infoLength + infoLengthStringLength + 2/*l and e bytes*/) {
+            return byteArrayOf()
+        }
+        // Extract the response data as well
+        val dataSlice = slice(infoEndIndex + 1 until size - 1)
+        val dataSepIdx = dataSlice.indexOfFirst { byteArrayOf(it).contentEquals(":".toByteArray()) }
+        val responseBody = dataSlice.slice(dataSepIdx + 1 until dataSlice.size)
+        return responseBody.toByteArray()
+    }
+
     // endregion
 }
 
