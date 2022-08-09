@@ -92,11 +92,13 @@ class OpenGroupPoller(private val server: String, private val executorService: S
     }
 
     private fun updateCapabilitiesIfNeeded(isPostCapabilitiesRetry: Boolean, exception: Exception) {
-        if (!isPostCapabilitiesRetry && exception is OnionRequestAPI.HTTPRequestFailedBlindingRequiredException) {
-            OpenGroupApi.getCapabilities(server).map {
-                handleCapabilities(server, it)
+        if (exception is OnionRequestAPI.HTTPRequestFailedBlindingRequiredException) {
+            if (!isPostCapabilitiesRetry) {
+                OpenGroupApi.getCapabilities(server).map {
+                    handleCapabilities(server, it)
+                }
+                executorService?.schedule({ poll(isPostCapabilitiesRetry = true) }, pollInterval, TimeUnit.MILLISECONDS)
             }
-            executorService?.schedule({ poll(isPostCapabilitiesRetry = true) }, pollInterval, TimeUnit.MILLISECONDS)
         } else {
             executorService?.schedule(this@OpenGroupPoller::poll, pollInterval, TimeUnit.MILLISECONDS)
         }
