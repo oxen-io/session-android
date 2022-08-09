@@ -97,6 +97,8 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                 handleCapabilities(server, it)
             }
             executorService?.schedule({ poll(isPostCapabilitiesRetry = true) }, pollInterval, TimeUnit.MILLISECONDS)
+        } else {
+            executorService?.schedule(this@OpenGroupPoller::poll, pollInterval, TimeUnit.MILLISECONDS)
         }
     }
 
