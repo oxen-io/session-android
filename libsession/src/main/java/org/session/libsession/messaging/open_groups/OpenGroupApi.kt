@@ -524,12 +524,12 @@ object OpenGroupApi {
                     json = mapOf("rooms" to listOf(room))
                 ),
                 endpoint = Endpoint.UserBan(publicKey),
-                responseType = object: TypeReference<Nothing>(){}
+                responseType = object: TypeReference<Any>(){}
             ),
             BatchRequestInfo(
                 request = BatchRequest(DELETE, "room/$room/all/$publicKey"),
                 endpoint = Endpoint.RoomDeleteMessages(room, publicKey),
-                responseType = object: TypeReference<Nothing>(){}
+                responseType = object: TypeReference<Any>(){}
             )
         )
         return sequentialBatch(server, requests).map {
