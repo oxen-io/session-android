@@ -76,6 +76,8 @@ class VisibleMessageView : LinearLayout {
     var delegate: VisibleMessageViewDelegate? = null
     val messageContentView: VisibleMessageContentView by lazy { binding.messageContentView }
 
+    private val snIsSelected = false
+
     companion object {
         const val swipeToReplyThreshold = 64.0f // dp
         const val longPressMovementThreshold = 10.0f // dp

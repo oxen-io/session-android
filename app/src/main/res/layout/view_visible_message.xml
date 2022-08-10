@@ -37,7 +37,7 @@
             android:layout_marginBottom="@dimen/small_spacing"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/startSpacing"
-            app:layout_constraintEnd_toStartOf="@+id/expirationTimerViewContainer"
+            app:layout_constraintEnd_toStartOf="@+id/messageInnerContainer"
             android:layout_marginEnd="@dimen/small_spacing"
             android:layout_width="@dimen/very_small_profile_picture_size"
             android:layout_height="@dimen/very_small_profile_picture_size"
@@ -67,16 +67,17 @@
             android:textStyle="bold"
             tools:text="@tools:sample/full_names"
             android:paddingBottom="4dp"
-            app:layout_constraintStart_toStartOf="@+id/expirationTimerViewContainer"
+            app:layout_constraintStart_toStartOf="@+id/messageInnerContainer"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <LinearLayout
+            tools:visibility=""
             android:id="@+id/messageInnerContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="@+id/profilePictureView"
-            app:layout_constraintEnd_toStartOf="@+id/messageTimestampContainer"
+            app:layout_constraintEnd_toStartOf="@+id/messageFooterContainer"
             app:layout_constraintStart_toEndOf="@+id/profilePictureView"
             app:layout_constraintTop_toBottomOf="@+id/senderNameTextView">
 
@@ -104,16 +105,15 @@
 
         </LinearLayout>
 
+        <RelativeLayout
+            android:id="@+id/messageFooterContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <org.thoughtcrime.securesms.conversation.v2.messages.EmojiReactionsView
                 android:id="@+id/emojiReactionsView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone" />
-
-            <RelativeLayout
-                android:id="@+id/messageFooterContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/messageStatusImageView"
