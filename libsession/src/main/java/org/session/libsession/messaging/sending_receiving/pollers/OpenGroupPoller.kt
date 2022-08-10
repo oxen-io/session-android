@@ -162,7 +162,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                 base64EncodedSignature = it.signature
             )
         })
-        handleDeletedMessages(openGroupId, deletions.map { OpenGroupApi.MessageDeletion(it.id, it.seqno) })
+        handleDeletedMessages(openGroupId, deletions.map { it.id })
     }
 
     private fun handleDirectMessages(
@@ -249,14 +249,10 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         }
     }
 
-    private fun handleDeletedMessages(openGroupID: String, deletions: List<OpenGroupApi.MessageDeletion>) {
+    private fun handleDeletedMessages(openGroupID: String, serverIds: List<Long>) {
         val storage = MessagingModuleConfiguration.shared.storage
         val groupID = GroupUtil.getEncodedOpenGroupID(openGroupID.toByteArray())
         val threadID = storage.getThreadId(Address.fromSerialized(groupID)) ?: return
-
-        val serverIds = deletions.map { deletion ->
-            deletion.deletedMessageServerID
-        }
 
         if (serverIds.isNotEmpty()) {
             val deleteJob = OpenGroupDeleteJob(serverIds.toLongArray(), threadID, openGroupID)
