@@ -63,5 +63,5 @@ data class OpenGroup(
 
     val joinURL: String get() = "$server/$room?public_key=$publicKey"
 
-    val groupId: String get() = "$server.room"
+    val groupId: String get() = "$server.$room"
 }

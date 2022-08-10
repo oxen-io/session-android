@@ -11,18 +11,19 @@ class GroupMemberDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
 
     companion object {
         const val TABLE_NAME = "group_member"
-        const val ROW_ID = "_id"
         const val GROUP_ID = "group_id"
         const val PROFILE_ID = "profile_id"
         const val ROLE = "role"
 
+        private val allColumns = arrayOf(GROUP_ID, PROFILE_ID, ROLE)
+
         @JvmField
         val CREATE_GROUP_MEMBER_TABLE_COMMAND = """
       CREATE TABLE $TABLE_NAME (
-        $ROW_ID INTEGER PRIMARY KEY,
         $GROUP_ID TEXT NOT NULL,
         $PROFILE_ID TEXT NOT NULL,
-        $ROLE TEXT NOT NULL
+        $ROLE TEXT NOT NULL,
+        PRIMARY KEY ($GROUP_ID, $PROFILE_ID)
       )
     """.trimIndent()
 
@@ -41,7 +42,7 @@ class GroupMemberDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
 
         val mappings: MutableList<GroupMember> = mutableListOf()
 
-        readableDatabase.query(TABLE_NAME, null, query, args, null, null, null).use { cursor ->
+        readableDatabase.query(TABLE_NAME, allColumns, query, args, null, null, null).use { cursor ->
             while (cursor.moveToNext()) {
                 mappings += readGroupMember(cursor)
             }
@@ -58,8 +59,10 @@ class GroupMemberDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
                 put(PROFILE_ID, member.profileId)
                 put(ROLE, member.role.name)
             }
+            val query = "$GROUP_ID = ? AND $PROFILE_ID = ?"
+            val args = arrayOf(member.groupId, member.profileId)
 
-            writableDatabase.insert(TABLE_NAME, null, values)
+            writableDatabase.insertOrUpdate(TABLE_NAME, values, query, args)
             writableDatabase.setTransactionSuccessful()
         } finally {
             writableDatabase.endTransaction()

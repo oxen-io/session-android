@@ -157,7 +157,14 @@ class VisibleMessageView : LinearLayout {
                 }
                 if (thread.isOpenGroupRecipient) {
                     val openGroup = lokiThreadDb.getOpenGroupChat(threadID) ?: return
-                    val isModerator = OpenGroupManager.isUserModerator(context, senderSessionID, openGroup.groupId)
+                    var standardPublicKey = ""
+                    var blindedPublicKey: String? = null
+                    if (IdPrefix.fromValue(senderSessionID) == IdPrefix.BLINDED) {
+                        blindedPublicKey = senderSessionID
+                    } else {
+                        standardPublicKey = senderSessionID
+                    }
+                    val isModerator = OpenGroupManager.isUserModerator(context, openGroup.groupId, standardPublicKey, blindedPublicKey)
                     binding.moderatorIconImageView.isVisible = !message.isOutgoing && isModerator
                 }
             }
