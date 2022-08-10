@@ -162,9 +162,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                 base64EncodedSignature = it.signature
             )
         })
-        handleDeletedMessages(openGroupId, deletions.map {
-            OpenGroupApi.MessageDeletion(it.id, it.seqno)
-        })
+        handleDeletedMessages(openGroupId, deletions.map { OpenGroupApi.MessageDeletion(it.id, it.seqno) })
     }
 
     private fun handleDirectMessages(

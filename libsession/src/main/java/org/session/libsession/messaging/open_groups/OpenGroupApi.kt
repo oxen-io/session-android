@@ -527,7 +527,7 @@ object OpenGroupApi {
                 responseType = object: TypeReference<Any>(){}
             ),
             BatchRequestInfo(
-                request = BatchRequest(DELETE, "room/$room/all/$publicKey"),
+                request = BatchRequest(DELETE, "/room/$room/all/$publicKey"),
                 endpoint = Endpoint.RoomDeleteMessages(room, publicKey),
                 responseType = object: TypeReference<Any>(){}
             )
