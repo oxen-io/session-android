@@ -24,7 +24,6 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewVisibleMessageBinding
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.contacts.Contact.ContactContext
-import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.ViewUtil
 import org.session.libsignal.utilities.IdPrefix
@@ -145,11 +144,13 @@ class VisibleMessageView : LinearLayout {
                 binding.profilePictureView.root.glide = glide
                 binding.profilePictureView.root.update(message.individualRecipient)
                 binding.profilePictureView.root.setOnClickListener {
-                    if (thread.isOpenGroupRecipient && IdPrefix.fromValue(senderSessionID) == IdPrefix.BLINDED) {
-                        val intent = Intent(context, ConversationActivityV2::class.java)
-                        intent.putExtra(ConversationActivityV2.FROM_GROUP_THREAD_ID, threadID)
-                        intent.putExtra(ConversationActivityV2.ADDRESS, Address.fromSerialized(senderSessionID))
-                        context.startActivity(intent)
+                    if (thread.isOpenGroupRecipient) {
+                        if (IdPrefix.fromValue(senderSessionID) == IdPrefix.BLINDED) {
+                            val intent = Intent(context, ConversationActivityV2::class.java)
+                            intent.putExtra(ConversationActivityV2.FROM_GROUP_THREAD_ID, threadID)
+                            intent.putExtra(ConversationActivityV2.ADDRESS, Address.fromSerialized(senderSessionID))
+                            context.startActivity(intent)
+                        }
                     } else {
                         maybeShowUserDetails(senderSessionID, threadID)
                     }
