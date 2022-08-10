@@ -502,7 +502,7 @@ object OpenGroupApi {
     // region Moderation
     @JvmStatic
     fun ban(publicKey: String, room: String, server: String): Promise<Unit, Exception> {
-        val parameters = mapOf("public_key" to publicKey)
+        val parameters =  mapOf("rooms" to listOf(room))
         val request = Request(
             verb = POST,
             room = room,
@@ -520,7 +520,7 @@ object OpenGroupApi {
             BatchRequestInfo(
                 request = BatchRequest(
                     method = POST,
-                    path = "user/$publicKey/ban",
+                    path = "/user/$publicKey/ban",
                     json = mapOf("rooms" to listOf(room))
                 ),
                 endpoint = Endpoint.UserBan(publicKey),
