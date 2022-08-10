@@ -521,7 +521,7 @@ object OpenGroupApi {
                 request = BatchRequest(
                     method = POST,
                     path = "user/$publicKey/ban",
-                    json = mapOf("roomTokens" to listOf(room))
+                    json = mapOf("rooms" to listOf(room))
                 ),
                 endpoint = Endpoint.UserBan(publicKey),
                 responseType = object: TypeReference<Nothing>(){}
