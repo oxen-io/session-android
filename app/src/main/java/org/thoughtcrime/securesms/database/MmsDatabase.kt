@@ -1447,7 +1447,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
 
         private fun getQuote(cursor: Cursor): Quote? {
             val quoteId = cursor.getLong(cursor.getColumnIndexOrThrow(QUOTE_ID))
-            val quoteAuthor = cursor.getString(cursor.getColumnIndexOrThrow(QUOTE_AUTHOR))
+            val quoteAuthor = cursor.getString(cursor.getColumnIndexOrThrow(QUOTE_AUTHOR)) ?: return null
             val retrievedQuote = get(context).mmsSmsDatabase().getMessageFor(quoteId, quoteAuthor)
             val quoteText = retrievedQuote?.body
             val quoteMissing = retrievedQuote == null

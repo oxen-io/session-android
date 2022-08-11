@@ -108,12 +108,17 @@
             android:id="@+id/emojiReactionsView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/messageInnerContainer"
+            app:layout_constraintEnd_toStartOf="@id/messageFooterContainer"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <RelativeLayout
             android:id="@+id/messageFooterContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/messageInnerContainer">
 
             <ImageView
                 android:id="@+id/messageStatusImageView"
@@ -121,7 +126,6 @@
                 android:layout_height="16dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="2dp"
                 android:padding="2dp"
                 android:src="@drawable/ic_delivery_status_sent" />
 
