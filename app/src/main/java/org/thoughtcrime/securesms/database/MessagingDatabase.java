@@ -44,6 +44,8 @@ public abstract class MessagingDatabase extends Database implements MmsSmsColumn
 
   public abstract boolean deleteMessage(long messageId);
 
+  public abstract void updateThreadId(long fromId, long toId);
+
   public abstract MessageRecord getMessageRecord(long messageId) throws NoSuchMessageException;
 
   public void addMismatchedIdentity(long messageId, Address address, IdentityKey identityKey) {

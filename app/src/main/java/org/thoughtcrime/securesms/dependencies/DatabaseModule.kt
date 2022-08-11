@@ -119,6 +119,14 @@ object DatabaseModule {
 
     @Provides
     @Singleton
+    fun provideBlindedIdMappingDatabase(@ApplicationContext context: Context, openHelper: SQLCipherOpenHelper) = BlindedIdMappingDatabase(context, openHelper)
+
+    @Provides
+    @Singleton
+    fun provideGroupMemberDatabase(@ApplicationContext context: Context, openHelper: SQLCipherOpenHelper) = GroupMemberDatabase(context, openHelper)
+
+    @Provides
+    @Singleton
     fun provideReactionDatabase(@ApplicationContext context: Context, openHelper: SQLCipherOpenHelper) = ReactionDatabase(context,openHelper)
 
     @Provides

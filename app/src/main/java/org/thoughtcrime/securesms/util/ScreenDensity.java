@@ -54,16 +54,6 @@ public final class ScreenDensity {
     return new ScreenDensity(bucket, density);
   }
 
-  public static @NonNull String getBestDensityBucketForDevice() {
-    ScreenDensity density = get(ApplicationContext.getInstance(MessagingModuleConfiguration.shared.getContext()));
-
-    if (density.isKnownDensity()) {
-      return density.bucket;
-    } else {
-      return "xhdpi";
-    }
-  }
-
   public String getBucket() {
     return bucket;
   }

@@ -14,8 +14,10 @@ import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.crypto.DatabaseSecret;
 import org.thoughtcrime.securesms.database.AttachmentDatabase;
+import org.thoughtcrime.securesms.database.BlindedIdMappingDatabase;
 import org.thoughtcrime.securesms.database.DraftDatabase;
 import org.thoughtcrime.securesms.database.GroupDatabase;
+import org.thoughtcrime.securesms.database.GroupMemberDatabase;
 import org.thoughtcrime.securesms.database.GroupReceiptDatabase;
 import org.thoughtcrime.securesms.database.JobDatabase;
 import org.thoughtcrime.securesms.database.LokiAPIDatabase;
@@ -69,6 +71,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
   private static final int lokiV33                          = 54;
   private static final int lokiV34                          = 55;
   private static final int lokiV35                          = 56;
+  private static final int lokiV36                          = 57;
 
   // Loki - onUpgrade(...) must be updated to use Loki version numbers if Signal makes any database changes
   private static final int    DATABASE_VERSION = lokiV35;
@@ -137,6 +140,9 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
     db.execSQL(LokiAPIDatabase.getCreateOpenGroupProfilePictureTableCommand());
     db.execSQL(LokiAPIDatabase.getCreateClosedGroupEncryptionKeyPairsTable());
     db.execSQL(LokiAPIDatabase.getCreateClosedGroupPublicKeysTable());
+    db.execSQL(LokiAPIDatabase.getCreateServerCapabilitiesCommand());
+    db.execSQL(LokiAPIDatabase.getCreateLastInboxMessageServerIdCommand());
+    db.execSQL(LokiAPIDatabase.getCreateLastOutboxMessageServerIdCommand());
     db.execSQL(LokiMessageDatabase.getCreateMessageIDTableCommand());
     db.execSQL(LokiMessageDatabase.getCreateMessageToThreadMappingTableCommand());
     db.execSQL(LokiMessageDatabase.getCreateErrorMessageTableCommand());
@@ -154,7 +160,6 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
     db.execSQL(GroupDatabase.getCreateUpdatedTimestampCommand());
     db.execSQL(RecipientDatabase.getCreateApprovedCommand());
     db.execSQL(RecipientDatabase.getCreateApprovedMeCommand());
-    db.execSQL(MmsDatabase.createMessageRequestResponseCommand);
     db.execSQL(MmsDatabase.CREATE_MESSAGE_REQUEST_RESPONSE_COMMAND);
     db.execSQL(MmsDatabase.CREATE_REACTIONS_UNREAD_COMMAND);
     db.execSQL(SmsDatabase.CREATE_REACTIONS_UNREAD_COMMAND);
@@ -167,6 +172,8 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
     db.execSQL(LokiAPIDatabase.DROP_LEGACY_LAST_HASH);
     db.execSQL(LokiAPIDatabase.INSERT_RECEIVED_HASHES_DATA);
     db.execSQL(LokiAPIDatabase.DROP_LEGACY_RECEIVED_HASHES);
+    db.execSQL(BlindedIdMappingDatabase.CREATE_BLINDED_ID_MAPPING_TABLE_COMMAND);
+    db.execSQL(GroupMemberDatabase.CREATE_GROUP_MEMBER_TABLE_COMMAND);
     db.execSQL(ReactionDatabase.CREATE_REACTION_TABLE_COMMAND);
 
     executeStatements(db, SmsDatabase.CREATE_INDEXS);
@@ -356,7 +363,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
         db.execSQL(RecipientDatabase.getCreateApprovedCommand());
         db.execSQL(RecipientDatabase.getCreateApprovedMeCommand());
         db.execSQL(RecipientDatabase.getUpdateApprovedCommand());
-        db.execSQL(MmsDatabase.createMessageRequestResponseCommand);
+        db.execSQL(MmsDatabase.CREATE_MESSAGE_REQUEST_RESPONSE_COMMAND);
       }
 
       if (oldVersion < lokiV32) {
@@ -379,6 +386,14 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
       }
 
       if (oldVersion < lokiV35) {
+        db.execSQL(LokiAPIDatabase.getCreateServerCapabilitiesCommand());
+        db.execSQL(LokiAPIDatabase.getCreateLastInboxMessageServerIdCommand());
+        db.execSQL(LokiAPIDatabase.getCreateLastOutboxMessageServerIdCommand());
+        db.execSQL(BlindedIdMappingDatabase.CREATE_BLINDED_ID_MAPPING_TABLE_COMMAND);
+        db.execSQL(GroupMemberDatabase.CREATE_GROUP_MEMBER_TABLE_COMMAND);
+      }
+
+      if (oldVersion < lokiV36) {
         db.execSQL(MmsDatabase.CREATE_REACTIONS_UNREAD_COMMAND);
         db.execSQL(SmsDatabase.CREATE_REACTIONS_UNREAD_COMMAND);
         db.execSQL(MmsDatabase.CREATE_REACTIONS_LAST_SEEN_COMMAND);

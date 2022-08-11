@@ -594,6 +594,17 @@ public class SmsDatabase extends MessagingDatabase {
   }
 
   @Override
+  public void updateThreadId(long fromId, long toId) {
+    ContentValues contentValues = new ContentValues(1);
+    contentValues.put(MmsSmsColumns.THREAD_ID, toId);
+
+    SQLiteDatabase db = databaseHelper.getWritableDatabase();
+    db.update(TABLE_NAME, contentValues, THREAD_ID + " = ?", new String[] {fromId + ""});
+    notifyConversationListeners(toId);
+    notifyConversationListListeners();
+  }
+
+  @Override
   public MessageRecord getMessageRecord(long messageId) throws NoSuchMessageException {
     return getMessage(messageId);
   }

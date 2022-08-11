@@ -7,6 +7,7 @@ import android.database.Cursor
 import android.util.SparseArray
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.WorkerThread
@@ -34,8 +35,10 @@ import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
 class ConversationAdapter(
     context: Context,
     cursor: Cursor,
+    private val onItemPress: (MessageRecord, Int, VisibleMessageView, MotionEvent) -> Unit,
     private val onItemSwipeToReply: (MessageRecord, Int) -> Unit,
     private val onItemLongPress: (MessageRecord, Int, VisibleMessageView) -> Unit,
+    private val onDeselect: (MessageRecord, Int) -> Unit,
     private val glide: GlideRequests,
     lifecycleCoroutineScope: LifecycleCoroutineScope
 )
@@ -103,9 +106,9 @@ class ConversationAdapter(
         val messageBefore = getMessageBefore(position, cursor)
         when (viewHolder) {
             is VisibleMessageViewHolder -> {
-                val view = viewHolder.view
                 val visibleMessageView = ViewVisibleMessageBinding.bind(viewHolder.view).visibleMessageView
                 val isSelected = selectedItems.contains(message)
+                visibleMessageView.snIsSelected = isSelected
                 visibleMessageView.indexInAdapter = position
                 val senderId = message.individualRecipient.address.serialize()
                 val senderIdHash = senderId.hashCode()
@@ -119,9 +122,11 @@ class ConversationAdapter(
 
                 visibleMessageView.bind(message, messageBefore, getMessageAfter(position, cursor), glide, searchQuery, contact, senderId)
                 if (!message.isDeleted) {
+                    visibleMessageView.onPress = { event -> onItemPress(message, viewHolder.adapterPosition, visibleMessageView, event) }
                     visibleMessageView.onSwipeToReply = { onItemSwipeToReply(message, viewHolder.adapterPosition) }
-                    visibleMessageView.onLongPress = { onItemLongPress(message, viewHolder.adapterPosition, viewHolder.view as VisibleMessageView) }
+                    visibleMessageView.onLongPress = { onItemLongPress(message, viewHolder.adapterPosition, visibleMessageView) }
                 } else {
+                    visibleMessageView.onPress = null
                     visibleMessageView.onSwipeToReply = null
                     visibleMessageView.onLongPress = null
                 }
@@ -179,6 +184,27 @@ class ConversationAdapter(
         // one for the cursor because the layout is reversed
         if (!cursor.moveToPosition(position - 1)) { return null }
         return messageDB.readerFor(cursor).current
+    }
+
+    override fun changeCursor(cursor: Cursor?) {
+        super.changeCursor(cursor)
+        val toRemove = mutableSetOf<MessageRecord>()
+        val toDeselect = mutableSetOf<Pair<Int, MessageRecord>>()
+        for (selected in selectedItems) {
+            val position = getItemPositionForTimestamp(selected.timestamp)
+            if (position == null || position == -1) {
+                toRemove += selected
+            } else {
+                val item = getMessage(getCursorAtPositionOrThrow(position))
+                if (item == null || item.isDeleted) {
+                    toDeselect += position to selected
+                }
+            }
+        }
+        selectedItems -= toRemove
+        toDeselect.iterator().forEach { (pos, record) ->
+            onDeselect(record, pos)
+        }
     }
 
     fun findLastSeenItemPosition(lastSeenTimestamp: Long): Int? {

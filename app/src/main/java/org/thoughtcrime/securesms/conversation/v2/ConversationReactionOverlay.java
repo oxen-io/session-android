@@ -31,7 +31,7 @@ import androidx.vectordrawable.graphics.drawable.AnimatorInflaterCompat;
 
 import com.annimon.stream.Stream;
 
-import org.session.libsession.messaging.open_groups.OpenGroupV2;
+import org.session.libsession.messaging.open_groups.OpenGroup;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.ThemeUtil;
 import org.session.libsession.utilities.recipients.Recipient;
@@ -685,19 +685,19 @@ public final class ConversationReactionOverlay extends FrameLayout {
     // Prepare
     boolean containsControlMessage = message.isUpdate();
     boolean hasText = !message.getBody().isEmpty();
-    OpenGroupV2 openGroup = DatabaseComponent.get(getContext()).lokiThreadDatabase().getOpenGroupChat(message.getThreadId());
+    OpenGroup openGroup = DatabaseComponent.get(getContext()).lokiThreadDatabase().getOpenGroupChat(message.getThreadId());
     Recipient recipient = DatabaseComponent.get(getContext()).threadDatabase().getRecipientForThreadId(message.getThreadId());
     String userPublicKey = TextSecurePreferences.getLocalNumber(getContext());
     // Delete message
-    if (ConversationMenuItemHelper.userCanDeleteSelectedItems(message, openGroup, userPublicKey)) {
+    if (ConversationMenuItemHelper.userCanDeleteSelectedItems(getContext(), message, openGroup, userPublicKey)) {
       items.add(new ActionItem(R.attr.menu_trash_icon, getContext().getResources().getString(R.string.conversation_context__menu_delete_message), () -> handleActionItemClicked(Action.DELETE)));
     }
     // Ban user
-    if (ConversationMenuItemHelper.userCanBanSelectedUsers(message, openGroup, userPublicKey)) {
+    if (ConversationMenuItemHelper.userCanBanSelectedUsers(getContext(), message, openGroup, userPublicKey)) {
       items.add(new ActionItem(0, getContext().getResources().getString(R.string.conversation_context__menu_ban_user), () -> handleActionItemClicked(Action.BAN_USER)));
     }
     // Ban and delete all
-    if (ConversationMenuItemHelper.userCanBanSelectedUsers(message, openGroup, userPublicKey)) {
+    if (ConversationMenuItemHelper.userCanBanSelectedUsers(getContext(), message, openGroup, userPublicKey)) {
       items.add(new ActionItem(0, getContext().getResources().getString(R.string.conversation_context__menu_ban_and_delete_all), () -> handleActionItemClicked(Action.BAN_AND_DELETE_ALL)));
     }
     // Copy message text
@@ -918,6 +918,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
     COPY_MESSAGE,
     COPY_SESSION_ID,
     VIEW_INFO,
+    SELECT,
     DELETE,
     BAN_USER,
     BAN_AND_DELETE_ALL,

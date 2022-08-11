@@ -1,9 +1,11 @@
 package org.thoughtcrime.securesms.conversation.v2.messages
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Rect
+import android.graphics.drawable.ColorDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -24,10 +26,12 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewVisibleMessageBinding
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.contacts.Contact.ContactContext
-import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
+import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.ViewUtil
+import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.ThreadUtils
 import org.thoughtcrime.securesms.ApplicationContext
+import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.database.LokiThreadDatabase
 import org.thoughtcrime.securesms.database.MmsDatabase
 import org.thoughtcrime.securesms.database.MmsSmsDatabase
@@ -35,10 +39,12 @@ import org.thoughtcrime.securesms.database.SmsDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.MessageId
 import org.thoughtcrime.securesms.database.model.MessageRecord
+import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.home.UserDetailsBottomSheet
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.disableClipping
+import org.thoughtcrime.securesms.util.getColorWithID
 import org.thoughtcrime.securesms.util.toDp
 import org.thoughtcrime.securesms.util.toPx
 import java.util.Date
@@ -70,6 +76,12 @@ class VisibleMessageView : LinearLayout {
     private var onDownTimestamp = 0L
     private var onDoubleTap: (() -> Unit)? = null
     var indexInAdapter: Int = -1
+    var snIsSelected = false
+        set(value) {
+            field = value
+            //TODO: binding.messageTimestampTextView.isVisible = isSelected
+            handleIsSelectedChanged()
+        }
     var onPress: ((event: MotionEvent) -> Unit)? = null
     var onSwipeToReply: (() -> Unit)? = null
     var onLongPress: (() -> Unit)? = null
@@ -123,9 +135,9 @@ class VisibleMessageView : LinearLayout {
         else ViewUtil.dpToPx(context,2)
 
         if (binding.profilePictureView.root.visibility == View.GONE) {
-            val expirationParams = binding.expirationTimerViewContainer.layoutParams as MarginLayoutParams
+            val expirationParams = binding.messageInnerContainer.layoutParams as MarginLayoutParams
             expirationParams.bottomMargin = bottomMargin
-            binding.expirationTimerViewContainer.layoutParams = expirationParams
+            binding.messageInnerContainer.layoutParams = expirationParams
         } else {
             val avatarLayoutParams = binding.profilePictureView.root.layoutParams as MarginLayoutParams
             avatarLayoutParams.bottomMargin = bottomMargin
@@ -138,15 +150,27 @@ class VisibleMessageView : LinearLayout {
                 binding.profilePictureView.root.glide = glide
                 binding.profilePictureView.root.update(message.individualRecipient)
                 binding.profilePictureView.root.setOnClickListener {
-                    showUserDetails(senderSessionID, threadID)
+                    if (thread.isOpenGroupRecipient) {
+                        if (IdPrefix.fromValue(senderSessionID) == IdPrefix.BLINDED) {
+                            val intent = Intent(context, ConversationActivityV2::class.java)
+                            intent.putExtra(ConversationActivityV2.FROM_GROUP_THREAD_ID, threadID)
+                            intent.putExtra(ConversationActivityV2.ADDRESS, Address.fromSerialized(senderSessionID))
+                            context.startActivity(intent)
+                        }
+                    } else {
+                        maybeShowUserDetails(senderSessionID, threadID)
+                    }
                 }
                 if (thread.isOpenGroupRecipient) {
                     val openGroup = lokiThreadDb.getOpenGroupChat(threadID) ?: return
-                    val isModerator = OpenGroupAPIV2.isUserModerator(
-                        senderSessionID,
-                        openGroup.room,
-                        openGroup.server
-                    )
+                    var standardPublicKey = ""
+                    var blindedPublicKey: String? = null
+                    if (IdPrefix.fromValue(senderSessionID) == IdPrefix.BLINDED) {
+                        blindedPublicKey = senderSessionID
+                    } else {
+                        standardPublicKey = senderSessionID
+                    }
+                    val isModerator = OpenGroupManager.isUserModerator(context, openGroup.groupId, standardPublicKey, blindedPublicKey)
                     binding.moderatorIconImageView.isVisible = !message.isOutgoing && isModerator
                 }
             }
@@ -172,8 +196,8 @@ class VisibleMessageView : LinearLayout {
         // Expiration timer
         updateExpirationTimer(message)
         // Calculate max message bubble width
-        var maxWidth = screenWidth - startPadding - endPadding
-        if (binding.profilePictureContainer.visibility != View.GONE) { maxWidth -= binding.profilePictureContainer.width }
+        //TODO: var maxWidth = screenWidth - startPadding - endPadding
+        //TODO: if (binding.profilePictureContainer.visibility != View.GONE) { maxWidth -= binding.profilePictureContainer.width }
         // Emoji Reactions
         if (message.reactions.isNotEmpty()) {
             binding.emojiReactionsView.isVisible = true
@@ -276,11 +300,19 @@ class VisibleMessageView : LinearLayout {
         container.requestLayout()
     }
 
+    private fun handleIsSelectedChanged() {
+        background = if (snIsSelected) {
+            ColorDrawable(context.resources.getColorWithID(R.color.message_selected, context.theme))
+        } else {
+            null
+        }
+    }
+
     override fun onDraw(canvas: Canvas) {
         val spacing = context.resources.getDimensionPixelSize(R.dimen.small_spacing)
         val iconSize = toPx(24, context.resources)
-        val left = binding.expirationTimerViewContainer.left + binding.messageContentView.right + spacing
-        val top = height - (binding.expirationTimerViewContainer.height / 2) - binding.profilePictureView.root.marginBottom - (iconSize / 2)
+        val left = binding.messageInnerContainer.left + binding.messageContentView.right + spacing
+        val top = height - (binding.messageInnerContainer.height / 2) - binding.profilePictureView.root.marginBottom - (iconSize / 2)
         val right = left + iconSize
         val bottom = top + iconSize
         swipeToReplyIconRect.left = left
@@ -307,7 +339,7 @@ class VisibleMessageView : LinearLayout {
 
     // region Interaction
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (onSwipeToReply == null || onLongPress == null) { return false }
+        if (onPress == null || onSwipeToReply == null || onLongPress == null) { return false }
         when (event.action) {
             MotionEvent.ACTION_DOWN -> onDown(event)
             MotionEvent.ACTION_MOVE -> onMove(event)
@@ -328,7 +360,7 @@ class VisibleMessageView : LinearLayout {
 
     private fun onMove(event: MotionEvent) {
         val translationX = toDp(event.rawX + dx, context.resources)
-        if (abs(translationX) < longPressMovementThreshold) {
+        if (abs(translationX) < longPressMovementThreshold || snIsSelected) {
             return
         } else {
             longPressCallback?.let { gestureHandler.removeCallbacks(it) }
@@ -368,7 +400,7 @@ class VisibleMessageView : LinearLayout {
                 this.pressCallback = null
                 onDoubleTap?.invoke()
             } else {
-                val newPressCallback = Runnable { this.pressCallback = null }
+                val newPressCallback = Runnable { onPress(event) }
                 this.pressCallback = newPressCallback
                 gestureHandler.postDelayed(newPressCallback, maxDoubleTapInterval)
             }
@@ -400,7 +432,12 @@ class VisibleMessageView : LinearLayout {
         binding.messageContentView.onContentClick.iterator().forEach { clickHandler -> clickHandler.invoke(event) }
     }
 
-    private fun showUserDetails(publicKey: String, threadID: Long) {
+    private fun onPress(event: MotionEvent) {
+        onPress?.invoke(event)
+        pressCallback = null
+    }
+
+    private fun maybeShowUserDetails(publicKey: String, threadID: Long) {
         val userDetailsBottomSheet = UserDetailsBottomSheet()
         val bundle = bundleOf(
                 UserDetailsBottomSheet.ARGUMENT_PUBLIC_KEY to publicKey,

@@ -94,7 +94,6 @@ public abstract class Database {
     this.databaseHelper = databaseHelper;
   }
 
-
   protected SQLiteDatabase getReadableDatabase() {
     return databaseHelper.getReadableDatabase();
   }

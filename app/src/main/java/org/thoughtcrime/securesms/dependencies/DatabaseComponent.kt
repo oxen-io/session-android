@@ -43,4 +43,6 @@ interface DatabaseComponent {
     fun reactionDatabase(): ReactionDatabase
     fun storage(): Storage
     fun attachmentProvider(): MessageDataProvider
+    fun blindedIdMappingDatabase(): BlindedIdMappingDatabase
+    fun groupMemberDatabase(): GroupMemberDatabase
 }
