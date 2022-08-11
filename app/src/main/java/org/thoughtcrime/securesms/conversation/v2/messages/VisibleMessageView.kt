@@ -79,7 +79,6 @@ class VisibleMessageView : LinearLayout {
     var snIsSelected = false
         set(value) {
             field = value
-            //TODO: binding.messageTimestampTextView.isVisible = isSelected
             handleIsSelectedChanged()
         }
     var onPress: ((event: MotionEvent) -> Unit)? = null
@@ -192,12 +191,15 @@ class VisibleMessageView : LinearLayout {
             }
             binding.messageStatusImageView.setImageDrawable(drawable)
         }
-        binding.messageStatusImageView.isVisible = message.isOutgoing && !message.isSent
+        if (message.isOutgoing) {
+            val lastMessageID = mmsSmsDb.getLastMessageID(message.threadId)
+            binding.messageStatusImageView.isVisible =
+                !message.isSent || message.id == lastMessageID
+        } else {
+            binding.messageStatusImageView.isVisible = false
+        }
         // Expiration timer
         updateExpirationTimer(message)
-        // Calculate max message bubble width
-        //TODO: var maxWidth = screenWidth - startPadding - endPadding
-        //TODO: if (binding.profilePictureContainer.visibility != View.GONE) { maxWidth -= binding.profilePictureContainer.width }
         // Emoji Reactions
         if (message.reactions.isNotEmpty()) {
             binding.emojiReactionsView.isVisible = true

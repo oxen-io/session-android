@@ -76,7 +76,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="@+id/profilePictureView"
-            app:layout_constraintEnd_toStartOf="@+id/messageFooterContainer"
             app:layout_constraintStart_toEndOf="@+id/profilePictureView"
             app:layout_constraintTop_toBottomOf="@+id/senderNameTextView">
 
@@ -110,7 +109,6 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/messageInnerContainer"
-            app:layout_constraintEnd_toStartOf="@id/messageFooterContainer"
             app:layout_constraintStart_toStartOf="parent" />
 
         <RelativeLayout
@@ -118,7 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@+id/messageInnerContainer">
+            app:layout_constraintTop_toBottomOf="@id/messageInnerContainer">
 
             <ImageView
                 android:id="@+id/messageStatusImageView"
