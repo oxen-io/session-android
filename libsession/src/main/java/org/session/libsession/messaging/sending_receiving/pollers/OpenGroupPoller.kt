@@ -231,28 +231,22 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         val threadId = storage.getThreadId(Address.fromSerialized(groupID)) ?: -1
         val threadExists = threadId >= 0
         if (!hasStarted || !threadExists) { return }
-        val envelopes =  mutableListOf<Pair<SignalServiceProtos.Envelope, Long?>>()
+        val envelopes =  mutableListOf<Triple<Long?, SignalServiceProtos.Envelope, Map<String, OpenGroupApi.Reaction>?>>()
         messages.sortedBy { it.serverID!! }.forEach { message ->
             val senderPublicKey = message.sender!!
-            if (message.base64EncodedData != null) {
-                val builder = SignalServiceProtos.Envelope.newBuilder()
-                builder.type = SignalServiceProtos.Envelope.Type.SESSION_MESSAGE
-                builder.source = senderPublicKey
-                builder.sourceDevice = 1
-                builder.content = message.toProto().toByteString()
-                builder.timestamp = message.sentTimestamp
+            val builder = SignalServiceProtos.Envelope.newBuilder()
+            builder.type = SignalServiceProtos.Envelope.Type.SESSION_MESSAGE
+            builder.source = senderPublicKey
+            builder.sourceDevice = 1
+            builder.content = message.toProto().toByteString()
+            builder.timestamp = message.sentTimestamp
 
-                envelopes.add(builder.build() to message.serverID)
-            }
-            if (!message.reactions.isNullOrEmpty()) {
-                val reactions = processOpenGroupReactions(server, roomToken, threadId, message)
-                reactions.forEach(storage::addReaction)
-            }
+            envelopes.add(Triple( message.serverID, builder.build(), message.reactions))
         }
 
         envelopes.chunked(BatchMessageReceiveJob.BATCH_DEFAULT_NUMBER).forEach { list ->
-            val parameters = list.map { (message, serverId) ->
-                MessageReceiveParameters(message.toByteArray(), openGroupMessageServerID = serverId)
+            val parameters = list.map { (serverId, message, reactions) ->
+                MessageReceiveParameters(message.toByteArray(), openGroupMessageServerID = serverId, reactions = reactions)
             }
             JobQueue.shared.add(BatchMessageReceiveJob(parameters, openGroupID))
         }
@@ -260,65 +254,6 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         if (envelopes.isNotEmpty()) {
             JobQueue.shared.add(TrimThreadJob(threadId, openGroupID))
         }
-    }
-    private fun processOpenGroupReactions(server: String, roomToken: String, threadId: Long, message: OpenGroupMessage): List<Reaction> {
-        val reactions = mutableListOf<Reaction>()
-        if (message.reactions.isNullOrEmpty()) return reactions
-        val storage = MessagingModuleConfiguration.shared.storage
-        val (messageId, isSms) = MessagingModuleConfiguration.shared.messageDataProvider.getMessageID(message.serverID!!, threadId) ?: return reactions
-        val userPublicKey = storage.getUserPublicKey()!!
-        val blindedPublicKey = storage.getOpenGroup(roomToken, server)?.publicKey?.let { serverPublicKey ->
-            SodiumUtilities.blindedKeyPair(serverPublicKey, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!)
-                ?.let { SessionId(IdPrefix.BLINDED, it.publicKey.asBytes).hexString }
-        }
-        for ((emoji, reaction) in message.reactions) {
-            val count = reaction.count
-            if (count <= 0) continue
-            val index = reaction.index
-            val reactorIds = reaction.reactors.filter { it != blindedPublicKey }
-            // Add the first reaction (with the count)
-            val firstReactor = reactorIds.first()
-            reactions += Reaction(
-                localId = messageId,
-                isMms = !isSms,
-                publicKey = firstReactor,
-                emoji = emoji,
-                react = true,
-                serverId = "${message.serverID}",
-                count = count,
-                index = index
-            )
-
-            // Add all other reactions
-            reactions.addAll(
-                reactorIds.slice(1 until reactorIds.size).map { reactor ->
-                    Reaction(
-                        localId = messageId,
-                        isMms = !isSms,
-                        publicKey = reactor,
-                        emoji = emoji,
-                        react = true,
-                        serverId = "${message.serverID}",
-                        count = 0,  // Only want this on the first reaction
-                        index = index
-                    )
-                }
-            )
-            // Add the current user reaction (if applicable and not already included)
-            if (reaction.you && !reaction.reactors.contains(userPublicKey)) {
-                reactions += Reaction(
-                    localId = messageId,
-                    isMms = !isSms,
-                    publicKey = userPublicKey,
-                    emoji = emoji,
-                    react = true,
-                    serverId = "${message.serverID}",
-                    count = count,
-                    index = index
-                )
-            }
-        }
-        return reactions
     }
 
     private fun handleDeletedMessages(server: String, roomToken: String, serverIds: List<Long>) {
