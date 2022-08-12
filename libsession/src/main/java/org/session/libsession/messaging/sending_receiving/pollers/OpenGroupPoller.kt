@@ -13,6 +13,7 @@ import org.session.libsession.messaging.jobs.MessageReceiveParameters
 import org.session.libsession.messaging.jobs.OpenGroupDeleteJob
 import org.session.libsession.messaging.jobs.TrimThreadJob
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
+import org.session.libsession.messaging.messages.visible.Reaction
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.Endpoint
 import org.session.libsession.messaging.open_groups.GroupMember
@@ -22,11 +23,14 @@ import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.open_groups.OpenGroupMessage
 import org.session.libsession.messaging.sending_receiving.MessageReceiver
 import org.session.libsession.messaging.sending_receiving.handle
+import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Base64
+import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.successBackground
 import java.util.concurrent.ScheduledExecutorService
@@ -147,22 +151,22 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         roomToken: String,
         messages: List<OpenGroupApi.Message>
     ) {
-        val openGroupId = "$server.$roomToken"
         val sortedMessages = messages.sortedBy { it.seqno }
         sortedMessages.maxOfOrNull { it.seqno }?.let {
             MessagingModuleConfiguration.shared.storage.setLastMessageServerID(roomToken, server, it)
         }
-        val (deletions, additions) = sortedMessages.partition { it.deleted || it.data.isNullOrBlank() }
-        handleNewMessages(openGroupId, additions.map {
+        val (deletions, additions) = sortedMessages.partition { it.deleted || (it.data.isNullOrBlank() && it.reactions == null) }
+        handleNewMessages(server, roomToken, additions.map {
             OpenGroupMessage(
                 serverID = it.id,
                 sender = it.sessionId,
                 sentTimestamp = (it.posted * 1000).toLong(),
-                base64EncodedData = it.data!!,
-                base64EncodedSignature = it.signature
+                base64EncodedData = it.data,
+                base64EncodedSignature = it.signature,
+                reactions = it.reactions
             )
         })
-        handleDeletedMessages(openGroupId, deletions.map { it.id })
+        handleDeletedMessages(server, roomToken, deletions.map { it.id })
     }
 
     private fun handleDirectMessages(
@@ -219,22 +223,31 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         }
     }
 
-    private fun handleNewMessages(openGroupID: String, messages: List<OpenGroupMessage>) {
+    private fun handleNewMessages(server: String, roomToken: String, messages: List<OpenGroupMessage>) {
         val storage = MessagingModuleConfiguration.shared.storage
+        val openGroupID = "$server.$roomToken"
         val groupID = GroupUtil.getEncodedOpenGroupID(openGroupID.toByteArray())
         // check thread still exists
         val threadId = storage.getThreadId(Address.fromSerialized(groupID)) ?: -1
         val threadExists = threadId >= 0
         if (!hasStarted || !threadExists) { return }
-        val envelopes = messages.sortedBy { it.serverID!! }.map { message ->
+        val envelopes =  mutableListOf<Pair<SignalServiceProtos.Envelope, Long?>>()
+        messages.sortedBy { it.serverID!! }.forEach { message ->
             val senderPublicKey = message.sender!!
-            val builder = SignalServiceProtos.Envelope.newBuilder()
-            builder.type = SignalServiceProtos.Envelope.Type.SESSION_MESSAGE
-            builder.source = senderPublicKey
-            builder.sourceDevice = 1
-            builder.content = message.toProto().toByteString()
-            builder.timestamp = message.sentTimestamp
-            builder.build() to message.serverID
+            if (message.base64EncodedData != null) {
+                val builder = SignalServiceProtos.Envelope.newBuilder()
+                builder.type = SignalServiceProtos.Envelope.Type.SESSION_MESSAGE
+                builder.source = senderPublicKey
+                builder.sourceDevice = 1
+                builder.content = message.toProto().toByteString()
+                builder.timestamp = message.sentTimestamp
+
+                envelopes.add(builder.build() to message.serverID)
+            }
+            if (!message.reactions.isNullOrEmpty()) {
+                val reactions = processOpenGroupReactions(server, roomToken, threadId, message)
+                reactions.forEach(storage::addReaction)
+            }
         }
 
         envelopes.chunked(BatchMessageReceiveJob.BATCH_DEFAULT_NUMBER).forEach { list ->
@@ -245,17 +258,77 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         }
 
         if (envelopes.isNotEmpty()) {
-            JobQueue.shared.add(TrimThreadJob(threadId,openGroupID))
+            JobQueue.shared.add(TrimThreadJob(threadId, openGroupID))
         }
     }
-
-    private fun handleDeletedMessages(openGroupID: String, serverIds: List<Long>) {
+    private fun processOpenGroupReactions(server: String, roomToken: String, threadId: Long, message: OpenGroupMessage): List<Reaction> {
+        val reactions = mutableListOf<Reaction>()
+        if (message.reactions.isNullOrEmpty()) return reactions
         val storage = MessagingModuleConfiguration.shared.storage
-        val groupID = GroupUtil.getEncodedOpenGroupID(openGroupID.toByteArray())
+        val (messageId, isSms) = MessagingModuleConfiguration.shared.messageDataProvider.getMessageID(message.serverID!!, threadId) ?: return reactions
+        val userPublicKey = storage.getUserPublicKey()!!
+        val blindedPublicKey = storage.getOpenGroup(roomToken, server)?.publicKey?.let { serverPublicKey ->
+            SodiumUtilities.blindedKeyPair(serverPublicKey, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!)
+                ?.let { SessionId(IdPrefix.BLINDED, it.publicKey.asBytes).hexString }
+        }
+        for ((emoji, reaction) in message.reactions) {
+            val count = reaction.count
+            if (count <= 0) continue
+            val index = reaction.index
+            val reactorIds = reaction.reactors.filter { it != blindedPublicKey }
+            // Add the first reaction (with the count)
+            val firstReactor = reactorIds.first()
+            reactions += Reaction(
+                localId = messageId,
+                isMms = !isSms,
+                publicKey = firstReactor,
+                emoji = emoji,
+                react = true,
+                serverId = "${message.serverID}",
+                count = count,
+                index = index
+            )
+
+            // Add all other reactions
+            reactions.addAll(
+                reactorIds.slice(1 until reactorIds.size).map { reactor ->
+                    Reaction(
+                        localId = messageId,
+                        isMms = !isSms,
+                        publicKey = reactor,
+                        emoji = emoji,
+                        react = true,
+                        serverId = "${message.serverID}",
+                        count = 0,  // Only want this on the first reaction
+                        index = index
+                    )
+                }
+            )
+            // Add the current user reaction (if applicable and not already included)
+            if (reaction.you && !reaction.reactors.contains(userPublicKey)) {
+                reactions += Reaction(
+                    localId = messageId,
+                    isMms = !isSms,
+                    publicKey = userPublicKey,
+                    emoji = emoji,
+                    react = true,
+                    serverId = "${message.serverID}",
+                    count = count,
+                    index = index
+                )
+            }
+        }
+        return reactions
+    }
+
+    private fun handleDeletedMessages(server: String, roomToken: String, serverIds: List<Long>) {
+        val openGroupId = "$server.$roomToken"
+        val storage = MessagingModuleConfiguration.shared.storage
+        val groupID = GroupUtil.getEncodedOpenGroupID(openGroupId.toByteArray())
         val threadID = storage.getThreadId(Address.fromSerialized(groupID)) ?: return
 
         if (serverIds.isNotEmpty()) {
-            val deleteJob = OpenGroupDeleteJob(serverIds.toLongArray(), threadID, openGroupID)
+            val deleteJob = OpenGroupDeleteJob(serverIds.toLongArray(), threadID, openGroupId)
             JobQueue.shared.add(deleteJob)
         }
     }

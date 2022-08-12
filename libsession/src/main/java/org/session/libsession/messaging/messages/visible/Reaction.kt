@@ -6,10 +6,14 @@ import org.session.libsignal.utilities.Log
 
 class Reaction() {
     var timestamp: Long? = 0
+    var localId: Long? = 0
+    var isMms: Boolean? = false
     var publicKey: String? = null
     var emoji: String? = null
     var react: Boolean? = true
     var serverId: String? = null
+    var count: Long? = 0
+    var index: Long? = 0
     var dateSent: Long? = 0
     var dateReceived: Long? = 0
 
@@ -22,19 +26,24 @@ class Reaction() {
 
         fun fromProto(proto: SignalServiceProtos.DataMessage.Reaction): Reaction? {
             val react = proto.action == Action.REACT
-            return Reaction(proto.id, proto.author, proto.emoji, react)
+            return Reaction(proto.author, proto.emoji, react, proto.id)
         }
 
         fun from(timestamp: Long, author: String, emoji: String, react: Boolean): Reaction? {
-            return Reaction(timestamp, author, emoji, react)
+            return Reaction(author, emoji, react, timestamp)
         }
     }
 
-    internal constructor(timestamp: Long, publicKey: String, emoji: String, react: Boolean) : this() {
+    internal constructor(publicKey: String, emoji: String, react: Boolean, timestamp: Long? = 0, localId: Long? = 0, isMms: Boolean? = false, serverId: String? = null, count: Long? = 0, index: Long? = 0) : this() {
         this.timestamp = timestamp
         this.publicKey = publicKey
         this.emoji = emoji
         this.react = react
+        this.serverId = serverId
+        this.localId = localId
+        this.isMms = isMms
+        this.count = count
+        this.index = index
     }
 
     fun toProto(): SignalServiceProtos.DataMessage.Reaction? {

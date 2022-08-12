@@ -26,6 +26,8 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
     const val IS_MMS = "is_mms"
     const val AUTHOR_ID = "author_id"
     const val SERVER_ID = "server_id"
+    const val COUNT = "count"
+    const val SORT_ID = "sort_id"
     const val EMOJI = "emoji"
     const val DATE_SENT = "reaction_date_sent"
     const val DATE_RECEIVED = "reaction_date_received"
@@ -39,6 +41,8 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
         $AUTHOR_ID INTEGER NOT NULL REFERENCES ${RecipientDatabase.TABLE_NAME} (${RecipientDatabase.ID}) ON DELETE CASCADE,
         $EMOJI TEXT NOT NULL,
         $SERVER_ID TEXT NOT NULL,
+        $COUNT INTEGER NOT NULL,
+        $SORT_ID INTEGER NOT NULL,
         $DATE_SENT INTEGER NOT NULL,
         $DATE_RECEIVED INTEGER NOT NULL,
         UNIQUE($MESSAGE_ID, $IS_MMS, $EMOJI, $AUTHOR_ID) ON CONFLICT REPLACE
@@ -68,6 +72,8 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
         emoji = CursorUtil.requireString(cursor, EMOJI),
         author = CursorUtil.requireString(cursor, AUTHOR_ID),
         serverId = CursorUtil.requireString(cursor, SERVER_ID),
+        count = CursorUtil.requireLong(cursor, COUNT),
+        sortId = CursorUtil.requireLong(cursor, SORT_ID),
         dateSent = CursorUtil.requireLong(cursor, DATE_SENT),
         dateReceived = CursorUtil.requireLong(cursor, DATE_RECEIVED)
       )
@@ -132,6 +138,8 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
         put(EMOJI, reaction.emoji)
         put(AUTHOR_ID, reaction.author)
         put(SERVER_ID, reaction.serverId)
+        put(COUNT, reaction.count)
+        put(SORT_ID, reaction.sortId)
         put(DATE_SENT, reaction.dateSent)
         put(DATE_RECEIVED, reaction.dateReceived)
       }
@@ -232,6 +240,8 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
                 `object`.getString(AUTHOR_ID),
                 `object`.getString(EMOJI),
                 `object`.getString(SERVER_ID),
+                `object`.getLong(COUNT),
+                `object`.getLong(SORT_ID),
                 `object`.getLong(DATE_SENT),
                 `object`.getLong(DATE_RECEIVED)
               )
@@ -248,6 +258,8 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
             cursor.getString(cursor.getColumnIndexOrThrow(AUTHOR_ID)),
             cursor.getString(cursor.getColumnIndexOrThrow(EMOJI)),
             cursor.getString(cursor.getColumnIndexOrThrow(SERVER_ID)),
+            cursor.getLong(cursor.getColumnIndexOrThrow(COUNT)),
+            cursor.getLong(cursor.getColumnIndexOrThrow(SORT_ID)),
             cursor.getLong(cursor.getColumnIndexOrThrow(DATE_SENT)),
             cursor.getLong(cursor.getColumnIndexOrThrow(DATE_RECEIVED))
           )
@@ -274,6 +286,8 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
         put(EMOJI, reaction.emoji)
         put(AUTHOR_ID, reaction.author)
         put(SERVER_ID, reaction.serverId)
+        put(COUNT, reaction.count)
+        put(SORT_ID, reaction.sortId)
         put(DATE_SENT, reaction.dateSent)
         put(DATE_RECEIVED, reaction.dateReceived)
       }

@@ -114,6 +114,7 @@ object OpenGroupApi {
     data class BatchRequestInfo<T>(
         val request: BatchRequest,
         val endpoint: Endpoint,
+        val queryParameters: Map<String, String> = mapOf(),
         val responseType: TypeReference<T>
     )
 
@@ -179,7 +180,15 @@ object OpenGroupApi {
         val whisperMods: String = "",
         val whisperTo: String = "",
         val data: String? = null,
-        val signature: String? = null
+        val signature: String? = null,
+        val reactions: Map<String, Reaction>? = null,
+    )
+
+    data class Reaction(
+        val count: Long = 0,
+        val reactors: List<String> = emptyList(),
+        val you: Boolean = false,
+        val index: Long = 0
     )
 
     @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
@@ -470,6 +479,54 @@ object OpenGroupApi {
         }
         return messages
     }
+
+    fun getReactors(room: String, server: String, messageId: Long, emoji: String): Promise<Map<*, *>, Exception> {
+        val request = Request(
+            verb = GET,
+            room = room,
+            server = server,
+            endpoint = Endpoint.Reactors(room, messageId, emoji)
+        )
+        return getResponseBody(request).map { response ->
+            JsonUtil.fromJson(response, Map::class.java)
+        }
+    }
+
+    fun addReaction(room: String, server: String, messageId: Long, emoji: String): Promise<Map<*, *>, Exception> {
+        val request = Request(
+            verb = PUT,
+            room = room,
+            server = server,
+            endpoint = Endpoint.Reaction(room, messageId, emoji)
+        )
+        return getResponseBody(request).map { response ->
+            JsonUtil.fromJson(response, Map::class.java)
+        }
+    }
+
+    fun deleteReaction(room: String, server: String, messageId: Long, emoji: String): Promise<Map<*, *>, Exception> {
+        val request = Request(
+            verb = DELETE,
+            room = room,
+            server = server,
+            endpoint = Endpoint.Reaction(room, messageId, emoji)
+        )
+        return getResponseBody(request).map { response ->
+            JsonUtil.fromJson(response, Map::class.java)
+        }
+    }
+
+    fun deleteAllReactions(room: String, server: String, messageId: Long, emoji: String): Promise<Map<*, *>, Exception> {
+        val request = Request(
+            verb = DELETE,
+            room = room,
+            server = server,
+            endpoint = Endpoint.ReactionDelete(room, messageId, emoji)
+        )
+        return getResponseBody(request).map { response ->
+            JsonUtil.fromJson(response, Map::class.java)
+        }
+    }
     // endregion
 
     // region Message Deletion
@@ -608,7 +665,7 @@ object OpenGroupApi {
                     BatchRequestInfo(
                         request = BatchRequest(
                             method = GET,
-                            path = "/room/$room/messages/recent"
+                            path = "/room/$room/messages/recent?t=r&reactors=20"
                         ),
                         endpoint = Endpoint.RoomMessagesRecent(room),
                         responseType = object : TypeReference<List<Message>>(){}
@@ -617,7 +674,7 @@ object OpenGroupApi {
                     BatchRequestInfo(
                         request = BatchRequest(
                             method = GET,
-                            path = "/room/$room/messages/since/$lastMessageServerId"
+                            path = "/room/$room/messages/since/$lastMessageServerId?t=r&reactors=20"
                         ),
                         endpoint = Endpoint.RoomMessagesSince(room, lastMessageServerId),
                         responseType = object : TypeReference<List<Message>>(){}

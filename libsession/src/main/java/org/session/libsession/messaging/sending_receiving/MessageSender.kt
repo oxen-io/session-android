@@ -1,6 +1,5 @@
 package org.session.libsession.messaging.sending_receiving
 
-import com.goterl.lazysodium.utils.KeyPair
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.deferred
 import org.session.libsession.messaging.MessagingModuleConfiguration
