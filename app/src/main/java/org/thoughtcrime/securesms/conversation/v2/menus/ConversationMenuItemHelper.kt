@@ -62,6 +62,7 @@ object ConversationMenuItemHelper {
     fun onMenuItemSelected(item: MenuItem, message: MessageRecord, delegate: ConversationActionModeCallbackDelegate) {
         val selectedItems = setOf(message)
         when (item.itemId) {
+            R.id.menu_context_select_message -> delegate.selectMessages(selectedItems)
             R.id.menu_context_delete_message -> delegate.deleteMessages(selectedItems)
             R.id.menu_context_ban_user -> delegate.banUser(selectedItems)
             R.id.menu_context_ban_and_delete_all -> delegate.banAndDeleteAll(selectedItems)

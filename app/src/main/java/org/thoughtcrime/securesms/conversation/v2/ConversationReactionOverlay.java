@@ -688,6 +688,8 @@ public final class ConversationReactionOverlay extends FrameLayout {
     OpenGroup openGroup = DatabaseComponent.get(getContext()).lokiThreadDatabase().getOpenGroupChat(message.getThreadId());
     Recipient recipient = DatabaseComponent.get(getContext()).threadDatabase().getRecipientForThreadId(message.getThreadId());
     String userPublicKey = TextSecurePreferences.getLocalNumber(getContext());
+    // Select message
+    items.add(new ActionItem(0, getContext().getResources().getString(R.string.conversation_context__menu_select_message), () -> handleActionItemClicked(Action.SELECT)));
     // Delete message
     if (ConversationMenuItemHelper.userCanDeleteSelectedItems(getContext(), message, openGroup, userPublicKey)) {
       items.add(new ActionItem(R.attr.menu_trash_icon, getContext().getResources().getString(R.string.conversation_context__menu_delete_message), () -> handleActionItemClicked(Action.DELETE)));

@@ -72,9 +72,11 @@ class ContextMenuList(recyclerView: RecyclerView, onItemClick: () -> Unit) {
     val title: TextView = itemView.findViewById(R.id.context_menu_item_title)
 
     override fun bind(model: DisplayItem) {
-      val typedValue = TypedValue()
-      context.theme.resolveAttribute(model.item.iconRes, typedValue, true)
-      icon.setImageDrawable(ContextCompat.getDrawable(context, typedValue.resourceId))
+      if (model.item.iconRes > 0) {
+        val typedValue = TypedValue()
+        context.theme.resolveAttribute(model.item.iconRes, typedValue, true)
+        icon.setImageDrawable(ContextCompat.getDrawable(context, typedValue.resourceId))
+      }
       title.text = model.item.title
       itemView.setOnClickListener {
         model.item.action.run()

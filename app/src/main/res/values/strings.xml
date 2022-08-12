@@ -564,6 +564,7 @@
     <string name="conversation_context__menu_resend_message">Resend message</string>
     <string name="conversation_context__menu_reply_to_message">Reply to message</string>
     <string name="conversation_context__menu_call">Call</string>
+    <string name="conversation_context__menu_select_message">Select message</string>
 
     <!-- conversation_context_image -->
     <string name="conversation_context_image__save_attachment">Save attachment</string>
