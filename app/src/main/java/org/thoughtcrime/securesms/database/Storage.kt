@@ -894,15 +894,22 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
     }
 
     override fun addReaction(reaction: Reaction) {
-        val messageRecord = DatabaseComponent.get(context).mmsSmsDatabase().getMessageForTimestamp(reaction.timestamp!!) ?: return
+        val messageId = if (reaction.timestamp != null) {
+            val messageRecord = DatabaseComponent.get(context).mmsSmsDatabase().getMessageForTimestamp(reaction.timestamp!!) ?: return
+            MessageId(messageRecord.id, messageRecord.isMms)
+        } else {
+            MessageId(reaction.localId!!, reaction.isMms!!)
+        }
         DatabaseComponent.get(context).reactionDatabase().addReaction(
-            MessageId(messageRecord.id, messageRecord.isMms),
+            messageId,
             ReactionRecord(
-                messageId = messageRecord.id,
-                isMms = messageRecord.isMms,
+                messageId = messageId.id,
+                isMms = messageId.mms,
                 author = reaction.publicKey!!,
                 emoji = reaction.emoji!!,
                 serverId = reaction.serverId!!,
+                count = reaction.count!!,
+                sortId = reaction.index!!,
                 dateSent = reaction.dateSent!!,
                 dateReceived = reaction.dateReceived!!
             )

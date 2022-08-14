@@ -13,6 +13,7 @@ import org.session.libsession.messaging.jobs.MessageReceiveParameters
 import org.session.libsession.messaging.jobs.OpenGroupDeleteJob
 import org.session.libsession.messaging.jobs.TrimThreadJob
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
+import org.session.libsession.messaging.messages.visible.Reaction
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.Endpoint
 import org.session.libsession.messaging.open_groups.GroupMember
@@ -22,11 +23,14 @@ import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.open_groups.OpenGroupMessage
 import org.session.libsession.messaging.sending_receiving.MessageReceiver
 import org.session.libsession.messaging.sending_receiving.handle
+import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Base64
+import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.successBackground
 import java.util.concurrent.ScheduledExecutorService
@@ -147,22 +151,22 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         roomToken: String,
         messages: List<OpenGroupApi.Message>
     ) {
-        val openGroupId = "$server.$roomToken"
         val sortedMessages = messages.sortedBy { it.seqno }
         sortedMessages.maxOfOrNull { it.seqno }?.let {
             MessagingModuleConfiguration.shared.storage.setLastMessageServerID(roomToken, server, it)
         }
-        val (deletions, additions) = sortedMessages.partition { it.deleted || it.data.isNullOrBlank() }
-        handleNewMessages(openGroupId, additions.map {
+        val (deletions, additions) = sortedMessages.partition { it.deleted || (it.data.isNullOrBlank() && it.reactions == null) }
+        handleNewMessages(server, roomToken, additions.map {
             OpenGroupMessage(
                 serverID = it.id,
                 sender = it.sessionId,
                 sentTimestamp = (it.posted * 1000).toLong(),
-                base64EncodedData = it.data!!,
-                base64EncodedSignature = it.signature
+                base64EncodedData = it.data,
+                base64EncodedSignature = it.signature,
+                reactions = it.reactions
             )
         })
-        handleDeletedMessages(openGroupId, deletions.map { it.id })
+        handleDeletedMessages(server, roomToken, deletions.map { it.id })
     }
 
     private fun handleDirectMessages(
@@ -219,14 +223,16 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         }
     }
 
-    private fun handleNewMessages(openGroupID: String, messages: List<OpenGroupMessage>) {
+    private fun handleNewMessages(server: String, roomToken: String, messages: List<OpenGroupMessage>) {
         val storage = MessagingModuleConfiguration.shared.storage
+        val openGroupID = "$server.$roomToken"
         val groupID = GroupUtil.getEncodedOpenGroupID(openGroupID.toByteArray())
         // check thread still exists
         val threadId = storage.getThreadId(Address.fromSerialized(groupID)) ?: -1
         val threadExists = threadId >= 0
         if (!hasStarted || !threadExists) { return }
-        val envelopes = messages.sortedBy { it.serverID!! }.map { message ->
+        val envelopes =  mutableListOf<Triple<Long?, SignalServiceProtos.Envelope, Map<String, OpenGroupApi.Reaction>?>>()
+        messages.sortedBy { it.serverID!! }.forEach { message ->
             val senderPublicKey = message.sender!!
             val builder = SignalServiceProtos.Envelope.newBuilder()
             builder.type = SignalServiceProtos.Envelope.Type.SESSION_MESSAGE
@@ -234,28 +240,30 @@ class OpenGroupPoller(private val server: String, private val executorService: S
             builder.sourceDevice = 1
             builder.content = message.toProto().toByteString()
             builder.timestamp = message.sentTimestamp
-            builder.build() to message.serverID
+
+            envelopes.add(Triple( message.serverID, builder.build(), message.reactions))
         }
 
         envelopes.chunked(BatchMessageReceiveJob.BATCH_DEFAULT_NUMBER).forEach { list ->
-            val parameters = list.map { (message, serverId) ->
-                MessageReceiveParameters(message.toByteArray(), openGroupMessageServerID = serverId)
+            val parameters = list.map { (serverId, message, reactions) ->
+                MessageReceiveParameters(message.toByteArray(), openGroupMessageServerID = serverId, reactions = reactions)
             }
             JobQueue.shared.add(BatchMessageReceiveJob(parameters, openGroupID))
         }
 
         if (envelopes.isNotEmpty()) {
-            JobQueue.shared.add(TrimThreadJob(threadId,openGroupID))
+            JobQueue.shared.add(TrimThreadJob(threadId, openGroupID))
         }
     }
 
-    private fun handleDeletedMessages(openGroupID: String, serverIds: List<Long>) {
+    private fun handleDeletedMessages(server: String, roomToken: String, serverIds: List<Long>) {
+        val openGroupId = "$server.$roomToken"
         val storage = MessagingModuleConfiguration.shared.storage
-        val groupID = GroupUtil.getEncodedOpenGroupID(openGroupID.toByteArray())
+        val groupID = GroupUtil.getEncodedOpenGroupID(openGroupId.toByteArray())
         val threadID = storage.getThreadId(Address.fromSerialized(groupID)) ?: return
 
         if (serverIds.isNotEmpty()) {
-            val deleteJob = OpenGroupDeleteJob(serverIds.toLongArray(), threadID, openGroupID)
+            val deleteJob = OpenGroupDeleteJob(serverIds.toLongArray(), threadID, openGroupId)
             JobQueue.shared.add(deleteJob)
         }
     }

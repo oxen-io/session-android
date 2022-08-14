@@ -16,7 +16,9 @@ import org.session.libsession.messaging.messages.control.ReadReceipt
 import org.session.libsession.messaging.messages.control.TypingIndicator
 import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.visible.Attachment
+import org.session.libsession.messaging.messages.visible.Reaction
 import org.session.libsession.messaging.messages.visible.VisibleMessage
+import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.attachments.PointerAttachment
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
@@ -316,6 +318,68 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage,
     cancelTypingIndicatorsIfNeeded(message.sender!!)
     return null
 }
+
+fun MessageReceiver.handleOpenGroupReactions(
+    threadId: Long,
+    openGroupMessageServerID: Long,
+    reactions: Map<String, OpenGroupApi.Reaction>?
+) {
+    if (reactions.isNullOrEmpty()) return
+    val storage = MessagingModuleConfiguration.shared.storage
+    val (messageId, isSms) = MessagingModuleConfiguration.shared.messageDataProvider.getMessageID(openGroupMessageServerID, threadId) ?: return
+    val userPublicKey = storage.getUserPublicKey()!!
+    val blindedPublicKey = storage.getOpenGroup(threadId)?.publicKey?.let { serverPublicKey ->
+        SodiumUtilities.blindedKeyPair(serverPublicKey, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!)
+            ?.let { SessionId(IdPrefix.BLINDED, it.publicKey.asBytes).hexString }
+    }
+    for ((emoji, reaction) in reactions) {
+        val count = reaction.count
+        if (count <= 0) continue
+        val index = reaction.index
+        val reactorIds = reaction.reactors.filter { it != blindedPublicKey }
+        // Add the first reaction (with the count)
+        val firstReactor = reactorIds.first()
+        storage.addReaction(Reaction(
+            localId = messageId,
+            isMms = !isSms,
+            publicKey = firstReactor,
+            emoji = emoji,
+            react = true,
+            serverId = "$openGroupMessageServerID",
+            count = count,
+            index = index
+        ))
+
+        // Add all other reactions
+        reactorIds.slice(1 until reactorIds.size).map { reactor ->
+            storage.addReaction(Reaction(
+                localId = messageId,
+                isMms = !isSms,
+                publicKey = reactor,
+                emoji = emoji,
+                react = true,
+                serverId = "$openGroupMessageServerID",
+                count = 0,  // Only want this on the first reaction
+                index = index
+            ))
+        }
+
+        // Add the current user reaction (if applicable and not already included)
+        if (reaction.you && !reaction.reactors.contains(userPublicKey)) {
+            storage.addReaction(Reaction(
+                localId = messageId,
+                isMms = !isSms,
+                publicKey = userPublicKey,
+                emoji = emoji,
+                react = true,
+                serverId = "$openGroupMessageServerID",
+                count = count,
+                index = index
+            ))
+        }
+    }
+}
+
 //endregion
 
 // region Closed Groups

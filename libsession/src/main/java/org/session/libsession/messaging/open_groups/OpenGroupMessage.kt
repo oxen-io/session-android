@@ -19,12 +19,13 @@ data class OpenGroupMessage(
     /**
      * The serialized protobuf in base64 encoding.
      */
-    val base64EncodedData: String,
+    val base64EncodedData: String?,
     /**
      * When sending a message, the sender signs the serialized protobuf with their private key so that
      * a receiving user can verify that the message wasn't tampered with.
      */
-    val base64EncodedSignature: String? = null
+    val base64EncodedSignature: String? = null,
+    val reactions: Map<String, OpenGroupApi.Reaction>? = null
 ) {
 
     companion object {
@@ -47,7 +48,7 @@ data class OpenGroupMessage(
     }
 
     fun sign(room: String, server: String, fallbackSigningType: IdPrefix): OpenGroupMessage? {
-        if (base64EncodedData.isEmpty()) return null
+        if (base64EncodedData.isNullOrEmpty()) return null
         val userEdKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return null
         val openGroup = MessagingModuleConfiguration.shared.storage.getOpenGroup(room, server) ?: return null
         val serverCapabilities = MessagingModuleConfiguration.shared.storage.getServerCapabilities(server)
@@ -78,7 +79,7 @@ data class OpenGroupMessage(
         return copy(base64EncodedSignature = Base64.encodeBytes(signature))
     }
 
-    fun toJSON(): Map<String, Any> {
+    fun toJSON(): Map<String, Any?> {
         val json = mutableMapOf( "data" to base64EncodedData, "timestamp" to sentTimestamp )
         serverID?.let { json["server_id"] = it }
         sender?.let { json["public_key"] = it }
