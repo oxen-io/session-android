@@ -249,15 +249,12 @@ object OpenGroupApi {
     }
 
     private fun send(request: Request): Promise<OnionResponse, Exception> {
-        val url = HttpUrl.parse(request.server) ?: return Promise.ofFail(Error.InvalidURL)
-        val urlBuilder = HttpUrl.Builder()
-            .scheme(url.scheme())
-            .host(url.host())
-            .port(url.port())
-            .addPathSegments(request.endpoint.value)
-        if (request.verb == GET) {
+        HttpUrl.parse(request.server) ?: return Promise.ofFail(Error.InvalidURL)
+        val urlBuilder = StringBuilder("${request.server}/${request.endpoint.value}")
+        if (request.verb == GET && request.queryParameters.isNotEmpty()) {
+            urlBuilder.append("?")
             for ((key, value) in request.queryParameters) {
-                urlBuilder.addQueryParameter(key, value)
+                urlBuilder.append("$key=$value")
             }
         }
         fun execute(): Promise<OnionResponse, Exception> {
@@ -267,7 +264,7 @@ object OpenGroupApi {
                     ?: return Promise.ofFail(Error.NoPublicKey)
             val ed25519KeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair()
                 ?: return Promise.ofFail(Error.NoEd25519KeyPair)
-            val urlRequest = urlBuilder.build()
+            val urlRequest = urlBuilder.toString()
             val headers = request.headers.toMutableMap()
             if (request.isAuthRequired) {
                 val nonce = sodium.nonce(16)
@@ -303,7 +300,7 @@ object OpenGroupApi {
                     .plus(nonce)
                     .plus("$timestamp".toByteArray(Charsets.US_ASCII))
                     .plus(request.verb.rawValue.toByteArray())
-                    .plus(urlRequest.encodedPath().toByteArray())
+                    .plus("/${request.endpoint.value}".toByteArray())
                     .plus(bodyHash)
                 if (serverCapabilities.contains("blind")) {
                     SodiumUtilities.blindedKeyPair(publicKey, ed25519KeyPair)?.let { keyPair ->
