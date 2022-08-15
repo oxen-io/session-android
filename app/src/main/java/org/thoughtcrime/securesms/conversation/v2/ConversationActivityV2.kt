@@ -1014,7 +1014,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             view.width,
             message.isOutgoing,
             view)
-        reactionDelegate.show(this, message, selectedConversationModel);
+        reactionDelegate.show(this, message, selectedConversationModel)
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
