@@ -497,7 +497,8 @@ object OpenGroupApi {
             verb = PUT,
             room = room,
             server = server,
-            endpoint = Endpoint.Reaction(room, messageId, emoji)
+            endpoint = Endpoint.Reaction(room, messageId, emoji),
+            parameters = emptyMap<String, String>()
         )
         return getResponseBody(request).map { response ->
             JsonUtil.fromJson(response, Map::class.java)

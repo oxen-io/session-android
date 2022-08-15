@@ -1051,7 +1051,14 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         reactionDb.addReaction(messageId, reaction)
         // Send it
         message.reaction = Reaction.from(messageTimestamp, author, emoji, true)
-        MessageSender.send(message, recipient.address)
+        if (recipient.isOpenGroupRecipient) {
+            val messageServerId = lokiMessageDb.getServerID(messageId.id, !messageId.mms) ?: return
+            lokiThreadDb.getOpenGroupChat(viewModel.threadId)?.let {
+                OpenGroupApi.addReaction(it.room, it.server, messageServerId, emoji)
+            }
+        } else {
+            MessageSender.send(message, recipient.address)
+        }
         LoaderManager.getInstance(this).restartLoader(0, null, this)
     }
 
@@ -1063,7 +1070,14 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val author = textSecurePreferences.getLocalNumber()!!
         reactionDb.deleteReaction(emoji, messageId, author)
         message.reaction = Reaction.from(messageTimestamp, author, emoji, false)
-        MessageSender.send(message, recipient.address)
+        if (recipient.isOpenGroupRecipient) {
+            val messageServerId = lokiMessageDb.getServerID(messageId.id, !messageId.mms) ?: return
+            lokiThreadDb.getOpenGroupChat(viewModel.threadId)?.let {
+                OpenGroupApi.deleteReaction(it.room, it.server, messageServerId, emoji)
+            }
+        } else {
+            MessageSender.send(message, recipient.address)
+        }
         LoaderManager.getInstance(this).restartLoader(0, null, this)
     }
 
