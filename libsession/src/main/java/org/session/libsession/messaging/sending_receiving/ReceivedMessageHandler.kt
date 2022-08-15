@@ -338,17 +338,18 @@ fun MessageReceiver.handleOpenGroupReactions(
         val index = reaction.index
         val reactorIds = reaction.reactors.filter { it != blindedPublicKey }
         // Add the first reaction (with the count)
-        val firstReactor = reactorIds.first()
-        storage.addReaction(Reaction(
-            localId = messageId,
-            isMms = !isSms,
-            publicKey = firstReactor,
-            emoji = emoji,
-            react = true,
-            serverId = "$openGroupMessageServerID",
-            count = count,
-            index = index
-        ))
+        reactorIds.firstOrNull()?.let {
+            storage.addReaction(Reaction(
+                localId = messageId,
+                isMms = !isSms,
+                publicKey = it,
+                emoji = emoji,
+                react = true,
+                serverId = "$openGroupMessageServerID",
+                count = count,
+                index = index
+            ))
+        }
 
         // Add all other reactions
         reactorIds.slice(1 until reactorIds.size).map { reactor ->
