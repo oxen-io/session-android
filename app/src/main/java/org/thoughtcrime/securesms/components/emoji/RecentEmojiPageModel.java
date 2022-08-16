@@ -30,8 +30,8 @@ public class RecentEmojiPageModel implements EmojiPageModel {
   private static final String EMOJI_LRU_PREFERENCE = "pref_recent_emoji2";
   private static final int    EMOJI_LRU_SIZE       = 50;
   public static final  String KEY                  = "Recents";
-  public static final List<String> DEFAULT_REACTIONS_LIST = Arrays.asList("\u2764\ufe0f",
-          "\ud83d\udc4d", "\ud83d\udc4e", "\ud83d\ude02", "\ud83d\ude2e", "\ud83d\ude22");
+  public static final List<String> DEFAULT_REACTIONS_LIST =
+          Arrays.asList("\ud83d\ude02", "\ud83e\udd70", "\ud83d\ude22", "\ud83d\ude21", "\ud83d\ude2e", "\ud83d\ude08");
 
   private final SharedPreferences     prefs;
   private final LinkedHashSet<String> recentlyUsed;

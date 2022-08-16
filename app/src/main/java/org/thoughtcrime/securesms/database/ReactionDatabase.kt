@@ -81,7 +81,7 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
   }
 
   fun getReactions(messageId: MessageId): List<ReactionRecord> {
-    val query = "$MESSAGE_ID = ? AND $IS_MMS = ?"
+    val query = "$MESSAGE_ID = ? AND $IS_MMS = ? ORDER BY $SORT_ID"
     val args = arrayOf("${messageId.id}", "${if (messageId.mms) 1 else 0}")
 
     val reactions: MutableList<ReactionRecord> = mutableListOf()
@@ -93,39 +93,6 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
     }
 
     return reactions
-  }
-
-  fun getReactionsForMessages(messageIds: Collection<MessageId>): Map<MessageId, List<ReactionRecord>> {
-    if (messageIds.isEmpty()) {
-      return emptyMap()
-    }
-
-    val messageIdToReactions: MutableMap<MessageId, MutableList<ReactionRecord>> = mutableMapOf()
-
-    val args: List<Array<String>> = messageIds.map { arrayOf("$it.id", "${if (it.mms) 1 else 0}") }
-
-    for (query: SqlUtil.Query in SqlUtil.buildCustomCollectionQuery("$MESSAGE_ID = ? AND $IS_MMS = ?", args)) {
-      readableDatabase.query(TABLE_NAME, null, query.where, query.whereArgs, null, null, null).use { cursor ->
-        while (cursor.moveToNext()) {
-          val reaction: ReactionRecord = readReaction(cursor)
-          val messageId = MessageId(
-            id = CursorUtil.requireLong(cursor, MESSAGE_ID),
-            mms = CursorUtil.requireBoolean(cursor, IS_MMS)
-          )
-
-          var reactionsList: MutableList<ReactionRecord>? = messageIdToReactions[messageId]
-
-          if (reactionsList == null) {
-            reactionsList = mutableListOf()
-            messageIdToReactions[messageId] = reactionsList
-          }
-
-          reactionsList.add(reaction)
-        }
-      }
-    }
-
-    return messageIdToReactions
   }
 
   fun addReaction(messageId: MessageId, reaction: ReactionRecord) {
@@ -179,19 +146,6 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
     }
   }
 
-  fun deleteReactions(messageId: MessageId) {
-    writableDatabase.delete(TABLE_NAME, "$MESSAGE_ID = ? AND $IS_MMS = ?", arrayOf("${messageId.id}", "${if (messageId.mms) 1 else 0}"))
-  }
-
-  fun hasReaction(messageId: MessageId, reaction: ReactionRecord): Boolean {
-    val query = "$MESSAGE_ID = ? AND $IS_MMS = ? AND $AUTHOR_ID = ? AND $EMOJI = ? AND $SERVER_ID = ?"
-    val args = arrayOf("${messageId.id}", "${if (messageId.mms) 1 else 0}", reaction.author, reaction.emoji, reaction.serverId)
-
-    readableDatabase.query(TABLE_NAME, arrayOf(MESSAGE_ID), query, args, null, null, null).use { cursor ->
-      return cursor.moveToFirst()
-    }
-  }
-
   private fun hasReactions(messageId: MessageId): Boolean {
     val query = "$MESSAGE_ID = ? AND $IS_MMS = ?"
     val args = arrayOf("${messageId.id}", "${if (messageId.mms) 1 else 0}")
@@ -199,26 +153,6 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
     readableDatabase.query(TABLE_NAME, arrayOf(MESSAGE_ID), query, args, null, null, null).use { cursor ->
       return cursor.moveToFirst()
     }
-  }
-
-  fun remapRecipient(oldAuthorId: String, newAuthorId: String) {
-    val query = "$AUTHOR_ID = ?"
-    val args = arrayOf(oldAuthorId)
-    val values = ContentValues().apply {
-      put(AUTHOR_ID, newAuthorId)
-    }
-
-    readableDatabase.update(TABLE_NAME, values, query, args)
-  }
-
-  fun deleteAbandonedReactions() {
-    val query = """
-      ($IS_MMS = 0 AND $MESSAGE_ID NOT IN (SELECT ${MmsSmsColumns.ID} FROM ${SmsDatabase.TABLE_NAME}))
-      OR
-      ($IS_MMS = 1 AND $MESSAGE_ID NOT IN (SELECT ${MmsSmsColumns.ID} FROM ${MmsDatabase.TABLE_NAME}))
-    """.trimIndent()
-
-    writableDatabase.delete(TABLE_NAME, query, null)
   }
 
   fun getReactions(cursor: Cursor): List<ReactionRecord> {
