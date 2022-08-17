@@ -33,6 +33,7 @@
 
     <TextView
         style="@style/SessionIDTextView"
+        android:contentDescription="@string/AccessibilityId_session_id"
         android:id="@+id/publicKeyTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -49,6 +50,7 @@
     <Button
         style="@style/Widget.Session.Button.Common.ProminentFilled"
         android:id="@+id/registerButton"
+        android:contentDescription="@string/AccessibilityId_continue"
         android:layout_width="match_parent"
         android:layout_height="@dimen/medium_button_height"
         android:layout_marginLeft="@dimen/massive_spacing"
