@@ -12,7 +12,7 @@ import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.PublicKeyValidation
 import org.session.libsignal.utilities.Snode
-import org.session.libsignal.utilities.removing05PrefixIfNeeded
+import org.session.libsignal.utilities.removingIdPrefixIfNeeded
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
@@ -59,9 +59,9 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         private val token = "token"
         @JvmStatic val createOpenGroupAuthTokenTableCommand = "CREATE TABLE $openGroupAuthTokenTable ($server TEXT PRIMARY KEY, $token TEXT);"
         // Last message server IDs
-        private val lastMessageServerIDTable = "loki_api_last_message_server_id_cache"
+        private const val lastMessageServerIDTable = "loki_api_last_message_server_id_cache"
         private val lastMessageServerIDTableIndex = "loki_api_last_message_server_id_cache_index"
-        private val lastMessageServerID = "last_message_server_id"
+        private const val lastMessageServerID = "last_message_server_id"
         @JvmStatic val createLastMessageServerIDTableCommand = "CREATE TABLE $lastMessageServerIDTable ($lastMessageServerIDTableIndex STRING PRIMARY KEY, $lastMessageServerID INTEGER DEFAULT 0);"
         // Last deletion server IDs
         private val lastDeletionServerIDTable = "loki_api_last_deletion_server_id_cache"
@@ -127,6 +127,21 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         """
         const val INSERT_RECEIVED_HASHES_DATA = "INSERT OR IGNORE INTO $receivedMessageHashValuesTable($publicKey, $receivedMessageHashValues) SELECT $publicKey, $receivedMessageHashValues FROM $legacyReceivedMessageHashValuesTable3;"
         const val DROP_LEGACY_RECEIVED_HASHES = "DROP TABLE $legacyReceivedMessageHashValuesTable3;"
+        // Open group server capabilities
+        private val serverCapabilitiesTable = "open_group_server_capabilities"
+        private val capabilities = "capabilities"
+        @JvmStatic
+        val createServerCapabilitiesCommand = "CREATE TABLE $serverCapabilitiesTable($server STRING PRIMARY KEY, $capabilities STRING)"
+        // Last inbox message server IDs
+        private val lastInboxMessageServerIdTable = "open_group_last_inbox_message_server_id_cache"
+        private val lastInboxMessageServerId = "last_inbox_message_server_id"
+        @JvmStatic
+        val createLastInboxMessageServerIdCommand = "CREATE TABLE $lastInboxMessageServerIdTable($server STRING PRIMARY KEY, $lastInboxMessageServerId INTEGER DEFAULT 0)"
+        // Last outbox message server IDs
+        private val lastOutboxMessageServerIdTable = "open_group_last_outbox_message_server_id_cache"
+        private val lastOutboxMessageServerId = "last_outbox_message_server_id"
+        @JvmStatic
+        val createLastOutboxMessageServerIdCommand = "CREATE TABLE $lastOutboxMessageServerIdTable($server STRING PRIMARY KEY, $lastOutboxMessageServerId INTEGER DEFAULT 0)"
 
         // region Deprecated
         private val deviceLinkCache = "loki_pairing_authorisation_cache"
@@ -138,6 +153,9 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
             "$requestSignature STRING NULLABLE DEFAULT NULL, $authorizationSignature STRING NULLABLE DEFAULT NULL, PRIMARY KEY ($masterPublicKey, $slavePublicKey));"
         private val sessionRequestTimestampCache = "session_request_timestamp_cache"
         @JvmStatic val createSessionRequestTimestampCacheCommand = "CREATE TABLE $sessionRequestTimestampCache ($publicKey STRING PRIMARY KEY, $timestamp STRING);"
+
+        const val RESET_SEQ_NO = "UPDATE $lastMessageServerIDTable SET $lastMessageServerID = 0;"
+
         // endregion
     }
 
@@ -427,14 +445,14 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
 
     override fun getUserX25519KeyPair(): ECKeyPair {
         val keyPair = IdentityKeyUtil.getIdentityKeyPair(context)
-        return ECKeyPair(DjbECPublicKey(keyPair.publicKey.serialize().removing05PrefixIfNeeded()), DjbECPrivateKey(keyPair.privateKey.serialize()))
+        return ECKeyPair(DjbECPublicKey(keyPair.publicKey.serialize().removingIdPrefixIfNeeded()), DjbECPrivateKey(keyPair.privateKey.serialize()))
     }
 
     fun addClosedGroupEncryptionKeyPair(encryptionKeyPair: ECKeyPair, groupPublicKey: String) {
         val database = databaseHelper.writableDatabase
         val timestamp = Date().time.toString()
         val index = "$groupPublicKey-$timestamp"
-        val encryptionKeyPairPublicKey = encryptionKeyPair.publicKey.serialize().toHexString().removing05PrefixIfNeeded()
+        val encryptionKeyPairPublicKey = encryptionKeyPair.publicKey.serialize().toHexString().removingIdPrefixIfNeeded()
         val encryptionKeyPairPrivateKey = encryptionKeyPair.privateKey.serialize().toHexString()
         val row = wrap(mapOf(closedGroupsEncryptionKeyPairIndex to index, Companion.encryptionKeyPairPublicKey to encryptionKeyPairPublicKey,
                 Companion.encryptionKeyPairPrivateKey to encryptionKeyPairPrivateKey ))
@@ -483,6 +501,53 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
     fun removeClosedGroupPublicKey(groupPublicKey: String) {
         val database = databaseHelper.writableDatabase
         database.delete(closedGroupPublicKeysTable, "${Companion.groupPublicKey} = ?", wrap(groupPublicKey))
+    }
+
+    fun setServerCapabilities(serverName: String, serverCapabilities: List<String>) {
+        val database = databaseHelper.writableDatabase
+        val row = wrap(mapOf(server to serverName, capabilities to serverCapabilities.joinToString(",")))
+        database.insertOrUpdate(serverCapabilitiesTable, row, "$server = ?", wrap(serverName))
+    }
+
+    fun getServerCapabilities(serverName: String): List<String> {
+        val database = databaseHelper.writableDatabase
+        return database.get(serverCapabilitiesTable, "$server = ?", wrap(serverName)) { cursor ->
+            cursor.getString(capabilities)
+        }?.split(",") ?: emptyList()
+    }
+
+    fun setLastInboxMessageId(serverName: String, newValue: Long) {
+        val database = databaseHelper.writableDatabase
+        val row = wrap(mapOf(server to serverName, lastInboxMessageServerId to newValue.toString()))
+        database.insertOrUpdate(lastInboxMessageServerIdTable, row, "$server = ?", wrap(serverName))
+    }
+
+    fun getLastInboxMessageId(serverName: String): Long? {
+        val database = databaseHelper.writableDatabase
+        return database.get(lastInboxMessageServerIdTable, "$server = ?", wrap(serverName)) { cursor ->
+            cursor.getInt(lastInboxMessageServerId)
+        }?.toLong()
+    }
+
+    fun removeLastInboxMessageId(serverName: String) {
+        databaseHelper.writableDatabase.delete(lastInboxMessageServerIdTable, "$server = ?", wrap(serverName))
+    }
+
+    fun setLastOutboxMessageId(serverName: String, newValue: Long) {
+        val database = databaseHelper.writableDatabase
+        val row = wrap(mapOf(server to serverName, lastOutboxMessageServerId to newValue.toString()))
+        database.insertOrUpdate(lastOutboxMessageServerIdTable, row, "$server = ?", wrap(serverName))
+    }
+
+    fun getLastOutboxMessageId(serverName: String): Long? {
+        val database = databaseHelper.writableDatabase
+        return database.get(lastOutboxMessageServerIdTable, "$server = ?", wrap(serverName)) { cursor ->
+            cursor.getInt(lastOutboxMessageServerId)
+        }?.toLong()
+    }
+
+    fun removeLastOutboxMessageId(serverName: String) {
+        databaseHelper.writableDatabase.delete(lastOutboxMessageServerIdTable, "$server = ?", wrap(serverName))
     }
 
     override fun getForkInfo(): ForkInfo {

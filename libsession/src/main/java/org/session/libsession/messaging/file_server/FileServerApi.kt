@@ -6,14 +6,12 @@ import okhttp3.Headers
 import okhttp3.HttpUrl
 import okhttp3.MediaType
 import okhttp3.RequestBody
-import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsignal.utilities.HTTP
-import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
 
-object FileServerAPIV2 {
+object FileServerApi {
 
     private const val serverPublicKey = "da21e1d886c6fbaea313f75298bd64aab03a97ce985b46bb2dad9f2089c8ee59"
     const val server = "http://filev2.getsession.org"
@@ -39,6 +37,7 @@ object FileServerAPIV2 {
             val queryParameters: Map<String, String> = mapOf(),
             val parameters: Any? = null,
             val headers: Map<String, String> = mapOf(),
+            val body: ByteArray? = null,
             /**
          * Always `true` under normal circumstances. You might want to disable
          * this when running over Lokinet.
@@ -46,14 +45,15 @@ object FileServerAPIV2 {
         val useOnionRouting: Boolean = true
     )
 
-    private fun createBody(parameters: Any?): RequestBody? {
+    private fun createBody(body: ByteArray?, parameters: Any?): RequestBody? {
+        if (body != null) return RequestBody.create(MediaType.get("application/octet-stream"), body)
         if (parameters == null) return null
         val parametersAsJSON = JsonUtil.toJson(parameters)
         return RequestBody.create(MediaType.get("application/json"), parametersAsJSON)
     }
 
-    private fun send(request: Request): Promise<Map<*, *>, Exception> {
-        val url = HttpUrl.parse(server) ?: return Promise.ofFail(OpenGroupAPIV2.Error.InvalidURL)
+    private fun send(request: Request): Promise<ByteArray, Exception> {
+        val url = HttpUrl.parse(server) ?: return Promise.ofFail(Error.InvalidURL)
         val urlBuilder = HttpUrl.Builder()
             .scheme(url.scheme())
             .host(url.host())
@@ -69,33 +69,39 @@ object FileServerAPIV2 {
             .headers(Headers.of(request.headers))
         when (request.verb) {
             HTTP.Verb.GET -> requestBuilder.get()
-            HTTP.Verb.PUT -> requestBuilder.put(createBody(request.parameters)!!)
-            HTTP.Verb.POST -> requestBuilder.post(createBody(request.parameters)!!)
-            HTTP.Verb.DELETE -> requestBuilder.delete(createBody(request.parameters))
+            HTTP.Verb.PUT -> requestBuilder.put(createBody(request.body, request.parameters)!!)
+            HTTP.Verb.POST -> requestBuilder.post(createBody(request.body, request.parameters)!!)
+            HTTP.Verb.DELETE -> requestBuilder.delete(createBody(request.body, request.parameters))
         }
-        if (request.useOnionRouting) {
-            return OnionRequestAPI.sendOnionRequest(requestBuilder.build(), server, serverPublicKey).fail { e ->
+        return if (request.useOnionRouting) {
+            OnionRequestAPI.sendOnionRequest(requestBuilder.build(), server, serverPublicKey).map {
+                it.body ?: throw Error.ParsingFailed
+            }.fail { e ->
                 Log.e("Loki", "File server request failed.", e)
             }
         } else {
-            return Promise.ofFail(IllegalStateException("It's currently not allowed to send non onion routed requests."))
+            Promise.ofFail(IllegalStateException("It's currently not allowed to send non onion routed requests."))
         }
     }
 
     fun upload(file: ByteArray): Promise<Long, Exception> {
-        val base64EncodedFile = Base64.encodeBytes(file)
-        val parameters = mapOf( "file" to base64EncodedFile )
-        val request = Request(verb = HTTP.Verb.POST, endpoint = "files", parameters = parameters)
-        return send(request).map { json ->
-            json["result"] as? Long ?: throw OpenGroupAPIV2.Error.ParsingFailed
+        val request = Request(
+            verb = HTTP.Verb.POST,
+            endpoint = "file",
+            body = file,
+            headers = mapOf(
+                "Content-Disposition" to "attachment",
+                "Content-Type" to "application/octet-stream"
+            )
+        )
+        return send(request).map { response ->
+            val json = JsonUtil.fromJson(response, Map::class.java)
+            (json["id"] as? String)?.toLong() ?: throw Error.ParsingFailed
         }
     }
 
-    fun download(file: Long): Promise<ByteArray, Exception> {
-        val request = Request(verb = HTTP.Verb.GET, endpoint = "files/$file")
-        return send(request).map { json ->
-            val base64EncodedFile = json["result"] as? String ?: throw Error.ParsingFailed
-            Base64.decode(base64EncodedFile) ?: throw Error.ParsingFailed
-        }
+    fun download(file: String): Promise<ByteArray, Exception> {
+        val request = Request(verb = HTTP.Verb.GET, endpoint = "file/$file")
+        return send(request)
     }
 }
