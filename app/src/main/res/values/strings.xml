@@ -17,7 +17,10 @@
     <!-- Session ID Page-->
     <string name="AccessibilityId_session_id">Session ID</string>
     <string name="AccessibilityId_continue">Continue</string>
+<<<<<<< Updated upstream
     <string name="AccessibilityId_continue_message_notifications">Continue with settings</string>
+=======
+>>>>>>> Stashed changes
     <string name="AccessibilityId_copy_session_id">Copy Session ID</string>
     <!--Restore by seed page-->
     <string name="AccessibilityId_enter_your_recovery_phrase">Enter your recovery phrase</string>
@@ -32,6 +35,7 @@
     <!--Home Page-->
     <string name="AccessibilityId_profile_picture">Profile picture</string>
     <string name="AccessibilityId_search_icon">Search icon</string>
+<<<<<<< Updated upstream
     <string name="AccessibilityId_message_request_banner">Message requests banner</string>
     <string name="AccessibilityId_message_request">Message request</string>
     <!--New conversation pop up-->
@@ -62,6 +66,13 @@
     <string name="AccessibilityId_cancel_button">Cancel</string>
 
 
+=======
+    <!--Settings Page-->
+    <string name="AccessibilityId_username">Username</string>
+    <string name="AccessibilityId_show_recovery_phrase">Show recovery phrase</string>
+<!--    Recovery Phrase Dialog-->
+    <string name="AccessibilityId_cancel_button">Cancel</string>
+>>>>>>> Stashed changes
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">New message</string>
 

@@ -103,7 +103,11 @@
 
         <Button
             style="@style/Widget.Session.Button.Common.ProminentFilled"
+<<<<<<< Updated upstream
             android:contentDescription="@string/AccessibilityId_continue_message_notifications"
+=======
+            android:contentDescription="@string/AccessibilityId_continue"
+>>>>>>> Stashed changes
             android:id="@+id/registerButton"
             android:layout_width="match_parent"
             android:layout_height="@dimen/medium_button_height"
