@@ -13,5 +13,4 @@ sealed class EmojiPage(open val uri: Uri) : Key {
   }
 
   data class Asset(override val uri: Uri) : EmojiPage(uri)
-  data class Disk(override val uri: Uri) : EmojiPage(uri)
 }

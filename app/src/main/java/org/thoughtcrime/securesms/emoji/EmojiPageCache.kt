@@ -9,7 +9,6 @@ import org.session.libsession.utilities.ListenableFutureTask
 import org.session.libsession.utilities.SoftHashMap
 import org.session.libsession.utilities.concurrent.SimpleTask
 import org.session.libsignal.utilities.Log
-import org.thoughtcrime.securesms.mms.PartAuthority
 import java.io.IOException
 import java.io.InputStream
 
@@ -69,7 +68,6 @@ object EmojiPageCache {
   private fun loadInternal(context: Context, emojiPageRequest: EmojiPageRequest): Bitmap? {
     val inputStream: InputStream = when (emojiPageRequest.emojiPage) {
       is EmojiPage.Asset -> context.assets.open(emojiPageRequest.emojiPage.uri.toString().replace("file:///android_asset/", ""))
-      is EmojiPage.Disk -> EmojiFiles.openForReading(context, PartAuthority.getEmojiFilename(emojiPageRequest.emojiPage.uri))
     }
 
     val bitmapOptions = BitmapFactory.Options()

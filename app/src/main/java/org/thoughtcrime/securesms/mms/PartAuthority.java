@@ -22,11 +22,9 @@ public class PartAuthority {
   private static final String PART_URI_STRING     = "content://network.loki.provider.securesms/part";
   private static final String THUMB_URI_STRING    = "content://network.loki.provider.securesms/thumb";
   private static final String STICKER_URI_STRING  = "content://network.loki.provider.securesms/sticker";
-  private static final String EMOJI_URI_STRING    = "content://network.loki.provider.securesms/emoji";
   private static final Uri    PART_CONTENT_URI    = Uri.parse(PART_URI_STRING);
   private static final Uri    THUMB_CONTENT_URI   = Uri.parse(THUMB_URI_STRING);
   private static final Uri    STICKER_CONTENT_URI = Uri.parse(STICKER_URI_STRING);
-  private static final Uri    EMOJI_CONTENT_URI         = Uri.parse(EMOJI_URI_STRING);
 
   private static final int PART_ROW       = 1;
   private static final int THUMB_ROW      = 2;
@@ -124,14 +122,6 @@ public class PartAuthority {
   public static Uri getAttachmentThumbnailUri(AttachmentId attachmentId) {
     Uri uri = Uri.withAppendedPath(THUMB_CONTENT_URI, String.valueOf(attachmentId.getUniqueId()));
     return ContentUris.withAppendedId(uri, attachmentId.getRowId());
-  }
-
-  public static Uri getEmojiUri(String sprite) {
-    return Uri.withAppendedPath(EMOJI_CONTENT_URI, sprite);
-  }
-
-  public static String getEmojiFilename(Uri uri) {
-    return uri.getPathSegments().get(1);
   }
 
   public static boolean isLocalUri(final @NonNull Uri uri) {
