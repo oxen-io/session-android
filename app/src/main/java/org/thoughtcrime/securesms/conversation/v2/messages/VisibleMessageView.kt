@@ -203,7 +203,7 @@ class VisibleMessageView : LinearLayout {
         // Emoji Reactions
         if (message.reactions.isNotEmpty()) {
             binding.emojiReactionsView.isVisible = true
-            binding.emojiReactionsView.setReactions(message.reactions, message.isOutgoing, binding.messageInnerContainer.width, delegate)
+            binding.emojiReactionsView.setReactions(message.reactions, message.isOutgoing, binding.messageContentView.width, delegate)
             binding.emojiReactionsView.setOnLongClickListener {
                 if (message.recipient.isClosedGroupRecipient) {
                     delegate?.onReactionLongClicked(MessageId(message.id, message.isMms))

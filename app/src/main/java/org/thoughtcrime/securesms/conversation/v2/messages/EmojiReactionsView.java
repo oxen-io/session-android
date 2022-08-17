@@ -19,7 +19,6 @@ import com.annimon.stream.Stream;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
 import org.thoughtcrime.securesms.components.emoji.EmojiUtil;
-import org.thoughtcrime.securesms.conversation.v2.ViewUtil;
 import org.thoughtcrime.securesms.database.model.MessageId;
 import org.thoughtcrime.securesms.database.model.ReactionRecord;
 
@@ -32,9 +31,6 @@ import java.util.Map;
 import network.loki.messenger.R;
 
 public class EmojiReactionsView extends LinearLayout {
-
-  // Normally 6dp, but we have 1dp left+right margin on the pills themselves
-  private static final int OUTER_MARGIN = ViewUtil.dpToPx(5);
 
   private boolean              outgoing;
   private List<ReactionRecord> records;
@@ -108,25 +104,6 @@ public class EmojiReactionsView extends LinearLayout {
       }
     } else {
       showLess.setVisibility(GONE);
-    }
-    measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-
-    int railWidth = getMeasuredWidth();
-
-    if (railWidth < (bubbleWidth - OUTER_MARGIN)) {
-      int margin = (bubbleWidth - railWidth - OUTER_MARGIN);
-
-      if (outgoing) {
-        ViewUtil.setRightMargin(this, margin);
-      } else {
-        ViewUtil.setLeftMargin(this, margin);
-      }
-    } else {
-      if (outgoing) {
-        ViewUtil.setRightMargin(this, OUTER_MARGIN);
-      } else {
-        ViewUtil.setLeftMargin(this, OUTER_MARGIN);
-      }
     }
   }
 
