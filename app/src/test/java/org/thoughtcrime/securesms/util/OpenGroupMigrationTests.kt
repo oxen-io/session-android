@@ -11,8 +11,8 @@ import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
-import org.session.libsession.messaging.open_groups.OpenGroupV2
+import org.session.libsession.messaging.open_groups.OpenGroup
+import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.database.GroupDatabase
@@ -160,14 +160,14 @@ class OpenGroupMigrationTests {
             on { migrateLegacyOpenGroup(capturedLokiLegacyGroup.capture(), capturedLokiNewGroup.capture()) } doAnswer {}
         }
 
-        val pubKey = OpenGroupAPIV2.defaultServerPublicKey
+        val pubKey = OpenGroupApi.defaultServerPublicKey
         val room = "oxen"
-        val legacyServer = OpenGroupAPIV2.legacyDefaultServer
-        val newServer = OpenGroupAPIV2.defaultServer
+        val legacyServer = OpenGroupApi.legacyDefaultServer
+        val newServer = OpenGroupApi.defaultServer
 
-        val lokiThreadOpenGroup = argumentCaptor<OpenGroupV2>()
+        val lokiThreadOpenGroup = argumentCaptor<OpenGroup>()
         val mockedLokiThreadDb = mock<LokiThreadDatabase> {
-            on { getOpenGroupChat(eq(LEGACY_THREAD_ID)) } doReturn OpenGroupV2(legacyServer, room, "Oxen", pubKey)
+            on { getOpenGroupChat(eq(LEGACY_THREAD_ID)) } doReturn OpenGroup(legacyServer, room, "Oxen", 0, pubKey)
             on { setOpenGroupChat(lokiThreadOpenGroup.capture(), eq(LEGACY_THREAD_ID)) } doAnswer {}
         }
 
@@ -191,8 +191,8 @@ class OpenGroupMigrationTests {
         assertEquals(EXAMPLE_NEW_ENCODED_OPEN_GROUP, capturedGroupNewEncoded.firstValue)
 
         // expect Loki API DB migration to reflect new thread values:
-        assertEquals("${OpenGroupAPIV2.legacyDefaultServer}.oxen", capturedLokiLegacyGroup.firstValue)
-        assertEquals("${OpenGroupAPIV2.defaultServer}.oxen", capturedLokiNewGroup.firstValue)
+        assertEquals("${OpenGroupApi.legacyDefaultServer}.oxen", capturedLokiLegacyGroup.firstValue)
+        assertEquals("${OpenGroupApi.defaultServer}.oxen", capturedLokiNewGroup.firstValue)
 
         assertEquals(newServer, lokiThreadOpenGroup.firstValue.server)
 

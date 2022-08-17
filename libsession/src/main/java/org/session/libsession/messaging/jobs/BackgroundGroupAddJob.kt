@@ -41,11 +41,11 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
             // get image
             val openGroup = OpenGroupUrlParser.parseUrl(joinUrl)
             storage.setOpenGroupPublicKey(openGroup.server, openGroup.serverPublicKey)
-            val info = OpenGroupApi.getRoomInfo(room, serverString).get()
+            val info = OpenGroupApi.getRoomInfo(openGroup.room, openGroup.server).get()
             val imageId = info.imageId
             storage.addOpenGroup(openGroup.joinUrl())
             if (imageId != null) {
-                val bytes = OpenGroupApi.downloadOpenGroupProfilePicture(openGroup.room, openGroup.server).get()
+                val bytes = OpenGroupApi.downloadOpenGroupProfilePicture(openGroup.room, openGroup.server, imageId).get()
                 val groupId = GroupUtil.getEncodedOpenGroupID("${openGroup.server}.${openGroup.room}".toByteArray())
                 storage.updateProfilePicture(groupId, bytes)
                 storage.updateTimestampUpdated(groupId, System.currentTimeMillis())

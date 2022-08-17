@@ -1,7 +1,7 @@
 package org.thoughtcrime.securesms.groups
 
 import androidx.annotation.VisibleForTesting
-import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
+import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Hex
 import org.thoughtcrime.securesms.database.model.ThreadRecord
@@ -74,12 +74,12 @@ object OpenGroupMigrator {
                 // migrate Loki API DB values
                 // decode the hex to bytes, decode byte array to string i.e. "oxen" or "session"
                 val decodedStub = Hex.fromStringCondensed(stub).decodeToString()
-                val legacyLokiServerId = "${OpenGroupAPIV2.legacyDefaultServer}.$decodedStub"
-                val newLokiServerId = "${OpenGroupAPIV2.defaultServer}.$decodedStub"
+                val legacyLokiServerId = "${OpenGroupApi.legacyDefaultServer}.$decodedStub"
+                val newLokiServerId = "${OpenGroupApi.defaultServer}.$decodedStub"
                 lokiApiDb.migrateLegacyOpenGroup(legacyLokiServerId, newLokiServerId)
                 // migrate loki thread db server info
                 val oldServerInfo = lokiThreadDatabase.getOpenGroupChat(old)
-                val newServerInfo = oldServerInfo!!.copy(server = OpenGroupAPIV2.defaultServer, id = newLokiServerId)
+                val newServerInfo = oldServerInfo!!.copy(server = OpenGroupApi.defaultServer, id = newLokiServerId)
                 lokiThreadDatabase.setOpenGroupChat(newServerInfo, old)
             } else {
                 // has a legacy and a new one
