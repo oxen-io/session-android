@@ -104,7 +104,11 @@
         <Button
             style="@style/Widget.Session.Button.Common.ProminentFilled"
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             android:contentDescription="@string/AccessibilityId_continue_message_notifications"
+=======
+            android:contentDescription="@string/AccessibilityId_continue"
+>>>>>>> Stashed changes
 =======
             android:contentDescription="@string/AccessibilityId_continue"
 >>>>>>> Stashed changes

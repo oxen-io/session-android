@@ -39,10 +39,17 @@
                     android:id="@+id/displayNameEditText"
                     style="@style/SessionEditText"
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:contentDescription="@string/AccessibilityId_username_input"
+=======
+                    android:contentDescription="@string/AccessibilityId_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+>>>>>>> Stashed changes
 =======
                     android:contentDescription="@string/AccessibilityId_username"
                     android:layout_width="wrap_content"
