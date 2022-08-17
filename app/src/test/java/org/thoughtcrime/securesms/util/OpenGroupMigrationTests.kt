@@ -137,7 +137,7 @@ class OpenGroupMigrationTests {
         val mockedThreadDb = mock<ThreadDatabase> {
             val legacyThreadRecord = legacyThreadRecord()
             on { legacyOxenOpenGroups } doReturn listOf(legacyThreadRecord)
-            on { newOxenOpenGroups } doReturn emptyList()
+            on { httpsOxenOpenGroups } doReturn emptyList()
             on { migrateEncodedGroup(capturedThreadId.capture(), capturedNewEncoded.capture()) } doAnswer {}
         }
 
@@ -207,7 +207,7 @@ class OpenGroupMigrationTests {
             val legacyThreadRecord = legacyThreadRecord()
             val newThreadRecord = newThreadRecord()
             on { legacyOxenOpenGroups } doReturn listOf(legacyThreadRecord)
-            on { newOxenOpenGroups } doReturn listOf(newThreadRecord)
+            on { httpsOxenOpenGroups } doReturn listOf(newThreadRecord)
             on { deleteConversation(capturedThreadId.capture()) } doAnswer {}
         }
 

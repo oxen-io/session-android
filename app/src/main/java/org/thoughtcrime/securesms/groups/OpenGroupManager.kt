@@ -8,6 +8,7 @@ import org.session.libsession.messaging.open_groups.GroupMemberRole
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPoller
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import java.util.concurrent.Executors
@@ -92,6 +93,7 @@ object OpenGroupManager {
             pollers[server]?.stop()
             pollers[server]?.startIfNeeded() ?: run {
                 val poller = OpenGroupPoller(server, executorService)
+                Log.d("Loki", "Starting poller for open group: $server")
                 pollers[server] = poller
                 poller.startIfNeeded()
             }

@@ -8,7 +8,9 @@ import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 
 object OpenGroupMigrator {
-
+    const val HTTP_PREFIX = "__loki_public_chat_group__!687474703a2f2f"
+    private const val HTTPS_PREFIX = "__loki_public_chat_group__!68747470733a2f2f"
+    const val OPEN_GET_SESSION_TRAILING_DOT_ENCODED = "6f70656e2e67657473657373696f6e2e6f72672e"
     const val LEGACY_GROUP_ENCODED_ID = "__loki_public_chat_group__!687474703a2f2f3131362e3230332e37302e33332e" // old IP based toByteArray()
     const val NEW_GROUP_ENCODED_ID = "__loki_public_chat_group__!68747470733a2f2f6f70656e2e67657473657373696f6e2e6f72672e" // new URL based toByteArray()
 
@@ -22,6 +24,8 @@ object OpenGroupMigrator {
             return serialized.replace(LEGACY_GROUP_ENCODED_ID,"")
         } else if (serialized.startsWith(NEW_GROUP_ENCODED_ID)) {
             return serialized.replace(NEW_GROUP_ENCODED_ID,"")
+        } else if (serialized.startsWith(HTTP_PREFIX + OPEN_GET_SESSION_TRAILING_DOT_ENCODED)) {
+            return serialized.replace(HTTP_PREFIX + OPEN_GET_SESSION_TRAILING_DOT_ENCODED, "")
         }
         return null
     }
@@ -52,10 +56,13 @@ object OpenGroupMigrator {
         val threadDb = databaseComponent.threadDatabase()
 
         val legacyOpenGroups = threadDb.legacyOxenOpenGroups
-        if (legacyOpenGroups.isEmpty()) return // no need to migrate
+        val httpBasedNewGroups = threadDb.httpOxenOpenGroups
+        if (legacyOpenGroups.isEmpty() && httpBasedNewGroups.isEmpty()) return // no need to migrate
 
-        val newOpenGroups = threadDb.newOxenOpenGroups
-        val mappings = getExistingMappings(legacyOpenGroups, newOpenGroups)
+        val newOpenGroups = threadDb.httpsOxenOpenGroups
+        val firstStepMigration = getExistingMappings(legacyOpenGroups, newOpenGroups)
+
+        val secondStepMigration = getExistingMappings(httpBasedNewGroups, newOpenGroups)
 
         val groupDb = databaseComponent.groupDatabase()
         val lokiApiDb = databaseComponent.lokiAPIDatabase()
@@ -64,7 +71,7 @@ object OpenGroupMigrator {
         val lokiMessageDatabase = databaseComponent.lokiMessageDatabase()
         val lokiThreadDatabase = databaseComponent.lokiThreadDatabase()
 
-        mappings.forEach { (stub, old, new) ->
+        firstStepMigration.forEach { (stub, old, new) ->
             val legacyEncodedGroupId = LEGACY_GROUP_ENCODED_ID+stub
             if (new == null) {
                 val newEncodedGroupId = NEW_GROUP_ENCODED_ID+stub
@@ -75,6 +82,38 @@ object OpenGroupMigrator {
                 // decode the hex to bytes, decode byte array to string i.e. "oxen" or "session"
                 val decodedStub = Hex.fromStringCondensed(stub).decodeToString()
                 val legacyLokiServerId = "${OpenGroupApi.legacyDefaultServer}.$decodedStub"
+                val newLokiServerId = "${OpenGroupApi.defaultServer}.$decodedStub"
+                lokiApiDb.migrateLegacyOpenGroup(legacyLokiServerId, newLokiServerId)
+                // migrate loki thread db server info
+                val oldServerInfo = lokiThreadDatabase.getOpenGroupChat(old)
+                val newServerInfo = oldServerInfo!!.copy(server = OpenGroupApi.defaultServer, id = newLokiServerId)
+                lokiThreadDatabase.setOpenGroupChat(newServerInfo, old)
+            } else {
+                // has a legacy and a new one
+                // migrate SMS and MMS tables
+                smsDb.migrateThreadId(old, new)
+                mmsDb.migrateThreadId(old, new)
+                lokiMessageDatabase.migrateThreadId(old, new)
+                // delete group for legacy ID
+                groupDb.delete(legacyEncodedGroupId)
+                // delete thread for legacy ID
+                threadDb.deleteConversation(old)
+                lokiThreadDatabase.removeOpenGroupChat(old)
+            }
+            // maybe migrate jobs here
+        }
+
+        secondStepMigration.forEach { (stub, old, new) ->
+            val legacyEncodedGroupId = HTTP_PREFIX + OPEN_GET_SESSION_TRAILING_DOT_ENCODED + stub
+            if (new == null) {
+                val newEncodedGroupId = NEW_GROUP_ENCODED_ID+stub
+                // migrate thread and group encoded values
+                threadDb.migrateEncodedGroup(old, newEncodedGroupId)
+                groupDb.migrateEncodedGroup(legacyEncodedGroupId, newEncodedGroupId)
+                // migrate Loki API DB values
+                // decode the hex to bytes, decode byte array to string i.e. "oxen" or "session"
+                val decodedStub = Hex.fromStringCondensed(stub).decodeToString()
+                val legacyLokiServerId = "${OpenGroupApi.httpDefaultServer}.$decodedStub"
                 val newLokiServerId = "${OpenGroupApi.defaultServer}.$decodedStub"
                 lokiApiDb.migrateLegacyOpenGroup(legacyLokiServerId, newLokiServerId)
                 // migrate loki thread db server info

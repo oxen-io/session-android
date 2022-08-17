@@ -31,15 +31,15 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
 
     override fun execute() {
         try {
+            val openGroup = OpenGroupUrlParser.parseUrl(joinUrl)
             val storage = MessagingModuleConfiguration.shared.storage
-            val allOpenGroups = storage.getAllOpenGroups().map { it.value.joinURL }
-            if (allOpenGroups.contains(joinUrl)) {
+            val allOpenGroups = storage.getAllOpenGroups().map { it.value.publicKey }
+            if (allOpenGroups.contains(openGroup.serverPublicKey)) {
                 Log.e("OpenGroupDispatcher", "Failed to add group because", DuplicateGroupException())
                 delegate?.handleJobFailed(this, DuplicateGroupException())
                 return
             }
             // get image
-            val openGroup = OpenGroupUrlParser.parseUrl(joinUrl)
             storage.setOpenGroupPublicKey(openGroup.server, openGroup.serverPublicKey)
             val info = OpenGroupApi.getRoomInfo(openGroup.room, openGroup.server).get()
             val imageId = info.imageId
@@ -50,7 +50,8 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
                 storage.updateProfilePicture(groupId, bytes)
                 storage.updateTimestampUpdated(groupId, System.currentTimeMillis())
             }
-            storage.onOpenGroupAdded(openGroup.joinUrl())
+            Log.d(KEY, "onOpenGroupAdded(${openGroup.server})")
+            storage.onOpenGroupAdded(openGroup.server)
         } catch (e: Exception) {
             Log.e("OpenGroupDispatcher", "Failed to add group because",e)
             delegate?.handleJobFailed(this, e)

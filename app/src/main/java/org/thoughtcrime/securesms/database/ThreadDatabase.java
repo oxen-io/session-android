@@ -770,6 +770,30 @@ public class ThreadDatabase extends Database {
   }
 
   @NotNull
+  public List<ThreadRecord> getHttpOxenOpenGroups() {
+    String where = TABLE_NAME+"."+ADDRESS+" LIKE ?";
+    String selection = OpenGroupMigrator.HTTP_PREFIX+OpenGroupMigrator.OPEN_GET_SESSION_TRAILING_DOT_ENCODED +"%";
+    SQLiteDatabase db     = databaseHelper.getReadableDatabase();
+    String         query  = createQuery(where, 0);
+    Cursor         cursor = db.rawQuery(query, new String[]{selection});
+
+    if (cursor == null) {
+      return Collections.emptyList();
+    }
+    List<ThreadRecord> threads = new ArrayList<>();
+    try {
+      Reader reader = readerFor(cursor);
+      ThreadRecord record;
+      while ((record = reader.getNext()) != null) {
+        threads.add(record);
+      }
+    } finally {
+      cursor.close();
+    }
+    return threads;
+  }
+
+  @NotNull
   public List<ThreadRecord> getLegacyOxenOpenGroups() {
     String where = TABLE_NAME+"."+ADDRESS+" LIKE ?";
     String selection = OpenGroupMigrator.LEGACY_GROUP_ENCODED_ID+"%";
@@ -794,7 +818,7 @@ public class ThreadDatabase extends Database {
   }
 
   @NotNull
-  public List<ThreadRecord> getNewOxenOpenGroups() {
+  public List<ThreadRecord> getHttpsOxenOpenGroups() {
     String where = TABLE_NAME+"."+ADDRESS+" LIKE ?";
     String selection = OpenGroupMigrator.NEW_GROUP_ENCODED_ID+"%";
     SQLiteDatabase db     = databaseHelper.getReadableDatabase();
