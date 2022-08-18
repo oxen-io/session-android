@@ -9,15 +9,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.session.libsession.database.StorageProtocol
+import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
+import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.repository.ConversationRepository
 import java.util.UUID
 
 class ConversationViewModel(
     val threadId: Long,
-    private val repository: ConversationRepository
+    private val repository: ConversationRepository,
+    private val storage: Storage
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ConversationUiState())
@@ -25,6 +29,12 @@ class ConversationViewModel(
 
     val recipient: Recipient?
         get() = repository.maybeGetRecipientForThreadId(threadId)
+
+    val openGroup: OpenGroup?
+        get() = storage.getOpenGroup(threadId)
+
+    val serverCapabilities: List<String>
+        get() = openGroup?.let { storage.getServerCapabilities(it.server) } ?: listOf()
 
     init {
         _uiState.update {
@@ -143,11 +153,12 @@ class ConversationViewModel(
     @Suppress("UNCHECKED_CAST")
     class Factory @AssistedInject constructor(
         @Assisted private val threadId: Long,
-        private val repository: ConversationRepository
+        private val repository: ConversationRepository,
+        private val storage: Storage
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return ConversationViewModel(threadId, repository) as T
+            return ConversationViewModel(threadId, repository, storage) as T
         }
     }
 }
@@ -157,5 +168,6 @@ data class UiMessage(val id: Long, val message: String)
 data class ConversationUiState(
     val isOxenHostedOpenGroup: Boolean = false,
     val uiMessages: List<UiMessage> = emptyList(),
-    val isMessageRequestAccepted: Boolean? = null
+    val isMessageRequestAccepted: Boolean? = null,
+    val openGroup: OpenGroup? = null
 )

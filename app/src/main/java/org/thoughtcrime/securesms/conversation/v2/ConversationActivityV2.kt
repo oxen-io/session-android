@@ -61,6 +61,7 @@ import org.session.libsession.messaging.messages.signal.OutgoingTextMessage
 import org.session.libsession.messaging.messages.visible.Reaction
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.OpenGroupApi
+import org.session.libsession.messaging.open_groups.OpenGroupApi.Capability
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
@@ -162,7 +163,6 @@ import kotlin.math.sqrt
 // part of the conversation activity layout. This is just because it makes the layout a lot simpler. The
 // price we pay is a bit of back and forth between the input bar and the conversation activity.
 @AndroidEntryPoint
-
 class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDelegate,
     InputBarRecordingViewDelegate, AttachmentManager.AttachmentListener, ActivityDispatcher,
     ConversationActionModeCallbackDelegate, VisibleMessageViewDelegate, RecipientModifiedListener,
@@ -267,8 +267,14 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             onItemSwipeToReply = { message, _ ->
                 handleSwipeToReply(message)
             },
-            onItemLongPress = { message, _, view ->
-                handleLongPress(message, view)
+            onItemLongPress = { message, position, view ->
+                if (viewModel.openGroup != null &&
+                    viewModel.serverCapabilities.contains(Capability.REACTIONS.name.lowercase())
+                ) {
+                    handleLongPress(message, view)
+                } else {
+                    handleLongPress(message, position)
+                }
             },
             onDeselect = { message, position ->
                 actionMode?.let {
@@ -352,12 +358,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         showOrHideInputIfNeeded()
         setUpMessageRequestsBar()
         viewModel.recipient?.let { recipient ->
-            if (recipient.isOpenGroupRecipient) {
-                val openGroup = lokiThreadDb.getOpenGroupChat(viewModel.threadId)
-                if (openGroup == null) {
-                    Toast.makeText(this, "This thread has been deleted.", Toast.LENGTH_LONG).show()
-                    return finish()
-                }
+            if (recipient.isOpenGroupRecipient && viewModel.openGroup == null) {
+                Toast.makeText(this, "This thread has been deleted.", Toast.LENGTH_LONG).show()
+                return finish()
             }
         }
 
@@ -547,8 +550,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun getLatestOpenGroupInfoIfNeeded() {
-        val openGroup = lokiThreadDb.getOpenGroupChat(viewModel.threadId) ?: return
-        OpenGroupApi.getMemberCount(openGroup.room, openGroup.server).successUi { updateSubtitle() }
+        viewModel.openGroup?.let {
+            OpenGroupApi.getMemberCount(it.room, it.server).successUi { updateSubtitle() }
+        }
     }
 
     // called from onCreate
@@ -911,11 +915,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 actionBarBinding.conversationSubtitleView.text = getString(R.string.ConversationActivity_muted_forever)
             }
         } else if (recipient.isGroupRecipient) {
-            val openGroup = lokiThreadDb.getOpenGroupChat(viewModel.threadId)
-            if (openGroup != null) {
+            viewModel.openGroup?.let { openGroup ->
                 val userCount = lokiApiDb.getUserCount(openGroup.room, openGroup.server) ?: 0
                 actionBarBinding.conversationSubtitleView.text = getString(R.string.ConversationActivity_member_count, userCount)
-            } else {
+            } ?: run {
                 actionBarBinding.conversationSubtitleView.isVisible = false
             }
         } else {
@@ -1053,7 +1056,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         message.reaction = Reaction.from(messageTimestamp, author, emoji, true)
         if (recipient.isOpenGroupRecipient) {
             val messageServerId = lokiMessageDb.getServerID(messageId.id, !messageId.mms) ?: return
-            lokiThreadDb.getOpenGroupChat(viewModel.threadId)?.let {
+            viewModel.openGroup?.let {
                 OpenGroupApi.addReaction(it.room, it.server, messageServerId, emoji)
             }
         } else {
@@ -1072,7 +1075,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         message.reaction = Reaction.from(messageTimestamp, author, emoji, false)
         if (recipient.isOpenGroupRecipient) {
             val messageServerId = lokiMessageDb.getServerID(messageId.id, !messageId.mms) ?: return
-            lokiThreadDb.getOpenGroupChat(viewModel.threadId)?.let {
+            viewModel.openGroup?.let {
                 OpenGroupApi.deleteReaction(it.room, it.server, messageServerId, emoji)
             }
         } else {

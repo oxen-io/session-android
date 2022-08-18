@@ -1,6 +1,7 @@
 package org.session.libsession.messaging.open_groups
 
 import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.open_groups.OpenGroupApi.Capability
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsignal.crypto.PushTransportDetails
 import org.session.libsignal.protos.SignalServiceProtos
@@ -53,7 +54,7 @@ data class OpenGroupMessage(
         val openGroup = MessagingModuleConfiguration.shared.storage.getOpenGroup(room, server) ?: return null
         val serverCapabilities = MessagingModuleConfiguration.shared.storage.getServerCapabilities(server)
         val signature = when {
-            serverCapabilities.contains("blind") -> {
+            serverCapabilities.contains(Capability.BLIND.name.lowercase()) -> {
                 val blindedKeyPair = SodiumUtilities.blindedKeyPair(openGroup.publicKey, userEdKeyPair) ?: return null
                 SodiumUtilities.sogsSignature(
                     decode(base64EncodedData),

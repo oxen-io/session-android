@@ -140,6 +140,10 @@ object OpenGroupApi {
         val missing: List<String> = emptyList()
     )
 
+    enum class Capability {
+        BLIND, REACTIONS
+    }
+
     @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
     data class RoomPollInfo(
         val token: String = "",
@@ -302,7 +306,7 @@ object OpenGroupApi {
                     .plus(request.verb.rawValue.toByteArray())
                     .plus("/${request.endpoint.value}".toByteArray())
                     .plus(bodyHash)
-                if (serverCapabilities.contains("blind")) {
+                if (serverCapabilities.contains(Capability.BLIND.name.lowercase())) {
                     SodiumUtilities.blindedKeyPair(publicKey, ed25519KeyPair)?.let { keyPair ->
                         pubKey = SessionId(
                             IdPrefix.BLINDED,
@@ -688,7 +692,7 @@ object OpenGroupApi {
             )
         }
         val serverCapabilities = storage.getServerCapabilities(server)
-        if (serverCapabilities.contains("blind")) {
+        if (serverCapabilities.contains(Capability.BLIND.name.lowercase())) {
             requests.add(
                 if (lastInboxMessageId == null) {
                     BatchRequestInfo(
