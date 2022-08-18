@@ -33,8 +33,8 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
         try {
             val openGroup = OpenGroupUrlParser.parseUrl(joinUrl)
             val storage = MessagingModuleConfiguration.shared.storage
-            val allOpenGroups = storage.getAllOpenGroups().map { it.value.publicKey }
-            if (allOpenGroups.contains(openGroup.serverPublicKey)) {
+            val allOpenGroups = storage.getAllOpenGroups().map { it.value.joinURL }
+            if (allOpenGroups.contains(openGroup.joinUrl())) {
                 Log.e("OpenGroupDispatcher", "Failed to add group because", DuplicateGroupException())
                 delegate?.handleJobFailed(this, DuplicateGroupException())
                 return
