@@ -45,7 +45,7 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
             val imageId = info.imageId
             storage.addOpenGroup(openGroup.joinUrl())
             if (imageId != null) {
-                val bytes = OpenGroupApi.downloadOpenGroupProfilePicture(openGroup.room, openGroup.server, imageId).get()
+                val bytes = OpenGroupApi.downloadOpenGroupProfilePicture(openGroup.server, openGroup.room, imageId).get()
                 val groupId = GroupUtil.getEncodedOpenGroupID("${openGroup.server}.${openGroup.room}".toByteArray())
                 storage.updateProfilePicture(groupId, bytes)
                 storage.updateTimestampUpdated(groupId, System.currentTimeMillis())
