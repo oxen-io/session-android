@@ -133,7 +133,7 @@ public class EmojiReactionsView extends LinearLayout {
   private void onReactionClicked(Reaction reaction) {
     if (reaction.messageId != 0) {
       MessageId messageId = new MessageId(reaction.messageId, reaction.isMms);
-      delegate.onReactionClicked(reaction.displayEmoji, messageId, reaction.userWasSender);
+      delegate.onReactionClicked(reaction.emoji, messageId, reaction.userWasSender);
     } else {
       displayReactions(Integer.MAX_VALUE);
     }
@@ -147,7 +147,7 @@ public class EmojiReactionsView extends LinearLayout {
       Reaction info      = counters.get(baseEmoji);
 
       if (info == null) {
-        info = new Reaction(record.getMessageId(), record.isMms(), baseEmoji, record.getEmoji(), 1, record.getDateReceived(), userPublicKey.equals(record.getAuthor()));
+        info = new Reaction(record.getMessageId(), record.isMms(), record.getEmoji(), 1, record.getDateReceived(), userPublicKey.equals(record.getAuthor()));
       } else {
         info.update(record.getEmoji(), record.getDateReceived(), userPublicKey.equals(record.getAuthor()));
       }
@@ -162,7 +162,7 @@ public class EmojiReactionsView extends LinearLayout {
     if (reactions.size() > threshold) {
       List<Reaction> shortened = new ArrayList<>(threshold - 1);
       shortened.addAll(reactions.subList(0, threshold - 2));
-      shortened.add(Stream.of(reactions).skip(threshold - 2).reduce(new Reaction(0, false, null, null, 0, 0, false), Reaction::merge));
+      shortened.add(Stream.of(reactions).skip(threshold - 2).reduce(new Reaction(0, false, null, 0, 0, false), Reaction::merge));
 
       return shortened;
     } else {
@@ -176,8 +176,8 @@ public class EmojiReactionsView extends LinearLayout {
     TextView       countView = root.findViewById(R.id.reactions_pill_count);
     View           spacer    = root.findViewById(R.id.reactions_pill_spacer);
 
-    if (reaction.displayEmoji != null) {
-      emojiView.setImageEmoji(reaction.displayEmoji);
+    if (reaction.emoji != null) {
+      emojiView.setImageEmoji(reaction.emoji);
 
       if (reaction.count > 1) {
         countView.setText(String.valueOf(reaction.count));
@@ -202,28 +202,26 @@ public class EmojiReactionsView extends LinearLayout {
   }
 
   private static class Reaction implements Comparable<Reaction> {
-    private long messageId;
-    private boolean isMms;
-    private String  baseEmoji;
-    private String  displayEmoji;
+    private final long messageId;
+    private final boolean isMms;
+    private String  emoji;
     private int     count;
     private long    lastSeen;
     private boolean userWasSender;
 
-    Reaction(long messageId, boolean isMms, @Nullable String baseEmoji, @Nullable String displayEmoji, int count, long lastSeen, boolean userWasSender) {
+    Reaction(long messageId, boolean isMms, @Nullable String emoji, int count, long lastSeen, boolean userWasSender) {
       this.messageId     = messageId;
       this.isMms         = isMms;
-      this.baseEmoji     = baseEmoji;
-      this.displayEmoji  = displayEmoji;
+      this.emoji         = emoji;
       this.count         = count;
       this.lastSeen      = lastSeen;
       this.userWasSender = userWasSender;
     }
 
-    void update(@NonNull String displayEmoji, long lastSeen, boolean userWasSender) {
+    void update(@NonNull String emoji, long lastSeen, boolean userWasSender) {
       if (!this.userWasSender) {
         if (userWasSender || lastSeen > this.lastSeen) {
-          this.displayEmoji = displayEmoji;
+          this.emoji = emoji;
         }
       }
 

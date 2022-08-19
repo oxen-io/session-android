@@ -268,10 +268,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 handleSwipeToReply(message)
             },
             onItemLongPress = { message, position, view ->
-                if (viewModel.openGroup != null &&
-                    viewModel.serverCapabilities.contains(Capability.REACTIONS.name.lowercase())
+                if (!isMessageRequestThread() &&
+                    (viewModel.openGroup == null || Capability.REACTIONS.name.lowercase() in viewModel.serverCapabilities)
                 ) {
-                    handleLongPress(message, view)
+                    showEmojiPicker(message, view)
                 } else {
                     handleLongPress(message, position)
                 }
@@ -987,8 +987,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
-    // `position` is the adapter position; not the visual position
-    private fun handleLongPress(message: MessageRecord, visibleMessageView: VisibleMessageView) {
+    private fun showEmojiPicker(message: MessageRecord, visibleMessageView: VisibleMessageView) {
         ViewUtil.hideKeyboard(this, visibleMessageView);
         binding?.reactionsShade?.isVisible = true
         binding?.conversationRecyclerView?.suppressLayout(true)

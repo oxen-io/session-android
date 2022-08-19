@@ -21,7 +21,8 @@
         android:id="@+id/mainContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="bottom">
+        android:gravity="bottom"
+        android:paddingBottom="@dimen/small_spacing">
 
         <View
             android:id="@+id/startSpacing"
