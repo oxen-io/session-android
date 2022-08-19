@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
 
@@ -39,7 +40,7 @@ import network.loki.messenger.R;
 public class EmojiReactionsView extends LinearLayout {
 
   // Normally 6dp, but we have 1dp left+right margin on the pills themselves
-  private static final int OUTER_MARGIN = ViewUtil.dpToPx(5);
+  private final int OUTER_MARGIN = ViewUtil.dpToPx(5);
 
   private boolean              outgoing;
   private List<ReactionRecord> records;
@@ -188,14 +189,18 @@ public class EmojiReactionsView extends LinearLayout {
     }
   }
 
-  private static String getFormattedCount(int count) {
-    if (count < 1000) return String.valueOf(count);
-    int thousands = count / 1000;
-    int hundreds = (count - thousands*1000) / 100;
+  @VisibleForTesting
+  public static String getFormattedCount(int count) {
+    boolean isNegative = count < 0;
+    int absoluteCount = Math.abs(count);
+    if (absoluteCount < 1000) return String.valueOf(count);
+    int thousands = absoluteCount / 1000;
+    int hundreds = (absoluteCount - thousands*1000) / 100;
+    String negativePrefix = isNegative ? "-" : "";
     if (hundreds == 0) {
-      return String.format(Locale.ROOT, "%dk", thousands);
+      return String.format(Locale.ROOT, negativePrefix+"%dk", thousands);
     } else {
-      return String.format(Locale.ROOT, "%d.%dk", thousands, hundreds);
+      return String.format(Locale.ROOT, negativePrefix+"%d.%dk", thousands, hundreds);
     }
   }
 
