@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import network.loki.messenger.R;
@@ -187,6 +188,17 @@ public class EmojiReactionsView extends LinearLayout {
     }
   }
 
+  private static String getFormattedCount(int count) {
+    if (count < 1000) return String.valueOf(count);
+    int thousands = count / 1000;
+    int hundreds = (count - thousands*1000) / 100;
+    if (hundreds == 0) {
+      return String.format(Locale.ROOT, "%dk", thousands);
+    } else {
+      return String.format(Locale.ROOT, "%d.%dk", thousands, hundreds);
+    }
+  }
+
   private static View buildPill(@NonNull Context context, @NonNull ViewGroup parent, @NonNull Reaction reaction) {
     View           root      = LayoutInflater.from(context).inflate(R.layout.reactions_pill, parent, false);
     EmojiImageView emojiView = root.findViewById(R.id.reactions_pill_emoji);
@@ -197,7 +209,7 @@ public class EmojiReactionsView extends LinearLayout {
       emojiView.setImageEmoji(reaction.emoji);
 
       if (reaction.count > 1) {
-        countView.setText(String.valueOf(reaction.count));
+        countView.setText(getFormattedCount(reaction.count));
       } else {
         countView.setVisibility(GONE);
         spacer.setVisibility(GONE);
