@@ -2,8 +2,11 @@ package org.thoughtcrime.securesms.conversation.v2.messages;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -25,6 +28,7 @@ import org.thoughtcrime.securesms.database.model.ReactionRecord;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +46,12 @@ public class EmojiReactionsView extends LinearLayout {
   private ViewGroup            container;
   private Group                showLess;
   private VisibleMessageViewDelegate delegate;
+  private Handler gestureHandler = new Handler(Looper.getMainLooper());
+  private Runnable pressCallback;
+  private Runnable longPressCallback;
+  private long onDownTimestamp = 0;
+  private static long longPressDurationThreshold = 250;
+  private static long maxDoubleTapInterval = 200;
 
   public EmojiReactionsView(Context context) {
     super(context);
@@ -97,7 +107,14 @@ public class EmojiReactionsView extends LinearLayout {
     for (Reaction reaction : reactions) {
       View pill = buildPill(getContext(), this, reaction);
       pill.setVisibility(bubbleWidth == 0 ? INVISIBLE : VISIBLE);
-      pill.setOnClickListener(v -> onReactionClicked(reaction));
+      pill.setOnTouchListener((view, event) -> {
+        int action = event.getAction();
+        if (action == MotionEvent.ACTION_DOWN) onDown(new MessageId(reaction.messageId, reaction.isMms));
+        else if (action == MotionEvent.ACTION_MOVE) removeLongPresCallback();
+        else if (action == MotionEvent.ACTION_CANCEL) removeLongPresCallback();
+        else if (action == MotionEvent.ACTION_UP) onUp(reaction);
+        return true;
+      });
       container.addView(pill);
     }
 
@@ -199,6 +216,34 @@ public class EmojiReactionsView extends LinearLayout {
     }
 
     return root;
+  }
+
+  private void onDown(MessageId messageId) {
+    removeLongPresCallback();
+    Runnable newLongPressCallback = () -> delegate.onReactionLongClicked(messageId);
+    this.longPressCallback = newLongPressCallback;
+    gestureHandler.postDelayed(newLongPressCallback, longPressDurationThreshold);
+    onDownTimestamp = new Date().getTime();
+  }
+
+  private void removeLongPresCallback() {
+    if (longPressCallback != null) {
+      gestureHandler.removeCallbacks(longPressCallback);
+    }
+  }
+
+  private void onUp(Reaction reaction) {
+    if ((new Date().getTime() - onDownTimestamp) < longPressDurationThreshold) {
+      removeLongPresCallback();
+      if (pressCallback != null) {
+        gestureHandler.removeCallbacks(pressCallback);
+        this.pressCallback = null;
+      } else {
+        Runnable newPressCallback = () -> onReactionClicked(reaction);
+        this.pressCallback = newPressCallback;
+        gestureHandler.postDelayed(newPressCallback, maxDoubleTapInterval);
+      }
+    }
   }
 
   private static class Reaction implements Comparable<Reaction> {

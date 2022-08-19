@@ -125,6 +125,7 @@ import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.giph.ui.GiphyActivity
+import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewRepository
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewUtil
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewViewModel
@@ -1207,7 +1208,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun onReactionLongClicked(messageId: MessageId) {
-        ReactionsBottomSheetDialogFragment.create(messageId).show(supportFragmentManager, null)
+        val recipient = viewModel.recipient ?: return
+        if (recipient.isClosedGroupRecipient || recipient.isOpenGroupRecipient) {
+            ReactionsBottomSheetDialogFragment.create(messageId).show(supportFragmentManager, null)
+        }
     }
 
     override fun playVoiceMessageAtIndexIfPossible(indexInAdapter: Int) {

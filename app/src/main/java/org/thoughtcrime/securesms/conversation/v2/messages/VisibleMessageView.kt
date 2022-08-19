@@ -26,7 +26,6 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewVisibleMessageBinding
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.contacts.Contact.ContactContext
-import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.ViewUtil
 import org.session.libsignal.utilities.IdPrefix
@@ -210,14 +209,6 @@ class VisibleMessageView : LinearLayout {
         ) {
             binding.emojiReactionsView.isVisible = true
             binding.emojiReactionsView.setReactions(message.reactions, message.isOutgoing, binding.messageInnerContainer.width, delegate)
-            binding.emojiReactionsView.setOnLongClickListener {
-                if (message.recipient.isClosedGroupRecipient || message.recipient.isClosedGroupRecipient) {
-                    delegate?.onReactionLongClicked(MessageId(message.id, message.isMms))
-                    return@setOnLongClickListener true
-                } else {
-                    return@setOnLongClickListener false
-                }
-            }
         } else {
             binding.emojiReactionsView.isVisible = false
         }
