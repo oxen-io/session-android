@@ -11,7 +11,6 @@ import org.thoughtcrime.securesms.database.model.MessageId
 import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.util.CursorUtil
-import org.thoughtcrime.securesms.util.SqlUtil
 
 /**
  * Store reactions on messages.
@@ -182,7 +181,7 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
         if (cursor.isNull(cursor.getColumnIndexOrThrow(REACTION_JSON_ALIAS))) {
           return listOf()
         }
-        val result = mutableListOf<ReactionRecord>()
+        val result = mutableSetOf<ReactionRecord>()
         val array = JSONArray(cursor.getString(cursor.getColumnIndexOrThrow(REACTION_JSON_ALIAS)))
         for (i in 0 until array.length()) {
           val `object` = SaneJSONObject(array.getJSONObject(i))
