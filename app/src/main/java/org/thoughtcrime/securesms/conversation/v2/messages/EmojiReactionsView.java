@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
 import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
 
@@ -26,13 +25,13 @@ import org.thoughtcrime.securesms.components.emoji.EmojiUtil;
 import org.thoughtcrime.securesms.conversation.v2.ViewUtil;
 import org.thoughtcrime.securesms.database.model.MessageId;
 import org.thoughtcrime.securesms.database.model.ReactionRecord;
+import org.thoughtcrime.securesms.util.NumberUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import network.loki.messenger.R;
@@ -189,21 +188,6 @@ public class EmojiReactionsView extends LinearLayout {
     }
   }
 
-  @VisibleForTesting
-  public static String getFormattedCount(int count) {
-    boolean isNegative = count < 0;
-    int absoluteCount = Math.abs(count);
-    if (absoluteCount < 1000) return String.valueOf(count);
-    int thousands = absoluteCount / 1000;
-    int hundreds = (absoluteCount - thousands*1000) / 100;
-    String negativePrefix = isNegative ? "-" : "";
-    if (hundreds == 0) {
-      return String.format(Locale.ROOT, negativePrefix+"%dk", thousands);
-    } else {
-      return String.format(Locale.ROOT, negativePrefix+"%d.%dk", thousands, hundreds);
-    }
-  }
-
   private static View buildPill(@NonNull Context context, @NonNull ViewGroup parent, @NonNull Reaction reaction) {
     View           root      = LayoutInflater.from(context).inflate(R.layout.reactions_pill, parent, false);
     EmojiImageView emojiView = root.findViewById(R.id.reactions_pill_emoji);
@@ -214,7 +198,7 @@ public class EmojiReactionsView extends LinearLayout {
       emojiView.setImageEmoji(reaction.emoji);
 
       if (reaction.count > 1) {
-        countView.setText(getFormattedCount(reaction.count));
+        countView.setText(NumberUtil.getFormattedNumber(reaction.count));
       } else {
         countView.setVisibility(GONE);
         spacer.setVisibility(GONE);

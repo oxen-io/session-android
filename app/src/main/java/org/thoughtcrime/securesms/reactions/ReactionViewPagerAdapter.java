@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.thoughtcrime.securesms.database.model.MessageId;
 import org.thoughtcrime.securesms.util.adapter.AlwaysChangedDiffUtil;
 
 import java.util.List;
@@ -19,10 +20,10 @@ import network.loki.messenger.R;
  */
 class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPagerAdapter.ViewHolder> {
 
-  private ReactionsDialogFragment.Callback callback;
+  private Listener callback;
   private int selectedPosition = 0;
 
-  protected ReactionViewPagerAdapter(ReactionsDialogFragment.Callback callback) {
+  protected ReactionViewPagerAdapter(Listener callback) {
     super(new AlwaysChangedDiffUtil<>());
     this.callback = callback;
   }
@@ -71,7 +72,7 @@ class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPager
     private final RecyclerView              recycler;
     private final ReactionRecipientsAdapter adapter;
 
-    public ViewHolder(ReactionsDialogFragment.Callback callback, @NonNull View itemView) {
+    public ViewHolder(Listener callback, @NonNull View itemView) {
       super(itemView);
       adapter = new ReactionRecipientsAdapter(callback);
       recycler = (RecyclerView) itemView;
@@ -91,4 +92,11 @@ class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPager
       recycler.setNestedScrollingEnabled(getAdapterPosition() == position);
     }
   }
+
+  public interface Listener {
+    void onRemoveReaction(@NonNull String emoji, @NonNull MessageId messageId, long timestamp);
+
+    void onClearAll(@NonNull String emoji, @NonNull MessageId messageId);
+  }
+
 }
