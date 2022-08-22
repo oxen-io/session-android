@@ -126,7 +126,6 @@ import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.giph.ui.GiphyActivity
-import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewRepository
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewUtil
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewViewModel
@@ -142,8 +141,8 @@ import org.thoughtcrime.securesms.mms.Slide
 import org.thoughtcrime.securesms.mms.SlideDeck
 import org.thoughtcrime.securesms.mms.VideoSlide
 import org.thoughtcrime.securesms.permissions.Permissions
-import org.thoughtcrime.securesms.reactions.ReactionsBottomSheetDialogFragment
-import org.thoughtcrime.securesms.reactions.any.ReactWithAnyEmojiBottomSheetDialogFragment
+import org.thoughtcrime.securesms.reactions.ReactionsDialogFragment
+import org.thoughtcrime.securesms.reactions.any.ReactWithAnyEmojiDialogFragment
 import org.thoughtcrime.securesms.util.ActivityDispatcher
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.DateUtils
@@ -169,7 +168,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     InputBarRecordingViewDelegate, AttachmentManager.AttachmentListener, ActivityDispatcher,
     ConversationActionModeCallbackDelegate, VisibleMessageViewDelegate, RecipientModifiedListener,
     SearchBottomBar.EventListener, LoaderManager.LoaderCallbacks<Cursor>,
-    OnReactionSelectedListener, ReactWithAnyEmojiBottomSheetDialogFragment.Callback {
+    OnReactionSelectedListener, ReactWithAnyEmojiDialogFragment.Callback, ReactionsDialogFragment.Callback {
 
     private var binding: ActivityConversationV2Binding? = null
     private var actionBarBinding: ActivityConversationV2ActionBarBinding? = null
@@ -1094,7 +1093,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         } else {
             reactionDelegate.hideForReactWithAny()
 
-            ReactWithAnyEmojiBottomSheetDialogFragment
+            ReactWithAnyEmojiDialogFragment
                 .createForMessageRecord(messageRecord, reactWithAnyEmojiStartPage)
                 .show(supportFragmentManager, "BOTTOM");
         }
@@ -1111,6 +1110,19 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             sendEmojiRemoval(emoji, messageId, timestamp)
         } else {
             sendEmojiReaction(emoji, messageId, timestamp)
+        }
+    }
+
+    override fun onRemoveReaction(emoji: String, messageId: MessageId, timestamp: Long) {
+        sendEmojiRemoval(emoji, messageId, timestamp)
+    }
+
+    override fun onClearAll(emoji: String, messageId: MessageId) {
+        reactionDb.deleteReactions(emoji, messageId)
+        viewModel.openGroup?.let { openGroup ->
+            lokiMessageDb.getServerID(messageId.id, !messageId.mms)?.let { serverId ->
+                OpenGroupApi.deleteAllReactions(openGroup.room, openGroup.server, serverId, emoji)
+            }
         }
     }
 
@@ -1212,7 +1224,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         if (viewModel.recipient?.isClosedGroupRecipient == true ||
             (viewModel.openGroup != null && OpenGroupManager.isUserModerator(this, viewModel.openGroup?.groupId!!, textSecurePreferences.getLocalNumber()!!, viewModel.blindedPublicKey))
         ) {
-            ReactionsBottomSheetDialogFragment.create(messageId).show(supportFragmentManager, null)
+            ReactionsDialogFragment.create(messageId).show(supportFragmentManager, null)
         }
     }
 

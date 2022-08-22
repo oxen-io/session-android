@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.reactions;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,19 +29,20 @@ import java.util.Objects;
 
 import network.loki.messenger.R;
 
-public final class ReactionsBottomSheetDialogFragment extends BottomSheetDialogFragment {
+public final class ReactionsDialogFragment extends BottomSheetDialogFragment {
 
   private static final String ARGS_MESSAGE_ID = "reactions.args.message.id";
   private static final String ARGS_IS_MMS     = "reactions.args.is.mms";
 
   private ViewPager2                recipientPagerView;
   private ReactionViewPagerAdapter  recipientsAdapter;
+  private Callback                  callback;
 
   private final LifecycleDisposable disposables = new LifecycleDisposable();
 
   public static DialogFragment create(MessageId messageId) {
     Bundle         args     = new Bundle();
-    DialogFragment fragment = new ReactionsBottomSheetDialogFragment();
+    DialogFragment fragment = new ReactionsDialogFragment();
 
     args.putLong(ARGS_MESSAGE_ID, messageId.getId());
     args.putBoolean(ARGS_IS_MMS, messageId.isMms());
@@ -48,6 +50,17 @@ public final class ReactionsBottomSheetDialogFragment extends BottomSheetDialogF
     fragment.setArguments(args);
 
     return fragment;
+  }
+
+  @Override
+  public void onAttach(@NonNull Context context) {
+    super.onAttach(context);
+
+    if (getParentFragment() instanceof Callback) {
+      callback = (Callback) getParentFragment();
+    } else {
+      callback = (Callback) context;
+    }
   }
 
   @Override
@@ -114,7 +127,7 @@ public final class ReactionsBottomSheetDialogFragment extends BottomSheetDialogF
   }
 
   private void setUpRecipientsRecyclerView() {
-    recipientsAdapter = new ReactionViewPagerAdapter();
+    recipientsAdapter = new ReactionViewPagerAdapter(callback);
 
     recipientPagerView.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
       @Override
@@ -143,6 +156,12 @@ public final class ReactionsBottomSheetDialogFragment extends BottomSheetDialogF
 
       recipientsAdapter.submitList(emojiCounts);
     }));
+  }
+
+  public interface Callback {
+    void onRemoveReaction(@NonNull String emoji, @NonNull MessageId messageId, long timestamp);
+
+    void onClearAll(@NonNull String emoji, @NonNull MessageId messageId);
   }
 
 }

@@ -23,19 +23,17 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@tools:sample/full_names" />
 
-    <org.thoughtcrime.securesms.components.emoji.EmojiTextView
+    <ImageView
         android:id="@+id/reactions_bottom_view_recipient_emoji"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:gravity="center"
-        android:textSize="22dp"
-        app:emoji_forceCustom="true"
+        android:src="@drawable/ic_close_grey600_32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="SpUsage" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

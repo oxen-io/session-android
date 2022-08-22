@@ -36,7 +36,7 @@ import org.thoughtcrime.securesms.util.LifecycleDisposable;
 
 import network.loki.messenger.R;
 
-public final class ReactWithAnyEmojiBottomSheetDialogFragment extends BottomSheetDialogFragment implements EmojiKeyboardProvider.EmojiEventListener,
+public final class ReactWithAnyEmojiDialogFragment extends BottomSheetDialogFragment implements EmojiKeyboardProvider.EmojiEventListener,
                                                                                                            EmojiPageViewGridAdapter.VariationSelectorListener
 {
 
@@ -53,7 +53,7 @@ public final class ReactWithAnyEmojiBottomSheetDialogFragment extends BottomShee
   private final LifecycleDisposable disposables = new LifecycleDisposable();
 
   public static DialogFragment createForMessageRecord(@NonNull MessageRecord messageRecord, int startingPage) {
-    DialogFragment fragment = new ReactWithAnyEmojiBottomSheetDialogFragment();
+    DialogFragment fragment = new ReactWithAnyEmojiDialogFragment();
     Bundle         args     = new Bundle();
 
     args.putLong(ARG_MESSAGE_ID, messageRecord.getId());

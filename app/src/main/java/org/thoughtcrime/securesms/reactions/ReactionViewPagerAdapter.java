@@ -19,10 +19,12 @@ import network.loki.messenger.R;
  */
 class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPagerAdapter.ViewHolder> {
 
+  private ReactionsDialogFragment.Callback callback;
   private int selectedPosition = 0;
 
-  protected ReactionViewPagerAdapter() {
+  protected ReactionViewPagerAdapter(ReactionsDialogFragment.Callback callback) {
     super(new AlwaysChangedDiffUtil<>());
+    this.callback = callback;
   }
 
   @NonNull EmojiCount getEmojiCount(int position) {
@@ -37,7 +39,7 @@ class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPager
 
   @Override
   public @NonNull ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-    return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.reactions_bottom_sheet_dialog_fragment_recycler, parent, false));
+    return new ViewHolder(callback, LayoutInflater.from(parent.getContext()).inflate(R.layout.reactions_bottom_sheet_dialog_fragment_recycler, parent, false));
   }
 
   @Override
@@ -67,11 +69,11 @@ class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPager
   static class ViewHolder extends RecyclerView.ViewHolder {
 
     private final RecyclerView              recycler;
-    private final ReactionRecipientsAdapter adapter = new ReactionRecipientsAdapter();
+    private final ReactionRecipientsAdapter adapter;
 
-    public ViewHolder(@NonNull View itemView) {
+    public ViewHolder(ReactionsDialogFragment.Callback callback, @NonNull View itemView) {
       super(itemView);
-
+      adapter = new ReactionRecipientsAdapter(callback);
       recycler = (RecyclerView) itemView;
 
       ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,

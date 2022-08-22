@@ -28,7 +28,10 @@ class ReactionsRepository {
                 sender = Recipient.from(context, Address.fromSerialized(reaction.author), false),
                 baseEmoji = EmojiUtil.getCanonicalRepresentation(reaction.emoji),
                 displayEmoji = reaction.emoji,
-                timestamp = reaction.dateReceived
+                timestamp = reaction.dateReceived,
+                serverId = reaction.serverId,
+                localId = reaction.messageId,
+                isMms = reaction.isMms
             )
         }
     }
