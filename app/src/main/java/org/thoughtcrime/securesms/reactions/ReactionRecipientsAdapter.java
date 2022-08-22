@@ -8,9 +8,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.thoughtcrime.securesms.components.AvatarImageView;
-import org.thoughtcrime.securesms.mms.GlideApp;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -45,16 +42,12 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
 
   static final class ViewHolder extends RecyclerView.ViewHolder {
 
-    private final AvatarImageView avatar;
-//    private final BadgeImageView  badge;
     private final TextView        recipient;
     private final TextView        emoji;
 
     public ViewHolder(@NonNull View itemView) {
       super(itemView);
 
-      avatar    = itemView.findViewById(R.id.reactions_bottom_view_recipient_avatar);
-//      badge     = itemView.findViewById(R.id.reactions_bottom_view_recipient_badge);
       recipient = itemView.findViewById(R.id.reactions_bottom_view_recipient_name);
       emoji     = itemView.findViewById(R.id.reactions_bottom_view_recipient_emoji);
     }
@@ -64,13 +57,8 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
 
       if (reaction.getSender().isLocalNumber()) {
         this.recipient.setText(R.string.ReactionsRecipientAdapter_you);
-        this.avatar.setAvatar(GlideApp.with(avatar), null, false);
-//        this.badge.setBadge(null);
-//        AvatarUtil.loadIconIntoImageView(reaction.getSender(), avatar);
       } else {
-        this.recipient.setText(reaction.getSender().getProfileName());
-        this.avatar.setAvatar(GlideApp.with(avatar), reaction.getSender(), false);
-//        this.badge.setBadgeFromRecipient(reaction.getSender());
+        this.recipient.setText(reaction.getSender().getName());
       }
     }
   }

@@ -28,19 +28,13 @@ public class ReactionsViewModel extends ViewModel {
   public @NonNull
   Observable<List<EmojiCount>> getEmojiCounts() {
     return repository.getReactions(messageId)
-                     .map(reactionList -> {
-                       List<EmojiCount> emojiCounts = Stream.of(reactionList)
-                                                            .groupBy(ReactionDetails::getBaseEmoji)
-                                                            .sorted(this::compareReactions)
-                                                            .map(entry -> new EmojiCount(entry.getKey(),
-                                                                                         getCountDisplayEmoji(entry.getValue()),
-                                                                                         entry.getValue()))
-                                                            .toList();
-
-                       emojiCounts.add(0, EmojiCount.all(reactionList));
-
-                       return emojiCounts;
-                     })
+                     .map(reactionList -> Stream.of(reactionList)
+                                                          .groupBy(ReactionDetails::getBaseEmoji)
+                                                          .sorted(this::compareReactions)
+                                                          .map(entry -> new EmojiCount(entry.getKey(),
+                                                                                       getCountDisplayEmoji(entry.getValue()),
+                                                                                       entry.getValue()))
+                                                          .toList())
                      .observeOn(AndroidSchedulers.mainThread());
   }
 

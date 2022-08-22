@@ -35,7 +35,6 @@ public final class ReactionsBottomSheetDialogFragment extends BottomSheetDialogF
 
   private ViewPager2                recipientPagerView;
   private ReactionViewPagerAdapter  recipientsAdapter;
-  private ReactionsViewModel        viewModel;
 
   private final LifecycleDisposable disposables = new LifecycleDisposable();
 
@@ -107,14 +106,9 @@ public final class ReactionsBottomSheetDialogFragment extends BottomSheetDialogF
         TextView       text       = customView.findViewById(R.id.reactions_bottom_view_emoji_item_text);
         EmojiCount     emojiCount = recipientsAdapter.getEmojiCount(position);
 
-        if (position != 0) {
-          emoji.setVisibility(View.VISIBLE);
-          emoji.setImageEmoji(emojiCount.getDisplayEmoji());
-          text.setText(String.valueOf(emojiCount.getCount()));
-        } else {
-          emoji.setVisibility(View.GONE);
-          text.setText(customView.getContext().getString(R.string.ReactionsBottomSheetDialogFragment_all, emojiCount.getCount()));
-        }
+        emoji.setVisibility(View.VISIBLE);
+        emoji.setImageEmoji(emojiCount.getDisplayEmoji());
+        text.setText(String.valueOf(emojiCount.getCount()));
       }).attach();
     }
   }
@@ -125,9 +119,7 @@ public final class ReactionsBottomSheetDialogFragment extends BottomSheetDialogF
     recipientPagerView.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
       @Override
       public void onPageSelected(int position) {
-        recipientPagerView.post(() -> {
-          recipientsAdapter.enableNestedScrollingForPosition(position);
-        });
+        recipientPagerView.post(() -> recipientsAdapter.enableNestedScrollingForPosition(position));
       }
 
       @Override
@@ -144,7 +136,7 @@ public final class ReactionsBottomSheetDialogFragment extends BottomSheetDialogF
   private void setUpViewModel(@NonNull MessageId messageId) {
     ReactionsViewModel.Factory factory = new ReactionsViewModel.Factory(messageId);
 
-    viewModel = new ViewModelProvider(this, factory).get(ReactionsViewModel.class);
+    ReactionsViewModel viewModel = new ViewModelProvider(this, factory).get(ReactionsViewModel.class);
 
     disposables.add(viewModel.getEmojiCounts().subscribe(emojiCounts -> {
       if (emojiCounts.size() <= 1) dismiss();
