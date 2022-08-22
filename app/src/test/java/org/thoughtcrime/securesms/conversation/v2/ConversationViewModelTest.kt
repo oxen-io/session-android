@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.conversation.v2
 
+import com.goterl.lazysodium.utils.KeyPair
 import kotlinx.coroutines.flow.first
 import org.hamcrest.CoreMatchers.endsWith
 import org.hamcrest.CoreMatchers.equalTo
@@ -26,10 +27,11 @@ class ConversationViewModelTest: BaseViewModelTest() {
     private val storage = mock(Storage::class.java)
 
     private val threadId = 123L
+    private val edKeyPair = mock(KeyPair::class.java)
     private lateinit var recipient: Recipient
 
     private val viewModel: ConversationViewModel by lazy {
-        ConversationViewModel(threadId, repository, storage)
+        ConversationViewModel(threadId, edKeyPair, repository, storage)
     }
 
     @Before

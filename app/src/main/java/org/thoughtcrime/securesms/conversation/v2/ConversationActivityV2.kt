@@ -52,6 +52,7 @@ import network.loki.messenger.databinding.ActivityConversationV2ActionBarBinding
 import network.loki.messenger.databinding.ActivityConversationV2Binding
 import network.loki.messenger.databinding.ViewVisibleMessageBinding
 import nl.komponents.kovenant.ui.successUi
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.mentions.Mention
 import org.session.libsession.messaging.mentions.MentionsManager
@@ -216,7 +217,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 }
             } ?: finish()
         }
-        viewModelFactory.create(threadId)
+        viewModelFactory.create(threadId, MessagingModuleConfiguration.shared.getUserED25519KeyPair())
     }
     private var actionMode: ActionMode? = null
     private var unreadCount = 0
@@ -1208,8 +1209,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun onReactionLongClicked(messageId: MessageId) {
-        val recipient = viewModel.recipient ?: return
-        if (recipient.isClosedGroupRecipient || recipient.isOpenGroupRecipient) {
+        if (viewModel.recipient?.isClosedGroupRecipient == true ||
+            (viewModel.openGroup != null && OpenGroupManager.isUserModerator(this, viewModel.openGroup?.groupId!!, textSecurePreferences.getLocalNumber()!!, viewModel.blindedPublicKey))
+        ) {
             ReactionsBottomSheetDialogFragment.create(messageId).show(supportFragmentManager, null)
         }
     }

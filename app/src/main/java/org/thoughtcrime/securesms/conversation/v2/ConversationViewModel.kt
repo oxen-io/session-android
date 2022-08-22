@@ -3,15 +3,18 @@ package org.thoughtcrime.securesms.conversation.v2
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.goterl.lazysodium.utils.KeyPair
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.open_groups.OpenGroup
+import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.model.MessageRecord
@@ -20,6 +23,7 @@ import java.util.UUID
 
 class ConversationViewModel(
     val threadId: Long,
+    val edKeyPair: KeyPair?,
     private val repository: ConversationRepository,
     private val storage: Storage
 ) : ViewModel() {
@@ -35,6 +39,12 @@ class ConversationViewModel(
 
     val serverCapabilities: List<String>
         get() = openGroup?.let { storage.getServerCapabilities(it.server) } ?: listOf()
+
+    val blindedPublicKey: String?
+        get() = if (openGroup == null || edKeyPair == null) null else {
+            SodiumUtilities.blindedKeyPair(openGroup!!.publicKey, edKeyPair)?.publicKey?.asBytes
+                ?.let { SessionId(IdPrefix.BLINDED, it) }?.hexString
+        }
 
     init {
         _uiState.update {
@@ -147,18 +157,19 @@ class ConversationViewModel(
 
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {
-        fun create(threadId: Long): Factory
+        fun create(threadId: Long, edKeyPair: KeyPair?): Factory
     }
 
     @Suppress("UNCHECKED_CAST")
     class Factory @AssistedInject constructor(
         @Assisted private val threadId: Long,
+        @Assisted private val edKeyPair: KeyPair?,
         private val repository: ConversationRepository,
         private val storage: Storage
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return ConversationViewModel(threadId, repository, storage) as T
+            return ConversationViewModel(threadId, edKeyPair, repository, storage) as T
         }
     }
 }
@@ -168,6 +179,5 @@ data class UiMessage(val id: Long, val message: String)
 data class ConversationUiState(
     val isOxenHostedOpenGroup: Boolean = false,
     val uiMessages: List<UiMessage> = emptyList(),
-    val isMessageRequestAccepted: Boolean? = null,
-    val openGroup: OpenGroup? = null
+    val isMessageRequestAccepted: Boolean? = null
 )
