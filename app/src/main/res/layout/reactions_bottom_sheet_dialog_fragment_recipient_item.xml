@@ -7,7 +7,7 @@
 
     <org.thoughtcrime.securesms.components.FromTextView
         android:id="@+id/reactions_bottom_view_recipient_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:ellipsize="end"

@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.session.libsession.messaging.utilities.SessionId;
 import org.thoughtcrime.securesms.database.model.MessageId;
 
 import java.util.Collections;
@@ -71,7 +72,11 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
         this.recipient.setText(R.string.ReactionsRecipientAdapter_you);
         this.remove.setVisibility(View.VISIBLE);
       } else {
-        this.recipient.setText(reaction.getSender().getName());
+        String name = reaction.getSender().getName();
+        if (name != null && new SessionId(name).getPrefix() != null) {
+          name = name.substring(0, 4) + "..." + name.substring(name.length() - 4);
+        }
+        this.recipient.setText(name);
         this.remove.setVisibility(View.GONE);
       }
     }
