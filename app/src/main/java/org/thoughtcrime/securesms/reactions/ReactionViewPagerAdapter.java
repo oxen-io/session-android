@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.reactions;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ListAdapter;
@@ -20,8 +21,15 @@ import network.loki.messenger.R;
  */
 class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPagerAdapter.ViewHolder> {
 
+  private static final int HEADER_COUNT = 1;
+  private static final int HEADER_POSITION = 0;
+
+  private static final int HEADER_TYPE = 0;
+  private static final int RECIPIENT_TYPE = 1;
+
   private Listener callback;
   private int selectedPosition = 0;
+  private MessageId messageId = null;
   private boolean isUserModerator = false;
 
   protected ReactionViewPagerAdapter(Listener callback) {
@@ -31,6 +39,24 @@ class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPager
 
   public void setIsUserModerator(boolean isUserModerator) {
     this.isUserModerator = isUserModerator;
+  }
+
+  public void setMessageId(MessageId messageId) {
+    this.messageId = messageId;
+  }
+
+  @Override
+  public int getItemViewType(int position) {
+    if (position == 0) {
+      return HEADER_TYPE;
+    } else {
+      return RECIPIENT_TYPE;
+    }
+  }
+
+  @Override
+  public int getItemCount() {
+    return super.getItemCount() + HEADER_COUNT;
   }
 
   @NonNull EmojiCount getEmojiCount(int position) {
@@ -45,22 +71,33 @@ class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPager
 
   @Override
   public @NonNull ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-    return new ViewHolder(callback, LayoutInflater.from(parent.getContext()).inflate(R.layout.reactions_bottom_sheet_dialog_fragment_recycler, parent, false));
+    if (viewType == HEADER_TYPE) {
+      return new HeaderViewHolder(callback, LayoutInflater.from(parent.getContext()).inflate(R.layout.reactions_bottom_sheet_dialog_fragment_recycler_header, parent, false));
+    } else {
+      return new RecipientViewHolder(callback, LayoutInflater.from(parent.getContext()).inflate(R.layout.reactions_bottom_sheet_dialog_fragment_recycler, parent, false));
+    }
   }
 
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
     if (payloads.isEmpty()) {
       onBindViewHolder(holder, position);
-    } else {
-      holder.setSelected(selectedPosition);
+    } else if (position != HEADER_POSITION) {
+      RecipientViewHolder viewHolder = (RecipientViewHolder) holder;
+      viewHolder.setSelected(selectedPosition);
     }
   }
 
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-    holder.onBind(getItem(position));
-    holder.setSelected(selectedPosition);
+    if (position == HEADER_POSITION) {
+      HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
+      viewHolder.bind(getItem(position), messageId, isUserModerator);
+    } else {
+      RecipientViewHolder viewHolder = (RecipientViewHolder) holder;
+      viewHolder.onBind(getItem(position));
+      viewHolder.setSelected(selectedPosition);
+    }
   }
 
   @Override
@@ -73,14 +110,41 @@ class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPager
   }
 
   static class ViewHolder extends RecyclerView.ViewHolder {
+    public ViewHolder(@NonNull View itemView) {
+      super(itemView);
+    }
+  }
+
+  static class HeaderViewHolder extends ViewHolder {
+
+    private final Listener callback;
+
+    public HeaderViewHolder(Listener callback, @NonNull View itemView) {
+      super(itemView);
+      this.callback = callback;
+    }
+
+    private void bind(@NonNull final EmojiCount emoji, final MessageId messageId, boolean isUserModerator) {
+      View clearAll = itemView.findViewById(R.id.header_view_clear_all);
+      clearAll.setVisibility(isUserModerator ? View.VISIBLE : View.GONE);
+      clearAll.setOnClickListener(isUserModerator ? (View.OnClickListener) v -> {
+        callback.onClearAll(emoji.getBaseEmoji(), messageId);
+      } : null);
+      TextView base = itemView.findViewById(R.id.header_view_emoji);
+      base.setText(String.format("%s · %s", emoji.getBaseEmoji(), emoji.getDisplayEmoji()));
+    }
+
+  }
+
+  static class RecipientViewHolder extends ViewHolder {
 
     private final RecyclerView              recycler;
     private final ReactionRecipientsAdapter adapter;
 
-    public ViewHolder(Listener callback, @NonNull View itemView) {
+    public RecipientViewHolder(Listener callback, @NonNull View itemView) {
       super(itemView);
       adapter = new ReactionRecipientsAdapter(callback);
-      recycler = (RecyclerView) itemView;
+      recycler = itemView.findViewById(R.id.reactions_bottom_view_recipient_recycler);
 
       ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                                                  ViewGroup.LayoutParams.MATCH_PARENT);

@@ -96,6 +96,7 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment imp
 
     MessageId messageId = new MessageId(requireArguments().getLong(ARGS_MESSAGE_ID), requireArguments().getBoolean(ARGS_IS_MMS));
     recipientsAdapter.setIsUserModerator(requireArguments().getBoolean(ARGS_IS_MODERATOR));
+    recipientsAdapter.setMessageId(messageId);
     setUpViewModel(messageId);
   }
 
