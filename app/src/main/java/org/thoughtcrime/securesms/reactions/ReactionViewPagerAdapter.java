@@ -59,7 +59,7 @@ class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPager
 
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-    holder.onBind(getItem(position), isUserModerator);
+    holder.onBind(getItem(position));
     holder.setSelected(selectedPosition);
   }
 
@@ -89,8 +89,8 @@ class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPager
       recycler.setAdapter(adapter);
     }
 
-    public void onBind(@NonNull EmojiCount emojiCount, boolean isUserModerator) {
-      adapter.updateData(emojiCount.getReactions(), isUserModerator);
+    public void onBind(@NonNull EmojiCount emojiCount) {
+      adapter.updateData(emojiCount.getReactions());
     }
 
     public void setSelected(int position) {

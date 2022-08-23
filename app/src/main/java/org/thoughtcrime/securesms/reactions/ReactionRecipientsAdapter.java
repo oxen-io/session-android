@@ -20,15 +20,13 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
 
   private ReactionViewPagerAdapter.Listener callback;
   private List<ReactionDetails> data = Collections.emptyList();
-  private boolean isUserModerator = false;
 
   public ReactionRecipientsAdapter(ReactionViewPagerAdapter.Listener callback) {
     this.callback = callback;
   }
 
-  public void updateData(List<ReactionDetails> newData, boolean isUserModerator) {
+  public void updateData(List<ReactionDetails> newData) {
     data = newData;
-    this.isUserModerator = isUserModerator;
     notifyDataSetChanged();
   }
 
@@ -42,7 +40,7 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
 
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-    holder.bind(data.get(position), isUserModerator);
+    holder.bind(data.get(position));
   }
 
   @Override
@@ -63,7 +61,7 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
       remove     = itemView.findViewById(R.id.reactions_bottom_view_recipient_emoji);
     }
 
-    void bind(@NonNull ReactionDetails reaction, boolean isUserModerator) {
+    void bind(@NonNull ReactionDetails reaction) {
       this.remove.setOnClickListener((v) -> {
         MessageId messageId = new MessageId(reaction.getLocalId(), reaction.isMms());
         callback.onRemoveReaction(reaction.getBaseEmoji(), messageId, reaction.getTimestamp());
@@ -74,7 +72,7 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
         this.remove.setVisibility(View.VISIBLE);
       } else {
         this.recipient.setText(reaction.getSender().getName());
-        this.remove.setVisibility(isUserModerator ? View.VISIBLE : View.GONE);
+        this.remove.setVisibility(View.GONE);
       }
     }
   }
