@@ -117,7 +117,7 @@ class BatchMessageReceiveJob(
                                         runThreadUpdate = false,
                                         runProfileUpdate = true
                                     )
-                                    if (messageId != null) {
+                                    if (messageId != null && message.reaction == null) {
                                         val isUserBlindedSender = message.sender == serverPublicKey?.let { SodiumUtilities.blindedKeyPair(it, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!) }?.let { SessionId(
                                             IdPrefix.BLINDED, it.publicKey.asBytes).hexString }
                                         messageIds += messageId to (message.sender == localUserPublicKey || isUserBlindedSender)
