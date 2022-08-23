@@ -160,8 +160,4 @@ public class EmojiKeyboardProvider implements MediaKeyboardProvider,
     }
   }
 
-  public interface EmojiEventListener {
-    void onEmojiSelected(String emoji);
-    void onKeyEvent(KeyEvent keyEvent);
-  }
 }
