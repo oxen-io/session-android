@@ -3,6 +3,7 @@
 
     <!-- The base theme is dark and the light one is implemented using "notnight" resources. -->
     <style name="Base.Theme.Session" parent="@style/Theme.AppCompat.DayNight.DarkActionBar">
+        <item name="theme_type">dark</item>
         <item name="colorPrimary">@color/action_bar_background</item>
         <item name="colorPrimaryDark">@color/action_bar_background</item>
         <item name="searchBackgroundColor">#1B1B1B</item>
