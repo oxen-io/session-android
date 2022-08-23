@@ -33,7 +33,8 @@
         android:src="@drawable/ic_close_grey600_32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="?colorPrimary" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,10 +22,15 @@ class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPager
 
   private Listener callback;
   private int selectedPosition = 0;
+  private boolean isUserModerator = false;
 
   protected ReactionViewPagerAdapter(Listener callback) {
     super(new AlwaysChangedDiffUtil<>());
     this.callback = callback;
+  }
+
+  public void setIsUserModerator(boolean isUserModerator) {
+    this.isUserModerator = isUserModerator;
   }
 
   @NonNull EmojiCount getEmojiCount(int position) {
@@ -54,7 +59,7 @@ class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPager
 
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-    holder.onBind(getItem(position));
+    holder.onBind(getItem(position), isUserModerator);
     holder.setSelected(selectedPosition);
   }
 
@@ -84,8 +89,8 @@ class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPager
       recycler.setAdapter(adapter);
     }
 
-    public void onBind(@NonNull EmojiCount emojiCount) {
-      adapter.updateData(emojiCount.getReactions());
+    public void onBind(@NonNull EmojiCount emojiCount, boolean isUserModerator) {
+      adapter.updateData(emojiCount.getReactions(), isUserModerator);
     }
 
     public void setSelected(int position) {
