@@ -38,36 +38,14 @@
                 <EditText
                     android:id="@+id/displayNameEditText"
                     style="@style/SessionEditText"
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:contentDescription="@string/AccessibilityId_username_input"
-=======
                     android:contentDescription="@string/AccessibilityId_username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
->>>>>>> Stashed changes
-=======
-                    android:contentDescription="@string/AccessibilityId_username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
->>>>>>> Stashed changes
-=======
-                    android:contentDescription="@string/AccessibilityId_username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
->>>>>>> Stashed changes
-                    android:hint="@string/activity_settings_display_name_edit_text_hint"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
-                    android:textAlignment="center"
-                    android:visibility="invisible" />
+                    android:visibility="invisible"
+                    android:hint="@string/activity_settings_display_name_edit_text_hint" />
 
                 <TextView
                     android:id="@+id/btnGroupNameDisplay"
@@ -91,7 +69,6 @@
 
             <TextView
                 android:id="@+id/publicKeyTextView"
-                android:contentDescription="@string/AccessibilityId_session_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/large_spacing"
@@ -174,7 +151,6 @@
 
             <TextView
                 android:id="@+id/privacyButton"
-                android:contentDescription="@string/AccessibilityId_privacy"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/setting_button_height"
                 android:background="@drawable/setting_button_background"
@@ -239,7 +215,6 @@
 
             <TextView
                 android:id="@+id/seedButton"
-                android:contentDescription="@string/AccessibilityId_show_recovery_phrase"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/setting_button_height"
                 android:background="@drawable/setting_button_background"

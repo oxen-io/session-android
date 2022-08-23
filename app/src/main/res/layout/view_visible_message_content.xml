@@ -97,6 +97,7 @@
         android:paddingHorizontal="12dp"
         android:paddingVertical="@dimen/small_spacing"
         android:id="@+id/bodyTextView"
+        android:contentDescription="@string/AccessibilityId_message_body"
         android:layout_width="0dp"
         android:layout_height="wrap_content"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

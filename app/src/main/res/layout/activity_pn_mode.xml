@@ -44,7 +44,6 @@
             android:background="@drawable/pn_option_background">
 
             <TextView
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/medium_font_size"
@@ -103,19 +102,7 @@
 
         <Button
             style="@style/Widget.Session.Button.Common.ProminentFilled"
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
             android:contentDescription="@string/AccessibilityId_continue_message_notifications"
-=======
-            android:contentDescription="@string/AccessibilityId_continue"
->>>>>>> Stashed changes
-=======
-            android:contentDescription="@string/AccessibilityId_continue"
->>>>>>> Stashed changes
-=======
-            android:contentDescription="@string/AccessibilityId_continue"
->>>>>>> Stashed changes
             android:id="@+id/registerButton"
             android:layout_width="match_parent"
             android:layout_height="@dimen/medium_button_height"

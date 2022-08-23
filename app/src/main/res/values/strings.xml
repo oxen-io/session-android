@@ -19,16 +19,7 @@
     <string name="AccessibilityId_continue">Continue</string>
     <!-- Recovery phrase input -->
     <string name="AccessibilityId_recovery_phrase_input">Recovery phrase input</string>
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    <string name="AccessibilityId_continue_message_notifications">Continue with settings</string>
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
     <string name="AccessibilityId_copy_session_id">Copy Session ID</string>
     <!--Restore by seed page-->
     <string name="AccessibilityId_enter_your_recovery_phrase">Enter your recovery phrase</string>
@@ -37,15 +28,14 @@
     <!--Message Notifications Options-->
     <string name="AccessibilityId_fast_mode_notifications_option">Fast mode notifications option</string>
     <string name="AccessibilityId_slow_mode_notifications_option">Slow mode notifications option</string>
+    <string name="AccessibilityId_continue_message_notifications">Continue with settings</string>
     <!--Recovery Phrase reminder-->
     <string name="AccessibilityId_recovery_phrase">Recovery Phrase</string>
     <string name="AccessibilityId_copy_recovery_phrase">Copy Recovery Phrase</string>
     <!--Home Page-->
     <string name="AccessibilityId_profile_picture">Profile picture</string>
     <string name="AccessibilityId_search_icon">Search icon</string>
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
     <string name="AccessibilityId_message_request_banner">Message requests banner</string>
     <string name="AccessibilityId_message_request">Message request</string>
     <!--New conversation pop up-->
@@ -56,6 +46,10 @@
     <!--New Session -->
     <string name="AccessibilityId_session_id_input">Session id input box</string>
     <string name="AccessibilityId_next">Next</string>
+    <!--  New group -->
+    <string name="AccessibilityId_group_name_input">Group name input</string>
+    <string name="AccessibilityId_continue_group_creation">Continue group creation</string>
+    <string name="AccessibilityId_contact">Contact</string>
     <!--Conversation screen -->
     <string name="AccessibilityId_message_input">Message input box</string>
     <string name="AccessibilityId_microphone_button">Microphone button</string>
@@ -65,7 +59,13 @@
     <string name="AccessibilityId_message_sent_status_tick">Message sent status tick</string>
     <string name="AccessibilityId_message_sent_status_pending">Message sent status pending</string>
     <string name="AccessibilityId_message_request_config_message">Message request has been accepted</string>
+    <string name="AccessibilityId_message_body">Message Body</string>
+    <string name="AccessibilityId_deleted_message">Deleted message</string>
 
+    <!-- Delete message modal-->
+    <string name="AccessibilityId_delete_just_for_me">Delete just for me</string>
+    <string name="AccessibilityId_delete_for_everyone">Delete for everyone</string>
+    <string name="AccessibilityId_cancel_deletion">Cancel deletion</string>
     <!--Settings Page-->
     <string name="AccessibilityId_username_input">Username input</string>
     <string name="AccessibilityId_username_text">Username text</string>
@@ -75,28 +75,6 @@
 <!--    Recovery Phrase Dialog-->
     <string name="AccessibilityId_cancel_button">Cancel</string>
 
-
-=======
-    <!--Settings Page-->
-    <string name="AccessibilityId_username">Username</string>
-    <string name="AccessibilityId_show_recovery_phrase">Show recovery phrase</string>
-<!--    Recovery Phrase Dialog-->
-    <string name="AccessibilityId_cancel_button">Cancel</string>
->>>>>>> Stashed changes
-=======
-    <!--Settings Page-->
-    <string name="AccessibilityId_username">Username</string>
-    <string name="AccessibilityId_show_recovery_phrase">Show recovery phrase</string>
-<!--    Recovery Phrase Dialog-->
-    <string name="AccessibilityId_cancel_button">Cancel</string>
->>>>>>> Stashed changes
-=======
-    <!--Settings Page-->
-    <string name="AccessibilityId_username">Username</string>
-    <string name="AccessibilityId_show_recovery_phrase">Show recovery phrase</string>
-<!--    Recovery Phrase Dialog-->
-    <string name="AccessibilityId_cancel_button">Cancel</string>
->>>>>>> Stashed changes
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">New message</string>
 

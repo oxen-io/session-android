@@ -18,6 +18,7 @@
             <EditText
                 style="@style/SmallSessionEditText"
                 android:id="@+id/nameEditText"
+                android:contentDescription="@string/AccessibilityId_group_name_input"
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:layout_marginLeft="@dimen/large_spacing"
@@ -58,6 +59,7 @@
         <Button
             style="@style/Widget.Session.Button.Common.ProminentOutline"
             android:id="@+id/createNewPrivateChatButton"
+            android:contentDescription="@string/AccessibilityId_continue_group_creation"
             android:layout_width="196dp"
             android:layout_height="@dimen/medium_button_height"
             android:layout_marginTop="@dimen/medium_spacing"
