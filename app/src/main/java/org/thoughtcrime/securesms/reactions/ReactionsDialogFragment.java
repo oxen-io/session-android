@@ -24,12 +24,13 @@ import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
 import org.thoughtcrime.securesms.conversation.v2.ViewUtil;
 import org.thoughtcrime.securesms.database.model.MessageId;
 import org.thoughtcrime.securesms.util.LifecycleDisposable;
+import org.thoughtcrime.securesms.util.NumberUtil;
 
 import java.util.Objects;
 
 import network.loki.messenger.R;
 
-public final class ReactionsDialogFragment extends BottomSheetDialogFragment {
+public final class ReactionsDialogFragment extends BottomSheetDialogFragment implements ReactionViewPagerAdapter.Listener {
 
   private static final String ARGS_MESSAGE_ID = "reactions.args.message.id";
   private static final String ARGS_IS_MMS     = "reactions.args.is.mms";
@@ -121,13 +122,13 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment {
 
         emoji.setVisibility(View.VISIBLE);
         emoji.setImageEmoji(emojiCount.getDisplayEmoji());
-        text.setText(String.valueOf(emojiCount.getCount()));
+        text.setText(NumberUtil.getFormattedNumber(emojiCount.getCount()));
       }).attach();
     }
   }
 
   private void setUpRecipientsRecyclerView() {
-    recipientsAdapter = new ReactionViewPagerAdapter(callback);
+    recipientsAdapter = new ReactionViewPagerAdapter(this);
 
     recipientPagerView.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
       @Override
@@ -156,6 +157,18 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment {
 
       recipientsAdapter.submitList(emojiCounts);
     }));
+  }
+
+  @Override
+  public void onRemoveReaction(@NonNull String emoji, @NonNull MessageId messageId, long timestamp) {
+    callback.onRemoveReaction(emoji, messageId, timestamp);
+    dismiss();
+  }
+
+  @Override
+  public void onClearAll(@NonNull String emoji, @NonNull MessageId messageId) {
+    callback.onClearAll(emoji, messageId);
+    dismiss();
   }
 
   public interface Callback {

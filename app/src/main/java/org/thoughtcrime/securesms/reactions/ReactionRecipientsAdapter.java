@@ -18,10 +18,10 @@ import network.loki.messenger.R;
 
 final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecipientsAdapter.ViewHolder> {
 
-  private ReactionsDialogFragment.Callback callback;
+  private ReactionViewPagerAdapter.Listener callback;
   private List<ReactionDetails> data = Collections.emptyList();
 
-  public ReactionRecipientsAdapter(ReactionsDialogFragment.Callback callback) {
+  public ReactionRecipientsAdapter(ReactionViewPagerAdapter.Listener callback) {
     this.callback = callback;
   }
 
@@ -50,11 +50,11 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
 
   static final class ViewHolder extends RecyclerView.ViewHolder {
 
-    private ReactionsDialogFragment.Callback callback;
+    private ReactionViewPagerAdapter.Listener callback;
     private final TextView        recipient;
     private final ImageView       remove;
 
-    public ViewHolder(ReactionsDialogFragment.Callback callback, @NonNull View itemView) {
+    public ViewHolder(ReactionViewPagerAdapter.Listener callback, @NonNull View itemView) {
       super(itemView);
       this.callback = callback;
       recipient = itemView.findViewById(R.id.reactions_bottom_view_recipient_name);
