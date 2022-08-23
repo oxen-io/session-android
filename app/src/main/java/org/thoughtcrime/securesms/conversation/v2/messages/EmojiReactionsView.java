@@ -197,7 +197,7 @@ public class EmojiReactionsView extends LinearLayout {
     if (reaction.emoji != null) {
       emojiView.setImageEmoji(reaction.emoji);
 
-      if (reaction.count > 1) {
+      if (reaction.count >= 1) {
         countView.setText(NumberUtil.getFormattedNumber(reaction.count));
       } else {
         countView.setVisibility(GONE);

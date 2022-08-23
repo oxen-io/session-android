@@ -133,6 +133,17 @@
             tools:alpha="1"
             tools:translationY="0dp" />
 
+        <View
+            android:id="@+id/reaction_7_background"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:alpha="0.5"
+            android:background="@drawable/reactions_old_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/reaction_7"
+            app:layout_constraintRight_toRightOf="@id/reaction_7"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <org.thoughtcrime.securesms.components.emoji.EmojiImageView
             android:id="@+id/reaction_7"
             android:layout_width="32dp"

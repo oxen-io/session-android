@@ -338,8 +338,23 @@ object MessageSender {
                 storage.setMessageServerHash(messageID, it)
             }
             // Track the open group server message ID
-            if (message.openGroupServerMessageID != null && destination is Destination.LegacyOpenGroup) {
-                val encoded = GroupUtil.getEncodedOpenGroupID("${destination.server}.${destination.roomToken}".toByteArray())
+            if (message.openGroupServerMessageID != null && (destination is Destination.LegacyOpenGroup || destination is Destination.OpenGroup)) {
+                val server: String
+                val room: String
+                when (destination) {
+                    is Destination.LegacyOpenGroup -> {
+                        server = destination.server
+                        room = destination.roomToken
+                    }
+                    is Destination.OpenGroup -> {
+                        server = destination.server
+                        room = destination.roomToken
+                    }
+                    else -> {
+                        throw Exception("Destination was a different destination than we were expecting")
+                    }
+                }
+                val encoded = GroupUtil.getEncodedOpenGroupID("$server.$room".toByteArray())
                 val threadID = storage.getThreadId(Address.fromSerialized(encoded))
                 if (threadID != null && threadID >= 0) {
                     storage.setOpenGroupServerMessageID(messageID, message.openGroupServerMessageID!!, threadID, !(message as VisibleMessage).isMediaMessage())

@@ -159,7 +159,10 @@ private fun handleConfigurationMessage(message: ConfigurationMessage) {
         }
     }
     val allV2OpenGroups = storage.getAllOpenGroups().map { it.value.joinURL }
-    for (openGroup in message.openGroups) {
+    for (openGroup in message.openGroups.map {
+        it.replace(OpenGroupApi.legacyDefaultServer, OpenGroupApi.defaultServer)
+            .replace(OpenGroupApi.httpDefaultServer, OpenGroupApi.defaultServer)
+    }) {
         if (allV2OpenGroups.contains(openGroup)) continue
         Log.d("OpenGroup", "All open groups doesn't contain $openGroup")
         if (!storage.hasBackgroundGroupAddJob(openGroup)) {
