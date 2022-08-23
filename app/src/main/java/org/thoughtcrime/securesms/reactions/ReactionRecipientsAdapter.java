@@ -18,47 +18,104 @@ import network.loki.messenger.R;
 
 final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecipientsAdapter.ViewHolder> {
 
+  private static final int HEADER_COUNT = 1;
+  private static final int HEADER_POSITION = 0;
+
+  private static final int HEADER_TYPE = 0;
+  private static final int RECIPIENT_TYPE = 1;
+
   private ReactionViewPagerAdapter.Listener callback;
   private List<ReactionDetails> data = Collections.emptyList();
+  private MessageId messageId;
+  private boolean isUserModerator;
+  private EmojiCount emojiData;
 
   public ReactionRecipientsAdapter(ReactionViewPagerAdapter.Listener callback) {
     this.callback = callback;
   }
 
-  public void updateData(List<ReactionDetails> newData) {
-    data = newData;
+  public void updateData(MessageId messageId, EmojiCount newData, boolean isUserModerator) {
+    this.messageId = messageId;
+    emojiData = newData;
+    data = newData.getReactions();
+    this.isUserModerator = isUserModerator;
     notifyDataSetChanged();
   }
 
   @Override
-  public @NonNull ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-    return new ViewHolder(callback, LayoutInflater.from(parent.getContext())
-                                        .inflate(R.layout.reactions_bottom_sheet_dialog_fragment_recipient_item,
-                                                 parent,
-                                                 false));
+  public int getItemViewType(int position) {
+    if (position == HEADER_POSITION) {
+      return HEADER_TYPE;
+    } else {
+      return RECIPIENT_TYPE;
+    }
+  }
+
+  @Override
+  public @NonNull
+  ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    if (viewType == HEADER_TYPE) {
+      return new HeaderViewHolder(callback, LayoutInflater.from(parent.getContext()).inflate(R.layout.reactions_bottom_sheet_dialog_fragment_recycler_header, parent, false));
+    } else {
+      return new RecipientViewHolder(callback, LayoutInflater.from(parent.getContext()).inflate(R.layout.reactions_bottom_sheet_dialog_fragment_recipient_item, parent, false));
+    }
   }
 
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-    holder.bind(data.get(position));
+    if (holder instanceof RecipientViewHolder) {
+      ((RecipientViewHolder) holder).bind(data.get(position-HEADER_COUNT));
+    } else if (holder instanceof HeaderViewHolder) {
+      ((HeaderViewHolder) holder).bind(emojiData, messageId, isUserModerator);
+    }
   }
 
   @Override
   public int getItemCount() {
-    return data.size();
+    if (data.isEmpty()) {
+      return 0;
+    } else {
+      return data.size() + HEADER_COUNT;
+    }
   }
 
-  static final class ViewHolder extends RecyclerView.ViewHolder {
+  static class ViewHolder extends RecyclerView.ViewHolder {
+    public ViewHolder(@NonNull View itemView) {
+      super(itemView);
+    }
+  }
+
+  static class HeaderViewHolder extends ViewHolder {
+
+    private final ReactionViewPagerAdapter.Listener callback;
+
+    public HeaderViewHolder(ReactionViewPagerAdapter.Listener callback, @NonNull View itemView) {
+      super(itemView);
+      this.callback = callback;
+    }
+
+    private void bind(@NonNull final EmojiCount emoji, final MessageId messageId, boolean isUserModerator) {
+      View clearAll = itemView.findViewById(R.id.header_view_clear_all);
+      clearAll.setVisibility(isUserModerator ? View.VISIBLE : View.GONE);
+      clearAll.setOnClickListener(isUserModerator ? (View.OnClickListener) v -> {
+        callback.onClearAll(emoji.getBaseEmoji(), messageId);
+      } : null);
+      TextView base = itemView.findViewById(R.id.header_view_emoji);
+      base.setText(String.format("%s · %s", emoji.getBaseEmoji(), emoji.getCount()));
+    }
+  }
+
+  static final class RecipientViewHolder extends ViewHolder {
 
     private ReactionViewPagerAdapter.Listener callback;
-    private final TextView        recipient;
-    private final ImageView       remove;
+    private final TextView recipient;
+    private final ImageView remove;
 
-    public ViewHolder(ReactionViewPagerAdapter.Listener callback, @NonNull View itemView) {
+    public RecipientViewHolder(ReactionViewPagerAdapter.Listener callback, @NonNull View itemView) {
       super(itemView);
       this.callback = callback;
       recipient = itemView.findViewById(R.id.reactions_bottom_view_recipient_name);
-      remove     = itemView.findViewById(R.id.reactions_bottom_view_recipient_emoji);
+      remove = itemView.findViewById(R.id.reactions_bottom_view_recipient_emoji);
     }
 
     void bind(@NonNull ReactionDetails reaction) {
