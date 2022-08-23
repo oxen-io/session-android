@@ -2,6 +2,7 @@
 <resources>
 
     <style name="Theme.Session.Light" parent="Base.Theme.Session">
+        <item name="theme_type">light</item>
         <item name="android:navigationBarColor">?android:navigationBarColor</item>
         <item name="android:textColorHint">@color/gray50</item>
 
