@@ -22,6 +22,7 @@ class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPager
 
   private Listener callback;
   private int selectedPosition = 0;
+  private MessageId messageId = null;
   private boolean isUserModerator = false;
 
   protected ReactionViewPagerAdapter(Listener callback) {
@@ -31,6 +32,15 @@ class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPager
 
   public void setIsUserModerator(boolean isUserModerator) {
     this.isUserModerator = isUserModerator;
+  }
+
+  public void setMessageId(MessageId messageId) {
+    this.messageId = messageId;
+  }
+
+  @Override
+  public int getItemCount() {
+    return super.getItemCount();
   }
 
   @NonNull EmojiCount getEmojiCount(int position) {
@@ -45,7 +55,8 @@ class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPager
 
   @Override
   public @NonNull ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-    return new ViewHolder(callback, LayoutInflater.from(parent.getContext()).inflate(R.layout.reactions_bottom_sheet_dialog_fragment_recycler, parent, false));
+    return new ViewHolder(callback,
+            LayoutInflater.from(parent.getContext()).inflate(R.layout.reactions_bottom_sheet_dialog_fragment_recycler, parent, false));
   }
 
   @Override
@@ -59,8 +70,7 @@ class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPager
 
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-    holder.onBind(getItem(position));
-    holder.setSelected(selectedPosition);
+    holder.onBind(messageId, getItem(position), isUserModerator);
   }
 
   @Override
@@ -73,14 +83,13 @@ class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPager
   }
 
   static class ViewHolder extends RecyclerView.ViewHolder {
-
     private final RecyclerView              recycler;
     private final ReactionRecipientsAdapter adapter;
 
     public ViewHolder(Listener callback, @NonNull View itemView) {
       super(itemView);
       adapter = new ReactionRecipientsAdapter(callback);
-      recycler = (RecyclerView) itemView;
+      recycler = itemView.findViewById(R.id.reactions_bottom_view_recipient_recycler);
 
       ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                                                  ViewGroup.LayoutParams.MATCH_PARENT);
@@ -89,8 +98,8 @@ class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPager
       recycler.setAdapter(adapter);
     }
 
-    public void onBind(@NonNull EmojiCount emojiCount) {
-      adapter.updateData(emojiCount.getReactions());
+    public void onBind(MessageId messageId, @NonNull EmojiCount emojiCount, boolean isUserModerator) {
+      adapter.updateData(messageId, emojiCount, isUserModerator);
     }
 
     public void setSelected(int position) {

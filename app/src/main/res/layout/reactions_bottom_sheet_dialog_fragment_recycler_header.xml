@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:padding="@dimen/small_spacing"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+        android:id="@+id/header_view_emoji"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:text="@string/message_requests_clear_all"
+        android:textColor="@color/destructive"
+        android:visibility="gone"
+        android:id="@+id/header_view_clear_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
