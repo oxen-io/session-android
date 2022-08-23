@@ -101,7 +101,7 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
         callback.onClearAll(emoji.getBaseEmoji(), messageId);
       } : null);
       TextView base = itemView.findViewById(R.id.header_view_emoji);
-      base.setText(String.format("%s · %s", emoji.getBaseEmoji(), emoji.getCount()));
+      base.setText(String.format("%s · %s", emoji.getDisplayEmoji(), emoji.getCount()));
     }
   }
 
