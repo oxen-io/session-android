@@ -25,15 +25,18 @@
 
     <ImageView
         android:id="@+id/reactions_bottom_view_recipient_emoji"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/large_spacing"
+        android:layout_height="@dimen/large_spacing"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:gravity="center"
-        android:src="@drawable/ic_close_grey600_32dp"
+        android:src="@drawable/ic_close_white_48dp"
+        android:tint="?android:textColorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:scaleType="centerInside"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

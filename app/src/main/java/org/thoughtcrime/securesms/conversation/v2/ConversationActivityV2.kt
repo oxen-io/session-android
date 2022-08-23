@@ -1222,10 +1222,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun onReactionLongClicked(messageId: MessageId) {
-        if (viewModel.recipient?.isClosedGroupRecipient == true ||
-            (viewModel.openGroup != null && OpenGroupManager.isUserModerator(this, viewModel.openGroup?.groupId!!, textSecurePreferences.getLocalNumber()!!, viewModel.blindedPublicKey))
-        ) {
-            ReactionsDialogFragment.create(messageId).show(supportFragmentManager, null)
+        if (viewModel.recipient?.isGroupRecipient == true) {
+            val isUserModerator = viewModel.openGroup?.let { openGroup ->
+                val userPublicKey = textSecurePreferences.getLocalNumber() ?: return@let false
+                OpenGroupManager.isUserModerator(this, openGroup.id, userPublicKey, viewModel.blindedPublicKey)
+            } ?: false
+            val fragment = ReactionsDialogFragment.create(messageId, isUserModerator)
+            fragment.show(supportFragmentManager, null)
         }
     }
 

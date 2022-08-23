@@ -34,6 +34,7 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment imp
 
   private static final String ARGS_MESSAGE_ID = "reactions.args.message.id";
   private static final String ARGS_IS_MMS     = "reactions.args.is.mms";
+  private static final String ARGS_IS_MODERATOR = "reactions.args.is.moderator";
 
   private ViewPager2                recipientPagerView;
   private ReactionViewPagerAdapter  recipientsAdapter;
@@ -41,12 +42,13 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment imp
 
   private final LifecycleDisposable disposables = new LifecycleDisposable();
 
-  public static DialogFragment create(MessageId messageId) {
+  public static DialogFragment create(MessageId messageId, boolean isUserModerator) {
     Bundle         args     = new Bundle();
     DialogFragment fragment = new ReactionsDialogFragment();
 
     args.putLong(ARGS_MESSAGE_ID, messageId.getId());
     args.putBoolean(ARGS_IS_MMS, messageId.isMms());
+    args.putBoolean(ARGS_IS_MODERATOR, isUserModerator);
 
     fragment.setArguments(args);
 
@@ -93,6 +95,7 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment imp
     setUpTabMediator(savedInstanceState);
 
     MessageId messageId = new MessageId(requireArguments().getLong(ARGS_MESSAGE_ID), requireArguments().getBoolean(ARGS_IS_MMS));
+    recipientsAdapter.setIsUserModerator(requireArguments().getBoolean(ARGS_IS_MODERATOR));
     setUpViewModel(messageId);
   }
 

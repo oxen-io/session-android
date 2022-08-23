@@ -22,10 +22,15 @@ class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPager
 
   private Listener callback;
   private int selectedPosition = 0;
+  private boolean isUserModerator = false;
 
   protected ReactionViewPagerAdapter(Listener callback) {
     super(new AlwaysChangedDiffUtil<>());
     this.callback = callback;
+  }
+
+  public void setIsUserModerator(boolean isUserModerator) {
+    this.isUserModerator = isUserModerator;
   }
 
   @NonNull EmojiCount getEmojiCount(int position) {
