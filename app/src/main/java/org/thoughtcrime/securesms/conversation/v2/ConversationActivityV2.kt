@@ -1125,6 +1125,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 OpenGroupApi.deleteAllReactions(openGroup.room, openGroup.server, serverId, emoji)
             }
         }
+        threadDb.notifyThreadUpdated(viewModel.threadId)
     }
 
     override fun onMicrophoneButtonMove(event: MotionEvent) {
