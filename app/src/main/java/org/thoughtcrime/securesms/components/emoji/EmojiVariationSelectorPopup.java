@@ -8,8 +8,6 @@ import android.widget.PopupWindow;
 
 import androidx.annotation.NonNull;
 
-import org.thoughtcrime.securesms.components.emoji.EmojiKeyboardProvider.EmojiEventListener;
-
 import java.util.List;
 
 import network.loki.messenger.R;

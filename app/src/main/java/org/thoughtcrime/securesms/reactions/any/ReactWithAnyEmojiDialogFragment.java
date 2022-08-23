@@ -26,7 +26,7 @@ import com.google.android.material.shape.CornerFamily;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.ShapeAppearanceModel;
 
-import org.thoughtcrime.securesms.components.emoji.EmojiKeyboardProvider;
+import org.thoughtcrime.securesms.components.emoji.EmojiEventListener;
 import org.thoughtcrime.securesms.components.emoji.EmojiPageView;
 import org.thoughtcrime.securesms.components.emoji.EmojiPageViewGridAdapter;
 import org.thoughtcrime.securesms.conversation.v2.ViewUtil;
@@ -36,7 +36,7 @@ import org.thoughtcrime.securesms.util.LifecycleDisposable;
 
 import network.loki.messenger.R;
 
-public final class ReactWithAnyEmojiDialogFragment extends BottomSheetDialogFragment implements EmojiKeyboardProvider.EmojiEventListener,
+public final class ReactWithAnyEmojiDialogFragment extends BottomSheetDialogFragment implements EmojiEventListener,
                                                                                                            EmojiPageViewGridAdapter.VariationSelectorListener
 {
 
