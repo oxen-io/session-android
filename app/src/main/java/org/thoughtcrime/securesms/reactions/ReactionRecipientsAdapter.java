@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.session.libsession.messaging.utilities.SessionId;
 import org.thoughtcrime.securesms.components.ProfilePictureView;
+import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
 import org.thoughtcrime.securesms.database.model.MessageId;
 import org.thoughtcrime.securesms.mms.GlideApp;
 
@@ -110,8 +111,10 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
       clearAll.setOnClickListener(isUserModerator ? (View.OnClickListener) v -> {
         callback.onClearAll(emoji.getBaseEmoji(), messageId);
       } : null);
-      TextView base = itemView.findViewById(R.id.header_view_emoji);
-      base.setText(String.format("%s · %s", emoji.getDisplayEmoji(), emoji.getCount()));
+      EmojiImageView emojiView = itemView.findViewById(R.id.header_view_emoji);
+      emojiView.setImageEmoji(emoji.getDisplayEmoji());
+      TextView count = itemView.findViewById(R.id.header_view_emoji_count);
+      count.setText(String.format("· %s", emoji.getCount()));
     }
   }
 

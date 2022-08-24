@@ -12,6 +12,7 @@
     android:gravity="center">
 
   <org.thoughtcrime.securesms.components.emoji.EmojiImageView
+      android:scaleType="centerInside"
       android:id="@+id/reactions_pill_emoji"
       android:layout_width="17dp"
       android:layout_height="17dp" />
