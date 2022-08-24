@@ -69,7 +69,7 @@ public abstract class MessagingDatabase extends Database implements MmsSmsColumn
 
   void updateReactionsUnread(SQLiteDatabase db, long messageId, boolean hasReactions, boolean isRemoval) {
     try {
-      boolean       isOutgoing = getMessageRecord(messageId).isOutgoing();
+      MessageRecord message    = getMessageRecord(messageId);
       ContentValues values     = new ContentValues();
 
       if (!hasReactions) {
@@ -78,13 +78,14 @@ public abstract class MessagingDatabase extends Database implements MmsSmsColumn
         values.put(REACTIONS_UNREAD, 1);
       }
 
-      if (isOutgoing && hasReactions) {
+      if (message.isOutgoing() && hasReactions) {
         values.put(NOTIFIED, 0);
       }
 
       if (values.size() > 0) {
         db.update(getTableName(), values, ID_WHERE, SqlUtil.buildArgs(messageId));
       }
+      notifyConversationListeners(message.getThreadId());
     } catch (NoSuchMessageException e) {
       Log.w(TAG, "Failed to find message " + messageId);
     }
