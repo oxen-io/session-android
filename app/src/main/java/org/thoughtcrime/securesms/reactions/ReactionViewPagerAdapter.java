@@ -5,10 +5,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.thoughtcrime.securesms.database.model.MessageId;
+import org.thoughtcrime.securesms.util.ContextUtil;
 import org.thoughtcrime.securesms.util.adapter.AlwaysChangedDiffUtil;
 
 import java.util.List;
@@ -95,6 +98,9 @@ class ReactionViewPagerAdapter extends ListAdapter<EmojiCount, ReactionViewPager
                                                                  ViewGroup.LayoutParams.MATCH_PARENT);
 
       recycler.setLayoutParams(params);
+      DividerItemDecoration decoration = new DividerItemDecoration(itemView.getContext(), LinearLayoutManager.VERTICAL);
+      decoration.setDrawable(ContextUtil.requireDrawable(itemView.getContext(), R.drawable.vertical_divider));
+      recycler.addItemDecoration(decoration);
       recycler.setAdapter(adapter);
     }
 

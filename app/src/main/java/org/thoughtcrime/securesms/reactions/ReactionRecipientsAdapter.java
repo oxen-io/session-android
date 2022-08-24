@@ -10,7 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.session.libsession.messaging.utilities.SessionId;
+import org.thoughtcrime.securesms.components.ProfilePictureView;
 import org.thoughtcrime.securesms.database.model.MessageId;
+import org.thoughtcrime.securesms.mms.GlideApp;
 
 import java.util.Collections;
 import java.util.List;
@@ -72,6 +74,13 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
   }
 
   @Override
+  public void onViewRecycled(@NonNull ViewHolder holder) {
+    if (holder instanceof RecipientViewHolder) {
+      ((RecipientViewHolder) holder).unbind();
+    }
+  }
+
+  @Override
   public int getItemCount() {
     if (data.isEmpty()) {
       return 0;
@@ -109,14 +118,17 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
   static final class RecipientViewHolder extends ViewHolder {
 
     private ReactionViewPagerAdapter.Listener callback;
+    private final ProfilePictureView avatar;
     private final TextView recipient;
     private final ImageView remove;
 
     public RecipientViewHolder(ReactionViewPagerAdapter.Listener callback, @NonNull View itemView) {
       super(itemView);
       this.callback = callback;
+      avatar = itemView.findViewById(R.id.reactions_bottom_view_avatar);
+      avatar.glide = GlideApp.with(itemView);
       recipient = itemView.findViewById(R.id.reactions_bottom_view_recipient_name);
-      remove = itemView.findViewById(R.id.reactions_bottom_view_recipient_emoji);
+      remove = itemView.findViewById(R.id.reactions_bottom_view_recipient_remove);
     }
 
     void bind(@NonNull ReactionDetails reaction) {
@@ -124,6 +136,8 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
         MessageId messageId = new MessageId(reaction.getLocalId(), reaction.isMms());
         callback.onRemoveReaction(reaction.getBaseEmoji(), messageId, reaction.getTimestamp());
       });
+
+      this.avatar.update(reaction.getSender());
 
       if (reaction.getSender().isLocalNumber()) {
         this.recipient.setText(R.string.ReactionsRecipientAdapter_you);
@@ -137,6 +151,11 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
         this.remove.setVisibility(View.GONE);
       }
     }
+
+    void unbind() {
+      avatar.recycle();
+    }
+
   }
 
 }
