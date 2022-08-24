@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms.components.emoji;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
@@ -33,7 +34,13 @@ public class EmojiImageView extends AppCompatImageView {
     if (isInEditMode()) {
       setImageResource(R.drawable.ic_emoji);
     } else {
-      setImageDrawable(EmojiProvider.getEmojiDrawable(getContext(), emoji));
+      Drawable emojiDrawable = EmojiProvider.getEmojiDrawable(getContext(), emoji);
+      if (emojiDrawable == null) {
+        // fallback
+        setImageResource(R.drawable.unsupported_emoji);
+      } else {
+        setImageDrawable(emojiDrawable);
+      }
     }
   }
 }
