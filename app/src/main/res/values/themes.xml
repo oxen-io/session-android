@@ -321,13 +321,11 @@
     <style name="Widget.TextSecure.BottomSheet.ReactWithAny" parent="Widget.MaterialComponents.BottomSheet">
         <item name="backgroundTint">@color/core_grey_75</item>
         <item name="behavior_peekHeight">@dimen/react_with_any_emoji_bottom_sheet_dialog_fragment_min_height</item>
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.TextSecure.BottomSheet.Rounded</item>
     </style>
 
     <style name="Theme.TextSecure.Light.BottomSheetDialog.Fixed.ReactWithAny">
         <item name="bottomSheetStyle">@style/Widget.TextSecure.BottomSheet.ReactWithAny.Light</item>
         <item name="android:backgroundDimEnabled">true</item>
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.TextSecure.BottomSheet.Rounded</item>
     </style>
 
     <style name="Widget.TextSecure.BottomSheet.ReactWithAny.Light">

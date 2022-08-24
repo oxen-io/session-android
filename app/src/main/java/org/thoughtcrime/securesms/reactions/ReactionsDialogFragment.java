@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -21,7 +22,6 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 import org.session.libsession.utilities.ThemeUtil;
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
-import org.thoughtcrime.securesms.conversation.v2.ViewUtil;
 import org.thoughtcrime.securesms.database.model.MessageId;
 import org.thoughtcrime.securesms.util.LifecycleDisposable;
 import org.thoughtcrime.securesms.util.NumberUtil;
@@ -103,31 +103,43 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment imp
   private void setUpTabMediator(@Nullable Bundle savedInstanceState) {
     if (savedInstanceState == null) {
       FrameLayout    container       = requireDialog().findViewById(R.id.container);
-      LayoutInflater layoutInflater  = LayoutInflater.from(requireContext());
-      View           statusBarShader = layoutInflater.inflate(R.layout.react_with_any_emoji_status_fade, container, false);
-      TabLayout      emojiTabs       = (TabLayout) layoutInflater.inflate(R.layout.reactions_bottom_sheet_dialog_fragment_tabs, container, false);
-
-      ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewUtil.getStatusBarHeight(container));
-
-      statusBarShader.setLayoutParams(params);
-
-      container.addView(statusBarShader, 0);
-      container.addView(emojiTabs);
+      TabLayout      emojiTabs       = requireDialog().findViewById(R.id.emoji_tabs);
 
       ViewCompat.setOnApplyWindowInsetsListener(container, (v, insets) -> insets.consumeSystemWindowInsets());
 
-      new TabLayoutMediator(emojiTabs, recipientPagerView, (tab, position) -> {
-        tab.setCustomView(R.layout.reactions_bottom_sheet_dialog_fragment_emoji_item);
+      TabLayoutMediator mediator = new TabLayoutMediator(emojiTabs, recipientPagerView, (tab, position) -> {
+        tab.setCustomView(R.layout.reactions_pill);
 
         View           customView = Objects.requireNonNull(tab.getCustomView());
-        EmojiImageView emoji      = customView.findViewById(R.id.reactions_bottom_view_emoji_item_emoji);
-        TextView       text       = customView.findViewById(R.id.reactions_bottom_view_emoji_item_text);
+        EmojiImageView emoji      = customView.findViewById(R.id.reactions_pill_emoji);
+        TextView       text       = customView.findViewById(R.id.reactions_pill_count);
         EmojiCount     emojiCount = recipientsAdapter.getEmojiCount(position);
 
-        emoji.setVisibility(View.VISIBLE);
+        customView.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.reaction_pill_background));
         emoji.setImageEmoji(emojiCount.getDisplayEmoji());
         text.setText(NumberUtil.getFormattedNumber(emojiCount.getCount()));
-      }).attach();
+      });
+
+      emojiTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+          View customView = tab.getCustomView();
+          TextView text = customView.findViewById(R.id.reactions_pill_count);
+          customView.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.reaction_pill_background_selected));
+          text.setTextColor(ContextCompat.getColor(requireContext(), R.color.reactions_pill_selected_text_color));
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+          View customView = tab.getCustomView();
+          TextView text = customView.findViewById(R.id.reactions_pill_count);
+          customView.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.reaction_pill_background));
+          text.setTextColor(ContextCompat.getColor(requireContext(), R.color.reactions_pill_text_color));
+        }
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {}
+      });
+      mediator.attach();
     }
   }
 
@@ -157,7 +169,10 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment imp
     ReactionsViewModel viewModel = new ViewModelProvider(this, factory).get(ReactionsViewModel.class);
 
     disposables.add(viewModel.getEmojiCounts().subscribe(emojiCounts -> {
-      if (emojiCounts.size() <= 1) dismiss();
+      if (emojiCounts.size() < 1) {
+        dismiss();
+        return;
+      }
 
       recipientsAdapter.submitList(emojiCounts);
     }));
