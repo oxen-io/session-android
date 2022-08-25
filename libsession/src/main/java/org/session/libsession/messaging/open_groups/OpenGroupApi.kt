@@ -760,14 +760,16 @@ object OpenGroupApi {
 
     private fun sequentialBatch(
         server: String,
-        requests: MutableList<BatchRequestInfo<*>>
+        requests: MutableList<BatchRequestInfo<*>>,
+        authRequired: Boolean = true
     ): Promise<List<BatchResponse<*>>, Exception> {
         val request = Request(
             verb = POST,
             room = null,
             server = server,
             endpoint = Endpoint.Sequence,
-            parameters = requests.map { it.request }
+            parameters = requests.map { it.request },
+            isAuthRequired = authRequired
         )
         return getBatchResponseJson(request, requests)
     }
@@ -874,7 +876,11 @@ object OpenGroupApi {
         }
     }
 
-    fun getCapabilitiesAndRoomInfo(room: String, server: String): Promise<Pair<Capabilities, RoomInfo>, Exception> {
+    fun getCapabilitiesAndRoomInfo(
+        room: String,
+        server: String,
+        authRequired: Boolean = true
+    ): Promise<Pair<Capabilities, RoomInfo>, Exception> {
         val requests = mutableListOf<BatchRequestInfo<*>>(
             BatchRequestInfo(
                 request = BatchRequest(
@@ -893,7 +899,7 @@ object OpenGroupApi {
                 responseType = object : TypeReference<RoomInfo>(){}
             )
         )
-        return sequentialBatch(server, requests).map {
+        return sequentialBatch(server, requests, authRequired).map {
             val capabilities = it.firstOrNull()?.body as? Capabilities ?: throw Error.ParsingFailed
             val roomInfo = it.lastOrNull()?.body as? RoomInfo ?: throw Error.ParsingFailed
             capabilities to roomInfo
