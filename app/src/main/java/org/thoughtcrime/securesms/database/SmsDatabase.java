@@ -557,7 +557,7 @@ public class SmsDatabase extends MessagingDatabase {
     SQLiteDatabase database = databaseHelper.getReadableDatabase();
     return database.rawQuery("SELECT " + Util.join(MESSAGE_PROJECTION, ",") +
             " FROM " + SmsDatabase.TABLE_NAME +  " LEFT OUTER JOIN " + ReactionDatabase.TABLE_NAME +
-            " ON (" + SmsDatabase.TABLE_NAME + "." + SmsDatabase.ID + " = " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.MESSAGE_ID + ")" +
+            " ON (" + SmsDatabase.TABLE_NAME + "." + SmsDatabase.ID + " = " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.MESSAGE_ID + " AND " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.IS_MMS + " = 0)" +
             " WHERE " + where + " GROUP BY " + SmsDatabase.TABLE_NAME + "." + SmsDatabase.ID, arguments);
   }
 

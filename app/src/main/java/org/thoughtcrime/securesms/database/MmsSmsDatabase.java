@@ -316,12 +316,12 @@ public class MmsSmsDatabase extends Database {
 
     smsQueryBuilder.setTables(SmsDatabase.TABLE_NAME +
                               " LEFT OUTER JOIN " + ReactionDatabase.TABLE_NAME +
-                              " ON " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.MESSAGE_ID + " = " + SmsDatabase.TABLE_NAME + "." + SmsDatabase.ID);
+                              " ON " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.MESSAGE_ID + " = " + SmsDatabase.TABLE_NAME + "." + SmsDatabase.ID + " AND " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.IS_MMS + " = 0");
     mmsQueryBuilder.setTables(MmsDatabase.TABLE_NAME +
                               " LEFT OUTER JOIN " + AttachmentDatabase.TABLE_NAME +
                               " ON " + AttachmentDatabase.TABLE_NAME + "." + AttachmentDatabase.MMS_ID + " = " + MmsDatabase.TABLE_NAME + "." + MmsDatabase.ID +
                               " LEFT OUTER JOIN " + ReactionDatabase.TABLE_NAME +
-                              " ON " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.MESSAGE_ID + " = " + MmsDatabase.TABLE_NAME + "." + MmsDatabase.ID);
+                              " ON " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.MESSAGE_ID + " = " + MmsDatabase.TABLE_NAME + "." + MmsDatabase.ID + " AND " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.IS_MMS + " = 1");
 
 
     Set<String> mmsColumnsPresent = new HashSet<>();

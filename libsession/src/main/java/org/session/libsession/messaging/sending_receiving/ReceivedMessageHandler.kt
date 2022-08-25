@@ -377,7 +377,7 @@ fun MessageReceiver.handleOpenGroupReactions(
                 emoji = emoji,
                 react = true,
                 serverId = "$openGroupMessageServerID",
-                count = count,
+                count = if (reactorIds.isEmpty()) count else 0,
                 index = index
             ))
         }

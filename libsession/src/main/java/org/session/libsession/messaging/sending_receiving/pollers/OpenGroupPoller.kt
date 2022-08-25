@@ -161,7 +161,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         sortedMessages.maxOfOrNull { it.seqno }?.let {
             MessagingModuleConfiguration.shared.storage.setLastMessageServerID(roomToken, server, it)
         }
-        val (deletions, additions) = sortedMessages.partition { it.deleted || (it.data.isNullOrBlank() && it.reactions == null) }
+        val (deletions, additions) = sortedMessages.partition { it.deleted }
         handleNewMessages(server, roomToken, additions.map {
             OpenGroupMessage(
                 serverID = it.id,
