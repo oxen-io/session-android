@@ -35,6 +35,7 @@
     <!--Home Page-->
     <string name="AccessibilityId_profile_picture">Profile picture</string>
     <string name="AccessibilityId_search_icon">Search icon</string>
+    <string name="AccessibilityId_conversation_list_item">Conversation list item</string>
 
     <string name="AccessibilityId_message_request_banner">Message requests banner</string>
     <string name="AccessibilityId_message_request">Message request</string>
@@ -50,6 +51,7 @@
     <string name="AccessibilityId_group_name_input">Group name input</string>
     <string name="AccessibilityId_continue_group_creation">Continue group creation</string>
     <string name="AccessibilityId_contact">Contact</string>
+    <string name="AccessibilityId_select_contact">Select contact</string>
     <!--Conversation screen -->
     <string name="AccessibilityId_message_input">Message input box</string>
     <string name="AccessibilityId_microphone_button">Microphone button</string>
