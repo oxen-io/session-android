@@ -13,7 +13,6 @@ import org.session.libsession.messaging.jobs.MessageReceiveParameters
 import org.session.libsession.messaging.jobs.OpenGroupDeleteJob
 import org.session.libsession.messaging.jobs.TrimThreadJob
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
-import org.session.libsession.messaging.messages.visible.Reaction
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.Endpoint
 import org.session.libsession.messaging.open_groups.GroupMember
@@ -23,14 +22,12 @@ import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.open_groups.OpenGroupMessage
 import org.session.libsession.messaging.sending_receiving.MessageReceiver
 import org.session.libsession.messaging.sending_receiving.handle
-import org.session.libsession.messaging.utilities.SessionId
-import org.session.libsession.messaging.utilities.SodiumUtilities
+import org.session.libsession.messaging.sending_receiving.handleOpenGroupReactions
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Base64
-import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.successBackground
 import java.util.concurrent.ScheduledExecutorService
@@ -239,15 +236,20 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         if (!hasStarted || !threadExists) { return }
         val envelopes =  mutableListOf<Triple<Long?, SignalServiceProtos.Envelope, Map<String, OpenGroupApi.Reaction>?>>()
         messages.sortedBy { it.serverID!! }.forEach { message ->
-            val senderPublicKey = message.sender!!
-            val builder = SignalServiceProtos.Envelope.newBuilder()
-            builder.type = SignalServiceProtos.Envelope.Type.SESSION_MESSAGE
-            builder.source = senderPublicKey
-            builder.sourceDevice = 1
-            builder.content = message.toProto().toByteString()
-            builder.timestamp = message.sentTimestamp
-
-            envelopes.add(Triple( message.serverID, builder.build(), message.reactions))
+            if (!message.base64EncodedData.isNullOrEmpty()) {
+                val envelope = SignalServiceProtos.Envelope.newBuilder()
+                    .setType(SignalServiceProtos.Envelope.Type.SESSION_MESSAGE)
+                    .setSource(message.sender!!)
+                    .setSourceDevice(1)
+                    .setContent(message.toProto().toByteString())
+                    .setTimestamp(message.sentTimestamp)
+                    .build()
+                envelopes.add(Triple( message.serverID, envelope, message.reactions))
+            } else if (!message.reactions.isNullOrEmpty()) {
+                message.serverID?.let {
+                    MessageReceiver.handleOpenGroupReactions(threadId, it, message.reactions)
+                }
+            }
         }
 
         envelopes.chunked(BatchMessageReceiveJob.BATCH_DEFAULT_NUMBER).forEach { list ->
