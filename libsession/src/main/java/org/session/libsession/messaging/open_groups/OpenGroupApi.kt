@@ -679,7 +679,7 @@ object OpenGroupApi {
                     BatchRequestInfo(
                         request = BatchRequest(
                             method = GET,
-                            path = "/room/$room/messages/recent?t=r&reactors=20"
+                            path = "/room/$room/messages/recent?t=r&reactors=5"
                         ),
                         endpoint = Endpoint.RoomMessagesRecent(room),
                         responseType = object : TypeReference<List<Message>>(){}
@@ -688,7 +688,7 @@ object OpenGroupApi {
                     BatchRequestInfo(
                         request = BatchRequest(
                             method = GET,
-                            path = "/room/$room/messages/since/$lastMessageServerId?t=r&reactors=20"
+                            path = "/room/$room/messages/since/$lastMessageServerId?t=r&reactors=5"
                         ),
                         endpoint = Endpoint.RoomMessagesSince(room, lastMessageServerId),
                         responseType = object : TypeReference<List<Message>>(){}

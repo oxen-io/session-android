@@ -49,6 +49,7 @@ import org.session.libsignal.utilities.removingIdPrefixIfNeeded
 import org.session.libsignal.utilities.toHexString
 import java.security.MessageDigest
 import java.util.LinkedList
+import kotlin.math.min
 
 internal fun MessageReceiver.isBlocked(publicKey: String): Boolean {
     val context = MessagingModuleConfiguration.shared.context
@@ -355,7 +356,10 @@ fun MessageReceiver.handleOpenGroupReactions(
         }
 
         // Add all other reactions
-        reactorIds.slice(1 until reactorIds.size).map { reactor ->
+        val lastIndex = if (reaction.you && !reaction.reactors.contains(userPublicKey)) {
+            min(4, reactorIds.size)
+        } else reactorIds.size
+        reactorIds.slice(1 until lastIndex).map { reactor ->
             storage.addReaction(Reaction(
                 localId = messageId,
                 isMms = !isSms,
