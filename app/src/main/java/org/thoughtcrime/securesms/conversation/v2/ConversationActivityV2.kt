@@ -1119,7 +1119,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun onClearAll(emoji: String, messageId: MessageId) {
-        reactionDb.deleteReactions(emoji, messageId)
+        reactionDb.deleteEmojiReactions(emoji, messageId)
         viewModel.openGroup?.let { openGroup ->
             lokiMessageDb.getServerID(messageId.id, !messageId.mms)?.let { serverId ->
                 OpenGroupApi.deleteAllReactions(openGroup.room, openGroup.server, serverId, emoji)

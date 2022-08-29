@@ -155,8 +155,9 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         messages: List<OpenGroupApi.Message>
     ) {
         val sortedMessages = messages.sortedBy { it.seqno }
-        sortedMessages.maxOfOrNull { it.seqno }?.let {
-            MessagingModuleConfiguration.shared.storage.setLastMessageServerID(roomToken, server, it)
+        sortedMessages.maxOfOrNull { it.seqno }?.let { seqNo ->
+            MessagingModuleConfiguration.shared.storage.setLastMessageServerID(roomToken, server, seqNo)
+            OpenGroupApi.pendingReactions.removeAll { !(it.seqNo == null || it.seqNo!! > seqNo) }
         }
         val (deletions, additions) = sortedMessages.partition { it.deleted }
         handleNewMessages(server, roomToken, additions.map {

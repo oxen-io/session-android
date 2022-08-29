@@ -193,4 +193,5 @@ interface StorageProtocol {
     fun addReaction(reaction: Reaction)
     fun removeReaction(emoji: String, messageTimestamp: Long, author: String)
     fun updateReactionIfNeeded(message: Message, sender: String, openGroupSentTimestamp: Long)
+    fun deleteReactions(messageId: Long, mms: Boolean)
 }

@@ -331,16 +331,21 @@ fun MessageReceiver.handleOpenGroupReactions(
     if (reactions.isNullOrEmpty()) return
     val storage = MessagingModuleConfiguration.shared.storage
     val (messageId, isSms) = MessagingModuleConfiguration.shared.messageDataProvider.getMessageID(openGroupMessageServerID, threadId) ?: return
+    storage.deleteReactions(messageId, !isSms)
     val userPublicKey = storage.getUserPublicKey()!!
-    val blindedPublicKey = storage.getOpenGroup(threadId)?.publicKey?.let { serverPublicKey ->
+    val openGroup = storage.getOpenGroup(threadId)
+    val blindedPublicKey = openGroup?.publicKey?.let { serverPublicKey ->
         SodiumUtilities.blindedKeyPair(serverPublicKey, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!)
             ?.let { SessionId(IdPrefix.BLINDED, it.publicKey.asBytes).hexString }
     }
     for ((emoji, reaction) in reactions) {
-        val count = reaction.count
-        if (count <= 0) continue
-        val index = reaction.index
-        val reactorIds = reaction.reactors.filter { it != blindedPublicKey }
+        val pendingUserReaction = OpenGroupApi.pendingReactions
+            .filter { it.server == openGroup?.server && it.room == openGroup.room && it.messageId == openGroupMessageServerID && it.add }
+            .sortedByDescending { it.seqNo }
+            .any { it.emoji == emoji }
+        val shouldAddUserReaction = pendingUserReaction || reaction.you || reaction.reactors.contains(userPublicKey)
+        val reactorIds = reaction.reactors.filter { it != blindedPublicKey && it != userPublicKey }
+        val count = if (reaction.you) reaction.count - 1 else reaction.count
         // Add the first reaction (with the count)
         reactorIds.firstOrNull()?.let {
             storage.addReaction(Reaction(
@@ -351,14 +356,13 @@ fun MessageReceiver.handleOpenGroupReactions(
                 react = true,
                 serverId = "$openGroupMessageServerID",
                 count = count,
-                index = index
+                index = reaction.index
             ))
         }
 
         // Add all other reactions
-        val lastIndex = if (reaction.you && !reaction.reactors.contains(userPublicKey)) {
-            min(4, reactorIds.size)
-        } else reactorIds.size
+        val maxAllowed = if (shouldAddUserReaction) 4 else 5
+        val lastIndex = min(maxAllowed, reactorIds.size)
         reactorIds.slice(1 until lastIndex).map { reactor ->
             storage.addReaction(Reaction(
                 localId = messageId,
@@ -368,12 +372,12 @@ fun MessageReceiver.handleOpenGroupReactions(
                 react = true,
                 serverId = "$openGroupMessageServerID",
                 count = 0,  // Only want this on the first reaction
-                index = index
+                index = reaction.index
             ))
         }
 
         // Add the current user reaction (if applicable and not already included)
-        if (reaction.you && !reaction.reactors.contains(userPublicKey)) {
+        if (shouldAddUserReaction) {
             storage.addReaction(Reaction(
                 localId = messageId,
                 isMms = !isSms,
@@ -381,8 +385,8 @@ fun MessageReceiver.handleOpenGroupReactions(
                 emoji = emoji,
                 react = true,
                 serverId = "$openGroupMessageServerID",
-                count = if (reactorIds.isEmpty()) count else 0,
-                index = index
+                count = 1,
+                index = reaction.index
             ))
         }
     }

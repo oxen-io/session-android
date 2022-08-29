@@ -125,33 +125,32 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
   }
 
   fun deleteReaction(emoji: String, messageId: MessageId, author: String) {
-
-    writableDatabase.beginTransaction()
-    try {
-      val query = "$MESSAGE_ID = ? AND $IS_MMS = ? AND $EMOJI = ? AND $AUTHOR_ID = ?"
-      val args =  arrayOf("${messageId.id}", "${if (messageId.mms)  1 else 0}", emoji, author)
-
-      writableDatabase.delete(TABLE_NAME, query, args)
-
-      if (messageId.mms) {
-        DatabaseComponent.get(context).mmsDatabase().updateReactionsUnread(writableDatabase, messageId.id, hasReactions(messageId), true)
-      } else {
-        DatabaseComponent.get(context).smsDatabase().updateReactionsUnread(writableDatabase, messageId.id, hasReactions(messageId), true)
-      }
-
-      writableDatabase.setTransactionSuccessful()
-    } finally {
-      writableDatabase.endTransaction()
-    }
+    deleteReactions(
+      messageId = messageId,
+      query = "$MESSAGE_ID = ? AND $IS_MMS = ? AND $EMOJI = ? AND $AUTHOR_ID = ?",
+      args = arrayOf("${messageId.id}", "${if (messageId.mms)  1 else 0}", emoji, author)
+    )
   }
 
-  fun deleteReactions(emoji: String, messageId: MessageId) {
+  fun deleteEmojiReactions(emoji: String, messageId: MessageId) {
+    deleteReactions(
+      messageId = messageId,
+      query = "$MESSAGE_ID = ? AND $IS_MMS = ? AND $EMOJI = ?",
+      args = arrayOf("${messageId.id}", "${if (messageId.mms)  1 else 0}", emoji)
+    )
+  }
 
+  fun deleteMessageReactions(messageId: MessageId) {
+    deleteReactions(
+      messageId = messageId,
+      query = "$MESSAGE_ID = ? AND $IS_MMS = ?",
+      args = arrayOf("${messageId.id}", "${if (messageId.mms)  1 else 0}")
+    )
+  }
+
+  private fun deleteReactions(messageId: MessageId, query: String, args: Array<String>) {
     writableDatabase.beginTransaction()
     try {
-      val query = "$MESSAGE_ID = ? AND $IS_MMS = ? AND $EMOJI = ?"
-      val args =  arrayOf("${messageId.id}", "${if (messageId.mms)  1 else 0}", emoji)
-
       writableDatabase.delete(TABLE_NAME, query, args)
 
       if (messageId.mms) {

@@ -64,6 +64,8 @@ object OpenGroupApi {
 
     const val defaultServer = "https://open.getsession.org"
 
+    val pendingReactions = mutableListOf<PendingReaction>()
+
     sealed class Error(message: String) : Exception(message) {
         object Generic : Error("An error occurred.")
         object ParsingFailed : Error("Invalid response.")
@@ -198,6 +200,30 @@ object OpenGroupApi {
         val reactors: List<String> = emptyList(),
         val you: Boolean = false,
         val index: Long = 0
+    )
+
+    data class AddReactionResponse(
+        val seqNo: Long,
+        val added: Boolean
+    )
+
+    data class DeleteReactionResponse(
+        val seqNo: Long,
+        val removed: Boolean
+    )
+
+    data class DeleteAllReactionsResponse(
+        val seqNo: Long,
+        val removed: Boolean
+    )
+
+    data class PendingReaction(
+        val server: String,
+        val room: String,
+        val messageId: Long,
+        val emoji: String,
+        val add: Boolean,
+        var seqNo: Long? = null
     )
 
     @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
@@ -505,7 +531,7 @@ object OpenGroupApi {
         }
     }
 
-    fun addReaction(room: String, server: String, messageId: Long, emoji: String): Promise<Map<*, *>, Exception> {
+    fun addReaction(room: String, server: String, messageId: Long, emoji: String): Promise<AddReactionResponse, Exception> {
         val request = Request(
             verb = PUT,
             room = room,
@@ -513,24 +539,32 @@ object OpenGroupApi {
             endpoint = Endpoint.Reaction(room, messageId, emoji),
             parameters = emptyMap<String, String>()
         )
+        val pendingReaction = PendingReaction(server, room, messageId, emoji, true)
         return getResponseBody(request).map { response ->
-            JsonUtil.fromJson(response, Map::class.java)
+            JsonUtil.fromJson(response, AddReactionResponse::class.java).also {
+                val index = pendingReactions.indexOf(pendingReaction)
+                pendingReactions[index].seqNo = it.seqNo
+            }
         }
     }
 
-    fun deleteReaction(room: String, server: String, messageId: Long, emoji: String): Promise<Map<*, *>, Exception> {
+    fun deleteReaction(room: String, server: String, messageId: Long, emoji: String): Promise<DeleteReactionResponse, Exception> {
         val request = Request(
             verb = DELETE,
             room = room,
             server = server,
             endpoint = Endpoint.Reaction(room, messageId, emoji)
         )
+        val pendingReaction = PendingReaction(server, room, messageId, emoji, true)
         return getResponseBody(request).map { response ->
-            JsonUtil.fromJson(response, Map::class.java)
+            JsonUtil.fromJson(response, DeleteReactionResponse::class.java).also {
+                val index = pendingReactions.indexOf(pendingReaction)
+                pendingReactions[index].seqNo = it.seqNo
+            }
         }
     }
 
-    fun deleteAllReactions(room: String, server: String, messageId: Long, emoji: String): Promise<Map<*, *>, Exception> {
+    fun deleteAllReactions(room: String, server: String, messageId: Long, emoji: String): Promise<DeleteAllReactionsResponse, Exception> {
         val request = Request(
             verb = DELETE,
             room = room,
@@ -538,7 +572,7 @@ object OpenGroupApi {
             endpoint = Endpoint.ReactionDelete(room, messageId, emoji)
         )
         return getResponseBody(request).map { response ->
-            JsonUtil.fromJson(response, Map::class.java)
+            JsonUtil.fromJson(response, DeleteAllReactionsResponse::class.java)
         }
     }
     // endregion

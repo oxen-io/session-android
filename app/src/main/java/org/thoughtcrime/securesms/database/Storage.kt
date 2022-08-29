@@ -940,4 +940,8 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         database.updateReaction(reaction)
     }
 
+    override fun deleteReactions(messageId: Long, mms: Boolean) {
+        DatabaseComponent.get(context).reactionDatabase().deleteMessageReactions(MessageId(messageId, mms))
+    }
+
 }

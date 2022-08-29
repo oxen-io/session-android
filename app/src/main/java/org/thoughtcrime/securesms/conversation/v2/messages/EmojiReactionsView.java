@@ -165,9 +165,9 @@ public class EmojiReactionsView extends LinearLayout {
       Reaction info      = counters.get(baseEmoji);
 
       if (info == null) {
-        info = new Reaction(record.getMessageId(), record.isMms(), record.getEmoji(), 1, record.getDateReceived(), userPublicKey.equals(record.getAuthor()));
+        info = new Reaction(record.getMessageId(), record.isMms(), record.getEmoji(), record.getCount(), record.getSortId(), record.getDateReceived(), userPublicKey.equals(record.getAuthor()));
       } else {
-        info.update(record.getEmoji(), record.getDateReceived(), userPublicKey.equals(record.getAuthor()));
+        info.update(record.getEmoji(), record.getCount(), record.getDateReceived(), userPublicKey.equals(record.getAuthor()));
       }
 
       counters.put(baseEmoji, info);
@@ -180,7 +180,7 @@ public class EmojiReactionsView extends LinearLayout {
     if (reactions.size() > threshold) {
       List<Reaction> shortened = new ArrayList<>(threshold - 1);
       shortened.addAll(reactions.subList(0, threshold - 2));
-      shortened.add(Stream.of(reactions).skip(threshold - 2).reduce(new Reaction(0, false, null, 0, 0, false), Reaction::merge));
+      shortened.add(Stream.of(reactions).skip(threshold - 2).reduce(new Reaction(0, false, null, 0, 0, 0, false), Reaction::merge));
 
       return shortened;
     } else {
@@ -251,27 +251,29 @@ public class EmojiReactionsView extends LinearLayout {
     private final long messageId;
     private final boolean isMms;
     private String  emoji;
-    private int     count;
+    private long    count;
+    private long    sortIndex;
     private long    lastSeen;
     private boolean userWasSender;
 
-    Reaction(long messageId, boolean isMms, @Nullable String emoji, int count, long lastSeen, boolean userWasSender) {
+    Reaction(long messageId, boolean isMms, @Nullable String emoji, long count, long sortIndex, long lastSeen, boolean userWasSender) {
       this.messageId     = messageId;
       this.isMms         = isMms;
       this.emoji         = emoji;
       this.count         = count;
+      this.sortIndex     = sortIndex;
       this.lastSeen      = lastSeen;
       this.userWasSender = userWasSender;
     }
 
-    void update(@NonNull String emoji, long lastSeen, boolean userWasSender) {
+    void update(@NonNull String emoji, long count, long lastSeen, boolean userWasSender) {
       if (!this.userWasSender) {
         if (userWasSender || lastSeen > this.lastSeen) {
           this.emoji = emoji;
         }
       }
 
-      this.count         = this.count + 1;
+      this.count         = this.count + count;
       this.lastSeen      = Math.max(this.lastSeen, lastSeen);
       this.userWasSender = this.userWasSender || userWasSender;
     }
@@ -288,7 +290,7 @@ public class EmojiReactionsView extends LinearLayout {
       Reaction lhs = this;
 
       if (lhs.count != rhs.count) {
-        return Integer.compare(lhs.count, rhs.count);
+        return Long.compare(lhs.count, rhs.count);
       }
 
       return Long.compare(lhs.lastSeen, rhs.lastSeen);
