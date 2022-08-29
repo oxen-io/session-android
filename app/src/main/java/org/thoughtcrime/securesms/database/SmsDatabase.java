@@ -314,7 +314,7 @@ public class SmsDatabase extends MessagingDatabase {
   }
 
   public List<MarkedMessageInfo> setMessagesRead(long threadId) {
-    return setMessagesRead(THREAD_ID + " = ? AND " + READ + " = 0", new String[] {String.valueOf(threadId)});
+    return setMessagesRead(THREAD_ID + " = ? AND (" + READ + " = 0 OR " + REACTIONS_UNREAD + " = 1)", new String[] {String.valueOf(threadId)});
   }
 
   public List<MarkedMessageInfo> setAllMessagesRead() {
@@ -341,6 +341,7 @@ public class SmsDatabase extends MessagingDatabase {
 
       ContentValues contentValues = new ContentValues();
       contentValues.put(READ, 1);
+      contentValues.put(REACTIONS_UNREAD, 0);
 
       database.update(TABLE_NAME, contentValues, where, arguments);
       database.setTransactionSuccessful();
