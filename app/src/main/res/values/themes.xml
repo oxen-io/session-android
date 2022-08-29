@@ -98,6 +98,7 @@
 
         <item name="conversation_pinned_background_color">@color/conversation_pinned_background</item>
         <item name="conversation_pinned_icon_color">@color/conversation_pinned_icon</item>
+        <item name="emoji_show_less_icon">@drawable/ic_chevron_up_light</item>
     </style>
 
     <!-- This should be the default theme for the application. -->
@@ -249,7 +250,6 @@
         <item name="emoji_category_flags">@drawable/ic_emoji_flag_dark_20</item>
         <item name="emoji_category_emoticons">@drawable/ic_emoji_emoticon_dark_20</item>
         <item name="emoji_variation_selector_background">@drawable/emoji_variation_selector_background_dark</item>
-        <item name="emoji_show_less_icon">@drawable/ic_chevron_up</item>
 
         <item name="linkpreview_background_color">@color/black</item>
         <item name="linkpreview_primary_text_color">@color/text</item>

@@ -75,6 +75,7 @@ public class EmojiReactionsView extends LinearLayout {
     if (attrs != null) {
       TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.EmojiReactionsView, 0, 0);
       outgoing = typedArray.getBoolean(R.styleable.EmojiReactionsView_erv_outgoing, false);
+      typedArray.recycle();
     }
   }
 
