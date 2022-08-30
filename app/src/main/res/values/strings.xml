@@ -951,4 +951,8 @@
     <string name="reaction_notification">%1$s reacted to a message %2$s</string>
     <string name="ReactionsConversationView_show_less">Show less</string>
 
+    <plurals name="ReactionsRecipientAdapter_other_reactors">
+        <item quantity="one">And %1$d other has reacted %2$s to this message</item>
+        <item quantity="other">And %1$d others have reacted %2$s to this message</item>
+    </plurals>
 </resources>

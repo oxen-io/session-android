@@ -25,8 +25,12 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
   private static final int HEADER_COUNT = 1;
   private static final int HEADER_POSITION = 0;
 
+  private static final int FOOTER_COUNT = 1;
+  private static final int FOOTER_POSITION = 6;
+
   private static final int HEADER_TYPE = 0;
   private static final int RECIPIENT_TYPE = 1;
+  private static final int FOOTER_TYPE = 2;
 
   private ReactionViewPagerAdapter.Listener callback;
   private List<ReactionDetails> data = Collections.emptyList();
@@ -48,29 +52,38 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
 
   @Override
   public int getItemViewType(int position) {
-    if (position == HEADER_POSITION) {
-      return HEADER_TYPE;
-    } else {
-      return RECIPIENT_TYPE;
+    switch (position) {
+      case HEADER_POSITION:
+        return HEADER_TYPE;
+      case FOOTER_POSITION:
+        return FOOTER_TYPE;
+      default:
+        return RECIPIENT_TYPE;
     }
   }
 
   @Override
   public @NonNull
   ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-    if (viewType == HEADER_TYPE) {
-      return new HeaderViewHolder(callback, LayoutInflater.from(parent.getContext()).inflate(R.layout.reactions_bottom_sheet_dialog_fragment_recycler_header, parent, false));
-    } else {
-      return new RecipientViewHolder(callback, LayoutInflater.from(parent.getContext()).inflate(R.layout.reactions_bottom_sheet_dialog_fragment_recipient_item, parent, false));
+    switch (viewType) {
+      case HEADER_TYPE:
+        return new HeaderViewHolder(callback, LayoutInflater.from(parent.getContext()).inflate(R.layout.reactions_bottom_sheet_dialog_fragment_recycler_header, parent, false));
+      case FOOTER_TYPE:
+        return new FooterViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.reactions_bottom_sheet_dialog_fragment_recycler_footer, parent, false));
+      default:
+        return new RecipientViewHolder(callback, LayoutInflater.from(parent.getContext()).inflate(R.layout.reactions_bottom_sheet_dialog_fragment_recipient_item, parent, false));
     }
   }
 
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     if (holder instanceof RecipientViewHolder) {
-      ((RecipientViewHolder) holder).bind(data.get(position-HEADER_COUNT));
+      int index = emojiData.getCount() > 5 ? (position - HEADER_COUNT - FOOTER_COUNT) : (position - HEADER_COUNT);
+      ((RecipientViewHolder) holder).bind(data.get(position - HEADER_COUNT));
     } else if (holder instanceof HeaderViewHolder) {
       ((HeaderViewHolder) holder).bind(emojiData, messageId, isUserModerator);
+    } else if (holder instanceof FooterViewHolder) {
+      ((FooterViewHolder) holder).bind(emojiData);
     }
   }
 
@@ -85,8 +98,10 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
   public int getItemCount() {
     if (data.isEmpty()) {
       return 0;
-    } else {
+    } else if (emojiData.getCount() <= 5) {
       return data.size() + HEADER_COUNT;
+    } else {
+      return data.size() + HEADER_COUNT + FOOTER_COUNT;
     }
   }
 
@@ -159,6 +174,23 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
       avatar.recycle();
     }
 
+  }
+
+  static class FooterViewHolder extends ViewHolder {
+
+    public FooterViewHolder(@NonNull View itemView) {
+      super(itemView);
+    }
+
+    private void bind(@NonNull final EmojiCount emoji) {
+      if (emoji.getCount() > 5) {
+        TextView count = itemView.findViewById(R.id.footer_view_emoji_count);
+        count.setText(itemView.getContext().getResources().getQuantityString(R.plurals.ReactionsRecipientAdapter_other_reactors, emoji.getCount() - 5, emoji.getCount() - 5, emoji.getBaseEmoji()));
+        itemView.setVisibility(View.VISIBLE);
+      } else {
+        itemView.setVisibility(View.GONE);
+      }
+    }
   }
 
 }

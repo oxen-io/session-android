@@ -12,5 +12,6 @@ data class ReactionDetails(
   val timestamp: Long,
   val serverId: String,
   val localId: Long,
-  val isMms: Boolean
+  val isMms: Boolean,
+  val count: Int
 )

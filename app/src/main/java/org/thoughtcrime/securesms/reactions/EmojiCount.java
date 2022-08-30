@@ -2,6 +2,8 @@ package org.thoughtcrime.securesms.reactions;
 
 import androidx.annotation.NonNull;
 
+import com.annimon.stream.Stream;
+
 import java.util.List;
 
 final class EmojiCount {
@@ -32,7 +34,7 @@ final class EmojiCount {
   }
 
   public int getCount() {
-    return reactions.size();
+    return Stream.of(reactions).reduce(0, (count, reaction) -> count + reaction.getCount());
   }
 
   public @NonNull List<ReactionDetails> getReactions() {
