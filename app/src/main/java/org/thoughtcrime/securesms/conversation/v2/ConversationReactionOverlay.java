@@ -24,7 +24,6 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewKt;
 import androidx.vectordrawable.graphics.drawable.AnimatorInflaterCompat;
@@ -36,7 +35,6 @@ import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.ThemeUtil;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
-import org.thoughtcrime.securesms.components.emoji.EmojiUtil;
 import org.thoughtcrime.securesms.components.emoji.RecentEmojiPageModel;
 import org.thoughtcrime.securesms.components.menu.ActionItem;
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationMenuItemHelper;
@@ -551,8 +549,6 @@ public final class ConversationReactionOverlay extends FrameLayout {
       selectedView.setVisibility(View.GONE);
     }
 
-    boolean foundSelected = false;
-
     for (int i = 0; i < emojiViews.length; i++) {
       final EmojiImageView view = emojiViews[i];
 
@@ -561,28 +557,8 @@ public final class ConversationReactionOverlay extends FrameLayout {
       view.setTranslationY(0);
 
       boolean isAtCustomIndex                      = i == customEmojiIndex;
-      boolean isNotAtCustomIndexAndOldEmojiMatches = !isAtCustomIndex && oldEmoji != null && EmojiUtil.isCanonicallyEqual(emojis.get(i), oldEmoji);
-      boolean isAtCustomIndexAndOldEmojiExists     = isAtCustomIndex && oldEmoji != null;
 
-      if (!foundSelected && (isNotAtCustomIndexAndOldEmojiMatches || isAtCustomIndexAndOldEmojiExists)) {
-        foundSelected = true;
-        selectedView.setVisibility(View.VISIBLE);
-
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(foregroundView);
-        constraintSet.clear(selectedView.getId(), ConstraintSet.LEFT);
-        constraintSet.clear(selectedView.getId(), ConstraintSet.RIGHT);
-        constraintSet.connect(selectedView.getId(), ConstraintSet.LEFT, view.getId(), ConstraintSet.LEFT);
-        constraintSet.connect(selectedView.getId(), ConstraintSet.RIGHT, view.getId(), ConstraintSet.RIGHT);
-        constraintSet.applyTo(foregroundView);
-
-        if (isAtCustomIndex) {
-          view.setImageEmoji(oldEmoji);
-          view.setTag(oldEmoji);
-        } else {
-          view.setImageEmoji(emojis.get(i));
-        }
-      } else if (isAtCustomIndex) {
+      if (isAtCustomIndex) {
         view.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_baseline_add_24));
         view.setTag(null);
       } else {

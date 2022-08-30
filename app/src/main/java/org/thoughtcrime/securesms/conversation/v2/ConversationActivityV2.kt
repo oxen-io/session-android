@@ -34,6 +34,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.DimenRes
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -74,6 +75,7 @@ import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.MediaTypes
 import org.session.libsession.utilities.Stub
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.ThemeUtil
 import org.session.libsession.utilities.concurrent.SimpleTask
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.recipients.RecipientModifiedListener
@@ -992,6 +994,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private fun showEmojiPicker(message: MessageRecord, visibleMessageView: VisibleMessageView) {
         ViewUtil.hideKeyboard(this, visibleMessageView);
         binding?.reactionsShade?.isVisible = true
+        if (ThemeUtil.isDarkTheme(this)) {
+            supportActionBar?.setBackgroundDrawable(ContextCompat.getDrawable(this, R.color.transparent_white_20))
+        } else {
+            supportActionBar?.setBackgroundDrawable(ContextCompat.getDrawable(this, R.color.transparent_black_70))
+        }
         binding?.conversationRecyclerView?.suppressLayout(true)
         reactionDelegate.setOnActionSelectedListener(ReactionsToolbarListener(message))
         reactionDelegate.setOnHideListener(object: ConversationReactionOverlay.OnHideListener {
@@ -999,6 +1006,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 binding?.reactionsShade?.let {
                     ViewUtil.fadeOut(it, resources.getInteger(R.integer.reaction_scrubber_hide_duration), View.GONE)
                 }
+                supportActionBar?.setBackgroundDrawable(null)
             }
 
             override fun onHide() {
