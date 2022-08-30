@@ -22,6 +22,7 @@ import network.loki.messenger.R;
 
 final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecipientsAdapter.ViewHolder> {
 
+  private static final int MAX_REACTORS = 5;
   private static final int HEADER_COUNT = 1;
   private static final int HEADER_POSITION = 0;
 
@@ -78,7 +79,6 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
     if (holder instanceof RecipientViewHolder) {
-      int index = emojiData.getCount() > 5 ? (position - HEADER_COUNT - FOOTER_COUNT) : (position - HEADER_COUNT);
       ((RecipientViewHolder) holder).bind(data.get(position - HEADER_COUNT));
     } else if (holder instanceof HeaderViewHolder) {
       ((HeaderViewHolder) holder).bind(emojiData, messageId, isUserModerator);
@@ -98,10 +98,10 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
   public int getItemCount() {
     if (data.isEmpty()) {
       return 0;
-    } else if (emojiData.getCount() <= 5) {
+    } else if (emojiData.getCount() <= MAX_REACTORS) {
       return data.size() + HEADER_COUNT;
     } else {
-      return data.size() + HEADER_COUNT + FOOTER_COUNT;
+      return MAX_REACTORS + HEADER_COUNT + FOOTER_COUNT;
     }
   }
 
