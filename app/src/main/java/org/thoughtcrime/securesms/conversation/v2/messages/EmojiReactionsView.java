@@ -17,7 +17,6 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
 
-import com.annimon.stream.Stream;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.flexbox.JustifyContent;
 
@@ -85,6 +84,7 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
   }
 
   public void setReactions(@NonNull List<ReactionRecord> records, boolean outgoing, VisibleMessageViewDelegate delegate) {
+    this.delegate = delegate;
     if (records.equals(this.records)) {
       return;
     }
@@ -93,8 +93,6 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
     containerLayout.setJustifyContent(outgoing ? JustifyContent.FLEX_END : JustifyContent.FLEX_START);
     this.records.clear();
     this.records.addAll(records);
-
-    this.delegate = delegate;
 
     displayReactions(DEFAULT_THRESHOLD);
   }
@@ -117,16 +115,47 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
     List<Reaction> reactions = buildSortedReactionsList(records, userPublicKey, threshold);
 
     container.removeAllViews();
+    LinearLayout overflowContainer = new LinearLayout(getContext());
+    overflowContainer.setOrientation(LinearLayout.HORIZONTAL);
+    int innerPadding = ViewUtil.dpToPx(4);
+    overflowContainer.setPaddingRelative(innerPadding,innerPadding,innerPadding,innerPadding);
 
     for (Reaction reaction : reactions) {
-      View pill = buildPill(getContext(), this, reaction);
-      pill.setTag(reaction);
-      pill.setOnTouchListener(this);
-      container.addView(pill);
-      int pixelSize = ViewUtil.dpToPx(1);
-      MarginLayoutParams params = (MarginLayoutParams) pill.getLayoutParams();
-      params.setMargins(pixelSize, 0, pixelSize, 0);
-      pill.setLayoutParams(params);
+      if (container.getChildCount() + 1 >= DEFAULT_THRESHOLD && threshold != Integer.MAX_VALUE && reactions.size() > threshold) {
+        if (overflowContainer.getParent() == null) {
+          container.addView(overflowContainer);
+          ViewGroup.LayoutParams overflowParams = overflowContainer.getLayoutParams();
+          overflowParams.height = ViewUtil.dpToPx(26);
+          overflowContainer.setLayoutParams(overflowParams);
+          overflowContainer.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.reaction_pill_dialog_background));
+        }
+        View pill = buildPill(getContext(), this, reaction, true);
+        pill.setOnClickListener(v -> displayReactions(Integer.MAX_VALUE));
+        pill.findViewById(R.id.reactions_pill_count).setVisibility(View.GONE);
+        pill.findViewById(R.id.reactions_pill_spacer).setVisibility(View.GONE);
+        overflowContainer.addView(pill);
+      } else {
+        View pill = buildPill(getContext(), this, reaction, false);
+        pill.setTag(reaction);
+        pill.setOnTouchListener(this);
+        container.addView(pill);
+        int pixelSize = ViewUtil.dpToPx(1);
+        MarginLayoutParams params = (MarginLayoutParams) pill.getLayoutParams();
+        params.setMargins(pixelSize, 0, pixelSize, 0);
+        pill.setLayoutParams(params);
+      }
+    }
+
+    int overflowChildren = overflowContainer.getChildCount();
+    int negativeMargin = ViewUtil.dpToPx(-8);
+    for (int i = 0; i < overflowChildren; i++) {
+      View child = overflowContainer.getChildAt(i);
+      MarginLayoutParams childParams = (MarginLayoutParams) child.getLayoutParams();
+      if ((i == 0 && overflowChildren > 1) || i + 1 < overflowChildren) {
+        // if first and there is more than one child, or we are not the last child then set negative right margin
+        childParams.setMargins(0,0, negativeMargin, 0);
+        child.setLayoutParams(childParams);
+      }
     }
 
     if (threshold == Integer.MAX_VALUE) {
@@ -143,8 +172,6 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
     if (reaction.messageId != 0) {
       MessageId messageId = new MessageId(reaction.messageId, reaction.isMms);
       delegate.onReactionClicked(reaction.emoji, messageId, reaction.userWasSender);
-    } else {
-      displayReactions(Integer.MAX_VALUE);
     }
   }
 
@@ -168,22 +195,27 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
 
     Collections.sort(reactions, Collections.reverseOrder());
 
-    if (reactions.size() > threshold) {
-      List<Reaction> shortened = new ArrayList<>(threshold - 1);
-      shortened.addAll(reactions.subList(0, threshold - 2));
-      shortened.add(Stream.of(reactions).skip(threshold - 2).reduce(new Reaction(0, false, null, 0, 0, 0, false), Reaction::merge));
-
+    if (reactions.size() >= threshold + 2 && threshold != Integer.MAX_VALUE) {
+      List<Reaction> shortened = new ArrayList<>(threshold + 2);
+      shortened.addAll(reactions.subList(0, threshold + 2));
       return shortened;
     } else {
       return reactions;
     }
   }
 
-  private static View buildPill(@NonNull Context context, @NonNull ViewGroup parent, @NonNull Reaction reaction) {
+  private static View buildPill(@NonNull Context context, @NonNull ViewGroup parent, @NonNull Reaction reaction, boolean isCompact) {
     View           root      = LayoutInflater.from(context).inflate(R.layout.reactions_pill, parent, false);
     EmojiImageView emojiView = root.findViewById(R.id.reactions_pill_emoji);
     TextView       countView = root.findViewById(R.id.reactions_pill_count);
     View           spacer    = root.findViewById(R.id.reactions_pill_spacer);
+
+    if (isCompact) {
+      root.setPaddingRelative(1,1,1,1);
+      ViewGroup.LayoutParams layoutParams = root.getLayoutParams();
+      layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+      root.setLayoutParams(layoutParams);
+    }
 
     if (reaction.emoji != null) {
       emojiView.setImageEmoji(reaction.emoji);
@@ -200,11 +232,13 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
       countView.setText(context.getString(R.string.ReactionsConversationView_plus, reaction.count));
     }
 
-    if (reaction.userWasSender) {
+    if (reaction.userWasSender && !isCompact) {
       root.setBackground(ContextCompat.getDrawable(context, R.drawable.reaction_pill_background_selected));
       countView.setTextColor(ContextCompat.getColor(context, R.color.reactions_pill_selected_text_color));
     } else {
-      root.setBackground(ContextCompat.getDrawable(context, R.drawable.reaction_pill_background));
+      if (!isCompact) {
+        root.setBackground(ContextCompat.getDrawable(context, R.drawable.reaction_pill_background));
+      }
     }
 
     return root;
