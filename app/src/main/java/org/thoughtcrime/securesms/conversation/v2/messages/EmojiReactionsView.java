@@ -18,6 +18,8 @@ import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
 
 import com.annimon.stream.Stream;
+import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.flexbox.JustifyContent;
 
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
@@ -36,10 +38,11 @@ import java.util.Map;
 
 import network.loki.messenger.R;
 
-public class EmojiReactionsView extends LinearLayout {
+public class EmojiReactionsView extends LinearLayout implements View.OnTouchListener {
 
   // Normally 6dp, but we have 1dp left+right margin on the pills themselves
-  private final int OUTER_MARGIN = ViewUtil.dpToPx(5);
+  private final int OUTER_MARGIN = ViewUtil.dpToPx(2);
+  private static final int DEFAULT_THRESHOLD = 5;
 
   private boolean              outgoing;
   private List<ReactionRecord> records;
@@ -75,6 +78,7 @@ public class EmojiReactionsView extends LinearLayout {
     if (attrs != null) {
       TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.EmojiReactionsView, 0, 0);
       outgoing = typedArray.getBoolean(R.styleable.EmojiReactionsView_erv_outgoing, false);
+      typedArray.recycle();
     }
   }
 
@@ -89,6 +93,8 @@ public class EmojiReactionsView extends LinearLayout {
       return;
     }
 
+    FlexboxLayout containerLayout = (FlexboxLayout) this.container;
+    containerLayout.setJustifyContent(outgoing ? JustifyContent.FLEX_END : JustifyContent.FLEX_START);
     this.records.clear();
     this.records.addAll(records);
 
@@ -96,7 +102,20 @@ public class EmojiReactionsView extends LinearLayout {
     this.bubbleWidth = bubbleWidth;
     this.delegate = delegate;
 
-    displayReactions(6);
+    displayReactions(DEFAULT_THRESHOLD);
+  }
+
+  @Override
+  public boolean onTouch(View v, MotionEvent event) {
+    if (v.getTag() == null) return false;
+
+    Reaction reaction = (Reaction) v.getTag();
+    int action = event.getAction();
+    if (action == MotionEvent.ACTION_DOWN) onDown(new MessageId(reaction.messageId, reaction.isMms));
+    else if (action == MotionEvent.ACTION_MOVE) removeLongPresCallback();
+    else if (action == MotionEvent.ACTION_CANCEL) removeLongPresCallback();
+    else if (action == MotionEvent.ACTION_UP) onUp(reaction);
+    return true;
   }
 
   private void displayReactions(int threshold) {
@@ -107,22 +126,20 @@ public class EmojiReactionsView extends LinearLayout {
 
     for (Reaction reaction : reactions) {
       View pill = buildPill(getContext(), this, reaction);
+      pill.setTag(reaction);
       pill.setVisibility(bubbleWidth == 0 ? INVISIBLE : VISIBLE);
-      pill.setOnTouchListener((view, event) -> {
-        int action = event.getAction();
-        if (action == MotionEvent.ACTION_DOWN) onDown(new MessageId(reaction.messageId, reaction.isMms));
-        else if (action == MotionEvent.ACTION_MOVE) removeLongPresCallback();
-        else if (action == MotionEvent.ACTION_CANCEL) removeLongPresCallback();
-        else if (action == MotionEvent.ACTION_UP) onUp(reaction);
-        return true;
-      });
+      pill.setOnTouchListener(this);
       container.addView(pill);
+      int pixelSize = ViewUtil.dpToPx(1);
+      MarginLayoutParams params = (MarginLayoutParams) pill.getLayoutParams();
+      params.setMargins(pixelSize, 0, pixelSize, 0);
+      pill.setLayoutParams(params);
     }
 
     if (threshold == Integer.MAX_VALUE) {
       showLess.setVisibility(VISIBLE);
       for (int id : showLess.getReferencedIds()) {
-        findViewById(id).setOnClickListener(view -> displayReactions(6));
+        findViewById(id).setOnClickListener(view -> displayReactions(DEFAULT_THRESHOLD));
       }
     } else {
       showLess.setVisibility(GONE);

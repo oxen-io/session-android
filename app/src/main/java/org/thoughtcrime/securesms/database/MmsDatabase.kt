@@ -399,7 +399,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
 
     fun setMessagesRead(threadId: Long): List<MarkedMessageInfo> {
         return setMessagesRead(
-            THREAD_ID + " = ? AND " + READ + " = 0",
+            THREAD_ID + " = ? AND (" + READ + " = 0 OR " + REACTIONS_UNREAD + " = 1)",
             arrayOf(threadId.toString())
         )
     }
@@ -438,6 +438,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             }
             val contentValues = ContentValues()
             contentValues.put(READ, 1)
+            contentValues.put(REACTIONS_UNREAD, 0)
             database.update(TABLE_NAME, contentValues, where, arguments)
             database.setTransactionSuccessful()
         } finally {
