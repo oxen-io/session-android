@@ -76,6 +76,7 @@
         <item name="menu_delete_icon">@drawable/ic_baseline_delete_24</item>
         <item name="menu_copy_icon">@drawable/ic_baseline_file_copy_24</item>
         <item name="menu_reply_icon">@drawable/ic_baseline_reply_24</item>
+        <item name="menu_select_icon">@drawable/ic_baseline_check_circle_outline_24</item>
         <item name="menu_selectall_icon">@drawable/ic_baseline_select_all_24</item>
         <item name="menu_split_icon">@drawable/ic_baseline_call_split_24</item>
         <item name="menu_popup_expand">@drawable/ic_baseline_launch_24</item>

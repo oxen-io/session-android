@@ -689,10 +689,22 @@ public final class ConversationReactionOverlay extends FrameLayout {
     Recipient recipient = DatabaseComponent.get(getContext()).threadDatabase().getRecipientForThreadId(message.getThreadId());
     String userPublicKey = TextSecurePreferences.getLocalNumber(getContext());
     // Select message
-    items.add(new ActionItem(0, getContext().getResources().getString(R.string.conversation_context__menu_select_message), () -> handleActionItemClicked(Action.SELECT)));
+    items.add(new ActionItem(R.attr.menu_select_icon, getContext().getResources().getString(R.string.conversation_context__menu_select), () -> handleActionItemClicked(Action.SELECT)));
+    // Reply
+    if (!message.isPending() && !message.isFailed()) {
+      items.add(new ActionItem(R.attr.menu_reply_icon, getContext().getResources().getString(R.string.conversation_context__menu_reply), () -> handleActionItemClicked(Action.REPLY)));
+    }
+    // Copy message text
+    if (!containsControlMessage && hasText) {
+      items.add(new ActionItem(R.attr.menu_copy_icon, getContext().getResources().getString(R.string.copy), () -> handleActionItemClicked(Action.COPY_MESSAGE)));
+    }
+    // Copy Session ID
+    if (recipient.isGroupRecipient() && !recipient.isOpenGroupRecipient() && !message.getRecipient().getAddress().toString().equals(userPublicKey)) {
+      items.add(new ActionItem(R.attr.menu_copy_icon, getContext().getResources().getString(R.string.activity_conversation_menu_copy_session_id), () -> handleActionItemClicked(Action.COPY_SESSION_ID)));
+    }
     // Delete message
     if (ConversationMenuItemHelper.userCanDeleteSelectedItems(getContext(), message, openGroup, userPublicKey)) {
-      items.add(new ActionItem(R.attr.menu_trash_icon, getContext().getResources().getString(R.string.conversation_context__menu_delete_message), () -> handleActionItemClicked(Action.DELETE)));
+      items.add(new ActionItem(R.attr.menu_trash_icon, getContext().getResources().getString(R.string.delete), () -> handleActionItemClicked(Action.DELETE)));
     }
     // Ban user
     if (ConversationMenuItemHelper.userCanBanSelectedUsers(getContext(), message, openGroup, userPublicKey)) {
@@ -701,14 +713,6 @@ public final class ConversationReactionOverlay extends FrameLayout {
     // Ban and delete all
     if (ConversationMenuItemHelper.userCanBanSelectedUsers(getContext(), message, openGroup, userPublicKey)) {
       items.add(new ActionItem(0, getContext().getResources().getString(R.string.conversation_context__menu_ban_and_delete_all), () -> handleActionItemClicked(Action.BAN_AND_DELETE_ALL)));
-    }
-    // Copy message text
-    if (!containsControlMessage && hasText) {
-      items.add(new ActionItem(R.attr.menu_copy_icon, getContext().getResources().getString(R.string.conversation_context__menu_copy_text), () -> handleActionItemClicked(Action.COPY_MESSAGE)));
-    }
-    // Copy Session ID
-    if (recipient.isGroupRecipient() && !recipient.isOpenGroupRecipient() && !message.getRecipient().getAddress().toString().equals(userPublicKey)) {
-      items.add(new ActionItem(R.attr.menu_copy_icon, getContext().getResources().getString(R.string.activity_conversation_menu_copy_session_id), () -> handleActionItemClicked(Action.COPY_SESSION_ID)));
     }
     // Message detail
     if (message.isFailed()) {
@@ -721,10 +725,6 @@ public final class ConversationReactionOverlay extends FrameLayout {
     // Save media
     if (message.isMms() && ((MediaMmsMessageRecord)message).containsMediaSlide()) {
       items.add(new ActionItem(R.attr.menu_save_icon, getContext().getResources().getString(R.string.conversation_context_image__save_attachment), () -> handleActionItemClicked(Action.DOWNLOAD)));
-    }
-    // Reply
-    if (!message.isPending() && !message.isFailed()) {
-      items.add(new ActionItem(R.attr.menu_reply_icon, getContext().getResources().getString(R.string.conversation_context__menu_reply_to_message), () -> handleActionItemClicked(Action.REPLY)));
     }
 
     backgroundView.setVisibility(View.VISIBLE);
