@@ -115,7 +115,7 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment imp
         TextView       text       = customView.findViewById(R.id.reactions_pill_count);
         EmojiCount     emojiCount = recipientsAdapter.getEmojiCount(position);
 
-        customView.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.reaction_pill_background));
+        customView.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.reaction_pill_dialog_background));
         emoji.setImageEmoji(emojiCount.getDisplayEmoji());
         text.setText(NumberUtil.getFormattedNumber(emojiCount.getCount()));
       });
@@ -133,7 +133,7 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment imp
         public void onTabUnselected(TabLayout.Tab tab) {
           View customView = tab.getCustomView();
           TextView text = customView.findViewById(R.id.reactions_pill_count);
-          customView.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.reaction_pill_background));
+          customView.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.reaction_pill_dialog_background));
           text.setTextColor(ContextCompat.getColor(requireContext(), R.color.reactions_pill_text_color));
         }
         @Override
