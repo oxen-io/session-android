@@ -6,13 +6,15 @@
     android:layout_height="wrap_content">
     <View
         android:layout_gravity="top"
-        android:layout_marginHorizontal="@dimen/very_large_spacing"
+        android:alpha="0.3"
+        android:layout_marginHorizontal="@dimen/small_spacing"
         android:background="?android:textColorTertiary"
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
     <LinearLayout android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_width="match_parent"
+        android:layout_marginHorizontal="@dimen/medium_spacing"
         android:padding="@dimen/small_spacing">
         <org.thoughtcrime.securesms.components.emoji.EmojiImageView
             android:id="@+id/header_view_emoji"
