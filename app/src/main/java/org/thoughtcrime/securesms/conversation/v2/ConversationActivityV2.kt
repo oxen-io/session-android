@@ -1049,6 +1049,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             isMms = messageId.mms,
             author = author,
             emoji = emoji,
+            count = 1,
             dateSent = emojiTimestamp,
             dateReceived = emojiTimestamp
         )
