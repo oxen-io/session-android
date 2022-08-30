@@ -7,18 +7,24 @@
     android:padding="@dimen/small_spacing"
     android:gravity="center">
 
-    <com.google.android.flexbox.FlexboxLayout
-        android:id="@+id/layout_emoji_container"
-        android:layout_width="250dp"
+    <FrameLayout
+        android:id="@+id/layout_flex_container"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:flexDirection="row"
-        app:flexWrap="wrap"
-        android:gravity="center"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
+        app:layout_constraintWidth_max="220dp"
+        app:layout_constraintEnd_toEndOf="parent">
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/layout_emoji_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:flexDirection="row"
+            app:flexWrap="wrap"
+            android:layout_gravity="center"
+            />
+    </FrameLayout>
     <ImageView
         android:id="@+id/image_view_show_less"
         android:layout_width="16dp"
@@ -47,7 +53,7 @@
         app:layout_constraintStart_toEndOf="@id/image_view_show_less"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_emoji_container"
+        app:layout_constraintTop_toBottomOf="@+id/layout_flex_container"
         app:layout_constraintBottom_toBottomOf="parent"
         />
 
