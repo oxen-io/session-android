@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintWidth_max="220dp"
+        app:layout_constraintWidth_max="240dp"
         app:layout_constraintEnd_toEndOf="parent">
         <com.google.android.flexbox.FlexboxLayout
             android:id="@+id/layout_emoji_container"
@@ -22,6 +22,7 @@
             android:orientation="horizontal"
             app:flexDirection="row"
             app:flexWrap="wrap"
+            app:alignItems="center"
             android:layout_gravity="center"
             />
     </FrameLayout>

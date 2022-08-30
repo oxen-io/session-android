@@ -203,15 +203,19 @@ class VisibleMessageView : LinearLayout {
         // Expiration timer
         updateExpirationTimer(message)
         // Emoji Reactions
+        val emojiLayoutParams = binding.emojiReactionsView.layoutParams as ConstraintLayout.LayoutParams
+        emojiLayoutParams.horizontalBias = if (message.isOutgoing) 1f else 0f
+        binding.emojiReactionsView.layoutParams = emojiLayoutParams
         val capabilities = lokiThreadDb.getOpenGroupChat(threadID)?.server?.let { lokiApiDb.getServerCapabilities(it) }
         if (message.reactions.isNotEmpty() &&
             (capabilities.isNullOrEmpty() || capabilities.contains(OpenGroupApi.Capability.REACTIONS.name.lowercase()))
         ) {
             binding.emojiReactionsView.isVisible = true
-            binding.emojiReactionsView.setReactions(message.reactions, message.isOutgoing, binding.messageInnerContainer.width, delegate)
+            binding.emojiReactionsView.setReactions(message.reactions, message.isOutgoing, delegate)
         } else {
             binding.emojiReactionsView.isVisible = false
         }
+
         // Populate content view
         binding.messageContentView.indexInAdapter = indexInAdapter
         binding.messageContentView.bind(

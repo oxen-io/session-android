@@ -129,7 +129,7 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
       EmojiImageView emojiView = itemView.findViewById(R.id.header_view_emoji);
       emojiView.setImageEmoji(emoji.getDisplayEmoji());
       TextView count = itemView.findViewById(R.id.header_view_emoji_count);
-      count.setText(String.format("· %s", emoji.getCount()));
+      count.setText(String.format(" ·  %s", emoji.getCount()));
     }
   }
 

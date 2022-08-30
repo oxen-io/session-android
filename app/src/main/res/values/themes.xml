@@ -320,7 +320,7 @@
     </style>
 
     <style name="Widget.TextSecure.BottomSheet.ReactWithAny" parent="Widget.MaterialComponents.BottomSheet">
-        <item name="backgroundTint">@color/core_grey_75</item>
+        <item name="backgroundTint">@color/core_grey_95</item>
         <item name="behavior_peekHeight">@dimen/react_with_any_emoji_bottom_sheet_dialog_fragment_min_height</item>
     </style>
 
