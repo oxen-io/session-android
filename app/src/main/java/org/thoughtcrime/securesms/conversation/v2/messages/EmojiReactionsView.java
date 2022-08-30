@@ -44,9 +44,7 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
   private final int OUTER_MARGIN = ViewUtil.dpToPx(2);
   private static final int DEFAULT_THRESHOLD = 5;
 
-  private boolean              outgoing;
   private List<ReactionRecord> records;
-  private int                  bubbleWidth;
   private ViewGroup            container;
   private Group                showLess;
   private VisibleMessageViewDelegate delegate;
@@ -77,19 +75,17 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
 
     if (attrs != null) {
       TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.EmojiReactionsView, 0, 0);
-      outgoing = typedArray.getBoolean(R.styleable.EmojiReactionsView_erv_outgoing, false);
       typedArray.recycle();
     }
   }
 
   public void clear() {
     this.records.clear();
-    this.bubbleWidth = 0;
     container.removeAllViews();
   }
 
-  public void setReactions(@NonNull List<ReactionRecord> records, boolean outgoing, int bubbleWidth, VisibleMessageViewDelegate delegate) {
-    if (records.equals(this.records) && this.bubbleWidth == bubbleWidth) {
+  public void setReactions(@NonNull List<ReactionRecord> records, boolean outgoing, VisibleMessageViewDelegate delegate) {
+    if (records.equals(this.records)) {
       return;
     }
 
@@ -98,8 +94,6 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
     this.records.clear();
     this.records.addAll(records);
 
-    this.outgoing = outgoing;
-    this.bubbleWidth = bubbleWidth;
     this.delegate = delegate;
 
     displayReactions(DEFAULT_THRESHOLD);
@@ -127,7 +121,6 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
     for (Reaction reaction : reactions) {
       View pill = buildPill(getContext(), this, reaction);
       pill.setTag(reaction);
-      pill.setVisibility(bubbleWidth == 0 ? INVISIBLE : VISIBLE);
       pill.setOnTouchListener(this);
       container.addView(pill);
       int pixelSize = ViewUtil.dpToPx(1);
@@ -143,25 +136,6 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
       }
     } else {
       showLess.setVisibility(GONE);
-    }
-    measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-
-    int railWidth = getMeasuredWidth();
-
-    if (railWidth < (bubbleWidth - OUTER_MARGIN)) {
-      int margin = (bubbleWidth - railWidth - OUTER_MARGIN);
-
-      if (outgoing) {
-        ViewUtil.setLeftMargin(this, margin);
-      } else {
-        ViewUtil.setRightMargin(this, margin);
-      }
-    } else {
-      if (outgoing) {
-        ViewUtil.setLeftMargin(this, OUTER_MARGIN);
-      } else {
-        ViewUtil.setRightMargin(this, OUTER_MARGIN);
-      }
     }
   }
 
