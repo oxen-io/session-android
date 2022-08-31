@@ -53,29 +53,6 @@ class EmojiSearchDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
       .map { it.emoji }
   }
 
-  fun getAll(originalLimit: Int): List<String> {
-    val limit: Int = max(originalLimit, 100)
-    val entries = mutableListOf<Entry>()
-
-    readableDatabase.query(TABLE_NAME, null, null, null, null, null, null, "$limit")
-      .use { cursor ->
-        while (cursor.moveToNext()) {
-          entries += Entry(
-            label = CursorUtil.requireString(cursor, LABEL),
-            emoji = CursorUtil.requireString(cursor, EMOJI)
-          )
-        }
-      }
-
-    return entries
-      /*.sortedWith { lhs, rhs ->
-        similarityScore(query, lhs.label) - similarityScore(query, rhs.label)
-      }*/
-      .distinctBy { it.emoji }
-      .take(originalLimit)
-      .map { it.emoji }
-  }
-
   /**
    * Deletes the content of the current search index and replaces it with the new one.
    */

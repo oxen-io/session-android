@@ -26,7 +26,7 @@ class Reaction() {
 
         fun fromProto(proto: SignalServiceProtos.DataMessage.Reaction): Reaction? {
             val react = proto.action == Action.REACT
-            return Reaction(proto.author, proto.emoji, react, proto.id)
+            return Reaction(publicKey = proto.author, emoji = proto.emoji, react = react, timestamp = proto.id, count = 1)
         }
 
         fun from(timestamp: Long, author: String, emoji: String, react: Boolean): Reaction? {

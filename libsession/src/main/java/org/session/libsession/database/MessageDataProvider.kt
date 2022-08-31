@@ -36,7 +36,7 @@ interface MessageDataProvider {
     fun isOutgoingMessage(timestamp: Long): Boolean
     fun handleSuccessfulAttachmentUpload(attachmentId: Long, attachmentStream: SignalServiceAttachmentStream, attachmentKey: ByteArray, uploadResult: UploadResult)
     fun handleFailedAttachmentUpload(attachmentId: Long)
-    fun getMessageFor(timestamp: Long, author: Address): Pair<Long, Boolean>?
+    fun getMessageForQuote(timestamp: Long, author: Address): Pair<Long, Boolean>?
     fun getAttachmentsAndLinkPreviewFor(mmsId: Long): List<Attachment>
     fun getMessageBodyFor(timestamp: Long, author: String): String
     fun getAttachmentIDsFor(messageID: Long): List<Long>

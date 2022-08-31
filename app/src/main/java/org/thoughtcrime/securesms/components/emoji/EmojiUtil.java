@@ -1,15 +1,9 @@
 package org.thoughtcrime.securesms.components.emoji;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import org.thoughtcrime.securesms.components.emoji.parsing.EmojiParser;
 import org.thoughtcrime.securesms.emoji.EmojiSource;
 import org.thoughtcrime.securesms.emoji.ObsoleteEmoji;
-import org.thoughtcrime.securesms.util.Util;
 
 import java.util.HashSet;
 import java.util.Set;
