@@ -924,5 +924,8 @@
     <string name="CallNotificationBuilder_system_notification_title">Notifications</string>
     <string name="CallNotificationBuilder_system_notification_message">Having notifications disabled will prevent you from receiving calls, go to Session notification settings?</string>
     <string name="dismiss">Dismiss</string>
+    <string name="activity_settings_conversations_button_title">Conversations</string>
+    <string name="activity_settings_message_appearance_button_title">Appearance</string>
+    <string name="activity_settings_help_button">Help</string>
 
 </resources>

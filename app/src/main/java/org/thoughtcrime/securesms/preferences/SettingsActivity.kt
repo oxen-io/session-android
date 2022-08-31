@@ -43,7 +43,6 @@ import org.thoughtcrime.securesms.profiles.ProfileMediaConstraints
 import org.thoughtcrime.securesms.util.BitmapDecodingException
 import org.thoughtcrime.securesms.util.BitmapUtil
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
-import org.thoughtcrime.securesms.util.UiModeUtilities
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
@@ -94,13 +93,10 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             notificationsButton.setOnClickListener { showNotificationSettings() }
             messageRequestsButton.setOnClickListener { showMessageRequests() }
             chatsButton.setOnClickListener { showChatSettings() }
-            sendInvitationButton.setOnClickListener { sendInvitation() }
-            faqButton.setOnClickListener { showFAQ() }
-            surveyButton.setOnClickListener { showSurvey() }
-            helpTranslateButton.setOnClickListener { helpTranslate() }
+            inviteFriendButton.setOnClickListener { sendInvitation() }
+            helpButton.setOnClickListener { showHelp() }
             seedButton.setOnClickListener { showSeed() }
             clearAllDataButton.setOnClickListener { clearAllData() }
-            debugLogButton.setOnClickListener { shareLogs() }
             versionTextView.text = String.format(getString(R.string.version_s), "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
         }
     }
@@ -300,7 +296,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         startActivity(chooser)
     }
 
-    private fun showFAQ() {
+    private fun showHelp() {
         try {
             val url = "https://getsession.org/faq"
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
