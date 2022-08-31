@@ -18,6 +18,16 @@
         android:textSize="@dimen/medium_font_size" />
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/large_spacing"
+        android:text="@string/dialog_seed_explanation"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="@dimen/medium_font_size"
+        android:textAlignment="center"
+        android:alpha="0.6" />
+
+    <TextView
         style="@style/SessionIDTextView"
         android:id="@+id/seedTextView"
         android:layout_width="wrap_content"
@@ -28,16 +38,6 @@
         android:textColor="?android:textColorPrimary"
         android:textSize="@dimen/small_font_size"
         android:textAlignment="center" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/large_spacing"
-        android:text="@string/dialog_seed_explanation"
-        android:textColor="?android:textColorPrimary"
-        android:textSize="@dimen/small_font_size"
-        android:textAlignment="center"
-        android:alpha="0.6" />
 
     <LinearLayout
         android:layout_width="match_parent"

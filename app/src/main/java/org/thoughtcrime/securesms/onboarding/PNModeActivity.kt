@@ -12,15 +12,21 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityPnModeBinding
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.ThemeUtil
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.BaseActionBarActivity
 import org.thoughtcrime.securesms.home.HomeActivity
-import org.thoughtcrime.securesms.util.*
+import org.thoughtcrime.securesms.util.GlowViewUtilities
+import org.thoughtcrime.securesms.util.PNModeView
+import org.thoughtcrime.securesms.util.disableClipping
+import org.thoughtcrime.securesms.util.getAccentColor
+import org.thoughtcrime.securesms.util.getColorWithID
+import org.thoughtcrime.securesms.util.setUpActionBarSessionLogo
+import org.thoughtcrime.securesms.util.show
 
 class PNModeActivity : BaseActionBarActivity() {
     private lateinit var binding: ActivityPnModeBinding
@@ -36,10 +42,10 @@ class PNModeActivity : BaseActionBarActivity() {
         with(binding) {
             contentView.disableClipping()
             fcmOptionView.setOnClickListener { toggleFCM() }
-            fcmOptionView.mainColor = resources.getColorWithID(R.color.pn_option_background, theme)
+            fcmOptionView.mainColor = ThemeUtil.getThemedColor(root.context, R.attr.colorPrimary)
             fcmOptionView.strokeColor = resources.getColorWithID(R.color.pn_option_border, theme)
             backgroundPollingOptionView.setOnClickListener { toggleBackgroundPolling() }
-            backgroundPollingOptionView.mainColor = resources.getColorWithID(R.color.pn_option_background, theme)
+            backgroundPollingOptionView.mainColor = ThemeUtil.getThemedColor(root.context, R.attr.colorPrimary)
             backgroundPollingOptionView.strokeColor = resources.getColorWithID(R.color.pn_option_border, theme)
             registerButton.setOnClickListener { register() }
         }
