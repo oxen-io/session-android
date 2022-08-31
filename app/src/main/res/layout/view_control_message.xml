@@ -31,6 +31,7 @@
 
     <TextView
         android:id="@+id/textView"
+        android:contentDescription="@string/AccessibilityId_control_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
