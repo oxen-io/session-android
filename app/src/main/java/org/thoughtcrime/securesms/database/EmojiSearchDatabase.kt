@@ -81,7 +81,7 @@ class EmojiSearchDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
    */
   fun setSearchIndex(searchIndex: List<EmojiSearchData>) {
     writableDatabase.beginTransaction()
-    val count = writableDatabase.delete(TABLE_NAME, null, null)
+    writableDatabase.delete(TABLE_NAME, null, null)
 
     for (searchData in searchIndex) {
       for (label in searchData.tags) {
@@ -92,6 +92,7 @@ class EmojiSearchDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         writableDatabase.insert(TABLE_NAME, null, values)
       }
     }
+    writableDatabase.setTransactionSuccessful()
     writableDatabase.endTransaction()
   }
 

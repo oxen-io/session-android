@@ -510,7 +510,6 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
                 try (InputStream inputStream = getAssets().open("emoji/emoji_search_index.json")) {
                     List<EmojiSearchData> searchIndex = Arrays.asList(JsonUtil.fromJson(inputStream, EmojiSearchData[].class));
                     emojiSearchDb.setSearchIndex(searchIndex);
-                    Log.d("Loki", "Finished inserting emoji search index");
                 } catch (IOException e) {
                     Log.e("Loki", "Failed to load emoji search index");
                 }
