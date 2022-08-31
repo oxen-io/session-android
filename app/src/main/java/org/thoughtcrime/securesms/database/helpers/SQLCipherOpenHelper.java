@@ -16,6 +16,7 @@ import org.thoughtcrime.securesms.crypto.DatabaseSecret;
 import org.thoughtcrime.securesms.database.AttachmentDatabase;
 import org.thoughtcrime.securesms.database.BlindedIdMappingDatabase;
 import org.thoughtcrime.securesms.database.DraftDatabase;
+import org.thoughtcrime.securesms.database.EmojiSearchDatabase;
 import org.thoughtcrime.securesms.database.GroupDatabase;
 import org.thoughtcrime.securesms.database.GroupMemberDatabase;
 import org.thoughtcrime.securesms.database.GroupReceiptDatabase;
@@ -176,6 +177,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
     db.execSQL(BlindedIdMappingDatabase.CREATE_BLINDED_ID_MAPPING_TABLE_COMMAND);
     db.execSQL(GroupMemberDatabase.CREATE_GROUP_MEMBER_TABLE_COMMAND);
     db.execSQL(LokiAPIDatabase.RESET_SEQ_NO); // probably not needed but consistent with all migrations
+    db.execSQL(EmojiSearchDatabase.CREATE_EMOJI_SEARCH_TABLE_COMMAND);
     db.execSQL(ReactionDatabase.CREATE_REACTION_TABLE_COMMAND);
 
     executeStatements(db, SmsDatabase.CREATE_INDEXS);
@@ -403,6 +405,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
         db.execSQL(MmsDatabase.CREATE_REACTIONS_UNREAD_COMMAND);
         db.execSQL(SmsDatabase.CREATE_REACTIONS_UNREAD_COMMAND);
         db.execSQL(MmsDatabase.CREATE_REACTIONS_LAST_SEEN_COMMAND);
+        db.execSQL(EmojiSearchDatabase.CREATE_EMOJI_SEARCH_TABLE_COMMAND);
         db.execSQL(ReactionDatabase.CREATE_REACTION_TABLE_COMMAND);
         executeStatements(db, ReactionDatabase.CREATE_REACTION_TRIGGERS);
       }

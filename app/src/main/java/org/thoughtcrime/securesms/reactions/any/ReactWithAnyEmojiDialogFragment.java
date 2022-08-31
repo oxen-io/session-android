@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ import org.thoughtcrime.securesms.components.emoji.EmojiPageViewGridAdapter;
 import org.thoughtcrime.securesms.conversation.v2.ViewUtil;
 import org.thoughtcrime.securesms.database.model.MessageId;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
+import org.thoughtcrime.securesms.keyboard.emoji.KeyboardPageSearchView;
 import org.thoughtcrime.securesms.util.LifecycleDisposable;
 
 import network.loki.messenger.R;
@@ -49,6 +51,7 @@ public final class ReactWithAnyEmojiDialogFragment extends BottomSheetDialogFrag
   private ReactWithAnyEmojiViewModel viewModel;
   private Callback                   callback;
   private EmojiPageView              emojiPageView;
+  private KeyboardPageSearchView search;
 
   private final LifecycleDisposable disposables = new LifecycleDisposable();
 
@@ -121,7 +124,7 @@ public final class ReactWithAnyEmojiDialogFragment extends BottomSheetDialogFrag
 
   @Override
   public @Nullable View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.react_with_any_emoji_bottom_sheet_dialog_fragment, container, false);
+    return inflater.inflate(R.layout.react_with_any_emoji_dialog_fragment, container, false);
   }
 
   @Override
@@ -131,9 +134,26 @@ public final class ReactWithAnyEmojiDialogFragment extends BottomSheetDialogFrag
     emojiPageView = view.findViewById(R.id.react_with_any_emoji_page_view);
     emojiPageView.initialize(this, this, true);
 
+    search = view.findViewById(R.id.react_with_any_emoji_search);
+
     initializeViewModel();
 
+//    EmojiKeyboardPageCategoriesAdapter categoriesAdapter = new EmojiKeyboardPageCategoriesAdapter(key -> {
+//      scrollTo(key);
+//      viewModel.selectPage(key);
+//    });
+
     disposables.add(viewModel.getEmojiList().subscribe(pages -> emojiPageView.setList(pages, null)));
+//    disposables.add(viewModel.getCategories().subscribe(categoriesAdapter::submitList));
+//    disposables.add(viewModel.getSelectedKey().subscribe(key -> categoriesRecycler.post(() -> {
+//      int index = categoriesAdapter.indexOfFirst(EmojiKeyboardPageCategoryMappingModel.class, m -> m.getKey().equals(key));
+//
+//      if (index != -1) {
+//        categoriesRecycler.smoothScrollToPosition(index);
+//      }
+//    })));
+
+    search.setCallbacks(new SearchCallbacks());
   }
 
   @Override
@@ -179,4 +199,35 @@ public final class ReactWithAnyEmojiDialogFragment extends BottomSheetDialogFrag
     void onReactWithAnyEmojiSelected(@NonNull String emoji, MessageId messageId, long timestamp);
   }
 
+  private class SearchCallbacks implements KeyboardPageSearchView.Callbacks {
+    @Override
+    public void onQueryChanged(@NonNull String query) {
+      boolean hasQuery = !TextUtils.isEmpty(query);
+      search.enableBackNavigation(hasQuery);
+      /*if (hasQuery) {
+        ViewUtil.fadeOut(tabBar, 250, View.INVISIBLE);
+      } else {
+        ViewUtil.fadeIn(tabBar, 250);
+      }*/
+      viewModel.onQueryChanged(query);
+    }
+
+    @Override
+    public void onNavigationClicked() {
+      search.clearQuery();
+      search.clearFocus();
+      ViewUtil.hideKeyboard(requireContext(), requireView());
+    }
+
+    @Override
+    public void onFocusGained() {
+      ((BottomSheetDialog) requireDialog()).getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
+
+    @Override
+    public void onClicked() { }
+
+    @Override
+    public void onFocusLost() { }
+  }
 }

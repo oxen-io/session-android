@@ -16,7 +16,7 @@
         android:src="@drawable/bottom_sheet_handle"
         tools:ignore="ContentDescription" />
 
-    <!--<org.thoughtcrime.securesms.keyboard.emoji.KeyboardPageSearchView
+    <org.thoughtcrime.securesms.keyboard.emoji.KeyboardPageSearchView
         android:id="@+id/react_with_any_emoji_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
         app:search_bar_tint="@color/react_with_any_search_background"
         app:search_hint="@string/KeyboardPagerFragment_search_emoji"
         app:search_icon_tint="@color/react_with_any_search_hint"
-        app:show_always="true" />-->
+        app:show_always="true" />
 
     <FrameLayout
         android:layout_width="match_parent"
