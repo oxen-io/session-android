@@ -45,6 +45,7 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
   private static final int DEFAULT_THRESHOLD = 5;
 
   private List<ReactionRecord> records;
+  private long                 messageId;
   private ViewGroup            container;
   private Group                showLess;
   private VisibleMessageViewDelegate delegate;
@@ -85,7 +86,7 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
     container.removeAllViews();
   }
 
-  public void setReactions(@NonNull List<ReactionRecord> records, boolean outgoing, VisibleMessageViewDelegate delegate) {
+  public void setReactions(long messageId, @NonNull List<ReactionRecord> records, boolean outgoing, VisibleMessageViewDelegate delegate) {
     this.delegate = delegate;
     if (records.equals(this.records)) {
       return;
@@ -95,6 +96,10 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
     containerLayout.setJustifyContent(outgoing ? JustifyContent.FLEX_END : JustifyContent.FLEX_START);
     this.records.clear();
     this.records.addAll(records);
+    if (this.messageId != messageId) {
+      extended = false;
+    }
+    this.messageId = messageId;
 
     displayReactions(extended ? Integer.MAX_VALUE : DEFAULT_THRESHOLD);
   }

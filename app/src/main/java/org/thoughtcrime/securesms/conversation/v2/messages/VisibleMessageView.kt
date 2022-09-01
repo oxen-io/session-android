@@ -211,7 +211,7 @@ class VisibleMessageView : LinearLayout {
             (capabilities.isNullOrEmpty() || capabilities.contains(OpenGroupApi.Capability.REACTIONS.name.lowercase()))
         ) {
             binding.emojiReactionsView.isVisible = true
-            binding.emojiReactionsView.setReactions(message.reactions, message.isOutgoing, delegate)
+            binding.emojiReactionsView.setReactions(message.id, message.reactions, message.isOutgoing, delegate)
         } else {
             binding.emojiReactionsView.isVisible = false
         }
