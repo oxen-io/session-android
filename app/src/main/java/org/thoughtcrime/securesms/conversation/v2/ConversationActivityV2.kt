@@ -49,7 +49,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
-import network.loki.messenger.databinding.ActivityConversationV2ActionBarBinding
 import network.loki.messenger.databinding.ActivityConversationV2Binding
 import network.loki.messenger.databinding.ViewVisibleMessageBinding
 import nl.komponents.kovenant.ui.successUi
@@ -174,7 +173,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     OnReactionSelectedListener, ReactWithAnyEmojiDialogFragment.Callback, ReactionsDialogFragment.Callback {
 
     private var binding: ActivityConversationV2Binding? = null
-    private var actionBarBinding: ActivityConversationV2ActionBarBinding? = null
 
     @Inject lateinit var textSecurePreferences: TextSecurePreferences
     @Inject lateinit var threadDb: ThreadDatabase
@@ -438,22 +436,22 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     // called from onCreate
     private fun setUpToolBar() {
+        setSupportActionBar(binding?.toolbar)
         val actionBar = supportActionBar ?: return
-        actionBarBinding = ActivityConversationV2ActionBarBinding.inflate(layoutInflater)
         actionBar.title = ""
-        actionBar.customView = actionBarBinding!!.root
-        actionBar.setDisplayShowCustomEnabled(true)
-        actionBarBinding!!.conversationTitleView.text = viewModel.recipient?.toShortString()
+        actionBar.setDisplayHomeAsUpEnabled(true)
+        actionBar.setHomeButtonEnabled(true)
+        binding!!.toolbarContent.conversationTitleView.text = viewModel.recipient?.toShortString()
         @DimenRes val sizeID: Int = if (viewModel.recipient?.isClosedGroupRecipient == true) {
             R.dimen.medium_profile_picture_size
         } else {
             R.dimen.small_profile_picture_size
         }
         val size = resources.getDimension(sizeID).roundToInt()
-        actionBarBinding!!.profilePictureView.root.layoutParams = LinearLayout.LayoutParams(size, size)
-        actionBarBinding!!.profilePictureView.root.glide = glide
+        binding!!.toolbarContent.profilePictureView.root.layoutParams = LinearLayout.LayoutParams(size, size)
+        binding!!.toolbarContent.profilePictureView.root.glide = glide
         MentionManagerUtilities.populateUserPublicKeyCacheIfNeeded(viewModel.threadId, this)
-        val profilePictureView = actionBarBinding!!.profilePictureView.root
+        val profilePictureView = binding!!.toolbarContent.profilePictureView.root
         viewModel.recipient?.let { recipient ->
             profilePictureView.update(recipient)
         }
@@ -635,7 +633,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         tearDownRecipientObserver()
         super.onDestroy()
         binding = null
-        actionBarBinding = null
+//        actionBarBinding = null
     }
     // endregion
 
@@ -651,9 +649,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             updateSubtitle()
             showOrHideInputIfNeeded()
             if (recipient != null) {
-                actionBarBinding?.profilePictureView?.root?.update(recipient)
+                binding?.toolbarContent?.profilePictureView?.root?.update(recipient)
             }
-            actionBarBinding?.conversationTitleView?.text = recipient?.toShortString()
+            binding?.toolbarContent?.conversationTitleView?.text = recipient?.toShortString()
         }
     }
 
@@ -908,7 +906,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun updateSubtitle() {
-        val actionBarBinding = actionBarBinding ?: return
+        val actionBarBinding = binding?.toolbarContent ?: return
         val recipient = viewModel.recipient ?: return
         actionBarBinding.muteIconImageView.isVisible = recipient.isMuted
         actionBarBinding.conversationSubtitleView.isVisible = true

@@ -8,6 +8,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?colorPrimary"
+        app:contentInsetStart="0dp">
+
+        <include android:id="@+id/toolbarContent"
+            layout="@layout/activity_conversation_v2_action_bar" />
+
+    </androidx.appcompat.widget.Toolbar>
+
     <org.thoughtcrime.securesms.conversation.v2.components.OpenGroupGuidelinesView
         android:id="@+id/openGroupGuidelinesView"
         android:layout_width="match_parent"
@@ -18,6 +30,7 @@
         android:id="@+id/conversationRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
         android:layout_above="@+id/typingIndicatorViewContainer" />
 
     <org.thoughtcrime.securesms.conversation.v2.components.TypingIndicatorViewContainer
