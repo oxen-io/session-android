@@ -1015,16 +1015,26 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             }
 
         })
-        val view = visibleMessageView.messageContentView
-        val selectedConversationModel = SelectedConversationModel(view.drawToBitmap(),
-            view.x,
-            view.y + binding!!.conversationRecyclerView.translationY,
-            view.x,
-            view.y,
-            view.width,
-            message.isOutgoing,
-            view)
-        reactionDelegate.show(this, message, selectedConversationModel)
+        val itemBounds = Rect()
+        visibleMessageView.getGlobalVisibleRect(itemBounds)
+        val contentBounds = Rect()
+        visibleMessageView.messageContentView.getGlobalVisibleRect(contentBounds)
+        try {
+            val selectedConversationModel = SelectedConversationModel(
+                visibleMessageView.messageContentView.drawToBitmap(),
+                itemBounds.left.toFloat(),
+                itemBounds.top.toFloat() + binding!!.conversationRecyclerView.translationY,
+                contentBounds.left.toFloat(),
+                contentBounds.top.toFloat(),
+                visibleMessageView.messageContentView.width,
+                message.isOutgoing,
+                visibleMessageView.messageContentView
+            )
+            reactionDelegate.show(this, message, selectedConversationModel)
+        } catch (e: Exception) {
+            reactionDelegate.hide()
+            Log.e("Loki", "Failed to show emoji picker", e)
+        }
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
