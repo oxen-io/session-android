@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -246,7 +247,10 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
 
   private void onDown(MessageId messageId) {
     removeLongPresCallback();
-    Runnable newLongPressCallback = () -> delegate.onReactionLongClicked(messageId);
+    Runnable newLongPressCallback = () -> {
+      performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+      delegate.onReactionLongClicked(messageId);
+    };
     this.longPressCallback = newLongPressCallback;
     gestureHandler.postDelayed(newLongPressCallback, longPressDurationThreshold);
     onDownTimestamp = new Date().getTime();
@@ -265,7 +269,10 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
         gestureHandler.removeCallbacks(pressCallback);
         this.pressCallback = null;
       } else {
-        Runnable newPressCallback = () -> onReactionClicked(reaction);
+        Runnable newPressCallback = () -> {
+          onReactionClicked(reaction);
+          pressCallback = null;
+        };
         this.pressCallback = newPressCallback;
         gestureHandler.postDelayed(newPressCallback, maxDoubleTapInterval);
       }

@@ -889,10 +889,14 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val wasTypingIndicatorVisibleBefore = binding.typingIndicatorViewContainer.isVisible
         binding.typingIndicatorViewContainer.isVisible = wasTypingIndicatorVisibleBefore && isScrolledToBottom
         binding.typingIndicatorViewContainer.isVisible
-        binding.scrollToBottomButton.isVisible = !isScrolledToBottom && adapter.itemCount > 0
+        showOrHidScrollToBottomButton()
         val firstVisiblePosition = layoutManager?.findFirstVisibleItemPosition() ?: -1
         unreadCount = min(unreadCount, firstVisiblePosition).coerceAtLeast(0)
         updateUnreadCountIndicator()
+    }
+
+    private fun showOrHidScrollToBottomButton(show: Boolean = true) {
+        binding?.scrollToBottomButton?.isVisible = show && !isScrolledToBottom && adapter.itemCount > 0
     }
 
     private fun updateUnreadCountIndicator() {
@@ -992,11 +996,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private fun showEmojiPicker(message: MessageRecord, visibleMessageView: VisibleMessageView) {
         ViewUtil.hideKeyboard(this, visibleMessageView);
         binding?.reactionsShade?.isVisible = true
-        if (ThemeUtil.isDarkTheme(this)) {
-            supportActionBar?.setBackgroundDrawable(ContextCompat.getDrawable(this, R.color.transparent_white_20))
-        } else {
-            supportActionBar?.setBackgroundDrawable(ContextCompat.getDrawable(this, R.color.transparent_black_70))
-        }
+        showOrHidScrollToBottomButton(false)
         binding?.conversationRecyclerView?.suppressLayout(true)
         reactionDelegate.setOnActionSelectedListener(ReactionsToolbarListener(message))
         reactionDelegate.setOnHideListener(object: ConversationReactionOverlay.OnHideListener {
@@ -1004,7 +1004,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 binding?.reactionsShade?.let {
                     ViewUtil.fadeOut(it, resources.getInteger(R.integer.reaction_scrubber_hide_duration), View.GONE)
                 }
-                supportActionBar?.setBackgroundDrawable(null)
+                showOrHidScrollToBottomButton(true)
             }
 
             override fun onHide() {
