@@ -54,6 +54,7 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
   private long onDownTimestamp = 0;
   private static long longPressDurationThreshold = 250;
   private static long maxDoubleTapInterval = 200;
+  private boolean extended = false;
 
   public EmojiReactionsView(Context context) {
     super(context);
@@ -95,7 +96,7 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
     this.records.clear();
     this.records.addAll(records);
 
-    displayReactions(DEFAULT_THRESHOLD);
+    displayReactions(extended ? Integer.MAX_VALUE : DEFAULT_THRESHOLD);
   }
 
   @Override
@@ -131,7 +132,10 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
           overflowContainer.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.reaction_pill_dialog_background));
         }
         View pill = buildPill(getContext(), this, reaction, true);
-        pill.setOnClickListener(v -> displayReactions(Integer.MAX_VALUE));
+        pill.setOnClickListener(v -> {
+          extended = true;
+          displayReactions(Integer.MAX_VALUE);
+        });
         pill.findViewById(R.id.reactions_pill_count).setVisibility(View.GONE);
         pill.findViewById(R.id.reactions_pill_spacer).setVisibility(View.GONE);
         overflowContainer.addView(pill);
@@ -162,7 +166,10 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
     if (threshold == Integer.MAX_VALUE) {
       showLess.setVisibility(VISIBLE);
       for (int id : showLess.getReferencedIds()) {
-        findViewById(id).setOnClickListener(view -> displayReactions(DEFAULT_THRESHOLD));
+        findViewById(id).setOnClickListener(view -> {
+          extended = false;
+          displayReactions(DEFAULT_THRESHOLD);
+        });
       }
     } else {
       showLess.setVisibility(GONE);
