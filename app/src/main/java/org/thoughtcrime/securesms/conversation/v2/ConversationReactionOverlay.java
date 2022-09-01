@@ -212,7 +212,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
     float itemX = isMessageOnLeft ? scrubberHorizontalMargin :
             selectedConversationModel.getBubbleX() - conversationItem.getWidth() + selectedConversationModel.getBubbleWidth();
     conversationItem.setX(itemX);
-    conversationItem.setY(selectedConversationModel.getItemY() + selectedConversationModel.getBubbleY() - statusBarHeight);
+    conversationItem.setY(selectedConversationModel.getBubbleY() - statusBarHeight);
 
     Bitmap  conversationItemSnapshot = selectedConversationModel.getBitmap();
     boolean isWideLayout             = contextMenu.getMaxWidth() + scrubberWidth < getWidth();
@@ -256,7 +256,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
       boolean everythingFitsVertically = contextMenu.getMaxHeight() + conversationItemSnapshot.getHeight() + menuPadding + spaceForReactionBar < overlayHeight;
 
       if (everythingFitsVertically) {
-        float   bubbleBottom      = selectedConversationModel.getItemY() + selectedConversationModel.getBubbleY() + conversationItemSnapshot.getHeight();
+        float   bubbleBottom      = selectedConversationModel.getBubbleY() + conversationItemSnapshot.getHeight();
         boolean menuFitsBelowItem = bubbleBottom + menuPadding + contextMenu.getMaxHeight() <= overlayHeight + statusBarHeight;
 
         if (menuFitsBelowItem) {
@@ -294,7 +294,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
         boolean fitsVertically = menuHeight + conversationItem.getHeight() + menuPadding * 2 + reactionBarHeight + reactionBarTopPadding < overlayHeight;
 
         if (fitsVertically) {
-          float   bubbleBottom      = selectedConversationModel.getItemY() + selectedConversationModel.getBubbleY() + conversationItemSnapshot.getHeight();
+          float   bubbleBottom      = selectedConversationModel.getBubbleY() + conversationItemSnapshot.getHeight();
           boolean menuFitsBelowItem = bubbleBottom + menuPadding + menuHeight <= overlayHeight + statusBarHeight;
 
           if (menuFitsBelowItem) {
@@ -405,7 +405,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
 
   private void updateSystemUiOnShow(@NonNull Activity activity) {
     Window window   = activity.getWindow();
-    int    barColor = ContextCompat.getColor(getContext(), R.color.conversation_item_selected_system_ui);
+    int    barColor = ContextCompat.getColor(getContext(), R.color.reactions_screen_dark_shade_color);
 
     originalStatusBarColor = window.getStatusBarColor();
     WindowUtil.setStatusBarColor(window, barColor);
@@ -821,7 +821,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
 
     ObjectAnimator itemYAnim = new ObjectAnimator();
     itemYAnim.setProperty(View.Y);
-    itemYAnim.setFloatValues(selectedConversationModel.getItemY() + selectedConversationModel.getBubbleY() - statusBarHeight);
+    itemYAnim.setFloatValues(selectedConversationModel.getBubbleY() - statusBarHeight);
     itemYAnim.setTarget(conversationItem);
     itemYAnim.setDuration(duration);
     animators.add(itemYAnim);
