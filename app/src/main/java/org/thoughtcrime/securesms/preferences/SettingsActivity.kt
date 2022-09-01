@@ -39,6 +39,7 @@ import org.thoughtcrime.securesms.messagerequests.MessageRequestsActivity
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.permissions.Permissions
+import org.thoughtcrime.securesms.preferences.appearance.AppearanceSettingsActivity
 import org.thoughtcrime.securesms.profiles.ProfileMediaConstraints
 import org.thoughtcrime.securesms.util.BitmapDecodingException
 import org.thoughtcrime.securesms.util.BitmapUtil
@@ -93,6 +94,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             notificationsButton.setOnClickListener { showNotificationSettings() }
             messageRequestsButton.setOnClickListener { showMessageRequests() }
             chatsButton.setOnClickListener { showChatSettings() }
+            appearanceButton.setOnClickListener { showAppearanceSettings() }
             inviteFriendButton.setOnClickListener { sendInvitation() }
             helpButton.setOnClickListener { showHelp() }
             seedButton.setOnClickListener { showSeed() }
@@ -283,6 +285,11 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
     private fun showChatSettings() {
         val intent = Intent(this, ChatSettingsActivity::class.java)
+        push(intent)
+    }
+
+    private fun showAppearanceSettings() {
+        val intent = Intent(this, AppearanceSettingsActivity::class.java)
         push(intent)
     }
 
