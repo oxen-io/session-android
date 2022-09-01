@@ -85,7 +85,6 @@
     <color name="signal_button_primary_text_disabled">@color/transparent_white_20</color>
 
     <color name="signal_button_secondary">@color/core_grey_05</color>
-    <color name="signal_button_secondary_ripple">@color/core_grey_02</color>
     <color name="signal_button_secondary_text_disabled">@color/core_grey_25</color>
     <color name="signal_button_secondary_stroke">@color/core_grey_15</color>
 

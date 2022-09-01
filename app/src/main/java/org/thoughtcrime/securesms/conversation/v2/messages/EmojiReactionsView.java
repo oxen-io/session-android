@@ -111,8 +111,7 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
     Reaction reaction = (Reaction) v.getTag();
     int action = event.getAction();
     if (action == MotionEvent.ACTION_DOWN) onDown(new MessageId(reaction.messageId, reaction.isMms));
-    else if (action == MotionEvent.ACTION_MOVE) removeLongPresCallback();
-    else if (action == MotionEvent.ACTION_CANCEL) removeLongPresCallback();
+    else if (action == MotionEvent.ACTION_CANCEL) removeLongPressCallback();
     else if (action == MotionEvent.ACTION_UP) onUp(reaction);
     return true;
   }
@@ -258,7 +257,7 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
   }
 
   private void onDown(MessageId messageId) {
-    removeLongPresCallback();
+    removeLongPressCallback();
     Runnable newLongPressCallback = () -> {
       performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
       delegate.onReactionLongClicked(messageId);
@@ -268,7 +267,7 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
     onDownTimestamp = new Date().getTime();
   }
 
-  private void removeLongPresCallback() {
+  private void removeLongPressCallback() {
     if (longPressCallback != null) {
       gestureHandler.removeCallbacks(longPressCallback);
     }
@@ -276,7 +275,7 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
 
   private void onUp(Reaction reaction) {
     if ((new Date().getTime() - onDownTimestamp) < longPressDurationThreshold) {
-      removeLongPresCallback();
+      removeLongPressCallback();
       if (pressCallback != null) {
         gestureHandler.removeCallbacks(pressCallback);
         this.pressCallback = null;
@@ -337,7 +336,7 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
         return Long.compare(lhs.count, rhs.count);
       }
 
-      return Long.compare(lhs.lastSeen, rhs.lastSeen);
+      return Long.compare(lhs.sortIndex, rhs.sortIndex);
     }
   }
 }

@@ -74,9 +74,10 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
   private static final int lokiV35                          = 56;
   private static final int lokiV36                          = 57;
   private static final int lokiV37                          = 58;
+  private static final int lokiV38                          = 59;
 
   // Loki - onUpgrade(...) must be updated to use Loki version numbers if Signal makes any database changes
-  private static final int    DATABASE_VERSION = lokiV37;
+  private static final int    DATABASE_VERSION = lokiV38;
   private static final String DATABASE_NAME    = "signal.db";
 
   private final Context        context;
@@ -405,9 +406,12 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
         db.execSQL(MmsDatabase.CREATE_REACTIONS_UNREAD_COMMAND);
         db.execSQL(SmsDatabase.CREATE_REACTIONS_UNREAD_COMMAND);
         db.execSQL(MmsDatabase.CREATE_REACTIONS_LAST_SEEN_COMMAND);
-        db.execSQL(EmojiSearchDatabase.CREATE_EMOJI_SEARCH_TABLE_COMMAND);
         db.execSQL(ReactionDatabase.CREATE_REACTION_TABLE_COMMAND);
         executeStatements(db, ReactionDatabase.CREATE_REACTION_TRIGGERS);
+      }
+
+      if (oldVersion < lokiV38) {
+        db.execSQL(EmojiSearchDatabase.CREATE_EMOJI_SEARCH_TABLE_COMMAND);
       }
 
       db.setTransactionSuccessful();
