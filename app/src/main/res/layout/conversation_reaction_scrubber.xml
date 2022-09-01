@@ -16,10 +16,27 @@
         android:layout_gravity="left"
         tools:ignore="RtlHardcoded" />
 
-    <View
+    <LinearLayout
         android:id="@+id/conversation_item"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+         <View
+            android:id="@+id/conversation_item_bubble"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/conversation_item_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginHorizontal="@dimen/small_spacing"
+            android:maxLines="1"
+            android:textSize="11sp" />
+
+    </LinearLayout>
 
     <View
         android:id="@+id/conversation_reaction_scrubber_background"

@@ -1017,18 +1017,19 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         })
         val itemBounds = Rect()
         visibleMessageView.getGlobalVisibleRect(itemBounds)
+        val view = visibleMessageView.messageContentView
         val contentBounds = Rect()
-        visibleMessageView.messageContentView.getGlobalVisibleRect(contentBounds)
+        view.getGlobalVisibleRect(contentBounds)
         try {
             val selectedConversationModel = SelectedConversationModel(
-                visibleMessageView.messageContentView.drawToBitmap(),
+                view.drawToBitmap(),
                 itemBounds.left.toFloat(),
                 itemBounds.top.toFloat() + binding!!.conversationRecyclerView.translationY,
                 contentBounds.left.toFloat(),
                 contentBounds.top.toFloat(),
-                visibleMessageView.messageContentView.width,
+                view.width,
                 message.isOutgoing,
-                visibleMessageView.messageContentView
+                view
             )
             reactionDelegate.show(this, message, selectedConversationModel)
         } catch (e: Exception) {

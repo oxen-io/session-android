@@ -20,6 +20,8 @@ import android.view.Window;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,9 +45,11 @@ import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.database.model.ReactionRecord;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import org.thoughtcrime.securesms.util.AnimationCompleteListener;
+import org.thoughtcrime.securesms.util.DateUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import kotlin.Unit;
 import network.loki.messenger.R;
@@ -76,7 +80,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
   private int     originalNavigationBarColor;
 
   private View             dropdownAnchor;
-  private View             conversationItem;
+  private LinearLayout     conversationItem;
   private View             backgroundView;
   private ConstraintLayout foregroundView;
   private EmojiImageView[] emojiViews;
@@ -167,8 +171,13 @@ public final class ConversationReactionOverlay extends FrameLayout {
 
     Bitmap conversationItemSnapshot = selectedConversationModel.getBitmap();
 
-    conversationItem.setLayoutParams(new LayoutParams(conversationItemSnapshot.getWidth(), conversationItemSnapshot.getHeight()));
-    conversationItem.setBackground(new BitmapDrawable(getResources(), conversationItemSnapshot));
+    View conversationBubble = conversationItem.findViewById(R.id.conversation_item_bubble);
+    conversationBubble.setLayoutParams(new LinearLayout.LayoutParams(conversationItemSnapshot.getWidth(), conversationItemSnapshot.getHeight()));
+    conversationBubble.setBackground(new BitmapDrawable(getResources(), conversationItemSnapshot));
+    TextView conversationTimestamp = conversationItem.findViewById(R.id.conversation_item_timestamp);
+    conversationTimestamp.setText(DateUtils.getDisplayFormattedTimeSpanString(getContext(), Locale.getDefault(), messageRecord.getTimestamp()));
+
+    updateConversationTimestamp(messageRecord);
 
     boolean isMessageOnLeft = selectedConversationModel.isOutgoing() ^ ViewUtil.isLtr(this);
 
@@ -186,12 +195,23 @@ public final class ConversationReactionOverlay extends FrameLayout {
     });
   }
 
+  private void updateConversationTimestamp(MessageRecord message) {
+    View bubble = conversationItem.findViewById(R.id.conversation_item_bubble);
+    View timestamp = conversationItem.findViewById(R.id.conversation_item_timestamp);
+    conversationItem.removeAllViewsInLayout();
+    conversationItem.addView(message.isOutgoing() ? timestamp : bubble);
+    conversationItem.addView(message.isOutgoing() ? bubble : timestamp);
+    conversationItem.requestLayout();
+  }
+
   private void showAfterLayout(@NonNull MessageRecord messageRecord,
                                @NonNull PointF lastSeenDownPoint,
                                boolean isMessageOnLeft) {
     contextMenu = new ConversationContextMenu(dropdownAnchor, getMenuActionItems(messageRecord));
 
-    conversationItem.setX(selectedConversationModel.getItemX());
+    float itemX = isMessageOnLeft ? scrubberHorizontalMargin :
+            selectedConversationModel.getBubbleX() - conversationItem.getWidth() + selectedConversationModel.getBubbleWidth();
+    conversationItem.setX(itemX);
     conversationItem.setY(selectedConversationModel.getItemY() + selectedConversationModel.getBubbleY() - statusBarHeight);
 
     Bitmap  conversationItemSnapshot = selectedConversationModel.getBitmap();
@@ -200,7 +220,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
     int overlayHeight = getHeight() - bottomNavigationBarHeight;
     int bubbleWidth   = selectedConversationModel.getBubbleWidth();
 
-    float endX            = selectedConversationModel.getBubbleX();
+    float endX            = itemX;
     float endY            = conversationItem.getY();
     float endApparentTop  = endY;
     float endScale        = 1f;
