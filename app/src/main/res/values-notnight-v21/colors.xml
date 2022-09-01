@@ -51,7 +51,6 @@
     <color name="reactions_pill_selected_text_color">@color/core_grey_75</color>
     <color name="reactions_screen_dark_shade_color">@color/transparent_black_70</color>
     <color name="reactions_screen_light_shade_color">@color/transparent_white_87</color>
-    <color name="reactions_status_bar_shade">#4d4d4d</color>
 
     <color name="signal_background_primary">@color/core_white</color>
     <color name="signal_background_secondary">@color/core_grey_05</color>

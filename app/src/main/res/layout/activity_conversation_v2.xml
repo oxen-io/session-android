@@ -60,7 +60,8 @@
         android:layout_height="match_parent"
         android:background="@color/reactions_screen_light_shade_color"
         android:foreground="@color/reactions_screen_dark_shade_color"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
     <ViewStub
         android:id="@+id/conversation_reaction_scrubber_stub"

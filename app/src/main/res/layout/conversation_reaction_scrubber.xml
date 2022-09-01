@@ -38,17 +38,6 @@
         android:clipToPadding="false"
         android:elevation="4dp">
 
-        <View
-            android:id="@+id/conversation_reaction_current_selection_indicator"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
-            android:alpha="0"
-            android:background="@drawable/reactions_old_background"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="@id/reaction_3"
-            app:layout_constraintRight_toRightOf="@id/reaction_3"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <org.thoughtcrime.securesms.components.emoji.EmojiImageView
             android:id="@+id/reaction_1"
             android:layout_width="32dp"
@@ -61,7 +50,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:alpha="1"
-            tools:translationY="0dp" />
+            tools:translationY="0dp"
+            tools:src="@drawable/ic_outline_disabled_by_default_24" />
 
         <org.thoughtcrime.securesms.components.emoji.EmojiImageView
             android:id="@+id/reaction_2"
@@ -75,7 +65,8 @@
             app:layout_constraintStart_toEndOf="@id/reaction_1"
             app:layout_constraintTop_toTopOf="parent"
             tools:alpha="1"
-            tools:translationY="0dp" />
+            tools:translationY="0dp"
+            tools:src="@drawable/ic_outline_disabled_by_default_24" />
 
         <org.thoughtcrime.securesms.components.emoji.EmojiImageView
             android:id="@+id/reaction_3"
@@ -89,7 +80,8 @@
             app:layout_constraintStart_toEndOf="@id/reaction_2"
             app:layout_constraintTop_toTopOf="parent"
             tools:alpha="1"
-            tools:translationY="0dp" />
+            tools:translationY="0dp"
+            tools:src="@drawable/ic_outline_disabled_by_default_24" />
 
         <org.thoughtcrime.securesms.components.emoji.EmojiImageView
             android:id="@+id/reaction_4"
@@ -103,7 +95,8 @@
             app:layout_constraintStart_toEndOf="@id/reaction_3"
             app:layout_constraintTop_toTopOf="parent"
             tools:alpha="1"
-            tools:translationY="0dp" />
+            tools:translationY="0dp"
+            tools:src="@drawable/ic_outline_disabled_by_default_24" />
 
         <org.thoughtcrime.securesms.components.emoji.EmojiImageView
             android:id="@+id/reaction_5"
@@ -117,7 +110,8 @@
             app:layout_constraintStart_toEndOf="@id/reaction_4"
             app:layout_constraintTop_toTopOf="parent"
             tools:alpha="1"
-            tools:translationY="0dp" />
+            tools:translationY="0dp"
+            tools:src="@drawable/ic_outline_disabled_by_default_24" />
 
         <org.thoughtcrime.securesms.components.emoji.EmojiImageView
             android:id="@+id/reaction_6"
@@ -131,7 +125,8 @@
             app:layout_constraintStart_toEndOf="@id/reaction_5"
             app:layout_constraintTop_toTopOf="parent"
             tools:alpha="1"
-            tools:translationY="0dp" />
+            tools:translationY="0dp"
+            tools:src="@drawable/ic_outline_disabled_by_default_24" />
 
         <View
             android:id="@+id/reaction_7_background"
@@ -156,7 +151,8 @@
             app:layout_constraintStart_toEndOf="@id/reaction_6"
             app:layout_constraintTop_toTopOf="parent"
             tools:alpha="1"
-            tools:translationY="0dp" />
+            tools:translationY="0dp"
+            tools:src="@drawable/ic_plus" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </org.thoughtcrime.securesms.conversation.v2.ConversationReactionOverlay>

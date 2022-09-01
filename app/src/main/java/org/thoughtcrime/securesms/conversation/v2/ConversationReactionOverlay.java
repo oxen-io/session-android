@@ -79,7 +79,6 @@ public final class ConversationReactionOverlay extends FrameLayout {
   private View             conversationItem;
   private View             backgroundView;
   private ConstraintLayout foregroundView;
-  private View             selectedView;
   private EmojiImageView[] emojiViews;
 
   private ConversationContextMenu contextMenu;
@@ -116,7 +115,6 @@ public final class ConversationReactionOverlay extends FrameLayout {
     conversationItem = findViewById(R.id.conversation_item);
     backgroundView   = findViewById(R.id.conversation_reaction_scrubber_background);
     foregroundView   = findViewById(R.id.conversation_reaction_scrubber_foreground);
-    selectedView     = findViewById(R.id.conversation_reaction_current_selection_indicator);
 
     emojiViews = new EmojiImageView[] { findViewById(R.id.reaction_1),
             findViewById(R.id.reaction_2),
@@ -193,7 +191,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
                                boolean isMessageOnLeft) {
     contextMenu = new ConversationContextMenu(dropdownAnchor, getMenuActionItems(messageRecord));
 
-    conversationItem.setX(selectedConversationModel.getBubbleX());
+    conversationItem.setX(selectedConversationModel.getItemX());
     conversationItem.setY(selectedConversationModel.getItemY() + selectedConversationModel.getBubbleY() - statusBarHeight);
 
     Bitmap  conversationItemSnapshot = selectedConversationModel.getBitmap();
@@ -333,7 +331,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
       float offsetX       = isMessageOnLeft ? scrubberRight + menuPadding : scrubberX - contextMenu.getMaxWidth() - menuPadding;
       contextMenu.show((int) offsetX, (int) Math.min(backgroundView.getY(), overlayHeight - contextMenu.getMaxHeight()));
     } else {
-      float contentX = selectedConversationModel.getBubbleX();
+      float contentX = isMessageOnLeft ? scrubberHorizontalMargin : selectedConversationModel.getBubbleX();
       float offsetX  = isMessageOnLeft ? contentX : -contextMenu.getMaxWidth() + contentX + bubbleWidth;
 
       float menuTop = endApparentTop + (conversationItemSnapshot.getHeight() * endScale);
@@ -543,11 +541,6 @@ public final class ConversationReactionOverlay extends FrameLayout {
 
   private void setupSelectedEmoji() {
     final List<String> emojis   = recentEmojiPageModel.getEmoji();
-    final String       oldEmoji = getOldEmoji(messageRecord);
-
-    if (oldEmoji == null) {
-      selectedView.setVisibility(View.GONE);
-    }
 
     for (int i = 0; i < emojiViews.length; i++) {
       final EmojiImageView view = emojiViews[i];
@@ -749,12 +742,6 @@ public final class ConversationReactionOverlay extends FrameLayout {
     backgroundRevealAnim.setStartDelay(revealOffset);
     reveals.add(backgroundRevealAnim);
 
-    Animator selectedRevealAnim = AnimatorInflaterCompat.loadAnimator(getContext(), android.R.animator.fade_in);
-    selectedRevealAnim.setTarget(selectedView);
-    backgroundRevealAnim.setDuration(revealDuration);
-    backgroundRevealAnim.setStartDelay(revealOffset);
-    reveals.add(selectedRevealAnim);
-
     revealAnimatorSet.setInterpolator(INTERPOLATOR);
     revealAnimatorSet.playTogether(reveals);
   }
@@ -790,11 +777,6 @@ public final class ConversationReactionOverlay extends FrameLayout {
     backgroundHideAnim.setTarget(backgroundView);
     backgroundHideAnim.setDuration(duration);
     animators.add(backgroundHideAnim);
-
-    Animator selectedHideAnim = AnimatorInflaterCompat.loadAnimator(getContext(), android.R.animator.fade_out);
-    selectedHideAnim.setTarget(selectedView);
-    selectedHideAnim.setDuration(duration);
-    animators.add(selectedHideAnim);
 
     ObjectAnimator itemScaleXAnim = new ObjectAnimator();
     itemScaleXAnim.setProperty(View.SCALE_X);
