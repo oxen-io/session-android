@@ -1039,55 +1039,54 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     override fun onReactionSelected(messageRecord: MessageRecord, emoji: String) {
         reactionDelegate.hide()
         val oldRecord = messageRecord.reactions.find { it.author == textSecurePreferences.getLocalNumber() }
-        val messageId = MessageId(messageRecord.id, messageRecord.isMms)
         if (oldRecord != null && oldRecord.emoji == emoji) {
-            sendEmojiRemoval(emoji, messageId, messageRecord.timestamp)
+            sendEmojiRemoval(emoji, messageRecord)
         } else {
-            sendEmojiReaction(emoji, messageId, messageRecord.timestamp)
+            sendEmojiReaction(emoji, messageRecord)
         }
     }
 
-    private fun sendEmojiReaction(emoji: String, messageId: MessageId, messageTimestamp: Long) {
+    private fun sendEmojiReaction(emoji: String, originalMessage: MessageRecord) {
         // Create the message
         val recipient = viewModel.recipient ?: return
-        val message = VisibleMessage()
+        val reactionMessage = VisibleMessage()
         val emojiTimestamp = System.currentTimeMillis()
-        message.sentTimestamp = emojiTimestamp
+        reactionMessage.sentTimestamp = emojiTimestamp
         val author = textSecurePreferences.getLocalNumber()!!
         // Put the message in the database
         val reaction = ReactionRecord(
-            messageId = messageId.id,
-            isMms = messageId.mms,
+            messageId = originalMessage.id,
+            isMms = originalMessage.isMms,
             author = author,
             emoji = emoji,
             count = 1,
             dateSent = emojiTimestamp,
             dateReceived = emojiTimestamp
         )
-        reactionDb.addReaction(messageId, reaction)
+        reactionDb.addReaction(MessageId(originalMessage.id, originalMessage.isMms), reaction)
         // Send it
-        message.reaction = Reaction.from(messageTimestamp, author, emoji, true)
+        reactionMessage.reaction = Reaction.from(originalMessage.timestamp, originalMessage.recipient.address.serialize(), emoji, true)
         if (recipient.isOpenGroupRecipient) {
-            val messageServerId = lokiMessageDb.getServerID(messageId.id, !messageId.mms) ?: return
+            val messageServerId = lokiMessageDb.getServerID(originalMessage.id, !originalMessage.isMms) ?: return
             viewModel.openGroup?.let {
                 OpenGroupApi.addReaction(it.room, it.server, messageServerId, emoji)
             }
         } else {
-            MessageSender.send(message, recipient.address)
+            MessageSender.send(reactionMessage, recipient.address)
         }
         LoaderManager.getInstance(this).restartLoader(0, null, this)
     }
 
-    private fun sendEmojiRemoval(emoji: String, messageId: MessageId, messageTimestamp: Long) {
+    private fun sendEmojiRemoval(emoji: String, originalMessage: MessageRecord) {
         val recipient = viewModel.recipient ?: return
         val message = VisibleMessage()
         val emojiTimestamp = System.currentTimeMillis()
         message.sentTimestamp = emojiTimestamp
         val author = textSecurePreferences.getLocalNumber()!!
-        reactionDb.deleteReaction(emoji, messageId, author)
-        message.reaction = Reaction.from(messageTimestamp, author, emoji, false)
+        reactionDb.deleteReaction(emoji, MessageId(originalMessage.id, originalMessage.isMms), author)
+        message.reaction = Reaction.from(originalMessage.timestamp, author, emoji, false)
         if (recipient.isOpenGroupRecipient) {
-            val messageServerId = lokiMessageDb.getServerID(messageId.id, !messageId.mms) ?: return
+            val messageServerId = lokiMessageDb.getServerID(originalMessage.id, !originalMessage.isMms) ?: return
             viewModel.openGroup?.let {
                 OpenGroupApi.deleteReaction(it.room, it.server, messageServerId, emoji)
             }
@@ -1102,7 +1101,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
         if (oldRecord != null && hasAddedCustomEmoji) {
             reactionDelegate.hide()
-            sendEmojiRemoval(oldRecord.emoji, MessageId(messageRecord.id, messageRecord.isMms), messageRecord.timestamp)
+            sendEmojiRemoval(oldRecord.emoji, messageRecord)
         } else {
             reactionDelegate.hideForReactWithAny()
 
@@ -1116,18 +1115,28 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         reactionDelegate.hide()
     }
 
-    override fun onReactWithAnyEmojiSelected(emoji: String, messageId: MessageId, timestamp: Long) {
+    override fun onReactWithAnyEmojiSelected(emoji: String, messageId: MessageId) {
         reactionDelegate.hide()
+        val message = if (messageId.mms) {
+            mmsDb.getMessageRecord(messageId.id)
+        } else {
+            smsDb.getMessageRecord(messageId.id)
+        }
         val oldRecord = reactionDb.getReactions(messageId).find { it.author == textSecurePreferences.getLocalNumber() }
         if (oldRecord?.emoji == emoji) {
-            sendEmojiRemoval(emoji, messageId, timestamp)
+            sendEmojiRemoval(emoji, message)
         } else {
-            sendEmojiReaction(emoji, messageId, timestamp)
+            sendEmojiReaction(emoji, message)
         }
     }
 
-    override fun onRemoveReaction(emoji: String, messageId: MessageId, timestamp: Long) {
-        sendEmojiRemoval(emoji, messageId, timestamp)
+    override fun onRemoveReaction(emoji: String, messageId: MessageId) {
+        val message = if (messageId.mms) {
+            mmsDb.getMessageRecord(messageId.id)
+        } else {
+            smsDb.getMessageRecord(messageId.id)
+        }
+        sendEmojiRemoval(emoji, message)
     }
 
     override fun onClearAll(emoji: String, messageId: MessageId) {
@@ -1222,15 +1231,15 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun onReactionClicked(emoji: String, messageId: MessageId, userWasSender: Boolean) {
-        val timestamp = if (messageId.mms) {
-            mmsDb.getMessageRecord(messageId.id).timestamp
+        val message = if (messageId.mms) {
+            mmsDb.getMessageRecord(messageId.id)
         } else {
-            smsDb.getMessageRecord(messageId.id).timestamp
+            smsDb.getMessageRecord(messageId.id)
         }
         if (userWasSender) {
-            sendEmojiRemoval(emoji, messageId, timestamp)
+            sendEmojiRemoval(emoji, message)
         } else {
-            sendEmojiReaction(emoji, messageId, timestamp)
+            sendEmojiReaction(emoji, message)
         }
     }
 

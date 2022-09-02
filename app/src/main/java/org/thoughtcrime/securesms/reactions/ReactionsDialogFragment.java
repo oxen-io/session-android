@@ -180,7 +180,7 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment imp
 
   @Override
   public void onRemoveReaction(@NonNull String emoji, @NonNull MessageId messageId, long timestamp) {
-    callback.onRemoveReaction(emoji, messageId, timestamp);
+    callback.onRemoveReaction(emoji, messageId);
     dismiss();
   }
 
@@ -191,7 +191,7 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment imp
   }
 
   public interface Callback {
-    void onRemoveReaction(@NonNull String emoji, @NonNull MessageId messageId, long timestamp);
+    void onRemoveReaction(@NonNull String emoji, @NonNull MessageId messageId);
 
     void onClearAll(@NonNull String emoji, @NonNull MessageId messageId);
   }

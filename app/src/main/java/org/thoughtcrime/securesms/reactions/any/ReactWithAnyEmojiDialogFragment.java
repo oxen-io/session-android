@@ -43,7 +43,6 @@ public final class ReactWithAnyEmojiDialogFragment extends BottomSheetDialogFrag
 {
 
   private static final String ARG_MESSAGE_ID = "arg_message_id";
-  private static final String ARG_TIMESTAMP = "arg_message_timestamp";
   private static final String ARG_IS_MMS     = "arg_is_mms";
   private static final String ARG_START_PAGE = "arg_start_page";
   private static final String ARG_SHADOWS    = "arg_shadows";
@@ -60,7 +59,6 @@ public final class ReactWithAnyEmojiDialogFragment extends BottomSheetDialogFrag
     Bundle         args     = new Bundle();
 
     args.putLong(ARG_MESSAGE_ID, messageRecord.getId());
-    args.putLong(ARG_TIMESTAMP, messageRecord.getTimestamp());
     args.putBoolean(ARG_IS_MMS, messageRecord.isMms());
     args.putInt(ARG_START_PAGE, startingPage);
     fragment.setArguments(args);
@@ -182,7 +180,7 @@ public final class ReactWithAnyEmojiDialogFragment extends BottomSheetDialogFrag
     viewModel.onEmojiSelected(emoji);
     Bundle    args      = requireArguments();
     MessageId messageId = new MessageId(args.getLong(ARG_MESSAGE_ID), args.getBoolean(ARG_IS_MMS));
-    callback.onReactWithAnyEmojiSelected(emoji, messageId, args.getLong(ARG_TIMESTAMP));
+    callback.onReactWithAnyEmojiSelected(emoji, messageId);
     dismiss();
   }
 
@@ -196,7 +194,7 @@ public final class ReactWithAnyEmojiDialogFragment extends BottomSheetDialogFrag
   public interface Callback {
     void onReactWithAnyEmojiDialogDismissed();
 
-    void onReactWithAnyEmojiSelected(@NonNull String emoji, MessageId messageId, long timestamp);
+    void onReactWithAnyEmojiSelected(@NonNull String emoji, MessageId messageId);
   }
 
   private class SearchCallbacks implements KeyboardPageSearchView.Callbacks {
