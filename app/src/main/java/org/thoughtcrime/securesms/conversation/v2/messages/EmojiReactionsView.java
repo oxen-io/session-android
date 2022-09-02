@@ -331,8 +331,11 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
     @Override
     public int compareTo(Reaction rhs) {
       Reaction lhs = this;
-
-      return Long.compare(lhs.sortIndex, rhs.sortIndex);
+      if (lhs.count == rhs.count ) {
+        return Long.compare(lhs.sortIndex, rhs.sortIndex);
+      } else {
+        return Long.compare(lhs.count, rhs.count);
+      }
     }
   }
 }
