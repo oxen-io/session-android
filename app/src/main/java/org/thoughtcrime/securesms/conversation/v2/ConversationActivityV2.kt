@@ -34,7 +34,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.DimenRes
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -74,7 +73,6 @@ import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.MediaTypes
 import org.session.libsession.utilities.Stub
 import org.session.libsession.utilities.TextSecurePreferences
-import org.session.libsession.utilities.ThemeUtil
 import org.session.libsession.utilities.concurrent.SimpleTask
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.recipients.RecipientModifiedListener
@@ -994,6 +992,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun showEmojiPicker(message: MessageRecord, visibleMessageView: VisibleMessageView) {
+        val messageContentBitmap = try {
+            visibleMessageView.messageContentView.drawToBitmap()
+        } catch (e: Exception) {
+            Log.e("Loki", "Failed to show emoji picker", e)
+            return
+        }
         ViewUtil.hideKeyboard(this, visibleMessageView);
         binding?.reactionsShade?.isVisible = true
         showOrHidScrollToBottomButton(false)
@@ -1015,27 +1019,17 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             }
 
         })
-        val itemBounds = Rect()
-        visibleMessageView.getGlobalVisibleRect(itemBounds)
-        val view = visibleMessageView.messageContentView
         val contentBounds = Rect()
-        view.getGlobalVisibleRect(contentBounds)
-        try {
-            val selectedConversationModel = SelectedConversationModel(
-                view.drawToBitmap(),
-                itemBounds.left.toFloat(),
-                itemBounds.top.toFloat() + binding!!.conversationRecyclerView.translationY,
-                contentBounds.left.toFloat(),
-                contentBounds.top.toFloat(),
-                view.width,
-                message.isOutgoing,
-                view
-            )
-            reactionDelegate.show(this, message, selectedConversationModel)
-        } catch (e: Exception) {
-            reactionDelegate.hide()
-            Log.e("Loki", "Failed to show emoji picker", e)
-        }
+        visibleMessageView.messageContentView.getGlobalVisibleRect(contentBounds)
+        val selectedConversationModel = SelectedConversationModel(
+            messageContentBitmap,
+            contentBounds.left.toFloat(),
+            contentBounds.top.toFloat(),
+            visibleMessageView.messageContentView.width,
+            message.isOutgoing,
+            visibleMessageView.messageContentView
+        )
+        reactionDelegate.show(this, message, selectedConversationModel)
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {

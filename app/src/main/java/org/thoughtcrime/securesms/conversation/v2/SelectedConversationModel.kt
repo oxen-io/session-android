@@ -9,8 +9,6 @@ import android.view.View
  */
 data class SelectedConversationModel(
   val bitmap: Bitmap,
-  val itemX: Float,
-  val itemY: Float,
   val bubbleX: Float,
   val bubbleY: Float,
   val bubbleWidth: Int,

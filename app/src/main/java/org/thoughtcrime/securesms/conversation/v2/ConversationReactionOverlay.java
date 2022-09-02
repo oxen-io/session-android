@@ -6,12 +6,10 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
@@ -94,7 +92,6 @@ public final class ConversationReactionOverlay extends FrameLayout {
   private int   scrubberHorizontalMargin;
   private int   animationEmojiStartDelayFactor;
   private int   statusBarHeight;
-  private int   bottomNavigationBarHeight;
 
   private OnReactionSelectedListener       onReactionSelectedListener;
   private OnActionSelectedListener         onActionSelectedListener;
@@ -162,13 +159,6 @@ public final class ConversationReactionOverlay extends FrameLayout {
     View statusBarBackground = activity.findViewById(android.R.id.statusBarBackground);
     statusBarHeight = statusBarBackground == null ? 0 : statusBarBackground.getHeight();
 
-    View navigationBarBackground = activity.findViewById(android.R.id.navigationBarBackground);
-    bottomNavigationBarHeight = navigationBarBackground == null ? 0 : navigationBarBackground.getHeight();
-
-    if (zeroNavigationBarHeightForConfiguration()) {
-      bottomNavigationBarHeight = 0;
-    }
-
     Bitmap conversationItemSnapshot = selectedConversationModel.getBitmap();
 
     View conversationBubble = conversationItem.findViewById(R.id.conversation_item_bubble);
@@ -217,7 +207,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
     Bitmap  conversationItemSnapshot = selectedConversationModel.getBitmap();
     boolean isWideLayout             = contextMenu.getMaxWidth() + scrubberWidth < getWidth();
 
-    int overlayHeight = getHeight() - bottomNavigationBarHeight;
+    int overlayHeight = getHeight();
     int bubbleWidth   = selectedConversationModel.getBubbleWidth();
 
     float endX            = itemX;
@@ -252,7 +242,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
       }
     } else {
       float   reactionBarOffset        = DimensionUnit.DP.toPixels(48);
-      float   spaceForReactionBar      = Math.max(reactionBarHeight + reactionBarOffset - conversationItemSnapshot.getHeight(), 0);
+      float   spaceForReactionBar      = Math.max(reactionBarHeight + reactionBarOffset, 0);
       boolean everythingFitsVertically = contextMenu.getMaxHeight() + conversationItemSnapshot.getHeight() + menuPadding + spaceForReactionBar < overlayHeight;
 
       if (everythingFitsVertically) {
@@ -264,7 +254,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
             endY = 0;
           }
           float contextMenuTop = endY + conversationItemSnapshot.getHeight();
-          reactionBarBackgroundY = getReactionBarOffsetForTouch(lastSeenDownPoint, contextMenuTop, menuPadding, reactionBarOffset, reactionBarHeight, reactionBarTopPadding, endY);
+          reactionBarBackgroundY = getReactionBarOffsetForTouch(selectedConversationModel.getBubbleY(), contextMenuTop, menuPadding, reactionBarOffset, reactionBarHeight, reactionBarTopPadding, endY);
 
           if (reactionBarBackgroundY <= reactionBarTopPadding) {
             endY = backgroundView.getHeight() + menuPadding + reactionBarTopPadding;
@@ -273,7 +263,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
           endY = overlayHeight - contextMenu.getMaxHeight() - menuPadding - conversationItemSnapshot.getHeight();
 
           float contextMenuTop = endY + conversationItemSnapshot.getHeight();
-          reactionBarBackgroundY = getReactionBarOffsetForTouch(lastSeenDownPoint, contextMenuTop, menuPadding, reactionBarOffset, reactionBarHeight, reactionBarTopPadding, endY);
+          reactionBarBackgroundY = getReactionBarOffsetForTouch(selectedConversationModel.getBubbleY(), contextMenuTop, menuPadding, reactionBarOffset, reactionBarHeight, reactionBarTopPadding, endY);
         }
 
         endApparentTop = endY;
@@ -285,7 +275,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
         endY     = spaceForReactionBar - Util.halfOffsetFromScale(conversationItemSnapshot.getHeight(), endScale);
 
         float contextMenuTop = endY + (conversationItemSnapshot.getHeight() * endScale);
-        reactionBarBackgroundY = getReactionBarOffsetForTouch(lastSeenDownPoint, contextMenuTop + Util.halfOffsetFromScale(conversationItemSnapshot.getHeight(), endScale), menuPadding, reactionBarOffset, reactionBarHeight, reactionBarTopPadding, endY);
+        reactionBarBackgroundY = reactionBarTopPadding;//getReactionBarOffsetForTouch(selectedConversationModel.getBubbleY(), contextMenuTop + Util.halfOffsetFromScale(conversationItemSnapshot.getHeight(), endScale), menuPadding, reactionBarOffset, reactionBarHeight, reactionBarTopPadding, endY);
         endApparentTop         = endY + Util.halfOffsetFromScale(conversationItemSnapshot.getHeight(), endScale);
       } else {
         contextMenu.setHeight(contextMenu.getMaxHeight() / 2);
@@ -368,7 +358,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
             .setDuration(revealDuration);
   }
 
-  private float getReactionBarOffsetForTouch(@NonNull PointF touchPoint,
+  private float getReactionBarOffsetForTouch(float itemY,
                                              float contextMenuTop,
                                              float contextMenuPadding,
                                              float reactionBarOffset,
@@ -376,7 +366,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
                                              float spaceNeededBetweenTopOfScreenAndTopOfReactionBar,
                                              float messageTop)
   {
-    float adjustedTouchY        = touchPoint.y - statusBarHeight;
+    float adjustedTouchY        = itemY - statusBarHeight;
     float reactionStartingPoint = Math.min(adjustedTouchY, contextMenuTop);
 
     float spaceBetweenTopOfMessageAndTopOfContextMenu = Math.abs(messageTop - contextMenuTop);
@@ -387,20 +377,6 @@ public final class ConversationReactionOverlay extends FrameLayout {
     }
 
     return Math.max(reactionStartingPoint - reactionBarOffset - reactionBarHeight, spaceNeededBetweenTopOfScreenAndTopOfReactionBar);
-  }
-
-  /**
-   * Returns true when the device is in a configuration where the navigation bar doesn't take up
-   * space at the bottom of the screen.
-   */
-  private boolean zeroNavigationBarHeightForConfiguration() {
-    boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-
-    if (Build.VERSION.SDK_INT >= 29) {
-      return getRootWindowInsets().getSystemGestureInsets().bottom == 0 && isLandscape;
-    } else {
-      return isLandscape;
-    }
   }
 
   private void updateSystemUiOnShow(@NonNull Activity activity) {
