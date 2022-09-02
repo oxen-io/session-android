@@ -86,7 +86,6 @@ class VisibleMessageView : LinearLayout {
     var onPress: ((event: MotionEvent) -> Unit)? = null
     var onSwipeToReply: (() -> Unit)? = null
     var onLongPress: (() -> Unit)? = null
-    var delegate: VisibleMessageViewDelegate? = null
     val messageContentView: VisibleMessageContentView by lazy { binding.messageContentView }
 
     companion object {
@@ -115,8 +114,15 @@ class VisibleMessageView : LinearLayout {
     // endregion
 
     // region Updating
-    fun bind(message: MessageRecord, previous: MessageRecord?, next: MessageRecord?,
-             glide: GlideRequests, searchQuery: String?, contact: Contact?, senderSessionID: String,
+    fun bind(
+        message: MessageRecord,
+        previous: MessageRecord?,
+        next: MessageRecord?,
+        glide: GlideRequests,
+        searchQuery: String?,
+        contact: Contact?,
+        senderSessionID: String,
+        delegate: VisibleMessageViewDelegate?,
     ) {
         val threadID = message.threadId
         val thread = threadDb.getRecipientForThreadId(threadID) ?: return
@@ -210,8 +216,8 @@ class VisibleMessageView : LinearLayout {
         if (message.reactions.isNotEmpty() &&
             (capabilities.isNullOrEmpty() || capabilities.contains(OpenGroupApi.Capability.REACTIONS.name.lowercase()))
         ) {
-            binding.emojiReactionsView.isVisible = true
             binding.emojiReactionsView.setReactions(message.id, message.reactions, message.isOutgoing, delegate)
+            binding.emojiReactionsView.isVisible = true
         } else {
             binding.emojiReactionsView.isVisible = false
         }

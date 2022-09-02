@@ -260,7 +260,9 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
     removeLongPressCallback();
     Runnable newLongPressCallback = () -> {
       performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-      delegate.onReactionLongClicked(messageId);
+      if (delegate != null) {
+        delegate.onReactionLongClicked(messageId);
+      }
     };
     this.longPressCallback = newLongPressCallback;
     gestureHandler.postDelayed(newLongPressCallback, longPressDurationThreshold);
