@@ -95,6 +95,11 @@
     <attr name="dialog_background_color" format="reference|color" />
     <attr name="sessionLogoTint" format="reference|color" />
 
+    <attr name="theme_preview_incoming" format="reference|color"/>
+    <attr name="theme_preview_outgoing" format="reference|color"/>
+    <attr name="theme_preview_background" format="reference|color"/>
+    <attr name="theme_preview_border" format="reference|color"/>
+
     <attr name="conversation_icon_attach_audio" format="reference"/>
     <attr name="conversation_icon_attach_video" format="reference" />
 

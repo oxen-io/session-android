@@ -1,18 +1,259 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textColor="?android:textColorTertiary"
+            android:padding="@dimen/large_spacing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_appearance_themes_category"/>
+
+        <include layout="@layout/preference_divider"/>
+        <LinearLayout
+            android:id="@+id/theme_option_classic_dark"
+            android:background="?colorCellBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/large_spacing"
+            android:paddingVertical="@dimen/small_spacing"
+            android:orientation="horizontal">
+            <ImageView
+                android:theme="@style/Classic.Dark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_themepreview"/>
+            <TextView
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                android:lines="1"
+                android:text="@string/classic_dark_theme_name"
+                android:padding="@dimen/medium_spacing"
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+            <RadioButton
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/small_spacing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <include layout="@layout/preference_divider"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?colorCellBackground"
+            android:paddingHorizontal="@dimen/large_spacing"
+            android:paddingVertical="@dimen/small_spacing"
+            android:orientation="horizontal">
+            <ImageView
+                android:theme="@style/Classic.Light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_themepreview"/>
+            <TextView
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                android:lines="1"
+                android:text="@string/classic_light_theme_name"
+                android:padding="@dimen/medium_spacing"
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+            <RadioButton
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/small_spacing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <include layout="@layout/preference_divider"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?colorCellBackground"
+            android:paddingHorizontal="@dimen/large_spacing"
+            android:paddingVertical="@dimen/small_spacing"
+            android:orientation="horizontal">
+            <ImageView
+                android:theme="@style/Ocean.Dark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_themepreview"/>
+            <TextView
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                android:lines="1"
+                android:text="@string/ocean_dark_theme_name"
+                android:padding="@dimen/medium_spacing"
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+            <RadioButton
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/small_spacing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <include layout="@layout/preference_divider"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?colorCellBackground"
+            android:paddingHorizontal="@dimen/large_spacing"
+            android:paddingVertical="@dimen/small_spacing"
+            android:orientation="horizontal">
+            <ImageView
+                android:theme="@style/Ocean.Light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_themepreview"/>
+            <TextView
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                android:lines="1"
+                android:text="@string/ocean_light_theme_name"
+                android:padding="@dimen/medium_spacing"
+                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
+            <RadioButton
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/small_spacing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <include layout="@layout/preference_divider"/>
+
+        <TextView
+            android:textColor="?android:textColorTertiary"
+            android:paddingHorizontal="@dimen/large_spacing"
+            android:paddingTop="@dimen/large_spacing"
+            android:paddingBottom="@dimen/small_spacing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_appearance_primary_color_category"/>
+
+        <include layout="@layout/preference_divider"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?colorCellBackground"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_marginTop="@dimen/medium_spacing"
+                android:background="@drawable/fake_chat_view_incoming_message_background"
+                android:padding="12dp"
+                android:layout_marginHorizontal="@dimen/very_large_spacing"
+                android:layout_gravity="start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?message_received_text_color"
+                    android:text="How are you?"
+                    android:gravity="center"
+                    android:drawablePadding="12dp"
+                    app:drawableLeftCompat="@drawable/quote_accent_line"
+                    tools:ignore="HardcodedText" />
+                <TextView
+                    android:layout_marginTop="4dp"
+                    android:text="I'm good thanks, you?"
+                    android:textColor="?message_received_text_color"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginVertical="@dimen/medium_spacing"
+                android:background="@drawable/fake_chat_view_outgoing_message_background"
+                android:padding="12dp"
+                android:layout_marginHorizontal="@dimen/very_large_spacing"
+                android:layout_gravity="end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:text="I'm doing great, thanks."
+                    android:textColor="?message_sent_text_color"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+        </LinearLayout>
+        <include layout="@layout/preference_divider"/>
+
+        <LinearLayout
+            android:id="@+id/accent_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginVertical="@dimen/medium_spacing"
+            android:layout_marginHorizontal="@dimen/large_spacing">
+            <View
+                android:id="@+id/accent_green"
+                android:background="@drawable/padded_circle_tintable"
+                android:backgroundTint="@color/accent_green"
+                android:foreground="@drawable/radial_select"
+                android:layout_width="34dp"
+                android:layout_height="34dp"/>
+            <View
+                android:id="@+id/accent_blue"
+                android:background="@drawable/padded_circle_tintable"
+                android:backgroundTint="@color/accent_blue"
+                android:foreground="@drawable/radial_select"
+                android:layout_width="34dp"
+                android:layout_height="34dp"/>
+            <View
+                android:id="@+id/accent_yellow"
+                android:background="@drawable/padded_circle_tintable"
+                android:backgroundTint="@color/accent_yellow"
+                android:foreground="@drawable/radial_select"
+                android:layout_width="34dp"
+                android:layout_height="34dp"/>
+            <View
+                android:id="@+id/accent_pink"
+                android:background="@drawable/padded_circle_tintable"
+                android:backgroundTint="@color/accent_pink"
+                android:foreground="@drawable/radial_select"
+                android:layout_width="34dp"
+                android:layout_height="34dp"/>
+            <View
+                android:id="@+id/accent_purple"
+                android:background="@drawable/padded_circle_tintable"
+                android:backgroundTint="@color/accent_purple"
+                android:foreground="@drawable/radial_select"
+                android:layout_width="34dp"
+                android:layout_height="34dp"/>
+            <View
+                android:id="@+id/accent_orange"
+                android:background="@drawable/padded_circle_tintable"
+                android:backgroundTint="@color/accent_orange"
+                android:foreground="@drawable/radial_select"
+                android:layout_width="34dp"
+                android:layout_height="34dp"/>
+            <View
+                android:id="@+id/accent_red"
+                android:background="@drawable/padded_circle_tintable"
+                android:backgroundTint="@color/accent_red"
+                android:foreground="@drawable/radial_select"
+                android:layout_width="34dp"
+                android:layout_height="34dp"/>
+        </LinearLayout>
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="Test"/>
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+</ScrollView>

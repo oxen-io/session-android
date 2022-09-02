@@ -3,6 +3,12 @@
     <style name="Base.Theme.Session" parent="@style/Theme.AppCompat.DayNight">
         <item name="actionModeBackground">?colorPrimary</item>
         <item name="dialog_background_color">?colorPrimary</item>
+
+        <item name="theme_preview_incoming">?message_received_background_color</item>
+        <item name="theme_preview_outgoing">?message_sent_background_color</item>
+        <item name="theme_preview_background">?colorPrimary</item>
+        <item name="theme_preview_border">?input_bar_border</item>
+
 <!--        <item name="colorPrimary">@color/action_bar_background</item>-->
 <!--        <item name="colorPrimaryDark">@color/action_bar_background</item>-->
 <!--        <item name="searchBackgroundColor">#1B1B1B</item>-->
@@ -593,6 +599,7 @@
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
+        <item name="theme_preview_border">@color/ocean_light_2</item>
 
         <!-- Light mode -->
         <item name="android:colorBackgroundFloating">?colorPrimary</item>

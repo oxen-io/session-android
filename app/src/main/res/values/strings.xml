@@ -927,5 +927,11 @@
     <string name="activity_settings_conversations_button_title">Conversations</string>
     <string name="activity_settings_message_appearance_button_title">Appearance</string>
     <string name="activity_settings_help_button">Help</string>
+    <string name="activity_appearance_themes_category">Themes</string>
+    <string name="ocean_dark_theme_name">Ocean Dark</string>
+    <string name="classic_dark_theme_name">Classic Dark</string>
+    <string name="ocean_light_theme_name">Ocean Light</string>
+    <string name="classic_light_theme_name">Classic Light</string>
+    <string name="activity_appearance_primary_color_category">Primary color</string>
 
 </resources>

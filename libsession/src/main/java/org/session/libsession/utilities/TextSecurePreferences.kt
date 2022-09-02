@@ -5,8 +5,6 @@ import android.hardware.Camera
 import android.net.Uri
 import android.provider.Settings
 import androidx.annotation.ArrayRes
-import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import androidx.annotation.StyleRes
 import androidx.core.app.NotificationCompat
 import androidx.preference.PreferenceManager.getDefaultSharedPreferences
@@ -168,6 +166,7 @@ interface TextSecurePreferences {
     fun setLastVacuumNow()
     fun getFingerprintKeyGenerated(): Boolean
     fun setFingerprintKeyGenerated()
+    @StyleRes fun getThemeStyle(): Int?
     @StyleRes fun getAccentColorStyle(): Int?
     fun setAccentColorStyle(@StyleRes newColorStyle: Int?)
     fun clearAll()
