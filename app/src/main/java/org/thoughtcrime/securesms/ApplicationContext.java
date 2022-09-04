@@ -26,6 +26,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 
+import com.huawei.hms.common.ApiException;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
@@ -68,7 +70,7 @@ import org.thoughtcrime.securesms.logging.PersistentLogger;
 import org.thoughtcrime.securesms.logging.UncaughtExceptionLogger;
 import org.thoughtcrime.securesms.notifications.BackgroundPollWorker;
 import org.thoughtcrime.securesms.notifications.DefaultMessageNotifier;
-import org.thoughtcrime.securesms.notifications.FcmUtils;
+import org.thoughtcrime.securesms.notifications.FcmHcmUtils;
 import org.thoughtcrime.securesms.notifications.LokiPushNotificationManager;
 import org.thoughtcrime.securesms.notifications.NotificationChannels;
 import org.thoughtcrime.securesms.notifications.OptimizedMessageNotifier;
@@ -83,6 +85,7 @@ import org.thoughtcrime.securesms.util.Broadcaster;
 import org.thoughtcrime.securesms.util.UiModeUtilities;
 import org.thoughtcrime.securesms.util.dynamiclanguage.LocaleParseHelper;
 import org.thoughtcrime.securesms.webrtc.CallMessageProcessor;
+import org.thoughtcrime.securesms.notifications.LokiPushNotificationManager.DeviceType;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.PeerConnectionFactory.InitializationOptions;
 import org.webrtc.voiceengine.WebRtcAudioManager;
@@ -129,6 +132,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     public Poller poller = null;
     public Broadcaster broadcaster = null;
     private Job firebaseInstanceIdJob;
+    private Job huaweiPushInstanceIdJob;
     private WindowDebouncer conversationListDebouncer;
     private HandlerThread conversationListHandlerThread;
     private Handler conversationListHandler;
@@ -207,6 +211,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         String userPublicKey = TextSecurePreferences.getLocalNumber(this);
         if (userPublicKey != null) {
             registerForFCMIfNeeded(false);
+            registerForHCMIfNeeded(false);
         }
         UiModeUtilities.setupUiModeToUserSelected(this);
         initializeExpiringMessageManager();
@@ -420,7 +425,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         if (force && firebaseInstanceIdJob != null) {
             firebaseInstanceIdJob.cancel(null);
         }
-        firebaseInstanceIdJob = FcmUtils.getFcmInstanceId(task->{
+        firebaseInstanceIdJob = FcmHcmUtils.getFcmInstanceId(task->{
             if (!task.isSuccessful()) {
                 Log.w("Loki", "FirebaseInstanceId.getInstance().getInstanceId() failed." + task.getException());
                 return Unit.INSTANCE;
@@ -429,9 +434,34 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
             String userPublicKey = TextSecurePreferences.getLocalNumber(this);
             if (userPublicKey == null) return Unit.INSTANCE;
             if (TextSecurePreferences.isUsingFCM(this)) {
-                LokiPushNotificationManager.register(token, userPublicKey, this, force);
+                LokiPushNotificationManager.register(token, userPublicKey, DeviceType.Android, this, force);
             } else {
                 LokiPushNotificationManager.unregister(token, this);
+            }
+            return Unit.INSTANCE;
+        });
+    }
+
+    public void registerForHCMIfNeeded(final Boolean force) {
+        if (!Build.BRAND.equals("Huawei")) return;
+        if (huaweiPushInstanceIdJob != null && huaweiPushInstanceIdJob.isActive() && !force) return;
+        if (force && huaweiPushInstanceIdJob != null) {
+            huaweiPushInstanceIdJob.cancel(null);
+        }
+        huaweiPushInstanceIdJob = FcmHcmUtils.getHcmInstanceId(this, hmsInstanceId->{
+            String appId = "106995229";
+            String tokenScope = "HCM";
+            try {
+                String token = hmsInstanceId.getToken(appId, tokenScope);
+                String userPublicKey = TextSecurePreferences.getLocalNumber(this);
+                if (userPublicKey == null) return Unit.INSTANCE;
+                if (TextSecurePreferences.isUsingFCM(this)) {
+                    LokiPushNotificationManager.register(token, userPublicKey, DeviceType.Huawei, this, force);
+                } else {
+                    LokiPushNotificationManager.unregister(token, this);
+                }
+            } catch (ApiException e) {
+                Log.e("Loki", "Request HCM token failed. " + e.getLocalizedMessage());
             }
             return Unit.INSTANCE;
         });

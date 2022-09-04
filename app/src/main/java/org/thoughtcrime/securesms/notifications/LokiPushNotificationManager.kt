@@ -26,6 +26,18 @@ object LokiPushNotificationManager {
         PushNotificationAPI.serverPublicKey
     }
 
+    enum class DeviceType {
+        Android, Huawei;
+
+        val rawValue: String
+            get() {
+                return when(this) {
+                    Android -> ""
+                    Huawei -> ""
+                }
+            }
+    }
+
     enum class ClosedGroupOperation {
         Subscribe, Unsubscribe;
 
@@ -65,11 +77,11 @@ object LokiPushNotificationManager {
     }
 
     @JvmStatic
-    fun register(token: String, publicKey: String, context: Context, force: Boolean) {
+    fun register(token: String, publicKey: String, device: DeviceType, context: Context, force: Boolean) {
         val oldToken = TextSecurePreferences.getFCMToken(context)
         val lastUploadDate = TextSecurePreferences.getLastFCMUploadTime(context)
         if (!force && token == oldToken && System.currentTimeMillis() - lastUploadDate < tokenExpirationInterval) { return }
-        val parameters = mapOf( "token" to token, "pubKey" to publicKey )
+        val parameters = mapOf( "token" to token, "pubKey" to publicKey, "device" to device.rawValue )
         val url = "$server/register"
         val body = RequestBody.create(MediaType.get("application/json"), JsonUtil.toJson(parameters))
         val request = Request.Builder().url(url).post(body)

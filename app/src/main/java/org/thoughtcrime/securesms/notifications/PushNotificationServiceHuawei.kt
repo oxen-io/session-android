@@ -1,9 +1,10 @@
 package org.thoughtcrime.securesms.notifications
 
+import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.google.firebase.messaging.FirebaseMessagingService
-import com.google.firebase.messaging.RemoteMessage
+import com.huawei.hms.push.HmsMessageService
+import com.huawei.hms.push.RemoteMessage
 import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageReceiveParameters
@@ -13,18 +14,19 @@ import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.notifications.LokiPushNotificationManager.DeviceType
 
-class PushNotificationService : FirebaseMessagingService() {
+class PushNotificationServiceHuawei : HmsMessageService() {
+    override fun onNewToken(token: String?, bundle: Bundle?) {
+        Log.d("Loki", "New HCM token: $token.")
 
-    override fun onNewToken(token: String) {
-        super.onNewToken(token)
-        Log.d("Loki", "New FCM token: $token.")
-        val userPublicKey = TextSecurePreferences.getLocalNumber(this) ?: return
-        LokiPushNotificationManager.register(token, userPublicKey, DeviceType.Android, this, false)
+        if (!token.isNullOrEmpty()) {
+            val userPublicKey = TextSecurePreferences.getLocalNumber(this) ?: return
+            LokiPushNotificationManager.register(token, userPublicKey, DeviceType.Huawei, this, false)
+        }
     }
 
-    override fun onMessageReceived(message: RemoteMessage) {
+    override fun onMessageReceived(message: RemoteMessage?) {
         Log.d("Loki", "Received a push notification.")
-        val base64EncodedData = message.data?.get("ENCRYPTED_DATA")
+        val base64EncodedData = message?.dataOfMap?.get("ENCRYPTED_DATA")
         val data = base64EncodedData?.let { Base64.decode(it) }
         if (data != null) {
             try {
@@ -49,11 +51,4 @@ class PushNotificationService : FirebaseMessagingService() {
         }
     }
 
-    override fun onDeletedMessages() {
-        Log.d("Loki", "Called onDeletedMessages.")
-        super.onDeletedMessages()
-        val token = TextSecurePreferences.getFCMToken(this)!!
-        val userPublicKey = TextSecurePreferences.getLocalNumber(this) ?: return
-        LokiPushNotificationManager.register(token, userPublicKey, DeviceType.Android, this, true)
-    }
 }

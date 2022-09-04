@@ -213,6 +213,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 // Set up remaining components if needed
                 val application = ApplicationContext.getInstance(this@HomeActivity)
                 application.registerForFCMIfNeeded(false)
+                application.registerForHCMIfNeeded(false)
                 if (textSecurePreferences.getLocalNumber() != null) {
                     OpenGroupManager.startPolling()
                     JobQueue.shared.resumePendingJobs()
