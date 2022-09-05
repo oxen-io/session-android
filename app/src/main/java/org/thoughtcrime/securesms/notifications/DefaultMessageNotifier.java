@@ -36,15 +36,26 @@ import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.goterl.lazysodium.utils.KeyPair;
+
+import org.session.libsession.messaging.MessagingModuleConfiguration;
+import org.session.libsession.messaging.open_groups.OpenGroup;
+import com.annimon.stream.Optional;
+import com.annimon.stream.Stream;
+
 import org.session.libsession.messaging.sending_receiving.notifications.MessageNotifier;
+import org.session.libsession.messaging.utilities.SessionId;
+import org.session.libsession.messaging.utilities.SodiumUtilities;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.Contact;
 import org.session.libsession.utilities.ServiceUtil;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.recipients.Recipient;
+import org.session.libsignal.utilities.IdPrefix;
 import org.session.libsignal.utilities.Log;
 import org.session.libsignal.utilities.Util;
 import org.thoughtcrime.securesms.ApplicationContext;
@@ -52,6 +63,8 @@ import org.thoughtcrime.securesms.contactshare.ContactUtil;
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2;
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionManagerUtilities;
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities;
+import org.thoughtcrime.securesms.crypto.KeyPairUtilities;
+import org.thoughtcrime.securesms.database.LokiThreadDatabase;
 import org.thoughtcrime.securesms.database.MessagingDatabase.MarkedMessageInfo;
 import org.thoughtcrime.securesms.database.MmsSmsDatabase;
 import org.thoughtcrime.securesms.database.RecipientDatabase;
@@ -60,15 +73,18 @@ import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord;
 import org.thoughtcrime.securesms.database.model.Quote;
+import org.thoughtcrime.securesms.database.model.ReactionRecord;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import org.thoughtcrime.securesms.mms.SlideDeck;
 import org.thoughtcrime.securesms.service.KeyCachingService;
 import org.thoughtcrime.securesms.util.SessionMetaProtocol;
 import org.thoughtcrime.securesms.util.SpanUtil;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Executor;
@@ -155,18 +171,16 @@ public class DefaultMessageNotifier implements MessageNotifier {
     NotificationManager notifications = ServiceUtil.getNotificationManager(context);
     notifications.cancel(SUMMARY_NOTIFICATION_ID);
 
-    if (Build.VERSION.SDK_INT >= 23) {
-      try {
-        StatusBarNotification[] activeNotifications = notifications.getActiveNotifications();
+    try {
+      StatusBarNotification[] activeNotifications = notifications.getActiveNotifications();
 
-        for (StatusBarNotification activeNotification : activeNotifications) {
-          notifications.cancel(activeNotification.getId());
-        }
-      } catch (Throwable e) {
-        // XXX Appears to be a ROM bug, see #6043
-        Log.w(TAG, e);
-        notifications.cancelAll();
+      for (StatusBarNotification activeNotification : activeNotifications) {
+        notifications.cancel(activeNotification.getId());
       }
+    } catch (Throwable e) {
+      // XXX Appears to be a ROM bug, see #6043
+      Log.w(TAG, e);
+      notifications.cancelAll();
     }
   }
 
@@ -258,7 +272,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
     Cursor pushCursor  = null;
 
     try {
-      telcoCursor = DatabaseComponent.get(context).mmsSmsDatabase().getUnread();
+      telcoCursor = DatabaseComponent.get(context).mmsSmsDatabase().getUnread(); // TODO: add a notification specific lighter query here
 
       if ((telcoCursor == null || telcoCursor.isAfterLast()) || !TextSecurePreferences.hasSeenWelcomeScreen(context))
       {
@@ -282,13 +296,13 @@ public class DefaultMessageNotifier implements MessageNotifier {
             sendSingleThreadNotification(context, new NotificationState(notificationState.getNotificationsForThread(threadId)), false, true);
           }
           sendMultipleThreadNotification(context, notificationState, signal);
-        } else if (notificationState.getMessageCount() > 0){
+        } else if (notificationState.getMessageCount() > 0) {
           sendSingleThreadNotification(context, notificationState, signal, false);
         } else {
           cancelActiveNotifications(context);
         }
       } catch (Exception e) {
-        Log.e(TAG, "Error creating notification",e);
+        Log.e(TAG, "Error creating notification", e);
       }
       cancelOrphanedNotifications(context, notificationState);
       updateBadge(context, notificationState.getMessageCount());
@@ -299,15 +313,6 @@ public class DefaultMessageNotifier implements MessageNotifier {
     } finally {
       if (telcoCursor != null) telcoCursor.close();
     }
-  }
-
-  private String getTrimmedText(CharSequence text) {
-    String trimmedText = "";
-    if (text != null) {
-      int trimEnd = Math.min(text.length(), 50);
-      trimmedText = text.subSequence(0,trimEnd) + (text.length() >= 50 ? "..." : "");
-    }
-    return trimmedText;
   }
 
   private void sendSingleThreadNotification(@NonNull  Context context,
@@ -342,13 +347,12 @@ public class DefaultMessageNotifier implements MessageNotifier {
     builder.putStringExtra(LATEST_MESSAGE_ID_TAG, messageIdTag);
 
     CharSequence text = notifications.get(0).getText();
-    String trimmedText = getTrimmedText(text);
 
     builder.setThread(notifications.get(0).getRecipient());
     builder.setMessageCount(notificationState.getMessageCount());
     MentionManagerUtilities.INSTANCE.populateUserPublicKeyCacheIfNeeded(notifications.get(0).getThreadId(),context);
     builder.setPrimaryMessageBody(recipient, notifications.get(0).getIndividualRecipient(),
-                                  MentionUtilities.highlightMentions(trimmedText,
+                                  MentionUtilities.highlightMentions(text == null ? "" : text,
                                           notifications.get(0).getThreadId(),
                                           context),
                                   notifications.get(0).getSlideDeck());
@@ -483,13 +487,9 @@ public class DefaultMessageNotifier implements MessageNotifier {
       return;
     }
 
-    if (Build.VERSION.SDK_INT >= 21) {
-      ringtone.setAudioAttributes(new AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_UNKNOWN)
-                                                               .setUsage(AudioAttributes.USAGE_NOTIFICATION_COMMUNICATION_INSTANT)
-                                                               .build());
-    } else {
-      ringtone.setStreamType(AudioManager.STREAM_NOTIFICATION);
-    }
+    ringtone.setAudioAttributes(new AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_UNKNOWN)
+                                                             .setUsage(AudioAttributes.USAGE_NOTIFICATION_COMMUNICATION_INSTANT)
+                                                             .build());
 
     ringtone.play();
   }
@@ -500,7 +500,10 @@ public class DefaultMessageNotifier implements MessageNotifier {
     NotificationState     notificationState = new NotificationState();
     MmsSmsDatabase.Reader reader            = DatabaseComponent.get(context).mmsSmsDatabase().readerFor(cursor);
     ThreadDatabase        threadDatabase    = DatabaseComponent.get(context).threadDatabase();
+    LokiThreadDatabase    lokiThreadDatabase= DatabaseComponent.get(context).lokiThreadDatabase();
+    KeyPair               edKeyPair         = MessagingModuleConfiguration.getShared().getGetUserED25519KeyPair().invoke();
     MessageRecord record;
+    Map<Long, String> cache = new HashMap<Long, String>();
 
     while ((record = reader.getNext()) != null) {
       long         id                    = record.getId();
@@ -513,7 +516,6 @@ public class DefaultMessageNotifier implements MessageNotifier {
       SlideDeck    slideDeck             = null;
       long         timestamp             = record.getTimestamp();
       boolean      messageRequest        = false;
-
 
       if (threadId != -1) {
         threadRecipients = threadDatabase.getRecipientForThreadId(threadId);
@@ -541,7 +543,12 @@ public class DefaultMessageNotifier implements MessageNotifier {
       } else if (record.isOpenGroupInvitation()) {
         body = SpanUtil.italic(context.getString(R.string.ThreadRecord_open_group_invitation));
       }
-
+      String userPublicKey = TextSecurePreferences.getLocalNumber(context);
+      String blindedPublicKey = cache.get(threadId);
+      if (blindedPublicKey == null) {
+        blindedPublicKey = generateBlindedId(threadId, context);
+        cache.put(threadId, blindedPublicKey);
+      }
       if (threadRecipients == null || !threadRecipients.isMuted()) {
         if (threadRecipients != null && threadRecipients.notifyType == RecipientDatabase.NOTIFY_TYPE_MENTIONS) {
           // check if mentioned here
@@ -550,10 +557,10 @@ public class DefaultMessageNotifier implements MessageNotifier {
             Quote quote = ((MmsMessageRecord) record).getQuote();
             Address quoteAddress = quote != null ? quote.getAuthor() : null;
             String serializedAddress = quoteAddress != null ? quoteAddress.serialize() : null;
-            isQuoteMentioned = serializedAddress != null && Objects.equals(TextSecurePreferences.getLocalNumber(context), serializedAddress);
+            isQuoteMentioned = (serializedAddress!= null && Objects.equals(userPublicKey, serializedAddress)) ||
+                    (blindedPublicKey != null && Objects.equals(userPublicKey, blindedPublicKey));
           }
-          if (body.toString().contains("@"+TextSecurePreferences.getLocalNumber(context))
-                  || isQuoteMentioned) {
+          if (body.toString().contains("@"+userPublicKey) || body.toString().contains("@"+blindedPublicKey) || isQuoteMentioned) {
             notificationState.addNotification(new NotificationItem(id, mms, recipient, conversationRecipient, threadRecipients, threadId, body, timestamp, slideDeck));
           }
         } else if (threadRecipients != null && threadRecipients.notifyType == RecipientDatabase.NOTIFY_TYPE_NONE) {
@@ -561,11 +568,38 @@ public class DefaultMessageNotifier implements MessageNotifier {
         } else {
           notificationState.addNotification(new NotificationItem(id, mms, recipient, conversationRecipient, threadRecipients, threadId, body, timestamp, slideDeck));
         }
+
+        String userBlindedPublicKey = blindedPublicKey;
+        Optional<ReactionRecord> lastReact = Stream.of(record.getReactions())
+                .filter(r -> !(r.getAuthor().equals(userPublicKey) || r.getAuthor().equals(userBlindedPublicKey)))
+                .findLast();
+
+        if (lastReact.isPresent()) {
+          if (threadRecipients != null && !threadRecipients.isGroupRecipient()) {
+            ReactionRecord reaction = lastReact.get();
+            Recipient reactor = Recipient.from(context, Address.fromSerialized(reaction.getAuthor()), false);
+            String emoji = context.getString(R.string.reaction_notification, reactor.toShortString(), reaction.getEmoji());
+            notificationState.addNotification(new NotificationItem(id, mms, reactor, reactor, threadRecipients, threadId, emoji, reaction.getDateSent(), slideDeck));
+          }
+        }
       }
     }
 
     reader.close();
     return notificationState;
+  }
+
+  private @Nullable String generateBlindedId(long threadId, Context context) {
+    LokiThreadDatabase lokiThreadDatabase   = DatabaseComponent.get(context).lokiThreadDatabase();
+    OpenGroup openGroup = lokiThreadDatabase.getOpenGroupChat(threadId);
+    KeyPair edKeyPair = KeyPairUtilities.INSTANCE.getUserED25519KeyPair(context);
+    if (openGroup != null && edKeyPair != null) {
+      KeyPair blindedKeyPair = SodiumUtilities.blindedKeyPair(openGroup.getPublicKey(), edKeyPair);
+      if (blindedKeyPair != null) {
+        return new SessionId(IdPrefix.BLINDED, blindedKeyPair.getPublicKey().getAsBytes()).getHexString();
+      }
+    }
+    return null;
   }
 
   private void updateBadge(Context context, int count) {

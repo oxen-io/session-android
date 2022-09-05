@@ -16,13 +16,17 @@ import org.session.libsession.messaging.messages.control.ReadReceipt
 import org.session.libsession.messaging.messages.control.TypingIndicator
 import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.visible.Attachment
+import org.session.libsession.messaging.messages.visible.Reaction
 import org.session.libsession.messaging.messages.visible.VisibleMessage
+import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.attachments.PointerAttachment
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.notifications.PushNotificationAPI
 import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPollerV2
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
+import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.messaging.utilities.WebRtcUtils
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
@@ -38,12 +42,14 @@ import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.messages.SignalServiceGroup
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Base64
+import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.guava.Optional
-import org.session.libsignal.utilities.removing05PrefixIfNeeded
+import org.session.libsignal.utilities.removingIdPrefixIfNeeded
 import org.session.libsignal.utilities.toHexString
 import java.security.MessageDigest
 import java.util.LinkedList
+import kotlin.math.min
 
 internal fun MessageReceiver.isBlocked(publicKey: String): Boolean {
     val context = MessagingModuleConfiguration.shared.context
@@ -153,8 +159,11 @@ private fun handleConfigurationMessage(message: ConfigurationMessage) {
                 closedGroup.encryptionKeyPair!!, closedGroup.members, closedGroup.admins, message.sentTimestamp!!, closedGroup.expirationTimer)
         }
     }
-    val allV2OpenGroups = storage.getAllV2OpenGroups().map { it.value.joinURL }
-    for (openGroup in message.openGroups) {
+    val allV2OpenGroups = storage.getAllOpenGroups().map { it.value.joinURL }
+    for (openGroup in message.openGroups.map {
+        it.replace(OpenGroupApi.legacyDefaultServer, OpenGroupApi.defaultServer)
+            .replace(OpenGroupApi.httpDefaultServer, OpenGroupApi.defaultServer)
+    }) {
         if (allV2OpenGroups.contains(openGroup)) continue
         Log.d("OpenGroup", "All open groups doesn't contain $openGroup")
         if (!storage.hasBackgroundGroupAddJob(openGroup)) {
@@ -216,8 +225,7 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage,
     // Get or create thread
     // FIXME: In case this is an open group this actually * doesn't * create the thread if it doesn't yet
     //        exist. This is intentional, but it's very non-obvious.
-    val threadID = storage.getOrCreateThreadIdFor(message.syncTarget
-        ?: messageSender!!, message.groupPublicKey, openGroupID)
+    val threadID = storage.getOrCreateThreadIdFor(message.syncTarget ?: messageSender!!, message.groupPublicKey, openGroupID)
     if (threadID < 0) {
         // Thread doesn't exist; should only be reached in a case where we are processing open group messages for a no longer existent thread
         throw MessageReceiver.Error.NoThread
@@ -226,7 +234,9 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage,
     val recipient = Recipient.from(context, Address.fromSerialized(messageSender!!), false)
     if (runProfileUpdate) {
         val profile = message.profile
-        if (profile != null && userPublicKey != messageSender) {
+        val isUserBlindedSender = messageSender == storage.getOpenGroup(threadID)?.publicKey?.let { SodiumUtilities.blindedKeyPair(it, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!) }?.let { SessionId(
+            IdPrefix.BLINDED, it.publicKey.asBytes).hexString }
+        if (profile != null && userPublicKey != messageSender && !isUserBlindedSender) {
             val profileManager = SSKEnvironment.shared.profileManager
             val name = profile.displayName!!
             if (name.isNotEmpty()) {
@@ -252,11 +262,11 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage,
         val author = Address.fromSerialized(quote.author)
         val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
         val messageInfo = messageDataProvider.getMessageForQuote(quote.id, author)
-        if (messageInfo != null) {
+        quoteModel = if (messageInfo != null) {
             val attachments = if (messageInfo.second) messageDataProvider.getAttachmentsAndLinkPreviewFor(messageInfo.first) else ArrayList()
-            quoteModel = QuoteModel(quote.id, author, messageDataProvider.getMessageBodyFor(quote.id, quote.author), false, attachments)
+            QuoteModel(quote.id, author,null,false, attachments)
         } else {
-            quoteModel = QuoteModel(quote.id, author, quote.text, true, PointerAttachment.forPointers(proto.dataMessage.quote.attachmentsList))
+            QuoteModel(quote.id, author,null, true, PointerAttachment.forPointers(proto.dataMessage.quote.attachmentsList))
         }
     }
     // Parse link preview if needed
@@ -284,22 +294,104 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage,
             return@mapNotNull attachment
         }
     }
-    // Persist the message
-    message.threadID = threadID
-    val messageID = storage.persist(
-        message, quoteModel, linkPreviews,
-        message.groupPublicKey, openGroupID,
-        attachments, runIncrement, runThreadUpdate
-    ) ?: return null
-    val openGroupServerID = message.openGroupServerMessageID
-    if (openGroupServerID != null) {
-        val isSms = !(message.isMediaMessage() || attachments.isNotEmpty())
-        storage.setOpenGroupServerMessageID(messageID, openGroupServerID, threadID, isSms)
+    // Parse reaction if needed
+    message.reaction?.let { reaction ->
+        if (reaction.react == true) {
+            reaction.serverId = message.openGroupServerMessageID?.toString() ?: message.serverHash.orEmpty()
+            reaction.dateSent = message.sentTimestamp ?: 0
+            reaction.dateReceived = message.receivedTimestamp ?: 0
+            storage.addReaction(reaction, messageSender)
+        } else {
+            storage.removeReaction(reaction.emoji!!, reaction.timestamp!!, reaction.publicKey!!)
+        }
+    } ?: run {
+        // Persist the message
+        message.threadID = threadID
+        val messageID =
+            storage.persist(message, quoteModel, linkPreviews, message.groupPublicKey, openGroupID,
+         attachments, runIncrement, runThreadUpdate
+        ) ?: return null
+        val openGroupServerID = message.openGroupServerMessageID
+        if (openGroupServerID != null) {
+            val isSms = !(message.isMediaMessage() || attachments.isNotEmpty())
+            storage.setOpenGroupServerMessageID(messageID, openGroupServerID, threadID, isSms)
+        }
+        return messageID
     }
     // Cancel any typing indicators if needed
     cancelTypingIndicatorsIfNeeded(message.sender!!)
-    return messageID
+    return null
 }
+
+fun MessageReceiver.handleOpenGroupReactions(
+    threadId: Long,
+    openGroupMessageServerID: Long,
+    reactions: Map<String, OpenGroupApi.Reaction>?
+) {
+    if (reactions.isNullOrEmpty()) return
+    val storage = MessagingModuleConfiguration.shared.storage
+    val (messageId, isSms) = MessagingModuleConfiguration.shared.messageDataProvider.getMessageID(openGroupMessageServerID, threadId) ?: return
+    storage.deleteReactions(messageId, !isSms)
+    val userPublicKey = storage.getUserPublicKey()!!
+    val openGroup = storage.getOpenGroup(threadId)
+    val blindedPublicKey = openGroup?.publicKey?.let { serverPublicKey ->
+        SodiumUtilities.blindedKeyPair(serverPublicKey, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!)
+            ?.let { SessionId(IdPrefix.BLINDED, it.publicKey.asBytes).hexString }
+    }
+    for ((emoji, reaction) in reactions) {
+        val pendingUserReaction = OpenGroupApi.pendingReactions
+            .filter { it.server == openGroup?.server && it.room == openGroup.room && it.messageId == openGroupMessageServerID && it.add }
+            .sortedByDescending { it.seqNo }
+            .any { it.emoji == emoji }
+        val shouldAddUserReaction = pendingUserReaction || reaction.you || reaction.reactors.contains(userPublicKey)
+        val reactorIds = reaction.reactors.filter { it != blindedPublicKey && it != userPublicKey }
+        val count = if (reaction.you) reaction.count - 1 else reaction.count
+        // Add the first reaction (with the count)
+        reactorIds.firstOrNull()?.let { reactor ->
+            storage.addReaction(Reaction(
+                localId = messageId,
+                isMms = !isSms,
+                publicKey = reactor,
+                emoji = emoji,
+                react = true,
+                serverId = "$openGroupMessageServerID",
+                count = count,
+                index = reaction.index
+            ), reactor)
+        }
+
+        // Add all other reactions
+        val maxAllowed = if (shouldAddUserReaction) 4 else 5
+        val lastIndex = min(maxAllowed, reactorIds.size)
+        reactorIds.slice(1 until lastIndex).map { reactor ->
+            storage.addReaction(Reaction(
+                localId = messageId,
+                isMms = !isSms,
+                publicKey = reactor,
+                emoji = emoji,
+                react = true,
+                serverId = "$openGroupMessageServerID",
+                count = 0,  // Only want this on the first reaction
+                index = reaction.index
+            ), reactor)
+        }
+
+        // Add the current user reaction (if applicable and not already included)
+        if (shouldAddUserReaction) {
+            storage.addReaction(Reaction(
+                localId = messageId,
+                isMms = !isSms,
+                publicKey = userPublicKey,
+                emoji = emoji,
+                react = true,
+                serverId = "$openGroupMessageServerID",
+                count = 1,
+                index = reaction.index
+            ), userPublicKey)
+        }
+    }
+}
+
 //endregion
 
 // region Closed Groups
@@ -395,7 +487,7 @@ private fun MessageReceiver.handleClosedGroupEncryptionKeyPair(message: ClosedGr
     val plaintext = MessageDecrypter.decrypt(encryptedKeyPair, userKeyPair).first
     // Parse it
     val proto = SignalServiceProtos.KeyPair.parseFrom(plaintext)
-    val keyPair = ECKeyPair(DjbECPublicKey(proto.publicKey.toByteArray().removing05PrefixIfNeeded()), DjbECPrivateKey(proto.privateKey.toByteArray()))
+    val keyPair = ECKeyPair(DjbECPublicKey(proto.publicKey.toByteArray().removingIdPrefixIfNeeded()), DjbECPrivateKey(proto.privateKey.toByteArray()))
     // Store it if needed
     val closedGroupEncryptionKeyPairs = storage.getClosedGroupEncryptionKeyPairs(groupPublicKey)
     if (closedGroupEncryptionKeyPairs.contains(keyPair)) {

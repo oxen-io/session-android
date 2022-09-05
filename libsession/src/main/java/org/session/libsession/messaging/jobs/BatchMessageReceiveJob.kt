@@ -13,18 +13,24 @@ import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
 import org.session.libsession.messaging.messages.visible.ParsedMessage
 import org.session.libsession.messaging.messages.visible.VisibleMessage
+import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.MessageReceiver
 import org.session.libsession.messaging.sending_receiving.handle
+import org.session.libsession.messaging.sending_receiving.handleOpenGroupReactions
 import org.session.libsession.messaging.sending_receiving.handleVisibleMessage
 import org.session.libsession.messaging.utilities.Data
+import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsignal.protos.UtilProtos
+import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
 
 data class MessageReceiveParameters(
     val data: ByteArray,
     val serverHash: String? = null,
-    val openGroupMessageServerID: Long? = null
+    val openGroupMessageServerID: Long? = null,
+    val reactions: Map<String, OpenGroupApi.Reaction>? = null
 )
 
 class BatchMessageReceiveJob(
@@ -72,12 +78,13 @@ class BatchMessageReceiveJob(
             val storage = MessagingModuleConfiguration.shared.storage
             val context = MessagingModuleConfiguration.shared.context
             val localUserPublicKey = storage.getUserPublicKey()
+            val serverPublicKey = openGroupID?.let { storage.getOpenGroupPublicKey(it.split(".").dropLast(1).joinToString(".")) }
 
             // parse and collect IDs
             messages.forEach { messageParameters ->
                 val (data, serverHash, openGroupMessageServerID) = messageParameters
                 try {
-                    val (message, proto) = MessageReceiver.parse(data, openGroupMessageServerID)
+                    val (message, proto) = MessageReceiver.parse(data, openGroupMessageServerID, openGroupPublicKey = serverPublicKey)
                     message.serverHash = serverHash
                     val threadID = getThreadId(message, storage)
                     val parsedParams = ParsedMessage(messageParameters, message, proto)
@@ -110,8 +117,13 @@ class BatchMessageReceiveJob(
                                         runThreadUpdate = false,
                                         runProfileUpdate = true
                                     )
-                                    if (messageId != null) {
-                                        messageIds += messageId to (message.sender == localUserPublicKey)
+                                    if (messageId != null && message.reaction == null) {
+                                        val isUserBlindedSender = message.sender == serverPublicKey?.let { SodiumUtilities.blindedKeyPair(it, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!) }?.let { SessionId(
+                                            IdPrefix.BLINDED, it.publicKey.asBytes).hexString }
+                                        messageIds += messageId to (message.sender == localUserPublicKey || isUserBlindedSender)
+                                    }
+                                    parameters.openGroupMessageServerID?.let {
+                                        MessageReceiver.handleOpenGroupReactions(threadId, it, parameters.reactions)
                                     }
                                 } else {
                                     MessageReceiver.handle(message, proto, openGroupID)
@@ -128,19 +140,21 @@ class BatchMessageReceiveJob(
                         }
                         // increment unreads, notify, and update thread
                         val unreadFromMine = messageIds.indexOfLast { (_,fromMe) -> fromMe }
-                        var trueUnreadCount = messageIds.size
+                        var trueUnreadCount = messageIds.filter { (_,fromMe) -> !fromMe }.size
                         if (unreadFromMine >= 0) {
                             trueUnreadCount -= (unreadFromMine + 1)
                             storage.markConversationAsRead(threadId, false)
                         }
-                        storage.incrementUnread(threadId, trueUnreadCount)
+                        if (trueUnreadCount > 0) {
+                            storage.incrementUnread(threadId, trueUnreadCount)
+                        }
                         storage.updateThread(threadId, true)
+                        SSKEnvironment.shared.notificationManager.updateNotification(context, threadId)
                     }
                 }
                 // await all thread processing
                 deferredThreadMap.awaitAll()
             }
-            SSKEnvironment.shared.notificationManager.updateNotification(context)
             if (failures.isEmpty()) {
                 handleSuccess()
             } else {

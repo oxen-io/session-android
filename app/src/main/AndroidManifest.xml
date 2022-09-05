@@ -53,7 +53,6 @@
     <uses-permission android:name="android.permission.RAISED_THREAD_PRIORITY" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" tools:node="remove"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
 
     <queries>
@@ -224,7 +223,7 @@
             android:name="org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2"
             android:screenOrientation="portrait"
             android:parentActivityName="org.thoughtcrime.securesms.home.HomeActivity"
-            android:theme="@style/Theme.Session.DayNight.FlatActionBar">
+            android:theme="@style/Theme.Session.DayNight.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.thoughtcrime.securesms.home.HomeActivity" />

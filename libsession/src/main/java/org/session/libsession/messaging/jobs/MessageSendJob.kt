@@ -3,8 +3,6 @@ package org.session.libsession.messaging.jobs
 import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.io.Input
 import com.esotericsoftware.kryo.io.Output
-import nl.komponents.kovenant.FailedException
-import nl.komponents.kovenant.Promise
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.Job.Companion.MAX_BUFFER_SIZE
 import org.session.libsession.messaging.messages.Destination
@@ -46,7 +44,7 @@ class MessageSendJob(val message: Message, val destination: Destination) : Job {
         }
 
         if (message != null) {
-            if (!messageDataProvider.isOutgoingMessage(message.sentTimestamp!!)) return // The message has been deleted
+            if (!messageDataProvider.isOutgoingMessage(message.sentTimestamp!!) && message.reaction == null) return // The message has been deleted
             val attachmentIDs = mutableListOf<Long>()
             attachmentIDs.addAll(message.attachmentIDs)
             message.quote?.let { it.attachmentID?.let { attachmentID -> attachmentIDs.add(attachmentID) } }
