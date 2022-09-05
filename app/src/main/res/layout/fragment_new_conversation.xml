@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="none">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/dialog_background">
+
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_button_height"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/activity_new_conversation_title"
+            android:textColor="@color/text"
+            android:textSize="@dimen/very_large_font_size"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/closeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/medium_spacing"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_baseline_close_24"
+            app:layout_constraintBottom_toTopOf="@id/view0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view0"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginBottom="1dp"
+            android:background="?android:dividerHorizontal"
+            app:layout_constraintStart_toStartOf="@+id/titleText"
+            app:layout_constraintTop_toBottomOf="@+id/titleText" />
+
+        <LinearLayout
+            android:id="@+id/newMessageButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_button_height"
+            android:background="@drawable/setting_button_background"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/medium_spacing"
+            app:alignItems="center"
+            app:justifyContent="center"
+            app:layout_constraintBottom_toTopOf="@+id/view1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view0">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_message" />
+
+            <TextView
+                android:id="@+id/newMessageText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/medium_spacing"
+                android:gravity="center"
+                android:text="@string/activity_new_message_title"
+                android:textColor="@color/text"
+                android:textSize="@dimen/medium_font_size" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginStart="@dimen/very_large_spacing"
+            android:background="?android:dividerHorizontal"
+            app:layout_constraintStart_toStartOf="@+id/newMessageButton"
+            app:layout_constraintTop_toBottomOf="@+id/newMessageButton" />
+
+        <LinearLayout
+            android:id="@+id/newGroupButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_button_height"
+            android:background="@drawable/setting_button_background"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/medium_spacing"
+            app:alignItems="center"
+            app:justifyContent="center"
+            app:layout_constraintBottom_toTopOf="@+id/view2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view1">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_group" />
+
+            <TextView
+                android:id="@+id/newGroupText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/medium_spacing"
+                android:gravity="center"
+                android:text="@string/activity_create_group_title"
+                android:textColor="@color/text"
+                android:textSize="@dimen/medium_font_size" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginStart="@dimen/very_large_spacing"
+            android:background="?android:dividerHorizontal"
+            app:layout_constraintStart_toStartOf="@+id/newGroupButton"
+            app:layout_constraintTop_toBottomOf="@+id/newGroupButton" />
+
+        <LinearLayout
+            android:id="@+id/joinCommunityButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_button_height"
+            android:background="@drawable/setting_button_background"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/medium_spacing"
+            app:alignItems="center"
+            app:justifyContent="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view2">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_globe" />
+
+            <TextView
+                android:id="@+id/joinCommunityText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/medium_spacing"
+                android:gravity="center"
+                android:text="@string/activity_join_community_title"
+                android:textColor="@color/text"
+                android:textSize="@dimen/medium_font_size" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view3"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginBottom="1dp"
+            android:background="?android:dividerHorizontal"
+            app:layout_constraintStart_toStartOf="@+id/joinCommunityButton"
+            app:layout_constraintTop_toBottomOf="@+id/joinCommunityButton" />
+
+        <TextView
+            android:id="@+id/contactsText"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_button_height"
+            android:background="@drawable/setting_button_background"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/medium_spacing"
+            android:text="@string/new_conversation_contacts_title"
+            android:textColor="@color/text"
+            android:textSize="@dimen/medium_font_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view3" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/contactsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/contactsText" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

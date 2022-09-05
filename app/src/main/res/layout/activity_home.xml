@@ -165,7 +165,8 @@
             android:layout_centerHorizontal="true"
             android:background="@drawable/new_conversation_button_background"
             android:layout_marginBottom="@dimen/new_conversation_button_bottom_offset"
-            android:src="@drawable/ic_plus" />
+            android:src="@drawable/ic_plus"
+            app:tint="@color/white" />
 
     </RelativeLayout>
 

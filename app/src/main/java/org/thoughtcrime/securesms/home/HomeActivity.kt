@@ -50,6 +50,9 @@ import org.thoughtcrime.securesms.database.RecipientDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
+import org.thoughtcrime.securesms.dms.CreatePrivateChatActivity
+import org.thoughtcrime.securesms.groups.CreateClosedGroupActivity
+import org.thoughtcrime.securesms.groups.JoinPublicChatActivity
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter
 import org.thoughtcrime.securesms.home.search.GlobalSearchInputLayout
@@ -75,6 +78,7 @@ import javax.inject.Inject
 class HomeActivity : PassphraseRequiredActionBarActivity(),
         ConversationClickListener,
         SeedReminderViewDelegate,
+        NewConversationDelegate,
         GlobalSearchInputLayout.GlobalSearchInputLayoutListener {
 
     private lateinit var binding: ActivityHomeBinding
@@ -613,7 +617,28 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 
     private fun showNewConversation() {
-        val intent = Intent(this, NewConversationActivity::class.java)
+        NewConversationDialogFragment()
+            .show(supportFragmentManager, "NewConversationDialogFragment")
+    }
+
+    override fun contactSelected(address: String) {
+        val intent = Intent(this, ConversationActivityV2::class.java)
+        intent.putExtra(ConversationActivityV2.ADDRESS, Address.fromSerialized(address))
+        push(intent)
+    }
+
+    override fun createNewMessage() {
+        val intent = Intent(this, CreatePrivateChatActivity::class.java)
+        show(intent)
+    }
+
+    override fun createNewGroup() {
+        val intent = Intent(this, CreateClosedGroupActivity::class.java)
+        show(intent, true)
+    }
+
+    override fun joinCommunity() {
+        val intent = Intent(this, JoinPublicChatActivity::class.java)
         show(intent)
     }
     // endregion
