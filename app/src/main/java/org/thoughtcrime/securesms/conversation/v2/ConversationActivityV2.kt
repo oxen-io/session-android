@@ -34,7 +34,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.DimenRes
 import androidx.appcompat.app.AlertDialog
-import androidx.core.os.bundleOf
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -127,7 +126,6 @@ import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.giph.ui.GiphyActivity
 import org.thoughtcrime.securesms.groups.OpenGroupManager
-import org.thoughtcrime.securesms.home.UserDetailsBottomSheet
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewRepository
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewUtil
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewViewModel
@@ -1233,16 +1231,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         currentMentionStartIndex = -1
         hideMentionCandidates()
         this.previousText = newText
-    }
-
-    override fun showUserDetails(publicKey: String, threadID: Long) {
-        val userDetailsBottomSheet = UserDetailsBottomSheet()
-        val bundle = bundleOf(
-            UserDetailsBottomSheet.ARGUMENT_PUBLIC_KEY to publicKey,
-            UserDetailsBottomSheet.ARGUMENT_THREAD_ID to threadID
-        )
-        userDetailsBottomSheet.arguments = bundle
-        userDetailsBottomSheet.show(supportFragmentManager, userDetailsBottomSheet.tag)
     }
 
     override fun scrollToMessageIfPossible(timestamp: Long) {

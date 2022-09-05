@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.core.view.children
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityAppearanceSettingsBinding
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
@@ -44,7 +46,11 @@ class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.On
             }
         }
 
-        viewModel.themeUpdates.
+        lifecycleScope.launchWhenResumed {
+            viewModel.uiState.collectLatest {
+                // update the UI state
+            }
+        }
 
     }
 }

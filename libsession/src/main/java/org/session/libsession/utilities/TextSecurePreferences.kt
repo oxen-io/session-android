@@ -166,7 +166,7 @@ interface TextSecurePreferences {
     fun setLastVacuumNow()
     fun getFingerprintKeyGenerated(): Boolean
     fun setFingerprintKeyGenerated()
-    @StyleRes fun getThemeStyle(): Int?
+//    @StyleRes fun getThemeStyle(): Int? TODO
     @StyleRes fun getAccentColorStyle(): Int?
     fun setAccentColorStyle(@StyleRes newColorStyle: Int?)
     fun clearAll()
