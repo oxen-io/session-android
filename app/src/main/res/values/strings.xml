@@ -959,4 +959,10 @@
         <item quantity="one">And %1$d other has reacted %2$s to this message</item>
         <item quantity="other">And %1$d others have reacted %2$s to this message</item>
     </plurals>
+
+    <string name="activity_new_conversation_title">New Conversation</string>
+    <string name="activity_new_message_title">New Message</string>
+    <string name="activity_create_group_title">Create Group</string>
+    <string name="activity_join_community_title">Join Community</string>
+    <string name="new_conversation_contacts_title">Contacts</string>
 </resources>

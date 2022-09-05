@@ -125,6 +125,12 @@
             android:launchMode="singleTask"
             android:theme="@style/Theme.Session.DayNight.NoActionBar" />
         <activity
+            android:name="org.thoughtcrime.securesms.home.NewConversationActivity"
+            android:exported="false"
+            android:label="@string/activity_new_conversation_title"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Session.DayNight.FlatActionBar" />
+        <activity
             android:name="org.thoughtcrime.securesms.messagerequests.MessageRequestsActivity"
             android:exported="false"
             android:label="@string/activity_message_requests_title"

@@ -50,9 +50,6 @@ import org.thoughtcrime.securesms.database.RecipientDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.dms.CreatePrivateChatActivity
-import org.thoughtcrime.securesms.groups.CreateClosedGroupActivity
-import org.thoughtcrime.securesms.groups.JoinPublicChatActivity
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter
 import org.thoughtcrime.securesms.home.search.GlobalSearchInputLayout
@@ -78,7 +75,6 @@ import javax.inject.Inject
 class HomeActivity : PassphraseRequiredActionBarActivity(),
         ConversationClickListener,
         SeedReminderViewDelegate,
-        NewConversationButtonSetViewDelegate,
         GlobalSearchInputLayout.GlobalSearchInputLayoutListener {
 
     private lateinit var binding: ActivityHomeBinding
@@ -178,7 +174,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         binding.recyclerView.adapter = homeAdapter
         binding.globalSearchRecycler.adapter = globalSearchAdapter
         // Set up empty state view
-        binding.createNewPrivateChatButton.setOnClickListener { createNewPrivateChat() }
+        binding.createNewPrivateChatButton.setOnClickListener { showNewConversation() }
         IP2Country.configureIfNeeded(this@HomeActivity)
         homeViewModel.getObservable(this).observe(this) { newData ->
             val manager = binding.recyclerView.layoutManager as LinearLayoutManager
@@ -194,8 +190,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             updateEmptyState()
         }
         homeViewModel.tryUpdateChannel()
-        // Set up new conversation button set
-        binding.newConversationButtonSet.delegate = this
+        // Set up new conversation button
+        binding.newConversationButtonSet.setOnClickListener { showNewConversation() }
         // Observe blocked contacts changed events
         val broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
@@ -352,13 +348,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     override fun onPause() {
         super.onPause()
         ApplicationContext.getInstance(this).messageNotifier.setHomeScreenVisible(false)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == CreateClosedGroupActivity.closedGroupCreatedResultCode) {
-            createNewPrivateChat()
-        }
     }
 
     override fun onDestroy() {
@@ -623,18 +612,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             .create().show()
     }
 
-    override fun createNewPrivateChat() {
-        val intent = Intent(this, CreatePrivateChatActivity::class.java)
-        show(intent)
-    }
-
-    override fun createNewClosedGroup() {
-        val intent = Intent(this, CreateClosedGroupActivity::class.java)
-        show(intent, true)
-    }
-
-    override fun joinOpenGroup() {
-        val intent = Intent(this, JoinPublicChatActivity::class.java)
+    private fun showNewConversation() {
+        val intent = Intent(this, NewConversationActivity::class.java)
         show(intent)
     }
     // endregion
