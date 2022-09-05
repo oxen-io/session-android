@@ -20,7 +20,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import org.session.libsession.utilities.ThemeUtil;
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
 import org.thoughtcrime.securesms.database.model.MessageId;
 import org.thoughtcrime.securesms.util.LifecycleDisposable;
@@ -68,20 +67,14 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment imp
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
-    if (ThemeUtil.isDarkTheme(requireContext())) {
-      setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_TextSecure_BottomSheetDialog_Fixed_ReactWithAny);
-    } else {
-      setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_TextSecure_Light_BottomSheetDialog_Fixed_ReactWithAny);
-    }
-
+//    setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_Session_BottomSheet);
     super.onCreate(savedInstanceState);
   }
 
   @Override
   public @Nullable View onCreateView(@NonNull LayoutInflater inflater,
                                      @Nullable ViewGroup container,
-                                     @Nullable Bundle savedInstanceState)
-  {
+                                     @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.reactions_bottom_sheet_dialog_fragment, container, false);
   }
 
