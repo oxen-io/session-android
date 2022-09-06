@@ -30,7 +30,7 @@ object StartConversation {
         val dialog = MaterialDialog(context, BottomSheet())
         dialog.show {
             val binding = DialogNewConversationBinding.inflate(LayoutInflater.from(context))
-            customView(view = binding.root)
+            customView(view = binding.root, scrollable = true, noVerticalPadding = true)
             binding.closeButton.setOnClickListener { dismiss() }
             binding.newMessageButton.setOnClickListener { delegate.createNewMessage() }
             binding.newGroupButton.setOnClickListener { delegate.createNewGroup() }
