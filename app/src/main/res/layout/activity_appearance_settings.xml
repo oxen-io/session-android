@@ -40,6 +40,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"/>
             <RadioButton
+                android:id="@+id/theme_radio_classic_dark"
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/small_spacing"
                 android:layout_width="wrap_content"
@@ -47,6 +48,7 @@
         </LinearLayout>
         <include layout="@layout/preference_divider"/>
         <LinearLayout
+            android:id="@+id/theme_option_classic_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?colorCellBackground"
@@ -68,6 +70,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"/>
             <RadioButton
+                android:id="@+id/theme_radio_classic_light"
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/small_spacing"
                 android:layout_width="wrap_content"
@@ -75,6 +78,7 @@
         </LinearLayout>
         <include layout="@layout/preference_divider"/>
         <LinearLayout
+            android:id="@+id/theme_option_ocean_dark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?colorCellBackground"
@@ -96,6 +100,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"/>
             <RadioButton
+                android:id="@+id/theme_radio_ocean_dark"
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/small_spacing"
                 android:layout_width="wrap_content"
@@ -103,6 +108,7 @@
         </LinearLayout>
         <include layout="@layout/preference_divider"/>
         <LinearLayout
+            android:id="@+id/theme_option_ocean_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?colorCellBackground"
@@ -124,6 +130,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"/>
             <RadioButton
+                android:id="@+id/theme_radio_ocean_light"
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/small_spacing"
                 android:layout_width="wrap_content"
@@ -253,7 +260,34 @@
                 android:layout_height="34dp"/>
         </LinearLayout>
 
+        <TextView
+            android:textColor="?android:textColorTertiary"
+            android:paddingHorizontal="@dimen/large_spacing"
+            android:paddingTop="@dimen/large_spacing"
+            android:paddingBottom="@dimen/small_spacing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_appearance_follow_system_category"/>
 
+        <LinearLayout
+            android:background="?colorCellBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+            <TextView
+                android:textColor="?android:textColorPrimary"
+                android:paddingHorizontal="@dimen/large_spacing"
+                android:paddingVertical="@dimen/small_spacing"
+                android:text="@string/activity_appearance_follow_system_explanation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/system_settings_switch"
+                android:paddingHorizontal="@dimen/large_spacing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

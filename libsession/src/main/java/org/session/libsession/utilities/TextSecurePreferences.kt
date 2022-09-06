@@ -15,7 +15,14 @@ import kotlinx.coroutines.flow.asSharedFlow
 import org.session.libsession.BuildConfig
 import org.session.libsession.R
 import org.session.libsession.utilities.TextSecurePreferences.Companion.CALL_NOTIFICATIONS_ENABLED
+import org.session.libsession.utilities.TextSecurePreferences.Companion.CLASSIC_DARK
+import org.session.libsession.utilities.TextSecurePreferences.Companion.CLASSIC_LIGHT
+import org.session.libsession.utilities.TextSecurePreferences.Companion.FOLLOW_SYSTEM_SETTINGS
 import org.session.libsession.utilities.TextSecurePreferences.Companion.LAST_VACUUM_TIME
+import org.session.libsession.utilities.TextSecurePreferences.Companion.LEGACY_PREF_KEY_SELECTED_UI_MODE
+import org.session.libsession.utilities.TextSecurePreferences.Companion.OCEAN_DARK
+import org.session.libsession.utilities.TextSecurePreferences.Companion.OCEAN_LIGHT
+import org.session.libsession.utilities.TextSecurePreferences.Companion.SELECTED_STYLE
 import org.session.libsession.utilities.TextSecurePreferences.Companion.SHOWN_CALL_NOTIFICATION
 import org.session.libsession.utilities.TextSecurePreferences.Companion.SHOWN_CALL_WARNING
 import org.session.libsignal.utilities.Log
@@ -166,9 +173,13 @@ interface TextSecurePreferences {
     fun setLastVacuumNow()
     fun getFingerprintKeyGenerated(): Boolean
     fun setFingerprintKeyGenerated()
-//    @StyleRes fun getThemeStyle(): Int? TODO
     @StyleRes fun getAccentColorStyle(): Int?
     fun setAccentColorStyle(@StyleRes newColorStyle: Int?)
+    fun getThemeStyle(): String
+    fun getFollowSystemSettings(): Boolean
+    fun setThemeStyle(themeStyle: String)
+    fun setFollowSystemSettings(followSystemSettings: Boolean)
+    fun hasPreference(key: String): Boolean
     fun clearAll()
 
     companion object {
@@ -259,6 +270,15 @@ interface TextSecurePreferences {
         const val RED_ACCENT = "accent_red"
         const val ORANGE_ACCENT = "accent_orange"
         const val YELLOW_ACCENT = "accent_yellow"
+
+        const val SELECTED_STYLE = "pref_selected_style" // classic_dark/light, ocean_dark/light
+        const val FOLLOW_SYSTEM_SETTINGS = "pref_follow_system" // follow system day/night
+
+        const val LEGACY_PREF_KEY_SELECTED_UI_MODE = "SELECTED_UI_MODE" // this will be cleared upon launching app, for users migrating to theming build
+        const val CLASSIC_DARK = "classic.dark"
+        const val CLASSIC_LIGHT = "classic.light"
+        const val OCEAN_DARK = "ocean.dark"
+        const val OCEAN_LIGHT = "ocean.light"
 
         @JvmStatic
         fun getLastConfigurationSyncTime(context: Context): Long {
@@ -1464,6 +1484,10 @@ class AppTextSecurePreferences @Inject constructor(
         getDefaultSharedPreferences(context).edit().putLong(key, value).apply()
     }
 
+    override fun hasPreference(key: String): Boolean {
+        return getDefaultSharedPreferences(context).contains(key)
+    }
+
     override fun removePreference(key: String) {
         getDefaultSharedPreferences(context).edit().remove(key).apply()
     }
@@ -1586,8 +1610,7 @@ class AppTextSecurePreferences @Inject constructor(
 
     @StyleRes
     override fun getAccentColorStyle(): Int? {
-        val prefColor = TextSecurePreferences.getStringPreference(
-            context,
+        val prefColor = getStringPreference(
             TextSecurePreferences.SELECTED_ACCENT_COLOR,
             null
         )
@@ -1604,8 +1627,8 @@ class AppTextSecurePreferences @Inject constructor(
     }
 
     override fun setAccentColorStyle(@StyleRes newColorStyle: Int?) {
-        TextSecurePreferences.setStringPreference(
-            context, TextSecurePreferences.SELECTED_ACCENT_COLOR, when (newColorStyle) {
+        setStringPreference(
+            TextSecurePreferences.SELECTED_ACCENT_COLOR, when (newColorStyle) {
                 R.style.PrimaryGreen -> TextSecurePreferences.GREEN_ACCENT
                 R.style.PrimaryBlue -> TextSecurePreferences.BLUE_ACCENT
                 R.style.PrimaryPurple -> TextSecurePreferences.PURPLE_ACCENT
@@ -1616,6 +1639,56 @@ class AppTextSecurePreferences @Inject constructor(
                 else -> null
             }
         )
+    }
+
+    override fun getThemeStyle(): String {
+        val hasLegacy = getStringPreference(LEGACY_PREF_KEY_SELECTED_UI_MODE, null)
+        if (!hasLegacy.isNullOrEmpty()) {
+            migrateLegacyUiPref()
+        }
+
+        return getStringPreference(SELECTED_STYLE, CLASSIC_DARK)!!
+    }
+
+    override fun setThemeStyle(themeStyle: String) {
+        val safeTheme = if (themeStyle !in listOf(CLASSIC_DARK, CLASSIC_LIGHT, OCEAN_DARK, OCEAN_LIGHT)) CLASSIC_DARK else themeStyle
+        setStringPreference(SELECTED_STYLE, safeTheme)
+    }
+
+    override fun getFollowSystemSettings(): Boolean {
+        val hasLegacy = getStringPreference(LEGACY_PREF_KEY_SELECTED_UI_MODE, null)
+        if (!hasLegacy.isNullOrEmpty()) {
+            migrateLegacyUiPref()
+        }
+
+        return getBooleanPreference(FOLLOW_SYSTEM_SETTINGS, false)
+    }
+
+    private fun migrateLegacyUiPref() {
+        val legacy = getStringPreference(LEGACY_PREF_KEY_SELECTED_UI_MODE, null) ?: return
+        val (mode, followSystem) = when (legacy) {
+            "DAY" -> {
+                CLASSIC_LIGHT to false
+            }
+            "NIGHT" -> {
+                CLASSIC_DARK to false
+            }
+            "SYSTEM_DEFAULT" -> {
+                CLASSIC_DARK to true
+            }
+            else -> {
+                CLASSIC_DARK to false
+            }
+        }
+        if (!hasPreference(FOLLOW_SYSTEM_SETTINGS) && !hasPreference(SELECTED_STYLE)) {
+            setThemeStyle(mode)
+            setFollowSystemSettings(followSystem)
+        }
+        removePreference(LEGACY_PREF_KEY_SELECTED_UI_MODE)
+    }
+
+    override fun setFollowSystemSettings(followSystemSettings: Boolean) {
+        setBooleanPreference(FOLLOW_SYSTEM_SETTINGS, followSystemSettings)
     }
 
     override fun clearAll() {

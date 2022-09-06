@@ -6,24 +6,31 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.session.libsession.utilities.TextSecurePreferences
-import org.thoughtcrime.securesms.conversation.v2.ConversationUiState
+import org.thoughtcrime.securesms.util.ThemeState
+import org.thoughtcrime.securesms.util.themeState
 import javax.inject.Inject
 
 @HiltViewModel
 class AppearanceSettingsViewModel @Inject constructor(private val prefs: TextSecurePreferences) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ConversationUiState())
-    val uiState: StateFlow<ConversationUiState> = _uiState
+    private val _uiState = MutableStateFlow(prefs.themeState())
+    val uiState: StateFlow<ThemeState> = _uiState
 
-    private fun buildThemeState() = prefs
-
-    fun setNewAccent(@StyleRes accentColorStyle: Int) {
-        prefs.setAccentColorStyle(accentColorStyle)
+    fun setNewAccent(@StyleRes newAccentColorStyle: Int) {
+        prefs.setAccentColorStyle(newAccentColorStyle)
+        // update UI state
+        _uiState.value = prefs.themeState()
     }
 
-    data class ThemeState (
-        @StyleRes val theme: Int,
-        @StyleRes val accent: Int
-    )
+    fun setNewStyle(newThemeStyle: String) {
+        prefs.setThemeStyle(newThemeStyle)
+        // update UI state
+        _uiState.value = prefs.themeState()
+    }
+
+    fun setNewFollowSystemSettings(followSystemSettings: Boolean) {
+        prefs.setFollowSystemSettings(followSystemSettings)
+        _uiState.value = prefs.themeState()
+    }
 
 }

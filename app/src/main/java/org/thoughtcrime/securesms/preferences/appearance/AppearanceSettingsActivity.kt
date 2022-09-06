@@ -9,6 +9,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityAppearanceSettingsBinding
+import org.session.libsession.utilities.TextSecurePreferences.Companion.CLASSIC_DARK
+import org.session.libsession.utilities.TextSecurePreferences.Companion.CLASSIC_LIGHT
+import org.session.libsession.utilities.TextSecurePreferences.Companion.OCEAN_DARK
+import org.session.libsession.utilities.TextSecurePreferences.Companion.OCEAN_LIGHT
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 
 @AndroidEntryPoint
@@ -28,11 +32,58 @@ class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.On
             binding.accentRed to R.style.PrimaryRed
         )
 
+    private val themeViews
+        get() = listOf(
+            binding.themeOptionClassicDark,
+            binding.themeRadioClassicDark,
+            binding.themeOptionClassicLight,
+            binding.themeRadioClassicLight,
+            binding.themeOptionOceanDark,
+            binding.themeRadioOceanDark,
+            binding.themeOptionOceanLight,
+            binding.themeRadioOceanLight
+        )
+
     override fun onClick(v: View?) {
         v ?: return
         val accents = accentColors
-        val entry = accents[v]
-        entry?.let { viewModel.setNewAccent(it) }
+        val themes = themeViews
+        if (v in accents) {
+            val entry = accents[v]
+            entry?.let { viewModel.setNewAccent(it) }
+        } else if (v in themes) {
+            val mappedStyle = when (v) {
+                binding.themeOptionClassicDark, binding.themeRadioClassicDark -> CLASSIC_DARK
+                binding.themeOptionClassicLight, binding.themeRadioClassicLight -> CLASSIC_LIGHT
+                binding.themeOptionOceanDark, binding.themeRadioOceanDark -> OCEAN_DARK
+                binding.themeOptionOceanLight, binding.themeRadioOceanLight -> OCEAN_LIGHT
+                else -> throw NullPointerException("Invalid style for view [$v]")
+            }
+            viewModel.setNewStyle(mappedStyle)
+        } else if (v == binding.systemSettingsSwitch) {
+            viewModel.setNewFollowSystemSettings(v.isSelected)
+        }
+    }
+
+    private fun updateSelectedTheme(themeStyle: Int) {
+        mapOf(
+            R.style.Classic_Dark to binding.themeRadioClassicDark,
+            R.style.Classic_Light to binding.themeRadioClassicLight,
+            R.style.Ocean_Dark to binding.themeRadioOceanDark,
+            R.style.Ocean_Light to binding.themeRadioOceanLight
+        ).forEach { (style, view) ->
+            view.isChecked = themeStyle == style
+        }
+    }
+
+    private fun updateSelectedAccent(accentStyle: Int) {
+        accentColors.forEach { (view, style) ->
+            view.isSelected = style == accentStyle
+        }
+    }
+
+    private fun updateFollowSystemToggle(followSystemSettings: Boolean) {
+        binding.systemSettingsSwitch.isChecked = followSystemSettings
     }
 
     override fun onCreate(savedInstanceState: Bundle?, ready: Boolean) {
@@ -41,14 +92,23 @@ class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.On
         setContentView(binding.root)
         supportActionBar!!.title = getString(R.string.activity_settings_message_appearance_button_title)
         with (binding) {
+            // accent toggles
             accentContainer.children.forEach { view ->
                 view.setOnClickListener(this@AppearanceSettingsActivity)
             }
+            // theme toggles
+            themeViews.forEach {
+                it.setOnClickListener(this@AppearanceSettingsActivity)
+            }
+            // system settings toggle
+            systemSettingsSwitch.setOnClickListener(this@AppearanceSettingsActivity)
         }
 
         lifecycleScope.launchWhenResumed {
-            viewModel.uiState.collectLatest {
-                // update the UI state
+            viewModel.uiState.collectLatest { (theme, accent, followSystem) ->
+                updateSelectedTheme(theme)
+                updateSelectedAccent(accent)
+                updateFollowSystemToggle(followSystem)
             }
         }
 

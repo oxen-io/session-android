@@ -963,6 +963,8 @@
     <string name="KeyboardPagerFragment_search_emoji">Search emoji</string>
     <string name="KeyboardPagerfragment_back_to_emoji">Back to emoji</string>
     <string name="KeyboardPagerfragment_clear_search_entry">Clear search entry</string>
+    <string name="activity_appearance_follow_system_category">Auto dark-mode</string>
+    <string name="activity_appearance_follow_system_explanation">Match system settings</string>
 
     <plurals name="ReactionsRecipientAdapter_other_reactors">
         <item quantity="one">And %1$d other has reacted %2$s to this message</item>

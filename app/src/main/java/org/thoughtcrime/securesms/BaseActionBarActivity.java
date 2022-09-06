@@ -1,5 +1,7 @@
 package org.thoughtcrime.securesms;
 
+import static org.session.libsession.utilities.TextSecurePreferences.SELECTED_ACCENT_COLOR;
+
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.Resources;
@@ -16,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.dynamiclanguage.DynamicLanguageActivityHelper;
 import org.session.libsession.utilities.dynamiclanguage.DynamicLanguageContextWrapper;
+import org.thoughtcrime.securesms.util.ActivityUtilitiesKt;
+import org.thoughtcrime.securesms.util.ThemeState;
 import org.thoughtcrime.securesms.util.UiModeUtilities;
 
 import network.loki.messenger.R;
@@ -25,15 +29,30 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
 
   @StyleRes
   public int getDesiredTheme() {
-    boolean isDayUi = UiModeUtilities.isDayUiMode(this);
-    return isDayUi ? R.style.Classic_Light : R.style.Classic_Dark;
+    ApplicationContext context = (ApplicationContext) getApplicationContext();
+    TextSecurePreferences prefs = context.textSecurePreferences;
+    ThemeState themeState = ActivityUtilitiesKt.themeState(prefs);
+    int userSelectedTheme = themeState.getTheme();
+    if (themeState.getFollowSystem()) {
+      // do light or dark based on the selected theme
+      boolean isDayUi = UiModeUtilities.isDayUiMode(this);
+      if (userSelectedTheme == R.style.Ocean_Dark || userSelectedTheme == R.style.Ocean_Light) {
+        return isDayUi ? R.style.Ocean_Light : R.style.Ocean_Dark;
+      } else {
+        return isDayUi ? R.style.Classic_Light : R.style.Classic_Dark;
+      }
+    } else {
+      return userSelectedTheme;
+    }
   }
 
   @StyleRes @Nullable
   public Integer getAccentTheme() {
-    boolean isDayUi = UiModeUtilities.isDayUiMode(this);
-    return isDayUi ? R.style.PrimaryOrange : R.style.PrimaryGreen;
-            // TextSecurePreferences.getAccentColorStyle(getApplicationContext());
+    ApplicationContext context = (ApplicationContext) getApplicationContext();
+    TextSecurePreferences prefs = context.textSecurePreferences;
+    if (!prefs.hasPreference(SELECTED_ACCENT_COLOR)) return null;
+    ThemeState themeState = ActivityUtilitiesKt.themeState(prefs);
+    return themeState.getAccentStyle();
   }
 
   @Override
