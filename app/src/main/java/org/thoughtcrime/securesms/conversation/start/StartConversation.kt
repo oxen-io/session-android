@@ -7,6 +7,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.bottomsheets.setPeekHeight
 import com.afollestad.materialdialogs.customview.customView
+import network.loki.messenger.R
 import network.loki.messenger.databinding.DialogNewConversationBinding
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.contacts.ContactClickListener
@@ -18,7 +19,14 @@ object StartConversation {
 
     private val defaultPeekHeight: Int by lazy { (Resources.getSystem().displayMetrics.heightPixels * 0.94).toInt() }
 
-    fun showDialog(contacts: List<ContactSelectionListItem>, context: Context, delegate: StartConversationDelegate) {
+    fun showDialog(recipients: List<Recipient>, context: Context, delegate: StartConversationDelegate) {
+        val contacts = recipients.sortedBy { it.address }
+            .groupBy { it.address.serialize()[2] }
+            .flatMap { entry -> listOf(ContactSelectionListItem.Header(entry.key.uppercase())) + entry.value.map { ContactSelectionListItem.Contact(it) }}
+            .toMutableList()
+        if (contacts.isNotEmpty()) {
+            contacts.add(0, ContactSelectionListItem.Header(context.getString(R.string.new_conversation_contacts_title)))
+        }
         val dialog = MaterialDialog(context, BottomSheet())
         dialog.show {
             val binding = DialogNewConversationBinding.inflate(LayoutInflater.from(context))
@@ -27,22 +35,17 @@ object StartConversation {
             binding.newMessageButton.setOnClickListener { delegate.createNewMessage() }
             binding.newGroupButton.setOnClickListener { delegate.createNewGroup() }
             binding.joinCommunityButton.setOnClickListener { delegate.joinCommunity() }
-            val adapter = ContactSelectionListAdapter(context, false).apply {
+            binding.contactsRecyclerView.adapter = ContactSelectionListAdapter(context, false).apply {
                 glide = GlideApp.with(context)
-            }
-            adapter.contactClickListener = object : ContactClickListener {
-                override fun onContactClick(contact: Recipient) {
-                    adapter.onContactClick(contact)
+                items = contacts
+                contactClickListener = object : ContactClickListener {
+                    override fun onContactClick(contact: Recipient) {
+                        delegate.contactSelected(contact.address.serialize())
+                    }
+                    override fun onContactSelected(contact: Recipient) = Unit
+                    override fun onContactDeselected(contact: Recipient) = Unit
                 }
-
-                override fun onContactSelected(contact: Recipient) {
-                    delegate.contactSelected(contact.address.serialize())
-                }
-
-                override fun onContactDeselected(contact: Recipient) = Unit
             }
-            binding.contactsRecyclerView.adapter = adapter
-            adapter.items = contacts
         }
         dialog.setPeekHeight(defaultPeekHeight)
     }
