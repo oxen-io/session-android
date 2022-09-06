@@ -623,7 +623,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         val contacts = homeViewModel.conversations.value?.filter { !it.recipient.isGroupRecipient }
             ?.sortedBy { it.recipient.address }
             ?.groupBy { it.recipient.address.serialize()[2] }
-            ?.flatMap { entry -> listOf(ContactSelectionListItem.Header("${entry.key}")) + entry.value.map { ContactSelectionListItem.Contact(it.recipient) }}
+            ?.flatMap { entry -> listOf(ContactSelectionListItem.Header(entry.key.uppercase())) + entry.value.map { ContactSelectionListItem.Contact(it.recipient) }}
             ?.toMutableList() ?: mutableListOf()
         if (contacts.isNotEmpty()) {
             contacts.add(0, ContactSelectionListItem.Header(getString(R.string.new_conversation_contacts_title)))

@@ -19,7 +19,8 @@ object StartConversation {
     private val defaultPeekHeight: Int by lazy { (Resources.getSystem().displayMetrics.heightPixels * 0.94).toInt() }
 
     fun showDialog(contacts: List<ContactSelectionListItem>, context: Context, delegate: StartConversationDelegate) {
-        MaterialDialog(context, BottomSheet()).show {
+        val dialog = MaterialDialog(context, BottomSheet())
+        dialog.show {
             val binding = DialogNewConversationBinding.inflate(LayoutInflater.from(context))
             customView(view = binding.root)
             binding.closeButton.setOnClickListener { dismiss() }
@@ -42,9 +43,8 @@ object StartConversation {
             }
             binding.contactsRecyclerView.adapter = adapter
             adapter.items = contacts
-            setPeekHeight(defaultPeekHeight)
         }
-
+        dialog.setPeekHeight(defaultPeekHeight)
     }
 
 }

@@ -27,12 +27,12 @@
             android:id="@+id/closeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/medium_spacing"
+            android:layout_marginStart="@dimen/medium_spacing"
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/ic_baseline_close_24"
             app:layout_constraintBottom_toTopOf="@id/view0"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <View
@@ -157,15 +157,6 @@
 
         </LinearLayout>
 
-        <View
-            android:id="@+id/view3"
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginBottom="1dp"
-            android:background="?android:dividerHorizontal"
-            app:layout_constraintStart_toStartOf="@+id/joinCommunityButton"
-            app:layout_constraintTop_toBottomOf="@+id/joinCommunityButton" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/contactsRecyclerView"
             android:layout_width="match_parent"
@@ -173,7 +164,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view3" />
+            app:layout_constraintTop_toBottomOf="@id/joinCommunityButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
