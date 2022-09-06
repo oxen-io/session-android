@@ -41,6 +41,9 @@ import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.MuteDialog
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
+import org.thoughtcrime.securesms.contacts.ContactSelectionListItem
+import org.thoughtcrime.securesms.conversation.start.StartConversationDelegate
+import org.thoughtcrime.securesms.conversation.start.StartConversation
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.utilities.NotificationUtils
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
@@ -76,10 +79,10 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeActivity : PassphraseRequiredActionBarActivity(),
-        ConversationClickListener,
-        SeedReminderViewDelegate,
-        NewConversationDelegate,
-        GlobalSearchInputLayout.GlobalSearchInputLayoutListener {
+    ConversationClickListener,
+    SeedReminderViewDelegate,
+    StartConversationDelegate,
+    GlobalSearchInputLayout.GlobalSearchInputLayoutListener {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var glide: GlideRequests
@@ -617,8 +620,15 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 
     private fun showNewConversation() {
-        NewConversationDialogFragment()
-            .show(supportFragmentManager, "NewConversationDialogFragment")
+        val contacts = homeViewModel.conversations.value?.filter { !it.recipient.isGroupRecipient }
+            ?.sortedBy { it.recipient.address }
+            ?.groupBy { it.recipient.address.serialize()[2] }
+            ?.flatMap { entry -> listOf(ContactSelectionListItem.Header("${entry.key}")) + entry.value.map { ContactSelectionListItem.Contact(it.recipient) }}
+            ?.toMutableList() ?: mutableListOf()
+        if (contacts.isNotEmpty()) {
+            contacts.add(0, ContactSelectionListItem.Header(getString(R.string.new_conversation_contacts_title)))
+        }
+        StartConversation.showDialog(contacts, this, this)
     }
 
     override fun contactSelected(address: String) {
