@@ -9,6 +9,7 @@
         android:id="@+id/titleText"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_button_height"
+        android:background="@drawable/setting_button_background"
         android:gravity="center_horizontal|center_vertical"
         android:text="@string/dialog_new_conversation_title"
         android:textColor="@color/text"
@@ -152,6 +153,29 @@
 
     </LinearLayout>
 
+    <View
+        android:id="@+id/view3"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginBottom="1dp"
+        android:background="?android:dividerHorizontal"
+        app:layout_constraintStart_toStartOf="@+id/joinCommunityButton"
+        app:layout_constraintTop_toBottomOf="@+id/joinCommunityButton" />
+
+    <TextView
+        android:id="@+id/contactsText"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/setting_button_height"
+        android:background="@drawable/setting_button_background"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/medium_spacing"
+        android:text="@string/new_conversation_contacts_title"
+        android:textColor="@color/text"
+        android:textSize="@dimen/medium_font_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view3" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/contactsRecyclerView"
         android:layout_width="match_parent"
@@ -159,6 +183,6 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/joinCommunityButton" />
+        app:layout_constraintTop_toBottomOf="@id/contactsText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

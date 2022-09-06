@@ -965,4 +965,5 @@
     <string name="activity_create_group_title">Create Group</string>
     <string name="activity_join_community_title">Join Community</string>
     <string name="new_conversation_contacts_title">Contacts</string>
+    <string name="new_conversation_unknown_contacts_section_title">Unknown</string>
 </resources>
