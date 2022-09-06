@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.preferences.appearance
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.children
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
@@ -14,12 +15,15 @@ import org.session.libsession.utilities.TextSecurePreferences.Companion.CLASSIC_
 import org.session.libsession.utilities.TextSecurePreferences.Companion.OCEAN_DARK
 import org.session.libsession.utilities.TextSecurePreferences.Companion.OCEAN_LIGHT
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
+import org.thoughtcrime.securesms.util.ThemeState
 
 @AndroidEntryPoint
 class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.OnClickListener {
 
     val viewModel: AppearanceSettingsViewModel by viewModels()
     lateinit var binding : ActivityAppearanceSettingsBinding
+
+    var currentTheme: ThemeState? = null
 
     private val accentColors
         get() = mapOf(
@@ -61,7 +65,7 @@ class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.On
             }
             viewModel.setNewStyle(mappedStyle)
         } else if (v == binding.systemSettingsSwitch) {
-            viewModel.setNewFollowSystemSettings(v.isSelected)
+            viewModel.setNewFollowSystemSettings((v as SwitchCompat).isChecked)
         }
     }
 
@@ -105,10 +109,16 @@ class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.On
         }
 
         lifecycleScope.launchWhenResumed {
-            viewModel.uiState.collectLatest { (theme, accent, followSystem) ->
+            viewModel.uiState.collectLatest { themeState ->
+                val (theme, accent, followSystem) = themeState
                 updateSelectedTheme(theme)
                 updateSelectedAccent(accent)
                 updateFollowSystemToggle(followSystem)
+                if (currentTheme != null && currentTheme != themeState) {
+                    recreate()
+                } else {
+                    currentTheme = themeState
+                }
             }
         }
 
