@@ -270,6 +270,7 @@
             android:text="@string/activity_appearance_follow_system_category"/>
 
         <LinearLayout
+            android:layout_marginBottom="@dimen/massive_spacing"
             android:background="?colorCellBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
