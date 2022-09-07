@@ -1,18 +1,35 @@
 package org.thoughtcrime.securesms.conversation.start
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Context
+import android.content.Intent
 import android.content.res.Resources
+import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.View
+import android.widget.Toast
+import androidx.fragment.app.FragmentActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.bottomsheets.setPeekHeight
 import com.afollestad.materialdialogs.customview.customView
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import com.google.android.material.tabs.TabLayoutMediator
 import network.loki.messenger.R
+import network.loki.messenger.databinding.DialogCreatePrivateChatBinding
 import network.loki.messenger.databinding.DialogNewConversationBinding
+import nl.komponents.kovenant.ui.failUi
+import nl.komponents.kovenant.ui.successUi
 import org.session.libsession.messaging.contacts.Contact
+import org.session.libsession.snode.SnodeAPI
+import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.PublicKeyValidation
+import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
+import org.thoughtcrime.securesms.dms.CreatePrivateChatFragmentAdapter
 import org.thoughtcrime.securesms.mms.GlideApp
 
 object StartConversation {
@@ -36,8 +53,8 @@ object StartConversation {
             val binding = DialogNewConversationBinding.inflate(LayoutInflater.from(context))
             customView(view = binding.root, scrollable = true, noVerticalPadding = true)
             binding.closeButton.setOnClickListener { dismiss() }
-            binding.newMessageButton.setOnClickListener { delegate.createNewMessage() }
-            binding.newGroupButton.setOnClickListener { delegate.createNewGroup() }
+            binding.createPrivateChatButton.setOnClickListener { delegate.createPrivateChat() }
+            binding.createClosedGroupButton.setOnClickListener { delegate.createClosedGroup() }
             binding.joinCommunityButton.setOnClickListener { delegate.joinCommunity() }
             val adapter = ContactListAdapter(context, GlideApp.with(context)) {
                 delegate.contactSelected(it.address.serialize())
@@ -46,6 +63,89 @@ object StartConversation {
             binding.contactsRecyclerView.adapter = adapter
         }
         dialog.setPeekHeight(defaultPeekHeight)
+    }
+
+    fun showPrivateChatCreationDialog(activity: FragmentActivity) {
+        val dialog = MaterialDialog(activity, BottomSheet())
+        dialog.show {
+            val binding = DialogCreatePrivateChatBinding.inflate(LayoutInflater.from(activity))
+            customView(view = binding.root, scrollable = true, noVerticalPadding = true)
+            binding.backButton.setOnClickListener { dismiss() }
+            binding.closeButton.setOnClickListener { dismiss() }
+            fun showLoader() {
+                binding.loader.visibility = View.VISIBLE
+                binding.loader.animate().setDuration(150).alpha(1.0f).start()
+            }
+            fun hideLoader() {
+                binding.loader.animate().setDuration(150).alpha(0.0f).setListener(object : AnimatorListenerAdapter() {
+
+                    override fun onAnimationEnd(animation: Animator?) {
+                        super.onAnimationEnd(animation)
+                        binding.loader.visibility = View.GONE
+                    }
+                })
+            }
+            val adapter = CreatePrivateChatFragmentAdapter(activity) { onsNameOrPublicKey ->
+                if (PublicKeyValidation.isValid(onsNameOrPublicKey)) {
+                    createPrivateChat(onsNameOrPublicKey, activity)
+                } else {
+                    // This could be an ONS name
+                    showLoader()
+                    SnodeAPI.getSessionID(onsNameOrPublicKey).successUi { hexEncodedPublicKey ->
+                        hideLoader()
+                        createPrivateChat(hexEncodedPublicKey, activity)
+                    }.failUi { exception ->
+                        hideLoader()
+                        var message = activity.resources.getString(R.string.fragment_enter_public_key_error_message)
+                        exception.localizedMessage?.let {
+                            message = it
+                        }
+                        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+            binding.viewPager.adapter = adapter
+            val mediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, pos ->
+                tab.text = when (pos) {
+                    0 -> activity.resources.getString(R.string.activity_create_private_chat_enter_session_id_tab_title)
+                    1 -> activity.resources.getString(R.string.activity_create_private_chat_scan_qr_code_tab_title)
+                    else -> throw IllegalStateException()
+                }
+            }
+            mediator.attach()
+            binding.tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                }
+
+                override fun onTabUnselected(tab: TabLayout.Tab?) {
+                }
+
+                override fun onTabReselected(tab: TabLayout.Tab?) = Unit
+            })
+            var isKeyboardShowing = false
+            binding.rootLayout.viewTreeObserver.addOnGlobalLayoutListener {
+                val diff = binding.rootLayout.rootView.height - binding.rootLayout.height
+                val displayMetrics = activity.resources.displayMetrics
+                val estimatedKeyboardHeight =
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200.0f, displayMetrics)
+                val maybeShowing = (diff > estimatedKeyboardHeight)
+                if (isKeyboardShowing != maybeShowing) {
+                    adapter.isKeyboardShowing = maybeShowing
+                }
+                isKeyboardShowing = maybeShowing
+            }
+        }
+        dialog.setPeekHeight(defaultPeekHeight)
+    }
+
+    private fun createPrivateChat(hexEncodedPublicKey: String, activity: FragmentActivity) {
+        val recipient = Recipient.from(activity, Address.fromSerialized(hexEncodedPublicKey), false)
+        val intent = Intent(activity, ConversationActivityV2::class.java)
+        intent.putExtra(ConversationActivityV2.ADDRESS, recipient.address)
+        intent.setDataAndType(activity.intent.data, activity.intent.type)
+        val existingThread = DatabaseComponent.get(activity).threadDatabase().getThreadIdIfExistsFor(recipient)
+        intent.putExtra(ConversationActivityV2.THREAD_ID, existingThread)
+        activity.startActivity(intent)
     }
 
 }

@@ -41,7 +41,7 @@
         app:layout_constraintTop_toBottomOf="@+id/titleText" />
 
     <LinearLayout
-        android:id="@+id/newMessageButton"
+        android:id="@+id/createPrivateChatButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_button_height"
         android:background="@drawable/setting_button_background"
@@ -78,11 +78,11 @@
         android:layout_height="1px"
         android:layout_marginStart="@dimen/very_large_spacing"
         android:background="?android:dividerHorizontal"
-        app:layout_constraintStart_toStartOf="@+id/newMessageButton"
-        app:layout_constraintTop_toBottomOf="@+id/newMessageButton" />
+        app:layout_constraintStart_toStartOf="@+id/createPrivateChatButton"
+        app:layout_constraintTop_toBottomOf="@+id/createPrivateChatButton" />
 
     <LinearLayout
-        android:id="@+id/newGroupButton"
+        android:id="@+id/createClosedGroupButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_button_height"
         android:background="@drawable/setting_button_background"
@@ -119,8 +119,8 @@
         android:layout_height="1px"
         android:layout_marginStart="@dimen/very_large_spacing"
         android:background="?android:dividerHorizontal"
-        app:layout_constraintStart_toStartOf="@+id/newGroupButton"
-        app:layout_constraintTop_toBottomOf="@+id/newGroupButton" />
+        app:layout_constraintStart_toStartOf="@+id/createClosedGroupButton"
+        app:layout_constraintTop_toBottomOf="@+id/createClosedGroupButton" />
 
     <LinearLayout
         android:id="@+id/joinCommunityButton"

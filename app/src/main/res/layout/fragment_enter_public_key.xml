@@ -1,52 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/contentView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical">
+    android:gravity="center_horizontal">
 
     <View
+        android:id="@+id/topSpacer"
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="?android:dividerHorizontal"
-        android:elevation="1dp" />
+        android:elevation="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        style="@style/SmallSessionEditText"
         android:id="@+id/publicKeyEditText"
+        style="@style/SmallSessionEditText"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_marginLeft="@dimen/large_spacing"
         android:layout_marginTop="@dimen/large_spacing"
         android:layout_marginRight="@dimen/large_spacing"
-        android:paddingTop="0dp"
-        android:paddingBottom="0dp"
         android:gravity="center_vertical"
+        android:hint="@string/fragment_enter_public_key_edit_text_hint"
+        android:imeOptions="actionDone"
         android:inputType="textMultiLine"
         android:maxLines="3"
-        android:imeOptions="actionDone"
-        android:hint="@string/fragment_enter_public_key_edit_text_hint" />
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topSpacer" />
 
     <TextView
+        android:id="@+id/promptTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/large_spacing"
         android:layout_marginTop="@dimen/medium_spacing"
         android:layout_marginRight="@dimen/large_spacing"
-        android:textSize="@dimen/very_small_font_size"
-        android:textColor="@color/text"
         android:alpha="0.6"
+        android:text="@string/fragment_enter_public_key_prompt"
         android:textAlignment="center"
-        android:text="@string/fragment_enter_public_key_explanation" />
+        android:textColor="@color/text"
+        android:textSize="@dimen/very_small_font_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/publicKeyEditText" />
 
     <LinearLayout
         android:id="@+id/optionalContentContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/promptTextView">
 
         <org.thoughtcrime.securesms.components.LabeledSeparatorView
             android:id="@+id/separatorView"
@@ -56,17 +69,24 @@
             android:layout_marginTop="@dimen/large_spacing"
             android:layout_marginRight="@dimen/large_spacing" />
 
+        <ImageView
+            android:id="@+id/qrCodeImageView"
+            android:layout_width="228dp"
+            android:layout_height="228dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/medium_spacing"
+            tools:src="@drawable/ic_qr_code_24" />
+
         <TextView
             android:id="@+id/publicKeyTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/large_spacing"
+            android:layout_marginHorizontal="@dimen/large_spacing"
             android:layout_marginTop="@dimen/large_spacing"
-            android:layout_marginRight="@dimen/large_spacing"
-            android:textSize="@dimen/medium_font_size"
-            android:textColor="@color/text"
             android:fontFamily="@font/space_mono_regular"
             android:textAlignment="center"
+            android:textColor="@color/text"
+            android:textSize="@dimen/medium_font_size"
             tools:text="05987d601943c267879be41830888066c6a024cbdc9a548d06813924bf3372ea78" />
 
         <LinearLayout
@@ -78,38 +98,37 @@
             android:orientation="horizontal">
 
             <Button
-                style="@style/Widget.Session.Button.Common.UnimportantFilled"
                 android:id="@+id/copyButton"
+                style="@style/Widget.Session.Button.Common.UnimportantFilled"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/medium_button_height"
                 android:layout_weight="1"
                 android:text="@string/copy" />
 
             <Button
-                style="@style/Widget.Session.Button.Common.UnimportantFilled"
                 android:id="@+id/shareButton"
+                style="@style/Widget.Session.Button.Common.UnimportantFilled"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/medium_button_height"
-                android:layout_weight="1"
                 android:layout_marginStart="@dimen/medium_spacing"
+                android:layout_weight="1"
                 android:text="@string/share" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <View
-        android:id="@+id/spacer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
     <Button
-        style="@style/Widget.Session.Button.Common.ProminentOutline"
         android:id="@+id/createPrivateChatButton"
+        style="@style/Widget.Session.Button.Common.ProminentOutline"
         android:layout_width="196dp"
         android:layout_height="@dimen/medium_button_height"
         android:layout_marginBottom="@dimen/medium_spacing"
-        android:text="@string/next" />
+        android:text="@string/next"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

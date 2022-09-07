@@ -41,8 +41,8 @@ import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.MuteDialog
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
-import org.thoughtcrime.securesms.conversation.start.StartConversationDelegate
 import org.thoughtcrime.securesms.conversation.start.StartConversation
+import org.thoughtcrime.securesms.conversation.start.StartConversationDelegate
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.utilities.NotificationUtils
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
@@ -52,7 +52,6 @@ import org.thoughtcrime.securesms.database.RecipientDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.dms.CreatePrivateChatActivity
 import org.thoughtcrime.securesms.groups.CreateClosedGroupActivity
 import org.thoughtcrime.securesms.groups.JoinPublicChatActivity
 import org.thoughtcrime.securesms.groups.OpenGroupManager
@@ -629,12 +628,11 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         push(intent)
     }
 
-    override fun createNewMessage() {
-        val intent = Intent(this, CreatePrivateChatActivity::class.java)
-        show(intent)
+    override fun createPrivateChat() {
+        StartConversation.showPrivateChatCreationDialog(this)
     }
 
-    override fun createNewGroup() {
+    override fun createClosedGroup() {
         val intent = Intent(this, CreateClosedGroupActivity::class.java)
         show(intent, true)
     }

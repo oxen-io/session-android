@@ -966,4 +966,5 @@
     <string name="activity_join_community_title">Join Community</string>
     <string name="new_conversation_contacts_title">Contacts</string>
     <string name="new_conversation_unknown_contacts_section_title">Unknown</string>
+    <string name="fragment_enter_public_key_prompt">Start a new conversation by entering someone\'s Session ID or share your Session ID with them.</string>
 </resources>
