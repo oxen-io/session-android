@@ -54,8 +54,7 @@
         android:layout_height="match_parent"
         android:background="@color/reactions_screen_light_shade_color"
         android:foreground="@color/reactions_screen_dark_shade_color"
-        android:visibility="gone"
-        tools:visibility="visible"/>
+        android:visibility="gone"/>
 
     <ViewStub
         android:id="@+id/conversation_reaction_scrubber_stub"
@@ -206,11 +205,11 @@
             android:id="@+id/sendAcceptsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:layout_margin="@dimen/medium_spacing"
+            android:alpha="0.6"
+            android:gravity="center_horizontal"
             android:text="@string/message_requests_send_notice"
             android:textColor="@color/text"
-            android:alpha="0.6"
             android:textSize="@dimen/small_font_size" />
 
         <LinearLayout
