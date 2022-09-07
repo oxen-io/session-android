@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
    <style name="Base.Theme.Session" parent="@style/Theme.AppCompat.DayNight">
-        <item name="actionModeBackground">?colorPrimary</item>
-        <item name="dialog_background_color">?colorPrimary</item>
-
-        <item name="theme_preview_incoming">?message_received_background_color</item>
-        <item name="theme_preview_outgoing">?message_sent_background_color</item>
-        <item name="theme_preview_background">?colorPrimary</item>
-        <item name="theme_preview_border">?input_bar_border</item>
+       <item name="actionModeBackground">?colorPrimary</item>
+       <item name="dialog_background_color">?colorPrimary</item>
+       <item name="theme_preview_incoming">?message_received_background_color</item>
+       <item name="theme_preview_outgoing">?message_sent_background_color</item>
+       <item name="theme_preview_background">?colorPrimary</item>
+       <item name="theme_preview_border">?input_bar_border</item>
        <item name="theme_type">dark</item>
+       <item name="android:preferenceLayoutChild">@layout/preference_divider</item>
 
 <!--        <item name="colorPrimary">@color/action_bar_background</item>-->
 <!--        <item name="colorPrimaryDark">@color/action_bar_background</item>-->

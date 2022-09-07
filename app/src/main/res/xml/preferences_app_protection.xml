@@ -2,7 +2,9 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/preferences_app_protection__app_access">
+    <org.thoughtcrime.securesms.preferences.widgets.SessionPreferenceCategory
+        android:title="@string/preferences_app_protection__app_access"
+        >
 
         <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
             android:key="pref_android_screen_lock"
@@ -51,7 +53,7 @@
             android:title="@string/preferences__incognito_keyboard"
             android:summary="@string/preferences__request_keyboard_to_disable_personalized_learning"/>
 
-    </PreferenceCategory>
+    </org.thoughtcrime.securesms.preferences.widgets.SessionPreferenceCategory>
 
     <PreferenceCategory android:layout="@layout/preference_divider" />
 
