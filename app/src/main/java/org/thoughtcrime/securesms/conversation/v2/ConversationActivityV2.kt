@@ -1086,7 +1086,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val emojiTimestamp = System.currentTimeMillis()
         message.sentTimestamp = emojiTimestamp
         val author = textSecurePreferences.getLocalNumber()!!
-        reactionDb.deleteReaction(emoji, MessageId(originalMessage.id, originalMessage.isMms), author)
+        reactionDb.deleteReaction(emoji, MessageId(originalMessage.id, originalMessage.isMms), author, false)
 
         val originalAuthor = if (originalMessage.isOutgoing) {
             fromSerialized(viewModel.blindedPublicKey ?: textSecurePreferences.getLocalNumber()!!)

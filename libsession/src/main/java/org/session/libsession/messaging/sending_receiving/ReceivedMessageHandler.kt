@@ -302,7 +302,7 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage,
             reaction.serverId = message.openGroupServerMessageID?.toString() ?: message.serverHash.orEmpty()
             reaction.dateSent = message.sentTimestamp ?: 0
             reaction.dateReceived = message.receivedTimestamp ?: 0
-            storage.addReaction(reaction, messageSender, threadIsGroup)
+            storage.addReaction(reaction, messageSender, !threadIsGroup)
         } else {
             storage.removeReaction(reaction.emoji!!, reaction.timestamp!!, reaction.publicKey!!, threadIsGroup)
         }
