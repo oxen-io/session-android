@@ -9,7 +9,8 @@ import org.thoughtcrime.securesms.util.ScanQRCodeWrapperFragmentDelegate
 
 class CreatePrivateChatFragmentAdapter(
     val activity: FragmentActivity,
-    val delegate: ScanQRCodeWrapperFragmentDelegate
+    private val enterPublicKeyDelegate: EnterPublicKeyDelegate,
+    private val scanPublicKeyDelegate: ScanQRCodeWrapperFragmentDelegate
 ) : FragmentStateAdapter(activity) {
 
     val enterPublicKeyFragment: EnterPublicKeyFragment by lazy {
@@ -26,21 +27,16 @@ class CreatePrivateChatFragmentAdapter(
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> EnterPublicKeyFragment()
+            0 -> {
+                enterPublicKeyFragment.delegate = enterPublicKeyDelegate
+                enterPublicKeyFragment
+            }
             1 -> {
                 val result = ScanQRCodeWrapperFragment()
-                result.delegate = delegate
+                result.delegate = scanPublicKeyDelegate
                 result.message = activity.resources.getString(R.string.activity_create_private_chat_scan_qr_code_explanation)
                 result
             }
-            else -> throw IllegalStateException()
-        }
-    }
-
-    private fun getPageTitle(index: Int): CharSequence {
-        return when (index) {
-            0 -> activity.resources.getString(R.string.activity_create_private_chat_enter_session_id_tab_title)
-            1 -> activity.resources.getString(R.string.activity_create_private_chat_scan_qr_code_tab_title)
             else -> throw IllegalStateException()
         }
     }

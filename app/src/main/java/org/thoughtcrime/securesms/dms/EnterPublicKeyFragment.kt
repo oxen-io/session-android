@@ -23,6 +23,8 @@ import org.thoughtcrime.securesms.util.toPx
 class EnterPublicKeyFragment : Fragment() {
     private var binding: FragmentEnterPublicKeyBinding? = null
 
+    var delegate: EnterPublicKeyDelegate? = null
+
     var isKeyboardShowing = false
         set(value) {
             field = value
@@ -81,7 +83,10 @@ class EnterPublicKeyFragment : Fragment() {
 
     private fun createPrivateChatIfPossible() {
         val hexEncodedPublicKey = binding?.publicKeyEditText?.text?.trim().toString()
-//        val activity = requireActivity() as CreatePrivateChatActivity
-//        activity.createPrivateChatIfPossible(hexEncodedPublicKey)
+        delegate?.handlePublicKeyEntered(hexEncodedPublicKey)
     }
+}
+
+fun interface EnterPublicKeyDelegate {
+    fun handlePublicKeyEntered(publicKey: String)
 }

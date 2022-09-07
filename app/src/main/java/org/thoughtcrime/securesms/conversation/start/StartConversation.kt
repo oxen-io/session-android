@@ -14,8 +14,6 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.bottomsheets.setPeekHeight
 import com.afollestad.materialdialogs.customview.customView
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import network.loki.messenger.R
 import network.loki.messenger.databinding.DialogCreatePrivateChatBinding
@@ -85,7 +83,8 @@ object StartConversation {
                     }
                 })
             }
-            val adapter = CreatePrivateChatFragmentAdapter(activity) { onsNameOrPublicKey ->
+            val enterPublicKeyDelegate = { publicKey: String -> createPrivateChat(publicKey, activity) }
+            val adapter = CreatePrivateChatFragmentAdapter(activity, enterPublicKeyDelegate) { onsNameOrPublicKey ->
                 if (PublicKeyValidation.isValid(onsNameOrPublicKey)) {
                     createPrivateChat(onsNameOrPublicKey, activity)
                 } else {
@@ -113,15 +112,6 @@ object StartConversation {
                 }
             }
             mediator.attach()
-            binding.tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
-                override fun onTabSelected(tab: TabLayout.Tab?) {
-                }
-
-                override fun onTabUnselected(tab: TabLayout.Tab?) {
-                }
-
-                override fun onTabReselected(tab: TabLayout.Tab?) = Unit
-            })
             var isKeyboardShowing = false
             binding.rootLayout.viewTreeObserver.addOnGlobalLayoutListener {
                 val diff = binding.rootLayout.rootView.height - binding.rootLayout.height
