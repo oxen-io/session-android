@@ -52,7 +52,6 @@ import org.thoughtcrime.securesms.database.RecipientDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.groups.JoinPublicChatActivity
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter
 import org.thoughtcrime.securesms.home.search.GlobalSearchInputLayout
@@ -640,8 +639,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 
     override fun joinCommunity() {
-        val intent = Intent(this, JoinPublicChatActivity::class.java)
-        show(intent)
+        StartConversation.showJoinCommunityDialog(this)
     }
     // endregion
 }

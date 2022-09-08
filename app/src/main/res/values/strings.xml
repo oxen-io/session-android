@@ -969,4 +969,5 @@
     <string name="fragment_enter_public_key_prompt">Start a new conversation by entering someone\'s Session ID or share your Session ID with them.</string>
     <string name="activity_create_group_create_button_title">Create</string>
     <string name="search_contacts_hint">Search contacts</string>
+    <string name="activity_join_public_chat_enter_community_url_tab_title">Community URL</string>
 </resources>

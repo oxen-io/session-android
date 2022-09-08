@@ -11,30 +11,43 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.bottomsheets.setPeekHeight
 import com.afollestad.materialdialogs.customview.customView
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import network.loki.messenger.databinding.DialogCreateClosedGroupBinding
 import network.loki.messenger.databinding.DialogCreatePrivateChatBinding
+import network.loki.messenger.databinding.DialogJoinCommunityBinding
 import network.loki.messenger.databinding.DialogNewConversationBinding
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.groupSizeLimit
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.GroupUtil
+import org.session.libsession.utilities.OpenGroupUrlParser
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.PublicKeyValidation
 import org.thoughtcrime.securesms.contacts.SelectContactsAdapter
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.dms.CreatePrivateChatFragmentAdapter
+import org.thoughtcrime.securesms.groups.GroupManager
+import org.thoughtcrime.securesms.groups.JoinCommunityFragmentAdapter
+import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.mms.GlideApp
+import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.fadeIn
 import org.thoughtcrime.securesms.util.fadeOut
 
@@ -207,6 +220,81 @@ object StartConversation {
         intent.putExtra(ConversationActivityV2.THREAD_ID, threadId)
         intent.putExtra(ConversationActivityV2.ADDRESS, recipient.address)
         context.startActivity(intent)
+    }
+
+    fun showJoinCommunityDialog(activity: FragmentActivity) {
+        val dialog = MaterialDialog(activity, BottomSheet())
+        dialog.show {
+            val binding = DialogJoinCommunityBinding.inflate(LayoutInflater.from(activity))
+            customView(view = binding.root, scrollable = true, noVerticalPadding = true)
+            binding.backButton.setOnClickListener { dismiss() }
+            binding.closeButton.setOnClickListener { dismiss() }
+            fun showLoader() {
+                binding.loader.visibility = View.VISIBLE
+                binding.loader.animate().setDuration(150).alpha(1.0f).start()
+            }
+
+            fun hideLoader() {
+                binding.loader.animate().setDuration(150).alpha(0.0f).setListener(object : AnimatorListenerAdapter() {
+
+                    override fun onAnimationEnd(animation: Animator?) {
+                        super.onAnimationEnd(animation)
+                        binding.loader.visibility = View.GONE
+                    }
+                })
+            }
+            fun joinCommunityIfPossible(url: String) {
+                val openGroup = try {
+                    OpenGroupUrlParser.parseUrl(url)
+                } catch (e: OpenGroupUrlParser.Error) {
+                    when (e) {
+                        is OpenGroupUrlParser.Error.MalformedURL -> return Toast.makeText(activity, R.string.activity_join_public_chat_error, Toast.LENGTH_SHORT).show()
+                        is OpenGroupUrlParser.Error.InvalidPublicKey -> return Toast.makeText(activity, R.string.invalid_public_key, Toast.LENGTH_SHORT).show()
+                        is OpenGroupUrlParser.Error.NoPublicKey -> return Toast.makeText(activity, R.string.invalid_public_key, Toast.LENGTH_SHORT).show()
+                        is OpenGroupUrlParser.Error.NoRoom -> return Toast.makeText(activity, R.string.activity_join_public_chat_error, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                showLoader()
+                activity.lifecycleScope.launch(Dispatchers.IO) {
+                    try {
+                        val sanitizedServer = openGroup.server.removeSuffix("/")
+                        val openGroupID = "$sanitizedServer.${openGroup.room}"
+                        OpenGroupManager.add(sanitizedServer, openGroup.room, openGroup.serverPublicKey, activity)
+                        val storage = MessagingModuleConfiguration.shared.storage
+                        storage.onOpenGroupAdded(sanitizedServer)
+                        val threadID = GroupManager.getOpenGroupThreadID(openGroupID, activity)
+                        val groupID = GroupUtil.getEncodedOpenGroupID(openGroupID.toByteArray())
+
+                        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(activity)
+                        withContext(Dispatchers.Main) {
+                            val recipient = Recipient.from(activity, Address.fromSerialized(groupID), false)
+                            openConversationActivity(activity, threadID, recipient)
+                            dismiss()
+                        }
+                    } catch (e: Exception) {
+                        Log.e("Loki", "Couldn't join open group.", e)
+                        withContext(Dispatchers.Main) {
+                            hideLoader()
+                            Toast.makeText(activity, R.string.activity_join_public_chat_error, Toast.LENGTH_SHORT).show()
+                        }
+                        return@launch
+                    }
+                }
+            }
+            val enterCommunityUrlDelegate = { url: String -> joinCommunityIfPossible(url) }
+            binding.viewPager.adapter = JoinCommunityFragmentAdapter(activity, enterCommunityUrlDelegate) { url ->
+                joinCommunityIfPossible(url)
+            }
+            val mediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, pos ->
+                tab.text = when (pos) {
+                    0 -> activity.resources.getString(R.string.activity_join_public_chat_enter_community_url_tab_title)
+                    1 -> activity.resources.getString(R.string.activity_join_public_chat_scan_qr_code_tab_title)
+                    else -> throw IllegalStateException()
+                }
+            }
+            mediator.attach()
+        }
+        dialog.setPeekHeight(defaultPeekHeight)
     }
 
 }
