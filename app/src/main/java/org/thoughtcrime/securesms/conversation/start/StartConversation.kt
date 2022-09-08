@@ -9,6 +9,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
@@ -16,19 +17,26 @@ import com.afollestad.materialdialogs.bottomsheets.setPeekHeight
 import com.afollestad.materialdialogs.customview.customView
 import com.google.android.material.tabs.TabLayoutMediator
 import network.loki.messenger.R
+import network.loki.messenger.databinding.DialogCreateClosedGroupBinding
 import network.loki.messenger.databinding.DialogCreatePrivateChatBinding
 import network.loki.messenger.databinding.DialogNewConversationBinding
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
 import org.session.libsession.messaging.contacts.Contact
+import org.session.libsession.messaging.sending_receiving.MessageSender
+import org.session.libsession.messaging.sending_receiving.groupSizeLimit
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.PublicKeyValidation
+import org.thoughtcrime.securesms.contacts.SelectContactsAdapter
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.dms.CreatePrivateChatFragmentAdapter
 import org.thoughtcrime.securesms.mms.GlideApp
+import org.thoughtcrime.securesms.util.fadeIn
+import org.thoughtcrime.securesms.util.fadeOut
 
 object StartConversation {
 
@@ -51,11 +59,12 @@ object StartConversation {
             val binding = DialogNewConversationBinding.inflate(LayoutInflater.from(context))
             customView(view = binding.root, scrollable = true, noVerticalPadding = true)
             binding.closeButton.setOnClickListener { dismiss() }
-            binding.createPrivateChatButton.setOnClickListener { delegate.createPrivateChat() }
-            binding.createClosedGroupButton.setOnClickListener { delegate.createClosedGroup() }
-            binding.joinCommunityButton.setOnClickListener { delegate.joinCommunity() }
+            binding.createPrivateChatButton.setOnClickListener { delegate.createPrivateChat(); dismiss() }
+            binding.createClosedGroupButton.setOnClickListener { delegate.createClosedGroup(); dismiss() }
+            binding.joinCommunityButton.setOnClickListener { delegate.joinCommunity(); dismiss() }
             val adapter = ContactListAdapter(context, GlideApp.with(context)) {
                 delegate.contactSelected(it.address.serialize())
+                dismiss()
             }
             adapter.items = contactGroups.flatMap { entry -> listOf(ContactListItem.Header(entry.key)) + entry.value }
             binding.contactsRecyclerView.adapter = adapter
@@ -93,6 +102,7 @@ object StartConversation {
                     SnodeAPI.getSessionID(onsNameOrPublicKey).successUi { hexEncodedPublicKey ->
                         hideLoader()
                         createPrivateChat(hexEncodedPublicKey, activity)
+                        dismiss()
                     }.failUi { exception ->
                         hideLoader()
                         var message = activity.resources.getString(R.string.fragment_enter_public_key_error_message)
@@ -136,6 +146,67 @@ object StartConversation {
         val existingThread = DatabaseComponent.get(activity).threadDatabase().getThreadIdIfExistsFor(recipient)
         intent.putExtra(ConversationActivityV2.THREAD_ID, existingThread)
         activity.startActivity(intent)
+    }
+
+    fun showClosedGroupCreationDialog(members: List<String>, context: Context, delegate: StartConversationDelegate) {
+        val dialog = MaterialDialog(context, BottomSheet())
+        dialog.show {
+            val binding = DialogCreateClosedGroupBinding.inflate(LayoutInflater.from(context))
+            customView(view = binding.root, scrollable = true, noVerticalPadding = true)
+            binding.backButton.setOnClickListener { dismiss() }
+            binding.closeButton.setOnClickListener { dismiss() }
+            binding.createNewPrivateChatButton.setOnClickListener { delegate.createPrivateChat(); dismiss() }
+            val adapter = SelectContactsAdapter(context, GlideApp.with(context)).apply {
+                this.members = members
+            }
+            binding.recyclerView.adapter = adapter
+            var isLoading = false
+            binding.createClosedGroupButton.setOnClickListener {
+                if (isLoading) return@setOnClickListener
+                val name = binding.nameEditText.text.trim()
+                if (name.isEmpty()) {
+                    return@setOnClickListener Toast.makeText(context, R.string.activity_create_closed_group_group_name_missing_error, Toast.LENGTH_LONG).show()
+                }
+                if (name.length >= 30) {
+                    return@setOnClickListener Toast.makeText(context, R.string.activity_create_closed_group_group_name_too_long_error, Toast.LENGTH_LONG).show()
+                }
+                val selectedMembers = adapter.selectedMembers
+                if (selectedMembers.isEmpty()) {
+                    return@setOnClickListener Toast.makeText(context, R.string.activity_create_closed_group_not_enough_group_members_error, Toast.LENGTH_LONG).show()
+                }
+                if (selectedMembers.count() >= groupSizeLimit) { // Minus one because we're going to include self later
+                    return@setOnClickListener Toast.makeText(context, R.string.activity_create_closed_group_too_many_group_members_error, Toast.LENGTH_LONG).show()
+                }
+                val userPublicKey = TextSecurePreferences.getLocalNumber(context)!!
+                isLoading = true
+                binding.loaderContainer.fadeIn()
+                MessageSender.createClosedGroup(name.toString(), selectedMembers + setOf( userPublicKey )).successUi { groupID ->
+                    binding.loaderContainer.fadeOut()
+                    isLoading = false
+                    val threadID = DatabaseComponent.get(context).threadDatabase().getOrCreateThreadIdFor(Recipient.from(context, Address.fromSerialized(groupID), false))
+                    openConversationActivity(
+                        context,
+                        threadID,
+                        Recipient.from(context, Address.fromSerialized(groupID), false)
+                    )
+                    dismiss()
+                }.failUi {
+                    binding.loaderContainer.fadeOut()
+                    isLoading = false
+                    Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                }
+            }
+            binding.mainContentGroup.isVisible = members.isNotEmpty()
+            binding.emptyStateGroup.isVisible = members.isEmpty()
+        }
+        dialog.setPeekHeight(defaultPeekHeight)
+    }
+
+    private fun openConversationActivity(context: Context, threadId: Long, recipient: Recipient) {
+        val intent = Intent(context, ConversationActivityV2::class.java)
+        intent.putExtra(ConversationActivityV2.THREAD_ID, threadId)
+        intent.putExtra(ConversationActivityV2.ADDRESS, recipient.address)
+        context.startActivity(intent)
     }
 
 }

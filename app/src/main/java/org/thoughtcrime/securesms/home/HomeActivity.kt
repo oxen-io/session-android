@@ -52,7 +52,6 @@ import org.thoughtcrime.securesms.database.RecipientDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.groups.CreateClosedGroupActivity
 import org.thoughtcrime.securesms.groups.JoinPublicChatActivity
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter
@@ -618,7 +617,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 
     private fun showNewConversation() {
-        val recipients = homeViewModel.conversations.value?.map { it.recipient }?.filter { !it.isGroupRecipient } ?: emptyList()
+        val recipients = homeViewModel.conversations.value?.map { it.recipient }
+            ?.filter { !it.isGroupRecipient && it.address.serialize() != publicKey } ?: emptyList()
         StartConversation.showDialog(recipients, this, this)
     }
 
@@ -633,8 +633,10 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 
     override fun createClosedGroup() {
-        val intent = Intent(this, CreateClosedGroupActivity::class.java)
-        show(intent, true)
+        val members = homeViewModel.conversations.value
+            ?.filter { !it.recipient.isGroupRecipient && it.recipient.hasApprovedMe() && it.recipient.address.serialize() != publicKey }
+            ?.map { it.recipient.address.serialize() } ?: emptyList()
+        StartConversation.showClosedGroupCreationDialog(members, this, this)
     }
 
     override fun joinCommunity() {
