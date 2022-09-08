@@ -72,11 +72,11 @@ object StartConversation {
             val binding = DialogNewConversationBinding.inflate(LayoutInflater.from(context))
             customView(view = binding.root, scrollable = true, noVerticalPadding = true)
             binding.closeButton.setOnClickListener { dismiss() }
-            binding.createPrivateChatButton.setOnClickListener { delegate.createPrivateChat(); dismiss() }
-            binding.createClosedGroupButton.setOnClickListener { delegate.createClosedGroup(); dismiss() }
-            binding.joinCommunityButton.setOnClickListener { delegate.joinCommunity(); dismiss() }
+            binding.createPrivateChatButton.setOnClickListener { delegate.onNewMessageSelected(); dismiss() }
+            binding.createClosedGroupButton.setOnClickListener { delegate.onCreateGroupSelected(); dismiss() }
+            binding.joinCommunityButton.setOnClickListener { delegate.onJoinCommunitySelected(); dismiss() }
             val adapter = ContactListAdapter(context, GlideApp.with(context)) {
-                delegate.contactSelected(it.address.serialize())
+                delegate.onContactSelected(it.address.serialize())
                 dismiss()
             }
             adapter.items = contactGroups.flatMap { entry -> listOf(ContactListItem.Header(entry.key)) + entry.value }
@@ -85,12 +85,12 @@ object StartConversation {
         dialog.setPeekHeight(defaultPeekHeight)
     }
 
-    fun showPrivateChatCreationDialog(activity: FragmentActivity) {
+    fun showPrivateChatCreationDialog(activity: FragmentActivity, delegate: StartConversationDelegate) {
         val dialog = MaterialDialog(activity, BottomSheet())
         dialog.show {
             val binding = DialogCreatePrivateChatBinding.inflate(LayoutInflater.from(activity))
             customView(view = binding.root, scrollable = true, noVerticalPadding = true)
-            binding.backButton.setOnClickListener { dismiss() }
+            binding.backButton.setOnClickListener { delegate.onDialogBackPressed(); dismiss() }
             binding.closeButton.setOnClickListener { dismiss() }
             fun showLoader() {
                 binding.loader.visibility = View.VISIBLE
@@ -166,9 +166,9 @@ object StartConversation {
         dialog.show {
             val binding = DialogCreateClosedGroupBinding.inflate(LayoutInflater.from(context))
             customView(view = binding.root, scrollable = true, noVerticalPadding = true)
-            binding.backButton.setOnClickListener { dismiss() }
+            binding.backButton.setOnClickListener { delegate.onDialogBackPressed(); dismiss() }
             binding.closeButton.setOnClickListener { dismiss() }
-            binding.createNewPrivateChatButton.setOnClickListener { delegate.createPrivateChat(); dismiss() }
+            binding.createNewPrivateChatButton.setOnClickListener { delegate.onNewMessageSelected(); dismiss() }
             val adapter = SelectContactsAdapter(context, GlideApp.with(context)).apply {
                 this.members = members
             }
@@ -222,12 +222,12 @@ object StartConversation {
         context.startActivity(intent)
     }
 
-    fun showJoinCommunityDialog(activity: FragmentActivity) {
+    fun showJoinCommunityDialog(activity: FragmentActivity, delegate: StartConversationDelegate) {
         val dialog = MaterialDialog(activity, BottomSheet())
         dialog.show {
             val binding = DialogJoinCommunityBinding.inflate(LayoutInflater.from(activity))
             customView(view = binding.root, scrollable = true, noVerticalPadding = true)
-            binding.backButton.setOnClickListener { dismiss() }
+            binding.backButton.setOnClickListener { delegate.onDialogBackPressed(); dismiss() }
             binding.closeButton.setOnClickListener { dismiss() }
             fun showLoader() {
                 binding.loader.visibility = View.VISIBLE

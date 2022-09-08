@@ -621,25 +621,30 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         StartConversation.showDialog(recipients, this, this)
     }
 
-    override fun contactSelected(address: String) {
-        val intent = Intent(this, ConversationActivityV2::class.java)
-        intent.putExtra(ConversationActivityV2.ADDRESS, Address.fromSerialized(address))
-        push(intent)
+    override fun onNewMessageSelected() {
+        StartConversation.showPrivateChatCreationDialog(this, this)
     }
 
-    override fun createPrivateChat() {
-        StartConversation.showPrivateChatCreationDialog(this)
-    }
-
-    override fun createClosedGroup() {
+    override fun onCreateGroupSelected() {
         val members = homeViewModel.conversations.value
             ?.filter { !it.recipient.isGroupRecipient && it.recipient.hasApprovedMe() && it.recipient.address.serialize() != publicKey }
             ?.map { it.recipient.address.serialize() } ?: emptyList()
         StartConversation.showClosedGroupCreationDialog(members, this, this)
     }
 
-    override fun joinCommunity() {
-        StartConversation.showJoinCommunityDialog(this)
+    override fun onJoinCommunitySelected() {
+        StartConversation.showJoinCommunityDialog(this, this)
     }
+
+    override fun onContactSelected(address: String) {
+        val intent = Intent(this, ConversationActivityV2::class.java)
+        intent.putExtra(ConversationActivityV2.ADDRESS, Address.fromSerialized(address))
+        push(intent)
+    }
+
+    override fun onDialogBackPressed() {
+        showNewConversation()
+    }
+
     // endregion
 }

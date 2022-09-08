@@ -1,8 +1,9 @@
 package org.thoughtcrime.securesms.conversation.start
 
 interface StartConversationDelegate {
-    fun contactSelected(address: String)
-    fun joinCommunity()
-    fun createPrivateChat()
-    fun createClosedGroup()
+    fun onNewMessageSelected()
+    fun onCreateGroupSelected()
+    fun onJoinCommunitySelected()
+    fun onContactSelected(address: String)
+    fun onDialogBackPressed()
 }
