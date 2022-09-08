@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/contentView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -19,15 +19,14 @@
         android:id="@+id/chatURLEditText"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:layout_marginLeft="@dimen/large_spacing"
+        android:layout_marginHorizontal="@dimen/large_spacing"
         android:layout_marginTop="@dimen/large_spacing"
-        android:layout_marginRight="@dimen/large_spacing"
         android:inputType="textWebEmailAddress|textMultiLine"
         android:paddingTop="0dp"
         android:paddingBottom="0dp"
         android:gravity="center_vertical"
         android:maxLines="3"
-        android:hint="@string/fragment_enter_chat_url_edit_text_hint" />
+        android:hint="@string/fragment_enter_community_url_edit_text_hint" />
 
     <RelativeLayout
         android:id="@+id/defaultRoomsLoaderContainer"
@@ -52,7 +51,8 @@
         android:id="@+id/defaultRoomsContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:visibility="visible">
 
         <TextView
             android:layout_marginVertical="16dp"
@@ -63,12 +63,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <GridLayout
-            android:id="@+id/defaultRoomsGridLayout"
-            android:columnCount="2"
-            android:paddingHorizontal="16dp"
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/defaultRoomsFlexboxLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingHorizontal="16dp"
+            app:justifyContent="center"
+            app:flexDirection="row"
+            app:flexWrap="wrap"
+            app:alignItems="center"/>
 
     </LinearLayout>
 
@@ -83,6 +87,6 @@
         android:layout_width="196dp"
         android:layout_height="@dimen/medium_button_height"
         android:layout_marginBottom="@dimen/medium_spacing"
-        android:text="@string/next" />
+        android:text="@string/fragment_enter_community_url_join_button_title" />
 
 </LinearLayout>

@@ -970,4 +970,6 @@
     <string name="activity_create_group_create_button_title">Create</string>
     <string name="search_contacts_hint">Search contacts</string>
     <string name="activity_join_public_chat_enter_community_url_tab_title">Community URL</string>
+    <string name="fragment_enter_community_url_edit_text_hint">Enter Community URL</string>
+    <string name="fragment_enter_community_url_join_button_title">Join</string>
 </resources>

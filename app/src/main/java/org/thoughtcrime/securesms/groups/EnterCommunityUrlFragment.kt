@@ -52,10 +52,9 @@ class EnterCommunityUrlFragment : Fragment() {
     }
 
     private fun populateDefaultGroups(groups: List<OpenGroupApi.DefaultGroup>) {
-        binding.defaultRoomsGridLayout.removeAllViews()
-        binding.defaultRoomsGridLayout.useDefaultMargins = false
+        binding.defaultRoomsFlexboxLayout?.removeAllViews()
         groups.iterator().forEach { defaultGroup ->
-            val chip = layoutInflater.inflate(R.layout.default_group_chip, binding.defaultRoomsGridLayout, false) as Chip
+            val chip = layoutInflater.inflate(R.layout.default_group_chip, binding.defaultRoomsFlexboxLayout, false) as Chip
             val drawable = defaultGroup.image?.let { bytes ->
                 val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                 RoundedBitmapDrawableFactory.create(resources, bitmap).apply {
@@ -67,10 +66,7 @@ class EnterCommunityUrlFragment : Fragment() {
             chip.setOnClickListener {
                 delegate?.handleCommunityUrlEntered(defaultGroup.joinURL)
             }
-            binding.defaultRoomsGridLayout.addView(chip)
-        }
-        if ((groups.size and 1) != 0) { // This checks that the number of rooms is even
-            layoutInflater.inflate(R.layout.grid_layout_filler, binding.defaultRoomsGridLayout)
+            binding.defaultRoomsFlexboxLayout?.addView(chip)
         }
     }
 
