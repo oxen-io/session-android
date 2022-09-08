@@ -211,6 +211,7 @@ interface TextSecurePreferences {
         const val UPDATE_APK_DOWNLOAD_ID = "pref_update_apk_download_id"
         const val UPDATE_APK_DIGEST = "pref_update_apk_digest"
         const val IN_THREAD_NOTIFICATION_PREF = "pref_key_inthread_notifications"
+        const val IN_APP_NOTIFICATION_SOUNDS = "pref_sound_when_app_open"
         const val MESSAGE_BODY_TEXT_SIZE_PREF = "pref_message_body_text_size"
         const val LOCAL_REGISTRATION_ID_PREF = "pref_local_registration_id"
         const val REPEAT_ALERTS_PREF = "pref_repeat_alerts"

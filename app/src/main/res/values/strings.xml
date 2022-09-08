@@ -503,6 +503,7 @@
     <string name="preferences__led_color_unknown">Unknown</string>
     <string name="preferences__pref_led_blink_title">LED blink pattern</string>
     <string name="preferences__sound">Sound</string>
+    <string name="preferences__in_app_sounds">Sound when App is Open</string>
     <string name="preferences__silent">Silent</string>
     <string name="preferences__repeat_alerts">Repeat alerts</string>
     <string name="preferences__never">Never</string>
@@ -965,6 +966,7 @@
     <string name="KeyboardPagerfragment_clear_search_entry">Clear search entry</string>
     <string name="activity_appearance_follow_system_category">Auto dark-mode</string>
     <string name="activity_appearance_follow_system_explanation">Match system settings</string>
+    <string name="go_to_device_notification_settings">Go to device notification settings</string>
 
     <plurals name="ReactionsRecipientAdapter_other_reactors">
         <item quantity="one">And %1$d other has reacted %2$s to this message</item>

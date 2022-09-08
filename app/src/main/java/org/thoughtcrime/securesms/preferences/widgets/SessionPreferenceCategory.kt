@@ -7,10 +7,11 @@ import androidx.preference.PreferenceCategory
 
 class SessionPreferenceCategory @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null): PreferenceCategory(context, attrs) {
 
+    init {
+
+    }
+
     override fun addItemFromInflater(preference: Preference?) {
         super.addItemFromInflater(preference)
     }
-
-
-
 }

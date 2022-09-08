@@ -360,4 +360,6 @@
         <attr name="click_only" format="boolean" />
     </declare-styleable>
 
+    <attr name="preferenceCornerRadius" format="dimension|reference"/>
+
 </resources>
