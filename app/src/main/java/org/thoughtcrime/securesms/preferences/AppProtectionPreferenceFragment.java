@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.thoughtcrime.securesms.ApplicationContext;
@@ -31,7 +30,7 @@ import mobi.upod.timedurationpicker.TimeDurationPickerDialog;
 import network.loki.messenger.BuildConfig;
 import network.loki.messenger.R;
 
-public class AppProtectionPreferenceFragment extends PreferenceFragmentCompat {
+public class AppProtectionPreferenceFragment extends ListSummaryPreferenceFragment {
 
   @Override
   public void onAttach(Activity activity) {
