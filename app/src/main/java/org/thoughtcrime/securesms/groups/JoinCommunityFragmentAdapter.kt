@@ -17,11 +17,7 @@ class JoinCommunityFragmentAdapter(
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> EnterCommunityUrlFragment().apply { delegate = enterCommunityUrlDelegate }
-            1 -> {
-                val result = ScanQRCodeWrapperFragment()
-                result.delegate = scanQrCodeDelegate
-                result
-            }
+            1 ->  ScanQRCodeWrapperFragment().apply { delegate = scanQrCodeDelegate }
             else -> throw IllegalStateException()
         }
     }

@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
@@ -135,18 +134,6 @@ object StartConversation {
                 }
             }
             mediator.attach()
-            var isKeyboardShowing = false
-            binding.rootLayout.viewTreeObserver.addOnGlobalLayoutListener {
-                val diff = binding.rootLayout.rootView.height - binding.rootLayout.height
-                val displayMetrics = activity.resources.displayMetrics
-                val estimatedKeyboardHeight =
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200.0f, displayMetrics)
-                val maybeShowing = (diff > estimatedKeyboardHeight)
-                if (isKeyboardShowing != maybeShowing) {
-                    adapter.isKeyboardShowing = maybeShowing
-                }
-                isKeyboardShowing = maybeShowing
-            }
         }
         dialog.setPeekHeight(defaultPeekHeight)
     }

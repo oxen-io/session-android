@@ -21,15 +21,9 @@ import org.thoughtcrime.securesms.util.QRCodeUtilities
 import org.thoughtcrime.securesms.util.toPx
 
 class EnterPublicKeyFragment : Fragment() {
-    private var binding: FragmentEnterPublicKeyBinding? = null
+    private lateinit var binding: FragmentEnterPublicKeyBinding
 
     var delegate: EnterPublicKeyDelegate? = null
-
-    var isKeyboardShowing = false
-        set(value) {
-            field = value
-            binding?.optionalContentContainer?.isVisible = !value
-        }
 
     private val hexEncodedPublicKey: String
         get() {
@@ -38,12 +32,12 @@ class EnterPublicKeyFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentEnterPublicKeyBinding.inflate(inflater, container, false)
-        return binding!!.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding?.apply {
+        with(binding) {
             publicKeyEditText.imeOptions = EditorInfo.IME_ACTION_DONE or 16777216 // Always use incognito keyboard
             publicKeyEditText.setRawInputType(InputType.TYPE_CLASS_TEXT)
             publicKeyEditText.setOnEditorActionListener { v, actionID, _ ->
@@ -82,7 +76,7 @@ class EnterPublicKeyFragment : Fragment() {
     }
 
     private fun createPrivateChatIfPossible() {
-        val hexEncodedPublicKey = binding?.publicKeyEditText?.text?.trim().toString()
+        val hexEncodedPublicKey = binding.publicKeyEditText.text?.trim().toString()
         delegate?.handlePublicKeyEntered(hexEncodedPublicKey)
     }
 }
