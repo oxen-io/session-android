@@ -51,6 +51,7 @@ public abstract class CorrectedPreferenceFragment extends PreferenceFragmentComp
 
     View lv = getView().findViewById(android.R.id.list);
     if (lv != null) lv.setPadding(0, 0, 0, 0);
+    setDivider(null);
   }
 
   @Override
