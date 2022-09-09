@@ -24,7 +24,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Looper;
+import android.os.HandlerThread;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.DefaultLifecycleObserver;
@@ -44,19 +44,25 @@ import org.session.libsession.utilities.ProfilePictureUtilities;
 import org.session.libsession.utilities.SSKEnvironment;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.Util;
+import org.session.libsession.utilities.WindowDebouncer;
 import org.session.libsession.utilities.dynamiclanguage.DynamicLanguageContextWrapper;
 import org.session.libsession.utilities.dynamiclanguage.LocaleParser;
+import org.session.libsignal.utilities.JsonUtil;
 import org.session.libsignal.utilities.Log;
 import org.session.libsignal.utilities.ThreadUtils;
 import org.signal.aesgcmprovider.AesGcmProvider;
 import org.thoughtcrime.securesms.components.TypingStatusSender;
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities;
+import org.thoughtcrime.securesms.database.EmojiSearchDatabase;
 import org.thoughtcrime.securesms.database.JobDatabase;
 import org.thoughtcrime.securesms.database.LokiAPIDatabase;
 import org.thoughtcrime.securesms.database.Storage;
+import org.thoughtcrime.securesms.database.model.EmojiSearchData;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import org.thoughtcrime.securesms.dependencies.DatabaseModule;
+import org.thoughtcrime.securesms.emoji.EmojiSource;
 import org.thoughtcrime.securesms.groups.OpenGroupManager;
+import org.thoughtcrime.securesms.groups.OpenGroupMigrator;
 import org.thoughtcrime.securesms.home.HomeActivity;
 import org.thoughtcrime.securesms.jobmanager.JobManager;
 import org.thoughtcrime.securesms.jobmanager.impl.JsonDataSerializer;
@@ -88,11 +94,16 @@ import org.webrtc.voiceengine.WebRtcAudioManager;
 import org.webrtc.voiceengine.WebRtcAudioUtils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.security.Security;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.Timer;
+import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
@@ -127,7 +138,9 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     public Poller poller = null;
     public Broadcaster broadcaster = null;
     private Job firebaseInstanceIdJob;
-    private Handler conversationListNotificationHandler;
+    private WindowDebouncer conversationListDebouncer;
+    private HandlerThread conversationListHandlerThread;
+    private Handler conversationListHandler;
     private PersistentLogger persistentLogger;
 
     @Inject LokiAPIDatabase lokiAPIDatabase;
@@ -136,8 +149,17 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     @Inject JobDatabase jobDatabase;
     @Inject TextSecurePreferences textSecurePreferences;
     CallMessageProcessor callMessageProcessor;
+    MessagingModuleConfiguration messagingModuleConfiguration;
 
     private volatile boolean isAppVisible;
+
+    @Override
+    public Object getSystemService(String name) {
+        if (MessagingModuleConfiguration.MESSAGING_MODULE_SERVICE.equals(name)) {
+            return messagingModuleConfiguration;
+        }
+        return super.getSystemService(name);
+    }
 
     public static ApplicationContext getInstance(Context context) {
         return (ApplicationContext) context.getApplicationContext();
@@ -148,10 +170,21 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     }
 
     public Handler getConversationListNotificationHandler() {
-        if (this.conversationListNotificationHandler == null) {
-            conversationListNotificationHandler = new Handler(Looper.getMainLooper());
+        if (this.conversationListHandlerThread == null) {
+            conversationListHandlerThread = new HandlerThread("ConversationListHandler");
+            conversationListHandlerThread.start();
         }
-        return this.conversationListNotificationHandler;
+        if (this.conversationListHandler == null) {
+            conversationListHandler = new Handler(conversationListHandlerThread.getLooper());
+        }
+        return conversationListHandler;
+    }
+
+    public WindowDebouncer getConversationListDebouncer() {
+        if (conversationListDebouncer == null) {
+            conversationListDebouncer = new WindowDebouncer(1000, new Timer());
+        }
+        return conversationListDebouncer;
     }
 
     public PersistentLogger getPersistentLogger() {
@@ -161,7 +194,15 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     @Override
     public void onCreate() {
         DatabaseModule.init(this);
+        MessagingModuleConfiguration.configure(this);
         super.onCreate();
+        messagingModuleConfiguration = new MessagingModuleConfiguration(this,
+                storage,
+                messageDataProvider,
+                ()-> KeyPairUtilities.INSTANCE.getUserED25519KeyPair(this));
+        // migrate session open group data
+        OpenGroupMigrator.migrate(getDatabaseComponent());
+        // end migration
         callMessageProcessor = new CallMessageProcessor(this, textSecurePreferences, ProcessLifecycleOwner.get().getLifecycle(), storage);
         Log.i(TAG, "onCreate()");
         startKovenant();
@@ -174,11 +215,6 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         messageNotifier = new OptimizedMessageNotifier(new DefaultMessageNotifier());
         broadcaster = new Broadcaster(this);
         LokiAPIDatabase apiDB = getDatabaseComponent().lokiAPIDatabase();
-        MessagingModuleConfiguration.Companion.configure(this,
-                storage,
-                messageDataProvider,
-                ()-> KeyPairUtilities.INSTANCE.getUserED25519KeyPair(this)
-        );
         SnodeModule.Companion.configure(apiDB, broadcaster);
         String userPublicKey = TextSecurePreferences.getLocalNumber(this);
         if (userPublicKey != null) {
@@ -196,6 +232,8 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         initializeWebRtc();
         initializeBlobProvider();
         resubmitProfilePictureIfNeeded();
+        loadEmojiSearchIndexIfNeeded();
+        EmojiSource.refresh();
     }
 
     @Override
@@ -461,6 +499,20 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
                 });
             } catch (Exception exception) {
                 // Do nothing
+            }
+        });
+    }
+
+    private void loadEmojiSearchIndexIfNeeded() {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            EmojiSearchDatabase emojiSearchDb = getDatabaseComponent().emojiSearchDatabase();
+            if (emojiSearchDb.query("face", 1).isEmpty()) {
+                try (InputStream inputStream = getAssets().open("emoji/emoji_search_index.json")) {
+                    List<EmojiSearchData> searchIndex = Arrays.asList(JsonUtil.fromJson(inputStream, EmojiSearchData[].class));
+                    emojiSearchDb.setSearchIndex(searchIndex);
+                } catch (IOException e) {
+                    Log.e("Loki", "Failed to load emoji search index");
+                }
             }
         });
     }

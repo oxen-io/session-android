@@ -21,6 +21,7 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsignal.utilities.IdPrefix
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
@@ -39,7 +40,7 @@ class UserDetailsBottomSheet : BottomSheetDialogFragment() {
         const val ARGUMENT_THREAD_ID = "threadId"
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentUserDetailsBottomSheetBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -51,10 +52,10 @@ class UserDetailsBottomSheet : BottomSheetDialogFragment() {
         val recipient = Recipient.from(requireContext(), Address.fromSerialized(publicKey), false)
         val threadRecipient = threadDb.getRecipientForThreadId(threadID) ?: return dismiss()
         with(binding) {
-            profilePictureView.publicKey = publicKey
-            profilePictureView.glide = GlideApp.with(this@UserDetailsBottomSheet)
-            profilePictureView.isLarge = true
-            profilePictureView.update(recipient)
+            profilePictureView.root.publicKey = publicKey
+            profilePictureView.root.glide = GlideApp.with(this@UserDetailsBottomSheet)
+            profilePictureView.root.isLarge = true
+            profilePictureView.root.update(recipient)
             nameTextViewContainer.visibility = View.VISIBLE
             nameTextViewContainer.setOnClickListener {
                 nameTextViewContainer.visibility = View.INVISIBLE
@@ -83,8 +84,8 @@ class UserDetailsBottomSheet : BottomSheetDialogFragment() {
             }
             nameTextView.text = recipient.name ?: publicKey // Uses the Contact API internally
 
-            publicKeyTextView.isVisible = !threadRecipient.isOpenGroupRecipient
-            messageButton.isVisible = !threadRecipient.isOpenGroupRecipient
+            publicKeyTextView.isVisible = !threadRecipient.isOpenGroupRecipient && !threadRecipient.isOpenGroupInboxRecipient
+            messageButton.isVisible = !threadRecipient.isOpenGroupRecipient || IdPrefix.fromValue(publicKey) == IdPrefix.BLINDED
             publicKeyTextView.text = publicKey
             publicKeyTextView.setOnLongClickListener {
                 val clipboard =
@@ -103,6 +104,7 @@ class UserDetailsBottomSheet : BottomSheetDialogFragment() {
                 )
                 intent.putExtra(ConversationActivityV2.ADDRESS, recipient.address)
                 intent.putExtra(ConversationActivityV2.THREAD_ID, threadId ?: -1)
+                intent.putExtra(ConversationActivityV2.FROM_GROUP_THREAD_ID, threadID)
                 startActivity(intent)
                 dismiss()
             }

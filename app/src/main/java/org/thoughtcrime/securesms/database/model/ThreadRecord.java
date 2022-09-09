@@ -27,8 +27,8 @@ import android.text.style.StyleSpan;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsession.utilities.ExpirationUtil;
+import org.session.libsession.utilities.recipients.Recipient;
 import org.thoughtcrime.securesms.database.MmsSmsColumns;
 import org.thoughtcrime.securesms.database.SmsDatabase;
 
@@ -74,7 +74,6 @@ public class ThreadRecord extends DisplayRecord {
 
   @Override
   public SpannableString getDisplayBody(@NonNull Context context) {
-    Recipient recipient = getRecipient();
     if (isGroupUpdateMessage()) {
       return emphasisAdded(context.getString(R.string.ThreadRecord_group_updated));
     } else if (isOpenGroupInvitation()) {
@@ -116,6 +115,8 @@ public class ThreadRecord extends DisplayRecord {
       return emphasisAdded(context.getString(R.string.ThreadRecord_you_marked_verified));
     } else if (SmsDatabase.Types.isIdentityDefault(type)) {
       return emphasisAdded(context.getString(R.string.ThreadRecord_you_marked_unverified));
+    } else if (MmsSmsColumns.Types.isMessageRequestResponse(type)) {
+      return emphasisAdded(context.getString(R.string.message_requests_accepted));
     } else if (getCount() == 0) {
       return new SpannableString(context.getString(R.string.ThreadRecord_empty_message));
     } else {

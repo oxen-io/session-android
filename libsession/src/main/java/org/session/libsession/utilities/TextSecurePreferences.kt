@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import org.session.libsession.BuildConfig
 import org.session.libsession.R
 import org.session.libsession.utilities.TextSecurePreferences.Companion.CALL_NOTIFICATIONS_ENABLED
+import org.session.libsession.utilities.TextSecurePreferences.Companion.LAST_VACUUM_TIME
 import org.session.libsession.utilities.TextSecurePreferences.Companion.SHOWN_CALL_NOTIFICATION
 import org.session.libsession.utilities.TextSecurePreferences.Companion.SHOWN_CALL_WARNING
 import org.session.libsignal.utilities.Log
@@ -160,6 +161,10 @@ interface TextSecurePreferences {
     fun setShownCallWarning(): Boolean
     fun setShownCallNotification(): Boolean
     fun isCallNotificationsEnabled(): Boolean
+    fun getLastVacuum(): Long
+    fun setLastVacuumNow()
+    fun getFingerprintKeyGenerated(): Boolean
+    fun setFingerprintKeyGenerated()
     fun clearAll()
 
     companion object {
@@ -240,6 +245,8 @@ interface TextSecurePreferences {
         const val CALL_NOTIFICATIONS_ENABLED = "pref_call_notifications_enabled"
         const val SHOWN_CALL_WARNING = "pref_shown_call_warning" // call warning is user-facing warning of enabling calls
         const val SHOWN_CALL_NOTIFICATION = "pref_shown_call_notification" // call notification is a promp to check privacy settings
+        const val LAST_VACUUM_TIME = "pref_last_vacuum_time"
+        const val FINGERPRINT_KEY_GENERATED = "fingerprint_key_generated"
 
         @JvmStatic
         fun getLastConfigurationSyncTime(context: Context): Long {
@@ -910,9 +917,30 @@ interface TextSecurePreferences {
         }
 
         @JvmStatic
+        fun getLastVacuumTime(context: Context): Long {
+            return getLongPreference(context, LAST_VACUUM_TIME, 0)
+        }
+
+        @JvmStatic
+        fun setLastVacuumNow(context: Context) {
+            setLongPreference(context, LAST_VACUUM_TIME, System.currentTimeMillis())
+        }
+
+        @JvmStatic
+        fun getFingerprintKeyGenerated(context: Context): Boolean {
+            return getBooleanPreference(context, FINGERPRINT_KEY_GENERATED, false)
+        }
+
+        @JvmStatic
+        fun setFingerprintKeyGenerated(context: Context) {
+            setBooleanPreference(context, FINGERPRINT_KEY_GENERATED, true)
+        }
+
+        @JvmStatic
         fun clearAll(context: Context) {
             getDefaultSharedPreferences(context).edit().clear().commit()
         }
+
     }
 }
 
@@ -1469,6 +1497,14 @@ class AppTextSecurePreferences @Inject constructor(
         return getBooleanPreference(CALL_NOTIFICATIONS_ENABLED, false)
     }
 
+    override fun getLastVacuum(): Long {
+        return getLongPreference(LAST_VACUUM_TIME, 0)
+    }
+
+    override fun setLastVacuumNow() {
+        setLongPreference(LAST_VACUUM_TIME, System.currentTimeMillis())
+    }
+
     override fun setShownCallNotification(): Boolean {
         val previousValue = getBooleanPreference(SHOWN_CALL_NOTIFICATION, false)
         if (previousValue) return false
@@ -1499,6 +1535,15 @@ class AppTextSecurePreferences @Inject constructor(
     override fun setHasHiddenMessageRequests() {
         setBooleanPreference(TextSecurePreferences.HAS_HIDDEN_MESSAGE_REQUESTS, true)
     }
+
+    override fun getFingerprintKeyGenerated(): Boolean {
+        return getBooleanPreference(TextSecurePreferences.FINGERPRINT_KEY_GENERATED, false)
+    }
+
+    override fun setFingerprintKeyGenerated() {
+        setBooleanPreference(TextSecurePreferences.FINGERPRINT_KEY_GENERATED, true)
+    }
+
 
     override fun clearAll() {
         getDefaultSharedPreferences(context).edit().clear().commit()

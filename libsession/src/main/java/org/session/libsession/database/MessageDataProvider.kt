@@ -1,6 +1,11 @@
 package org.session.libsession.database
 
-import org.session.libsession.messaging.sending_receiving.attachments.*
+import org.session.libsession.messaging.sending_receiving.attachments.Attachment
+import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId
+import org.session.libsession.messaging.sending_receiving.attachments.AttachmentState
+import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
+import org.session.libsession.messaging.sending_receiving.attachments.SessionServiceAttachmentPointer
+import org.session.libsession.messaging.sending_receiving.attachments.SessionServiceAttachmentStream
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.UploadResult
 import org.session.libsession.utilities.recipients.Recipient
@@ -11,6 +16,9 @@ import java.io.InputStream
 interface MessageDataProvider {
 
     fun getMessageID(serverID: Long): Long?
+    /**
+     * @return pair of sms or mms table-specific ID and whether it is in SMS table
+     */
     fun getMessageID(serverId: Long, threadId: Long): Pair<Long, Boolean>?
     fun deleteMessage(messageID: Long, isSms: Boolean)
     fun updateMessageAsDeleted(timestamp: Long, author: String)
@@ -25,7 +33,7 @@ interface MessageDataProvider {
     fun insertAttachment(messageId: Long, attachmentId: AttachmentId, stream : InputStream)
     fun updateAudioAttachmentDuration(attachmentId: AttachmentId, durationMs: Long, threadId: Long)
     fun isMmsOutgoing(mmsMessageId: Long): Boolean
-    fun isOutgoingMessage(mmsId: Long): Boolean
+    fun isOutgoingMessage(timestamp: Long): Boolean
     fun handleSuccessfulAttachmentUpload(attachmentId: Long, attachmentStream: SignalServiceAttachmentStream, attachmentKey: ByteArray, uploadResult: UploadResult)
     fun handleFailedAttachmentUpload(attachmentId: Long)
     fun getMessageForQuote(timestamp: Long, author: Address): Pair<Long, Boolean>?

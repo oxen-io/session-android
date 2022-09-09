@@ -14,6 +14,7 @@ import com.annimon.stream.Stream;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.jetbrains.annotations.NotNull;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.GroupRecord;
 import org.session.libsession.utilities.TextSecurePreferences;
@@ -243,6 +244,7 @@ public class GroupDatabase extends Database implements LokiOpenGroupDatabaseProt
       recipient.setParticipants(Stream.of(members).map(memberAddress -> Recipient.from(context, memberAddress, true)).toList());
     });
 
+    notifyConversationListeners(threadId);
     notifyConversationListListeners();
     return threadId;
   }
@@ -314,6 +316,7 @@ public class GroupDatabase extends Database implements LokiOpenGroupDatabaseProt
                                                 new String[] {groupID});
 
     Recipient.applyCached(Address.fromSerialized(groupID), recipient -> recipient.setGroupAvatarId(avatarId == 0 ? null : avatarId));
+    notifyConversationListListeners();
   }
 
   public void updateMembers(String groupId, List<Address> members) {
@@ -439,7 +442,15 @@ public class GroupDatabase extends Database implements LokiOpenGroupDatabaseProt
     }
   }
 
-  public static class Reader implements Closeable {
+  public void migrateEncodedGroup(@NotNull String legacyEncodedGroupId, @NotNull String newEncodedGroupId) {
+    String query = GROUP_ID+" = ?";
+    ContentValues contentValues = new ContentValues(1);
+    contentValues.put(GROUP_ID, newEncodedGroupId);
+    SQLiteDatabase db = databaseHelper.getWritableDatabase();
+    db.update(TABLE_NAME, contentValues, query, new String[]{legacyEncodedGroupId});
+  }
+
+    public static class Reader implements Closeable {
 
     private final Cursor cursor;
 

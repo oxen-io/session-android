@@ -26,6 +26,7 @@ import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Broadcaster
 import org.session.libsignal.utilities.HTTP
 import org.session.libsignal.utilities.Hex
+import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Snode
 import org.session.libsignal.utilities.ThreadUtils
@@ -41,7 +42,7 @@ import kotlin.properties.Delegates.observable
 
 object SnodeAPI {
     private val sodium by lazy { LazySodiumAndroid(SodiumAndroid()) }
-    private val database: LokiAPIDatabaseProtocol
+    internal val database: LokiAPIDatabaseProtocol
         get() = SnodeModule.shared.storage
     private val broadcaster: Broadcaster
         get() = SnodeModule.shared.broadcaster
@@ -93,16 +94,26 @@ object SnodeAPI {
     }
 
     // Internal API
-    internal fun invoke(method: Snode.Method, snode: Snode, publicKey: String? = null, parameters: Map<String, Any>): RawResponsePromise {
+    internal fun invoke(
+        method: Snode.Method,
+        snode: Snode,
+        parameters: Map<String, Any>,
+        publicKey: String? = null,
+        version: Version = Version.V3
+    ): RawResponsePromise {
         val url = "${snode.address}:${snode.port}/storage_rpc/v1"
+        val deferred = deferred<Map<*, *>, Exception>()
         if (useOnionRequests) {
-            return OnionRequestAPI.sendOnionRequest(method, parameters, snode, publicKey)
+            OnionRequestAPI.sendOnionRequest(method, parameters, snode, version, publicKey).map {
+                val body = it.body ?: throw Error.Generic
+                deferred.resolve(JsonUtil.fromJson(body, Map::class.java))
+            }.fail { deferred.reject(it) }
         } else {
-            val deferred = deferred<Map<*, *>, Exception>()
             ThreadUtils.queue {
                 val payload = mapOf( "method" to method.rawValue, "params" to parameters )
                 try {
-                    val json = HTTP.execute(HTTP.Verb.POST, url, payload)
+                    val response = HTTP.execute(HTTP.Verb.POST, url, payload).toString()
+                    val json = JsonUtil.fromJson(response, Map::class.java)
                     deferred.resolve(json)
                 } catch (exception: Exception) {
                     val httpRequestFailedException = exception as? HTTP.HTTPRequestFailedException
@@ -114,8 +125,8 @@ object SnodeAPI {
                     deferred.reject(exception)
                 }
             }
-            return deferred.promise
         }
+        return deferred.promise
     }
 
     internal fun getRandomSnode(): Promise<Snode, Exception> {
@@ -136,7 +147,12 @@ object SnodeAPI {
             deferred<Snode, Exception>()
             ThreadUtils.queue {
                 try {
-                    val json = HTTP.execute(HTTP.Verb.POST, url, parameters, useSeedNodeConnection = true)
+                    val response = HTTP.execute(HTTP.Verb.POST, url, parameters, useSeedNodeConnection = true)
+                    val json = try {
+                        JsonUtil.fromJson(response, Map::class.java)
+                    } catch (exception: Exception) {
+                        mapOf( "result" to response.toString())
+                    }
                     val intermediate = json["result"] as? Map<*, *>
                     val rawSnodes = intermediate?.get("service_node_states") as? List<*>
                     if (rawSnodes != null) {
@@ -211,7 +227,7 @@ object SnodeAPI {
         val promises = (1..validationCount).map {
             getRandomSnode().bind { snode ->
                 retryIfNeeded(maxRetryCount) {
-                    invoke(Snode.Method.OxenDaemonRPCCall, snode, null, parameters)
+                    invoke(Snode.Method.OxenDaemonRPCCall, snode, parameters)
                 }
             }
         }
@@ -275,14 +291,14 @@ object SnodeAPI {
 
     fun getSwarm(publicKey: String): Promise<Set<Snode>, Exception> {
         val cachedSwarm = database.getSwarm(publicKey)
-        if (cachedSwarm != null && cachedSwarm.size >= minimumSwarmSnodeCount) {
+        return if (cachedSwarm != null && cachedSwarm.size >= minimumSwarmSnodeCount) {
             val cachedSwarmCopy = mutableSetOf<Snode>() // Workaround for a Kotlin compiler issue
             cachedSwarmCopy.addAll(cachedSwarm)
-            return task { cachedSwarmCopy }
+            task { cachedSwarmCopy }
         } else {
             val parameters = mapOf( "pubKey" to publicKey )
-            return getRandomSnode().bind {
-                invoke(Snode.Method.GetSwarm, it, publicKey, parameters)
+            getRandomSnode().bind {
+                invoke(Snode.Method.GetSwarm, it, parameters, publicKey)
             }.map {
                 parseSnodes(it).toSet()
             }.success {
@@ -292,7 +308,6 @@ object SnodeAPI {
     }
 
     fun getRawMessages(snode: Snode, publicKey: String, requiresAuth: Boolean = true, namespace: Int = 0): RawResponsePromise {
-        val userED25519KeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return Promise.ofFail(Error.NoKeyPair)
         // Get last message hash
         val lastHashValue = database.getLastMessageHashValue(snode, publicKey, namespace) ?: ""
         val parameters = mutableMapOf<String,Any>(
@@ -301,6 +316,12 @@ object SnodeAPI {
         )
         // Construct signature
         if (requiresAuth) {
+            val userED25519KeyPair = try {
+                MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return Promise.ofFail(Error.NoKeyPair)
+            } catch (e: Exception) {
+                Log.e("Loki", "Error getting KeyPair", e)
+                return Promise.ofFail(Error.NoKeyPair)
+            }
             val timestamp = Date().time + SnodeAPI.clockOffset
             val ed25519PublicKey = userED25519KeyPair.publicKey.asHexString
             val signature = ByteArray(Sign.BYTES)
@@ -324,7 +345,7 @@ object SnodeAPI {
         }
 
         // Make the request
-        return invoke(Snode.Method.GetMessages, snode, publicKey, parameters)
+        return invoke(Snode.Method.GetMessages, snode, parameters, publicKey)
     }
 
     fun getMessages(publicKey: String): MessageListPromise {
@@ -336,7 +357,7 @@ object SnodeAPI {
     }
 
     private fun getNetworkTime(snode: Snode): Promise<Pair<Snode,Long>, Exception> {
-        return invoke(Snode.Method.Info, snode, null, emptyMap()).map { rawResponse ->
+        return invoke(Snode.Method.Info, snode, emptyMap()).map { rawResponse ->
             val timestamp = rawResponse["timestamp"] as? Long ?: -1
             snode to timestamp
         }
@@ -370,7 +391,7 @@ object SnodeAPI {
                 parameters["namespace"] = namespace
             }
             getSingleTargetSnode(destination).bind { snode ->
-                invoke(Snode.Method.SendMessage, snode, destination, parameters)
+                invoke(Snode.Method.SendMessage, snode, parameters, destination)
             }
         }
     }
@@ -391,7 +412,7 @@ object SnodeAPI {
                         "messages" to serverHashes,
                         "signature" to Base64.encodeBytes(signature)
                     )
-                    invoke(Snode.Method.DeleteMessage, snode, publicKey, deleteMessageParams).map { rawResponse ->
+                    invoke(Snode.Method.DeleteMessage, snode, deleteMessageParams, publicKey).map { rawResponse ->
                         val swarms = rawResponse["swarm"] as? Map<String, Any> ?: return@map mapOf()
                         val result = swarms.mapNotNull { (hexSnodePublicKey, rawJSON) ->
                             val json = rawJSON as? Map<String, Any> ?: return@mapNotNull null
@@ -461,7 +482,7 @@ object SnodeAPI {
                             "timestamp" to timestamp,
                             "signature" to Base64.encodeBytes(signature)
                         )
-                        invoke(Snode.Method.DeleteAll, snode, userPublicKey, deleteMessageParams).map {
+                        invoke(Snode.Method.DeleteAll, snode, deleteMessageParams, userPublicKey).map {
                             rawResponse -> parseDeletions(userPublicKey, timestamp, rawResponse)
                         }.fail { e ->
                             Log.e("Loki", "Failed to clear data", e)
@@ -477,7 +498,7 @@ object SnodeAPI {
         return if (messages != null) {
             updateLastMessageHashValueIfPossible(snode, publicKey, messages, namespace)
             val newRawMessages = removeDuplicates(publicKey, messages, namespace)
-            return parseEnvelopes(newRawMessages);
+            return parseEnvelopes(newRawMessages)
         } else {
             listOf()
         }
@@ -494,7 +515,8 @@ object SnodeAPI {
     }
 
     private fun removeDuplicates(publicKey: String, rawMessages: List<*>, namespace: Int): List<*> {
-        val receivedMessageHashValues = database.getReceivedMessageHashValues(publicKey, namespace)?.toMutableSet() ?: mutableSetOf()
+        val originalMessageHashValues = database.getReceivedMessageHashValues(publicKey, namespace)?.toMutableSet() ?: mutableSetOf()
+        val receivedMessageHashValues = originalMessageHashValues.toMutableSet()
         val result = rawMessages.filter { rawMessage ->
             val rawMessageAsJSON = rawMessage as? Map<*, *>
             val hashValue = rawMessageAsJSON?.get("hash") as? String
@@ -507,7 +529,9 @@ object SnodeAPI {
                 false
             }
         }
-        database.setReceivedMessageHashValues(publicKey, receivedMessageHashValues, namespace)
+        if (originalMessageHashValues != receivedMessageHashValues) {
+            database.setReceivedMessageHashValues(publicKey, receivedMessageHashValues, namespace)
+        }
         return result
     }
 

@@ -31,7 +31,7 @@ class AlbumThumbnailView : FrameLayout {
     private lateinit var binding: AlbumThumbnailViewBinding
 
     companion object {
-        const val MAX_ALBUM_DISPLAY_SIZE = 5
+        const val MAX_ALBUM_DISPLAY_SIZE = 3
     }
 
     // region Lifecycle
@@ -118,7 +118,7 @@ class AlbumThumbnailView : FrameLayout {
             this.slideSize = slides.size
         }
         // iterate binding
-        slides.take(5).forEachIndexed { position, slide ->
+        slides.take(MAX_ALBUM_DISPLAY_SIZE).forEachIndexed { position, slide ->
             val thumbnailView = getThumbnailView(position)
             thumbnailView.setImageResource(glideRequests, slide, isPreview = false, mms = message)
         }
@@ -130,18 +130,13 @@ class AlbumThumbnailView : FrameLayout {
     fun layoutRes(slideCount: Int) = when (slideCount) {
         1 -> R.layout.album_thumbnail_1 // single
         2 -> R.layout.album_thumbnail_2// two sidebyside
-        3 -> R.layout.album_thumbnail_3// three stacked
-        4 -> R.layout.album_thumbnail_4// four square
-        5 -> R.layout.album_thumbnail_5//
-        else -> R.layout.album_thumbnail_many// five or more
+        else -> R.layout.album_thumbnail_3 // three stacked with additional text
     }
 
     fun getThumbnailView(position: Int): KThumbnailView = when (position) {
         0 -> binding.albumCellContainer.findViewById<ViewGroup>(R.id.albumCellContainer).findViewById(R.id.album_cell_1)
         1 -> binding.albumCellContainer.findViewById<ViewGroup>(R.id.albumCellContainer).findViewById(R.id.album_cell_2)
         2 -> binding.albumCellContainer.findViewById<ViewGroup>(R.id.albumCellContainer).findViewById(R.id.album_cell_3)
-        3 -> binding.albumCellContainer.findViewById<ViewGroup>(R.id.albumCellContainer).findViewById(R.id.album_cell_4)
-        4 -> binding.albumCellContainer.findViewById<ViewGroup>(R.id.albumCellContainer).findViewById(R.id.album_cell_5)
         else -> throw Exception("Can't get thumbnail view for non-existent thumbnail at position: $position")
     }
 

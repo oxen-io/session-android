@@ -7,7 +7,7 @@ import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.signal.OutgoingTextMessage
 import org.session.libsession.messaging.messages.visible.OpenGroupInvitation
 import org.session.libsession.messaging.messages.visible.VisibleMessage
-import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
+import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
@@ -33,7 +33,7 @@ import kotlin.coroutines.suspendCoroutine
 
 interface ConversationRepository {
     fun isOxenHostedOpenGroup(threadId: Long): Boolean
-    fun getRecipientForThreadId(threadId: Long): Recipient
+    fun maybeGetRecipientForThreadId(threadId: Long): Recipient?
     fun saveDraft(threadId: Long, text: String)
     fun getDraft(threadId: Long): String?
     fun inviteContacts(threadId: Long, contacts: List<Recipient>)
@@ -86,12 +86,11 @@ class DefaultConversationRepository @Inject constructor(
 
     override fun isOxenHostedOpenGroup(threadId: Long): Boolean {
         val openGroup = lokiThreadDb.getOpenGroupChat(threadId)
-        return openGroup?.room == "session" || openGroup?.room == "oxen"
-                || openGroup?.room == "lokinet" || openGroup?.room == "crypto"
+        return openGroup?.publicKey == OpenGroupApi.defaultServerPublicKey
     }
 
-    override fun getRecipientForThreadId(threadId: Long): Recipient {
-        return threadDb.getRecipientForThreadId(threadId)!!
+    override fun maybeGetRecipientForThreadId(threadId: Long): Recipient? {
+        return threadDb.getRecipientForThreadId(threadId)
     }
 
     override fun saveDraft(threadId: Long, text: String) {
@@ -121,7 +120,7 @@ class DefaultConversationRepository @Inject constructor(
                 contact,
                 message.sentTimestamp
             )
-            smsDb.insertMessageOutbox(-1, outgoingTextMessage, message.sentTimestamp!!)
+            smsDb.insertMessageOutbox(-1, outgoingTextMessage, message.sentTimestamp!!, true)
             MessageSender.send(message, contact.address)
         }
     }
@@ -154,7 +153,7 @@ class DefaultConversationRepository @Inject constructor(
         val openGroup = lokiThreadDb.getOpenGroupChat(threadId)
         if (openGroup != null) {
             lokiMessageDb.getServerID(message.id, !message.isMms)?.let { messageServerID ->
-                OpenGroupAPIV2.deleteMessage(messageServerID, openGroup.room, openGroup.server)
+                OpenGroupApi.deleteMessage(messageServerID, openGroup.room, openGroup.server)
                     .success {
                         messageDataProvider.deleteMessage(message.id, !message.isMms)
                         continuation.resume(ResultOf.Success(Unit))
@@ -206,7 +205,7 @@ class DefaultConversationRepository @Inject constructor(
                 messageServerIDs[messageServerID] = message
             }
             for ((messageServerID, message) in messageServerIDs) {
-                OpenGroupAPIV2.deleteMessage(messageServerID, openGroup.room, openGroup.server)
+                OpenGroupApi.deleteMessage(messageServerID, openGroup.room, openGroup.server)
                     .success {
                         messageDataProvider.deleteMessage(message.id, !message.isMms)
                     }.fail { error ->
@@ -229,7 +228,7 @@ class DefaultConversationRepository @Inject constructor(
         suspendCoroutine { continuation ->
             val sessionID = recipient.address.toString()
             val openGroup = lokiThreadDb.getOpenGroupChat(threadId)!!
-            OpenGroupAPIV2.ban(sessionID, openGroup.room, openGroup.server)
+            OpenGroupApi.ban(sessionID, openGroup.room, openGroup.server)
                 .success {
                     continuation.resume(ResultOf.Success(Unit))
                 }.fail { error ->
@@ -241,7 +240,7 @@ class DefaultConversationRepository @Inject constructor(
         suspendCoroutine { continuation ->
             val sessionID = recipient.address.toString()
             val openGroup = lokiThreadDb.getOpenGroupChat(threadId)!!
-            OpenGroupAPIV2.banAndDeleteAll(sessionID, openGroup.room, openGroup.server)
+            OpenGroupApi.banAndDeleteAll(sessionID, openGroup.room, openGroup.server)
                 .success {
                     continuation.resume(ResultOf.Success(Unit))
                 }.fail { error ->
