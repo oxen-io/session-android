@@ -50,13 +50,22 @@
     <string name="AccessibilityId_add_to_home_screen">Add to home screen</string>
     <string name="AccessibilityId_disappearing_messages">Disappearing messages</string>
     <string name="AccessibilityId_block">Block</string>
+    <string name="AccessibilityId_block_confirm">Confirm block</string>
     <string name="AccessibilityId_mute_notifications">Mute notifications</string>
+    <!--  Conversation options for closed group-->
+    <string name="AccessibilityId_edit_group">Edit group</string>
+    <string name="AccessibilityId_leave_group">Leave group</string>
     <!--  Conversation icons -->
     <string name="AccessibilityId_call_button">Call button</string>
     <string name="AccessibilityId_disappearing_messages_timer">Disappearing messages timer</string>
     <string name="AccessibilityId_disappearing_messages_time_picker">Time selector</string>
+    <string name="AccessibilityId_accept_message_request_button">Accept message request</string>
+    <string name="AccessibilityId_decline_message_request_button">Decline message request</string>
+    <string name="AccessibilityId_block_message_request_button">Block message request</string>
 <!--    Control messages -->
     <string name="AccessibilityId_control_message">Control message</string>
+    <string name="AccessibilityId_blocked_banner">Blocked banner</string>
+    <string name="AccessibilityId_blocked_banner_text">Blocked banner text</string>
     <!--New Session -->
     <string name="AccessibilityId_session_id_input">Session id input box</string>
     <string name="AccessibilityId_next">Next</string>

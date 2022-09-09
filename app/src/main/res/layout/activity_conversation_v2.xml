@@ -149,21 +149,23 @@
 
     <RelativeLayout
         android:id="@+id/blockedBanner"
+        android:contentDescription="@string/AccessibilityId_blocked_banner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/destructive"
         android:layout_alignParentTop="true"
+        android:background="@color/destructive"
         android:visibility="gone"
         tools:visibility="visible">
 
         <TextView
             android:id="@+id/blockedBannerTextView"
+            android:contentDescription="@string/AccessibilityId_blocked_banner_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_margin="@dimen/medium_spacing"
-            android:textSize="@dimen/small_font_size"
             android:textColor="@color/white"
+            android:textSize="@dimen/small_font_size"
             android:textStyle="bold"
             tools:text="Elon is blocked. Unblock them?" />
 
@@ -199,6 +201,7 @@
             <Button
                 android:id="@+id/acceptMessageRequestButton"
                 style="@style/Widget.Session.Button.Common.ProminentOutline"
+                android:contentDescription="@string/AccessibilityId_accept_message_request_button"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/medium_button_height"
                 android:layout_weight="1"
@@ -207,6 +210,7 @@
             <Button
                 android:id="@+id/declineMessageRequestButton"
                 style="@style/Widget.Session.Button.Common.DestructiveOutline"
+                android:contentDescription="@string/AccessibilityId_decline_message_request_button"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/medium_button_height"
                 android:layout_marginStart="@dimen/medium_spacing"
