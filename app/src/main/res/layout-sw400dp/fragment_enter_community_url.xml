@@ -63,12 +63,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <GridLayout
-            android:id="@+id/defaultRoomsGridLayout"
-            android:columnCount="2"
-            android:paddingHorizontal="16dp"
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/defaultRoomsFlexboxLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingHorizontal="16dp"
+            app:justifyContent="center"
+            app:flexDirection="row"
+            app:flexWrap="wrap"
+            app:alignItems="center"/>
 
     </LinearLayout>
 

@@ -12,20 +12,20 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.chip.Chip
 import network.loki.messenger.R
-import network.loki.messenger.databinding.FragmentEnterChatUrlBinding
+import network.loki.messenger.databinding.FragmentEnterCommunityUrlBinding
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.thoughtcrime.securesms.BaseActionBarActivity
 import org.thoughtcrime.securesms.util.State
 import java.util.Locale
 
 class EnterCommunityUrlFragment : Fragment() {
-    private lateinit var binding: FragmentEnterChatUrlBinding
+    private lateinit var binding: FragmentEnterCommunityUrlBinding
     private val viewModel by activityViewModels<DefaultGroupsViewModel>()
 
     var delegate: EnterCommunityUrlDelegate? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentEnterChatUrlBinding.inflate(inflater, container, false)
+        binding = FragmentEnterCommunityUrlBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -52,7 +52,7 @@ class EnterCommunityUrlFragment : Fragment() {
     }
 
     private fun populateDefaultGroups(groups: List<OpenGroupApi.DefaultGroup>) {
-        binding.defaultRoomsFlexboxLayout?.removeAllViews()
+        binding.defaultRoomsFlexboxLayout.removeAllViews()
         groups.iterator().forEach { defaultGroup ->
             val chip = layoutInflater.inflate(R.layout.default_group_chip, binding.defaultRoomsFlexboxLayout, false) as Chip
             val drawable = defaultGroup.image?.let { bytes ->
@@ -66,7 +66,7 @@ class EnterCommunityUrlFragment : Fragment() {
             chip.setOnClickListener {
                 delegate?.handleCommunityUrlEntered(defaultGroup.joinURL)
             }
-            binding.defaultRoomsFlexboxLayout?.addView(chip)
+            binding.defaultRoomsFlexboxLayout.addView(chip)
         }
     }
 
