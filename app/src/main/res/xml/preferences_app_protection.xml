@@ -55,8 +55,6 @@
 
     </org.thoughtcrime.securesms.preferences.widgets.SessionPreferenceCategory>
 
-    <PreferenceCategory android:layout="@layout/preference_divider" />
-
     <PreferenceCategory android:title="@string/preferences_app_protection__communication">
 
         <!-- <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
