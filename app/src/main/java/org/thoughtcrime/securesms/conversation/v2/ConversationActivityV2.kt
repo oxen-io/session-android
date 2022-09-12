@@ -1802,6 +1802,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 ConversationReactionOverlay.Action.VIEW_INFO -> showMessageDetail(selectedItems)
                 ConversationReactionOverlay.Action.SELECT -> selectMessages(selectedItems)
                 ConversationReactionOverlay.Action.DELETE -> deleteMessages(selectedItems)
+                ConversationReactionOverlay.Action.BAN_AND_DELETE_ALL -> banAndDeleteAll(selectedItems)
+                ConversationReactionOverlay.Action.BAN_USER -> banUser(selectedItems)
             }
         }
     }

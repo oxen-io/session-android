@@ -676,11 +676,11 @@ public final class ConversationReactionOverlay extends FrameLayout {
     }
     // Ban user
     if (ConversationMenuItemHelper.userCanBanSelectedUsers(getContext(), message, openGroup, userPublicKey, blindedPublicKey)) {
-      items.add(new ActionItem(0, getContext().getResources().getString(R.string.conversation_context__menu_ban_user), () -> handleActionItemClicked(Action.BAN_USER)));
+      items.add(new ActionItem(R.attr.menu_block_icon, getContext().getResources().getString(R.string.conversation_context__menu_ban_user), () -> handleActionItemClicked(Action.BAN_USER)));
     }
     // Ban and delete all
     if (ConversationMenuItemHelper.userCanBanSelectedUsers(getContext(), message, openGroup, userPublicKey, blindedPublicKey)) {
-      items.add(new ActionItem(0, getContext().getResources().getString(R.string.conversation_context__menu_ban_and_delete_all), () -> handleActionItemClicked(Action.BAN_AND_DELETE_ALL)));
+      items.add(new ActionItem(R.attr.menu_trash_icon, getContext().getResources().getString(R.string.conversation_context__menu_ban_and_delete_all), () -> handleActionItemClicked(Action.BAN_AND_DELETE_ALL)));
     }
     // Message detail
     if (message.isFailed()) {
