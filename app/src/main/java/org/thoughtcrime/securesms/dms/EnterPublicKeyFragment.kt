@@ -13,6 +13,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import network.loki.messenger.R
 import network.loki.messenger.databinding.FragmentEnterPublicKeyBinding
@@ -50,9 +51,11 @@ class EnterPublicKeyFragment : Fragment() {
                     false
                 }
             }
+            publicKeyEditText.setOnFocusChangeListener { _, hasFocus ->  optionalContentContainer.isVisible = !hasFocus }
+            publicKeyEditText.addTextChangedListener { text -> createPrivateChatButton.isVisible = !text.isNullOrBlank() }
             val size = toPx(228, resources)
             val qrCode = QRCodeUtilities.encode(hexEncodedPublicKey, size, isInverted = false, hasTransparentBackground = false)
-            qrCodeImageView?.setImageBitmap(qrCode)
+            qrCodeImageView.setImageBitmap(qrCode)
             publicKeyTextView.text = hexEncodedPublicKey
             copyButton.setOnClickListener { copyPublicKey() }
             shareButton.setOnClickListener { sharePublicKey() }

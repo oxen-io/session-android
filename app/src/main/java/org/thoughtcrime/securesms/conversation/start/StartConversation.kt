@@ -88,7 +88,7 @@ object StartConversation {
         val dialog = MaterialDialog(activity, BottomSheet())
         dialog.show {
             val binding = DialogCreatePrivateChatBinding.inflate(LayoutInflater.from(activity))
-            customView(view = binding.root, scrollable = true, noVerticalPadding = true)
+            customView(view = binding.root, noVerticalPadding = true)
             binding.backButton.setOnClickListener { delegate.onDialogBackPressed(); dismiss() }
             binding.closeButton.setOnClickListener { dismiss() }
             fun showLoader() {
@@ -213,7 +213,7 @@ object StartConversation {
         val dialog = MaterialDialog(activity, BottomSheet())
         dialog.show {
             val binding = DialogJoinCommunityBinding.inflate(LayoutInflater.from(activity))
-            customView(view = binding.root, scrollable = true, noVerticalPadding = true)
+            customView(view = binding.root, noVerticalPadding = true)
             binding.backButton.setOnClickListener { delegate.onDialogBackPressed(); dismiss() }
             binding.closeButton.setOnClickListener { dismiss() }
             fun showLoader() {
