@@ -150,7 +150,7 @@ object ConversationMenuHelper {
             R.id.menu_expiring_messages -> { showExpiringMessagesDialog(context, thread) }
             R.id.menu_expiring_messages_off -> { showExpiringMessagesDialog(context, thread) }
             R.id.menu_unblock -> { unblock(context, thread) }
-            R.id.menu_block -> { block(context, thread) }
+            R.id.menu_block -> { block(context, thread, deleteThread = false) }
             R.id.menu_block_delete -> { blockAndDelete(context, thread) }
             R.id.menu_copy_session_id -> { copySessionID(context, thread) }
             R.id.menu_edit_group -> { editClosedGroup(context, thread) }
@@ -248,19 +248,19 @@ object ConversationMenuHelper {
     private fun unblock(context: Context, thread: Recipient) {
         if (!thread.isContactRecipient) { return }
         val listener = context as? ConversationMenuListener ?: return
-        listener.unblock(thread)
+        listener.unblock()
     }
 
-    private fun block(context: Context, thread: Recipient) {
+    private fun block(context: Context, thread: Recipient, deleteThread: Boolean) {
         if (!thread.isContactRecipient) { return }
         val listener = context as? ConversationMenuListener ?: return
-        listener.block(thread)
+        listener.block(deleteThread)
     }
 
     private fun blockAndDelete(context: Context, thread: Recipient) {
         if (!thread.isContactRecipient) { return }
         val listener = context as? ConversationMenuListener ?: return
-        listener.block(thread, deleteThread = true)
+        listener.block(deleteThread = true)
     }
 
     private fun copySessionID(context: Context, thread: Recipient) {
@@ -340,8 +340,8 @@ object ConversationMenuHelper {
     }
 
     interface ConversationMenuListener {
-        fun block(recipient: Recipient, deleteThread: Boolean = false)
-        fun unblock(recipient: Recipient)
+        fun block(deleteThread: Boolean = false)
+        fun unblock()
         fun copySessionID(sessionId: String)
         fun showExpiringMessagesDialog(thread: Recipient)
     }

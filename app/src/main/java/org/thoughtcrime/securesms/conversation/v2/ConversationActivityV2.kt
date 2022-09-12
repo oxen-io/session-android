@@ -171,7 +171,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     InputBarRecordingViewDelegate, AttachmentManager.AttachmentListener, ActivityDispatcher,
     ConversationActionModeCallbackDelegate, VisibleMessageViewDelegate, RecipientModifiedListener,
     SearchBottomBar.EventListener, LoaderManager.LoaderCallbacks<Cursor>,
-    OnReactionSelectedListener, ReactWithAnyEmojiDialogFragment.Callback, ReactionsDialogFragment.Callback {
+    OnReactionSelectedListener, ReactWithAnyEmojiDialogFragment.Callback, ReactionsDialogFragment.Callback,
+    ConversationMenuHelper.ConversationMenuListener {
 
     private var binding: ActivityConversationV2Binding? = null
 
@@ -664,8 +665,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             acceptMessageRequest()
         }
         binding?.messageRequestBlock?.setOnClickListener {
-            val recipient = viewModel.recipient ?: return@setOnClickListener
-            block(recipient, deleteThread = true)
+            block(deleteThread = true)
         }
         binding?.declineMessageRequestButton?.setOnClickListener {
             viewModel.declineMessageRequest()
@@ -938,7 +938,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         } ?: false
     }
 
-    override fun block(recipient: Recipient, deleteThread: Boolean) {
+    override fun block(deleteThread: Boolean) {
         val title = R.string.RecipientPreferenceActivity_block_this_contact_question
         val message = R.string.RecipientPreferenceActivity_you_will_no_longer_receive_messages_and_calls_from_this_contact
         AlertDialog.Builder(this)
@@ -978,7 +978,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
-    override fun unblock(recipient: Recipient) {
+    override fun unblock() {
         val title = R.string.ConversationActivity_unblock_this_contact_question
         val message = R.string.ConversationActivity_you_will_once_again_be_able_to_receive_messages_and_calls_from_this_contact
         AlertDialog.Builder(this)
