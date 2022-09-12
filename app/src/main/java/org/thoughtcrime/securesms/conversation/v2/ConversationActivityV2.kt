@@ -989,7 +989,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             Log.e("Loki", "Failed to show emoji picker", e)
             return
         }
-        ViewUtil.hideKeyboard(this, visibleMessageView);
+        ViewUtil.hideKeyboard(this, visibleMessageView)
         binding?.reactionsShade?.isVisible = true
         showOrHidScrollToBottomButton(false)
         binding?.conversationRecyclerView?.suppressLayout(true)
@@ -1020,7 +1020,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             message.isOutgoing,
             visibleMessageView.messageContentView
         )
-        reactionDelegate.show(this, message, selectedConversationModel)
+        reactionDelegate.show(this, message, selectedConversationModel, viewModel.blindedPublicKey)
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
