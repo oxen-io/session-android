@@ -436,6 +436,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private fun setUpToolBar() {
         setSupportActionBar(binding?.toolbar)
         val actionBar = supportActionBar ?: return
+        val recipient = viewModel.recipient ?: return
         actionBar.title = ""
         actionBar.setDisplayHomeAsUpEnabled(true)
         actionBar.setHomeButtonEnabled(true)
