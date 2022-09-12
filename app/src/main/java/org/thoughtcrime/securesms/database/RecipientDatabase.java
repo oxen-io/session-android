@@ -34,7 +34,7 @@ public class RecipientDatabase extends Database {
   private static final String TAG = RecipientDatabase.class.getSimpleName();
 
           static final String TABLE_NAME               = "recipient_preferences";
-  private static final String ID                       = "_id";
+          static final String ID                       = "_id";
   public  static final String ADDRESS                  = "recipient_ids";
           static final String BLOCK                    = "block";
           static final String APPROVED                 = "approved";
@@ -253,10 +253,6 @@ public class RecipientDatabase extends Database {
     values.put(APPROVED, approved ? 1 : 0);
     updateOrInsert(recipient.getAddress(), values);
     recipient.resolve().setApproved(approved);
-  }
-
-  public void setAllApproved(List<String> addresses) {
-
   }
 
   public void setApprovedMe(@NonNull Recipient recipient, boolean approvedMe) {

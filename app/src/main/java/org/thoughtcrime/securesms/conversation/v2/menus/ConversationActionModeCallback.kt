@@ -5,13 +5,16 @@ import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
 import network.loki.messenger.R
-import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
+import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.TextSecurePreferences
-import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
+import org.session.libsignal.utilities.IdPrefix
 import org.thoughtcrime.securesms.conversation.v2.ConversationAdapter
 import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
+import org.thoughtcrime.securesms.groups.OpenGroupManager
 
 class ConversationActionModeCallback(private val adapter: ConversationAdapter, private val threadID: Long,
     private val context: Context) : ActionMode.Callback {
@@ -34,20 +37,15 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
         val openGroup = DatabaseComponent.get(context).lokiThreadDatabase().getOpenGroupChat(threadID)
         val thread = DatabaseComponent.get(context).threadDatabase().getRecipientForThreadId(threadID)!!
         val userPublicKey = TextSecurePreferences.getLocalNumber(context)!!
+        val edKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!
+        val blindedPublicKey = openGroup?.publicKey?.let { SodiumUtilities.blindedKeyPair(it, edKeyPair)?.publicKey?.asBytes }
+            ?.let { SessionId(IdPrefix.BLINDED, it) }?.hexString
         fun userCanDeleteSelectedItems(): Boolean {
             val allSentByCurrentUser = selectedItems.all { it.isOutgoing }
-
-            // Remove this after the unsend request is enabled
-            if (!ConversationActivityV2.IS_UNSEND_REQUESTS_ENABLED) {
-                if (openGroup == null) { return true }
-                if (allSentByCurrentUser) { return true }
-                return OpenGroupAPIV2.isUserModerator(userPublicKey, openGroup.room, openGroup.server)
-            }
-
             val allReceivedByCurrentUser = selectedItems.all { !it.isOutgoing }
             if (openGroup == null) { return allSentByCurrentUser || allReceivedByCurrentUser }
             if (allSentByCurrentUser) { return true }
-            return OpenGroupAPIV2.isUserModerator(userPublicKey, openGroup.room, openGroup.server)
+            return OpenGroupManager.isUserModerator(context, openGroup.groupId, userPublicKey, blindedPublicKey)
         }
         fun userCanBanSelectedUsers(): Boolean {
             if (openGroup == null) { return false }
@@ -55,7 +53,7 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
             if (anySentByCurrentUser) { return false } // Users can't ban themselves
             val selectedUsers = selectedItems.map { it.recipient.address.toString() }.toSet()
             if (selectedUsers.size > 1) { return false }
-            return OpenGroupAPIV2.isUserModerator(userPublicKey, openGroup.room, openGroup.server)
+            return OpenGroupManager.isUserModerator(context, openGroup.groupId, userPublicKey, blindedPublicKey)
         }
         // Delete message
         menu.findItem(R.id.menu_context_delete_message).isVisible = userCanDeleteSelectedItems()
@@ -108,6 +106,7 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
 
 interface ConversationActionModeCallbackDelegate {
 
+    fun selectMessages(messages: Set<MessageRecord>)
     fun deleteMessages(messages: Set<MessageRecord>)
     fun banUser(messages: Set<MessageRecord>)
     fun banAndDeleteAll(messages: Set<MessageRecord>)

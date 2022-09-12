@@ -1,10 +1,8 @@
 package org.thoughtcrime.securesms.messagerequests
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.database.Cursor
-import android.os.Build
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.ViewGroup
@@ -16,7 +14,7 @@ import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
-
+import org.thoughtcrime.securesms.util.forceShowIcon
 
 class MessageRequestsAdapter(
     context: Context,
@@ -66,7 +64,7 @@ class MessageRequestsAdapter(
             item.iconTintList = ColorStateList.valueOf(context.getColor(R.color.destructive))
             item.title = s
         }
-        popupMenu.forceShowIcon() //TODO: call setForceShowIcon(true) after update to appcompat 1.4.1+
+        popupMenu.forceShowIcon()
         popupMenu.show()
     }
 
@@ -79,21 +77,4 @@ interface ConversationClickListener {
     fun onConversationClick(thread: ThreadRecord)
     fun onBlockConversationClick(thread: ThreadRecord)
     fun onDeleteConversationClick(thread: ThreadRecord)
-}
-
-@SuppressLint("PrivateApi")
-private fun PopupMenu.forceShowIcon() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        this.setForceShowIcon(true)
-    } else {
-        try {
-            val popupField = PopupMenu::class.java.getDeclaredField("mPopup")
-            popupField.isAccessible = true
-            val menu = popupField.get(this)
-            menu.javaClass.getDeclaredMethod("setForceShowIcon", Boolean::class.java)
-                .invoke(menu, true)
-        } catch (exception: Exception) {
-            Log.e("Loki", "Couldn't show message request popupmenu due to error: $exception.")
-        }
-    }
 }
