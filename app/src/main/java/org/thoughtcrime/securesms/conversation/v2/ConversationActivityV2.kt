@@ -633,18 +633,19 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     // region Animation & Updating
     override fun onModified(recipient: Recipient) {
         runOnUiThread {
-            val recipient = viewModel.recipient
-            if (recipient != null && recipient.isContactRecipient) {
-                binding?.blockedBanner?.isVisible = recipient.isBlocked
+            val threadRecipient = viewModel.recipient ?: return@runOnUiThread
+            if (threadRecipient.isContactRecipient) {
+                binding?.blockedBanner?.isVisible = threadRecipient.isBlocked
             }
             setUpMessageRequestsBar()
             invalidateOptionsMenu()
             updateSubtitle()
             showOrHideInputIfNeeded()
-            if (recipient != null) {
-                binding?.toolbarContent?.profilePictureView?.root?.update(recipient)
+            binding?.toolbarContent?.profilePictureView?.root?.update(threadRecipient)
+            binding!!.toolbarContent.conversationTitleView.text = when {
+                threadRecipient.isLocalNumber -> getString(R.string.note_to_self)
+                else -> threadRecipient.toShortString()
             }
-            binding?.toolbarContent?.conversationTitleView?.text = recipient?.toShortString()
         }
     }
 
