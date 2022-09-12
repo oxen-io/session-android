@@ -26,12 +26,16 @@ import network.loki.messenger.R;
 
 public abstract class BaseActionBarActivity extends AppCompatActivity {
   private static final String TAG = BaseActionBarActivity.class.getSimpleName();
+  private ThemeState currentThemeState;
+
+  private TextSecurePreferences getPreferences() {
+    ApplicationContext appContext = (ApplicationContext) getApplicationContext();
+    return appContext.textSecurePreferences;
+  }
 
   @StyleRes
   public int getDesiredTheme() {
-    ApplicationContext context = (ApplicationContext) getApplicationContext();
-    TextSecurePreferences prefs = context.textSecurePreferences;
-    ThemeState themeState = ActivityUtilitiesKt.themeState(prefs);
+    ThemeState themeState = ActivityUtilitiesKt.themeState(getPreferences());
     int userSelectedTheme = themeState.getTheme();
     if (themeState.getFollowSystem()) {
       // do light or dark based on the selected theme
@@ -48,10 +52,8 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
 
   @StyleRes @Nullable
   public Integer getAccentTheme() {
-    ApplicationContext context = (ApplicationContext) getApplicationContext();
-    TextSecurePreferences prefs = context.textSecurePreferences;
-    if (!prefs.hasPreference(SELECTED_ACCENT_COLOR)) return null;
-    ThemeState themeState = ActivityUtilitiesKt.themeState(prefs);
+    if (!getPreferences().hasPreference(SELECTED_ACCENT_COLOR)) return null;
+    ThemeState themeState = ActivityUtilitiesKt.themeState(getPreferences());
     return themeState.getAccentStyle();
   }
 
@@ -64,18 +66,18 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
     if (accentTheme != null) {
       modifiedTheme.applyStyle(accentTheme, true);
     }
+    currentThemeState = ActivityUtilitiesKt.themeState(getPreferences());
     return modifiedTheme;
   }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
     ActionBar actionBar = getSupportActionBar();
     if (actionBar != null) {
       actionBar.setDisplayHomeAsUpEnabled(true);
       actionBar.setHomeButtonEnabled(true);
     }
-
-    super.onCreate(savedInstanceState);
   }
 
   @Override
@@ -87,6 +89,9 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
     Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_foreground);
     int color = getResources().getColor(R.color.app_icon_background);
     setTaskDescription(new ActivityManager.TaskDescription(name, icon, color));
+    if (!currentThemeState.equals(ActivityUtilitiesKt.themeState(getPreferences()))) {
+      recreate();
+    }
   }
 
   @Override
