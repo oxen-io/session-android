@@ -57,6 +57,12 @@ class EnterPublicKeyFragment : Fragment() {
             val qrCode = QRCodeUtilities.encode(hexEncodedPublicKey, size, isInverted = false, hasTransparentBackground = false)
             qrCodeImageView.setImageBitmap(qrCode)
             publicKeyTextView.text = hexEncodedPublicKey
+            publicKeyTextView.setOnCreateContextMenuListener { contextMenu, view, _ ->
+                contextMenu.add(0, view.id, 0, R.string.copy).setOnMenuItemClickListener {
+                    copyPublicKey()
+                    true
+                }
+            }
             copyButton.setOnClickListener { copyPublicKey() }
             shareButton.setOnClickListener { sharePublicKey() }
             createPrivateChatButton.setOnClickListener { createPrivateChatIfPossible() }
