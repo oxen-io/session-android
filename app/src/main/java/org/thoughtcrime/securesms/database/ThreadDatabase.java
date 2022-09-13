@@ -34,6 +34,7 @@ import com.annimon.stream.Stream;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.jetbrains.annotations.NotNull;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.Contact;
 import org.session.libsession.utilities.DelimiterUtil;
@@ -43,6 +44,7 @@ import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.Util;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsession.utilities.recipients.Recipient.RecipientSettings;
+import org.session.libsignal.utilities.IdPrefix;
 import org.session.libsignal.utilities.Log;
 import org.session.libsignal.utilities.Pair;
 import org.session.libsignal.utilities.guava.Optional;
@@ -55,12 +57,15 @@ import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord;
 import org.thoughtcrime.securesms.database.model.ThreadRecord;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
+import org.thoughtcrime.securesms.groups.OpenGroupMigrator;
 import org.thoughtcrime.securesms.mms.Slide;
 import org.thoughtcrime.securesms.mms.SlideDeck;
 import org.thoughtcrime.securesms.notifications.MarkReadReceiver;
 import org.thoughtcrime.securesms.util.SessionMetaProtocol;
 
 import java.io.Closeable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -276,6 +281,14 @@ public class ThreadDatabase extends Database {
     }
   }
 
+  public void trimThreadBefore(long threadId, long timestamp) {
+    Log.i("ThreadDatabase", "Trimming thread: " + threadId + " before :"+timestamp);
+    DatabaseComponent.get(context).smsDatabase().deleteMessagesInThreadBeforeDate(threadId, timestamp);
+    DatabaseComponent.get(context).mmsDatabase().deleteMessagesInThreadBeforeDate(threadId, timestamp);
+    update(threadId, false);
+    notifyConversationListeners(threadId);
+  }
+
   public List<MarkedMessageInfo> setRead(long threadId, boolean lastSeen) {
     ContentValues contentValues = new ContentValues(1);
     contentValues.put(READ, 1);
@@ -444,6 +457,11 @@ public class ThreadDatabase extends Database {
   public Cursor getConversationList() {
     String where  = "(" + MESSAGE_COUNT + " != 0 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') " +
             "AND " + ARCHIVED + " = 0 ";
+    return getConversationList(where);
+  }
+
+  public Cursor getBlindedConversationList() {
+    String where  = TABLE_NAME + "." + ADDRESS + " LIKE '" + IdPrefix.BLINDED.getValue() + "%' ";
     return getConversationList(where);
   }
 
@@ -757,6 +775,88 @@ public class ThreadDatabase extends Database {
     }
 
     return query;
+  }
+
+  @NotNull
+  public List<ThreadRecord> getHttpOxenOpenGroups() {
+    String where = TABLE_NAME+"."+ADDRESS+" LIKE ?";
+    String selection = OpenGroupMigrator.HTTP_PREFIX+OpenGroupMigrator.OPEN_GET_SESSION_TRAILING_DOT_ENCODED +"%";
+    SQLiteDatabase db     = databaseHelper.getReadableDatabase();
+    String         query  = createQuery(where, 0);
+    Cursor         cursor = db.rawQuery(query, new String[]{selection});
+
+    if (cursor == null) {
+      return Collections.emptyList();
+    }
+    List<ThreadRecord> threads = new ArrayList<>();
+    try {
+      Reader reader = readerFor(cursor);
+      ThreadRecord record;
+      while ((record = reader.getNext()) != null) {
+        threads.add(record);
+      }
+    } finally {
+      cursor.close();
+    }
+    return threads;
+  }
+
+  @NotNull
+  public List<ThreadRecord> getLegacyOxenOpenGroups() {
+    String where = TABLE_NAME+"."+ADDRESS+" LIKE ?";
+    String selection = OpenGroupMigrator.LEGACY_GROUP_ENCODED_ID+"%";
+    SQLiteDatabase db     = databaseHelper.getReadableDatabase();
+    String         query  = createQuery(where, 0);
+    Cursor         cursor = db.rawQuery(query, new String[]{selection});
+
+    if (cursor == null) {
+      return Collections.emptyList();
+    }
+    List<ThreadRecord> threads = new ArrayList<>();
+    try {
+      Reader reader = readerFor(cursor);
+      ThreadRecord record;
+      while ((record = reader.getNext()) != null) {
+        threads.add(record);
+      }
+    } finally {
+      cursor.close();
+    }
+    return threads;
+  }
+
+  @NotNull
+  public List<ThreadRecord> getHttpsOxenOpenGroups() {
+    String where = TABLE_NAME+"."+ADDRESS+" LIKE ?";
+    String selection = OpenGroupMigrator.NEW_GROUP_ENCODED_ID+"%";
+    SQLiteDatabase db     = databaseHelper.getReadableDatabase();
+    String         query  = createQuery(where, 0);
+    Cursor         cursor = db.rawQuery(query, new String[]{selection});
+    if (cursor == null) {
+      return Collections.emptyList();
+    }
+    List<ThreadRecord> threads = new ArrayList<>();
+    try {
+      Reader reader = readerFor(cursor);
+      ThreadRecord record;
+      while ((record = reader.getNext()) != null) {
+        threads.add(record);
+      }
+    } finally {
+      cursor.close();
+    }
+    return threads;
+  }
+
+  public void migrateEncodedGroup(long threadId, @NotNull String newEncodedGroupId) {
+    ContentValues contentValues = new ContentValues(1);
+    contentValues.put(ADDRESS, newEncodedGroupId);
+    SQLiteDatabase db = databaseHelper.getWritableDatabase();
+    db.update(TABLE_NAME, contentValues, ID_WHERE, new String[] {threadId+""});
+  }
+
+  public void notifyThreadUpdated(long threadId) {
+    notifyConversationListeners(threadId);
   }
 
   public interface ProgressListener {

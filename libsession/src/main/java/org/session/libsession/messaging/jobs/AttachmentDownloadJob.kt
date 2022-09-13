@@ -2,7 +2,7 @@ package org.session.libsession.messaging.jobs
 
 import okhttp3.HttpUrl
 import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
+import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentState
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
@@ -60,6 +60,15 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
                     messageDataProvider.setAttachmentState(AttachmentState.FAILED, AttachmentId(attachmentID,0), databaseMessageID)
                 }
                 this.handlePermanentFailure(exception)
+            } else if (exception == Error.DuplicateData) {
+                attachment?.let { id ->
+                    Log.d("AttachmentDownloadJob", "Setting attachment state = done from duplicate data")
+                    messageDataProvider.setAttachmentState(AttachmentState.DONE, id, databaseMessageID)
+                } ?: run {
+                    Log.d("AttachmentDownloadJob", "Setting attachment state = done from duplicate data")
+                    messageDataProvider.setAttachmentState(AttachmentState.DONE, AttachmentId(attachmentID,0), databaseMessageID)
+                }
+                this.handleSuccess()
             } else {
                 if (failureCount + 1 >= maxFailureCount) {
                     attachment?.let { id ->
@@ -106,15 +115,15 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
             }
             messageDataProvider.setAttachmentState(AttachmentState.STARTED, attachment.attachmentId, this.databaseMessageID)
             tempFile = createTempFile()
-            val openGroupV2 = storage.getV2OpenGroup(threadID)
-            if (openGroupV2 == null) {
+            val openGroup = storage.getOpenGroup(threadID)
+            if (openGroup == null) {
                 Log.d("AttachmentDownloadJob", "downloading normal attachment")
                 DownloadUtilities.downloadFile(tempFile, attachment.url)
             } else {
                 Log.d("AttachmentDownloadJob", "downloading open group attachment")
                 val url = HttpUrl.parse(attachment.url)!!
                 val fileID = url.pathSegments().last()
-                OpenGroupAPIV2.download(fileID.toLong(), openGroupV2.room, openGroupV2.server).get().let {
+                OpenGroupApi.download(fileID, openGroup.room, openGroup.server).get().let {
                     tempFile.writeBytes(it)
                 }
             }

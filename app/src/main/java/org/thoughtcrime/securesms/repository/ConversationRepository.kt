@@ -7,7 +7,7 @@ import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.signal.OutgoingTextMessage
 import org.session.libsession.messaging.messages.visible.OpenGroupInvitation
 import org.session.libsession.messaging.messages.visible.VisibleMessage
-import org.session.libsession.messaging.open_groups.OpenGroupAPIV2
+import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
@@ -36,7 +36,7 @@ interface ConversationRepository {
     fun saveDraft(threadId: Long, text: String)
     fun getDraft(threadId: Long): String?
     fun inviteContacts(threadId: Long, contacts: List<Recipient>)
-    fun unblock(recipient: Recipient)
+    fun setBlocked(recipient: Recipient, blocked: Boolean)
     fun deleteLocally(recipient: Recipient, message: MessageRecord)
     fun setApproved(recipient: Recipient, isApproved: Boolean)
 
@@ -57,13 +57,15 @@ interface ConversationRepository {
 
     suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): ResultOf<Unit>
 
+    suspend fun deleteThread(threadId: Long): ResultOf<Unit>
+
     suspend fun deleteMessageRequest(thread: ThreadRecord): ResultOf<Unit>
 
     suspend fun clearAllMessageRequests(): ResultOf<Unit>
 
     suspend fun acceptMessageRequest(threadId: Long, recipient: Recipient): ResultOf<Unit>
 
-    fun declineMessageRequest(threadId: Long, recipient: Recipient)
+    fun declineMessageRequest(threadId: Long)
 
     fun hasReceived(threadId: Long): Boolean
 
@@ -119,8 +121,8 @@ class DefaultConversationRepository @Inject constructor(
         }
     }
 
-    override fun unblock(recipient: Recipient) {
-        recipientDb.setBlocked(recipient, false)
+    override fun setBlocked(recipient: Recipient, blocked: Boolean) {
+        recipientDb.setBlocked(recipient, blocked)
     }
 
     override fun deleteLocally(recipient: Recipient, message: MessageRecord) {
@@ -147,7 +149,7 @@ class DefaultConversationRepository @Inject constructor(
         val openGroup = lokiThreadDb.getOpenGroupChat(threadId)
         if (openGroup != null) {
             lokiMessageDb.getServerID(message.id, !message.isMms)?.let { messageServerID ->
-                OpenGroupAPIV2.deleteMessage(messageServerID, openGroup.room, openGroup.server)
+                OpenGroupApi.deleteMessage(messageServerID, openGroup.room, openGroup.server)
                     .success {
                         messageDataProvider.deleteMessage(message.id, !message.isMms)
                         continuation.resume(ResultOf.Success(Unit))
@@ -199,7 +201,7 @@ class DefaultConversationRepository @Inject constructor(
                 messageServerIDs[messageServerID] = message
             }
             for ((messageServerID, message) in messageServerIDs) {
-                OpenGroupAPIV2.deleteMessage(messageServerID, openGroup.room, openGroup.server)
+                OpenGroupApi.deleteMessage(messageServerID, openGroup.room, openGroup.server)
                     .success {
                         messageDataProvider.deleteMessage(message.id, !message.isMms)
                     }.fail { error ->
@@ -222,7 +224,7 @@ class DefaultConversationRepository @Inject constructor(
         suspendCoroutine { continuation ->
             val sessionID = recipient.address.toString()
             val openGroup = lokiThreadDb.getOpenGroupChat(threadId)!!
-            OpenGroupAPIV2.ban(sessionID, openGroup.room, openGroup.server)
+            OpenGroupApi.ban(sessionID, openGroup.room, openGroup.server)
                 .success {
                     continuation.resume(ResultOf.Success(Unit))
                 }.fail { error ->
@@ -234,7 +236,7 @@ class DefaultConversationRepository @Inject constructor(
         suspendCoroutine { continuation ->
             val sessionID = recipient.address.toString()
             val openGroup = lokiThreadDb.getOpenGroupChat(threadId)!!
-            OpenGroupAPIV2.banAndDeleteAll(sessionID, openGroup.room, openGroup.server)
+            OpenGroupApi.banAndDeleteAll(sessionID, openGroup.room, openGroup.server)
                 .success {
                     continuation.resume(ResultOf.Success(Unit))
                 }.fail { error ->
@@ -242,9 +244,15 @@ class DefaultConversationRepository @Inject constructor(
                 }
         }
 
+    override suspend fun deleteThread(threadId: Long): ResultOf<Unit> {
+        sessionJobDb.cancelPendingMessageSendJobs(threadId)
+        threadDb.deleteConversation(threadId)
+        return ResultOf.Success(Unit)
+    }
+
     override suspend fun deleteMessageRequest(thread: ThreadRecord): ResultOf<Unit> {
         sessionJobDb.cancelPendingMessageSendJobs(thread.threadId)
-        recipientDb.setBlocked(thread.recipient, true)
+        threadDb.deleteConversation(thread.threadId)
         return ResultOf.Success(Unit)
     }
 
@@ -269,8 +277,9 @@ class DefaultConversationRepository @Inject constructor(
             }
     }
 
-    override fun declineMessageRequest(threadId: Long, recipient: Recipient) {
-        recipientDb.setBlocked(recipient, true)
+    override fun declineMessageRequest(threadId: Long) {
+        sessionJobDb.cancelPendingMessageSendJobs(threadId)
+        threadDb.deleteConversation(threadId)
     }
 
     override fun hasReceived(threadId: Long): Boolean {

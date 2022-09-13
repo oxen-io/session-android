@@ -8,11 +8,24 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?colorPrimary"
+        app:contentInsetStart="0dp">
+
+        <include android:id="@+id/toolbarContent"
+            layout="@layout/activity_conversation_v2_action_bar" />
+
+    </androidx.appcompat.widget.Toolbar>
+
     <org.thoughtcrime.securesms.conversation.v2.ConversationRecyclerView
         android:id="@+id/conversationRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/typingIndicatorViewContainer" />
+        android:layout_above="@+id/typingIndicatorViewContainer"
+        android:layout_below="@id/toolbar" />
 
     <org.thoughtcrime.securesms.conversation.v2.components.TypingIndicatorViewContainer
         android:id="@+id/typingIndicatorViewContainer"
@@ -34,6 +47,21 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:visibility="gone"/>
+
+    <FrameLayout
+        android:id="@+id/reactions_shade"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/reactions_screen_light_shade_color"
+        android:foreground="@color/reactions_screen_dark_shade_color"
+        android:visibility="gone"/>
+
+    <ViewStub
+        android:id="@+id/conversation_reaction_scrubber_stub"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inflatedId="@+id/conversation_reaction_scrubber"
+        android:layout="@layout/conversation_reaction_scrubber"/>
 
     <FrameLayout
         android:id="@+id/additionalContentContainer"
@@ -145,8 +173,8 @@
         android:id="@+id/blockedBanner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
         android:background="@color/destructive"
-        android:layout_alignParentTop="true"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -156,8 +184,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_margin="@dimen/medium_spacing"
-            android:textSize="@dimen/small_font_size"
             android:textColor="@color/white"
+            android:textSize="@dimen/small_font_size"
             android:textStyle="bold"
             tools:text="Elon is blocked. Unblock them?" />
 
@@ -174,14 +202,25 @@
         tools:visibility="visible">
 
         <TextView
+            android:id="@+id/messageRequestBlock"
+            android:layout_gravity="center"
+            android:textColor="@color/destructive"
+            android:paddingHorizontal="@dimen/massive_spacing"
+            android:paddingVertical="@dimen/small_spacing"
+            android:textSize="@dimen/text_size"
+            android:text="@string/activity_conversation_block_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
             android:id="@+id/sendAcceptsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:layout_margin="@dimen/medium_spacing"
+            android:alpha="0.6"
+            android:gravity="center_horizontal"
             android:text="@string/message_requests_send_notice"
             android:textColor="@color/text"
-            android:alpha="0.6"
             android:textSize="@dimen/small_font_size" />
 
         <LinearLayout
