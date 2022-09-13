@@ -46,6 +46,7 @@ import org.thoughtcrime.securesms.dms.CreatePrivateChatFragmentAdapter
 import org.thoughtcrime.securesms.groups.GroupManager
 import org.thoughtcrime.securesms.groups.JoinCommunityFragmentAdapter
 import org.thoughtcrime.securesms.groups.OpenGroupManager
+import org.thoughtcrime.securesms.keyboard.emoji.KeyboardPageSearchView
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.fadeIn
@@ -157,12 +158,17 @@ object StartConversation {
             view.setBackgroundColor(ContextCompat.getColor(context, R.color.cell_background))
             val binding = DialogCreateClosedGroupBinding.inflate(LayoutInflater.from(context))
             customView(view = binding.root, scrollable = true, noVerticalPadding = true)
-            binding.backButton.setOnClickListener { delegate.onDialogBackPressed(); dismiss() }
-            binding.closeButton.setOnClickListener { dismiss() }
-            binding.createNewPrivateChatButton.setOnClickListener { delegate.onNewMessageSelected(); dismiss() }
             val adapter = SelectContactsAdapter(context, GlideApp.with(context)).apply {
                 this.members = members
             }
+            binding.backButton.setOnClickListener { delegate.onDialogBackPressed(); dismiss() }
+            binding.closeButton.setOnClickListener { dismiss() }
+            binding.contactSearch.callbacks = object : KeyboardPageSearchView.Callbacks {
+                override fun onQueryChanged(query: String) {
+                    adapter.members = members.filter { it.contains(query) }
+                }
+            }
+            binding.createNewPrivateChatButton.setOnClickListener { delegate.onNewMessageSelected(); dismiss() }
             binding.recyclerView.adapter = adapter
             var isLoading = false
             binding.createClosedGroupButton.setOnClickListener {
