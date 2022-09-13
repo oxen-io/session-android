@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/setting_button_background">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/titleText"

@@ -8,6 +8,7 @@ import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
@@ -68,6 +69,7 @@ object StartConversation {
 
         val dialog = MaterialDialog(context, BottomSheet())
         dialog.show {
+            view.setBackgroundColor(ContextCompat.getColor(context, R.color.cell_background))
             val binding = DialogNewConversationBinding.inflate(LayoutInflater.from(context))
             customView(view = binding.root, scrollable = true, noVerticalPadding = true)
             binding.closeButton.setOnClickListener { dismiss() }
@@ -87,6 +89,7 @@ object StartConversation {
     fun showPrivateChatCreationDialog(activity: FragmentActivity, delegate: StartConversationDelegate) {
         val dialog = MaterialDialog(activity, BottomSheet())
         dialog.show {
+            view.setBackgroundColor(ContextCompat.getColor(context, R.color.cell_background))
             val binding = DialogCreatePrivateChatBinding.inflate(LayoutInflater.from(activity))
             customView(view = binding.root, noVerticalPadding = true)
             binding.backButton.setOnClickListener { delegate.onDialogBackPressed(); dismiss() }
@@ -151,6 +154,7 @@ object StartConversation {
     fun showClosedGroupCreationDialog(members: List<String>, context: Context, delegate: StartConversationDelegate) {
         val dialog = MaterialDialog(context, BottomSheet())
         dialog.show {
+            view.setBackgroundColor(ContextCompat.getColor(context, R.color.cell_background))
             val binding = DialogCreateClosedGroupBinding.inflate(LayoutInflater.from(context))
             customView(view = binding.root, scrollable = true, noVerticalPadding = true)
             binding.backButton.setOnClickListener { delegate.onDialogBackPressed(); dismiss() }
@@ -212,6 +216,7 @@ object StartConversation {
     fun showJoinCommunityDialog(activity: FragmentActivity, delegate: StartConversationDelegate) {
         val dialog = MaterialDialog(activity, BottomSheet())
         dialog.show {
+            view.setBackgroundColor(ContextCompat.getColor(context, R.color.cell_background))
             val binding = DialogJoinCommunityBinding.inflate(LayoutInflater.from(activity))
             customView(view = binding.root, noVerticalPadding = true)
             binding.backButton.setOnClickListener { delegate.onDialogBackPressed(); dismiss() }
