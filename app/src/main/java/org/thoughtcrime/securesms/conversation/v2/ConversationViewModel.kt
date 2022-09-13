@@ -46,12 +46,6 @@ class ConversationViewModel(
                 ?.let { SessionId(IdPrefix.BLINDED, it) }?.hexString
         }
 
-    init {
-        _uiState.update {
-            it.copy(isOxenHostedOpenGroup = repository.isOxenHostedOpenGroup(threadId))
-        }
-    }
-
     fun saveDraft(text: String) {
         repository.saveDraft(threadId, text)
     }
@@ -187,7 +181,6 @@ class ConversationViewModel(
 data class UiMessage(val id: Long, val message: String)
 
 data class ConversationUiState(
-    val isOxenHostedOpenGroup: Boolean = false,
     val uiMessages: List<UiMessage> = emptyList(),
     val isMessageRequestAccepted: Boolean? = null
 )

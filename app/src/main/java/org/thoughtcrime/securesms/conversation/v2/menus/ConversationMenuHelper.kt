@@ -155,6 +155,7 @@ object ConversationMenuHelper {
             R.id.menu_copy_session_id -> { copySessionID(context, thread) }
             R.id.menu_edit_group -> { editClosedGroup(context, thread) }
             R.id.menu_leave_group -> { leaveClosedGroup(context, thread) }
+            R.id.menu_leave_open_group -> { leaveOpenGroup(context, thread) }
             R.id.menu_invite_to_open_group -> { inviteContacts(context, thread) }
             R.id.menu_unmute_notifications -> { unmute(context, thread) }
             R.id.menu_mute_notifications -> { mute(context, thread) }
@@ -316,6 +317,12 @@ object ConversationMenuHelper {
         builder.show()
     }
 
+    private fun leaveOpenGroup(context: Context, thread: Recipient) {
+        if (!thread.isOpenGroupRecipient) return
+        val listener = context as? ConversationMenuListener ?: return
+        listener.leaveOpenGroup(thread)
+    }
+
     private fun inviteContacts(context: Context, thread: Recipient) {
         if (!thread.isOpenGroupRecipient) { return }
         val intent = Intent(context, SelectContactsActivity::class.java)
@@ -344,6 +351,7 @@ object ConversationMenuHelper {
         fun unblock()
         fun copySessionID(sessionId: String)
         fun showExpiringMessagesDialog(thread: Recipient)
+        fun leaveOpenGroup(thread: Recipient)
     }
 
 }

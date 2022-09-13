@@ -127,6 +127,7 @@ import org.thoughtcrime.securesms.database.model.MessageId
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.database.model.ReactionRecord
+import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.giph.ui.GiphyActivity
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewRepository
@@ -981,6 +982,24 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             MessageSender.send(message, thread.address)
             invalidateOptionsMenu()
         }
+    }
+
+    override fun leaveOpenGroup(thread: Recipient) {
+        if (!thread.isOpenGroupRecipient) return
+
+        val builder = AlertDialog.Builder(this)
+            .setTitle(R.string.ConversationActivity_leave_group)
+            .setCancelable(true)
+            .setMessage(R.string.ConversationActivity_are_you_sure_you_want_to_leave_this_group)
+            .setPositiveButton(R.string.yes) { _, _ ->
+                val threadId = DatabaseComponent.get(this).threadDatabase().getThreadIdIfExistsFor(thread)
+                if (threadId == -1L) return@setPositiveButton
+                val v2OpenGroup = DatabaseComponent.get(this).lokiThreadDatabase().getOpenGroupChat(threadId) ?: return@setPositiveButton
+                OpenGroupManager.delete(v2OpenGroup.server, v2OpenGroup.room, this)
+                finish()
+            }
+            .setNegativeButton(R.string.no, null)
+        builder.show()
     }
 
     override fun unblock() {
