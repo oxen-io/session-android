@@ -10,4 +10,12 @@
                 android:topRightRadius="?preferenceCornerRadius"/>
         </shape>
     </item>
+    <item android:gravity="bottom"
+        android:left="@dimen/large_spacing"
+        android:right="@dimen/large_spacing">
+        <shape android:shape="rectangle" android:tint="?android:textColorPrimary">
+            <size android:height="1dp"/>
+            <solid android:color="@color/transparent_white_15"/>
+        </shape>
+    </item>
 </layer-list>

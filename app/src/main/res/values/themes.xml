@@ -453,8 +453,8 @@
         <item name="android:navigationBarColor">@color/compose_view_background</item>
         <item name="default_background_end">@color/classic_light_6</item>
         <item name="default_background_start">@color/classic_light_5</item>
-        <item name="colorCellBackground">@color/classic_light_6</item>
-        <item name="colorDividerBackground">@color/classic_light_2</item>
+        <item name="colorCellBackground">@color/classic_light_2</item>
+        <item name="colorDividerBackground">@color/classic_light_1</item>
         <item name="colorCellRipple">@color/classic_light_3</item>
         <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet.ClassicLight</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
