@@ -1,67 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/contentView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <View
+        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="?android:dividerHorizontal"
-        android:elevation="1dp" />
+        android:elevation="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        style="@style/SmallSessionEditText"
         android:id="@+id/chatURLEditText"
+        style="@style/SmallSessionEditText"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_marginHorizontal="@dimen/large_spacing"
         android:layout_marginTop="@dimen/large_spacing"
+        android:gravity="center_vertical"
+        android:hint="@string/fragment_enter_community_url_edit_text_hint"
         android:inputType="textWebEmailAddress|textMultiLine"
+        android:maxLines="3"
         android:paddingTop="0dp"
         android:paddingBottom="0dp"
-        android:gravity="center_vertical"
-        android:maxLines="3"
-        android:hint="@string/fragment_enter_community_url_edit_text_hint" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider" />
 
     <RelativeLayout
         android:id="@+id/defaultRoomsLoaderContainer"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginTop="56dp"
-        android:visibility="gone">
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chatURLEditText">
 
         <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/defaultRoomsLoader"
             style="@style/SpinKitView.Large.ThreeBounce"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:SpinKit_Color="@color/text"
+            android:layout_centerInParent="true"
             android:visibility="gone"
-            android:layout_centerInParent="true" />
+            app:SpinKit_Color="@color/text" />
 
     </RelativeLayout>
 
     <LinearLayout
-        android:visibility="gone"
         android:id="@+id/defaultRoomsContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chatURLEditText"
         tools:visibility="visible">
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginVertical="16dp"
-            android:textSize="18sp"
-            android:textStyle="bold"
             android:paddingHorizontal="24dp"
             android:text="@string/activity_join_public_chat_join_rooms"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <com.google.android.flexbox.FlexboxLayout
             android:id="@+id/defaultRoomsFlexboxLayout"
@@ -69,24 +79,32 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:paddingHorizontal="16dp"
-            app:justifyContent="center"
+            app:alignItems="center"
             app:flexDirection="row"
             app:flexWrap="wrap"
-            app:alignItems="center"/>
+            app:justifyContent="center" />
 
     </LinearLayout>
 
     <View
+        android:id="@+id/bottomSpacer"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/defaultRoomsContainer" />
 
     <Button
-        style="@style/Widget.Session.Button.Common.ProminentOutline"
         android:id="@+id/joinPublicChatButton"
+        style="@style/Widget.Session.Button.Common.ProminentOutline"
         android:layout_width="196dp"
         android:layout_height="@dimen/medium_button_height"
-        android:layout_marginBottom="@dimen/medium_spacing"
-        android:text="@string/fragment_enter_community_url_join_button_title" />
+        android:layout_marginVertical="@dimen/medium_spacing"
+        android:text="@string/fragment_enter_community_url_join_button_title"
+        android:enabled="false"
+        app:layout_constraintTop_toBottomOf="@id/bottomSpacer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

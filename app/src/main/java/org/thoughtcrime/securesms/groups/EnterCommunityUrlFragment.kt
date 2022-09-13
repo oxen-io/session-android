@@ -34,6 +34,7 @@ class EnterCommunityUrlFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.chatURLEditText.imeOptions = binding.chatURLEditText.imeOptions or 16777216 // Always use incognito keyboard
         binding.chatURLEditText.addTextChangedListener { text -> binding.joinPublicChatButton.isEnabled = !text.isNullOrBlank() }
+        binding.chatURLEditText.setOnFocusChangeListener { _, hasFocus ->  binding.defaultRoomsContainer.isVisible = !hasFocus }
         binding.joinPublicChatButton.setOnClickListener { joinPublicChatIfPossible() }
         viewModel.defaultRooms.observe(viewLifecycleOwner) { state ->
             binding.defaultRoomsContainer.isVisible = state is State.Success
