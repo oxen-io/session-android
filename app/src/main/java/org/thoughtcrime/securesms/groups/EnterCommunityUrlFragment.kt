@@ -16,6 +16,7 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.FragmentEnterCommunityUrlBinding
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.thoughtcrime.securesms.BaseActionBarActivity
+import org.thoughtcrime.securesms.conversation.v2.ViewUtil
 import org.thoughtcrime.securesms.util.State
 import java.util.Locale
 
@@ -35,6 +36,12 @@ class EnterCommunityUrlFragment : Fragment() {
         binding.chatURLEditText.imeOptions = binding.chatURLEditText.imeOptions or 16777216 // Always use incognito keyboard
         binding.chatURLEditText.addTextChangedListener { text -> binding.joinPublicChatButton.isEnabled = !text.isNullOrBlank() }
         binding.chatURLEditText.setOnFocusChangeListener { _, hasFocus ->  binding.defaultRoomsContainer.isVisible = !hasFocus }
+        binding.root.setOnTouchListener { _, _ ->
+            binding.defaultRoomsContainer.isVisible = true
+            binding.chatURLEditText.clearFocus()
+            ViewUtil.hideKeyboard(requireContext(), binding.chatURLEditText)
+            true
+        }
         binding.joinPublicChatButton.setOnClickListener { joinPublicChatIfPossible() }
         viewModel.defaultRooms.observe(viewLifecycleOwner) { state ->
             binding.defaultRoomsContainer.isVisible = state is State.Success
