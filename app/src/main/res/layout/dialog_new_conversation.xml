@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -8,9 +9,11 @@
     <TextView
         android:id="@+id/titleText"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/setting_button_height"
+        android:layout_height="wrap_content"
         android:background="@drawable/setting_button_background"
         android:gravity="center_horizontal|center_vertical"
+        android:paddingTop="@dimen/large_spacing"
+        android:paddingBottom="@dimen/very_large_spacing"
         android:text="@string/dialog_new_conversation_title"
         android:textColor="@color/text"
         android:textSize="@dimen/very_large_font_size"
@@ -23,7 +26,7 @@
         android:id="@+id/closeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/medium_spacing"
+        android:layout_marginStart="@dimen/large_spacing"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_baseline_close_24"
@@ -41,118 +44,70 @@
         app:layout_constraintStart_toStartOf="@+id/titleText"
         app:layout_constraintTop_toBottomOf="@+id/titleText" />
 
-    <LinearLayout
+    <TextView
         android:id="@+id/createPrivateChatButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_button_height"
-        android:background="@drawable/setting_button_background"
-        android:orientation="horizontal"
-        android:paddingHorizontal="@dimen/medium_spacing"
-        app:alignItems="center"
-        app:justifyContent="center"
+        android:layout_marginStart="@dimen/large_spacing"
+        android:drawablePadding="@dimen/large_spacing"
+        android:gravity="center_vertical"
+        android:text="@string/activity_new_message_title"
+        android:textColor="@color/text"
+        android:textSize="@dimen/medium_font_size"
+        app:drawableStartCompat="@drawable/ic_message"
         app:layout_constraintBottom_toTopOf="@+id/view1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view0">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_message" />
-
-        <TextView
-            android:id="@+id/newMessageText"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/medium_spacing"
-            android:gravity="center"
-            android:text="@string/activity_new_message_title"
-            android:textColor="@color/text"
-            android:textSize="@dimen/medium_font_size" />
-
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@id/view0" />
 
     <View
         android:id="@+id/view1"
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_marginStart="@dimen/very_large_spacing"
+        android:layout_marginStart="@dimen/massive_spacing"
         android:background="?android:dividerHorizontal"
         app:layout_constraintStart_toStartOf="@+id/createPrivateChatButton"
         app:layout_constraintTop_toBottomOf="@+id/createPrivateChatButton" />
 
-    <LinearLayout
+    <TextView
         android:id="@+id/createClosedGroupButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_button_height"
-        android:background="@drawable/setting_button_background"
-        android:orientation="horizontal"
-        android:paddingHorizontal="@dimen/medium_spacing"
-        app:alignItems="center"
-        app:justifyContent="center"
+        android:layout_marginStart="@dimen/large_spacing"
+        android:drawablePadding="@dimen/large_spacing"
+        android:gravity="center_vertical"
+        android:text="@string/activity_create_group_title"
+        android:textColor="@color/text"
+        android:textSize="@dimen/medium_font_size"
+        app:drawableStartCompat="@drawable/ic_group"
         app:layout_constraintBottom_toTopOf="@+id/view2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view1">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_group" />
-
-        <TextView
-            android:id="@+id/newGroupText"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/medium_spacing"
-            android:gravity="center"
-            android:text="@string/activity_create_group_title"
-            android:textColor="@color/text"
-            android:textSize="@dimen/medium_font_size" />
-
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/view1" />
 
     <View
         android:id="@+id/view2"
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_marginStart="@dimen/very_large_spacing"
+        android:layout_marginStart="@dimen/massive_spacing"
         android:background="?android:dividerHorizontal"
         app:layout_constraintStart_toStartOf="@+id/createClosedGroupButton"
         app:layout_constraintTop_toBottomOf="@+id/createClosedGroupButton" />
 
-    <LinearLayout
+    <TextView
         android:id="@+id/joinCommunityButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/setting_button_height"
-        android:background="@drawable/setting_button_background"
-        android:orientation="horizontal"
-        android:paddingHorizontal="@dimen/medium_spacing"
-        app:alignItems="center"
-        app:justifyContent="center"
+        android:layout_marginStart="@dimen/large_spacing"
+        android:drawablePadding="@dimen/large_spacing"
+        android:gravity="center_vertical"
+        android:text="@string/activity_join_community_title"
+        android:textColor="@color/text"
+        android:textSize="@dimen/medium_font_size"
+        app:drawableStartCompat="@drawable/ic_globe"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_globe" />
-
-        <TextView
-            android:id="@+id/joinCommunityText"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/medium_spacing"
-            android:gravity="center"
-            android:text="@string/activity_join_community_title"
-            android:textColor="@color/text"
-            android:textSize="@dimen/medium_font_size" />
-
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/view2" />
 
     <View
         android:id="@+id/view3"
@@ -169,7 +124,7 @@
         android:layout_height="@dimen/setting_button_height"
         android:background="@drawable/setting_button_background"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/medium_spacing"
+        android:paddingHorizontal="@dimen/large_spacing"
         android:text="@string/new_conversation_contacts_title"
         android:textColor="@color/text"
         android:textSize="@dimen/medium_font_size"
@@ -184,6 +139,8 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/contactsText" />
+        app:layout_constraintTop_toBottomOf="@id/contactsText"
+        tools:itemCount="6"
+        tools:listitem="@layout/view_contact"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

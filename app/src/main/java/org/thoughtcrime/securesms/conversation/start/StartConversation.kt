@@ -56,7 +56,7 @@ object StartConversation {
 
     private val defaultPeekHeight: Int by lazy { (Resources.getSystem().displayMetrics.heightPixels * 0.94).toInt() }
 
-    fun showDialog(recipients: List<Recipient>, context: Context, delegate: StartConversationDelegate) {
+    fun showNewConversationDialog(recipients: List<Recipient>, context: Context, delegate: StartConversationDelegate) {
         val unknownSectionTitle = context.getString(R.string.new_conversation_unknown_contacts_section_title)
         val contactGroups = recipients.map {
             val sessionId = it.address.serialize()
@@ -87,7 +87,7 @@ object StartConversation {
         dialog.setPeekHeight(defaultPeekHeight)
     }
 
-    fun showPrivateChatCreationDialog(activity: FragmentActivity, delegate: StartConversationDelegate) {
+    fun showNewMessageDialog(activity: FragmentActivity, delegate: StartConversationDelegate) {
         val dialog = MaterialDialog(activity, BottomSheet())
         dialog.show {
             view.setBackgroundColor(ContextCompat.getColor(context, R.color.cell_background))
@@ -152,7 +152,7 @@ object StartConversation {
         activity.startActivity(intent)
     }
 
-    fun showClosedGroupCreationDialog(members: List<String>, context: Context, delegate: StartConversationDelegate) {
+    fun showCreateGroupDialog(members: List<String>, context: Context, delegate: StartConversationDelegate) {
         val dialog = MaterialDialog(context, BottomSheet())
         dialog.show {
             view.setBackgroundColor(ContextCompat.getColor(context, R.color.cell_background))

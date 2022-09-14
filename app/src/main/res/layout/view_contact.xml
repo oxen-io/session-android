@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/medium_spacing"
+        android:paddingHorizontal="@dimen/large_spacing"
         android:paddingVertical="@dimen/small_spacing">
 
         <include layout="@layout/view_profile_picture"

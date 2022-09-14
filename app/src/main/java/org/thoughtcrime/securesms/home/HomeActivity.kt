@@ -618,18 +618,18 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     private fun showNewConversation() {
         val recipients = homeViewModel.conversations.value?.map { it.recipient }
             ?.filter { !it.isGroupRecipient && it.address.serialize() != publicKey } ?: emptyList()
-        StartConversation.showDialog(recipients, this, this)
+        StartConversation.showNewConversationDialog(recipients, this, this)
     }
 
     override fun onNewMessageSelected() {
-        StartConversation.showPrivateChatCreationDialog(this, this)
+        StartConversation.showNewMessageDialog(this, this)
     }
 
     override fun onCreateGroupSelected() {
         val members = homeViewModel.conversations.value
             ?.filter { !it.recipient.isGroupRecipient && it.recipient.hasApprovedMe() && it.recipient.address.serialize() != publicKey }
             ?.map { it.recipient.address.serialize() } ?: emptyList()
-        StartConversation.showClosedGroupCreationDialog(members, this, this)
+        StartConversation.showCreateGroupDialog(members, this, this)
     }
 
     override fun onJoinCommunitySelected() {

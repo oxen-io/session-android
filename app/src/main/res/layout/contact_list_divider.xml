@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingVertical="@dimen/tiny_spacing"
-        android:paddingHorizontal="@dimen/medium_spacing"
+        android:paddingHorizontal="@dimen/large_spacing"
         android:textColor="@color/text"
         tools:text="A" />
 
