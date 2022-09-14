@@ -121,9 +121,7 @@ interface TextSecurePreferences {
     fun setNotificationRingtone(ringtone: String?)
     fun setNotificationVibrateEnabled(enabled: Boolean)
     fun isNotificationVibrateEnabled(): Boolean
-    fun getNotificationLedColor(): String?
-    fun getNotificationLedPattern(): String?
-    fun getNotificationLedPatternCustom(): String?
+    fun getNotificationLedColor(): Int
     fun isThreadLengthTrimmingEnabled(): Boolean
     fun isSystemEmojiPreferred(): Boolean
     fun getMobileMediaDownloadAllowed(): Set<String>?
@@ -195,6 +193,7 @@ interface TextSecurePreferences {
         const val VIBRATE_PREF = "pref_key_vibrate"
         const val NOTIFICATION_PREF = "pref_key_enable_notifications"
         const val LED_COLOR_PREF = "pref_led_color"
+        const val LED_COLOR_PREF_PRIMARY = "pref_led_color_primary"
         const val LED_BLINK_PREF = "pref_led_blink"
         const val LED_BLINK_PREF_CUSTOM = "pref_led_blink_custom"
         const val PASSPHRASE_TIMEOUT_INTERVAL_PREF = "pref_timeout_interval"
@@ -720,18 +719,8 @@ interface TextSecurePreferences {
         }
 
         @JvmStatic
-        fun getNotificationLedColor(context: Context): String? {
-            return getStringPreference(context, LED_COLOR_PREF, "blue")
-        }
-
-        @JvmStatic
-        fun getNotificationLedPattern(context: Context): String? {
-            return getStringPreference(context, LED_BLINK_PREF, "500,2000")
-        }
-
-        @JvmStatic
-        fun getNotificationLedPatternCustom(context: Context): String? {
-            return getStringPreference(context, LED_BLINK_PREF_CUSTOM, "500,2000")
+        fun getNotificationLedColor(context: Context): Int {
+            return getIntegerPreference(context, LED_COLOR_PREF_PRIMARY, ThemeUtil.getThemedColor(context, R.attr.colorAccent))
         }
 
         @JvmStatic
@@ -1370,16 +1359,8 @@ class AppTextSecurePreferences @Inject constructor(
         return getBooleanPreference(TextSecurePreferences.VIBRATE_PREF, true)
     }
 
-    override fun getNotificationLedColor(): String? {
-        return getStringPreference(TextSecurePreferences.LED_COLOR_PREF, "blue")
-    }
-
-    override fun getNotificationLedPattern(): String? {
-        return getStringPreference(TextSecurePreferences.LED_BLINK_PREF, "500,2000")
-    }
-
-    override fun getNotificationLedPatternCustom(): String? {
-        return getStringPreference(TextSecurePreferences.LED_BLINK_PREF_CUSTOM, "500,2000")
+    override fun getNotificationLedColor(): Int {
+        return getIntegerPreference(TextSecurePreferences.LED_COLOR_PREF_PRIMARY, context.getColor(R.color.accent_green))
     }
 
     override fun isThreadLengthTrimmingEnabled(): Boolean {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory android:title="@string/preferences_notifications_strategy_category_title">
 
@@ -34,12 +35,13 @@
             android:defaultValue="true"
             android:title="@string/preferences__vibrate" />
 
-        <org.thoughtcrime.securesms.preferences.widgets.LEDColorListPreference
-            android:key="pref_led_color"
-            android:defaultValue="blue"
+        <org.thoughtcrime.securesms.preferences.widgets.ColorPickerPreference
+            android:key="pref_led_color_primary"
             android:title="@string/preferences__led_color"
-            android:entries="@array/pref_led_color_entries"
-            android:entryValues="@array/pref_led_color_values" />
+            app:colors="@array/pref_led_color_values"
+            app:columns="4"
+            app:colorSize="small"
+            />
 
     </PreferenceCategory>
 

@@ -48,7 +48,7 @@ public class NotificationsPreferenceFragment extends ListSummaryPreferenceFragme
       TextSecurePreferences.setNotificationVibrateEnabled(getContext(), NotificationChannels.getMessageVibrate(getContext()));
     }
 
-    this.findPreference(TextSecurePreferences.LED_COLOR_PREF)
+    this.findPreference(TextSecurePreferences.LED_COLOR_PREF_PRIMARY)
         .setOnPreferenceChangeListener(new LedColorChangeListener());
     this.findPreference(TextSecurePreferences.RINGTONE_PREF)
         .setOnPreferenceChangeListener(new RingtoneSummaryListener());
@@ -76,7 +76,6 @@ public class NotificationsPreferenceFragment extends ListSummaryPreferenceFragme
           return true;
         });
 
-    initializeListSummary((ListPreference) findPreference(TextSecurePreferences.LED_COLOR_PREF));
     initializeListSummary((ListPreference) findPreference(TextSecurePreferences.NOTIFICATION_PRIVACY_PREF));
 
     if (NotificationChannels.supported()) {
@@ -171,19 +170,22 @@ public class NotificationsPreferenceFragment extends ListSummaryPreferenceFragme
   }
 
   @SuppressLint("StaticFieldLeak")
-  private class LedColorChangeListener extends ListSummaryListener {
+  private class LedColorChangeListener implements Preference.OnPreferenceChangeListener {
+
     @Override
     public boolean onPreferenceChange(Preference preference, Object value) {
       if (NotificationChannels.supported()) {
         new AsyncTask<Void, Void, Void>() {
           @Override
           protected Void doInBackground(Void... voids) {
-            NotificationChannels.updateMessagesLedColor(getActivity(), (String) value);
+            NotificationChannels.updateMessagesLedColor(getActivity(), (Integer) value);
             return null;
           }
         }.execute();
+        return true;
       }
-      return super.onPreferenceChange(preference, value);
+      return false;
     }
+
   }
 }
