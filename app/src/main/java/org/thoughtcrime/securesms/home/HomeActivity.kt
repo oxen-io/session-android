@@ -194,7 +194,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         }
         homeViewModel.tryUpdateChannel()
         // Set up new conversation button
-        binding.newConversationButtonSet.setOnClickListener { showNewConversation() }
+        binding.newConversationButton.setOnClickListener { showNewConversation() }
         // Observe blocked contacts changed events
         val broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
@@ -300,7 +300,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         binding.seedReminderView.isVisible = !TextSecurePreferences.getHasViewedSeed(this) && !isShown
         binding.gradientView.isVisible = !isShown
         binding.globalSearchRecycler.isVisible = isShown
-        binding.newConversationButtonSet.isVisible = !isShown
+        binding.newConversationButton.isVisible = !isShown
     }
 
     private fun setupMessageRequestsBanner() {
