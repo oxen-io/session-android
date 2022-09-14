@@ -85,6 +85,8 @@
     <string name="AccessibilityId_message_request_config_message">Message request has been accepted</string>
     <string name="AccessibilityId_message_body">Message Body</string>
     <string name="AccessibilityId_deleted_message">Deleted message</string>
+    <string name="AccessibilityId_delete_message">Delete message</string>
+    <string name="AccessibilityId_reply_message">Reply</string>
 
     <!-- Delete message modal-->
     <string name="AccessibilityId_delete_just_for_me">Delete just for me</string>
