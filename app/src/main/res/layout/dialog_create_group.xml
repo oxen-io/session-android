@@ -29,7 +29,8 @@
         android:src="@drawable/ic_arrow_left_24"
         app:layout_constraintBottom_toBottomOf="@id/titleText"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/titleText" />
+        app:layout_constraintTop_toTopOf="@id/titleText"
+        android:contentDescription="@string/new_conversation_dialog_back_button_content_description" />
 
     <ImageView
         android:id="@+id/closeButton"
@@ -41,7 +42,8 @@
         android:src="@drawable/ic_baseline_close_24"
         app:layout_constraintBottom_toBottomOf="@id/titleText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/titleText" />
+        app:layout_constraintTop_toTopOf="@id/titleText"
+        android:contentDescription="@string/new_conversation_dialog_close_button_content_description" />
 
     <EditText
         android:id="@+id/nameEditText"
@@ -83,7 +85,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/contactSearch"
-        tools:listitem="@layout/view_user"/>
+        tools:itemCount="3"
+        tools:listitem="@layout/view_user" />
 
     <Button
         android:id="@+id/createClosedGroupButton"
@@ -123,7 +126,7 @@
         style="@style/Widget.Session.Button.Common.ProminentOutline"
         android:layout_width="196dp"
         android:layout_height="@dimen/medium_button_height"
-        android:layout_marginTop="@dimen/medium_spacing"
+        android:layout_marginVertical="@dimen/medium_spacing"
         android:text="@string/activity_create_closed_group_empty_state_button_title"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -134,7 +137,8 @@
         android:id="@+id/emptyStateGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="emptyStateMessageTextView, createNewPrivateChatButton" />
+        app:constraint_referenced_ids="emptyStateMessageTextView, createNewPrivateChatButton"
+        tools:visibility="gone"/>
 
     <RelativeLayout
         android:id="@+id/loaderContainer"

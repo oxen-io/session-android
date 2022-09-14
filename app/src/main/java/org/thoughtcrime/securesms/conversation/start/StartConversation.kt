@@ -21,10 +21,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
-import network.loki.messenger.databinding.DialogCreateClosedGroupBinding
-import network.loki.messenger.databinding.DialogCreatePrivateChatBinding
+import network.loki.messenger.databinding.DialogCreateGroupBinding
 import network.loki.messenger.databinding.DialogJoinCommunityBinding
 import network.loki.messenger.databinding.DialogNewConversationBinding
+import network.loki.messenger.databinding.DialogNewMessageBinding
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -91,7 +91,7 @@ object StartConversation {
         val dialog = MaterialDialog(activity, BottomSheet())
         dialog.show {
             view.setBackgroundColor(ContextCompat.getColor(context, R.color.cell_background))
-            val binding = DialogCreatePrivateChatBinding.inflate(LayoutInflater.from(activity))
+            val binding = DialogNewMessageBinding.inflate(LayoutInflater.from(activity))
             customView(view = binding.root, noVerticalPadding = true)
             binding.backButton.setOnClickListener { delegate.onDialogBackPressed(); dismiss() }
             binding.closeButton.setOnClickListener { dismiss() }
@@ -156,7 +156,7 @@ object StartConversation {
         val dialog = MaterialDialog(context, BottomSheet())
         dialog.show {
             view.setBackgroundColor(ContextCompat.getColor(context, R.color.cell_background))
-            val binding = DialogCreateClosedGroupBinding.inflate(LayoutInflater.from(context))
+            val binding = DialogCreateGroupBinding.inflate(LayoutInflater.from(context))
             customView(view = binding.root, scrollable = true, noVerticalPadding = true)
             val adapter = SelectContactsAdapter(context, GlideApp.with(context)).apply {
                 this.members = members

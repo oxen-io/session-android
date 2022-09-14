@@ -972,4 +972,6 @@
     <string name="activity_join_public_chat_enter_community_url_tab_title">Community URL</string>
     <string name="fragment_enter_community_url_edit_text_hint">Enter Community URL</string>
     <string name="fragment_enter_community_url_join_button_title">Join</string>
+    <string name="new_conversation_dialog_back_button_content_description">Navigate Back</string>
+    <string name="new_conversation_dialog_close_button_content_description">Close Dialog</string>
 </resources>

@@ -29,7 +29,8 @@
         android:src="@drawable/ic_baseline_close_24"
         app:layout_constraintBottom_toTopOf="@id/view0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/new_conversation_dialog_close_button_content_description" />
 
     <View
         android:id="@+id/view0"
