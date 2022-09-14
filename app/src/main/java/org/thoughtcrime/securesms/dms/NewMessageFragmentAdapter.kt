@@ -6,7 +6,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import org.thoughtcrime.securesms.util.ScanQRCodeWrapperFragment
 import org.thoughtcrime.securesms.util.ScanQRCodeWrapperFragmentDelegate
 
-class CreatePrivateChatFragmentAdapter(
+class NewMessageFragmentAdapter(
     val activity: FragmentActivity,
     private val enterPublicKeyDelegate: EnterPublicKeyDelegate,
     private val scanPublicKeyDelegate: ScanQRCodeWrapperFragmentDelegate

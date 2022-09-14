@@ -13,5 +13,5 @@
     tools:layout_width="wrap_content"
     app:chipMinTouchTargetSize="0dp"
     android:layout_margin="4dp"
-    android:layout_width="162dp"
+    android:layout_width="156dp"
     android:layout_height="wrap_content" />

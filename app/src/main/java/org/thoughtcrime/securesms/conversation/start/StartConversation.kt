@@ -42,7 +42,7 @@ import org.session.libsignal.utilities.PublicKeyValidation
 import org.thoughtcrime.securesms.contacts.SelectContactsAdapter
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.dms.CreatePrivateChatFragmentAdapter
+import org.thoughtcrime.securesms.dms.NewMessageFragmentAdapter
 import org.thoughtcrime.securesms.groups.GroupManager
 import org.thoughtcrime.securesms.groups.JoinCommunityFragmentAdapter
 import org.thoughtcrime.securesms.groups.OpenGroupManager
@@ -109,7 +109,7 @@ object StartConversation {
                 })
             }
             val enterPublicKeyDelegate = { publicKey: String -> createPrivateChat(publicKey, activity) }
-            val adapter = CreatePrivateChatFragmentAdapter(activity, enterPublicKeyDelegate) { onsNameOrPublicKey ->
+            val adapter = NewMessageFragmentAdapter(activity, enterPublicKeyDelegate) { onsNameOrPublicKey ->
                 if (PublicKeyValidation.isValid(onsNameOrPublicKey)) {
                     createPrivateChat(onsNameOrPublicKey, activity)
                 } else {
