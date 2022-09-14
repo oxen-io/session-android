@@ -446,7 +446,6 @@
     <string name="preferences__default">Սկզբնական</string>
     <string name="preferences__incognito_keyboard">Չհիշել բառերը</string>
     <string name="preferences__read_receipts">Կարդալու ազդանշաններ</string>
-    <string name="preferences__if_read_receipts_are_disabled_you_wont_be_able_to_see_read_receipts">Եթե կարդալու ազդանշանները անջատված են, Դուք չեք տեսնի երբ են մնացածները կարդացել Ձեր նամակները։</string>
     <string name="preferences__typing_indicators">Գրելու ինդիկատորներ</string>
     <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Եթե գրելու հնարավորությունը փակված է, դուք չեք կարող տեսնել մյուս օգտագործողների գրելը.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Առաջարկել ստեղնաշարի հավելվածին, որ այն չհիշի նոր բառերը</string>
@@ -455,8 +454,6 @@
     <string name="preferences_chats__message_trimming">Նամակների կարճեցում</string>
     <string name="preferences_advanced__use_system_emoji">Օգտագործել համակարգի էմոջին</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Անջատել Session-ի ներկառուցված էմոջիների ապահովումը</string>
-    <string name="preferences_app_protection__app_access">Հավելվածի հասանելիություն</string>
-    <string name="preferences_app_protection__communication">Հաղորդակցություն</string>
     <string name="preferences_chats__chats">Չատեր</string>
     <string name="preferences_notifications__messages">Նամակներ</string>
     <string name="preferences_notifications__in_chat_sounds">Ձայներ չատում</string>

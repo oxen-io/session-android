@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Session</string>
+    <string name="app_name" translatable="false">Session</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="delete">Delete</string>
@@ -494,8 +494,9 @@
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Enter key sends</string>
     <string name="preferences__pressing_the_enter_key_will_send_text_messages">Pressing the Enter key will send text messages</string>
-    <string name="preferences__send_link_previews">Send link previews</string>
-    <string name="preferences__previews_are_supported_for">Previews are supported for Imgur, Instagram, Pinterest, Reddit, and YouTube links</string>
+    <string name="preferences__send_link_previews">Send Link Previews</string>
+    <string name="preferences__link_previews">Link Previews</string>
+    <string name="preferences__link_previews_summary">Generate link previews for supported URLs.</string>
     <string name="preferences__screen_security">Screen security</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">Block screenshots in the recents list and inside the app</string>
     <string name="preferences__notifications">Notifications</string>
@@ -531,23 +532,24 @@
     <string name="preferences__scan_through_all_conversations_and_enforce_conversation_length_limits">Scan through all conversations and enforce conversation length limits</string>
     <string name="preferences__default">Default</string>
     <string name="preferences__incognito_keyboard">Incognito keyboard</string>
-    <string name="preferences__read_receipts">Read receipts</string>
-    <string name="preferences__if_read_receipts_are_disabled_you_wont_be_able_to_see_read_receipts">If read receipts are disabled, you won\'t be able to see read receipts from others.</string>
-    <string name="preferences__typing_indicators">Typing indicators</string>
-    <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">If typing indicators are disabled, you won\'t be able to see typing indicators from others.</string>
+    <string name="preferences__read_receipts">Read Receipts</string>
+    <string name="preferences__read_receipts_summary">Send read receipts in one-to-one chats.</string>
+    <string name="preferences__typing_indicators">Typing Indicators</string>
+    <string name="preferences__typing_indicators_summary">See and share typing indicators in one-to-one chats.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Request keyboard to disable personalized learning</string>
     <string name="preferences__light_theme">Light</string>
     <string name="preferences__dark_theme">Dark</string>
     <string name="preferences_chats__message_trimming">Message Trimming</string>
     <string name="preferences_advanced__use_system_emoji">Use system emoji</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Disable Session\'s built-in emoji support</string>
-    <string name="preferences_app_protection__app_access">App Access</string>
-    <string name="preferences_app_protection__communication">Communication</string>
+    <string name="preferences_app_protection__screen_security">Screen Security</string>
     <string name="preferences_chats__chats">Chats</string>
     <string name="preferences_notifications__messages">Messages</string>
     <string name="preferences_notifications__in_chat_sounds">In-chat sounds</string>
     <string name="preferences_notifications__show">Show</string>
     <string name="preferences_notifications__priority">Priority</string>
+    <string name="preferences_app_protection__screenshot_notifications">Screenshot Notifications</string>
+    <string name="preferences_app_protected__screenshot_notifications_summary">Receive a notification when a contact takes a screenshot of a one-to-one chat.</string>
 
     <!-- **************************************** -->
     <!-- menus -->
@@ -632,8 +634,8 @@
     <string name="LocalBackupJob_creating_backup">Creating backup...</string>
     <string name="ProgressPreference_d_messages_so_far">%d messages so far</string>
     <string name="BackupUtil_never">Never</string>
-    <string name="preferences_app_protection__screen_lock">Screen lock</string>
-    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Lock Session access with Android screen lock or fingerprint</string>
+    <string name="preferences_app_protection__screen_lock">Lock Session</string>
+    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Require fingerprint, PIN, pattern or password to unlock Session.</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">Screen lock inactivity timeout</string>
     <string name="AppProtectionPreferenceFragment_none">None</string>
     <!-- Conversation activity -->
@@ -918,8 +920,9 @@
     <string name="NotificationBarManager__end_call">End call</string>
     <string name="accept_call">Accept Call</string>
     <string name="decline_call">Decline call</string>
-    <string name="preferences__voice_video_calls">Voice and video calls</string>
-    <string name="preferences__allow_access_voice_video">Allow access to accept voice and video calls from other users</string>
+    <string name="preferences__voice_video_calls">Voice and Video Calls</string>
+    <string name="preferences__calls_beta">Calls (Beta)</string>
+    <string name="preferences__allow_access_voice_video">Enables voice and video calls to and from other users.</string>
     <string name="dialog_voice_video_title">Voice / video calls</string>
     <string name="dialog_voice_video_message">The current implementation of voice / video calls will expose your IP address to the Oxen Foundation servers and the calling / called user</string>
     <string name="CallNotificationBuilder_first_call_title">Call Missed</string>

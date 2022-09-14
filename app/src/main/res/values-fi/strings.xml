@@ -437,7 +437,6 @@ on viallinen!</string>
     <string name="preferences__default">Oletus</string>
     <string name="preferences__incognito_keyboard">Yksityinen näppäimistö</string>
     <string name="preferences__read_receipts">Lukukuittaukset</string>
-    <string name="preferences__if_read_receipts_are_disabled_you_wont_be_able_to_see_read_receipts">Jos lukukuittauksia ei ole otettu käyttöön, et tule näkemään lukukuittauksia muilta.</string>
     <string name="preferences__typing_indicators">Kirjoitustilaindikaattori</string>
     <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Jos et ole ottanut kirjoitustilaindikaattoria käyttöön, et tule näkemään kirjoitustilaindikaattoria muilta.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Pyydä näppäimistöä kytkemään sanakirjan automaattinen päivittäminen pois päältä</string>
@@ -446,8 +445,6 @@ on viallinen!</string>
     <string name="preferences_chats__message_trimming">Keskustelujen karsiminen</string>
     <string name="preferences_advanced__use_system_emoji">Käytä järjestelmän hymiöitä</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Ota Sessionin oletushymiöt pois käytöstä</string>
-    <string name="preferences_app_protection__app_access">Sovelluksen käyttö</string>
-    <string name="preferences_app_protection__communication">Kommunikointi</string>
     <string name="preferences_chats__chats">Keskustelut</string>
     <string name="preferences_notifications__messages">Viestit</string>
     <string name="preferences_notifications__in_chat_sounds">Keskustelun sisäiset äänet</string>

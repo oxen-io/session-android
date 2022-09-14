@@ -340,7 +340,6 @@ memproses pertukaran kunci korupsi.</string>
     <string name="preferences__default">Bawaan</string>
     <string name="preferences__incognito_keyboard">Papan ketik tersembunyi</string>
     <string name="preferences__read_receipts">Pesan terbaca</string>
-    <string name="preferences__if_read_receipts_are_disabled_you_wont_be_able_to_see_read_receipts">Jika tanda telah diterima di non aktifkan . anda tidak dapat melihat jika pesan sudah dibaca oleh orang lain</string>
     <string name="preferences__typing_indicators">Indikator penulisan</string>
     <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Jika indikator penulisan di non-aktifkan, kamu tidak akan mampu melihat indikator penulisan dari anggota lainnya.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Permintaan papan ketik untuk non-aktif personalisasi</string>
@@ -349,8 +348,6 @@ memproses pertukaran kunci korupsi.</string>
     <string name="preferences_chats__message_trimming">Penyingkatan pesan</string>
     <string name="preferences_advanced__use_system_emoji">Gunakan emoji sistem</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Nonaktifkan dukungan emoji Session bawaan</string>
-    <string name="preferences_app_protection__app_access">Akses aplikasi</string>
-    <string name="preferences_app_protection__communication">Komunikasi</string>
     <string name="preferences_chats__chats">Obrolan</string>
     <string name="preferences_notifications__messages">Pesan</string>
     <string name="preferences_notifications__in_chat_sounds">Suara dalam-obrolan</string>

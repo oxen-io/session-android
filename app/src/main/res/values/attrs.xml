@@ -361,5 +361,8 @@
     </declare-styleable>
 
     <attr name="preferenceCornerRadius" format="dimension|reference"/>
+    <attr name="reactionsPillSelectedTextColor" format="color|reference"/>
+    <attr name="reactionsPillSelectedBackground" format="color|reference"/>
+    <attr name="reactionsPillNormalBackground" format="color|reference"/>
 
 </resources>

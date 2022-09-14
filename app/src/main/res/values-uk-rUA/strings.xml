@@ -462,7 +462,6 @@
     <string name="preferences__default">Типово</string>
     <string name="preferences__incognito_keyboard">Клавіатура в режимі \"інкогніто\"</string>
     <string name="preferences__read_receipts">Звіти про прочитання</string>
-    <string name="preferences__if_read_receipts_are_disabled_you_wont_be_able_to_see_read_receipts">Якщо звіти про прочитання вимкнено, ви не зможете отримувати звіти від інших.</string>
     <string name="preferences__typing_indicators">Індикатор введення тексту</string>
     <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Якщо індикатор введення тексту вимкнено, ви не зможете бачити індикатор введення тексту від інших.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Запитати клавіатуру, щоб вимкнути персоналізоване навчання</string>
@@ -471,8 +470,6 @@
     <string name="preferences_chats__message_trimming">Обрізка повідомлень</string>
     <string name="preferences_advanced__use_system_emoji">Використовувати системні emoji</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Вимкнути вбудовану в Session підтримку emoji</string>
-    <string name="preferences_app_protection__app_access">Доступ до додатка</string>
-    <string name="preferences_app_protection__communication">Спілкування</string>
     <string name="preferences_chats__chats">Чати</string>
     <string name="preferences_notifications__messages">Повідомлення</string>
     <string name="preferences_notifications__in_chat_sounds">Звуки чату</string>

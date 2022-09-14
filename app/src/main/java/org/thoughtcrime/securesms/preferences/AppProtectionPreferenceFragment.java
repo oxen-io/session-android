@@ -23,10 +23,7 @@ import org.thoughtcrime.securesms.service.KeyCachingService;
 import org.thoughtcrime.securesms.util.CallNotificationBuilder;
 import org.thoughtcrime.securesms.util.IntentUtils;
 
-import java.util.concurrent.TimeUnit;
-
 import kotlin.jvm.functions.Function1;
-import mobi.upod.timedurationpicker.TimeDurationPickerDialog;
 import network.loki.messenger.BuildConfig;
 import network.loki.messenger.R;
 
@@ -42,7 +39,6 @@ public class AppProtectionPreferenceFragment extends ListSummaryPreferenceFragme
     super.onCreate(paramBundle);
 
     this.findPreference(TextSecurePreferences.SCREEN_LOCK).setOnPreferenceChangeListener(new ScreenLockListener());
-    this.findPreference(TextSecurePreferences.SCREEN_LOCK_TIMEOUT).setOnPreferenceClickListener(new ScreenLockTimeoutListener());
 
     this.findPreference(TextSecurePreferences.READ_RECEIPTS_PREF).setOnPreferenceChangeListener(new ReadReceiptToggleListener());
     this.findPreference(TextSecurePreferences.TYPING_INDICATORS).setOnPreferenceChangeListener(new TypingIndicatorsToggleListener());
@@ -100,20 +96,6 @@ public class AppProtectionPreferenceFragment extends ListSummaryPreferenceFragme
   @Override
   public void onResume() {
     super.onResume();
-    if (TextSecurePreferences.isPasswordDisabled(getContext())) {
-      initializeScreenLockTimeoutSummary();
-    }
-  }
-
-  private void initializeScreenLockTimeoutSummary() {
-    long timeoutSeconds = TextSecurePreferences.getScreenLockTimeout(getContext());
-    long hours          = TimeUnit.SECONDS.toHours(timeoutSeconds);
-    long minutes        = TimeUnit.SECONDS.toMinutes(timeoutSeconds) - (TimeUnit.SECONDS.toHours(timeoutSeconds) * 60  );
-    long seconds        = TimeUnit.SECONDS.toSeconds(timeoutSeconds) - (TimeUnit.SECONDS.toMinutes(timeoutSeconds) * 60);
-
-    findPreference(TextSecurePreferences.SCREEN_LOCK_TIMEOUT)
-        .setSummary(timeoutSeconds <= 0 ? getString(R.string.AppProtectionPreferenceFragment_none) :
-                                          String.format("%02d:%02d:%02d", hours, minutes, seconds));
   }
 
   private void initializeVisibility() {
@@ -139,25 +121,6 @@ public class AppProtectionPreferenceFragment extends ListSummaryPreferenceFragme
       Intent intent = new Intent(getContext(), KeyCachingService.class);
       intent.setAction(KeyCachingService.LOCK_TOGGLED_EVENT);
       getContext().startService(intent);
-      return true;
-    }
-  }
-
-  private class ScreenLockTimeoutListener implements Preference.OnPreferenceClickListener {
-
-    @Override
-    public boolean onPreferenceClick(Preference preference) {
-      new TimeDurationPickerDialog(getContext(), (view, duration) -> {
-        if (duration == 0) {
-          TextSecurePreferences.setScreenLockTimeout(getContext(), 0);
-        } else {
-          long timeoutSeconds = TimeUnit.MILLISECONDS.toSeconds(duration);
-          TextSecurePreferences.setScreenLockTimeout(getContext(), timeoutSeconds);
-        }
-
-        initializeScreenLockTimeoutSummary();
-      }, 0).show();
-
       return true;
     }
   }

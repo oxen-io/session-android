@@ -22,6 +22,7 @@ import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.flexbox.JustifyContent;
 
 import org.session.libsession.utilities.TextSecurePreferences;
+import org.session.libsession.utilities.ThemeUtil;
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
 import org.thoughtcrime.securesms.components.emoji.EmojiUtil;
 import org.thoughtcrime.securesms.conversation.v2.ViewUtil;
@@ -246,7 +247,7 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
 
     if (reaction.userWasSender && !isCompact) {
       root.setBackground(ContextCompat.getDrawable(context, R.drawable.reaction_pill_background_selected));
-      countView.setTextColor(ContextCompat.getColor(context, R.color.reactions_pill_selected_text_color));
+      countView.setTextColor(ThemeUtil.getThemedColor(context, R.attr.reactionsPillSelectedTextColor));
     } else {
       if (!isCompact) {
         root.setBackground(ContextCompat.getDrawable(context, R.drawable.reaction_pill_background));

@@ -438,7 +438,6 @@ nøkkelutvekslingsmelding.</string>
     <string name="preferences__default">Forvalgt</string>
     <string name="preferences__incognito_keyboard">Inkognito-tastatur</string>
     <string name="preferences__read_receipts">Lesebekreftelser</string>
-    <string name="preferences__if_read_receipts_are_disabled_you_wont_be_able_to_see_read_receipts">Hvis du slår av lesebekreftelser, får du heller ikke se lesebekreftelser fra andre.</string>
     <string name="preferences__typing_indicators">Skriverindikatorer</string>
     <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Hvis skriveindikatorer er deaktivert, vil du ikke kunne se skriveindikatorer fra andre.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Be tastatur om å slå av lærefunksjon</string>
@@ -447,8 +446,6 @@ nøkkelutvekslingsmelding.</string>
     <string name="preferences_chats__message_trimming">Automatisk sletting</string>
     <string name="preferences_advanced__use_system_emoji">Bruk systemets emoji</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Slå av innebygd emoji-støtte i Session</string>
-    <string name="preferences_app_protection__app_access">Programtilgang</string>
-    <string name="preferences_app_protection__communication">Kommunikasjon</string>
     <string name="preferences_chats__chats">Samtaler</string>
     <string name="preferences_notifications__messages">Meldinger</string>
     <string name="preferences_notifications__in_chat_sounds">Samtalelyder</string>

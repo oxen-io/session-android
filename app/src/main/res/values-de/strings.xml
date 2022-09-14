@@ -437,7 +437,6 @@
     <string name="preferences__default">Standard</string>
     <string name="preferences__incognito_keyboard">Inkognito-Tastatur</string>
     <string name="preferences__read_receipts">Lesebestätigungen</string>
-    <string name="preferences__if_read_receipts_are_disabled_you_wont_be_able_to_see_read_receipts">Bei deaktivierten Lesebestätigungen wirst du auch die Lesebestätigungen anderer nicht sehen können</string>
     <string name="preferences__typing_indicators">Tipp-Indikatoren</string>
     <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Bei deaktivierten Tipp-Indikatoren wirst du auch die Tipp-Indikatoren anderer nicht sehen können</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Tastatur auffordern, personalisiertes Lernen auszuschalten</string>
@@ -446,8 +445,6 @@
     <string name="preferences_chats__message_trimming">Kürzen von Unterhaltungen</string>
     <string name="preferences_advanced__use_system_emoji">System-Emojis verwenden</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Integrierte Emojis deaktivieren und stattdessen System-Emojis verwenden</string>
-    <string name="preferences_app_protection__app_access">App-Zugriff</string>
-    <string name="preferences_app_protection__communication">Kommunikation</string>
     <string name="preferences_chats__chats">Unterhaltungen</string>
     <string name="preferences_notifications__messages">Nachrichten</string>
     <string name="preferences_notifications__in_chat_sounds">Töne während Unterhaltung</string>

@@ -463,7 +463,6 @@
     <string name="preferences__default">По умолчанию</string>
     <string name="preferences__incognito_keyboard">Инкогнито-клавиатура</string>
     <string name="preferences__read_receipts">Уведомления о прочтении</string>
-    <string name="preferences__if_read_receipts_are_disabled_you_wont_be_able_to_see_read_receipts">Если уведомления о прочтении отключены, вы не сможете просматривать уведомления о прочтении от других пользователей.</string>
     <string name="preferences__typing_indicators">Индикаторы ввода</string>
     <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Если индикаторы ввода отключены, вы не сможете видеть индикаторы ввода других.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Запросить отключение персонализированного обучения клавиатуры</string>
@@ -472,8 +471,6 @@
     <string name="preferences_chats__message_trimming">Обрезка сообщений</string>
     <string name="preferences_advanced__use_system_emoji">Использовать системные эмодзи</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Отключить встроенные эмодзи Session</string>
-    <string name="preferences_app_protection__app_access">Доступ приложения</string>
-    <string name="preferences_app_protection__communication">Переписка</string>
     <string name="preferences_chats__chats">Чаты</string>
     <string name="preferences_notifications__messages">Сообщения</string>
     <string name="preferences_notifications__in_chat_sounds">Звуки в чате</string>

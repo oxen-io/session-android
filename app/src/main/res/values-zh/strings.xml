@@ -426,7 +426,6 @@
     <string name="preferences__default">默认</string>
     <string name="preferences__incognito_keyboard">隐身键盘</string>
     <string name="preferences__read_receipts">已读回执</string>
-    <string name="preferences__if_read_receipts_are_disabled_you_wont_be_able_to_see_read_receipts">如果您的已读回执被禁用，您也将无法看到他人的已读回执。</string>
     <string name="preferences__typing_indicators">“正在输入”提示</string>
     <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">如果“正在输入”提示功能被禁用，您将无法看到别人正在输入的提示。</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">关闭键盘自动学习功能</string>
@@ -435,8 +434,6 @@
     <string name="preferences_chats__message_trimming">信息整理</string>
     <string name="preferences_advanced__use_system_emoji">使用系统表情符号</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">禁用 Session 内置的表情支持</string>
-    <string name="preferences_app_protection__app_access">应用保护</string>
-    <string name="preferences_app_protection__communication">通讯</string>
     <string name="preferences_chats__chats">聊天界面</string>
     <string name="preferences_notifications__messages">消息</string>
     <string name="preferences_notifications__in_chat_sounds">聊天音效</string>

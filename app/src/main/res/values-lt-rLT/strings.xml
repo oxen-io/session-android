@@ -458,7 +458,6 @@
     <string name="preferences__default">Numatytoji</string>
     <string name="preferences__incognito_keyboard">Inkognito klaviatūra</string>
     <string name="preferences__read_receipts">Pranešimai apie žinučių skaitymą</string>
-    <string name="preferences__if_read_receipts_are_disabled_you_wont_be_able_to_see_read_receipts">Jeigu pranešimai apie žinučių skaitymą yra išjungti, jūs negalėsite matyti kitų žmonių pranešimų apie žinučių skaitymą.</string>
     <string name="preferences__typing_indicators">Rašymo indikatoriai</string>
     <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Išjungę rašymo indikatorius, nebegalėsite matyti kitų žmonių rašymo indikatorių.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Prašyti klaviatūros išjungti suasmenintą mokymąsi</string>
@@ -467,8 +466,6 @@
     <string name="preferences_chats__message_trimming">Žinučių išvalymas</string>
     <string name="preferences_advanced__use_system_emoji">Naudoti sistemos jaustukus</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Išjungti Session įtaisytą jaustukų palaikymą</string>
-    <string name="preferences_app_protection__app_access">Programėlės prieiga</string>
-    <string name="preferences_app_protection__communication">Susisiekimas</string>
     <string name="preferences_chats__chats">Pokalbiai</string>
     <string name="preferences_notifications__messages">Žinutės</string>
     <string name="preferences_notifications__in_chat_sounds">Garsai pokalbiuose</string>

@@ -380,15 +380,12 @@ ranti pakalla yupaykunamanta</string>
     <string name="preferences__default">Ña rurashka </string>
     <string name="preferences__incognito_keyboard">Killkana hillay pakallaku</string>
     <string name="preferences__read_receipts">Killkakatinata willachik </string>
-    <string name="preferences__if_read_receipts_are_disabled_you_wont_be_able_to_see_read_receipts">Willachiykuna mana hapichishka kakpika, mana shuk mashikunapa willachiykunata rikuyta ushankichu.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Killkana antata mañay, paypaklla yachakuyta anchuchinkapak</string>
     <string name="preferences__light_theme">Punchalla</string>
     <string name="preferences__dark_theme">Yanalla</string>
     <string name="preferences_chats__message_trimming">Chaskimanta pitishka</string>
     <string name="preferences_advanced__use_system_emoji">Anta llikapa ñawikukunata rikuchipay</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Sessionpa ñawikukunapa yanapayta anchuchipay</string>
-    <string name="preferences_app_protection__app_access">Aplicacionman yaykupay</string>
-    <string name="preferences_app_protection__communication">Rimariy</string>
     <string name="preferences_chats__chats">Rimariy</string>
     <string name="preferences_notifications__messages">Chaskikuna</string>
     <string name="preferences_notifications__in_chat_sounds">Rimaripi wakay</string>

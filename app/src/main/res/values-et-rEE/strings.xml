@@ -404,7 +404,6 @@
     <string name="preferences__default">Vaikimisi</string>
     <string name="preferences__incognito_keyboard">Inkognito klaviatuur</string>
     <string name="preferences__read_receipts">Lugemiskinnitused</string>
-    <string name="preferences__if_read_receipts_are_disabled_you_wont_be_able_to_see_read_receipts">Kui lugemiskinnitused on keelatud, siis pole sul võimalik teiste saadetud lugemiskinnitusi näha.</string>
     <string name="preferences__typing_indicators">Kirjutamisindikaatorid</string>
     <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Kui kirjutamisindikaatorid on keelatud, ei näe sa neid ka teiste puhul.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Palu klaviatuuril keelata isikupärastatud õppimine</string>
@@ -413,8 +412,6 @@
     <string name="preferences_chats__message_trimming">Sõnumi piiramine</string>
     <string name="preferences_advanced__use_system_emoji">Kasuta süsteemi emojisid</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Keela Sessionisse sisseehitatud emoji-tugi</string>
-    <string name="preferences_app_protection__app_access">Rakenduse ligipääs</string>
-    <string name="preferences_app_protection__communication">Suhtlus</string>
     <string name="preferences_chats__chats">Vestlused</string>
     <string name="preferences_notifications__messages">Sõnumid</string>
     <string name="preferences_notifications__in_chat_sounds">Vestlusesisesed helid</string>

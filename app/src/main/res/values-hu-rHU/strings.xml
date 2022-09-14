@@ -439,7 +439,6 @@
     <string name="preferences__default">Alapértelmezett</string>
     <string name="preferences__incognito_keyboard">Inkognitó billentyűzet</string>
     <string name="preferences__read_receipts">Olvasási nyugták</string>
-    <string name="preferences__if_read_receipts_are_disabled_you_wont_be_able_to_see_read_receipts">Ha az olvasási nyugták le vannak tiltva, te sem fogod látni mások olvasási nyugtáit.</string>
     <string name="preferences__typing_indicators">Gépelésindikátorok</string>
     <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Ha a gépelés-indikátorod ki van kapcsolva, nem fogod látni mások gépelés-indikátorát sem.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Tanulás letiltásának kérése a billentyűzettől (személyre szabás kikapcsolása)</string>
@@ -448,8 +447,6 @@
     <string name="preferences_chats__message_trimming">Üzenetek csonkítása</string>
     <string name="preferences_advanced__use_system_emoji">Rendszer emojik használata</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">A Session beépített emoji-támogatásának letiltása</string>
-    <string name="preferences_app_protection__app_access">Alkalmazás hozzáférés</string>
-    <string name="preferences_app_protection__communication">Kommunikáció</string>
     <string name="preferences_chats__chats">Csevegések</string>
     <string name="preferences_notifications__messages">Üzenetek</string>
     <string name="preferences_notifications__in_chat_sounds">Csevegésen belüli hangok</string>

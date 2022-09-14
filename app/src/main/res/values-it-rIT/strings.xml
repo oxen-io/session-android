@@ -439,7 +439,6 @@ scambia un altro messaggio!</string>
     <string name="preferences__default">Predefinito</string>
     <string name="preferences__incognito_keyboard">Tastiera in incognito</string>
     <string name="preferences__read_receipts">Conferme di lettura</string>
-    <string name="preferences__if_read_receipts_are_disabled_you_wont_be_able_to_see_read_receipts">Se le conferme di lettura sono disabilitate, non sarai in grado di vedere le conferme di lettura da altri.</string>
     <string name="preferences__typing_indicators">Indicatori di scrittura</string>
     <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Se gli indicatori di scrittura sono disabilitati, non sarai in grado di vedere quando gli altri utenti stanno digitando.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Richiedi alla tastiera di disattivare l\'apprendimento delle parole digitate</string>
@@ -448,8 +447,6 @@ scambia un altro messaggio!</string>
     <string name="preferences_chats__message_trimming">Cancellazione messaggi</string>
     <string name="preferences_advanced__use_system_emoji">Usa le emoji di sistema</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Disattiva le emoji di Session</string>
-    <string name="preferences_app_protection__app_access">Accesso app</string>
-    <string name="preferences_app_protection__communication">Comunicazione</string>
     <string name="preferences_chats__chats">Conversazioni</string>
     <string name="preferences_notifications__messages">Messaggi</string>
     <string name="preferences_notifications__in_chat_sounds">Suoni in chat</string>

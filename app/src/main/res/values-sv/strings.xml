@@ -438,7 +438,6 @@ för nyckelutbyte!</string>
     <string name="preferences__default">Standard</string>
     <string name="preferences__incognito_keyboard">Inkognito-tangentbord</string>
     <string name="preferences__read_receipts">Läskvittenser</string>
-    <string name="preferences__if_read_receipts_are_disabled_you_wont_be_able_to_see_read_receipts">Om läskvittenser är avstängda kan du inte se läskvittenser från andra.</string>
     <string name="preferences__typing_indicators">Skrivindikatorer</string>
     <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Om skrivindikatorer är avstängda kan du inte se skrivindikatorer från andra.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Begär att tangentbordet stänger av personlig inlärning</string>
@@ -447,8 +446,6 @@ för nyckelutbyte!</string>
     <string name="preferences_chats__message_trimming">Trimma meddelanden</string>
     <string name="preferences_advanced__use_system_emoji">Använd systemets emojier</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Inaktivera Sessions inbyggda emojier</string>
-    <string name="preferences_app_protection__app_access">Appåtkomst</string>
-    <string name="preferences_app_protection__communication">Kommunikation</string>
     <string name="preferences_chats__chats">Konversationer</string>
     <string name="preferences_notifications__messages">Meddelanden</string>
     <string name="preferences_notifications__in_chat_sounds">Ljud i konversationer</string>

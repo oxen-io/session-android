@@ -439,7 +439,6 @@
     <string name="preferences__default">Systeem-standaard</string>
     <string name="preferences__incognito_keyboard">Incognito toetsenbord</string>
     <string name="preferences__read_receipts">Leesbevestigingen</string>
-    <string name="preferences__if_read_receipts_are_disabled_you_wont_be_able_to_see_read_receipts">Als je leesbevestigingen zijn uitgeschakeld zullen anderen niet kunnen zien of je hun bericht hebt gelezen, maar je zult leesbevestigingen van anderen ook niet kunnen zien.</string>
     <string name="preferences__typing_indicators">Typindicatoren</string>
     <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Als typindicatoren zijn uitgeschakeld, kunnen anderen niet zien of je aan het typen bent, maar je kunt ook niet zien wanneer anderen aan het typen zijn.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Schakel gepersonaliseerd leren van toetsenbord uit</string>
@@ -448,8 +447,6 @@
     <string name="preferences_chats__message_trimming">Beperk bewaartermijn</string>
     <string name="preferences_advanced__use_system_emoji">Gebruik systeem-emoji</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Schakel de ingebouwde emoji-ondersteuning van Session uit.</string>
-    <string name="preferences_app_protection__app_access">Toegang tot app</string>
-    <string name="preferences_app_protection__communication">Communicatie</string>
     <string name="preferences_chats__chats">Gesprekken</string>
     <string name="preferences_notifications__messages">Berichten</string>
     <string name="preferences_notifications__in_chat_sounds">Ook geluid als Session al geopend is</string>

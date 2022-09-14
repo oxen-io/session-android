@@ -432,7 +432,6 @@ d\'intercanvi de claus!</string>
     <string name="preferences__default">Per defecte</string>
     <string name="preferences__incognito_keyboard">Teclat d\'incògnit</string>
     <string name="preferences__read_receipts">Confirmació de lectura</string>
-    <string name="preferences__if_read_receipts_are_disabled_you_wont_be_able_to_see_read_receipts">Si les confirmacions de recepció estan inhabilitades, no podreu veure les dels altres.</string>
     <string name="preferences__typing_indicators">Indicadors de tecleig</string>
     <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Si els indicadors de tecleig estan inhabilitats, no podreu veure els indicadors de tecleig dels altres.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Demana el teclat per a inhabilitar l\'aprenentatge personalitzat</string>
@@ -441,8 +440,6 @@ d\'intercanvi de claus!</string>
     <string name="preferences_chats__message_trimming">Escapçament de missatges</string>
     <string name="preferences_advanced__use_system_emoji">Usa els emoji del sistema</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Inhabilita els emojis inclosos al Session</string>
-    <string name="preferences_app_protection__app_access">Accés de l\'aplicació</string>
-    <string name="preferences_app_protection__communication">Comunicació</string>
     <string name="preferences_chats__chats">Xats</string>
     <string name="preferences_notifications__messages">Missatges</string>
     <string name="preferences_notifications__in_chat_sounds">Sons del xat</string>

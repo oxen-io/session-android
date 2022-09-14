@@ -434,7 +434,6 @@ foi recebida está corrompida!</string>
     <string name="preferences__default">Pré-definição</string>
     <string name="preferences__incognito_keyboard">Teclado incógnito</string>
     <string name="preferences__read_receipts">Recibos de leitura</string>
-    <string name="preferences__if_read_receipts_are_disabled_you_wont_be_able_to_see_read_receipts">Se os recibos de leitura forem desativados, não vai poder ver os recibos enviados por outros.</string>
     <string name="preferences__typing_indicators">Indicadores de escrita</string>
     <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Se os indicadores de escrita estiverem desativados, não poderá ver os indicadores de escrita de outros utilizadores.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Pedir ao teclado para desligar a aprendizagem de palavras</string>
@@ -443,8 +442,6 @@ foi recebida está corrompida!</string>
     <string name="preferences_chats__message_trimming">Redução da mensagem</string>
     <string name="preferences_advanced__use_system_emoji">Utilizar os emojis do sistema</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Desativar o suporte de emojis próprios do Session</string>
-    <string name="preferences_app_protection__app_access">Acesso da aplicação</string>
-    <string name="preferences_app_protection__communication">Comunicação</string>
     <string name="preferences_chats__chats">Conversas</string>
     <string name="preferences_notifications__messages">Mensagens</string>
     <string name="preferences_notifications__in_chat_sounds">Sons na conversa</string>

@@ -437,7 +437,6 @@
     <string name="preferences__default">Valeur par défaut</string>
     <string name="preferences__incognito_keyboard">Clavier incognito</string>
     <string name="preferences__read_receipts">Accusés de lecture</string>
-    <string name="preferences__if_read_receipts_are_disabled_you_wont_be_able_to_see_read_receipts">Si les accusés de lecture sont désactivés, vous ne pourrez pas voir les accusés de lecture d’autrui.</string>
     <string name="preferences__typing_indicators">Indicateurs de saisie</string>
     <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Si les indicateurs de saisie sont désactivés, vous ne serez pas en mesure de voir les indicateurs de saisie des autres.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Demander au clavier de désactiver l’apprentissage personnalisé</string>
@@ -446,8 +445,6 @@
     <string name="preferences_chats__message_trimming">Élagage des messages</string>
     <string name="preferences_advanced__use_system_emoji">Utiliser les émojis du système</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Désactiver la prise en charge des émojis intégrés à Session</string>
-    <string name="preferences_app_protection__app_access">Accès à l’appli</string>
-    <string name="preferences_app_protection__communication">Communication</string>
     <string name="preferences_chats__chats">Conversations</string>
     <string name="preferences_notifications__messages">Messages</string>
     <string name="preferences_notifications__in_chat_sounds">Sons des conversations</string>

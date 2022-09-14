@@ -449,8 +449,6 @@
     <string name="preferences_chats__message_trimming">Скраћивање порука</string>
     <string name="preferences_advanced__use_system_emoji">Користи системски емоџи</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Искључи уграђене Session-ове емоџије</string>
-    <string name="preferences_app_protection__app_access">Приступ апликацији</string>
-    <string name="preferences_app_protection__communication">Комуникација</string>
     <string name="preferences_chats__chats">Ћаскања</string>
     <string name="preferences_notifications__messages">Поруке</string>
     <string name="preferences_notifications__in_chat_sounds">Звуци ћаскања</string>

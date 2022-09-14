@@ -42,7 +42,7 @@ public abstract class CorrectedPreferenceFragment extends PreferenceFragmentComp
   public void onCreate(Bundle icicle) {
     super.onCreate(icicle);
     horizontalPadding = ViewUtil.dpToPx(requireContext(), 36);
-    verticalPadding = ViewUtil.dpToPx(requireContext(), 16);
+    verticalPadding = ViewUtil.dpToPx(requireContext(), 8);
   }
 
   @Override
@@ -151,6 +151,10 @@ public abstract class CorrectedPreferenceFragment extends PreferenceFragmentComp
         super.onBindViewHolder(holder, position);
         Preference preference = getItem(position);
         if (preference instanceof PreferenceCategory) {
+          ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
+          layoutParams.topMargin = 0;
+          layoutParams.bottomMargin = 0;
+          holder.itemView.setLayoutParams(layoutParams);
           setZeroPaddingToLayoutChildren(holder.itemView);
         } else {
           View iconFrame = holder.itemView.findViewById(R.id.icon_frame);
