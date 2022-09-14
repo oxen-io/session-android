@@ -125,7 +125,6 @@ interface TextSecurePreferences {
     fun getNotificationLedPattern(): String?
     fun getNotificationLedPatternCustom(): String?
     fun isThreadLengthTrimmingEnabled(): Boolean
-    fun getThreadTrimLength(): Int
     fun isSystemEmojiPreferred(): Boolean
     fun getMobileMediaDownloadAllowed(): Set<String>?
     fun getWifiMediaDownloadAllowed(): Set<String>?
@@ -190,7 +189,6 @@ interface TextSecurePreferences {
 
         const val DISABLE_PASSPHRASE_PREF = "pref_disable_passphrase"
         const val LANGUAGE_PREF = "pref_language"
-        const val THREAD_TRIM_LENGTH = "pref_trim_length"
         const val THREAD_TRIM_NOW = "pref_trim_now"
         const val LAST_VERSION_CODE_PREF = "last_version_code"
         const val RINGTONE_PREF = "pref_key_ringtone"
@@ -738,12 +736,7 @@ interface TextSecurePreferences {
 
         @JvmStatic
         fun isThreadLengthTrimmingEnabled(context: Context): Boolean {
-            return getBooleanPreference(context, THREAD_TRIM_ENABLED, false)
-        }
-
-        @JvmStatic
-        fun getThreadTrimLength(context: Context): Int {
-            return getStringPreference(context, THREAD_TRIM_LENGTH, "500")!!.toInt()
+            return getBooleanPreference(context, THREAD_TRIM_ENABLED, true)
         }
 
         @JvmStatic
@@ -1390,11 +1383,7 @@ class AppTextSecurePreferences @Inject constructor(
     }
 
     override fun isThreadLengthTrimmingEnabled(): Boolean {
-        return getBooleanPreference(TextSecurePreferences.THREAD_TRIM_ENABLED, false)
-    }
-
-    override fun getThreadTrimLength(): Int {
-        return getStringPreference(TextSecurePreferences.THREAD_TRIM_LENGTH, "500")!!.toInt()
+        return getBooleanPreference(TextSecurePreferences.THREAD_TRIM_ENABLED, true)
     }
 
     override fun isSystemEmojiPreferred(): Boolean {

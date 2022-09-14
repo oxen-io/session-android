@@ -71,7 +71,8 @@ interface StorageProtocol {
     fun hasBackgroundGroupAddJob(groupJoinUrl: String): Boolean
     fun setOpenGroupServerMessageID(messageID: Long, serverID: Long, threadID: Long, isSms: Boolean)
     fun getOpenGroup(room: String, server: String): OpenGroup?
-    fun addGroupMember(member: GroupMember)
+    fun addGroupMemberRole(member: GroupMember)
+    fun clearGroupMemberRoles(groupId: String)
 
     // Open Group Public Keys
     fun getOpenGroupPublicKey(server: String): String?
@@ -151,6 +152,8 @@ interface StorageProtocol {
     fun getThreadIdForMms(mmsId: Long): Long
     fun getLastUpdated(threadID: Long): Long
     fun trimThread(threadID: Long, threadLimit: Int)
+    fun trimThreadBefore(threadID: Long, timestamp: Long)
+    fun getMessageCount(threadID: Long): Long
 
     // Contacts
     fun getContactWithSessionID(sessionID: String): Contact?

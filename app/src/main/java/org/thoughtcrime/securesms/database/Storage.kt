@@ -201,11 +201,6 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
                 messageID = result.messageId
             }
         }
-        val threadID = message.threadID
-        // open group trim thread job is scheduled after processing in OpenGroupPollerV2
-        if (openGroupID.isNullOrEmpty() && threadID != null && threadID >= 0 && TextSecurePreferences.isThreadLengthTrimmingEnabled(context)) {
-            JobQueue.shared.queueThreadForTrim(threadID)
-        }
         message.serverHash?.let { serverHash ->
             messageID?.let { id ->
                 DatabaseComponent.get(context).lokiMessageDatabase().setMessageServerHash(id, serverHash)
@@ -324,7 +319,11 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         return getAllOpenGroups().values.firstOrNull { it.server == server && it.room == room }
     }
 
-    override fun addGroupMember(member: GroupMember) {
+    override fun clearGroupMemberRoles(groupId: String) {
+        DatabaseComponent.get(context).groupMemberDatabase().clearGroupMemberRoles(groupId)
+    }
+
+    override fun addGroupMemberRole(member: GroupMember) {
         DatabaseComponent.get(context).groupMemberDatabase().addGroupMember(member)
     }
 
@@ -700,6 +699,18 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         val threadDB = DatabaseComponent.get(context).threadDatabase()
         threadDB.trimThread(threadID, threadLimit)
     }
+
+    override fun trimThreadBefore(threadID: Long, timestamp: Long) {
+        val threadDB = DatabaseComponent.get(context).threadDatabase()
+        threadDB.trimThreadBefore(threadID, timestamp)
+    }
+
+    override fun getMessageCount(threadID: Long): Long {
+        val mmsSmsDb = DatabaseComponent.get(context).mmsSmsDatabase()
+        return mmsSmsDb.getConversationCount(threadID)
+    }
+
+
 
     override fun getAttachmentDataUri(attachmentId: AttachmentId): Uri {
         return PartAuthority.getAttachmentDataUri(attachmentId)
