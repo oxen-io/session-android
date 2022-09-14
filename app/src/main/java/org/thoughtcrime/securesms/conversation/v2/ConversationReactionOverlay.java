@@ -46,6 +46,7 @@ import org.thoughtcrime.securesms.util.AnimationCompleteListener;
 import org.thoughtcrime.securesms.util.DateUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -68,6 +69,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
   private Activity                  activity;
   private MessageRecord             messageRecord;
   private SelectedConversationModel selectedConversationModel;
+  private String                    blindedPublicKey;
   private OverlayState              overlayState = OverlayState.HIDDEN;
   private RecentEmojiPageModel      recentEmojiPageModel;
 
@@ -142,7 +144,8 @@ public final class ConversationReactionOverlay extends FrameLayout {
   public void show(@NonNull Activity activity,
                    @NonNull MessageRecord messageRecord,
                    @NonNull PointF lastSeenDownPoint,
-                   @NonNull SelectedConversationModel selectedConversationModel)
+                   @NonNull SelectedConversationModel selectedConversationModel,
+                   @Nullable String blindedPublicKey)
   {
     if (overlayState != OverlayState.HIDDEN) {
       return;
@@ -150,6 +153,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
 
     this.messageRecord                 = messageRecord;
     this.selectedConversationModel     = selectedConversationModel;
+    this.blindedPublicKey              = blindedPublicKey;
     overlayState                       = OverlayState.UNINITAILIZED;
     selected                           = -1;
     recentEmojiPageModel               = new RecentEmojiPageModel(activity);
@@ -652,6 +656,8 @@ public final class ConversationReactionOverlay extends FrameLayout {
     boolean hasText = !message.getBody().isEmpty();
     OpenGroup openGroup = DatabaseComponent.get(getContext()).lokiThreadDatabase().getOpenGroupChat(message.getThreadId());
     Recipient recipient = DatabaseComponent.get(getContext()).threadDatabase().getRecipientForThreadId(message.getThreadId());
+    if (recipient == null) return Collections.emptyList();
+
     String userPublicKey = TextSecurePreferences.getLocalNumber(getContext());
     // Select message
     items.add(new ActionItem(R.attr.menu_select_icon, getContext().getResources().getString(R.string.conversation_context__menu_select), () -> handleActionItemClicked(Action.SELECT)));
@@ -668,16 +674,16 @@ public final class ConversationReactionOverlay extends FrameLayout {
       items.add(new ActionItem(R.attr.menu_copy_icon, getContext().getResources().getString(R.string.activity_conversation_menu_copy_session_id), () -> handleActionItemClicked(Action.COPY_SESSION_ID)));
     }
     // Delete message
-    if (ConversationMenuItemHelper.userCanDeleteSelectedItems(getContext(), message, openGroup, userPublicKey)) {
+    if (ConversationMenuItemHelper.userCanDeleteSelectedItems(getContext(), message, openGroup, userPublicKey, blindedPublicKey)) {
       items.add(new ActionItem(R.attr.menu_trash_icon, getContext().getResources().getString(R.string.delete), () -> handleActionItemClicked(Action.DELETE)));
     }
     // Ban user
-    if (ConversationMenuItemHelper.userCanBanSelectedUsers(getContext(), message, openGroup, userPublicKey)) {
-      items.add(new ActionItem(0, getContext().getResources().getString(R.string.conversation_context__menu_ban_user), () -> handleActionItemClicked(Action.BAN_USER)));
+    if (ConversationMenuItemHelper.userCanBanSelectedUsers(getContext(), message, openGroup, userPublicKey, blindedPublicKey)) {
+      items.add(new ActionItem(R.attr.menu_block_icon, getContext().getResources().getString(R.string.conversation_context__menu_ban_user), () -> handleActionItemClicked(Action.BAN_USER)));
     }
     // Ban and delete all
-    if (ConversationMenuItemHelper.userCanBanSelectedUsers(getContext(), message, openGroup, userPublicKey)) {
-      items.add(new ActionItem(0, getContext().getResources().getString(R.string.conversation_context__menu_ban_and_delete_all), () -> handleActionItemClicked(Action.BAN_AND_DELETE_ALL)));
+    if (ConversationMenuItemHelper.userCanBanSelectedUsers(getContext(), message, openGroup, userPublicKey, blindedPublicKey)) {
+      items.add(new ActionItem(R.attr.menu_trash_icon, getContext().getResources().getString(R.string.conversation_context__menu_ban_and_delete_all), () -> handleActionItemClicked(Action.BAN_AND_DELETE_ALL)));
     }
     // Message detail
     if (message.isFailed()) {
