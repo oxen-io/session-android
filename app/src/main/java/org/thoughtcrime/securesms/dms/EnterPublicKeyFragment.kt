@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -19,6 +18,7 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.FragmentEnterPublicKeyBinding
 import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.util.QRCodeUtilities
+import org.thoughtcrime.securesms.util.hideKeyboard
 import org.thoughtcrime.securesms.util.toPx
 
 class EnterPublicKeyFragment : Fragment() {
@@ -43,13 +43,18 @@ class EnterPublicKeyFragment : Fragment() {
             publicKeyEditText.setRawInputType(InputType.TYPE_CLASS_TEXT)
             publicKeyEditText.setOnEditorActionListener { v, actionID, _ ->
                 if (actionID == EditorInfo.IME_ACTION_DONE) {
-                    val imm = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(v.windowToken, 0)
+                    v.hideKeyboard()
                     createPrivateChatIfPossible()
                     true
                 } else {
                     false
                 }
+            }
+            root.setOnTouchListener { _, _ ->
+                binding.optionalContentContainer.isVisible = true
+                publicKeyEditText.clearFocus()
+                publicKeyEditText.hideKeyboard()
+                true
             }
             publicKeyEditText.setOnFocusChangeListener { _, hasFocus ->  optionalContentContainer.isVisible = !hasFocus }
             publicKeyEditText.addTextChangedListener { text -> createPrivateChatButton.isVisible = !text.isNullOrBlank() }
@@ -85,7 +90,8 @@ class EnterPublicKeyFragment : Fragment() {
     }
 
     private fun createPrivateChatIfPossible() {
-        val hexEncodedPublicKey = binding.publicKeyEditText.text?.trim().toString()
+        val hexEncodedPublicKey = binding.publicKeyEditText.text?.trim()?.toString()
+        if (hexEncodedPublicKey.isNullOrEmpty()) return
         delegate?.handlePublicKeyEntered(hexEncodedPublicKey)
     }
 }

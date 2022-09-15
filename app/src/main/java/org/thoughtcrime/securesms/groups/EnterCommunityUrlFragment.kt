@@ -16,8 +16,8 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.FragmentEnterCommunityUrlBinding
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.thoughtcrime.securesms.BaseActionBarActivity
-import org.thoughtcrime.securesms.conversation.v2.ViewUtil
 import org.thoughtcrime.securesms.util.State
+import org.thoughtcrime.securesms.util.hideKeyboard
 import java.util.Locale
 
 class EnterCommunityUrlFragment : Fragment() {
@@ -39,7 +39,7 @@ class EnterCommunityUrlFragment : Fragment() {
         binding.root.setOnTouchListener { _, _ ->
             binding.defaultRoomsContainer.isVisible = true
             binding.chatURLEditText.clearFocus()
-            ViewUtil.hideKeyboard(requireContext(), binding.chatURLEditText)
+            binding.chatURLEditText.hideKeyboard()
             true
         }
         binding.joinPublicChatButton.setOnClickListener { joinPublicChatIfPossible() }
