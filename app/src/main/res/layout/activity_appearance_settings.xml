@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -16,14 +17,13 @@
             android:layout_height="wrap_content"
             android:text="@string/activity_appearance_themes_category"/>
 
-        <include layout="@layout/preference_divider"/>
         <LinearLayout
             android:id="@+id/theme_option_classic_dark"
-            android:background="?colorCellBackground"
+            android:background="@drawable/preference_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="@dimen/large_spacing"
-            android:paddingVertical="@dimen/small_spacing"
+            android:paddingVertical="@dimen/medium_spacing"
             android:orientation="horizontal">
             <ImageView
                 android:theme="@style/Classic.Dark"
@@ -33,6 +33,7 @@
             <TextView
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
                 android:lines="1"
+                android:textSize="16sp"
                 android:text="@string/classic_dark_theme_name"
                 android:padding="@dimen/medium_spacing"
                 android:layout_gravity="center"
@@ -46,12 +47,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
-        <include layout="@layout/preference_divider"/>
         <LinearLayout
             android:id="@+id/theme_option_classic_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?colorCellBackground"
+            android:background="@drawable/preference_middle"
             android:paddingHorizontal="@dimen/large_spacing"
             android:paddingVertical="@dimen/small_spacing"
             android:orientation="horizontal">
@@ -62,6 +62,7 @@
                 android:src="@drawable/ic_themepreview"/>
             <TextView
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                android:textSize="16sp"
                 android:lines="1"
                 android:text="@string/classic_light_theme_name"
                 android:padding="@dimen/medium_spacing"
@@ -76,14 +77,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
-        <include layout="@layout/preference_divider"/>
         <LinearLayout
             android:id="@+id/theme_option_ocean_dark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?colorCellBackground"
+            android:background="@drawable/preference_middle"
             android:paddingHorizontal="@dimen/large_spacing"
-            android:paddingVertical="@dimen/small_spacing"
+            android:paddingVertical="@dimen/medium_spacing"
             android:orientation="horizontal">
             <ImageView
                 android:theme="@style/Ocean.Dark"
@@ -92,6 +92,7 @@
                 android:src="@drawable/ic_themepreview"/>
             <TextView
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                android:textSize="16sp"
                 android:lines="1"
                 android:text="@string/ocean_dark_theme_name"
                 android:padding="@dimen/medium_spacing"
@@ -106,14 +107,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
-        <include layout="@layout/preference_divider"/>
         <LinearLayout
             android:id="@+id/theme_option_ocean_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?colorCellBackground"
+            android:background="@drawable/preference_bottom"
             android:paddingHorizontal="@dimen/large_spacing"
-            android:paddingVertical="@dimen/small_spacing"
+            android:paddingTop="@dimen/medium_spacing"
+            android:paddingBottom="@dimen/large_spacing"
             android:orientation="horizontal">
             <ImageView
                 android:theme="@style/Ocean.Light"
@@ -122,6 +123,7 @@
                 android:src="@drawable/ic_themepreview"/>
             <TextView
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                android:textSize="16sp"
                 android:lines="1"
                 android:text="@string/ocean_light_theme_name"
                 android:padding="@dimen/medium_spacing"
@@ -136,8 +138,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
-        <include layout="@layout/preference_divider"/>
-
         <TextView
             android:textColor="?android:textColorTertiary"
             android:paddingHorizontal="@dimen/large_spacing"
@@ -147,15 +147,14 @@
             android:layout_height="wrap_content"
             android:text="@string/activity_appearance_primary_color_category"/>
 
-        <include layout="@layout/preference_divider"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?colorCellBackground"
+            android:background="@drawable/preference_single"
             android:orientation="vertical">
 
             <LinearLayout
-                android:layout_marginTop="@dimen/medium_spacing"
+                android:layout_marginTop="@dimen/large_spacing"
                 android:background="@drawable/fake_chat_view_incoming_message_background"
                 android:padding="12dp"
                 android:layout_marginHorizontal="@dimen/very_large_spacing"
@@ -183,7 +182,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginVertical="@dimen/medium_spacing"
+                android:layout_marginVertical="@dimen/large_spacing"
                 android:background="@drawable/fake_chat_view_outgoing_message_background"
                 android:padding="12dp"
                 android:layout_marginHorizontal="@dimen/very_large_spacing"
@@ -200,7 +199,6 @@
             </LinearLayout>
 
         </LinearLayout>
-        <include layout="@layout/preference_divider"/>
 
         <LinearLayout
             android:id="@+id/accent_container"
@@ -270,8 +268,9 @@
             android:text="@string/activity_appearance_follow_system_category"/>
 
         <LinearLayout
+            android:padding="@dimen/medium_spacing"
             android:layout_marginBottom="@dimen/massive_spacing"
-            android:background="?colorCellBackground"
+            android:background="@drawable/preference_single"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center">

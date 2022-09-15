@@ -1,6 +1,8 @@
 package org.thoughtcrime.securesms.preferences.appearance
 
 import android.os.Bundle
+import android.os.Parcelable
+import android.util.SparseArray
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SwitchCompat
@@ -19,6 +21,10 @@ import org.thoughtcrime.securesms.util.ThemeState
 
 @AndroidEntryPoint
 class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.OnClickListener {
+
+    companion object {
+        private const val SCROLL_PARCEL = "scroll_parcel"
+    }
 
     val viewModel: AppearanceSettingsViewModel by viewModels()
     lateinit var binding : ActivityAppearanceSettingsBinding
@@ -69,6 +75,13 @@ class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.On
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val scrollParcelArray = SparseArray<Parcelable>()
+        binding.scrollView.saveHierarchyState(scrollParcelArray)
+        outState.putSparseParcelableArray(SCROLL_PARCEL, scrollParcelArray)
+    }
+
     private fun updateSelectedTheme(themeStyle: Int) {
         mapOf(
             R.style.Classic_Dark to binding.themeRadioClassicDark,
@@ -94,6 +107,12 @@ class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.On
         super.onCreate(savedInstanceState, ready)
         binding = ActivityAppearanceSettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        savedInstanceState?.let { bundle ->
+            val scrollStateParcel = bundle.getSparseParcelableArray<Parcelable>(SCROLL_PARCEL)
+            if (scrollStateParcel != null) {
+                binding.scrollView.restoreHierarchyState(scrollStateParcel)
+            }
+        }
         supportActionBar!!.title = getString(R.string.activity_settings_message_appearance_button_title)
         with (binding) {
             // accent toggles
