@@ -41,8 +41,7 @@ import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.MuteDialog
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
-import org.thoughtcrime.securesms.conversation.start.StartConversation
-import org.thoughtcrime.securesms.conversation.start.StartConversationDelegate
+import org.thoughtcrime.securesms.conversation.start.NewConversationFragment
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.utilities.NotificationUtils
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
@@ -77,7 +76,6 @@ import javax.inject.Inject
 class HomeActivity : PassphraseRequiredActionBarActivity(),
     ConversationClickListener,
     SeedReminderViewDelegate,
-    StartConversationDelegate,
     GlobalSearchInputLayout.GlobalSearchInputLayoutListener {
 
     private lateinit var binding: ActivityHomeBinding
@@ -616,34 +614,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 
     private fun showNewConversation() {
-        val recipients = homeViewModel.conversations.value?.map { it.recipient }
-            ?.filter { !it.isGroupRecipient && it.address.serialize() != publicKey } ?: emptyList()
-        StartConversation.showNewConversationDialog(recipients, this, this)
-    }
-
-    override fun onNewMessageSelected() {
-        StartConversation.showNewMessageDialog(this, this)
-    }
-
-    override fun onCreateGroupSelected() {
-        val members = homeViewModel.conversations.value
-            ?.filter { !it.recipient.isGroupRecipient && it.recipient.hasApprovedMe() && it.recipient.address.serialize() != publicKey }
-            ?.map { it.recipient.address.serialize() } ?: emptyList()
-        StartConversation.showCreateGroupDialog(members, this, this)
-    }
-
-    override fun onJoinCommunitySelected() {
-        StartConversation.showJoinCommunityDialog(this, this)
-    }
-
-    override fun onContactSelected(address: String) {
-        val intent = Intent(this, ConversationActivityV2::class.java)
-        intent.putExtra(ConversationActivityV2.ADDRESS, Address.fromSerialized(address))
-        push(intent)
-    }
-
-    override fun onDialogBackPressed() {
-        showNewConversation()
+        NewConversationFragment().show(supportFragmentManager, "NewConversationFragment")
     }
 
     // endregion
