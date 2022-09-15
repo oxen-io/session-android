@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
-import network.loki.messenger.databinding.FragmentNewConversationDialogBinding
+import network.loki.messenger.databinding.FragmentNewConversationHomeBinding
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.PublicKeyValidation
@@ -17,10 +17,10 @@ import org.thoughtcrime.securesms.mms.GlideApp
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class NewConversationMenuFragment : Fragment() {
+class NewConversationHomeFragment : Fragment() {
 
-    private lateinit var binding: FragmentNewConversationDialogBinding
-    private val viewModel: NewConversationMenuViewModel by viewModels()
+    private lateinit var binding: FragmentNewConversationHomeBinding
+    private val viewModel: NewConversationHomeViewModel by viewModels()
 
     @Inject
     lateinit var textSecurePreferences: TextSecurePreferences
@@ -31,7 +31,7 @@ class NewConversationMenuFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentNewConversationDialogBinding.inflate(inflater)
+        binding = FragmentNewConversationHomeBinding.inflate(inflater)
         return binding.root
     }
 

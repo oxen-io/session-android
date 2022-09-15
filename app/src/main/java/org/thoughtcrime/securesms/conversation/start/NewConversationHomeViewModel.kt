@@ -13,7 +13,7 @@ import org.thoughtcrime.securesms.database.ThreadDatabase
 import javax.inject.Inject
 
 @HiltViewModel
-class NewConversationMenuViewModel @Inject constructor(private val threadDb: ThreadDatabase): ViewModel() {
+class NewConversationHomeViewModel @Inject constructor(private val threadDb: ThreadDatabase): ViewModel() {
 
     private val _recipients = MutableLiveData<List<Recipient>>()
     val recipients: LiveData<List<Recipient>> = _recipients
