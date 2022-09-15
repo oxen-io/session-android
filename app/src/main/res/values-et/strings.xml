@@ -366,7 +366,6 @@
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Sisestusklahv saadab</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">Sisestusklahvi vajutamine saadab tekstsõnumeid</string>
     <string name="preferences__send_link_previews">Saada linkide eelvaateid</string>
     <string name="preferences__previews_are_supported_for">Eelvaated on toetatud Imgur, Instagram, Pinterest, Reddit ja YouTube linkide puhul</string>
     <string name="preferences__screen_security">Kuva turvamine</string>
@@ -415,7 +414,6 @@
     <string name="preferences_chats__chats">Vestlused</string>
     <string name="preferences_notifications__messages">Sõnumid</string>
     <string name="preferences_notifications__in_chat_sounds">Vestlusesisesed helid</string>
-    <string name="preferences_notifications__show">Kuva</string>
     <string name="preferences_notifications__priority">Prioriteet</string>
     <!-- **************************************** -->
     <!-- menus -->

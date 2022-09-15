@@ -408,7 +408,6 @@
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Գրեք ուղարկողի բանալին</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">Սեղմեք \"գրել բանալին\" ուղարկելու տեքստային հաղորդագրություն</string>
     <string name="preferences__send_link_previews">Ուղարկել հղման նախադիտումներ</string>
     <string name="preferences__previews_are_supported_for">Նախադիտումները աջակցվում են Imgur, Instagram, Pinterest, Reddit և YouTube հղումների համար</string>
     <string name="preferences__screen_security">Էկրանակադրի անվտանգություն</string>
@@ -457,7 +456,6 @@
     <string name="preferences_chats__chats">Չատեր</string>
     <string name="preferences_notifications__messages">Նամակներ</string>
     <string name="preferences_notifications__in_chat_sounds">Ձայներ չատում</string>
-    <string name="preferences_notifications__show">Ցույց տալ</string>
     <string name="preferences_notifications__priority">Առաջնայնություն</string>
     <!-- **************************************** -->
     <!-- menus -->
@@ -623,7 +621,6 @@
     <string name="activity_notification_settings_style_section_title">Ծանուցումների Ոճ</string>
     <string name="activity_notification_settings_content_section_title">Ծանուցումների Բովանդակություն</string>
     <string name="activity_privacy_settings_title">Գաղտնիություն</string>
-    <string name="activity_chat_settings_title">Զրույցներ</string>
     <string name="preferences_notifications_strategy_category_title">Ծանուցումների ոճ</string>
     <string name="preferences_notifications_strategy_category_fast_mode_title">Օգտագործել արագ ռեժիմը</string>
     <string name="preferences_notifications_strategy_category_fast_mode_summary">Դուք մշտապես և անմիջապես կտեղեկացվեք նոր հաղորդագրությունների մասին՝ օգտագործելով Google-ի ծանուցումների սերվերները:</string>

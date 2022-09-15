@@ -362,7 +362,6 @@
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Tîpa Enter dişîne</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">Ji bo peyamên nivîsî bişîne pêl bike \"Enter\"ê</string>
     <string name="preferences__send_link_previews">Pêşdîtinên girêdanê bişîne</string>
     <string name="preferences__screen_security">Ewlehiya ekranê</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">Di lîsta yên dawiyê de û di sepanê de wêneyên ekranê asteng bike</string>
@@ -409,7 +408,6 @@
     <string name="preferences_chats__chats">Gotûbêj</string>
     <string name="preferences_notifications__messages">Peyam</string>
     <string name="preferences_notifications__in_chat_sounds">Dengên di gotûbêjê de</string>
-    <string name="preferences_notifications__show">Nîşan bide</string>
     <string name="preferences_notifications__priority">Pêşkî</string>
     <!-- **************************************** -->
     <!-- menus -->

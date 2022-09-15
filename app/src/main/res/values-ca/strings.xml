@@ -394,7 +394,6 @@ d\'intercanvi de claus!</string>
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Envia amb la tecla Retorn</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">En prémer Retorn s\'envia el missatge de text</string>
     <string name="preferences__send_link_previews">Envia previsualitzacions d\'enllaços</string>
     <string name="preferences__previews_are_supported_for">Les vistes prèvies són compatibles amb els enllaços d\'Imgur, Instagram, Pinterest, Reddit i YouTube.</string>
     <string name="preferences__screen_security">Seguretat de la pantalla</string>
@@ -443,7 +442,6 @@ d\'intercanvi de claus!</string>
     <string name="preferences_chats__chats">Xats</string>
     <string name="preferences_notifications__messages">Missatges</string>
     <string name="preferences_notifications__in_chat_sounds">Sons del xat</string>
-    <string name="preferences_notifications__show">Mostra</string>
     <string name="preferences_notifications__priority">Prioritat</string>
     <!-- **************************************** -->
     <!-- menus -->
@@ -602,7 +600,6 @@ d\'intercanvi de claus!</string>
     <string name="activity_notification_settings_style_section_title">Estil de notificacions</string>
     <string name="activity_notification_settings_content_section_title">Contingut de notificacions</string>
     <string name="activity_privacy_settings_title">Privadesa</string>
-    <string name="activity_chat_settings_title">Xats</string>
     <string name="preferences_notifications_strategy_category_title">Estratègia de les notificacions</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">Canvia el nom</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Desenllaça el dispositiu</string>

@@ -141,6 +141,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Session.DayNight.FlatActionBar" />
         <activity
+            android:name="org.thoughtcrime.securesms.preferences.BlockedContactsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Session.DayNight.FlatActionBar"
+            />
+        <activity
             android:name="org.thoughtcrime.securesms.dms.CreatePrivateChatActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"

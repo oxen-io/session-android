@@ -352,7 +352,6 @@ nøkkelutvekslingsmelding.</string>
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Send med linjeskift</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">Bruk linjeskift for å senda tekstmeldingar</string>
     <string name="preferences__send_link_previews">Send lenkjesniktitt</string>
     <string name="preferences__screen_security">Skjermtryggleik</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">Blokker skjermbilete i sist brukte-liste og i programmetb</string>
@@ -397,7 +396,6 @@ nøkkelutvekslingsmelding.</string>
     <string name="preferences_chats__chats">Samtalar</string>
     <string name="preferences_notifications__messages">Meldingar</string>
     <string name="preferences_notifications__in_chat_sounds">Lydar i samtalar</string>
-    <string name="preferences_notifications__show">Vis</string>
     <string name="preferences_notifications__priority">Prioritet</string>
     <!-- **************************************** -->
     <!-- menus -->

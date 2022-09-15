@@ -401,7 +401,6 @@
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Enter düyməsi ilə göndər</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">Enter düyməsinə basanda, mətn mesajları göndəriləcək</string>
     <string name="preferences__send_link_previews">Bağlantı önbaxışlarını göndər</string>
     <string name="preferences__previews_are_supported_for">Imgur, Instagram, Pinterest, Reddit və YouTube bağlantıları üçün önbaxışlar dəstəklənir</string>
     <string name="preferences__screen_security">Ekran güvənliyi</string>
@@ -450,7 +449,6 @@
     <string name="preferences_chats__chats">Söhbətlər</string>
     <string name="preferences_notifications__messages">Mesajlar</string>
     <string name="preferences_notifications__in_chat_sounds">Söhbət daxili səslər</string>
-    <string name="preferences_notifications__show">Göstər</string>
     <string name="preferences_notifications__priority">Prioritet</string>
     <!-- **************************************** -->
     <!-- menus -->
@@ -616,7 +614,6 @@
     <string name="activity_notification_settings_style_section_title">Bildiriş stili</string>
     <string name="activity_notification_settings_content_section_title">Bildiriş məzmunu</string>
     <string name="activity_privacy_settings_title">Gizlilik</string>
-    <string name="activity_chat_settings_title">Söhbətlər</string>
     <string name="preferences_notifications_strategy_category_title">Bildiriş Strategiyası</string>
     <string name="preferences_notifications_strategy_category_fast_mode_title">Sürətli rejimi istifadə et</string>
     <string name="preferences_notifications_strategy_category_fast_mode_summary">Google-un bildiriş serverlərini istifadə edərək yeni mesajlardan dərhal və etibarlı şəkildə xəbərdar olacaqsınız.</string>

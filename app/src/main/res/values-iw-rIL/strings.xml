@@ -415,7 +415,6 @@
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">מקש Enter שולח</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">לחיצה על מקש Enter תישלח הודעות טקסט</string>
     <string name="preferences__send_link_previews">שלח קדם־תצוגות של קישורים</string>
     <string name="preferences__previews_are_supported_for">קדם־תצוגות נתמכות עבור קישורים של Imgur, Instagram, Pinterest, Reddit ו־YouTube</string>
     <string name="preferences__screen_security">אבטחת מסך</string>
@@ -464,7 +463,6 @@
     <string name="preferences_chats__chats">התכתבויות</string>
     <string name="preferences_notifications__messages">הודעות</string>
     <string name="preferences_notifications__in_chat_sounds">צלילים בתוך התכתבויות</string>
-    <string name="preferences_notifications__show">הראה</string>
     <string name="preferences_notifications__priority">עדיפות</string>
     <!-- **************************************** -->
     <!-- menus -->

@@ -447,7 +447,6 @@
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">مفتاح الدخول يقوم بالإرسال</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">الضغط على مفتاح الدخول سيقوم بإرسال الرسالة</string>
     <string name="preferences__send_link_previews">إرسال معاينة الرابط</string>
     <string name="preferences__previews_are_supported_for">المعاينات مدعومة لروابط Imgur، Instagram، Pinte، Reddit، واليوتيوب</string>
     <string name="preferences__screen_security">تأمين الشاشة</string>
@@ -496,7 +495,6 @@
     <string name="preferences_chats__chats">دردشة</string>
     <string name="preferences_notifications__messages">الرسائل</string>
     <string name="preferences_notifications__in_chat_sounds">أصوات خلال الدردشة</string>
-    <string name="preferences_notifications__show">اظهار</string>
     <string name="preferences_notifications__priority">أولوية</string>
     <!-- **************************************** -->
     <!-- menus -->
@@ -662,7 +660,6 @@
     <string name="activity_notification_settings_style_section_title">طريقة الإشعارات</string>
     <string name="activity_notification_settings_content_section_title">محتوى الإشعارات</string>
     <string name="activity_privacy_settings_title">الخصوصية</string>
-    <string name="activity_chat_settings_title">دردشات</string>
     <string name="preferences_notifications_strategy_category_title">طريقة الإشعارات</string>
     <string name="preferences_notifications_strategy_category_fast_mode_title">استخدام الوضع السريع</string>
     <string name="preferences_notifications_strategy_category_fast_mode_summary">سوف يتم تنبيهك بالرسائل الجديدة بشكل موثوق و فوري بإستخدام خوادم غوغل.</string>

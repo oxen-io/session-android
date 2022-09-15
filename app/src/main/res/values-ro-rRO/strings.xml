@@ -415,7 +415,6 @@ schimbul de chei este corupt </string>
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Trimiteți cu Enter</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">Apăsarea tastei Enter va trimite mesajele text</string>
     <string name="preferences__send_link_previews">Trimite previzualizarea link-urilor</string>
     <string name="preferences__previews_are_supported_for">Previzualizarea este suportată pentru link-uri Imgur, Instagram, Pinterest, Reddit și YouTube</string>
     <string name="preferences__screen_security">Securitate ecran</string>
@@ -464,7 +463,6 @@ schimbul de chei este corupt </string>
     <string name="preferences_chats__chats">Conversații</string>
     <string name="preferences_notifications__messages">Mesaje</string>
     <string name="preferences_notifications__in_chat_sounds">Sunete în conversație</string>
-    <string name="preferences_notifications__show">Afișează</string>
     <string name="preferences_notifications__priority">Prioritate</string>
     <!-- **************************************** -->
     <!-- menus -->

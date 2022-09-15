@@ -293,7 +293,6 @@
     <!-- plurals.xml -->
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">ထည့်ထားတဲ့ ကီးပို့ပါ</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">စာပို့ရန်အတွက် Enter ကို နှိပ်ခြင်း</string>
     <string name="preferences__screen_security">အဖွင့်စာမျက်နှာ လုံခြုံရေး</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">မကြာသေးမီ စာရင်းနှင့် app အတွင်း Screenshot များကို တားမြစ်ပါ</string>
     <string name="preferences__notifications">အသိပေးချက်များ</string>
@@ -338,7 +337,6 @@
     <string name="preferences_chats__chats">စကားစမြည်များ</string>
     <string name="preferences_notifications__messages">စာများ</string>
     <string name="preferences_notifications__in_chat_sounds">စကားပြောနေစဥ် အသံ</string>
-    <string name="preferences_notifications__show">ပြပါ</string>
     <string name="preferences_notifications__priority">ဦးစားပေး</string>
     <!-- **************************************** -->
     <!-- menus -->

@@ -334,7 +334,6 @@
         <item quantity="other">%d jam</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">Menekan tombol Enter akan mengirim pesan teks</string>
     <string name="preferences__notifications">Notifikasi</string>
     <string name="preferences__led_color">Warna LED</string>
     <string name="preferences__led_color_unknown">Tidak Dikenal</string>
@@ -357,7 +356,6 @@
     <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Jika indikator mengetik dinonaktifkan, anda tidak akan dapat melihat indikator mengetik dari orang lain.</string>
     <string name="preferences_chats__chats">Percakapan</string>
     <string name="preferences_notifications__messages">Pesan</string>
-    <string name="preferences_notifications__show">Tampilkan</string>
     <!-- **************************************** -->
     <!-- menus -->
     <!-- **************************************** -->

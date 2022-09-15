@@ -394,7 +394,6 @@
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">按下輸入鍵發送</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">按下輸入鍵將會發送訊息</string>
     <string name="preferences__send_link_previews">傳送連結預覽</string>
     <string name="preferences__previews_are_supported_for">預覽功能支援 Imgur、 Instagram、 Pinterest、 Reddit 及 YouTube的連結。</string>
     <string name="preferences__screen_security">螢幕安全設定</string>
@@ -443,7 +442,6 @@
     <string name="preferences_chats__chats">聊天</string>
     <string name="preferences_notifications__messages">訊息</string>
     <string name="preferences_notifications__in_chat_sounds">聊天音效</string>
-    <string name="preferences_notifications__show">顯示</string>
     <string name="preferences_notifications__priority">優先順序</string>
     <!-- **************************************** -->
     <!-- menus -->
@@ -609,7 +607,6 @@
     <string name="activity_notification_settings_style_section_title">通知樣式</string>
     <string name="activity_notification_settings_content_section_title">通知內容</string>
     <string name="activity_privacy_settings_title">隱私權</string>
-    <string name="activity_chat_settings_title">聊天</string>
     <string name="preferences_notifications_strategy_category_title">通知類型</string>
     <string name="preferences_notifications_strategy_category_fast_mode_title">使用快速模式</string>
     <string name="preferences_notifications_strategy_category_fast_mode_summary">您將會透過 Google 的通知服務可靠且迅速的收到通知。</string>

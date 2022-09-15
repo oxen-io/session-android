@@ -399,7 +399,6 @@
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Tasti Enter dërgon</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">Shtypja e tastit Enter do të sjellë dërgim mesazhesh tekst</string>
     <string name="preferences__send_link_previews">Dërgo paraparje lidhjesh</string>
     <string name="preferences__previews_are_supported_for">Paraparjet mbulohen për lidhje Imgur, Instagram, Pinterest, Reddit, dhe YouTube.</string>
     <string name="preferences__screen_security">Siguri ekrani</string>
@@ -448,7 +447,6 @@
     <string name="preferences_chats__chats">Biseda</string>
     <string name="preferences_notifications__messages">Mesazhe</string>
     <string name="preferences_notifications__in_chat_sounds">Tinguj në fjalosje</string>
-    <string name="preferences_notifications__show">Shfaq</string>
     <string name="preferences_notifications__priority">Përparësi</string>
     <!-- **************************************** -->
     <!-- menus -->

@@ -363,7 +363,6 @@
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">ఎంటర్ కీ పంపుతుంది </string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages"> ప్రారంబించే కీ ని నొక్కడం ద్వారా సందేశాలను పంపుతోంది</string>
     <string name="preferences__screen_security">స్క్రీన్ భద్రత</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">  నిరోధించు స్క్రీన్షాట్లు లో ది ఇటీవలి జాబితా మరియు లోపల ది అనువర్తనం</string>
     <string name="preferences__notifications">ప్రకటనలు</string>
@@ -408,7 +407,6 @@
     <string name="preferences_chats__chats">మాటామంతి</string>
     <string name="preferences_notifications__messages">సందేశాలు</string>
     <string name="preferences_notifications__in_chat_sounds">చాట్ శబ్దాలు</string>
-    <string name="preferences_notifications__show">కనబర్చు</string>
     <string name="preferences_notifications__priority">ప్రాధాన్యత</string>
     <!-- **************************************** -->
     <!-- menus -->

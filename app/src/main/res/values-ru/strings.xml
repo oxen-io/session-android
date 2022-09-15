@@ -425,7 +425,6 @@
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Отправка клавишей «Ввод»</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">Нажатие клавиши ввода будет отправлять текстовые сообщения</string>
     <string name="preferences__send_link_previews">Отправлять предпросмотр ссылки</string>
     <string name="preferences__previews_are_supported_for">Предварительный просмотр поддерживается для ссылок Imgur, Instagram, Pinterest, Reddit и YouTube.</string>
     <string name="preferences__screen_security">Защита экрана</string>
@@ -474,7 +473,6 @@
     <string name="preferences_chats__chats">Чаты</string>
     <string name="preferences_notifications__messages">Сообщения</string>
     <string name="preferences_notifications__in_chat_sounds">Звуки в чате</string>
-    <string name="preferences_notifications__show">Показать</string>
     <string name="preferences_notifications__priority">Приоритет</string>
     <!-- **************************************** -->
     <!-- menus -->
@@ -640,7 +638,6 @@
     <string name="activity_notification_settings_style_section_title">Стиль уведомлений</string>
     <string name="activity_notification_settings_content_section_title">Содержание уведомления</string>
     <string name="activity_privacy_settings_title">Конфиденциальность</string>
-    <string name="activity_chat_settings_title">Чаты</string>
     <string name="preferences_notifications_strategy_category_title">Метод уведомлений</string>
     <string name="preferences_notifications_strategy_category_fast_mode_title">Использовать быстрый режим</string>
     <string name="preferences_notifications_strategy_category_fast_mode_summary">Вы будете получать уведомления о новых сообщениях надежно и сразу же с помощью серверов уведомлений Google.</string>

@@ -401,7 +401,6 @@
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Enter-toets verzendt</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">Gebruik de Enter-toets voor verzenden van tekstberichten</string>
     <string name="preferences__send_link_previews">Voorbeeldweergaven verzenden</string>
     <string name="preferences__previews_are_supported_for">Voorbeelden worden ondersteund voor koppelingen naar Imgur, Instagram, Pinterest, Reddit en YouTube</string>
     <string name="preferences__screen_security">Schermafdrukken blokkeren</string>
@@ -450,7 +449,6 @@
     <string name="preferences_chats__chats">Gesprekken</string>
     <string name="preferences_notifications__messages">Berichten</string>
     <string name="preferences_notifications__in_chat_sounds">Ook geluid als Session al geopend is</string>
-    <string name="preferences_notifications__show">Laat zien</string>
     <string name="preferences_notifications__priority">Belangrijkheid</string>
     <!-- **************************************** -->
     <!-- menus -->
@@ -616,7 +614,6 @@
     <string name="activity_notification_settings_style_section_title">Notificatie stijl</string>
     <string name="activity_notification_settings_content_section_title">Notificatie inhoud</string>
     <string name="activity_privacy_settings_title">Privacy</string>
-    <string name="activity_chat_settings_title">Gesprekken</string>
     <string name="preferences_notifications_strategy_category_title">Notificatie strategie</string>
     <string name="preferences_notifications_strategy_category_fast_mode_title">Gebruik snelle modus</string>
     <string name="preferences_notifications_strategy_category_fast_mode_summary">U wordt op een op een betrouwbare manier direct op de hoogte gebracht van nieuwe berichten via de notificatieservers van Google.</string>

@@ -467,9 +467,9 @@
     <string name="arrays__enabled">Enabled</string>
     <string name="arrays__disabled">Disabled</string>
 
-    <string name="arrays__name_and_message">Name and message</string>
-    <string name="arrays__name_only">Name only</string>
-    <string name="arrays__no_name_or_message">No name or message</string>
+    <string name="arrays__name_and_message">Name and Content</string>
+    <string name="arrays__name_only">Name Only</string>
+    <string name="arrays__no_name_or_message">No Name or Content</string>
 
     <string name="arrays__images">Images</string>
     <string name="arrays__audio">Audio</string>
@@ -492,11 +492,14 @@
     </plurals>
 
     <!-- preferences.xml -->
-    <string name="preferences__pref_enter_sends_title">Enter key sends</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">Pressing the Enter key will send text messages</string>
+    <string name="preferences__pref_enter_sends_title">Send with Enter Key</string>
+    <string name="preferences__pref_enter_sends_summary">Tapping the Enter Key will send message instead of starting a new line.</string>
     <string name="preferences__send_link_previews">Send Link Previews</string>
     <string name="preferences__link_previews">Link Previews</string>
     <string name="preferences__link_previews_summary">Generate link previews for supported URLs.</string>
+    <string name="preferences__pref_autoplay_audio_category">Audio Messages</string>
+    <string name="preferences__pref_autoplay_audio_title">Autoplay Audio Messages</string>
+    <string name="preferences__pref_autoplay_audio_summary">Autoplay consecutive audio messages.</string>
     <string name="preferences__screen_security">Screen security</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">Block screenshots in the recents list and inside the app</string>
     <string name="preferences__notifications">Notifications</string>
@@ -540,13 +543,16 @@
     <string name="preferences__light_theme">Light</string>
     <string name="preferences__dark_theme">Dark</string>
     <string name="preferences_chats__message_trimming">Message Trimming</string>
+    <string name="preferences_chats__message_trimming_title">Trim Communities</string>
+    <string name="preferences_chats__message_trimming_summary">Delete messages older than 6 months from communities that have over 2,000 messages.</string>
     <string name="preferences_advanced__use_system_emoji">Use system emoji</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Disable Session\'s built-in emoji support</string>
     <string name="preferences_app_protection__screen_security">Screen Security</string>
     <string name="preferences_chats__chats">Chats</string>
     <string name="preferences_notifications__messages">Messages</string>
     <string name="preferences_notifications__in_chat_sounds">In-chat sounds</string>
-    <string name="preferences_notifications__show">Show</string>
+    <string name="preferences_notifications__content">Notification Content</string>
+    <string name="preferences_notifications__summary">The information shown in notifications.</string>
     <string name="preferences_notifications__priority">Priority</string>
     <string name="preferences_app_protection__screenshot_notifications">Screenshot Notifications</string>
     <string name="preferences_app_protected__screenshot_notifications_summary">Receive a notification when a contact takes a screenshot of a one-to-one chat.</string>
@@ -755,7 +761,7 @@
 
     <string name="activity_privacy_settings_title">Privacy</string>
 
-    <string name="activity_chat_settings_title">Chats</string>
+    <string name="activity_conversations_settings_title">Conversations</string>
 
     <string name="preferences_notifications_strategy_category_title">Notification Strategy</string>
     <string name="preferences_notifications_strategy_category_fast_mode_title">Use Fast Mode</string>
@@ -972,6 +978,7 @@
     <string name="activity_appearance_follow_system_category">Auto dark-mode</string>
     <string name="activity_appearance_follow_system_explanation">Match system settings</string>
     <string name="go_to_device_notification_settings">Go to device notification settings</string>
+    <string name="blocked_contacts_title">Blocked Contacts</string>
 
     <plurals name="ReactionsRecipientAdapter_other_reactors">
         <item quantity="one">And %1$d other has reacted %2$s to this message</item>

@@ -401,7 +401,6 @@ scambia un altro messaggio!</string>
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Spedisci premendo Invio</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">Il tasto Invio manderà il messaggio</string>
     <string name="preferences__send_link_previews">Invia anteprime dei link</string>
     <string name="preferences__previews_are_supported_for">Le anteprime sono supportate per link di Imgur, Instagram, Pinterest, Reddit e YouTube.</string>
     <string name="preferences__screen_security">Sicurezza schermo</string>
@@ -450,7 +449,6 @@ scambia un altro messaggio!</string>
     <string name="preferences_chats__chats">Conversazioni</string>
     <string name="preferences_notifications__messages">Messaggi</string>
     <string name="preferences_notifications__in_chat_sounds">Suoni in chat</string>
-    <string name="preferences_notifications__show">Mostra</string>
     <string name="preferences_notifications__priority">Priorità</string>
     <!-- **************************************** -->
     <!-- menus -->
@@ -616,7 +614,6 @@ scambia un altro messaggio!</string>
     <string name="activity_notification_settings_style_section_title">Stile della notifica</string>
     <string name="activity_notification_settings_content_section_title">Contenuto della notifica</string>
     <string name="activity_privacy_settings_title">Privacy</string>
-    <string name="activity_chat_settings_title">Chat</string>
     <string name="preferences_notifications_strategy_category_title">Strategia di notifica</string>
     <string name="preferences_notifications_strategy_category_fast_mode_title">Usa Modalità Veloce</string>
     <string name="preferences_notifications_strategy_category_fast_mode_summary">Riceverai notifiche di nuovi messaggi in modo affidabile e immediato utilizzando i server di notifica di Google.</string>

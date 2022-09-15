@@ -312,7 +312,6 @@
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Enter키로 메시지 보내기</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">Enter키 사용하여 메시지 보냄</string>
     <string name="preferences__screen_security">화면 보안</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">최근 사용 목록/개요 및 앱 안에서 스크린샷 차단</string>
     <string name="preferences__notifications">알림</string>

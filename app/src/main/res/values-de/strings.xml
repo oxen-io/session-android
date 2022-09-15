@@ -399,7 +399,6 @@
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Eingabetaste sendet</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">Antippen der Eingabetaste versendet Nachrichten sofort</string>
     <string name="preferences__send_link_previews">Link-Vorschauen senden</string>
     <string name="preferences__previews_are_supported_for">Vorschauen werden unterstützt für Links von Imgur, Instagram, Pinterest, Reddit und YouTube</string>
     <string name="preferences__screen_security">Bildschirmschutz</string>
@@ -448,7 +447,6 @@
     <string name="preferences_chats__chats">Unterhaltungen</string>
     <string name="preferences_notifications__messages">Nachrichten</string>
     <string name="preferences_notifications__in_chat_sounds">Töne während Unterhaltung</string>
-    <string name="preferences_notifications__show">Anzeigen</string>
     <string name="preferences_notifications__priority">Priorität</string>
     <!-- **************************************** -->
     <!-- menus -->
@@ -614,7 +612,6 @@
     <string name="activity_notification_settings_style_section_title">Stil der Benachrichtigungen</string>
     <string name="activity_notification_settings_content_section_title">Inhalt der Benachrichtigungen</string>
     <string name="activity_privacy_settings_title">Datenschutz</string>
-    <string name="activity_chat_settings_title">Konversationen</string>
     <string name="preferences_notifications_strategy_category_title">Benachrichtigungsstrategie</string>
     <string name="preferences_notifications_strategy_category_fast_mode_title">Schnellen Modus verwenden</string>
     <string name="preferences_notifications_strategy_category_fast_mode_summary">Über neue Nachrichten wirst du zuverlässig und sofort von Googles Benachrichtigungsservern informiert.</string>

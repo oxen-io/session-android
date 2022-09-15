@@ -377,7 +377,6 @@
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Клавишът Enter се използва за изпращане</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">Натискане на клавиша Enter ще изпрати текстово съобщене</string>
     <string name="preferences__send_link_previews">Изпращане на визуализации на връзката</string>
     <string name="preferences__previews_are_supported_for">Визуализации са поддържани за линкове към Imgur, Instagram, Pinterest, Reddit, и YouTube.</string>
     <string name="preferences__screen_security">Сигурност на екрана</string>
@@ -426,7 +425,6 @@
     <string name="preferences_chats__chats">Чатове</string>
     <string name="preferences_notifications__messages">Съобщения</string>
     <string name="preferences_notifications__in_chat_sounds">Звуци в чатове</string>
-    <string name="preferences_notifications__show">Показване</string>
     <string name="preferences_notifications__priority">Приоритет</string>
     <!-- **************************************** -->
     <!-- menus -->

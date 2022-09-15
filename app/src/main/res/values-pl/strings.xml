@@ -423,7 +423,6 @@
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Enter wysyła</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">Wciśnięcie przycisku Enter spowoduje wysłanie wiadomości</string>
     <string name="preferences__send_link_previews">Podgląd linków</string>
     <string name="preferences__previews_are_supported_for">Podglądy linków są wspierane dla Imgur, Instagram, Pinterest, Reddit i YouTube.</string>
     <string name="preferences__screen_security">Ochrona ekranu</string>
@@ -472,7 +471,6 @@
     <string name="preferences_chats__chats">Rozmowy</string>
     <string name="preferences_notifications__messages">Wiadomości</string>
     <string name="preferences_notifications__in_chat_sounds">Dźwięki podczas rozmowy</string>
-    <string name="preferences_notifications__show">Pokaż</string>
     <string name="preferences_notifications__priority">Priorytet</string>
     <!-- **************************************** -->
     <!-- menus -->
@@ -638,7 +636,6 @@
     <string name="activity_notification_settings_style_section_title">Styl powiadomienia</string>
     <string name="activity_notification_settings_content_section_title">Treść powiadomienia</string>
     <string name="activity_privacy_settings_title">Prywatność</string>
-    <string name="activity_chat_settings_title">Czaty</string>
     <string name="preferences_notifications_strategy_category_title">Strategia powiadomień</string>
     <string name="preferences_notifications_strategy_category_fast_mode_title">Użyj trybu szybkiego</string>
     <string name="preferences_notifications_strategy_category_fast_mode_summary">Zostaniesz natychmiast powiadomiony o nowych wiadomościach w niezawodny sposób przy użyciu serwerów powiadomień Google.</string>

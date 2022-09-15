@@ -416,7 +416,6 @@ výmeny kľúčov.</string>
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Odoslať stlačením klávesy Enter</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">Stlačením klávesy Enter sa správa odošle</string>
     <string name="preferences__send_link_previews">Posielať náhľady stránok</string>
     <string name="preferences__previews_are_supported_for">Ukážky sú podporované pre odkazy na Imgur, Instagram, Pinterest, Reddit a YouTube</string>
     <string name="preferences__screen_security">Zabezpečenie obrazovky</string>
@@ -465,7 +464,6 @@ výmeny kľúčov.</string>
     <string name="preferences_chats__chats">Chat</string>
     <string name="preferences_notifications__messages">Správy</string>
     <string name="preferences_notifications__in_chat_sounds">Zvuky v chate</string>
-    <string name="preferences_notifications__show">Zobraziť</string>
     <string name="preferences_notifications__priority">Priorita</string>
     <!-- **************************************** -->
     <!-- menus -->

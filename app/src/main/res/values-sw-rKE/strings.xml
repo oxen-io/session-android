@@ -312,7 +312,6 @@
     <!-- plurals.xml -->
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Ingiza kutuma muhimu</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">bonyeza kibodi ya kuingia ili kutuma ujumbe wa maandishi</string>
     <string name="preferences__send_link_previews">tuma kiungo kilichoonekana</string>
     <string name="preferences__screen_security">usalamaa wa skrini</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">Zima viwambo vya skrini katika orodha ya rekodi na ndani ya programu</string>
@@ -360,7 +359,6 @@
     <string name="preferences_chats__chats">mazungumzo</string>
     <string name="preferences_notifications__messages">ujumbe</string>
     <string name="preferences_notifications__in_chat_sounds">sauti wakati wa mazungumzo</string>
-    <string name="preferences_notifications__show">onyesha</string>
     <string name="preferences_notifications__priority">Kipaumbele</string>
     <!-- **************************************** -->
     <!-- menus -->

@@ -408,7 +408,6 @@
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Ентер тастер шаље</string>
-    <string name="preferences__pressing_the_enter_key_will_send_text_messages">Притисак на Ентер тастер ће послати текстуалне поруке</string>
     <string name="preferences__screen_security">Безбедност екрана</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">Блокирање снимка екрана у списку недавних апликација и унутар апликације</string>
     <string name="preferences__notifications">Обавештавање</string>
@@ -452,7 +451,6 @@
     <string name="preferences_chats__chats">Ћаскања</string>
     <string name="preferences_notifications__messages">Поруке</string>
     <string name="preferences_notifications__in_chat_sounds">Звуци ћаскања</string>
-    <string name="preferences_notifications__show">Прикажи</string>
     <string name="preferences_notifications__priority">Приоритет</string>
     <!-- **************************************** -->
     <!-- menus -->
