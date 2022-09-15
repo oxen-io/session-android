@@ -108,17 +108,26 @@ object StartConversation {
                     }
                 })
             }
-            val enterPublicKeyDelegate = { publicKey: String -> createPrivateChat(publicKey, activity) }
+            fun createPrivateChat(hexEncodedPublicKey: String) {
+                val recipient = Recipient.from(activity, Address.fromSerialized(hexEncodedPublicKey), false)
+                val intent = Intent(activity, ConversationActivityV2::class.java)
+                intent.putExtra(ConversationActivityV2.ADDRESS, recipient.address)
+                intent.setDataAndType(activity.intent.data, activity.intent.type)
+                val existingThread = DatabaseComponent.get(activity).threadDatabase().getThreadIdIfExistsFor(recipient)
+                intent.putExtra(ConversationActivityV2.THREAD_ID, existingThread)
+                activity.startActivity(intent)
+                dismiss()
+            }
+            val enterPublicKeyDelegate = { publicKey: String -> createPrivateChat(publicKey) }
             val adapter = NewMessageFragmentAdapter(activity, enterPublicKeyDelegate) { onsNameOrPublicKey ->
                 if (PublicKeyValidation.isValid(onsNameOrPublicKey)) {
-                    createPrivateChat(onsNameOrPublicKey, activity)
+                    createPrivateChat(onsNameOrPublicKey)
                 } else {
                     // This could be an ONS name
                     showLoader()
                     SnodeAPI.getSessionID(onsNameOrPublicKey).successUi { hexEncodedPublicKey ->
                         hideLoader()
-                        createPrivateChat(hexEncodedPublicKey, activity)
-                        dismiss()
+                        createPrivateChat(hexEncodedPublicKey)
                     }.failUi { exception ->
                         hideLoader()
                         var message = activity.resources.getString(R.string.fragment_enter_public_key_error_message)
@@ -140,16 +149,6 @@ object StartConversation {
             mediator.attach()
         }
         dialog.setPeekHeight(defaultPeekHeight)
-    }
-
-    private fun createPrivateChat(hexEncodedPublicKey: String, activity: FragmentActivity) {
-        val recipient = Recipient.from(activity, Address.fromSerialized(hexEncodedPublicKey), false)
-        val intent = Intent(activity, ConversationActivityV2::class.java)
-        intent.putExtra(ConversationActivityV2.ADDRESS, recipient.address)
-        intent.setDataAndType(activity.intent.data, activity.intent.type)
-        val existingThread = DatabaseComponent.get(activity).threadDatabase().getThreadIdIfExistsFor(recipient)
-        intent.putExtra(ConversationActivityV2.THREAD_ID, existingThread)
-        activity.startActivity(intent)
     }
 
     fun showCreateGroupDialog(members: List<String>, context: Context, delegate: StartConversationDelegate) {
