@@ -7,7 +7,6 @@
     style="?attr/chipStyle"
     app:chipStartPadding="4dp"
     app:chipBackgroundColor="@color/open_group_chip_color"
-    android:layout_columnWeight="1"
     tools:text="Main Group"
     android:ellipsize="end"
     tools:layout_width="wrap_content"
