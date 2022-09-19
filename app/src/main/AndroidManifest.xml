@@ -144,6 +144,7 @@
             android:name="org.thoughtcrime.securesms.preferences.BlockedContactsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Session.DayNight.FlatActionBar"
+            android:label="@string/blocked_contacts_title"
             />
         <activity
             android:name="org.thoughtcrime.securesms.dms.CreatePrivateChatActivity"

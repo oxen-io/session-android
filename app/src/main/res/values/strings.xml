@@ -979,6 +979,7 @@
     <string name="activity_appearance_follow_system_explanation">Match system settings</string>
     <string name="go_to_device_notification_settings">Go to device notification settings</string>
     <string name="blocked_contacts_title">Blocked Contacts</string>
+    <string name="blocked_contacts_empty_state">You have no blocked contacts</string>
 
     <plurals name="ReactionsRecipientAdapter_other_reactors">
         <item quantity="one">And %1$d other has reacted %2$s to this message</item>

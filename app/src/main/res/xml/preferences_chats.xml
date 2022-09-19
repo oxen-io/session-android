@@ -26,7 +26,7 @@
             android:title="@string/preferences__pref_autoplay_audio_title"/>
     </PreferenceCategory>
 
-    <PreferenceCategory
+    <org.thoughtcrime.securesms.preferences.BlockedContactsPreference
         android:key="blocked_contacts"
         android:layout="@layout/blocked_contacts_preference"
         />
