@@ -72,7 +72,7 @@ interface StorageProtocol {
     fun setOpenGroupServerMessageID(messageID: Long, serverID: Long, threadID: Long, isSms: Boolean)
     fun getOpenGroup(room: String, server: String): OpenGroup?
     fun addGroupMemberRole(member: GroupMember)
-    fun clearGroupMemberRoles(groupId: String)
+    fun setGroupMemberRoles(members: List<GroupMember>)
 
     // Open Group Public Keys
     fun getOpenGroupPublicKey(server: String): String?
