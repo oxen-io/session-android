@@ -81,22 +81,4 @@ class GroupMemberDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         }
     }
 
-    fun addGroupMember(member: GroupMember) {
-        writableDatabase.beginTransaction()
-        try {
-            val values = ContentValues().apply {
-                put(GROUP_ID, member.groupId)
-                put(PROFILE_ID, member.profileId)
-                put(ROLE, member.role.name)
-            }
-            val query = "$GROUP_ID = ? AND $PROFILE_ID = ?"
-            val args = arrayOf(member.groupId, member.profileId)
-
-            writableDatabase.insertOrUpdate(TABLE_NAME, values, query, args)
-            writableDatabase.setTransactionSuccessful()
-        } finally {
-            writableDatabase.endTransaction()
-        }
-    }
-
 }
