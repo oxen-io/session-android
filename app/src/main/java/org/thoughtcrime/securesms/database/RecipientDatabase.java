@@ -269,6 +269,25 @@ public class RecipientDatabase extends Database {
     recipient.resolve().setBlocked(blocked);
   }
 
+  public void setBlocked(@NonNull List<Recipient> recipients, boolean blocked) {
+    SQLiteDatabase db = getWritableDatabase();
+    db.beginTransaction();
+    try {
+      ContentValues values = new ContentValues();
+      values.put(BLOCK, blocked ? 1 : 0);
+      for (Recipient recipient : recipients) {
+        db.update(TABLE_NAME, values, ADDRESS + " = ?", new String[]{recipient.getAddress().serialize()});
+      }
+      db.setTransactionSuccessful();
+      for (Recipient recipient : recipients) {
+        // make sure transaction is successful before updating in-memory recipients
+        recipient.resolve().setBlocked(blocked);
+      }
+    } finally {
+      db.endTransaction();
+    }
+  }
+
   public void setMuted(@NonNull Recipient recipient, long until) {
     ContentValues values = new ContentValues();
     values.put(MUTE_UNTIL, until);
