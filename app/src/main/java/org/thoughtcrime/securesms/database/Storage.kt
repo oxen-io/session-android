@@ -960,4 +960,10 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         val recipientDb = DatabaseComponent.get(context).recipientDatabase()
         recipientDb.setBlocked(toUnblock, false)
     }
+
+    override fun blockedContacts(): List<Recipient> {
+        val recipientDb = DatabaseComponent.get(context).recipientDatabase()
+        return recipientDb.blockedContacts
+    }
+
 }

@@ -39,7 +39,7 @@ class BlockedContactsViewModel @Inject constructor(private val storage: Storage)
         }
         executor.launch(IO) {
             for (update in listUpdateChannel) {
-                // TODO: get blocked contacts here
+                _contacts.value = BlockedContactsViewState(storage.blockedContacts())
             }
         }
         return _contacts

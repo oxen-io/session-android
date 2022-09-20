@@ -27,6 +27,7 @@ import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecipientDatabase extends Database {
@@ -399,6 +400,23 @@ public class RecipientDatabase extends Database {
 
     database.setTransactionSuccessful();
     database.endTransaction();
+  }
+
+  public List<Recipient> getBlockedContacts() {
+    SQLiteDatabase database = databaseHelper.getReadableDatabase();
+
+    Cursor         cursor   = database.query(TABLE_NAME, new String[] {ID, ADDRESS}, BLOCK + " = 1",
+            null, null, null, null, null);
+
+    RecipientReader reader = new RecipientReader(context, cursor);
+    List<Recipient> returnList = new ArrayList<>();
+
+    while (reader.getNext() != null) {
+      Recipient recipient = reader.getCurrent();
+      returnList.add(recipient);
+    }
+    reader.close();
+    return returnList;
   }
 
   public static class RecipientReader implements Closeable {

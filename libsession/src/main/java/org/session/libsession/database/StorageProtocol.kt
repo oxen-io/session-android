@@ -198,4 +198,5 @@ interface StorageProtocol {
     fun updateReactionIfNeeded(message: Message, sender: String, openGroupSentTimestamp: Long)
     fun deleteReactions(messageId: Long, mms: Boolean)
     fun unblock(toUnblock: List<Recipient>)
+    fun blockedContacts(): List<Recipient>
 }
