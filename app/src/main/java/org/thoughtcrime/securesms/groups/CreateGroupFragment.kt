@@ -52,7 +52,7 @@ class CreateGroupFragment : Fragment() {
         binding.closeButton.setOnClickListener { delegate.onDialogClosePressed() }
         binding.contactSearch.callbacks = object : KeyboardPageSearchView.Callbacks {
             override fun onQueryChanged(query: String) {
-                adapter.members = viewModel.members.value?.filter { it.contains(query) } ?: emptyList()
+                adapter.members = viewModel.members.value?.filter { it.contains(query, ignoreCase = true) } ?: emptyList()
             }
         }
         binding.createNewPrivateChatButton.setOnClickListener { delegate.onNewMessageSelected() }

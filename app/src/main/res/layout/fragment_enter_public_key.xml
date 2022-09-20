@@ -24,9 +24,8 @@
             style="@style/SmallSessionEditText"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:layout_marginLeft="@dimen/large_spacing"
+            android:layout_marginHorizontal="@dimen/large_spacing"
             android:layout_marginTop="@dimen/large_spacing"
-            android:layout_marginRight="@dimen/large_spacing"
             android:gravity="center_vertical"
             android:hint="@string/fragment_enter_public_key_edit_text_hint"
             android:imeOptions="actionDone"
@@ -42,9 +41,8 @@
             android:id="@+id/promptTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/large_spacing"
+            android:layout_marginHorizontal="@dimen/large_spacing"
             android:layout_marginTop="@dimen/medium_spacing"
-            android:layout_marginRight="@dimen/large_spacing"
             android:alpha="0.6"
             android:text="@string/fragment_enter_public_key_prompt"
             android:textAlignment="center"
@@ -94,9 +92,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/large_spacing"
+                android:layout_marginHorizontal="@dimen/large_spacing"
                 android:layout_marginTop="@dimen/large_spacing"
-                android:layout_marginRight="@dimen/large_spacing"
                 android:orientation="horizontal">
 
                 <Button

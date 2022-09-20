@@ -90,6 +90,7 @@
         android:id="@+id/bottomSpacer"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/joinPublicChatButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/defaultRoomsContainer" />
@@ -99,10 +100,9 @@
         style="@style/Widget.Session.Button.Common.ProminentOutline"
         android:layout_width="196dp"
         android:layout_height="@dimen/medium_button_height"
-        android:layout_marginVertical="@dimen/medium_spacing"
+        android:layout_marginVertical="@dimen/large_spacing"
         android:text="@string/fragment_enter_community_url_join_button_title"
         android:enabled="false"
-        app:layout_constraintTop_toBottomOf="@id/bottomSpacer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
