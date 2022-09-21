@@ -1,146 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<org.thoughtcrime.securesms.components.NestedScrollableHost xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <View
-            android:id="@+id/topSpacer"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="?android:dividerHorizontal"
-            android:elevation="1dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/publicKeyEditText"
-            style="@style/SmallSessionEditText"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:layout_marginHorizontal="@dimen/large_spacing"
-            android:layout_marginTop="@dimen/large_spacing"
-            android:gravity="center_vertical"
-            android:hint="@string/fragment_enter_public_key_edit_text_hint"
-            android:imeOptions="actionDone"
-            android:inputType="textMultiLine"
-            android:maxLines="3"
-            android:paddingTop="0dp"
-            android:paddingBottom="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/topSpacer" />
-
-        <TextView
-            android:id="@+id/promptTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/large_spacing"
-            android:layout_marginTop="@dimen/medium_spacing"
-            android:alpha="0.6"
-            android:text="@string/fragment_enter_public_key_prompt"
-            android:textAlignment="center"
-            android:textColor="@color/text"
-            android:textSize="@dimen/very_small_font_size"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/publicKeyEditText" />
-
-        <LinearLayout
-            android:id="@+id/optionalContentContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/promptTextView">
-
-            <org.thoughtcrime.securesms.components.LabeledSeparatorView
-                android:id="@+id/separatorView"
+            <View
+                android:id="@+id/topSpacer"
                 android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:layout_marginLeft="@dimen/large_spacing"
-                android:layout_marginTop="@dimen/large_spacing"
-                android:layout_marginRight="@dimen/large_spacing" />
+                android:layout_height="1px"
+                android:background="?android:dividerHorizontal"
+                android:elevation="1dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/qrCodeImageView"
-                android:layout_width="228dp"
-                android:layout_height="228dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/medium_spacing"
-                tools:src="@drawable/ic_qr_code_24" />
+            <EditText
+                android:id="@+id/publicKeyEditText"
+                style="@style/SmallSessionEditText"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginHorizontal="@dimen/large_spacing"
+                android:layout_marginTop="@dimen/large_spacing"
+                android:gravity="center_vertical"
+                android:hint="@string/fragment_enter_public_key_edit_text_hint"
+                android:imeOptions="actionDone"
+                android:inputType="textMultiLine"
+                android:maxLines="3"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/topSpacer" />
 
             <TextView
-                android:id="@+id/publicKeyTextView"
+                android:id="@+id/promptTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/large_spacing"
-                android:layout_marginTop="@dimen/large_spacing"
-                android:fontFamily="@font/space_mono_regular"
+                android:layout_marginTop="@dimen/medium_spacing"
+                android:alpha="0.6"
+                android:text="@string/fragment_enter_public_key_prompt"
                 android:textAlignment="center"
                 android:textColor="@color/text"
-                android:textSize="@dimen/medium_font_size"
-                tools:text="05987d601943c267879be41830888066c6a024cbdc9a548d06813924bf3372ea78" />
+                android:textSize="@dimen/very_small_font_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/publicKeyEditText" />
 
             <LinearLayout
+                android:id="@+id/optionalContentContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/large_spacing"
-                android:layout_marginTop="@dimen/large_spacing"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/promptTextView">
 
-                <Button
-                    android:id="@+id/copyButton"
-                    style="@style/Widget.Session.Button.Common.ProminentOutline"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/medium_button_height"
-                    android:layout_weight="1"
-                    android:text="@string/copy" />
+                <org.thoughtcrime.securesms.components.LabeledSeparatorView
+                    android:id="@+id/separatorView"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:layout_marginLeft="@dimen/large_spacing"
+                    android:layout_marginTop="@dimen/large_spacing"
+                    android:layout_marginRight="@dimen/large_spacing" />
 
-                <Button
-                    android:id="@+id/shareButton"
-                    style="@style/Widget.Session.Button.Common.ProminentOutline"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/medium_button_height"
-                    android:layout_marginStart="@dimen/medium_spacing"
-                    android:layout_weight="1"
-                    android:text="@string/share" />
+                <ImageView
+                    android:id="@+id/qrCodeImageView"
+                    android:layout_width="228dp"
+                    android:layout_height="228dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/medium_spacing"
+                    tools:src="@drawable/ic_qr_code_24" />
+
+                <TextView
+                    android:id="@+id/publicKeyTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/large_spacing"
+                    android:layout_marginTop="@dimen/large_spacing"
+                    android:fontFamily="@font/space_mono_regular"
+                    android:textAlignment="center"
+                    android:textColor="@color/text"
+                    android:textSize="@dimen/medium_font_size"
+                    tools:text="05987d601943c267879be41830888066c6a024cbdc9a548d06813924bf3372ea78" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/large_spacing"
+                    android:layout_marginTop="@dimen/large_spacing"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/copyButton"
+                        style="@style/Widget.Session.Button.Common.ProminentOutline"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/medium_button_height"
+                        android:layout_weight="1"
+                        android:text="@string/copy" />
+
+                    <Button
+                        android:id="@+id/shareButton"
+                        style="@style/Widget.Session.Button.Common.ProminentOutline"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/medium_button_height"
+                        android:layout_marginStart="@dimen/medium_spacing"
+                        android:layout_weight="1"
+                        android:text="@string/share" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
+            <View
+                android:id="@+id/bottomSpacer"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/medium_spacing"
+                app:layout_constraintBottom_toTopOf="@id/createPrivateChatButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/optionalContentContainer" />
 
-        <View
-            android:id="@+id/bottomSpacer"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/medium_spacing"
-            app:layout_constraintTop_toBottomOf="@id/optionalContentContainer"
-            app:layout_constraintBottom_toTopOf="@id/createPrivateChatButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            <Button
+                android:id="@+id/createPrivateChatButton"
+                style="@style/Widget.Session.Button.Common.ProminentOutline"
+                android:layout_width="196dp"
+                android:layout_height="@dimen/medium_button_height"
+                android:layout_marginVertical="@dimen/medium_spacing"
+                android:text="@string/next"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/bottomSpacer"
+                tools:visibility="visible" />
 
-        <Button
-            android:id="@+id/createPrivateChatButton"
-            style="@style/Widget.Session.Button.Common.ProminentOutline"
-            android:layout_width="196dp"
-            android:layout_height="@dimen/medium_button_height"
-            android:layout_marginVertical="@dimen/medium_spacing"
-            android:text="@string/next"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/bottomSpacer"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:visibility="visible" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
-</androidx.core.widget.NestedScrollView>
+</org.thoughtcrime.securesms.components.NestedScrollableHost>

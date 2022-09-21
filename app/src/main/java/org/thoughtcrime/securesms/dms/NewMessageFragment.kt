@@ -42,26 +42,11 @@ class NewMessageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.backButton.setOnClickListener { delegate.onDialogBackPressed() }
         binding.closeButton.setOnClickListener { delegate.onDialogClosePressed() }
-        val enterPublicKeyDelegate = { publicKey: String -> createPrivateChat(publicKey) }
-        val adapter = NewMessageFragmentAdapter(requireActivity(), enterPublicKeyDelegate) { onsNameOrPublicKey ->
-            if (PublicKeyValidation.isValid(onsNameOrPublicKey)) {
-                createPrivateChat(onsNameOrPublicKey)
-            } else {
-                // This could be an ONS name
-                showLoader()
-                SnodeAPI.getSessionID(onsNameOrPublicKey).successUi { hexEncodedPublicKey ->
-                    hideLoader()
-                    createPrivateChat(hexEncodedPublicKey)
-                }.failUi { exception ->
-                    hideLoader()
-                    var message = getString(R.string.fragment_enter_public_key_error_message)
-                    exception.localizedMessage?.let {
-                        message = it
-                    }
-                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
+        val adapter = NewMessageFragmentAdapter(
+            activity = requireActivity(),
+            enterPublicKeyDelegate = { onsNameOrPublicKey: String -> createPrivateChatIfPossible(onsNameOrPublicKey)},
+            scanPublicKeyDelegate = { onsNameOrPublicKey: String -> createPrivateChatIfPossible(onsNameOrPublicKey)}
+        )
         binding.viewPager.adapter = adapter
         val mediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, pos ->
             tab.text = when (pos) {
@@ -71,6 +56,26 @@ class NewMessageFragment : Fragment() {
             }
         }
         mediator.attach()
+    }
+
+    private fun createPrivateChatIfPossible(onsNameOrPublicKey: String) {
+        if (PublicKeyValidation.isValid(onsNameOrPublicKey)) {
+            createPrivateChat(onsNameOrPublicKey)
+        } else {
+            // This could be an ONS name
+            showLoader()
+            SnodeAPI.getSessionID(onsNameOrPublicKey).successUi { hexEncodedPublicKey ->
+                hideLoader()
+                createPrivateChat(hexEncodedPublicKey)
+            }.failUi { exception ->
+                hideLoader()
+                var message = getString(R.string.fragment_enter_public_key_error_message)
+                exception.localizedMessage?.let {
+                    message = it
+                }
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun createPrivateChat(hexEncodedPublicKey: String) {

@@ -44,7 +44,7 @@ class EnterPublicKeyFragment : Fragment() {
             publicKeyEditText.setOnEditorActionListener { v, actionID, _ ->
                 if (actionID == EditorInfo.IME_ACTION_DONE) {
                     v.hideKeyboard()
-                    createPrivateChatIfPossible()
+                    handlePublicKeyEntered()
                     true
                 } else {
                     false
@@ -70,7 +70,7 @@ class EnterPublicKeyFragment : Fragment() {
             }
             copyButton.setOnClickListener { copyPublicKey() }
             shareButton.setOnClickListener { sharePublicKey() }
-            createPrivateChatButton.setOnClickListener { createPrivateChatIfPossible() }
+            createPrivateChatButton.setOnClickListener { handlePublicKeyEntered(); publicKeyEditText.hideKeyboard() }
         }
     }
 
@@ -89,7 +89,7 @@ class EnterPublicKeyFragment : Fragment() {
         startActivity(intent)
     }
 
-    private fun createPrivateChatIfPossible() {
+    private fun handlePublicKeyEntered() {
         val hexEncodedPublicKey = binding.publicKeyEditText.text?.trim()?.toString()
         if (hexEncodedPublicKey.isNullOrEmpty()) return
         delegate?.handlePublicKeyEntered(hexEncodedPublicKey)
