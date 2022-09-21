@@ -50,14 +50,14 @@ class EnterPublicKeyFragment : Fragment() {
                     false
                 }
             }
-            root.setOnTouchListener { _, _ ->
+            publicKeyEditText.addTextChangedListener { text -> createPrivateChatButton.isVisible = !text.isNullOrBlank() }
+            publicKeyEditText.setOnFocusChangeListener { _, hasFocus ->  optionalContentContainer.isVisible = !hasFocus }
+            mainContainer.setOnTouchListener { _, _ ->
                 binding.optionalContentContainer.isVisible = true
                 publicKeyEditText.clearFocus()
                 publicKeyEditText.hideKeyboard()
                 true
             }
-            publicKeyEditText.setOnFocusChangeListener { _, hasFocus ->  optionalContentContainer.isVisible = !hasFocus }
-            publicKeyEditText.addTextChangedListener { text -> createPrivateChatButton.isVisible = !text.isNullOrBlank() }
             val size = toPx(228, resources)
             val qrCode = QRCodeUtilities.encode(hexEncodedPublicKey, size, isInverted = false, hasTransparentBackground = false)
             qrCodeImageView.setImageBitmap(qrCode)

@@ -33,16 +33,16 @@ class EnterCommunityUrlFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.chatURLEditText.imeOptions = binding.chatURLEditText.imeOptions or 16777216 // Always use incognito keyboard
-        binding.chatURLEditText.addTextChangedListener { text -> binding.joinPublicChatButton.isEnabled = !text.isNullOrBlank() }
-        binding.chatURLEditText.setOnFocusChangeListener { _, hasFocus ->  binding.defaultRoomsContainer.isVisible = !hasFocus }
-        binding.root.setOnTouchListener { _, _ ->
+        binding.communityUrlEditText.imeOptions = binding.communityUrlEditText.imeOptions or 16777216 // Always use incognito keyboard
+        binding.communityUrlEditText.addTextChangedListener { text -> binding.joinCommunityButton.isEnabled = !text.isNullOrBlank() }
+        binding.communityUrlEditText.setOnFocusChangeListener { _, hasFocus ->  binding.defaultRoomsContainer.isVisible = !hasFocus }
+        binding.mainContainer.setOnTouchListener { _, _ ->
             binding.defaultRoomsContainer.isVisible = true
-            binding.chatURLEditText.clearFocus()
-            binding.chatURLEditText.hideKeyboard()
+            binding.communityUrlEditText.clearFocus()
+            binding.communityUrlEditText.hideKeyboard()
             true
         }
-        binding.joinPublicChatButton.setOnClickListener { joinPublicChatIfPossible() }
+        binding.joinCommunityButton.setOnClickListener { joinCommunityIfPossible() }
         viewModel.defaultRooms.observe(viewLifecycleOwner) { state ->
             binding.defaultRoomsContainer.isVisible = state is State.Success
             binding.defaultRoomsLoaderContainer.isVisible = state is State.Loading
@@ -81,11 +81,11 @@ class EnterCommunityUrlFragment : Fragment() {
     }
 
     // region Convenience
-    private fun joinPublicChatIfPossible() {
+    private fun joinCommunityIfPossible() {
         val inputMethodManager = requireContext().getSystemService(BaseActionBarActivity.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(binding.chatURLEditText.windowToken, 0)
-        val chatURL = binding.chatURLEditText.text.trim().toString().toLowerCase(Locale.US)
-        delegate?.handleCommunityUrlEntered(chatURL)
+        inputMethodManager.hideSoftInputFromWindow(binding.communityUrlEditText.windowToken, 0)
+        val communityUrl = binding.communityUrlEditText.text.trim().toString().lowercase(Locale.US)
+        delegate?.handleCommunityUrlEntered(communityUrl)
     }
     // endregion
 }

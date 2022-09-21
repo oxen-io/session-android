@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -16,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/chatURLEditText"
+        android:id="@+id/communityUrlEditText"
         style="@style/SmallSessionEditText"
         android:layout_width="match_parent"
         android:layout_height="64dp"
@@ -40,7 +41,7 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chatURLEditText">
+        app:layout_constraintTop_toBottomOf="@id/communityUrlEditText">
 
         <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/defaultRoomsLoader"
@@ -56,12 +57,13 @@
     <LinearLayout
         android:id="@+id/defaultRoomsContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:orientation="vertical"
         android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/joinCommunityButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chatURLEditText"
+        app:layout_constraintTop_toBottomOf="@id/communityUrlEditText"
         tools:visibility="visible">
 
         <TextView
@@ -86,17 +88,8 @@
 
     </LinearLayout>
 
-    <View
-        android:id="@+id/bottomSpacer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/joinPublicChatButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/defaultRoomsContainer" />
-
     <Button
-        android:id="@+id/joinPublicChatButton"
+        android:id="@+id/joinCommunityButton"
         style="@style/Widget.Session.Button.Common.ProminentOutline"
         android:layout_width="196dp"
         android:layout_height="@dimen/medium_button_height"

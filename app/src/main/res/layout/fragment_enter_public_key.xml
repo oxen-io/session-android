@@ -7,14 +7,16 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:id="@+id/mainContainer">
 
             <View
-                android:id="@+id/topSpacer"
+                android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="?android:dividerHorizontal"
@@ -39,7 +41,7 @@
                 android:paddingBottom="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/topSpacer" />
+                app:layout_constraintTop_toBottomOf="@id/divider" />
 
             <TextView
                 android:id="@+id/promptTextView"
@@ -61,6 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@id/createPrivateChatButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/promptTextView">
@@ -97,7 +100,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/large_spacing"
-                    android:layout_marginTop="@dimen/large_spacing"
+                    android:layout_marginVertical="@dimen/large_spacing"
                     android:orientation="horizontal">
 
                     <Button
@@ -121,16 +124,6 @@
 
             </LinearLayout>
 
-            <View
-                android:id="@+id/bottomSpacer"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginTop="@dimen/medium_spacing"
-                app:layout_constraintBottom_toTopOf="@id/createPrivateChatButton"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/optionalContentContainer" />
-
             <Button
                 android:id="@+id/createPrivateChatButton"
                 style="@style/Widget.Session.Button.Common.ProminentOutline"
@@ -142,7 +135,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/bottomSpacer"
                 tools:visibility="visible" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
