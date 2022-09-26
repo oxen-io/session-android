@@ -284,12 +284,9 @@ public class RecipientDatabase extends Database {
       values.put(BLOCK, blocked ? 1 : 0);
       for (Recipient recipient : recipients) {
         db.update(TABLE_NAME, values, ADDRESS + " = ?", new String[]{recipient.getAddress().serialize()});
-      }
-      db.setTransactionSuccessful();
-      for (Recipient recipient : recipients) {
-        // make sure transaction is successful before updating in-memory recipients
         recipient.resolve().setBlocked(blocked);
       }
+      db.setTransactionSuccessful();
     } finally {
       db.endTransaction();
     }

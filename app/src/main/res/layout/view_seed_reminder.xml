@@ -14,7 +14,6 @@
         android:paddingLeft="-2dp"
         android:paddingRight="-2dp"
         android:progressTint="?colorAccent"
-        android:progressBackgroundTint="@color/progress_bar_background"
         android:progress="80" />
 
     <LinearLayout
