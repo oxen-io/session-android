@@ -42,10 +42,11 @@ class NewMessageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.backButton.setOnClickListener { delegate.onDialogBackPressed() }
         binding.closeButton.setOnClickListener { delegate.onDialogClosePressed() }
+        val onsOrPkDelegate = { onsNameOrPublicKey: String -> createPrivateChatIfPossible(onsNameOrPublicKey)}
         val adapter = NewMessageFragmentAdapter(
-            activity = requireActivity(),
-            enterPublicKeyDelegate = { onsNameOrPublicKey: String -> createPrivateChatIfPossible(onsNameOrPublicKey)},
-            scanPublicKeyDelegate = { onsNameOrPublicKey: String -> createPrivateChatIfPossible(onsNameOrPublicKey)}
+            parentFragment = this,
+            enterPublicKeyDelegate = onsOrPkDelegate,
+            scanPublicKeyDelegate = onsOrPkDelegate
         )
         binding.viewPager.adapter = adapter
         val mediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, pos ->

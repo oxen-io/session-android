@@ -99,10 +99,12 @@ class JoinCommunityFragment : Fragment() {
                 }
             }
         }
-        val enterCommunityUrlDelegate = { url: String -> joinCommunityIfPossible(url) }
-        binding.viewPager.adapter = JoinCommunityFragmentAdapter(requireActivity(), enterCommunityUrlDelegate) { url ->
-            joinCommunityIfPossible(url)
-        }
+        val urlDelegate = { url: String -> joinCommunityIfPossible(url) }
+        binding.viewPager.adapter = JoinCommunityFragmentAdapter(
+            parentFragment = this,
+            enterCommunityUrlDelegate = urlDelegate,
+            scanQrCodeDelegate = urlDelegate
+        )
         val mediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, pos ->
             tab.text = when (pos) {
                 0 -> getString(R.string.activity_join_public_chat_enter_community_url_tab_title)

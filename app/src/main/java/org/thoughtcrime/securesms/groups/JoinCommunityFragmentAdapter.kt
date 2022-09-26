@@ -1,16 +1,15 @@
 package org.thoughtcrime.securesms.groups
 
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import org.thoughtcrime.securesms.util.ScanQRCodeWrapperFragment
 import org.thoughtcrime.securesms.util.ScanQRCodeWrapperFragmentDelegate
 
 class JoinCommunityFragmentAdapter(
-    val activity: FragmentActivity,
+    private val parentFragment: Fragment,
     private val enterCommunityUrlDelegate: EnterCommunityUrlDelegate,
     private val scanQrCodeDelegate: ScanQRCodeWrapperFragmentDelegate
-) : FragmentStateAdapter(activity) {
+) : FragmentStateAdapter(parentFragment) {
 
     override fun getItemCount(): Int = 2
 

@@ -1,16 +1,15 @@
 package org.thoughtcrime.securesms.dms
 
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import org.thoughtcrime.securesms.util.ScanQRCodeWrapperFragment
 import org.thoughtcrime.securesms.util.ScanQRCodeWrapperFragmentDelegate
 
 class NewMessageFragmentAdapter(
-    val activity: FragmentActivity,
+    private val parentFragment: Fragment,
     private val enterPublicKeyDelegate: EnterPublicKeyDelegate,
     private val scanPublicKeyDelegate: ScanQRCodeWrapperFragmentDelegate
-) : FragmentStateAdapter(activity) {
+) : FragmentStateAdapter(parentFragment) {
 
     override fun getItemCount(): Int  = 2
 
