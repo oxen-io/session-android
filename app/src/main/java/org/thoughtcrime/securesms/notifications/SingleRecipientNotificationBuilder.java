@@ -31,6 +31,7 @@ import org.session.libsession.avatars.GeneratedContactPhoto;
 import org.session.libsession.messaging.contacts.Contact;
 import org.session.libsession.utilities.NotificationPrivacyPreference;
 import org.session.libsession.utilities.TextSecurePreferences;
+import org.session.libsession.utilities.ThemeUtil;
 import org.session.libsession.utilities.Util;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsignal.utilities.Log;
@@ -65,7 +66,7 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
 
 
     setSmallIcon(R.drawable.ic_notification);
-    setColor(context.getResources().getColor(R.color.textsecure_primary));
+    setColor(ThemeUtil.getThemedColor(context, R.attr.colorPrimary));
     setCategory(NotificationCompat.CATEGORY_MESSAGE);
 
     if (!NotificationChannels.supported()) {

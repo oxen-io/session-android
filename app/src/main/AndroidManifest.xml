@@ -402,6 +402,10 @@
             android:name="org.thoughtcrime.securesms.database.DatabaseContentProviders$StickerPack"
             android:authorities="network.loki.securesms.database.stickerpack"
             android:exported="false" />
+        <provider
+            android:name="org.thoughtcrime.securesms.database.DatabaseContentProviders$Recipient"
+            android:authorities="network.loki.securesms.database.recipient"
+            android:exported="false" />
 
         <receiver android:name="org.thoughtcrime.securesms.service.BootReceiver">
             <intent-filter>

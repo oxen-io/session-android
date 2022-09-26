@@ -980,6 +980,14 @@
     <string name="go_to_device_notification_settings">Go to device notification settings</string>
     <string name="blocked_contacts_title">Blocked Contacts</string>
     <string name="blocked_contacts_empty_state">You have no blocked contacts</string>
+    <string name="Unblock_dialog__title_single">Unblock %s</string>
+    <string name="Unblock_dialog__title_multiple">Unblock Users</string>
+    <string name="Unblock_dialog__message">Are you sure you want to unblock %s?</string>
+
+    <plurals name="Unblock_dialog__message_multiple_overflow">
+        <item quantity="one">and %d other</item>
+        <item quantity="other">and %d others</item>
+    </plurals>
 
     <plurals name="ReactionsRecipientAdapter_other_reactors">
         <item quantity="one">And %1$d other has reacted %2$s to this message</item>

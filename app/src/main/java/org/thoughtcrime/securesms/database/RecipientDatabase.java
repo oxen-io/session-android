@@ -410,10 +410,9 @@ public class RecipientDatabase extends Database {
 
     RecipientReader reader = new RecipientReader(context, cursor);
     List<Recipient> returnList = new ArrayList<>();
-
-    while (reader.getNext() != null) {
-      Recipient recipient = reader.getCurrent();
-      returnList.add(recipient);
+    Recipient current;
+    while ((current = reader.getNext()) != null) {
+      returnList.add(current);
     }
     reader.close();
     return returnList;

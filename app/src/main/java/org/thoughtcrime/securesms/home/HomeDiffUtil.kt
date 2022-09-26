@@ -37,6 +37,8 @@ class HomeDiffUtil(
         val sameSendStatus = oldItem.isFailed == newItem.isFailed && oldItem.isDelivered == newItem.isDelivered
                 && oldItem.isSent == newItem.isSent && oldItem.isPending == newItem.isPending
         if (!sameSendStatus) return false
+        val sameBlockedStatus = oldItem.recipient.isBlocked == newItem.recipient.isBlocked
+        if (!sameBlockedStatus) return false
 
         // all same
         return true

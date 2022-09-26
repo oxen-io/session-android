@@ -212,50 +212,50 @@
                 android:background="@drawable/padded_circle_tintable"
                 android:backgroundTint="@color/accent_green"
                 android:foreground="@drawable/radial_select"
-                android:layout_width="34dp"
-                android:layout_height="34dp"/>
+                android:layout_width="@dimen/radial_size"
+                android:layout_height="@dimen/radial_size"/>
             <View
                 android:id="@+id/accent_blue"
                 android:background="@drawable/padded_circle_tintable"
                 android:backgroundTint="@color/accent_blue"
                 android:foreground="@drawable/radial_select"
-                android:layout_width="34dp"
-                android:layout_height="34dp"/>
+                android:layout_width="@dimen/radial_size"
+                android:layout_height="@dimen/radial_size"/>
             <View
                 android:id="@+id/accent_yellow"
                 android:background="@drawable/padded_circle_tintable"
                 android:backgroundTint="@color/accent_yellow"
                 android:foreground="@drawable/radial_select"
-                android:layout_width="34dp"
-                android:layout_height="34dp"/>
+                android:layout_width="@dimen/radial_size"
+                android:layout_height="@dimen/radial_size"/>
             <View
                 android:id="@+id/accent_pink"
                 android:background="@drawable/padded_circle_tintable"
                 android:backgroundTint="@color/accent_pink"
                 android:foreground="@drawable/radial_select"
-                android:layout_width="34dp"
-                android:layout_height="34dp"/>
+                android:layout_width="@dimen/radial_size"
+                android:layout_height="@dimen/radial_size"/>
             <View
                 android:id="@+id/accent_purple"
                 android:background="@drawable/padded_circle_tintable"
                 android:backgroundTint="@color/accent_purple"
                 android:foreground="@drawable/radial_select"
-                android:layout_width="34dp"
-                android:layout_height="34dp"/>
+                android:layout_width="@dimen/radial_size"
+                android:layout_height="@dimen/radial_size"/>
             <View
                 android:id="@+id/accent_orange"
                 android:background="@drawable/padded_circle_tintable"
                 android:backgroundTint="@color/accent_orange"
                 android:foreground="@drawable/radial_select"
-                android:layout_width="34dp"
-                android:layout_height="34dp"/>
+                android:layout_width="@dimen/radial_size"
+                android:layout_height="@dimen/radial_size"/>
             <View
                 android:id="@+id/accent_red"
                 android:background="@drawable/padded_circle_tintable"
                 android:backgroundTint="@color/accent_red"
                 android:foreground="@drawable/radial_select"
-                android:layout_width="34dp"
-                android:layout_height="34dp"/>
+                android:layout_width="@dimen/radial_size"
+                android:layout_height="@dimen/radial_size"/>
         </LinearLayout>
 
         <TextView

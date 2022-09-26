@@ -74,6 +74,7 @@ public abstract class Database {
 
   protected void notifyRecipientListeners() {
     context.getContentResolver().notifyChange(DatabaseContentProviders.Recipient.CONTENT_URI, null);
+    notifyConversationListListeners();
   }
 
   protected void setNotifyConverationListeners(Cursor cursor, long threadId) {

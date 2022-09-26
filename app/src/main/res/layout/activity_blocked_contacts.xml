@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@drawable/preference_single_no_padding"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_marginHorizontal="@dimen/medium_spacing"
         android:layout_marginVertical="@dimen/large_spacing"
         />
@@ -22,6 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@+id/recyclerView"
+        android:layout_marginTop="@dimen/medium_spacing"
         app:layout_constraintStart_toStartOf="@+id/recyclerView"
         app:layout_constraintEnd_toEndOf="@+id/recyclerView"
         android:text="@string/blocked_contacts_empty_state"
