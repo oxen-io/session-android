@@ -30,6 +30,12 @@ class HelpSettingsFragment: CorrectedPreferenceFragment() {
         private const val FEEDBACK = "feedback"
         private const val FAQ = "faq"
         private const val SUPPORT = "support"
+
+        private const val CROWDIN_URL = "https://crowdin.com/project/session-android"
+        private const val FEEDBACK_URL = "https://getsession.org/survey"
+        private const val FAQ_URL = "https://getsession.org/faq"
+        private const val SUPPORT_URL = "https://sessionapp.zendesk.com/hc/en-us"
+
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -44,19 +50,19 @@ class HelpSettingsFragment: CorrectedPreferenceFragment() {
                 true
             }
             TRANSLATE -> {
-                helpTranslate()
+                openLink(CROWDIN_URL)
                 true
             }
             FEEDBACK -> {
-
+                openLink(FEEDBACK_URL)
                 true
             }
             FAQ -> {
-
+                openLink(FAQ_URL)
                 true
             }
             SUPPORT -> {
-
+                openLink(SUPPORT_URL)
                 true
             }
             else -> super.onPreferenceTreeClick(preference)
@@ -77,9 +83,8 @@ class HelpSettingsFragment: CorrectedPreferenceFragment() {
             .execute()
     }
 
-    private fun helpTranslate() {
+    private fun openLink(url: String) {
         try {
-            val url = "https://crowdin.com/project/session-android"
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(intent)
         } catch (e: Exception) {
