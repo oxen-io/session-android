@@ -8,10 +8,11 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.AsyncTask
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.Parcelable
+import android.util.SparseArray
 import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
@@ -67,6 +68,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
     companion object {
         const val updatedProfileResultCode = 1234
+        private const val SCROLL_STATE = "SCROLL_STATE"
     }
 
     // region Lifecycle
@@ -100,6 +102,20 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             seedButton.setOnClickListener { showSeed() }
             clearAllDataButton.setOnClickListener { clearAllData() }
             versionTextView.text = String.format(getString(R.string.version_s), "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val scrollBundle = SparseArray<Parcelable>()
+        binding.scrollView.saveHierarchyState(scrollBundle)
+        outState.putSparseParcelableArray(SCROLL_STATE, scrollBundle)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        savedInstanceState.getSparseParcelableArray<Parcelable>(SCROLL_STATE)?.let { scrollBundle ->
+            binding.scrollView.restoreHierarchyState(scrollBundle)
         }
     }
 
@@ -304,38 +320,13 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
     }
 
     private fun showHelp() {
-        try {
-            val url = "https://getsession.org/faq"
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            startActivity(intent)
-        } catch (e: Exception) {
-            Toast.makeText(this, "Can't open URL", Toast.LENGTH_LONG).show()
-        }
+        val intent = Intent(this, HelpSettingsActivity::class.java)
+        push(intent)
     }
 
     private fun showPath() {
         val intent = Intent(this, PathActivity::class.java)
         show(intent)
-    }
-
-    private fun showSurvey() {
-        try {
-            val url = "https://getsession.org/survey"
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            startActivity(intent)
-        } catch (e: Exception) {
-            Toast.makeText(this, "Can't open URL", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    private fun helpTranslate() {
-        try {
-            val url = "https://crowdin.com/project/session-android"
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            startActivity(intent)
-        } catch (e: Exception) {
-            Toast.makeText(this, "Can't open URL", Toast.LENGTH_LONG).show()
-        }
     }
 
     private fun showSeed() {
@@ -344,20 +335,6 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
     private fun clearAllData() {
         ClearAllDataDialog().show(supportFragmentManager, "Clear All Data Dialog")
-    }
-
-    private fun shareLogs() {
-        Permissions.with(this)
-            .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            .maxSdkVersion(Build.VERSION_CODES.P)
-            .withPermanentDenialDialog(getString(R.string.MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied))
-            .onAnyDenied {
-                Toast.makeText(this, R.string.MediaPreviewActivity_unable_to_write_to_external_storage_without_permission, Toast.LENGTH_LONG).show()
-            }
-            .onAllGranted {
-                ShareLogsDialog().show(supportFragmentManager,"Share Logs Dialog")
-            }
-            .execute()
     }
 
     // endregion

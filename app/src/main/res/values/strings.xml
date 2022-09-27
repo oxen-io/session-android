@@ -763,6 +763,15 @@
 
     <string name="activity_conversations_settings_title">Conversations</string>
 
+    <string name="activity_help_settings_title">Help</string>
+    <string name="activity_help_settings__report_bug_title">Report a Bug</string>
+    <string name="activity_help_settings__report_bug_summary">Export your logs, then upload the file though Session\'s Help Desk.</string>
+    <string name="activity_help_settings__translate_session">Translate Session</string>
+    <string name="activity_help_settings__feedback">We\'d love your feedback</string>
+    <string name="activity_help_settings__faq">FAQ</string>
+    <string name="activity_help_settings__support">Support</string>
+    <string name="activity_help_settings__export_logs">Export Logs</string>
+
     <string name="preferences_notifications_strategy_category_title">Notification Strategy</string>
     <string name="preferences_notifications_strategy_category_fast_mode_title">Use Fast Mode</string>
     <string name="preferences_notifications_strategy_category_fast_mode_summary">You\'ll be notified of new messages reliably and immediately using Google\'s notification servers.</string>

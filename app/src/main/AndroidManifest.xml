@@ -179,6 +179,10 @@
         <activity
             android:name="org.thoughtcrime.securesms.preferences.ChatSettingsActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="org.thoughtcrime.securesms.preferences.HelpSettingsActivity"
+            android:label="@string/activity_help_settings_title"
+            android:screenOrientation="portrait" />
         <activity android:name="org.thoughtcrime.securesms.preferences.appearance.AppearanceSettingsActivity"
             android:screenOrientation="portrait"/>
 

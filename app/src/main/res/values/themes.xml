@@ -13,6 +13,7 @@
        <item name="reactionsPillSelectedTextColor">?colorAccent</item>
        <item name="reactionsPillSelectedBackground">?colorPrimary</item>
        <item name="reactionsPillNormalBackground">?colorPrimary</item>
+       <item name="colorDividerBackground">@color/gray50</item>
 <!--        <item name="colorPrimary">@color/action_bar_background</item>-->
 <!--        <item name="colorPrimaryDark">@color/action_bar_background</item>-->
 <!--        <item name="searchBackgroundColor">#1B1B1B</item>-->
