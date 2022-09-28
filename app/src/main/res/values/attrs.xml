@@ -143,6 +143,7 @@
     <attr name="default_background_end" format="color|reference"/>
     <attr name="colorCellRipple" format="color|reference"/>
     <attr name="colorCellBackground" format="color|reference" />
+    <attr name="colorSettingsBackground" format="color|reference" />
     <attr name="colorDividerBackground" format="color|reference" />
     <attr name="outlineButtonBorder" format="color|reference" />
     <attr name="outlineButtonText" format="color|reference" />
@@ -173,7 +174,6 @@
     <attr name="verification_background" format="color"/>
 
     <attr name="media_overview_toolbar_background" format="color"/>
-    <attr name="media_overview_header_foreground" format="color"/>
 
     <attr name="shared_contact_details_header_background" format="color"/>
     <attr name="shared_contact_details_titlebar" format="color"/>

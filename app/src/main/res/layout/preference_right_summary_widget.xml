@@ -13,7 +13,7 @@
         android:layout_gravity="right|center_vertical"
         android:gravity="right|center_vertical"
         android:textSize="@dimen/very_small_font_size"
-        android:textColor="?colorAccent"
+        android:textColor="?android:textColorPrimary"
         tools:text="Preference Summary"/>
 
 </FrameLayout>

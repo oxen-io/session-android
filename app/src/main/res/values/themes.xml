@@ -14,6 +14,7 @@
        <item name="reactionsPillSelectedBackground">?colorPrimary</item>
        <item name="reactionsPillNormalBackground">?colorPrimary</item>
        <item name="colorDividerBackground">@color/gray50</item>
+       <item name="colorPrimaryVariant">?colorPrimary</item>
 <!--        <item name="colorPrimary">@color/action_bar_background</item>-->
 <!--        <item name="colorPrimaryDark">@color/action_bar_background</item>-->
 <!--        <item name="searchBackgroundColor">#1B1B1B</item>-->
@@ -35,7 +36,6 @@
 <!--        <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>-->
 <!--        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>-->
 <!--        <item name="preferenceTheme">@style/ThemeOverlay.Session.Settings</item>-->
-<!--        <item name="appBarLayoutStyle">@style/Widget.Session.AppBarLayout</item>-->
 <!--        <item name="actionBarTabBarStyle">@style/Widget.Session.TabBar</item>-->
 
 <!--        <item name="statusBarBackground">@color/accent</item>-->
@@ -56,8 +56,8 @@
 
 <!--        <item name="dialog_background_color">@color/dialog_background</item>-->
 
-<!--        <item name="media_overview_toolbar_background">@color/transparent</item>-->
-<!--        <item name="media_overview_header_foreground">@color/text</item>-->
+        <item name="media_overview_toolbar_background">@color/transparent</item>
+        <item name="media_overview_header_foreground">?android:textColorPrimary</item>
 <!--        <item name="media_keyboard_button_color">@color/core_grey_25</item>\-->
 
 <!--        <item name="attachment_type_selector_background">?android:windowBackground</item>-->
@@ -112,41 +112,14 @@
         <!-- leave empty to allow overriding -->
     </style>
 
-    <style name="Theme.Session.DayNight.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionModeOverlay">true</item>
+    <style name="ThemeOverlay.App.Toolbar" parent="">
+        <item name="colorOnPrimary">?android:textColorPrimary</item>
     </style>
 
-    <style name="Theme.Session.DayNight.NoActionBar.Light">
+    <style name="Theme.Session.DayNight.NoActionBar" parent="Base.Theme.Session">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
-
-        <item name="android:navigationBarColor">?android:navigationBarColor</item>
-        <item name="android:textColorHint">@color/gray50</item>
-
-        <item name="message_received_background_color">#F2F2F2</item>
-        <item name="message_sent_background_color">#00E076</item>
-
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
-        <item name="android:statusBarColor">?colorPrimary</item>
-
-        <item name="attachment_type_selector_hide_button_background">@color/gray27</item>
-        <item name="attachment_document_icon_small">@drawable/ic_document_small_light</item>
-        <item name="attachment_document_icon_large">@drawable/ic_document_large_light</item>
-
-        <item name="conversation_emoji_toggle">@drawable/ic_emoji_outline_keyboard</item>
-        <item name="conversation_sticker_toggle">@drawable/ic_sticker_outline_keyboard</item>
-        <item name="conversation_keyboard_toggle">@drawable/ic_outline_keyboard_24</item>
-        <item name="conversation_input_background">@drawable/compose_background_light</item>
-
-        <item name="quick_camera_icon">@drawable/ic_outline_photo_camera_24</item>
-
-        <item name="media_keyboard_button_color">@color/core_grey_60</item>
-
-        <item name="menu_info_icon">@drawable/ic_outline_info_24</item>
     </style>
 
     <style name="Theme.Session.DayNight.FlatActionBar">
@@ -201,9 +174,6 @@
     <style name="Base.Theme.TextSecure" parent="@style/Theme.Session.DayNight">
 
         <item name="windowActionModeOverlay">true</item>
-
-        <item name="colorPrimary">@color/action_bar_background</item>
-        <item name="colorPrimaryDark">@color/action_bar_background</item>
 
         <item name="media_overview_toolbar_background">@color/transparent</item>
         <item name="media_overview_header_foreground">?android:textColorPrimary</item>
@@ -392,6 +362,7 @@
         <item name="default_background_start">@color/classic_dark_1</item>
         <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet.ClassicDark</item>
         <item name="colorCellBackground">@color/classic_dark_1</item>
+        <item name="colorSettingsBackground">@color/classic_dark_1</item>
         <item name="colorDividerBackground">@color/classic_dark_3</item>
         <item name="colorCellRipple">@color/classic_dark_3</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
@@ -447,7 +418,7 @@
         <item name="colorControlActivated">?colorAccent</item>
         <item name="android:colorControlHighlight">?colorAccent</item>
         <item name="android:textColorPrimary">@color/classic_light_0</item>
-        <item name="android:textColorSecondary">?android:textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/classic_light_1</item>
         <item name="android:textColorTertiary">@color/classic_light_2</item>
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textColorHint">@color/gray27</item>
@@ -456,8 +427,9 @@
         <item name="android:navigationBarColor">@color/compose_view_background</item>
         <item name="default_background_end">@color/classic_light_6</item>
         <item name="default_background_start">@color/classic_light_5</item>
-        <item name="colorCellBackground">@color/classic_light_2</item>
-        <item name="colorDividerBackground">@color/classic_light_1</item>
+        <item name="colorCellBackground">@color/classic_light_6</item>
+        <item name="colorSettingsBackground">@color/classic_light_5</item>
+        <item name="colorDividerBackground">@color/classic_light_3</item>
         <item name="colorCellRipple">@color/classic_light_3</item>
         <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet.ClassicLight</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
@@ -532,6 +504,7 @@
         <item name="default_background_end">?colorPrimary</item>
         <item name="default_background_start">?colorPrimaryDark</item>
         <item name="colorCellBackground">@color/ocean_dark_3</item>
+        <item name="colorSettingsBackground">@color/ocean_dark_1</item>
         <item name="colorDividerBackground">@color/ocean_dark_4</item>
         <item name="colorCellRipple">@color/ocean_dark_4</item>
         <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet.OceanDark</item>
@@ -599,7 +572,8 @@
         <item name="android:colorBackground">@color/default_background_start</item>
         <item name="default_background_end">@color/ocean_light_6</item>
         <item name="default_background_start">@color/ocean_light_5</item>
-        <item name="colorCellBackground">@color/ocean_light_5</item>
+        <item name="colorCellBackground">@color/ocean_light_4</item>
+        <item name="colorSettingsBackground">@color/ocean_light_5</item>
         <item name="colorDividerBackground">@color/ocean_light_2</item>
         <item name="colorCellRipple">@color/ocean_light_3</item>
         <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet.OceanLight</item>
@@ -615,6 +589,7 @@
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="O_MR1">true</item>
         <item name="android:isLightTheme" tools:targetApi="Q">true</item>
+        <item name="android:statusBarColor">?colorPrimary</item>
 
 
         <item name="searchBackgroundColor">@color/ocean_light_4</item>
@@ -636,22 +611,22 @@
         <item name="message_received_text_color">@color/ocean_light_0</item>
         <item name="message_sent_background_color">?colorAccent</item>
         <item name="message_sent_text_color">@color/ocean_light_0</item>
-        <item name="input_bar_background">@color/ocean_dark_1</item>
-        <item name="input_bar_text_hint">@color/ocean_dark_5</item>
-        <item name="input_bar_text_user">@color/ocean_dark_6</item>
-        <item name="input_bar_border">@color/ocean_dark_4</item>
-        <item name="input_bar_button_background">@color/ocean_dark_2</item>
-        <item name="input_bar_button_background_opaque">@color/ocean_dark_2</item>
-        <item name="input_bar_button_text_color">@color/ocean_dark_6</item>
-        <item name="input_bar_button_background_opaque_border">@color/ocean_dark_2</item>
-        <item name="input_bar_lock_view_background">?colorPrimary</item>
-        <item name="input_bar_lock_view_border">?colorPrimary</item>
-        <item name="mention_candidates_view_background">@color/ocean_dark_2</item>
-        <item name="mention_candidates_view_background_ripple">@color/ocean_dark_3</item>
-        <item name="scroll_to_bottom_button_background">@color/ocean_dark_4</item>
-        <item name="scroll_to_bottom_button_border">?colorPrimary</item>
-        <item name="conversation_unread_count_indicator_background">@color/ocean_dark_4</item>
-        <item name="conversation_pinned_background_color">@color/ocean_dark_4</item>
+        <item name="input_bar_background">@color/ocean_light_6</item>
+        <item name="input_bar_text_hint">@color/ocean_light_1</item>
+        <item name="input_bar_text_user">@color/ocean_light_0</item>
+        <item name="input_bar_border">@color/ocean_light_2</item>
+        <item name="input_bar_button_background">@color/ocean_light_3</item>
+        <item name="input_bar_button_background_opaque">@color/ocean_light_3</item>
+        <item name="input_bar_button_text_color">@color/ocean_light_0</item>
+        <item name="input_bar_button_background_opaque_border">@color/ocean_light_0</item>
+        <item name="input_bar_lock_view_background">@color/ocean_light_3</item>
+        <item name="input_bar_lock_view_border">@color/ocean_light_0</item>
+        <item name="mention_candidates_view_background">?colorCellBackground</item>
+        <item name="mention_candidates_view_background_ripple">?colorCellRipple</item>
+        <item name="scroll_to_bottom_button_background">?input_bar_button_background_opaque</item>
+        <item name="scroll_to_bottom_button_border">?input_bar_button_background_opaque_border</item>
+        <item name="conversation_unread_count_indicator_background">?colorAccent</item>
+        <item name="conversation_pinned_background_color">@color/ocean_light_4</item>
         <item name="conversation_pinned_icon_color">?colorPrimary</item>
     </style>
 

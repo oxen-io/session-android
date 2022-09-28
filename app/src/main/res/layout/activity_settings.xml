@@ -149,7 +149,7 @@
                     android:layout_marginHorizontal="@dimen/very_large_spacing"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="?android:dividerHorizontal" />
+                    android:background="?colorDividerBackground" />
 
                 <RelativeLayout
                     android:id="@+id/privacyButton"
@@ -182,7 +182,7 @@
                     android:layout_marginHorizontal="@dimen/very_large_spacing"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="?android:dividerHorizontal" />
+                    android:background="?colorDividerBackground" />
 
                 <RelativeLayout
                     android:id="@+id/notificationsButton"
@@ -216,7 +216,7 @@
                     android:layout_marginHorizontal="@dimen/very_large_spacing"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="?android:dividerHorizontal" />
+                    android:background="?colorDividerBackground" />
 
                 <RelativeLayout
                     android:id="@+id/chatsButton"
@@ -249,7 +249,7 @@
                     android:layout_marginHorizontal="@dimen/very_large_spacing"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="?android:dividerHorizontal" />
+                    android:background="?colorDividerBackground" />
 
                 <RelativeLayout
                     android:id="@+id/messageRequestsButton"
@@ -282,7 +282,7 @@
                     android:layout_marginHorizontal="@dimen/very_large_spacing"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="?android:dividerHorizontal" />
+                    android:background="?colorDividerBackground" />
 
                 <RelativeLayout
                     android:id="@+id/appearanceButton"
@@ -315,7 +315,7 @@
                     android:layout_marginHorizontal="@dimen/very_large_spacing"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="?android:dividerHorizontal" />
+                    android:background="?colorDividerBackground" />
 
                 <RelativeLayout
                     android:id="@+id/inviteFriendButton"
@@ -348,7 +348,7 @@
                     android:layout_marginHorizontal="@dimen/very_large_spacing"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="?android:dividerHorizontal" />
+                    android:background="?colorDividerBackground" />
 
                 <RelativeLayout
                     android:id="@+id/seedButton"
@@ -381,7 +381,7 @@
                     android:layout_marginHorizontal="@dimen/very_large_spacing"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="?android:dividerHorizontal" />
+                    android:background="?colorDividerBackground" />
 
                 <RelativeLayout
                     android:id="@+id/helpButton"
@@ -414,7 +414,7 @@
                     android:layout_marginHorizontal="@dimen/very_large_spacing"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="?android:dividerHorizontal" />
+                    android:background="?colorDividerBackground" />
 
                 <RelativeLayout
                     android:id="@+id/clearAllDataButton"

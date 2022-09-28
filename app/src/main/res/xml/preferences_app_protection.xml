@@ -2,7 +2,7 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <org.thoughtcrime.securesms.preferences.widgets.SessionPreferenceCategory
+    <PreferenceCategory
         android:title="@string/preferences_app_protection__screen_security"
         >
 
@@ -49,7 +49,7 @@
             android:title="@string/preferences__screen_security"
             android:summary="@string/preferences__disable_screen_security_to_allow_screen_shots" />
 
-    </org.thoughtcrime.securesms.preferences.widgets.SessionPreferenceCategory>
+    </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/preferences__read_receipts">
         <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
