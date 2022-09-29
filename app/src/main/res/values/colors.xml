@@ -94,10 +94,7 @@
     <color name="text_primary_disabled">@color/core_grey_60</color>
     <color name="signal_text_primary_dialog">@color/core_grey_25</color>
 
-    <color name="react_with_any_background">@color/core_grey_75</color>
-    <color name="react_with_any_search_background">@color/core_grey_65</color>
-    <color name="react_with_any_search_hint">@color/core_grey_25</color>
-    <color name="react_with_any_customize_background">@color/core_grey_65</color>
+    <color name="react_with_any_background">?colorPrimary</color>
 
 
     <color name="signal_inverse_transparent">@color/transparent</color>

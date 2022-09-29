@@ -15,6 +15,7 @@
        <item name="reactionsPillNormalBackground">?colorPrimary</item>
        <item name="colorDividerBackground">@color/gray50</item>
        <item name="colorPrimaryVariant">?colorPrimary</item>
+       <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>
 <!--        <item name="colorPrimary">@color/action_bar_background</item>-->
 <!--        <item name="colorPrimaryDark">@color/action_bar_background</item>-->
 <!--        <item name="searchBackgroundColor">#1B1B1B</item>-->
@@ -33,9 +34,9 @@
 <!--        <item name="android:colorBackground">@color/default_background_start</item>-->
 <!--        <item name="android:navigationBarColor">@color/compose_view_background</item>-->
 
-<!--        <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>-->
+        <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
 <!--        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>-->
-<!--        <item name="preferenceTheme">@style/ThemeOverlay.Session.Settings</item>-->
+        <item name="preferenceTheme">@style/ThemeOverlay.Session.Settings</item>
 <!--        <item name="actionBarTabBarStyle">@style/Widget.Session.TabBar</item>-->
 
 <!--        <item name="statusBarBackground">@color/accent</item>-->
@@ -123,7 +124,7 @@
     </style>
 
     <style name="Theme.Session.DayNight.FlatActionBar">
-<!--        <item name="actionBarStyle">@style/Widget.Session.ActionBar.Flat</item>-->
+        <item name="actionBarStyle">@style/Widget.Session.ActionBar.Flat</item>
     </style>
 
     <!--
@@ -164,7 +165,7 @@
         <item name="android:statusBarColor">@color/black</item>
     </style>
 
-    <style name="Theme.Session.BottomSheet" parent="@style/Theme.AppCompat.DayNight.Dialog">
+    <style name="Theme.Session.BottomSheet" parent="@style/Theme.MaterialComponents.BottomSheetDialog">
         <item name="colorControlNormal">?android:textColorPrimary</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>
@@ -304,28 +305,32 @@
     </style>
 
     <style name="Theme.Session.BottomSheet.ClassicDark">
-<!--        <item name="colorControlNormal">?android:textColorPrimary</item>-->
-<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
-<!--        <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>-->
-<!--        <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>-->
+        <item name="colorPrimary">@color/classic_dark_0</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">?android:textColorPrimary</item>
     </style>
     <style name="Theme.Session.BottomSheet.ClassicLight">
-<!--        <item name="colorControlNormal">?android:textColorPrimary</item>-->
-<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
-<!--        <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>-->
-<!--        <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>-->
+        <item name="colorPrimary">@color/classic_light_5</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorSecondary">?android:textColorPrimary</item>
     </style>
     <style name="Theme.Session.BottomSheet.OceanDark">
-<!--        <item name="colorControlNormal">?android:textColorPrimary</item>-->
-<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
-<!--        <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>-->
-<!--        <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>-->
+        <item name="colorPrimary">@color/ocean_dark_0</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">?android:textColorPrimary</item>
     </style>
     <style name="Theme.Session.BottomSheet.OceanLight">
-<!--        <item name="colorControlNormal">?android:textColorPrimary</item>-->
-<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
-<!--        <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>-->
-<!--        <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>-->
+        <item name="colorPrimary">@color/ocean_light_5</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorSecondary">?android:textColorPrimary</item>
+    </style>
+
+    <style name="Dark.Popup" parent="@style/ThemeOverlay.AppCompat.Dark">
+        <item name="android:actionMenuTextColor">?android:textColorPrimary</item>
+    </style>
+
+    <style name="Light.Popup" parent="@style/ThemeOverlay.AppCompat.Light">
+        <item name="android:actionMenuTextColor">?android:textColorPrimary</item>
     </style>
 
     <style name="Classic">
@@ -361,11 +366,13 @@
         <item name="default_background_end">@color/classic_dark_0</item>
         <item name="default_background_start">@color/classic_dark_1</item>
         <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet.ClassicDark</item>
+        <item name="actionMenuTextColor">?android:textColorPrimary</item>
+        <item name="popupTheme">?actionBarPopupTheme</item>
         <item name="colorCellBackground">@color/classic_dark_1</item>
         <item name="colorSettingsBackground">@color/classic_dark_1</item>
         <item name="colorDividerBackground">@color/classic_dark_3</item>
         <item name="colorCellRipple">@color/classic_dark_3</item>
-        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
+        <item name="actionBarPopupTheme">@style/Dark.Popup</item>
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
@@ -424,7 +431,7 @@
         <item name="android:textColorHint">@color/gray27</item>
         <item name="android:windowBackground">@drawable/default_session_background</item>
         <item name="android:colorBackground">@color/default_background_start</item>
-        <item name="android:navigationBarColor">@color/compose_view_background</item>
+        <item name="android:navigationBarColor">?colorPrimary</item>
         <item name="default_background_end">@color/classic_light_6</item>
         <item name="default_background_start">@color/classic_light_5</item>
         <item name="colorCellBackground">@color/classic_light_6</item>
@@ -432,17 +439,20 @@
         <item name="colorDividerBackground">@color/classic_light_3</item>
         <item name="colorCellRipple">@color/classic_light_3</item>
         <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet.ClassicLight</item>
-        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="android:actionMenuTextColor">?android:textColorPrimary</item>
+        <item name="popupTheme">?actionBarPopupTheme</item>
+        <item name="actionBarPopupTheme">@style/Light.Popup</item>
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
 
         <!-- Light mode -->
+        <item name="theme_type">light</item>
         <item name="android:colorBackgroundFloating">?colorPrimary</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="O_MR1">true</item>
         <item name="android:isLightTheme" tools:targetApi="Q">true</item>
-        <item name="theme_type">light</item>
+        <item name="android:statusBarColor">?colorPrimary</item>
 
         <!-- Home screen -->
         <item name="searchBackgroundColor">@color/classic_light_4</item>
@@ -508,7 +518,9 @@
         <item name="colorDividerBackground">@color/ocean_dark_4</item>
         <item name="colorCellRipple">@color/ocean_dark_4</item>
         <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet.OceanDark</item>
-        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
+        <item name="popupTheme">?actionBarPopupTheme</item>
+        <item name="actionMenuTextColor">?android:textColorPrimary</item>
+        <item name="actionBarPopupTheme">@style/Dark.Popup</item>
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
@@ -559,7 +571,7 @@
         <item name="sessionLogoTint">@color/ocean_light_0</item>
         <item name="colorPrimary">@color/ocean_light_6</item>
         <item name="colorPrimaryDark">@color/ocean_light_5</item>
-        <item name="colorControlNormal">@color/ocean_light_6</item>
+        <item name="colorControlNormal">@color/ocean_light_0</item>
         <item name="colorControlActivated">?colorAccent</item>
         <item name="android:colorControlHighlight">?colorAccent</item>
         <item name="android:textColorPrimary">@color/ocean_light_0</item>
@@ -577,11 +589,12 @@
         <item name="colorDividerBackground">@color/ocean_light_2</item>
         <item name="colorCellRipple">@color/ocean_light_3</item>
         <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet.OceanLight</item>
-        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="actionBarPopupTheme">@style/Light.Popup</item>
+        <item name="popupTheme">?actionBarPopupTheme</item>
+        <item name="actionMenuTextColor">?android:textColorPrimary</item>
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
-        <item name="theme_preview_border">@color/ocean_light_2</item>
 
         <!-- Light mode -->
         <item name="theme_type">light</item>
