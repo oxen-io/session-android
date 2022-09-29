@@ -12,6 +12,7 @@ import org.session.libsession.messaging.jobs.Job
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageReceiveJob
 import org.session.libsession.messaging.jobs.MessageSendJob
+import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.signal.IncomingEncryptedMessage
@@ -22,6 +23,7 @@ import org.session.libsession.messaging.messages.signal.OutgoingGroupMediaMessag
 import org.session.libsession.messaging.messages.signal.OutgoingMediaMessage
 import org.session.libsession.messaging.messages.signal.OutgoingTextMessage
 import org.session.libsession.messaging.messages.visible.Attachment
+import org.session.libsession.messaging.messages.visible.Reaction
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.GroupMember
 import org.session.libsession.messaging.open_groups.OpenGroup
@@ -49,6 +51,8 @@ import org.session.libsignal.utilities.KeyHelper
 import org.session.libsignal.utilities.guava.Optional
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
+import org.thoughtcrime.securesms.database.model.MessageId
+import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.jobs.RetrieveProfileAvatarJob
@@ -197,11 +201,6 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
                 messageID = result.messageId
             }
         }
-        val threadID = message.threadID
-        // open group trim thread job is scheduled after processing in OpenGroupPollerV2
-        if (openGroupID.isNullOrEmpty() && threadID != null && threadID >= 0 && TextSecurePreferences.isThreadLengthTrimmingEnabled(context)) {
-            JobQueue.shared.queueThreadForTrim(threadID)
-        }
         message.serverHash?.let { serverHash ->
             messageID?.let { id ->
                 DatabaseComponent.get(context).lokiMessageDatabase().setMessageServerHash(id, serverHash)
@@ -320,7 +319,11 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         return getAllOpenGroups().values.firstOrNull { it.server == server && it.room == room }
     }
 
-    override fun addGroupMember(member: GroupMember) {
+    override fun clearGroupMemberRoles(groupId: String) {
+        DatabaseComponent.get(context).groupMemberDatabase().clearGroupMemberRoles(groupId)
+    }
+
+    override fun addGroupMemberRole(member: GroupMember) {
         DatabaseComponent.get(context).groupMemberDatabase().addGroupMember(member)
     }
 
@@ -567,9 +570,8 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         OpenGroupManager.addOpenGroup(urlAsString, context)
     }
 
-    override fun onOpenGroupAdded(urlAsString: String) {
-        val server = OpenGroup.getServer(urlAsString)
-        OpenGroupManager.restartPollerForServer(server.toString().removeSuffix("/"))
+    override fun onOpenGroupAdded(server: String) {
+        OpenGroupManager.restartPollerForServer(server.removeSuffix("/"))
     }
 
     override fun hasBackgroundGroupAddJob(groupJoinUrl: String): Boolean {
@@ -697,6 +699,18 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         val threadDB = DatabaseComponent.get(context).threadDatabase()
         threadDB.trimThread(threadID, threadLimit)
     }
+
+    override fun trimThreadBefore(threadID: Long, timestamp: Long) {
+        val threadDB = DatabaseComponent.get(context).threadDatabase()
+        threadDB.trimThreadBefore(threadID, timestamp)
+    }
+
+    override fun getMessageCount(threadID: Long): Long {
+        val mmsSmsDb = DatabaseComponent.get(context).mmsSmsDatabase()
+        return mmsSmsDb.getConversationCount(threadID)
+    }
+
+
 
     override fun getAttachmentDataUri(attachmentId: AttachmentId): Uri {
         return PartAuthority.getAttachmentDataUri(attachmentId)
@@ -888,4 +902,58 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         db.addBlindedIdMapping(mapping)
         return mapping
     }
+
+    override fun addReaction(reaction: Reaction, messageSender: String, notifyUnread: Boolean) {
+        val timestamp = reaction.timestamp
+        val localId = reaction.localId
+        val isMms = reaction.isMms
+        val messageId = if (localId != null && localId > 0 && isMms != null) {
+            MessageId(localId, isMms)
+        } else if (timestamp != null && timestamp > 0) {
+            val messageRecord = DatabaseComponent.get(context).mmsSmsDatabase().getMessageForTimestamp(timestamp) ?: return
+            MessageId(messageRecord.id, messageRecord.isMms)
+        } else return
+        DatabaseComponent.get(context).reactionDatabase().addReaction(
+            messageId,
+            ReactionRecord(
+                messageId = messageId.id,
+                isMms = messageId.mms,
+                author = messageSender,
+                emoji = reaction.emoji!!,
+                serverId = reaction.serverId!!,
+                count = reaction.count!!,
+                sortId = reaction.index!!,
+                dateSent = reaction.dateSent!!,
+                dateReceived = reaction.dateReceived!!
+            ),
+            notifyUnread
+        )
+    }
+
+    override fun removeReaction(emoji: String, messageTimestamp: Long, author: String, notifyUnread: Boolean) {
+        val messageRecord = DatabaseComponent.get(context).mmsSmsDatabase().getMessageForTimestamp(messageTimestamp) ?: return
+        val messageId = MessageId(messageRecord.id, messageRecord.isMms)
+        DatabaseComponent.get(context).reactionDatabase().deleteReaction(emoji, messageId, author, notifyUnread)
+    }
+
+    override fun updateReactionIfNeeded(message: Message, sender: String, openGroupSentTimestamp: Long) {
+        val database = DatabaseComponent.get(context).reactionDatabase()
+        var reaction = database.getReactionFor(message.sentTimestamp!!, sender) ?: return
+        if (openGroupSentTimestamp != -1L) {
+            addReceivedMessageTimestamp(openGroupSentTimestamp)
+            reaction = reaction.copy(dateSent = openGroupSentTimestamp)
+        }
+        message.serverHash?.let {
+            reaction = reaction.copy(serverId = it)
+        }
+        message.openGroupServerMessageID?.let {
+            reaction = reaction.copy(serverId = "$it")
+        }
+        database.updateReaction(reaction)
+    }
+
+    override fun deleteReactions(messageId: Long, mms: Boolean) {
+        DatabaseComponent.get(context).reactionDatabase().deleteMessageReactions(MessageId(messageId, mms))
+    }
+
 }

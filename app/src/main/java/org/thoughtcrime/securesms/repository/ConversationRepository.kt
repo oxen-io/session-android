@@ -32,12 +32,11 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 interface ConversationRepository {
-    fun isOxenHostedOpenGroup(threadId: Long): Boolean
     fun maybeGetRecipientForThreadId(threadId: Long): Recipient?
     fun saveDraft(threadId: Long, text: String)
     fun getDraft(threadId: Long): String?
     fun inviteContacts(threadId: Long, contacts: List<Recipient>)
-    fun unblock(recipient: Recipient)
+    fun setBlocked(recipient: Recipient, blocked: Boolean)
     fun deleteLocally(recipient: Recipient, message: MessageRecord)
     fun setApproved(recipient: Recipient, isApproved: Boolean)
 
@@ -58,13 +57,15 @@ interface ConversationRepository {
 
     suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): ResultOf<Unit>
 
+    suspend fun deleteThread(threadId: Long): ResultOf<Unit>
+
     suspend fun deleteMessageRequest(thread: ThreadRecord): ResultOf<Unit>
 
     suspend fun clearAllMessageRequests(): ResultOf<Unit>
 
     suspend fun acceptMessageRequest(threadId: Long, recipient: Recipient): ResultOf<Unit>
 
-    fun declineMessageRequest(threadId: Long, recipient: Recipient)
+    fun declineMessageRequest(threadId: Long)
 
     fun hasReceived(threadId: Long): Boolean
 
@@ -83,11 +84,6 @@ class DefaultConversationRepository @Inject constructor(
     private val lokiMessageDb: LokiMessageDatabase,
     private val sessionJobDb: SessionJobDatabase
 ) : ConversationRepository {
-
-    override fun isOxenHostedOpenGroup(threadId: Long): Boolean {
-        val openGroup = lokiThreadDb.getOpenGroupChat(threadId)
-        return openGroup?.publicKey == OpenGroupApi.defaultServerPublicKey
-    }
 
     override fun maybeGetRecipientForThreadId(threadId: Long): Recipient? {
         return threadDb.getRecipientForThreadId(threadId)
@@ -125,8 +121,8 @@ class DefaultConversationRepository @Inject constructor(
         }
     }
 
-    override fun unblock(recipient: Recipient) {
-        recipientDb.setBlocked(recipient, false)
+    override fun setBlocked(recipient: Recipient, blocked: Boolean) {
+        recipientDb.setBlocked(recipient, blocked)
     }
 
     override fun deleteLocally(recipient: Recipient, message: MessageRecord) {
@@ -248,9 +244,15 @@ class DefaultConversationRepository @Inject constructor(
                 }
         }
 
+    override suspend fun deleteThread(threadId: Long): ResultOf<Unit> {
+        sessionJobDb.cancelPendingMessageSendJobs(threadId)
+        threadDb.deleteConversation(threadId)
+        return ResultOf.Success(Unit)
+    }
+
     override suspend fun deleteMessageRequest(thread: ThreadRecord): ResultOf<Unit> {
         sessionJobDb.cancelPendingMessageSendJobs(thread.threadId)
-        recipientDb.setBlocked(thread.recipient, true)
+        threadDb.deleteConversation(thread.threadId)
         return ResultOf.Success(Unit)
     }
 
@@ -275,8 +277,9 @@ class DefaultConversationRepository @Inject constructor(
             }
     }
 
-    override fun declineMessageRequest(threadId: Long, recipient: Recipient) {
-        recipientDb.setBlocked(recipient, true)
+    override fun declineMessageRequest(threadId: Long) {
+        sessionJobDb.cancelPendingMessageSendJobs(threadId)
+        threadDb.deleteConversation(threadId)
     }
 
     override fun hasReceived(threadId: Long): Boolean {

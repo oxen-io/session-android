@@ -2,23 +2,25 @@ package org.session.libsession.database
 
 import android.content.Context
 import android.net.Uri
+import org.session.libsession.messaging.BlindedIdMapping
 import org.session.libsession.messaging.calls.CallMessageType
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.AttachmentUploadJob
 import org.session.libsession.messaging.jobs.Job
 import org.session.libsession.messaging.jobs.MessageSendJob
+import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.visible.Attachment
+import org.session.libsession.messaging.messages.visible.Reaction
 import org.session.libsession.messaging.messages.visible.VisibleMessage
+import org.session.libsession.messaging.open_groups.GroupMember
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
-import org.session.libsession.messaging.BlindedIdMapping
-import org.session.libsession.messaging.open_groups.GroupMember
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupRecord
 import org.session.libsession.utilities.recipients.Recipient
@@ -65,11 +67,12 @@ interface StorageProtocol {
     fun updateOpenGroup(openGroup: OpenGroup)
     fun getOpenGroup(threadId: Long): OpenGroup?
     fun addOpenGroup(urlAsString: String)
-    fun onOpenGroupAdded(urlAsString: String)
+    fun onOpenGroupAdded(server: String)
     fun hasBackgroundGroupAddJob(groupJoinUrl: String): Boolean
     fun setOpenGroupServerMessageID(messageID: Long, serverID: Long, threadID: Long, isSms: Boolean)
     fun getOpenGroup(room: String, server: String): OpenGroup?
-    fun addGroupMember(member: GroupMember)
+    fun addGroupMemberRole(member: GroupMember)
+    fun clearGroupMemberRoles(groupId: String)
 
     // Open Group Public Keys
     fun getOpenGroupPublicKey(server: String): String?
@@ -149,6 +152,8 @@ interface StorageProtocol {
     fun getThreadIdForMms(mmsId: Long): Long
     fun getLastUpdated(threadID: Long): Long
     fun trimThread(threadID: Long, threadLimit: Int)
+    fun trimThreadBefore(threadID: Long, timestamp: Long)
+    fun getMessageCount(threadID: Long): Long
 
     // Contacts
     fun getContactWithSessionID(sessionID: String): Contact?
@@ -188,4 +193,8 @@ interface StorageProtocol {
     fun removeLastOutboxMessageId(server: String)
     fun getOrCreateBlindedIdMapping(blindedId: String, server: String, serverPublicKey: String, fromOutbox: Boolean = false): BlindedIdMapping
 
+    fun addReaction(reaction: Reaction, messageSender: String, notifyUnread: Boolean)
+    fun removeReaction(emoji: String, messageTimestamp: Long, author: String, notifyUnread: Boolean)
+    fun updateReactionIfNeeded(message: Message, sender: String, openGroupSentTimestamp: Long)
+    fun deleteReactions(messageId: Long, mms: Boolean)
 }

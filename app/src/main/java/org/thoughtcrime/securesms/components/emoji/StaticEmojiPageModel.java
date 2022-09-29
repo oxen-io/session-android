@@ -1,38 +1,41 @@
 package org.thoughtcrime.securesms.components.emoji;
 
-import androidx.annotation.AttrRes;
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
+
+import org.thoughtcrime.securesms.emoji.EmojiCategory;
+
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 public class StaticEmojiPageModel implements EmojiPageModel {
-  @AttrRes  private final int         iconAttr;
-  @NonNull  private final List<Emoji> emoji;
-  @Nullable private final String      sprite;
+  private final @NonNull  EmojiCategory category;
+  private final @NonNull  List<Emoji>   emoji;
+  private final @Nullable Uri           sprite;
 
-  public StaticEmojiPageModel(@AttrRes int iconAttr, @NonNull String[] strings, @Nullable String sprite) {
-    List<Emoji> emoji = new ArrayList<>(strings.length);
-    for (String s : strings) {
-      emoji.add(new Emoji(s));
-    }
+  public StaticEmojiPageModel(@NonNull EmojiCategory category, @NonNull String[] strings, @Nullable Uri sprite) {
+    this(category, Stream.of(strings).map(s -> new Emoji(Collections.singletonList(s))).collect(Collectors.toList()), sprite);
+  }
 
-    this.iconAttr = iconAttr;
-    this.emoji    = emoji;
+  public StaticEmojiPageModel(@NonNull EmojiCategory category, @NonNull List<Emoji> emoji, @Nullable Uri sprite) {
+    this.category = category;
+    this.emoji    = Collections.unmodifiableList(emoji);
     this.sprite   = sprite;
   }
 
-  public StaticEmojiPageModel(@AttrRes int iconAttr, @NonNull Emoji[] emoji, @Nullable String sprite) {
-    this.iconAttr     = iconAttr;
-    this.emoji        = Arrays.asList(emoji);
-    this.sprite       = sprite;
+  @Override
+  public String getKey() {
+    return category.getKey();
   }
 
   public int getIconAttr() {
-    return iconAttr;
+    return category.getIcon();
   }
 
   @Override
@@ -55,7 +58,7 @@ public class StaticEmojiPageModel implements EmojiPageModel {
   }
 
   @Override
-  public @Nullable String getSprite() {
+  public @Nullable Uri getSpriteUri() {
     return sprite;
   }
 
