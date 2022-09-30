@@ -52,7 +52,7 @@ class CreateGroupFragment : Fragment() {
         binding.closeButton.setOnClickListener { delegate.onDialogClosePressed() }
         binding.contactSearch.callbacks = object : KeyboardPageSearchView.Callbacks {
             override fun onQueryChanged(query: String) {
-                adapter.members = viewModel.members.value?.filter { it.contains(query, ignoreCase = true) } ?: emptyList()
+                adapter.members = viewModel.filter(query).map { it.address.serialize() }
             }
         }
         binding.createNewPrivateChatButton.setOnClickListener { delegate.onNewMessageSelected() }
@@ -93,9 +93,11 @@ class CreateGroupFragment : Fragment() {
                 Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
             }
         }
-        binding.mainContentGroup.isVisible = !viewModel.members.value.isNullOrEmpty()
-        binding.emptyStateGroup.isVisible = viewModel.members.value.isNullOrEmpty()
-        viewModel.members.observe(viewLifecycleOwner) { adapter.members = it }
+        binding.mainContentGroup.isVisible = !viewModel.recipients.value.isNullOrEmpty()
+        binding.emptyStateGroup.isVisible = viewModel.recipients.value.isNullOrEmpty()
+        viewModel.recipients.observe(viewLifecycleOwner) { recipients ->
+            adapter.members = recipients.map { it.address.serialize() }
+        }
     }
 
     private fun openConversationActivity(context: Context, threadId: Long, recipient: Recipient) {

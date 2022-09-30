@@ -19,8 +19,8 @@ class CreateGroupViewModel @Inject constructor(
     private val textSecurePreferences: TextSecurePreferences
 ) : ViewModel() {
 
-    private val _members = MutableLiveData<List<String>>()
-    val members: LiveData<List<String>> = _members
+    private val _recipients = MutableLiveData<List<Recipient>>()
+    val recipients: LiveData<List<Recipient>> = _recipients
 
     init {
         viewModelScope.launch {
@@ -31,11 +31,16 @@ class CreateGroupViewModel @Inject constructor(
                     recipients += reader.next?.recipient ?: break
                 }
                 withContext(Dispatchers.Main) {
-                    _members.value = recipients
+                    _recipients.value = recipients
                         .filter { !it.isGroupRecipient && it.hasApprovedMe() && it.address.serialize() != textSecurePreferences.getLocalNumber() }
-                        .map { it.address.serialize() }
                 }
             }
         }
+    }
+
+    fun filter(query: String): List<Recipient> {
+        return _recipients.value?.filter {
+            it.address.serialize().contains(query, ignoreCase = true) || it.name?.contains(query, ignoreCase = true) == true
+        } ?: emptyList()
     }
 }
