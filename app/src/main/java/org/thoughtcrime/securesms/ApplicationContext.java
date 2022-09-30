@@ -222,8 +222,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         SnodeModule.Companion.configure(apiDB, broadcaster);
         String userPublicKey = TextSecurePreferences.getLocalNumber(this);
         if (userPublicKey != null) {
-            registerForFCMIfNeeded(false);
-            registerForHCMIfNeeded(false);
+            registerForFastModePushNotificationIfNeeded(false);
         }
         UiModeUtilities.setupUiModeToUserSelected(this);
         initializeExpiringMessageManager();
@@ -434,7 +433,15 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
 
     private static class ProviderInitializationException extends RuntimeException { }
 
-    public void registerForFCMIfNeeded(final Boolean force) {
+    public void registerForFastModePushNotificationIfNeeded(final Boolean force) {
+        if (Build.BRAND.equals("Huawei")) {
+            registerForHCMIfNeeded(force);
+        } else {
+            registerForFCMIfNeeded(force);
+        }
+    }
+
+    private void registerForFCMIfNeeded(final Boolean force) {
         if (firebaseInstanceIdJob != null && firebaseInstanceIdJob.isActive() && !force) return;
         if (force && firebaseInstanceIdJob != null) {
             firebaseInstanceIdJob.cancel(null);
@@ -456,8 +463,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         });
     }
 
-    public void registerForHCMIfNeeded(final Boolean force) {
-        if (!Build.BRAND.equals("Huawei")) return;
+    private void registerForHCMIfNeeded(final Boolean force) {
         if (huaweiPushInstanceIdJob != null && huaweiPushInstanceIdJob.isActive() && !force) return;
         if (force && huaweiPushInstanceIdJob != null) {
             huaweiPushInstanceIdJob.cancel(null);
@@ -476,6 +482,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
                 }
             } catch (ApiException e) {
                 Log.e("Loki", "Request HCM token failed. " + e.getLocalizedMessage());
+                registerForFCMIfNeeded(force);
             }
             return Unit.INSTANCE;
         });
