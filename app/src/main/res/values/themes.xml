@@ -16,6 +16,8 @@
        <item name="colorDividerBackground">@color/gray50</item>
        <item name="colorPrimaryVariant">?colorPrimary</item>
        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>
+       <item name="android:backgroundDimEnabled">true</item>
+       <item name="android:backgroundDimAmount">0.6</item>
 <!--        <item name="colorPrimary">@color/action_bar_background</item>-->
 <!--        <item name="colorPrimaryDark">@color/action_bar_background</item>-->
 <!--        <item name="searchBackgroundColor">#1B1B1B</item>-->
@@ -165,7 +167,7 @@
         <item name="android:statusBarColor">@color/black</item>
     </style>
 
-    <style name="Theme.Session.BottomSheet" parent="@style/Theme.MaterialComponents.BottomSheetDialog">
+    <style name="Theme.Session.BottomSheet" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
         <item name="colorControlNormal">?android:textColorPrimary</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowAnimationStyle">@style/Animation.MaterialComponents.BottomSheetDialog</item>
@@ -294,7 +296,7 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
     </style>
-    
+
     <style name="Theme.TextSecure.Dialog.Rationale" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <item name="android:windowBackground">@drawable/default_dialog_background</item>
     </style>
@@ -304,23 +306,31 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.Session.BottomSheet.ClassicDark">
+    <style name="Classic.Dark.BottomSheet" parent="Theme.MaterialComponents.BottomSheetDialog">
         <item name="colorPrimary">@color/classic_dark_0</item>
+        <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>
+        <item name="dialog_border">@color/transparent_black_40</item>
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">?android:textColorPrimary</item>
     </style>
-    <style name="Theme.Session.BottomSheet.ClassicLight">
+    <style name="Classic.Light.BottomSheet" parent="Theme.MaterialComponents.BottomSheetDialog">
         <item name="colorPrimary">@color/classic_light_5</item>
+        <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>
+        <item name="dialog_border">@color/transparent_black_15</item>
         <item name="android:textColorPrimary">@color/black</item>
         <item name="android:textColorSecondary">?android:textColorPrimary</item>
     </style>
-    <style name="Theme.Session.BottomSheet.OceanDark">
-        <item name="colorPrimary">@color/ocean_dark_0</item>
+    <style name="Ocean.Dark.BottomSheet" parent="Theme.MaterialComponents.BottomSheetDialog">
+        <item name="colorPrimary">@color/ocean_dark_3</item>
+        <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>
+        <item name="dialog_border">@color/transparent_black_40</item>
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">?android:textColorPrimary</item>
     </style>
-    <style name="Theme.Session.BottomSheet.OceanLight">
+    <style name="Ocean.Light.BottomSheet" parent="Theme.MaterialComponents.BottomSheetDialog">
         <item name="colorPrimary">@color/ocean_light_5</item>
+        <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>
+        <item name="dialog_border">@color/transparent_black_15</item>
         <item name="android:textColorPrimary">@color/black</item>
         <item name="android:textColorSecondary">?android:textColorPrimary</item>
     </style>
@@ -365,7 +375,7 @@
         <item name="android:navigationBarColor">@color/compose_view_background</item>
         <item name="default_background_end">@color/classic_dark_0</item>
         <item name="default_background_start">@color/classic_dark_1</item>
-        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet.ClassicDark</item>
+        <item name="bottomSheetDialogTheme">@style/Classic.Dark.BottomSheet</item>
         <item name="actionMenuTextColor">?android:textColorPrimary</item>
         <item name="popupTheme">?actionBarPopupTheme</item>
         <item name="colorCellBackground">@color/classic_dark_1</item>
@@ -400,7 +410,7 @@
         <item name="message_sent_background_color">?colorAccent</item>
         <item name="message_sent_text_color">@color/classic_dark_0</item>
         <item name="input_bar_background">@color/classic_dark_1</item>
-        <item name="input_bar_text_hint">@color/classic_dark_4</item>
+        <item name="input_bar_text_hint">@color/classic_dark_5</item>
         <item name="input_bar_text_user">@color/classic_dark_6</item>
         <item name="input_bar_border">@color/classic_dark_3</item>
         <item name="input_bar_button_background">@color/classic_dark_2</item>
@@ -438,7 +448,7 @@
         <item name="colorSettingsBackground">@color/classic_light_5</item>
         <item name="colorDividerBackground">@color/classic_light_3</item>
         <item name="colorCellRipple">@color/classic_light_3</item>
-        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet.ClassicLight</item>
+        <item name="bottomSheetDialogTheme">@style/Classic.Light.BottomSheet</item>
         <item name="android:actionMenuTextColor">?android:textColorPrimary</item>
         <item name="popupTheme">?actionBarPopupTheme</item>
         <item name="actionBarPopupTheme">@style/Light.Popup</item>
@@ -517,7 +527,7 @@
         <item name="colorSettingsBackground">@color/ocean_dark_1</item>
         <item name="colorDividerBackground">@color/ocean_dark_4</item>
         <item name="colorCellRipple">@color/ocean_dark_4</item>
-        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet.OceanDark</item>
+        <item name="bottomSheetDialogTheme">@style/Ocean.Dark.BottomSheet</item>
         <item name="popupTheme">?actionBarPopupTheme</item>
         <item name="actionMenuTextColor">?android:textColorPrimary</item>
         <item name="actionBarPopupTheme">@style/Dark.Popup</item>
@@ -588,7 +598,7 @@
         <item name="colorSettingsBackground">@color/ocean_light_5</item>
         <item name="colorDividerBackground">@color/ocean_light_2</item>
         <item name="colorCellRipple">@color/ocean_light_3</item>
-        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet.OceanLight</item>
+        <item name="bottomSheetDialogTheme">@style/Ocean.Light.BottomSheet</item>
         <item name="actionBarPopupTheme">@style/Light.Popup</item>
         <item name="popupTheme">?actionBarPopupTheme</item>
         <item name="actionMenuTextColor">?android:textColorPrimary</item>

@@ -9,5 +9,5 @@
         android:topLeftRadius="@dimen/dialog_corner_radius"
         android:topRightRadius="@dimen/dialog_corner_radius" />
 
-<!--    <stroke android:width="@dimen/border_thickness" android:color="@color/dialog_border" />-->
+    <stroke android:width="@dimen/border_thickness" android:color="?dialog_border" />
 </shape>

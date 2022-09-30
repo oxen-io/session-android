@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.content.pm.ShortcutInfoCompat
@@ -328,7 +329,7 @@ object ConversationMenuHelper {
     }
 
     private fun mute(context: Context, thread: Recipient) {
-        MuteDialog.show(context) { until: Long ->
+        MuteDialog.show(ContextThemeWrapper(context, context.theme)) { until: Long ->
             DatabaseComponent.get(context).recipientDatabase().setMuted(thread, until)
         }
     }
