@@ -2,6 +2,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven {url 'https://developer.huawei.com/repo/'}
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.2.2'
@@ -10,6 +11,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         classpath "com.google.gms:google-services:4.3.10"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$daggerVersion"
+        classpath "com.huawei.agconnect:agcp:1.6.0.300"
     }
 }
 
@@ -21,6 +23,7 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlinx-serialization'
 apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'com.huawei.agconnect'
 
 configurations.all {
     exclude module: "commons-logging"
@@ -119,6 +122,7 @@ dependencies {
     implementation "com.github.tbruyelle:rxpermissions:0.10.2"
     implementation "com.github.ybq:Android-SpinKit:1.4.0"
     implementation "com.opencsv:opencsv:4.6"
+    implementation 'com.huawei.hms:push:6.5.0.300'
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.assertj:assertj-core:3.11.1'
     testImplementation "org.mockito:mockito-inline:4.0.0"
@@ -155,6 +159,7 @@ dependencies {
 
     testImplementation 'org.robolectric:robolectric:4.4'
     testImplementation 'org.robolectric:shadows-multidex:4.4'
+    implementation 'com.huawei.hms:push:5.0.4.302'
 }
 
 def canonicalVersionCode = 299
@@ -205,6 +210,8 @@ android {
     }
 
     defaultConfig {
+        applicationId "network.loki.messenger"
+        
         versionCode canonicalVersionCode * postFixSize
         versionName canonicalVersionName
 
@@ -310,3 +317,4 @@ def autoResConfig() {
          .collect { matcher -> matcher.group(1) }
          .sort()
 }
+apply plugin: 'com.huawei.agconnect'

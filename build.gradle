@@ -2,12 +2,16 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url 'https://developer.huawei.com/repo/'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.2.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "com.google.gms:google-services:4.3.10"
         classpath files('libs/gradle-witness.jar')
+        classpath 'com.huawei.agconnect:agcp:1.6.0.300'
     }
 }
 
@@ -20,6 +24,9 @@ allprojects {
             content {
                 includeGroupByRegex "com\\.github\\.chrisbanes.*"
             }
+        }
+        maven {
+            url 'https://developer.huawei.com/repo/'
         }
         maven {
             url "https://raw.github.com/signalapp/maven/master/shortcutbadger/releases/"

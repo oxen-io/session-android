@@ -73,10 +73,11 @@ import org.thoughtcrime.securesms.logging.PersistentLogger;
 import org.thoughtcrime.securesms.logging.UncaughtExceptionLogger;
 import org.thoughtcrime.securesms.notifications.BackgroundPollWorker;
 import org.thoughtcrime.securesms.notifications.DefaultMessageNotifier;
-import org.thoughtcrime.securesms.notifications.FcmUtils;
+import org.thoughtcrime.securesms.notifications.FcmHcmUtils;
 import org.thoughtcrime.securesms.notifications.LokiPushNotificationManager;
 import org.thoughtcrime.securesms.notifications.NotificationChannels;
 import org.thoughtcrime.securesms.notifications.OptimizedMessageNotifier;
+import org.thoughtcrime.securesms.notifications.RegisterHuaweiPushService;
 import org.thoughtcrime.securesms.providers.BlobProvider;
 import org.thoughtcrime.securesms.service.ExpiringMessageManager;
 import org.thoughtcrime.securesms.service.KeyCachingService;
@@ -138,6 +139,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     public Poller poller = null;
     public Broadcaster broadcaster = null;
     private Job firebaseInstanceIdJob;
+    private Job huaweiPushInstanceIdJob;
     private WindowDebouncer conversationListDebouncer;
     private HandlerThread conversationListHandlerThread;
     private Handler conversationListHandler;
@@ -218,7 +220,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         SnodeModule.Companion.configure(apiDB, broadcaster);
         String userPublicKey = TextSecurePreferences.getLocalNumber(this);
         if (userPublicKey != null) {
-            registerForFCMIfNeeded(false);
+            registerForFastModePushNotificationIfNeeded(false);
         }
         UiModeUtilities.setupUiModeToUserSelected(this);
         initializeExpiringMessageManager();
@@ -429,12 +431,20 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
 
     private static class ProviderInitializationException extends RuntimeException { }
 
+    public void registerForFastModePushNotificationIfNeeded(final Boolean force) {
+        if (Build.BRAND.equals("Huawei")) {
+            registerForHCMIfNeeded(force);
+        } else {
+            registerForFCMIfNeeded(force);
+        }
+    }
+
     public void registerForFCMIfNeeded(final Boolean force) {
         if (firebaseInstanceIdJob != null && firebaseInstanceIdJob.isActive() && !force) return;
         if (force && firebaseInstanceIdJob != null) {
             firebaseInstanceIdJob.cancel(null);
         }
-        firebaseInstanceIdJob = FcmUtils.getFcmInstanceId(task->{
+        firebaseInstanceIdJob = FcmHcmUtils.getFcmInstanceId(task->{
             if (!task.isSuccessful()) {
                 Log.w("Loki", "FirebaseInstanceId.getInstance().getInstanceId() failed." + task.getException());
                 return Unit.INSTANCE;
@@ -443,10 +453,21 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
             String userPublicKey = TextSecurePreferences.getLocalNumber(this);
             if (userPublicKey == null) return Unit.INSTANCE;
             if (TextSecurePreferences.isUsingFCM(this)) {
-                LokiPushNotificationManager.register(token, userPublicKey, this, force);
+                LokiPushNotificationManager.register(token, userPublicKey, LokiPushNotificationManager.DeviceType.Android, this, force);
             } else {
                 LokiPushNotificationManager.unregister(token, this);
             }
+            return Unit.INSTANCE;
+        });
+    }
+
+    private void registerForHCMIfNeeded(final Boolean force) {
+        if (huaweiPushInstanceIdJob != null && huaweiPushInstanceIdJob.isActive() && !force) return;
+        if (force && huaweiPushInstanceIdJob != null) {
+            huaweiPushInstanceIdJob.cancel(null);
+        }
+        huaweiPushInstanceIdJob = FcmHcmUtils.getHcmInstanceId(this, hmsInstanceId->{
+            (new RegisterHuaweiPushService(hmsInstanceId, this, force)).start();
             return Unit.INSTANCE;
         });
     }

@@ -16,7 +16,7 @@ import org.session.libsignal.utilities.Log
 @SuppressLint("StaticFieldLeak")
 object PushNotificationAPI {
     val context = MessagingModuleConfiguration.shared.context
-    val server = "https://live.apns.getsession.org"
+    val server = "https://staging.apns.getsession.org"
     val serverPublicKey = "642a6585919742e5a2d4dc51244964fbcd8bcab2b75612407de58b810740d049"
     private val maxRetryCount = 4
     private val tokenExpirationInterval = 12 * 60 * 60 * 1000
