@@ -79,6 +79,7 @@ import org.thoughtcrime.securesms.notifications.FcmHcmUtils;
 import org.thoughtcrime.securesms.notifications.LokiPushNotificationManager;
 import org.thoughtcrime.securesms.notifications.NotificationChannels;
 import org.thoughtcrime.securesms.notifications.OptimizedMessageNotifier;
+import org.thoughtcrime.securesms.notifications.RegisterHuaweiPushService;
 import org.thoughtcrime.securesms.providers.BlobProvider;
 import org.thoughtcrime.securesms.service.ExpiringMessageManager;
 import org.thoughtcrime.securesms.service.KeyCachingService;
@@ -441,7 +442,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         }
     }
 
-    private void registerForFCMIfNeeded(final Boolean force) {
+    public void registerForFCMIfNeeded(final Boolean force) {
         if (firebaseInstanceIdJob != null && firebaseInstanceIdJob.isActive() && !force) return;
         if (force && firebaseInstanceIdJob != null) {
             firebaseInstanceIdJob.cancel(null);
@@ -469,21 +470,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
             huaweiPushInstanceIdJob.cancel(null);
         }
         huaweiPushInstanceIdJob = FcmHcmUtils.getHcmInstanceId(this, hmsInstanceId->{
-            String appId = "106995229";
-            String tokenScope = "HCM";
-            try {
-                String token = hmsInstanceId.getToken(appId, tokenScope);
-                String userPublicKey = TextSecurePreferences.getLocalNumber(this);
-                if (userPublicKey == null) return Unit.INSTANCE;
-                if (TextSecurePreferences.isUsingFCM(this)) {
-                    LokiPushNotificationManager.register(token, userPublicKey, DeviceType.Huawei, this, force);
-                } else {
-                    LokiPushNotificationManager.unregister(token, this);
-                }
-            } catch (ApiException e) {
-                Log.e("Loki", "Request HCM token failed. " + e.getLocalizedMessage());
-                registerForFCMIfNeeded(force);
-            }
+            (new RegisterHuaweiPushService(hmsInstanceId, this, force)).start();
             return Unit.INSTANCE;
         });
     }

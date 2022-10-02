@@ -1,4 +1,10 @@
 {
+	"agcgw":{
+		"backurl":"connect-dre.hispace.hicloud.com",
+		"url":"connect-dre.dbankcloud.cn",
+		"websocketbackurl":"connect-ws-dre.hispace.dbankcloud.com",
+		"websocketurl":"connect-ws-dre.hispace.dbankcloud.cn"
+	},
 	"agcgw_all":{
 		"CN":"connect-drcn.dbankcloud.cn",
 		"CN_back":"connect-drcn.hispace.hicloud.com",
@@ -21,36 +27,65 @@
 	},
 	"client":{
 		"cp_id":"30061000024605000",
-		"product_id":"99536292102587651",
-		"client_id":"973022074471730176",
-		"client_secret":"3C496F5B2C3F25A56EAB53ECAA93D4D7DA00A0CFD6F3F3D677280F44C0BEAD2E",
-		"project_id":"99536292102587651",
-		"app_id":"106995229",
-		"api_key":"DAEDADBSdCVPvv+zTMLw1VsEsD05qCs6CPBqDuoInl8nBBGsBHSAe8pWOAD5zxRiWcnAm+P2cfwZ/7fJsXj2aplrIR4XDjQGg8O9Ag==",
+		"product_id":"99536292102650699",
+		"client_id":"993355872258247936",
+		"client_secret":"0A83DC166FBF0696B884D38830E0B90AE8BBFF2D9CA8C26C9D9DA26816C2A9E3",
+		"project_id":"99536292102650699",
+		"app_id":"107146885",
+		"api_key":"DAEDAPld5VAZXpjfD+g0PwlXfya5ykPMYTMRYkySUjGfJg055ijAFNZBUtcykDPWZiaUcc4Mo9oJqmooL6HT8n4toO5COlWZjkqGXA==",
 		"package_name":"network.loki.messenger"
 	},
 	"oauth_client":{
-		"client_id":"106995229",
+		"client_id":"107146885",
 		"client_type":1
 	},
 	"app_info":{
-		"app_id":"106995229",
+		"app_id":"107146885",
 		"package_name":"network.loki.messenger"
 	},
+	"service":{
+		"analytics":{
+			"collector_url":"datacollector-dre.dt.hicloud.com,datacollector-dre.dt.dbankcloud.cn",
+			"collector_url_ru":"datacollector-drru.dt.dbankcloud.ru,datacollector-drru.dt.hicloud.com",
+			"collector_url_sg":"datacollector-dra.dt.hicloud.com,datacollector-dra.dt.dbankcloud.cn",
+			"collector_url_de":"datacollector-dre.dt.hicloud.com,datacollector-dre.dt.dbankcloud.cn",
+			"collector_url_cn":"datacollector-drcn.dt.hicloud.com,datacollector-drcn.dt.dbankcloud.cn",
+			"resource_id":"p1",
+			"channel_id":""
+		},
+		"search":{
+			"url":"https://search-dre.cloud.huawei.com"
+		},
+		"cloudstorage":{
+			"storage_url_sg_back":"https://agc-storage-dra.cloud.huawei.asia",
+			"storage_url_ru_back":"https://agc-storage-drru.cloud.huawei.ru",
+			"storage_url_ru":"https://agc-storage-drru.cloud.huawei.ru",
+			"storage_url_de_back":"https://agc-storage-dre.cloud.huawei.eu",
+			"storage_url_de":"https://ops-dre.agcstorage.link",
+			"storage_url":"https://agc-storage-drcn.platform.dbankcloud.cn",
+			"storage_url_sg":"https://ops-dra.agcstorage.link",
+			"storage_url_cn_back":"https://agc-storage-drcn.cloud.huawei.com.cn",
+			"storage_url_cn":"https://agc-storage-drcn.platform.dbankcloud.cn"
+		},
+		"ml":{
+			"mlservice_url":"ml-api-dre.ai.dbankcloud.com,ml-api-dre.ai.dbankcloud.cn"
+		}
+	},
+	"region":"DE",
 	"configuration_version":"3.0",
 	"appInfos":[
 		{
 			"package_name":"network.loki.messenger",
 			"client":{
-				"app_id":"106995229"
+				"app_id":"107146885"
 			},
 			"app_info":{
 				"package_name":"network.loki.messenger",
-				"app_id":"106995229"
+				"app_id":"107146885"
 			},
 			"oauth_client":{
 				"client_type":1,
-				"client_id":"106995229"
+				"client_id":"107146885"
 			}
 		}
 	]
