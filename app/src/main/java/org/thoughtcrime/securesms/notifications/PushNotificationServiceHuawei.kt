@@ -26,7 +26,7 @@ class PushNotificationServiceHuawei : HmsMessageService() {
 
     override fun onMessageReceived(message: RemoteMessage?) {
         Log.d("Loki", "Received a push notification.")
-        val base64EncodedData = message?.dataOfMap?.get("ENCRYPTED_DATA")
+        val base64EncodedData = message?.data
         val data = base64EncodedData?.let { Base64.decode(it) }
         if (data != null) {
             try {
