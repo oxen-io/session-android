@@ -11,8 +11,8 @@ import android.view.View
 import androidx.annotation.ColorInt
 import androidx.annotation.DimenRes
 import network.loki.messenger.R
-import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.getColorFromAttr
+import android.view.inputmethod.InputMethodManager
 
 fun View.contains(point: PointF): Boolean {
     return hitRect.contains(point.x.toInt(), point.y.toInt())
@@ -59,4 +59,9 @@ fun View.fadeOut(duration: Long = 150) {
             visibility = View.GONE
         }
     })
+}
+
+fun View.hideKeyboard() {
+    val imm = this.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(this.windowToken, 0)
 }

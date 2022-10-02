@@ -42,6 +42,7 @@ import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.MuteDialog
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
+import org.thoughtcrime.securesms.conversation.start.NewConversationFragment
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.utilities.NotificationUtils
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
@@ -51,9 +52,6 @@ import org.thoughtcrime.securesms.database.RecipientDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.dms.CreatePrivateChatActivity
-import org.thoughtcrime.securesms.groups.CreateClosedGroupActivity
-import org.thoughtcrime.securesms.groups.JoinPublicChatActivity
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter
 import org.thoughtcrime.securesms.home.search.GlobalSearchInputLayout
@@ -76,10 +74,9 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeActivity : PassphraseRequiredActionBarActivity(),
-        ConversationClickListener,
-        SeedReminderViewDelegate,
-        NewConversationButtonSetViewDelegate,
-        GlobalSearchInputLayout.GlobalSearchInputLayoutListener {
+    ConversationClickListener,
+    SeedReminderViewDelegate,
+    GlobalSearchInputLayout.GlobalSearchInputLayoutListener {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var glide: GlideRequests
@@ -177,7 +174,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         binding.recyclerView.adapter = homeAdapter
         binding.globalSearchRecycler.adapter = globalSearchAdapter
         // Set up empty state view
-        binding.createNewPrivateChatButton.setOnClickListener { createNewPrivateChat() }
+        binding.createNewPrivateChatButton.setOnClickListener { showNewConversation() }
         IP2Country.configureIfNeeded(this@HomeActivity)
         homeViewModel.getObservable(this).observe(this) { newData ->
             val manager = binding.recyclerView.layoutManager as LinearLayoutManager
@@ -193,8 +190,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             updateEmptyState()
         }
         homeViewModel.tryUpdateChannel()
-        // Set up new conversation button set
-        binding.newConversationButtonSet.delegate = this
+        // Set up new conversation button
+        binding.newConversationButton.setOnClickListener { showNewConversation() }
         // Observe blocked contacts changed events
         val broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
@@ -293,7 +290,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         binding.emptyStateContainer.isVisible = (binding.recyclerView.adapter as NewHomeAdapter).itemCount == 0 && binding.recyclerView.isVisible
         binding.seedReminderView.isVisible = !TextSecurePreferences.getHasViewedSeed(this) && !isShown
         binding.globalSearchRecycler.isVisible = isShown
-        binding.newConversationButtonSet.isVisible = !isShown
+        binding.newConversationButton.isVisible = !isShown
     }
 
     private fun setupMessageRequestsBanner() {
@@ -344,13 +341,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     override fun onPause() {
         super.onPause()
         ApplicationContext.getInstance(this).messageNotifier.setHomeScreenVisible(false)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == CreateClosedGroupActivity.closedGroupCreatedResultCode) {
-            createNewPrivateChat()
-        }
     }
 
     override fun onDestroy() {
@@ -615,19 +605,9 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             .create().show()
     }
 
-    override fun createNewPrivateChat() {
-        val intent = Intent(this, CreatePrivateChatActivity::class.java)
-        show(intent)
+    private fun showNewConversation() {
+        NewConversationFragment().show(supportFragmentManager, "NewConversationFragment")
     }
 
-    override fun createNewClosedGroup() {
-        val intent = Intent(this, CreateClosedGroupActivity::class.java)
-        show(intent, true)
-    }
-
-    override fun joinOpenGroup() {
-        val intent = Intent(this, JoinPublicChatActivity::class.java)
-        show(intent)
-    }
     // endregion
 }
