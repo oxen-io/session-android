@@ -18,6 +18,7 @@
        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>
        <item name="android:backgroundDimEnabled">true</item>
        <item name="android:backgroundDimAmount">0.6</item>
+       <item name="dialogCornerRadius">@dimen/dialog_corner_radius</item>
 <!--        <item name="colorPrimary">@color/action_bar_background</item>-->
 <!--        <item name="colorPrimaryDark">@color/action_bar_background</item>-->
 <!--        <item name="searchBackgroundColor">#1B1B1B</item>-->
@@ -35,8 +36,6 @@
 <!--        <item name="android:windowBackground">@drawable/default_session_background</item>-->
 <!--        <item name="android:colorBackground">@color/default_background_start</item>-->
 <!--        <item name="android:navigationBarColor">@color/compose_view_background</item>-->
-
-        <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
 <!--        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>-->
         <item name="preferenceTheme">@style/ThemeOverlay.Session.Settings</item>
 <!--        <item name="actionBarTabBarStyle">@style/Widget.Session.TabBar</item>-->
@@ -386,6 +385,7 @@
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
+        <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
 
         <!-- Home screen -->
         <item name="searchBackgroundColor">#1B1B1B</item>
@@ -455,6 +455,7 @@
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
+        <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
 
         <!-- Light mode -->
         <item name="theme_type">light</item>
@@ -534,6 +535,7 @@
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
+        <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
 
         <!-- Home screen -->
         <item name="searchBackgroundColor">@color/ocean_dark_3</item>
@@ -605,6 +607,7 @@
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
+        <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
 
         <!-- Light mode -->
         <item name="theme_type">light</item>
@@ -638,11 +641,11 @@
         <item name="input_bar_text_hint">@color/ocean_light_1</item>
         <item name="input_bar_text_user">@color/ocean_light_0</item>
         <item name="input_bar_border">@color/ocean_light_2</item>
-        <item name="input_bar_button_background">@color/ocean_light_3</item>
-        <item name="input_bar_button_background_opaque">@color/ocean_light_3</item>
+        <item name="input_bar_button_background">@color/ocean_light_4</item>
+        <item name="input_bar_button_background_opaque">@color/ocean_light_4</item>
         <item name="input_bar_button_text_color">@color/ocean_light_0</item>
         <item name="input_bar_button_background_opaque_border">@color/ocean_light_0</item>
-        <item name="input_bar_lock_view_background">@color/ocean_light_3</item>
+        <item name="input_bar_lock_view_background">@color/ocean_light_4</item>
         <item name="input_bar_lock_view_border">@color/ocean_light_0</item>
         <item name="mention_candidates_view_background">?colorCellBackground</item>
         <item name="mention_candidates_view_background_ripple">?colorCellRipple</item>

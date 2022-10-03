@@ -12,6 +12,7 @@ import android.provider.Settings;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.fragment.app.Fragment;
 import androidx.preference.Preference;
 
@@ -27,7 +28,7 @@ import kotlin.jvm.functions.Function1;
 import network.loki.messenger.BuildConfig;
 import network.loki.messenger.R;
 
-public class AppProtectionPreferenceFragment extends ListSummaryPreferenceFragment {
+public class PrivacySettingsPreferenceFragment extends ListSummaryPreferenceFragment {
 
   @Override
   public void onAttach(Activity activity) {
@@ -52,7 +53,7 @@ public class AppProtectionPreferenceFragment extends ListSummaryPreferenceFragme
     ((SwitchPreferenceCompat)findPreference(TextSecurePreferences.CALL_NOTIFICATIONS_ENABLED)).setChecked(isEnabled);
     if (isEnabled && !CallNotificationBuilder.areNotificationsEnabled(requireActivity())) {
       // show a dialog saying that calls won't work properly if you don't have notifications on at a system level
-      new AlertDialog.Builder(requireActivity())
+      new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(), R.style.ThemeOverlay_Session_AlertDialog))
               .setTitle(R.string.CallNotificationBuilder_system_notification_title)
               .setMessage(R.string.CallNotificationBuilder_system_notification_message)
               .setPositiveButton(R.string.activity_notification_settings_title, (d, w) -> {
@@ -179,7 +180,7 @@ public class AppProtectionPreferenceFragment extends ListSummaryPreferenceFragme
       if (val) {
         // check if we've shown the info dialog and check for microphone permissions
         if (TextSecurePreferences.setShownCallWarning(context.requireContext())) {
-          new AlertDialog.Builder(context.requireContext())
+          new AlertDialog.Builder(new ContextThemeWrapper(context.requireContext(), R.style.ThemeOverlay_Session_AlertDialog))
                   .setTitle(R.string.dialog_voice_video_title)
                   .setMessage(R.string.dialog_voice_video_message)
                   .setPositiveButton(R.string.dialog_link_preview_enable_button_title, (d, w) -> {

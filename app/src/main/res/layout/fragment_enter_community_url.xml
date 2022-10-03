@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:visibility="gone"
-            app:SpinKit_Color="@color/text" />
+            app:SpinKit_Color="?android:textColorPrimary" />
 
     </RelativeLayout>
 
