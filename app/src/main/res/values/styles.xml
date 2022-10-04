@@ -36,6 +36,10 @@
         <item name="textColorAlertDialogListItem">?android:textColorPrimary</item>
     </style>
 
+    <style name="PreferenceTitleStyle" parent="@android:style/Widget.TextView">
+        <item name="android:textColorPrimary">?android:textColorSecondary</item>
+    </style>
+
     <style name="Widget.Session.BottomSheetDialog" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:backgroundDimAmount">0.6</item>

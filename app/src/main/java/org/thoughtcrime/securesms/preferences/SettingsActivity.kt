@@ -130,10 +130,6 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                 showQRCode()
                 true
             }
-            R.id.action_change_theme -> {
-                ChangeUiModeDialog().show(supportFragmentManager, ChangeUiModeDialog.TAG)
-                true
-            }
             else -> super.onOptionsItemSelected(item)
         }
     }
