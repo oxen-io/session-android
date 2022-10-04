@@ -7,8 +7,6 @@ import android.graphics.Rect
 import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.View
-import androidx.core.content.res.ResourcesCompat
-import network.loki.messenger.R
 import org.thoughtcrime.securesms.util.getAccentColor
 import kotlin.math.sin
 

@@ -387,6 +387,7 @@
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
         <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
+        <item name="prominentButtonColor">?colorAccent</item>
 
         <!-- Home screen -->
         <item name="searchBackgroundColor">#1B1B1B</item>
@@ -457,6 +458,7 @@
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
         <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
+        <item name="prominentButtonColor">?android:textColorPrimary</item>
 
         <!-- Light mode -->
         <item name="theme_type">light</item>
@@ -537,6 +539,7 @@
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
         <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
+        <item name="prominentButtonColor">?colorAccent</item>
 
         <!-- Home screen -->
         <item name="searchBackgroundColor">@color/ocean_dark_3</item>
@@ -609,6 +612,7 @@
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
         <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
+        <item name="prominentButtonColor">?android:textColorPrimary</item>
 
         <!-- Light mode -->
         <item name="theme_type">light</item>

@@ -83,20 +83,14 @@
 
     <style name="Widget.Session.Button.Common.ProminentFilled">
         <item name="android:background">@drawable/prominent_filled_button_medium_background</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:drawableTint" tools:ignore="NewApi">?android:textColorPrimary</item>
     </style>
 
     <style name="Widget.Session.Button.Common.ProminentOutline">
         <item name="android:background">@drawable/prominent_outline_button_medium_background</item>
-        <item name="android:textColor">?colorAccent</item>
-        <item name="android:drawableTint" tools:ignore="NewApi">?colorAccent</item>
-    </style>
-
-    <style name="Widget.Session.Button.Common.ProminentOutline.Accent">
-        <item name="android:background">@drawable/prominent_outline_button_medium_background_accent</item>
-        <item name="android:textColor">?colorAccent</item>
-        <item name="android:drawableTint" tools:ignore="NewApi">?colorAccent</item>
+        <item name="android:textColor">?attr/prominentButtonColor</item>
+        <item name="android:drawableTint" tools:ignore="NewApi">?attr/prominentButtonColor</item>
     </style>
 
     <style name="Widget.Session.Button.Common.UnimportantFilled">
@@ -113,14 +107,14 @@
 
     <style name="Widget.Session.Button.Common.UnimportantDestructive">
         <item name="android:background">@drawable/unimportant_outline_button_medium_background</item>
-        <item name="android:textColor">@color/destructive</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:backgroundTint" tools:ignore="NewApi">@color/destructive</item>
         <item name="android:drawableTint" tools:ignore="NewApi">@color/destructive</item>
     </style>
 
     <style name="Widget.Session.Button.Common.DestructiveOutline">
         <item name="android:background">@drawable/destructive_outline_button_medium_background</item>
-        <item name="android:textColor">@color/destructive</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:drawableTint" tools:ignore="NewApi">?android:textColorPrimary</item>
     </style>
 
@@ -136,7 +130,7 @@
 
     <style name="Widget.Session.Button.Dialog.Destructive">
         <item name="android:background">@drawable/destructive_dialog_button_background</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="Widget.Session.EditText.Compose" parent="@style/Signal.Text.Body">

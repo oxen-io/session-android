@@ -69,12 +69,12 @@
     <color name="default_background_start">#121212</color>
     <color name="default_background_end">#171717</color>
 
-    <color name="accent_green">#31F196</color>
-    <color name="accent_blue">#57C9FA</color>
-    <color name="accent_purple">#C993FF</color>
-    <color name="accent_pink">#FF95EF</color>
-    <color name="accent_red">#FF9C8E</color>
-    <color name="accent_orange">#FCB159</color>
-    <color name="accent_yellow">#FAD657</color>
+    <color name="accent_green">#ff31F196</color>
+    <color name="accent_blue">#ff57C9FA</color>
+    <color name="accent_purple">#ffC993FF</color>
+    <color name="accent_pink">#ffFF95EF</color>
+    <color name="accent_red">#ffFF9C8E</color>
+    <color name="accent_orange">#ffFCB159</color>
+    <color name="accent_yellow">#ffFAD657</color>
 
 </resources>

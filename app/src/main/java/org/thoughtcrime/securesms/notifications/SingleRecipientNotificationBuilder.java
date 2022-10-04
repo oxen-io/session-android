@@ -22,6 +22,7 @@ import androidx.annotation.StringRes;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationCompat.Action;
 import androidx.core.app.RemoteInput;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
@@ -31,21 +32,17 @@ import org.session.libsession.avatars.GeneratedContactPhoto;
 import org.session.libsession.messaging.contacts.Contact;
 import org.session.libsession.utilities.NotificationPrivacyPreference;
 import org.session.libsession.utilities.TextSecurePreferences;
-import org.session.libsession.utilities.ThemeUtil;
 import org.session.libsession.utilities.Util;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsignal.utilities.Log;
-import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.database.SessionContactDatabase;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import org.thoughtcrime.securesms.mms.DecryptableStreamUriLoader;
 import org.thoughtcrime.securesms.mms.GlideApp;
 import org.thoughtcrime.securesms.mms.Slide;
 import org.thoughtcrime.securesms.mms.SlideDeck;
-import org.thoughtcrime.securesms.util.ActivityUtilitiesKt;
 import org.thoughtcrime.securesms.util.AvatarPlaceholderGenerator;
 import org.thoughtcrime.securesms.util.BitmapUtil;
-import org.thoughtcrime.securesms.util.ThemeState;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -67,9 +64,8 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
   {
     super(context, privacy);
 
-    ThemeState state = ActivityUtilitiesKt.themeState(ApplicationContext.getInstance(context).getPrefs());
     setSmallIcon(R.drawable.ic_notification);
-    setColor(ThemeUtil.getThemedColor(context, state.getAccentStyle()));
+    setColor(ContextCompat.getColor(context, R.color.accent_green));
     setCategory(NotificationCompat.CATEGORY_MESSAGE);
 
     if (!NotificationChannels.supported()) {

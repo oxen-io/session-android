@@ -71,7 +71,7 @@ interface ActivityDispatcher {
 
 fun TextSecurePreferences.themeState(): ThemeState {
     val themeStyle = getThemeStyle().getThemeStyle()
-    val accentStyle = getAccentColorStyle() ?: themeStyle.getAccentColor()
+    val accentStyle = getAccentColorStyle() ?: themeStyle.getDefaultAccentColor()
     val followSystem = getFollowSystemSettings()
     return ThemeState(
         themeStyle,
@@ -90,7 +90,7 @@ fun String.getThemeStyle(): Int = when (this) {
 }
 
 @StyleRes
-fun Int.getAccentColor(): Int =
+fun Int.getDefaultAccentColor(): Int =
     if (this == R.style.Ocean_Dark || this == R.style.Ocean_Light) R.style.PrimaryBlue
     else R.style.PrimaryGreen
 
