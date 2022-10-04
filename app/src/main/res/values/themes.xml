@@ -19,13 +19,14 @@
        <item name="android:backgroundDimEnabled">true</item>
        <item name="android:backgroundDimAmount">0.6</item>
        <item name="dialogCornerRadius">@dimen/dialog_corner_radius</item>
+       <item name="conversation_transport_sms_indicator">@drawable/ic_arrow_up_circle_24</item>
 <!--        <item name="colorPrimary">@color/action_bar_background</item>-->
 <!--        <item name="colorPrimaryDark">@color/action_bar_background</item>-->
 <!--        <item name="searchBackgroundColor">#1B1B1B</item>-->
 <!--        <item name="searchIconColor">#E5E5E8</item>-->
 <!--        <item name="searchHighlightTint">@color/accent</item>-->
 <!--        <item name="colorAccent">@color/accent</item>-->
-<!--        <item name="colorControlNormal">?android:textColorPrimary</item>-->
+        <item name="android:colorControlNormal">?android:textColorPrimary</item>
 <!--        <item name="colorControlActivated">?colorAccent</item>-->
 <!--        <item name="colorControlHighlight">?colorAccent</item>-->
 <!--        <item name="android:textColorPrimary">@color/text</item>-->

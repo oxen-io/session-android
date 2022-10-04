@@ -1427,7 +1427,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private fun showGIFPicker() {
         val hasSeenGIFMetaDataWarning: Boolean = textSecurePreferences.hasSeenGIFMetaDataWarning()
         if (!hasSeenGIFMetaDataWarning) {
-            val builder = AlertDialog.Builder(this)
+            val builder = AlertDialog.Builder(this, R.style.ThemeOverlay_Session_AlertDialog)
             builder.setTitle("Search GIFs?")
             builder.setMessage("You will not have full metadata protection when sending GIFs.")
             builder.setPositiveButton("OK") { dialog: DialogInterface, _: Int ->

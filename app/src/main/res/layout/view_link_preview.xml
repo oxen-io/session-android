@@ -8,6 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
+        android:background="@color/transparent_black_6"
         android:id="@+id/mainLinkPreviewParent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,6 +27,7 @@
                 app:tint="?android:textColorPrimary" />
 
             <org.thoughtcrime.securesms.conversation.v2.utilities.KThumbnailView
+                android:background="@color/transparent_black_6"
                 android:id="@+id/thumbnailImageView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

@@ -110,6 +110,7 @@
                 android:layout_height="match_parent">
 
                 <ImageView
+                    android:background="@color/transparent_black_6"
                     android:id="@+id/quote_thumbnail"
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
