@@ -4,11 +4,11 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath "com.android.tools.build:gradle:$gradlePluginVersion"
         classpath files('libs/gradle-witness.jar')
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
-        classpath "com.google.gms:google-services:4.3.10"
+        classpath "com.google.gms:google-services:$googleServicesVersion"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$daggerVersion"
     }
 }
@@ -169,7 +169,6 @@ def abiPostFix = ['armeabi-v7a' : 1,
 
 android {
     compileSdkVersion androidCompileSdkVersion
-    buildToolsVersion '29.0.3'
     useLibrary 'org.apache.http.legacy'
 
     dexOptions {
@@ -209,7 +208,7 @@ android {
         versionName canonicalVersionName
 
         minSdkVersion androidMinimumSdkVersion
-        targetSdkVersion androidCompileSdkVersion
+        targetSdkVersion androidTargetSdkVersion
 
         multiDexEnabled = true
 

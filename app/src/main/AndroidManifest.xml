@@ -177,6 +177,7 @@
             android:name="org.thoughtcrime.securesms.ShareActivity"
             android:configChanges="touchscreen|keyboard|keyboardHidden|orientation|screenLayout|screenSize"
             android:excludeFromRecents="true"
+            android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:noHistory="true"
@@ -321,6 +322,7 @@
             android:exported="false" />
         <service
             android:name="org.thoughtcrime.securesms.service.DirectShareService"
+            android:exported="true"
             android:permission="android.permission.BIND_CHOOSER_TARGET_SERVICE">
             <intent-filter>
                 <action android:name="android.service.chooser.ChooserTargetService" />
@@ -398,28 +400,33 @@
             android:authorities="network.loki.securesms.database.recipient"
             android:exported="false" />
 
-        <receiver android:name="org.thoughtcrime.securesms.service.BootReceiver">
+        <receiver android:name="org.thoughtcrime.securesms.service.BootReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="network.loki.securesms.RESTART" />
             </intent-filter>
         </receiver>
-        <receiver android:name="org.thoughtcrime.securesms.service.LocalBackupListener">
+        <receiver android:name="org.thoughtcrime.securesms.service.LocalBackupListener"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name="org.thoughtcrime.securesms.service.PersistentConnectionBootListener">
+        <receiver android:name="org.thoughtcrime.securesms.service.PersistentConnectionBootListener"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name="org.thoughtcrime.securesms.notifications.LocaleChangedReceiver">
+        <receiver android:name="org.thoughtcrime.securesms.notifications.LocaleChangedReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.LOCALE_CHANGED" />
             </intent-filter>
         </receiver>
-        <receiver android:name="org.thoughtcrime.securesms.notifications.DeleteNotificationReceiver">
+        <receiver android:name="org.thoughtcrime.securesms.notifications.DeleteNotificationReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="network.loki.securesms.DELETE_NOTIFICATION" />
             </intent-filter>
@@ -433,7 +440,8 @@
         </receiver>
         <receiver
             android:name="org.thoughtcrime.securesms.notifications.BackgroundPollWorker$BootBroadcastReceiver"
-            android:enabled="true">
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

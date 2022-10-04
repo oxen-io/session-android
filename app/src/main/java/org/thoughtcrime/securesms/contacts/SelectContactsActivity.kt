@@ -49,7 +49,7 @@ class SelectContactsActivity : PassphraseRequiredActionBarActivity(), LoaderMana
         LoaderManager.getInstance(this).initLoader(0, null, this)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_done, menu)
         return members.isNotEmpty()
     }
