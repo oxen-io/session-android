@@ -1,6 +1,5 @@
 package org.thoughtcrime.securesms.home
 
-import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -9,6 +8,7 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -450,7 +450,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 
     private fun blockConversation(thread: ThreadRecord) {
-        AlertDialog.Builder(this, R.style.ThemeOverlay_Session_AlertDialog)
+        AlertDialog.Builder(this)
                 .setTitle(R.string.RecipientPreferenceActivity_block_this_contact_question)
                 .setMessage(R.string.RecipientPreferenceActivity_you_will_no_longer_receive_messages_and_calls_from_this_contact)
                 .setNegativeButton(android.R.string.cancel, null)
@@ -466,7 +466,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 
     private fun unblockConversation(thread: ThreadRecord) {
-        AlertDialog.Builder(this, R.style.ThemeOverlay_Session_AlertDialog)
+        AlertDialog.Builder(this)
                 .setTitle(R.string.RecipientPreferenceActivity_unblock_this_contact_question)
                 .setMessage(R.string.RecipientPreferenceActivity_you_will_once_again_be_able_to_receive_messages_and_calls_from_this_contact)
                 .setNegativeButton(android.R.string.cancel, null)
@@ -536,7 +536,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         } else {
             resources.getString(R.string.activity_home_delete_conversation_dialog_message)
         }
-        val dialog = AlertDialog.Builder(this, R.style.ThemeOverlay_Session_AlertDialog)
+        val dialog = AlertDialog.Builder(this)
         dialog.setMessage(message)
         dialog.setPositiveButton(R.string.yes) { _, _ ->
             lifecycleScope.launch(Dispatchers.Main) {

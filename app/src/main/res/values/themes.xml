@@ -21,6 +21,8 @@
        <item name="dialogCornerRadius">@dimen/dialog_corner_radius</item>
        <item name="conversation_transport_sms_indicator">@drawable/ic_arrow_up_circle_24</item>
        <item name="preferenceCategoryTitleTextAppearance">@style/TextAppearance.AppCompat.Display1</item>
+       <item name="android:alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
+       <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
 <!--        <item name="colorPrimary">@color/action_bar_background</item>-->
 <!--        <item name="colorPrimaryDark">@color/action_bar_background</item>-->
 <!--        <item name="searchBackgroundColor">#1B1B1B</item>-->
@@ -342,10 +344,16 @@
 
     <style name="Dark.Popup" parent="@style/ThemeOverlay.AppCompat.Dark">
         <item name="android:actionMenuTextColor">?android:textColorPrimary</item>
+        <item name="colorBackgroundFloating">?colorPrimary</item>
+        <item name="android:colorBackground">?colorPrimary</item>
+        <item name="android:windowBackground">?colorPrimary</item>
     </style>
 
     <style name="Light.Popup" parent="@style/ThemeOverlay.AppCompat.Light">
         <item name="android:actionMenuTextColor">?android:textColorPrimary</item>
+        <item name="colorBackgroundFloating">?colorPrimary</item>
+        <item name="android:colorBackground">?colorPrimary</item>
+        <item name="android:windowBackground">?colorPrimary</item>
     </style>
 
     <style name="Classic">
@@ -391,7 +399,6 @@
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
-        <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
         <item name="prominentButtonColor">?colorAccent</item>
         <item name="elementBorderColor">@color/classic_dark_3</item>
 
@@ -463,7 +470,6 @@
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
-        <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
         <item name="prominentButtonColor">?android:textColorPrimary</item>
         <item name="elementBorderColor">@color/classic_light_3</item>
 
@@ -545,7 +551,6 @@
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
-        <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
         <item name="prominentButtonColor">?colorAccent</item>
         <item name="elementBorderColor">@color/ocean_dark_4</item>
 
@@ -619,7 +624,6 @@
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
-        <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
         <item name="prominentButtonColor">?android:textColorPrimary</item>
         <item name="elementBorderColor">@color/ocean_light_2</item>
 

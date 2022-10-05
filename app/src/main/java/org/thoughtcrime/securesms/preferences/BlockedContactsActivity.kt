@@ -20,7 +20,7 @@ class BlockedContactsActivity: PassphraseRequiredActionBarActivity(), View.OnCli
     val adapter = BlockedContactsAdapter()
 
     override fun onClick(v: View?) {
-        if (v === binding.unblockButton) {
+        if (v === binding.unblockButton && adapter.getSelectedItems().isNotEmpty()) {
             val contactsToUnblock = adapter.getSelectedItems()
             // show dialog
             val title = if (contactsToUnblock.size == 1) {
