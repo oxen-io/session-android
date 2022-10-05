@@ -16,6 +16,7 @@
     <string name="AccessibilityId_link_device">Link Device</string>
     <!-- Session ID Page-->
     <string name="AccessibilityId_session_id">Session ID</string>
+    <string name="AccessibilityId_recovery_phrase_reminder">Recovery phrase reminder</string>
     <string name="AccessibilityId_continue">Continue</string>
     <!-- Recovery phrase input -->
     <string name="AccessibilityId_recovery_phrase_input">Recovery phrase input</string>
@@ -55,6 +56,11 @@
     <!--  Conversation options for closed group-->
     <string name="AccessibilityId_edit_group">Edit group</string>
     <string name="AccessibilityId_leave_group">Leave group</string>
+    <string name="AccessibilityId_group_name">Group name</string>
+    <string name="AccessibilityId_accept_name_change">Accept name change</string>
+    <string name="AccessibilityId_cancel_name_change">Cancel name change</string>
+    <string name="AccessibilityId_apply_changes">Apply changes</string>
+    <string name="AccessibilityId_add_members">Add members</string>
     <!--  Conversation icons -->
     <string name="AccessibilityId_call_button">Call button</string>
     <string name="AccessibilityId_disappearing_messages_timer">Disappearing messages timer</string>
@@ -95,6 +101,7 @@
     <!--Settings Page-->
     <string name="AccessibilityId_username_input">Username input</string>
     <string name="AccessibilityId_username_text">Username text</string>
+    <string name="AccessibilityId_user_settings">User settings</string>
     <string name="AccessibilityId_username">Username</string>
     <string name="AccessibilityId_privacy">Privacy</string>
     <string name="AccessibilityId_show_recovery_phrase">Show recovery phrase</string>
