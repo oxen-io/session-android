@@ -24,10 +24,13 @@
     <color name="call_background">#171717</color>
 
     <array name="profile_picture_placeholder_colors">
-        <item>#5ff8b0</item>
-        <item>#26cdb9</item>
-        <item>#f3c615</item>
-        <item>#fcac5a</item>
+        <item>@style/PrimaryGreen</item>
+        <item>@style/PrimaryBlue</item>
+        <item>@style/PrimaryYellow</item>
+        <item>@style/PrimaryPink</item>
+        <item>@style/PrimaryPurple</item>
+        <item>@style/PrimaryOrange</item>
+        <item>@style/PrimaryRed</item>
     </array>
 
     <color name="loki_darkest_gray">#0a0a0a</color>

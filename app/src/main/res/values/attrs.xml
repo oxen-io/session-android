@@ -29,6 +29,7 @@
     <attr name="ic_visibility_off" format="reference" />
 
     <attr name="prominentButtonColor" format="reference|color"/>
+    <attr name="elementBorderColor" format="reference|color"/>
     <attr name="conversation_background" format="reference|color"/>
     <attr name="conversation_editor_background" format="reference|color"/>
     <attr name="conversation_editor_text_color" format="reference|color"/>

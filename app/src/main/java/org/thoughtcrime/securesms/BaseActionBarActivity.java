@@ -83,7 +83,7 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
   @Override
   protected void onResume() {
     super.onResume();
-    initializeScreenshotSecurity();
+    initializeScreenshotSecurity(true);
     DynamicLanguageActivityHelper.recreateIfNotInCorrectLanguage(this, TextSecurePreferences.getLanguage(this));
     String name = getResources().getString(R.string.app_name);
     Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_foreground);
@@ -95,6 +95,12 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
   }
 
   @Override
+  protected void onPause() {
+    super.onPause();
+    initializeScreenshotSecurity(false);
+  }
+
+  @Override
   public boolean onSupportNavigateUp() {
     if (super.onSupportNavigateUp()) return true;
 
@@ -102,11 +108,15 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
     return true;
   }
 
-  private void initializeScreenshotSecurity() {
-    if (TextSecurePreferences.isScreenSecurityEnabled(this)) {
+  private void initializeScreenshotSecurity(boolean isResume) {
+    if (!isResume) {
       getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
     } else {
-      getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+      if (TextSecurePreferences.isScreenSecurityEnabled(this)) {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+      } else {
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+      }
     }
   }
 

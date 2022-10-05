@@ -31,7 +31,8 @@ object AvatarPlaceholderGenerator {
         }
 
         // Do not cache color array, it may be different depends on the current theme.
-        val colorPrimary = context.getAccentColor()
+        val colorArray = context.resources.getIntArray(R.array.profile_picture_placeholder_colors)
+        val colorPrimary = colorArray[(hash % colorArray.size).toInt()]
 
         val labelText = when {
             !TextUtils.isEmpty(displayName) -> extractLabel(displayName!!.capitalize(Locale.ROOT))

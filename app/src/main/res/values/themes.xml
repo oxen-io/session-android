@@ -20,6 +20,7 @@
        <item name="android:backgroundDimAmount">0.6</item>
        <item name="dialogCornerRadius">@dimen/dialog_corner_radius</item>
        <item name="conversation_transport_sms_indicator">@drawable/ic_arrow_up_circle_24</item>
+       <item name="preferenceCategoryTitleTextAppearance">@style/TextAppearance.AppCompat.Display1</item>
 <!--        <item name="colorPrimary">@color/action_bar_background</item>-->
 <!--        <item name="colorPrimaryDark">@color/action_bar_background</item>-->
 <!--        <item name="searchBackgroundColor">#1B1B1B</item>-->
@@ -50,7 +51,11 @@
 <!--        <item name="dividerVertical">@color/separator</item>-->
 <!--        <item name="dividerHorizontal">?dividerVertical</item>-->
 
-        <item name="searchViewStyle">@style/Widget.Session.SearchView</item>
+       <item name="searchViewStyle">@style/Widget.Session.SearchView</item>
+       <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.MaterialComponents.SmallComponent</item>
+       <item name="elementBorderColor">?android:textColorSecondary</item>
+       <item name="colorOnSurface">?android:textColorPrimary</item>
+       <item name="colorSurface">?dialog_background_color</item>
 
 <!--        &lt;!&ndash; App specific attributes &ndash;&gt;-->
 <!--        <item name="ic_visibility_on">@drawable/ic_baseline_visibility_24</item>-->
@@ -388,6 +393,7 @@
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
         <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
         <item name="prominentButtonColor">?colorAccent</item>
+        <item name="elementBorderColor">@color/classic_dark_3</item>
 
         <!-- Home screen -->
         <item name="searchBackgroundColor">#1B1B1B</item>
@@ -459,6 +465,7 @@
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
         <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
         <item name="prominentButtonColor">?android:textColorPrimary</item>
+        <item name="elementBorderColor">@color/classic_light_3</item>
 
         <!-- Light mode -->
         <item name="theme_type">light</item>
@@ -540,11 +547,12 @@
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
         <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
         <item name="prominentButtonColor">?colorAccent</item>
+        <item name="elementBorderColor">@color/ocean_dark_4</item>
 
         <!-- Home screen -->
         <item name="searchBackgroundColor">@color/ocean_dark_3</item>
         <item name="searchIconColor">@color/ocean_dark_6</item>
-        <item name="searchHintColor">@color/ocean_dark_1</item>
+        <item name="searchHintColor">@color/ocean_dark_5</item>
         <item name="searchTextColor">?android:textColorPrimary</item>
         <item name="searchHighlightTint">?colorAccent</item>
         <item name="home_gradient_start">#00000000</item>
@@ -613,6 +621,7 @@
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
         <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
         <item name="prominentButtonColor">?android:textColorPrimary</item>
+        <item name="elementBorderColor">@color/ocean_light_2</item>
 
         <!-- Light mode -->
         <item name="theme_type">light</item>
