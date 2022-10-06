@@ -279,6 +279,8 @@
             android:gravity="center">
             <TextView
                 android:textColor="?android:textColorPrimary"
+                android:textStyle="bold"
+                android:textSize="@dimen/medium_font_size"
                 android:paddingHorizontal="@dimen/large_spacing"
                 android:paddingVertical="@dimen/small_spacing"
                 android:text="@string/activity_appearance_follow_system_explanation"
