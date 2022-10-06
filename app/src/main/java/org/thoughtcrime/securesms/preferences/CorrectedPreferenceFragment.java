@@ -3,10 +3,12 @@ package org.thoughtcrime.securesms.preferences;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -163,6 +165,10 @@ public abstract class CorrectedPreferenceFragment extends PreferenceFragmentComp
           }
           Drawable background = getBackground(holder.itemView.getContext(), position);
           holder.itemView.setBackground(background);
+          TextView titleView = holder.itemView.findViewById(android.R.id.title);
+          if (titleView != null) {
+            ((TextView) titleView).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+          }
           boolean isTop = isTop(position);
           boolean isBottom = isBottom(position);
           holder.itemView.setPadding(horizontalPadding, isTop ? verticalPadding : 0, horizontalPadding, isBottom ? verticalPadding : 0);

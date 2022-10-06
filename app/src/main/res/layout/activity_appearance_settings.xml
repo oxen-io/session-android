@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:context="org.thoughtcrime.securesms.preferences.appearance.AppearanceSettingsActivity"
     android:id="@+id/scrollView"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,8 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:textColor="?android:textColorSecondary"
-            android:padding="@dimen/large_spacing"
+            android:textColor="?android:textColorTertiary"
+            android:textSize="@dimen/medium_font_size"
+            android:paddingHorizontal="@dimen/large_spacing"
+            android:paddingVertical="@dimen/small_spacing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/activity_appearance_themes_category"/>
@@ -139,10 +142,10 @@
                 android:layout_height="wrap_content"/>
         </LinearLayout>
         <TextView
-            android:textColor="?android:textColorSecondary"
+            android:textColor="?android:textColorTertiary"
+            android:textSize="@dimen/medium_font_size"
             android:paddingHorizontal="@dimen/large_spacing"
-            android:paddingTop="@dimen/large_spacing"
-            android:paddingBottom="@dimen/small_spacing"
+            android:paddingVertical="@dimen/small_spacing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/activity_appearance_primary_color_category"/>
@@ -259,10 +262,10 @@
         </LinearLayout>
 
         <TextView
-            android:textColor="?android:textColorSecondary"
+            android:textColor="?android:textColorTertiary"
+            android:textSize="@dimen/medium_font_size"
             android:paddingHorizontal="@dimen/large_spacing"
-            android:paddingTop="@dimen/large_spacing"
-            android:paddingBottom="@dimen/small_spacing"
+            android:paddingVertical="@dimen/small_spacing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/activity_appearance_follow_system_category"/>

@@ -153,11 +153,13 @@
         <item name="android:textAlignment">viewStart</item>
     </style>
 
-    <style name="ThemeOverlay.Session.Settings" parent="PreferenceThemeOverlay.v14.Material">
-        <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:textColorSecondary">#99FFFFFF</item>
+    <style name="PreferenceThemeOverlay.Fix.Settings">
         <item name="android:textSize">@dimen/medium_font_size</item>
-        <item name="preferenceCategoryTitleTextAppearance">@style/TextAppearance.AppCompat.Display1</item>
+        <item name="preferenceCategoryStyle">@style/Preference.Category.Material.Session</item>
+    </style>
+
+    <style name="Preference.Category.Material.Session">
+        <item name="android:layout">@layout/preference_category_session</item>
     </style>
 
     <style name="SessionIDTextView">

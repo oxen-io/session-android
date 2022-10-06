@@ -47,9 +47,6 @@ public class NotificationsPreferenceFragment extends ListSummaryPreferenceFragme
       TextSecurePreferences.setNotificationRingtone(getContext(), NotificationChannels.getMessageRingtone(getContext()).toString());
       TextSecurePreferences.setNotificationVibrateEnabled(getContext(), NotificationChannels.getMessageVibrate(getContext()));
     }
-
-    this.findPreference(TextSecurePreferences.LED_COLOR_PREF_PRIMARY)
-        .setOnPreferenceChangeListener(new LedColorChangeListener());
     this.findPreference(TextSecurePreferences.RINGTONE_PREF)
         .setOnPreferenceChangeListener(new RingtoneSummaryListener());
     this.findPreference(TextSecurePreferences.NOTIFICATION_PRIVACY_PREF)
