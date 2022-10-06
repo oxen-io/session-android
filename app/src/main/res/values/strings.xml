@@ -13,6 +13,7 @@
     <!-- Landing Page -->
     <string name="AccessibilityId_create_session_id">Create Session ID</string>
     <string name="AccessibilityId_restore_your_session">Restore Your Session</string>
+    <string name="AccessibilityId_link_a_device">Link a Device</string>
     <string name="AccessibilityId_link_device">Link Device</string>
     <!-- Session ID Page-->
     <string name="AccessibilityId_session_id">Session ID</string>
@@ -37,6 +38,8 @@
     <string name="AccessibilityId_profile_picture">Profile picture</string>
     <string name="AccessibilityId_search_icon">Search icon</string>
     <string name="AccessibilityId_conversation_list_item">Conversation list item</string>
+    <string name="AccessibilityId_details">Details</string>
+    <string name="AccessibilityId_pin">Pin</string>
 
     <string name="AccessibilityId_message_request_banner">Message requests banner</string>
     <string name="AccessibilityId_message_request">Message request</string>
@@ -52,7 +55,9 @@
     <string name="AccessibilityId_disappearing_messages">Disappearing messages</string>
     <string name="AccessibilityId_block">Block</string>
     <string name="AccessibilityId_block_confirm">Confirm block</string>
+    <string name="AccessibilityId_notification_settings">Notification settings</string>
     <string name="AccessibilityId_mute_notifications">Mute notifications</string>
+    <string name="AccessibilityId_delete">Delete</string>
     <!--  Conversation options for closed group-->
     <string name="AccessibilityId_edit_group">Edit group</string>
     <string name="AccessibilityId_leave_group">Leave group</string>
@@ -61,8 +66,11 @@
     <string name="AccessibilityId_cancel_name_change">Cancel name change</string>
     <string name="AccessibilityId_apply_changes">Apply changes</string>
     <string name="AccessibilityId_add_members">Add members</string>
+    <string name="AccessibilityId_done">Done</string>
+    <string name="AccessibilityId_mentions_list">Mentions list</string>
     <!--  Conversation icons -->
     <string name="AccessibilityId_call_button">Call button</string>
+    <string name="AccessibilityId_settings">Settings</string>
     <string name="AccessibilityId_disappearing_messages_timer">Disappearing messages timer</string>
     <string name="AccessibilityId_disappearing_messages_time_picker">Time selector</string>
     <string name="AccessibilityId_accept_message_request_button">Accept message request</string>
@@ -84,7 +92,14 @@
     <string name="AccessibilityId_message_input">Message input box</string>
     <string name="AccessibilityId_microphone_button">Microphone button</string>
     <string name="AccessibilityId_send_message_button">Send message button</string>
-    <string name="AccessibilityId_attachments_button">Attachment button</string>
+    <string name="AccessibilityId_attachments_button">Attachments button</string>
+    <string name="AccessibilityId_select_camera_button">Select camera button</string>
+    <string name="AccessibilityId_images_folder">Images folder</string>
+    <string name="AccessibilityId_documents_folder">Documents folder</string>
+    <string name="AccessibilityId_gif_button">GIF button</string>
+    <string name="AccessibilityId_untrusted_attachment_message">Untrusted attachment message</string>
+    <string name="AccessibilityId_download_media">Download media</string>
+    <string name="AccessibilityId_dont_download_media">Don\'t download media</string>
     <!-- Conversation View-->
     <string name="AccessibilityId_message_sent_status_tick">Message sent status tick</string>
     <string name="AccessibilityId_message_sent_status_pending">Message sent status pending</string>
@@ -93,6 +108,8 @@
     <string name="AccessibilityId_deleted_message">Deleted message</string>
     <string name="AccessibilityId_delete_message">Delete message</string>
     <string name="AccessibilityId_reply_message">Reply</string>
+    <string name="AccessibilityId_select">Select</string>
+    <string name="AccessibilityId_save_attachment">Save attachment</string>
 
     <!-- Delete message modal-->
     <string name="AccessibilityId_delete_just_for_me">Delete just for me</string>
@@ -105,6 +122,10 @@
     <string name="AccessibilityId_username">Username</string>
     <string name="AccessibilityId_privacy">Privacy</string>
     <string name="AccessibilityId_show_recovery_phrase">Show recovery phrase</string>
+    <string name="AccessibilityId_edit_user_nickname">Edit user nickname</string>
+    <string name="AccessibilityId_apply">Apply</string>
+    <string name="AccessibilityId_cancel">Cancel</string>
+    <string name="AccessibilityId_message_user">Message user</string>
 <!--    Recovery Phrase Dialog-->
     <string name="AccessibilityId_cancel_button">Cancel</string>
 

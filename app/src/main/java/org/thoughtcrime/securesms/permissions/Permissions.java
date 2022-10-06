@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.permissions;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -353,12 +354,14 @@ public class Permissions {
       Context context = this.context.get();
 
       if (context != null) {
-        new AlertDialog.Builder(context)
+        AlertDialog alertDialog = new AlertDialog.Builder(context)
             .setTitle(R.string.Permissions_permission_required)
             .setMessage(message)
             .setPositiveButton(R.string.Permissions_continue, (dialog, which) -> context.startActivity(getApplicationSettingsIntent(context)))
             .setNegativeButton(android.R.string.cancel, null)
-            .show();
+            .create();
+        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setContentDescription(context.getString(R.string.AccessibilityId_continue));
+        alertDialog.show();
       }
     }
   }

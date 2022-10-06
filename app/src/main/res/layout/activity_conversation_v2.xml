@@ -84,6 +84,7 @@
             android:id="@+id/gifButtonContainer"
             android:layout_width="@dimen/input_bar_button_expanded_size"
             android:layout_height="@dimen/input_bar_button_expanded_size"
+            android:contentDescription="@string/AccessibilityId_gif_button"
             android:alpha="0" />
 
         <RelativeLayout
@@ -91,6 +92,7 @@
             android:layout_marginTop="8dp"
             android:layout_width="@dimen/input_bar_button_expanded_size"
             android:layout_height="@dimen/input_bar_button_expanded_size"
+            android:contentDescription="@string/AccessibilityId_documents_folder"
             android:alpha="0" />
 
         <RelativeLayout
@@ -98,6 +100,7 @@
             android:layout_marginTop="8dp"
             android:layout_width="@dimen/input_bar_button_expanded_size"
             android:layout_height="@dimen/input_bar_button_expanded_size"
+            android:contentDescription="@string/AccessibilityId_images_folder"
             android:alpha="0" />
 
         <RelativeLayout
@@ -105,6 +108,7 @@
             android:layout_marginTop="8dp"
             android:layout_width="@dimen/input_bar_button_expanded_size"
             android:layout_height="@dimen/input_bar_button_expanded_size"
+            android:contentDescription="@string/AccessibilityId_select_camera_button"
             android:alpha="0" />
 
     </LinearLayout>
@@ -205,14 +209,15 @@
 
         <TextView
             android:id="@+id/messageRequestBlock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:contentDescription="@string/AccessibilityId_block_message_request_button"
             android:textColor="@color/destructive"
             android:paddingHorizontal="@dimen/massive_spacing"
             android:paddingVertical="@dimen/small_spacing"
             android:textSize="@dimen/text_size"
-            android:text="@string/activity_conversation_block_user"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:text="@string/activity_conversation_block_user"/>
 
         <TextView
             android:id="@+id/sendAcceptsTextView"

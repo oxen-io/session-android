@@ -771,7 +771,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val recipient = viewModel.recipient ?: return
         if (!isShowingMentionCandidatesView) {
             additionalContentContainer.removeAllViews()
-            val view = MentionCandidatesView(this)
+            val view = MentionCandidatesView(this).apply {
+                contentDescription = context.getString(R.string.AccessibilityId_mentions_list)
+            }
             view.glide = glide
             view.onCandidateSelected = { handleMentionSelected(it) }
             additionalContentContainer.addView(view)

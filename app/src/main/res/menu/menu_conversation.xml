@@ -5,11 +5,13 @@
 
     <item
         android:title="@string/conversation__menu_view_all_media"
-        android:id="@+id/menu_view_all_media" />
+        android:id="@+id/menu_view_all_media"
+        android:contentDescription="@string/AccessibilityId_all_media"/>
 
     <item
         android:title="@string/SearchToolbar_search"
         android:id="@+id/menu_search"
+        android:contentDescription="@string/AccessibilityId_search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="collapseActionView" />
 

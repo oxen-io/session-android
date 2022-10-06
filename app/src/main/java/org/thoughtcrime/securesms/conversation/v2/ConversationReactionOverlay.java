@@ -660,7 +660,8 @@ public final class ConversationReactionOverlay extends FrameLayout {
 
     String userPublicKey = TextSecurePreferences.getLocalNumber(getContext());
     // Select message
-    items.add(new ActionItem(R.attr.menu_select_icon, getContext().getResources().getString(R.string.conversation_context__menu_select), () -> handleActionItemClicked(Action.SELECT)));
+    items.add(new ActionItem(R.attr.menu_select_icon, getContext().getResources().getString(R.string.conversation_context__menu_select), () -> handleActionItemClicked(Action.SELECT),
+            getContext().getResources().getString(R.string.AccessibilityId_select)));
     // Reply
     if (!message.isPending() && !message.isFailed()) {
       items.add(
@@ -704,7 +705,9 @@ public final class ConversationReactionOverlay extends FrameLayout {
     }
     // Save media
     if (message.isMms() && ((MediaMmsMessageRecord)message).containsMediaSlide()) {
-      items.add(new ActionItem(R.attr.menu_save_icon, getContext().getResources().getString(R.string.conversation_context_image__save_attachment), () -> handleActionItemClicked(Action.DOWNLOAD)));
+      items.add(new ActionItem(R.attr.menu_save_icon, getContext().getResources().getString(R.string.conversation_context_image__save_attachment), () -> handleActionItemClicked(Action.DOWNLOAD),
+              getContext().getResources().getString(R.string.AccessibilityId_save_attachment))
+      );
     }
 
     backgroundView.setVisibility(View.VISIBLE);

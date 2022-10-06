@@ -53,7 +53,7 @@
 
     <Button
         android:id="@+id/linkButton"
-        android:contentDescription="@string/AccessibilityId_link_device"
+        android:contentDescription="@string/AccessibilityId_link_a_device"
         android:layout_width="match_parent"
         android:layout_height="@dimen/onboarding_button_bottom_offset"
         android:layout_marginLeft="@dimen/massive_spacing"

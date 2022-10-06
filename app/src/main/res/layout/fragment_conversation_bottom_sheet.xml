@@ -12,6 +12,7 @@
     <TextView
         android:id="@+id/detailsTextView"
         style="@style/BottomSheetActionItem"
+        android:contentDescription="@string/AccessibilityId_details"
         android:drawableStart="@drawable/ic_info_outline_white_24dp"
         android:drawableTint="?attr/colorControlNormal"
         android:text="@string/details" />
@@ -19,6 +20,7 @@
     <TextView
         android:id="@+id/pinTextView"
         style="@style/BottomSheetActionItem"
+        android:contentDescription="@string/AccessibilityId_pin"
         android:drawableStart="?attr/menu_pin_icon"
         android:text="@string/conversation_pin"
         android:visibility="gone"
@@ -35,6 +37,7 @@
     <TextView
         android:id="@+id/blockTextView"
         style="@style/BottomSheetActionItem"
+        android:contentDescription="@string/AccessibilityId_block"
         android:drawableStart="?attr/menu_block_icon"
         android:text="@string/RecipientPreferenceActivity_block"
         android:visibility="gone"
@@ -51,6 +54,7 @@
     <TextView
         android:id="@+id/muteNotificationsTextView"
         style="@style/BottomSheetActionItem"
+        android:contentDescription="@string/AccessibilityId_mute_notifications"
         android:drawableStart="@drawable/ic_outline_notifications_off_24"
         android:text="@string/MuteDialog_mute_notifications"
         tools:visibility="visible"
@@ -86,6 +90,7 @@
     <TextView
         android:id="@+id/deleteTextView"
         style="@style/BottomSheetActionItem"
+        android:contentDescription="@string/AccessibilityId_delete"
         android:drawableStart="?attr/menu_trash_icon"
         android:text="@string/delete" />
 
