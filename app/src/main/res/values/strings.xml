@@ -76,6 +76,7 @@
     <string name="AccessibilityId_accept_message_request_button">Accept message request</string>
     <string name="AccessibilityId_decline_message_request_button">Decline message request</string>
     <string name="AccessibilityId_block_message_request_button">Block message request</string>
+    <string name="AccessibilityId_timer_icon">Timer icon</string>
 <!--    Control messages -->
     <string name="AccessibilityId_control_message">Control message</string>
     <string name="AccessibilityId_blocked_banner">Blocked banner</string>
