@@ -96,6 +96,11 @@
     <attr name="dialog_info_icon" format="reference" />
     <attr name="dialog_alert_icon" format="reference" />
     <attr name="dialog_background_color" format="reference|color" />
+    <attr name="conversation_menu_background_color" format="reference|color" />
+    <attr name="conversation_menu_cell_color" format="reference|color"/>
+    <attr name="conversation_menu_border_color" format="reference|color"/>
+    <attr name="conversationMenuSearchBackgroundColor" format="reference|color"/>
+    <attr name="conversationMenuSearchTintColor" format="reference|color"/>
     <attr name="dialog_border" format="reference|color" />
     <attr name="sessionLogoTint" format="reference|color" />
 

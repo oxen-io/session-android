@@ -4,7 +4,7 @@
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?dialog_background_color">
+    android:background="?conversation_menu_background_color">
 
     <TextView
         android:id="@+id/titleText"

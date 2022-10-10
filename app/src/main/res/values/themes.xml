@@ -10,9 +10,9 @@
        <item name="theme_type">dark</item>
        <item name="android:preferenceLayoutChild">@layout/preference_divider</item>
        <item name="preferenceCornerRadius">@dimen/medium_spacing</item>
-       <item name="reactionsPillSelectedTextColor">?colorAccent</item>
-       <item name="reactionsPillSelectedBackground">?colorPrimary</item>
-       <item name="reactionsPillNormalBackground">?colorPrimary</item>
+       <item name="reactionsPillSelectedTextColor">?android:textColorPrimary</item>
+       <item name="reactionsPillSelectedBackground">?message_received_background_color</item>
+       <item name="reactionsPillNormalBackground">?message_received_background_color</item>
        <item name="colorDividerBackground">@color/gray50</item>
        <item name="colorPrimaryVariant">?colorPrimary</item>
        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>
@@ -22,6 +22,8 @@
        <item name="conversation_transport_sms_indicator">@drawable/ic_arrow_up_circle_24</item>
        <item name="android:alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
        <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
+       <item name="conversationMenuSearchTintColor">?android:textColorPrimary</item>
+       <item name="conversation_menu_background_color">?colorPrimary</item>
 <!--        <item name="colorPrimary">@color/action_bar_background</item>-->
 <!--        <item name="colorPrimaryDark">@color/action_bar_background</item>-->
 <!--        <item name="searchBackgroundColor">#1B1B1B</item>-->
@@ -29,6 +31,7 @@
 <!--        <item name="searchHighlightTint">@color/accent</item>-->
 <!--        <item name="colorAccent">@color/accent</item>-->
        <item name="android:colorControlNormal">?android:textColorPrimary</item>
+       <item name="conversation_menu_border_color">?colorDividerBackground</item>
 <!--        <item name="colorControlActivated">?colorAccent</item>-->
 <!--        <item name="colorControlHighlight">?colorAccent</item>-->
 <!--        <item name="android:textColorPrimary">@color/text</item>-->
@@ -316,7 +319,7 @@
     <style name="Classic.Dark.BottomSheet" parent="Theme.MaterialComponents.BottomSheetDialog">
         <item name="colorPrimary">@color/classic_dark_0</item>
         <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>
-        <item name="dialog_border">@color/transparent_black_40</item>
+        <item name="dialog_border">@color/transparent_black_15</item>
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">?android:textColorPrimary</item>
     </style>
@@ -330,7 +333,7 @@
     <style name="Ocean.Dark.BottomSheet" parent="Theme.MaterialComponents.BottomSheetDialog">
         <item name="colorPrimary">@color/ocean_dark_3</item>
         <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>
-        <item name="dialog_border">@color/transparent_black_40</item>
+        <item name="dialog_border">@color/transparent_black_15</item>
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">?android:textColorPrimary</item>
     </style>
@@ -388,6 +391,7 @@
         <item name="android:navigationBarColor">@color/compose_view_background</item>
         <item name="default_background_end">@color/classic_dark_0</item>
         <item name="default_background_start">@color/classic_dark_1</item>
+        <item name="dialog_background_color">@color/classic_dark_1</item>
         <item name="bottomSheetDialogTheme">@style/Classic.Dark.BottomSheet</item>
         <item name="actionMenuTextColor">?android:textColorPrimary</item>
         <item name="popupTheme">?actionBarPopupTheme</item>
@@ -418,6 +422,10 @@
         <item name="conversation_color_non_main">@color/classic_dark_2</item>
         <item name="conversation_shadow_non_main">@color/transparent_black_30</item>
         <item name="conversation_shadow_main">?colorAccent</item>
+        <item name="conversation_menu_background_color">@color/classic_dark_1</item>
+        <item name="conversation_menu_cell_color">?conversation_menu_background_color</item>
+        <item name="conversation_menu_border_color">@color/classic_dark_3</item>
+        <item name="conversationMenuSearchBackgroundColor">@color/classic_dark_0</item>
 
         <!-- Conversation -->
         <item name="message_received_background_color">@color/classic_dark_2</item>
@@ -445,6 +453,7 @@
         <!-- Main styles -->
         <item name="sessionLogoTint">@color/classic_light_0</item>
         <item name="colorPrimary">@color/classic_light_6</item>
+        <item name="dialog_background_color">@color/classic_light_5</item>
         <item name="colorPrimaryDark">@color/classic_light_6</item>
         <item name="colorControlNormal">?android:textColorPrimary</item>
         <item name="colorControlActivated">?colorAccent</item>
@@ -498,6 +507,10 @@
         <item name="conversation_tint_non_main">@color/classic_light_4</item>
         <item name="conversation_shadow_non_main">@color/transparent_black_30</item>
         <item name="conversation_shadow_main">@color/transparent_black_30</item>
+        <item name="conversation_menu_background_color">@color/classic_light_6</item>
+        <item name="conversation_menu_cell_color">@color/classic_light_5</item>
+        <item name="conversation_menu_border_color">@color/classic_light_3</item>
+        <item name="conversationMenuSearchBackgroundColor">@color/classic_light_6</item>
 
         <!-- Conversation -->
         <item name="message_received_background_color">@color/classic_light_4</item>
@@ -532,7 +545,7 @@
         <item name="android:colorControlHighlight">?colorAccent</item>
         <item name="android:textColorPrimary">@color/ocean_dark_6</item>
         <item name="android:textColorSecondary">@color/ocean_dark_5</item>
-        <item name="android:textColorTertiary">@color/ocean_dark_4</item>
+        <item name="android:textColorTertiary">@color/ocean_dark_5</item>
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textColorHint">@color/ocean_dark_5</item>
         <item name="android:windowBackground">@drawable/default_session_background</item>
@@ -566,6 +579,12 @@
         <item name="conversation_pinned_icon_color">?colorAccent</item>
         <item name="unreadIndicatorBackgroundColor">?colorAccent</item>
         <item name="unreadIndicatorTextColor">@color/ocean_dark_6</item>
+        <item name="conversation_menu_background_color">@color/ocean_dark_3</item>
+        <item name="conversation_menu_cell_color">@color/ocean_dark_2</item>
+        <item name="conversation_menu_border_color">@color/ocean_dark_4</item>
+        <item name="conversationMenuSearchBackgroundColor">@color/ocean_dark_2</item>
+
+
 
         <!-- New conversation button -->
         <item name="conversation_color_non_main">@color/ocean_dark_2</item>
@@ -646,6 +665,10 @@
         <item name="home_gradient_end">@color/ocean_light_6</item>
         <item name="conversation_shadow_non_main">@color/black</item>
         <item name="conversation_shadow_main">@color/black</item>
+        <item name="conversation_menu_background_color">@color/ocean_light_6</item>
+        <item name="conversation_menu_cell_color">@color/ocean_light_5</item>
+        <item name="conversation_menu_border_color">@color/ocean_light_2</item>
+        <item name="conversationMenuSearchBackgroundColor">@color/ocean_light_6</item>
 
         <item name="unreadIndicatorBackgroundColor">?colorAccent</item>
         <item name="unreadIndicatorTextColor">@color/ocean_light_0</item>

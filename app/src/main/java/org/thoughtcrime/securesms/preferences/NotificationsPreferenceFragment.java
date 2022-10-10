@@ -166,23 +166,4 @@ public class NotificationsPreferenceFragment extends ListSummaryPreferenceFragme
     }
   }
 
-  @SuppressLint("StaticFieldLeak")
-  private class LedColorChangeListener implements Preference.OnPreferenceChangeListener {
-
-    @Override
-    public boolean onPreferenceChange(Preference preference, Object value) {
-      if (NotificationChannels.supported()) {
-        new AsyncTask<Void, Void, Void>() {
-          @Override
-          protected Void doInBackground(Void... voids) {
-            NotificationChannels.updateMessagesLedColor(getActivity(), (Integer) value);
-            return null;
-          }
-        }.execute();
-        return true;
-      }
-      return false;
-    }
-
-  }
 }

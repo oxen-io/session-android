@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?dialog_background_color"
+    android:background="?conversation_menu_background_color"
     android:orientation="vertical">
 
     <TextView
@@ -14,10 +14,5 @@
         android:paddingHorizontal="@dimen/large_spacing"
         android:textColor="?android:textColorPrimary"
         tools:text="A" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="?dividerHorizontal" />
 
 </LinearLayout>
