@@ -650,6 +650,7 @@
     <!-- Session -->
     <string name="continue_2">Continue</string>
     <string name="copy">Copy</string>
+    <string name="close">Close</string>
     <string name="invalid_url">Invalid URL</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="next">Next</string>
