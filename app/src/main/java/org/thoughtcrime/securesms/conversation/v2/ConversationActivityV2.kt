@@ -18,6 +18,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Pair
 import android.util.TypedValue
@@ -85,6 +86,7 @@ import org.session.libsignal.utilities.hexEncodedPrivateKey
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.ExpirationDialog
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
+import org.thoughtcrime.securesms.attachments.ScreenshotObserver
 import org.thoughtcrime.securesms.audio.AudioRecorder
 import org.thoughtcrime.securesms.contacts.SelectContactsActivity.Companion.selectedContactsKey
 import org.thoughtcrime.securesms.contactshare.SimpleTextWatcher
@@ -190,6 +192,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     @Inject lateinit var storage: Storage
     @Inject lateinit var reactionDb: ReactionDatabase
     @Inject lateinit var viewModelFactory: ConversationViewModel.AssistedFactory
+
+    private val screenshotObserver by lazy {
+        ScreenshotObserver(this, Handler(Looper.getMainLooper())) {
+            // post screenshot message
+            sendScreenshotNotification()
+        }
+    }
 
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels
     private val linkPreviewViewModel: LinkPreviewViewModel by lazy {
@@ -380,11 +389,17 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         ApplicationContext.getInstance(this).messageNotifier.setVisibleThread(viewModel.threadId)
         val recipient = viewModel.recipient ?: return
         threadDb.markAllAsRead(viewModel.threadId, recipient.isOpenGroupRecipient)
+        contentResolver.registerContentObserver(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            true,
+            screenshotObserver
+        )
     }
 
     override fun onPause() {
         super.onPause()
         ApplicationContext.getInstance(this).messageNotifier.setVisibleThread(-1)
+        contentResolver.unregisterContentObserver(screenshotObserver)
     }
 
     override fun getSystemService(name: String): Any? {
@@ -923,10 +938,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         } else if (recipient.isGroupRecipient) {
             viewModel.openGroup?.let { openGroup ->
                 val userCount = lokiApiDb.getUserCount(openGroup.room, openGroup.server) ?: 0
-                actionBarBinding.conversationSubtitleView.text = getString(R.string.ConversationActivity_member_count, userCount)
+                actionBarBinding.conversationSubtitleView.text = getString(R.string.ConversationActivity_active_member_count, userCount)
             } ?: run {
-                actionBarBinding.conversationSubtitleView.isVisible = false
+                val userCount = groupDb.getGroupMemberAddresses(recipient.address.toGroupString(), true).size
+                actionBarBinding.conversationSubtitleView.text = getString(R.string.ConversationActivity_member_count, userCount)
             }
+            viewModel
         } else {
             actionBarBinding.conversationSubtitleView.isVisible = false
         }
@@ -1768,6 +1785,14 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val recipient = viewModel.recipient ?: return
         binding?.inputBar?.draftQuote(recipient, messages.first(), glide)
         endActionMode()
+    }
+
+    private fun sendScreenshotNotification() {
+        val recipient = viewModel.recipient ?: return
+        if (recipient.isGroupRecipient) return
+        val kind = DataExtractionNotification.Kind.Screenshot()
+        val message = DataExtractionNotification(kind)
+        MessageSender.send(message, recipient.address)
     }
 
     private fun sendMediaSavedNotification() {
