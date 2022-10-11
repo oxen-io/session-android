@@ -171,6 +171,7 @@
     <style name="PreferenceThemeOverlay.Fix.Settings">
         <item name="android:textSize">@dimen/medium_font_size</item>
         <item name="preferenceCategoryStyle">@style/Preference.Category.Material.Session</item>
+        <item name="android:textColorSecondary">?android:textColorPrimary</item>
     </style>
 
     <style name="Preference.Category.Material.Session">

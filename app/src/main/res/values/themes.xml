@@ -32,26 +32,27 @@
        <item name="elementBorderColor">?android:textColorSecondary</item>
        <item name="colorOnSurface">?android:textColorPrimary</item>
        <item name="colorSurface">?dialog_background_color</item>
-        <item name="media_overview_toolbar_background">@color/transparent</item>
-        <item name="media_overview_header_foreground">?android:textColorPrimary</item>
-        <item name="menu_accept_icon">@drawable/ic_baseline_done_24</item>
-        <item name="menu_trash_icon">@drawable/ic_baseline_delete_24</item>
-        <item name="menu_block_icon">@drawable/ic_baseline_block_24</item>
-        <item name="menu_forward_icon">@drawable/ic_baseline_forward_24</item>
-        <item name="menu_save_icon">@drawable/ic_baseline_save_24</item>
-        <item name="menu_photo_library_icon">@drawable/ic_baseline_photo_library_24</item>
-        <item name="menu_delete_icon">@drawable/ic_baseline_delete_24</item>
-        <item name="menu_copy_icon">@drawable/ic_baseline_file_copy_24</item>
-        <item name="menu_reply_icon">@drawable/ic_baseline_reply_24</item>
-        <item name="menu_select_icon">@drawable/ic_baseline_check_circle_outline_24</item>
-        <item name="menu_selectall_icon">@drawable/ic_baseline_select_all_24</item>
-        <item name="menu_split_icon">@drawable/ic_baseline_call_split_24</item>
-        <item name="menu_popup_expand">@drawable/ic_baseline_launch_24</item>
-        <item name="menu_info_icon">@drawable/ic_baseline_info_24</item>
-        <item name="menu_pin_icon">@drawable/ic_outline_pin_24</item>
-        <item name="menu_unpin_icon">@drawable/ic_outline_pin_off_24</item>
-        <item name="menu_mark_all_as_read">@drawable/ic_outline_mark_chat_read_24</item>
-        <item name="emoji_show_less_icon">@drawable/ic_chevron_up_light</item>
+       <item name="media_overview_toolbar_background">@color/transparent</item>
+       <item name="media_overview_header_foreground">?android:textColorPrimary</item>
+       <item name="menu_accept_icon">@drawable/ic_baseline_done_24</item>
+       <item name="menu_trash_icon">@drawable/ic_baseline_delete_24</item>
+       <item name="menu_block_icon">@drawable/ic_baseline_block_24</item>
+       <item name="menu_forward_icon">@drawable/ic_baseline_forward_24</item>
+       <item name="menu_save_icon">@drawable/ic_baseline_save_24</item>
+       <item name="menu_photo_library_icon">@drawable/ic_baseline_photo_library_24</item>
+       <item name="menu_delete_icon">@drawable/ic_baseline_delete_24</item>
+       <item name="menu_copy_icon">@drawable/ic_baseline_file_copy_24</item>
+       <item name="menu_reply_icon">@drawable/ic_baseline_reply_24</item>
+       <item name="menu_select_icon">@drawable/ic_baseline_check_circle_outline_24</item>
+       <item name="menu_selectall_icon">@drawable/ic_baseline_select_all_24</item>
+       <item name="menu_split_icon">@drawable/ic_baseline_call_split_24</item>
+       <item name="menu_popup_expand">@drawable/ic_baseline_launch_24</item>
+       <item name="menu_info_icon">@drawable/ic_baseline_info_24</item>
+       <item name="menu_pin_icon">@drawable/ic_outline_pin_24</item>
+       <item name="menu_unpin_icon">@drawable/ic_outline_pin_off_24</item>
+       <item name="menu_mark_all_as_read">@drawable/ic_outline_mark_chat_read_24</item>
+       <item name="emoji_show_less_icon">@drawable/ic_chevron_up_light</item>
+       <item name="prominentButtonColor">?colorAccent</item>
     </style>
 
     <!-- This should be the default theme for the application. -->
