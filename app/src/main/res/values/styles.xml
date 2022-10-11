@@ -293,4 +293,8 @@
         <item name="android:dropDownHorizontalOffset">@dimen/medium_spacing</item>
     </style>
 
+    <style name="PopupMenu.MessageRequests" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="android:background">?attr/colorSettingsBackground</item>
+    </style>
+
 </resources>
