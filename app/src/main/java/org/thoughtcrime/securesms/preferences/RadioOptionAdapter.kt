@@ -10,10 +10,10 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.ItemSelectableBinding
 import org.thoughtcrime.securesms.mms.GlideApp
 
-class CustomRadioGroupAdapter(
-    var selectedItemPosition: Int = 0,
+class RadioOptionAdapter(
+    var selectedOptionPosition: Int = 0,
     private val onClickListener: (RadioOption) -> Unit
-) : ListAdapter<RadioOption, CustomRadioGroupAdapter.ViewHolder>(RadioOptionDiffer()) {
+) : ListAdapter<RadioOption, RadioOptionAdapter.ViewHolder>(RadioOptionDiffer()) {
 
     class RadioOptionDiffer: DiffUtil.ItemCallback<RadioOption>() {
         override fun areItemsTheSame(oldItem: RadioOption, newItem: RadioOption) = oldItem === newItem
@@ -27,10 +27,10 @@ class CustomRadioGroupAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val option = getItem(position)
-        val isSelected = position == selectedItemPosition
+        val isSelected = position == selectedOptionPosition
         holder.bind(option, isSelected) {
             onClickListener(it)
-            selectedItemPosition = position
+            selectedOptionPosition = position
             notifyDataSetChanged()
         }
     }
