@@ -91,6 +91,7 @@
     <attr name="conversation_item_audio_seek_bar_color_outgoing" format="reference|color" />
     <attr name="conversation_item_audio_seek_bar_background_color" format="reference|color" />
     <attr name="conversation_pinned_background_color" format="reference|color" />
+    <attr name="conversation_unread_background_color" format="reference|color" />
     <attr name="conversation_pinned_icon_color" format="reference|color" />
 
     <attr name="dialog_info_icon" format="reference" />

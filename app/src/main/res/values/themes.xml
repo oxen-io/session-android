@@ -24,67 +24,16 @@
        <item name="alertDialogTheme">@style/ThemeOverlay.Session.AlertDialog</item>
        <item name="conversationMenuSearchTintColor">?android:textColorPrimary</item>
        <item name="conversation_menu_background_color">?colorPrimary</item>
-<!--        <item name="colorPrimary">@color/action_bar_background</item>-->
-<!--        <item name="colorPrimaryDark">@color/action_bar_background</item>-->
-<!--        <item name="searchBackgroundColor">#1B1B1B</item>-->
-<!--        <item name="searchIconColor">#E5E5E8</item>-->
-<!--        <item name="searchHighlightTint">@color/accent</item>-->
-<!--        <item name="colorAccent">@color/accent</item>-->
        <item name="android:colorControlNormal">?android:textColorPrimary</item>
        <item name="conversation_menu_border_color">?colorDividerBackground</item>
-<!--        <item name="colorControlActivated">?colorAccent</item>-->
-<!--        <item name="colorControlHighlight">?colorAccent</item>-->
-<!--        <item name="android:textColorPrimary">@color/text</item>-->
-<!--        <item name="android:textColorSecondary">?android:textColorPrimary</item>-->
-<!--        <item name="android:textColorTertiary">@color/unimportant</item>-->
-<!--        <item name="android:textColor">?android:textColorPrimary</item>-->
-<!--        <item name="android:textColorHint">@color/gray27</item>-->
-<!--        <item name="android:windowBackground">@drawable/default_session_background</item>-->
-<!--        <item name="android:colorBackground">@color/default_background_start</item>-->
-<!--        <item name="android:navigationBarColor">@color/compose_view_background</item>-->
-<!--        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>-->
        <item name="preferenceTheme">@style/PreferenceThemeOverlay.Fix.Settings</item>
-<!--       <item name="preferenceCategoryStyle">@style/ThemeOverlay.Session.Settings.Category</item>-->
-<!--        <item name="actionBarTabBarStyle">@style/Widget.Session.TabBar</item>-->
-
-<!--        <item name="statusBarBackground">@color/accent</item>-->
-<!--        <item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
-<!--        <item name="windowActionModeOverlay">true</item>-->
-<!--        <item name="actionModeCloseDrawable">@drawable/ic_baseline_clear_24</item>-->
-<!--        <item name="actionModeBackground">@color/compose_view_background</item>-->
-
-<!--        <item name="dividerVertical">@color/separator</item>-->
-<!--        <item name="dividerHorizontal">?dividerVertical</item>-->
-
        <item name="searchViewStyle">@style/Widget.Session.SearchView</item>
        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.MaterialComponents.SmallComponent</item>
        <item name="elementBorderColor">?android:textColorSecondary</item>
        <item name="colorOnSurface">?android:textColorPrimary</item>
        <item name="colorSurface">?dialog_background_color</item>
-
-<!--        &lt;!&ndash; App specific attributes &ndash;&gt;-->
-<!--        <item name="ic_visibility_on">@drawable/ic_baseline_visibility_24</item>-->
-<!--        <item name="ic_visibility_off">@drawable/ic_baseline_visibility_off_24</item>-->
-<!--        <item name="ic_arrow_forward">@drawable/ic_baseline_arrow_forward_24</item>-->
-
-<!--        <item name="dialog_background_color">@color/dialog_background</item>-->
-
         <item name="media_overview_toolbar_background">@color/transparent</item>
         <item name="media_overview_header_foreground">?android:textColorPrimary</item>
-<!--        <item name="media_keyboard_button_color">@color/core_grey_25</item>\-->
-
-<!--        <item name="attachment_type_selector_background">?android:windowBackground</item>-->
-<!--        <item name="attachment_type_selector_hide_button_background">@color/gray50</item>-->
-<!--        <item name="attachment_document_icon_small">@drawable/ic_document_small_dark</item>-->
-<!--        <item name="attachment_document_icon_large">@drawable/ic_document_large_dark</item>-->
-<!--        <item name="attachment_document_extension_text_color">#222</item>-->
-
-<!--        <item name="home_gradient_start">#00000000</item>-->
-<!--        <item name="home_gradient_end">#FF000000</item>-->
-
-<!--        <item name="message_received_background_color">#2D2D2D</item>-->
-<!--        <item name="message_sent_background_color">#00E97B</item>-->
-
         <item name="menu_accept_icon">@drawable/ic_baseline_done_24</item>
         <item name="menu_trash_icon">@drawable/ic_baseline_delete_24</item>
         <item name="menu_block_icon">@drawable/ic_baseline_block_24</item>
@@ -102,21 +51,6 @@
         <item name="menu_pin_icon">@drawable/ic_outline_pin_24</item>
         <item name="menu_unpin_icon">@drawable/ic_outline_pin_off_24</item>
         <item name="menu_mark_all_as_read">@drawable/ic_outline_mark_chat_read_24</item>
-
-<!--        <item name="conversation_emoji_toggle">@drawable/ic_emoji_filled_keyboard_24</item>-->
-<!--        <item name="conversation_sticker_toggle">@drawable/ic_sticker_filled_keyboard_24</item>-->
-<!--        <item name="conversation_keyboard_toggle">@drawable/ic_baseline_keyboard_24</item>-->
-<!--        <item name="conversation_input_background">@drawable/compose_background_dark</item>-->
-
-<!--        <item name="quick_camera_icon">@drawable/ic_baseline_photo_camera_24</item>-->
-<!--        <item name="quick_mic_icon">@drawable/ic_baseline_mic_24</item>-->
-
-<!--        <item name="conversation_item_audio_seek_bar_color_incoming">@color/accent</item>-->
-<!--        <item name="conversation_item_audio_seek_bar_color_outgoing">@color/accent</item>-->
-<!--        <item name="conversation_item_audio_seek_bar_background_color">@color/text</item>-->
-
-<!--        <item name="conversation_pinned_background_color">@color/conversation_pinned_background</item>-->
-<!--        <item name="conversation_pinned_icon_color">@color/conversation_pinned_icon</item>-->
         <item name="emoji_show_less_icon">@drawable/ic_chevron_up_light</item>
     </style>
 
@@ -414,7 +348,8 @@
         <item name="searchHighlightTint">?colorAccent</item>
         <item name="home_gradient_start">#00000000</item>
         <item name="home_gradient_end">@color/classic_dark_1</item>
-        <item name="conversation_pinned_background_color">@color/classic_dark_2</item>
+        <item name="conversation_pinned_background_color">?colorCellBackground</item>
+        <item name="conversation_unread_background_color">@color/classic_dark_2</item>
         <item name="conversation_pinned_icon_color">@color/classic_dark_4</item>
         <item name="unreadIndicatorBackgroundColor">@color/classic_dark_3</item>
         <item name="unreadIndicatorTextColor">@color/classic_dark_0</item>
@@ -498,7 +433,8 @@
         <item name="searchHighlightTint">?colorAccent</item>
         <item name="home_gradient_start">#00000000</item>
         <item name="home_gradient_end">@color/classic_light_5</item>
-        <item name="conversation_pinned_background_color">@color/classic_light_4</item>
+        <item name="conversation_pinned_background_color">?colorCellBackground</item>
+        <item name="conversation_unread_background_color">@color/classic_light_6</item>
         <item name="conversation_pinned_icon_color">@color/classic_light_2</item>
         <item name="unreadIndicatorBackgroundColor">@color/classic_light_3</item>
         <item name="unreadIndicatorTextColor">@color/classic_light_0</item>
@@ -575,7 +511,8 @@
         <item name="searchHighlightTint">?colorAccent</item>
         <item name="home_gradient_start">#00000000</item>
         <item name="home_gradient_end">@color/ocean_dark_3</item>
-        <item name="conversation_pinned_background_color">@color/ocean_dark_4</item>
+        <item name="conversation_pinned_background_color">?colorCellBackground</item>
+        <item name="conversation_unread_background_color">@color/ocean_dark_2</item>
         <item name="conversation_pinned_icon_color">?colorAccent</item>
         <item name="unreadIndicatorBackgroundColor">?colorAccent</item>
         <item name="unreadIndicatorTextColor">@color/ocean_dark_6</item>
@@ -693,7 +630,8 @@
         <item name="scroll_to_bottom_button_background">?input_bar_button_background_opaque</item>
         <item name="scroll_to_bottom_button_border">?input_bar_button_background_opaque_border</item>
         <item name="conversation_unread_count_indicator_background">?colorAccent</item>
-        <item name="conversation_pinned_background_color">@color/ocean_light_4</item>
+        <item name="conversation_pinned_background_color">?colorCellBackground</item>
+        <item name="conversation_unread_background_color">@color/ocean_light_5</item>
         <item name="conversation_pinned_icon_color">?colorPrimary</item>
     </style>
 
