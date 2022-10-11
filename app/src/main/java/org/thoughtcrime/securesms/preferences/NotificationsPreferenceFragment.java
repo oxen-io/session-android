@@ -73,6 +73,17 @@ public class NotificationsPreferenceFragment extends ListSummaryPreferenceFragme
           return true;
         });
 
+    this.findPreference(TextSecurePreferences.NOTIFICATION_PRIVACY_PREF)
+        .setOnPreferenceClickListener(preference -> {
+          ListPreference listPreference = (ListPreference) preference;
+          listPreference.setDialogMessage(R.string.preferences_notifications__content_message);
+          new ListPreferenceDialog(listPreference, () -> {
+              initializeListSummary((ListPreference) findPreference(TextSecurePreferences.NOTIFICATION_PRIVACY_PREF));
+              return null;
+          }).show(getChildFragmentManager(), "ListPreferenceDialog");
+          return true;
+        });
+
     initializeListSummary((ListPreference) findPreference(TextSecurePreferences.NOTIFICATION_PRIVACY_PREF));
 
     if (NotificationChannels.supported()) {

@@ -469,6 +469,7 @@
     <string name="preferences_notifications__messages">Messages</string>
     <string name="preferences_notifications__in_chat_sounds">In-chat sounds</string>
     <string name="preferences_notifications__content">Notification Content</string>
+    <string name="preferences_notifications__content_message">Show:</string>
     <string name="preferences_notifications__summary">The information shown in notifications.</string>
     <string name="preferences_notifications__priority">Priority</string>
     <string name="preferences_app_protection__screenshot_notifications">Screenshot Notifications</string>

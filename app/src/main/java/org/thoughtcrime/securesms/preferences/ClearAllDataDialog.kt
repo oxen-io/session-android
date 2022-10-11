@@ -40,7 +40,7 @@ class ClearAllDataDialog : BaseDialog() {
         val device = RadioOption("deviceOnly", requireContext().getString(R.string.dialog_clear_all_data_clear_device_only))
         val network = RadioOption("deviceAndNetwork", requireContext().getString(R.string.dialog_clear_all_data_clear_device_and_network))
         var selectedOption = device
-        val optionAdapter = CustomRadioGroupAdapter { selectedOption = it }
+        val optionAdapter = RadioOptionAdapter { selectedOption = it }
         binding.recyclerView.apply {
             adapter = optionAdapter
             addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
