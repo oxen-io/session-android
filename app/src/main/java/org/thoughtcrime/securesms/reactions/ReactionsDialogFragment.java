@@ -20,6 +20,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import org.session.libsession.utilities.ThemeUtil;
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
 import org.thoughtcrime.securesms.database.model.MessageId;
 import org.thoughtcrime.securesms.util.LifecycleDisposable;
@@ -119,7 +120,7 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment imp
           View customView = tab.getCustomView();
           TextView text = customView.findViewById(R.id.reactions_pill_count);
           customView.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.reaction_pill_background_selected));
-          text.setTextColor(ContextCompat.getColor(requireContext(), R.color.reactions_pill_selected_text_color));
+          text.setTextColor(ThemeUtil.getThemedColor(requireContext(), R.attr.reactionsPillSelectedTextColor));
         }
 
         @Override
@@ -127,7 +128,7 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment imp
           View customView = tab.getCustomView();
           TextView text = customView.findViewById(R.id.reactions_pill_count);
           customView.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.reaction_pill_dialog_background));
-          text.setTextColor(ContextCompat.getColor(requireContext(), R.color.reactions_pill_text_color));
+          text.setTextColor(ThemeUtil.getThemedColor(requireContext(), android.R.attr.textColorPrimary));
         }
         @Override
         public void onTabReselected(TabLayout.Tab tab) {}
