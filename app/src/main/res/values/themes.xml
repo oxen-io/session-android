@@ -2,6 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
    <style name="Base.Theme.Session" parent="@style/Theme.AppCompat.DayNight">
        <item name="actionModeBackground">?colorPrimary</item>
+       <item name="android:colorBackground">?colorPrimary</item>
        <item name="dialog_background_color">?colorPrimary</item>
        <item name="theme_preview_incoming">?message_received_background_color</item>
        <item name="theme_preview_outgoing">?message_sent_background_color</item>
@@ -323,11 +324,8 @@
         <item name="android:textColorTertiary">@color/classic_dark_5</item>
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textColorHint">@color/gray27</item>
-        <item name="android:windowBackground">@drawable/default_session_background</item>
-        <item name="android:colorBackground">@color/default_background_start</item>
+        <item name="android:windowBackground">?colorPrimary</item>
         <item name="android:navigationBarColor">@color/compose_view_background</item>
-        <item name="default_background_end">@color/classic_dark_0</item>
-        <item name="default_background_start">@color/classic_dark_1</item>
         <item name="dialog_background_color">@color/classic_dark_1</item>
         <item name="bottomSheetDialogTheme">@style/Classic.Dark.BottomSheet</item>
         <item name="actionMenuTextColor">?android:textColorPrimary</item>
@@ -401,11 +399,8 @@
         <item name="android:textColorTertiary">@color/classic_light_1</item>
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textColorHint">@color/gray27</item>
-        <item name="android:windowBackground">@drawable/default_session_background</item>
-        <item name="android:colorBackground">@color/default_background_start</item>
+        <item name="android:windowBackground">?colorPrimary</item>
         <item name="android:navigationBarColor">?colorPrimary</item>
-        <item name="default_background_end">@color/classic_light_6</item>
-        <item name="default_background_start">@color/classic_light_5</item>
         <item name="colorCellBackground">@color/classic_light_6</item>
         <item name="colorSettingsBackground">@color/classic_light_5</item>
         <item name="colorDividerBackground">@color/classic_light_3</item>
@@ -487,7 +482,7 @@
         <item name="android:textColorTertiary">@color/ocean_dark_5</item>
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textColorHint">@color/ocean_dark_5</item>
-        <item name="android:windowBackground">@drawable/default_session_background</item>
+        <item name="android:windowBackground">?colorPrimary</item>
         <item name="android:colorBackground">@color/default_background_start</item>
         <item name="android:navigationBarColor">@color/compose_view_background</item>
         <item name="default_background_end">?colorPrimary</item>
@@ -568,7 +563,7 @@
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textColorHint">@color/ocean_light_5</item>
         <item name="android:navigationBarColor">@color/ocean_light_6</item>
-        <item name="android:windowBackground">@drawable/default_session_background</item>
+        <item name="android:windowBackground">?colorPrimary</item>
         <item name="android:colorBackground">@color/default_background_start</item>
         <item name="default_background_end">@color/ocean_light_6</item>
         <item name="default_background_start">@color/ocean_light_5</item>
