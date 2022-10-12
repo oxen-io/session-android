@@ -128,7 +128,7 @@ public final class ReactionsDialogFragment extends BottomSheetDialogFragment imp
           View customView = tab.getCustomView();
           TextView text = customView.findViewById(R.id.reactions_pill_count);
           customView.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.reaction_pill_dialog_background));
-          text.setTextColor(ThemeUtil.getThemedColor(requireContext(), android.R.attr.textColorSecondary));
+          text.setTextColor(ThemeUtil.getThemedColor(requireContext(), R.attr.reactionsPillNormalTextColor));
         }
         @Override
         public void onTabReselected(TabLayout.Tab tab) {}

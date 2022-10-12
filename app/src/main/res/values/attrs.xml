@@ -373,5 +373,6 @@
     <attr name="reactionsPillSelectedTextColor" format="color|reference"/>
     <attr name="reactionsPillSelectedBackground" format="color|reference"/>
     <attr name="reactionsPillNormalBackground" format="color|reference"/>
+    <attr name="reactionsPillNormalTextColor" format="color|reference"/>
 
 </resources>

@@ -18,6 +18,8 @@
         app:tabMinWidth="48dp"
         app:tabMode="scrollable"
         app:tabPaddingEnd="5dp"
+        app:tabSelectedTextColor="?android:textColorPrimary"
+        app:tabTextColor="?android:textColorTertiary"
         app:tabPaddingStart="5dp" />
 
     <androidx.viewpager2.widget.ViewPager2

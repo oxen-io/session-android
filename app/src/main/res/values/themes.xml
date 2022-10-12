@@ -14,6 +14,7 @@
        <item name="reactionsPillSelectedTextColor">?android:textColorPrimary</item>
        <item name="reactionsPillSelectedBackground">?message_received_background_color</item>
        <item name="reactionsPillNormalBackground">?message_received_background_color</item>
+       <item name="reactionsPillNormalTextColor">?android:textColorTertiary</item>
        <item name="colorDividerBackground">@color/gray50</item>
        <item name="colorPrimaryVariant">?colorPrimary</item>
        <item name="bottomSheetDialogTheme">@style/Theme.Session.BottomSheet</item>
