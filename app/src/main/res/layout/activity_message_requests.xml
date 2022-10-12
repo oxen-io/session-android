@@ -49,7 +49,7 @@
 
         <Button
             android:id="@+id/clearAllMessageRequestsButton"
-            style="@style/Widget.Session.Button.Common.DestructiveTexOutline"
+            style="@style/Widget.Session.Button.Common.DestructiveOutline"
             android:layout_width="196dp"
             android:layout_height="@dimen/medium_button_height"
             android:layout_alignParentBottom="true"
