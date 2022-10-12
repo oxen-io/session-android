@@ -127,14 +127,17 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
     int innerPadding = ViewUtil.dpToPx(4);
     overflowContainer.setPaddingRelative(innerPadding,innerPadding,innerPadding,innerPadding);
 
+    int pixelSize = ViewUtil.dpToPx(1);
+
     for (Reaction reaction : reactions) {
       if (container.getChildCount() + 1 >= DEFAULT_THRESHOLD && threshold != Integer.MAX_VALUE && reactions.size() > threshold) {
         if (overflowContainer.getParent() == null) {
           container.addView(overflowContainer);
-          ViewGroup.LayoutParams overflowParams = overflowContainer.getLayoutParams();
+          MarginLayoutParams overflowParams = (MarginLayoutParams) overflowContainer.getLayoutParams();
           overflowParams.height = ViewUtil.dpToPx(26);
+          overflowParams.setMargins(pixelSize, pixelSize, pixelSize, pixelSize);
           overflowContainer.setLayoutParams(overflowParams);
-          overflowContainer.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.reaction_pill_dialog_background));
+          overflowContainer.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.reaction_pill_background));
         }
         View pill = buildPill(getContext(), this, reaction, true);
         pill.setOnClickListener(v -> {
@@ -148,11 +151,10 @@ public class EmojiReactionsView extends LinearLayout implements View.OnTouchList
         View pill = buildPill(getContext(), this, reaction, false);
         pill.setTag(reaction);
         pill.setOnTouchListener(this);
-        container.addView(pill);
-        int pixelSize = ViewUtil.dpToPx(1);
         MarginLayoutParams params = (MarginLayoutParams) pill.getLayoutParams();
-        params.setMargins(pixelSize, 0, pixelSize, 0);
+        params.setMargins(pixelSize, pixelSize, pixelSize, pixelSize);
         pill.setLayoutParams(params);
+        container.addView(pill);
       }
     }
 
