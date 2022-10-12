@@ -16,7 +16,6 @@ import androidx.core.view.isVisible
 import androidx.core.widget.ImageViewCompat
 import androidx.core.widget.doAfterTextChanged
 import network.loki.messenger.R
-import org.session.libsession.utilities.ThemeUtil
 import org.thoughtcrime.securesms.animation.AnimationCompleteListener
 import org.thoughtcrime.securesms.animation.ResizeAnimation
 import org.thoughtcrime.securesms.conversation.v2.ViewUtil
@@ -96,8 +95,6 @@ class KeyboardPageSearchView @JvmOverloads constructor(
       val iconTint = typedArray.getColorStateList(R.styleable.KeyboardPageSearchView_search_icon_tint) ?: ContextCompat.getColorStateList(context, R.color.signal_icon_tint_tab_selected)
       ImageViewCompat.setImageTintList(navButton, iconTint)
       ImageViewCompat.setImageTintList(clearButton, iconTint)
-      val hintColor = ThemeUtil.getThemedColor(context, android.R.attr.textColorTertiary)
-      input.setHintTextColor(hintColor)
 
       val clickOnly: Boolean = typedArray.getBoolean(R.styleable.KeyboardPageSearchView_click_only, false)
       if (clickOnly) {

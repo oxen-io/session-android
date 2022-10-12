@@ -77,7 +77,6 @@ public final class ReactWithAnyEmojiDialogFragment extends BottomSheetDialogFrag
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-//    setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_Session_BottomSheet);
   }
 
   @Override
