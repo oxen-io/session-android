@@ -93,7 +93,7 @@
 
     <style name="Widget.Session.Button.Common.ProminentOutline">
         <item name="android:background">@drawable/prominent_outline_button_medium_background</item>
-        <item name="android:textColor">?attr/prominentButtonColor</item>
+        <item name="android:textColorPrimary">?attr/prominentButtonColor</item>
         <item name="android:drawableTint" tools:ignore="NewApi">?attr/prominentButtonColor</item>
     </style>
 

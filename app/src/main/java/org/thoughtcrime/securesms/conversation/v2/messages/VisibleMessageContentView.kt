@@ -15,7 +15,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.ColorInt
-import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
@@ -69,7 +68,7 @@ class VisibleMessageContentView : LinearLayout {
     fun bind(message: MessageRecord, isStartOfMessageCluster: Boolean, isEndOfMessageCluster: Boolean,
         glide: GlideRequests, thread: Recipient, searchQuery: String?, contactIsTrusted: Boolean) {
         // Background
-        val background = getBackground(message.isOutgoing, isStartOfMessageCluster, isEndOfMessageCluster)
+        val background = getBackground(message.isOutgoing)
         val color = if (message.isOutgoing) context.getAccentColor()
         else context.getColorFromAttr(R.attr.message_received_background_color)
         val filter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(color, BlendModeCompat.SRC_IN)
@@ -236,22 +235,8 @@ class VisibleMessageContentView : LinearLayout {
     private fun ViewVisibleMessageContentBinding.barrierViewsGone(): Boolean =
         listOf<View>(albumThumbnailView, linkPreviewView, voiceMessageView.root, quoteView.root).none { it.isVisible }
 
-    private fun getBackground(isOutgoing: Boolean, isStartOfMessageCluster: Boolean, isEndOfMessageCluster: Boolean): Drawable {
-        val isSingleMessage = (isStartOfMessageCluster && isEndOfMessageCluster)
-        @DrawableRes val backgroundID = when {
-            isSingleMessage -> {
-                if (isOutgoing) R.drawable.message_bubble_background_sent_alone else R.drawable.message_bubble_background_received_alone
-            }
-            isStartOfMessageCluster -> {
-                if (isOutgoing) R.drawable.message_bubble_background_sent_start else R.drawable.message_bubble_background_received_start
-            }
-            isEndOfMessageCluster -> {
-                if (isOutgoing) R.drawable.message_bubble_background_sent_end else R.drawable.message_bubble_background_received_end
-            }
-            else -> {
-                if (isOutgoing) R.drawable.message_bubble_background_sent_middle else R.drawable.message_bubble_background_received_middle
-            }
-        }
+    private fun getBackground(isOutgoing: Boolean): Drawable {
+        val backgroundID = if (isOutgoing) R.drawable.message_bubble_background_sent_alone else R.drawable.message_bubble_background_received_alone
         return ResourcesCompat.getDrawable(resources, backgroundID, context.theme)!!
     }
 

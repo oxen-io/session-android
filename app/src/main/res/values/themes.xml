@@ -540,7 +540,7 @@
         <item name="input_bar_border">@color/ocean_dark_4</item>
         <item name="input_bar_button_background">@color/ocean_dark_2</item>
         <item name="input_bar_button_text_color">@color/ocean_dark_6</item>
-        <item name="input_bar_button_background_opaque">@color/ocean_dark_2</item>
+        <item name="input_bar_button_background_opaque">@color/ocean_dark_4</item>
         <item name="input_bar_button_background_opaque_border">@color/ocean_dark_2</item>
         <item name="input_bar_lock_view_background">?colorPrimary</item>
         <item name="input_bar_lock_view_border">?colorPrimary</item>

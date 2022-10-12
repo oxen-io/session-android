@@ -1844,7 +1844,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         searchViewModel.onSearchOpened()
         binding?.searchBottomBar?.visibility = View.VISIBLE
         binding?.searchBottomBar?.setData(0, 0)
-        binding?.inputBar?.visibility = View.GONE
+        binding?.inputBar?.visibility = View.INVISIBLE
     }
 
     fun onSearchClosed() {
