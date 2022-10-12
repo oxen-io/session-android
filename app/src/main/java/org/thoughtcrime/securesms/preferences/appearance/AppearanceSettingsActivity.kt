@@ -62,14 +62,22 @@ class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.On
             val entry = accents[v]
             entry?.let { viewModel.setNewAccent(it) }
         } else if (v in themes) {
-            val mappedStyle = when (v) {
-                binding.themeOptionClassicDark, binding.themeRadioClassicDark -> CLASSIC_DARK
-                binding.themeOptionClassicLight, binding.themeRadioClassicLight -> CLASSIC_LIGHT
-                binding.themeOptionOceanDark, binding.themeRadioOceanDark -> OCEAN_DARK
-                binding.themeOptionOceanLight, binding.themeRadioOceanLight -> OCEAN_LIGHT
+            val currentBase = if (currentTheme?.theme == R.style.Classic_Dark || currentTheme?.theme == R.style.Classic_Light) R.style.Classic else R.style.Ocean
+            val (mappedStyle, newBase) = when (v) {
+                binding.themeOptionClassicDark, binding.themeRadioClassicDark -> CLASSIC_DARK to R.style.Classic
+                binding.themeOptionClassicLight, binding.themeRadioClassicLight -> CLASSIC_LIGHT to R.style.Classic
+                binding.themeOptionOceanDark, binding.themeRadioOceanDark -> OCEAN_DARK to R.style.Ocean
+                binding.themeOptionOceanLight, binding.themeRadioOceanLight -> OCEAN_LIGHT to R.style.Ocean
                 else -> throw NullPointerException("Invalid style for view [$v]")
             }
             viewModel.setNewStyle(mappedStyle)
+            if (currentBase != newBase) {
+                if (newBase == R.style.Ocean) {
+                    viewModel.setNewAccent(R.style.PrimaryBlue)
+                } else if (newBase == R.style.Classic) {
+                    viewModel.setNewAccent(R.style.PrimaryGreen)
+                }
+            }
         } else if (v == binding.systemSettingsSwitch) {
             viewModel.setNewFollowSystemSettings((v as SwitchCompat).isChecked)
         }
