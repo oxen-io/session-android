@@ -631,7 +631,7 @@
         <item name="conversation_unread_count_indicator_background">?colorAccent</item>
         <item name="conversation_pinned_background_color">?colorCellBackground</item>
         <item name="conversation_unread_background_color">@color/ocean_light_5</item>
-        <item name="conversation_pinned_icon_color">?colorPrimary</item>
+        <item name="conversation_pinned_icon_color">?android:textColorPrimary</item>
     </style>
 
 </resources>
