@@ -179,20 +179,16 @@ public class PrivacySettingsPreferenceFragment extends ListSummaryPreferenceFrag
       boolean val = (boolean) newValue;
       if (val) {
         // check if we've shown the info dialog and check for microphone permissions
-        if (TextSecurePreferences.setShownCallWarning(context.requireContext())) {
-          new AlertDialog.Builder(new ContextThemeWrapper(context.requireContext(), R.style.ThemeOverlay_Session_AlertDialog))
-                  .setTitle(R.string.dialog_voice_video_title)
-                  .setMessage(R.string.dialog_voice_video_message)
-                  .setPositiveButton(R.string.dialog_link_preview_enable_button_title, (d, w) -> {
-                    requestMicrophonePermission();
-                  })
-                  .setNegativeButton(R.string.cancel, (d, w) -> {
+        new AlertDialog.Builder(new ContextThemeWrapper(context.requireContext(), R.style.ThemeOverlay_Session_AlertDialog))
+                .setTitle(R.string.dialog_voice_video_title)
+                .setMessage(R.string.dialog_voice_video_message)
+                .setPositiveButton(R.string.dialog_link_preview_enable_button_title, (d, w) -> {
+                  requestMicrophonePermission();
+                })
+                .setNegativeButton(R.string.cancel, (d, w) -> {
 
-                  })
-                  .show();
-        } else {
-          requestMicrophonePermission();
-        }
+                })
+                .show();
         return false;
       } else {
         return true;
