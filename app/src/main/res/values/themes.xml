@@ -511,7 +511,7 @@
         <item name="home_gradient_start">#00000000</item>
         <item name="home_gradient_end">@color/ocean_dark_3</item>
         <item name="conversation_pinned_background_color">?colorCellBackground</item>
-        <item name="conversation_unread_background_color">@color/ocean_dark_2</item>
+        <item name="conversation_unread_background_color">@color/ocean_dark_4</item>
         <item name="conversation_pinned_icon_color">?colorAccent</item>
         <item name="unreadIndicatorBackgroundColor">?colorAccent</item>
         <item name="unreadIndicatorTextColor">@color/ocean_dark_0</item>
