@@ -53,6 +53,8 @@
        <item name="menu_mark_all_as_read">@drawable/ic_outline_mark_chat_read_24</item>
        <item name="emoji_show_less_icon">@drawable/ic_chevron_up_light</item>
        <item name="prominentButtonColor">?colorAccent</item>
+       <item name="attachment_document_icon_small">@drawable/ic_document_small_dark</item>
+       <item name="attachment_document_icon_large">@drawable/ic_document_large_dark</item>
     </style>
 
     <!-- This should be the default theme for the application. -->
