@@ -1334,6 +1334,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun playVoiceMessageAtIndexIfPossible(indexInAdapter: Int) {
+        if (!textSecurePreferences.autoplayAudioMessages()) return
+
         if (indexInAdapter < 0 || indexInAdapter >= adapter.itemCount) { return }
         val viewHolder = binding?.conversationRecyclerView?.findViewHolderForAdapterPosition(indexInAdapter) as? ConversationAdapter.VisibleMessageViewHolder ?: return
         val visibleMessageView = ViewVisibleMessageBinding.bind(viewHolder.view).visibleMessageView

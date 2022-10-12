@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import org.session.libsession.BuildConfig
 import org.session.libsession.R
+import org.session.libsession.utilities.TextSecurePreferences.Companion.AUTOPLAY_AUDIO_MESSAGES
 import org.session.libsession.utilities.TextSecurePreferences.Companion.CALL_NOTIFICATIONS_ENABLED
 import org.session.libsession.utilities.TextSecurePreferences.Companion.CLASSIC_DARK
 import org.session.libsession.utilities.TextSecurePreferences.Companion.CLASSIC_LIGHT
@@ -176,6 +177,7 @@ interface TextSecurePreferences {
     fun getFollowSystemSettings(): Boolean
     fun setThemeStyle(themeStyle: String)
     fun setFollowSystemSettings(followSystemSettings: Boolean)
+    fun autoplayAudioMessages(): Boolean
     fun hasPreference(key: String): Boolean
     fun clearAll()
 
@@ -257,8 +259,9 @@ interface TextSecurePreferences {
         const val HAS_HIDDEN_MESSAGE_REQUESTS = "pref_message_requests_hidden"
         const val CALL_NOTIFICATIONS_ENABLED = "pref_call_notifications_enabled"
         const val SHOWN_CALL_WARNING = "pref_shown_call_warning" // call warning is user-facing warning of enabling calls
-        const val SHOWN_CALL_NOTIFICATION = "pref_shown_call_notification" // call notification is a promp to check privacy settings
+        const val SHOWN_CALL_NOTIFICATION = "pref_shown_call_notification" // call notification is a prompt to check privacy settings
         const val LAST_VACUUM_TIME = "pref_last_vacuum_time"
+        const val AUTOPLAY_AUDIO_MESSAGES = "pref_autoplay_audio"
         const val FINGERPRINT_KEY_GENERATED = "fingerprint_key_generated"
         const val SELECTED_ACCENT_COLOR = "selected_accent_color"
         const val GREEN_ACCENT = "accent_green"
@@ -1660,6 +1663,10 @@ class AppTextSecurePreferences @Inject constructor(
 
     override fun setFollowSystemSettings(followSystemSettings: Boolean) {
         setBooleanPreference(FOLLOW_SYSTEM_SETTINGS, followSystemSettings)
+    }
+
+    override fun autoplayAudioMessages(): Boolean {
+        return getBooleanPreference(AUTOPLAY_AUDIO_MESSAGES, false)
     }
 
     override fun clearAll() {
