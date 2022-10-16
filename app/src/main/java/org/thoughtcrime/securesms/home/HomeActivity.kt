@@ -93,8 +93,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     private val publicKey: String
         get() = textSecurePreferences.getLocalNumber()!!
 
-    private val homeAdapter: NewHomeAdapter by lazy {
-        NewHomeAdapter(context = this, listener = this)
+    private val homeAdapter: HomeAdapter by lazy {
+        HomeAdapter(context = this, listener = this)
     }
 
     private val globalSearchAdapter = GlobalSearchAdapter { model ->
@@ -286,7 +286,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         binding.searchToolbar.isVisible = isShown
         binding.sessionToolbar.isVisible = !isShown
         binding.recyclerView.isVisible = !isShown
-        binding.emptyStateContainer.isVisible = (binding.recyclerView.adapter as NewHomeAdapter).itemCount == 0 && binding.recyclerView.isVisible
+        binding.emptyStateContainer.isVisible = (binding.recyclerView.adapter as HomeAdapter).itemCount == 0 && binding.recyclerView.isVisible
         binding.seedReminderView.isVisible = !TextSecurePreferences.getHasViewedSeed(this) && !isShown
         binding.globalSearchRecycler.isVisible = isShown
         binding.newConversationButton.isVisible = !isShown
