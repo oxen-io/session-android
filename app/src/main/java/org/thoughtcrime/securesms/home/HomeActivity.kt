@@ -61,7 +61,12 @@ import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.onboarding.SeedActivity
 import org.thoughtcrime.securesms.onboarding.SeedReminderViewDelegate
 import org.thoughtcrime.securesms.preferences.SettingsActivity
-import org.thoughtcrime.securesms.util.*
+import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
+import org.thoughtcrime.securesms.util.DateUtils
+import org.thoughtcrime.securesms.util.IP2Country
+import org.thoughtcrime.securesms.util.disableClipping
+import org.thoughtcrime.securesms.util.push
+import org.thoughtcrime.securesms.util.show
 import java.io.IOException
 import java.util.Locale
 import javax.inject.Inject
