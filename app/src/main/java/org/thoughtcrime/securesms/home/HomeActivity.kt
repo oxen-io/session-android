@@ -61,12 +61,7 @@ import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.onboarding.SeedActivity
 import org.thoughtcrime.securesms.onboarding.SeedReminderViewDelegate
 import org.thoughtcrime.securesms.preferences.SettingsActivity
-import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
-import org.thoughtcrime.securesms.util.DateUtils
-import org.thoughtcrime.securesms.util.IP2Country
-import org.thoughtcrime.securesms.util.disableClipping
-import org.thoughtcrime.securesms.util.push
-import org.thoughtcrime.securesms.util.show
+import org.thoughtcrime.securesms.util.*
 import java.io.IOException
 import java.util.Locale
 import javax.inject.Inject
@@ -172,22 +167,11 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         homeAdapter.glide = glide
         binding.recyclerView.adapter = homeAdapter
         binding.globalSearchRecycler.adapter = globalSearchAdapter
+
         // Set up empty state view
         binding.createNewPrivateChatButton.setOnClickListener { showNewConversation() }
         IP2Country.configureIfNeeded(this@HomeActivity)
-        homeViewModel.getObservable(this).observe(this) { newData ->
-            val manager = binding.recyclerView.layoutManager as LinearLayoutManager
-            val firstPos = manager.findFirstCompletelyVisibleItemPosition()
-            val offsetTop = if(firstPos >= 0) {
-                manager.findViewByPosition(firstPos)?.let { view ->
-                    manager.getDecoratedTop(view) - manager.getTopDecorationHeight(view)
-                } ?: 0
-            } else 0
-            homeAdapter.data = newData
-            if(firstPos >= 0) { manager.scrollToPositionWithOffset(firstPos, offsetTop) }
-            setupMessageRequestsBanner()
-            updateEmptyState()
-        }
+        startObservingUpdates()
 
         // Set up new conversation button
         binding.newConversationButton.setOnClickListener { showNewConversation() }
@@ -335,11 +319,19 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 ConfigurationMessageUtilities.syncConfigurationIfNeeded(this@HomeActivity)
             }
         }
+
+        // If the theme hasn't changed then start observing updates again (if it does change then we
+        // will recreate the activity resulting in it responding to changes multiple times)
+        if (currentThemeState == textSecurePreferences.themeState() && !homeViewModel.getObservable(this).hasActiveObservers()) {
+            startObservingUpdates()
+        }
     }
 
     override fun onPause() {
         super.onPause()
         ApplicationContext.getInstance(this).messageNotifier.setHomeScreenVisible(false)
+
+        homeViewModel.getObservable(this).removeObservers(this)
     }
 
     override fun onDestroy() {
@@ -353,6 +345,22 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     // endregion
 
     // region Updating
+    private fun startObservingUpdates() {
+        homeViewModel.getObservable(this).observe(this) { newData ->
+            val manager = binding.recyclerView.layoutManager as LinearLayoutManager
+            val firstPos = manager.findFirstCompletelyVisibleItemPosition()
+            val offsetTop = if(firstPos >= 0) {
+                manager.findViewByPosition(firstPos)?.let { view ->
+                    manager.getDecoratedTop(view) - manager.getTopDecorationHeight(view)
+                } ?: 0
+            } else 0
+            homeAdapter.data = newData
+            if(firstPos >= 0) { manager.scrollToPositionWithOffset(firstPos, offsetTop) }
+            setupMessageRequestsBanner()
+            updateEmptyState()
+        }
+    }
+
     private fun updateEmptyState() {
         val threadCount = (binding.recyclerView.adapter)!!.itemCount
         binding.emptyStateContainer.isVisible = threadCount == 0 && binding.recyclerView.isVisible
