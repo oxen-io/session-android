@@ -660,7 +660,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             updateSubtitle()
             showOrHideInputIfNeeded()
             binding?.toolbarContent?.profilePictureView?.root?.update(threadRecipient)
-            binding!!.toolbarContent.conversationTitleView.text = when {
+            binding?.toolbarContent?.conversationTitleView?.text = when {
                 threadRecipient.isLocalNumber -> getString(R.string.note_to_self)
                 else -> threadRecipient.toShortString()
             }
