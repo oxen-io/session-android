@@ -385,6 +385,7 @@
         <item name="scroll_to_bottom_button_background">@color/classic_dark_1</item>
         <item name="scroll_to_bottom_button_border">@color/classic_dark_3</item>
         <item name="conversation_unread_count_indicator_background">@color/classic_dark_4</item>
+        <item name="message_selected">@color/classic_dark_2</item>
     </style>
 
     <style name="Classic.Light">
@@ -468,6 +469,7 @@
         <item name="scroll_to_bottom_button_background">@color/classic_light_4</item>
         <item name="scroll_to_bottom_button_border">@color/classic_light_2</item>
         <item name="conversation_unread_count_indicator_background">@color/classic_dark_4</item>
+        <item name="message_selected">@color/classic_light_4</item>
 
     </style>
 
@@ -548,6 +550,7 @@
         <item name="scroll_to_bottom_button_background">@color/ocean_dark_4</item>
         <item name="scroll_to_bottom_button_border">?colorPrimary</item>
         <item name="conversation_unread_count_indicator_background">@color/ocean_dark_4</item>
+        <item name="message_selected">@color/classic_dark_4</item>
 
     </style>
 
@@ -633,6 +636,7 @@
         <item name="conversation_pinned_background_color">?colorCellBackground</item>
         <item name="conversation_unread_background_color">@color/ocean_light_5</item>
         <item name="conversation_pinned_icon_color">?android:textColorPrimary</item>
+        <item name="message_selected">@color/classic_light_5</item>
     </style>
 
 </resources>
