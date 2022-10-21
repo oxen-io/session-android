@@ -148,12 +148,11 @@ public class PassphrasePromptActivity extends BaseActionBarActivity {
     // Finish and proceed with the next intent.
     Intent nextIntent = getIntent().getParcelableExtra("next_intent");
     if (nextIntent != null) {
-      startActivity(nextIntent);
-//      try {
-//        startActivity(nextIntent);
-//      } catch (java.lang.SecurityException e) {
-//        Log.w(TAG, "Access permission not passed from PassphraseActivity, retry sharing.");
-//      }
+      try {
+        startActivity(nextIntent);
+      } catch (java.lang.SecurityException e) {
+        Log.w(TAG, "Access permission not passed from PassphraseActivity, retry sharing.", e);
+      }
     }
     finish();
   }
