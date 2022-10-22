@@ -31,7 +31,7 @@ public class NotificationsPreferenceFragment extends ListSummaryPreferenceFragme
 
   @Override
   public void onCreate(Bundle paramBundle) {
-    super.onCreate(paramBundle);a
+    super.onCreate(paramBundle);
 
     // Set up FCM toggle
     String fcmKey = "pref_key_use_fcm";
