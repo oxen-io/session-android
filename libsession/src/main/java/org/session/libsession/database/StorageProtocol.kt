@@ -71,8 +71,7 @@ interface StorageProtocol {
     fun hasBackgroundGroupAddJob(groupJoinUrl: String): Boolean
     fun setOpenGroupServerMessageID(messageID: Long, serverID: Long, threadID: Long, isSms: Boolean)
     fun getOpenGroup(room: String, server: String): OpenGroup?
-    fun addGroupMemberRole(member: GroupMember)
-    fun clearGroupMemberRoles(groupId: String)
+    fun setGroupMemberRoles(members: List<GroupMember>)
 
     // Open Group Public Keys
     fun getOpenGroupPublicKey(server: String): String?
@@ -197,4 +196,6 @@ interface StorageProtocol {
     fun removeReaction(emoji: String, messageTimestamp: Long, author: String, notifyUnread: Boolean)
     fun updateReactionIfNeeded(message: Message, sender: String, openGroupSentTimestamp: Long)
     fun deleteReactions(messageId: Long, mms: Boolean)
+    fun unblock(toUnblock: List<Recipient>)
+    fun blockedContacts(): List<Recipient>
 }
