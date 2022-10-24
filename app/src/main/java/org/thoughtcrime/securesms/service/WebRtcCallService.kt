@@ -12,6 +12,7 @@ import android.os.IBinder
 import android.os.ResultReceiver
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -199,7 +200,7 @@ class WebRtcCallService: Service(), CallManager.WebRtcListener {
     private val serviceExecutor = Executors.newSingleThreadExecutor()
     private val timeoutExecutor = Executors.newScheduledThreadPool(1)
     private val hangupOnCallAnswered = HangUpRtcOnPstnCallAnsweredListener {
-        startService(hangupIntent(this))
+        ContextCompat.startForegroundService(this, hangupIntent(this))
     }
 
     private var networkChangedReceiver: NetworkChangeReceiver? = null
