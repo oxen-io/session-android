@@ -15,7 +15,7 @@ android {
 }
 
 dependencies {
-    implementation "androidx.annotation:annotation:1.2.0"
+    implementation "androidx.annotation:annotation:1.5.0"
     implementation "com.google.protobuf:protobuf-java:$protobufVersion"
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
     implementation "com.github.oxen-io.session-android-curve-25519:curve25519-java:$curve25519Version"
@@ -24,7 +24,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     implementation "nl.komponents.kovenant:kovenant:$kovenantVersion"
-    testImplementation "junit:junit:3.8.2"
+    testImplementation "junit:junit:$junitVersion"
     testImplementation "org.assertj:assertj-core:1.7.1"
     testImplementation "org.conscrypt:conscrypt-openjdk-uber:2.0.0"
 }
