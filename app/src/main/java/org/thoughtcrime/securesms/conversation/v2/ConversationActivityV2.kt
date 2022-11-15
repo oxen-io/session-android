@@ -9,7 +9,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Resources
-import android.database.Cursor
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.net.Uri
@@ -39,8 +38,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.loader.app.LoaderManager
-import androidx.loader.content.Loader
+import androidx.paging.liveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.annimon.stream.Stream
@@ -90,6 +88,7 @@ import org.thoughtcrime.securesms.attachments.ScreenshotObserver
 import org.thoughtcrime.securesms.audio.AudioRecorder
 import org.thoughtcrime.securesms.contacts.SelectContactsActivity.Companion.selectedContactsKey
 import org.thoughtcrime.securesms.contactshare.SimpleTextWatcher
+import org.thoughtcrime.securesms.conversation.paging.ConversationPager
 import org.thoughtcrime.securesms.conversation.v2.ConversationReactionOverlay.OnActionSelectedListener
 import org.thoughtcrime.securesms.conversation.v2.ConversationReactionOverlay.OnReactionSelectedListener
 import org.thoughtcrime.securesms.conversation.v2.dialogs.BlockedDialog
@@ -172,9 +171,8 @@ import kotlin.math.sqrt
 class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDelegate,
     InputBarRecordingViewDelegate, AttachmentManager.AttachmentListener, ActivityDispatcher,
     ConversationActionModeCallbackDelegate, VisibleMessageViewDelegate, RecipientModifiedListener,
-    SearchBottomBar.EventListener, LoaderManager.LoaderCallbacks<Cursor>,
-    OnReactionSelectedListener, ReactWithAnyEmojiDialogFragment.Callback, ReactionsDialogFragment.Callback,
-    ConversationMenuHelper.ConversationMenuListener {
+    SearchBottomBar.EventListener, OnReactionSelectedListener, ReactWithAnyEmojiDialogFragment.Callback,
+    ReactionsDialogFragment.Callback, ConversationMenuHelper.ConversationMenuListener {
 
     private var binding: ActivityConversationV2Binding? = null
 
@@ -274,7 +272,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val cursor = mmsSmsDb.getConversation(viewModel.threadId, !isIncomingMessageRequestThread())
         val adapter = ConversationAdapter(
             this,
-            cursor,
             onItemPress = { message, position, view, event ->
                 handlePress(message, position, view, event)
             },
@@ -418,34 +415,37 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         baseDialog.show(supportFragmentManager, tag)
     }
 
-    override fun onCreateLoader(id: Int, bundle: Bundle?): Loader<Cursor> {
-        return ConversationLoader(viewModel.threadId, !isIncomingMessageRequestThread(), this@ConversationActivityV2)
-    }
+//    override fun onCreateLoader(id: Int, bundle: Bundle?): Loader<Cursor> {
+////        return ConversationLoader(viewModel.threadId, !isIncomingMessageRequestThread(), this@ConversationActivityV2)
+//    }
 
-    override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
-        adapter.changeCursor(cursor)
-        if (cursor != null) {
-            val messageTimestamp = messageToScrollTimestamp.getAndSet(-1)
-            val author = messageToScrollAuthor.getAndSet(null)
-            if (author != null && messageTimestamp >= 0) {
-                jumpToMessage(author, messageTimestamp, null)
-            }
-        }
-    }
+//    override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
+//        adapter.changeCursor(cursor)
+//        if (cursor != null) {
+//            val messageTimestamp = messageToScrollTimestamp.getAndSet(-1)
+//            val author = messageToScrollAuthor.getAndSet(null)
+//            if (author != null && messageTimestamp >= 0) {
+//                jumpToMessage(author, messageTimestamp, null)
+//            }
+//        }
+//    }
 
-    override fun onLoaderReset(cursor: Loader<Cursor>) {
-        adapter.changeCursor(null)
-    }
+//    override fun onLoaderReset(cursor: Loader<Cursor>) {
+////        adapter.changeCursor(null)
+//    }
 
     // called from onCreate
     private fun setUpRecyclerView() {
+        ConversationPager(viewModel.threadId, mmsSmsDb).liveData.observe(this) {
+            adapter.submitData(this.lifecycle, it)
+        }
         binding!!.conversationRecyclerView.adapter = adapter
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, !isIncomingMessageRequestThread())
         binding!!.conversationRecyclerView.layoutManager = layoutManager
         // Workaround for the fact that CursorRecyclerViewAdapter doesn't auto-update automatically (even though it says it will)
-        LoaderManager.getInstance(this).restartLoader(0, null, this)
+//        LoaderManager.getInstance(this).restartLoader(0, null, this)
+        ConversationPager(viewModel.threadId, mmsSmsDb)
         binding!!.conversationRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 handleRecyclerViewScrolled()
             }
@@ -702,7 +702,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
         adapter.notifyDataSetChanged()
         viewModel.acceptMessageRequest()
-        LoaderManager.getInstance(this).restartLoader(0, null, this)
+//        LoaderManager.getInstance(this).restartLoader(0, null, this)
         lifecycleScope.launch(Dispatchers.IO) {
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@ConversationActivityV2)
         }
@@ -1148,7 +1148,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         } else {
             MessageSender.send(reactionMessage, recipient.address)
         }
-        LoaderManager.getInstance(this).restartLoader(0, null, this)
+//        LoaderManager.getInstance(this).restartLoader(0, null, this)
     }
 
     private fun sendEmojiRemoval(emoji: String, originalMessage: MessageRecord) {
@@ -1172,7 +1172,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         } else {
             MessageSender.send(message, recipient.address)
         }
-        LoaderManager.getInstance(this).restartLoader(0, null, this)
+//        LoaderManager.getInstance(this).restartLoader(0, null, this)
     }
 
     override fun onCustomReactionSelected(messageRecord: MessageRecord, hasAddedCustomEmoji: Boolean) {

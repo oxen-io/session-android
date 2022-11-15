@@ -3,7 +3,6 @@ package org.thoughtcrime.securesms.conversation.v2
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.database.Cursor
 import android.util.SparseArray
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
@@ -14,6 +13,7 @@ import androidx.annotation.WorkerThread
 import androidx.core.util.getOrDefault
 import androidx.core.util.set
 import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.channels.BufferOverflow
@@ -23,10 +23,10 @@ import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewVisibleMessageBinding
 import org.session.libsession.messaging.contacts.Contact
+import org.thoughtcrime.securesms.conversation.paging.ConversationPagerDiffCallback
 import org.thoughtcrime.securesms.conversation.v2.messages.ControlMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageViewDelegate
-import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
@@ -34,15 +34,13 @@ import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
 
 class ConversationAdapter(
     context: Context,
-    cursor: Cursor,
     private val onItemPress: (MessageRecord, Int, VisibleMessageView, MotionEvent) -> Unit,
     private val onItemSwipeToReply: (MessageRecord, Int) -> Unit,
     private val onItemLongPress: (MessageRecord, Int, VisibleMessageView) -> Unit,
     private val onDeselect: (MessageRecord, Int) -> Unit,
     private val glide: GlideRequests,
     lifecycleCoroutineScope: LifecycleCoroutineScope
-)
-    : CursorRecyclerViewAdapter<ViewHolder>(context, cursor) {
+) : PagingDataAdapter<MessageRecord, ViewHolder>(ConversationPagerDiffCallback()) {
     private val messageDB by lazy { DatabaseComponent.get(context).mmsSmsDatabase() }
     private val contactDB by lazy { DatabaseComponent.get(context).sessionContactDatabase() }
     var selectedItems = mutableSetOf<MessageRecord>()
@@ -84,26 +82,20 @@ class ConversationAdapter(
     class VisibleMessageViewHolder(val view: View) : ViewHolder(view)
     class ControlMessageViewHolder(val view: ControlMessageView) : ViewHolder(view)
 
-    override fun getItemViewType(cursor: Cursor): Int {
-        val message = getMessage(cursor)!!
+    override fun getItemViewType(position: Int): Int {
+        val message = getItem(position)!!
         if (message.isControlMessage) { return ViewType.Control.rawValue }
         return ViewType.Visible.rawValue
     }
 
-    override fun onCreateItemViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        @Suppress("NAME_SHADOWING")
-        val viewType = ViewType.allValues[viewType]
-        return when (viewType) {
-            ViewType.Visible -> VisibleMessageViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_visible_message, parent, false))
-            ViewType.Control -> ControlMessageViewHolder(ControlMessageView(context))
-            else -> throw IllegalStateException("Unexpected view type: $viewType.")
-        }
-    }
-
-    override fun onBindItemViewHolder(viewHolder: ViewHolder, cursor: Cursor) {
-        val message = getMessage(cursor)!!
-        val position = viewHolder.adapterPosition
-        val messageBefore = getMessageBefore(position, cursor)
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+        val message = getItem(position)!!
+        val beforePosition = position - 1
+        val afterPosition = position + 1
+        val hasBefore = beforePosition in 0 until itemCount
+        val hasAfter = afterPosition in 0 until itemCount
+        val messageBefore = if (hasBefore) getItem(beforePosition)!! else null
+        val messageAfter = if (hasAfter) getItem(afterPosition)!! else null
         when (viewHolder) {
             is VisibleMessageViewHolder -> {
                 val visibleMessageView = ViewVisibleMessageBinding.bind(viewHolder.view).visibleMessageView
@@ -120,7 +112,7 @@ class ConversationAdapter(
                 }
                 val contact = contactCache[senderIdHash]
 
-                visibleMessageView.bind(message, messageBefore, getMessageAfter(position, cursor), glide, searchQuery, contact, senderId, visibleMessageViewDelegate)
+                visibleMessageView.bind(message, messageBefore, messageAfter, glide, searchQuery, contact, senderId, visibleMessageViewDelegate)
                 if (!message.isDeleted) {
                     visibleMessageView.onPress = { event -> onItemPress(message, viewHolder.adapterPosition, visibleMessageView, event) }
                     visibleMessageView.onSwipeToReply = { onItemSwipeToReply(message, viewHolder.adapterPosition) }
@@ -135,6 +127,7 @@ class ConversationAdapter(
                 viewHolder.view.bind(message, messageBefore)
                 if (message.isCallLog && message.isFirstMissedCall) {
                     viewHolder.view.setOnClickListener {
+                        val context = viewHolder.view.context
                         AlertDialog.Builder(context)
                             .setTitle(R.string.CallNotificationBuilder_first_call_title)
                             .setMessage(R.string.CallNotificationBuilder_first_call_message)
@@ -154,78 +147,85 @@ class ConversationAdapter(
         }
     }
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        @Suppress("NAME_SHADOWING")
+        val viewType = ViewType.allValues[viewType]
+        return when (viewType) {
+            ViewType.Visible -> VisibleMessageViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_visible_message, parent, false))
+            ViewType.Control -> ControlMessageViewHolder(ControlMessageView(parent.context))
+            else -> throw IllegalStateException("Unexpected view type: $viewType.")
+        }
+    }
+
     fun toggleSelection(message: MessageRecord, position: Int) {
         if (selectedItems.contains(message)) selectedItems.remove(message) else selectedItems.add(message)
         notifyItemChanged(position)
     }
 
-    override fun onItemViewRecycled(viewHolder: ViewHolder?) {
+    override fun onViewRecycled(viewHolder: ViewHolder) {
+        super.onViewRecycled(viewHolder)
         when (viewHolder) {
             is VisibleMessageViewHolder -> viewHolder.view.findViewById<VisibleMessageView>(R.id.visibleMessageView).recycle()
             is ControlMessageViewHolder -> viewHolder.view.recycle()
         }
-        super.onItemViewRecycled(viewHolder)
     }
 
-    private fun getMessage(cursor: Cursor): MessageRecord? {
-        return messageDB.readerFor(cursor).current
-    }
+//    private fun getMessageBefore(position: Int, cursor: Cursor): MessageRecord? {
+//        // The message that's visually before the current one is actually after the current
+//        // one for the cursor because the layout is reversed
+//        if (!cursor.moveToPosition(position + 1)) { return null }
+//        return messageDB.readerFor(cursor).current
+//    }
+//
+//    private fun getMessageAfter(position: Int, cursor: Cursor): MessageRecord? {
+//        // The message that's visually after the current one is actually before the current
+//        // one for the cursor because the layout is reversed
+//        if (!cursor.moveToPosition(position - 1)) { return null }
+//        return messageDB.readerFor(cursor).current
+//    }
 
-    private fun getMessageBefore(position: Int, cursor: Cursor): MessageRecord? {
-        // The message that's visually before the current one is actually after the current
-        // one for the cursor because the layout is reversed
-        if (!cursor.moveToPosition(position + 1)) { return null }
-        return messageDB.readerFor(cursor).current
-    }
-
-    private fun getMessageAfter(position: Int, cursor: Cursor): MessageRecord? {
-        // The message that's visually after the current one is actually before the current
-        // one for the cursor because the layout is reversed
-        if (!cursor.moveToPosition(position - 1)) { return null }
-        return messageDB.readerFor(cursor).current
-    }
-
-    override fun changeCursor(cursor: Cursor?) {
-        super.changeCursor(cursor)
-        val toRemove = mutableSetOf<MessageRecord>()
-        val toDeselect = mutableSetOf<Pair<Int, MessageRecord>>()
-        for (selected in selectedItems) {
-            val position = getItemPositionForTimestamp(selected.timestamp)
-            if (position == null || position == -1) {
-                toRemove += selected
-            } else {
-                val item = getMessage(getCursorAtPositionOrThrow(position))
-                if (item == null || item.isDeleted) {
-                    toDeselect += position to selected
-                }
-            }
-        }
-        selectedItems -= toRemove
-        toDeselect.iterator().forEach { (pos, record) ->
-            onDeselect(record, pos)
-        }
-    }
+//    override fun changeCursor(cursor: Cursor?) {
+//        super.changeCursor(cursor)
+//        val toRemove = mutableSetOf<MessageRecord>()
+//        val toDeselect = mutableSetOf<Pair<Int, MessageRecord>>()
+//        for (selected in selectedItems) {
+//            val position = getItemPositionForTimestamp(selected.timestamp)
+//            if (position == null || position == -1) {
+//                toRemove += selected
+//            } else {
+//                val item = getMessage(getCursorAtPositionOrThrow(position))
+//                if (item == null || item.isDeleted) {
+//                    toDeselect += position to selected
+//                }
+//            }
+//        }
+//        selectedItems -= toRemove
+//        toDeselect.iterator().forEach { (pos, record) ->
+//            onDeselect(record, pos)
+//        }
+//    }
 
     fun findLastSeenItemPosition(lastSeenTimestamp: Long): Int? {
-        val cursor = this.cursor
-        if (lastSeenTimestamp <= 0L || cursor == null || !isActiveCursor) return null
-        for (i in 0 until itemCount) {
-            cursor.moveToPosition(i)
-            val message = messageDB.readerFor(cursor).current
-            if (message.isOutgoing || message.dateReceived <= lastSeenTimestamp) { return i }
-        }
+//        val cursor = this.cursor
+//        if (lastSeenTimestamp <= 0L || cursor == null || !isActiveCursor) return null
+//        for (i in 0 until itemCount) {
+//            cursor.moveToPosition(i)
+//            val message = messageDB.readerFor(cursor).current
+//            if (message.isOutgoing || message.dateReceived <= lastSeenTimestamp) { return i }
+//        }
         return null
     }
 
     fun getItemPositionForTimestamp(timestamp: Long): Int? {
-        val cursor = this.cursor
-        if (timestamp <= 0L || cursor == null || !isActiveCursor) return null
-        for (i in 0 until itemCount) {
-            cursor.moveToPosition(i)
-            val message = messageDB.readerFor(cursor).current
-            if (message.dateSent == timestamp) { return i }
-        }
         return null
+//        val cursor = this.cursor
+//        if (timestamp <= 0L || cursor == null || !isActiveCursor) return null
+//        for (i in 0 until itemCount) {
+//            cursor.moveToPosition(i)
+//            val message = messageDB.readerFor(cursor).current
+//            if (message.dateSent == timestamp) { return i }
+//        }
+//        return null
     }
 
     fun onSearchQueryUpdated(query: String?) {

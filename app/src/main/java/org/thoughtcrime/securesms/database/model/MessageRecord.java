@@ -33,6 +33,7 @@ import org.session.libsession.utilities.NetworkFailure;
 import org.session.libsession.utilities.recipients.Recipient;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The base class for message record models that are displayed in
@@ -140,10 +141,12 @@ public abstract class MessageRecord extends DisplayRecord {
     return spannable;
   }
 
-  public boolean equals(Object other) {
-    return other instanceof MessageRecord
-      && ((MessageRecord) other).getId() == getId()
-      && ((MessageRecord) other).isMms() == isMms();
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    MessageRecord that = (MessageRecord) o;
+    return that.isMms() == isMms() && expiresIn == that.expiresIn && expireStarted == that.expireStarted && unidentified == that.unidentified && id == that.id && Objects.equals(individualRecipient, that.individualRecipient) && Objects.equals(mismatches, that.mismatches) && Objects.equals(networkFailures, that.networkFailures) && Objects.equals(reactions, that.reactions);
   }
 
   public int hashCode() {

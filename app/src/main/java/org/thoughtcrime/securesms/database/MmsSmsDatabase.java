@@ -112,6 +112,19 @@ public class MmsSmsDatabase extends Database {
     return getMessageFor(timestamp, author.serialize());
   }
 
+  public Cursor getConversationPage(long threadId, long offsetDate, int limit) {
+    String order = MmsSmsColumns.NORMALIZED_DATE_SENT+" DESC";
+    String selection = MmsSmsColumns.THREAD_ID + " = "+threadId;
+    if (offsetDate != 0) {
+      selection += " AND "+MmsSmsColumns.NORMALIZED_DATE_SENT+" < "+offsetDate;
+    }
+    String limitStr = limit > 0 ? ""+limit : null;
+    Cursor cursor = queryTables(PROJECTION, selection, order, limitStr);
+    setNotifyConverationListeners(cursor, threadId);
+
+    return cursor;
+  }
+
   public Cursor getConversation(long threadId, boolean reverse, long offset, long limit) {
     String order     = MmsSmsColumns.NORMALIZED_DATE_SENT + (reverse ? " DESC" : " ASC");
     String selection = MmsSmsColumns.THREAD_ID + " = " + threadId;
