@@ -38,12 +38,16 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.cachedIn
 import androidx.paging.liveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.cash.copper.flow.observeQuery
 import com.annimon.stream.Stream
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityConversationV2Binding
@@ -88,7 +92,7 @@ import org.thoughtcrime.securesms.attachments.ScreenshotObserver
 import org.thoughtcrime.securesms.audio.AudioRecorder
 import org.thoughtcrime.securesms.contacts.SelectContactsActivity.Companion.selectedContactsKey
 import org.thoughtcrime.securesms.contactshare.SimpleTextWatcher
-import org.thoughtcrime.securesms.conversation.paging.ConversationPager
+import org.thoughtcrime.securesms.conversation.paging.conversationPager
 import org.thoughtcrime.securesms.conversation.v2.ConversationReactionOverlay.OnActionSelectedListener
 import org.thoughtcrime.securesms.conversation.v2.ConversationReactionOverlay.OnReactionSelectedListener
 import org.thoughtcrime.securesms.conversation.v2.dialogs.BlockedDialog
@@ -112,6 +116,7 @@ import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities
 import org.thoughtcrime.securesms.conversation.v2.utilities.ResendMessageUtilities
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
 import org.thoughtcrime.securesms.crypto.MnemonicUtilities
+import org.thoughtcrime.securesms.database.DatabaseContentProviders
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
 import org.thoughtcrime.securesms.database.LokiMessageDatabase
@@ -250,7 +255,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private val isScrolledToBottom: Boolean
         get() {
-            val position = layoutManager?.findFirstCompletelyVisibleItemPosition() ?: 0
+            val position = layoutManager?.findFirstVisibleItemPosition() ?: 0
             return position == 0
         }
 
@@ -268,8 +273,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         MnemonicCodec(loadFileContents).encode(hexEncodedSeed!!, MnemonicCodec.Language.Configuration.english)
     }
 
+    private val pager by lazy {
+        conversationPager(viewModel.threadId, mmsSmsDb, sessionContactDb)
+    }
+
     private val adapter by lazy {
-        val cursor = mmsSmsDb.getConversation(viewModel.threadId, !isIncomingMessageRequestThread())
         val adapter = ConversationAdapter(
             this,
             onItemPress = { message, position, view, event ->
@@ -292,8 +300,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     onDeselect(message, position, it)
                 }
             },
-            glide = glide,
-            lifecycleCoroutineScope = lifecycleScope
+            glide = glide
         )
         adapter.visibleMessageViewDelegate = this
         adapter
@@ -348,6 +355,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         setUpLinkPreviewObserver()
         restoreDraftIfNeeded()
         setUpUiStateObserver()
+        setUpThreadUpdatedObserver()
         binding!!.scrollToBottomButton.setOnClickListener {
             val layoutManager = binding?.conversationRecyclerView?.layoutManager ?: return@setOnClickListener
             if (layoutManager.isSmoothScrolling) {
@@ -436,7 +444,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     // called from onCreate
     private fun setUpRecyclerView() {
-        ConversationPager(viewModel.threadId, mmsSmsDb).liveData.observe(this) {
+        pager.liveData.cachedIn(lifecycle).observe(this) {
             adapter.submitData(this.lifecycle, it)
         }
         binding!!.conversationRecyclerView.adapter = adapter
@@ -444,7 +452,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         binding!!.conversationRecyclerView.layoutManager = layoutManager
         // Workaround for the fact that CursorRecyclerViewAdapter doesn't auto-update automatically (even though it says it will)
 //        LoaderManager.getInstance(this).restartLoader(0, null, this)
-        ConversationPager(viewModel.threadId, mmsSmsDb)
         binding!!.conversationRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 handleRecyclerViewScrolled()
@@ -602,6 +609,18 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             }
         }
     }
+    
+    private fun setUpThreadUpdatedObserver() {
+        lifecycleScope.launchWhenStarted {
+            contentResolver
+                .observeQuery(DatabaseContentProviders.Conversation.getUriForThread(viewModel.threadId))
+                .onEach {
+                    Log.d("Loki", "Should refresh here maybe")
+                    adapter.refresh()
+                }
+                .collect()
+        }
+    }
 
     private fun setUpUiStateObserver() {
         lifecycleScope.launchWhenStarted {
@@ -702,7 +721,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
         adapter.notifyDataSetChanged()
         viewModel.acceptMessageRequest()
-//        LoaderManager.getInstance(this).restartLoader(0, null, this)
         lifecycleScope.launch(Dispatchers.IO) {
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@ConversationActivityV2)
         }

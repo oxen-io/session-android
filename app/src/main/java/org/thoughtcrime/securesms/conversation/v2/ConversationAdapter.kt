@@ -3,27 +3,16 @@ package org.thoughtcrime.securesms.conversation.v2
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.util.SparseArray
-import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.WorkerThread
-import androidx.core.util.getOrDefault
-import androidx.core.util.set
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewVisibleMessageBinding
-import org.session.libsession.messaging.contacts.Contact
 import org.thoughtcrime.securesms.conversation.paging.ConversationPagerDiffCallback
+import org.thoughtcrime.securesms.conversation.paging.MessageAndContact
 import org.thoughtcrime.securesms.conversation.v2.messages.ControlMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageViewDelegate
@@ -39,32 +28,12 @@ class ConversationAdapter(
     private val onItemLongPress: (MessageRecord, Int, VisibleMessageView) -> Unit,
     private val onDeselect: (MessageRecord, Int) -> Unit,
     private val glide: GlideRequests,
-    lifecycleCoroutineScope: LifecycleCoroutineScope
-) : PagingDataAdapter<MessageRecord, ViewHolder>(ConversationPagerDiffCallback()) {
+) : PagingDataAdapter<MessageAndContact, ViewHolder>(ConversationPagerDiffCallback()) {
     private val messageDB by lazy { DatabaseComponent.get(context).mmsSmsDatabase() }
     private val contactDB by lazy { DatabaseComponent.get(context).sessionContactDatabase() }
     var selectedItems = mutableSetOf<MessageRecord>()
     private var searchQuery: String? = null
     var visibleMessageViewDelegate: VisibleMessageViewDelegate? = null
-
-    private val updateQueue = Channel<String>(1024, onBufferOverflow = BufferOverflow.DROP_OLDEST)
-    private val contactCache = SparseArray<Contact>(100)
-    private val contactLoadedCache = SparseBooleanArray(100)
-    init {
-        lifecycleCoroutineScope.launch(IO) {
-            while (isActive) {
-                val item = updateQueue.receive()
-                val contact = getSenderInfo(item) ?: continue
-                contactCache[item.hashCode()] = contact
-                contactLoadedCache[item.hashCode()] = true
-            }
-        }
-    }
-
-    @WorkerThread
-    private fun getSenderInfo(sender: String): Contact? {
-        return contactDB.getContactWithSessionID(sender)
-    }
 
     sealed class ViewType(val rawValue: Int) {
         object Visible : ViewType(0)
@@ -83,15 +52,15 @@ class ConversationAdapter(
     class ControlMessageViewHolder(val view: ControlMessageView) : ViewHolder(view)
 
     override fun getItemViewType(position: Int): Int {
-        val message = getItem(position)!!
+        val message = getItem(position)!!.message
         if (message.isControlMessage) { return ViewType.Control.rawValue }
         return ViewType.Visible.rawValue
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val message = getItem(position)!!
-        val beforePosition = position - 1
-        val afterPosition = position + 1
+        val (message, contact) = getItem(position)!!
+        val beforePosition = position + 1
+        val afterPosition = position - 1
         val hasBefore = beforePosition in 0 until itemCount
         val hasAfter = afterPosition in 0 until itemCount
         val messageBefore = if (hasBefore) getItem(beforePosition)!! else null
@@ -103,16 +72,8 @@ class ConversationAdapter(
                 visibleMessageView.snIsSelected = isSelected
                 visibleMessageView.indexInAdapter = position
                 val senderId = message.individualRecipient.address.serialize()
-                val senderIdHash = senderId.hashCode()
-                updateQueue.trySend(senderId)
-                if (contactCache[senderIdHash] == null && !contactLoadedCache.getOrDefault(senderIdHash, false)) {
-                    getSenderInfo(senderId)?.let { contact ->
-                        contactCache[senderIdHash] = contact
-                    }
-                }
-                val contact = contactCache[senderIdHash]
 
-                visibleMessageView.bind(message, messageBefore, messageAfter, glide, searchQuery, contact, senderId, visibleMessageViewDelegate)
+                visibleMessageView.bind(message, messageBefore?.message, messageAfter?.message, glide, searchQuery, contact, senderId, visibleMessageViewDelegate)
                 if (!message.isDeleted) {
                     visibleMessageView.onPress = { event -> onItemPress(message, viewHolder.adapterPosition, visibleMessageView, event) }
                     visibleMessageView.onSwipeToReply = { onItemSwipeToReply(message, viewHolder.adapterPosition) }
@@ -124,7 +85,7 @@ class ConversationAdapter(
                 }
             }
             is ControlMessageViewHolder -> {
-                viewHolder.view.bind(message, messageBefore)
+                viewHolder.view.bind(message, messageBefore?.message)
                 if (message.isCallLog && message.isFirstMissedCall) {
                     viewHolder.view.setOnClickListener {
                         val context = viewHolder.view.context

@@ -112,17 +112,44 @@ public class MmsSmsDatabase extends Database {
     return getMessageFor(timestamp, author.serialize());
   }
 
-  public Cursor getConversationPage(long threadId, long offsetDate, int limit) {
+  public Cursor getConversationPage(long threadId, long fromTime, long toTime, int limit) {
     String order = MmsSmsColumns.NORMALIZED_DATE_SENT+" DESC";
-    String selection = MmsSmsColumns.THREAD_ID + " = "+threadId;
-    if (offsetDate != 0) {
-      selection += " AND "+MmsSmsColumns.NORMALIZED_DATE_SENT+" < "+offsetDate;
+    String selection = MmsSmsColumns.THREAD_ID + " = "+threadId
+            + " AND "+MmsSmsColumns.NORMALIZED_DATE_SENT+" < " + fromTime;
+    String limitStr = null;
+    if (toTime != -1L) {
+      selection += " AND "+MmsSmsColumns.NORMALIZED_DATE_SENT+" >= "+toTime;
+    } else {
+      limitStr = ""+limit;
     }
-    String limitStr = limit > 0 ? ""+limit : null;
-    Cursor cursor = queryTables(PROJECTION, selection, order, limitStr);
-    setNotifyConverationListeners(cursor, threadId);
 
-    return cursor;
+    return queryTables(PROJECTION, selection, order, limitStr);
+  }
+
+  public boolean hasNextPage(long threadId, long toTime) {
+    String order = MmsSmsColumns.NORMALIZED_DATE_SENT+" DESC";
+    String selection = MmsSmsColumns.THREAD_ID + " = "+threadId
+            + " AND "+MmsSmsColumns.NORMALIZED_DATE_SENT+" < " + toTime; // check if there's at least one message before the `toTime`
+    Cursor cursor = queryTables(PROJECTION, selection, order, null);
+    boolean hasNext = false;
+    if (cursor != null) {
+      hasNext = cursor.getCount() > 0;
+      cursor.close();
+    }
+    return hasNext;
+  }
+
+  public boolean hasPreviousPage(long threadId, long fromTime) {
+    String order = MmsSmsColumns.NORMALIZED_DATE_SENT+" DESC";
+    String selection = MmsSmsColumns.THREAD_ID + " = "+threadId
+            + " AND "+MmsSmsColumns.NORMALIZED_DATE_SENT+" >= " + fromTime; // check if there's at least one message after the `fromTime`
+    Cursor cursor = queryTables(PROJECTION, selection, order, null);
+    boolean hasNext = false;
+    if (cursor != null) {
+      hasNext = cursor.getCount() > 0;
+      cursor.close();
+    }
+    return hasNext;
   }
 
   public Cursor getConversation(long threadId, boolean reverse, long offset, long limit) {

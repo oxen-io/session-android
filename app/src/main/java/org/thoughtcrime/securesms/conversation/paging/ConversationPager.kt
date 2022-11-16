@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.conversation.paging
 
+import androidx.annotation.WorkerThread
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
@@ -7,64 +8,112 @@ import androidx.paging.PagingState
 import androidx.recyclerview.widget.DiffUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.session.libsession.messaging.contacts.Contact
 import org.thoughtcrime.securesms.database.MmsSmsDatabase
+import org.thoughtcrime.securesms.database.SessionContactDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
 
+private const val TIME_BUCKET = 600000L // bucket into 10 minute increments
+
 private fun config() = PagingConfig(
-    pageSize = 50,
+    pageSize = 100,
+    maxSize = 500,
 )
 
-fun ConversationPager(threadId: Long, db: MmsSmsDatabase) = Pager(config()) {
-    ConversationPagingSource(threadId, db)
+fun conversationPager(threadId: Long, db: MmsSmsDatabase, contactDb: SessionContactDatabase) = Pager(config()) {
+    ConversationPagingSource(threadId, db, contactDb)
 }
 
-class ConversationPagerDiffCallback: DiffUtil.ItemCallback<MessageRecord>() {
-    override fun areItemsTheSame(oldItem: MessageRecord, newItem: MessageRecord): Boolean =
-        oldItem.id == newItem.id
+class ConversationPagerDiffCallback: DiffUtil.ItemCallback<MessageAndContact>() {
+    override fun areItemsTheSame(oldItem: MessageAndContact, newItem: MessageAndContact): Boolean =
+        oldItem.message.id == newItem.message.id && oldItem.message.isMms == newItem.message.isMms
 
-    override fun areContentsTheSame(oldItem: MessageRecord, newItem: MessageRecord): Boolean =
+    override fun areContentsTheSame(oldItem: MessageAndContact, newItem: MessageAndContact): Boolean =
         oldItem == newItem
 }
 
+data class MessageAndContact(val message: MessageRecord,
+                          val contact: Contact?)
+
+data class PageLoad(val fromTime: Long, val toTime: Long? = null)
+
 class ConversationPagingSource(
     private val threadId: Long,
-    private val db: MmsSmsDatabase
-    ): PagingSource<Long, MessageRecord>() {
-    override fun getRefreshKey(state: PagingState<Long, MessageRecord>): Long? =
-        state.firstItemOrNull()?.dateSent
+    private val messageDb: MmsSmsDatabase,
+    private val contactDb: SessionContactDatabase
+    ): PagingSource<PageLoad, MessageAndContact>() {
 
-    override suspend fun load(params: LoadParams<Long>): LoadResult<Long, MessageRecord> {
-        val fromTime = params.key ?: 0 // 0 will be treated as no offset if passed to DB
-        val amount = params.loadSize
-        val prevKey: Long?
+    override fun getRefreshKey(state: PagingState<PageLoad, MessageAndContact>): PageLoad? {
+        val anchorPosition = state.anchorPosition ?: return null
+        val anchorPage = state.closestPageToPosition(anchorPosition) ?: return null
+        val next = anchorPage.nextKey?.fromTime ?: return null
+        val previous = anchorPage.prevKey?.toTime
+        return PageLoad(next, previous)
+    }
+
+    private val contactCache = mutableMapOf<String, Contact>()
+
+    @WorkerThread
+    private fun getContact(sessionId: String): Contact? {
+        contactCache[sessionId]?.let { contact ->
+            return contact
+        } ?: run {
+            contactDb.getContactWithSessionID(sessionId)?.let { contact ->
+                contactCache[sessionId] = contact
+                return contact
+            }
+        }
+        return null
+    }
+
+    override suspend fun load(params: LoadParams<PageLoad>): LoadResult<PageLoad, MessageAndContact> {
+        val pageLoad = params.key ?: withContext(Dispatchers.IO) {
+            messageDb.getConversationSnippet(threadId).use {
+                val reader = messageDb.readerFor(it)
+                var record: MessageRecord? = null
+                if (reader != null) {
+                    record = reader.next
+                    while (record != null && record.isDeleted) {
+                        record = reader.next
+                    }
+                }
+                record?.let { message ->
+                    val toRound = message.dateSent
+                    (TIME_BUCKET - toRound % TIME_BUCKET) + toRound
+                }?.let { fromTime ->
+                    PageLoad(fromTime)
+                }
+            }
+        } ?: return LoadResult.Page(emptyList(), null, null)
+
         val result = withContext(Dispatchers.IO) {
-            val cursor = db.getConversationPage(threadId, fromTime, amount)
-            val processedList = mutableListOf<MessageRecord>()
-            val reader = db.readerFor(cursor)
-            while (reader.next != null) {
+            val cursor = messageDb.getConversationPage(threadId, pageLoad.fromTime, pageLoad.toTime ?: -1L, params.loadSize)
+            val processedList = mutableListOf<MessageAndContact>()
+            val reader = messageDb.readerFor(cursor)
+            while (reader.next != null && !invalid) {
                 reader.current?.let { item ->
-                    processedList += item
+                    val contact = getContact(item.individualRecipient.address.serialize())
+                    processedList += MessageAndContact(item, contact)
                 }
             }
             reader.close()
-            processedList.toList()
+            processedList.toMutableList()
         }
-        val nextKey = if (result.isEmpty()) null else result.last().dateSent
-        prevKey = if (fromTime == 0L || result.isEmpty()) null else withContext(Dispatchers.IO) {
-            val cursor = db.getConversationPage(threadId, result.first().dateSent, amount)
-            val lastTimestamp =
-                if (!cursor.moveToLast()) null
-                else {
-                    val reader = db.readerFor(cursor)
-                    reader.current?.dateSent
-                }
-            cursor.close()
-            lastTimestamp
-        }
+
+        val (nextCheckTime, drop) = if (pageLoad.toTime == null) {
+            // cut out the last X to bucket time, set next check time to be that time
+            val toRound = result.last().message.dateSent
+            (TIME_BUCKET - toRound % TIME_BUCKET) + toRound to true
+        } else pageLoad.toTime to false
+
+        val hasNext = withContext(Dispatchers.IO) { messageDb.hasNextPage(threadId, nextCheckTime) }
+        val hasPrevious = withContext(Dispatchers.IO) { messageDb.hasPreviousPage(threadId, pageLoad.fromTime) }
+        val nextKey = if (!hasNext) null else nextCheckTime
+        val prevKey = if (!hasPrevious) null else pageLoad.fromTime + TIME_BUCKET
         return LoadResult.Page(
-            data = result,
-            prevKey,
-            nextKey
+            data = result.dropLastWhile { drop && it.message.dateSent <= nextCheckTime },
+            prevKey = prevKey?.let { PageLoad(it) },
+            nextKey = nextKey?.let { PageLoad(it) }
         )
     }
 }
