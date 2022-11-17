@@ -16,9 +16,12 @@ import org.thoughtcrime.securesms.database.model.MessageRecord
 private const val TIME_BUCKET = 600000L // bucket into 10 minute increments
 
 private fun config() = PagingConfig(
-    pageSize = 100,
-    maxSize = 500,
+    pageSize = 50,
+    maxSize = 200,
+    enablePlaceholders = false
 )
+
+fun Long.bucketed(): Long = (TIME_BUCKET - this % TIME_BUCKET) + this
 
 fun conversationPager(threadId: Long, db: MmsSmsDatabase, contactDb: SessionContactDatabase) = Pager(config()) {
     ConversationPagingSource(threadId, db, contactDb)
@@ -46,9 +49,9 @@ class ConversationPagingSource(
     override fun getRefreshKey(state: PagingState<PageLoad, MessageAndContact>): PageLoad? {
         val anchorPosition = state.anchorPosition ?: return null
         val anchorPage = state.closestPageToPosition(anchorPosition) ?: return null
-        val next = anchorPage.nextKey?.fromTime ?: return null
-        val previous = anchorPage.prevKey?.toTime
-        return PageLoad(next, previous)
+        val next = anchorPage.nextKey?.fromTime
+        val previous = anchorPage.prevKey?.fromTime ?: anchorPage.data.firstOrNull()?.message?.dateSent ?: return null
+        return PageLoad(previous, next)
     }
 
     private val contactCache = mutableMapOf<String, Contact>()
@@ -77,17 +80,19 @@ class ConversationPagingSource(
                         record = reader.next
                     }
                 }
-                record?.let { message ->
-                    val toRound = message.dateSent
-                    (TIME_BUCKET - toRound % TIME_BUCKET) + toRound
-                }?.let { fromTime ->
+                record?.dateSent?.let { fromTime ->
                     PageLoad(fromTime)
                 }
             }
         } ?: return LoadResult.Page(emptyList(), null, null)
 
         val result = withContext(Dispatchers.IO) {
-            val cursor = messageDb.getConversationPage(threadId, pageLoad.fromTime, pageLoad.toTime ?: -1L, params.loadSize)
+            val cursor = messageDb.getConversationPage(
+                threadId,
+                pageLoad.fromTime,
+                pageLoad.toTime ?: -1L,
+                params.loadSize
+            )
             val processedList = mutableListOf<MessageAndContact>()
             val reader = messageDb.readerFor(cursor)
             while (reader.next != null && !invalid) {
@@ -100,19 +105,25 @@ class ConversationPagingSource(
             processedList.toMutableList()
         }
 
-        val (nextCheckTime, drop) = if (pageLoad.toTime == null) {
-            // cut out the last X to bucket time, set next check time to be that time
-            val toRound = result.last().message.dateSent
-            (TIME_BUCKET - toRound % TIME_BUCKET) + toRound to true
-        } else pageLoad.toTime to false
+        val hasNext = withContext(Dispatchers.IO) {
+            if (result.isEmpty()) return@withContext false
+            val lastTime = result.last().message.dateSent
+            messageDb.hasNextPage(threadId, lastTime)
+        }
 
-        val hasNext = withContext(Dispatchers.IO) { messageDb.hasNextPage(threadId, nextCheckTime) }
+        val nextCheckTime = if (hasNext) {
+            // cut out the last X to bucket time, set next check time to be that time
+            val lastSent = result.last().message.dateSent
+            if (lastSent == pageLoad.fromTime) null else lastSent
+        } else null
+
         val hasPrevious = withContext(Dispatchers.IO) { messageDb.hasPreviousPage(threadId, pageLoad.fromTime) }
         val nextKey = if (!hasNext) null else nextCheckTime
-        val prevKey = if (!hasPrevious) null else pageLoad.fromTime + TIME_BUCKET
+        val prevKey = if (!hasPrevious) null else messageDb.getPreviousPage(threadId, pageLoad.fromTime, params.loadSize)
+
         return LoadResult.Page(
-            data = result.dropLastWhile { drop && it.message.dateSent <= nextCheckTime },
-            prevKey = prevKey?.let { PageLoad(it) },
+            data = result, // next check time is not null if drop is true
+            prevKey = prevKey?.let { PageLoad(it, pageLoad.fromTime) },
             nextKey = nextKey?.let { PageLoad(it) }
         )
     }

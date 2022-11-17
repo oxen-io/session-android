@@ -112,13 +112,31 @@ public class MmsSmsDatabase extends Database {
     return getMessageFor(timestamp, author.serialize());
   }
 
+  public long getPreviousPage(long threadId, long fromTime, int limit) {
+    String order = MmsSmsColumns.NORMALIZED_DATE_SENT+" ASC";
+    String selection = MmsSmsColumns.THREAD_ID+" = "+threadId
+            + " AND "+MmsSmsColumns.NORMALIZED_DATE_SENT+" > "+fromTime;
+    String limitStr = ""+limit;
+    long sent = -1;
+    Cursor cursor = queryTables(PROJECTION, selection, order, limitStr);
+    if (cursor == null) return sent;
+    Reader reader = readerFor(cursor);
+    if (!cursor.move(limit)) {
+      cursor.moveToLast();
+    }
+    MessageRecord record = reader.getCurrent();
+    sent = record.getDateSent();
+    reader.close();
+    return sent;
+  }
+
   public Cursor getConversationPage(long threadId, long fromTime, long toTime, int limit) {
     String order = MmsSmsColumns.NORMALIZED_DATE_SENT+" DESC";
     String selection = MmsSmsColumns.THREAD_ID + " = "+threadId
-            + " AND "+MmsSmsColumns.NORMALIZED_DATE_SENT+" < " + fromTime;
+            + " AND "+MmsSmsColumns.NORMALIZED_DATE_SENT+" <= " + fromTime;
     String limitStr = null;
     if (toTime != -1L) {
-      selection += " AND "+MmsSmsColumns.NORMALIZED_DATE_SENT+" >= "+toTime;
+      selection += " AND "+MmsSmsColumns.NORMALIZED_DATE_SENT+" > "+toTime;
     } else {
       limitStr = ""+limit;
     }
@@ -142,7 +160,7 @@ public class MmsSmsDatabase extends Database {
   public boolean hasPreviousPage(long threadId, long fromTime) {
     String order = MmsSmsColumns.NORMALIZED_DATE_SENT+" DESC";
     String selection = MmsSmsColumns.THREAD_ID + " = "+threadId
-            + " AND "+MmsSmsColumns.NORMALIZED_DATE_SENT+" >= " + fromTime; // check if there's at least one message after the `fromTime`
+            + " AND "+MmsSmsColumns.NORMALIZED_DATE_SENT+" > " + fromTime; // check if there's at least one message after the `fromTime`
     Cursor cursor = queryTables(PROJECTION, selection, order, null);
     boolean hasNext = false;
     if (cursor != null) {
