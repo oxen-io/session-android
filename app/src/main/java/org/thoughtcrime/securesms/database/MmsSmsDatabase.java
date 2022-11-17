@@ -257,16 +257,16 @@ public class MmsSmsDatabase extends Database {
     return -1;
   }
 
-  public int getMessagePositionInConversation(long threadId, long receivedTimestamp, @NonNull Address address) {
-    String order     = MmsSmsColumns.NORMALIZED_DATE_RECEIVED + " DESC";
+  public int getMessagePositionInConversation(long threadId, long sentTimestamp, @NonNull Address address) {
+    String order     = MmsSmsColumns.NORMALIZED_DATE_SENT + " DESC";
     String selection = MmsSmsColumns.THREAD_ID + " = " + threadId;
 
-    try (Cursor cursor = queryTables(new String[]{ MmsSmsColumns.NORMALIZED_DATE_RECEIVED, MmsSmsColumns.ADDRESS }, selection, order, null)) {
+    try (Cursor cursor = queryTables(new String[]{ MmsSmsColumns.NORMALIZED_DATE_SENT, MmsSmsColumns.ADDRESS }, selection, order, null)) {
       String  serializedAddress = address.serialize();
       boolean isOwnNumber       = Util.isOwnNumber(context, address.serialize());
 
       while (cursor != null && cursor.moveToNext()) {
-        boolean timestampMatches = cursor.getLong(0) == receivedTimestamp;
+        boolean timestampMatches = cursor.getLong(0) == sentTimestamp;
         boolean addressMatches   = serializedAddress.equals(cursor.getString(1));
 
         if (timestampMatches && (addressMatches || isOwnNumber)) {

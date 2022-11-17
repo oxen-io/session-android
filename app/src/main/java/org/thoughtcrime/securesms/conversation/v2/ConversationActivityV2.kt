@@ -274,7 +274,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private val pager by lazy {
-        conversationPager(viewModel.threadId, mmsSmsDb, sessionContactDb)
+        val fromTimestamp = messageToScrollTimestamp.getAndSet(-1)
+        conversationPager(viewModel.threadId, if (fromTimestamp >= 0L) fromTimestamp else null, mmsSmsDb, sessionContactDb)
     }
 
     private val adapter by lazy {
@@ -445,7 +446,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     // called from onCreate
     private fun setUpRecyclerView() {
         pager.liveData.cachedIn(lifecycle).observe(this) {
-            adapter.submitData(this.lifecycle, it)
+            adapter.submitData(lifecycle, it)
         }
         binding!!.conversationRecyclerView.adapter = adapter
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, !isIncomingMessageRequestThread())
@@ -616,7 +617,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 .observeQuery(DatabaseContentProviders.Conversation.getUriForThread(viewModel.threadId))
                 .onEach {
                     Log.d("Loki", "Should refresh here maybe")
-                    adapter.refresh()
+//                    adapter.refresh()
                 }
                 .collect()
         }
@@ -1852,8 +1853,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             if (result == null) return@Observer
             if (result.getResults().isNotEmpty()) {
                 result.getResults()[result.position]?.let {
-                    jumpToMessage(it.messageRecipient.address, it.receivedTimestampMs) {
-                        searchViewModel.onMissingResult() }
+                    jumpToMessage(it.messageRecipient.address, it.sentTimestampMs) {
+                        searchViewModel.onMissingResult()
+                    }
                 }
             }
             binding?.searchBottomBar?.setData(result.position, result.getResults().size)
@@ -1891,7 +1893,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private fun jumpToMessage(author: Address, timestamp: Long, onMessageNotFound: Runnable?) {
         SimpleTask.run(lifecycle, {
-            mmsSmsDb.getMessagePositionInConversation(viewModel.threadId, timestamp, author)
+            adapter.getItemPositionForTimestamp(timestamp) ?: -1
         }) { p: Int -> moveToMessagePosition(p, onMessageNotFound) }
     }
 

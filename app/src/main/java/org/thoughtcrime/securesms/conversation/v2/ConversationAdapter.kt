@@ -178,15 +178,9 @@ class ConversationAdapter(
     }
 
     fun getItemPositionForTimestamp(timestamp: Long): Int? {
-        return null
-//        val cursor = this.cursor
-//        if (timestamp <= 0L || cursor == null || !isActiveCursor) return null
-//        for (i in 0 until itemCount) {
-//            cursor.moveToPosition(i)
-//            val message = messageDB.readerFor(cursor).current
-//            if (message.dateSent == timestamp) { return i }
-//        }
-//        return null
+        return (0 until itemCount).firstOrNull { position ->
+            getItem(position)?.message?.dateSent == timestamp
+        }
     }
 
     fun onSearchQueryUpdated(query: String?) {

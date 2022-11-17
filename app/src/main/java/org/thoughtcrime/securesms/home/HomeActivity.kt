@@ -102,7 +102,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         when (model) {
             is GlobalSearchAdapter.Model.Message -> {
                 val threadId = model.messageResult.threadId
-                val timestamp = model.messageResult.receivedTimestampMs
+                val timestamp = model.messageResult.sentTimestampMs
                 val author = model.messageResult.messageRecipient.address
 
                 val intent = Intent(this, ConversationActivityV2::class.java)
