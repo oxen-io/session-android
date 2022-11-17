@@ -16,8 +16,8 @@ import org.thoughtcrime.securesms.database.model.MessageRecord
 private const val TIME_BUCKET = 600000L // bucket into 10 minute increments
 
 private fun config() = PagingConfig(
-    pageSize = 50,
-    maxSize = 200,
+    pageSize = 25,
+    maxSize = 100,
     enablePlaceholders = false
 )
 
