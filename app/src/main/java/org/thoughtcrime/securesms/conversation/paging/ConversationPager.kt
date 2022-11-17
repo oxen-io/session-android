@@ -112,7 +112,6 @@ class ConversationPagingSource(
         }
 
         val nextCheckTime = if (hasNext) {
-            // cut out the last X to bucket time, set next check time to be that time
             val lastSent = result.last().message.dateSent
             if (lastSent == pageLoad.fromTime) null else lastSent
         } else null

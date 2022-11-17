@@ -616,8 +616,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             contentResolver
                 .observeQuery(DatabaseContentProviders.Conversation.getUriForThread(viewModel.threadId))
                 .onEach {
-                    Log.d("Loki", "Should refresh here maybe")
-//                    adapter.refresh()
+                    adapter.refresh()
                 }
                 .collect()
         }
