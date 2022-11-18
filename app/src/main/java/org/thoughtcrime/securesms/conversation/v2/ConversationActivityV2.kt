@@ -38,6 +38,8 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import androidx.paging.cachedIn
 import androidx.paging.liveData
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -428,38 +430,33 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         baseDialog.show(supportFragmentManager, tag)
     }
 
-//    override fun onCreateLoader(id: Int, bundle: Bundle?): Loader<Cursor> {
-////        return ConversationLoader(viewModel.threadId, !isIncomingMessageRequestThread(), this@ConversationActivityV2)
-//    }
-
-//    override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
-//        adapter.changeCursor(cursor)
-//        if (cursor != null) {
-//            val messageTimestamp = messageToScrollTimestamp.getAndSet(-1)
-//            val author = messageToScrollAuthor.getAndSet(null)
-//            if (author != null && messageTimestamp >= 0) {
-//                jumpToMessage(author, messageTimestamp, null)
-//            }
-//        }
-//    }
-
-//    override fun onLoaderReset(cursor: Loader<Cursor>) {
-////        adapter.changeCursor(null)
-//    }
-
     // called from onCreate
     private fun setUpRecyclerView() {
         pager.liveData.cachedIn(lifecycle).observe(this) {
             adapter.submitData(lifecycle, it)
         }
-        binding!!.conversationRecyclerView.adapter = adapter
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, !isIncomingMessageRequestThread())
         binding!!.conversationRecyclerView.layoutManager = layoutManager
-        // Workaround for the fact that CursorRecyclerViewAdapter doesn't auto-update automatically (even though it says it will)
-//        LoaderManager.getInstance(this).restartLoader(0, null, this)
+        binding!!.conversationRecyclerView.itemAnimator = null
         binding!!.conversationRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 handleRecyclerViewScrolled()
+            }
+        })
+        binding!!.conversationRecyclerView.adapter = adapter
+        adapter.addLoadStateListener(object : Function1<CombinedLoadStates, Unit> {
+            private var incomingNewMessages = false
+            private var endIsVisible: Boolean = false
+
+            override fun invoke(loadStates: CombinedLoadStates) {
+                if (!incomingNewMessages && loadStates.prepend is LoadState.Loading) {
+                    endIsVisible = layoutManager.findFirstCompletelyVisibleItemPosition() == 0
+                    incomingNewMessages = true
+                } else if (loadStates.prepend is LoadState.NotLoading) {
+                    if (endIsVisible) layoutManager.scrollToPosition(0)
+                    endIsVisible = false
+                    incomingNewMessages = false
+                }
             }
         })
     }
