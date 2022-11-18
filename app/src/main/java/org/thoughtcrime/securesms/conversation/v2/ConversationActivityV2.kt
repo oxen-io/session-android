@@ -92,6 +92,7 @@ import org.thoughtcrime.securesms.attachments.ScreenshotObserver
 import org.thoughtcrime.securesms.audio.AudioRecorder
 import org.thoughtcrime.securesms.contacts.SelectContactsActivity.Companion.selectedContactsKey
 import org.thoughtcrime.securesms.contactshare.SimpleTextWatcher
+import org.thoughtcrime.securesms.conversation.paging.PageLoad
 import org.thoughtcrime.securesms.conversation.paging.conversationPager
 import org.thoughtcrime.securesms.conversation.v2.ConversationReactionOverlay.OnActionSelectedListener
 import org.thoughtcrime.securesms.conversation.v2.ConversationReactionOverlay.OnReactionSelectedListener
@@ -275,7 +276,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private val pager by lazy {
         val fromTimestamp = messageToScrollTimestamp.getAndSet(-1)
-        conversationPager(viewModel.threadId, if (fromTimestamp >= 0L) fromTimestamp else null, mmsSmsDb, sessionContactDb)
+        val initialKey = if (fromTimestamp == -1L) {
+            val lastSeen = threadDb.getLastSeenAndHasSent(viewModel.threadId).first()
+            lastSeen
+        } else fromTimestamp
+        conversationPager(viewModel.threadId, if (fromTimestamp >= 0L) PageLoad(initialKey) else null, mmsSmsDb, sessionContactDb)
     }
 
     private val adapter by lazy {
@@ -374,7 +379,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         setUpBlockedBanner()
         binding!!.searchBottomBar.setEventListener(this)
         setUpSearchResultObserver()
-        scrollToFirstUnreadMessageIfNeeded()
         showOrHideInputIfNeeded()
         setUpMessageRequestsBar()
         viewModel.recipient?.let { recipient ->
@@ -634,13 +638,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 }
             }
         }
-    }
-
-    private fun scrollToFirstUnreadMessageIfNeeded() {
-        val lastSeenTimestamp = threadDb.getLastSeenAndHasSent(viewModel.threadId).first()
-        val lastSeenItemPosition = adapter.findLastSeenItemPosition(lastSeenTimestamp) ?: return
-        if (lastSeenItemPosition <= 3) { return }
-        binding?.conversationRecyclerView?.scrollToPosition(lastSeenItemPosition)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {

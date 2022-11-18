@@ -2,15 +2,18 @@ package org.thoughtcrime.securesms.database.model;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import org.session.libsession.utilities.Contact;
+
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview;
-import org.session.libsession.utilities.recipients.Recipient;
+import org.session.libsession.utilities.Contact;
 import org.session.libsession.utilities.IdentityKeyMismatch;
 import org.session.libsession.utilities.NetworkFailure;
+import org.session.libsession.utilities.recipients.Recipient;
 import org.thoughtcrime.securesms.mms.Slide;
 import org.thoughtcrime.securesms.mms.SlideDeck;
+
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class MmsMessageRecord extends MessageRecord {
   private final @NonNull  SlideDeck         slideDeck;
@@ -53,6 +56,20 @@ public abstract class MmsMessageRecord extends MessageRecord {
     }
 
     return false;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    if (!super.equals(o)) return false;
+    MmsMessageRecord that = (MmsMessageRecord) o;
+    return isMediaPending() == that.isMediaPending() && slideDeck.equals(that.slideDeck) && Objects.equals(quote, that.quote) && contacts.equals(that.contacts) && linkPreviews.equals(that.linkPreviews);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), slideDeck, quote, contacts, linkPreviews);
   }
 
   public boolean containsMediaSlide() {

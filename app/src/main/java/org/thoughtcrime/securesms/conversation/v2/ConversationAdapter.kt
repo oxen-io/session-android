@@ -131,52 +131,6 @@ class ConversationAdapter(
         }
     }
 
-//    private fun getMessageBefore(position: Int, cursor: Cursor): MessageRecord? {
-//        // The message that's visually before the current one is actually after the current
-//        // one for the cursor because the layout is reversed
-//        if (!cursor.moveToPosition(position + 1)) { return null }
-//        return messageDB.readerFor(cursor).current
-//    }
-//
-//    private fun getMessageAfter(position: Int, cursor: Cursor): MessageRecord? {
-//        // The message that's visually after the current one is actually before the current
-//        // one for the cursor because the layout is reversed
-//        if (!cursor.moveToPosition(position - 1)) { return null }
-//        return messageDB.readerFor(cursor).current
-//    }
-
-//    override fun changeCursor(cursor: Cursor?) {
-//        super.changeCursor(cursor)
-//        val toRemove = mutableSetOf<MessageRecord>()
-//        val toDeselect = mutableSetOf<Pair<Int, MessageRecord>>()
-//        for (selected in selectedItems) {
-//            val position = getItemPositionForTimestamp(selected.timestamp)
-//            if (position == null || position == -1) {
-//                toRemove += selected
-//            } else {
-//                val item = getMessage(getCursorAtPositionOrThrow(position))
-//                if (item == null || item.isDeleted) {
-//                    toDeselect += position to selected
-//                }
-//            }
-//        }
-//        selectedItems -= toRemove
-//        toDeselect.iterator().forEach { (pos, record) ->
-//            onDeselect(record, pos)
-//        }
-//    }
-
-    fun findLastSeenItemPosition(lastSeenTimestamp: Long): Int? {
-//        val cursor = this.cursor
-//        if (lastSeenTimestamp <= 0L || cursor == null || !isActiveCursor) return null
-//        for (i in 0 until itemCount) {
-//            cursor.moveToPosition(i)
-//            val message = messageDB.readerFor(cursor).current
-//            if (message.isOutgoing || message.dateReceived <= lastSeenTimestamp) { return i }
-//        }
-        return null
-    }
-
     fun getItemPositionForTimestamp(timestamp: Long): Int? {
         return (0 until itemCount).firstOrNull { position ->
             getItem(position)?.message?.dateSent == timestamp

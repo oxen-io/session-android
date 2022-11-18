@@ -23,7 +23,7 @@ private fun config() = PagingConfig(
 
 fun Long.bucketed(): Long = (TIME_BUCKET - this % TIME_BUCKET) + this
 
-fun conversationPager(threadId: Long, initialKey: Long? = null, db: MmsSmsDatabase, contactDb: SessionContactDatabase) = Pager(config(), initialKey = initialKey?.let { PageLoad(it) }) {
+fun conversationPager(threadId: Long, initialKey: PageLoad? = null, db: MmsSmsDatabase, contactDb: SessionContactDatabase) = Pager(config(), initialKey = initialKey) {
     ConversationPagingSource(threadId, db, contactDb)
 }
 
