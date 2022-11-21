@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioManager
 import android.media.SoundPool
-import android.os.Build
 import android.os.HandlerThread
 import network.loki.messenger.R
 import org.session.libsignal.utilities.Log
@@ -108,7 +107,7 @@ class SignalAudioManager(private val context: Context,
                 updateAudioDeviceState()
 
                 wiredHeadsetReceiver = WiredHeadsetReceiver()
-                context.registerReceiver(wiredHeadsetReceiver, IntentFilter(if (Build.VERSION.SDK_INT >= 21) AudioManager.ACTION_HEADSET_PLUG else Intent.ACTION_HEADSET_PLUG))
+                context.registerReceiver(wiredHeadsetReceiver, IntentFilter(AudioManager.ACTION_HEADSET_PLUG))
 
                 state = State.PREINITIALIZED
 

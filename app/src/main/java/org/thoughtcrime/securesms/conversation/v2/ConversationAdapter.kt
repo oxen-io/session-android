@@ -17,7 +17,6 @@ import org.thoughtcrime.securesms.conversation.v2.messages.ControlMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageViewDelegate
 import org.thoughtcrime.securesms.database.model.MessageRecord
-import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
 
@@ -29,8 +28,6 @@ class ConversationAdapter(
     private val onDeselect: (MessageRecord, Int) -> Unit,
     private val glide: GlideRequests,
 ) : PagingDataAdapter<MessageAndContact, ViewHolder>(ConversationPagerDiffCallback()) {
-    private val messageDB by lazy { DatabaseComponent.get(context).mmsSmsDatabase() }
-    private val contactDB by lazy { DatabaseComponent.get(context).sessionContactDatabase() }
     var selectedItems = mutableSetOf<MessageRecord>()
     private var searchQuery: String? = null
     var visibleMessageViewDelegate: VisibleMessageViewDelegate? = null
