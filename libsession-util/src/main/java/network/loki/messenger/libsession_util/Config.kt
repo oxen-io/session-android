@@ -8,6 +8,7 @@ data class Config(private val /* yucky */ pointer: Long) {
 
     var lastError: String? = null
 
+    external fun setName(newName: String)
 
 
 }
