@@ -14,6 +14,9 @@ project("session_util")
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
 
+set(BUILD_SHARED_LIBS ON CACHE BOOL "")
+add_subdirectory(../../../libsession-util libsession)
+
 add_library( # Sets the name of the library.
         session_util
 
@@ -37,13 +40,6 @@ find_library( # Sets the name of the path variable.
         log)
 
 # Add the libsession-util library here
-set(distribution_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../distribution)
-add_library(external-libsession-util STATIC IMPORTED)
-set_target_properties(external-libsession-util PROPERTIES IMPORTED_LOCATION
-        ${distribution_DIR}/libsession-util-android/lib/${ANDROID_ABI}/libsession-util.a)
-
-target_include_directories(session_util PRIVATE
-        ${distribution_DIR}/libsession-util-android/include)
 
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this
@@ -51,7 +47,9 @@ target_include_directories(session_util PRIVATE
 
 target_link_libraries( # Specifies the target library.
         session_util
-        external-libsession-util
+        PUBLIC
+        libsession::config
+        libsession::crypto
         # Links the target library to the log library
         # included in the NDK.
         ${log-lib})
