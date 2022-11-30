@@ -24,6 +24,19 @@ class ExampleInstrumentedTest {
     fun jni_accessible() {
         val userProfile = UserProfile.newInstance()
         assertNotNull(userProfile)
+        userProfile.free()
+    }
+
+    @Test
+    fun jni_setting_getting() {
+        val userProfile = UserProfile.newInstance()
+        val newName = "test"
+        println("Name being set via JNI call: $newName")
+        userProfile.setName(newName)
+        val nameFromNative = userProfile.getName()
+        assertEquals(newName, nameFromNative)
+        println("Name received by JNI call: $nameFromNative")
+        userProfile.free()
     }
 
 }

@@ -13,8 +13,8 @@ project("session_util")
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
-
-set(BUILD_SHARED_LIBS ON CACHE BOOL "")
+set(STATIC_BUNDLE ON)
+#set(BUILD_SHARED_LIBS ON CACHE BOOL "")
 add_subdirectory(../../../libsession-util libsession)
 
 add_library( # Sets the name of the library.

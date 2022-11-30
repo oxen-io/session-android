@@ -36,3 +36,19 @@ Java_network_loki_messenger_libsession_1util_UserProfile_setName(
     auto profile = ptrToProfile(env, obj);
     profile->set_name(env->GetStringUTFChars(newName, nullptr));
 }
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_network_loki_messenger_libsession_1util_UserProfile_getName(JNIEnv *env, jobject obj) {
+    auto profile = ptrToProfile(env, obj);
+    auto name = profile->get_name();
+    jstring returnString = env->NewStringUTF(name->c_str());
+    return returnString;
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_network_loki_messenger_libsession_1util_UserProfile_free(JNIEnv *env, jobject obj) {
+    auto profile = ptrToProfile(env, obj);
+    delete profile;
+}
