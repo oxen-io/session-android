@@ -16,9 +16,6 @@ android {
             cmake {
             }
         }
-//        ndk {
-//            abiFilters 'x86_64', 'arm64-v8a' ,'x86', 'armeabi-v7a'
-//        }
     }
 
     buildTypes {
