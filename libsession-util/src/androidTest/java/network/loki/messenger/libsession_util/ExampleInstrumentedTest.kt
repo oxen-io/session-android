@@ -36,6 +36,7 @@ class ExampleInstrumentedTest {
         val nameFromNative = userProfile.getName()
         assertEquals(newName, nameFromNative)
         println("Name received by JNI call: $nameFromNative")
+        assertTrue(userProfile.dirty())
         userProfile.free()
     }
 

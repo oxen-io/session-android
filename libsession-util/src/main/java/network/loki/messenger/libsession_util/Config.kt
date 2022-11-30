@@ -7,8 +7,8 @@ sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
             System.loadLibrary("session_util")
         }
     }
+    external fun dirty(): Boolean
 }
-
 
 class UserProfile(pointer: Long): ConfigBase(pointer) {
     companion object {

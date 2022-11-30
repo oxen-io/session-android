@@ -52,3 +52,10 @@ Java_network_loki_messenger_libsession_1util_UserProfile_free(JNIEnv *env, jobje
     auto profile = ptrToProfile(env, obj);
     delete profile;
 }
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_network_loki_messenger_libsession_1util_ConfigBase_dirty(JNIEnv *env, jobject thiz) {
+    auto* configBase = ptrToConfigBase(env, thiz);
+    return configBase->is_dirty();
+}
