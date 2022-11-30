@@ -1,9 +1,18 @@
 package network.loki.messenger.libsession_util
 
-data class Config(private val /* yucky */ pointer: Long) {
+
+sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
+
+}
+
+
+class UserProfile(pointer: Long): ConfigBase(pointer) {
 
     companion object {
-        external fun newInstance(): Config
+        init {
+            System.loadLibrary("session_util")
+        }
+        external fun newInstance(): UserProfile
     }
 
     var lastError: String? = null

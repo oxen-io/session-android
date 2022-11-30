@@ -17,9 +17,9 @@ android {
                 cppFlags "--std=c++17"
             }
         }
-        ndk {
-            abiFilters 'x86_64', 'arm64-v8a' // ,'x86', 'armeabi-v7a' TODO: remove after the native library works properly with targets
-        }
+//        ndk {
+//            abiFilters 'x86_64', 'arm64-v8a' ,'x86', 'armeabi-v7a'
+//        }
     }
 
     buildTypes {
