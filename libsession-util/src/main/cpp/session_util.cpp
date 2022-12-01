@@ -31,25 +31,26 @@ Java_network_loki_messenger_libsession_1util_UserProfile_00024Companion_newInsta
 extern "C" JNIEXPORT void JNICALL
 Java_network_loki_messenger_libsession_1util_UserProfile_setName(
         JNIEnv* env,
-        jobject obj,
+        jobject thiz,
         jstring newName) {
-    auto profile = ptrToProfile(env, obj);
+    auto profile = ptrToProfile(env, thiz);
     profile->set_name(env->GetStringUTFChars(newName, nullptr));
 }
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_network_loki_messenger_libsession_1util_UserProfile_getName(JNIEnv *env, jobject obj) {
-    auto profile = ptrToProfile(env, obj);
+Java_network_loki_messenger_libsession_1util_UserProfile_getName(JNIEnv *env, jobject thiz) {
+    auto profile = ptrToProfile(env, thiz);
     auto name = profile->get_name();
+    if (name == nullptr) return nullptr;
     jstring returnString = env->NewStringUTF(name->c_str());
     return returnString;
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_network_loki_messenger_libsession_1util_UserProfile_free(JNIEnv *env, jobject obj) {
-    auto profile = ptrToProfile(env, obj);
+Java_network_loki_messenger_libsession_1util_UserProfile_free(JNIEnv *env, jobject thiz) {
+    auto profile = ptrToProfile(env, thiz);
     delete profile;
 }
 
@@ -58,4 +59,29 @@ JNIEXPORT jboolean JNICALL
 Java_network_loki_messenger_libsession_1util_ConfigBase_dirty(JNIEnv *env, jobject thiz) {
     auto* configBase = ptrToConfigBase(env, thiz);
     return configBase->is_dirty();
+}
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_network_loki_messenger_libsession_1util_ConfigBase_needsPush(JNIEnv *env, jobject thiz) {
+    auto config = ptrToConfigBase(env, thiz);
+    return config->needs_push();
+}
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_network_loki_messenger_libsession_1util_ConfigBase_needsDump(JNIEnv *env, jobject thiz) {
+    auto config = ptrToConfigBase(env, thiz);
+    return config->needs_dump();
+}
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_network_loki_messenger_libsession_1util_ConfigBase_push(JNIEnv *env, jobject thiz) {
+    auto config = ptrToConfigBase(env, thiz);
+    auto pair = config->push();
+    std::string to_push_str = pair.first;
+    jstring returnString = env->NewStringUTF(to_push_str.c_str());
+    jlong seqNo = pair.second;
+    jclass returnObjectClass = env->FindClass("network/loki/messenger/libsession_util/util/ConfigWithSeqNo");
+    jmethodID methodId = env->GetMethodID(returnObjectClass, "<init>", "(Ljava/lang/String;J)V");
+    jobject returnObject = env->NewObject(returnObjectClass, methodId, returnString, seqNo);
+    return returnObject;
 }

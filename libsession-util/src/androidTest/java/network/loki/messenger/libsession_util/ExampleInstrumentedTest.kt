@@ -28,6 +28,23 @@ class ExampleInstrumentedTest {
     }
 
     @Test
+    fun jni_user_profile_c_api() {
+        val userProfile = UserProfile.newInstance()
+
+        assertFalse(userProfile.needsPush())
+        assertFalse(userProfile.needsDump())
+
+        val name = userProfile.getName()
+        assertNull(name)
+
+        val (toPush, seqNo) = userProfile.push()
+        assertEquals("d1:#i0e1:&de1:<le1:=dee", toPush)
+        assertEquals(0, seqNo)
+
+        userProfile.free()
+    }
+
+    @Test
     fun jni_setting_getting() {
         val userProfile = UserProfile.newInstance()
         val newName = "test"
