@@ -481,6 +481,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         if (now - lastProfilePictureUpload <= 14 * 24 * 60 * 60 * 1000) return;
         ThreadUtils.queue(() -> {
             // Don't generate a new profile key here; we do that when the user changes their profile picture
+            Log.d("Loki-Avatar", "Uploading Avatar Started");
             String encodedProfileKey = TextSecurePreferences.getProfileKey(ApplicationContext.this);
             try {
                 // Read the file into a byte array
@@ -497,6 +498,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
                 ProfilePictureUtilities.INSTANCE.upload(profilePicture, encodedProfileKey, ApplicationContext.this).success(unit -> {
                     // Update the last profile picture upload date
                     TextSecurePreferences.setLastProfilePictureUpload(ApplicationContext.this, new Date().getTime());
+                    Log.d("Loki-Avatar", "Uploading Avatar Finished");
                     return Unit.INSTANCE;
                 });
             } catch (Exception exception) {
