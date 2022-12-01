@@ -174,7 +174,7 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:exported="false"
+            android:exported="true"
             android:name="org.thoughtcrime.securesms.ShareActivity"
             android:configChanges="touchscreen|keyboard|keyboardHidden|orientation|screenLayout|screenSize"
             android:excludeFromRecents="true"
