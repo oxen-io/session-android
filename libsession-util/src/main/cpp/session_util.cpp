@@ -18,7 +18,7 @@ jbyteArray bytes_from_string(JNIEnv* env, std::string_view from_str) {
     size_t length = from_str.length();
     jsize jlength = (jsize)length;
     jbyteArray new_array = env->NewByteArray(jlength);
-    env->SetByteArrayRegion(new_array, 0, jlength, reinterpret_cast<const jbyte *>(from_str.data()));
+    env->SetByteArrayRegion(new_array, 0, jlength, (jbyte*)from_str.data());
     return new_array;
 }
 
