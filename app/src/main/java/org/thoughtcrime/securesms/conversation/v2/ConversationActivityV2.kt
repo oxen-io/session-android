@@ -3,30 +3,17 @@ package org.thoughtcrime.securesms.conversation.v2
 import android.Manifest
 import android.animation.FloatEvaluator
 import android.animation.ValueAnimator
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
 import android.content.res.Resources
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.net.Uri
-import android.os.AsyncTask
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Pair
 import android.util.TypedValue
-import android.view.ActionMode
-import android.view.Menu
-import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.View
-import android.view.WindowManager
+import android.view.*
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.Toast
@@ -72,12 +59,8 @@ import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
 import org.session.libsession.messaging.utilities.SessionId
-import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.*
 import org.session.libsession.utilities.Address.Companion.fromSerialized
-import org.session.libsession.utilities.GroupUtil
-import org.session.libsession.utilities.MediaTypes
-import org.session.libsession.utilities.Stub
-import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.concurrent.SimpleTask
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.recipients.RecipientModifiedListener
@@ -112,26 +95,10 @@ import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageViewDelegate
 import org.thoughtcrime.securesms.conversation.v2.search.SearchBottomBar
 import org.thoughtcrime.securesms.conversation.v2.search.SearchViewModel
-import org.thoughtcrime.securesms.conversation.v2.utilities.AttachmentManager
-import org.thoughtcrime.securesms.conversation.v2.utilities.BaseDialog
-import org.thoughtcrime.securesms.conversation.v2.utilities.MentionManagerUtilities
-import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities
-import org.thoughtcrime.securesms.conversation.v2.utilities.ResendMessageUtilities
+import org.thoughtcrime.securesms.conversation.v2.utilities.*
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
 import org.thoughtcrime.securesms.crypto.MnemonicUtilities
-import org.thoughtcrime.securesms.database.DatabaseContentProviders
-import org.thoughtcrime.securesms.database.GroupDatabase
-import org.thoughtcrime.securesms.database.LokiAPIDatabase
-import org.thoughtcrime.securesms.database.LokiMessageDatabase
-import org.thoughtcrime.securesms.database.LokiThreadDatabase
-import org.thoughtcrime.securesms.database.MmsDatabase
-import org.thoughtcrime.securesms.database.MmsSmsDatabase
-import org.thoughtcrime.securesms.database.ReactionDatabase
-import org.thoughtcrime.securesms.database.RecipientDatabase
-import org.thoughtcrime.securesms.database.SessionContactDatabase
-import org.thoughtcrime.securesms.database.SmsDatabase
-import org.thoughtcrime.securesms.database.Storage
-import org.thoughtcrime.securesms.database.ThreadDatabase
+import org.thoughtcrime.securesms.database.*
 import org.thoughtcrime.securesms.database.model.MessageId
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
@@ -144,25 +111,12 @@ import org.thoughtcrime.securesms.linkpreview.LinkPreviewViewModel
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewViewModel.LinkPreviewState
 import org.thoughtcrime.securesms.mediasend.Media
 import org.thoughtcrime.securesms.mediasend.MediaSendActivity
-import org.thoughtcrime.securesms.mms.AudioSlide
-import org.thoughtcrime.securesms.mms.GifSlide
-import org.thoughtcrime.securesms.mms.GlideApp
-import org.thoughtcrime.securesms.mms.ImageSlide
-import org.thoughtcrime.securesms.mms.MediaConstraints
-import org.thoughtcrime.securesms.mms.Slide
-import org.thoughtcrime.securesms.mms.SlideDeck
-import org.thoughtcrime.securesms.mms.VideoSlide
+import org.thoughtcrime.securesms.mms.*
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.reactions.ReactionsDialogFragment
 import org.thoughtcrime.securesms.reactions.any.ReactWithAnyEmojiDialogFragment
-import org.thoughtcrime.securesms.util.ActivityDispatcher
-import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
-import org.thoughtcrime.securesms.util.DateUtils
-import org.thoughtcrime.securesms.util.MediaUtil
-import org.thoughtcrime.securesms.util.SaveAttachmentTask
-import org.thoughtcrime.securesms.util.push
-import org.thoughtcrime.securesms.util.toPx
-import java.util.Locale
+import org.thoughtcrime.securesms.util.*
+import java.util.*
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
@@ -282,7 +236,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             val lastSeen = threadDb.getLastSeenAndHasSent(viewModel.threadId).first()
             lastSeen
         } else fromTimestamp
-        conversationPager(viewModel.threadId, if (fromTimestamp >= 0L) PageLoad(initialKey) else null, mmsSmsDb, sessionContactDb)
+        conversationPager(viewModel.threadId, if (initialKey >= 0L) PageLoad(initialKey) else null, mmsSmsDb, sessionContactDb)
     }
 
     private val adapter by lazy {
@@ -411,6 +365,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     override fun onPause() {
         super.onPause()
         ApplicationContext.getInstance(this).messageNotifier.setVisibleThread(-1)
+        threadDb.setLastSeen(viewModel.threadId)
         contentResolver.unregisterContentObserver(screenshotObserver)
     }
 

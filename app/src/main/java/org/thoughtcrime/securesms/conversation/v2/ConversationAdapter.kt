@@ -134,6 +134,13 @@ class ConversationAdapter(
         }
     }
 
+    fun getMessageAndContact(position: Int): MessageAndContact? {
+        if (position !in 0 until itemCount) {
+            return null
+        }
+        return getItem(position)
+    }
+
     fun onSearchQueryUpdated(query: String?) {
         this.searchQuery = query
         notifyDataSetChanged()
