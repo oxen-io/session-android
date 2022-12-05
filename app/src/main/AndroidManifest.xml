@@ -414,19 +414,19 @@
             </intent-filter>
         </receiver>
         <receiver android:name="org.thoughtcrime.securesms.service.PersistentConnectionBootListener"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
         <receiver android:name="org.thoughtcrime.securesms.notifications.LocaleChangedReceiver"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.LOCALE_CHANGED" />
             </intent-filter>
         </receiver>
         <receiver android:name="org.thoughtcrime.securesms.notifications.DeleteNotificationReceiver"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="network.loki.securesms.DELETE_NOTIFICATION" />
             </intent-filter>
@@ -441,7 +441,7 @@
         <receiver
             android:name="org.thoughtcrime.securesms.notifications.BackgroundPollWorker$BootBroadcastReceiver"
             android:enabled="true"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

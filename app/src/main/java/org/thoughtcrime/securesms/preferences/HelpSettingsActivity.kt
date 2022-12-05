@@ -41,8 +41,7 @@ class HelpSettingsFragment: CorrectedPreferenceFragment() {
         addPreferencesFromResource(R.xml.preferences_help)
     }
 
-    override fun onPreferenceTreeClick(preference: Preference?): Boolean {
-        preference ?: return false
+    override fun onPreferenceTreeClick(preference: Preference): Boolean {
         return when (preference.key) {
             EXPORT_LOGS -> {
                 shareLogs()
