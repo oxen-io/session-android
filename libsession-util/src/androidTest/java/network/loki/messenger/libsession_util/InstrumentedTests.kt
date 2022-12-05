@@ -89,7 +89,21 @@ class InstrumentedTests {
 
         assertEquals(1, newSeqNo)
         assertArrayEquals(expectedPush1, newToPush)
+        // We haven't dumped, so still need to dump:
+        assertTrue(userProfile.needsDump())
+        // We did call push but we haven't confirmed it as stored yet, so this will still return true:
+        assertTrue(userProfile.needsPush())
 
+        val dump = userProfile.dump()
+        // (in a real client we'd now store this to disk)
+        assertFalse(userProfile.needsDump())
+        val expectedDump = ("d" +
+                "1:!i2e" +
+                "1:$").encodeToByteArray() + expectedPush1.size.toString().encodeToByteArray() +
+                ":".encodeToByteArray() + expectedPush1 +
+                "e".encodeToByteArray()
+
+        assertArrayEquals(expectedDump, dump)
 
         userProfile.free()
     }

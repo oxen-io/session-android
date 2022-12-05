@@ -13,6 +13,7 @@ sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
     external fun needsPush(): Boolean
     external fun needsDump(): Boolean
     external fun push(): ConfigWithSeqNo
+    external fun dump(): ByteArray
 }
 
 class UserProfile(pointer: Long): ConfigBase(pointer) {

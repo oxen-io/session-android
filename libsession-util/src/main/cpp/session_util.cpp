@@ -138,3 +138,11 @@ Java_network_loki_messenger_libsession_1util_UserProfile_setPic(JNIEnv *env, job
 
     profile->set_profile_pic(*pic_string, key_str);
 }
+extern "C"
+JNIEXPORT jbyteArray JNICALL
+Java_network_loki_messenger_libsession_1util_ConfigBase_dump(JNIEnv *env, jobject thiz) {
+    auto config = ptrToConfigBase(env, thiz);
+    std::string dumped = config->dump();
+    jbyteArray bytes = bytes_from_string(env, dumped);
+    return bytes;
+}
