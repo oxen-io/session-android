@@ -1,6 +1,7 @@
 package network.loki.messenger.libsession_util
 
 import network.loki.messenger.libsession_util.util.ConfigWithSeqNo
+import network.loki.messenger.libsession_util.util.UserPic
 
 
 sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
@@ -21,31 +22,12 @@ class UserProfile(pointer: Long): ConfigBase(pointer) {
         init {
             System.loadLibrary("session_util")
         }
-        external fun newInstance(): UserProfile
+        external fun newInstance(ed25519SecretKey: ByteArray): UserProfile
+        external fun newInstance(ed25519SecretKey: ByteArray, initialDump: ByteArray): UserProfile
     }
     external fun setName(newName: String)
     external fun getName(): String?
     external fun free()
     external fun getPic(): UserPic?
     external fun setPic(userPic: UserPic)
-}
-
-data class UserPic(val url: String, val key: ByteArray) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as UserPic
-
-        if (url != other.url) return false
-        if (!key.contentEquals(other.key)) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = url.hashCode()
-        result = 31 * result + key.contentHashCode()
-        return result
-    }
 }

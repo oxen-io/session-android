@@ -3,6 +3,8 @@ package network.loki.messenger.libsession_util
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import network.loki.messenger.libsession_util.util.Sodium
+import network.loki.messenger.libsession_util.util.UserPic
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,6 +17,10 @@ import org.session.libsignal.utilities.Hex
  */
 @RunWith(AndroidJUnit4::class)
 class InstrumentedTests {
+
+    val seed = Hex.fromStringCondensed("0123456789abcdef0123456789abcdef00000000000000000000000000000000")
+    val keyPair = Sodium.ed25519KeyPair(seed)
+
     @Test
     fun useAppContext() {
         // Context of the app under test.
@@ -24,15 +30,14 @@ class InstrumentedTests {
 
     @Test
     fun jni_accessible() {
-        val userProfile = UserProfile.newInstance()
+        val userProfile = UserProfile.newInstance(keyPair.secretKey)
         assertNotNull(userProfile)
         userProfile.free()
     }
 
     @Test
     fun jni_user_profile_c_api() {
-        Log.d("JNITEST","Creating profile")
-        val userProfile = UserProfile.newInstance()
+        val userProfile = UserProfile.newInstance(keyPair.secretKey)
 
         // these should be false as empty config
         assertFalse(userProfile.needsPush())
@@ -53,9 +58,7 @@ class InstrumentedTests {
         // not sending keylen like c api so cutting off the NOTSECRET in key for testing purposes
         userProfile.setName("Kallie")
         val newUserPic = UserPic("http://example.org/omg-pic-123.bmp", "secret".encodeToByteArray())
-        Log.d("JNITEST","setting pic")
         userProfile.setPic(newUserPic)
-        Log.d("JNITEST","set pic")
 
         // Retrieve them just to make sure they set properly:
         assertEquals("Kallie", userProfile.getName())
@@ -110,7 +113,7 @@ class InstrumentedTests {
 
     @Test
     fun jni_setting_getting() {
-        val userProfile = UserProfile.newInstance()
+        val userProfile = UserProfile.newInstance(keyPair.secretKey)
         val newName = "test"
         println("Name being set via JNI call: $newName")
         userProfile.setName(newName)
