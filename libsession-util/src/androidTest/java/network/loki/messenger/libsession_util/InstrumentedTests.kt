@@ -3,6 +3,7 @@ package network.loki.messenger.libsession_util
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import network.loki.messenger.libsession_util.util.KeyPair
 import network.loki.messenger.libsession_util.util.Sodium
 import network.loki.messenger.libsession_util.util.UserPic
 import org.junit.Assert.*
@@ -18,8 +19,11 @@ import org.session.libsignal.utilities.Hex
 @RunWith(AndroidJUnit4::class)
 class InstrumentedTests {
 
-    val seed = Hex.fromStringCondensed("0123456789abcdef0123456789abcdef00000000000000000000000000000000")
-    val keyPair = Sodium.ed25519KeyPair(seed)
+    private val keyPair: KeyPair
+    get() {
+        val seed = Hex.fromStringCondensed("0123456789abcdef0123456789abcdef00000000000000000000000000000000")
+        return Sodium.ed25519KeyPair(seed)
+    }
 
     @Test
     fun useAppContext() {
