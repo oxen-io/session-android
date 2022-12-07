@@ -6,15 +6,7 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.BackgroundGroupAddJob
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.messages.Message
-import org.session.libsession.messaging.messages.control.CallMessage
-import org.session.libsession.messaging.messages.control.ClosedGroupControlMessage
-import org.session.libsession.messaging.messages.control.ConfigurationMessage
-import org.session.libsession.messaging.messages.control.DataExtractionNotification
-import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
-import org.session.libsession.messaging.messages.control.MessageRequestResponse
-import org.session.libsession.messaging.messages.control.ReadReceipt
-import org.session.libsession.messaging.messages.control.TypingIndicator
-import org.session.libsession.messaging.messages.control.UnsendRequest
+import org.session.libsession.messaging.messages.control.*
 import org.session.libsession.messaging.messages.visible.Attachment
 import org.session.libsession.messaging.messages.visible.Reaction
 import org.session.libsession.messaging.messages.visible.VisibleMessage
@@ -29,26 +21,18 @@ import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.messaging.utilities.WebRtcUtils
 import org.session.libsession.snode.SnodeAPI
-import org.session.libsession.utilities.Address
-import org.session.libsession.utilities.GroupRecord
-import org.session.libsession.utilities.GroupUtil
-import org.session.libsession.utilities.ProfileKeyUtil
-import org.session.libsession.utilities.SSKEnvironment
-import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.*
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.crypto.ecc.DjbECPrivateKey
 import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.messages.SignalServiceGroup
 import org.session.libsignal.protos.SignalServiceProtos
+import org.session.libsignal.utilities.*
 import org.session.libsignal.utilities.Base64
-import org.session.libsignal.utilities.IdPrefix
-import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.guava.Optional
-import org.session.libsignal.utilities.removingIdPrefixIfNeeded
-import org.session.libsignal.utilities.toHexString
 import java.security.MessageDigest
-import java.util.LinkedList
+import java.util.*
 import kotlin.math.min
 
 internal fun MessageReceiver.isBlocked(publicKey: String): Boolean {
@@ -307,6 +291,8 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage,
             return@mapNotNull attachment
         }
     }
+    // Cancel any typing indicators if needed
+    cancelTypingIndicatorsIfNeeded(message.sender!!)
     // Parse reaction if needed
     val threadIsGroup = threadRecipient?.isGroupRecipient == true
     message.reaction?.let { reaction ->
@@ -332,8 +318,6 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage,
         }
         return messageID
     }
-    // Cancel any typing indicators if needed
-    cancelTypingIndicatorsIfNeeded(message.sender!!)
     return null
 }
 
