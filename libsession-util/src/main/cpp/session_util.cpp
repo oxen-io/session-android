@@ -129,7 +129,7 @@ Java_network_loki_messenger_libsession_1util_UserProfile_getPic(JNIEnv *env, job
     auto pic = profile->get_profile_pic();
     if (pic == std::nullopt) return nullptr;
     // return nullptr if either parameter is null as per profile class
-    jclass returnObjectClass = env->FindClass("network/loki/messenger/libsession_util/UserPic");
+    jclass returnObjectClass = env->FindClass("network/loki/messenger/libsession_util/util/UserPic");
     jmethodID constructor = env->GetMethodID(returnObjectClass, "<init>", "(Ljava/lang/String;[B)V");
     jstring url = env->NewStringUTF(pic->url.data());
     jbyteArray byteArray = bytes_from_ustring(env, pic->key);
@@ -141,7 +141,7 @@ JNIEXPORT void JNICALL
 Java_network_loki_messenger_libsession_1util_UserProfile_setPic(JNIEnv *env, jobject thiz,
                                                                 jobject user_pic) {
     auto profile = ptrToProfile(env, thiz);
-    jclass userPicClass = env->FindClass("network/loki/messenger/libsession_util/UserPic");
+    jclass userPicClass = env->FindClass("network/loki/messenger/libsession_util/util/UserPic");
     jfieldID picField = env->GetFieldID(userPicClass, "url", "Ljava/lang/String;");
     jfieldID keyField = env->GetFieldID(userPicClass, "key", "[B");
     auto pic = (jstring)env->GetObjectField(user_pic, picField);
@@ -167,14 +167,28 @@ Java_network_loki_messenger_libsession_1util_util_Sodium_ed25519KeyPair(JNIEnv *
     std::array<unsigned char, 32> ed_pk;
     std::array<unsigned char, 64> ed_sk;
     auto seed_bytes = ustring_from_bytes(env, seed);
-    crypto_sign_ed25519_seed_keypair(ed_pk.data(), ed_sk.data(), seed_bytes.c_str());
+    crypto_sign_ed25519_seed_keypair(ed_pk.data(), ed_sk.data(), seed_bytes.data());
 
     jclass kp_class = env->FindClass("network/loki/messenger/libsession_util/util/KeyPair");
     jmethodID kp_constructor = env->GetMethodID(kp_class, "<init>", "([B[B)V");
 
-    jbyteArray pk_jarray = bytes_from_ustring(env, ed_pk.data());
-    jbyteArray sk_jarray = bytes_from_ustring(env, ed_sk.data());
+    jbyteArray pk_jarray = bytes_from_ustring(env, session::ustring_view {ed_pk.data(), ed_pk.size()});
+    jbyteArray sk_jarray = bytes_from_ustring(env, session::ustring_view {ed_sk.data(), ed_sk.size()});
 
     jobject return_obj = env->NewObject(kp_class, kp_constructor, pk_jarray, sk_jarray);
     return return_obj;
+}
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_network_loki_messenger_libsession_1util_ConfigBase_encryptionDomain(JNIEnv *env,
+                                                                         jobject thiz) {
+    auto conf = ptrToConfigBase(env, thiz);
+    return env->NewStringUTF(conf->encryption_domain());
+}
+extern "C"
+JNIEXPORT jbyteArray JNICALL
+Java_network_loki_messenger_libsession_1util_ConfigBase_decrypt(JNIEnv *env, jobject thiz,
+                                                                jbyteArray encrypted) {
+    auto profile = ptrToProfile(env, thiz);
+    auto encrypted_bytes = ustring_from_bytes(env, encrypted);
 }

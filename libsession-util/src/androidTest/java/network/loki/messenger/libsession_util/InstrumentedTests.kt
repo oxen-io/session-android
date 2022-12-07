@@ -1,6 +1,5 @@
 package network.loki.messenger.libsession_util
 
-import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import network.loki.messenger.libsession_util.util.KeyPair
@@ -20,10 +19,11 @@ import org.session.libsignal.utilities.Hex
 class InstrumentedTests {
 
     private val keyPair: KeyPair
-    get() {
-        val seed = Hex.fromStringCondensed("0123456789abcdef0123456789abcdef00000000000000000000000000000000")
-        return Sodium.ed25519KeyPair(seed)
-    }
+        get() {
+            val seed =
+                Hex.fromStringCondensed("0123456789abcdef0123456789abcdef00000000000000000000000000000000")
+            return Sodium.ed25519KeyPair(seed)
+        }
 
     @Test
     fun useAppContext() {
@@ -51,8 +51,8 @@ class InstrumentedTests {
         assertNull(userProfile.getName())
 
         // Don't need to push yet so this is just for testing
-        val (toPush, seqNo) = userProfile.push()
-        assertEquals("d1:#i0e1:&de1:<le1:=dee", toPush.decodeToString())
+        val (_, seqNo) = userProfile.push() // disregarding encrypted
+        assertEquals("UserProfile", userProfile.encryptionDomain())
         assertEquals(0, seqNo)
 
         // This should also be unset:
@@ -76,26 +76,37 @@ class InstrumentedTests {
         assertTrue(userProfile.needsDump())
         val (newToPush, newSeqNo) = userProfile.push()
 
-        val expHash0 = Hex.fromStringCondensed("ea173b57beca8af18c3519a7bbf69c3e7a05d1c049fa9558341d8ebb48b0c965")
-        val expectedPush1 = ("d" +
-        "1:#" + "i1e"+
-        "1:&" + "d"+
-        "1:n" + "6:Kallie"+
-        "1:p" + "34:http://example.org/omg-pic-123.bmp"+
-        "1:q" + "6:secret"+
-        "e"+
-        "1:<" + "l"+
-        "l" + "i0e" + "32:").encodeToByteArray() + expHash0 + ("de" + "e" +
-        "e" +
-        "1:=" + "d" +
-        "1:n" + "0:" +
-        "1:p" + "0:" +
-        "1:q" + "0:" +
-        "e" +
-        "e").encodeToByteArray()
+        val expHash0 =
+            Hex.fromStringCondensed("ea173b57beca8af18c3519a7bbf69c3e7a05d1c049fa9558341d8ebb48b0c965")
+
+        val expectedPush1Decrypted = ("d" +
+                "1:#" + "i1e"+
+                "1:&" + "d"+
+                "1:n" + "6:Kallie"+
+                "1:p" + "34:http://example.org/omg-pic-123.bmp"+
+                "1:q" + "6:secret"+
+                "e"+
+                "1:<" + "l"+
+                "l" + "i0e" + "32:").encodeToByteArray() + expHash0 + ("de" + "e" +
+                "e" +
+                "1:=" + "d" +
+                "1:n" + "0:" +
+                "1:p" + "0:" +
+                "1:q" + "0:" +
+                "e" +
+                "e").encodeToByteArray()
+
+        val expectedPush1Encrypted = Hex.fromStringCondensed(
+            "a2952190dcb9797bc48e48f6dc7b3254d004bde9091cfc9ec3433cbc5939a3726deb04f58a546d7d79e6f8" +
+                    "0ea185d43bf93278398556304998ae882304075c77f15c67f9914c4d10005a661f29ff7a79e0a9de7f2172" +
+                    "5ba3b5a6c19eaa3797671b8fa4008d62e9af2744629cbb46664c4d8048e2867f66ed9254120371bdb24e95" +
+                    "b2d92341fa3b1f695046113a768ceb7522269f937ead5591bfa8a5eeee3010474002f2db9de043f0f0d1cf" +
+                    "b1066a03e7b5d6cfb70a8f84a20cd2df5a510cd3d175708015a52dd4a105886d916db0005dbea5706e5a5d" +
+                    "c37ffd0a0ca2824b524da2e2ad181a48bb38e21ed9abe136014a4ee1e472cb2f53102db2a46afa9d68"
+        )
 
         assertEquals(1, newSeqNo)
-        assertArrayEquals(expectedPush1, newToPush)
+        assertArrayEquals(expectedPush1Encrypted, newToPush)
         // We haven't dumped, so still need to dump:
         assertTrue(userProfile.needsDump())
         // We did call push but we haven't confirmed it as stored yet, so this will still return true:
@@ -106,8 +117,8 @@ class InstrumentedTests {
         assertFalse(userProfile.needsDump())
         val expectedDump = ("d" +
                 "1:!i2e" +
-                "1:$").encodeToByteArray() + expectedPush1.size.toString().encodeToByteArray() +
-                ":".encodeToByteArray() + expectedPush1 +
+                "1:$").encodeToByteArray() + expectedPush1Decrypted.size.toString().encodeToByteArray() +
+                ":".encodeToByteArray() + expectedPush1Decrypted +
                 "e".encodeToByteArray()
 
         assertArrayEquals(expectedDump, dump)
