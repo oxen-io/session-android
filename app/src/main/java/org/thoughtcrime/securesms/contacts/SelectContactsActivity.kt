@@ -3,12 +3,12 @@ package org.thoughtcrime.securesms.contacts
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.loader.app.LoaderManager
-import androidx.loader.content.Loader
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.loader.app.LoaderManager
+import androidx.loader.content.Loader
+import androidx.recyclerview.widget.LinearLayoutManager
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivitySelectContactsBinding
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
@@ -70,7 +70,7 @@ class SelectContactsActivity : PassphraseRequiredActionBarActivity(), LoaderMana
 
     private fun update(members: List<String>) {
         this.members = members
-        binding.mainContentContainer.visibility = if (members.isEmpty()) View.GONE else View.VISIBLE
+        binding.recyclerView.visibility = if (members.isEmpty()) View.GONE else View.VISIBLE
         binding.emptyStateContainer.visibility = if (members.isEmpty()) View.VISIBLE else View.GONE
         invalidateOptionsMenu()
     }
