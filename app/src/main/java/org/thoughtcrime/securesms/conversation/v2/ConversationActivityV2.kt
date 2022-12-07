@@ -5,6 +5,7 @@ import android.animation.FloatEvaluator
 import android.animation.ValueAnimator
 import android.content.*
 import android.content.res.Resources
+import android.database.Cursor
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.net.Uri
@@ -25,18 +26,13 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.CombinedLoadStates
-import androidx.paging.LoadState
-import androidx.paging.cachedIn
-import androidx.paging.liveData
+import androidx.loader.app.LoaderManager
+import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.cash.copper.flow.observeQuery
 import com.annimon.stream.Stream
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityConversationV2Binding
@@ -77,8 +73,6 @@ import org.thoughtcrime.securesms.attachments.ScreenshotObserver
 import org.thoughtcrime.securesms.audio.AudioRecorder
 import org.thoughtcrime.securesms.contacts.SelectContactsActivity.Companion.selectedContactsKey
 import org.thoughtcrime.securesms.contactshare.SimpleTextWatcher
-import org.thoughtcrime.securesms.conversation.paging.PageLoad
-import org.thoughtcrime.securesms.conversation.paging.conversationPager
 import org.thoughtcrime.securesms.conversation.v2.ConversationReactionOverlay.OnActionSelectedListener
 import org.thoughtcrime.securesms.conversation.v2.ConversationReactionOverlay.OnReactionSelectedListener
 import org.thoughtcrime.securesms.conversation.v2.dialogs.BlockedDialog
@@ -133,8 +127,9 @@ import kotlin.math.sqrt
 class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDelegate,
     InputBarRecordingViewDelegate, AttachmentManager.AttachmentListener, ActivityDispatcher,
     ConversationActionModeCallbackDelegate, VisibleMessageViewDelegate, RecipientModifiedListener,
-    SearchBottomBar.EventListener, OnReactionSelectedListener, ReactWithAnyEmojiDialogFragment.Callback,
-    ReactionsDialogFragment.Callback, ConversationMenuHelper.ConversationMenuListener {
+    SearchBottomBar.EventListener, LoaderManager.LoaderCallbacks<Cursor>,
+    OnReactionSelectedListener, ReactWithAnyEmojiDialogFragment.Callback, ReactionsDialogFragment.Callback,
+    ConversationMenuHelper.ConversationMenuListener {
 
     private var binding: ActivityConversationV2Binding? = null
 
@@ -212,7 +207,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private val isScrolledToBottom: Boolean
         get() {
-            val position = layoutManager?.findFirstVisibleItemPosition() ?: 0
+            val position = layoutManager?.findFirstCompletelyVisibleItemPosition() ?: 0
             return position == 0
         }
 
@@ -230,18 +225,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         MnemonicCodec(loadFileContents).encode(hexEncodedSeed!!, MnemonicCodec.Language.Configuration.english)
     }
 
-    private val pager by lazy {
-        val fromTimestamp = messageToScrollTimestamp.getAndSet(-1)
-        val initialKey = if (fromTimestamp == -1L) {
-            val lastSeen = threadDb.getLastSeenAndHasSent(viewModel.threadId).first()
-            lastSeen
-        } else fromTimestamp
-        conversationPager(viewModel.threadId, if (initialKey >= 0L) PageLoad(initialKey) else null, mmsSmsDb, sessionContactDb)
-    }
-
     private val adapter by lazy {
+        val cursor = mmsSmsDb.getConversation(viewModel.threadId, !isIncomingMessageRequestThread())
         val adapter = ConversationAdapter(
             this,
+            cursor,
             onItemPress = { message, position, view, event ->
                 handlePress(message, position, view, event)
             },
@@ -262,7 +250,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     onDeselect(message, position, it)
                 }
             },
-            glide = glide
+            glide = glide,
+            lifecycleCoroutineScope = lifecycleScope
         )
         adapter.visibleMessageViewDelegate = this
         adapter
@@ -317,7 +306,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         setUpLinkPreviewObserver()
         restoreDraftIfNeeded()
         setUpUiStateObserver()
-        setUpThreadUpdatedObserver()
         binding!!.scrollToBottomButton.setOnClickListener {
             val layoutManager = binding?.conversationRecyclerView?.layoutManager ?: return@setOnClickListener
             if (layoutManager.isSmoothScrolling) {
@@ -335,6 +323,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         setUpBlockedBanner()
         binding!!.searchBottomBar.setEventListener(this)
         setUpSearchResultObserver()
+        scrollToFirstUnreadMessageIfNeeded()
         showOrHideInputIfNeeded()
         setUpMessageRequestsBar()
         viewModel.recipient?.let { recipient ->
@@ -365,7 +354,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     override fun onPause() {
         super.onPause()
         ApplicationContext.getInstance(this).messageNotifier.setVisibleThread(-1)
-        threadDb.setLastSeen(viewModel.threadId)
         contentResolver.unregisterContentObserver(screenshotObserver)
     }
 
@@ -385,33 +373,36 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         baseDialog.show(supportFragmentManager, tag)
     }
 
+    override fun onCreateLoader(id: Int, bundle: Bundle?): Loader<Cursor> {
+        return ConversationLoader(viewModel.threadId, !isIncomingMessageRequestThread(), this@ConversationActivityV2)
+    }
+
+    override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
+        adapter.changeCursor(cursor)
+        if (cursor != null) {
+            val messageTimestamp = messageToScrollTimestamp.getAndSet(-1)
+            val author = messageToScrollAuthor.getAndSet(null)
+            if (author != null && messageTimestamp >= 0) {
+                jumpToMessage(author, messageTimestamp, null)
+            }
+        }
+    }
+
+    override fun onLoaderReset(cursor: Loader<Cursor>) {
+        adapter.changeCursor(null)
+    }
+
     // called from onCreate
     private fun setUpRecyclerView() {
-        pager.liveData.cachedIn(lifecycle).observe(this) {
-            adapter.submitData(lifecycle, it)
-        }
+        binding!!.conversationRecyclerView.adapter = adapter
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, !isIncomingMessageRequestThread())
         binding!!.conversationRecyclerView.layoutManager = layoutManager
-        binding!!.conversationRecyclerView.itemAnimator = null
+        // Workaround for the fact that CursorRecyclerViewAdapter doesn't auto-update automatically (even though it says it will)
+        LoaderManager.getInstance(this).restartLoader(0, null, this)
         binding!!.conversationRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 handleRecyclerViewScrolled()
-            }
-        })
-        binding!!.conversationRecyclerView.adapter = adapter
-        adapter.addLoadStateListener(object : Function1<CombinedLoadStates, Unit> {
-            private var incomingNewMessages = false
-            private var endIsVisible: Boolean = false
-
-            override fun invoke(loadStates: CombinedLoadStates) {
-                if (!incomingNewMessages && loadStates.prepend is LoadState.Loading) {
-                    endIsVisible = layoutManager.findFirstCompletelyVisibleItemPosition() == 0
-                    incomingNewMessages = true
-                } else if (loadStates.prepend is LoadState.NotLoading) {
-                    if (endIsVisible) layoutManager.scrollToPosition(0)
-                    endIsVisible = false
-                    incomingNewMessages = false
-                }
             }
         })
     }
@@ -566,17 +557,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             }
         }
     }
-    
-    private fun setUpThreadUpdatedObserver() {
-        lifecycleScope.launchWhenStarted {
-            contentResolver
-                .observeQuery(DatabaseContentProviders.Conversation.getUriForThread(viewModel.threadId))
-                .onEach {
-                    adapter.refresh()
-                }
-                .collect()
-        }
-    }
 
     private fun setUpUiStateObserver() {
         lifecycleScope.launchWhenStarted {
@@ -590,6 +570,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 }
             }
         }
+    }
+
+    private fun scrollToFirstUnreadMessageIfNeeded() {
+        val lastSeenTimestamp = threadDb.getLastSeenAndHasSent(viewModel.threadId).first()
+        val lastSeenItemPosition = adapter.findLastSeenItemPosition(lastSeenTimestamp) ?: return
+        if (lastSeenItemPosition <= 3) { return }
+        binding?.conversationRecyclerView?.scrollToPosition(lastSeenItemPosition)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
@@ -670,6 +657,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
         adapter.notifyDataSetChanged()
         viewModel.acceptMessageRequest()
+        LoaderManager.getInstance(this).restartLoader(0, null, this)
         lifecycleScope.launch(Dispatchers.IO) {
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@ConversationActivityV2)
         }
@@ -1115,7 +1103,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         } else {
             MessageSender.send(reactionMessage, recipient.address)
         }
-//        LoaderManager.getInstance(this).restartLoader(0, null, this)
+        LoaderManager.getInstance(this).restartLoader(0, null, this)
     }
 
     private fun sendEmojiRemoval(emoji: String, originalMessage: MessageRecord) {
@@ -1139,7 +1127,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         } else {
             MessageSender.send(message, recipient.address)
         }
-//        LoaderManager.getInstance(this).restartLoader(0, null, this)
+        LoaderManager.getInstance(this).restartLoader(0, null, this)
     }
 
     override fun onCustomReactionSelected(messageRecord: MessageRecord, hasAddedCustomEmoji: Boolean) {
@@ -1802,8 +1790,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             if (result.getResults().isNotEmpty()) {
                 result.getResults()[result.position]?.let {
                     jumpToMessage(it.messageRecipient.address, it.sentTimestampMs) {
-                        searchViewModel.onMissingResult()
-                    }
+                        searchViewModel.onMissingResult() }
                 }
             }
             binding?.searchBottomBar?.setData(result.position, result.getResults().size)
@@ -1841,7 +1828,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private fun jumpToMessage(author: Address, timestamp: Long, onMessageNotFound: Runnable?) {
         SimpleTask.run(lifecycle, {
-            adapter.getItemPositionForTimestamp(timestamp) ?: -1
+            mmsSmsDb.getMessagePositionInConversation(viewModel.threadId, timestamp, author)
         }) { p: Int -> moveToMessagePosition(p, onMessageNotFound) }
     }
 
