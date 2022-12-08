@@ -186,9 +186,23 @@ Java_network_loki_messenger_libsession_1util_ConfigBase_encryptionDomain(JNIEnv 
     return env->NewStringUTF(conf->encryption_domain());
 }
 extern "C"
-JNIEXPORT jbyteArray JNICALL
-Java_network_loki_messenger_libsession_1util_ConfigBase_decrypt(JNIEnv *env, jobject thiz,
-                                                                jbyteArray encrypted) {
-    auto profile = ptrToProfile(env, thiz);
-    auto encrypted_bytes = ustring_from_bytes(env, encrypted);
+JNIEXPORT void JNICALL
+Java_network_loki_messenger_libsession_1util_ConfigBase_confirmPushed(JNIEnv *env, jobject thiz,
+                                                                      jlong seq_no) {
+    auto conf = ptrToConfigBase(env, thiz);
+    conf->confirm_pushed(seq_no);
+}
+extern "C"
+JNIEXPORT jint JNICALL
+Java_network_loki_messenger_libsession_1util_ConfigBase_merge(JNIEnv *env, jobject thiz,
+                                                              jobjectArray to_merge) {
+    auto conf = ptrToConfigBase(env, thiz);
+    size_t number = env->GetArrayLength(to_merge);
+    std::vector<session::ustring> configs = {};
+    for (int i = 0; i < number; i++) {
+        auto jArr = (jbyteArray) env->GetObjectArrayElement(to_merge, i);
+        auto bytes = ustring_from_bytes(env, jArr);
+        configs.push_back(bytes);
+    }
+    return conf->merge(configs);
 }

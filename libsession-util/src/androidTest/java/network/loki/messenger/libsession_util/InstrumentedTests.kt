@@ -41,7 +41,8 @@ class InstrumentedTests {
 
     @Test
     fun jni_user_profile_c_api() {
-        val userProfile = UserProfile.newInstance(keyPair.secretKey)
+        val edSk = keyPair.secretKey
+        val userProfile = UserProfile.newInstance(edSk)
 
         // these should be false as empty config
         assertFalse(userProfile.needsPush())
@@ -123,7 +124,46 @@ class InstrumentedTests {
 
         assertArrayEquals(expectedDump, dump)
 
+        val newConf = UserProfile.newInstance(edSk)
+
+        val accepted = newConf.merge(arrayOf(expectedPush1Encrypted))
+        assertEquals(1, accepted)
+
+        assertTrue(newConf.needsDump())
+        assertFalse(newConf.needsPush())
+        val _ignore = newConf.dump()
+        assertFalse(newConf.needsDump())
+
+
+        userProfile.setName("Nibbler")
+        newConf.setName("Raz")
+        newConf.setPic(UserPic("http://new.example.com/pic", "qwertyuio".encodeToByteArray()))
+
+        val conf = userProfile.push()
+        val conf2 = newConf.push()
+
+        val dump1 = userProfile.dump()
+        val dump2 = userProfile.dump()
+
+        assertFalse(conf.config.contentEquals(conf2.config))
+
+        newConf.merge(arrayOf(conf.config))
+        userProfile.merge(arrayOf(conf2.config))
+
+        assertTrue(newConf.needsPush())
+        assertTrue(userProfile.needsPush())
+
+        val newSeq1 = userProfile.push()
+        val newSeq2 = newConf.push()
+
+        assertEquals(3, newSeq1.seqNo)
+        assertEquals(3, newSeq2.seqNo)
+
+        assertEquals("Nibbler", newConf.getName())
+        assertEquals("Nibbler", userProfile.getName())
+
         userProfile.free()
+        newConf.free()
     }
 
     @Test

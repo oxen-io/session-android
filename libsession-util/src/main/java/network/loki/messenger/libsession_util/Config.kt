@@ -16,7 +16,8 @@ sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
     external fun push(): ConfigWithSeqNo
     external fun dump(): ByteArray
     external fun encryptionDomain(): String
-    external fun decrypt(encrypted: ByteArray): ByteArray
+    external fun confirmPushed(seqNo: Long)
+    external fun merge(toMerge: Array<ByteArray>): Int
 }
 
 class UserProfile(pointer: Long): ConfigBase(pointer) {
