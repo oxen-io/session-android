@@ -319,12 +319,8 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         return getAllOpenGroups().values.firstOrNull { it.server == server && it.room == room }
     }
 
-    override fun clearGroupMemberRoles(groupId: String) {
-        DatabaseComponent.get(context).groupMemberDatabase().clearGroupMemberRoles(groupId)
-    }
-
-    override fun addGroupMemberRole(member: GroupMember) {
-        DatabaseComponent.get(context).groupMemberDatabase().addGroupMember(member)
+    override fun setGroupMemberRoles(members: List<GroupMember>) {
+        DatabaseComponent.get(context).groupMemberDatabase().setGroupMembers(members)
     }
 
     override fun isDuplicateMessage(timestamp: Long): Boolean {
@@ -674,7 +670,6 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
             val threadId = threadDatabase.getOrCreateThreadIdFor(recipient)
             if (contact.didApproveMe == true) {
                 recipientDatabase.setApprovedMe(recipient, true)
-                threadDatabase.setHasSent(threadId, true)
             }
             if (contact.isApproved == true) {
                 recipientDatabase.setApproved(recipient, true)
@@ -954,6 +949,16 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
 
     override fun deleteReactions(messageId: Long, mms: Boolean) {
         DatabaseComponent.get(context).reactionDatabase().deleteMessageReactions(MessageId(messageId, mms))
+    }
+
+    override fun unblock(toUnblock: List<Recipient>) {
+        val recipientDb = DatabaseComponent.get(context).recipientDatabase()
+        recipientDb.setBlocked(toUnblock, false)
+    }
+
+    override fun blockedContacts(): List<Recipient> {
+        val recipientDb = DatabaseComponent.get(context).recipientDatabase()
+        return recipientDb.blockedContacts
     }
 
 }

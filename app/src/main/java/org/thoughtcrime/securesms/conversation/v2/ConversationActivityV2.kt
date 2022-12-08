@@ -18,6 +18,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Pair
 import android.util.TypedValue
@@ -85,6 +86,7 @@ import org.session.libsignal.utilities.hexEncodedPrivateKey
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.ExpirationDialog
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
+import org.thoughtcrime.securesms.attachments.ScreenshotObserver
 import org.thoughtcrime.securesms.audio.AudioRecorder
 import org.thoughtcrime.securesms.contacts.SelectContactsActivity.Companion.selectedContactsKey
 import org.thoughtcrime.securesms.contactshare.SimpleTextWatcher
@@ -190,6 +192,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     @Inject lateinit var storage: Storage
     @Inject lateinit var reactionDb: ReactionDatabase
     @Inject lateinit var viewModelFactory: ConversationViewModel.AssistedFactory
+
+    private val screenshotObserver by lazy {
+        ScreenshotObserver(this, Handler(Looper.getMainLooper())) {
+            // post screenshot message
+            sendScreenshotNotification()
+        }
+    }
 
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels
     private val linkPreviewViewModel: LinkPreviewViewModel by lazy {
@@ -380,11 +389,17 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         ApplicationContext.getInstance(this).messageNotifier.setVisibleThread(viewModel.threadId)
         val recipient = viewModel.recipient ?: return
         threadDb.markAllAsRead(viewModel.threadId, recipient.isOpenGroupRecipient)
+        contentResolver.registerContentObserver(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            true,
+            screenshotObserver
+        )
     }
 
     override fun onPause() {
         super.onPause()
         ApplicationContext.getInstance(this).messageNotifier.setVisibleThread(-1)
+        contentResolver.unregisterContentObserver(screenshotObserver)
     }
 
     override fun getSystemService(name: String): Any? {
@@ -645,7 +660,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             updateSubtitle()
             showOrHideInputIfNeeded()
             binding?.toolbarContent?.profilePictureView?.root?.update(threadRecipient)
-            binding!!.toolbarContent.conversationTitleView.text = when {
+            binding?.toolbarContent?.conversationTitleView?.text = when {
                 threadRecipient.isLocalNumber -> getString(R.string.note_to_self)
                 else -> threadRecipient.toShortString()
             }
@@ -925,10 +940,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         } else if (recipient.isGroupRecipient) {
             viewModel.openGroup?.let { openGroup ->
                 val userCount = lokiApiDb.getUserCount(openGroup.room, openGroup.server) ?: 0
-                actionBarBinding.conversationSubtitleView.text = getString(R.string.ConversationActivity_member_count, userCount)
+                actionBarBinding.conversationSubtitleView.text = getString(R.string.ConversationActivity_active_member_count, userCount)
             } ?: run {
-                actionBarBinding.conversationSubtitleView.isVisible = false
+                val userCount = groupDb.getGroupMemberAddresses(recipient.address.toGroupString(), true).size
+                actionBarBinding.conversationSubtitleView.text = getString(R.string.ConversationActivity_member_count, userCount)
             }
+            viewModel
         } else {
             actionBarBinding.conversationSubtitleView.isVisible = false
         }
@@ -1319,6 +1336,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun playVoiceMessageAtIndexIfPossible(indexInAdapter: Int) {
+        if (!textSecurePreferences.autoplayAudioMessages()) return
+
         if (indexInAdapter < 0 || indexInAdapter >= adapter.itemCount) { return }
         val viewHolder = binding?.conversationRecyclerView?.findViewHolderForAdapterPosition(indexInAdapter) as? ConversationAdapter.VisibleMessageViewHolder ?: return
         val visibleMessageView = ViewVisibleMessageBinding.bind(viewHolder.view).visibleMessageView
@@ -1399,7 +1418,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             } else it.individualRecipient.address
             QuoteModel(it.dateSent, sender, it.body, false, quotedAttachments)
         }
-        val outgoingTextMessage = OutgoingMediaMessage.from(message, recipient, attachments, quote, linkPreview)
+        val localQuote = quotedMessage?.let {
+            val sender =
+                if (it.isOutgoing) fromSerialized(textSecurePreferences.getLocalNumber()!!)
+                else it.individualRecipient.address
+            quote?.copy(author = sender)
+        }
+        val outgoingTextMessage = OutgoingMediaMessage.from(message, recipient, attachments, localQuote, linkPreview)
         // Clear the input bar
         binding?.inputBar?.text = ""
         binding?.inputBar?.cancelQuoteDraft()
@@ -1715,7 +1740,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     override fun resendMessage(messages: Set<MessageRecord>) {
         messages.iterator().forEach { messageRecord ->
-            ResendMessageUtilities.resend(messageRecord)
+            ResendMessageUtilities.resend(this, messageRecord, viewModel.blindedPublicKey)
         }
         endActionMode()
     }
@@ -1764,6 +1789,14 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val recipient = viewModel.recipient ?: return
         binding?.inputBar?.draftQuote(recipient, messages.first(), glide)
         endActionMode()
+    }
+
+    private fun sendScreenshotNotification() {
+        val recipient = viewModel.recipient ?: return
+        if (recipient.isGroupRecipient) return
+        val kind = DataExtractionNotification.Kind.Screenshot()
+        val message = DataExtractionNotification(kind)
+        MessageSender.send(message, recipient.address)
     }
 
     private fun sendMediaSavedNotification() {
@@ -1815,7 +1848,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         searchViewModel.onSearchOpened()
         binding?.searchBottomBar?.visibility = View.VISIBLE
         binding?.searchBottomBar?.setData(0, 0)
-        binding?.inputBar?.visibility = View.GONE
+        binding?.inputBar?.visibility = View.INVISIBLE
     }
 
     fun onSearchClosed() {
@@ -1869,6 +1902,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 ConversationReactionOverlay.Action.DELETE -> deleteMessages(selectedItems)
                 ConversationReactionOverlay.Action.BAN_AND_DELETE_ALL -> banAndDeleteAll(selectedItems)
                 ConversationReactionOverlay.Action.BAN_USER -> banUser(selectedItems)
+                ConversationReactionOverlay.Action.COPY_SESSION_ID -> TODO()
             }
         }
     }
