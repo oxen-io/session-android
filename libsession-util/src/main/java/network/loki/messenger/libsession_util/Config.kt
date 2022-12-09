@@ -18,6 +18,8 @@ sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
     external fun encryptionDomain(): String
     external fun confirmPushed(seqNo: Long)
     external fun merge(toMerge: Array<ByteArray>): Int
+    // Singular merge
+    external fun merge(toMerge: ByteArray): Int
 }
 
 class UserProfile(pointer: Long): ConfigBase(pointer) {

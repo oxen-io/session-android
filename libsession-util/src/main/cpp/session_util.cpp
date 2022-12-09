@@ -194,7 +194,7 @@ Java_network_loki_messenger_libsession_1util_ConfigBase_confirmPushed(JNIEnv *en
 }
 extern "C"
 JNIEXPORT jint JNICALL
-Java_network_loki_messenger_libsession_1util_ConfigBase_merge(JNIEnv *env, jobject thiz,
+Java_network_loki_messenger_libsession_1util_ConfigBase_merge___3_3B(JNIEnv *env, jobject thiz,
                                                               jobjectArray to_merge) {
     auto conf = ptrToConfigBase(env, thiz);
     size_t number = env->GetArrayLength(to_merge);
@@ -204,5 +204,14 @@ Java_network_loki_messenger_libsession_1util_ConfigBase_merge(JNIEnv *env, jobje
         auto bytes = ustring_from_bytes(env, jArr);
         configs.push_back(bytes);
     }
+    return conf->merge(configs);
+}
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_network_loki_messenger_libsession_1util_ConfigBase_merge___3B(JNIEnv *env, jobject thiz,
+                                                                   jbyteArray to_merge) {
+    auto conf = ptrToConfigBase(env, thiz);
+    std::vector<session::ustring> configs = {ustring_from_bytes(env, to_merge)};
     return conf->merge(configs);
 }

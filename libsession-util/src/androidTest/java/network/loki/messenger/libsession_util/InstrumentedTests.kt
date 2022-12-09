@@ -135,15 +135,15 @@ class InstrumentedTests {
         assertFalse(newConf.needsDump())
 
 
-        userProfile.setName("Nibbler")
-        newConf.setName("Raz")
+        userProfile.setName("Raz")
+        newConf.setName("Nibbler")
         newConf.setPic(UserPic("http://new.example.com/pic", "qwertyuio".encodeToByteArray()))
 
         val conf = userProfile.push()
         val conf2 = newConf.push()
 
-        val dump1 = userProfile.dump()
-        val dump2 = userProfile.dump()
+        userProfile.dump()
+        userProfile.dump()
 
         assertFalse(conf.config.contentEquals(conf2.config))
 
@@ -154,16 +154,46 @@ class InstrumentedTests {
         assertTrue(userProfile.needsPush())
 
         val newSeq1 = userProfile.push()
-        val newSeq2 = newConf.push()
 
         assertEquals(3, newSeq1.seqNo)
-        assertEquals(3, newSeq2.seqNo)
+
+        // assume newConf push gets rejected as it was last to write and clear previous config by hash on oxenss
+        newConf.merge(arrayOf(newSeq1.config))
+
+        val newSeqMerge = newConf.push()
 
         assertEquals("Nibbler", newConf.getName())
-        assertEquals("Nibbler", userProfile.getName())
+        assertEquals(3, newSeqMerge.seqNo)
+
+        // userProfile device polls and merges
+        userProfile.merge(arrayOf(newSeqMerge.config))
+
+
+        val userConfigMerge = userProfile.push()
+
+        assertEquals(3, userConfigMerge.seqNo)
+
+        assertEquals("Raz", newConf.getName())
+        assertEquals("Raz", userProfile.getName())
 
         userProfile.free()
         newConf.free()
+    }
+
+    @Test
+    fun merge_resolves_conflicts() {
+        val kp = keyPair
+        val a = UserProfile.newInstance(kp.secretKey)
+        val b = UserProfile.newInstance(kp.secretKey)
+        a.setName("A")
+        val (aPush, aSeq) = a.push()
+        b.setName("B")
+        // polls and sees invalid state, has to merge
+        b.merge(aPush)
+        val (bPush, bSeq) = b.push()
+        assertEquals("B", b.getName())
+        assertEquals(1, aSeq)
+        assertEquals(2, bSeq)
     }
 
     @Test
