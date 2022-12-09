@@ -194,6 +194,8 @@ class InstrumentedTests {
         assertEquals("B", b.getName())
         assertEquals(1, aSeq)
         assertEquals(2, bSeq)
+        a.merge(bPush)
+        assertEquals(2, a.push().seqNo)
     }
 
     @Test
