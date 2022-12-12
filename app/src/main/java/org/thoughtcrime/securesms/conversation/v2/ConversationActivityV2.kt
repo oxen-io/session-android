@@ -590,7 +590,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 this
             ) { onOptionsItemSelected(it) }
         }
-        super.onPrepareOptionsMenu(menu)
         return true
     }
 
