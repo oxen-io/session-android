@@ -20,8 +20,7 @@ import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.util.DateUtils
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -48,7 +47,10 @@ class MessageDetailActivity: PassphraseRequiredActionBarActivity() {
         // We only show this screen for messages fail to send,
         // so the author of the messages must be the current user.
         val author = Address.fromSerialized(TextSecurePreferences.getLocalNumber(this)!!)
-        messageRecord = DatabaseComponent.get(this).mmsSmsDatabase().getMessageFor(timestamp, author)
+        messageRecord = DatabaseComponent.get(this).mmsSmsDatabase().getMessageFor(timestamp, author) ?: run {
+            finish()
+            return
+        }
         val threadId = messageRecord!!.threadId
         val openGroup = storage.getOpenGroup(threadId)
         val blindedKey = openGroup?.let { group ->
