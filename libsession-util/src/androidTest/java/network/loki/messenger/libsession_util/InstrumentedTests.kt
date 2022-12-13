@@ -33,6 +33,12 @@ class InstrumentedTests {
     }
 
     @Test
+    fun jni_contacts() {
+        val userProfile = UserProfile.newInstance(keyPair.secretKey)
+
+    }
+
+    @Test
     fun jni_accessible() {
         val userProfile = UserProfile.newInstance(keyPair.secretKey)
         assertNotNull(userProfile)
@@ -173,8 +179,8 @@ class InstrumentedTests {
 
         assertEquals(3, userConfigMerge.seqNo)
 
-        assertEquals("Raz", newConf.getName())
-        assertEquals("Raz", userProfile.getName())
+        assertEquals("Nibbler", newConf.getName())
+        assertEquals("Nibbler", userProfile.getName())
 
         userProfile.free()
         newConf.free()

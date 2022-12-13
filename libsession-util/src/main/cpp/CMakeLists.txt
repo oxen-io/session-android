@@ -22,14 +22,18 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(STATIC_BUNDLE ON)
 add_subdirectory(../../../libsession-util libsession)
 
+set(SOURCES
+        user_profile.cpp
+        config_base.cpp
+        contacts.cpp
+        util.cpp)
+
 add_library( # Sets the name of the library.
         session_util
-
         # Sets the library as a shared library.
         SHARED
-
         # Provides a relative path to your source file(s).
-        session_util.cpp)
+        ${SOURCES})
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by

@@ -1,0 +1,78 @@
+#include "user_profile.h"
+#include "util.h"
+
+extern "C" {
+JNIEXPORT jobject JNICALL
+Java_network_loki_messenger_libsession_1util_UserProfile_00024Companion_newInstance___3B_3B(
+        JNIEnv *env, jobject thiz, jbyteArray ed25519_secret_key, jbyteArray initial_dump) {
+    auto secret_key = util::ustring_from_bytes(env, ed25519_secret_key);
+    auto initial = util::ustring_from_bytes(env, initial_dump);
+    auto* profile = new session::config::UserProfile(secret_key, std::optional(initial));
+
+    jclass userClass = env->FindClass("network/loki/messenger/libsession_util/UserProfile");
+    jmethodID constructor = env->GetMethodID(userClass, "<init>", "(J)V");
+    jobject newConfig = env->NewObject(userClass, constructor, reinterpret_cast<jlong>(profile));
+
+    return newConfig;
+}
+
+JNIEXPORT jobject JNICALL
+Java_network_loki_messenger_libsession_1util_UserProfile_00024Companion_newInstance___3B(
+        JNIEnv* env,
+        jobject,
+        jbyteArray secretKey) {
+
+    auto* profile = new session::config::UserProfile(util::ustring_from_bytes(env, secretKey), std::nullopt);
+
+    jclass userClass = env->FindClass("network/loki/messenger/libsession_util/UserProfile");
+    jmethodID constructor = env->GetMethodID(userClass, "<init>", "(J)V");
+    jobject newConfig = env->NewObject(userClass, constructor, reinterpret_cast<jlong>(profile));
+
+    return newConfig;
+}
+
+JNIEXPORT void JNICALL
+Java_network_loki_messenger_libsession_1util_UserProfile_setName(
+        JNIEnv* env,
+        jobject thiz,
+        jstring newName) {
+    auto profile = ptrToProfile(env, thiz);
+    profile->set_name(env->GetStringUTFChars(newName, nullptr));
+}
+
+JNIEXPORT jstring JNICALL
+Java_network_loki_messenger_libsession_1util_UserProfile_getName(JNIEnv *env, jobject thiz) {
+    auto profile = ptrToProfile(env, thiz);
+    auto name = profile->get_name();
+    if (name == std::nullopt) return nullptr;
+    jstring returnString = env->NewStringUTF(name->data());
+    return returnString;
+}
+
+JNIEXPORT void JNICALL
+Java_network_loki_messenger_libsession_1util_UserProfile_free(JNIEnv *env, jobject thiz) {
+    auto profile = ptrToProfile(env, thiz);
+    delete profile;
+}
+
+JNIEXPORT jobject JNICALL
+Java_network_loki_messenger_libsession_1util_UserProfile_getPic(JNIEnv *env, jobject thiz) {
+    auto profile = ptrToProfile(env, thiz);
+    auto pic = profile->get_profile_pic();
+
+    jobject returnObject = util::serialize_user_pic(env, pic);
+
+    return returnObject;
+}
+
+JNIEXPORT void JNICALL
+Java_network_loki_messenger_libsession_1util_UserProfile_setPic(JNIEnv *env, jobject thiz,
+                                                                jobject user_pic) {
+    auto profile = ptrToProfile(env, thiz);
+    auto pic = util::deserialize_user_pic(env, user_pic);
+    auto url = env->GetStringUTFChars(pic.first, nullptr);
+    auto key = util::ustring_from_bytes(env, pic.second);
+    profile->set_profile_pic(url, key);
+}
+
+}
