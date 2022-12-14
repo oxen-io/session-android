@@ -44,8 +44,8 @@ namespace util {
 extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_util_Sodium_ed25519KeyPair(JNIEnv *env, jobject thiz, jbyteArray seed) {
-    std::array<unsigned char, 32> ed_pk;
-    std::array<unsigned char, 64> ed_sk;
+    std::array<unsigned char, 32> ed_pk; // NOLINT(cppcoreguidelines-pro-type-member-init)
+    std::array<unsigned char, 64> ed_sk; // NOLINT(cppcoreguidelines-pro-type-member-init)
     auto seed_bytes = util::ustring_from_bytes(env, seed);
     crypto_sign_ed25519_seed_keypair(ed_pk.data(), ed_sk.data(), seed_bytes.data());
 
@@ -57,4 +57,16 @@ Java_network_loki_messenger_libsession_1util_util_Sodium_ed25519KeyPair(JNIEnv *
 
     jobject return_obj = env->NewObject(kp_class, kp_constructor, pk_jarray, sk_jarray);
     return return_obj;
+}
+extern "C"
+JNIEXPORT jbyteArray JNICALL
+Java_network_loki_messenger_libsession_1util_util_Sodium_ed25519PkToCurve25519(JNIEnv *env,
+                                                                               jobject thiz,
+                                                                               jbyteArray pk) {
+    auto ed_pk = util::ustring_from_bytes(env, pk);
+    std::array<unsigned char, 32> curve_pk; // NOLINT(cppcoreguidelines-pro-type-member-init)
+    crypto_sign_ed25519_pk_to_curve25519(curve_pk.data(), ed_pk.data());
+
+    jbyteArray curve_pk_jarray = util::bytes_from_ustring(env, session::ustring_view {curve_pk.data(), curve_pk.size()});
+    return curve_pk_jarray;
 }

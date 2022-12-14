@@ -2,6 +2,8 @@
 #include "util.h"
 
 extern "C" {
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "bugprone-reserved-identifier"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_UserProfile_00024Companion_newInstance___3B_3B(
         JNIEnv *env, jobject thiz, jbyteArray ed25519_secret_key, jbyteArray initial_dump) {
@@ -30,6 +32,7 @@ Java_network_loki_messenger_libsession_1util_UserProfile_00024Companion_newInsta
 
     return newConfig;
 }
+#pragma clang diagnostic pop
 
 JNIEXPORT void JNICALL
 Java_network_loki_messenger_libsession_1util_UserProfile_setName(

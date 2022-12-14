@@ -26,6 +26,14 @@ sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
 }
 
 class Contacts(pointer: Long) : ConfigBase(pointer) {
+    companion object {
+        init {
+            System.loadLibrary("session_util")
+        }
+        external fun newInstance(ed25519SecretKey: ByteArray): Contacts
+        external fun newInstance(ed25519SecretKey: ByteArray, initialDump: ByteArray): Contacts
+    }
+
     external fun get(sessionId: String): Contact?
     external fun getOrCreate(sessionId: String): Contact
     external fun set(contact: Contact)

@@ -34,7 +34,8 @@ class InstrumentedTests {
 
     @Test
     fun jni_contacts() {
-        val userProfile = UserProfile.newInstance(keyPair.secretKey)
+        val contacts = Contacts.newInstance(keyPair.secretKey)
+        val definitelyRealId = Hex.fromStringCondensed("050000000000000000000000000000000000000000000000000000000000000000")
 
     }
 

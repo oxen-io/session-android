@@ -55,6 +55,8 @@ Java_network_loki_messenger_libsession_1util_ConfigBase_confirmPushed(JNIEnv *en
     conf->confirm_pushed(seq_no);
 }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "bugprone-reserved-identifier"
 JNIEXPORT jint JNICALL
 Java_network_loki_messenger_libsession_1util_ConfigBase_merge___3_3B(JNIEnv *env, jobject thiz,
                                                                      jobjectArray to_merge) {
@@ -76,5 +78,5 @@ Java_network_loki_messenger_libsession_1util_ConfigBase_merge___3B(JNIEnv *env, 
     std::vector<session::ustring> configs = {util::ustring_from_bytes(env, to_merge)};
     return conf->merge(configs);
 }
-
+#pragma clang diagnostic pop
 }
