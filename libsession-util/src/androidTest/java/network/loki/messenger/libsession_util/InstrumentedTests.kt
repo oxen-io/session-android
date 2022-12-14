@@ -18,10 +18,11 @@ import org.session.libsignal.utilities.Hex
 @RunWith(AndroidJUnit4::class)
 class InstrumentedTests {
 
+    val seed =
+        Hex.fromStringCondensed("0123456789abcdef0123456789abcdef00000000000000000000000000000000")
+
     private val keyPair: KeyPair
         get() {
-            val seed =
-                Hex.fromStringCondensed("0123456789abcdef0123456789abcdef00000000000000000000000000000000")
             return Sodium.ed25519KeyPair(seed)
         }
 
@@ -30,6 +31,19 @@ class InstrumentedTests {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals("network.loki.messenger.libsession_util.test", appContext.packageName)
+    }
+
+    @Test
+    fun jni_test_sodium_kp_ed_curve() {
+        val kp = keyPair
+        val curvePkBytes = Sodium.ed25519PkToCurve25519(kp.pubKey)
+
+        val edPk = Hex.toString(kp.pubKey)
+        val curvePk = Hex.toString(curvePkBytes)
+
+        assertEquals("4cb76fdc6d32278e3f83dbf608360ecc6b65727934b85d2fb86862ff98c46ab7", edPk)
+        assertEquals("d2ad010eeb72d72e561d9de7bd7b6989af77dcabffa03a5111a6c859ae5c3a72", curvePk)
+        assertEquals(kp.secretKey.take(32), seed)
     }
 
     @Test
