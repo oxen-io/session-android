@@ -38,12 +38,12 @@ class InstrumentedTests {
         val kp = keyPair
         val curvePkBytes = Sodium.ed25519PkToCurve25519(kp.pubKey)
 
-        val edPk = Hex.toString(kp.pubKey)
-        val curvePk = Hex.toString(curvePkBytes)
+        val edPk = kp.pubKey
+        val curvePk = curvePkBytes
 
-        assertEquals("4cb76fdc6d32278e3f83dbf608360ecc6b65727934b85d2fb86862ff98c46ab7", edPk)
-        assertEquals("d2ad010eeb72d72e561d9de7bd7b6989af77dcabffa03a5111a6c859ae5c3a72", curvePk)
-        assertEquals(kp.secretKey.take(32), seed)
+        assertArrayEquals(Hex.fromStringCondensed("4cb76fdc6d32278e3f83dbf608360ecc6b65727934b85d2fb86862ff98c46ab7"), edPk)
+        assertArrayEquals(Hex.fromStringCondensed("d2ad010eeb72d72e561d9de7bd7b6989af77dcabffa03a5111a6c859ae5c3a72"), curvePk)
+        assertArrayEquals(kp.secretKey.take(32).toByteArray(), seed)
     }
 
     @Test
