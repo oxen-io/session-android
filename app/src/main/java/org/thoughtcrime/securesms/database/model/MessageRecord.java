@@ -142,15 +142,15 @@ public abstract class MessageRecord extends DisplayRecord {
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    MessageRecord that = (MessageRecord) o;
-    return that.isMms() == isMms() && expiresIn == that.expiresIn && expireStarted == that.expireStarted && unidentified == that.unidentified && id == that.id && Objects.equals(individualRecipient, that.individualRecipient) && Objects.equals(mismatches, that.mismatches) && Objects.equals(networkFailures, that.networkFailures) && Objects.equals(reactions, that.reactions);
+  public boolean equals(Object other) {
+    return other instanceof MessageRecord
+            && ((MessageRecord) other).getId() == getId()
+            && ((MessageRecord) other).isMms() == isMms();
   }
 
+  @Override
   public int hashCode() {
-    return (int)getId();
+    return Objects.hash(id, isMms());
   }
 
   public @NonNull List<ReactionRecord> getReactions() {

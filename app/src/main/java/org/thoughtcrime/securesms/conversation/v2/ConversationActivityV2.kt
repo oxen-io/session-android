@@ -1743,6 +1743,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         endActionMode()
     }
 
+    override fun destroyActionMode() {
+        this.actionMode = null
+    }
+
     private fun sendScreenshotNotification() {
         val recipient = viewModel.recipient ?: return
         if (recipient.isGroupRecipient) return

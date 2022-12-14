@@ -101,6 +101,7 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
     override fun onDestroyActionMode(mode: ActionMode) {
         adapter.selectedItems.clear()
         adapter.notifyDataSetChanged()
+        delegate?.destroyActionMode()
     }
 }
 
@@ -116,4 +117,5 @@ interface ConversationActionModeCallbackDelegate {
     fun showMessageDetail(messages: Set<MessageRecord>)
     fun saveAttachment(messages: Set<MessageRecord>)
     fun reply(messages: Set<MessageRecord>)
+    fun destroyActionMode()
 }
