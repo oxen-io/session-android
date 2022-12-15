@@ -36,6 +36,7 @@ class Contacts(pointer: Long) : ConfigBase(pointer) {
 
     external fun get(sessionId: String): Contact?
     external fun getOrCreate(sessionId: String): Contact
+    external fun all(): List<Contact>
     external fun set(contact: Contact)
     external fun erase(sessionId: String): Boolean
 }

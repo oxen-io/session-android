@@ -49,8 +49,69 @@ class InstrumentedTests {
     @Test
     fun jni_contacts() {
         val contacts = Contacts.newInstance(keyPair.secretKey)
-        val definitelyRealId = Hex.fromStringCondensed("050000000000000000000000000000000000000000000000000000000000000000")
+        val definitelyRealId = "050000000000000000000000000000000000000000000000000000000000000000"
+        assertNull(contacts.get(definitelyRealId))
 
+        // Should be an uninitialized contact apart from ID
+        val c = contacts.getOrCreate(definitelyRealId)
+        assertEquals(definitelyRealId, c.id)
+        assertNull(c.name)
+        assertNull(c.nickname)
+        assertFalse(c.approved)
+        assertFalse(c.approvedMe)
+        assertFalse(c.blocked)
+        assertNull(c.profilePicture)
+
+        assertFalse(contacts.needsPush())
+        assertFalse(contacts.needsDump())
+        assertEquals(0, contacts.push().seqNo)
+
+        c.name = "Joe"
+        c.nickname = "Joey"
+        c.approved = true
+        c.approvedMe = true
+
+        contacts.set(c)
+
+        val cSaved = contacts.get(definitelyRealId)!!
+        assertEquals("Joe", cSaved.name)
+        assertEquals("Joey", cSaved.nickname)
+        assertTrue(cSaved.approved)
+        assertTrue(cSaved.approvedMe)
+        assertFalse(cSaved.blocked)
+        assertNull(cSaved.profilePicture)
+
+        val push1 = contacts.push()
+
+        assertEquals(1, push1.seqNo)
+        contacts.confirmPushed(push1.seqNo)
+        assertFalse(contacts.needsPush())
+        assertTrue(contacts.needsDump())
+
+        val contacts2 = Contacts.newInstance(keyPair.secretKey, contacts.dump())
+        assertFalse(contacts.needsDump())
+        assertFalse(contacts2.needsPush())
+        assertFalse(contacts2.needsDump())
+
+        val anotherId = "051111111111111111111111111111111111111111111111111111111111111111"
+        val c2 = contacts2.getOrCreate(anotherId)
+        contacts2.set(c2)
+        val push2 = contacts2.push()
+        assertEquals(2, push2.seqNo)
+        contacts2.confirmPushed(push2.seqNo)
+        assertFalse(contacts2.needsPush())
+
+        contacts.merge(push2.config)
+
+
+        assertFalse(contacts.needsPush())
+        assertEquals(push2.seqNo, contacts.push().seqNo)
+
+        val contactList = contacts.all().toList()
+        assertEquals(definitelyRealId, contactList[0].id)
+        assertEquals(anotherId, contactList[1].id)
+        assertEquals("Joey", contactList[0].nickname)
+        assertNull(contactList[1].nickname)
     }
 
     @Test

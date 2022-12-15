@@ -2,10 +2,10 @@ package network.loki.messenger.libsession_util.util
 
 data class Contact(
     val id: String,
-    val name: String,
-    val nickname: String,
-    val approved: Boolean,
-    val approvedMe: Boolean,
-    val blocked: Boolean,
-    val profilePicture: UserPic
+    var name: String?,
+    var nickname: String?,
+    var approved: Boolean,
+    var approvedMe: Boolean,
+    var blocked: Boolean,
+    var profilePicture: UserPic?
 )

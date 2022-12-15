@@ -27,7 +27,7 @@ Java_network_loki_messenger_libsession_1util_Contacts_set(JNIEnv *env, jobject t
                                                           jobject contact) {
     auto contacts = ptrToContacts(env, thiz);
     auto contact_info = deserialize_contact(env, contact);
-    contacts->set(contact_info);
+    contacts->set(*contact_info);
 }
 
 extern "C"
@@ -69,3 +69,17 @@ Java_network_loki_messenger_libsession_1util_Contacts_00024Companion_newInstance
     return newConfig;
 }
 #pragma clang diagnostic pop
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_network_loki_messenger_libsession_1util_Contacts_all(JNIEnv *env, jobject thiz) {
+    auto contacts = ptrToContacts(env, thiz);
+    jclass stack = env->FindClass("java/util/Stack");
+    jmethodID init = env->GetMethodID(stack, "<init>", "()V");
+    jobject our_stack = env->NewObject(stack, init);
+    jmethodID push = env->GetMethodID(stack, "push", "(Ljava/lang/Object;)Ljava/lang/Object;");
+    for (const auto& contact : *contacts) {
+        auto contact_obj = serialize_contact(env, contact);
+        env->CallObjectMethod(our_stack, push, contact_obj);
+    }
+    return our_stack;
+}
