@@ -2,9 +2,12 @@ package network.loki.messenger.libsession_util
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import network.loki.messenger.libsession_util.util.Contact
 import network.loki.messenger.libsession_util.util.KeyPair
 import network.loki.messenger.libsession_util.util.Sodium
 import network.loki.messenger.libsession_util.util.UserPic
+import org.hamcrest.CoreMatchers.not
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -112,6 +115,40 @@ class InstrumentedTests {
         assertEquals(anotherId, contactList[1].id)
         assertEquals("Joey", contactList[0].nickname)
         assertNull(contactList[1].nickname)
+
+        contacts.erase(definitelyRealId)
+
+        val thirdId ="052222222222222222222222222222222222222222222222222222222222222222"
+        val third = Contact(
+            id = thirdId,
+            nickname = "Nickname 3",
+            approved = true,
+            blocked = true,
+            profilePicture = UserPic("http://example.com/huge.bmp", "qwerty".encodeToByteArray())
+        )
+        contacts2.set(third)
+        assertTrue(contacts.needsPush())
+        assertTrue(contacts2.needsPush())
+        val toPush = contacts.push()
+        val toPush2 = contacts2.push()
+        assertEquals(toPush.seqNo, toPush2.seqNo)
+        assertThat(toPush2.config, not(equals(toPush.config)))
+
+        contacts.confirmPushed(toPush.seqNo)
+        contacts2.confirmPushed(toPush2.seqNo)
+
+        contacts.merge(toPush2.config)
+        contacts2.merge(toPush.config)
+
+        assertTrue(contacts.needsPush())
+        assertTrue(contacts2.needsPush())
+
+        val mergePush = contacts.push()
+        val mergePush2 = contacts2.push()
+
+        assertEquals(mergePush.seqNo, mergePush2.seqNo)
+        assertArrayEquals(mergePush.config, mergePush2.config)
+
     }
 
     @Test
