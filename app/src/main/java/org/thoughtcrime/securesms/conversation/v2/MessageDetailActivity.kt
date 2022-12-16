@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms.conversation.v2
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityMessageDetailBinding
@@ -73,8 +74,15 @@ class MessageDetailActivity: PassphraseRequiredActionBarActivity() {
         val dateFormatter: SimpleDateFormat = DateUtils.getDetailedDateFormatter(this, dateLocale)
         binding.sentTime.text = dateFormatter.format(Date(messageRecord!!.dateSent))
 
-        val errorMessage = DatabaseComponent.get(this).lokiMessageDatabase().getErrorMessage(messageRecord!!.getId()) ?: "Message failed to send."
-        binding.errorMessage.text = errorMessage
+        val errorMessage = DatabaseComponent.get(this).lokiMessageDatabase().getErrorMessage(messageRecord!!.getId())
+        if (errorMessage != null) {
+            binding.errorMessage.text = errorMessage
+            binding.resendContainer.isVisible = true
+            binding.errorContainer.isVisible = true
+        } else {
+            binding.errorContainer.isVisible = false
+            binding.resendContainer.isVisible = false
+        }
 
         if (messageRecord!!.expiresIn <= 0 || messageRecord!!.expireStarted <= 0) {
             binding.expiresContainer.visibility = View.GONE

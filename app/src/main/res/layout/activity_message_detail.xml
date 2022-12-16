@@ -69,6 +69,7 @@
             </TableRow>
 
             <TableRow
+                android:id="@+id/error_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="@dimen/small_spacing"
@@ -94,6 +95,7 @@
         </TableLayout>
 
         <LinearLayout
+            android:id="@+id/resend_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/very_large_spacing"
