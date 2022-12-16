@@ -54,12 +54,6 @@ Java_network_loki_messenger_libsession_1util_UserProfile_getName(JNIEnv *env, jo
     return returnString;
 }
 
-JNIEXPORT void JNICALL
-Java_network_loki_messenger_libsession_1util_UserProfile_free(JNIEnv *env, jobject thiz) {
-    auto profile = ptrToProfile(env, thiz);
-    delete profile;
-}
-
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_UserProfile_getPic(JNIEnv *env, jobject thiz) {
     auto profile = ptrToProfile(env, thiz);

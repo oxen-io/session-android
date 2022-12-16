@@ -33,6 +33,12 @@ Java_network_loki_messenger_libsession_1util_ConfigBase_push(JNIEnv *env, jobjec
     return returnObject;
 }
 
+JNIEXPORT void JNICALL
+Java_network_loki_messenger_libsession_1util_ConfigBase_free(JNIEnv *env, jobject thiz) {
+    auto config = ptrToConfigBase(env, thiz);
+    delete config;
+}
+
 JNIEXPORT jbyteArray JNICALL
 Java_network_loki_messenger_libsession_1util_ConfigBase_dump(JNIEnv *env, jobject thiz) {
     auto config = ptrToConfigBase(env, thiz);

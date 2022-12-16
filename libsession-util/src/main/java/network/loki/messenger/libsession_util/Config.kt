@@ -23,6 +23,14 @@ sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
 
     // Singular merge
     external fun merge(toMerge: ByteArray): Int
+
+    external fun free()
+
+    @Override
+    fun finalize() {
+        free()
+    }
+
 }
 
 class Contacts(pointer: Long) : ConfigBase(pointer) {
@@ -53,7 +61,6 @@ class UserProfile(pointer: Long) : ConfigBase(pointer) {
 
     external fun setName(newName: String)
     external fun getName(): String?
-    external fun free()
     external fun getPic(): UserPic?
     external fun setPic(userPic: UserPic)
 }
