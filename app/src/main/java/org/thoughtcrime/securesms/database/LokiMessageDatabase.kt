@@ -136,6 +136,11 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         database.insertOrUpdate(errorMessageTable, contentValues, "${Companion.messageID} = ?", arrayOf(messageID.toString()))
     }
 
+    fun clearErrorMessage(messageID: Long) {
+        val database = databaseHelper.writableDatabase
+        database.delete(errorMessageTable, "${Companion.messageID} = ?", arrayOf(messageID.toString()))
+    }
+
     fun deleteThread(threadId: Long) {
         val database = databaseHelper.writableDatabase
         try {
