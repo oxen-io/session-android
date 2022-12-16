@@ -65,8 +65,12 @@ Java_network_loki_messenger_libsession_1util_util_Sodium_ed25519PkToCurve25519(J
                                                                                jbyteArray pk) {
     auto ed_pk = util::ustring_from_bytes(env, pk);
     std::array<unsigned char, 32> curve_pk; // NOLINT(cppcoreguidelines-pro-type-member-init)
-    crypto_sign_ed25519_pk_to_curve25519(curve_pk.data(), ed_pk.data());
-
+    int success = crypto_sign_ed25519_pk_to_curve25519(curve_pk.data(), ed_pk.data());
+    if (success != 0) {
+        jclass exception = env->FindClass("java/lang/Exception");
+        env->ThrowNew(exception, "Invalid crypto_sign_ed25519_pk_to_curve25519 operation");
+        return nullptr;
+    }
     jbyteArray curve_pk_jarray = util::bytes_from_ustring(env, session::ustring_view {curve_pk.data(), curve_pk.size()});
     return curve_pk_jarray;
 }

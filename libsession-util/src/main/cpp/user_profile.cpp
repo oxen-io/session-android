@@ -40,7 +40,9 @@ Java_network_loki_messenger_libsession_1util_UserProfile_setName(
         jobject thiz,
         jstring newName) {
     auto profile = ptrToProfile(env, thiz);
-    profile->set_name(env->GetStringUTFChars(newName, nullptr));
+    auto name_chars = env->GetStringUTFChars(newName, nullptr);
+    profile->set_name(name_chars);
+    env->ReleaseStringUTFChars(newName, name_chars);
 }
 
 JNIEXPORT jstring JNICALL
@@ -76,6 +78,7 @@ Java_network_loki_messenger_libsession_1util_UserProfile_setPic(JNIEnv *env, job
     auto url = env->GetStringUTFChars(pic.first, nullptr);
     auto key = util::ustring_from_bytes(env, pic.second);
     profile->set_profile_pic(url, key);
+    env->ReleaseStringUTFChars(pic.first, url);
 }
 
 }
