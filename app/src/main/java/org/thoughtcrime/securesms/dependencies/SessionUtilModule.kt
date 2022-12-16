@@ -11,7 +11,7 @@ import org.thoughtcrime.securesms.crypto.KeyPairUtilities
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
-abstract class SessionUtilModule {
+object SessionUtilModule {
 
     private fun maybeUserEdSecretKey(context: ApplicationContext): ByteArray? {
         val edKey = KeyPairUtilities.getUserED25519KeyPair(context) ?: return null
