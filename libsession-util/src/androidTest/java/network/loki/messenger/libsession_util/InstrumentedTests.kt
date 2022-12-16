@@ -148,7 +148,6 @@ class InstrumentedTests {
 
         assertEquals(mergePush.seqNo, mergePush2.seqNo)
         assertArrayEquals(mergePush.config, mergePush2.config)
-
     }
 
     @Test
