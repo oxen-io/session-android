@@ -46,4 +46,5 @@ interface DatabaseComponent {
     fun attachmentProvider(): MessageDataProvider
     fun blindedIdMappingDatabase(): BlindedIdMappingDatabase
     fun groupMemberDatabase(): GroupMemberDatabase
+    fun configDatabase(): ConfigDatabase
 }

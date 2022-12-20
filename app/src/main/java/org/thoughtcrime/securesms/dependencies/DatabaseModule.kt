@@ -141,4 +141,8 @@ object DatabaseModule {
     @Singleton
     fun provideAttachmentProvider(@ApplicationContext context: Context, openHelper: SQLCipherOpenHelper): MessageDataProvider = DatabaseAttachmentProvider(context, openHelper)
 
+    @Provides
+    @Singleton
+    fun provideConfigDatabase(@ApplicationContext context: Context, openHelper: SQLCipherOpenHelper): ConfigDatabase = ConfigDatabase(context, openHelper)
+
 }

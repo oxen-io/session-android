@@ -25,6 +25,7 @@ import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityHomeBinding
 import network.loki.messenger.databinding.ViewMessageRequestBannerBinding
+import network.loki.messenger.libsession_util.UserProfile
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -37,6 +38,7 @@ import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils
+import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.MuteDialog
@@ -61,15 +63,9 @@ import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.onboarding.SeedActivity
 import org.thoughtcrime.securesms.onboarding.SeedReminderViewDelegate
 import org.thoughtcrime.securesms.preferences.SettingsActivity
-import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
-import org.thoughtcrime.securesms.util.DateUtils
-import org.thoughtcrime.securesms.util.IP2Country
-import org.thoughtcrime.securesms.util.disableClipping
-import org.thoughtcrime.securesms.util.push
-import org.thoughtcrime.securesms.util.show
-import org.thoughtcrime.securesms.util.themeState
+import org.thoughtcrime.securesms.util.*
 import java.io.IOException
-import java.util.Locale
+import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -87,6 +83,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     @Inject lateinit var recipientDatabase: RecipientDatabase
     @Inject lateinit var groupDatabase: GroupDatabase
     @Inject lateinit var textSecurePreferences: TextSecurePreferences
+    @Inject lateinit var userProfile: Optional<UserProfile>
 
     private val globalSearchViewModel by viewModels<GlobalSearchViewModel>()
     private val homeViewModel by viewModels<HomeViewModel>()
