@@ -20,7 +20,7 @@ Java_network_loki_messenger_libsession_1util_Contacts_getOrCreate(JNIEnv *env, j
                                                                   jstring session_id) {
     auto contacts = ptrToContacts(env, thiz);
     auto session_id_chars = env->GetStringUTFChars(session_id, nullptr);
-    auto contact = contacts->get_or_create(session_id_chars);
+    auto contact = contacts->get_or_construct(session_id_chars);
     env->ReleaseStringUTFChars(session_id, session_id_chars);
     return serialize_contact(env, contact);
 }
