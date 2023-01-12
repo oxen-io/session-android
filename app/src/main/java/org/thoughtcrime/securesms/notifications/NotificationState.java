@@ -4,12 +4,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.session.libsignal.utilities.Log;
 import org.session.libsession.utilities.recipients.Recipient;
-import org.session.libsession.utilities.recipients.Recipient.*;
+import org.session.libsession.utilities.recipients.Recipient.VibrateState;
+import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2;
 
 import java.util.LinkedHashSet;
@@ -114,7 +116,12 @@ public class NotificationState {
     intent.putExtra(MarkReadReceiver.THREAD_IDS_EXTRA, threadArray);
     intent.putExtra(MarkReadReceiver.NOTIFICATION_ID_EXTRA, notificationId);
 
-    return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    int intentFlags = PendingIntent.FLAG_UPDATE_CURRENT;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+      intentFlags |= PendingIntent.FLAG_MUTABLE;
+    }
+
+    return PendingIntent.getBroadcast(context, 0, intent, intentFlags);
   }
 
   public PendingIntent getRemoteReplyIntent(Context context, Recipient recipient, ReplyMethod replyMethod) {
@@ -127,7 +134,12 @@ public class NotificationState {
     intent.putExtra(RemoteReplyReceiver.REPLY_METHOD, replyMethod);
     intent.setPackage(context.getPackageName());
 
-    return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    int intentFlags = PendingIntent.FLAG_UPDATE_CURRENT;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+      intentFlags |= PendingIntent.FLAG_MUTABLE;
+    }
+
+    return PendingIntent.getBroadcast(context, 0, intent, intentFlags);
   }
 
   public PendingIntent getAndroidAutoReplyIntent(Context context, Recipient recipient) {
@@ -141,7 +153,12 @@ public class NotificationState {
     intent.putExtra(AndroidAutoReplyReceiver.THREAD_ID_EXTRA, (long)threads.toArray()[0]);
     intent.setPackage(context.getPackageName());
 
-    return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    int intentFlags = PendingIntent.FLAG_UPDATE_CURRENT;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+      intentFlags |= PendingIntent.FLAG_MUTABLE;
+    }
+
+    return PendingIntent.getBroadcast(context, 0, intent, intentFlags);
   }
 
   public PendingIntent getAndroidAutoHeardIntent(Context context, int notificationId) {
@@ -160,7 +177,12 @@ public class NotificationState {
     intent.putExtra(AndroidAutoHeardReceiver.NOTIFICATION_ID_EXTRA, notificationId);
     intent.setPackage(context.getPackageName());
 
-    return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    int intentFlags = PendingIntent.FLAG_UPDATE_CURRENT;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+      intentFlags |= PendingIntent.FLAG_MUTABLE;
+    }
+
+    return PendingIntent.getBroadcast(context, 0, intent, intentFlags);
   }
 
   public PendingIntent getQuickReplyIntent(Context context, Recipient recipient) {
@@ -171,7 +193,12 @@ public class NotificationState {
     intent.putExtra(ConversationActivityV2.THREAD_ID, (long)threads.toArray()[0]);
     intent.setData((Uri.parse("custom://"+System.currentTimeMillis())));
 
-    return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    int intentFlags = PendingIntent.FLAG_UPDATE_CURRENT;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+      intentFlags |= PendingIntent.FLAG_MUTABLE;
+    }
+
+    return PendingIntent.getActivity(context, 0, intent, intentFlags);
   }
 
   public PendingIntent getDeleteIntent(Context context) {
@@ -190,7 +217,12 @@ public class NotificationState {
     intent.putExtra(DeleteNotificationReceiver.EXTRA_MMS, mms);
     intent.setData((Uri.parse("custom://"+System.currentTimeMillis())));
 
-    return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    int intentFlags = PendingIntent.FLAG_UPDATE_CURRENT;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+      intentFlags |= PendingIntent.FLAG_MUTABLE;
+    }
+
+    return PendingIntent.getBroadcast(context, 0, intent, intentFlags);
   }
 
 

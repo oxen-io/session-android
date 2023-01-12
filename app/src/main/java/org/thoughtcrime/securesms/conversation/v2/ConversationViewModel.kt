@@ -182,7 +182,6 @@ class ConversationViewModel(
 data class UiMessage(val id: Long, val message: String)
 
 data class ConversationUiState(
-    val isOxenHostedOpenGroup: Boolean = false,
     val uiMessages: List<UiMessage> = emptyList(),
     val isMessageRequestAccepted: Boolean? = null
 )

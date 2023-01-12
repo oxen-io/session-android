@@ -44,7 +44,7 @@ import org.thoughtcrime.securesms.database.model.SmsMessageRecord
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.SearchUtil
 import org.thoughtcrime.securesms.util.getAccentColor
-import java.util.Locale
+import java.util.*
 import kotlin.math.roundToInt
 
 class VisibleMessageContentView : LinearLayout {
@@ -86,6 +86,14 @@ class VisibleMessageContentView : LinearLayout {
         if (message.isDeleted) {
             binding.deletedMessageView.root.isVisible = true
             binding.deletedMessageView.root.bind(message, getTextColor(context, message))
+            binding.bodyTextView.isVisible = false
+            binding.quoteView.root.isVisible = false
+            binding.linkPreviewView.isVisible = false
+            binding.untrustedView.root.isVisible = false
+            binding.voiceMessageView.root.isVisible = false
+            binding.documentView.root.isVisible = false
+            binding.albumThumbnailView.isVisible = false
+            binding.openGroupInvitationView.root.isVisible = false
             return
         } else {
             binding.deletedMessageView.root.isVisible = false

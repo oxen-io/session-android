@@ -13,18 +13,18 @@ public class MessageResult {
   public final Recipient messageRecipient;
   public final String    bodySnippet;
   public final long      threadId;
-  public final long      receivedTimestampMs;
+  public final long      sentTimestampMs;
 
   public MessageResult(@NonNull Recipient conversationRecipient,
                        @NonNull Recipient messageRecipient,
                        @NonNull String bodySnippet,
                        long threadId,
-                       long receivedTimestampMs)
+                       long sentTimestampMs)
   {
     this.conversationRecipient = conversationRecipient;
     this.messageRecipient      = messageRecipient;
     this.bodySnippet           = bodySnippet;
     this.threadId              = threadId;
-    this.receivedTimestampMs   = receivedTimestampMs;
+    this.sentTimestampMs       = sentTimestampMs;
   }
 }

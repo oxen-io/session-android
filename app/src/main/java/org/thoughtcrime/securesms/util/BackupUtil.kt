@@ -24,7 +24,6 @@ import org.thoughtcrime.securesms.crypto.AttachmentSecretProvider
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
 import org.thoughtcrime.securesms.database.BackupFileRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.service.LocalBackupListener
 import java.io.IOException
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -72,44 +71,6 @@ object BackupUtil {
                 .setValue(preferences.getString(IdentityKeyUtil.LOKI_SEED, null))
                 .build())
         return prefList
-    }
-
-    /**
-     * Set app-wide configuration to enable the backups and schedule them.
-     *
-     * Make sure that the backup dir is selected prior activating the backup.
-     * Use [BackupDirSelector] or [setBackupDirUri] manually.
-     */
-    @JvmStatic
-    @Throws(IOException::class)
-    fun enableBackups(context: Context, password: String) {
-        val backupDir = getBackupDirUri(context)
-        if (backupDir == null || !validateDirAccess(context, backupDir)) {
-            throw IOException("Backup dir is not set or invalid.")
-        }
-
-        BackupPassphrase.set(context, password)
-        TextSecurePreferences.setBackupEnabled(context, true)
-        LocalBackupListener.schedule(context)
-    }
-
-    /**
-     * Set app-wide configuration to disable the backups.
-     *
-     * This call resets the backup dir value.
-     * Make sure to call [setBackupDirUri] prior next call to [enableBackups].
-     *
-     * @param deleteBackupFiles if true, deletes all the previously created backup files
-     * (if the app has access to them)
-     */
-    @JvmStatic
-    fun disableBackups(context: Context, deleteBackupFiles: Boolean) {
-        BackupPassphrase.set(context, null)
-        TextSecurePreferences.setBackupEnabled(context, false)
-        if (deleteBackupFiles) {
-            deleteAllBackupFiles(context)
-        }
-        setBackupDirUri(context, null)
     }
 
     @JvmStatic

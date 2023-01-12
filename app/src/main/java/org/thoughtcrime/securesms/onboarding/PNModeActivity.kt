@@ -52,7 +52,7 @@ class PNModeActivity : BaseActionBarActivity() {
         toggleFCM()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_pn_mode, menu)
         return true
     }

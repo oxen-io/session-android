@@ -96,7 +96,10 @@ object FileServerApi {
         )
         return send(request).map { response ->
             val json = JsonUtil.fromJson(response, Map::class.java)
-            (json["id"] as? String)?.toLong() ?: throw Error.ParsingFailed
+            val hasId = json.containsKey("id")
+            val id = json.getOrDefault("id", null)
+            Log.d("Loki-FS", "File Upload Response hasId: $hasId of type: ${id?.javaClass}")
+            (id as? String)?.toLong() ?: throw Error.ParsingFailed
         }
     }
 

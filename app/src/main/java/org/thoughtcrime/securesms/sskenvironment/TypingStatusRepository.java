@@ -1,20 +1,21 @@
 package org.thoughtcrime.securesms.sskenvironment;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import android.content.Context;
-import androidx.annotation.NonNull;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
 import org.session.libsession.utilities.Address;
-import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsession.utilities.SSKEnvironment;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.Util;
+import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsignal.utilities.Log;
 
 import java.util.ArrayList;
@@ -198,12 +199,12 @@ public class TypingStatusRepository implements SSKEnvironment.TypingIndicatorsPr
 
       if (device != typist.device) return false;
       if (threadId != typist.threadId) return false;
-      return author.equals(typist.author);
+      return author.getAddress().equals(typist.author.getAddress());
     }
 
     @Override
     public int hashCode() {
-      int result = author.hashCode();
+      int result = author.getAddress().hashCode();
       result = 31 * result + device;
       result = 31 * result + (int) (threadId ^ (threadId >>> 32));
       return result;

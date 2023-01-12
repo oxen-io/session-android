@@ -4,9 +4,9 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath "com.android.tools.build:gradle:$gradlePluginVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath "com.google.gms:google-services:4.3.10"
+        classpath "com.google.gms:google-services:$googleServicesVersion"
         classpath files('libs/gradle-witness.jar')
     }
 }
@@ -51,6 +51,7 @@ allprojects {
 
     project.ext {
         androidMinimumSdkVersion = 23
-        androidCompileSdkVersion = 30
+        androidTargetSdkVersion  = 31
+        androidCompileSdkVersion = 32
     }
 }

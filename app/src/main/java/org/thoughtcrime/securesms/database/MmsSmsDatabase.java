@@ -112,6 +112,64 @@ public class MmsSmsDatabase extends Database {
     return getMessageFor(timestamp, author.serialize());
   }
 
+  public long getPreviousPage(long threadId, long fromTime, int limit) {
+    String order = MmsSmsColumns.NORMALIZED_DATE_SENT+" ASC";
+    String selection = MmsSmsColumns.THREAD_ID+" = "+threadId
+            + " AND "+MmsSmsColumns.NORMALIZED_DATE_SENT+" > "+fromTime;
+    String limitStr = ""+limit;
+    long sent = -1;
+    Cursor cursor = queryTables(PROJECTION, selection, order, limitStr);
+    if (cursor == null) return sent;
+    Reader reader = readerFor(cursor);
+    if (!cursor.move(limit)) {
+      cursor.moveToLast();
+    }
+    MessageRecord record = reader.getCurrent();
+    sent = record.getDateSent();
+    reader.close();
+    return sent;
+  }
+
+  public Cursor getConversationPage(long threadId, long fromTime, long toTime, int limit) {
+    String order = MmsSmsColumns.NORMALIZED_DATE_SENT+" DESC";
+    String selection = MmsSmsColumns.THREAD_ID + " = "+threadId
+            + " AND "+MmsSmsColumns.NORMALIZED_DATE_SENT+" <= " + fromTime;
+    String limitStr = null;
+    if (toTime != -1L) {
+      selection += " AND "+MmsSmsColumns.NORMALIZED_DATE_SENT+" > "+toTime;
+    } else {
+      limitStr = ""+limit;
+    }
+
+    return queryTables(PROJECTION, selection, order, limitStr);
+  }
+
+  public boolean hasNextPage(long threadId, long toTime) {
+    String order = MmsSmsColumns.NORMALIZED_DATE_SENT+" DESC";
+    String selection = MmsSmsColumns.THREAD_ID + " = "+threadId
+            + " AND "+MmsSmsColumns.NORMALIZED_DATE_SENT+" < " + toTime; // check if there's at least one message before the `toTime`
+    Cursor cursor = queryTables(PROJECTION, selection, order, null);
+    boolean hasNext = false;
+    if (cursor != null) {
+      hasNext = cursor.getCount() > 0;
+      cursor.close();
+    }
+    return hasNext;
+  }
+
+  public boolean hasPreviousPage(long threadId, long fromTime) {
+    String order = MmsSmsColumns.NORMALIZED_DATE_SENT+" DESC";
+    String selection = MmsSmsColumns.THREAD_ID + " = "+threadId
+            + " AND "+MmsSmsColumns.NORMALIZED_DATE_SENT+" > " + fromTime; // check if there's at least one message after the `fromTime`
+    Cursor cursor = queryTables(PROJECTION, selection, order, null);
+    boolean hasNext = false;
+    if (cursor != null) {
+      hasNext = cursor.getCount() > 0;
+      cursor.close();
+    }
+    return hasNext;
+  }
+
   public Cursor getConversation(long threadId, boolean reverse, long offset, long limit) {
     String order     = MmsSmsColumns.NORMALIZED_DATE_SENT + (reverse ? " DESC" : " ASC");
     String selection = MmsSmsColumns.THREAD_ID + " = " + threadId;
@@ -199,16 +257,16 @@ public class MmsSmsDatabase extends Database {
     return -1;
   }
 
-  public int getMessagePositionInConversation(long threadId, long receivedTimestamp, @NonNull Address address) {
-    String order     = MmsSmsColumns.NORMALIZED_DATE_RECEIVED + " DESC";
+  public int getMessagePositionInConversation(long threadId, long sentTimestamp, @NonNull Address address) {
+    String order     = MmsSmsColumns.NORMALIZED_DATE_SENT + " DESC";
     String selection = MmsSmsColumns.THREAD_ID + " = " + threadId;
 
-    try (Cursor cursor = queryTables(new String[]{ MmsSmsColumns.NORMALIZED_DATE_RECEIVED, MmsSmsColumns.ADDRESS }, selection, order, null)) {
+    try (Cursor cursor = queryTables(new String[]{ MmsSmsColumns.NORMALIZED_DATE_SENT, MmsSmsColumns.ADDRESS }, selection, order, null)) {
       String  serializedAddress = address.serialize();
       boolean isOwnNumber       = Util.isOwnNumber(context, address.serialize());
 
       while (cursor != null && cursor.moveToNext()) {
-        boolean timestampMatches = cursor.getLong(0) == receivedTimestamp;
+        boolean timestampMatches = cursor.getLong(0) == sentTimestamp;
         boolean addressMatches   = serializedAddress.equals(cursor.getString(1));
 
         if (timestampMatches && (addressMatches || isOwnNumber)) {

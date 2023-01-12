@@ -6,16 +6,18 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 
 import com.annimon.stream.Stream;
 
-import org.thoughtcrime.securesms.ApplicationContext;
-import network.loki.messenger.BuildConfig;
 import org.session.libsignal.utilities.Log;
+import org.thoughtcrime.securesms.ApplicationContext;
 
 import java.util.List;
 import java.util.UUID;
+
+import network.loki.messenger.BuildConfig;
 
 /**
  * Schedules tasks using the {@link AlarmManager}.
@@ -51,7 +53,7 @@ public class AlarmManagerScheduler implements Scheduler {
     Intent       intent       = new Intent(context, RetryReceiver.class);
 
     intent.setAction(BuildConfig.APPLICATION_ID + UUID.randomUUID().toString());
-    alarmManager.set(AlarmManager.RTC_WAKEUP, time, PendingIntent.getBroadcast(context, 0, intent, 0));
+    alarmManager.set(AlarmManager.RTC_WAKEUP, time, PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE));
 
     Log.i(TAG, "Set an alarm to retry a job in " + (time - System.currentTimeMillis()) + " ms.");
   }

@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms.conversation.v2
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityMessageDetailBinding
@@ -20,8 +21,7 @@ import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.util.DateUtils
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -48,7 +48,10 @@ class MessageDetailActivity: PassphraseRequiredActionBarActivity() {
         // We only show this screen for messages fail to send,
         // so the author of the messages must be the current user.
         val author = Address.fromSerialized(TextSecurePreferences.getLocalNumber(this)!!)
-        messageRecord = DatabaseComponent.get(this).mmsSmsDatabase().getMessageFor(timestamp, author)
+        messageRecord = DatabaseComponent.get(this).mmsSmsDatabase().getMessageFor(timestamp, author) ?: run {
+            finish()
+            return
+        }
         val threadId = messageRecord!!.threadId
         val openGroup = storage.getOpenGroup(threadId)
         val blindedKey = openGroup?.let { group ->
@@ -71,8 +74,15 @@ class MessageDetailActivity: PassphraseRequiredActionBarActivity() {
         val dateFormatter: SimpleDateFormat = DateUtils.getDetailedDateFormatter(this, dateLocale)
         binding.sentTime.text = dateFormatter.format(Date(messageRecord!!.dateSent))
 
-        val errorMessage = DatabaseComponent.get(this).lokiMessageDatabase().getErrorMessage(messageRecord!!.getId()) ?: "Message failed to send."
-        binding.errorMessage.text = errorMessage
+        val errorMessage = DatabaseComponent.get(this).lokiMessageDatabase().getErrorMessage(messageRecord!!.getId())
+        if (errorMessage != null) {
+            binding.errorMessage.text = errorMessage
+            binding.resendContainer.isVisible = true
+            binding.errorContainer.isVisible = true
+        } else {
+            binding.errorContainer.isVisible = false
+            binding.resendContainer.isVisible = false
+        }
 
         if (messageRecord!!.expiresIn <= 0 || messageRecord!!.expireStarted <= 0) {
             binding.expiresContainer.visibility = View.GONE
