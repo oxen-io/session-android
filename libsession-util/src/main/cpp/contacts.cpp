@@ -16,8 +16,8 @@ Java_network_loki_messenger_libsession_1util_Contacts_get(JNIEnv *env, jobject t
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_network_loki_messenger_libsession_1util_Contacts_getOrCreate(JNIEnv *env, jobject thiz,
-                                                                  jstring session_id) {
+Java_network_loki_messenger_libsession_1util_Contacts_getOrConstruct(JNIEnv *env, jobject thiz,
+                                                                     jstring session_id) {
     auto contacts = ptrToContacts(env, thiz);
     auto session_id_chars = env->GetStringUTFChars(session_id, nullptr);
     auto contact = contacts->get_or_construct(session_id_chars);

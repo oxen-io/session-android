@@ -56,7 +56,7 @@ class InstrumentedTests {
         assertNull(contacts.get(definitelyRealId))
 
         // Should be an uninitialized contact apart from ID
-        val c = contacts.getOrCreate(definitelyRealId)
+        val c = contacts.getOrConstruct(definitelyRealId)
         assertEquals(definitelyRealId, c.id)
         assertNull(c.name)
         assertNull(c.nickname)
@@ -97,7 +97,7 @@ class InstrumentedTests {
         assertFalse(contacts2.needsDump())
 
         val anotherId = "051111111111111111111111111111111111111111111111111111111111111111"
-        val c2 = contacts2.getOrCreate(anotherId)
+        val c2 = contacts2.getOrConstruct(anotherId)
         contacts2.set(c2)
         val push2 = contacts2.push()
         assertEquals(2, push2.seqNo)
