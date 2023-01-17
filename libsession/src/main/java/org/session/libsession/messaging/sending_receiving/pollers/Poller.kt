@@ -12,6 +12,7 @@ import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageReceiveParameters
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.snode.SnodeModule
+import org.session.libsession.utilities.ConfigFactoryProtocol
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Snode
 import java.security.SecureRandom
@@ -20,7 +21,7 @@ import java.util.TimerTask
 
 private class PromiseCanceledException : Exception("Promise canceled.")
 
-class Poller {
+class Poller(private val configFactory: ConfigFactoryProtocol) {
     var userPublicKey = MessagingModuleConfiguration.shared.storage.getUserPublicKey() ?: ""
     private var hasStarted: Boolean = false
     private val usedSnodes: MutableSet<Snode> = mutableSetOf()

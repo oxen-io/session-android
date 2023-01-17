@@ -18,6 +18,7 @@ android {
 
 dependencies {
     implementation project(":libsignal")
+    implementation project(":libsession-util")
     implementation project(":liblazysodium")
 //    implementation 'com.goterl:lazysodium-android:5.0.2@aar'
     implementation "net.java.dev.jna:jna:5.8.0@aar"

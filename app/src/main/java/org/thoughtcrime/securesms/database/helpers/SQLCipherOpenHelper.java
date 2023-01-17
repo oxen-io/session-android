@@ -15,6 +15,7 @@ import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.crypto.DatabaseSecret;
 import org.thoughtcrime.securesms.database.AttachmentDatabase;
 import org.thoughtcrime.securesms.database.BlindedIdMappingDatabase;
+import org.thoughtcrime.securesms.database.ConfigDatabase;
 import org.thoughtcrime.securesms.database.DraftDatabase;
 import org.thoughtcrime.securesms.database.EmojiSearchDatabase;
 import org.thoughtcrime.securesms.database.GroupDatabase;
@@ -75,9 +76,10 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
   private static final int lokiV36                          = 57;
   private static final int lokiV37                          = 58;
   private static final int lokiV38                          = 59;
+  private static final int lokiV39                          = 60;
 
   // Loki - onUpgrade(...) must be updated to use Loki version numbers if Signal makes any database changes
-  private static final int    DATABASE_VERSION = lokiV38;
+  private static final int    DATABASE_VERSION = lokiV39;
   private static final String DATABASE_NAME    = "signal.db";
 
   private final Context        context;
@@ -180,6 +182,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
     db.execSQL(LokiAPIDatabase.RESET_SEQ_NO); // probably not needed but consistent with all migrations
     db.execSQL(EmojiSearchDatabase.CREATE_EMOJI_SEARCH_TABLE_COMMAND);
     db.execSQL(ReactionDatabase.CREATE_REACTION_TABLE_COMMAND);
+    db.execSQL(ConfigDatabase.CREATE_CONFIG_TABLE_COMMAND);
 
     executeStatements(db, SmsDatabase.CREATE_INDEXS);
     executeStatements(db, MmsDatabase.CREATE_INDEXS);
@@ -412,6 +415,10 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
 
       if (oldVersion < lokiV38) {
         db.execSQL(EmojiSearchDatabase.CREATE_EMOJI_SEARCH_TABLE_COMMAND);
+      }
+
+      if (oldVersion < lokiV39) {
+        db.execSQL(ConfigDatabase.CREATE_CONFIG_TABLE_COMMAND);
       }
 
       db.setTransactionSuccessful();

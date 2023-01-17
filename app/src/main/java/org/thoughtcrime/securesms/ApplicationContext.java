@@ -58,6 +58,7 @@ import org.thoughtcrime.securesms.database.JobDatabase;
 import org.thoughtcrime.securesms.database.LokiAPIDatabase;
 import org.thoughtcrime.securesms.database.Storage;
 import org.thoughtcrime.securesms.database.model.EmojiSearchData;
+import org.thoughtcrime.securesms.dependencies.ConfigFactory;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import org.thoughtcrime.securesms.dependencies.DatabaseModule;
 import org.thoughtcrime.securesms.emoji.EmojiSource;
@@ -147,6 +148,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     @Inject MessageDataProvider messageDataProvider;
     @Inject JobDatabase jobDatabase;
     @Inject TextSecurePreferences textSecurePreferences;
+    @Inject ConfigFactory configFactory;
     CallMessageProcessor callMessageProcessor;
     MessagingModuleConfiguration messagingModuleConfiguration;
 
@@ -460,7 +462,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
             poller.setUserPublicKey(userPublicKey);
             return;
         }
-        poller = new Poller();
+        poller = new Poller(configFactory);
     }
 
     public void startPollingIfNeeded() {
@@ -538,6 +540,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         if (!deleteDatabase("signal.db")) {
             Log.d("Loki", "Failed to delete database.");
         }
+        configFactory.keyPairChanged();
         Util.runOnMain(() -> new Handler().postDelayed(ApplicationContext.this::restartApplication, 200));
     }
 
