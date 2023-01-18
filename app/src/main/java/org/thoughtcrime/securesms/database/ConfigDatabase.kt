@@ -19,10 +19,6 @@ class ConfigDatabase(context: Context, helper: SQLCipherOpenHelper): Database(co
             "CREATE TABLE $TABLE_NAME ($VARIANT TEXT NOT NULL, $PUBKEY TEXT NOT NULL, $DATA BLOB, $COMBINED_MESSAGE_HASHES TEXT, PRIMARY KEY($VARIANT, $PUBKEY));"
         private const val VARIANT_WHERE = "$VARIANT = ?"
         private const val VARIANT_AND_PUBKEY_WHERE = "$VARIANT = ? AND $PUBKEY = ?"
-
-        const val USER_KEY = "user"
-        const val CONTACTS_KEY = "contacts"
-        // conversations use publicKey / URL
     }
 
     fun storeConfig(variant: String, publicKey: String, data: ByteArray) {
