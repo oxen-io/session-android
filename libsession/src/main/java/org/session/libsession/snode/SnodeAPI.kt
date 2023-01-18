@@ -310,14 +310,15 @@ object SnodeAPI {
     fun getRawMessages(snode: Snode, publicKey: String, requiresAuth: Boolean = true, namespace: Int = 0): RawResponsePromise {
         // Get last message hash
         val lastHashValue = database.getLastMessageHashValue(snode, publicKey, namespace) ?: ""
-        val parameters = mutableMapOf<String,Any>(
+        val parameters = mutableMapOf<String, Any>(
             "pubKey" to publicKey,
             "last_hash" to lastHashValue,
         )
         // Construct signature
         if (requiresAuth) {
             val userED25519KeyPair = try {
-                MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return Promise.ofFail(Error.NoKeyPair)
+                MessagingModuleConfiguration.shared.getUserED25519KeyPair()
+                    ?: return Promise.ofFail(Error.NoKeyPair)
             } catch (e: Exception) {
                 Log.e("Loki", "Error getting KeyPair", e)
                 return Promise.ofFail(Error.NoKeyPair)
@@ -329,7 +330,12 @@ object SnodeAPI {
                 if (namespace != 0) "retrieve$namespace$timestamp".toByteArray()
                 else "retrieve$timestamp".toByteArray()
             try {
-                sodium.cryptoSignDetached(signature, verificationData, verificationData.size.toLong(), userED25519KeyPair.secretKey.asBytes)
+                sodium.cryptoSignDetached(
+                    signature,
+                    verificationData,
+                    verificationData.size.toLong(),
+                    userED25519KeyPair.secretKey.asBytes
+                )
             } catch (exception: Exception) {
                 return Promise.ofFail(Error.SigningFailed)
             }

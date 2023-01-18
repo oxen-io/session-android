@@ -86,3 +86,9 @@ Java_network_loki_messenger_libsession_1util_ConfigBase_merge___3B(JNIEnv *env, 
 }
 #pragma clang diagnostic pop
 }
+extern "C"
+JNIEXPORT jint JNICALL
+Java_network_loki_messenger_libsession_1util_ConfigBase_configNamespace(JNIEnv *env, jobject thiz) {
+    auto conf = ptrToConfigBase(env, thiz);
+    return (std::int16_t) conf->storage_namespace();
+}

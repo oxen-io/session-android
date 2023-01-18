@@ -21,6 +21,8 @@ sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
     external fun confirmPushed(seqNo: Long)
     external fun merge(toMerge: Array<ByteArray>): Int
 
+    external fun configNamespace(): Int
+
     // Singular merge
     external fun merge(toMerge: ByteArray): Int
 

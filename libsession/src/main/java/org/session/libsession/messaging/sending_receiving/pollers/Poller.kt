@@ -1,5 +1,9 @@
 package org.session.libsession.messaging.sending_receiving.pollers
 
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import nl.komponents.kovenant.Deferred
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.deferred
@@ -100,21 +104,38 @@ class Poller(private val configFactory: ConfigFactoryProtocol) {
 
     private fun poll(snode: Snode, deferred: Deferred<Unit, Exception>): Promise<Unit, Exception> {
         if (!hasStarted) { return Promise.ofFail(PromiseCanceledException()) }
-        return SnodeAPI.getRawMessages(snode, userPublicKey).bind { rawResponse ->
-            isCaughtUp = true
-            if (deferred.promise.isDone()) {
-                task { Unit } // The long polling connection has been canceled; don't recurse
-            } else {
-                val messages = SnodeAPI.parseRawMessagesResponse(rawResponse, snode, userPublicKey)
-                val parameters = messages.map { (envelope, serverHash) ->
-                    MessageReceiveParameters(envelope.toByteArray(), serverHash = serverHash)
-                }
-                parameters.chunked(BatchMessageReceiveJob.BATCH_DEFAULT_NUMBER).forEach { chunk ->
-                    val job = BatchMessageReceiveJob(chunk)
-                    JobQueue.shared.add(job)
+        return task {
+            runBlocking(Dispatchers.IO) {
+                // get user profile namespace
+                val deferredUserConfig = configFactory.userConfig?.let { currentUserConfig ->
+                    async {
+                        try {
+                            val currentNetworkConfig = SnodeAPI.getRawMessages(snode, userPublicKey, namespace = currentUserConfig.configNamespace()).get()
+
+                        } catch (e: Exception) {
+                            Log.e("Poller", "Error getting current user config from network", e)
+                        }
+                    }
+                } ?: CompletableDeferred(null)
+
+                SnodeAPI.getRawMessages(snode, userPublicKey).bind { rawResponse ->
+                    isCaughtUp = true
+                    if (deferred.promise.isDone()) {
+                        return@bind Promise.ofSuccess(Unit)
+                    } else {
+                        val messages = SnodeAPI.parseRawMessagesResponse(rawResponse, snode, userPublicKey)
+                        val parameters = messages.map { (envelope, serverHash) ->
+                            MessageReceiveParameters(envelope.toByteArray(), serverHash = serverHash)
+                        }
+                        parameters.chunked(BatchMessageReceiveJob.BATCH_DEFAULT_NUMBER).forEach { chunk ->
+                            val job = BatchMessageReceiveJob(chunk)
+                            JobQueue.shared.add(job)
+                        }
+
+                        poll(snode, deferred)
+                    }
                 }
 
-                poll(snode, deferred)
             }
         }
     }
