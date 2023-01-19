@@ -373,7 +373,8 @@ object SnodeAPI {
         val ed25519PublicKey = userEd25519KeyPair.publicKey.asHexString
         val timestamp = System.currentTimeMillis() + clockOffset
         val signature = ByteArray(Sign.BYTES)
-        val verificationData = "retrieve$namespace$timestamp".toByteArray()
+        val verificationData = if (namespace == 0) "retrieve$timestamp".toByteArray()
+        else "retrieve$namespace$timestamp".toByteArray()
         try {
             sodium.cryptoSignDetached(
                 signature,
@@ -385,8 +386,11 @@ object SnodeAPI {
             return null
         }
         params["timestamp"] = timestamp
-//        params["pubkey_ed25519"] = ed25519PublicKey
+        params["pubkey_ed25519"] = ed25519PublicKey
         params["signature"] = Base64.encodeBytes(signature)
+        if (namespace != 0) {
+            params["namespace"] = namespace
+        }
         return SnodeBatchRequestInfo(
             Snode.Method.Retrieve.rawValue,
             params
