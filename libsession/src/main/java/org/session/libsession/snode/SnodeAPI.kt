@@ -33,7 +33,6 @@ import org.session.libsignal.utilities.ThreadUtils
 import org.session.libsignal.utilities.prettifiedDescription
 import org.session.libsignal.utilities.retryIfNeeded
 import java.security.SecureRandom
-import java.util.Date
 import java.util.Locale
 import kotlin.collections.component1
 import kotlin.collections.component2
@@ -92,6 +91,12 @@ object SnodeAPI {
         object HashingFailed : Error("Couldn't compute ONS name hash.")
         object ValidationFailed : Error("ONS name validation failed.")
     }
+
+    // Batch
+    data class SnodeBatchRequestInfo(
+        val method: String,
+        val params: Map<String, Any>,
+    ) // assume signatures, pubkey and namespaces are attached in parameters if required
 
     // Internal API
     internal fun invoke(
@@ -323,7 +328,7 @@ object SnodeAPI {
                 Log.e("Loki", "Error getting KeyPair", e)
                 return Promise.ofFail(Error.NoKeyPair)
             }
-            val timestamp = Date().time + SnodeAPI.clockOffset
+            val timestamp = System.currentTimeMillis() + clockOffset
             val ed25519PublicKey = userED25519KeyPair.publicKey.asHexString
             val signature = ByteArray(Sign.BYTES)
             val verificationData =
@@ -351,7 +356,48 @@ object SnodeAPI {
         }
 
         // Make the request
-        return invoke(Snode.Method.GetMessages, snode, parameters, publicKey)
+        return invoke(Snode.Method.Retrieve, snode, parameters, publicKey)
+    }
+
+    fun buildAuthenticatedRetrieveBatchRequest(snode: Snode, publicKey: String, namespace: Int = 0): SnodeBatchRequestInfo? {
+        val lastHashValue = database.getLastMessageHashValue(snode, publicKey, namespace) ?: ""
+        val params = mutableMapOf<String, Any>(
+            "pubKey" to publicKey,
+            "last_hash" to lastHashValue,
+        )
+        val userEd25519KeyPair = try {
+            MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return null
+        } catch (e: Exception) {
+            return null
+        }
+        val ed25519PublicKey = userEd25519KeyPair.publicKey.asHexString
+        val timestamp = System.currentTimeMillis() + clockOffset
+        val signature = ByteArray(Sign.BYTES)
+        val verificationData = "retrieve$namespace$timestamp".toByteArray()
+        try {
+            sodium.cryptoSignDetached(
+                signature,
+                verificationData,
+                verificationData.size.toLong(),
+                userEd25519KeyPair.secretKey.asBytes
+            )
+        } catch (e: Exception) {
+            return null
+        }
+        params["timestamp"] = timestamp
+//        params["pubkey_ed25519"] = ed25519PublicKey
+        params["signature"] = Base64.encodeBytes(signature)
+        return SnodeBatchRequestInfo(
+            Snode.Method.Retrieve.rawValue,
+            params
+        )
+    }
+
+    fun getRawBatchResponse(snode: Snode, publicKey: String, requests: List<SnodeBatchRequestInfo>): RawResponsePromise {
+        val parameters = mutableMapOf<String, Any>(
+            "requests" to requests
+        )
+        return invoke(Snode.Method.Batch, snode, parameters, publicKey)
     }
 
     fun getMessages(publicKey: String): MessageListPromise {

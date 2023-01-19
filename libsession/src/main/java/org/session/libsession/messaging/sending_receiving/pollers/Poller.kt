@@ -1,8 +1,6 @@
 package org.session.libsession.messaging.sending_receiving.pollers
 
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import nl.komponents.kovenant.Deferred
 import nl.komponents.kovenant.Promise
@@ -14,9 +12,11 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageReceiveParameters
+import org.session.libsession.snode.RawResponse
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.snode.SnodeModule
 import org.session.libsession.utilities.ConfigFactoryProtocol
+import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Snode
 import java.security.SecureRandom
@@ -102,28 +102,42 @@ class Poller(private val configFactory: ConfigFactoryProtocol) {
         }
     }
 
+    private fun processUserConfig(rawMessages: List<Pair<SignalServiceProtos.Envelope, String?>>) {
+
+    }
+
     private fun poll(snode: Snode, deferred: Deferred<Unit, Exception>): Promise<Unit, Exception> {
         if (!hasStarted) { return Promise.ofFail(PromiseCanceledException()) }
         return task {
             runBlocking(Dispatchers.IO) {
-                // get user profile namespace
-                val deferredUserConfig = configFactory.userConfig?.let { currentUserConfig ->
-                    async {
-                        try {
-                            val currentNetworkConfig = SnodeAPI.getRawMessages(snode, userPublicKey, namespace = currentUserConfig.configNamespace()).get()
-
-                        } catch (e: Exception) {
-                            Log.e("Poller", "Error getting current user config from network", e)
-                        }
+                val requests = listOfNotNull(
+                    // get messages
+                    SnodeAPI.buildAuthenticatedRetrieveBatchRequest(snode, userPublicKey),
+                    // get user config namespace
+                    configFactory.userConfig?.let { currentUserConfig ->
+                        SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
+                            snode,
+                            userPublicKey,
+                            currentUserConfig.configNamespace()
+                        )
+                    },
+                    // get contact config namespace
+                    configFactory.contacts?.let { currentContacts ->
+                        SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
+                            snode,
+                            userPublicKey,
+                            currentContacts.configNamespace()
+                        )
                     }
-                } ?: CompletableDeferred(null)
+                )
 
-                SnodeAPI.getRawMessages(snode, userPublicKey).bind { rawResponse ->
+                SnodeAPI.getRawBatchResponse(snode, userPublicKey, requests).bind { rawResponses ->
                     isCaughtUp = true
                     if (deferred.promise.isDone()) {
                         return@bind Promise.ofSuccess(Unit)
                     } else {
-                        val messages = SnodeAPI.parseRawMessagesResponse(rawResponse, snode, userPublicKey)
+                        val messageResponse = (rawResponses["results"] as List<*>).first() as RawResponse
+                        val messages = SnodeAPI.parseRawMessagesResponse(messageResponse, snode, userPublicKey)
                         val parameters = messages.map { (envelope, serverHash) ->
                             MessageReceiveParameters(envelope.toByteArray(), serverHash = serverHash)
                         }
@@ -135,7 +149,6 @@ class Poller(private val configFactory: ConfigFactoryProtocol) {
                         poll(snode, deferred)
                     }
                 }
-
             }
         }
     }
