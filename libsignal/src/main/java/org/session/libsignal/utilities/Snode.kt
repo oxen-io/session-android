@@ -11,7 +11,9 @@ class Snode(val address: String, val port: Int, val publicKeySet: KeySet?) {
         OxenDaemonRPCCall("oxend_request"),
         Info("info"),
         DeleteAll("delete_all"),
-        Batch("batch")
+        Batch("batch"),
+        Expire("expire"),
+        GetExpiries("get_expiries")
     }
 
     data class KeySet(val ed25519Key: String, val x25519Key: String)

@@ -1,6 +1,7 @@
 package org.session.libsession.messaging.sending_receiving.pollers
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.runBlocking
 import nl.komponents.kovenant.Deferred
 import nl.komponents.kovenant.Promise
@@ -30,6 +31,7 @@ class Poller(private val configFactory: ConfigFactoryProtocol) {
     private var hasStarted: Boolean = false
     private val usedSnodes: MutableSet<Snode> = mutableSetOf()
     var isCaughtUp = false
+    var configPollingJob: Job? = null
 
     // region Settings
     companion object {

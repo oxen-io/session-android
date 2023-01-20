@@ -383,6 +383,7 @@ object SnodeAPI {
                 userEd25519KeyPair.secretKey.asBytes
             )
         } catch (e: Exception) {
+            Log.e("Loki", "Signing data failed with user secret key", e)
             return null
         }
         params["timestamp"] = timestamp
@@ -402,6 +403,77 @@ object SnodeAPI {
             "requests" to requests
         )
         return invoke(Snode.Method.Batch, snode, parameters, publicKey)
+    }
+
+    fun getExpiries(messageHashes: List<String>, publicKey: String) : RawResponsePromise {
+        val userEd25519KeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return Promise.ofFail(NullPointerException("No user key pair"))
+        return retryIfNeeded(maxRetryCount) {
+            val timestamp = System.currentTimeMillis() + clockOffset
+            val params = mutableMapOf(
+                "pubkey" to publicKey,
+                "messages" to messageHashes,
+                "timestamp" to timestamp
+            )
+            val signData = "${Snode.Method.GetExpiries.rawValue}$timestamp${messageHashes.joinToString(separator = "")}".toByteArray()
+
+            val ed25519PublicKey = userEd25519KeyPair.publicKey.asHexString
+            val signature = ByteArray(Sign.BYTES)
+            try {
+                sodium.cryptoSignDetached(
+                    signature,
+                    signData,
+                    signData.size.toLong(),
+                    userEd25519KeyPair.secretKey.asBytes
+                )
+            } catch (e: Exception) {
+                Log.e("Loki", "Signing data failed with user secret key", e)
+                return@retryIfNeeded Promise.ofFail(e)
+            }
+            params["pubkey_ed25519"] = ed25519PublicKey
+            params["signature"] = Base64.encodeBytes(signature)
+            getSingleTargetSnode(publicKey).bind { snode ->
+                invoke(Snode.Method.GetExpiries, snode, params, publicKey)
+            }
+        }
+    }
+
+    fun alterTtl(messageHashes: List<String>, newExpiry: Long, publicKey: String, extend: Boolean = false, shorten: Boolean = false): RawResponsePromise {
+        val userEd25519KeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return Promise.ofFail(NullPointerException("No user key pair"))
+        return retryIfNeeded(maxRetryCount) {
+        val params = mutableMapOf(
+            "expiry" to newExpiry,
+            "messages" to messageHashes,
+        )
+        if (extend) {
+            params["extend"] = true
+        } else if (shorten) {
+            params["shorten"] = true
+        }
+        val shortenOrExtend = if (extend) "extend" else if (shorten) "shorten" else ""
+
+        val signData = "${Snode.Method.Expire.rawValue}$shortenOrExtend$newExpiry${messageHashes.joinToString(separator = "")}".toByteArray()
+
+        val ed25519PublicKey = userEd25519KeyPair.publicKey.asHexString
+        val signature = ByteArray(Sign.BYTES)
+        try {
+            sodium.cryptoSignDetached(
+                signature,
+                signData,
+                signData.size.toLong(),
+                userEd25519KeyPair.secretKey.asBytes
+            )
+        } catch (e: Exception) {
+            Log.e("Loki", "Signing data failed with user secret key", e)
+            return@retryIfNeeded Promise.ofFail(e)
+        }
+        params["pubkey"] = publicKey
+        params["pubkey_ed25519"] = ed25519PublicKey
+        params["signature"] = Base64.encodeBytes(signature)
+
+        getSingleTargetSnode(publicKey).bind { snode ->
+            invoke(Snode.Method.Expire, snode, params, publicKey)
+        }
+        }
     }
 
     fun getMessages(publicKey: String): MessageListPromise {

@@ -218,6 +218,23 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                         .onEach(globalSearchViewModel::postQuery)
                         .collect()
             }
+//            launch(IO) {
+//                val publicKey = TextSecurePreferences.getLocalNumber(this@HomeActivity) ?: return@launch
+//                // do a expire
+//                try {
+//                    val promise = SnodeAPI.alterTtl(
+//                        listOf(
+//                            "message hashes"
+//                        ),
+//                        some long in the future,
+//                        publicKey
+//                    )
+//                    val result = promise.get()
+//                    Log.d("TTL", "ttl result: $result")
+//                } catch (e: Exception) {
+//                    Log.e("TTL", "Expiry didn't work", e)
+//                }
+//            }
             // Get group results and display them
             launch {
                 globalSearchViewModel.result.collect { result ->
