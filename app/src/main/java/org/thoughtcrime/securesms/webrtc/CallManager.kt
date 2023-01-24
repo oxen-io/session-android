@@ -1,7 +1,9 @@
 package org.thoughtcrime.securesms.webrtc
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.telephony.TelephonyManager
+import androidx.core.content.ContextCompat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.serialization.json.Json
@@ -176,8 +178,22 @@ class CallManager(context: Context, audioManager: AudioManagerCompat, private va
         _callStateEvents.value = newState
     }
 
-    fun isBusy(context: Context, callId: UUID) = callId != this.callId && (currentConnectionState != CallState.Idle
-            || context.getSystemService(TelephonyManager::class.java).callState  != TelephonyManager.CALL_STATE_IDLE)
+    fun isBusy(context: Context, callId: UUID): Boolean {
+        // Make sure we have the permission before accessing the callState
+        if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            return (
+                callId != this.callId && (
+                    currentConnectionState != CallState.Idle ||
+                    context.getSystemService(TelephonyManager::class.java).callState != TelephonyManager.CALL_STATE_IDLE
+                )
+            )
+        }
+
+        return (
+            callId != this.callId &&
+            currentConnectionState != CallState.Idle
+        )
+    }
 
     fun isPreOffer() = currentConnectionState == CallState.RemotePreOffer
 

@@ -25,7 +25,7 @@ class Profile() {
         }
     }
 
-    internal constructor(displayName: String, profileKey: ByteArray? = null, profilePictureURL: String? = null) : this() {
+    constructor(displayName: String, profileKey: ByteArray? = null, profilePictureURL: String? = null) : this() {
         this.displayName = displayName
         this.profileKey = profileKey
         this.profilePictureURL = profilePictureURL

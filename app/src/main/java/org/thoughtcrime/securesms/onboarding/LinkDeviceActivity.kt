@@ -23,8 +23,10 @@ import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityLinkDeviceBinding
 import network.loki.messenger.databinding.FragmentRecoveryPhraseBinding
+import org.session.libsession.snode.SnodeModule
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.crypto.MnemonicCodec
+import org.session.libsignal.database.LokiAPIDatabaseProtocol
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.KeyHelper
 import org.session.libsignal.utilities.Log
@@ -47,6 +49,8 @@ class LinkDeviceActivity : BaseActionBarActivity(), ScanQRCodeWrapperFragmentDel
     lateinit var configFactory: ConfigFactory
 
     private lateinit var binding: ActivityLinkDeviceBinding
+    internal val database: LokiAPIDatabaseProtocol
+        get() = SnodeModule.shared.storage
     private val adapter = LinkDeviceActivityAdapter(this)
     private var restoreJob: Job? = null
 
@@ -107,6 +111,11 @@ class LinkDeviceActivity : BaseActionBarActivity(), ScanQRCodeWrapperFragmentDel
         if (restoreJob?.isActive == true) return
 
         restoreJob = lifecycleScope.launch {
+            // This is here to resolve a case where the app restarts before a user completes onboarding
+            // which can result in an invalid database state
+            database.clearAllLastMessageHashes()
+            database.clearReceivedMessageHashValues()
+
             // RestoreActivity handles seed this way
             val keyPairGenerationResult = KeyPairUtilities.generate(seed)
             val x25519KeyPair = keyPairGenerationResult.x25519KeyPair

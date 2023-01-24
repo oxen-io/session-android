@@ -32,7 +32,7 @@ import androidx.annotation.Nullable;
 
 import com.annimon.stream.Stream;
 
-import net.sqlcipher.database.SQLiteDatabase;
+import net.zetetic.database.sqlcipher.SQLiteDatabase;
 
 import org.jetbrains.annotations.NotNull;
 import org.session.libsession.utilities.Address;
@@ -87,6 +87,7 @@ public class ThreadDatabase extends Database {
   private static final String SNIPPET_CHARSET        = "snippet_cs";
   public  static final String READ                   = "read";
   public  static final String UNREAD_COUNT           = "unread_count";
+  public  static final String UNREAD_MENTION_COUNT   = "unread_mention_count";
   public  static final String TYPE                   = "type";
   private static final String ERROR                  = "error";
   public  static final String SNIPPET_TYPE           = "snippet_type";
@@ -117,7 +118,7 @@ public class ThreadDatabase extends Database {
   };
 
   private static final String[] THREAD_PROJECTION = {
-      ID, DATE, MESSAGE_COUNT, ADDRESS, SNIPPET, SNIPPET_CHARSET, READ, UNREAD_COUNT, TYPE, ERROR, SNIPPET_TYPE,
+      ID, DATE, MESSAGE_COUNT, ADDRESS, SNIPPET, SNIPPET_CHARSET, READ, UNREAD_COUNT, UNREAD_MENTION_COUNT, TYPE, ERROR, SNIPPET_TYPE,
       SNIPPET_URI, ARCHIVED, STATUS, DELIVERY_RECEIPT_COUNT, EXPIRES_IN, LAST_SEEN, READ_RECEIPT_COUNT, IS_PINNED
   };
 
@@ -133,6 +134,11 @@ public class ThreadDatabase extends Database {
   public static String getCreatePinnedCommand() {
     return "ALTER TABLE "+ TABLE_NAME + " " +
             "ADD COLUMN " + IS_PINNED + " INTEGER DEFAULT 0;";
+  }
+
+  public static String getUnreadMentionCountCommand() {
+    return "ALTER TABLE "+ TABLE_NAME + " " +
+            "ADD COLUMN " + UNREAD_MENTION_COUNT + " INTEGER DEFAULT 0;";
   }
 
   public ThreadDatabase(Context context, SQLCipherOpenHelper databaseHelper) {
@@ -293,6 +299,7 @@ public class ThreadDatabase extends Database {
     ContentValues contentValues = new ContentValues(1);
     contentValues.put(READ, 1);
     contentValues.put(UNREAD_COUNT, 0);
+    contentValues.put(UNREAD_MENTION_COUNT, 0);
 
     if (lastSeen) {
       contentValues.put(LAST_SEEN, System.currentTimeMillis());
@@ -312,20 +319,28 @@ public class ThreadDatabase extends Database {
     }};
   }
 
-  public void incrementUnread(long threadId, int amount) {
+  public void incrementUnread(long threadId, int amount, int unreadMentionAmount) {
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
     db.execSQL("UPDATE " + TABLE_NAME + " SET " + READ + " = 0, " +
-                   UNREAD_COUNT + " = " + UNREAD_COUNT + " + ? WHERE " + ID + " = ?",
-               new String[] {String.valueOf(amount),
-                             String.valueOf(threadId)});
+                   UNREAD_COUNT + " = " + UNREAD_COUNT + " + ?, " +
+                   UNREAD_MENTION_COUNT + " = " + UNREAD_MENTION_COUNT + " + ? WHERE " + ID + " = ?",
+               new String[] {
+                   String.valueOf(amount),
+                   String.valueOf(unreadMentionAmount),
+                   String.valueOf(threadId)
+              });
   }
 
-  public void decrementUnread(long threadId, int amount) {
+  public void decrementUnread(long threadId, int amount, int unreadMentionAmount) {
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
     db.execSQL("UPDATE " + TABLE_NAME + " SET " + READ + " = 0, " +
-                    UNREAD_COUNT + " = " + UNREAD_COUNT + " - ? WHERE " + ID + " = ? AND " + UNREAD_COUNT + " > 0",
-            new String[] {String.valueOf(amount),
-                    String.valueOf(threadId)});
+                    UNREAD_COUNT + " = " + UNREAD_COUNT + " - ?, " +
+                    UNREAD_MENTION_COUNT + " = " + UNREAD_MENTION_COUNT + " - ? WHERE " + ID + " = ? AND " + UNREAD_COUNT + " > 0",
+            new String[] {
+              String.valueOf(amount),
+              String.valueOf(unreadMentionAmount),
+              String.valueOf(threadId)
+            });
   }
 
   public void setDistributionType(long threadId, int distributionType) {
@@ -502,13 +517,21 @@ public class ThreadDatabase extends Database {
     return db.rawQuery(query, null);
   }
 
-  public void setLastSeen(long threadId) {
+  public void setLastSeen(long threadId, long timestamp) {
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
     ContentValues contentValues = new ContentValues(1);
-    contentValues.put(LAST_SEEN, System.currentTimeMillis());
+    if (timestamp == -1) {
+      contentValues.put(LAST_SEEN, System.currentTimeMillis());
+    } else {
+      contentValues.put(LAST_SEEN, timestamp);
+    }
 
     db.update(TABLE_NAME, contentValues, ID_WHERE, new String[] {String.valueOf(threadId)});
     notifyConversationListListeners();
+  }
+
+  public void setLastSeen(long threadId) {
+    setLastSeen(threadId, -1);
   }
 
   public Pair<Long, Boolean> getLastSeenAndHasSent(long threadId) {
@@ -903,6 +926,7 @@ public class ThreadDatabase extends Database {
       long               date                 = cursor.getLong(cursor.getColumnIndexOrThrow(ThreadDatabase.DATE));
       long               count                = cursor.getLong(cursor.getColumnIndexOrThrow(ThreadDatabase.MESSAGE_COUNT));
       int                unreadCount          = cursor.getInt(cursor.getColumnIndexOrThrow(ThreadDatabase.UNREAD_COUNT));
+      int                unreadMentionCount   = cursor.getInt(cursor.getColumnIndexOrThrow(ThreadDatabase.UNREAD_MENTION_COUNT));
       long               type                 = cursor.getLong(cursor.getColumnIndexOrThrow(ThreadDatabase.SNIPPET_TYPE));
       boolean            archived             = cursor.getInt(cursor.getColumnIndexOrThrow(ThreadDatabase.ARCHIVED)) != 0;
       int                status               = cursor.getInt(cursor.getColumnIndexOrThrow(ThreadDatabase.STATUS));
@@ -918,7 +942,7 @@ public class ThreadDatabase extends Database {
       }
 
       return new ThreadRecord(body, snippetUri, recipient, date, count,
-                              unreadCount, threadId, deliveryReceiptCount, status, type,
+                              unreadCount, unreadMentionCount, threadId, deliveryReceiptCount, status, type,
                               distributionType, archived, expiresIn, lastSeen, readReceiptCount, pinned);
     }
 

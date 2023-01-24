@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView xmlns:android="http://schemas.android.com/apk/res/android"
+<org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/visibleMessageView"
@@ -21,15 +22,10 @@
         android:id="@+id/mainContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/small_spacing"
+        android:layout_marginEnd="@dimen/small_spacing"
         android:gravity="bottom"
         android:paddingBottom="@dimen/small_spacing">
-
-        <View
-            android:id="@+id/startSpacing"
-            android:layout_width="8dp"
-            android:layout_height="1dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
 
         <include
             android:id="@+id/profilePictureView"
@@ -41,7 +37,7 @@
             android:layout_gravity="center"
             app:layout_constraintEnd_toStartOf="@+id/messageInnerContainer"
             app:layout_constraintBottom_toBottomOf="@id/messageInnerContainer"
-            app:layout_constraintStart_toEndOf="@+id/startSpacing"
+            app:layout_constraintStart_toStartOf="parent"
             tools:visibility="visible" />
 
         <ImageView
@@ -77,11 +73,11 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="@+id/profilePictureView"
-            app:layout_constraintEnd_toStartOf="@+id/messageTimestampContainer"
             app:layout_constraintStart_toEndOf="@+id/profilePictureView"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/senderNameTextView">
 
-            <org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageContentView
+            <include layout="@layout/view_visible_message_content"
                 android:id="@+id/messageContentView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -104,32 +100,37 @@
 
         </LinearLayout>
 
-        <org.thoughtcrime.securesms.conversation.v2.messages.EmojiReactionsView
+        <include layout="@layout/view_emoji_reactions"
             android:id="@+id/emojiReactionsView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:layout_constraintEnd_toStartOf="@+id/messageTimestampContainer"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/messageInnerContainer"
             app:layout_constraintTop_toBottomOf="@id/messageInnerContainer" />
 
-        <RelativeLayout
-            android:id="@+id/messageTimestampContainer"
-            android:layout_width="@dimen/medium_spacing"
+        <TextView
+            android:id="@+id/messageStatusTextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="2dp"
+            android:layout_marginBottom="1dp"
+            app:layout_constraintTop_toTopOf="@id/messageStatusImageView"
+            app:layout_constraintBottom_toBottomOf="@id/messageStatusImageView"
+            app:layout_constraintEnd_toStartOf="@id/messageStatusImageView"
+            android:textSize="@dimen/very_small_font_size"
+            android:textColor="@color/classic_dark_1"
+            tools:text="Sent" />
+
+        <ImageView
+            android:id="@+id/messageStatusImageView"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_marginTop="5dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@+id/messageInnerContainer">
-
-            <ImageView
-                android:id="@+id/messageStatusImageView"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:padding="2dp"
-                android:src="@drawable/ic_delivery_status_sent" />
-
-        </RelativeLayout>
+            app:layout_constraintTop_toBottomOf="@+id/emojiReactionsView"
+            tools:tint="@color/classic_dark_1"
+            android:src="@drawable/ic_delivery_status_sent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

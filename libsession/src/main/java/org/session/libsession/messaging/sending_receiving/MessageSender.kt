@@ -12,9 +12,9 @@ import org.session.libsession.messaging.messages.control.CallMessage
 import org.session.libsession.messaging.messages.control.ClosedGroupControlMessage
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
+import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.visible.LinkPreview
-import org.session.libsession.messaging.messages.visible.Profile
 import org.session.libsession.messaging.messages.visible.Quote
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.OpenGroupApi
@@ -32,12 +32,7 @@ import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsignal.crypto.PushTransportDetails
 import org.session.libsignal.protos.SignalServiceProtos
-import org.session.libsignal.utilities.Base64
-import org.session.libsignal.utilities.IdPrefix
-import org.session.libsignal.utilities.Namespace
-import org.session.libsignal.utilities.defaultRequiresAuth
-import org.session.libsignal.utilities.hasNamespaces
-import org.session.libsignal.utilities.hexEncodedPublicKey
+import org.session.libsignal.utilities.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment as SignalAttachment
@@ -118,14 +113,10 @@ object MessageSender {
             }
             // Attach the user's profile if needed
             if (message is VisibleMessage) {
-                val displayName = storage.getUserDisplayName()!!
-                val profileKey = storage.getUserProfileKey()
-                val profilePictureUrl = storage.getUserProfilePictureURL()
-                if (profileKey != null && profilePictureUrl != null) {
-                    message.profile = Profile(displayName, profileKey, profilePictureUrl)
-                } else {
-                    message.profile = Profile(displayName)
-                }
+                message.profile = storage.getUserProfile()
+            }
+            if (message is MessageRequestResponse) {
+                message.profile = storage.getUserProfile()
             }
             // Convert it to protobuf
             val proto = message.toProto() ?: throw Error.ProtoConversionFailed
@@ -257,14 +248,7 @@ object MessageSender {
         try {
             // Attach the user's profile if needed
             if (message is VisibleMessage) {
-                val displayName = storage.getUserDisplayName()!!
-                val profileKey = storage.getUserProfileKey()
-                val profilePictureUrl = storage.getUserProfilePictureURL()
-                if (profileKey != null && profilePictureUrl != null) {
-                    message.profile = Profile(displayName, profileKey, profilePictureUrl)
-                } else {
-                    message.profile = Profile(displayName)
-                }
+                message.profile = storage.getUserProfile()
             }
             when (destination) {
                 is Destination.OpenGroup -> {
@@ -337,6 +321,8 @@ object MessageSender {
             message.serverHash?.let {
                 storage.setMessageServerHash(messageID, it)
             }
+            // in case any errors from previous sends
+            storage.clearErrorMessage(messageID)
             // Track the open group server message ID
             if (message.openGroupServerMessageID != null && (destination is Destination.LegacyOpenGroup || destination is Destination.OpenGroup)) {
                 val server: String

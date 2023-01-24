@@ -23,7 +23,7 @@ class LinkPreviewDraftView : LinearLayout {
         // Start out with the loader showing and the content view hidden
         binding = ViewLinkPreviewDraftBinding.inflate(LayoutInflater.from(context), this, true)
         binding.linkPreviewDraftContainer.isVisible = false
-        binding.thumbnailImageView.clipToOutline = true
+        binding.thumbnailImageView.root.clipToOutline = true
         binding.linkPreviewDraftCancelButton.setOnClickListener { cancel() }
     }
 
@@ -31,10 +31,10 @@ class LinkPreviewDraftView : LinearLayout {
         // Hide the loader and show the content view
         binding.linkPreviewDraftContainer.isVisible = true
         binding.linkPreviewDraftLoader.isVisible = false
-        binding.thumbnailImageView.radius = toPx(4, resources)
+        binding.thumbnailImageView.root.radius = toPx(4, resources)
         if (linkPreview.getThumbnail().isPresent) {
             // This internally fetches the thumbnail
-            binding.thumbnailImageView.setImageResource(glide, ImageSlide(context, linkPreview.getThumbnail().get()), false, false)
+            binding.thumbnailImageView.root.setImageResource(glide, ImageSlide(context, linkPreview.getThumbnail().get()), false, null)
         }
         binding.linkPreviewDraftTitleTextView.text = linkPreview.title
     }

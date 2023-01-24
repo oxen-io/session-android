@@ -1,9 +1,9 @@
 package org.thoughtcrime.securesms.database
 
 import android.content.ContentValues
+import android.database.Cursor
 import androidx.core.database.getStringOrNull
-import net.sqlcipher.Cursor
-import net.sqlcipher.database.SQLiteDatabase
+import net.zetetic.database.sqlcipher.SQLiteDatabase
 import org.session.libsignal.utilities.Base64
 
 fun <T> SQLiteDatabase.get(table: String, query: String?, arguments: Array<String>?, get: (Cursor) -> T): T? {

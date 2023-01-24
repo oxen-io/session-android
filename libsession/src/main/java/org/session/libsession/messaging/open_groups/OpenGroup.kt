@@ -11,16 +11,19 @@ data class OpenGroup(
     val id: String,
     val name: String,
     val publicKey: String,
+    val imageId: String?,
     val infoUpdates: Int,
+    val canWrite: Boolean,
 ) {
-
-    constructor(server: String, room: String, name: String, infoUpdates: Int, publicKey: String) : this(
+    constructor(server: String, room: String, publicKey: String, name: String, imageId: String?, canWrite: Boolean, infoUpdates: Int) : this(
         server = server,
         room = room,
         id = "$server.$room",
         name = name,
         publicKey = publicKey,
+        imageId = imageId,
         infoUpdates = infoUpdates,
+        canWrite = canWrite
     )
 
     companion object {
@@ -29,13 +32,14 @@ data class OpenGroup(
             return try {
                 val json = JsonUtil.fromJson(jsonAsString)
                 if (!json.has("room")) return null
-                val room = json.get("room").asText().toLowerCase(Locale.US)
-                val server = json.get("server").asText().toLowerCase(Locale.US)
+                val room = json.get("room").asText().lowercase(Locale.US)
+                val server = json.get("server").asText().lowercase(Locale.US)
                 val displayName = json.get("displayName").asText()
                 val publicKey = json.get("publicKey").asText()
+                val imageId = json.get("imageId")?.asText()
+                val canWrite = json.get("canWrite")?.asText()?.toBoolean() ?: true
                 val infoUpdates = json.get("infoUpdates")?.asText()?.toIntOrNull() ?: 0
-                val capabilities = json.get("capabilities")?.asText()?.split(",") ?: emptyList()
-                OpenGroup(server, room, displayName, infoUpdates, publicKey)
+                OpenGroup(server = server, room = room, name = displayName, publicKey = publicKey, imageId = imageId, canWrite = canWrite, infoUpdates = infoUpdates)
             } catch (e: Exception) {
                 Log.w("Loki", "Couldn't parse open group from JSON: $jsonAsString.", e);
                 null
@@ -53,12 +57,14 @@ data class OpenGroup(
         }
     }
 
-    fun toJson(): Map<String,String> = mapOf(
+    fun toJson(): Map<String,String?> = mapOf(
         "room" to room,
         "server" to server,
-        "displayName" to name,
         "publicKey" to publicKey,
+        "displayName" to name,
+        "imageId" to imageId,
         "infoUpdates" to infoUpdates.toString(),
+        "canWrite" to canWrite.toString()
     )
 
     val joinURL: String get() = "$server/$room?public_key=$publicKey"

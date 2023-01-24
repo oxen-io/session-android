@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.goterl.lazysodium.utils.KeyPair
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -48,11 +50,19 @@ class ConversationViewModel(
         }
 
     fun saveDraft(text: String) {
-        repository.saveDraft(threadId, text)
+        GlobalScope.launch(Dispatchers.IO) {
+            repository.saveDraft(threadId, text)
+        }
     }
 
     fun getDraft(): String? {
-        return repository.getDraft(threadId)
+        val draft: String? = repository.getDraft(threadId)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.clearDrafts(threadId)
+        }
+
+        return draft
     }
 
     fun inviteContacts(contacts: List<Recipient>) {
@@ -182,7 +192,6 @@ class ConversationViewModel(
 data class UiMessage(val id: Long, val message: String)
 
 data class ConversationUiState(
-    val isOxenHostedOpenGroup: Boolean = false,
     val uiMessages: List<UiMessage> = emptyList(),
     val isMessageRequestAccepted: Boolean? = null
 )

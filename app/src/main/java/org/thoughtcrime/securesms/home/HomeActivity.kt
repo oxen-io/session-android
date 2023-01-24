@@ -104,7 +104,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         when (model) {
             is GlobalSearchAdapter.Model.Message -> {
                 val threadId = model.messageResult.threadId
-                val timestamp = model.messageResult.receivedTimestampMs
+                val timestamp = model.messageResult.sentTimestampMs
                 val author = model.messageResult.messageRecipient.address
 
                 val intent = Intent(this, ConversationActivityV2::class.java)
@@ -204,7 +204,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                     OpenGroupManager.startPolling()
                     JobQueue.shared.resumePendingJobs()
                 }
-                // Set up typing observer
+
                 withContext(Dispatchers.Main) {
                     updateProfileButton()
                     TextSecurePreferences.events.filter { it == TextSecurePreferences.PROFILE_NAME_PREF }.collect {
@@ -383,6 +383,10 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             if(firstPos >= 0) { manager.scrollToPositionWithOffset(firstPos, offsetTop) }
             setupMessageRequestsBanner()
             updateEmptyState()
+        }
+
+        ApplicationContext.getInstance(this@HomeActivity).typingStatusRepository.typingThreads.observe(this) { threadIds ->
+            homeAdapter.typingThreadIDs = (threadIds ?: setOf())
         }
     }
 

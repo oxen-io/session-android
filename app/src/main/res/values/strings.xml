@@ -864,4 +864,10 @@
     <string name="fragment_enter_community_url_join_button_title">Join</string>
     <string name="new_conversation_dialog_back_button_content_description">Navigate Back</string>
     <string name="new_conversation_dialog_close_button_content_description">Close Dialog</string>
+    <string name="ErrorNotifier_migration">Database Upgrade Failed</string>
+    <string name="ErrorNotifier_migration_downgrade">Please contact support to report the error.</string>
+    <string name="delivery_status_sending">Sending</string>
+    <string name="delivery_status_read">Read</string>
+    <string name="delivery_status_sent">Sent</string>
+    <string name="delivery_status_failed">Failed to send</string>
 </resources>

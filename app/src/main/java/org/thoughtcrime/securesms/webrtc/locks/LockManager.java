@@ -49,7 +49,7 @@ public class LockManager {
         partialLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "signal:partial");
         proximityLock = new ProximityLock(pm);
 
-        WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wm = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         wifiLock = wm.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "signal:wifi");
 
         fullLock.setReferenceCounted(false);

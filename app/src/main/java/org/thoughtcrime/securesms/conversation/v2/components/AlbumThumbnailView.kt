@@ -8,52 +8,38 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import network.loki.messenger.R
 import network.loki.messenger.databinding.AlbumThumbnailViewBinding
-import org.session.libsession.messaging.jobs.AttachmentDownloadJob
-import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.MediaPreviewActivity
 import org.thoughtcrime.securesms.components.CornerMask
-import org.thoughtcrime.securesms.conversation.v2.utilities.KThumbnailView
+import org.thoughtcrime.securesms.conversation.v2.utilities.ThumbnailView
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.mms.Slide
 import org.thoughtcrime.securesms.util.ActivityDispatcher
 
-class AlbumThumbnailView : FrameLayout {
-
-    private lateinit var binding: AlbumThumbnailViewBinding
-
+class AlbumThumbnailView : RelativeLayout {
     companion object {
         const val MAX_ALBUM_DISPLAY_SIZE = 3
     }
 
+    private val binding: AlbumThumbnailViewBinding by lazy { AlbumThumbnailViewBinding.bind(this) }
+
     // region Lifecycle
-    constructor(context: Context) : super(context) {
-        initialize()
-    }
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        initialize()
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        initialize()
-    }
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     private val cornerMask by lazy { CornerMask(this) }
     private var slides: List<Slide> = listOf()
     private var slideSize: Int = 0
-
-    private fun initialize() {
-        binding = AlbumThumbnailViewBinding.inflate(LayoutInflater.from(context), this, true)
-    }
 
     override fun dispatchDraw(canvas: Canvas?) {
         super.dispatchDraw(canvas)
@@ -63,26 +49,25 @@ class AlbumThumbnailView : FrameLayout {
 
     // region Interaction
 
-    fun calculateHitObject(event: MotionEvent, mms: MmsMessageRecord, threadRecipient: Recipient) {
+    fun calculateHitObject(event: MotionEvent, mms: MmsMessageRecord, threadRecipient: Recipient, onAttachmentNeedsDownload: (Long, Long) -> Unit) {
         val rawXInt = event.rawX.toInt()
         val rawYInt = event.rawY.toInt()
         val eventRect = Rect(rawXInt, rawYInt, rawXInt, rawYInt)
         val testRect = Rect()
         // test each album child
-        binding.albumCellContainer.findViewById<ViewGroup>(R.id.album_thumbnail_root)?.children?.forEachIndexed { index, child ->
+        binding.albumCellContainer.findViewById<ViewGroup>(R.id.album_thumbnail_root)?.children?.forEachIndexed forEach@{ index, child ->
             child.getGlobalVisibleRect(testRect)
             if (testRect.contains(eventRect)) {
                 // hit intersects with this particular child
-                val slide = slides.getOrNull(index) ?: return
+                val slide = slides.getOrNull(index) ?: return@forEach
                 // only open to downloaded images
                 if (slide.transferState == AttachmentTransferProgress.TRANSFER_PROGRESS_FAILED) {
-                    // restart download here
+                    // Restart download here (on IO thread)
                     (slide.asAttachment() as? DatabaseAttachment)?.let { attachment ->
-                        val attachmentId = attachment.attachmentId.rowId
-                        JobQueue.shared.add(AttachmentDownloadJob(attachmentId, mms.getId()))
+                        onAttachmentNeedsDownload(attachment.attachmentId.rowId, mms.getId())
                     }
                 }
-                if (slide.isInProgress) return
+                if (slide.isInProgress) return@forEach
 
                 ActivityDispatcher.get(context)?.dispatchIntent { context ->
                     MediaPreviewActivity.getPreviewIntent(context, slide, mms, threadRecipient)
@@ -133,7 +118,7 @@ class AlbumThumbnailView : FrameLayout {
         else -> R.layout.album_thumbnail_3 // three stacked with additional text
     }
 
-    fun getThumbnailView(position: Int): KThumbnailView = when (position) {
+    fun getThumbnailView(position: Int): ThumbnailView = when (position) {
         0 -> binding.albumCellContainer.findViewById<ViewGroup>(R.id.albumCellContainer).findViewById(R.id.album_cell_1)
         1 -> binding.albumCellContainer.findViewById<ViewGroup>(R.id.albumCellContainer).findViewById(R.id.album_cell_2)
         2 -> binding.albumCellContainer.findViewById<ViewGroup>(R.id.albumCellContainer).findViewById(R.id.album_cell_3)

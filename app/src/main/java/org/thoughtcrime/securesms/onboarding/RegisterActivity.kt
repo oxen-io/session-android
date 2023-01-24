@@ -19,8 +19,10 @@ import com.goterl.lazysodium.utils.KeyPair
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityRegisterBinding
+import org.session.libsession.snode.SnodeModule
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.crypto.ecc.ECKeyPair
+import org.session.libsignal.database.LokiAPIDatabaseProtocol
 import org.session.libsignal.utilities.KeyHelper
 import org.session.libsignal.utilities.hexEncodedPublicKey
 import org.thoughtcrime.securesms.BaseActionBarActivity
@@ -37,6 +39,8 @@ class RegisterActivity : BaseActionBarActivity() {
     lateinit var configFactory: ConfigFactory
 
     private lateinit var binding: ActivityRegisterBinding
+    internal val database: LokiAPIDatabaseProtocol
+        get() = SnodeModule.shared.storage
     private var seed: ByteArray? = null
     private var ed25519KeyPair: KeyPair? = null
     private var x25519KeyPair: ECKeyPair? = null
@@ -117,6 +121,11 @@ class RegisterActivity : BaseActionBarActivity() {
 
     // region Interaction
     private fun register() {
+        // This is here to resolve a case where the app restarts before a user completes onboarding
+        // which can result in an invalid database state
+        database.clearAllLastMessageHashes()
+        database.clearReceivedMessageHashValues()
+
         KeyPairUtilities.store(this, seed!!, ed25519KeyPair!!, x25519KeyPair!!)
         configFactory.keyPairChanged()
         val userHexEncodedPublicKey = x25519KeyPair!!.hexEncodedPublicKey

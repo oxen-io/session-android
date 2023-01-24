@@ -11,6 +11,7 @@ import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.utilities.Data
 import org.session.libsession.snode.OnionRequestAPI
+import org.session.libsignal.utilities.HTTP
 import org.session.libsignal.utilities.Log
 
 class MessageSendJob(val message: Message, val destination: Destination) : Job {
@@ -67,14 +68,25 @@ class MessageSendJob(val message: Message, val destination: Destination) : Job {
         val promise = MessageSender.send(this.message, this.destination).success {
             this.handleSuccess()
         }.fail { exception ->
-            Log.e(TAG, "Couldn't send message due to error: $exception.")
-            if (exception is MessageSender.Error) {
-                if (!exception.isRetryable) { this.handlePermanentFailure(exception) }
+            var logStacktrace = true
+
+            when (exception) {
+                // No need for the stack trace for HTTP errors
+                is HTTP.HTTPRequestFailedException -> {
+                    logStacktrace = false
+
+                    if (exception.statusCode == 429) { this.handlePermanentFailure(exception) }
+                    else { this.handleFailure(exception) }
+                }
+                is MessageSender.Error -> {
+                    if (!exception.isRetryable) { this.handlePermanentFailure(exception) }
+                    else { this.handleFailure(exception) }
+                }
+                else -> this.handleFailure(exception)
             }
-            if (exception is OnionRequestAPI.HTTPRequestFailedAtDestinationException && exception.statusCode == 429) {
-                this.handlePermanentFailure(exception)
-            }
-            this.handleFailure(exception)
+
+            if (logStacktrace) { Log.e(TAG, "Couldn't send message due to error", exception) }
+            else { Log.e(TAG, "Couldn't send message due to error: ${exception.message}") }
         }
         try {
             promise.get()

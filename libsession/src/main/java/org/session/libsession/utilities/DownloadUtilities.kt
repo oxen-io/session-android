@@ -2,6 +2,7 @@ package org.session.libsession.utilities
 
 import okhttp3.HttpUrl
 import org.session.libsession.messaging.file_server.FileServerApi
+import org.session.libsignal.utilities.HTTP
 import org.session.libsignal.utilities.Log
 import java.io.*
 
@@ -40,7 +41,11 @@ object DownloadUtilities {
                 outputStream.write(it)
             }
         } catch (e: Exception) {
-            Log.e("Loki", "Couldn't download attachment.", e)
+            when (e) {
+                // No need for the stack trace for HTTP errors
+                is HTTP.HTTPRequestFailedException -> Log.e("Loki", "Couldn't download attachment due to error: ${e.message}")
+                else -> Log.e("Loki", "Couldn't download attachment", e)
+            }
             throw e
         }
     }

@@ -33,6 +33,7 @@ import org.session.libsession.utilities.NetworkFailure;
 import org.session.libsession.utilities.recipients.Recipient;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The base class for message record models that are displayed in
@@ -50,7 +51,8 @@ public abstract class MessageRecord extends DisplayRecord {
   private final long                      expireStarted;
   private final boolean                   unidentified;
   public  final long                      id;
-  private final List<ReactionRecord>     reactions;
+  private final List<ReactionRecord>      reactions;
+  private final boolean                   hasMention;
 
   public abstract boolean isMms();
   public abstract boolean isMmsNotification();
@@ -62,7 +64,7 @@ public abstract class MessageRecord extends DisplayRecord {
     List<IdentityKeyMismatch> mismatches,
     List<NetworkFailure> networkFailures,
     long expiresIn, long expireStarted,
-    int readReceiptCount, boolean unidentified, List<ReactionRecord> reactions)
+    int readReceiptCount, boolean unidentified, List<ReactionRecord> reactions, boolean hasMention)
   {
     super(body, conversationRecipient, dateSent, dateReceived,
       threadId, deliveryStatus, deliveryReceiptCount, type, readReceiptCount);
@@ -74,6 +76,7 @@ public abstract class MessageRecord extends DisplayRecord {
     this.expireStarted       = expireStarted;
     this.unidentified        = unidentified;
     this.reactions           = reactions;
+    this.hasMention          = hasMention;
   }
 
   public long getId() {
@@ -95,6 +98,8 @@ public abstract class MessageRecord extends DisplayRecord {
     return expiresIn;
   }
   public long getExpireStarted() { return expireStarted; }
+
+  public boolean getHasMention() { return hasMention; }
 
   public boolean isMediaPending() {
     return false;
@@ -140,14 +145,16 @@ public abstract class MessageRecord extends DisplayRecord {
     return spannable;
   }
 
+  @Override
   public boolean equals(Object other) {
     return other instanceof MessageRecord
-      && ((MessageRecord) other).getId() == getId()
-      && ((MessageRecord) other).isMms() == isMms();
+            && ((MessageRecord) other).getId() == getId()
+            && ((MessageRecord) other).isMms() == isMms();
   }
 
+  @Override
   public int hashCode() {
-    return (int)getId();
+    return Objects.hash(id, isMms());
   }
 
   public @NonNull List<ReactionRecord> getReactions() {

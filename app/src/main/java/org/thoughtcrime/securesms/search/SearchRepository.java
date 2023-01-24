@@ -301,10 +301,10 @@ public class SearchRepository {
       Recipient conversationRecipient = Recipient.from(context, conversationAddress, false);
       Recipient messageRecipient      = Recipient.from(context, messageAddress, false);
       String    body                  = cursor.getString(cursor.getColumnIndexOrThrow(SearchDatabase.SNIPPET));
-      long      receivedMs            = cursor.getLong(cursor.getColumnIndexOrThrow(MmsSmsColumns.NORMALIZED_DATE_RECEIVED));
+      long      sentMs                = cursor.getLong(cursor.getColumnIndexOrThrow(MmsSmsColumns.NORMALIZED_DATE_SENT));
       long      threadId              = cursor.getLong(cursor.getColumnIndexOrThrow(MmsSmsColumns.THREAD_ID));
 
-      return new MessageResult(conversationRecipient, messageRecipient, body, threadId, receivedMs);
+      return new MessageResult(conversationRecipient, messageRecipient, body, threadId, sentMs);
     }
   }
 

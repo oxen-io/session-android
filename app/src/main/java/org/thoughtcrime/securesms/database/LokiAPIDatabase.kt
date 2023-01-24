@@ -300,6 +300,11 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         val lastHash = database.insertOrUpdate(lastMessageHashValueTable2, row, query, arrayOf( snode.toString(), publicKey, namespace.toString() ))
     }
 
+    override fun clearAllLastMessageHashes() {
+        val database = databaseHelper.writableDatabase
+        database.delete(lastMessageHashValueTable2, null, null)
+    }
+
     override fun getReceivedMessageHashValues(publicKey: String, namespace: Int): Set<String>? {
         val database = databaseHelper.readableDatabase
         val query = "${Companion.publicKey} = ? AND ${Companion.receivedMessageHashNamespace} = ?"
@@ -321,6 +326,11 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         database.insertOrUpdate(receivedMessageHashValuesTable, row, query, arrayOf( publicKey, namespace.toString() ))
     }
 
+    override fun clearReceivedMessageHashValues() {
+        val database = databaseHelper.writableDatabase
+        database.delete(receivedMessageHashValuesTable, null, null)
+    }
+
     override fun getAuthToken(server: String): String? {
         val database = databaseHelper.readableDatabase
         return database.get(openGroupAuthTokenTable, "${Companion.server} = ?", wrap(server)) { cursor ->
@@ -339,7 +349,7 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
     }
 
     override fun getLastMessageServerID(room: String, server: String): Long? {
-        val database = databaseHelper.writableDatabase
+        val database = databaseHelper.readableDatabase
         val index = "$server.$room"
         return database.get(lastMessageServerIDTable, "$lastMessageServerIDTableIndex = ?", wrap(index)) { cursor ->
             cursor.getInt(lastMessageServerID)
@@ -510,7 +520,7 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
     }
 
     fun getServerCapabilities(serverName: String): List<String> {
-        val database = databaseHelper.writableDatabase
+        val database = databaseHelper.readableDatabase
         return database.get(serverCapabilitiesTable, "$server = ?", wrap(serverName)) { cursor ->
             cursor.getString(capabilities)
         }?.split(",") ?: emptyList()
@@ -523,7 +533,7 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
     }
 
     fun getLastInboxMessageId(serverName: String): Long? {
-        val database = databaseHelper.writableDatabase
+        val database = databaseHelper.readableDatabase
         return database.get(lastInboxMessageServerIdTable, "$server = ?", wrap(serverName)) { cursor ->
             cursor.getInt(lastInboxMessageServerId)
         }?.toLong()
@@ -540,7 +550,7 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
     }
 
     fun getLastOutboxMessageId(serverName: String): Long? {
-        val database = databaseHelper.writableDatabase
+        val database = databaseHelper.readableDatabase
         return database.get(lastOutboxMessageServerIdTable, "$server = ?", wrap(serverName)) { cursor ->
             cursor.getInt(lastOutboxMessageServerId)
         }?.toLong()

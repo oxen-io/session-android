@@ -277,7 +277,7 @@
         <item name="android:textColorSecondary">?android:textColorPrimary</item>
     </style>
     <style name="Ocean.Light.BottomSheet" parent="Theme.MaterialComponents.BottomSheetDialog">
-        <item name="colorPrimary">@color/ocean_light_5</item>
+        <item name="colorPrimary">@color/ocean_light_6</item>
         <item name="bottomSheetStyle">@style/Widget.Session.BottomSheetDialog</item>
         <item name="dialog_border">@color/transparent_black_15</item>
         <item name="android:textColorPrimary">@color/black</item>
@@ -352,9 +352,9 @@
         <item name="home_gradient_end">@color/classic_dark_1</item>
         <item name="conversation_pinned_background_color">?colorCellBackground</item>
         <item name="conversation_unread_background_color">@color/classic_dark_2</item>
-        <item name="conversation_pinned_icon_color">@color/classic_dark_4</item>
+        <item name="conversation_pinned_icon_color">?android:textColorSecondary</item>
         <item name="unreadIndicatorBackgroundColor">@color/classic_dark_3</item>
-        <item name="unreadIndicatorTextColor">@color/classic_dark_0</item>
+        <item name="unreadIndicatorTextColor">@color/classic_dark_6</item>
         
         <!-- New conversation button -->
         <item name="conversation_color_non_main">@color/classic_dark_2</item>
@@ -370,6 +370,7 @@
         <item name="message_received_text_color">@color/classic_dark_6</item>
         <item name="message_sent_background_color">?colorAccent</item>
         <item name="message_sent_text_color">@color/classic_dark_0</item>
+        <item name="message_status_color">@color/classic_dark_5</item>
         <item name="input_bar_background">@color/classic_dark_1</item>
         <item name="input_bar_text_hint">@color/classic_dark_5</item>
         <item name="input_bar_text_user">@color/classic_dark_6</item>
@@ -436,7 +437,7 @@
         <item name="home_gradient_end">@color/classic_light_5</item>
         <item name="conversation_pinned_background_color">?colorCellBackground</item>
         <item name="conversation_unread_background_color">@color/classic_light_6</item>
-        <item name="conversation_pinned_icon_color">@color/classic_light_2</item>
+        <item name="conversation_pinned_icon_color">?android:textColorSecondary</item>
         <item name="unreadIndicatorBackgroundColor">@color/classic_light_3</item>
         <item name="unreadIndicatorTextColor">@color/classic_light_0</item>
         <!-- New conversation button -->
@@ -454,6 +455,7 @@
         <item name="message_received_text_color">@color/classic_light_0</item>
         <item name="message_sent_background_color">?colorAccent</item>
         <item name="message_sent_text_color">@color/classic_light_0</item>
+        <item name="message_status_color">@color/classic_light_1</item>
         <item name="input_bar_background">@color/classic_light_6</item>
         <item name="input_bar_text_hint">@color/classic_light_1</item>
         <item name="input_bar_text_user">@color/classic_light_0</item>
@@ -475,13 +477,13 @@
 
     <style name="Ocean.Dark">
         <!-- Main styles -->
-        <item name="sessionLogoTint">@color/ocean_dark_6</item>
+        <item name="sessionLogoTint">@color/ocean_dark_7</item>
         <item name="colorPrimary">@color/ocean_dark_2</item>
         <item name="colorPrimaryDark">@color/ocean_dark_2</item>
-        <item name="colorControlNormal">@color/ocean_dark_6</item>
+        <item name="colorControlNormal">@color/ocean_dark_7</item>
         <item name="colorControlActivated">?colorAccent</item>
         <item name="android:colorControlHighlight">?colorAccent</item>
-        <item name="android:textColorPrimary">@color/ocean_dark_6</item>
+        <item name="android:textColorPrimary">@color/ocean_dark_7</item>
         <item name="android:textColorSecondary">@color/ocean_dark_5</item>
         <item name="android:textColorTertiary">@color/ocean_dark_5</item>
         <item name="android:textColor">?android:textColorPrimary</item>
@@ -507,7 +509,7 @@
 
         <!-- Home screen -->
         <item name="searchBackgroundColor">@color/ocean_dark_3</item>
-        <item name="searchIconColor">@color/ocean_dark_6</item>
+        <item name="searchIconColor">@color/ocean_dark_7</item>
         <item name="searchHintColor">@color/ocean_dark_5</item>
         <item name="searchTextColor">?android:textColorPrimary</item>
         <item name="searchHighlightTint">?colorAccent</item>
@@ -515,7 +517,7 @@
         <item name="home_gradient_end">@color/ocean_dark_3</item>
         <item name="conversation_pinned_background_color">?colorCellBackground</item>
         <item name="conversation_unread_background_color">@color/ocean_dark_4</item>
-        <item name="conversation_pinned_icon_color">?colorAccent</item>
+        <item name="conversation_pinned_icon_color">?android:textColorSecondary</item>
         <item name="unreadIndicatorBackgroundColor">?colorAccent</item>
         <item name="unreadIndicatorTextColor">@color/ocean_dark_0</item>
         <item name="conversation_menu_background_color">@color/ocean_dark_3</item>
@@ -532,15 +534,16 @@
 
         <!-- Conversation -->
         <item name="message_received_background_color">@color/ocean_dark_4</item>
-        <item name="message_received_text_color">@color/ocean_dark_6</item>
+        <item name="message_received_text_color">@color/ocean_dark_7</item>
         <item name="message_sent_background_color">?colorAccent</item>
         <item name="message_sent_text_color">@color/ocean_dark_0</item>
+        <item name="message_status_color">@color/ocean_dark_5</item>
         <item name="input_bar_background">@color/ocean_dark_1</item>
         <item name="input_bar_text_hint">@color/ocean_dark_5</item>
-        <item name="input_bar_text_user">@color/ocean_dark_6</item>
+        <item name="input_bar_text_user">@color/ocean_dark_7</item>
         <item name="input_bar_border">@color/ocean_dark_4</item>
         <item name="input_bar_button_background">@color/ocean_dark_2</item>
-        <item name="input_bar_button_text_color">@color/ocean_dark_6</item>
+        <item name="input_bar_button_text_color">@color/ocean_dark_7</item>
         <item name="input_bar_button_background_opaque">@color/ocean_dark_4</item>
         <item name="input_bar_button_background_opaque_border">@color/ocean_dark_2</item>
         <item name="input_bar_lock_view_background">?colorPrimary</item>
@@ -556,26 +559,26 @@
 
     <style name="Ocean.Light">
         <!-- Main styles -->
-        <item name="sessionLogoTint">@color/ocean_light_0</item>
-        <item name="colorPrimary">@color/ocean_light_6</item>
-        <item name="colorPrimaryDark">@color/ocean_light_5</item>
-        <item name="colorControlNormal">@color/ocean_light_0</item>
+        <item name="sessionLogoTint">@color/ocean_light_1</item>
+        <item name="colorPrimary">@color/ocean_light_7</item>
+        <item name="colorPrimaryDark">@color/ocean_light_6</item>
+        <item name="colorControlNormal">@color/ocean_light_1</item>
         <item name="colorControlActivated">?colorAccent</item>
         <item name="android:colorControlHighlight">?colorAccent</item>
-        <item name="android:textColorPrimary">@color/ocean_light_0</item>
-        <item name="android:textColorSecondary">@color/ocean_light_1</item>
-        <item name="android:textColorTertiary">@color/ocean_light_1</item>
+        <item name="android:textColorPrimary">@color/ocean_light_1</item>
+        <item name="android:textColorSecondary">@color/ocean_light_2</item>
+        <item name="android:textColorTertiary">@color/ocean_light_2</item>
         <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:textColorHint">@color/ocean_light_5</item>
-        <item name="android:navigationBarColor">@color/ocean_light_6</item>
+        <item name="android:textColorHint">@color/ocean_light_6</item>
+        <item name="android:navigationBarColor">@color/ocean_light_7</item>
         <item name="android:windowBackground">?colorPrimary</item>
         <item name="android:colorBackground">@color/default_background_start</item>
-        <item name="default_background_end">@color/ocean_light_6</item>
-        <item name="default_background_start">@color/ocean_light_5</item>
-        <item name="colorCellBackground">@color/ocean_light_4</item>
-        <item name="colorSettingsBackground">@color/ocean_light_5</item>
-        <item name="colorDividerBackground">@color/ocean_light_2</item>
-        <item name="colorCellRipple">@color/ocean_light_3</item>
+        <item name="default_background_end">@color/ocean_light_7</item>
+        <item name="default_background_start">@color/ocean_light_6</item>
+        <item name="colorCellBackground">@color/ocean_light_5</item>
+        <item name="colorSettingsBackground">@color/ocean_light_6</item>
+        <item name="colorDividerBackground">@color/ocean_light_3</item>
+        <item name="colorCellRipple">@color/ocean_light_4</item>
         <item name="bottomSheetDialogTheme">@style/Ocean.Light.BottomSheet</item>
         <item name="actionBarPopupTheme">@style/Light.Popup</item>
         <item name="popupTheme">?actionBarPopupTheme</item>
@@ -584,7 +587,7 @@
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
         <item name="prominentButtonColor">?android:textColorPrimary</item>
-        <item name="elementBorderColor">@color/ocean_light_2</item>
+        <item name="elementBorderColor">@color/ocean_light_3</item>
 
         <!-- Light mode -->
         <item name="theme_type">light</item>
@@ -595,48 +598,49 @@
         <item name="android:statusBarColor">?colorPrimary</item>
 
 
-        <item name="searchBackgroundColor">@color/ocean_light_4</item>
-        <item name="searchIconColor">@color/ocean_light_0</item>
-        <item name="searchHintColor">@color/ocean_light_1</item>
-        <item name="searchTextColor">@color/ocean_light_0</item>
+        <item name="searchBackgroundColor">@color/ocean_light_5</item>
+        <item name="searchIconColor">@color/ocean_light_1</item>
+        <item name="searchHintColor">@color/ocean_light_2</item>
+        <item name="searchTextColor">@color/ocean_light_1</item>
         <item name="searchHighlightTint">?colorAccent</item>
 
         <item name="home_gradient_start">#00000000</item>
-        <item name="home_gradient_end">@color/ocean_light_6</item>
+        <item name="home_gradient_end">@color/ocean_light_7</item>
         <item name="conversation_shadow_non_main">@color/black</item>
         <item name="conversation_shadow_main">@color/black</item>
-        <item name="conversation_menu_background_color">@color/ocean_light_6</item>
-        <item name="conversation_menu_cell_color">@color/ocean_light_5</item>
-        <item name="conversation_menu_border_color">@color/ocean_light_2</item>
-        <item name="conversationMenuSearchBackgroundColor">@color/ocean_light_6</item>
+        <item name="conversation_menu_background_color">@color/ocean_light_7</item>
+        <item name="conversation_menu_cell_color">@color/ocean_light_6</item>
+        <item name="conversation_menu_border_color">@color/ocean_light_3</item>
+        <item name="conversationMenuSearchBackgroundColor">@color/ocean_light_7</item>
 
         <item name="unreadIndicatorBackgroundColor">?colorAccent</item>
-        <item name="unreadIndicatorTextColor">@color/ocean_light_0</item>
+        <item name="unreadIndicatorTextColor">@color/ocean_light_1</item>
 
         <!-- Conversation -->
-        <item name="message_received_background_color">@color/ocean_light_3</item>
-        <item name="message_received_text_color">@color/ocean_light_0</item>
+        <item name="message_received_background_color">@color/ocean_light_4</item>
+        <item name="message_received_text_color">@color/ocean_light_1</item>
         <item name="message_sent_background_color">?colorAccent</item>
-        <item name="message_sent_text_color">@color/ocean_light_0</item>
-        <item name="input_bar_background">@color/ocean_light_6</item>
-        <item name="input_bar_text_hint">@color/ocean_light_1</item>
-        <item name="input_bar_text_user">@color/ocean_light_0</item>
-        <item name="input_bar_border">@color/ocean_light_2</item>
-        <item name="input_bar_button_background">@color/ocean_light_4</item>
-        <item name="input_bar_button_background_opaque">@color/ocean_light_4</item>
-        <item name="input_bar_button_text_color">@color/ocean_light_0</item>
-        <item name="input_bar_button_background_opaque_border">@color/ocean_light_0</item>
-        <item name="input_bar_lock_view_background">@color/ocean_light_4</item>
-        <item name="input_bar_lock_view_border">@color/ocean_light_0</item>
+        <item name="message_sent_text_color">@color/ocean_light_1</item>
+        <item name="message_status_color">@color/ocean_light_2</item>
+        <item name="input_bar_background">@color/ocean_light_7</item>
+        <item name="input_bar_text_hint">@color/ocean_light_2</item>
+        <item name="input_bar_text_user">@color/ocean_light_1</item>
+        <item name="input_bar_border">@color/ocean_light_3</item>
+        <item name="input_bar_button_background">@color/ocean_light_5</item>
+        <item name="input_bar_button_background_opaque">@color/ocean_light_5</item>
+        <item name="input_bar_button_text_color">@color/ocean_light_1</item>
+        <item name="input_bar_button_background_opaque_border">@color/ocean_light_1</item>
+        <item name="input_bar_lock_view_background">@color/ocean_light_5</item>
+        <item name="input_bar_lock_view_border">@color/ocean_light_1</item>
         <item name="mention_candidates_view_background">?colorCellBackground</item>
         <item name="mention_candidates_view_background_ripple">?colorCellRipple</item>
         <item name="scroll_to_bottom_button_background">?input_bar_button_background_opaque</item>
         <item name="scroll_to_bottom_button_border">?input_bar_button_background_opaque_border</item>
         <item name="conversation_unread_count_indicator_background">?colorAccent</item>
         <item name="conversation_pinned_background_color">?colorCellBackground</item>
-        <item name="conversation_unread_background_color">@color/ocean_light_5</item>
-        <item name="conversation_pinned_icon_color">?android:textColorPrimary</item>
-        <item name="message_selected">@color/ocean_light_5</item>
+        <item name="conversation_unread_background_color">@color/ocean_light_6</item>
+        <item name="conversation_pinned_icon_color">?android:textColorSecondary</item>
+        <item name="message_selected">@color/ocean_light_6</item>
     </style>
 
 </resources>

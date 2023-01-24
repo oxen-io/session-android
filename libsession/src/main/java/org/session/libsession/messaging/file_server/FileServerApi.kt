@@ -77,7 +77,11 @@ object FileServerApi {
             OnionRequestAPI.sendOnionRequest(requestBuilder.build(), server, serverPublicKey).map {
                 it.body ?: throw Error.ParsingFailed
             }.fail { e ->
-                Log.e("Loki", "File server request failed.", e)
+                when (e) {
+                    // No need for the stack trace for HTTP errors
+                    is HTTP.HTTPRequestFailedException -> Log.e("Loki", "File server request failed due to error: ${e.message}")
+                    else -> Log.e("Loki", "File server request failed", e)
+                }
             }
         } else {
             Promise.ofFail(IllegalStateException("It's currently not allowed to send non onion routed requests."))
@@ -96,7 +100,10 @@ object FileServerApi {
         )
         return send(request).map { response ->
             val json = JsonUtil.fromJson(response, Map::class.java)
-            (json["id"] as? String)?.toLong() ?: throw Error.ParsingFailed
+            val hasId = json.containsKey("id")
+            val id = json.getOrDefault("id", null)
+            Log.d("Loki-FS", "File Upload Response hasId: $hasId of type: ${id?.javaClass}")
+            (id as? String)?.toLong() ?: throw Error.ParsingFailed
         }
     }
 

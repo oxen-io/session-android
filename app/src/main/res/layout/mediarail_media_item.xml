@@ -8,7 +8,7 @@
     android:layout_margin="2dp"
     android:animateLayoutChanges="true">
 
-    <org.thoughtcrime.securesms.conversation.v2.utilities.ThumbnailView
+    <include layout="@layout/thumbnail_view"
         android:id="@+id/rail_item_image"
         android:layout_width="56dp"
         android:layout_height="56dp"

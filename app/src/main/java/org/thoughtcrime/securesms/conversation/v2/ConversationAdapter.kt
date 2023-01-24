@@ -39,10 +39,10 @@ class ConversationAdapter(
     private val onItemSwipeToReply: (MessageRecord, Int) -> Unit,
     private val onItemLongPress: (MessageRecord, Int, VisibleMessageView) -> Unit,
     private val onDeselect: (MessageRecord, Int) -> Unit,
+    private val onAttachmentNeedsDownload: (Long, Long) -> Unit,
     private val glide: GlideRequests,
     lifecycleCoroutineScope: LifecycleCoroutineScope
-)
-    : CursorRecyclerViewAdapter<ViewHolder>(context, cursor) {
+) : CursorRecyclerViewAdapter<ViewHolder>(context, cursor) {
     private val messageDB by lazy { DatabaseComponent.get(context).mmsSmsDatabase() }
     private val contactDB by lazy { DatabaseComponent.get(context).sessionContactDatabase() }
     var selectedItems = mutableSetOf<MessageRecord>()
@@ -120,7 +120,18 @@ class ConversationAdapter(
                 }
                 val contact = contactCache[senderIdHash]
 
-                visibleMessageView.bind(message, messageBefore, getMessageAfter(position, cursor), glide, searchQuery, contact, senderId, visibleMessageViewDelegate)
+                visibleMessageView.bind(
+                        message,
+                        messageBefore,
+                        getMessageAfter(position, cursor),
+                        glide,
+                        searchQuery,
+                        contact,
+                        senderId,
+                        visibleMessageViewDelegate,
+                        onAttachmentNeedsDownload
+                )
+
                 if (!message.isDeleted) {
                     visibleMessageView.onPress = { event -> onItemPress(message, viewHolder.adapterPosition, visibleMessageView, event) }
                     visibleMessageView.onSwipeToReply = { onItemSwipeToReply(message, viewHolder.adapterPosition) }

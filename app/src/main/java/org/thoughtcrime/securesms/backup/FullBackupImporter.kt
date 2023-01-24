@@ -5,7 +5,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
 import androidx.annotation.WorkerThread
-import net.sqlcipher.database.SQLiteDatabase
+import net.zetetic.database.sqlcipher.SQLiteDatabase
 import org.greenrobot.eventbus.EventBus
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId

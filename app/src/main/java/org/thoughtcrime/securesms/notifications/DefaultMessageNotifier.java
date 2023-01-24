@@ -40,7 +40,6 @@ import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.goterl.lazysodium.utils.KeyPair;
 
-import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.messaging.open_groups.OpenGroup;
 import org.session.libsession.messaging.sending_receiving.notifications.MessageNotifier;
 import org.session.libsession.messaging.utilities.SessionId;
@@ -453,8 +452,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
     NotificationState     notificationState = new NotificationState();
     MmsSmsDatabase.Reader reader            = DatabaseComponent.get(context).mmsSmsDatabase().readerFor(cursor);
     ThreadDatabase        threadDatabase    = DatabaseComponent.get(context).threadDatabase();
-    LokiThreadDatabase    lokiThreadDatabase= DatabaseComponent.get(context).lokiThreadDatabase();
-    KeyPair               edKeyPair         = MessagingModuleConfiguration.getShared().getGetUserED25519KeyPair().invoke();
+
     MessageRecord record;
     Map<Long, String> cache = new HashMap<Long, String>();
 
@@ -575,7 +573,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
     Intent       alarmIntent  = new Intent(ReminderReceiver.REMINDER_ACTION);
     alarmIntent.putExtra("reminder_count", count);
 
-    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     long          timeout       = TimeUnit.MINUTES.toMillis(2);
 
     alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + timeout, pendingIntent);
@@ -584,7 +582,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
   @Override
   public void clearReminder(Context context) {
     Intent        alarmIntent   = new Intent(ReminderReceiver.REMINDER_ACTION);
-    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     AlarmManager  alarmManager  = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     alarmManager.cancel(pendingIntent);
   }

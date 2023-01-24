@@ -95,7 +95,6 @@
 
                     <org.thoughtcrime.securesms.components.ComposeText
                         style="@style/Widget.Session.EditText.Compose"
-                        android:textColor="?android:textColorPrimary"
                         android:id="@+id/mediasend_compose_text"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

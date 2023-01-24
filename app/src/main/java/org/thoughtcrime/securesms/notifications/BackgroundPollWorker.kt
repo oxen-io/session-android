@@ -44,7 +44,7 @@ class BackgroundPollWorker(val context: Context, params: WorkerParameters) : Wor
     }
 
     override fun doWork(): Result {
-        if (TextSecurePreferences.getLocalNumber(context) == null) {
+        if (TextSecurePreferences.getLocalNumber(context) == null || !TextSecurePreferences.hasSeenWelcomeScreen(context)) {
             Log.v(TAG, "User not registered yet.")
             return Result.failure()
         }

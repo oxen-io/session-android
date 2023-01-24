@@ -164,6 +164,7 @@
     <attr name="message_received_text_color" format="color|reference" />
     <attr name="message_sent_background_color" format="color|reference" />
     <attr name="message_sent_text_color" format="color|reference" />
+    <attr name="message_status_color" format="color|reference" />
     <attr name="input_bar_background" format="color|reference"/>
     <attr name="input_bar_text_hint" format="color|reference"/>
     <attr name="input_bar_text_user" format="color|reference"/>

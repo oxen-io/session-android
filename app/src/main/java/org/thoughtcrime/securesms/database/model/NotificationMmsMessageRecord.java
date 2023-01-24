@@ -50,12 +50,12 @@ public class NotificationMmsMessageRecord extends MmsMessageRecord {
     long dateSent, long dateReceived, int deliveryReceiptCount,
     long threadId, byte[] contentLocation, long messageSize,
     long expiry, int status, byte[] transactionId, long mailbox,
-    SlideDeck slideDeck, int readReceiptCount)
+    SlideDeck slideDeck, int readReceiptCount, boolean hasMention)
   {
     super(id, "", conversationRecipient, individualRecipient,
       dateSent, dateReceived, threadId, Status.STATUS_NONE, deliveryReceiptCount, mailbox,
             emptyList(), emptyList(),
-      0, 0, slideDeck, readReceiptCount, null, emptyList(), emptyList(), false, emptyList());
+      0, 0, slideDeck, readReceiptCount, null, emptyList(), emptyList(), false, emptyList(), hasMention);
 
     this.contentLocation = contentLocation;
     this.messageSize     = messageSize;

@@ -2,7 +2,7 @@ package org.thoughtcrime.securesms.database
 
 import android.content.ContentValues
 import android.content.Context
-import net.sqlcipher.Cursor
+import android.database.Cursor
 import org.session.libsession.messaging.jobs.AttachmentUploadJob
 import org.session.libsession.messaging.jobs.BackgroundGroupAddJob
 import org.session.libsession.messaging.jobs.GroupAvatarDownloadJob

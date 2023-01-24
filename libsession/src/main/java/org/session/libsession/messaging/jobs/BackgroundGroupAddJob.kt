@@ -41,15 +41,10 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
             }
             // get image
             storage.setOpenGroupPublicKey(openGroup.server, openGroup.serverPublicKey)
-            val (capabilities, info) = OpenGroupApi.getCapabilitiesAndRoomInfo(openGroup.room, openGroup.server, false).get()
-            storage.setServerCapabilities(openGroup.server, capabilities.capabilities)
-            val imageId = info.imageId
-            storage.addOpenGroup(openGroup.joinUrl())
+            val info = storage.addOpenGroup(openGroup.joinUrl())
+            val imageId = info?.imageId
             if (imageId != null) {
-                val bytes = OpenGroupApi.downloadOpenGroupProfilePicture(openGroup.server, openGroup.room, imageId).get()
-                val groupId = GroupUtil.getEncodedOpenGroupID("${openGroup.server}.${openGroup.room}".toByteArray())
-                storage.updateProfilePicture(groupId, bytes)
-                storage.updateTimestampUpdated(groupId, System.currentTimeMillis())
+                JobQueue.shared.add(GroupAvatarDownloadJob(openGroup.room, openGroup.server))
             }
             Log.d(KEY, "onOpenGroupAdded(${openGroup.server})")
             storage.onOpenGroupAdded(openGroup.server)

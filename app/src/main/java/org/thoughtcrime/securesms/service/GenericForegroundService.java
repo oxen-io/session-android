@@ -6,6 +6,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,9 +14,9 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import org.session.libsignal.utilities.Log;
+import org.session.libsignal.utilities.guava.Preconditions;
 import org.thoughtcrime.securesms.home.HomeActivity;
 import org.thoughtcrime.securesms.notifications.NotificationChannels;
-import org.session.libsignal.utilities.guava.Preconditions;
 
 import network.loki.messenger.R;
 
@@ -87,10 +88,10 @@ public class GenericForegroundService extends Service {
   }
 
   private void postObligatoryForegroundNotification(String title, String channelId, @DrawableRes int iconRes) {
-    startForeground(NOTIFICATION_ID, new NotificationCompat.Builder(this, channelId)
+     startForeground(NOTIFICATION_ID, new NotificationCompat.Builder(this, channelId)
                                                            .setSmallIcon(iconRes)
                                                            .setContentTitle(title)
-                                                           .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, HomeActivity.class), 0))
+                                                           .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, HomeActivity.class), PendingIntent.FLAG_IMMUTABLE))
                                                            .build());
   }
 
