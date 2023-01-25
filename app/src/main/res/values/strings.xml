@@ -11,9 +11,9 @@
     <string name="version_s">Version %s</string>
 <!--Accessibility ID's-->
     <!-- Landing Page -->
-    <string name="AccessibilityId_create_session_id">Create Session ID</string>
+    <string name="AccessibilityId_create_session_id">Create session ID</string>
     <string name="AccessibilityId_restore_your_session">Restore Your Session</string>
-    <string name="AccessibilityId_link_a_device">Link a Device</string>
+    <string name="AccessibilityId_link_a_device">Link a device</string>
     <string name="AccessibilityId_link_device">Link Device</string>
     <!-- Session ID Page-->
     <string name="AccessibilityId_session_id">Session ID</string>
@@ -28,6 +28,7 @@
     <!--Create Display Name    -->
     <string name="AccessibilityId_enter_display_name">Enter display name</string>
     <!--Message Notifications Options-->
+    <string name="AccessibilityId_message_notifications">Message Notifications</string>
     <string name="AccessibilityId_fast_mode_notifications_option">Fast mode notifications option</string>
     <string name="AccessibilityId_slow_mode_notifications_option">Slow mode notifications option</string>
     <string name="AccessibilityId_continue_message_notifications">Continue with settings</string>
@@ -35,7 +36,7 @@
     <string name="AccessibilityId_recovery_phrase">Recovery Phrase</string>
     <string name="AccessibilityId_copy_recovery_phrase">Copy Recovery Phrase</string>
     <!--Home Page-->
-    <string name="AccessibilityId_profile_picture">Profile picture</string>
+    <string name="AccessibilityId_profile_picture">User settings</string>
     <string name="AccessibilityId_search_icon">Search icon</string>
     <string name="AccessibilityId_conversation_list_item">Conversation list item</string>
     <string name="AccessibilityId_details">Details</string>
@@ -77,8 +78,8 @@
     <string name="AccessibilityId_decline_message_request_button">Decline message request</string>
     <string name="AccessibilityId_block_message_request_button">Block message request</string>
     <string name="AccessibilityId_timer_icon">Timer icon</string>
-<!--    Control messages -->
-    <string name="AccessibilityId_control_message">Control message</string>
+<!--    Configuration messages -->
+    <string name="AccessibilityId_control_message">Configuration message</string>
     <string name="AccessibilityId_blocked_banner">Blocked banner</string>
     <string name="AccessibilityId_blocked_banner_text">Blocked banner text</string>
     <!--New Session -->
@@ -89,6 +90,7 @@
     <string name="AccessibilityId_continue_group_creation">Continue group creation</string>
     <string name="AccessibilityId_contact">Contact</string>
     <string name="AccessibilityId_select_contact">Select contact</string>
+
     <!--Conversation screen -->
     <string name="AccessibilityId_message_input">Message input box</string>
     <string name="AccessibilityId_microphone_button">Microphone button</string>
@@ -127,6 +129,7 @@
     <string name="AccessibilityId_apply">Apply</string>
     <string name="AccessibilityId_cancel">Cancel</string>
     <string name="AccessibilityId_message_user">Message user</string>
+
 <!--    Recovery Phrase Dialog-->
     <string name="AccessibilityId_cancel_button">Cancel</string>
 
