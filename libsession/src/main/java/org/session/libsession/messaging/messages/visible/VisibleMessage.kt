@@ -24,6 +24,7 @@ class VisibleMessage : Message()  {
     var profile: Profile? = null
     var openGroupInvitation: OpenGroupInvitation? = null
     var reaction: Reaction? = null
+    var hasMention: Boolean = false
 
     override val isSelfSendValid: Boolean = true
 

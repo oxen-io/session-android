@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import androidx.annotation.Nullable;
 
-import net.sqlcipher.database.SQLiteDatabase;
+import net.zetetic.database.sqlcipher.SQLiteDatabase;
 
 import network.loki.messenger.R;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;

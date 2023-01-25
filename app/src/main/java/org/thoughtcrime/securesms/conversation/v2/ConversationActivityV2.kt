@@ -40,6 +40,8 @@ import network.loki.messenger.databinding.ViewVisibleMessageBinding
 import nl.komponents.kovenant.ui.successUi
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
+import org.session.libsession.messaging.jobs.AttachmentDownloadJob
+import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.mentions.Mention
 import org.session.libsession.messaging.mentions.MentionsManager
 import org.session.libsession.messaging.messages.control.DataExtractionNotification
@@ -250,6 +252,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     onDeselect(message, position, it)
                 }
             },
+            onAttachmentNeedsDownload = { attachmentId, mmsId ->
+                // Start download (on IO thread)
+                lifecycleScope.launch(Dispatchers.IO) {
+                    JobQueue.shared.add(AttachmentDownloadJob(attachmentId, mmsId))
+                }
+            },
             glide = glide,
             lifecycleCoroutineScope = lifecycleScope
         )
@@ -307,11 +315,24 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         restoreDraftIfNeeded()
         setUpUiStateObserver()
         binding!!.scrollToBottomButton.setOnClickListener {
-            val layoutManager = binding?.conversationRecyclerView?.layoutManager ?: return@setOnClickListener
+            val layoutManager = (binding?.conversationRecyclerView?.layoutManager as? LinearLayoutManager) ?: return@setOnClickListener
+
             if (layoutManager.isSmoothScrolling) {
                 binding?.conversationRecyclerView?.scrollToPosition(0)
             } else {
-                binding?.conversationRecyclerView?.smoothScrollToPosition(0)
+                // It looks like 'smoothScrollToPosition' will actually load all intermediate items in
+                // order to do the scroll, this can be very slow if there are a lot of messages so
+                // instead we check the current position and if there are more than 10 items to scroll
+                // we jump instantly to the 10th item and scroll from there (this should happen quick
+                // enough to give a similar scroll effect without having to load everything)
+                val position = layoutManager.findFirstVisibleItemPosition()
+                if (position > 10) {
+                    binding?.conversationRecyclerView?.scrollToPosition(10)
+                }
+
+                binding?.conversationRecyclerView?.post {
+                    binding?.conversationRecyclerView?.smoothScrollToPosition(0)
+                }
             }
         }
         unreadCount = mmsSmsDb.getUnreadCount(viewModel.threadId)
@@ -343,7 +364,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         super.onResume()
         ApplicationContext.getInstance(this).messageNotifier.setVisibleThread(viewModel.threadId)
         val recipient = viewModel.recipient ?: return
-        threadDb.markAllAsRead(viewModel.threadId, recipient.isOpenGroupRecipient)
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            threadDb.markAllAsRead(viewModel.threadId, recipient.isOpenGroupRecipient)
+        }
+
         contentResolver.registerContentObserver(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             true,
@@ -436,6 +461,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     // called from onCreate
     private fun setUpInputBar() {
+        binding!!.inputBar.isVisible =  viewModel.openGroup == null || viewModel.openGroup?.canWrite == true
         binding!!.inputBar.delegate = this
         binding!!.inputBarRecordingView.delegate = this
         // GIF button

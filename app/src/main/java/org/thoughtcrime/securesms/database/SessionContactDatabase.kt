@@ -3,7 +3,7 @@ package org.thoughtcrime.securesms.database
 import android.content.ContentValues
 import android.content.Context
 import androidx.core.database.getStringOrNull
-import net.sqlcipher.Cursor
+import android.database.Cursor
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsignal.utilities.Base64
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
@@ -75,21 +75,6 @@ class SessionContactDatabase(context: Context, helper: SQLCipherOpenHelper) : Da
     }
 
     fun contactFromCursor(cursor: Cursor): Contact {
-        val sessionID = cursor.getString(sessionID)
-        val contact = Contact(sessionID)
-        contact.name = cursor.getStringOrNull(name)
-        contact.nickname = cursor.getStringOrNull(nickname)
-        contact.profilePictureURL = cursor.getStringOrNull(profilePictureURL)
-        contact.profilePictureFileName = cursor.getStringOrNull(profilePictureFileName)
-        cursor.getStringOrNull(profilePictureEncryptionKey)?.let {
-            contact.profilePictureEncryptionKey = Base64.decode(it)
-        }
-        contact.threadID = cursor.getLong(threadID)
-        contact.isTrusted = cursor.getInt(isTrusted) != 0
-        return contact
-    }
-
-    fun contactFromCursor(cursor: android.database.Cursor): Contact {
         val sessionID = cursor.getString(cursor.getColumnIndexOrThrow(sessionID))
         val contact = Contact(sessionID)
         contact.name = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(name))

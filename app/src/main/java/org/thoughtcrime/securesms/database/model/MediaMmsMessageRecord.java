@@ -57,12 +57,12 @@ public class MediaMmsMessageRecord extends MmsMessageRecord {
                                long expiresIn, long expireStarted, int readReceiptCount,
                                @Nullable Quote quote, @NonNull List<Contact> contacts,
                                @NonNull List<LinkPreview> linkPreviews,
-                               @NonNull List<ReactionRecord> reactions, boolean unidentified)
+                               @NonNull List<ReactionRecord> reactions, boolean unidentified, boolean hasMention)
   {
     super(id, body, conversationRecipient, individualRecipient, dateSent,
       dateReceived, threadId, Status.STATUS_NONE, deliveryReceiptCount, mailbox, mismatches, failures,
       expiresIn, expireStarted, slideDeck, readReceiptCount, quote, contacts,
-      linkPreviews, unidentified, reactions);
+      linkPreviews, unidentified, reactions, hasMention);
     this.partCount = partCount;
   }
 

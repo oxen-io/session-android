@@ -34,6 +34,8 @@ class ProfilePictureView @JvmOverloads constructor(
     private val profilePicturesCache = mutableMapOf<String, String?>()
     private val unknownRecipientDrawable = ResourceContactPhoto(R.drawable.ic_profile_default)
         .asDrawable(context, ContactColors.UNKNOWN_COLOR.toConversationColor(context), false)
+    private val unknownOpenGroupDrawable = ResourceContactPhoto(R.drawable.ic_notification)
+        .asDrawable(context, ContactColors.UNKNOWN_COLOR.toConversationColor(context), false)
 
     // endregion
 
@@ -43,10 +45,8 @@ class ProfilePictureView @JvmOverloads constructor(
             val contact = DatabaseComponent.get(context).sessionContactDatabase().getContactWithSessionID(publicKey)
             return contact?.displayName(Contact.ContactContext.REGULAR) ?: publicKey
         }
-        fun isOpenGroupWithProfilePicture(recipient: Recipient): Boolean {
-            return recipient.isOpenGroupRecipient && recipient.groupAvatarId != null
-        }
-        if (recipient.isGroupRecipient && !isOpenGroupWithProfilePicture(recipient)) {
+
+        if (recipient.isClosedGroupRecipient) {
             val members = DatabaseComponent.get(context).groupDatabase()
                     .getGroupMemberAddresses(recipient.address.toGroupString(), true)
                     .sorted()
@@ -107,7 +107,7 @@ class ProfilePictureView @JvmOverloads constructor(
             if (profilePicturesCache.containsKey(publicKey) && profilePicturesCache[publicKey] == recipient.profileAvatar) return
             val signalProfilePicture = recipient.contactPhoto
             val avatar = (signalProfilePicture as? ProfileContactPhoto)?.avatarObject
-            val placeholder = PlaceholderAvatarPhoto(context, publicKey, displayName ?: "${publicKey.take(4)}...${publicKey.takeLast(4)}")
+
             if (signalProfilePicture != null && avatar != "0" && avatar != "") {
                 glide.clear(imageView)
                 glide.load(signalProfilePicture)
@@ -117,7 +117,12 @@ class ProfilePictureView @JvmOverloads constructor(
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .circleCrop()
                     .into(imageView)
+            } else if (recipient.isOpenGroupRecipient && recipient.groupAvatarId == null) {
+                glide.clear(imageView)
+                imageView.setImageDrawable(unknownOpenGroupDrawable)
             } else {
+                val placeholder = PlaceholderAvatarPhoto(context, publicKey, displayName ?: "${publicKey.take(4)}...${publicKey.takeLast(4)}")
+
                 glide.clear(imageView)
                 glide.load(placeholder)
                     .placeholder(unknownRecipientDrawable)

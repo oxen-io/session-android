@@ -8,7 +8,7 @@ import androidx.annotation.WorkerThread
 import com.annimon.stream.function.Consumer
 import com.annimon.stream.function.Predicate
 import com.google.protobuf.ByteString
-import net.sqlcipher.database.SQLiteDatabase
+import net.zetetic.database.sqlcipher.SQLiteDatabase
 import org.greenrobot.eventbus.EventBus
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId

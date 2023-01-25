@@ -13,6 +13,11 @@ class ScreenshotObserver(private val context: Context, handler: Handler, private
     override fun onChange(selfChange: Boolean, uri: Uri?) {
         super.onChange(selfChange, uri)
         uri ?: return
+
+        // There is an odd bug where we can get notified for changes to 'content://media/external'
+        // directly which is a protected folder, this code is to prevent that crash
+        if (uri.scheme == "content" && uri.host == "media" && uri.path == "/external") { return }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             queryRelativeDataColumn(uri)
         } else {

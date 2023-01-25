@@ -93,7 +93,7 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
             val backgroundColor = context.getAccentColor()
             binding.quoteViewAttachmentPreviewContainer.backgroundTintList = ColorStateList.valueOf(backgroundColor)
             binding.quoteViewAttachmentPreviewImageView.isVisible = false
-            binding.quoteViewAttachmentThumbnailImageView.isVisible = false
+            binding.quoteViewAttachmentThumbnailImageView.root.isVisible = false
             when {
                 attachments.audioSlide != null -> {
                     binding.quoteViewAttachmentPreviewImageView.setImageResource(R.drawable.ic_microphone)
@@ -108,9 +108,9 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                 attachments.thumbnailSlide != null -> {
                     val slide = attachments.thumbnailSlide!!
                     // This internally fetches the thumbnail
-                    binding.quoteViewAttachmentThumbnailImageView.radius = toPx(4, resources)
-                    binding.quoteViewAttachmentThumbnailImageView.setImageResource(glide, slide, false, false)
-                    binding.quoteViewAttachmentThumbnailImageView.isVisible = true
+                    binding.quoteViewAttachmentThumbnailImageView.root.radius = toPx(4, resources)
+                    binding.quoteViewAttachmentThumbnailImageView.root.setImageResource(glide, slide, false, null)
+                    binding.quoteViewAttachmentThumbnailImageView.root.isVisible = true
                     binding.quoteViewBodyTextView.text = if (MediaUtil.isVideo(slide.asAttachment())) resources.getString(R.string.Slide_video) else resources.getString(R.string.Slide_image)
                 }
             }

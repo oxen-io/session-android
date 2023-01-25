@@ -49,6 +49,14 @@ class ReactionDatabase(context: Context, helper: SQLCipherOpenHelper) : Database
     """.trimIndent()
 
     @JvmField
+    val CREATE_INDEXS = arrayOf(
+      "CREATE INDEX IF NOT EXISTS reaction_message_id_index ON " + ReactionDatabase.TABLE_NAME + " (" + ReactionDatabase.MESSAGE_ID + ");",
+      "CREATE INDEX IF NOT EXISTS reaction_is_mms_index ON " + ReactionDatabase.TABLE_NAME + " (" + ReactionDatabase.IS_MMS + ");",
+      "CREATE INDEX IF NOT EXISTS reaction_message_id_is_mms_index ON " + ReactionDatabase.TABLE_NAME + " (" + ReactionDatabase.MESSAGE_ID + ", " + ReactionDatabase.IS_MMS + ");",
+      "CREATE INDEX IF NOT EXISTS reaction_sort_id_index ON " + ReactionDatabase.TABLE_NAME + " (" + ReactionDatabase.SORT_ID + ");",
+    )
+
+    @JvmField
     val CREATE_REACTION_TRIGGERS = arrayOf(
       """
         CREATE TRIGGER reactions_sms_delete AFTER DELETE ON ${SmsDatabase.TABLE_NAME} 

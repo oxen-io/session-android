@@ -1,54 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/mainLinkPreviewContainer"
+<org.thoughtcrime.securesms.conversation.v2.messages.LinkPreviewView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainLinkPreviewContainer"
+    android:background="@color/transparent_black_6"
     android:layout_width="300dp"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="horizontal"
+    android:gravity="center">
 
-    <LinearLayout
-        android:background="@color/transparent_black_6"
-        android:id="@+id/mainLinkPreviewParent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+    <RelativeLayout
+        android:layout_width="96dp"
+        android:layout_height="96dp">
 
-        <RelativeLayout
-            android:layout_width="96dp"
-            android:layout_height="96dp">
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_link"
+            app:tint="?android:textColorPrimary" />
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_link"
-                app:tint="?android:textColorPrimary" />
-
-            <org.thoughtcrime.securesms.conversation.v2.utilities.KThumbnailView
-                android:background="@color/transparent_black_6"
-                android:id="@+id/thumbnailImageView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
-
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/titleTextView"
+        <include layout="@layout/thumbnail_view"
+            android:background="@color/transparent_black_6"
+            android:id="@+id/thumbnailImageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingHorizontal="12dp"
-            android:gravity="center_vertical"
-            android:textSize="@dimen/small_font_size"
-            android:textStyle="bold"
-            tools:text="Some Text here"
-            android:minWidth="@dimen/media_bubble_min_width"
-            android:maxLines="3"
-            android:ellipsize="end"
-            android:textColor="?android:textColorPrimary"/>
+            android:scaleType="centerCrop" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="12dp"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/small_font_size"
+        android:textStyle="bold"
+        tools:text="Some Text here"
+        android:minWidth="@dimen/media_bubble_min_width"
+        android:maxLines="3"
+        android:ellipsize="end"
+        android:textColor="?android:textColorPrimary"/>
+
+</org.thoughtcrime.securesms.conversation.v2.messages.LinkPreviewView>

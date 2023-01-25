@@ -25,17 +25,17 @@ import org.thoughtcrime.securesms.util.getAccentColor
 import java.util.Locale
 
 class ConversationView : LinearLayout {
-    private lateinit var binding: ViewConversationBinding
+    private val binding: ViewConversationBinding by lazy { ViewConversationBinding.bind(this) }
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels
     var thread: ThreadRecord? = null
 
     // region Lifecycle
-    constructor(context: Context) : super(context) { initialize() }
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) { initialize() }
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) { initialize() }
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    private fun initialize() {
-        binding = ViewConversationBinding.inflate(LayoutInflater.from(context), this, true)
+    override fun onFinishInflate() {
+        super.onFinishInflate()
         layoutParams = RecyclerView.LayoutParams(screenWidth, RecyclerView.LayoutParams.WRAP_CONTENT)
     }
     // endregion
@@ -53,7 +53,7 @@ class ConversationView : LinearLayout {
         } else {
             binding.conversationViewDisplayNameTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
         }
-        background = if (thread.unreadCount > 0) {
+        binding.root.background = if (thread.unreadCount > 0) {
             ContextCompat.getDrawable(context, R.drawable.conversation_unread_background)
         } else {
             ContextCompat.getDrawable(context, R.drawable.conversation_view_background)
@@ -79,8 +79,9 @@ class ConversationView : LinearLayout {
         binding.unreadCountTextView.text = formattedUnreadCount
         val textSize = if (unreadCount < 1000) 12.0f else 10.0f
         binding.unreadCountTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize)
-        binding.unreadCountIndicator.background.setTint(context.getAccentColor())
         binding.unreadCountIndicator.isVisible = (unreadCount != 0 && !thread.isRead)
+        binding.unreadMentionTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize)
+        binding.unreadMentionIndicator.isVisible = (thread.unreadMentionCount != 0 && thread.recipient.address.isGroup)
         val senderDisplayName = getUserDisplayName(thread.recipient)
                 ?: thread.recipient.address.toString()
         binding.conversationViewDisplayNameTextView.text = senderDisplayName
@@ -99,11 +100,11 @@ class ConversationView : LinearLayout {
         binding.snippetTextView.typeface = if (unreadCount > 0 && !thread.isRead) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
         binding.snippetTextView.visibility = if (isTyping) View.GONE else View.VISIBLE
         if (isTyping) {
-            binding.typingIndicatorView.startAnimation()
+            binding.typingIndicatorView.root.startAnimation()
         } else {
-            binding.typingIndicatorView.stopAnimation()
+            binding.typingIndicatorView.root.stopAnimation()
         }
-        binding.typingIndicatorView.visibility = if (isTyping) View.VISIBLE else View.GONE
+        binding.typingIndicatorView.root.visibility = if (isTyping) View.VISIBLE else View.GONE
         binding.statusIndicatorImageView.visibility = View.VISIBLE
         when {
             !thread.isOutgoing -> binding.statusIndicatorImageView.visibility = View.GONE

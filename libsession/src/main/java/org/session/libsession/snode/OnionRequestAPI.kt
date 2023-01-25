@@ -78,8 +78,8 @@ object OnionRequestAPI {
     // endregion
 
     class HTTPRequestFailedBlindingRequiredException(statusCode: Int, json: Map<*, *>, destination: String): HTTPRequestFailedAtDestinationException(statusCode, json, destination)
-    open class HTTPRequestFailedAtDestinationException(val statusCode: Int, val json: Map<*, *>, val destination: String)
-        : Exception("HTTP request failed at destination ($destination) with status code $statusCode.")
+    open class HTTPRequestFailedAtDestinationException(statusCode: Int, json: Map<*, *>, val destination: String)
+        : HTTP.HTTPRequestFailedException(statusCode, json, "HTTP request failed at destination ($destination) with status code $statusCode.")
     class InsufficientSnodesException : Exception("Couldn't find enough snodes to build a path.")
 
     private data class OnionBuildingResult(

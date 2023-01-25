@@ -141,22 +141,25 @@
 
     <color name="ocean_accent">#57C9FA</color>
 
-    <color name="ocean_dark_0">#111111</color>
+    <color name="ocean_dark_0">#000000</color>
     <color name="ocean_dark_1">#1A1C28</color>
     <color name="ocean_dark_2">#252735</color>
     <color name="ocean_dark_3">#2B2D40</color>
     <color name="ocean_dark_4">#3D4A5D</color>
     <color name="ocean_dark_5">#A6A9CE</color>
-    <color name="ocean_dark_6">#FFFFFF</color>
+    <color name="ocean_dark_6">#5CAACC</color>
+    <color name="ocean_dark_7">#FFFFFF</color>
 
-    <color name="ocean_light_0">#19345D</color>
-    <color name="ocean_light_1">#6A6E90</color>
-    <color name="ocean_light_2">#5CAACC</color>
-    <color name="ocean_light_3">#B3EDF2</color>
-    <color name="ocean_light_4">#E7F3F4</color>
-    <color name="ocean_light_5">#ECFAFB</color>
-    <color name="ocean_light_6">#FCFFFF</color>
+    <color name="ocean_light_0">#000000</color>
+    <color name="ocean_light_1">#19345D</color>
+    <color name="ocean_light_2">#6A6E90</color>
+    <color name="ocean_light_3">#5CAACC</color>
+    <color name="ocean_light_4">#B3EDF2</color>
+    <color name="ocean_light_5">#E7F3F4</color>
+    <color name="ocean_light_6">#ECFAFB</color>
+    <color name="ocean_light_7">#FCFFFF</color>
 
-    <color name="danger">#EA5545</color>
+    <color name="danger_dark">#FF3A3A</color>
+    <color name="danger_light">#E12D19</color>
 
 </resources>

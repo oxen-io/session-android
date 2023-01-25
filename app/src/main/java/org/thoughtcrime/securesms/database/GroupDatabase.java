@@ -1,6 +1,5 @@
 package org.thoughtcrime.securesms.database;
 
-
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,7 +11,7 @@ import androidx.annotation.Nullable;
 
 import com.annimon.stream.Stream;
 
-import net.sqlcipher.database.SQLiteDatabase;
+import net.zetetic.database.sqlcipher.SQLiteDatabase;
 
 import org.jetbrains.annotations.NotNull;
 import org.session.libsession.utilities.Address;
@@ -317,6 +316,19 @@ public class GroupDatabase extends Database implements LokiOpenGroupDatabaseProt
 
     Recipient.applyCached(Address.fromSerialized(groupID), recipient -> recipient.setGroupAvatarId(avatarId == 0 ? null : avatarId));
     notifyConversationListListeners();
+  }
+
+  public boolean hasDownloadedProfilePicture(String groupId) {
+    try (Cursor cursor = databaseHelper.getReadableDatabase().query(TABLE_NAME, new String[]{AVATAR}, GROUP_ID + " = ?",
+            new String[] {groupId},
+            null, null, null))
+    {
+      if (cursor != null && cursor.moveToNext()) {
+        return !cursor.isNull(0);
+      }
+
+      return false;
+    }
   }
 
   public void updateMembers(String groupId, List<Address> members) {

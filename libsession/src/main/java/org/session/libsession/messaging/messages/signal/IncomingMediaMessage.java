@@ -29,6 +29,7 @@ public class IncomingMediaMessage {
   private final boolean       expirationUpdate;
   private final boolean       unidentified;
   private final boolean       messageRequestResponse;
+  private final boolean       hasMention;
 
   private final DataExtractionNotificationInfoMessage dataExtractionNotification;
   private final QuoteModel                            quote;
@@ -44,6 +45,7 @@ public class IncomingMediaMessage {
                               boolean expirationUpdate,
                               boolean unidentified,
                               boolean messageRequestResponse,
+                              boolean hasMention,
                               Optional<String> body,
                               Optional<SignalServiceGroup> group,
                               Optional<List<SignalServiceAttachment>> attachments,
@@ -63,6 +65,7 @@ public class IncomingMediaMessage {
     this.quote                      = quote.orNull();
     this.unidentified               = unidentified;
     this.messageRequestResponse     = messageRequestResponse;
+    this.hasMention                 = hasMention;
 
     if (group.isPresent()) this.groupId = Address.fromSerialized(GroupUtil.INSTANCE.getEncodedId(group.get()));
     else                   this.groupId = null;
@@ -81,7 +84,8 @@ public class IncomingMediaMessage {
                                           Optional<List<LinkPreview>> linkPreviews)
   {
     return new IncomingMediaMessage(from, message.getSentTimestamp(), -1, expiresIn, false,
-            false, false, Optional.fromNullable(message.getText()), group, Optional.fromNullable(attachments), quote, Optional.absent(), linkPreviews, Optional.absent());
+            false, false, message.getHasMention(), Optional.fromNullable(message.getText()),
+            group, Optional.fromNullable(attachments), quote, Optional.absent(), linkPreviews, Optional.absent());
   }
 
   public int getSubscriptionId() {
@@ -122,6 +126,10 @@ public class IncomingMediaMessage {
 
   public boolean isGroupMessage() {
     return groupId != null;
+  }
+
+  public boolean hasMention() {
+    return hasMention;
   }
 
   public boolean isScreenshotDataExtraction() {

@@ -233,7 +233,9 @@ message ConfigurationMessage {
 
 message MessageRequestResponse {
   // @required
-  required bool   isApproved  = 1; // Whether the request was approved
+  required bool                    isApproved = 1;
+  optional bytes                   profileKey = 2;
+  optional DataMessage.LokiProfile profile    = 3;
 }
 
 message ReceiptMessage {

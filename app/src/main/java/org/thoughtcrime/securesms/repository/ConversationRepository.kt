@@ -35,6 +35,7 @@ interface ConversationRepository {
     fun maybeGetRecipientForThreadId(threadId: Long): Recipient?
     fun saveDraft(threadId: Long, text: String)
     fun getDraft(threadId: Long): String?
+    fun clearDrafts(threadId: Long)
     fun inviteContacts(threadId: Long, contacts: List<Recipient>)
     fun setBlocked(recipient: Recipient, blocked: Boolean)
     fun deleteLocally(recipient: Recipient, message: MessageRecord)
@@ -98,8 +99,11 @@ class DefaultConversationRepository @Inject constructor(
 
     override fun getDraft(threadId: Long): String? {
         val drafts = draftDb.getDrafts(threadId)
-        draftDb.clearDrafts(threadId)
         return drafts.find { it.type == DraftDatabase.Draft.TEXT }?.value
+    }
+
+    override fun clearDrafts(threadId: Long) {
+        draftDb.clearDrafts(threadId)
     }
 
     override fun inviteContacts(threadId: Long, contacts: List<Recipient>) {

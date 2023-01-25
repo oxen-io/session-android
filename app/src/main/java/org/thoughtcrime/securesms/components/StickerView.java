@@ -52,19 +52,4 @@ public class StickerView extends FrameLayout {
   public void setOnLongClickListener(@Nullable OnLongClickListener l) {
     image.setOnLongClickListener(l);
   }
-
-  public void setSticker(@NonNull GlideRequests glideRequests, @NonNull Slide stickerSlide) {
-    boolean showControls = stickerSlide.asAttachment().getDataUri() == null;
-
-    image.setImageResource(glideRequests, stickerSlide, showControls, false);
-    missingShade.setVisibility(showControls ? View.VISIBLE : View.GONE);
-  }
-
-  public void setThumbnailClickListener(@NonNull SlideClickListener listener) {
-    image.setThumbnailClickListener(listener);
-  }
-
-  public void setDownloadClickListener(@NonNull SlidesClickedListener listener) {
-    image.setDownloadClickListener(listener);
-  }
 }

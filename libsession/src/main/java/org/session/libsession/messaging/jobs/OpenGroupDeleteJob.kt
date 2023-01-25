@@ -23,14 +23,27 @@ class OpenGroupDeleteJob(private val messageServerIds: LongArray, private val th
         val dataProvider = MessagingModuleConfiguration.shared.messageDataProvider
         val numberToDelete = messageServerIds.size
         Log.d(TAG, "Deleting $numberToDelete messages")
-        var numberDeleted = 0
-        messageServerIds.forEach { serverId ->
-            val (messageId, isSms) = dataProvider.getMessageID(serverId, threadId) ?: return@forEach
-            dataProvider.deleteMessage(messageId, isSms)
-            numberDeleted++
+
+        // FIXME: This entire process should probably run in a transaction (with the attachment deletion happening only if it succeeded)
+        try {
+            val messageIds = dataProvider.getMessageIDs(messageServerIds.toList(), threadId)
+
+            // Delete the SMS messages
+            if (messageIds.first.isNotEmpty()) {
+                dataProvider.deleteMessages(messageIds.first, threadId, true)
+            }
+
+            // Delete the MMS messages
+            if (messageIds.second.isNotEmpty()) {
+                dataProvider.deleteMessages(messageIds.second, threadId, false)
+            }
+
+            Log.d(TAG, "Deleted ${messageIds.first.size + messageIds.second.size} messages successfully")
+            delegate?.handleJobSucceeded(this)
         }
-        Log.d(TAG, "Deleted $numberDeleted messages successfully")
-        delegate?.handleJobSucceeded(this)
+        catch (e: Exception) {
+            delegate?.handleJobFailed(this, e)
+        }
     }
 
     override fun serialize(): Data = Data.Builder()

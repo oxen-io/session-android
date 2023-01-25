@@ -8,9 +8,13 @@ import org.session.libsession.messaging.jobs.MessageSendJob
 import org.session.libsession.messaging.jobs.NotifyPNServerJob
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.Message
-import org.session.libsession.messaging.messages.control.*
+import org.session.libsession.messaging.messages.control.CallMessage
+import org.session.libsession.messaging.messages.control.ClosedGroupControlMessage
+import org.session.libsession.messaging.messages.control.ConfigurationMessage
+import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
+import org.session.libsession.messaging.messages.control.MessageRequestResponse
+import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.visible.LinkPreview
-import org.session.libsession.messaging.messages.visible.Profile
 import org.session.libsession.messaging.messages.visible.Quote
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.OpenGroupApi
@@ -109,14 +113,10 @@ object MessageSender {
             }
             // Attach the user's profile if needed
             if (message is VisibleMessage) {
-                val displayName = storage.getUserDisplayName()!!
-                val profileKey = storage.getUserProfileKey()
-                val profilePictureUrl = storage.getUserProfilePictureURL()
-                if (profileKey != null && profilePictureUrl != null) {
-                    message.profile = Profile(displayName, profileKey, profilePictureUrl)
-                } else {
-                    message.profile = Profile(displayName)
-                }
+                message.profile = storage.getUserProfile()
+            }
+            if (message is MessageRequestResponse) {
+                message.profile = storage.getUserProfile()
             }
             // Convert it to protobuf
             val proto = message.toProto() ?: throw Error.ProtoConversionFailed
@@ -248,14 +248,7 @@ object MessageSender {
         try {
             // Attach the user's profile if needed
             if (message is VisibleMessage) {
-                val displayName = storage.getUserDisplayName()!!
-                val profileKey = storage.getUserProfileKey()
-                val profilePictureUrl = storage.getUserProfilePictureURL()
-                if (profileKey != null && profilePictureUrl != null) {
-                    message.profile = Profile(displayName, profileKey, profilePictureUrl)
-                } else {
-                    message.profile = Profile(displayName)
-                }
+                message.profile = storage.getUserProfile()
             }
             when (destination) {
                 is Destination.OpenGroup -> {

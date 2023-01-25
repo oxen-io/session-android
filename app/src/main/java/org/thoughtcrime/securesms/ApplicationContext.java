@@ -47,6 +47,7 @@ import org.session.libsession.utilities.Util;
 import org.session.libsession.utilities.WindowDebouncer;
 import org.session.libsession.utilities.dynamiclanguage.DynamicLanguageContextWrapper;
 import org.session.libsession.utilities.dynamiclanguage.LocaleParser;
+import org.session.libsignal.utilities.HTTP;
 import org.session.libsignal.utilities.JsonUtil;
 import org.session.libsignal.utilities.Log;
 import org.session.libsignal.utilities.ThreadUtils;
@@ -57,6 +58,7 @@ import org.thoughtcrime.securesms.database.EmojiSearchDatabase;
 import org.thoughtcrime.securesms.database.JobDatabase;
 import org.thoughtcrime.securesms.database.LokiAPIDatabase;
 import org.thoughtcrime.securesms.database.Storage;
+import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 import org.thoughtcrime.securesms.database.model.EmojiSearchData;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import org.thoughtcrime.securesms.dependencies.DatabaseModule;
@@ -66,6 +68,7 @@ import org.thoughtcrime.securesms.groups.OpenGroupMigrator;
 import org.thoughtcrime.securesms.home.HomeActivity;
 import org.thoughtcrime.securesms.jobmanager.JobManager;
 import org.thoughtcrime.securesms.jobmanager.impl.JsonDataSerializer;
+import org.thoughtcrime.securesms.jobmanager.impl.NetworkConstraint;
 import org.thoughtcrime.securesms.jobs.FastJobStorage;
 import org.thoughtcrime.securesms.jobs.JobManagerFactories;
 import org.thoughtcrime.securesms.logging.AndroidLogger;
@@ -236,6 +239,9 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         resubmitProfilePictureIfNeeded();
         loadEmojiSearchIndexIfNeeded();
         EmojiSource.refresh();
+
+        NetworkConstraint networkConstraint = new NetworkConstraint.Factory(this).create();
+        HTTP.INSTANCE.setConnectedToNetwork(networkConstraint::isMet);
     }
 
     @Override
@@ -243,6 +249,12 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         isAppVisible = true;
         Log.i(TAG, "App is now visible.");
         KeyCachingService.onAppForegrounded(this);
+
+        // If the user account hasn't been created or onboarding wasn't finished then don't start
+        // the pollers
+        if (TextSecurePreferences.getLocalNumber(this) == null || !TextSecurePreferences.hasSeenWelcomeScreen(this)) {
+            return;
+        }
 
         ThreadUtils.queue(()->{
             if (poller != null) {
@@ -537,7 +549,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
             TextSecurePreferences.setProfileName(this, displayName);
         }
         getSharedPreferences(PREFERENCES_NAME, 0).edit().clear().commit();
-        if (!deleteDatabase("signal.db")) {
+        if (!deleteDatabase(SQLCipherOpenHelper.DATABASE_NAME)) {
             Log.d("Loki", "Failed to delete database.");
         }
         Util.runOnMain(() -> new Handler().postDelayed(ApplicationContext.this::restartApplication, 200));

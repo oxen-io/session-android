@@ -356,17 +356,19 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         db.update(TABLE_NAME, contentValues, ID_WHERE, arrayOf(messageId.toString()))
     }
 
-    override fun markAsDeleted(messageId: Long, read: Boolean) {
+    override fun markAsDeleted(messageId: Long, read: Boolean, hasMention: Boolean) {
         val database = databaseHelper.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(READ, 1)
         contentValues.put(BODY, "")
+        contentValues.put(HAS_MENTION, 0)
         database.update(TABLE_NAME, contentValues, ID_WHERE, arrayOf(messageId.toString()))
         val attachmentDatabase = get(context).attachmentDatabase()
         queue(Runnable { attachmentDatabase.deleteAttachmentsForMessage(messageId) })
         val threadId = getThreadIdForMessage(messageId)
         if (!read) {
-            get(context).threadDatabase().decrementUnread(threadId, 1)
+            val mentionChange = if (hasMention) { 1 } else { 0 }
+            get(context).threadDatabase().decrementUnread(threadId, 1, mentionChange)
         }
         updateMailboxBitmask(
             messageId,
@@ -659,6 +661,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         contentValues.put(EXPIRES_IN, retrieved.expiresIn)
         contentValues.put(READ, if (retrieved.isExpirationUpdate) 1 else 0)
         contentValues.put(UNIDENTIFIED, retrieved.isUnidentified)
+        contentValues.put(HAS_MENTION, retrieved.hasMention())
         contentValues.put(MESSAGE_REQUEST_RESPONSE, retrieved.isMessageRequestResponse)
         if (!contentValues.containsKey(DATE_SENT)) {
             contentValues.put(DATE_SENT, contentValues.getAsLong(DATE_RECEIVED))
@@ -690,7 +693,8 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         )
         if (!MmsSmsColumns.Types.isExpirationTimerUpdate(mailbox)) {
             if (runIncrement) {
-                get(context).threadDatabase().incrementUnread(threadId, 1)
+                val mentionAmount = if (retrieved.hasMention()) { 1 } else { 0 }
+                get(context).threadDatabase().incrementUnread(threadId, 1, mentionAmount)
             }
             if (runThreadUpdate) {
                 get(context).threadDatabase().update(threadId, true)
@@ -995,6 +999,23 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         return threadDeleted
     }
 
+    override fun deleteMessages(messageIds: LongArray, threadId: Long): Boolean {
+        val attachmentDatabase = get(context).attachmentDatabase()
+        val groupReceiptDatabase = get(context).groupReceiptDatabase()
+
+        queue(Runnable { attachmentDatabase.deleteAttachmentsForMessages(messageIds) })
+        groupReceiptDatabase.deleteRowsForMessages(messageIds)
+
+        val database = databaseHelper.writableDatabase
+        database!!.delete(TABLE_NAME, ID_IN, arrayOf(messageIds.joinToString(",")))
+
+        val threadDeleted = get(context).threadDatabase().update(threadId, false)
+        notifyConversationListeners(threadId)
+        notifyStickerListeners()
+        notifyStickerPackListeners()
+        return threadDeleted
+    }
+
     override fun updateThreadId(fromId: Long, toId: Long) {
         val contentValues = ContentValues(1)
         contentValues.put(THREAD_ID, toId)
@@ -1272,7 +1293,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                         message.outgoingQuote!!.missing,
                         SlideDeck(context, message.outgoingQuote!!.attachments!!)
                     ) else null,
-                    message.sharedContacts, message.linkPreviews, listOf(), false
+                    message.sharedContacts, message.linkPreviews, listOf(), false, false
                 )
             }
 
@@ -1316,6 +1337,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             )
             var readReceiptCount = cursor.getInt(cursor.getColumnIndexOrThrow(READ_RECEIPT_COUNT))
             val subscriptionId = cursor.getInt(cursor.getColumnIndexOrThrow(SUBSCRIPTION_ID))
+            val hasMention = (cursor.getInt(cursor.getColumnIndexOrThrow(HAS_MENTION)) == 1)
             if (!isReadReceiptsEnabled(context)) {
                 readReceiptCount = 0
             }
@@ -1333,7 +1355,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                 dateSent, dateReceived, deliveryReceiptCount, threadId,
                 contentLocationBytes, messageSize, expiry, status,
                 transactionIdBytes, mailbox, slideDeck,
-                readReceiptCount
+                readReceiptCount, hasMention
             )
         }
 
@@ -1367,6 +1389,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             val expiresIn = cursor.getLong(cursor.getColumnIndexOrThrow(EXPIRES_IN))
             val expireStarted = cursor.getLong(cursor.getColumnIndexOrThrow(EXPIRE_STARTED))
             val unidentified = cursor.getInt(cursor.getColumnIndexOrThrow(UNIDENTIFIED)) == 1
+            val hasMention = cursor.getInt(cursor.getColumnIndexOrThrow(HAS_MENTION)) == 1
             if (!isReadReceiptsEnabled(context)) {
                 readReceiptCount = 0
             }
@@ -1403,7 +1426,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                 addressDeviceId, dateSent, dateReceived, deliveryReceiptCount,
                 threadId, body, slideDeck!!, partCount, box, mismatches,
                 networkFailures, subscriptionId, expiresIn, expireStarted,
-                readReceiptCount, quote, contacts, previews, reactions, unidentified
+                readReceiptCount, quote, contacts, previews, reactions, unidentified, hasMention
             )
         }
 
@@ -1596,5 +1619,6 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         const val CREATE_MESSAGE_REQUEST_RESPONSE_COMMAND = "ALTER TABLE $TABLE_NAME ADD COLUMN $MESSAGE_REQUEST_RESPONSE INTEGER DEFAULT 0;"
         const val CREATE_REACTIONS_UNREAD_COMMAND = "ALTER TABLE $TABLE_NAME ADD COLUMN $REACTIONS_UNREAD INTEGER DEFAULT 0;"
         const val CREATE_REACTIONS_LAST_SEEN_COMMAND = "ALTER TABLE $TABLE_NAME ADD COLUMN $REACTIONS_LAST_SEEN INTEGER DEFAULT 0;"
+        const val CREATE_HAS_MENTION_COMMAND = "ALTER TABLE $TABLE_NAME ADD COLUMN $HAS_MENTION INTEGER DEFAULT 0;"
     }
 }

@@ -58,14 +58,14 @@ object OpenGroupManager {
     }
 
     @WorkerThread
-    fun add(server: String, room: String, publicKey: String, context: Context) {
+    fun add(server: String, room: String, publicKey: String, context: Context): OpenGroupApi.RoomInfo? {
         val openGroupID = "$server.$room"
         var threadID = GroupManager.getOpenGroupThreadID(openGroupID, context)
         val storage = MessagingModuleConfiguration.shared.storage
         val threadDB = DatabaseComponent.get(context).lokiThreadDatabase()
         // Check it it's added already
         val existingOpenGroup = threadDB.getOpenGroupChat(threadID)
-        if (existingOpenGroup != null) { return }
+        if (existingOpenGroup != null) { return null }
         // Clear any existing data if needed
         storage.removeLastDeletionServerID(room, server)
         storage.removeLastMessageServerID(room, server)
@@ -73,18 +73,17 @@ object OpenGroupManager {
         storage.removeLastOutboxMessageId(server)
         // Store the public key
         storage.setOpenGroupPublicKey(server, publicKey)
-        // Get capabilities
-        val capabilities = OpenGroupApi.getCapabilities(server).get()
+        // Get capabilities & room info
+        val (capabilities, info) = OpenGroupApi.getCapabilitiesAndRoomInfo(room, server).get()
         storage.setServerCapabilities(server, capabilities.capabilities)
-        // Get room info
-        val info = OpenGroupApi.getRoomInfo(room, server).get()
         storage.setUserCount(room, server, info.activeUsers)
         // Create the group locally if not available already
         if (threadID < 0) {
             threadID = GroupManager.createOpenGroup(openGroupID, context, null, info.name).threadId
         }
-        val openGroup = OpenGroup(server, room, info.name, info.infoUpdates, publicKey)
+        val openGroup = OpenGroup(server = server, room = room, publicKey = publicKey, name = info.name, imageId = info.imageId, canWrite = info.write, infoUpdates = info.infoUpdates)
         threadDB.setOpenGroupChat(openGroup, threadID)
+        return info
     }
 
     fun restartPollerForServer(server: String) {
@@ -130,12 +129,13 @@ object OpenGroupManager {
         }
     }
 
-    fun addOpenGroup(urlAsString: String, context: Context) {
-        val url = HttpUrl.parse(urlAsString) ?: return
+    fun addOpenGroup(urlAsString: String, context: Context): OpenGroupApi.RoomInfo? {
+        val url = HttpUrl.parse(urlAsString) ?: return null
         val server = OpenGroup.getServer(urlAsString)
-        val room = url.pathSegments().firstOrNull() ?: return
-        val publicKey = url.queryParameter("public_key") ?: return
-        add(server.toString().removeSuffix("/"), room, publicKey, context) // assume migrated from calling function
+        val room = url.pathSegments().firstOrNull() ?: return null
+        val publicKey = url.queryParameter("public_key") ?: return null
+
+        return add(server.toString().removeSuffix("/"), room, publicKey, context) // assume migrated from calling function
     }
 
     fun updateOpenGroup(openGroup: OpenGroup, context: Context) {

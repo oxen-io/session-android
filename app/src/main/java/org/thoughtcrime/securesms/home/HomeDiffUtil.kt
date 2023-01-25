@@ -22,22 +22,28 @@ class HomeDiffUtil(
         val newItem = new[newItemPosition]
 
         // return early to save getDisplayBody or expensive calls
-        val sameCount = oldItem.count == newItem.count
-        if (!sameCount) return false
-        val sameUnreads = oldItem.unreadCount == newItem.unreadCount
-        if (!sameUnreads) return false
-        val samePinned = oldItem.isPinned == newItem.isPinned
-        if (!samePinned) return false
-        val sameRecipientHash = oldItem.recipientHash == newItem.recipientHash
-        if (!sameRecipientHash) return false
-        val sameSnippet = oldItem.getDisplayBody(context) == newItem.getDisplayBody(context)
-        if (!sameSnippet) return false
-        val sameSendStatus = oldItem.isFailed == newItem.isFailed && oldItem.isDelivered == newItem.isDelivered
-                && oldItem.isSent == newItem.isSent && oldItem.isPending == newItem.isPending
-        if (!sameSendStatus) return false
+        var isSameItem = true
 
-        // all same
-        return true
+        if (isSameItem) { isSameItem = (oldItem.count == newItem.count) }
+        if (isSameItem) { isSameItem = (oldItem.unreadCount == newItem.unreadCount) }
+        if (isSameItem) { isSameItem = (oldItem.isPinned == newItem.isPinned) }
+
+        // Note: For some reason the 'hashCode' value can change after initialisation so we can't cache it
+        if (isSameItem) { isSameItem = (oldItem.recipient.hashCode() == newItem.recipient.hashCode()) }
+
+        // Note: Two instances of 'SpannableString' may not equate even though their content matches
+        if (isSameItem) { isSameItem = (oldItem.getDisplayBody(context).toString() == newItem.getDisplayBody(context).toString()) }
+
+        if (isSameItem) {
+            isSameItem = (
+                oldItem.isFailed == newItem.isFailed &&
+                oldItem.isDelivered == newItem.isDelivered &&
+                oldItem.isSent == newItem.isSent &&
+                oldItem.isPending == newItem.isPending
+            )
+        }
+
+        return isSameItem
     }
 
 }

@@ -59,7 +59,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
     fun poll(isPostCapabilitiesRetry: Boolean = false): Promise<Unit, Exception> {
         val storage = MessagingModuleConfiguration.shared.storage
         val rooms = storage.getAllOpenGroups().values.filter { it.server == server }.map { it.room }
-        rooms.forEach { downloadGroupAvatarIfNeeded(it) }
+
         return OpenGroupApi.poll(rooms, server).successBackground { responses ->
             responses.filterNot { it.body == null }.forEach { response ->
                 when (response.endpoint) {
@@ -117,15 +117,18 @@ class OpenGroupPoller(private val server: String, private val executorService: S
     ) {
         val storage = MessagingModuleConfiguration.shared.storage
         val groupId = "$server.$roomToken"
+        val dbGroupId = GroupUtil.getEncodedOpenGroupID(groupId.toByteArray())
 
         val existingOpenGroup = storage.getOpenGroup(roomToken, server)
         val publicKey = existingOpenGroup?.publicKey ?: return
         val openGroup = OpenGroup(
             server = server,
             room = pollInfo.token,
-            name = pollInfo.details?.name ?: "",
-            infoUpdates = pollInfo.details?.infoUpdates ?: 0,
+            name = if (pollInfo.details != null) { pollInfo.details.name } else { existingOpenGroup.name },
             publicKey = publicKey,
+            imageId = if (pollInfo.details != null) { pollInfo.details.imageId } else { existingOpenGroup.imageId },
+            canWrite = pollInfo.write,
+            infoUpdates = if (pollInfo.details != null) { pollInfo.details.infoUpdates } else { existingOpenGroup.infoUpdates }
         )
         // - Open Group changes
         storage.updateOpenGroup(openGroup)
@@ -154,6 +157,22 @@ class OpenGroupPoller(private val server: String, private val executorService: S
             storage.setGroupMemberRoles(moderatorList.map {
                 GroupMember(groupId, it, GroupMemberRole.HIDDEN_ADMIN)
             })
+        }
+
+        if (
+            (
+                pollInfo.details != null &&
+                pollInfo.details.imageId != null && (
+                    pollInfo.details.imageId != existingOpenGroup.imageId ||
+                    !storage.hasDownloadedProfilePicture(dbGroupId)
+                )
+            ) || (
+                pollInfo.details == null &&
+                existingOpenGroup.imageId != null &&
+                !storage.hasDownloadedProfilePicture(dbGroupId)
+            )
+        ) {
+            JobQueue.shared.add(GroupAvatarDownloadJob(roomToken, server))
         }
     }
 
@@ -284,16 +303,4 @@ class OpenGroupPoller(private val server: String, private val executorService: S
             JobQueue.shared.add(deleteJob)
         }
     }
-
-    private fun downloadGroupAvatarIfNeeded(room: String) {
-        val storage = MessagingModuleConfiguration.shared.storage
-        if (storage.getGroupAvatarDownloadJob(server, room) != null) return
-        val groupId = GroupUtil.getEncodedOpenGroupID("$server.$room".toByteArray())
-        storage.getGroup(groupId)?.let {
-            if (System.currentTimeMillis() > it.updatedTimestamp + TimeUnit.DAYS.toMillis(7)) {
-                JobQueue.shared.add(GroupAvatarDownloadJob(room, server))
-            }
-        }
-    }
-
 }

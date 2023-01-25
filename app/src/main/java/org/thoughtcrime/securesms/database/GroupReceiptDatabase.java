@@ -1,14 +1,14 @@
 package org.thoughtcrime.securesms.database;
 
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 
-import net.sqlcipher.database.SQLiteDatabase;
+import net.zetetic.database.sqlcipher.SQLiteDatabase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.session.libsession.utilities.Address;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 
@@ -108,6 +108,11 @@ public class GroupReceiptDatabase extends Database {
   void deleteRowsForMessage(long mmsId) {
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
     db.delete(TABLE_NAME, MMS_ID + " = ?", new String[] {String.valueOf(mmsId)});
+  }
+
+  void deleteRowsForMessages(long[] mmsIds) {
+    SQLiteDatabase db = databaseHelper.getWritableDatabase();
+    db.delete(TABLE_NAME, MMS_ID + " IN (?)", new String[] {StringUtils.join(mmsIds, ',')});
   }
 
   void deleteAllRows() {

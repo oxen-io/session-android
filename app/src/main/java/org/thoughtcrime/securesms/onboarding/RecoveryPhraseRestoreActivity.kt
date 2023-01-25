@@ -13,8 +13,10 @@ import android.view.View
 import android.widget.Toast
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityRecoveryPhraseRestoreBinding
+import org.session.libsession.snode.SnodeModule
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.crypto.MnemonicCodec
+import org.session.libsignal.database.LokiAPIDatabaseProtocol
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.KeyHelper
 import org.session.libsignal.utilities.hexEncodedPublicKey
@@ -26,6 +28,8 @@ import org.thoughtcrime.securesms.util.setUpActionBarSessionLogo
 
 class RecoveryPhraseRestoreActivity : BaseActionBarActivity() {
     private lateinit var binding: ActivityRecoveryPhraseRestoreBinding
+    internal val database: LokiAPIDatabaseProtocol
+        get() = SnodeModule.shared.storage
     // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +68,11 @@ class RecoveryPhraseRestoreActivity : BaseActionBarActivity() {
     private fun restore() {
         val mnemonic = binding.mnemonicEditText.text.toString()
         try {
+            // This is here to resolve a case where the app restarts before a user completes onboarding
+            // which can result in an invalid database state
+            database.clearAllLastMessageHashes()
+            database.clearReceivedMessageHashValues()
+
             val loadFileContents: (String) -> String = { fileName ->
                 MnemonicUtilities.loadFileContents(this, fileName)
             }

@@ -11,13 +11,11 @@ import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
+import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.visible.ParsedMessage
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.OpenGroupApi
-import org.session.libsession.messaging.sending_receiving.MessageReceiver
-import org.session.libsession.messaging.sending_receiving.handle
-import org.session.libsession.messaging.sending_receiving.handleOpenGroupReactions
-import org.session.libsession.messaging.sending_receiving.handleVisibleMessage
+import org.session.libsession.messaging.sending_receiving.*
 import org.session.libsession.messaging.utilities.Data
 import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
@@ -94,12 +92,23 @@ class BatchMessageReceiveJob(
                         threadMap[threadID]!! += parsedParams
                     }
                 } catch (e: Exception) {
-                    Log.e(TAG, "Couldn't receive message.", e)
-                    if (e is MessageReceiver.Error && !e.isRetryable) {
-                        Log.e(TAG, "Message failed permanently",e)
-                    } else {
-                        Log.e(TAG, "Message failed",e)
-                        failures += messageParameters
+                    when (e) {
+                        is MessageReceiver.Error.DuplicateMessage, MessageReceiver.Error.SelfSend -> {
+                            Log.i(TAG, "Couldn't receive message, failed with error: ${e.message}")
+                        }
+                        is MessageReceiver.Error -> {
+                            if (!e.isRetryable) {
+                                Log.e(TAG, "Couldn't receive message, failed permanently", e)
+                            }
+                            else {
+                                Log.e(TAG, "Couldn't receive message, failed", e)
+                                failures += messageParameters
+                            }
+                        }
+                        else -> {
+                            Log.e(TAG, "Couldn't receive message, failed", e)
+                            failures += messageParameters
+                        }
                     }
                 }
             }
@@ -108,25 +117,42 @@ class BatchMessageReceiveJob(
             runBlocking(Dispatchers.IO) {
                 val deferredThreadMap = threadMap.entries.map { (threadId, messages) ->
                     async {
-                        val messageIds = mutableListOf<Pair<Long, Boolean>>()
+                        // The LinkedHashMap should preserve insertion order
+                        val messageIds = linkedMapOf<Long, Pair<Boolean, Boolean>>()
+
                         messages.forEach { (parameters, message, proto) ->
                             try {
-                                if (message is VisibleMessage) {
-                                    val messageId = MessageReceiver.handleVisibleMessage(message, proto, openGroupID,
-                                        runIncrement = false,
-                                        runThreadUpdate = false,
-                                        runProfileUpdate = true
-                                    )
-                                    if (messageId != null && message.reaction == null) {
-                                        val isUserBlindedSender = message.sender == serverPublicKey?.let { SodiumUtilities.blindedKeyPair(it, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!) }?.let { SessionId(
-                                            IdPrefix.BLINDED, it.publicKey.asBytes).hexString }
-                                        messageIds += messageId to (message.sender == localUserPublicKey || isUserBlindedSender)
+                                when (message) {
+                                    is VisibleMessage -> {
+                                        val messageId = MessageReceiver.handleVisibleMessage(message, proto, openGroupID,
+                                                runIncrement = false,
+                                                runThreadUpdate = false,
+                                                runProfileUpdate = true
+                                        )
+
+                                        if (messageId != null && message.reaction == null) {
+                                            val isUserBlindedSender = message.sender == serverPublicKey?.let { SodiumUtilities.blindedKeyPair(it, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!) }?.let { SessionId(
+                                                    IdPrefix.BLINDED, it.publicKey.asBytes).hexString }
+                                            messageIds[messageId] = Pair(
+                                                (message.sender == localUserPublicKey || isUserBlindedSender),
+                                                message.hasMention
+                                            )
+                                        }
+                                        parameters.openGroupMessageServerID?.let {
+                                            MessageReceiver.handleOpenGroupReactions(threadId, it, parameters.reactions)
+                                        }
                                     }
-                                    parameters.openGroupMessageServerID?.let {
-                                        MessageReceiver.handleOpenGroupReactions(threadId, it, parameters.reactions)
+
+                                    is UnsendRequest -> {
+                                        val deletedMessageId = MessageReceiver.handleUnsendRequest(message)
+
+                                        // If we removed a message then ensure it isn't in the 'messageIds'
+                                        if (deletedMessageId != null) {
+                                            messageIds.remove(deletedMessageId)
+                                        }
                                     }
-                                } else {
-                                    MessageReceiver.handle(message, proto, openGroupID)
+
+                                    else -> MessageReceiver.handle(message, proto, openGroupID)
                                 }
                             } catch (e: Exception) {
                                 Log.e(TAG, "Couldn't process message.", e)
@@ -139,14 +165,20 @@ class BatchMessageReceiveJob(
                             }
                         }
                         // increment unreads, notify, and update thread
-                        val unreadFromMine = messageIds.indexOfLast { (_,fromMe) -> fromMe }
-                        var trueUnreadCount = messageIds.filter { (_,fromMe) -> !fromMe }.size
+                        val unreadFromMine = messageIds.map { it.value.first }.indexOfLast { it }
+                        var trueUnreadCount = messageIds.filter { !it.value.first }.size
+                        var trueUnreadMentionCount = messageIds.filter { !it.value.first && it.value.second }.size
                         if (unreadFromMine >= 0) {
-                            trueUnreadCount -= (unreadFromMine + 1)
                             storage.markConversationAsRead(threadId, false)
+
+                            val trueUnreadIds = messageIds.keys.toList().subList(unreadFromMine + 1, messageIds.keys.count())
+                            trueUnreadCount = trueUnreadIds.size
+                            trueUnreadMentionCount = messageIds
+                                    .filter { trueUnreadIds.contains(it.key) && !it.value.first && it.value.second }
+                                    .size
                         }
                         if (trueUnreadCount > 0) {
-                            storage.incrementUnread(threadId, trueUnreadCount)
+                            storage.incrementUnread(threadId, trueUnreadCount, trueUnreadMentionCount)
                         }
                         storage.updateThread(threadId, true)
                         SSKEnvironment.shared.notificationManager.updateNotification(context, threadId)

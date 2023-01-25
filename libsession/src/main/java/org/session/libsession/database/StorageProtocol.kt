@@ -12,10 +12,12 @@ import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.visible.Attachment
+import org.session.libsession.messaging.messages.visible.Profile
 import org.session.libsession.messaging.messages.visible.Reaction
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.GroupMember
 import org.session.libsession.messaging.open_groups.OpenGroup
+import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage
@@ -34,9 +36,7 @@ interface StorageProtocol {
     // General
     fun getUserPublicKey(): String?
     fun getUserX25519KeyPair(): ECKeyPair
-    fun getUserDisplayName(): String?
-    fun getUserProfileKey(): ByteArray?
-    fun getUserProfilePictureURL(): String?
+    fun getUserProfile(): Profile
     fun setUserProfilePictureURL(newProfilePicture: String)
     // Signal
     fun getOrGenerateRegistrationID(): Int
@@ -66,7 +66,7 @@ interface StorageProtocol {
     fun getAllOpenGroups(): Map<Long, OpenGroup>
     fun updateOpenGroup(openGroup: OpenGroup)
     fun getOpenGroup(threadId: Long): OpenGroup?
-    fun addOpenGroup(urlAsString: String)
+    fun addOpenGroup(urlAsString: String): OpenGroupApi.RoomInfo?
     fun onOpenGroupAdded(server: String)
     fun hasBackgroundGroupAddJob(groupJoinUrl: String): Boolean
     fun setOpenGroupServerMessageID(messageID: Long, serverID: Long, threadID: Long, isSms: Boolean)
@@ -80,6 +80,7 @@ interface StorageProtocol {
     // Open Group Metadata
     fun updateTitle(groupID: String, newValue: String)
     fun updateProfilePicture(groupID: String, newValue: ByteArray)
+    fun hasDownloadedProfilePicture(groupID: String): Boolean
     fun setUserCount(room: String, server: String, newValue: Int)
 
     // Last Message Server ID
@@ -173,7 +174,7 @@ interface StorageProtocol {
      */
     fun persist(message: VisibleMessage, quotes: QuoteModel?, linkPreview: List<LinkPreview?>, groupPublicKey: String?, openGroupID: String?, attachments: List<Attachment>, runIncrement: Boolean, runThreadUpdate: Boolean): Long?
     fun markConversationAsRead(threadId: Long, updateLastSeen: Boolean)
-    fun incrementUnread(threadId: Long, amount: Int)
+    fun incrementUnread(threadId: Long, amount: Int, unreadMentionAmount: Int)
     fun updateThread(threadId: Long, unarchive: Boolean)
     fun insertDataExtractionNotificationMessage(senderPublicKey: String, message: DataExtractionNotificationInfoMessage, sentTimestamp: Long)
     fun insertMessageRequestResponse(response: MessageRequestResponse)
