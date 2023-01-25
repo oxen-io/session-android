@@ -196,7 +196,7 @@ class VisibleMessageView : LinearLayout {
         binding.dateBreakTextView.isVisible = showDateBreak
         // Message status indicator
         if (message.isOutgoing) {
-            val (iconID, iconColor, textId) = getMessageStatusImage(message)
+            val (iconID, iconColor, textId, contentDescription) = getMessageStatusImage(message)
             if (textId != null) {
                 binding.messageStatusTextView.setText(textId)
 

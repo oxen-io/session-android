@@ -191,8 +191,8 @@ object ConversationMenuHelper {
                 .setNeutralButton(R.string.cancel) { d, _ ->
                     d.dismiss()
                 }.create()
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).contentDescription = context.getString(R.string.AccessibilityId_settings)
-            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).contentDescription = context.getString(R.string.AccessibilityId_cancel_button)
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE)?.contentDescription = context.getString(R.string.AccessibilityId_settings)
+            dialog.getButton(DialogInterface.BUTTON_NEGATIVE)?.contentDescription = context.getString(R.string.AccessibilityId_cancel_button)
             dialog.show()
             return
         }
