@@ -1,7 +1,14 @@
 package org.thoughtcrime.securesms.util
 
 import android.content.Context
+import network.loki.messenger.libsession_util.Contacts
+import network.loki.messenger.libsession_util.UserProfile
+import network.loki.messenger.libsession_util.util.Contact
+import network.loki.messenger.libsession_util.util.UserPic
 import nl.komponents.kovenant.Promise
+import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.messages.control.ConfigurationMessage
+import org.session.libsession.utilities.Address
 
 object ConfigurationMessageUtilities {
 
@@ -50,6 +57,61 @@ object ConfigurationMessageUtilities {
 //        val promise = MessageSender.send(configurationMessage, Destination.from(Address.fromSerialized(userPublicKey)))
 //        TextSecurePreferences.setLastConfigurationSyncTime(context, System.currentTimeMillis())
 //        return promise
+    }
+
+    private fun maybeUserSecretKey() = MessagingModuleConfiguration.shared.getUserED25519KeyPair()?.secretKey?.asBytes
+
+    fun generateUserProfileConfigDump(): ByteArray? {
+        val config = ConfigurationMessage.getCurrent(listOf()) ?: return null
+        val secretKey = maybeUserSecretKey() ?: return null
+        val profile = UserProfile.newInstance(secretKey)
+        profile.setName(config.displayName)
+        val picUrl = config.profilePicture
+        val picKey = config.profileKey
+        if (!picUrl.isNullOrEmpty() && picKey.isNotEmpty()) {
+            profile.setPic(UserPic(picUrl, picKey))
+        }
+        val dump = profile.dump()
+        profile.free()
+        return dump
+    }
+
+    fun generateContactConfigDump(context: Context): ByteArray? {
+        val secretKey = maybeUserSecretKey() ?: return null
+        val storage = MessagingModuleConfiguration.shared.storage
+        val localUserKey = storage.getUserPublicKey() ?: return null
+        val contactsWithSettings = storage.getAllContacts().filter { recipient ->
+            recipient.sessionID != localUserKey
+        }.map { contact ->
+            contact to storage.getRecipientSettings(Address.fromSerialized(contact.sessionID))!!
+        }
+        val contactConfig = Contacts.newInstance(secretKey)
+        for ((contact, settings) in contactsWithSettings) {
+            val url = contact.profilePictureURL
+            val key = contact.profilePictureEncryptionKey
+            val userPic = if (url.isNullOrEmpty() || key?.isNotEmpty() != true) {
+                null
+            } else {
+                UserPic(url, key)
+            }
+            val contactInfo = Contact(
+                id = contact.sessionID,
+                name = contact.name,
+                nickname = contact.nickname,
+                blocked = settings.isBlocked,
+                approved = settings.isApproved,
+                approvedMe = settings.hasApprovedMe(),
+                profilePicture = userPic
+            )
+            contactConfig.set(contactInfo)
+        }
+        val dump = contactConfig.dump()
+        contactConfig.free()
+        return dump
+    }
+
+    fun generateConversationDump(context: Context): ByteArray? {
+        TODO()
     }
 
 }
