@@ -26,6 +26,7 @@ set(SOURCES
         user_profile.cpp
         config_base.cpp
         contacts.cpp
+        conversation.cpp
         util.cpp)
 
 add_library( # Sets the name of the library.

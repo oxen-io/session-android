@@ -67,18 +67,16 @@ class UserProfile(pointer: Long) : ConfigBase(pointer) {
     external fun setPic(userPic: UserPic)
 }
 
-class ConversationConfig(pointer: Long): ConfigBase(pointer) {
+class ConversationVolatileConfig(pointer: Long): ConfigBase(pointer) {
     companion object {
         init {
             System.loadLibrary("session_util")
         }
 
-        external fun newInstance(ed25519SecretKey: ByteArray): ConversationConfig
+        external fun newInstance(ed25519SecretKey: ByteArray): ConversationVolatileConfig
 
-        external fun newInstance(ed25519SecretKey: ByteArray, initialDump: ByteArray): ConversationConfig
+        external fun newInstance(ed25519SecretKey: ByteArray, initialDump: ByteArray): ConversationVolatileConfig
 
     }
-
-    external fun todo()
 
 }
