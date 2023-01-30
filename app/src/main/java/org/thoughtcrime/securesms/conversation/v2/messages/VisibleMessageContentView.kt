@@ -101,6 +101,9 @@ class VisibleMessageContentView : ConstraintLayout {
             binding.deletedMessageView.root.isVisible = false
         }
 
+        // Note: Need to clear the body to prevent the message bubble getting incorrectly
+        // sized based on text content from a recycled view
+        binding.bodyTextView.text = null
         binding.quoteView.root.isVisible = message is MmsMessageRecord && message.quote != null
         binding.linkPreviewView.root.isVisible = message is MmsMessageRecord && message.linkPreviews.isNotEmpty()
         binding.untrustedView.root.isVisible = !contactIsTrusted && message is MmsMessageRecord && message.quote == null && message.linkPreviews.isEmpty()
