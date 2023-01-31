@@ -2,6 +2,7 @@ package network.loki.messenger.libsession_util
 
 import network.loki.messenger.libsession_util.util.ConfigWithSeqNo
 import network.loki.messenger.libsession_util.util.Contact
+import network.loki.messenger.libsession_util.util.Conversation
 import network.loki.messenger.libsession_util.util.UserPic
 
 
@@ -56,7 +57,6 @@ class UserProfile(pointer: Long) : ConfigBase(pointer) {
         init {
             System.loadLibrary("session_util")
         }
-
         external fun newInstance(ed25519SecretKey: ByteArray): UserProfile
         external fun newInstance(ed25519SecretKey: ByteArray, initialDump: ByteArray): UserProfile
     }
@@ -72,11 +72,31 @@ class ConversationVolatileConfig(pointer: Long): ConfigBase(pointer) {
         init {
             System.loadLibrary("session_util")
         }
-
         external fun newInstance(ed25519SecretKey: ByteArray): ConversationVolatileConfig
-
         external fun newInstance(ed25519SecretKey: ByteArray, initialDump: ByteArray): ConversationVolatileConfig
-
     }
+
+    external fun getOneToOne(pubKeyHex: String): Conversation.OneToOne?
+    external fun getOrConstructOneToOne(pubKeyHex: String): Conversation.OneToOne
+    external fun set(toStore: Conversation.OneToOne)
+
+    external fun getOpenGroup(baseUrl: String, room: String, pubKeyHex: String): Conversation.OpenGroup?
+    external fun getOrConstructOpenGroup(baseUrl: String, room: String, pubKey: ByteArray): Conversation.OpenGroup
+
+    external fun getLegacyClosedGroup(groupId: String): Conversation.LegacyClosedGroup?
+    external fun getOrConstructLegacyClosedGroup(groupId: String): Conversation.LegacyClosedGroup
+
+    external fun erase(conversation: Conversation): Boolean
+
+    /**
+     * Erase all conversations that do not satisfy the `predicate`, similar to [MutableList.removeAll]
+     */
+    external fun eraseAll(predicate: (Conversation) -> Boolean): Int
+
+    external fun sizeOneToOnes(): Int
+    external fun sizeOpenGroups(): Int
+    external fun sizeLegacyClosedGroups(): Int
+
+    external fun all(): List<Conversation>
 
 }

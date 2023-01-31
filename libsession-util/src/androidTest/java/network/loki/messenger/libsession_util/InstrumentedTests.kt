@@ -3,6 +3,7 @@ package network.loki.messenger.libsession_util
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import network.loki.messenger.libsession_util.util.Contact
+import network.loki.messenger.libsession_util.util.Conversation
 import network.loki.messenger.libsession_util.util.KeyPair
 import network.loki.messenger.libsession_util.util.Sodium
 import network.loki.messenger.libsession_util.util.UserPic
@@ -327,6 +328,28 @@ class InstrumentedTests {
         println("Name received by JNI call: $nameFromNative")
         assertTrue(userProfile.dirty())
         userProfile.free()
+    }
+
+    @Test
+    fun jni_remove_all_test() {
+        val convos = ConversationVolatileConfig.newInstance(keyPair.secretKey)
+        assertEquals(0 /* number removed */, convos.eraseAll { true /* 'erase' every item */ })
+
+        val definitelyRealId = "050000000000000000000000000000000000000000000000000000000000000000"
+        val definitelyRealConvo = Conversation.OneToOne(definitelyRealId, System.currentTimeMillis(), false)
+        convos.set(definitelyRealConvo)
+
+        val anotherDefinitelyReadId = "051111111111111111111111111111111111111111111111111111111111111111"
+        val anotherDefinitelyRealConvo = Conversation.OneToOne(anotherDefinitelyReadId, System.currentTimeMillis(), false)
+        convos.set(anotherDefinitelyRealConvo)
+
+        assertEquals(2, convos.sizeOneToOnes())
+
+        val numErased = convos.eraseAll { convo ->
+            convo is Conversation.OneToOne && convo.sessionId == definitelyRealId
+        }
+        assertEquals(1, numErased)
+        assertEquals(1, convos.sizeOneToOnes())
     }
 
 }

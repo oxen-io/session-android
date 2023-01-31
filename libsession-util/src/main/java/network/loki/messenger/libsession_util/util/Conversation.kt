@@ -1,17 +1,22 @@
 package network.loki.messenger.libsession_util.util
 
 sealed class Conversation {
+
+    abstract val lastRead: Long
+    abstract val unread: Boolean
+
     data class OneToOne(
         val sessionId: String,
-        val lastRead: Long,
-        val expiryMode: ExpiryMode,
+        override val lastRead: Long,
+        override val unread: Boolean
     ): Conversation()
 
     data class OpenGroup(
         val baseUrl: String,
-        val room: String,
+        val room: String, // lowercase
         val pubKey: ByteArray,
-        val lastRead: Long,
+        override val lastRead: Long,
+        override val unread: Boolean
     ) : Conversation() {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
@@ -38,7 +43,7 @@ sealed class Conversation {
 
     data class LegacyClosedGroup(
         val groupId: String,
-        val lastRead: Long,
-        val expiryMode: ExpiryMode
+        override val lastRead: Long,
+        override val unread: Boolean
     ): Conversation()
 }
