@@ -352,4 +352,199 @@ class InstrumentedTests {
         assertEquals(1, convos.sizeOneToOnes())
     }
 
+    @Test
+    fun test_open_group_urls() {
+        val (base1, room1, pk1) = Conversation.OpenGroup.parseFullUrl(
+            "https://example.com/" +
+            "SomeRoom?public_key=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+        )!!
+
+        val (base2, room2, pk2) = Conversation.OpenGroup.parseFullUrl(
+            "HTTPS://EXAMPLE.COM/" +
+            "sOMErOOM?public_key=0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF"
+        )!!
+
+        val (base3, room3, pk3) = Conversation.OpenGroup.parseFullUrl(
+            "HTTPS://EXAMPLE.COM/r/" +
+            "someroom?public_key=0123456789aBcdEF0123456789abCDEF0123456789ABCdef0123456789ABCDEF"
+        )!!
+
+        val (base4, room4, pk4) = Conversation.OpenGroup.parseFullUrl(
+            "http://example.com/r/" +
+            "someroom?public_key=0123456789aBcdEF0123456789abCDEF0123456789ABCdef0123456789ABCDEF"
+        )!!
+
+        val (base5, room5, pk5) = Conversation.OpenGroup.parseFullUrl(
+            "HTTPS://EXAMPLE.com:443/r/" +
+            "someroom?public_key=0123456789aBcdEF0123456789abCDEF0123456789ABCdef0123456789ABCDEF"
+        )!!
+
+        val (base6, room6, pk6) = Conversation.OpenGroup.parseFullUrl(
+            "HTTP://EXAMPLE.com:80/r/" +
+            "someroom?public_key=0123456789aBcdEF0123456789abCDEF0123456789ABCdef0123456789ABCDEF"
+        )!!
+
+        val (base7, room7, pk7) = Conversation.OpenGroup.parseFullUrl(
+            "http://example.com:80/r/" +
+            "someroom?public_key=ASNFZ4mrze8BI0VniavN7wEjRWeJq83vASNFZ4mrze8"
+        )!!
+        val (base8, room8, pk8) = Conversation.OpenGroup.parseFullUrl(
+            "http://example.com:80/r/" +
+            "someroom?public_key=yrtwk3hjixg66yjdeiuauk6p7hy1gtm8tgih55abrpnsxnpm3zzo"
+        )!!
+
+        assertEquals("https://example.com", base1)
+        assertEquals(base1, base2)
+        assertEquals(base1, base3)
+        assertNotEquals(base1, base4)
+        assertEquals(base4, "http://example.com")
+        assertEquals(base1, base5)
+        assertEquals(base4, base6)
+        assertEquals(base4, base7)
+        assertEquals(base4, base8)
+        assertEquals(room1, "someroom")
+        assertEquals(room2, "someroom")
+        assertEquals(room3, "someroom")
+        assertEquals(room4, "someroom")
+        assertEquals(room5, "someroom")
+        assertEquals(room6, "someroom")
+        assertEquals(room7, "someroom")
+        assertEquals(room8, "someroom")
+        assertEquals(Hex.toStringCondensed(pk1), "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef")
+        assertEquals(Hex.toStringCondensed(pk2), "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef")
+        assertEquals(Hex.toStringCondensed(pk3), "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef")
+        assertEquals(Hex.toStringCondensed(pk4), "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef")
+        assertEquals(Hex.toStringCondensed(pk5), "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef")
+        assertEquals(Hex.toStringCondensed(pk6), "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef")
+        assertEquals(Hex.toStringCondensed(pk7), "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef")
+        assertEquals(Hex.toStringCondensed(pk8), "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef")
+
+    }
+
+    @Test
+    fun test_conversations() {
+        val convos = ConversationVolatileConfig.newInstance(keyPair.secretKey)
+        val definitelyRealId = "055000000000000000000000000000000000000000000000000000000000000000"
+        assertNull(convos.getOneToOne(definitelyRealId))
+        assertTrue(convos.empty())
+        assertEquals(0, convos.size())
+
+        val c = convos.getOrConstructOneToOne(definitelyRealId)
+
+        assertEquals(definitelyRealId, c.sessionId)
+        assertEquals(0, c.lastRead)
+
+        assertFalse(convos.needsPush())
+        assertFalse(convos.needsDump())
+        assertEquals(0, convos.push().seqNo)
+
+        val nowMs = System.currentTimeMillis()
+
+        c.lastRead = nowMs
+
+        convos.set(c)
+
+        assertNull(convos.getLegacyClosedGroup(definitelyRealId))
+        assertNotNull(convos.getOneToOne(definitelyRealId))
+        assertEquals(nowMs, convos.getOneToOne(definitelyRealId)?.lastRead)
+
+        assertTrue(convos.needsPush())
+        assertTrue(convos.needsDump())
+
+        val openGroupPubKey = Hex.fromStringCondensed("0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef")
+
+        val og = convos.getOrConstructOpenGroup("http://Example.ORG:5678", "SudokuRoom", openGroupPubKey)
+
+        assertEquals("http://example.org:5678", og.baseUrl) // Note: lower-case
+        assertEquals("sudokuroom", og.room) // Note: lower-case
+        assertEquals(32, og.pubKey.size);
+        assertEquals("0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef", og.pubKeyHex)
+
+        og.unread = true
+
+        convos.set(og)
+
+        val (toPush, seqNo) = convos.push()
+
+        assertEquals(1, seqNo)
+
+        convos.confirmPushed(seqNo)
+
+        assertTrue(convos.needsDump())
+        assertFalse(convos.needsPush())
+
+        val convos2 = ConversationVolatileConfig.newInstance(keyPair.secretKey, toPush)
+        assertFalse(convos.needsPush())
+        assertFalse(convos.needsDump())
+        assertEquals(1, convos.push().seqNo)
+        assertFalse(convos.needsDump())
+
+        val x1 = convos2.getOneToOne(definitelyRealId)!!
+        assertEquals(nowMs, x1.lastRead)
+        assertEquals(definitelyRealId, x1.sessionId)
+        assertEquals(false, x1.unread)
+
+        val x2 = convos2.getOpenGroup("http://EXAMPLE.org:5678", "sudokuRoom", openGroupPubKey)!!
+        assertEquals("http://example.org:5678", x2.baseUrl)
+        assertEquals("sudokuroom", x2.room)
+        assertEquals(x2.pubKeyHex, Hex.toStringCondensed(openGroupPubKey))
+        assertTrue(x2.unread)
+
+        val anotherId = "051111111111111111111111111111111111111111111111111111111111111111"
+        val c2 = convos.getOrConstructLegacyClosedGroup(anotherId)
+        c2.unread = true
+        convos2.set(c2)
+
+        val c3 = convos.getOrConstructLegacyClosedGroup(
+            "05cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        )
+        c3.lastRead = nowMs - 50
+        convos2.set(c3)
+
+        assertTrue(convos2.needsPush())
+
+        val (toPush2, seqNo2) = convos2.push()
+        assertEquals(2, seqNo2)
+
+        convos.merge(toPush2)
+        convos2.confirmPushed(seqNo2)
+
+        assertFalse(convos.needsPush())
+        assertEquals(seqNo2, convos.push().seqNo)
+
+        val seen = mutableListOf<String>()
+        for (conv in listOf(convos, convos2)) {
+            seen.clear()
+            assertEquals(4, conv.size())
+            assertEquals(2, conv.sizeOneToOnes())
+            assertEquals(1, conv.sizeOpenGroups())
+            assertEquals(1, conv.sizeLegacyClosedGroups())
+            assertFalse(conv.empty())
+            for (convo in conv.all()) {
+                when (convo) {
+                    is Conversation.OneToOne -> seen.add("1-to-1: ${convo.sessionId}")
+                    is Conversation.OpenGroup -> seen.add("og: ${convo.baseUrl}/r/${convo.room}")
+                    is Conversation.LegacyClosedGroup -> seen.add("cl: ${convo.groupId}")
+                }
+            }
+            assertEquals(listOf(
+                "1-to-1: " +
+                "051111111111111111111111111111111111111111111111111111111111111111",
+                "1-to-1: " +
+                "055000000000000000000000000000000000000000000000000000000000000000",
+                "og: http://example.org:5678/r/sudokuroom",
+                "cl: " +
+                "05ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            ), seen)
+        }
+
+        assertFalse(convos.needsPush())
+        convos.eraseOneToOne("052000000000000000000000000000000000000000000000000000000000000000")
+        assertFalse(convos.needsPush())
+        convos.eraseOneToOne("055000000000000000000000000000000000000000000000000000000000000000")
+        assertTrue(convos.needsPush())
+
+
+    }
+
 }

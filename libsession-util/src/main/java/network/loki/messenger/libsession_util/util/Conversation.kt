@@ -1,23 +1,35 @@
 package network.loki.messenger.libsession_util.util
 
+import org.session.libsignal.utilities.Hex
+
 sealed class Conversation {
 
-    abstract val lastRead: Long
-    abstract val unread: Boolean
+    abstract var lastRead: Long
+    abstract var unread: Boolean
 
     data class OneToOne(
         val sessionId: String,
-        override val lastRead: Long,
-        override val unread: Boolean
+        override var lastRead: Long,
+        override var unread: Boolean
     ): Conversation()
 
     data class OpenGroup(
         val baseUrl: String,
         val room: String, // lowercase
         val pubKey: ByteArray,
-        override val lastRead: Long,
-        override val unread: Boolean
+        override var lastRead: Long,
+        override var unread: Boolean
     ) : Conversation() {
+
+        val pubKeyHex: String
+            get() = Hex.toStringCondensed(pubKey)
+        companion object {
+            init {
+                System.loadLibrary("session_util")
+            }
+            external fun parseFullUrl(fullUrl: String): Triple<String, String, ByteArray>?
+        }
+
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (javaClass != other?.javaClass) return false
@@ -43,7 +55,7 @@ sealed class Conversation {
 
     data class LegacyClosedGroup(
         val groupId: String,
-        override val lastRead: Long,
-        override val unread: Boolean
+        override var lastRead: Long,
+        override var unread: Boolean
     ): Conversation()
 }

@@ -78,15 +78,17 @@ class ConversationVolatileConfig(pointer: Long): ConfigBase(pointer) {
 
     external fun getOneToOne(pubKeyHex: String): Conversation.OneToOne?
     external fun getOrConstructOneToOne(pubKeyHex: String): Conversation.OneToOne
-    external fun set(toStore: Conversation.OneToOne)
 
     external fun getOpenGroup(baseUrl: String, room: String, pubKeyHex: String): Conversation.OpenGroup?
+    external fun getOpenGroup(baseUrl: String, room: String, pubKey: ByteArray): Conversation.OpenGroup?
     external fun getOrConstructOpenGroup(baseUrl: String, room: String, pubKey: ByteArray): Conversation.OpenGroup
+    external fun getOrConstructOpenGroup(baseUrl: String, room: String, pubKeyHex: String): Conversation.OpenGroup
 
     external fun getLegacyClosedGroup(groupId: String): Conversation.LegacyClosedGroup?
     external fun getOrConstructLegacyClosedGroup(groupId: String): Conversation.LegacyClosedGroup
-
     external fun erase(conversation: Conversation): Boolean
+
+    external fun set(toStore: Conversation)
 
     /**
      * Erase all conversations that do not satisfy the `predicate`, similar to [MutableList.removeAll]
@@ -96,6 +98,9 @@ class ConversationVolatileConfig(pointer: Long): ConfigBase(pointer) {
     external fun sizeOneToOnes(): Int
     external fun sizeOpenGroups(): Int
     external fun sizeLegacyClosedGroups(): Int
+    external fun size(): Int
+
+    external fun empty(): Boolean
 
     external fun all(): List<Conversation>
 
