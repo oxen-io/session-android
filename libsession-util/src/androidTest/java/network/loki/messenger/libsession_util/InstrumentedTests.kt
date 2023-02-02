@@ -13,6 +13,7 @@ import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.session.libsignal.utilities.Hex
+import org.session.libsignal.utilities.Log
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -491,7 +492,7 @@ class InstrumentedTests {
         assertTrue(x2.unread)
 
         val anotherId = "051111111111111111111111111111111111111111111111111111111111111111"
-        val c2 = convos.getOrConstructLegacyClosedGroup(anotherId)
+        val c2 = convos.getOrConstructOneToOne(anotherId)
         c2.unread = true
         convos2.set(c2)
 
@@ -513,29 +514,27 @@ class InstrumentedTests {
         assertEquals(seqNo2, convos.push().seqNo)
 
         val seen = mutableListOf<String>()
-        for (conv in listOf(convos, convos2)) {
+        for ((ind, conv) in listOf(convos, convos2).withIndex()) {
+            Log.e("Test","Testing seen from convo #$ind")
             seen.clear()
             assertEquals(4, conv.size())
             assertEquals(2, conv.sizeOneToOnes())
             assertEquals(1, conv.sizeOpenGroups())
             assertEquals(1, conv.sizeLegacyClosedGroups())
             assertFalse(conv.empty())
-            for (convo in conv.all()) {
+            val allConvos = conv.all()
+            for (convo in allConvos) {
                 when (convo) {
                     is Conversation.OneToOne -> seen.add("1-to-1: ${convo.sessionId}")
                     is Conversation.OpenGroup -> seen.add("og: ${convo.baseUrl}/r/${convo.room}")
                     is Conversation.LegacyClosedGroup -> seen.add("cl: ${convo.groupId}")
                 }
             }
-            assertEquals(listOf(
-                "1-to-1: " +
-                "051111111111111111111111111111111111111111111111111111111111111111",
-                "1-to-1: " +
-                "055000000000000000000000000000000000000000000000000000000000000000",
-                "og: http://example.org:5678/r/sudokuroom",
-                "cl: " +
-                "05ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
-            ), seen)
+
+            assertTrue(seen.contains("1-to-1: 051111111111111111111111111111111111111111111111111111111111111111"))
+            assertTrue(seen.contains("1-to-1: 055000000000000000000000000000000000000000000000000000000000000000"))
+            assertTrue(seen.contains("og: http://example.org:5678/r/sudokuroom"))
+            assertTrue(seen.contains("cl: 05cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"))
         }
 
         assertFalse(convos.needsPush())

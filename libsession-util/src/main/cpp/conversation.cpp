@@ -305,3 +305,32 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_erase(JN
     if (deserialized == nullptr) return false;
     return convos->erase(*deserialized);
 }
+extern "C"
+JNIEXPORT jint JNICALL
+Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_sizeOpenGroups(JNIEnv *env,
+                                                                                       jobject thiz) {
+    auto convos = ptrToConvoInfo(env, thiz);
+    return convos->size_open();
+}
+extern "C"
+JNIEXPORT jint JNICALL
+Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_sizeLegacyClosedGroups(
+        JNIEnv *env, jobject thiz) {
+    auto convos = ptrToConvoInfo(env, thiz);
+    return convos->size_open();
+}
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_all(JNIEnv *env,
+                                                                            jobject thiz) {
+    auto contacts = ptrToConvoInfo(env, thiz);
+    jclass stack = env->FindClass("java/util/Stack");
+    jmethodID init = env->GetMethodID(stack, "<init>", "()V");
+    jobject our_stack = env->NewObject(stack, init);
+    jmethodID push = env->GetMethodID(stack, "push", "(Ljava/lang/Object;)Ljava/lang/Object;");
+    for (const auto& contact : *contacts) {
+        auto contact_obj = serialize_any(env, contact);
+        env->CallObjectMethod(our_stack, push, contact_obj);
+    }
+    return our_stack;
+}
