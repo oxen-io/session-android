@@ -78,14 +78,19 @@ class ConversationVolatileConfig(pointer: Long): ConfigBase(pointer) {
 
     external fun getOneToOne(pubKeyHex: String): Conversation.OneToOne?
     external fun getOrConstructOneToOne(pubKeyHex: String): Conversation.OneToOne
+    external fun eraseOneToOne(pubKeyHex: String): Boolean
 
     external fun getOpenGroup(baseUrl: String, room: String, pubKeyHex: String): Conversation.OpenGroup?
     external fun getOpenGroup(baseUrl: String, room: String, pubKey: ByteArray): Conversation.OpenGroup?
-    external fun getOrConstructOpenGroup(baseUrl: String, room: String, pubKey: ByteArray): Conversation.OpenGroup
     external fun getOrConstructOpenGroup(baseUrl: String, room: String, pubKeyHex: String): Conversation.OpenGroup
+    external fun getOrConstructOpenGroup(baseUrl: String, room: String, pubKey: ByteArray): Conversation.OpenGroup
+    external fun eraseOpenGroup(openGroup: Conversation.OpenGroup): Boolean
+    external fun eraseOpenGroup(baseUrl: String, room: String, pubKeyHex: String): Boolean
+    external fun eraseOpenGroup(baseUrl: String, room: String, pubKey: ByteArray): Boolean
 
     external fun getLegacyClosedGroup(groupId: String): Conversation.LegacyClosedGroup?
     external fun getOrConstructLegacyClosedGroup(groupId: String): Conversation.LegacyClosedGroup
+    external fun eraseLegacyClosedGroup(groupId: String): Boolean
     external fun erase(conversation: Conversation): Boolean
 
     external fun set(toStore: Conversation)

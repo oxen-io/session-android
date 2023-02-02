@@ -464,7 +464,7 @@ class InstrumentedTests {
 
         convos.set(og)
 
-        val (toPush, seqNo) = convos.push()
+        val (_, seqNo) = convos.push()
 
         assertEquals(1, seqNo)
 
@@ -473,7 +473,7 @@ class InstrumentedTests {
         assertTrue(convos.needsDump())
         assertFalse(convos.needsPush())
 
-        val convos2 = ConversationVolatileConfig.newInstance(keyPair.secretKey, toPush)
+        val convos2 = ConversationVolatileConfig.newInstance(keyPair.secretKey, convos.dump())
         assertFalse(convos.needsPush())
         assertFalse(convos.needsDump())
         assertEquals(1, convos.push().seqNo)
