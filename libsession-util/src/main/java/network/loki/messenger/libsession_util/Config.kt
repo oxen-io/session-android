@@ -107,6 +107,9 @@ class ConversationVolatileConfig(pointer: Long): ConfigBase(pointer) {
 
     external fun empty(): Boolean
 
+    external fun allOneToOnes(): List<Conversation.OneToOne>
+    external fun allOpenGroups(): List<Conversation.OpenGroup>
+    external fun allLegacyClosedGroups(): List<Conversation.LegacyClosedGroup>
     external fun all(): List<Conversation>
 
 }

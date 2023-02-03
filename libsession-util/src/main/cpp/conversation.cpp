@@ -323,14 +323,53 @@ extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_all(JNIEnv *env,
                                                                             jobject thiz) {
-    auto contacts = ptrToConvoInfo(env, thiz);
+    auto convos = ptrToConvoInfo(env, thiz);
     jclass stack = env->FindClass("java/util/Stack");
     jmethodID init = env->GetMethodID(stack, "<init>", "()V");
     jobject our_stack = env->NewObject(stack, init);
     jmethodID push = env->GetMethodID(stack, "push", "(Ljava/lang/Object;)Ljava/lang/Object;");
-    for (const auto& contact : *contacts) {
-        auto contact_obj = serialize_any(env, contact);
+    for (const auto& convo : *convos) {
+        auto contact_obj = serialize_any(env, convo);
         env->CallObjectMethod(our_stack, push, contact_obj);
     }
+    return our_stack;
+}
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_allOneToOnes(JNIEnv *env,
+                                                                                     jobject thiz) {
+    auto convos = ptrToConvoInfo(env, thiz);
+    jclass stack = env->FindClass("java/util/Stack");
+    jmethodID init = env->GetMethodID(stack, "<init>", "()V");
+    jobject our_stack = env->NewObject(stack, init);
+    jmethodID push = env->GetMethodID(stack, "push", "(Ljava/lang/Object;)Ljava/lang/Object;");
+    for (auto contact = convos->begin_1to1(); contact != convos->end(); ++contact)
+        env->CallObjectMethod(our_stack, push, serialize_one_to_one(env, *contact));
+    return our_stack;
+}
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_allOpenGroups(JNIEnv *env,
+                                                                                      jobject thiz) {
+    auto convos = ptrToConvoInfo(env, thiz);
+    jclass stack = env->FindClass("java/util/Stack");
+    jmethodID init = env->GetMethodID(stack, "<init>", "()V");
+    jobject our_stack = env->NewObject(stack, init);
+    jmethodID push = env->GetMethodID(stack, "push", "(Ljava/lang/Object;)Ljava/lang/Object;");
+    for (auto contact = convos->begin_open(); contact != convos->end(); ++contact)
+        env->CallObjectMethod(our_stack, push, serialize_open_group(env, *contact));
+    return our_stack;
+}
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_allLegacyClosedGroups(
+        JNIEnv *env, jobject thiz) {
+    auto convos = ptrToConvoInfo(env, thiz);
+    jclass stack = env->FindClass("java/util/Stack");
+    jmethodID init = env->GetMethodID(stack, "<init>", "()V");
+    jobject our_stack = env->NewObject(stack, init);
+    jmethodID push = env->GetMethodID(stack, "push", "(Ljava/lang/Object;)Ljava/lang/Object;");
+    for (auto contact = convos->begin_legacy_closed(); contact != convos->end(); ++contact)
+        env->CallObjectMethod(our_stack, push, serialize_legacy_group(env, *contact));
     return our_stack;
 }

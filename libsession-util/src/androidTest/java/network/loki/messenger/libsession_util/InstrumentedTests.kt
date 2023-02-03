@@ -535,6 +535,7 @@ class InstrumentedTests {
             assertTrue(seen.contains("1-to-1: 055000000000000000000000000000000000000000000000000000000000000000"))
             assertTrue(seen.contains("og: http://example.org:5678/r/sudokuroom"))
             assertTrue(seen.contains("cl: 05cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"))
+            assertTrue(seen.size == 4) // for some reason iterative checks aren't working in test cases
         }
 
         assertFalse(convos.needsPush())
@@ -543,7 +544,18 @@ class InstrumentedTests {
         convos.eraseOneToOne("055000000000000000000000000000000000000000000000000000000000000000")
         assertTrue(convos.needsPush())
 
-
+        assertEquals(1, convos.allOneToOnes().size)
+        assertEquals("051111111111111111111111111111111111111111111111111111111111111111",
+            convos.allOneToOnes().map(Conversation.OneToOne::sessionId).first()
+        )
+        assertEquals(1, convos.allOpenGroups().size)
+        assertEquals("http://example.org:5678",
+            convos.allOpenGroups().map(Conversation.OpenGroup::baseUrl).first()
+        )
+        assertEquals(1, convos.allLegacyClosedGroups().size)
+        assertEquals("05cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            convos.allLegacyClosedGroups().map(Conversation.LegacyClosedGroup::groupId).first()
+        )
     }
 
 }
