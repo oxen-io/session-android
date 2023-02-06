@@ -1,8 +1,13 @@
 package org.session.libsession.messaging.sending_receiving.pollers
 
+import android.util.SparseArray
+import androidx.core.util.keyIterator
+import androidx.core.util.valueIterator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.runBlocking
+import network.loki.messenger.libsession_util.ConfigBase
+import network.loki.messenger.libsession_util.UserProfile
 import nl.komponents.kovenant.Deferred
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.deferred
@@ -19,6 +24,7 @@ import org.session.libsession.snode.SnodeModule
 import org.session.libsession.utilities.ConfigFactoryProtocol
 import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.Namespace
 import org.session.libsignal.utilities.Snode
 import java.security.SecureRandom
 import java.util.Timer
@@ -132,33 +138,22 @@ class Poller(private val configFactory: ConfigFactoryProtocol) {
         if (!hasStarted) { return Promise.ofFail(PromiseCanceledException()) }
         return task {
             runBlocking(Dispatchers.IO) {
-                val requests = listOfNotNull(
-                    // get messages
-                    SnodeAPI.buildAuthenticatedRetrieveBatchRequest(snode, userPublicKey),
-                    // get user config namespace
-                    configFactory.user?.let { currentUserConfig ->
-                        SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
-                            snode,
-                            userPublicKey,
-                            currentUserConfig.configNamespace()
-                        )
-                    },
-                    // get contact config namespace
-                    configFactory.contacts?.let { currentContacts ->
-                        SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
-                            snode,
-                            userPublicKey,
-                            currentContacts.configNamespace()
-                        )
-                    },
-                    // get the latest convo info volatile
-                    configFactory.convoVolatile?.let { currentConvoVolatile ->
-                        SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
-                            snode, userPublicKey,
-                            currentConvoVolatile.configNamespace()
-                        )
-                    }
-                )
+                val requestSparseArray = SparseArray<SnodeAPI.SnodeBatchRequestInfo>()
+                // get messages
+                SnodeAPI.buildAuthenticatedRetrieveBatchRequest(snode, userPublicKey)!!.also { personalMessages ->
+                    requestSparseArray[personalMessages.namespace] = personalMessages
+                }
+                // get the latest convo info volatile
+                listOfNotNull(configFactory.user, configFactory.contacts, configFactory.convoVolatile).mapNotNull { config ->
+                    SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
+                        snode, userPublicKey,
+                        config.configNamespace()
+                    )
+                }.forEach { request ->
+                    requestSparseArray[request.namespace] = request
+                }
+
+                val requests = requestSparseArray.valueIterator().asSequence().toList()
 
                 SnodeAPI.getRawBatchResponse(snode, userPublicKey, requests).bind { rawResponses ->
                     isCaughtUp = true
@@ -166,7 +161,18 @@ class Poller(private val configFactory: ConfigFactoryProtocol) {
                         return@bind Promise.ofSuccess(Unit)
                     } else {
                         Log.d("Loki-DBG", JsonUtil.toJson(rawResponses))
-
+                        val requestList = (rawResponses["results"] as List<RawResponse>)
+                        requestSparseArray.keyIterator().withIndex().forEach { (requestIndex, key) ->
+                            requestList.getOrNull(requestIndex)?.let { rawResponse ->
+                                if (key == Namespace.DEFAULT) {
+                                    processPersonalMessages(snode, rawResponse)
+                                } else {
+                                    when (ConfigBase.kindFor(key)) {
+                                        UserProfile ->
+                                    }
+                                }
+                            }
+                        }
                         poll(snode, deferred)
                     }
                 }

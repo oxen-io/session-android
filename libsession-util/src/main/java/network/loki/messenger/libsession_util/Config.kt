@@ -11,6 +11,7 @@ sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
         init {
             System.loadLibrary("session_util")
         }
+        external fun kindFor(configNamespace: Int): Class<ConfigBase>
     }
 
     external fun dirty(): Boolean

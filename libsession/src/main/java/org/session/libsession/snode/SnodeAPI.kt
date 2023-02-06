@@ -100,6 +100,8 @@ object SnodeAPI {
     data class SnodeBatchRequestInfo(
         val method: String,
         val params: Map<String, Any>,
+        @Transient
+        val namespace: Int
     ) // assume signatures, pubkey and namespaces are attached in parameters if required
 
     // Internal API
@@ -398,7 +400,8 @@ object SnodeAPI {
         }
         return SnodeBatchRequestInfo(
             Snode.Method.Retrieve.rawValue,
-            params
+            params,
+            namespace
         )
     }
 
