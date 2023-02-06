@@ -17,7 +17,7 @@ import org.session.libsession.snode.RawResponse
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.snode.SnodeModule
 import org.session.libsession.utilities.ConfigFactoryProtocol
-import org.session.libsignal.protos.SignalServiceProtos
+import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Snode
 import java.security.SecureRandom
@@ -104,9 +104,29 @@ class Poller(private val configFactory: ConfigFactoryProtocol) {
         }
     }
 
-    private fun processUserConfig(rawMessages: List<Pair<SignalServiceProtos.Envelope, String?>>) {
+    private fun processPersonalMessages(snode: Snode, rawMessages: RawResponse) {
+        val messages = SnodeAPI.parseRawMessagesResponse(rawMessages, snode, userPublicKey)
+        val parameters = messages.map { (envelope, serverHash) ->
+            MessageReceiveParameters(envelope.toByteArray(), serverHash = serverHash)
+        }
+        parameters.chunked(BatchMessageReceiveJob.BATCH_DEFAULT_NUMBER).forEach { chunk ->
+            val job = BatchMessageReceiveJob(chunk)
+            JobQueue.shared.add(job)
+        }
+    }
+
+    private fun processUserConfig(snode: Snode, rawMessages: RawResponse) {
+        SnodeAPI.parseRawMessagesResponse(rawMessages, snode, userPublicKey)
+    }
+
+    private fun processContactsConfig(snode: Snode, rawMessages: RawResponse) {
 
     }
+
+    private fun processConvoVolatileConfig(snode: Snode, rawMessages: RawResponse) {
+
+    }
+
 
     private fun poll(snode: Snode, deferred: Deferred<Unit, Exception>): Promise<Unit, Exception> {
         if (!hasStarted) { return Promise.ofFail(PromiseCanceledException()) }
@@ -116,7 +136,7 @@ class Poller(private val configFactory: ConfigFactoryProtocol) {
                     // get messages
                     SnodeAPI.buildAuthenticatedRetrieveBatchRequest(snode, userPublicKey),
                     // get user config namespace
-                    configFactory.userConfig?.let { currentUserConfig ->
+                    configFactory.user?.let { currentUserConfig ->
                         SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
                             snode,
                             userPublicKey,
@@ -130,6 +150,13 @@ class Poller(private val configFactory: ConfigFactoryProtocol) {
                             userPublicKey,
                             currentContacts.configNamespace()
                         )
+                    },
+                    // get the latest convo info volatile
+                    configFactory.convoVolatile?.let { currentConvoVolatile ->
+                        SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
+                            snode, userPublicKey,
+                            currentConvoVolatile.configNamespace()
+                        )
                     }
                 )
 
@@ -138,15 +165,7 @@ class Poller(private val configFactory: ConfigFactoryProtocol) {
                     if (deferred.promise.isDone()) {
                         return@bind Promise.ofSuccess(Unit)
                     } else {
-                        val messageResponse = (rawResponses["results"] as List<*>).first() as RawResponse
-                        val messages = SnodeAPI.parseRawMessagesResponse(messageResponse, snode, userPublicKey)
-                        val parameters = messages.map { (envelope, serverHash) ->
-                            MessageReceiveParameters(envelope.toByteArray(), serverHash = serverHash)
-                        }
-                        parameters.chunked(BatchMessageReceiveJob.BATCH_DEFAULT_NUMBER).forEach { chunk ->
-                            val job = BatchMessageReceiveJob(chunk)
-                            JobQueue.shared.add(job)
-                        }
+                        Log.d("Loki-DBG", JsonUtil.toJson(rawResponses))
 
                         poll(snode, deferred)
                     }

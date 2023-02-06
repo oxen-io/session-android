@@ -22582,13 +22582,13 @@ public final class SignalServiceProtos {
        */
       CONTACTS(1, 2),
       /**
-       * <code>CONVERSATION_INFO = 3;</code>
+       * <code>CONVO_INFO_VOLATILE = 3;</code>
        */
-      CONVERSATION_INFO(2, 3),
+      CONVO_INFO_VOLATILE(2, 3),
       /**
-       * <code>LEGACY_CLOSED_GROUPS = 4;</code>
+       * <code>GROUPS = 4;</code>
        */
-      LEGACY_CLOSED_GROUPS(3, 4),
+      GROUPS(3, 4),
       /**
        * <code>CLOSED_GROUP_INFO = 5;</code>
        */
@@ -22612,13 +22612,13 @@ public final class SignalServiceProtos {
        */
       public static final int CONTACTS_VALUE = 2;
       /**
-       * <code>CONVERSATION_INFO = 3;</code>
+       * <code>CONVO_INFO_VOLATILE = 3;</code>
        */
-      public static final int CONVERSATION_INFO_VALUE = 3;
+      public static final int CONVO_INFO_VOLATILE_VALUE = 3;
       /**
-       * <code>LEGACY_CLOSED_GROUPS = 4;</code>
+       * <code>GROUPS = 4;</code>
        */
-      public static final int LEGACY_CLOSED_GROUPS_VALUE = 4;
+      public static final int GROUPS_VALUE = 4;
       /**
        * <code>CLOSED_GROUP_INFO = 5;</code>
        */
@@ -22639,8 +22639,8 @@ public final class SignalServiceProtos {
         switch (value) {
           case 1: return USER_PROFILE;
           case 2: return CONTACTS;
-          case 3: return CONVERSATION_INFO;
-          case 4: return LEGACY_CLOSED_GROUPS;
+          case 3: return CONVO_INFO_VOLATILE;
+          case 4: return GROUPS;
           case 5: return CLOSED_GROUP_INFO;
           case 6: return CLOSED_GROUP_MEMBERS;
           case 7: return ENCRYPTION_KEYS;
@@ -27227,30 +27227,30 @@ public final class SignalServiceProtos {
       "d\030\006 \001(\010\022\024\n\014didApproveMe\030\007 \001(\010\"y\n\026Message" +
       "RequestResponse\022\022\n\nisApproved\030\001 \002(\010\022\022\n\np" +
       "rofileKey\030\002 \001(\014\0227\n\007profile\030\003 \001(\0132&.signa" +
-      "lservice.DataMessage.LokiProfile\"\211\002\n\023Sha" +
+      "lservice.DataMessage.LokiProfile\"\375\001\n\023Sha" +
       "redConfigMessage\0225\n\004kind\030\001 \002(\0162\'.signals" +
       "ervice.SharedConfigMessage.Kind\022\r\n\005seqno" +
-      "\030\002 \002(\003\022\014\n\004data\030\003 \002(\014\"\235\001\n\004Kind\022\020\n\014USER_PR",
-      "OFILE\020\001\022\014\n\010CONTACTS\020\002\022\025\n\021CONVERSATION_IN" +
-      "FO\020\003\022\030\n\024LEGACY_CLOSED_GROUPS\020\004\022\025\n\021CLOSED" +
-      "_GROUP_INFO\020\005\022\030\n\024CLOSED_GROUP_MEMBERS\020\006\022" +
-      "\023\n\017ENCRYPTION_KEYS\020\007\"u\n\016ReceiptMessage\0220" +
-      "\n\004type\030\001 \002(\0162\".signalservice.ReceiptMess" +
-      "age.Type\022\021\n\ttimestamp\030\002 \003(\004\"\036\n\004Type\022\014\n\010D" +
-      "ELIVERY\020\000\022\010\n\004READ\020\001\"\354\001\n\021AttachmentPointe" +
-      "r\022\n\n\002id\030\001 \002(\006\022\023\n\013contentType\030\002 \001(\t\022\013\n\003ke" +
-      "y\030\003 \001(\014\022\014\n\004size\030\004 \001(\r\022\021\n\tthumbnail\030\005 \001(\014" +
-      "\022\016\n\006digest\030\006 \001(\014\022\020\n\010fileName\030\007 \001(\t\022\r\n\005fl",
-      "ags\030\010 \001(\r\022\r\n\005width\030\t \001(\r\022\016\n\006height\030\n \001(\r" +
-      "\022\017\n\007caption\030\013 \001(\t\022\013\n\003url\030e \001(\t\"\032\n\005Flags\022" +
-      "\021\n\rVOICE_MESSAGE\020\001\"\365\001\n\014GroupContext\022\n\n\002i" +
-      "d\030\001 \001(\014\022.\n\004type\030\002 \001(\0162 .signalservice.Gr" +
-      "oupContext.Type\022\014\n\004name\030\003 \001(\t\022\017\n\007members" +
-      "\030\004 \003(\t\0220\n\006avatar\030\005 \001(\0132 .signalservice.A" +
-      "ttachmentPointer\022\016\n\006admins\030\006 \003(\t\"H\n\004Type" +
-      "\022\013\n\007UNKNOWN\020\000\022\n\n\006UPDATE\020\001\022\013\n\007DELIVER\020\002\022\010" +
-      "\n\004QUIT\020\003\022\020\n\014REQUEST_INFO\020\004B3\n\034org.sessio" +
-      "n.libsignal.protosB\023SignalServiceProtos"
+      "\030\002 \002(\003\022\014\n\004data\030\003 \002(\014\"\221\001\n\004Kind\022\020\n\014USER_PR",
+      "OFILE\020\001\022\014\n\010CONTACTS\020\002\022\027\n\023CONVO_INFO_VOLA" +
+      "TILE\020\003\022\n\n\006GROUPS\020\004\022\025\n\021CLOSED_GROUP_INFO\020" +
+      "\005\022\030\n\024CLOSED_GROUP_MEMBERS\020\006\022\023\n\017ENCRYPTIO" +
+      "N_KEYS\020\007\"u\n\016ReceiptMessage\0220\n\004type\030\001 \002(\016" +
+      "2\".signalservice.ReceiptMessage.Type\022\021\n\t" +
+      "timestamp\030\002 \003(\004\"\036\n\004Type\022\014\n\010DELIVERY\020\000\022\010\n" +
+      "\004READ\020\001\"\354\001\n\021AttachmentPointer\022\n\n\002id\030\001 \002(" +
+      "\006\022\023\n\013contentType\030\002 \001(\t\022\013\n\003key\030\003 \001(\014\022\014\n\004s" +
+      "ize\030\004 \001(\r\022\021\n\tthumbnail\030\005 \001(\014\022\016\n\006digest\030\006" +
+      " \001(\014\022\020\n\010fileName\030\007 \001(\t\022\r\n\005flags\030\010 \001(\r\022\r\n",
+      "\005width\030\t \001(\r\022\016\n\006height\030\n \001(\r\022\017\n\007caption\030" +
+      "\013 \001(\t\022\013\n\003url\030e \001(\t\"\032\n\005Flags\022\021\n\rVOICE_MES" +
+      "SAGE\020\001\"\365\001\n\014GroupContext\022\n\n\002id\030\001 \001(\014\022.\n\004t" +
+      "ype\030\002 \001(\0162 .signalservice.GroupContext.T" +
+      "ype\022\014\n\004name\030\003 \001(\t\022\017\n\007members\030\004 \003(\t\0220\n\006av" +
+      "atar\030\005 \001(\0132 .signalservice.AttachmentPoi" +
+      "nter\022\016\n\006admins\030\006 \003(\t\"H\n\004Type\022\013\n\007UNKNOWN\020" +
+      "\000\022\n\n\006UPDATE\020\001\022\013\n\007DELIVER\020\002\022\010\n\004QUIT\020\003\022\020\n\014" +
+      "REQUEST_INFO\020\004B3\n\034org.session.libsignal." +
+      "protosB\023SignalServiceProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
