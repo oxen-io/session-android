@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.database
 import android.content.Context
 import androidx.core.content.contentValuesOf
 import androidx.core.database.getBlobOrNull
+import androidx.core.database.getStringOrNull
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 
 class ConfigDatabase(context: Context, helper: SQLCipherOpenHelper): Database(context, helper) {
@@ -21,24 +22,26 @@ class ConfigDatabase(context: Context, helper: SQLCipherOpenHelper): Database(co
         private const val VARIANT_AND_PUBKEY_WHERE = "$VARIANT = ? AND $PUBKEY = ?"
     }
 
-    fun storeConfig(variant: String, publicKey: String, data: ByteArray) {
+    fun storeConfig(variant: String, publicKey: String, data: ByteArray, hashes: List<String>) {
         val db = writableDatabase
         val contentValues = contentValuesOf(
             VARIANT to variant,
             PUBKEY to publicKey,
-            DATA to data
+            DATA to data,
+            COMBINED_MESSAGE_HASHES to hashes.joinToString(",")
         )
         db.insertOrUpdate(TABLE_NAME, contentValues, VARIANT_AND_PUBKEY_WHERE, arrayOf(variant, publicKey))
     }
 
-    fun retrieveConfig(variant: String, publicKey: String): ByteArray? {
+    fun retrieveConfigAndHashes(variant: String, publicKey: String): Pair<ByteArray,List<String>>? {
         val db = readableDatabase
         val query = db.query(TABLE_NAME, arrayOf(DATA), VARIANT_AND_PUBKEY_WHERE, arrayOf(variant, publicKey),null, null, null)
-        val bytes = query?.use { cursor ->
-            if (!cursor.moveToFirst()) return null
-            cursor.getBlobOrNull(cursor.getColumnIndex(DATA))
+        return query?.use { cursor ->
+            if (!cursor.moveToFirst()) return@use null
+            val bytes = cursor.getBlobOrNull(cursor.getColumnIndex(DATA)) ?: return@use null
+            val hashes = cursor.getStringOrNull(cursor.getColumnIndex(COMBINED_MESSAGE_HASHES))?.split(",") ?: emptyList()
+            bytes to hashes
         }
-        return bytes
     }
 
 }

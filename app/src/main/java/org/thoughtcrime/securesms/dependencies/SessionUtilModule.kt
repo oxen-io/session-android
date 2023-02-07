@@ -6,6 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import org.session.libsession.database.StorageProtocol
 import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities
 import org.thoughtcrime.securesms.database.ConfigDatabase
@@ -22,8 +23,8 @@ object SessionUtilModule {
 
     @Provides
     @Singleton
-    fun provideConfigFactory(@ApplicationContext context: Context, configDatabase: ConfigDatabase): ConfigFactory =
-        ConfigFactory(configDatabase) {
+    fun provideConfigFactory(@ApplicationContext context: Context, configDatabase: ConfigDatabase, storage: StorageProtocol): ConfigFactory =
+        ConfigFactory(context, configDatabase, storage) {
             val localUserPublicKey = TextSecurePreferences.getLocalNumber(context)
             val secretKey = maybeUserEdSecretKey(context)
             if (localUserPublicKey == null || secretKey == null) null

@@ -9,6 +9,7 @@ import org.session.libsession.messaging.messages.control.DataExtractionNotificat
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.control.ReadReceipt
+import org.session.libsession.messaging.messages.control.SharedConfigurationMessage
 import org.session.libsession.messaging.messages.control.TypingIndicator
 import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.visible.VisibleMessage
@@ -138,6 +139,7 @@ object MessageReceiver {
             UnsendRequest.fromProto(proto) ?:
             MessageRequestResponse.fromProto(proto) ?:
             CallMessage.fromProto(proto) ?:
+            SharedConfigurationMessage.fromProto(proto) ?:
             VisibleMessage.fromProto(proto) ?: run {
             throw Error.UnknownMessage
         }
@@ -166,12 +168,13 @@ object MessageReceiver {
         // If the message failed to process the first time around we retry it later (if the error is retryable). In this case the timestamp
         // will already be in the database but we don't want to treat the message as a duplicate. The isRetry flag is a simple workaround
         // for this issue.
-        if (message is ClosedGroupControlMessage && message.kind is ClosedGroupControlMessage.Kind.New) {
+        if ((message is ClosedGroupControlMessage && message.kind is ClosedGroupControlMessage.Kind.New) || message is SharedConfigurationMessage) {
             // Allow duplicates in this case to avoid the following situation:
             // • The app performed a background poll or received a push notification
             // • This method was invoked and the received message timestamps table was updated
             // • Processing wasn't finished
             // • The user doesn't see the new closed group
+            // also allow shared configuration messages to be duplicates since we track hashes separately use seqno for conflict resolution
         } else {
             if (storage.isDuplicateMessage(envelope.timestamp)) { throw Error.DuplicateMessage }
             storage.addReceivedMessageTimestamp(envelope.timestamp)

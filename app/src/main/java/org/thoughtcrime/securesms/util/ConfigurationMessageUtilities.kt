@@ -7,56 +7,69 @@ import network.loki.messenger.libsession_util.util.Contact
 import network.loki.messenger.libsession_util.util.UserPic
 import nl.komponents.kovenant.Promise
 import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
+import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.TextSecurePreferences
 
 object ConfigurationMessageUtilities {
 
+    const val isNewConfigEnabled = true
+
     @JvmStatic
     fun syncConfigurationIfNeeded(context: Context) {
-        return
-//        val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return
-//        val lastSyncTime = TextSecurePreferences.getLastConfigurationSyncTime(context)
-//        val now = System.currentTimeMillis()
-//        if (now - lastSyncTime < 7 * 24 * 60 * 60 * 1000) return
-//        val contacts = ContactUtilities.getAllContacts(context).filter { recipient ->
-//            !recipient.name.isNullOrEmpty() && !recipient.isLocalNumber && recipient.address.serialize().isNotEmpty()
-//        }.map { recipient ->
-//            ConfigurationMessage.Contact(
-//                publicKey = recipient.address.serialize(),
-//                name = recipient.name!!,
-//                profilePicture = recipient.profileAvatar,
-//                profileKey = recipient.profileKey,
-//                isApproved = recipient.isApproved,
-//                isBlocked = recipient.isBlocked,
-//                didApproveMe = recipient.hasApprovedMe()
-//            )
-//        }
-//        val configurationMessage = ConfigurationMessage.getCurrent(contacts) ?: return
-//        MessageSender.send(configurationMessage, Address.fromSerialized(userPublicKey))
-//        TextSecurePreferences.setLastConfigurationSyncTime(context, now)
+        // add if check here to schedule new config job process and return early
+        if (isNewConfigEnabled) {
+            // schedule job if none exist
+            TODO()
+        }
+        val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return
+        val lastSyncTime = TextSecurePreferences.getLastConfigurationSyncTime(context)
+        val now = System.currentTimeMillis()
+        if (now - lastSyncTime < 7 * 24 * 60 * 60 * 1000) return
+        val contacts = ContactUtilities.getAllContacts(context).filter { recipient ->
+            !recipient.name.isNullOrEmpty() && !recipient.isLocalNumber && recipient.address.serialize().isNotEmpty()
+        }.map { recipient ->
+            ConfigurationMessage.Contact(
+                publicKey = recipient.address.serialize(),
+                name = recipient.name!!,
+                profilePicture = recipient.profileAvatar,
+                profileKey = recipient.profileKey,
+                isApproved = recipient.isApproved,
+                isBlocked = recipient.isBlocked,
+                didApproveMe = recipient.hasApprovedMe()
+            )
+        }
+        val configurationMessage = ConfigurationMessage.getCurrent(contacts) ?: return
+        MessageSender.send(configurationMessage, Address.fromSerialized(userPublicKey))
+        TextSecurePreferences.setLastConfigurationSyncTime(context, now)
     }
 
     fun forceSyncConfigurationNowIfNeeded(context: Context): Promise<Unit, Exception> {
-        return Promise.ofSuccess(Unit)
-//        val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return Promise.ofSuccess(Unit)
-//        val contacts = ContactUtilities.getAllContacts(context).filter { recipient ->
-//            !recipient.isGroupRecipient && !recipient.name.isNullOrEmpty() && !recipient.isLocalNumber && recipient.address.serialize().isNotEmpty()
-//        }.map { recipient ->
-//            ConfigurationMessage.Contact(
-//                publicKey = recipient.address.serialize(),
-//                name = recipient.name!!,
-//                profilePicture = recipient.profileAvatar,
-//                profileKey = recipient.profileKey,
-//                isApproved = recipient.isApproved,
-//                isBlocked = recipient.isBlocked,
-//                didApproveMe = recipient.hasApprovedMe()
-//            )
-//        }
-//        val configurationMessage = ConfigurationMessage.getCurrent(contacts) ?: return Promise.ofSuccess(Unit)
-//        val promise = MessageSender.send(configurationMessage, Destination.from(Address.fromSerialized(userPublicKey)))
-//        TextSecurePreferences.setLastConfigurationSyncTime(context, System.currentTimeMillis())
-//        return promise
+        // add if check here to schedule new config job process and return early
+        if (isNewConfigEnabled) {
+            // schedule job if none exist
+            TODO()
+        }
+        val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return Promise.ofSuccess(Unit)
+        val contacts = ContactUtilities.getAllContacts(context).filter { recipient ->
+            !recipient.isGroupRecipient && !recipient.name.isNullOrEmpty() && !recipient.isLocalNumber && recipient.address.serialize().isNotEmpty()
+        }.map { recipient ->
+            ConfigurationMessage.Contact(
+                publicKey = recipient.address.serialize(),
+                name = recipient.name!!,
+                profilePicture = recipient.profileAvatar,
+                profileKey = recipient.profileKey,
+                isApproved = recipient.isApproved,
+                isBlocked = recipient.isBlocked,
+                didApproveMe = recipient.hasApprovedMe()
+            )
+        }
+        val configurationMessage = ConfigurationMessage.getCurrent(contacts) ?: return Promise.ofSuccess(Unit)
+        val promise = MessageSender.send(configurationMessage, Destination.from(Address.fromSerialized(userPublicKey)))
+        TextSecurePreferences.setLastConfigurationSyncTime(context, System.currentTimeMillis())
+        return promise
     }
 
     private fun maybeUserSecretKey() = MessagingModuleConfiguration.shared.getUserED25519KeyPair()?.secretKey?.asBytes
@@ -110,7 +123,7 @@ object ConfigurationMessageUtilities {
         return dump
     }
 
-    fun generateConversationDump(context: Context): ByteArray? {
+    fun generateConversationVolatileDump(context: Context): ByteArray? {
         TODO()
     }
 

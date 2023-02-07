@@ -628,10 +628,12 @@ object SnodeAPI {
         }
     }
 
-    fun parseRawMessagesResponse(rawResponse: RawResponse, snode: Snode, publicKey: String, namespace: Int = 0): List<Pair<SignalServiceProtos.Envelope, String?>> {
+    fun parseRawMessagesResponse(rawResponse: RawResponse, snode: Snode, publicKey: String, namespace: Int = 0, updateLatestHash: Boolean = true): List<Pair<SignalServiceProtos.Envelope, String?>> {
         val messages = rawResponse["messages"] as? List<*>
         return if (messages != null) {
-            updateLastMessageHashValueIfPossible(snode, publicKey, messages, namespace)
+            if (updateLatestHash) {
+                updateLastMessageHashValueIfPossible(snode, publicKey, messages, namespace)
+            }
             val newRawMessages = removeDuplicates(publicKey, messages, namespace)
             return parseEnvelopes(newRawMessages)
         } else {

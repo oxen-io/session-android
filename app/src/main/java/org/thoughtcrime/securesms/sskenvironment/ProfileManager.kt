@@ -54,7 +54,7 @@ class ProfileManager : SSKEnvironment.ProfileManagerProtocol {
         }
     }
 
-    override fun setProfileKey(context: Context, recipient: Recipient, profileKey: ByteArray) {
+    override fun setProfileKey(context: Context, recipient: Recipient, profileKey: ByteArray?) {
         // New API
         val sessionID = recipient.address.serialize()
         val contactDatabase = DatabaseComponent.get(context).sessionContactDatabase()

@@ -7,6 +7,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.runBlocking
 import network.loki.messenger.libsession_util.ConfigBase
+import network.loki.messenger.libsession_util.Contacts
+import network.loki.messenger.libsession_util.ConversationVolatileConfig
 import network.loki.messenger.libsession_util.UserProfile
 import nl.komponents.kovenant.Deferred
 import nl.komponents.kovenant.Promise
@@ -18,6 +20,8 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageReceiveParameters
+import org.session.libsession.messaging.messages.control.SharedConfigurationMessage
+import org.session.libsession.messaging.sending_receiving.MessageReceiver
 import org.session.libsession.snode.RawResponse
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.snode.SnodeModule
@@ -121,18 +125,36 @@ class Poller(private val configFactory: ConfigFactoryProtocol) {
         }
     }
 
-    private fun processUserConfig(snode: Snode, rawMessages: RawResponse) {
-        SnodeAPI.parseRawMessagesResponse(rawMessages, snode, userPublicKey)
+    private fun processConfig(snode: Snode, rawMessages: RawResponse, namespace: Int, forConfigObject: ConfigBase?) {
+        if (forConfigObject == null) return
+
+        val messages = SnodeAPI.parseRawMessagesResponse(
+            rawMessages,
+            snode,
+            userPublicKey,
+            namespace,
+            updateLatestHash = false
+        )
+        messages.forEach { (envelope, hash) ->
+            try {
+                val (message, _) = MessageReceiver.parse(data = envelope.toByteArray(), openGroupServerID = null)
+                // sanity checks
+                if (message !is SharedConfigurationMessage) {
+                    Log.w("Loki-DBG", "shared config message handled in configs wasn't SharedConfigurationMessage but was ${message.javaClass.simpleName}")
+                    return@forEach
+                }
+                // maybe do something with seqNo ?
+                Log.d("Loki-DBG", "Merging config of kind ${message.kind} into ${forConfigObject.javaClass.simpleName}")
+                forConfigObject.merge(message.data)
+                configFactory.appendHash(forConfigObject, hash!!)
+            } catch (e: Exception) {
+                Log.e("Loki", e)
+            }
+        }
+        // process new results
+        configFactory.persist(forConfigObject)
+        configFactory.notifyUpdates(forConfigObject)
     }
-
-    private fun processContactsConfig(snode: Snode, rawMessages: RawResponse) {
-
-    }
-
-    private fun processConvoVolatileConfig(snode: Snode, rawMessages: RawResponse) {
-
-    }
-
 
     private fun poll(snode: Snode, deferred: Deferred<Unit, Exception>): Promise<Unit, Exception> {
         if (!hasStarted) { return Promise.ofFail(PromiseCanceledException()) }
@@ -160,15 +182,20 @@ class Poller(private val configFactory: ConfigFactoryProtocol) {
                     if (deferred.promise.isDone()) {
                         return@bind Promise.ofSuccess(Unit)
                     } else {
+                        // TODO: remove log after testing responses
                         Log.d("Loki-DBG", JsonUtil.toJson(rawResponses))
                         val requestList = (rawResponses["results"] as List<RawResponse>)
+                        // in case we had null configs, the array won't be fully populated
+                        // index of the sparse array key iterator should be the request index, with the key being the namespace
                         requestSparseArray.keyIterator().withIndex().forEach { (requestIndex, key) ->
                             requestList.getOrNull(requestIndex)?.let { rawResponse ->
                                 if (key == Namespace.DEFAULT) {
                                     processPersonalMessages(snode, rawResponse)
                                 } else {
                                     when (ConfigBase.kindFor(key)) {
-                                        UserProfile ->
+                                        UserProfile::class.java -> processConfig(snode, rawResponse, key, configFactory.user)
+                                        Contacts::class.java -> processConfig(snode, rawResponse, key, configFactory.contacts)
+                                        ConversationVolatileConfig::class.java -> processConfig(snode, rawResponse, key, configFactory.convoVolatile)
                                     }
                                 }
                             }

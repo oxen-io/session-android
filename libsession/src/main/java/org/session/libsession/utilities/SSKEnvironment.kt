@@ -3,7 +3,6 @@ package org.session.libsession.utilities
 import android.content.Context
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
 import org.session.libsession.messaging.sending_receiving.notifications.MessageNotifier
-import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 
 class SSKEnvironment(
@@ -32,7 +31,7 @@ class SSKEnvironment(
         fun setNickname(context: Context, recipient: Recipient, nickname: String?)
         fun setName(context: Context, recipient: Recipient, name: String)
         fun setProfilePictureURL(context: Context, recipient: Recipient, profilePictureURL: String)
-        fun setProfileKey(context: Context, recipient: Recipient, profileKey: ByteArray)
+        fun setProfileKey(context: Context, recipient: Recipient, profileKey: ByteArray?)
         fun setUnidentifiedAccessMode(context: Context, recipient: Recipient, unidentifiedAccessMode: Recipient.UnidentifiedAccessMode)
     }
 
