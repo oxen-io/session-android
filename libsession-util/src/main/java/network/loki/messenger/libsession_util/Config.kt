@@ -12,6 +12,9 @@ sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
             System.loadLibrary("session_util")
         }
         external fun kindFor(configNamespace: Int): Class<ConfigBase>
+
+        const val isNewConfigEnabled = true
+
     }
 
     external fun dirty(): Boolean

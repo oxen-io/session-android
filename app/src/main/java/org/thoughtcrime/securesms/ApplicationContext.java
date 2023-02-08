@@ -207,7 +207,9 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         messagingModuleConfiguration = new MessagingModuleConfiguration(this,
                 storage,
                 messageDataProvider,
-                ()-> KeyPairUtilities.INSTANCE.getUserED25519KeyPair(this));
+                ()-> KeyPairUtilities.INSTANCE.getUserED25519KeyPair(this),
+                configFactory
+                );
         // migrate session open group data
         OpenGroupMigrator.migrate(getDatabaseComponent());
         // end migration

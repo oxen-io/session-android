@@ -1,6 +1,7 @@
 package org.thoughtcrime.securesms.util
 
 import android.content.Context
+import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.Contacts
 import network.loki.messenger.libsession_util.UserProfile
 import network.loki.messenger.libsession_util.util.Contact
@@ -15,12 +16,10 @@ import org.session.libsession.utilities.TextSecurePreferences
 
 object ConfigurationMessageUtilities {
 
-    const val isNewConfigEnabled = true
-
     @JvmStatic
     fun syncConfigurationIfNeeded(context: Context) {
         // add if check here to schedule new config job process and return early
-        if (isNewConfigEnabled) {
+        if (ConfigBase.isNewConfigEnabled) {
             // schedule job if none exist
             TODO()
         }
@@ -48,7 +47,7 @@ object ConfigurationMessageUtilities {
 
     fun forceSyncConfigurationNowIfNeeded(context: Context): Promise<Unit, Exception> {
         // add if check here to schedule new config job process and return early
-        if (isNewConfigEnabled) {
+        if (ConfigBase.isNewConfigEnabled) {
             // schedule job if none exist
             TODO()
         }
