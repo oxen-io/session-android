@@ -8,15 +8,13 @@ import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.RequestBody
 import org.session.libsession.messaging.jobs.Job.Companion.MAX_BUFFER_SIZE
-
 import org.session.libsession.messaging.sending_receiving.notifications.PushNotificationAPI
 import org.session.libsession.messaging.utilities.Data
-import org.session.libsession.snode.SnodeMessage
 import org.session.libsession.snode.OnionRequestAPI
+import org.session.libsession.snode.SnodeMessage
 import org.session.libsession.snode.Version
-
-import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.JsonUtil
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.retryIfNeeded
 
 class NotifyPNServerJob(val message: SnodeMessage) : Job {
@@ -32,7 +30,7 @@ class NotifyPNServerJob(val message: SnodeMessage) : Job {
         private val MESSAGE_KEY = "message"
     }
 
-    override fun execute() {
+    override suspend fun execute() {
         val server = PushNotificationAPI.server
         val parameters = mapOf( "data" to message.data, "send_to" to message.recipient )
         val url = "${server}/notify"

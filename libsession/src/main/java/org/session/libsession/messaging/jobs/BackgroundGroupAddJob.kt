@@ -3,9 +3,7 @@ package org.session.libsession.messaging.jobs
 import okhttp3.HttpUrl
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroup
-import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.utilities.Data
-import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.OpenGroupUrlParser
 import org.session.libsignal.utilities.Log
 
@@ -29,7 +27,7 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
         return "$server.$room"
     }
 
-    override fun execute() {
+    override suspend fun execute() {
         try {
             val openGroup = OpenGroupUrlParser.parseUrl(joinUrl)
             val storage = MessagingModuleConfiguration.shared.storage

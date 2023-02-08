@@ -12,7 +12,7 @@ class GroupAvatarDownloadJob(val room: String, val server: String) : Job {
     override var failureCount: Int = 0
     override val maxFailureCount: Int = 10
 
-    override fun execute() {
+    override suspend fun execute() {
         val storage = MessagingModuleConfiguration.shared.storage
         val imageId = storage.getOpenGroup(room, server)?.imageId ?: return
         try {

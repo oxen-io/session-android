@@ -25,7 +25,7 @@ class MessageReceiveJob(val data: ByteArray, val serverHash: String? = null, val
         private val OPEN_GROUP_ID_KEY = "open_group_id"
     }
 
-    override fun execute() {
+    override suspend fun execute() {
         executeAsync().get()
     }
 

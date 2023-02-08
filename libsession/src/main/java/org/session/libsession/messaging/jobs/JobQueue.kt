@@ -94,7 +94,7 @@ class JobQueue : JobDelegate {
         }
     }
 
-    private fun Job.process(dispatcherName: String) {
+    private suspend fun Job.process(dispatcherName: String) {
         Log.d(dispatcherName,"processJob: ${javaClass.simpleName}")
         delegate = this@JobQueue
         execute()

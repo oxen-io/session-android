@@ -15,7 +15,11 @@ import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.visible.ParsedMessage
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.OpenGroupApi
-import org.session.libsession.messaging.sending_receiving.*
+import org.session.libsession.messaging.sending_receiving.MessageReceiver
+import org.session.libsession.messaging.sending_receiving.handle
+import org.session.libsession.messaging.sending_receiving.handleOpenGroupReactions
+import org.session.libsession.messaging.sending_receiving.handleUnsendRequest
+import org.session.libsession.messaging.sending_receiving.handleVisibleMessage
 import org.session.libsession.messaging.utilities.Data
 import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
@@ -66,7 +70,7 @@ class BatchMessageReceiveJob(
         return storage.getOrCreateThreadIdFor(senderOrSync, message.groupPublicKey, openGroupID)
     }
 
-    override fun execute() {
+    override suspend fun execute() {
         executeAsync().get()
     }
 

@@ -20,7 +20,7 @@ class TrimThreadJob(val threadId: Long, val openGroupId: String?) : Job {
         const val THREAD_LENGTH_TRIGGER_SIZE = 2000
     }
 
-    override fun execute() {
+    override suspend fun execute() {
         val context = MessagingModuleConfiguration.shared.context
         val trimmingEnabled = TextSecurePreferences.isThreadLengthTrimmingEnabled(context)
         val storage = MessagingModuleConfiguration.shared.storage

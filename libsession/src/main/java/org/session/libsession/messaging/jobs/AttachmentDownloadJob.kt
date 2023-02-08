@@ -42,7 +42,7 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
         private val TS_INCOMING_MESSAGE_ID_KEY = "tsIncoming_message_id"
     }
 
-    override fun execute() {
+    override suspend fun execute() {
         val storage = MessagingModuleConfiguration.shared.storage
         val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
         val threadID = storage.getThreadIdForMms(databaseMessageID)
