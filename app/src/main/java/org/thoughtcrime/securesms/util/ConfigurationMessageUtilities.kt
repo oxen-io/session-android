@@ -56,11 +56,19 @@ object ConfigurationMessageUtilities {
 
     fun forceSyncConfigurationNowIfNeeded(context: Context): Promise<Unit, Exception> {
         // add if check here to schedule new config job process and return early
+        val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return Promise.ofFail(NullPointerException("User Public Key is null"))
+        val storage = MessagingModuleConfiguration.shared.storage
         if (ConfigBase.isNewConfigEnabled) {
             // schedule job if none exist
-            TODO()
+            // don't schedule job if we already have one
+            val ourDestination = Destination.Contact(userPublicKey)
+            if (storage.getConfigSyncJob(ourDestination) != null) return Promise.ofFail(NullPointerException("A job is already pending or in progress, don't schedule another job"))
+            val newConfigSync = ConfigurationSyncJob(ourDestination)
+            Log.d("Loki", "Scheduling new ConfigurationSyncJob")
+            JobQueue.shared.add(newConfigSync)
+            // treat this promise as succeeding now (so app continues running and doesn't block UI)
+            return Promise.ofSuccess(Unit)
         }
-        val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return Promise.ofSuccess(Unit)
         val contacts = ContactUtilities.getAllContacts(context).filter { recipient ->
             !recipient.isGroupRecipient && !recipient.name.isNullOrEmpty() && !recipient.isLocalNumber && recipient.address.serialize().isNotEmpty()
         }.map { recipient ->
