@@ -4,7 +4,7 @@
 
 Add the [F-Droid repo](https://fdroid.getsession.org/)
 
-[Download the APK from here](https://github.com/loki-project/session-android/releases/latest)
+[Download the APK from here](https://github.com/oxen-io/session-android/releases/latest)
 
 ## Summary
 
