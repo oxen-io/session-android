@@ -12,6 +12,7 @@ class Snode(val address: String, val port: Int, val publicKeySet: KeySet?) {
         Info("info"),
         DeleteAll("delete_all"),
         Batch("batch"),
+        Sequence("sequence"),
         Expire("expire"),
         GetExpiries("get_expiries")
     }

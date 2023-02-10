@@ -35,7 +35,6 @@ dependencies {
     implementation 'com.annimon:stream:1.1.8'
     implementation 'com.makeramen:roundedimageview:2.1.0'
     implementation 'com.esotericsoftware:kryo:5.1.1'
-    implementation "com.google.protobuf:protobuf-java:$protobufVersion"
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
     implementation "com.github.oxen-io.session-android-curve-25519:curve25519-java:$curve25519Version"
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"

@@ -8,22 +8,31 @@ import network.loki.messenger.libsession_util.util.Contact
 import network.loki.messenger.libsession_util.util.UserPic
 import nl.komponents.kovenant.Promise
 import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.jobs.ConfigurationSyncJob
+import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsignal.utilities.Log
 
 object ConfigurationMessageUtilities {
 
     @JvmStatic
     fun syncConfigurationIfNeeded(context: Context) {
         // add if check here to schedule new config job process and return early
-        if (ConfigBase.isNewConfigEnabled) {
-            // schedule job if none exist
-            TODO()
-        }
         val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return
+        val storage = MessagingModuleConfiguration.shared.storage
+        if (ConfigBase.isNewConfigEnabled) {
+            // don't schedule job if we already have one
+            val ourDestination = Destination.Contact(userPublicKey)
+            if (storage.getConfigSyncJob(ourDestination) != null) return
+            val newConfigSync = ConfigurationSyncJob(ourDestination)
+            Log.d("Loki", "Scheduling new ConfigurationSyncJob")
+            JobQueue.shared.add(newConfigSync)
+            return
+        }
         val lastSyncTime = TextSecurePreferences.getLastConfigurationSyncTime(context)
         val now = System.currentTimeMillis()
         if (now - lastSyncTime < 7 * 24 * 60 * 60 * 1000) return

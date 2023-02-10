@@ -101,7 +101,7 @@ object SnodeAPI {
         val method: String,
         val params: Map<String, Any>,
         @Transient
-        val namespace: Int
+        val namespace: Int?
     ) // assume signatures, pubkey and namespaces are attached in parameters if required
 
     // Internal API
@@ -365,10 +365,93 @@ object SnodeAPI {
         return invoke(Snode.Method.Retrieve, snode, parameters, publicKey)
     }
 
+    fun buildAuthenticatedStoreBatchInfo(publicKey: String, namespace: Int, message: SnodeMessage): SnodeBatchRequestInfo? {
+        val params = mutableMapOf<String, Any>()
+        // load the message data params into the sub request
+        // currently loads:
+        // pubKey
+        // data
+        // ttl
+        // timestamp
+        params.putAll(message.toJSON())
+        params["namespace"] = namespace
+
+        // used for sig generation since it is also the value used in timestamp parameter
+        val messageTimestamp = message.timestamp
+
+        val userEd25519KeyPair = try {
+            MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return null
+        } catch (e: Exception) {
+            return null
+        }
+
+        val ed25519PublicKey = userEd25519KeyPair.publicKey.asHexString
+        val signature = ByteArray(Sign.BYTES)
+        val verificationData = "store$namespace$messageTimestamp".toByteArray()
+        try {
+            sodium.cryptoSignDetached(
+                signature,
+                verificationData,
+                verificationData.size.toLong(),
+                userEd25519KeyPair.secretKey.asBytes
+            )
+        } catch (e: Exception) {
+            Log.e("Loki", "Signing data failed with user secret key", e)
+        }
+        // timestamp already set
+        params["pubkey_ed25519"] = ed25519PublicKey
+        params["signature"] = Base64.encodeBytes(signature)
+        return SnodeBatchRequestInfo(
+            Snode.Method.SendMessage.rawValue,
+            params,
+            namespace
+        )
+    }
+
+    /**
+     * Message hashes can be shared across multiple namespaces (for a single public key destination)
+     * @param publicKey the destination's identity public key to delete from (05...)
+     * @param messageHashes a list of stored message hashes to delete from the server
+     * @param required indicates that *at least one* message in the list is deleted from the server, otherwise it will return 404
+     */
+    fun buildAuthenticatedDeleteBatchInfo(publicKey: String, messageHashes: List<String>, required: Boolean = false): SnodeBatchRequestInfo? {
+        val params = mutableMapOf(
+            "pubkey" to publicKey,
+            "required" to required, // could be omitted technically but explicit here
+            "messages" to messageHashes
+        )
+        val userEd25519KeyPair = try {
+            MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return null
+        } catch (e: Exception) {
+            return null
+        }
+        val ed25519PublicKey = userEd25519KeyPair.publicKey.asHexString
+        val signature = ByteArray(Sign.BYTES)
+        val verificationData = "delete${messageHashes.joinToString("")}".toByteArray()
+        try {
+            sodium.cryptoSignDetached(
+                signature,
+                verificationData,
+                verificationData.size.toLong(),
+                userEd25519KeyPair.secretKey.asBytes
+            )
+        } catch (e: Exception) {
+            Log.e("Loki", "Signing data failed with user secret key", e)
+            return null
+        }
+        params["pubkey_ed25519"] = ed25519PublicKey
+        params["signature"] = Base64.encodeBytes(signature)
+        return SnodeBatchRequestInfo(
+            Snode.Method.Retrieve.rawValue,
+            params,
+            null
+        )
+    }
+
     fun buildAuthenticatedRetrieveBatchRequest(snode: Snode, publicKey: String, namespace: Int = 0): SnodeBatchRequestInfo? {
         val lastHashValue = database.getLastMessageHashValue(snode, publicKey, namespace) ?: ""
         val params = mutableMapOf<String, Any>(
-            "pubKey" to publicKey,
+            "pubkey" to publicKey,
             "last_hash" to lastHashValue,
         )
         val userEd25519KeyPair = try {
@@ -405,11 +488,11 @@ object SnodeAPI {
         )
     }
 
-    fun getRawBatchResponse(snode: Snode, publicKey: String, requests: List<SnodeBatchRequestInfo>): RawResponsePromise {
+    fun getRawBatchResponse(snode: Snode, publicKey: String, requests: List<SnodeBatchRequestInfo>, sequence: Boolean = false): RawResponsePromise {
         val parameters = mutableMapOf<String, Any>(
             "requests" to requests
         )
-        return invoke(Snode.Method.Batch, snode, parameters, publicKey)
+        return invoke(if (sequence) Snode.Method.Sequence else Snode.Method.Batch, snode, parameters, publicKey)
     }
 
     fun getExpiries(messageHashes: List<String>, publicKey: String) : RawResponsePromise {

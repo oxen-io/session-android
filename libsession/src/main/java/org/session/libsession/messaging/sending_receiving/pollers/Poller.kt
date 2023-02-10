@@ -163,7 +163,8 @@ class Poller(private val configFactory: ConfigFactoryProtocol) {
                 val requestSparseArray = SparseArray<SnodeAPI.SnodeBatchRequestInfo>()
                 // get messages
                 SnodeAPI.buildAuthenticatedRetrieveBatchRequest(snode, userPublicKey)!!.also { personalMessages ->
-                    requestSparseArray[personalMessages.namespace] = personalMessages
+                    // namespaces here should always be set
+                    requestSparseArray[personalMessages.namespace!!] = personalMessages
                 }
                 // get the latest convo info volatile
                 listOfNotNull(configFactory.user, configFactory.contacts, configFactory.convoVolatile).mapNotNull { config ->
@@ -172,7 +173,8 @@ class Poller(private val configFactory: ConfigFactoryProtocol) {
                         config.configNamespace()
                     )
                 }.forEach { request ->
-                    requestSparseArray[request.namespace] = request
+                    // namespaces here should always be set
+                    requestSparseArray[request.namespace!!] = request
                 }
 
                 val requests = requestSparseArray.valueIterator().asSequence().toList()

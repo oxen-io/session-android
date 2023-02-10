@@ -8,11 +8,13 @@ import org.session.libsession.messaging.BlindedIdMapping
 import org.session.libsession.messaging.calls.CallMessageType
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.AttachmentUploadJob
+import org.session.libsession.messaging.jobs.ConfigurationSyncJob
 import org.session.libsession.messaging.jobs.GroupAvatarDownloadJob
 import org.session.libsession.messaging.jobs.Job
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageReceiveJob
 import org.session.libsession.messaging.jobs.MessageSendJob
+import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
@@ -238,6 +240,12 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
 
     override fun getGroupAvatarDownloadJob(server: String, room: String): GroupAvatarDownloadJob? {
         return DatabaseComponent.get(context).sessionJobDatabase().getGroupAvatarDownloadJob(server, room)
+    }
+
+    override fun getConfigSyncJob(destination: Destination): Job? {
+        return DatabaseComponent.get(context).sessionJobDatabase().getAllPendingJobs(ConfigurationSyncJob.KEY).values.firstOrNull {
+            (it as? ConfigurationSyncJob)?.destination == destination
+        }
     }
 
     override fun resumeMessageSendJobIfNeeded(messageSendJobID: String) {

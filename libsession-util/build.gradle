@@ -40,7 +40,8 @@ android {
 
 dependencies {
     testImplementation 'junit:junit:4.13.2'
-    api(project(":libsignal"))
+    implementation(project(":libsignal"))
+    implementation "com.google.protobuf:protobuf-java:$protobufVersion"
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
 }

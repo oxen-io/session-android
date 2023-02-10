@@ -135,6 +135,20 @@ class ConfigFactory(private val context: Context,
         }
     }
 
+    override fun getHashesFor(forConfigObject: ConfigBase): List<String> =
+        when (forConfigObject) {
+            is UserProfile -> userHashes.toList()
+            is Contacts -> contactsHashes.toList()
+            is ConversationVolatileConfig -> convoHashes.toList()
+        }
+
+    override fun removeHashesFor(forConfigObject: ConfigBase, deletedHashes: Set<String>) =
+        when (forConfigObject) {
+            is UserProfile -> userHashes.removeAll(deletedHashes)
+            is Contacts -> contactsHashes.removeAll(deletedHashes)
+            is ConversationVolatileConfig -> convoHashes.removeAll(deletedHashes)
+        }
+
     private fun updateUser(userProfile: UserProfile) {
         val (_, userPublicKey) = maybeGetUserInfo() ?: return
         // would love to get rid of recipient and context from this

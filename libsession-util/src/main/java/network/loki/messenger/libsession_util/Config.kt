@@ -4,6 +4,7 @@ import network.loki.messenger.libsession_util.util.ConfigWithSeqNo
 import network.loki.messenger.libsession_util.util.Contact
 import network.loki.messenger.libsession_util.util.Conversation
 import network.loki.messenger.libsession_util.util.UserPic
+import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage.Kind
 
 
 sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
@@ -12,6 +13,12 @@ sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
             System.loadLibrary("session_util")
         }
         external fun kindFor(configNamespace: Int): Class<ConfigBase>
+
+        fun ConfigBase.protoKindFor(): Kind = when (this) {
+            is UserProfile -> Kind.USER_PROFILE
+            is Contacts -> Kind.CONTACTS
+            is ConversationVolatileConfig -> Kind.CONVO_INFO_VOLATILE
+        }
 
         const val isNewConfigEnabled = true
 
