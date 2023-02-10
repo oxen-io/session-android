@@ -35,6 +35,7 @@ import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
+import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Address.Companion.UNKNOWN
 import org.session.libsession.utilities.Address.Companion.fromExternal
@@ -380,7 +381,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
     }
 
     override fun markExpireStarted(messageId: Long) {
-        markExpireStarted(messageId, System.currentTimeMillis())
+        markExpireStarted(messageId, SnodeAPI.nowWithOffset)
     }
 
     override fun markExpireStarted(messageId: Long, startedTimestamp: Long) {
@@ -798,7 +799,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         // In open groups messages should be sorted by their server timestamp
         var receivedTimestamp = serverTimestamp
         if (serverTimestamp == 0L) {
-            receivedTimestamp = System.currentTimeMillis()
+            receivedTimestamp = SnodeAPI.nowWithOffset
         }
         contentValues.put(DATE_RECEIVED, receivedTimestamp)
         contentValues.put(SUBSCRIPTION_ID, message.subscriptionId)
@@ -1277,7 +1278,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                 val slideDeck = SlideDeck(context, message!!.attachments)
                 return MediaMmsMessageRecord(
                     id, message.recipient, message.recipient,
-                    1, System.currentTimeMillis(), System.currentTimeMillis(),
+                    1, SnodeAPI.nowWithOffset, SnodeAPI.nowWithOffset,
                     0, threadId, message.body,
                     slideDeck, slideDeck.slides.size,
                     if (message.isSecure) MmsSmsColumns.Types.getOutgoingEncryptedMessageType() else MmsSmsColumns.Types.getOutgoingSmsMessageType(),
@@ -1285,7 +1286,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                     LinkedList(),
                     message.subscriptionId,
                     message.expiresIn,
-                    System.currentTimeMillis(), 0,
+                    SnodeAPI.nowWithOffset, 0,
                     if (message.outgoingQuote != null) Quote(
                         message.outgoingQuote!!.id,
                         message.outgoingQuote!!.author,

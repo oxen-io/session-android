@@ -77,10 +77,10 @@ object MessageSender {
         val userPublicKey = storage.getUserPublicKey()
         // Set the timestamp, sender and recipient
         if (message.sentTimestamp == null) {
-            message.sentTimestamp = System.currentTimeMillis() // Visible messages will already have their sent timestamp set
+            message.sentTimestamp = SnodeAPI.nowWithOffset // Visible messages will already have their sent timestamp set
         }
 
-        val messageSendTime = System.currentTimeMillis()
+        val messageSendTime = SnodeAPI.nowWithOffset
 
         message.sender = userPublicKey
         val isSelfSend = (message.recipient == userPublicKey)
@@ -210,7 +210,7 @@ object MessageSender {
         val deferred = deferred<Unit, Exception>()
         val storage = MessagingModuleConfiguration.shared.storage
         if (message.sentTimestamp == null) {
-            message.sentTimestamp = System.currentTimeMillis()
+            message.sentTimestamp = SnodeAPI.nowWithOffset
         }
         val userEdKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!
         var serverCapabilities = listOf<String>()

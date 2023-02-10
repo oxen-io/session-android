@@ -3,6 +3,7 @@ package org.session.libsession.messaging.jobs
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.utilities.Data
+import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.GroupUtil
 
 class GroupAvatarDownloadJob(val room: String, val server: String) : Job {
@@ -19,7 +20,7 @@ class GroupAvatarDownloadJob(val room: String, val server: String) : Job {
             val bytes = OpenGroupApi.downloadOpenGroupProfilePicture(server, room, imageId).get()
             val groupId = GroupUtil.getEncodedOpenGroupID("$server.$room".toByteArray())
             storage.updateProfilePicture(groupId, bytes)
-            storage.updateTimestampUpdated(groupId, System.currentTimeMillis())
+            storage.updateTimestampUpdated(groupId, SnodeAPI.nowWithOffset)
             delegate?.handleJobSucceeded(this, dispatcherName)
         } catch (e: Exception) {
             delegate?.handleJobFailed(this, dispatcherName, e)
