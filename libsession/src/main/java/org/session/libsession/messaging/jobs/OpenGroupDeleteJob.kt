@@ -19,7 +19,7 @@ class OpenGroupDeleteJob(private val messageServerIds: LongArray, private val th
     override var failureCount: Int = 0
     override val maxFailureCount: Int = 1
 
-    override fun execute() {
+    override fun execute(dispatcherName: String) {
         val dataProvider = MessagingModuleConfiguration.shared.messageDataProvider
         val numberToDelete = messageServerIds.size
         Log.d(TAG, "Deleting $numberToDelete messages")
@@ -39,10 +39,10 @@ class OpenGroupDeleteJob(private val messageServerIds: LongArray, private val th
             }
 
             Log.d(TAG, "Deleted ${messageIds.first.size + messageIds.second.size} messages successfully")
-            delegate?.handleJobSucceeded(this)
+            delegate?.handleJobSucceeded(this, dispatcherName)
         }
         catch (e: Exception) {
-            delegate?.handleJobFailed(this, e)
+            delegate?.handleJobFailed(this, dispatcherName, e)
         }
     }
 

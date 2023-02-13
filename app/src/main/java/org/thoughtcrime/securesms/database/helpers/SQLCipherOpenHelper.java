@@ -97,25 +97,40 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
   private final DatabaseSecret databaseSecret;
 
   public SQLCipherOpenHelper(@NonNull Context context, @NonNull DatabaseSecret databaseSecret) {
-    super(context, DATABASE_NAME, databaseSecret.asString(), null, DATABASE_VERSION, MIN_DATABASE_VERSION, null, new SQLiteDatabaseHook() {
-      @Override
-      public void preKey(SQLiteConnection connection) {
-        SQLCipherOpenHelper.applySQLCipherPragmas(connection, true);
-      }
-
-      @Override
-      public void postKey(SQLiteConnection connection) {
-        SQLCipherOpenHelper.applySQLCipherPragmas(connection, true);
-
-        // if not vacuumed in a while, perform that operation
-        long currentTime = System.currentTimeMillis();
-        // 7 days
-        if (currentTime - TextSecurePreferences.getLastVacuumTime(context) > 604_800_000) {
-          connection.execute("VACUUM;", null, null);
-          TextSecurePreferences.setLastVacuumNow(context);
+    super(
+      context,
+      DATABASE_NAME,
+      databaseSecret.asString(),
+      null,
+      DATABASE_VERSION,
+      MIN_DATABASE_VERSION,
+      null,
+      new SQLiteDatabaseHook() {
+        @Override
+        public void preKey(SQLiteConnection connection) {
+          SQLCipherOpenHelper.applySQLCipherPragmas(connection, true);
         }
-      }
-    }, true);
+
+        @Override
+        public void postKey(SQLiteConnection connection) {
+          SQLCipherOpenHelper.applySQLCipherPragmas(connection, true);
+
+          // if not vacuumed in a while, perform that operation
+          long currentTime = System.currentTimeMillis();
+          // 7 days
+          if (currentTime - TextSecurePreferences.getLastVacuumTime(context) > 604_800_000) {
+            connection.execute("VACUUM;", null, null);
+            TextSecurePreferences.setLastVacuumNow(context);
+          }
+        }
+      },
+      // Note: Now that we support concurrent database reads the migrations are actually non-blocking
+      // because of this we need to initially open the database with writeAheadLogging (WAL mode) disabled
+      // and enable it once the database officially opens it's connection (which will cause it to re-connect
+      // in WAL mode) - this is a little inefficient but will prevent SQL-related errors/crashes due to
+      // incomplete migrations
+      false
+    );
 
     this.context        = context.getApplicationContext();
     this.databaseSecret = databaseSecret;
@@ -150,11 +165,11 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
     // If the old SQLCipher3 database file doesn't exist then no need to do anything
     if (!oldDbFile.exists()) { return; }
 
-    try {
-      // Define the location for the new database
-      String newDbPath = context.getDatabasePath(DATABASE_NAME).getPath();
-      File newDbFile = new File(newDbPath);
+    // Define the location for the new database
+    String newDbPath = context.getDatabasePath(DATABASE_NAME).getPath();
+    File newDbFile = new File(newDbPath);
 
+    try {
       // If the new database file already exists then check if it's valid first, if it's in an
       // invalid state we should delete it and try to migrate again
       if (newDbFile.exists()) {
@@ -162,10 +177,24 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
         // assume the user hasn't downgraded for some reason and made changes to the old database and
         // can remove the old database file (it won't be used anymore)
         if (oldDbFile.lastModified() <= newDbFile.lastModified()) {
-          // TODO: Delete 'CIPHER3_DATABASE_NAME' once enough time has past
-//          //noinspection ResultOfMethodCallIgnored
-//          oldDbFile.delete();
-          return;
+          try {
+            SQLiteDatabase newDb = SQLCipherOpenHelper.open(newDbPath, databaseSecret, true);
+            int version = newDb.getVersion();
+            newDb.close();
+
+            // Make sure the new database has it's version set correctly (if not then the migration didn't
+            // fully succeed and the database will try to create all it's tables and immediately fail so
+            // we will need to remove and remigrate)
+            if (version > 0) {
+              // TODO: Delete 'CIPHER3_DATABASE_NAME' once enough time has past
+//            //noinspection ResultOfMethodCallIgnored
+//            oldDbFile.delete();
+              return;
+            }
+          }
+          catch (Exception e) {
+            Log.i(TAG, "Failed to retrieve version from new database, assuming invalid and remigrating");
+          }
         }
 
         // If the old database does have newer changes then the new database could have stale/invalid
@@ -206,6 +235,11 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
     }
     catch (Exception e) {
       Log.e(TAG, "Migration from SQLCipher3 to SQLCipher4 failed", e);
+
+      // If an exception was thrown then we should remove the new database file (it's probably invalid)
+      if (!newDbFile.delete()) {
+        Log.e(TAG, "Unable to delete invalid new database file");
+      }
 
       // Notify the user of the issue so they know they can downgrade until the issue is fixed
       NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
@@ -557,6 +591,15 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
     } finally {
       db.endTransaction();
     }
+  }
+
+  @Override
+  public void onOpen(SQLiteDatabase db) {
+    super.onOpen(db);
+
+    // Now that the database is officially open (ie. the migrations are completed) we want to enable
+    // write ahead logging (WAL mode) to officially support concurrent read connections
+    db.enableWriteAheadLogging();
   }
 
   public void markCurrent(SQLiteDatabase db) {

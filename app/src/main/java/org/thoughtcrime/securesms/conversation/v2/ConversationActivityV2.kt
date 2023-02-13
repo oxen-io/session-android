@@ -965,6 +965,18 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
     }
 
+    override fun copyOpenGroupUrl(thread: Recipient) {
+        if (!thread.isOpenGroupRecipient) { return }
+
+        val threadId = threadDb.getThreadIdIfExistsFor(thread) ?: return
+        val openGroup = lokiThreadDb.getOpenGroupChat(threadId) ?: return
+
+        val clip = ClipData.newPlainText("Community URL", openGroup.joinURL)
+        val manager = getSystemService(PassphraseRequiredActionBarActivity.CLIPBOARD_SERVICE) as ClipboardManager
+        manager.setPrimaryClip(clip)
+        Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+    }
+
     override fun showExpiringMessagesDialog(thread: Recipient) {
         if (thread.isClosedGroupRecipient) {
             val group = groupDb.getGroup(thread.address.toGroupString()).orNull()

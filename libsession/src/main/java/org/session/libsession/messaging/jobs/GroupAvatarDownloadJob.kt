@@ -12,7 +12,7 @@ class GroupAvatarDownloadJob(val room: String, val server: String) : Job {
     override var failureCount: Int = 0
     override val maxFailureCount: Int = 10
 
-    override fun execute() {
+    override fun execute(dispatcherName: String) {
         val storage = MessagingModuleConfiguration.shared.storage
         val imageId = storage.getOpenGroup(room, server)?.imageId ?: return
         try {
@@ -20,9 +20,9 @@ class GroupAvatarDownloadJob(val room: String, val server: String) : Job {
             val groupId = GroupUtil.getEncodedOpenGroupID("$server.$room".toByteArray())
             storage.updateProfilePicture(groupId, bytes)
             storage.updateTimestampUpdated(groupId, System.currentTimeMillis())
-            delegate?.handleJobSucceeded(this)
+            delegate?.handleJobSucceeded(this, dispatcherName)
         } catch (e: Exception) {
-            delegate?.handleJobFailed(this, e)
+            delegate?.handleJobFailed(this, dispatcherName, e)
         }
     }
 

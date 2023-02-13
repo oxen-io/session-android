@@ -25,11 +25,11 @@ class MessageReceiveJob(val data: ByteArray, val serverHash: String? = null, val
         private val OPEN_GROUP_ID_KEY = "open_group_id"
     }
 
-    override fun execute() {
-        executeAsync().get()
+    override fun execute(dispatcherName: String) {
+        executeAsync(dispatcherName).get()
     }
 
-    fun executeAsync(): Promise<Unit, Exception> {
+    fun executeAsync(dispatcherName: String): Promise<Unit, Exception> {
         val deferred = deferred<Unit, Exception>()
         try {
             val isRetry: Boolean = failureCount != 0
@@ -39,32 +39,32 @@ class MessageReceiveJob(val data: ByteArray, val serverHash: String? = null, val
             val (message, proto) = MessageReceiver.parse(this.data, this.openGroupMessageServerID, openGroupPublicKey = serverPublicKey)
             message.serverHash = serverHash
             MessageReceiver.handle(message, proto, this.openGroupID)
-            this.handleSuccess()
+            this.handleSuccess(dispatcherName)
             deferred.resolve(Unit)
         } catch (e: Exception) {
             Log.e(TAG, "Couldn't receive message.", e)
             if (e is MessageReceiver.Error && !e.isRetryable) {
                 Log.e("Loki", "Message receive job permanently failed.", e)
-                this.handlePermanentFailure(e)
+                this.handlePermanentFailure(dispatcherName, e)
             } else {
                 Log.e("Loki", "Couldn't receive message.", e)
-                this.handleFailure(e)
+                this.handleFailure(dispatcherName, e)
             }
             deferred.resolve(Unit) // The promise is just used to keep track of when we're done
         }
         return deferred.promise
     }
 
-    private fun handleSuccess() {
-        delegate?.handleJobSucceeded(this)
+    private fun handleSuccess(dispatcherName: String) {
+        delegate?.handleJobSucceeded(this, dispatcherName)
     }
 
-    private fun handlePermanentFailure(e: Exception) {
-        delegate?.handleJobFailedPermanently(this, e)
+    private fun handlePermanentFailure(dispatcherName: String, e: Exception) {
+        delegate?.handleJobFailedPermanently(this, dispatcherName, e)
     }
 
-    private fun handleFailure(e: Exception) {
-        delegate?.handleJobFailed(this, e)
+    private fun handleFailure(dispatcherName: String, e: Exception) {
+        delegate?.handleJobFailed(this, dispatcherName, e)
     }
 
     override fun serialize(): Data {

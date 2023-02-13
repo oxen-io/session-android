@@ -32,7 +32,7 @@ class NotifyPNServerJob(val message: SnodeMessage) : Job {
         private val MESSAGE_KEY = "message"
     }
 
-    override fun execute() {
+    override fun execute(dispatcherName: String) {
         val server = PushNotificationAPI.server
         val parameters = mapOf( "data" to message.data, "send_to" to message.recipient )
         val url = "${server}/notify"
@@ -48,18 +48,18 @@ class NotifyPNServerJob(val message: SnodeMessage) : Job {
                 Log.d("Loki", "Couldn't notify PN server due to error: $exception.")
             }
         }.success {
-            handleSuccess()
+            handleSuccess(dispatcherName)
         }. fail {
-            handleFailure(it)
+            handleFailure(dispatcherName, it)
         }
     }
 
-    private fun handleSuccess() {
-        delegate?.handleJobSucceeded(this)
+    private fun handleSuccess(dispatcherName: String) {
+        delegate?.handleJobSucceeded(this, dispatcherName)
     }
 
-    private fun handleFailure(error: Exception) {
-        delegate?.handleJobFailed(this, error)
+    private fun handleFailure(dispatcherName: String, error: Exception) {
+        delegate?.handleJobFailed(this, dispatcherName, error)
     }
 
     override fun serialize(): Data {

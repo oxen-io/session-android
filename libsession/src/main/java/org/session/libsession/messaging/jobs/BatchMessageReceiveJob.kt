@@ -66,11 +66,11 @@ class BatchMessageReceiveJob(
         return storage.getOrCreateThreadIdFor(senderOrSync, message.groupPublicKey, openGroupID)
     }
 
-    override fun execute() {
-        executeAsync().get()
+    override fun execute(dispatcherName: String) {
+        executeAsync(dispatcherName).get()
     }
 
-    fun executeAsync(): Promise<Unit, Exception> {
+    fun executeAsync(dispatcherName: String): Promise<Unit, Exception> {
         return task {
             val threadMap = mutableMapOf<Long, MutableList<ParsedMessage>>()
             val storage = MessagingModuleConfiguration.shared.storage
@@ -188,19 +188,21 @@ class BatchMessageReceiveJob(
                 deferredThreadMap.awaitAll()
             }
             if (failures.isEmpty()) {
-                handleSuccess()
+                handleSuccess(dispatcherName)
             } else {
-                handleFailure()
+                handleFailure(dispatcherName)
             }
         }
     }
 
-    private fun handleSuccess() {
-        this.delegate?.handleJobSucceeded(this)
+    private fun handleSuccess(dispatcherName: String) {
+        Log.i(TAG, "Completed processing of ${messages.size} messages")
+        this.delegate?.handleJobSucceeded(this, dispatcherName)
     }
 
-    private fun handleFailure() {
-        this.delegate?.handleJobFailed(this, Exception("One or more jobs resulted in failure"))
+    private fun handleFailure(dispatcherName: String) {
+        Log.i(TAG, "Handling failure of ${failures.size} messages (${messages.size - failures.size} processed successfully)")
+        this.delegate?.handleJobFailed(this, dispatcherName, Exception("One or more jobs resulted in failure"))
     }
 
     override fun serialize(): Data {

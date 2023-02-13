@@ -29,14 +29,14 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
         return "$server.$room"
     }
 
-    override fun execute() {
+    override fun execute(dispatcherName: String) {
         try {
             val openGroup = OpenGroupUrlParser.parseUrl(joinUrl)
             val storage = MessagingModuleConfiguration.shared.storage
             val allOpenGroups = storage.getAllOpenGroups().map { it.value.joinURL }
             if (allOpenGroups.contains(openGroup.joinUrl())) {
                 Log.e("OpenGroupDispatcher", "Failed to add group because", DuplicateGroupException())
-                delegate?.handleJobFailed(this, DuplicateGroupException())
+                delegate?.handleJobFailed(this, dispatcherName, DuplicateGroupException())
                 return
             }
             // get image
@@ -50,11 +50,11 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
             storage.onOpenGroupAdded(openGroup.server)
         } catch (e: Exception) {
             Log.e("OpenGroupDispatcher", "Failed to add group because",e)
-            delegate?.handleJobFailed(this, e)
+            delegate?.handleJobFailed(this, dispatcherName, e)
             return
         }
         Log.d("Loki", "Group added successfully")
-        delegate?.handleJobSucceeded(this)
+        delegate?.handleJobSucceeded(this, dispatcherName)
     }
 
     override fun serialize(): Data = Data.Builder()
