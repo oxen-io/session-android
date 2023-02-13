@@ -85,7 +85,10 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
         val allRequests = mutableListOf<SnodeAPI.SnodeBatchRequestInfo>()
         allRequests += batchObjects.requireNoNulls().map { (_, request) -> request }
         // add in the deletion if we have any hashes
-        if (toDeleteRequest != null) allRequests += toDeleteRequest
+        if (toDeleteRequest != null) {
+            allRequests += toDeleteRequest
+            Log.d(TAG, "Including delete request for current hashes")
+        }
 
         val batchResponse = SnodeAPI.getSingleTargetSnode(destination.destinationPublicKey()).bind { snode ->
             SnodeAPI.getRawBatchResponse(
@@ -104,17 +107,29 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
             val deletionResponse = if (toDeleteRequest != null) responseList.last() else null
             val deletedHashes = deletionResponse?.let {
                 @Suppress("UNCHECKED_CAST")
-                deletionResponse["deleted"] as? List<String>
-            }?.toSet() ?: emptySet()
+                // get the sub-request body
+                (deletionResponse["body"] as? RawResponse)?.let { body ->
+                    // get the swarm dict
+                    body["swarm"] as? RawResponse
+                }?.mapValues { (_, swarmDict) ->
+                    // get the deleted values from dict
+                    ((swarmDict as? RawResponse)?.get("deleted") as? List<String>)?.toSet() ?: emptySet()
+                }?.values?.reduce { acc, strings ->
+                    // create an intersection of all deleted hashes (common between all swarm nodes)
+                    acc intersect strings
+                }
+            } ?: emptySet()
 
             // at this point responseList index should line up with configsRequiringPush index
             configsRequiringPush.forEachIndexed { index, config ->
                 val (toPushMessage, _) = batchObjects[index]!!
                 val response = responseList[index]
-                val insertHash = response["hash"] as? String ?: run {
+                val responseBody = response["body"] as? RawResponse
+                val insertHash = responseBody?.get("hash") as? String ?: run {
                     Log.w(TAG, "No hash returned for the configuration in namespace ${config.configNamespace()}")
                     return@forEachIndexed
                 }
+                Log.d(TAG, "Hash $insertHash returned from store request for new config")
 
                 // confirm pushed seqno
                 val thisSeqNo = toPushMessage.seqNo
@@ -129,7 +144,8 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
                 configFactory.persist(config)
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error performing batch request")
+            Log.e(TAG, "Error performing batch request", e)
+            return delegate.handleJobFailedPermanently(this, e)
         }
         delegate.handleJobSucceeded(this)
     }

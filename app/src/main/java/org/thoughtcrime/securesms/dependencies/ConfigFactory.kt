@@ -126,8 +126,6 @@ class ConfigFactory(private val context: Context,
     }
 
     override fun notifyUpdates(forConfigObject: ConfigBase) {
-        if (!forConfigObject.needsDump()) return
-
         when (forConfigObject) {
             is UserProfile -> updateUser(forConfigObject)
             is Contacts -> updateContacts(forConfigObject)

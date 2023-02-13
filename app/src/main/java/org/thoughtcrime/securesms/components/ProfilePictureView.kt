@@ -108,12 +108,14 @@ class ProfilePictureView @JvmOverloads constructor(
             val signalProfilePicture = recipient.contactPhoto
             val avatar = (signalProfilePicture as? ProfileContactPhoto)?.avatarObject
 
+            val placeholder = PlaceholderAvatarPhoto(context, publicKey, displayName ?: "${publicKey.take(4)}...${publicKey.takeLast(4)}")
+
             if (signalProfilePicture != null && avatar != "0" && avatar != "") {
                 glide.clear(imageView)
                 glide.load(signalProfilePicture)
                     .placeholder(unknownRecipientDrawable)
                     .centerCrop()
-                    .error(unknownRecipientDrawable)
+                    .error(glide.load(placeholder))
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .circleCrop()
                     .into(imageView)
@@ -121,8 +123,6 @@ class ProfilePictureView @JvmOverloads constructor(
                 glide.clear(imageView)
                 imageView.setImageDrawable(unknownOpenGroupDrawable)
             } else {
-                val placeholder = PlaceholderAvatarPhoto(context, publicKey, displayName ?: "${publicKey.take(4)}...${publicKey.takeLast(4)}")
-
                 glide.clear(imageView)
                 glide.load(placeholder)
                     .placeholder(unknownRecipientDrawable)

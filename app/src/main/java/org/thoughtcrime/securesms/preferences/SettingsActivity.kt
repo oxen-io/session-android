@@ -20,9 +20,11 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.isVisible
+import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.BuildConfig
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivitySettingsBinding
+import network.loki.messenger.libsession_util.util.UserPic
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.all
 import nl.komponents.kovenant.ui.alwaysUi
@@ -35,6 +37,7 @@ import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol
 import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.avatar.AvatarSelection
+import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.home.PathActivity
 import org.thoughtcrime.securesms.messagerequests.MessageRequestsActivity
 import org.thoughtcrime.securesms.mms.GlideApp
@@ -50,9 +53,14 @@ import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
 import java.io.File
 import java.security.SecureRandom
-import java.util.Date
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SettingsActivity : PassphraseRequiredActionBarActivity() {
+
+    @Inject
+    lateinit var configFactory: ConfigFactory
+
     private lateinit var binding: ActivitySettingsBinding
     private var displayNameEditActionMode: ActionMode? = null
         set(value) { field = value; handleDisplayNameEditActionModeChanged() }
@@ -196,6 +204,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         val displayName = displayNameToBeUploaded
         if (displayName != null) {
             TextSecurePreferences.setProfileName(this, displayName)
+            configFactory.user?.setName(displayName)
         }
         val profilePicture = profilePictureToBeUploaded
         val encodedProfileKey = ProfileKeyUtil.generateEncodedProfileKey(this)
@@ -207,8 +216,13 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             if (isUpdatingProfilePicture && profilePicture != null) {
                 AvatarHelper.setAvatar(this, Address.fromSerialized(TextSecurePreferences.getLocalNumber(this)!!), profilePicture)
                 TextSecurePreferences.setProfileAvatarId(this, SecureRandom().nextInt())
-                TextSecurePreferences.setLastProfilePictureUpload(this, Date().time)
                 ProfileKeyUtil.setEncodedProfileKey(this, encodedProfileKey)
+                // new config
+                val url = TextSecurePreferences.getProfilePictureURL(this)
+                val profileKey = ProfileKeyUtil.getProfileKey(this)
+                if (!url.isNullOrEmpty() && !profileKey.isEmpty()) {
+                    configFactory.user?.setPic(UserPic(url, profileKey))
+                }
             }
             if (profilePicture != null || displayName != null) {
                 ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@SettingsActivity)
@@ -218,10 +232,8 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             if (displayName != null) {
                 binding.btnGroupNameDisplay.text = displayName
             }
-            if (isUpdatingProfilePicture && profilePicture != null) {
-                binding.profilePictureView.root.recycle() // Clear the cached image before updating
-                binding.profilePictureView.root.update()
-            }
+            binding.profilePictureView.root.recycle() // Clear the cached image before updating
+            binding.profilePictureView.root.update()
             displayNameToBeUploaded = null
             profilePictureToBeUploaded = null
             binding.loader.isVisible = false

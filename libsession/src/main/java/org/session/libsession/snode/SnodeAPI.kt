@@ -442,7 +442,7 @@ object SnodeAPI {
         params["pubkey_ed25519"] = ed25519PublicKey
         params["signature"] = Base64.encodeBytes(signature)
         return SnodeBatchRequestInfo(
-            Snode.Method.Retrieve.rawValue,
+            Snode.Method.DeleteMessage.rawValue,
             params,
             null
         )
@@ -711,13 +711,13 @@ object SnodeAPI {
         }
     }
 
-    fun parseRawMessagesResponse(rawResponse: RawResponse, snode: Snode, publicKey: String, namespace: Int = 0, updateLatestHash: Boolean = true): List<Pair<SignalServiceProtos.Envelope, String?>> {
+    fun parseRawMessagesResponse(rawResponse: RawResponse, snode: Snode, publicKey: String, namespace: Int = 0, updateLatestHash: Boolean = true, updateStoredHashes: Boolean = true): List<Pair<SignalServiceProtos.Envelope, String?>> {
         val messages = rawResponse["messages"] as? List<*>
         return if (messages != null) {
             if (updateLatestHash) {
                 updateLastMessageHashValueIfPossible(snode, publicKey, messages, namespace)
             }
-            val newRawMessages = removeDuplicates(publicKey, messages, namespace)
+            val newRawMessages = removeDuplicates(publicKey, messages, namespace, updateStoredHashes)
             return parseEnvelopes(newRawMessages)
         } else {
             listOf()
@@ -734,7 +734,7 @@ object SnodeAPI {
         }
     }
 
-    private fun removeDuplicates(publicKey: String, rawMessages: List<*>, namespace: Int): List<*> {
+    private fun removeDuplicates(publicKey: String, rawMessages: List<*>, namespace: Int, updateStoredHashes: Boolean): List<*> {
         val originalMessageHashValues = database.getReceivedMessageHashValues(publicKey, namespace)?.toMutableSet() ?: mutableSetOf()
         val receivedMessageHashValues = originalMessageHashValues.toMutableSet()
         val result = rawMessages.filter { rawMessage ->
@@ -749,7 +749,7 @@ object SnodeAPI {
                 false
             }
         }
-        if (originalMessageHashValues != receivedMessageHashValues) {
+        if (originalMessageHashValues != receivedMessageHashValues && updateStoredHashes) {
             database.setReceivedMessageHashValues(publicKey, receivedMessageHashValues, namespace)
         }
         return result

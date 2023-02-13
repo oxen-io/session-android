@@ -27,7 +27,10 @@ object ConfigurationMessageUtilities {
         if (ConfigBase.isNewConfigEnabled) {
             // don't schedule job if we already have one
             val ourDestination = Destination.Contact(userPublicKey)
-            if (storage.getConfigSyncJob(ourDestination) != null) return
+            if (storage.getConfigSyncJob(ourDestination) != null) {
+                Log.d("Loki", "ConfigSyncJob is already running for our destination")
+                return
+            }
             val newConfigSync = ConfigurationSyncJob(ourDestination)
             Log.d("Loki", "Scheduling new ConfigurationSyncJob")
             JobQueue.shared.add(newConfigSync)
