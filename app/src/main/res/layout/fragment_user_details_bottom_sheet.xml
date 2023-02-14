@@ -72,7 +72,7 @@
                 android:id="@+id/cancelNicknameEditingButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:contentDescription="@string/AccessibilityId_apply"
+                android:contentDescription="@string/AccessibilityId_cancel"
                 android:src="@drawable/ic_baseline_clear_24" />
 
             <EditText

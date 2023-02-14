@@ -54,7 +54,7 @@
 
     <Button
         style="@style/Widget.Session.Button.Common.ProminentFilled"
-        android:contentDescription="@string/AccessibilityId_enter_your_recovery_phrase"
+        android:contentDescription="@string/AccessibilityId_continue"
         android:id="@+id/restoreButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/medium_button_height"

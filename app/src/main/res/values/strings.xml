@@ -20,7 +20,6 @@
     <string name="AccessibilityId_recovery_phrase_reminder">Recovery phrase reminder</string>
     <string name="AccessibilityId_continue">Continue</string>
     <!-- Recovery phrase input -->
-    <string name="AccessibilityId_recovery_phrase_input">Recovery phrase input</string>
 
     <string name="AccessibilityId_copy_session_id">Copy Session ID</string>
     <!--Restore by seed page-->
@@ -93,7 +92,7 @@
 
     <!--Conversation screen -->
     <string name="AccessibilityId_message_input">Message input box</string>
-    <string name="AccessibilityId_microphone_button">Microphone button</string>
+    <string name="AccessibilityId_microphone_button">New voice message</string>
     <string name="AccessibilityId_send_message_button">Send message button</string>
     <string name="AccessibilityId_attachments_button">Attachments button</string>
     <string name="AccessibilityId_select_camera_button">Select camera button</string>
@@ -104,13 +103,13 @@
     <string name="AccessibilityId_download_media">Download media</string>
     <string name="AccessibilityId_dont_download_media">Don\'t download media</string>
     <!-- Conversation View-->
-    <string name="AccessibilityId_message_sent_status_tick">Message sent status tick</string>
+    <string name="AccessibilityId_message_sent_status_tick">Message sent status: Sent</string>
     <string name="AccessibilityId_message_sent_status_pending">Message sent status pending</string>
     <string name="AccessibilityId_message_request_config_message">Message request has been accepted</string>
     <string name="AccessibilityId_message_body">Message Body</string>
     <string name="AccessibilityId_deleted_message">Deleted message</string>
     <string name="AccessibilityId_delete_message">Delete message</string>
-    <string name="AccessibilityId_reply_message">Reply</string>
+    <string name="AccessibilityId_reply_message">Reply to message</string>
     <string name="AccessibilityId_select">Select</string>
     <string name="AccessibilityId_save_attachment">Save attachment</string>
 
