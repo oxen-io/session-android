@@ -13,6 +13,7 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -360,7 +361,10 @@ public class Permissions {
             .setPositiveButton(R.string.Permissions_continue, (dialog, which) -> context.startActivity(getApplicationSettingsIntent(context)))
             .setNegativeButton(android.R.string.cancel, null)
             .create();
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setContentDescription(context.getString(R.string.AccessibilityId_continue));
+        Button positiveButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        if (positiveButton != null) {
+          positiveButton.setContentDescription(context.getString(R.string.AccessibilityId_continue));
+        }
         alertDialog.show();
       }
     }
