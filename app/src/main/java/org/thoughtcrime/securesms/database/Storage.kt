@@ -2,6 +2,11 @@ package org.thoughtcrime.securesms.database
 
 import android.content.Context
 import android.net.Uri
+import network.loki.messenger.libsession_util.ConfigBase
+import network.loki.messenger.libsession_util.Contacts
+import network.loki.messenger.libsession_util.ConversationVolatileConfig
+import network.loki.messenger.libsession_util.UserProfile
+import network.loki.messenger.libsession_util.util.Conversation
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.BlindedIdMapping
@@ -52,21 +57,26 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.messages.SignalServiceAttachmentPointer
 import org.session.libsignal.messages.SignalServiceGroup
+import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.KeyHelper
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.guava.Optional
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 import org.thoughtcrime.securesms.database.model.MessageId
 import org.thoughtcrime.securesms.database.model.ReactionRecord
+import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.jobs.RetrieveProfileAvatarJob
 import org.thoughtcrime.securesms.mms.PartAuthority
+import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.SessionMetaProtocol
 import java.security.MessageDigest
+import network.loki.messenger.libsession_util.util.Contact as LibSessionContact
 
-class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context, helper), StorageProtocol {
+class Storage(context: Context, helper: SQLCipherOpenHelper, private val configFactory: ConfigFactory) : Database(context, helper), StorageProtocol {
     
     override fun getUserPublicKey(): String? {
         return TextSecurePreferences.getLocalNumber(context)
@@ -262,6 +272,81 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         return DatabaseComponent.get(context).lokiAPIDatabase().getAuthToken(id)
     }
 
+    override fun notifyConfigUpdates(forConfigObject: ConfigBase) {
+        notifyUpdates(forConfigObject)
+    }
+
+    fun notifyUpdates(forConfigObject: ConfigBase) {
+        when (forConfigObject) {
+            is UserProfile -> updateUser(forConfigObject)
+            is Contacts -> updateContacts(forConfigObject)
+            is ConversationVolatileConfig -> updateConvoVolatile(forConfigObject)
+        }
+    }
+
+    private fun updateUser(userProfile: UserProfile) {
+        val userPublicKey = getUserPublicKey() ?: return
+        // would love to get rid of recipient and context from this
+        val recipient = Recipient.from(context, fromSerialized(userPublicKey), false)
+        // update name
+        val name = userProfile.getName() ?: return
+        val userPic = userProfile.getPic()
+        val profileManager = SSKEnvironment.shared.profileManager
+        if (name.isNotEmpty()) {
+            TextSecurePreferences.setProfileName(context, name)
+            profileManager.setName(context, recipient, name)
+        }
+
+        // update pfp
+        if (userPic == null) {
+            // clear picture if userPic is null
+            TextSecurePreferences.setProfileKey(context, null)
+            ProfileKeyUtil.setEncodedProfileKey(context, null)
+            profileManager.setProfileKey(context, recipient, null)
+            setUserProfilePictureURL(null)
+        } else if (userPic.key.isNotEmpty() && userPic.url.isNotEmpty()
+            && TextSecurePreferences.getProfilePictureURL(context) != userPic.url) {
+            val profileKey = Base64.encodeBytes(userPic.key)
+            ProfileKeyUtil.setEncodedProfileKey(context, profileKey)
+            profileManager.setProfileKey(context, recipient, userPic.key)
+            setUserProfilePictureURL(userPic.url)
+        }
+    }
+
+    private fun updateContacts(contacts: Contacts) {
+        val extracted = contacts.all().toList()
+        extracted.forEach { contact ->
+            val address = Address.fromSerialized(contact.id)
+            val settings = getRecipientSettings(address) ?: run {
+                // new contact, store it
+            }
+            contact.name
+            contact.approved
+            contact.approvedMe
+            contact.blocked
+            contact.nickname
+            contact.profilePicture
+        }
+    }
+
+    private fun updateConvoVolatile(convos: ConversationVolatileConfig) {
+        val extracted = convos.all()
+        for (conversation in extracted) {
+            val threadId = when (conversation) {
+                is Conversation.OneToOne -> conversation.sessionId.let {
+                    getOrCreateThreadIdFor(fromSerialized(it))
+                }
+                is Conversation.LegacyClosedGroup -> conversation.groupId.let {
+                    getOrCreateThreadIdFor("", it,null)
+                }
+                is Conversation.OpenGroup -> conversation.baseUrl.let {
+                    getOrCreateThreadIdFor("",null, it)
+                }
+            }
+            Log.d("Loki-DBG", "Should update thread $threadId")
+        }
+    }
+
     override fun setAuthToken(room: String, server: String, newValue: String) {
         val id = "$server.$room"
         DatabaseComponent.get(context).lokiAPIDatabase().setAuthToken(id, newValue)
@@ -455,6 +540,12 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
 
     override fun createGroup(groupId: String, title: String?, members: List<Address>, avatar: SignalServiceAttachmentPointer?, relay: String?, admins: List<Address>, formationTimestamp: Long) {
         DatabaseComponent.get(context).groupDatabase().create(groupId, title, members, avatar, relay, admins, formationTimestamp)
+        val volatiles = configFactory.convoVolatile ?: return
+        val groupPublicKey = GroupUtil.doubleDecodeGroupId(groupId)
+        val groupVolatileConfig = volatiles.getOrConstructLegacyClosedGroup(groupPublicKey)
+        groupVolatileConfig.lastRead = formationTimestamp
+        volatiles.set(groupVolatileConfig)
+        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
     }
 
     override fun isGroupActive(groupPublicKey: String): Boolean {
@@ -658,6 +749,25 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
     override fun getRecipientSettings(address: Address): Recipient.RecipientSettings? {
         val recipientSettings = DatabaseComponent.get(context).recipientDatabase().getRecipientSettings(address)
         return if (recipientSettings.isPresent) { recipientSettings.get() } else null
+    }
+
+    override fun addLibSessionContacts(contacts: List<LibSessionContact>) {
+        val recipientDatabase = DatabaseComponent.get(context).recipientDatabase()
+        val threadDatabase = DatabaseComponent.get(context).threadDatabase()
+        val mappingDb = DatabaseComponent.get(context).blindedIdMappingDatabase()
+        val moreContacts = contacts.filter { contact ->
+            val id = SessionId(contact.id)
+            id.prefix != IdPrefix.BLINDED || mappingDb.getBlindedIdMapping(contact.id).none { it.sessionId != null }
+        }
+        for (contact in moreContacts) {
+            val address = fromSerialized(contact.id)
+            val recipient = Recipient.from(context, address, true)
+            val (url, key) = contact.profilePicture?.let { it.url to it.key } ?: (null to null)
+            // set or clear the avatar
+            recipientDatabase.setProfileAvatar(recipient, url)
+            recipientDatabase.setProfileKey(recipient, key)
+
+        }
     }
 
     override fun addContacts(contacts: List<ConfigurationMessage.Contact>) {

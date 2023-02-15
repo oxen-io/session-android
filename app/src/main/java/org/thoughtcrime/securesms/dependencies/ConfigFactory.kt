@@ -5,21 +5,14 @@ import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.Contacts
 import network.loki.messenger.libsession_util.ConversationVolatileConfig
 import network.loki.messenger.libsession_util.UserProfile
-import org.session.libsession.database.StorageProtocol
-import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.ConfigFactoryProtocol
-import org.session.libsession.utilities.ProfileKeyUtil
-import org.session.libsession.utilities.SSKEnvironment
-import org.session.libsession.utilities.TextSecurePreferences
-import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsession.utilities.ConfigFactoryUpdateListener
 import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage
-import org.session.libsignal.utilities.Base64
 import org.thoughtcrime.securesms.database.ConfigDatabase
 import java.util.concurrent.ConcurrentSkipListSet
 
 class ConfigFactory(private val context: Context,
                     private val configDatabase: ConfigDatabase,
-                    private val storage: StorageProtocol,
                     private val maybeGetUserInfo: ()->Pair<ByteArray, String>?):
     ConfigFactoryProtocol {
 
@@ -41,6 +34,10 @@ class ConfigFactory(private val context: Context,
     private val convoVolatileLock = Object()
     private var _convoVolatileConfig: ConversationVolatileConfig? = null
     private val convoHashes = ConcurrentSkipListSet<String>()
+
+    private val listeners: MutableList<ConfigFactoryUpdateListener> = mutableListOf()
+    fun registerListener(listener: ConfigFactoryUpdateListener) { listeners += listener }
+    fun unregisterListener(listener: ConfigFactoryUpdateListener) { listeners -= listener }
 
     override val user: UserProfile? = synchronized(userLock) {
         if (_userConfig == null) {
@@ -115,6 +112,9 @@ class ConfigFactory(private val context: Context,
             is Contacts -> persistContactsConfigDump()
             is ConversationVolatileConfig -> persistConvoVolatileConfigDump()
         }
+        listeners.forEach { listener ->
+            listener.notifyUpdates(forConfigObject)
+        }
     }
 
     override fun appendHash(configObject: ConfigBase, hash: String) {
@@ -122,14 +122,6 @@ class ConfigFactory(private val context: Context,
             is UserProfile -> userHashes.add(hash)
             is Contacts -> contactsHashes.add(hash)
             is ConversationVolatileConfig -> convoHashes.add(hash)
-        }
-    }
-
-    override fun notifyUpdates(forConfigObject: ConfigBase) {
-        when (forConfigObject) {
-            is UserProfile -> updateUser(forConfigObject)
-            is Contacts -> updateContacts(forConfigObject)
-            is ConversationVolatileConfig -> updateConvoVolatile(forConfigObject)
         }
     }
 
@@ -146,43 +138,5 @@ class ConfigFactory(private val context: Context,
             is Contacts -> contactsHashes.removeAll(deletedHashes)
             is ConversationVolatileConfig -> convoHashes.removeAll(deletedHashes)
         }
-
-    private fun updateUser(userProfile: UserProfile) {
-        val (_, userPublicKey) = maybeGetUserInfo() ?: return
-        // would love to get rid of recipient and context from this
-        val recipient = Recipient.from(context, Address.fromSerialized(userPublicKey), false)
-        // update name
-        val name = userProfile.getName() ?: return
-        val userPic = userProfile.getPic()
-        val profileManager = SSKEnvironment.shared.profileManager
-        if (name.isNotEmpty()) {
-            TextSecurePreferences.setProfileName(context, name)
-            profileManager.setName(context, recipient, name)
-        }
-
-        // update pfp
-        if (userPic == null) {
-            // clear picture if userPic is null
-            TextSecurePreferences.setProfileKey(context, null)
-            ProfileKeyUtil.setEncodedProfileKey(context, null)
-            profileManager.setProfileKey(context, recipient, null)
-            storage.setUserProfilePictureURL(null)
-        } else if (userPic.key.isNotEmpty() && userPic.url.isNotEmpty()
-            && TextSecurePreferences.getProfilePictureURL(context) != userPic.url) {
-            val profileKey = Base64.encodeBytes(userPic.key)
-            ProfileKeyUtil.setEncodedProfileKey(context, profileKey)
-            profileManager.setProfileKey(context, recipient, userPic.key)
-            storage.setUserProfilePictureURL(userPic.url)
-        }
-    }
-
-    private fun updateContacts(contacts: Contacts) {
-
-    }
-
-    private fun updateConvoVolatile(convos: ConversationVolatileConfig) {
-
-    }
-
 
 }

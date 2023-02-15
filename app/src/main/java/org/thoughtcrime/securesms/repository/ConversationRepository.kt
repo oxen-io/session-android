@@ -26,6 +26,7 @@ import org.thoughtcrime.securesms.database.SmsDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.ThreadRecord
+import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -83,7 +84,8 @@ class DefaultConversationRepository @Inject constructor(
     private val mmsSmsDb: MmsSmsDatabase,
     private val recipientDb: RecipientDatabase,
     private val lokiMessageDb: LokiMessageDatabase,
-    private val sessionJobDb: SessionJobDatabase
+    private val sessionJobDb: SessionJobDatabase,
+    private val configFactory: ConfigFactory
 ) : ConversationRepository {
 
     override fun maybeGetRecipientForThreadId(threadId: Long): Recipient? {

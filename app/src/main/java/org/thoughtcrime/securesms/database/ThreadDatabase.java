@@ -295,6 +295,27 @@ public class ThreadDatabase extends Database {
     notifyConversationListeners(threadId);
   }
 
+  public List<MarkedMessageInfo> setRead(long threadId, long lastReadTime) {
+    ContentValues contentValues = new ContentValues(1);
+    contentValues.put(READ, 1);
+    contentValues.put(UNREAD_COUNT, 0);
+    contentValues.put(UNREAD_MENTION_COUNT, 0);
+    contentValues.put(LAST_SEEN, lastReadTime);
+
+    SQLiteDatabase db = databaseHelper.getWritableDatabase();
+    db.update(TABLE_NAME, contentValues, ID_WHERE, new String[] {threadId+""});
+
+    final List<MarkedMessageInfo> smsRecords = DatabaseComponent.get(context).smsDatabase().setMessagesRead(threadId, lastReadTime);
+    final List<MarkedMessageInfo> mmsRecords = DatabaseComponent.get(context).mmsDatabase().setMessagesRead(threadId, lastReadTime);
+
+    notifyConversationListListeners();
+
+    return new LinkedList<MarkedMessageInfo>() {{
+      addAll(smsRecords);
+      addAll(mmsRecords);
+    }};
+  }
+
   public List<MarkedMessageInfo> setRead(long threadId, boolean lastSeen) {
     ContentValues contentValues = new ContentValues(1);
     contentValues.put(READ, 1);

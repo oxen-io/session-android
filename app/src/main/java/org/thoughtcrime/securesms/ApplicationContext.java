@@ -40,6 +40,7 @@ import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPol
 import org.session.libsession.messaging.sending_receiving.pollers.Poller;
 import org.session.libsession.snode.SnodeModule;
 import org.session.libsession.utilities.Address;
+import org.session.libsession.utilities.ConfigFactoryUpdateListener;
 import org.session.libsession.utilities.ProfilePictureUtilities;
 import org.session.libsession.utilities.SSKEnvironment;
 import org.session.libsession.utilities.TextSecurePreferences;
@@ -115,6 +116,7 @@ import dagger.hilt.android.HiltAndroidApp;
 import kotlin.Unit;
 import kotlinx.coroutines.Job;
 import network.loki.messenger.BuildConfig;
+import network.loki.messenger.libsession_util.ConfigBase;
 
 /**
  * Will be called once when the TextSecure process is created.
@@ -125,7 +127,7 @@ import network.loki.messenger.BuildConfig;
  * @author Moxie Marlinspike
  */
 @HiltAndroidApp
-public class ApplicationContext extends Application implements DefaultLifecycleObserver {
+public class ApplicationContext extends Application implements DefaultLifecycleObserver, ConfigFactoryUpdateListener {
 
     public static final String PREFERENCES_NAME = "SecureSMS-Preferences";
 
@@ -199,6 +201,11 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         return this.persistentLogger;
     }
 
+    @Override
+    public void notifyUpdates(@NonNull ConfigBase forConfigObject) {
+        // forward to the config factory / storage ig
+        storage.notifyConfigUpdates(forConfigObject);
+    }
     @Override
     public void onCreate() {
         DatabaseModule.init(this);

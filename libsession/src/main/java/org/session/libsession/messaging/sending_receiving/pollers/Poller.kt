@@ -161,7 +161,6 @@ class Poller(private val configFactory: ConfigFactoryProtocol) {
         }
         // process new results
         configFactory.persist(forConfigObject)
-        configFactory.notifyUpdates(forConfigObject)
     }
 
     private fun poll(snode: Snode, deferred: Deferred<Unit, Exception>): Promise<Unit, Exception> {

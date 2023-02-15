@@ -3,7 +3,6 @@ package org.session.libsession.utilities
 import org.session.libsignal.messages.SignalServiceGroup
 import org.session.libsignal.utilities.Hex
 import java.io.IOException
-import kotlin.jvm.Throws
 
 object GroupUtil {
     const val CLOSED_GROUP_PREFIX = "__textsecure_group__!"
@@ -96,5 +95,11 @@ object GroupUtil {
     @Throws(IOException::class)
     fun doubleDecodeGroupID(groupID: String): ByteArray {
         return getDecodedGroupIDAsData(getDecodedGroupID(groupID))
+    }
+
+    @JvmStatic
+    @Throws(IOException::class)
+    fun doubleDecodeGroupId(groupID: String): String {
+        return Hex.toStringCondensed(getDecodedGroupIDAsData(getDecodedGroupID(groupID)))
     }
 }

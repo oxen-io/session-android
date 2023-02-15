@@ -399,6 +399,13 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         database.update(TABLE_NAME, contentValues, ID_WHERE, arrayOf(id.toString()))
     }
 
+    fun setMessagesRead(threadId: Long, beforeTime: Long): List<MarkedMessageInfo> {
+        return setMessagesRead(
+            THREAD_ID + " = ? AND (" + READ + " = 0 OR " + REACTIONS_UNREAD + " = 1) AND " + DATE_RECEIVED + " <= ?",
+            arrayOf(threadId.toString(), beforeTime.toString())
+        )
+    }
+
     fun setMessagesRead(threadId: Long): List<MarkedMessageInfo> {
         return setMessagesRead(
             THREAD_ID + " = ? AND (" + READ + " = 0 OR " + REACTIONS_UNREAD + " = 1)",

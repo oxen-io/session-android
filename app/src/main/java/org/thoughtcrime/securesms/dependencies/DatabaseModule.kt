@@ -6,7 +6,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import net.zetetic.database.sqlcipher.SQLiteDatabase
 import org.session.libsession.database.MessageDataProvider
 import org.thoughtcrime.securesms.attachments.DatabaseAttachmentProvider
 import org.thoughtcrime.securesms.crypto.AttachmentSecret
@@ -136,7 +135,7 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideStorage(@ApplicationContext context: Context, openHelper: SQLCipherOpenHelper) = Storage(context,openHelper)
+    fun provideStorage(@ApplicationContext context: Context, openHelper: SQLCipherOpenHelper, configFactory: ConfigFactory) = Storage(context,openHelper, configFactory)
 
     @Provides
     @Singleton

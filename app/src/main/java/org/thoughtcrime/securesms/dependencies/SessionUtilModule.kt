@@ -6,10 +6,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import org.session.libsession.utilities.ConfigFactoryUpdateListener
 import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities
 import org.thoughtcrime.securesms.database.ConfigDatabase
-import org.thoughtcrime.securesms.database.Storage
 import javax.inject.Singleton
 
 @Module
@@ -23,12 +23,14 @@ object SessionUtilModule {
 
     @Provides
     @Singleton
-    fun provideConfigFactory(@ApplicationContext context: Context, configDatabase: ConfigDatabase, storage: Storage): ConfigFactory =
-        ConfigFactory(context, configDatabase, storage) {
+    fun provideConfigFactory(@ApplicationContext context: Context, configDatabase: ConfigDatabase): ConfigFactory =
+        ConfigFactory(context, configDatabase) {
             val localUserPublicKey = TextSecurePreferences.getLocalNumber(context)
             val secretKey = maybeUserEdSecretKey(context)
             if (localUserPublicKey == null || secretKey == null) null
             else secretKey to localUserPublicKey
+        }.apply {
+            registerListener(context as ConfigFactoryUpdateListener)
         }
 
 }

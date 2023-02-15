@@ -11,7 +11,10 @@ interface ConfigFactoryProtocol {
     val convoVolatile: ConversationVolatileConfig?
     fun persist(forConfigObject: ConfigBase)
     fun appendHash(configObject: ConfigBase, hash: String)
-    fun notifyUpdates(forConfigObject: ConfigBase)
     fun getHashesFor(forConfigObject: ConfigBase): List<String>
     fun removeHashesFor(config: ConfigBase, deletedHashes: Set<String>): Boolean
+}
+
+interface ConfigFactoryUpdateListener {
+    fun notifyUpdates(forConfigObject: ConfigBase)
 }

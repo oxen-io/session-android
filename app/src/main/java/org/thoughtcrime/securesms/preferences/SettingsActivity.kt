@@ -213,6 +213,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         }
         val compoundPromise = all(promises)
         compoundPromise.successUi { // Do this on the UI thread so that it happens before the alwaysUi clause below
+            val userConfig = configFactory.user
             if (isUpdatingProfilePicture && profilePicture != null) {
                 AvatarHelper.setAvatar(this, Address.fromSerialized(TextSecurePreferences.getLocalNumber(this)!!), profilePicture)
                 TextSecurePreferences.setProfileAvatarId(this, SecureRandom().nextInt())
@@ -220,11 +221,14 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                 // new config
                 val url = TextSecurePreferences.getProfilePictureURL(this)
                 val profileKey = ProfileKeyUtil.getProfileKey(this)
-                if (!url.isNullOrEmpty() && !profileKey.isEmpty()) {
-                    configFactory.user?.setPic(UserPic(url, profileKey))
+                if (!url.isNullOrEmpty() && profileKey.isNotEmpty()) {
+                    userConfig?.setPic(UserPic(url, profileKey))
                 }
             }
             if (profilePicture != null || displayName != null) {
+                if (userConfig != null && userConfig.needsDump()) {
+                    configFactory.persist(userConfig)
+                }
                 ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@SettingsActivity)
             }
         }

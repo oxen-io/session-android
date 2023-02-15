@@ -2,6 +2,7 @@ package org.session.libsession.database
 
 import android.content.Context
 import android.net.Uri
+import network.loki.messenger.libsession_util.ConfigBase
 import org.session.libsession.messaging.BlindedIdMapping
 import org.session.libsession.messaging.calls.CallMessageType
 import org.session.libsession.messaging.contacts.Contact
@@ -31,6 +32,7 @@ import org.session.libsession.utilities.recipients.Recipient.RecipientSettings
 import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.messages.SignalServiceAttachmentPointer
 import org.session.libsignal.messages.SignalServiceGroup
+import network.loki.messenger.libsession_util.util.Contact as LibSessionContact
 
 interface StorageProtocol {
 
@@ -164,6 +166,7 @@ interface StorageProtocol {
     fun setContact(contact: Contact)
     fun getRecipientForThread(threadId: Long): Recipient?
     fun getRecipientSettings(address: Address): RecipientSettings?
+    fun addLibSessionContacts(contacts: List<LibSessionContact>)
     fun addContacts(contacts: List<ConfigurationMessage.Contact>)
 
     // Attachments
@@ -202,4 +205,7 @@ interface StorageProtocol {
     fun deleteReactions(messageId: Long, mms: Boolean)
     fun unblock(toUnblock: List<Recipient>)
     fun blockedContacts(): List<Recipient>
+
+    // Shared configs
+    fun notifyConfigUpdates(forConfigObject: ConfigBase)
 }
