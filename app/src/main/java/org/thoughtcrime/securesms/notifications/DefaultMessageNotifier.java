@@ -138,7 +138,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
       Intent intent = new Intent(context, ConversationActivityV2.class);
       intent.putExtra(ConversationActivityV2.ADDRESS, recipient.getAddress());
       intent.putExtra(ConversationActivityV2.THREAD_ID, threadId);
-      intent.setData((Uri.parse("custom://" + SnodeAPI.INSTANCE.getNowWithOffset())));
+      intent.setData((Uri.parse("custom://" + SnodeAPI.getNowWithOffset())));
 
       FailedNotificationBuilder builder = new FailedNotificationBuilder(context, TextSecurePreferences.getNotificationPrivacy(context), intent);
       ((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE))

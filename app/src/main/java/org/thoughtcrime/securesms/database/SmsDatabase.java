@@ -228,7 +228,7 @@ public class SmsDatabase extends MessagingDatabase {
 
   @Override
   public void markExpireStarted(long id) {
-    markExpireStarted(id, SnodeAPI.INSTANCE.getNowWithOffset());
+    markExpireStarted(id, SnodeAPI.getNowWithOffset());
   }
 
   @Override
@@ -531,7 +531,7 @@ public class SmsDatabase extends MessagingDatabase {
     contentValues.put(ADDRESS, address.serialize());
     contentValues.put(THREAD_ID, threadId);
     contentValues.put(BODY, message.getMessageBody());
-    contentValues.put(DATE_RECEIVED, SnodeAPI.INSTANCE.getNowWithOffset());
+    contentValues.put(DATE_RECEIVED, SnodeAPI.getNowWithOffset());
     contentValues.put(DATE_SENT, message.getSentTimestampMillis());
     contentValues.put(READ, 1);
     contentValues.put(TYPE, type);
@@ -766,11 +766,11 @@ public class SmsDatabase extends MessagingDatabase {
     public MessageRecord getCurrent() {
       return new SmsMessageRecord(id, message.getMessageBody(),
                                   message.getRecipient(), message.getRecipient(),
-                                  SnodeAPI.INSTANCE.getNowWithOffset(), SnodeAPI.INSTANCE.getNowWithOffset(),
+                                  SnodeAPI.getNowWithOffset(), SnodeAPI.getNowWithOffset(),
                                   0, message.isSecureMessage() ? MmsSmsColumns.Types.getOutgoingEncryptedMessageType() : MmsSmsColumns.Types.getOutgoingSmsMessageType(),
                                   threadId, 0, new LinkedList<IdentityKeyMismatch>(),
                                   message.getExpiresIn(),
-                                  SnodeAPI.INSTANCE.getNowWithOffset(), 0, false, Collections.emptyList(), false);
+                                  SnodeAPI.getNowWithOffset(), 0, false, Collections.emptyList(), false);
     }
   }
 

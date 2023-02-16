@@ -424,7 +424,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
               .onAnyDenied(() -> Toast.makeText(this, R.string.MediaPreviewActivity_unable_to_write_to_external_storage_without_permission, Toast.LENGTH_LONG).show())
               .onAllGranted(() -> {
                 SaveAttachmentTask saveTask = new SaveAttachmentTask(MediaPreviewActivity.this);
-                long saveDate = (mediaItem.date > 0) ? mediaItem.date : SnodeAPI.INSTANCE.getNowWithOffset();
+                long saveDate = (mediaItem.date > 0) ? mediaItem.date : SnodeAPI.getNowWithOffset();
                 saveTask.executeOnExecutor(
                         AsyncTask.THREAD_POOL_EXECUTOR,
                         new Attachment(mediaItem.uri, mediaItem.type, saveDate, null));
@@ -438,7 +438,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
 
   private void sendMediaSavedNotificationIfNeeded() {
     if (conversationRecipient.isGroupRecipient()) return;
-    DataExtractionNotification message = new DataExtractionNotification(new DataExtractionNotification.Kind.MediaSaved(SnodeAPI.INSTANCE.getNowWithOffset()));
+    DataExtractionNotification message = new DataExtractionNotification(new DataExtractionNotification.Kind.MediaSaved(SnodeAPI.getNowWithOffset()));
     MessageSender.send(message, conversationRecipient.getAddress());
   }
 

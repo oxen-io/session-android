@@ -367,7 +367,7 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
 
     private void sendMediaSavedNotificationIfNeeded() {
       if (recipient.isGroupRecipient()) return;
-      DataExtractionNotification message = new DataExtractionNotification(new DataExtractionNotification.Kind.MediaSaved(SnodeAPI.INSTANCE.getNowWithOffset()));
+      DataExtractionNotification message = new DataExtractionNotification(new DataExtractionNotification.Kind.MediaSaved(SnodeAPI.getNowWithOffset()));
       MessageSender.send(message, recipient.getAddress());
     }
 

@@ -51,7 +51,7 @@ public class QuickResponseService extends IntentService {
       if (!TextUtils.isEmpty(content)) {
         VisibleMessage message = new VisibleMessage();
         message.setText(content);
-        message.setSentTimestamp(SnodeAPI.INSTANCE.getNowWithOffset());
+        message.setSentTimestamp(SnodeAPI.getNowWithOffset());
         MessageSender.send(message, Address.fromExternal(this, number));
       }
     } catch (URISyntaxException e) {

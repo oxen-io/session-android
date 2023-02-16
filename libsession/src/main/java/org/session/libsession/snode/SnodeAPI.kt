@@ -57,6 +57,7 @@ object SnodeAPI {
      */
     internal var clockOffset = 0L
 
+    @JvmStatic
     public val nowWithOffset
         get() = System.currentTimeMillis() + clockOffset
 

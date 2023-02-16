@@ -83,7 +83,7 @@ public class AndroidAutoReplyReceiver extends BroadcastReceiver {
 
           VisibleMessage message = new VisibleMessage();
           message.setText(responseText.toString());
-          message.setSentTimestamp(SnodeAPI.INSTANCE.getNowWithOffset());
+          message.setSentTimestamp(SnodeAPI.getNowWithOffset());
           MessageSender.send(message, recipient.getAddress());
 
           if (recipient.isGroupRecipient()) {
@@ -97,7 +97,7 @@ public class AndroidAutoReplyReceiver extends BroadcastReceiver {
           } else {
             Log.w("AndroidAutoReplyReceiver", "Sending regular message ");
             OutgoingTextMessage reply = OutgoingTextMessage.from(message, recipient);
-            DatabaseComponent.get(context).smsDatabase().insertMessageOutbox(replyThreadId, reply, false, SnodeAPI.INSTANCE.getNowWithOffset(), null, true);
+            DatabaseComponent.get(context).smsDatabase().insertMessageOutbox(replyThreadId, reply, false, SnodeAPI.getNowWithOffset(), null, true);
           }
 
           List<MarkedMessageInfo> messageIds = DatabaseComponent.get(context).threadDatabase().setRead(replyThreadId, true);

@@ -87,7 +87,7 @@ public class MarkReadReceiver extends BroadcastReceiver {
       List<Long> timestamps = Stream.of(addressMap.get(address)).map(SyncMessageId::getTimetamp).toList();
       if (!SessionMetaProtocol.shouldSendReadReceipt(Recipient.from(context, address, false))) { continue; }
       ReadReceipt readReceipt = new ReadReceipt(timestamps);
-      readReceipt.setSentTimestamp(SnodeAPI.INSTANCE.getNowWithOffset());
+      readReceipt.setSentTimestamp(SnodeAPI.getNowWithOffset());
       MessageSender.send(readReceipt, address);
     }
   }

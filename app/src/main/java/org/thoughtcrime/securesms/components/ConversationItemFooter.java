@@ -107,7 +107,7 @@ public class ConversationItemFooter extends LinearLayout {
                                          messageRecord.getExpiresIn());
         this.timerView.startAnimation();
 
-        if (messageRecord.getExpireStarted() + messageRecord.getExpiresIn() <= SnodeAPI.INSTANCE.getNowWithOffset()) {
+        if (messageRecord.getExpireStarted() + messageRecord.getExpiresIn() <= SnodeAPI.getNowWithOffset()) {
           ApplicationContext.getInstance(getContext()).getExpiringMessageManager().checkSchedule();
         }
       } else if (!messageRecord.isOutgoing() && !messageRecord.isMediaPending()) {
