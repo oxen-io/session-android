@@ -366,10 +366,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         val attachmentDatabase = get(context).attachmentDatabase()
         queue(Runnable { attachmentDatabase.deleteAttachmentsForMessage(messageId) })
         val threadId = getThreadIdForMessage(messageId)
-        if (!read) {
-            val mentionChange = if (hasMention) { 1 } else { 0 }
-            get(context).threadDatabase().decrementUnread(threadId, 1, mentionChange)
-        }
+
         updateMailboxBitmask(
             messageId,
             MmsSmsColumns.Types.BASE_TYPE_MASK,
@@ -634,7 +631,6 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         contentLocation: String,
         threadId: Long, mailbox: Long,
         serverTimestamp: Long,
-        runIncrement: Boolean,
         runThreadUpdate: Boolean
     ): Optional<InsertResult> {
         var threadId = threadId
@@ -699,10 +695,6 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             null,
         )
         if (!MmsSmsColumns.Types.isExpirationTimerUpdate(mailbox)) {
-            if (runIncrement) {
-                val mentionAmount = if (retrieved.hasMention()) { 1 } else { 0 }
-                get(context).threadDatabase().incrementUnread(threadId, 1, mentionAmount)
-            }
             if (runThreadUpdate) {
                 get(context).threadDatabase().update(threadId, true)
             }
@@ -753,7 +745,6 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         retrieved: IncomingMediaMessage,
         threadId: Long,
         serverTimestamp: Long = 0,
-        runIncrement: Boolean,
         runThreadUpdate: Boolean
     ): Optional<InsertResult> {
         var type = MmsSmsColumns.Types.BASE_INBOX_TYPE or MmsSmsColumns.Types.SECURE_MESSAGE_BIT
@@ -772,7 +763,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         if (retrieved.isMessageRequestResponse) {
             type = type or MmsSmsColumns.Types.MESSAGE_REQUEST_RESPONSE_BIT
         }
-        return insertMessageInbox(retrieved, "", threadId, type, serverTimestamp, runIncrement, runThreadUpdate)
+        return insertMessageInbox(retrieved, "", threadId, type, serverTimestamp, runThreadUpdate)
     }
 
     @JvmOverloads

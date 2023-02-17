@@ -28,6 +28,7 @@ import network.loki.messenger.databinding.ViewMessageRequestBannerBinding
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.utilities.Address
@@ -556,7 +557,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
     private fun markAllAsRead(thread: ThreadRecord) {
         ThreadUtils.queue {
-            threadDb.markAllAsRead(thread.threadId, thread.recipient.isOpenGroupRecipient)
+            MessagingModuleConfiguration.shared.storage.markConversationAsRead(thread.threadId, System.currentTimeMillis())
         }
     }
 

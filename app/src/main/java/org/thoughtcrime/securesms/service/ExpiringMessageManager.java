@@ -120,7 +120,7 @@ public class ExpiringMessageManager implements SSKEnvironment.MessageExpirationM
               Optional.absent(),
               Optional.absent());
       //insert the timer update message
-      database.insertSecureDecryptedMessageInbox(mediaMessage, -1, true, true);
+      database.insertSecureDecryptedMessageInbox(mediaMessage, -1,  true);
 
       //set the timer to the conversation
       DatabaseComponent.get(context).recipientDatabase().setExpireMessages(recipient, duration);

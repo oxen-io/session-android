@@ -218,10 +218,6 @@ public class SmsDatabase extends MessagingDatabase {
     contentValues.put(BODY, "");
     contentValues.put(HAS_MENTION, 0);
     database.update(TABLE_NAME, contentValues, ID_WHERE, new String[] {String.valueOf(messageId)});
-    long threadId = getThreadIdForMessage(messageId);
-    if (!read) {
-      DatabaseComponent.get(context).threadDatabase().decrementUnread(threadId, 1, (hasMention ? 1 : 0));
-    }
     updateTypeBitmask(messageId, Types.BASE_TYPE_MASK, Types.BASE_DELETED_TYPE);
   }
 
@@ -394,7 +390,7 @@ public class SmsDatabase extends MessagingDatabase {
     return new Pair<>(messageId, threadId);
   }
 
-  protected Optional<InsertResult> insertMessageInbox(IncomingTextMessage message, long type, long serverTimestamp, boolean runIncrement, boolean runThreadUpdate) {
+  protected Optional<InsertResult> insertMessageInbox(IncomingTextMessage message, long type, long serverTimestamp, boolean runThreadUpdate) {
     if (message.isSecureMessage()) {
       type |= Types.SECURE_MESSAGE_BIT;
     } else if (message.isGroup()) {
@@ -473,10 +469,6 @@ public class SmsDatabase extends MessagingDatabase {
       SQLiteDatabase db        = databaseHelper.getWritableDatabase();
       long           messageId = db.insert(TABLE_NAME, null, values);
 
-      if (unread && runIncrement) {
-        DatabaseComponent.get(context).threadDatabase().incrementUnread(threadId, 1, (message.hasMention() ? 1 : 0));
-      }
-
       if (runThreadUpdate) {
         DatabaseComponent.get(context).threadDatabase().update(threadId, true);
       }
@@ -491,16 +483,16 @@ public class SmsDatabase extends MessagingDatabase {
     }
   }
 
-  public Optional<InsertResult> insertMessageInbox(IncomingTextMessage message, boolean runIncrement, boolean runThreadUpdate) {
-    return insertMessageInbox(message, Types.BASE_INBOX_TYPE, 0, runIncrement, runThreadUpdate);
+  public Optional<InsertResult> insertMessageInbox(IncomingTextMessage message, boolean runThreadUpdate) {
+    return insertMessageInbox(message, Types.BASE_INBOX_TYPE, 0, runThreadUpdate);
   }
 
   public Optional<InsertResult> insertCallMessage(IncomingTextMessage message) {
-    return insertMessageInbox(message, 0, 0, true, true);
+    return insertMessageInbox(message, 0, 0, true);
   }
 
-  public Optional<InsertResult> insertMessageInbox(IncomingTextMessage message, long serverTimestamp, boolean runIncrement, boolean runThreadUpdate) {
-    return insertMessageInbox(message, Types.BASE_INBOX_TYPE, serverTimestamp, runIncrement, runThreadUpdate);
+  public Optional<InsertResult> insertMessageInbox(IncomingTextMessage message, long serverTimestamp, boolean runThreadUpdate) {
+    return insertMessageInbox(message, Types.BASE_INBOX_TYPE, serverTimestamp, runThreadUpdate);
   }
 
   public Optional<InsertResult> insertMessageOutbox(long threadId, OutgoingTextMessage message, long serverTimestamp, boolean runThreadUpdate) {

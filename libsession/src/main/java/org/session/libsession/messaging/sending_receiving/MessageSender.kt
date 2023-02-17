@@ -66,7 +66,8 @@ object MessageSender {
         return if (destination is Destination.LegacyOpenGroup || destination is Destination.OpenGroup || destination is Destination.OpenGroupInbox) {
             sendToOpenGroupDestination(destination, message)
         } else {
-            sendToSnodeDestination(destination, message)
+            val userPublicKey = MessagingModuleConfiguration.shared.storage.getUserPublicKey()
+            sendToSnodeDestination(destination, message, destination is Destination.Contact && destination.publicKey == userPublicKey)
         }
     }
 

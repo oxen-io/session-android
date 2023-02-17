@@ -35,6 +35,7 @@ import com.annimon.stream.Stream;
 import net.zetetic.database.sqlcipher.SQLiteDatabase;
 
 import org.jetbrains.annotations.NotNull;
+import org.session.libsession.snode.SnodeAPI;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.Contact;
 import org.session.libsession.utilities.DelimiterUtil;
@@ -100,6 +101,8 @@ public class ThreadDatabase extends Database {
   public  static final String LAST_SEEN              = "last_seen";
   public static final String HAS_SENT               = "has_sent";
   public  static final String IS_PINNED              = "is_pinned";
+
+  public static final String LAST_SEEN_TRIGGER = "thread_last_seen_trigger";
 
   public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " ("                    +
     ID + " INTEGER PRIMARY KEY, " + DATE + " INTEGER DEFAULT 0, "                                  +
@@ -296,17 +299,16 @@ public class ThreadDatabase extends Database {
   }
 
   public List<MarkedMessageInfo> setRead(long threadId, long lastReadTime) {
+
+    final List<MarkedMessageInfo> smsRecords = DatabaseComponent.get(context).smsDatabase().setMessagesRead(threadId, lastReadTime);
+    final List<MarkedMessageInfo> mmsRecords = DatabaseComponent.get(context).mmsDatabase().setMessagesRead(threadId, lastReadTime);
+
     ContentValues contentValues = new ContentValues(1);
     contentValues.put(READ, 1);
-    contentValues.put(UNREAD_COUNT, 0);
-    contentValues.put(UNREAD_MENTION_COUNT, 0);
     contentValues.put(LAST_SEEN, lastReadTime);
 
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
     db.update(TABLE_NAME, contentValues, ID_WHERE, new String[] {threadId+""});
-
-    final List<MarkedMessageInfo> smsRecords = DatabaseComponent.get(context).smsDatabase().setMessagesRead(threadId, lastReadTime);
-    final List<MarkedMessageInfo> mmsRecords = DatabaseComponent.get(context).mmsDatabase().setMessagesRead(threadId, lastReadTime);
 
     notifyConversationListListeners();
 
@@ -338,30 +340,6 @@ public class ThreadDatabase extends Database {
       addAll(smsRecords);
       addAll(mmsRecords);
     }};
-  }
-
-  public void incrementUnread(long threadId, int amount, int unreadMentionAmount) {
-    SQLiteDatabase db = databaseHelper.getWritableDatabase();
-    db.execSQL("UPDATE " + TABLE_NAME + " SET " + READ + " = 0, " +
-                   UNREAD_COUNT + " = " + UNREAD_COUNT + " + ?, " +
-                   UNREAD_MENTION_COUNT + " = " + UNREAD_MENTION_COUNT + " + ? WHERE " + ID + " = ?",
-               new String[] {
-                   String.valueOf(amount),
-                   String.valueOf(unreadMentionAmount),
-                   String.valueOf(threadId)
-              });
-  }
-
-  public void decrementUnread(long threadId, int amount, int unreadMentionAmount) {
-    SQLiteDatabase db = databaseHelper.getWritableDatabase();
-    db.execSQL("UPDATE " + TABLE_NAME + " SET " + READ + " = 0, " +
-                    UNREAD_COUNT + " = " + UNREAD_COUNT + " - ?, " +
-                    UNREAD_MENTION_COUNT + " = " + UNREAD_MENTION_COUNT + " - ? WHERE " + ID + " = ? AND " + UNREAD_COUNT + " > 0",
-            new String[] {
-              String.valueOf(amount),
-              String.valueOf(unreadMentionAmount),
-              String.valueOf(threadId)
-            });
   }
 
   public void setDistributionType(long threadId, int distributionType) {
@@ -541,13 +519,15 @@ public class ThreadDatabase extends Database {
   public void setLastSeen(long threadId, long timestamp) {
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
     ContentValues contentValues = new ContentValues(1);
-    if (timestamp == -1) {
-      contentValues.put(LAST_SEEN, System.currentTimeMillis());
-    } else {
-      contentValues.put(LAST_SEEN, timestamp);
-    }
-
+    long lastSeenTime = timestamp == -1 ? SnodeAPI.INSTANCE.getNowWithOffset() : timestamp;
+    contentValues.put(LAST_SEEN, lastSeenTime);
+    db.beginTransaction();
     db.update(TABLE_NAME, contentValues, ID_WHERE, new String[] {String.valueOf(threadId)});
+    String countSubQuery = "SELECT COUNT(*) FROM "+SmsDatabase.TABLE_NAME+" AS s INNER JOIN "+TABLE_NAME+" AS t ON s.thread_id = t._id WHERE t._id = ? AND s."+SmsDatabase.DATE_SENT+" > t."+LAST_SEEN+"";
+    String reflectUpdates = "UPDATE "+TABLE_NAME+" AS t SET "+UNREAD_COUNT+" = ("+countSubQuery+") WHERE t."+ID+" = ?";
+    db.query(reflectUpdates, new String[]{threadId+"", threadId+""});
+    db.setTransactionSuccessful();
+    db.endTransaction();
     notifyConversationListListeners();
   }
 
@@ -755,8 +735,8 @@ public class ThreadDatabase extends Database {
     notifyConversationListeners(threadId);
   }
 
-  public void markAllAsRead(long threadId, boolean isGroupRecipient) {
-    List<MarkedMessageInfo> messages = setRead(threadId, true);
+  public void markAllAsRead(long threadId, boolean isGroupRecipient, long lastSeenTime) {
+    List<MarkedMessageInfo> messages = setRead(threadId, lastSeenTime);
     if (isGroupRecipient) {
       for (MarkedMessageInfo message: messages) {
         MarkReadReceiver.scheduleDeletion(context, message.getExpirationInfo());
@@ -765,6 +745,7 @@ public class ThreadDatabase extends Database {
       MarkReadReceiver.process(context, messages);
     }
     ApplicationContext.getInstance(context).messageNotifier.updateNotification(context, false, 0);
+    setLastSeen(threadId, lastSeenTime);
   }
 
   private boolean deleteThreadOnEmpty(long threadId) {

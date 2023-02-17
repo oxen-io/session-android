@@ -177,9 +177,9 @@ interface StorageProtocol {
     /**
      * Returns the ID of the `TSIncomingMessage` that was constructed.
      */
-    fun persist(message: VisibleMessage, quotes: QuoteModel?, linkPreview: List<LinkPreview?>, groupPublicKey: String?, openGroupID: String?, attachments: List<Attachment>, runIncrement: Boolean, runThreadUpdate: Boolean): Long?
-    fun markConversationAsRead(threadId: Long, updateLastSeen: Boolean)
-    fun incrementUnread(threadId: Long, amount: Int, unreadMentionAmount: Int)
+    fun persist(message: VisibleMessage, quotes: QuoteModel?, linkPreview: List<LinkPreview?>, groupPublicKey: String?, openGroupID: String?, attachments: List<Attachment>, runThreadUpdate: Boolean): Long?
+    fun markConversationAsRead(threadId: Long, lastSeenTime: Long)
+    fun getLastSeen(threadId: Long): Long
     fun updateThread(threadId: Long, unarchive: Boolean)
     fun insertDataExtractionNotificationMessage(senderPublicKey: String, message: DataExtractionNotificationInfoMessage, sentTimestamp: Long)
     fun insertMessageRequestResponse(response: MessageRequestResponse)

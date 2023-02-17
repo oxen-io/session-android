@@ -35,7 +35,7 @@ class ConfigDatabase(context: Context, helper: SQLCipherOpenHelper): Database(co
 
     fun retrieveConfigAndHashes(variant: String, publicKey: String): Pair<ByteArray,List<String>>? {
         val db = readableDatabase
-        val query = db.query(TABLE_NAME, arrayOf(DATA), VARIANT_AND_PUBKEY_WHERE, arrayOf(variant, publicKey),null, null, null)
+        val query = db.query(TABLE_NAME, arrayOf(DATA, COMBINED_MESSAGE_HASHES), VARIANT_AND_PUBKEY_WHERE, arrayOf(variant, publicKey),null, null, null)
         return query?.use { cursor ->
             if (!cursor.moveToFirst()) return@use null
             val bytes = cursor.getBlobOrNull(cursor.getColumnIndex(DATA)) ?: return@use null

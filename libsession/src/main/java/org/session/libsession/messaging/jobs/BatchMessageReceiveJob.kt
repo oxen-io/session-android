@@ -123,7 +123,7 @@ class BatchMessageReceiveJob(
                     async {
                         // The LinkedHashMap should preserve insertion order
                         val messageIds = linkedMapOf<Long, Pair<Boolean, Boolean>>()
-
+                        var myLastSeen = storage.getLastSeen(threadId)
                         messages.forEach { (parameters, message, proto) ->
                             try {
                                 when (message) {
@@ -137,6 +137,12 @@ class BatchMessageReceiveJob(
                                         if (messageId != null && message.reaction == null) {
                                             val isUserBlindedSender = message.sender == serverPublicKey?.let { SodiumUtilities.blindedKeyPair(it, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!) }?.let { SessionId(
                                                     IdPrefix.BLINDED, it.publicKey.asBytes).hexString }
+                                            if (message.sender == localUserPublicKey || isUserBlindedSender) {
+                                                val sentTimestamp = message.sentTimestamp
+                                                if (sentTimestamp != null && sentTimestamp > myLastSeen) {
+                                                    myLastSeen = sentTimestamp // use sent timestamp here since that is technically the last one we have
+                                                }
+                                            }
                                             messageIds[messageId] = Pair(
                                                 (message.sender == localUserPublicKey || isUserBlindedSender),
                                                 message.hasMention
@@ -169,21 +175,8 @@ class BatchMessageReceiveJob(
                             }
                         }
                         // increment unreads, notify, and update thread
-                        val unreadFromMine = messageIds.map { it.value.first }.indexOfLast { it }
-                        var trueUnreadCount = messageIds.filter { !it.value.first }.size
-                        var trueUnreadMentionCount = messageIds.filter { !it.value.first && it.value.second }.size
-                        if (unreadFromMine >= 0) {
-                            storage.markConversationAsRead(threadId, false)
-
-                            val trueUnreadIds = messageIds.keys.toList().subList(unreadFromMine + 1, messageIds.keys.count())
-                            trueUnreadCount = trueUnreadIds.size
-                            trueUnreadMentionCount = messageIds
-                                    .filter { trueUnreadIds.contains(it.key) && !it.value.first && it.value.second }
-                                    .size
-                        }
-                        if (trueUnreadCount > 0) {
-                            storage.incrementUnread(threadId, trueUnreadCount, trueUnreadMentionCount)
-                        }
+                        // last seen will be the current last seen if not changed (re-computes the read counts for thread record)
+                        storage.markConversationAsRead(threadId, 0)
                         storage.updateThread(threadId, true)
                         SSKEnvironment.shared.notificationManager.updateNotification(context, threadId)
                     }

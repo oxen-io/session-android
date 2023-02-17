@@ -343,7 +343,7 @@ fun MessageReceiver.handleVisibleMessage(message: VisibleMessage,
         message.threadID = threadID
         val messageID =
             storage.persist(message, quoteModel, linkPreviews, message.groupPublicKey, openGroupID,
-         attachments, runIncrement, runThreadUpdate
+         attachments, runThreadUpdate
         ) ?: return null
         val openGroupServerID = message.openGroupServerMessageID
         if (openGroupServerID != null) {
