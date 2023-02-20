@@ -107,13 +107,13 @@ class ConfigFactory(private val context: Context,
     }
 
     override fun persist(forConfigObject: ConfigBase) {
+        listeners.forEach { listener ->
+            listener.notifyUpdates(forConfigObject)
+        }
         when (forConfigObject) {
             is UserProfile -> persistUserConfigDump()
             is Contacts -> persistContactsConfigDump()
             is ConversationVolatileConfig -> persistConvoVolatileConfigDump()
-        }
-        listeners.forEach { listener ->
-            listener.notifyUpdates(forConfigObject)
         }
     }
 

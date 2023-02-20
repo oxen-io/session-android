@@ -64,8 +64,6 @@ import org.thoughtcrime.securesms.notifications.MarkReadReceiver;
 import org.thoughtcrime.securesms.util.SessionMetaProtocol;
 
 import java.io.Closeable;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -100,8 +98,6 @@ public class ThreadDatabase extends Database {
   public  static final String LAST_SEEN              = "last_seen";
   public static final String HAS_SENT               = "has_sent";
   public  static final String IS_PINNED              = "is_pinned";
-
-  public static final String LAST_SEEN_TRIGGER = "thread_last_seen_trigger";
 
   public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " ("                    +
     ID + " INTEGER PRIMARY KEY, " + DATE + " INTEGER DEFAULT 0, "                                  +
@@ -522,9 +518,19 @@ public class ThreadDatabase extends Database {
     contentValues.put(LAST_SEEN, lastSeenTime);
     db.beginTransaction();
     db.update(TABLE_NAME, contentValues, ID_WHERE, new String[] {String.valueOf(threadId)});
-    String countSubQuery = "SELECT COUNT(*) FROM "+SmsDatabase.TABLE_NAME+" AS s INNER JOIN "+TABLE_NAME+" AS t ON s.thread_id = t._id WHERE t._id = ? AND s."+SmsDatabase.DATE_SENT+" > t."+LAST_SEEN+"";
-    String reflectUpdates = "UPDATE "+TABLE_NAME+" AS t SET "+UNREAD_COUNT+" = ("+countSubQuery+") WHERE t."+ID+" = ?";
-    db.query(reflectUpdates, new String[]{threadId+"", threadId+""});
+    String smsCountSubQuery = "SELECT COUNT(*) FROM "+SmsDatabase.TABLE_NAME+" AS s WHERE t."+ID+" = s."+SmsDatabase.THREAD_ID+" AND s."+SmsDatabase.DATE_SENT+" > t."+LAST_SEEN+" AND s."+SmsDatabase.READ+" = 0";
+    String smsMentionCountSubQuery = "SELECT COUNT(*) FROM "+SmsDatabase.TABLE_NAME+" AS s WHERE t."+ID+" = s."+SmsDatabase.THREAD_ID+" AND s."+SmsDatabase.DATE_SENT+" > t."+LAST_SEEN+" AND s."+SmsDatabase.READ+" = 0 AND s."+SmsDatabase.HAS_MENTION+" = 1";
+    String smsReactionCountSubQuery = "SELECT COUNT(*) FROM "+SmsDatabase.TABLE_NAME+" AS s WHERE t."+ID+" = s."+SmsDatabase.THREAD_ID+" AND s."+SmsDatabase.DATE_SENT+" > t."+LAST_SEEN+" AND s."+SmsDatabase.REACTIONS_UNREAD+" = 1";
+    String mmsCountSubQuery = "SELECT COUNT(*) FROM "+MmsDatabase.TABLE_NAME+" AS m WHERE t."+ID+" = m."+MmsDatabase.THREAD_ID+" AND m."+MmsDatabase.DATE_SENT+" > t."+LAST_SEEN+" AND m."+MmsDatabase.READ+" = 0";
+    String mmsMentionCountSubQuery = "SELECT COUNT(*) FROM "+MmsDatabase.TABLE_NAME+" AS m WHERE t."+ID+" = m."+MmsDatabase.THREAD_ID+" AND m."+MmsDatabase.DATE_SENT+" > t."+LAST_SEEN+" AND m."+MmsDatabase.READ+" = 0 AND m."+MmsDatabase.HAS_MENTION+" = 1";
+    String mmsReactionCountSubQuery = "SELECT COUNT(*) FROM "+MmsDatabase.TABLE_NAME+" AS m WHERE t."+ID+" = m."+MmsDatabase.THREAD_ID+" AND m."+MmsDatabase.DATE_SENT+" > t."+LAST_SEEN+" AND m."+MmsDatabase.REACTIONS_UNREAD+" = 1";
+    String allSmsUnread = "(("+smsCountSubQuery+") + ("+smsReactionCountSubQuery+"))";
+    String allMmsUnread = "(("+mmsCountSubQuery+") + ("+mmsReactionCountSubQuery+"))";
+    String allUnread = "(("+allSmsUnread+") + ("+allMmsUnread+"))";
+    String allUnreadMention = "(("+smsMentionCountSubQuery+") + ("+mmsMentionCountSubQuery+"))";
+
+    String reflectUpdates = "UPDATE "+TABLE_NAME+" AS t SET "+UNREAD_COUNT+" = "+allUnread+", "+UNREAD_MENTION_COUNT+" = "+allUnreadMention+" WHERE "+ID+" = ?";
+    db.execSQL(reflectUpdates, new Object[]{threadId});
     db.setTransactionSuccessful();
     db.endTransaction();
     notifyConversationListListeners();

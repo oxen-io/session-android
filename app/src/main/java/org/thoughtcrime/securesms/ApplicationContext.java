@@ -479,7 +479,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
             poller.setUserPublicKey(userPublicKey);
             return;
         }
-        poller = new Poller(configFactory);
+        poller = new Poller(configFactory, new Timer());
     }
 
     public void startPollingIfNeeded() {

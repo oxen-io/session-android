@@ -128,8 +128,27 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
 
     override fun markConversationAsRead(threadId: Long, lastSeenTime: Long) {
         val threadDb = DatabaseComponent.get(context).threadDatabase()
-        getRecipientForThread(threadId)?.let {
-            threadDb.markAllAsRead(threadId, it.isGroupRecipient, lastSeenTime)
+        getRecipientForThread(threadId)?.let { recipient ->
+            threadDb.markAllAsRead(threadId, recipient.isGroupRecipient, lastSeenTime)
+            configFactory.convoVolatile?.let { config ->
+                val convo = when {
+                    // recipient closed group
+                    recipient.isClosedGroupRecipient -> config.getOrConstructLegacyClosedGroup(recipient.address.serialize())
+                    // recipient is open group
+                    recipient.isOpenGroupRecipient -> {
+                        val openGroupJoinUrl = getOpenGroup(threadId)?.joinURL ?: return
+                        Conversation.OpenGroup.parseFullUrl(openGroupJoinUrl)?.let { (base, room, pubKey) ->
+                            config.getOrConstructOpenGroup(base, room, pubKey)
+                        } ?: return
+                    }
+                    // otherwise recipient is one to one
+                    recipient.isContactRecipient -> config.getOrConstructOneToOne(recipient.address.serialize())
+                    else -> throw NullPointerException("Weren't expecting to have a convo with address ${recipient.address.serialize()}")
+                }
+                convo.lastRead = lastSeenTime
+                config.set(convo)
+                ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+            }
         }
     }
 
@@ -346,8 +365,8 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
             }
             Log.d("Loki-DBG", "Should update thread $threadId")
             if (threadId >= 0) {
-                DatabaseComponent.get(context).threadDatabase()
-                    .setLastSeen(threadId, conversation.lastRead)
+                markConversationAsRead(threadId, conversation.lastRead)
+                updateThread(threadId, false)
             }
         }
     }

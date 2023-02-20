@@ -26,6 +26,7 @@ import org.session.libsession.snode.RawResponse
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.snode.SnodeModule
 import org.session.libsession.utilities.ConfigFactoryProtocol
+import org.session.libsession.utilities.WindowDebouncer
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Namespace
 import org.session.libsignal.utilities.Snode
@@ -35,12 +36,14 @@ import java.util.TimerTask
 
 private class PromiseCanceledException : Exception("Promise canceled.")
 
-class Poller(private val configFactory: ConfigFactoryProtocol) {
+class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Timer) {
     var userPublicKey = MessagingModuleConfiguration.shared.storage.getUserPublicKey() ?: ""
     private var hasStarted: Boolean = false
     private val usedSnodes: MutableSet<Snode> = mutableSetOf()
     var isCaughtUp = false
     var configPollingJob: Job? = null
+    
+    val configDebouncer = WindowDebouncer(3000, debounceTimer)
 
     // region Settings
     companion object {
@@ -208,10 +211,12 @@ class Poller(private val configFactory: ConfigFactoryProtocol) {
                                 if (key == Namespace.DEFAULT) {
                                     processPersonalMessages(snode, body)
                                 } else {
-                                    when (ConfigBase.kindFor(key)) {
-                                        UserProfile::class.java -> processConfig(snode, body, key, configFactory.user)
-                                        Contacts::class.java -> processConfig(snode, body, key, configFactory.contacts)
-                                        ConversationVolatileConfig::class.java -> processConfig(snode, body, key, configFactory.convoVolatile)
+                                    configDebouncer.publish {
+                                        when (ConfigBase.kindFor(key)) {
+                                            UserProfile::class.java -> processConfig(snode, body, key, configFactory.user)
+                                            Contacts::class.java -> processConfig(snode, body, key, configFactory.contacts)
+                                            ConversationVolatileConfig::class.java -> processConfig(snode, body, key, configFactory.convoVolatile)
+                                        }
                                     }
                                 }
                             }

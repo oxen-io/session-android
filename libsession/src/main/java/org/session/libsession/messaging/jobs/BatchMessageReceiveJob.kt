@@ -176,7 +176,7 @@ class BatchMessageReceiveJob(
                         }
                         // increment unreads, notify, and update thread
                         // last seen will be the current last seen if not changed (re-computes the read counts for thread record)
-                        storage.markConversationAsRead(threadId, 0)
+                        storage.markConversationAsRead(threadId, myLastSeen)
                         storage.updateThread(threadId, true)
                         SSKEnvironment.shared.notificationManager.updateNotification(context, threadId)
                     }

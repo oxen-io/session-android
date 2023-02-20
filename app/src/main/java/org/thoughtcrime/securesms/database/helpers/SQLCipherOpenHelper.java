@@ -88,10 +88,9 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
   private static final int lokiV39                          = 60;
   private static final int lokiV40                          = 61;
   private static final int lokiV41                          = 62;
-  private static final int lokiV42                          = 63;
 
   // Loki - onUpgrade(...) must be updated to use Loki version numbers if Signal makes any database changes
-  private static final int    DATABASE_VERSION         = lokiV42;
+  private static final int    DATABASE_VERSION         = lokiV41;
   private static final int    MIN_DATABASE_VERSION     = lokiV7;
   private static final String CIPHER3_DATABASE_NAME    = "signal.db";
   public static final String  DATABASE_NAME            = "signal_v4.db";
@@ -594,10 +593,6 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
 
       if (oldVersion < lokiV41) {
         db.execSQL(ConfigDatabase.CREATE_CONFIG_TABLE_COMMAND);
-      }
-
-      if (oldVersion < lokiV42) {
-//        db.execSQL(ThreadDatabase.getCreateLastSeenTrigger());
       }
 
       db.setTransactionSuccessful();
