@@ -83,11 +83,11 @@ class SessionJobDatabase(context: Context, helper: SQLCipherOpenHelper) : Databa
         }
     }
 
-    fun getGroupAvatarDownloadJob(server: String, room: String): GroupAvatarDownloadJob? {
+    fun getGroupAvatarDownloadJob(server: String, room: String, imageId: String?): GroupAvatarDownloadJob? {
         val database = databaseHelper.readableDatabase
         return database.getAll(sessionJobTable, "$jobType = ?", arrayOf(GroupAvatarDownloadJob.KEY)) {
             jobFromCursor(it) as GroupAvatarDownloadJob?
-        }.filterNotNull().find { it.server == server && it.room == room }
+        }.filterNotNull().find { it.server == server && it.room == room && (imageId == null || it.imageId == imageId) }
     }
 
     fun cancelPendingMessageSendJobs(threadID: Long) {

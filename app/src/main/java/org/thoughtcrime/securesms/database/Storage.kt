@@ -249,8 +249,8 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         return DatabaseComponent.get(context).sessionJobDatabase().getMessageReceiveJob(messageReceiveJobID)
     }
 
-    override fun getGroupAvatarDownloadJob(server: String, room: String): GroupAvatarDownloadJob? {
-        return DatabaseComponent.get(context).sessionJobDatabase().getGroupAvatarDownloadJob(server, room)
+    override fun getGroupAvatarDownloadJob(server: String, room: String, imageId: String?): GroupAvatarDownloadJob? {
+        return DatabaseComponent.get(context).sessionJobDatabase().getGroupAvatarDownloadJob(server, room, imageId)
     }
 
     override fun getConfigSyncJob(destination: Destination): Job? {
@@ -430,6 +430,10 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
 
     override fun updateProfilePicture(groupID: String, newValue: ByteArray) {
         DatabaseComponent.get(context).groupDatabase().updateProfilePicture(groupID, newValue)
+    }
+
+    override fun removeProfilePicture(groupID: String) {
+        DatabaseComponent.get(context).groupDatabase().removeProfilePicture(groupID)
     }
 
     override fun hasDownloadedProfilePicture(groupID: String): Boolean {

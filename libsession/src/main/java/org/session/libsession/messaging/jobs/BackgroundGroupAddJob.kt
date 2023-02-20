@@ -27,32 +27,32 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
         return "$server.$room"
     }
 
-    override suspend fun execute() {
+    override suspend fun execute(dispatcherName: String) {
         try {
             val openGroup = OpenGroupUrlParser.parseUrl(joinUrl)
             val storage = MessagingModuleConfiguration.shared.storage
             val allOpenGroups = storage.getAllOpenGroups().map { it.value.joinURL }
             if (allOpenGroups.contains(openGroup.joinUrl())) {
                 Log.e("OpenGroupDispatcher", "Failed to add group because", DuplicateGroupException())
-                delegate?.handleJobFailed(this, DuplicateGroupException())
+                delegate?.handleJobFailed(this, dispatcherName, DuplicateGroupException())
                 return
             }
             // get image
             storage.setOpenGroupPublicKey(openGroup.server, openGroup.serverPublicKey)
             val info = storage.addOpenGroup(openGroup.joinUrl())
             val imageId = info?.imageId
-            if (imageId != null) {
-                JobQueue.shared.add(GroupAvatarDownloadJob(openGroup.room, openGroup.server))
+            if (imageId != null && storage.getGroupAvatarDownloadJob(openGroup.server, openGroup.room, imageId) == null) {
+                JobQueue.shared.add(GroupAvatarDownloadJob(openGroup.server, openGroup.room, imageId))
             }
             Log.d(KEY, "onOpenGroupAdded(${openGroup.server})")
             storage.onOpenGroupAdded(openGroup.server)
         } catch (e: Exception) {
             Log.e("OpenGroupDispatcher", "Failed to add group because",e)
-            delegate?.handleJobFailed(this, e)
+            delegate?.handleJobFailed(this, dispatcherName, e)
             return
         }
         Log.d("Loki", "Group added successfully")
-        delegate?.handleJobSucceeded(this)
+        delegate?.handleJobSucceeded(this, dispatcherName)
     }
 
     override fun serialize(): Data = Data.Builder()

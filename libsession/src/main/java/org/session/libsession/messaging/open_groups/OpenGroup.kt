@@ -36,7 +36,7 @@ data class OpenGroup(
                 val server = json.get("server").asText().lowercase(Locale.US)
                 val displayName = json.get("displayName").asText()
                 val publicKey = json.get("publicKey").asText()
-                val imageId = json.get("imageId")?.asText()
+                val imageId = if (json.hasNonNull("imageId")) { json.get("imageId")?.asText() } else { null }
                 val canWrite = json.get("canWrite")?.asText()?.toBoolean() ?: true
                 val infoUpdates = json.get("infoUpdates")?.asText()?.toIntOrNull() ?: 0
                 OpenGroup(server = server, room = room, name = displayName, publicKey = publicKey, imageId = imageId, canWrite = canWrite, infoUpdates = infoUpdates)

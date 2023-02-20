@@ -210,8 +210,7 @@ public class PassphrasePromptActivity extends BaseActionBarActivity {
       try {
         signature = biometricSecretProvider.getOrCreateBiometricSignature(this);
         hasSignatureObject = true;
-        throw new InvalidKeyException("e");
-      } catch (InvalidKeyException e) {
+      } catch (Exception e) {
         signature = null;
         hasSignatureObject = false;
         Log.e(TAG, "Error getting / creating signature", e);

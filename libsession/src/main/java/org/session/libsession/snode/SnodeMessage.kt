@@ -20,6 +20,7 @@ data class SnodeMessage(
      */
     val timestamp: Long
 ) {
+    internal constructor(): this("", "", -1, -1)
 
     internal fun toJSON(): Map<String, String> {
         return mapOf(

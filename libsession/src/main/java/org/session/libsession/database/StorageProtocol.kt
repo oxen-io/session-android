@@ -52,7 +52,7 @@ interface StorageProtocol {
     fun getAttachmentUploadJob(attachmentID: Long): AttachmentUploadJob?
     fun getMessageSendJob(messageSendJobID: String): MessageSendJob?
     fun getMessageReceiveJob(messageReceiveJobID: String): Job?
-    fun getGroupAvatarDownloadJob(server: String, room: String): Job?
+    fun getGroupAvatarDownloadJob(server: String, room: String, imageId: String?): Job?
     fun getConfigSyncJob(destination: Destination): Job?
     fun resumeMessageSendJobIfNeeded(messageSendJobID: String)
     fun isJobCanceled(job: Job): Boolean
@@ -84,6 +84,7 @@ interface StorageProtocol {
     // Open Group Metadata
     fun updateTitle(groupID: String, newValue: String)
     fun updateProfilePicture(groupID: String, newValue: ByteArray)
+    fun removeProfilePicture(groupID: String)
     fun hasDownloadedProfilePicture(groupID: String): Boolean
     fun setUserCount(room: String, server: String, newValue: Int)
 

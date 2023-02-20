@@ -123,12 +123,13 @@ open class ThumbnailView: FrameLayout {
 
         when {
             slide.thumbnailUri != null -> {
-                buildThumbnailGlideRequest(glide, slide).into(GlideDrawableListeningTarget(binding.thumbnailImage, result))
+                buildThumbnailGlideRequest(glide, slide).into(GlideDrawableListeningTarget(binding.thumbnailImage, binding.thumbnailLoadIndicator, result))
             }
             slide.hasPlaceholder() -> {
-                buildPlaceholderGlideRequest(glide, slide).into(GlideBitmapListeningTarget(binding.thumbnailImage, result))
+                buildPlaceholderGlideRequest(glide, slide).into(GlideBitmapListeningTarget(binding.thumbnailImage, binding.thumbnailLoadIndicator, result))
             }
             else -> {
+                binding.thumbnailLoadIndicator.isVisible = false
                 glide.clear(binding.thumbnailImage)
                 result.set(false)
             }
@@ -190,7 +191,7 @@ open class ThumbnailView: FrameLayout {
             request.transforms(CenterCrop())
         }
 
-        request.into(GlideDrawableListeningTarget(binding.thumbnailImage, future))
+        request.into(GlideDrawableListeningTarget(binding.thumbnailImage, binding.thumbnailLoadIndicator, future))
 
         return future
     }

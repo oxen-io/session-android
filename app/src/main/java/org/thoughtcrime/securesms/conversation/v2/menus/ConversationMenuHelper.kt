@@ -78,6 +78,10 @@ object ConversationMenuHelper {
                 inflater.inflate(R.menu.menu_conversation_expiration_off, menu)
             }
         }
+        // One-on-one chat menu allows copying the session id
+        if (thread.isContactRecipient) {
+            inflater.inflate(R.menu.menu_conversation_copy_session_id, menu)
+        }
         // One-on-one chat menu (options that should only be present for one-on-one chats)
         if (thread.isContactRecipient) {
             if (thread.isBlocked) {
@@ -154,6 +158,7 @@ object ConversationMenuHelper {
             R.id.menu_block -> { block(context, thread, deleteThread = false) }
             R.id.menu_block_delete -> { blockAndDelete(context, thread) }
             R.id.menu_copy_session_id -> { copySessionID(context, thread) }
+            R.id.menu_copy_open_group_url -> { copyOpenGroupUrl(context, thread) }
             R.id.menu_edit_group -> { editClosedGroup(context, thread) }
             R.id.menu_leave_group -> { leaveClosedGroup(context, thread) }
             R.id.menu_invite_to_open_group -> { inviteContacts(context, thread) }
@@ -270,6 +275,12 @@ object ConversationMenuHelper {
         listener.copySessionID(thread.address.toString())
     }
 
+    private fun copyOpenGroupUrl(context: Context, thread: Recipient) {
+        if (!thread.isOpenGroupRecipient) { return }
+        val listener = context as? ConversationMenuListener ?: return
+        listener.copyOpenGroupUrl(thread)
+    }
+
     private fun editClosedGroup(context: Context, thread: Recipient) {
         if (!thread.isClosedGroupRecipient) { return }
         val intent = Intent(context, EditClosedGroupActivity::class.java)
@@ -344,6 +355,7 @@ object ConversationMenuHelper {
         fun block(deleteThread: Boolean = false)
         fun unblock()
         fun copySessionID(sessionId: String)
+        fun copyOpenGroupUrl(thread: Recipient)
         fun showExpiringMessagesDialog(thread: Recipient)
     }
 

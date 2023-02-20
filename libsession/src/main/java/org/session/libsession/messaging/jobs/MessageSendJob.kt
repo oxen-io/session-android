@@ -32,7 +32,7 @@ class MessageSendJob(val message: Message, val destination: Destination) : Job {
         private val DESTINATION_KEY = "destination"
     }
 
-    override suspend fun execute() {
+    override suspend fun execute(dispatcherName: String) {
         val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
         val message = message as? VisibleMessage
         val storage = MessagingModuleConfiguration.shared.storage
@@ -60,12 +60,12 @@ class MessageSendJob(val message: Message, val destination: Destination) : Job {
                 }
             }
             if (attachmentsToUpload.isNotEmpty()) {
-                this.handleFailure(AwaitingAttachmentUploadException)
+                this.handleFailure(dispatcherName, AwaitingAttachmentUploadException)
                 return
             } // Wait for all attachments to upload before continuing
         }
         val promise = MessageSender.send(this.message, this.destination).success {
-            this.handleSuccess()
+            this.handleSuccess(dispatcherName)
         }.fail { exception ->
             var logStacktrace = true
 
@@ -74,14 +74,14 @@ class MessageSendJob(val message: Message, val destination: Destination) : Job {
                 is HTTP.HTTPRequestFailedException -> {
                     logStacktrace = false
 
-                    if (exception.statusCode == 429) { this.handlePermanentFailure(exception) }
-                    else { this.handleFailure(exception) }
+                    if (exception.statusCode == 429) { this.handlePermanentFailure(dispatcherName, exception) }
+                    else { this.handleFailure(dispatcherName, exception) }
                 }
                 is MessageSender.Error -> {
-                    if (!exception.isRetryable) { this.handlePermanentFailure(exception) }
-                    else { this.handleFailure(exception) }
+                    if (!exception.isRetryable) { this.handlePermanentFailure(dispatcherName, exception) }
+                    else { this.handleFailure(dispatcherName, exception) }
                 }
-                else -> this.handleFailure(exception)
+                else -> this.handleFailure(dispatcherName, exception)
             }
 
             if (logStacktrace) { Log.e(TAG, "Couldn't send message due to error", exception) }
@@ -94,15 +94,15 @@ class MessageSendJob(val message: Message, val destination: Destination) : Job {
         }
     }
 
-    private fun handleSuccess() {
-        delegate?.handleJobSucceeded(this)
+    private fun handleSuccess(dispatcherName: String) {
+        delegate?.handleJobSucceeded(this, dispatcherName)
     }
 
-    private fun handlePermanentFailure(error: Exception) {
-        delegate?.handleJobFailedPermanently(this, error)
+    private fun handlePermanentFailure(dispatcherName: String, error: Exception) {
+        delegate?.handleJobFailedPermanently(this, dispatcherName, error)
     }
 
-    private fun handleFailure(error: Exception) {
+    private fun handleFailure(dispatcherName: String, error: Exception) {
         Log.w(TAG, "Failed to send $message::class.simpleName.")
         val message = message as? VisibleMessage
         if (message != null) {
@@ -110,7 +110,7 @@ class MessageSendJob(val message: Message, val destination: Destination) : Job {
                 return // The message has been deleted
             }
         }
-        delegate?.handleJobFailed(this, error)
+        delegate?.handleJobFailed(this, dispatcherName, error)
     }
 
     override fun serialize(): Data {

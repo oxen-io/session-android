@@ -20,6 +20,7 @@ class ConversationOptionsBottomSheet(private val parentContext: Context) : Botto
     lateinit var thread: ThreadRecord
 
     var onViewDetailsTapped: (() -> Unit?)? = null
+    var onCopyConversationId: (() -> Unit?)? = null
     var onPinTapped: (() -> Unit)? = null
     var onUnpinTapped: (() -> Unit)? = null
     var onBlockTapped: (() -> Unit)? = null
@@ -37,6 +38,8 @@ class ConversationOptionsBottomSheet(private val parentContext: Context) : Botto
     override fun onClick(v: View?) {
         when (v) {
             binding.detailsTextView -> onViewDetailsTapped?.invoke()
+            binding.copyConversationId -> onCopyConversationId?.invoke()
+            binding.copyCommunityUrl -> onCopyConversationId?.invoke()
             binding.pinTextView -> onPinTapped?.invoke()
             binding.unpinTextView -> onUnpinTapped?.invoke()
             binding.blockTextView -> onBlockTapped?.invoke()
@@ -63,6 +66,10 @@ class ConversationOptionsBottomSheet(private val parentContext: Context) : Botto
         } else {
             binding.detailsTextView.visibility = View.GONE
         }
+        binding.copyConversationId.visibility = if (!recipient.isGroupRecipient && !recipient.isLocalNumber) View.VISIBLE else View.GONE
+        binding.copyConversationId.setOnClickListener(this)
+        binding.copyCommunityUrl.visibility = if (recipient.isOpenGroupRecipient) View.VISIBLE else View.GONE
+        binding.copyCommunityUrl.setOnClickListener(this)
         binding.unMuteNotificationsTextView.isVisible = recipient.isMuted && !recipient.isLocalNumber
         binding.muteNotificationsTextView.isVisible = !recipient.isMuted && !recipient.isLocalNumber
         binding.unMuteNotificationsTextView.setOnClickListener(this)

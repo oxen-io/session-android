@@ -51,6 +51,7 @@ public class ThreadRecord extends DisplayRecord {
   private           final long    expiresIn;
   private           final long    lastSeen;
   private           final boolean pinned;
+  private           final int initialRecipientHash;
 
   public ThreadRecord(@NonNull String body, @Nullable Uri snippetUri,
                       @NonNull Recipient recipient, long date, long count, int unreadCount,
@@ -68,6 +69,7 @@ public class ThreadRecord extends DisplayRecord {
     this.expiresIn          = expiresIn;
     this.lastSeen           = lastSeen;
     this.pinned             = pinned;
+    this.initialRecipientHash = recipient.hashCode();
   }
 
   public @Nullable Uri getSnippetUri() {
@@ -175,5 +177,9 @@ public class ThreadRecord extends DisplayRecord {
 
   public boolean isPinned() {
     return pinned;
+  }
+
+  public int getInitialRecipientHash() {
+    return initialRecipientHash;
   }
 }

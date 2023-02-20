@@ -158,7 +158,9 @@ class VisibleMessageContentView : ConstraintLayout {
             message is MmsMessageRecord && message.linkPreviews.isNotEmpty() -> {
                 binding.linkPreviewView.root.bind(message, glide, isStartOfMessageCluster, isEndOfMessageCluster)
                 onContentClick.add { event -> binding.linkPreviewView.root.calculateHit(event) }
-                // Body text view is inside the link preview for layout convenience
+
+                // When in a link preview ensure the bodyTextView can expand to the full width
+                binding.bodyTextView.maxWidth = binding.linkPreviewView.root.layoutParams.width
             }
             message is MmsMessageRecord && message.slideDeck.audioSlide != null -> {
                 hideBody = true
