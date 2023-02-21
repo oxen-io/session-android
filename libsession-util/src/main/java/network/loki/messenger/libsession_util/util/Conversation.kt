@@ -13,7 +13,7 @@ sealed class Conversation {
         override var unread: Boolean
     ): Conversation()
 
-    data class OpenGroup(
+    data class Community(
         val baseUrl: String,
         val room: String, // lowercase
         val pubKey: ByteArray,
@@ -34,7 +34,7 @@ sealed class Conversation {
             if (this === other) return true
             if (javaClass != other?.javaClass) return false
 
-            other as OpenGroup
+            other as Community
 
             if (baseUrl != other.baseUrl) return false
             if (room != other.room) return false
@@ -53,7 +53,7 @@ sealed class Conversation {
         }
     }
 
-    data class LegacyClosedGroup(
+    data class LegacyGroup(
         val groupId: String,
         override var lastRead: Long,
         override var unread: Boolean

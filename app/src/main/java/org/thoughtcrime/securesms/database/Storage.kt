@@ -137,8 +137,8 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
                     // recipient is open group
                     recipient.isOpenGroupRecipient -> {
                         val openGroupJoinUrl = getOpenGroup(threadId)?.joinURL ?: return
-                        Conversation.OpenGroup.parseFullUrl(openGroupJoinUrl)?.let { (base, room, pubKey) ->
-                            config.getOrConstructOpenGroup(base, room, pubKey)
+                        Conversation.Community.parseFullUrl(openGroupJoinUrl)?.let { (base, room, pubKey) ->
+                            config.getOrConstructCommunity(base, room, pubKey)
                         } ?: return
                     }
                     // otherwise recipient is one to one
@@ -356,10 +356,10 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
                 is Conversation.OneToOne -> conversation.sessionId.let {
                     getOrCreateThreadIdFor(fromSerialized(it))
                 }
-                is Conversation.LegacyClosedGroup -> conversation.groupId.let {
+                is Conversation.LegacyGroup -> conversation.groupId.let {
                     getOrCreateThreadIdFor("", it,null)
                 }
-                is Conversation.OpenGroup -> conversation.baseUrl.let {
+                is Conversation.Community -> conversation.baseUrl.let {
                     getOrCreateThreadIdFor("",null, it)
                 }
             }

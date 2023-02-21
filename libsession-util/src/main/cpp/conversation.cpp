@@ -5,10 +5,10 @@
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_network_loki_messenger_libsession_1util_util_Conversation_00024OpenGroup_00024Companion_parseFullUrl(
+Java_network_loki_messenger_libsession_1util_util_Conversation_00024Community_00024Companion_parseFullUrl(
         JNIEnv *env, jobject thiz, jstring full_url) {
     auto bytes = env->GetStringUTFChars(full_url, nullptr);
-    auto [base, room, pk] = session::config::convo::open_group::parse_full_url(bytes);
+    auto [base, room, pk] = session::config::convo::community::parse_full_url(bytes);
     env->ReleaseStringUTFChars(full_url, bytes);
 
     jclass clazz = env->FindClass("kotlin/Triple");
@@ -74,13 +74,13 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_eraseAll
     jmethodID predicate_call = env->GetMethodID(predicate_class, "invoke", "(Ljava/lang/Object;)Ljava/lang/Object;");
 
     jclass bool_class = env->FindClass("java/lang/Boolean");
-    jfieldID bool_value = env->GetFieldID(bool_class, "value", "Z");
+    jmethodID bool_get = env->GetMethodID(bool_class, "booleanValue", "()Z");
 
     int removed = 0;
 
     for (auto it = conversations->begin(); it != conversations->end(); ) {
         auto result = env->CallObjectMethod(predicate, predicate_call, serialize_any(env, *it));
-        bool bool_result = env->GetBooleanField(result, bool_value);
+        bool bool_result = env->CallBooleanMethod(result, bool_get);
         if (bool_result) {
             it = conversations->erase(it);
             removed++;
@@ -115,8 +115,8 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_set(JNIE
     auto convos = ptrToConvoInfo(env, thiz);
 
     jclass one_to_one = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$OneToOne");
-    jclass open_group = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$OpenGroup");
-    jclass legacy_closed_group = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$LegacyClosedGroup");
+    jclass open_group = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$Community");
+    jclass legacy_closed_group = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$LegacyGroup");
 
     jclass to_store_class = env->GetObjectClass(to_store);
     if (env->IsSameObject(to_store_class, one_to_one)) {
@@ -165,18 +165,15 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_eraseOne
     env->ReleaseStringUTFChars(pub_key_hex, param);
     return result;
 }
+
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getOpenGroup__Ljava_lang_String_2Ljava_lang_String_2Ljava_lang_String_2(
-        JNIEnv *env, jobject thiz, jstring base_url, jstring room, jstring pub_key_hex) {
+Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getCommunity__Ljava_lang_String_2Ljava_lang_String_2(
+        JNIEnv *env, jobject thiz, jstring base_url, jstring room) {
     auto convos = ptrToConvoInfo(env, thiz);
     auto base_url_chars = env->GetStringUTFChars(base_url, nullptr);
     auto room_chars = env->GetStringUTFChars(room, nullptr);
-    auto hex_chars = env->GetStringUTFChars(pub_key_hex, nullptr);
-    auto open = convos->get_open(base_url_chars, room_chars, hex_chars);
-    env->ReleaseStringUTFChars(base_url, base_url_chars);
-    env->ReleaseStringUTFChars(room, room_chars);
-    env->ReleaseStringUTFChars(pub_key_hex, hex_chars);
+    auto open = convos->get_community(base_url_chars, room_chars);
     if (open) {
         auto serialized = serialize_open_group(env, *open);
         return serialized;
@@ -185,40 +182,25 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getOpenG
 }
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getOpenGroup__Ljava_lang_String_2Ljava_lang_String_2_3B(
+Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getOrConstructCommunity__Ljava_lang_String_2Ljava_lang_String_2_3B(
         JNIEnv *env, jobject thiz, jstring base_url, jstring room, jbyteArray pub_key) {
     auto convos = ptrToConvoInfo(env, thiz);
     auto base_url_chars = env->GetStringUTFChars(base_url, nullptr);
     auto room_chars = env->GetStringUTFChars(room, nullptr);
     auto pub_key_ustring = util::ustring_from_bytes(env, pub_key);
-    auto open = convos->get_open(base_url_chars, room_chars, pub_key_ustring);
-    if (open) {
-        auto serialized = serialize_open_group(env, *open);
-        return serialized;
-    }
-    return nullptr;
-}
-extern "C"
-JNIEXPORT jobject JNICALL
-Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getOrConstructOpenGroup__Ljava_lang_String_2Ljava_lang_String_2_3B(
-        JNIEnv *env, jobject thiz, jstring base_url, jstring room, jbyteArray pub_key) {
-    auto convos = ptrToConvoInfo(env, thiz);
-    auto base_url_chars = env->GetStringUTFChars(base_url, nullptr);
-    auto room_chars = env->GetStringUTFChars(room, nullptr);
-    auto pub_key_ustring = util::ustring_from_bytes(env, pub_key);
-    auto open = convos->get_or_construct_open(base_url_chars, room_chars, pub_key_ustring);
+    auto open = convos->get_or_construct_community(base_url_chars, room_chars, pub_key_ustring);
     auto serialized = serialize_open_group(env, open);
     return serialized;
 }
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getOrConstructOpenGroup__Ljava_lang_String_2Ljava_lang_String_2Ljava_lang_String_2(
+Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getOrConstructCommunity__Ljava_lang_String_2Ljava_lang_String_2Ljava_lang_String_2(
         JNIEnv *env, jobject thiz, jstring base_url, jstring room, jstring pub_key_hex) {
     auto convos = ptrToConvoInfo(env, thiz);
     auto base_url_chars = env->GetStringUTFChars(base_url, nullptr);
     auto room_chars = env->GetStringUTFChars(room, nullptr);
     auto hex_chars = env->GetStringUTFChars(pub_key_hex, nullptr);
-    auto open = convos->get_or_construct_open(base_url_chars, room_chars, hex_chars);
+    auto open = convos->get_or_construct_community(base_url_chars, room_chars, hex_chars);
     env->ReleaseStringUTFChars(base_url, base_url_chars);
     env->ReleaseStringUTFChars(room, room_chars);
     env->ReleaseStringUTFChars(pub_key_hex, hex_chars);
@@ -227,7 +209,7 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getOrCon
 }
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_eraseOpenGroup__Lnetwork_loki_messenger_libsession_1util_util_Conversation_OpenGroup_2(JNIEnv *env,
+Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_eraseCommunity__Lnetwork_loki_messenger_libsession_1util_util_Conversation_Community_2(JNIEnv *env,
                                                                                        jobject thiz,
                                                                                        jobject open_group) {
     auto convos = ptrToConvoInfo(env, thiz);
@@ -236,27 +218,12 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_eraseOpe
 }
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_eraseOpenGroup__Ljava_lang_String_2Ljava_lang_String_2Ljava_lang_String_2(
-        JNIEnv *env, jobject thiz, jstring base_url, jstring room, jstring pub_key_hex) {
+Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_eraseCommunity__Ljava_lang_String_2Ljava_lang_String_2(
+        JNIEnv *env, jobject thiz, jstring base_url, jstring room) {
     auto convos = ptrToConvoInfo(env, thiz);
     auto base_url_chars = env->GetStringUTFChars(base_url, nullptr);
     auto room_chars = env->GetStringUTFChars(room, nullptr);
-    auto hex_chars = env->GetStringUTFChars(pub_key_hex, nullptr);
-    auto result = convos->erase_open(base_url_chars, room_chars, hex_chars);
-    env->ReleaseStringUTFChars(base_url, base_url_chars);
-    env->ReleaseStringUTFChars(room, room_chars);
-    env->ReleaseStringUTFChars(pub_key_hex, hex_chars);
-    return result;
-}
-extern "C"
-JNIEXPORT jboolean JNICALL
-Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_eraseOpenGroup__Ljava_lang_String_2Ljava_lang_String_2_3B(
-        JNIEnv *env, jobject thiz, jstring base_url, jstring room, jbyteArray pub_key) {
-    auto convos = ptrToConvoInfo(env, thiz);
-    auto base_url_chars = env->GetStringUTFChars(base_url, nullptr);
-    auto room_chars = env->GetStringUTFChars(room, nullptr);
-    auto pub_key_bytes = util::ustring_from_bytes(env, pub_key);
-    auto result = convos->erase_open(base_url_chars, room_chars, pub_key_bytes);
+    auto result = convos->erase_community(base_url_chars, room_chars);
     env->ReleaseStringUTFChars(base_url, base_url_chars);
     env->ReleaseStringUTFChars(room, room_chars);
     return result;
@@ -267,7 +234,7 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getLegac
         JNIEnv *env, jobject thiz, jstring group_id) {
     auto convos = ptrToConvoInfo(env, thiz);
     auto id_chars = env->GetStringUTFChars(group_id, nullptr);
-    auto lgc = convos->get_legacy_closed(id_chars);
+    auto lgc = convos->get_legacy_group(id_chars);
     env->ReleaseStringUTFChars(group_id, id_chars);
     if (lgc) {
         auto serialized = serialize_legacy_group(env, *lgc);
@@ -281,7 +248,7 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getOrCon
         JNIEnv *env, jobject thiz, jstring group_id) {
     auto convos = ptrToConvoInfo(env, thiz);
     auto id_chars = env->GetStringUTFChars(group_id, nullptr);
-    auto lgc = convos->get_or_construct_legacy_closed(id_chars);
+    auto lgc = convos->get_or_construct_legacy_group(id_chars);
     env->ReleaseStringUTFChars(group_id, id_chars);
     return serialize_legacy_group(env, lgc);
 }
@@ -291,7 +258,7 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_eraseLeg
         JNIEnv *env, jobject thiz, jstring group_id) {
     auto convos = ptrToConvoInfo(env, thiz);
     auto id_chars = env->GetStringUTFChars(group_id, nullptr);
-    auto result = convos->erase_legacy_closed(id_chars);
+    auto result = convos->erase_legacy_group(id_chars);
     env->ReleaseStringUTFChars(group_id, id_chars);
     return result;
 }
@@ -307,17 +274,17 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_erase(JN
 }
 extern "C"
 JNIEXPORT jint JNICALL
-Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_sizeOpenGroups(JNIEnv *env,
+Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_sizeCommunities(JNIEnv *env,
                                                                                        jobject thiz) {
     auto convos = ptrToConvoInfo(env, thiz);
-    return convos->size_open();
+    return convos->size_communities();
 }
 extern "C"
 JNIEXPORT jint JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_sizeLegacyClosedGroups(
         JNIEnv *env, jobject thiz) {
     auto convos = ptrToConvoInfo(env, thiz);
-    return convos->size_open();
+    return convos->size_legacy_groups();
 }
 extern "C"
 JNIEXPORT jobject JNICALL
@@ -349,14 +316,14 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_allOneTo
 }
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_allOpenGroups(JNIEnv *env,
+Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_allCommunities(JNIEnv *env,
                                                                                       jobject thiz) {
     auto convos = ptrToConvoInfo(env, thiz);
     jclass stack = env->FindClass("java/util/Stack");
     jmethodID init = env->GetMethodID(stack, "<init>", "()V");
     jobject our_stack = env->NewObject(stack, init);
     jmethodID push = env->GetMethodID(stack, "push", "(Ljava/lang/Object;)Ljava/lang/Object;");
-    for (auto contact = convos->begin_open(); contact != convos->end(); ++contact)
+    for (auto contact = convos->begin_communities(); contact != convos->end(); ++contact)
         env->CallObjectMethod(our_stack, push, serialize_open_group(env, *contact));
     return our_stack;
 }
@@ -369,7 +336,7 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_allLegac
     jmethodID init = env->GetMethodID(stack, "<init>", "()V");
     jobject our_stack = env->NewObject(stack, init);
     jmethodID push = env->GetMethodID(stack, "push", "(Ljava/lang/Object;)Ljava/lang/Object;");
-    for (auto contact = convos->begin_legacy_closed(); contact != convos->end(); ++contact)
+    for (auto contact = convos->begin_legacy_groups(); contact != convos->end(); ++contact)
         env->CallObjectMethod(our_stack, push, serialize_legacy_group(env, *contact));
     return our_stack;
 }

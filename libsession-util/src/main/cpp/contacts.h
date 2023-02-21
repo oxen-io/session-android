@@ -16,14 +16,8 @@ inline jobject serialize_contact(JNIEnv *env, session::config::contact_info info
     jmethodID constructor = env->GetMethodID(contactClass, "<init>",
                                              "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZZLnetwork/loki/messenger/libsession_util/util/UserPic;)V");
     jstring id = env->NewStringUTF(info.session_id.data());
-    jstring name = nullptr;
-    jstring nickname = nullptr;
-    if (info.name) {
-        name = env->NewStringUTF(info.name->data());
-    }
-    if (info.nickname) {
-        nickname = env->NewStringUTF(info.nickname->data());
-    }
+    jstring name = env->NewStringUTF(info.name.data());
+    jstring nickname = env->NewStringUTF(info.nickname.data());
     jboolean approved, approvedMe, blocked;
     approved = info.approved;
     approvedMe = info.approved_me;

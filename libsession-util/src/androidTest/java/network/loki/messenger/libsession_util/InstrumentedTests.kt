@@ -355,41 +355,41 @@ class InstrumentedTests {
 
     @Test
     fun test_open_group_urls() {
-        val (base1, room1, pk1) = Conversation.OpenGroup.parseFullUrl(
+        val (base1, room1, pk1) = Conversation.Community.parseFullUrl(
             "https://example.com/" +
             "SomeRoom?public_key=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
         )!!
 
-        val (base2, room2, pk2) = Conversation.OpenGroup.parseFullUrl(
+        val (base2, room2, pk2) = Conversation.Community.parseFullUrl(
             "HTTPS://EXAMPLE.COM/" +
             "sOMErOOM?public_key=0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF"
         )!!
 
-        val (base3, room3, pk3) = Conversation.OpenGroup.parseFullUrl(
+        val (base3, room3, pk3) = Conversation.Community.parseFullUrl(
             "HTTPS://EXAMPLE.COM/r/" +
             "someroom?public_key=0123456789aBcdEF0123456789abCDEF0123456789ABCdef0123456789ABCDEF"
         )!!
 
-        val (base4, room4, pk4) = Conversation.OpenGroup.parseFullUrl(
+        val (base4, room4, pk4) = Conversation.Community.parseFullUrl(
             "http://example.com/r/" +
             "someroom?public_key=0123456789aBcdEF0123456789abCDEF0123456789ABCdef0123456789ABCDEF"
         )!!
 
-        val (base5, room5, pk5) = Conversation.OpenGroup.parseFullUrl(
+        val (base5, room5, pk5) = Conversation.Community.parseFullUrl(
             "HTTPS://EXAMPLE.com:443/r/" +
             "someroom?public_key=0123456789aBcdEF0123456789abCDEF0123456789ABCdef0123456789ABCDEF"
         )!!
 
-        val (base6, room6, pk6) = Conversation.OpenGroup.parseFullUrl(
+        val (base6, room6, pk6) = Conversation.Community.parseFullUrl(
             "HTTP://EXAMPLE.com:80/r/" +
             "someroom?public_key=0123456789aBcdEF0123456789abCDEF0123456789ABCdef0123456789ABCDEF"
         )!!
 
-        val (base7, room7, pk7) = Conversation.OpenGroup.parseFullUrl(
+        val (base7, room7, pk7) = Conversation.Community.parseFullUrl(
             "http://example.com:80/r/" +
             "someroom?public_key=ASNFZ4mrze8BI0VniavN7wEjRWeJq83vASNFZ4mrze8"
         )!!
-        val (base8, room8, pk8) = Conversation.OpenGroup.parseFullUrl(
+        val (base8, room8, pk8) = Conversation.Community.parseFullUrl(
             "http://example.com:80/r/" +
             "someroom?public_key=yrtwk3hjixg66yjdeiuauk6p7hy1gtm8tgih55abrpnsxnpm3zzo"
         )!!
@@ -526,8 +526,8 @@ class InstrumentedTests {
             for (convo in allConvos) {
                 when (convo) {
                     is Conversation.OneToOne -> seen.add("1-to-1: ${convo.sessionId}")
-                    is Conversation.OpenGroup -> seen.add("og: ${convo.baseUrl}/r/${convo.room}")
-                    is Conversation.LegacyClosedGroup -> seen.add("cl: ${convo.groupId}")
+                    is Conversation.Community -> seen.add("og: ${convo.baseUrl}/r/${convo.room}")
+                    is Conversation.LegacyGroup -> seen.add("cl: ${convo.groupId}")
                 }
             }
 
@@ -550,11 +550,11 @@ class InstrumentedTests {
         )
         assertEquals(1, convos.allOpenGroups().size)
         assertEquals("http://example.org:5678",
-            convos.allOpenGroups().map(Conversation.OpenGroup::baseUrl).first()
+            convos.allOpenGroups().map(Conversation.Community::baseUrl).first()
         )
         assertEquals(1, convos.allLegacyClosedGroups().size)
         assertEquals("05cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
-            convos.allLegacyClosedGroups().map(Conversation.LegacyClosedGroup::groupId).first()
+            convos.allLegacyClosedGroups().map(Conversation.LegacyGroup::groupId).first()
         )
     }
 

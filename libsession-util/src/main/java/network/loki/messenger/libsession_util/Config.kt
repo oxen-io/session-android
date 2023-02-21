@@ -91,16 +91,14 @@ class ConversationVolatileConfig(pointer: Long): ConfigBase(pointer) {
     external fun getOrConstructOneToOne(pubKeyHex: String): Conversation.OneToOne
     external fun eraseOneToOne(pubKeyHex: String): Boolean
 
-    external fun getOpenGroup(baseUrl: String, room: String, pubKeyHex: String): Conversation.OpenGroup?
-    external fun getOpenGroup(baseUrl: String, room: String, pubKey: ByteArray): Conversation.OpenGroup?
-    external fun getOrConstructOpenGroup(baseUrl: String, room: String, pubKeyHex: String): Conversation.OpenGroup
-    external fun getOrConstructOpenGroup(baseUrl: String, room: String, pubKey: ByteArray): Conversation.OpenGroup
-    external fun eraseOpenGroup(openGroup: Conversation.OpenGroup): Boolean
-    external fun eraseOpenGroup(baseUrl: String, room: String, pubKeyHex: String): Boolean
-    external fun eraseOpenGroup(baseUrl: String, room: String, pubKey: ByteArray): Boolean
+    external fun getCommunity(baseUrl: String, room: String): Conversation.Community?
+    external fun getOrConstructCommunity(baseUrl: String, room: String, pubKeyHex: String): Conversation.Community
+    external fun getOrConstructCommunity(baseUrl: String, room: String, pubKey: ByteArray): Conversation.Community
+    external fun eraseCommunity(community: Conversation.Community): Boolean
+    external fun eraseCommunity(baseUrl: String, room: String): Boolean
 
-    external fun getLegacyClosedGroup(groupId: String): Conversation.LegacyClosedGroup?
-    external fun getOrConstructLegacyClosedGroup(groupId: String): Conversation.LegacyClosedGroup
+    external fun getLegacyClosedGroup(groupId: String): Conversation.LegacyGroup?
+    external fun getOrConstructLegacyClosedGroup(groupId: String): Conversation.LegacyGroup
     external fun eraseLegacyClosedGroup(groupId: String): Boolean
     external fun erase(conversation: Conversation): Boolean
 
@@ -112,15 +110,15 @@ class ConversationVolatileConfig(pointer: Long): ConfigBase(pointer) {
     external fun eraseAll(predicate: (Conversation) -> Boolean): Int
 
     external fun sizeOneToOnes(): Int
-    external fun sizeOpenGroups(): Int
+    external fun sizeCommunities(): Int
     external fun sizeLegacyClosedGroups(): Int
     external fun size(): Int
 
     external fun empty(): Boolean
 
     external fun allOneToOnes(): List<Conversation.OneToOne>
-    external fun allOpenGroups(): List<Conversation.OpenGroup>
-    external fun allLegacyClosedGroups(): List<Conversation.LegacyClosedGroup>
+    external fun allCommunities(): List<Conversation.Community>
+    external fun allLegacyClosedGroups(): List<Conversation.LegacyGroup>
     external fun all(): List<Conversation>
 
 }

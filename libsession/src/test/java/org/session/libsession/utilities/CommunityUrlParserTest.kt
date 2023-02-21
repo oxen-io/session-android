@@ -1,9 +1,9 @@
 package org.session.libsession.utilities
 
+import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.junit.Assert.*
 
-class OpenGroupUrlParserTest {
+class CommunityUrlParserTest {
 
     @Test
     fun parseUrlTest() {
