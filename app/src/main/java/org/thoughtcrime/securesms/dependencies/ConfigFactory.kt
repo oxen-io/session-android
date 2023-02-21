@@ -8,6 +8,7 @@ import network.loki.messenger.libsession_util.UserProfile
 import org.session.libsession.utilities.ConfigFactoryProtocol
 import org.session.libsession.utilities.ConfigFactoryUpdateListener
 import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage
+import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.database.ConfigDatabase
 import java.util.concurrent.ConcurrentSkipListSet
 
@@ -39,9 +40,11 @@ class ConfigFactory(private val context: Context,
     fun registerListener(listener: ConfigFactoryUpdateListener) { listeners += listener }
     fun unregisterListener(listener: ConfigFactoryUpdateListener) { listeners -= listener }
 
-    override val user: UserProfile? = synchronized(userLock) {
+    override val user: UserProfile? get() = synchronized(userLock) {
         if (_userConfig == null) {
+            Log.d("Loki-DBG", "Getting user info")
             val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
+            Log.d("Loki-DBG", "Getting user configs and hashes")
             val userDump = configDatabase.retrieveConfigAndHashes(SharedConfigMessage.Kind.USER_PROFILE.name, publicKey)
             _userConfig = if (userDump != null) {
                 val (bytes, hashes) = userDump
@@ -55,7 +58,7 @@ class ConfigFactory(private val context: Context,
         _userConfig
     }
 
-    override val contacts: Contacts? = synchronized(contactsLock) {
+    override val contacts: Contacts? get() = synchronized(contactsLock) {
         if (_contacts == null) {
             val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
             val contactsDump = configDatabase.retrieveConfigAndHashes(SharedConfigMessage.Kind.CONTACTS.name, publicKey)
@@ -71,7 +74,7 @@ class ConfigFactory(private val context: Context,
         _contacts
     }
 
-    override val convoVolatile: ConversationVolatileConfig? = synchronized(convoVolatileLock) {
+    override val convoVolatile: ConversationVolatileConfig? get() = synchronized(convoVolatileLock) {
         if (_convoVolatileConfig == null) {
             val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
             val convoDump = configDatabase.retrieveConfigAndHashes(SharedConfigMessage.Kind.CONVO_INFO_VOLATILE.name, publicKey)

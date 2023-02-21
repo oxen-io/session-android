@@ -133,9 +133,8 @@ class LinkDeviceActivity : BaseActionBarActivity(), ScanQRCodeWrapperFragmentDel
                     .setAction(R.string.registration_activity__skip) { register(true) }
 
             val skipJob = launch {
-                delay(30_000L)
+                delay(15_000L)
                 snackBar.show()
-                // show a dialog or something saying do you want to skip this bit?
             }
             // start polling and wait for updated message
             ApplicationContext.getInstance(this@LinkDeviceActivity).apply {

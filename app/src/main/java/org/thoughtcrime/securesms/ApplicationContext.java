@@ -116,6 +116,7 @@ import kotlin.Unit;
 import kotlinx.coroutines.Job;
 import network.loki.messenger.BuildConfig;
 import network.loki.messenger.libsession_util.ConfigBase;
+import network.loki.messenger.libsession_util.UserProfile;
 
 /**
  * Will be called once when the TextSecure process is created.
@@ -203,6 +204,9 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     @Override
     public void notifyUpdates(@NonNull ConfigBase forConfigObject) {
         // forward to the config factory / storage ig
+        if (forConfigObject instanceof UserProfile && !textSecurePreferences.getConfigurationMessageSynced()) {
+            textSecurePreferences.setConfigurationMessageSynced(true);
+        }
         storage.notifyConfigUpdates(forConfigObject);
     }
     @Override

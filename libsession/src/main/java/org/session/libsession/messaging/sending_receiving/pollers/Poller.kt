@@ -187,6 +187,12 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                     requestSparseArray[request.namespace!!] = request
                 }
 
+                if (requestSparseArray.size() == 1) {
+                    // only one (the personal messages)
+                    Log.d("Loki-DBG", "Not building requests for the configs, current config state:")
+                    Log.d("Loki-DBG", "${listOf(configFactory.user, configFactory.contacts, configFactory.convoVolatile)}")
+                }
+
                 val requests = requestSparseArray.valueIterator().asSequence().toList()
 
                 SnodeAPI.getRawBatchResponse(snode, userPublicKey, requests).bind { rawResponses ->
