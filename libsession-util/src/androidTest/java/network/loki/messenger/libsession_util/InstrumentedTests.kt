@@ -60,12 +60,12 @@ class InstrumentedTests {
         // Should be an uninitialized contact apart from ID
         val c = contacts.getOrConstruct(definitelyRealId)
         assertEquals(definitelyRealId, c.id)
-        assertNull(c.name)
-        assertNull(c.nickname)
+        assertTrue(c.name.isEmpty())
+        assertTrue(c.nickname.isEmpty())
         assertFalse(c.approved)
         assertFalse(c.approvedMe)
         assertFalse(c.blocked)
-        assertNull(c.profilePicture)
+        assertEquals(UserPic.DEFAULT, c.profilePicture)
 
         assertFalse(contacts.needsPush())
         assertFalse(contacts.needsDump())
@@ -84,7 +84,7 @@ class InstrumentedTests {
         assertTrue(cSaved.approved)
         assertTrue(cSaved.approvedMe)
         assertFalse(cSaved.blocked)
-        assertNull(cSaved.profilePicture)
+        assertEquals(UserPic.DEFAULT, cSaved.profilePicture)
 
         val push1 = contacts.push()
 
@@ -116,7 +116,7 @@ class InstrumentedTests {
         assertEquals(definitelyRealId, contactList[0].id)
         assertEquals(anotherId, contactList[1].id)
         assertEquals("Joey", contactList[0].nickname)
-        assertNull(contactList[1].nickname)
+        assertEquals("", contactList[1].nickname)
 
         contacts.erase(definitelyRealId)
 
@@ -126,7 +126,7 @@ class InstrumentedTests {
             nickname = "Nickname 3",
             approved = true,
             blocked = true,
-            profilePicture = UserPic("http://example.com/huge.bmp", "qwerty".encodeToByteArray())
+            profilePicture = UserPic("http://example.com/huge.bmp", "qwertyuio01234567890123456789012".encodeToByteArray())
         )
         contacts2.set(third)
         assertTrue(contacts.needsPush())
@@ -177,19 +177,19 @@ class InstrumentedTests {
         assertEquals(0, seqNo)
 
         // This should also be unset:
-        assertNull(userProfile.getPic())
+        assertEquals(UserPic.DEFAULT, userProfile.getPic())
 
         // Now let's go set a profile name and picture:
         // not sending keylen like c api so cutting off the NOTSECRET in key for testing purposes
         userProfile.setName("Kallie")
-        val newUserPic = UserPic("http://example.org/omg-pic-123.bmp", "secret".encodeToByteArray())
+        val newUserPic = UserPic("http://example.org/omg-pic-123.bmp", "secret78901234567890123456789012".encodeToByteArray())
         userProfile.setPic(newUserPic)
 
         // Retrieve them just to make sure they set properly:
         assertEquals("Kallie", userProfile.getName())
         val pic = userProfile.getPic()
-        assertEquals("http://example.org/omg-pic-123.bmp", pic?.url)
-        assertEquals("secret", pic?.key?.decodeToString())
+        assertEquals("http://example.org/omg-pic-123.bmp", pic.url)
+        assertEquals("secret78901234567890123456789012", pic.key.decodeToString())
 
         // Since we've made changes, we should need to push new config to the swarm, *and* should need
         // to dump the updated state:
@@ -205,7 +205,7 @@ class InstrumentedTests {
                 "1:&" + "d"+
                 "1:n" + "6:Kallie"+
                 "1:p" + "34:http://example.org/omg-pic-123.bmp"+
-                "1:q" + "6:secret"+
+                "1:q" + "32:secret78901234567890123456789012"+
                 "e"+
                 "1:<" + "l"+
                 "l" + "i0e" + "32:").encodeToByteArray() + expHash0 + ("de" + "e" +
@@ -218,12 +218,13 @@ class InstrumentedTests {
                 "e").encodeToByteArray()
 
         val expectedPush1Encrypted = Hex.fromStringCondensed(
-            "a2952190dcb9797bc48e48f6dc7b3254d004bde9091cfc9ec3433cbc5939a3726deb04f58a546d7d79e6f8" +
-                    "0ea185d43bf93278398556304998ae882304075c77f15c67f9914c4d10005a661f29ff7a79e0a9de7f2172" +
-                    "5ba3b5a6c19eaa3797671b8fa4008d62e9af2744629cbb46664c4d8048e2867f66ed9254120371bdb24e95" +
-                    "b2d92341fa3b1f695046113a768ceb7522269f937ead5591bfa8a5eeee3010474002f2db9de043f0f0d1cf" +
-                    "b1066a03e7b5d6cfb70a8f84a20cd2df5a510cd3d175708015a52dd4a105886d916db0005dbea5706e5a5d" +
-                    "c37ffd0a0ca2824b524da2e2ad181a48bb38e21ed9abe136014a4ee1e472cb2f53102db2a46afa9d68"
+            "877c8e0f5d33f5fffa5a4e162785a9a89918e95de1c4b925201f1f5c29d9ee4f8c36e2b278fce1e6" +
+                    "b9d999689dd86ff8e79e0a04004fa54d24da89bc2604cb1df8c1356da8f14710543ecec44f2d57fc" +
+                    "56ea8b7e73d119c69d755f4d513d5d069f02396b8ec0cbed894169836f57ca4b782ce705895c593b" +
+                    "4230d50c175d44a08045388d3f4160bacb617b9ae8de3ebc8d9024245cd09ce102627cab2acf1b91" +
+                    "26159211359606611ca5814de320d1a7099a65c99b0eebbefb92a115f5efa6b9132809300ac010c6" +
+                    "857cfbd62af71b0fa97eccec75cb95e67edf40b35fdb9cad125a6976693ab085c6bba96a2e51826e" +
+                    "81e16b9ec1232af5680f2ced55310486"
         )
 
         assertEquals(1, newSeqNo)
@@ -257,7 +258,7 @@ class InstrumentedTests {
 
         userProfile.setName("Raz")
         newConf.setName("Nibbler")
-        newConf.setPic(UserPic("http://new.example.com/pic", "qwertyuio".encodeToByteArray()))
+        newConf.setPic(UserPic("http://new.example.com/pic", "qwertyuio01234567890123456789012".encodeToByteArray()))
 
         val conf = userProfile.push()
         val conf2 = newConf.push()
@@ -283,7 +284,7 @@ class InstrumentedTests {
         val newSeqMerge = newConf.push()
 
         assertEquals("Nibbler", newConf.getName())
-        assertEquals(3, newSeqMerge.seqNo)
+        assertEquals(4, newSeqMerge.seqNo)
 
         // userProfile device polls and merges
         userProfile.merge(arrayOf(newSeqMerge.config))
@@ -291,7 +292,7 @@ class InstrumentedTests {
 
         val userConfigMerge = userProfile.push()
 
-        assertEquals(3, userConfigMerge.seqNo)
+        assertEquals(4, userConfigMerge.seqNo)
 
         assertEquals("Nibbler", newConf.getName())
         assertEquals("Nibbler", userProfile.getName())
@@ -357,12 +358,12 @@ class InstrumentedTests {
     fun test_open_group_urls() {
         val (base1, room1, pk1) = Conversation.Community.parseFullUrl(
             "https://example.com/" +
-            "SomeRoom?public_key=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+            "someroom?public_key=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
         )!!
 
         val (base2, room2, pk2) = Conversation.Community.parseFullUrl(
             "HTTPS://EXAMPLE.COM/" +
-            "sOMErOOM?public_key=0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF"
+            "someroom?public_key=0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF"
         )!!
 
         val (base3, room3, pk3) = Conversation.Community.parseFullUrl(
@@ -395,22 +396,22 @@ class InstrumentedTests {
         )!!
 
         assertEquals("https://example.com", base1)
+        assertEquals("http://example.com", base4)
         assertEquals(base1, base2)
         assertEquals(base1, base3)
         assertNotEquals(base1, base4)
-        assertEquals(base4, "http://example.com")
         assertEquals(base1, base5)
         assertEquals(base4, base6)
         assertEquals(base4, base7)
         assertEquals(base4, base8)
-        assertEquals(room1, "someroom")
-        assertEquals(room2, "someroom")
-        assertEquals(room3, "someroom")
-        assertEquals(room4, "someroom")
-        assertEquals(room5, "someroom")
-        assertEquals(room6, "someroom")
-        assertEquals(room7, "someroom")
-        assertEquals(room8, "someroom")
+        assertEquals("someroom", room1)
+        assertEquals("someroom", room2)
+        assertEquals("someroom", room3)
+        assertEquals("someroom", room4)
+        assertEquals("someroom", room5)
+        assertEquals("someroom", room6)
+        assertEquals("someroom", room7)
+        assertEquals("someroom", room8)
         assertEquals(Hex.toStringCondensed(pk1), "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef")
         assertEquals(Hex.toStringCondensed(pk2), "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef")
         assertEquals(Hex.toStringCondensed(pk3), "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef")
@@ -454,7 +455,7 @@ class InstrumentedTests {
 
         val openGroupPubKey = Hex.fromStringCondensed("0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef")
 
-        val og = convos.getOrConstructOpenGroup("http://Example.ORG:5678", "SudokuRoom", openGroupPubKey)
+        val og = convos.getOrConstructCommunity("http://Example.ORG:5678", "SudokuRoom", openGroupPubKey)
 
         assertEquals("http://example.org:5678", og.baseUrl) // Note: lower-case
         assertEquals("sudokuroom", og.room) // Note: lower-case
@@ -485,7 +486,7 @@ class InstrumentedTests {
         assertEquals(definitelyRealId, x1.sessionId)
         assertEquals(false, x1.unread)
 
-        val x2 = convos2.getOpenGroup("http://EXAMPLE.org:5678", "sudokuRoom", openGroupPubKey)!!
+        val x2 = convos2.getCommunity("http://EXAMPLE.org:5678", "sudokuRoom")!!
         assertEquals("http://example.org:5678", x2.baseUrl)
         assertEquals("sudokuroom", x2.room)
         assertEquals(x2.pubKeyHex, Hex.toStringCondensed(openGroupPubKey))
@@ -519,7 +520,7 @@ class InstrumentedTests {
             seen.clear()
             assertEquals(4, conv.size())
             assertEquals(2, conv.sizeOneToOnes())
-            assertEquals(1, conv.sizeOpenGroups())
+            assertEquals(1, conv.sizeCommunities())
             assertEquals(1, conv.sizeLegacyClosedGroups())
             assertFalse(conv.empty())
             val allConvos = conv.all()
@@ -548,9 +549,9 @@ class InstrumentedTests {
         assertEquals("051111111111111111111111111111111111111111111111111111111111111111",
             convos.allOneToOnes().map(Conversation.OneToOne::sessionId).first()
         )
-        assertEquals(1, convos.allOpenGroups().size)
+        assertEquals(1, convos.allCommunities().size)
         assertEquals("http://example.org:5678",
-            convos.allOpenGroups().map(Conversation.Community::baseUrl).first()
+            convos.allCommunities().map(Conversation.Community::baseUrl).first()
         )
         assertEquals(1, convos.allLegacyClosedGroups().size)
         assertEquals("05cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",

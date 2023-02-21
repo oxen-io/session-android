@@ -10,7 +10,7 @@
 namespace util {
     jbyteArray bytes_from_ustring(JNIEnv* env, session::ustring_view from_str);
     session::ustring ustring_from_bytes(JNIEnv* env, jbyteArray byteArray);
-    jobject serialize_user_pic(JNIEnv *env, std::optional<session::config::profile_pic> pic);
+    jobject serialize_user_pic(JNIEnv *env, session::config::profile_pic pic);
     std::pair<jstring, jbyteArray> deserialize_user_pic(JNIEnv *env, jobject user_pic);
 }
 

@@ -129,12 +129,12 @@ object ConfigurationMessageUtilities {
             }
             val contactInfo = Contact(
                 id = contact.sessionID,
-                name = contact.name,
-                nickname = contact.nickname,
+                name = contact.name.orEmpty(),
+                nickname = contact.nickname.orEmpty(),
                 blocked = settings.isBlocked,
                 approved = settings.isApproved,
                 approvedMe = settings.hasApprovedMe(),
-                profilePicture = userPic
+                profilePicture = userPic ?: UserPic.DEFAULT
             )
             contactConfig.set(contactInfo)
         }

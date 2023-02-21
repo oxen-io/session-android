@@ -22,6 +22,9 @@ data class ConfigWithSeqNo(val config: ByteArray, val seqNo: Long) {
 }
 
 data class UserPic(val url: String, val key: ByteArray) {
+    companion object {
+        val DEFAULT = UserPic("", byteArrayOf())
+    }
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

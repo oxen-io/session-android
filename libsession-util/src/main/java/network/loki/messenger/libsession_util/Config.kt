@@ -74,7 +74,7 @@ class UserProfile(pointer: Long) : ConfigBase(pointer) {
 
     external fun setName(newName: String)
     external fun getName(): String?
-    external fun getPic(): UserPic?
+    external fun getPic(): UserPic
     external fun setPic(userPic: UserPic)
 }
 

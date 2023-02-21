@@ -20,13 +20,11 @@ namespace util {
         return st;
     }
 
-    jobject serialize_user_pic(JNIEnv *env, std::optional<session::config::profile_pic> pic) {
-        if (!pic) return nullptr;
-
+    jobject serialize_user_pic(JNIEnv *env, session::config::profile_pic pic) {
         jclass returnObjectClass = env->FindClass("network/loki/messenger/libsession_util/util/UserPic");
         jmethodID constructor = env->GetMethodID(returnObjectClass, "<init>", "(Ljava/lang/String;[B)V");
-        jstring url = env->NewStringUTF(pic->url.data());
-        jbyteArray byteArray = util::bytes_from_ustring(env, pic->key);
+        jstring url = env->NewStringUTF(pic.url.data());
+        jbyteArray byteArray = util::bytes_from_ustring(env, pic.key);
         return env->NewObject(returnObjectClass, constructor, url, byteArray);
     }
 
