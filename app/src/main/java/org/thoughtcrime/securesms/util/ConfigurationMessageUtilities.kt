@@ -65,7 +65,8 @@ object ConfigurationMessageUtilities {
             // schedule job if none exist
             // don't schedule job if we already have one
             val ourDestination = Destination.Contact(userPublicKey)
-            if (storage.getConfigSyncJob(ourDestination) != null) return Promise.ofFail(NullPointerException("A job is already pending or in progress, don't schedule another job"))
+            val currentStorageJob = storage.getConfigSyncJob(ourDestination)
+            if (currentStorageJob != null && !(currentStorageJob as ConfigurationSyncJob).isRunning.get()) return Promise.ofFail(NullPointerException("A job is already pending or in progress, don't schedule another job"))
             val newConfigSync = ConfigurationSyncJob(ourDestination)
             Log.d("Loki", "Scheduling new ConfigurationSyncJob")
             JobQueue.shared.add(newConfigSync)

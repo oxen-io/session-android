@@ -1,11 +1,11 @@
 package org.thoughtcrime.securesms.home
 
 import android.content.BroadcastReceiver
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.os.Bundle
 import android.text.SpannableString
 import android.widget.Toast
@@ -33,6 +33,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.sending_receiving.MessageSender
+import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.ProfilePictureModifiedEvent
@@ -577,7 +578,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
     private fun markAllAsRead(thread: ThreadRecord) {
         ThreadUtils.queue {
-            MessagingModuleConfiguration.shared.storage.markConversationAsRead(thread.threadId, System.currentTimeMillis())
+            MessagingModuleConfiguration.shared.storage.markConversationAsRead(thread.threadId, SnodeAPI.nowWithOffset)
         }
     }
 

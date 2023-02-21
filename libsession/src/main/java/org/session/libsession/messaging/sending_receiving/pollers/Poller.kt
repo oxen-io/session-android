@@ -194,24 +194,40 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                     if (deferred.promise.isDone()) {
                         return@bind Promise.ofSuccess(Unit)
                     } else {
-                        val requestList = (rawResponses["results"] as List<RawResponse>)
+                        val responseList = (rawResponses["results"] as List<RawResponse>)
+                        // the first response will be the personal messages
+                        val personalResponseIndex = requestSparseArray.indexOfKey(Namespace.DEFAULT)
+                        if (personalResponseIndex >= 0) {
+                            responseList.getOrNull(personalResponseIndex)?.let { rawResponse ->
+                                if (rawResponse["code"] as? Int != 200) {
+                                    Log.e("Loki-DBG", "Batch sub-request for personal messages had non-200 response code, returned code ${(rawResponse["code"] as? Int) ?: "[unknown]"}")
+                                } else {
+                                    val body = rawResponse["body"] as? RawResponse
+                                    if (body == null) {
+                                        Log.e("Loki-DBG", "Batch sub-request for personal messages didn't contain a body")
+                                    } else {
+                                        processPersonalMessages(snode, body)
+                                    }
+                                }
+                            }
+                        }
                         // in case we had null configs, the array won't be fully populated
                         // index of the sparse array key iterator should be the request index, with the key being the namespace
-                        requestSparseArray.keyIterator().withIndex().forEach { (requestIndex, key) ->
-                            requestList.getOrNull(requestIndex)?.let { rawResponse ->
-                                if (rawResponse["code"] as? Int != 200) {
-                                    Log.e("Loki-DBG", "Batch sub-request had non-200 response code, returned code ${(rawResponse["code"] as? Int) ?: "[unknown]"}")
-                                    return@forEach
-                                }
-                                val body = rawResponse["body"] as? RawResponse
-                                if (body == null) {
-                                    Log.e("Loki-DBG", "Batch sub-request didn't contain a body")
-                                    return@forEach
-                                }
-                                if (key == Namespace.DEFAULT) {
-                                    processPersonalMessages(snode, body)
-                                } else {
-                                    configDebouncer.publish {
+                        configDebouncer.publish {
+                            requestSparseArray.keyIterator().withIndex().forEach { (requestIndex, key) ->
+                                responseList.getOrNull(requestIndex)?.let { rawResponse ->
+                                    if (rawResponse["code"] as? Int != 200) {
+                                        Log.e("Loki-DBG", "Batch sub-request had non-200 response code, returned code ${(rawResponse["code"] as? Int) ?: "[unknown]"}")
+                                        return@forEach
+                                    }
+                                    val body = rawResponse["body"] as? RawResponse
+                                    if (body == null) {
+                                        Log.e("Loki-DBG", "Batch sub-request didn't contain a body")
+                                        return@forEach
+                                    }
+                                    if (key == Namespace.DEFAULT) {
+                                        return@forEach // continue, skip default namespace
+                                    } else {
                                         when (ConfigBase.kindFor(key)) {
                                             UserProfile::class.java -> processConfig(snode, body, key, configFactory.user)
                                             Contacts::class.java -> processConfig(snode, body, key, configFactory.contacts)

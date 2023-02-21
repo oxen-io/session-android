@@ -11,6 +11,7 @@ import org.session.libsession.messaging.utilities.Data
 import org.session.libsession.snode.RawResponse
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsignal.utilities.Log
+import java.util.concurrent.atomic.AtomicBoolean
 
 // only contact (self) and closed group destinations will be supported
 data class ConfigurationSyncJob(val destination: Destination): Job {
@@ -20,7 +21,16 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
     override var failureCount: Int = 0
     override val maxFailureCount: Int = 1
 
-    override suspend fun execute(dispatcherName: String) {
+    val isRunning = AtomicBoolean(false)
+
+    suspend fun wrap(body: suspend ()->Unit) {
+        isRunning.set(true)
+        body()
+        isRunning.set(false)
+    }
+
+
+    override suspend fun execute(dispatcherName: String) = wrap {
         val userEdKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair()
         val userPublicKey = MessagingModuleConfiguration.shared.storage.getUserPublicKey()
         val delegate = delegate
@@ -37,8 +47,7 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
             || (destination is Destination.Contact && destination.publicKey != userPublicKey)
         ) {
             Log.w(TAG, "No need to run config sync job, TODO")
-            delegate?.handleJobSucceeded(this, dispatcherName)
-            return
+            return@wrap delegate?.handleJobSucceeded(this, dispatcherName) ?: Unit
         }
 
         // configFactory singleton instance will come in handy for modifying hashes and fetching configs for namespace etc
@@ -52,7 +61,7 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
         ).filter { config -> config.needsPush() }
 
         // don't run anything if we don't need to push anything
-        if (configsRequiringPush.isEmpty()) return delegate.handleJobSucceeded(this, dispatcherName)
+        if (configsRequiringPush.isEmpty()) return@wrap delegate.handleJobSucceeded(this, dispatcherName)
 
         // allow null results here so the list index matches configsRequiringPush
         val batchObjects: List<Pair<SharedConfigurationMessage, SnodeAPI.SnodeBatchRequestInfo>?> = configsRequiringPush.map { config ->
@@ -79,7 +88,7 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
 
         if (batchObjects.any { it == null }) {
             // stop running here, something like a signing error occurred
-            return delegate.handleJobFailedPermanently(this, dispatcherName, NullPointerException("One or more requests had a null batch request info"))
+            return@wrap delegate.handleJobFailedPermanently(this, dispatcherName, NullPointerException("One or more requests had a null batch request info"))
         }
 
         val allRequests = mutableListOf<SnodeAPI.SnodeBatchRequestInfo>()
@@ -145,7 +154,7 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error performing batch request", e)
-            return delegate.handleJobFailedPermanently(this, dispatcherName, e)
+            return@wrap delegate.handleJobFailedPermanently(this, dispatcherName, e)
         }
         delegate.handleJobSucceeded(this, dispatcherName)
     }

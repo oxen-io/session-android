@@ -133,7 +133,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
             configFactory.convoVolatile?.let { config ->
                 val convo = when {
                     // recipient closed group
-                    recipient.isClosedGroupRecipient -> config.getOrConstructLegacyClosedGroup(recipient.address.serialize())
+                    recipient.isClosedGroupRecipient -> config.getOrConstructLegacyClosedGroup(GroupUtil.doubleDecodeGroupId(recipient.address.serialize()))
                     // recipient is open group
                     recipient.isOpenGroupRecipient -> {
                         val openGroupJoinUrl = getOpenGroup(threadId)?.joinURL ?: return
