@@ -117,6 +117,7 @@ class ConfigFactory(private val context: Context,
             is UserProfile -> persistUserConfigDump()
             is Contacts -> persistContactsConfigDump()
             is ConversationVolatileConfig -> persistConvoVolatileConfigDump()
+            else -> throw UnsupportedOperationException("Can't support type of ${forConfigObject::class.simpleName} yet")
         }
     }
 
@@ -125,6 +126,7 @@ class ConfigFactory(private val context: Context,
             is UserProfile -> userHashes.add(hash)
             is Contacts -> contactsHashes.add(hash)
             is ConversationVolatileConfig -> convoHashes.add(hash)
+            else -> throw UnsupportedOperationException("Can't support type of ${configObject::class.simpleName} yet")
         }
     }
 
