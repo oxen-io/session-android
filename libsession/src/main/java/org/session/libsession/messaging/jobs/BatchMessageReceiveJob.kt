@@ -123,26 +123,27 @@ class BatchMessageReceiveJob(
                     async {
                         // The LinkedHashMap should preserve insertion order
                         val messageIds = linkedMapOf<Long, Pair<Boolean, Boolean>>()
-                        var myLastSeen = storage.getLastSeen(threadId)
+                        val myLastSeen = storage.getLastSeen(threadId)
+                        var newLastSeen = myLastSeen
                         messages.forEach { (parameters, message, proto) ->
                             try {
                                 when (message) {
                                     is VisibleMessage -> {
-                                        val messageId = MessageReceiver.handleVisibleMessage(message, proto, openGroupID,
-                                                runIncrement = false,
-                                                runThreadUpdate = false,
-                                                runProfileUpdate = true
+                                        val isUserBlindedSender = message.sender == serverPublicKey?.let { SodiumUtilities.blindedKeyPair(it, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!) }?.let { SessionId(
+                                            IdPrefix.BLINDED, it.publicKey.asBytes).hexString }
+                                        val sentTimestamp = message.sentTimestamp!!
+                                        if (message.sender == localUserPublicKey || isUserBlindedSender) {
+                                            if (sentTimestamp > newLastSeen) {
+                                                newLastSeen = sentTimestamp // use sent timestamp here since that is technically the last one we have
+                                            }
+                                        }
+                                        val messageId = MessageReceiver.handleVisibleMessage(
+                                            message, proto, openGroupID,
+                                            runThreadUpdate = false,
+                                            runProfileUpdate = true
                                         )
 
                                         if (messageId != null && message.reaction == null) {
-                                            val isUserBlindedSender = message.sender == serverPublicKey?.let { SodiumUtilities.blindedKeyPair(it, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!) }?.let { SessionId(
-                                                    IdPrefix.BLINDED, it.publicKey.asBytes).hexString }
-                                            if (message.sender == localUserPublicKey || isUserBlindedSender) {
-                                                val sentTimestamp = message.sentTimestamp
-                                                if (sentTimestamp != null && sentTimestamp > myLastSeen) {
-                                                    myLastSeen = sentTimestamp // use sent timestamp here since that is technically the last one we have
-                                                }
-                                            }
                                             messageIds[messageId] = Pair(
                                                 (message.sender == localUserPublicKey || isUserBlindedSender),
                                                 message.hasMention
@@ -176,7 +177,12 @@ class BatchMessageReceiveJob(
                         }
                         // increment unreads, notify, and update thread
                         // last seen will be the current last seen if not changed (re-computes the read counts for thread record)
-                        storage.markConversationAsRead(threadId, myLastSeen)
+                        // might have been updated from a different thread at this point
+                        val currentLastSeen = storage.getLastSeen(threadId)
+                        if (currentLastSeen > newLastSeen) {
+                            newLastSeen = currentLastSeen
+                        }
+                        storage.markConversationAsRead(threadId, newLastSeen)
                         storage.updateThread(threadId, true)
                         SSKEnvironment.shared.notificationManager.updateNotification(context, threadId)
                     }

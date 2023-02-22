@@ -67,8 +67,8 @@ fun MessageReceiver.handle(message: Message, proto: SignalServiceProtos.Content,
         is ConfigurationMessage -> handleConfigurationMessage(message)
         is UnsendRequest -> handleUnsendRequest(message)
         is MessageRequestResponse -> handleMessageRequestResponse(message)
-        is VisibleMessage -> handleVisibleMessage(message, proto, openGroupID,
-            runIncrement = true,
+        is VisibleMessage -> handleVisibleMessage(
+            message, proto, openGroupID,
             runThreadUpdate = true,
             runProfileUpdate = true
         )
@@ -214,12 +214,13 @@ fun handleMessageRequestResponse(message: MessageRequestResponse) {
 }
 //endregion
 
-fun MessageReceiver.handleVisibleMessage(message: VisibleMessage,
-                                         proto: SignalServiceProtos.Content,
-                                         openGroupID: String?,
-                                         runIncrement: Boolean,
-                                         runThreadUpdate: Boolean,
-                                         runProfileUpdate: Boolean): Long? {
+fun MessageReceiver.handleVisibleMessage(
+    message: VisibleMessage,
+    proto: SignalServiceProtos.Content,
+    openGroupID: String?,
+    runThreadUpdate: Boolean,
+    runProfileUpdate: Boolean
+): Long? {
     val storage = MessagingModuleConfiguration.shared.storage
     val context = MessagingModuleConfiguration.shared.context
     val userPublicKey = storage.getUserPublicKey()

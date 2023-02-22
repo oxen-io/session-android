@@ -25,7 +25,6 @@ class VisibleMessage : Message()  {
     var openGroupInvitation: OpenGroupInvitation? = null
     var reaction: Reaction? = null
     var hasMention: Boolean = false
-
     override val isSelfSendValid: Boolean = true
 
     // region Validation
