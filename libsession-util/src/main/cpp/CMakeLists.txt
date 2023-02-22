@@ -24,6 +24,7 @@ add_subdirectory(../../../libsession-util libsession)
 
 set(SOURCES
         user_profile.cpp
+        user_groups.cpp
         config_base.cpp
         contacts.cpp
         conversation.cpp

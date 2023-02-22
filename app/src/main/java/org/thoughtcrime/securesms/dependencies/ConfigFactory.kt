@@ -133,6 +133,7 @@ class ConfigFactory(private val context: Context,
             is UserProfile -> userHashes.toList()
             is Contacts -> contactsHashes.toList()
             is ConversationVolatileConfig -> convoHashes.toList()
+            else -> throw UnsupportedOperationException("Can't support type of ${forConfigObject::class.simpleName} yet")
         }
 
     override fun removeHashesFor(forConfigObject: ConfigBase, deletedHashes: Set<String>) =
@@ -140,6 +141,7 @@ class ConfigFactory(private val context: Context,
             is UserProfile -> userHashes.removeAll(deletedHashes)
             is Contacts -> contactsHashes.removeAll(deletedHashes)
             is ConversationVolatileConfig -> convoHashes.removeAll(deletedHashes)
+            else -> throw UnsupportedOperationException("Can't support type of ${forConfigObject::class.simpleName} yet")
         }
 
 }

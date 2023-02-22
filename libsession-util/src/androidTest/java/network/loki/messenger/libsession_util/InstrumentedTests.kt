@@ -497,7 +497,7 @@ class InstrumentedTests {
         c2.unread = true
         convos2.set(c2)
 
-        val c3 = convos.getOrConstructLegacyClosedGroup(
+        val c3 = convos.getOrConstructLegacyGroup(
             "05cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
         )
         c3.lastRead = nowMs - 50

@@ -3,8 +3,10 @@ package org.thoughtcrime.securesms.util
 import android.content.Context
 import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.Contacts
+import network.loki.messenger.libsession_util.ConversationVolatileConfig
 import network.loki.messenger.libsession_util.UserProfile
 import network.loki.messenger.libsession_util.util.Contact
+import network.loki.messenger.libsession_util.util.Conversation
 import network.loki.messenger.libsession_util.util.UserPic
 import nl.komponents.kovenant.Promise
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -14,8 +16,10 @@ import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.Log
+import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 
 object ConfigurationMessageUtilities {
 
@@ -144,7 +148,39 @@ object ConfigurationMessageUtilities {
     }
 
     fun generateConversationVolatileDump(context: Context): ByteArray? {
-        TODO()
+        val secretKey = maybeUserSecretKey() ?: return null
+        val storage = MessagingModuleConfiguration.shared.storage
+        val localUserKey = storage.getUserPublicKey() ?: return null
+        val convoConfig = ConversationVolatileConfig.newInstance(secretKey)
+        val threadDb = DatabaseComponent.get(context).threadDatabase()
+        threadDb.approvedConversationList.use { cursor ->
+            val reader = threadDb.readerFor(cursor)
+            var current = reader.current
+            while (current != null) {
+                val recipient = current.recipient
+                val contact = when {
+                    recipient.isOpenGroupRecipient -> {
+                        val openGroup = storage.getOpenGroup(current.threadId) ?: continue
+                        val (base, room, pubKey) = Conversation.Community.parseFullUrl(openGroup.joinURL) ?: continue
+                        convoConfig.getOrConstructCommunity(base, room, pubKey)
+                    }
+                    recipient.isClosedGroupRecipient -> {
+                        val groupPublicKey = GroupUtil.doubleDecodeGroupId(recipient.address.serialize())
+                        convoConfig.getOrConstructLegacyGroup(groupPublicKey)
+                    }
+                    recipient.isContactRecipient -> convoConfig.getOrConstructOneToOne(recipient.address.serialize())
+                    else -> null
+                } ?: continue
+                contact.lastRead = current.lastSeen
+                contact.unread = false // TODO: make the forced unread work at DB level
+                convoConfig.set(contact)
+                current = reader.next
+            }
+        }
+
+        val dump = convoConfig.dump()
+        convoConfig.free()
+        return dump
     }
 
 }

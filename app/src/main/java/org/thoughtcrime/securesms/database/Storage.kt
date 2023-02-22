@@ -133,7 +133,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
             configFactory.convoVolatile?.let { config ->
                 val convo = when {
                     // recipient closed group
-                    recipient.isClosedGroupRecipient -> config.getOrConstructLegacyClosedGroup(GroupUtil.doubleDecodeGroupId(recipient.address.serialize()))
+                    recipient.isClosedGroupRecipient -> config.getOrConstructLegacyGroup(GroupUtil.doubleDecodeGroupId(recipient.address.serialize()))
                     // recipient is open group
                     recipient.isOpenGroupRecipient -> {
                         val openGroupJoinUrl = getOpenGroup(threadId)?.joinURL ?: return
@@ -570,7 +570,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         DatabaseComponent.get(context).groupDatabase().create(groupId, title, members, avatar, relay, admins, formationTimestamp)
         val volatiles = configFactory.convoVolatile ?: return
         val groupPublicKey = GroupUtil.doubleDecodeGroupId(groupId)
-        val groupVolatileConfig = volatiles.getOrConstructLegacyClosedGroup(groupPublicKey)
+        val groupVolatileConfig = volatiles.getOrConstructLegacyGroup(groupPublicKey)
         groupVolatileConfig.lastRead = formationTimestamp
         volatiles.set(groupVolatileConfig)
         ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)

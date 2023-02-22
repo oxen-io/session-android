@@ -18,6 +18,7 @@ sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
             is UserProfile -> Kind.USER_PROFILE
             is Contacts -> Kind.CONTACTS
             is ConversationVolatileConfig -> Kind.CONVO_INFO_VOLATILE
+            is UserGroupsConfig -> Kind.GROUPS
         }
 
         const val isNewConfigEnabled = true
@@ -98,7 +99,7 @@ class ConversationVolatileConfig(pointer: Long): ConfigBase(pointer) {
     external fun eraseCommunity(baseUrl: String, room: String): Boolean
 
     external fun getLegacyClosedGroup(groupId: String): Conversation.LegacyGroup?
-    external fun getOrConstructLegacyClosedGroup(groupId: String): Conversation.LegacyGroup
+    external fun getOrConstructLegacyGroup(groupId: String): Conversation.LegacyGroup
     external fun eraseLegacyClosedGroup(groupId: String): Boolean
     external fun erase(conversation: Conversation): Boolean
 
@@ -120,5 +121,18 @@ class ConversationVolatileConfig(pointer: Long): ConfigBase(pointer) {
     external fun allCommunities(): List<Conversation.Community>
     external fun allLegacyClosedGroups(): List<Conversation.LegacyGroup>
     external fun all(): List<Conversation>
+
+}
+
+class UserGroupsConfig(pointer: Long): ConfigBase(pointer) {
+    companion object {
+        init {
+            System.loadLibrary("session_util")
+        }
+        external fun newInstance(ed25519SecretKey: ByteArray): UserGroupsConfig
+        external fun newInstance(ed25519SecretKey: ByteArray, initialDump: ByteArray): UserGroupsConfig
+    }
+
+
 
 }

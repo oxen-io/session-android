@@ -244,7 +244,7 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getLegac
 }
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getOrConstructLegacyClosedGroup(
+Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getOrConstructLegacyGroup(
         JNIEnv *env, jobject thiz, jstring group_id) {
     auto convos = ptrToConvoInfo(env, thiz);
     auto id_chars = env->GetStringUTFChars(group_id, nullptr);
