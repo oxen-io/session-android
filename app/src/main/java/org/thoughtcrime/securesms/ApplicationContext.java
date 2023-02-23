@@ -287,13 +287,13 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         /*if (poller != null) {
             poller.stopIfNeeded();
         }*/
-        ClosedGroupPollerV2.getShared().stop();
+        //ClosedGroupPollerV2.getShared().stop();
     }
 
     @Override
     public void onTerminate() {
         stopKovenant(); // Loki
-        OpenGroupManager.INSTANCE.stopPolling();
+        //OpenGroupManager.INSTANCE.stopPolling();
         super.onTerminate();
     }
 
