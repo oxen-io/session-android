@@ -62,6 +62,25 @@ class Contacts(pointer: Long) : ConfigBase(pointer) {
     external fun all(): List<Contact>
     external fun set(contact: Contact)
     external fun erase(sessionId: String): Boolean
+
+    /**
+     * Similar to [updateIfExists], but will create the underlying contact if it doesn't exist before passing to [updateFunction]
+     */
+    fun upsertContact(sessionId: String, updateFunction: Contact.()->Unit) {
+        val contact = getOrConstruct(sessionId)
+        updateFunction(contact)
+        set(contact)
+    }
+
+    /**
+     * Updates the contact by sessionId with a given [updateFunction], and applies to the underlying config.
+     * the [updateFunction] doesn't run if there is no contact
+     */
+    fun updateIfExists(sessionId: String, updateFunction: Contact.()->Unit) {
+        val contact = get(sessionId) ?: return
+        updateFunction(contact)
+        set(contact)
+    }
 }
 
 class UserProfile(pointer: Long) : ConfigBase(pointer) {

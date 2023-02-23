@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import network.loki.messenger.R
 import network.loki.messenger.databinding.DialogBlockedBinding
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.BaseDialog
@@ -35,7 +36,7 @@ class BlockedDialog(private val recipient: Recipient) : BaseDialog() {
     }
 
     private fun unblock() {
-        DatabaseComponent.get(requireContext()).recipientDatabase().setBlocked(recipient, false)
+        MessagingModuleConfiguration.shared.storage.setBlocked(listOf(recipient), false)
         dismiss()
     }
 }

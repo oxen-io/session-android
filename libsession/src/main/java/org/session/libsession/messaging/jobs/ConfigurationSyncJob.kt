@@ -150,7 +150,9 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
                 // store the new hash in list of hashes to track against
                 configFactory.appendHash(config, insertHash)
                 // dump and write config after successful
-                configFactory.persist(config)
+                if (config.needsDump()) { // usually this will be true?
+                    configFactory.persist(config)
+                }
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error performing batch request", e)

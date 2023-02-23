@@ -1,14 +1,17 @@
 package org.thoughtcrime.securesms.sskenvironment
 
 import android.content.Context
+import network.loki.messenger.libsession_util.util.UserPic
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.ApplicationContext
+import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.jobs.RetrieveProfileAvatarJob
+import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 
-class ProfileManager : SSKEnvironment.ProfileManagerProtocol {
+class ProfileManager(private val context: Context, private val configFactory: ConfigFactory) : SSKEnvironment.ProfileManagerProtocol {
 
     override fun setNickname(context: Context, recipient: Recipient, nickname: String?) {
         val sessionID = recipient.address.serialize()
@@ -20,6 +23,7 @@ class ProfileManager : SSKEnvironment.ProfileManagerProtocol {
             contact.nickname = nickname
             contactDatabase.setContact(contact)
         }
+        contactUpdatedInternal(contact)
     }
 
     override fun setName(context: Context, recipient: Recipient, name: String) {
@@ -37,6 +41,7 @@ class ProfileManager : SSKEnvironment.ProfileManagerProtocol {
         val database = DatabaseComponent.get(context).recipientDatabase()
         database.setProfileName(recipient, name)
         recipient.notifyListeners()
+        contactUpdatedInternal(contact)
     }
 
     override fun setProfilePictureURL(context: Context, recipient: Recipient, profilePictureURL: String) {
@@ -52,6 +57,7 @@ class ProfileManager : SSKEnvironment.ProfileManagerProtocol {
             contact.profilePictureURL = profilePictureURL
             contactDatabase.setContact(contact)
         }
+        contactUpdatedInternal(contact)
     }
 
     override fun setProfileKey(context: Context, recipient: Recipient, profileKey: ByteArray?) {
@@ -68,10 +74,28 @@ class ProfileManager : SSKEnvironment.ProfileManagerProtocol {
         // Old API
         val database = DatabaseComponent.get(context).recipientDatabase()
         database.setProfileKey(recipient, profileKey)
+        contactUpdatedInternal(contact)
     }
 
     override fun setUnidentifiedAccessMode(context: Context, recipient: Recipient, unidentifiedAccessMode: Recipient.UnidentifiedAccessMode) {
         val database = DatabaseComponent.get(context).recipientDatabase()
         database.setUnidentifiedAccessMode(recipient, unidentifiedAccessMode)
     }
+
+    private fun contactUpdatedInternal(contact: Contact) {
+        val contactConfig = configFactory.contacts ?: return
+        contactConfig.upsertContact(contact.sessionID) {
+            this.name = contact.name.orEmpty()
+            this.nickname = contact.nickname.orEmpty()
+            val url = contact.profilePictureURL
+            val key = contact.profilePictureEncryptionKey
+            if (!url.isNullOrEmpty() && key != null && key.size == 32) {
+                this.profilePicture = UserPic(url, key)
+            }
+        }
+        if (contactConfig.needsDump()) {
+            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+        }
+    }
+
 }

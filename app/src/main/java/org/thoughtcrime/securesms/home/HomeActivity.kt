@@ -52,6 +52,7 @@ import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.MmsSmsDatabase
 import org.thoughtcrime.securesms.database.RecipientDatabase
+import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
@@ -90,6 +91,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     @Inject lateinit var threadDb: ThreadDatabase
     @Inject lateinit var mmsSmsDatabase: MmsSmsDatabase
     @Inject lateinit var recipientDatabase: RecipientDatabase
+    @Inject lateinit var storage: Storage
     @Inject lateinit var groupDatabase: GroupDatabase
     @Inject lateinit var textSecurePreferences: TextSecurePreferences
     @Inject lateinit var configFactory: ConfigFactory
@@ -515,7 +517,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(R.string.RecipientPreferenceActivity_block) { dialog, _ ->
                     lifecycleScope.launch(Dispatchers.IO) {
-                        recipientDatabase.setBlocked(thread.recipient, true)
+                        storage.setBlocked(listOf(thread.recipient), true)
                         withContext(Dispatchers.Main) {
                             binding.recyclerView.adapter!!.notifyDataSetChanged()
                             dialog.dismiss()
@@ -531,7 +533,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(R.string.RecipientPreferenceActivity_unblock) { dialog, _ ->
                     lifecycleScope.launch(Dispatchers.IO) {
-                        recipientDatabase.setBlocked(thread.recipient, false)
+                        storage.setBlocked(listOf(thread.recipient), false)
                         withContext(Dispatchers.Main) {
                             binding.recyclerView.adapter!!.notifyDataSetChanged()
                             dialog.dismiss()

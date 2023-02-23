@@ -191,9 +191,9 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         if (!targetRecipient.isGroupRecipient) {
             val recipientDb = DatabaseComponent.get(context).recipientDatabase()
             if (isUserSender || isUserBlindedSender) {
-                recipientDb.setApproved(targetRecipient, true)
+                setRecipientApproved(targetRecipient, true)
             } else {
-                recipientDb.setApprovedMe(targetRecipient, true)
+                setRecipientApprovedMe(targetRecipient, true)
             }
         }
         if (message.isMediaMessage() || attachments.isNotEmpty()) {
@@ -790,7 +790,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         for (contact in moreContacts) {
             val address = fromSerialized(contact.id)
             val recipient = Recipient.from(context, address, true)
-            val (url, key) = contact.profilePicture?.let { it.url to it.key } ?: (null to null)
+            val (url, key) = contact.profilePicture.let { it.url to it.key }
             // set or clear the avatar
             recipientDatabase.setProfileAvatar(recipient, url)
             recipientDatabase.setProfileKey(recipient, key)
@@ -826,11 +826,11 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
                 recipientDatabase.setApprovedMe(recipient, true)
             }
             if (contact.isApproved == true) {
-                recipientDatabase.setApproved(recipient, true)
+                setRecipientApproved(recipient, true)
                 threadDatabase.setHasSent(threadId, true)
             }
             if (contact.isBlocked == true) {
-                recipientDatabase.setBlocked(recipient, true)
+                setBlocked(listOf(recipient), true)
                 threadDatabase.deleteConversation(threadId)
             }
         }
@@ -993,10 +993,16 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
 
     override fun setRecipientApproved(recipient: Recipient, approved: Boolean) {
         DatabaseComponent.get(context).recipientDatabase().setApproved(recipient, approved)
+        configFactory.contacts?.upsertContact(recipient.address.serialize()) {
+            this.approved = approved
+        }
     }
 
     override fun setRecipientApprovedMe(recipient: Recipient, approvedMe: Boolean) {
         DatabaseComponent.get(context).recipientDatabase().setApprovedMe(recipient, approvedMe)
+        configFactory.contacts?.upsertContact(recipient.address.serialize()) {
+            this.approvedMe = approvedMe
+        }
     }
 
     override fun insertCallMessage(senderPublicKey: String, callMessageType: CallMessageType, sentTimestamp: Long) {
@@ -1126,9 +1132,19 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         DatabaseComponent.get(context).reactionDatabase().deleteMessageReactions(MessageId(messageId, mms))
     }
 
-    override fun unblock(toUnblock: List<Recipient>) {
+    override fun setBlocked(recipients: List<Recipient>, isBlocked: Boolean) {
         val recipientDb = DatabaseComponent.get(context).recipientDatabase()
-        recipientDb.setBlocked(toUnblock, false)
+        recipientDb.setBlocked(recipients, isBlocked)
+        recipients.filter { it.isContactRecipient }.forEach { recipient ->
+            configFactory.contacts?.upsertContact(recipient.address.serialize()) {
+                this.blocked = true
+            }
+        }
+        val contactsConfig = configFactory.contacts ?: return
+        if (contactsConfig.needsDump()) {
+            configFactory.persist(contactsConfig)
+            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+        }
     }
 
     override fun blockedContacts(): List<Recipient> {

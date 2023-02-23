@@ -55,7 +55,7 @@ class BlockedContactsViewModel @Inject constructor(private val storage: Storage)
     }
 
     fun unblock(toUnblock: List<Recipient>) {
-        storage.unblock(toUnblock)
+        storage.setBlocked(toUnblock, false)
     }
 
     data class BlockedContactsViewState(

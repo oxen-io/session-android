@@ -420,7 +420,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 // only update the conversation every 3 seconds maximum
                 // channel is rendezvous and shouldn't block on try send calls as often as we want
                 val bufferedFlow = bufferedLastSeenChannel.consumeAsFlow()
-                    .debounce(3.seconds)
+                    .debounce(1.seconds)
                 bufferedFlow.collectLatest {
                     withContext(Dispatchers.IO) {
                         storage.markConversationAsRead(viewModel.threadId, SnodeAPI.nowWithOffset)
@@ -495,6 +495,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 handleRecyclerViewScrolled()
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+
             }
         })
     }
@@ -951,13 +955,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val wasTypingIndicatorVisibleBefore = binding.typingIndicatorViewContainer.isVisible
         binding.typingIndicatorViewContainer.isVisible = wasTypingIndicatorVisibleBefore && isScrolledToBottom
         binding.typingIndicatorViewContainer.isVisible
-        showOrHidScrollToBottomButton()
+        showOrHideScrollToBottomButton()
         val firstVisiblePosition = layoutManager?.findFirstVisibleItemPosition() ?: -1
         unreadCount = min(unreadCount, firstVisiblePosition).coerceAtLeast(0)
         updateUnreadCountIndicator()
     }
 
-    private fun showOrHidScrollToBottomButton(show: Boolean = true) {
+    private fun showOrHideScrollToBottomButton(show: Boolean = true) {
         binding?.scrollToBottomButton?.isVisible = show && !isScrolledToBottom && adapter.itemCount > 0
     }
 
@@ -1130,7 +1134,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
         ViewUtil.hideKeyboard(this, visibleMessageView)
         binding?.reactionsShade?.isVisible = true
-        showOrHidScrollToBottomButton(false)
+        showOrHideScrollToBottomButton(false)
         binding?.conversationRecyclerView?.suppressLayout(true)
         reactionDelegate.setOnActionSelectedListener(ReactionsToolbarListener(message))
         reactionDelegate.setOnHideListener(object: ConversationReactionOverlay.OnHideListener {
@@ -1138,7 +1142,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 binding?.reactionsShade?.let {
                     ViewUtil.fadeOut(it, resources.getInteger(R.integer.reaction_scrubber_hide_duration), View.GONE)
                 }
-                showOrHidScrollToBottomButton(true)
+                showOrHideScrollToBottomButton(true)
             }
 
             override fun onHide() {

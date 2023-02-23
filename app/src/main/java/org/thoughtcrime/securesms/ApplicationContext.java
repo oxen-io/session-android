@@ -390,7 +390,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     }
 
     private void initializeProfileManager() {
-        this.profileManager = new ProfileManager();
+        this.profileManager = new ProfileManager(this, configFactory);
     }
 
     private void initializeTypingStatusSender() {

@@ -749,7 +749,7 @@ public class ThreadDatabase extends Database {
     } else {
       MarkReadReceiver.process(context, messages);
     }
-    ApplicationContext.getInstance(context).messageNotifier.updateNotification(context, false, 0);
+    ApplicationContext.getInstance(context).messageNotifier.updateNotification(context, threadId);
     setLastSeen(threadId, lastSeenTime);
   }
 

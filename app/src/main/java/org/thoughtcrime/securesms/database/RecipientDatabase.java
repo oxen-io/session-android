@@ -268,14 +268,6 @@ public class RecipientDatabase extends Database {
     notifyRecipientListeners();
   }
 
-  public void setBlocked(@NonNull Recipient recipient, boolean blocked) {
-    ContentValues values = new ContentValues();
-    values.put(BLOCK, blocked ? 1 : 0);
-    updateOrInsert(recipient.getAddress(), values);
-    recipient.resolve().setBlocked(blocked);
-    notifyRecipientListeners();
-  }
-
   public void setBlocked(@NonNull List<Recipient> recipients, boolean blocked) {
     SQLiteDatabase db = getWritableDatabase();
     db.beginTransaction();

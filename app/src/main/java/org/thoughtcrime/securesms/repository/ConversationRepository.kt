@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.repository
 
+import org.jetbrains.annotations.Contract
 import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
@@ -23,6 +24,7 @@ import org.thoughtcrime.securesms.database.MmsSmsDatabase
 import org.thoughtcrime.securesms.database.RecipientDatabase
 import org.thoughtcrime.securesms.database.SessionJobDatabase
 import org.thoughtcrime.securesms.database.SmsDatabase
+import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.ThreadRecord
@@ -83,6 +85,7 @@ class DefaultConversationRepository @Inject constructor(
     private val mmsDb: MmsDatabase,
     private val mmsSmsDb: MmsSmsDatabase,
     private val recipientDb: RecipientDatabase,
+    private val storage: Storage,
     private val lokiMessageDb: LokiMessageDatabase,
     private val sessionJobDb: SessionJobDatabase,
     private val configFactory: ConfigFactory
@@ -127,8 +130,10 @@ class DefaultConversationRepository @Inject constructor(
         }
     }
 
+    // This assumes that recipient.isContactRecipient is true
+    @Contract
     override fun setBlocked(recipient: Recipient, blocked: Boolean) {
-        recipientDb.setBlocked(recipient, blocked)
+        storage.setBlocked(listOf(recipient), blocked)
     }
 
     override fun deleteLocally(recipient: Recipient, message: MessageRecord) {
@@ -141,7 +146,7 @@ class DefaultConversationRepository @Inject constructor(
     }
 
     override fun setApproved(recipient: Recipient, isApproved: Boolean) {
-        recipientDb.setApproved(recipient, isApproved)
+        storage.setRecipientApproved(recipient, isApproved)
     }
 
     override suspend fun deleteForEveryone(
@@ -272,7 +277,7 @@ class DefaultConversationRepository @Inject constructor(
     }
 
     override suspend fun acceptMessageRequest(threadId: Long, recipient: Recipient): ResultOf<Unit> = suspendCoroutine { continuation ->
-        recipientDb.setApproved(recipient, true)
+        storage.setRecipientApproved(recipient, true)
         val message = MessageRequestResponse(true)
         MessageSender.send(message, Destination.from(recipient.address))
             .success {

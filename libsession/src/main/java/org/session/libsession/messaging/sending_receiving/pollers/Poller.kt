@@ -163,7 +163,9 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
             }
         }
         // process new results
-        configFactory.persist(forConfigObject)
+        if (forConfigObject.needsDump()) {
+            configFactory.persist(forConfigObject)
+        }
     }
 
     private fun poll(snode: Snode, deferred: Deferred<Unit, Exception>): Promise<Unit, Exception> {
