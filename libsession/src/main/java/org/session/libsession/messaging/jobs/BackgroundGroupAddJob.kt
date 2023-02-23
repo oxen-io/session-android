@@ -43,8 +43,8 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
             storage.setOpenGroupPublicKey(openGroup.server, openGroup.serverPublicKey)
             val info = storage.addOpenGroup(openGroup.joinUrl())
             val imageId = info?.imageId
-            if (imageId != null) {
-                JobQueue.shared.add(GroupAvatarDownloadJob(openGroup.room, openGroup.server))
+            if (imageId != null && storage.getGroupAvatarDownloadJob(openGroup.server, openGroup.room, imageId) == null) {
+                JobQueue.shared.add(GroupAvatarDownloadJob(openGroup.server, openGroup.room, imageId))
             }
             Log.d(KEY, "onOpenGroupAdded(${openGroup.server})")
             storage.onOpenGroupAdded(openGroup.server)

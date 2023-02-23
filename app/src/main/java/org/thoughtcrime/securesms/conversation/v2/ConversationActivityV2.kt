@@ -1440,16 +1440,16 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val hasSeenGIFMetaDataWarning: Boolean = textSecurePreferences.hasSeenGIFMetaDataWarning()
         if (!hasSeenGIFMetaDataWarning) {
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("Search GIFs?")
-            builder.setMessage("You will not have full metadata protection when sending GIFs.")
-            builder.setPositiveButton("OK") { dialog: DialogInterface, _: Int ->
+            builder.setTitle(R.string.giphy_permission_title)
+            builder.setMessage(R.string.giphy_permission_message)
+            builder.setPositiveButton(R.string.continue_2) { dialog: DialogInterface, _: Int ->
                 textSecurePreferences.setHasSeenGIFMetaDataWarning()
                 AttachmentManager.selectGif(this, PICK_GIF)
                 dialog.dismiss()
             }
-            builder.setNegativeButton(
-                "Cancel"
-            ) { dialog: DialogInterface, _: Int -> dialog.dismiss() }
+            builder.setNegativeButton(R.string.cancel) { dialog: DialogInterface, _: Int ->
+                dialog.dismiss()
+            }
             builder.create().show()
         } else {
             AttachmentManager.selectGif(this, PICK_GIF)

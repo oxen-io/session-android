@@ -871,4 +871,6 @@
     <string name="delivery_status_read">Read</string>
     <string name="delivery_status_sent">Sent</string>
     <string name="delivery_status_failed">Failed to send</string>
+    <string name="giphy_permission_title">Search GIFs?</string>
+    <string name="giphy_permission_message">Session will connect to Giphy to provide search results. You will not have full metadata protection when sending GIFs.</string>
 </resources>

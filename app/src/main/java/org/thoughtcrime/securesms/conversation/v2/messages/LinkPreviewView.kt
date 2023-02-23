@@ -57,8 +57,12 @@ class LinkPreviewView : LinearLayout {
         val cornerRadii = MessageBubbleUtilities.calculateRadii(context, isStartOfMessageCluster, isEndOfMessageCluster, message.isOutgoing)
         cornerMask.setTopLeftRadius(cornerRadii[0])
         cornerMask.setTopRightRadius(cornerRadii[1])
-        cornerMask.setBottomRightRadius(cornerRadii[2])
-        cornerMask.setBottomLeftRadius(cornerRadii[3])
+
+        // Only round the bottom corners if there is no body text
+        if (message.body.isEmpty()) {
+            cornerMask.setBottomRightRadius(cornerRadii[2])
+            cornerMask.setBottomLeftRadius(cornerRadii[3])
+        }
     }
 
     override fun dispatchDraw(canvas: Canvas) {

@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.os.Bundle
 import android.text.SpannableString
 import android.widget.Toast
@@ -425,6 +427,24 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             )
             userDetailsBottomSheet.arguments = bundle
             userDetailsBottomSheet.show(supportFragmentManager, userDetailsBottomSheet.tag)
+        }
+        bottomSheet.onCopyConversationId = onCopyConversationId@{
+            bottomSheet.dismiss()
+            if (!thread.recipient.isGroupRecipient && !thread.recipient.isLocalNumber) {
+                val clip = ClipData.newPlainText("Session ID", thread.recipient.address.toString())
+                val manager = getSystemService(PassphraseRequiredActionBarActivity.CLIPBOARD_SERVICE) as ClipboardManager
+                manager.setPrimaryClip(clip)
+                Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+            }
+            else if (thread.recipient.isOpenGroupRecipient) {
+                val threadId = threadDb.getThreadIdIfExistsFor(thread.recipient) ?: return@onCopyConversationId Unit
+                val openGroup = DatabaseComponent.get(this@HomeActivity).lokiThreadDatabase().getOpenGroupChat(threadId) ?: return@onCopyConversationId Unit
+
+                val clip = ClipData.newPlainText("Community URL", openGroup.joinURL)
+                val manager = getSystemService(PassphraseRequiredActionBarActivity.CLIPBOARD_SERVICE) as ClipboardManager
+                manager.setPrimaryClip(clip)
+                Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+            }
         }
         bottomSheet.onBlockTapped = {
             bottomSheet.dismiss()
