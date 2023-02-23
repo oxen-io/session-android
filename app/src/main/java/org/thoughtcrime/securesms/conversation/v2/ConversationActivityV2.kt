@@ -36,9 +36,11 @@ import androidx.annotation.DimenRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -46,7 +48,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.annimon.stream.Stream
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityConversationV2Binding
 import network.loki.messenger.databinding.ViewVisibleMessageBinding
@@ -70,6 +78,7 @@ import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
 import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Address.Companion.fromSerialized
 import org.session.libsession.utilities.GroupUtil
@@ -166,6 +175,7 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
+import kotlin.time.Duration.Companion.seconds
 
 // Some things that seemingly belong to the input bar (e.g. the voice message recording UI) are actually
 // part of the conversation activity layout. This is just because it makes the layout a lot simpler. The
@@ -251,6 +261,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     // Search
     val searchViewModel: SearchViewModel by viewModels()
     var searchViewItem: MenuItem? = null
+
+    private val bufferedLastSeenChannel = Channel<Unit>(capacity = Channel.RENDEZVOUS, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
     private val isScrolledToBottom: Boolean
         get() {
@@ -403,15 +415,24 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             ViewUtil.findStubById(this, R.id.conversation_reaction_scrubber_stub)
         reactionDelegate = ConversationReactionDelegate(reactionOverlayStub)
         reactionDelegate.setOnReactionSelectedListener(this)
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                // only update the conversation every 3 seconds maximum
+                // channel is rendezvous and shouldn't block on try send calls as often as we want
+                val bufferedFlow = bufferedLastSeenChannel.consumeAsFlow()
+                    .debounce(3.seconds)
+                bufferedFlow.collectLatest {
+                    withContext(Dispatchers.IO) {
+                        storage.markConversationAsRead(viewModel.threadId, SnodeAPI.nowWithOffset)
+                    }
+                }
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
         ApplicationContext.getInstance(this).messageNotifier.setVisibleThread(viewModel.threadId)
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            storage.markConversationAsRead(viewModel.threadId, System.currentTimeMillis())
-        }
 
         contentResolver.registerContentObserver(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -454,6 +475,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             if (author != null && messageTimestamp >= 0) {
                 jumpToMessage(author, messageTimestamp, null)
             }
+            // TODO: buffer this
+            bufferedLastSeenChannel.trySend(Unit)
         }
     }
 
