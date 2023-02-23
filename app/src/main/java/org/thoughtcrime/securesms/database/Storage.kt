@@ -336,16 +336,9 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
     private fun updateContacts(contacts: Contacts) {
         val extracted = contacts.all().toList()
         extracted.forEach { contact ->
-            val address = Address.fromSerialized(contact.id)
-            val settings = getRecipientSettings(address) ?: run {
-                // new contact, store it
-            }
-            contact.name
-            contact.approved
-            contact.approvedMe
-            contact.blocked
-            contact.nickname
-            contact.profilePicture
+            val address = fromSerialized(contact.id)
+            val recipient = Recipient.from(context, address, false)
+            setBlocked(listOf(recipient), contact.blocked)
         }
     }
 
@@ -1142,7 +1135,6 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         }
         val contactsConfig = configFactory.contacts ?: return
         if (contactsConfig.needsDump()) {
-            configFactory.persist(contactsConfig)
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
         }
     }
