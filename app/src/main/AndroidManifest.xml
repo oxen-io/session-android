@@ -475,6 +475,11 @@
         <meta-data
             android:name="com.sec.android.multiwindow.MINIMUM_SIZE_H"
             android:value="598.0dip" />
+
+        <service
+            android:name="org.thoughtcrime.securesms.MyForegroundService"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

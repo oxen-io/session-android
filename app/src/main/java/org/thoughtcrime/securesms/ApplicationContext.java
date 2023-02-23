@@ -19,6 +19,9 @@ import static nl.komponents.kovenant.android.KovenantAndroid.startKovenant;
 import static nl.komponents.kovenant.android.KovenantAndroid.stopKovenant;
 
 import android.app.Application;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -27,9 +30,11 @@ import android.os.Handler;
 import android.os.HandlerThread;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ProcessLifecycleOwner;
+
 
 import org.conscrypt.Conscrypt;
 import org.session.libsession.avatars.AvatarHelper;
@@ -113,6 +118,7 @@ import dagger.hilt.android.HiltAndroidApp;
 import kotlin.Unit;
 import kotlinx.coroutines.Job;
 import network.loki.messenger.BuildConfig;
+
 
 /**
  * Will be called once when the TextSecure process is created.
@@ -244,6 +250,14 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     public void onStart(@NonNull LifecycleOwner owner) {
         isAppVisible = true;
         Log.i(TAG, "App is now visible.");
+
+        Intent serviceIntent = new Intent(this, MyForegroundService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Log.i(TAG, "start foreground service");
+            //startService(serviceIntent);
+            startForegroundService(serviceIntent);
+        }
+
         KeyCachingService.onAppForegrounded(this);
 
         // If the user account hasn't been created or onboarding wasn't finished then don't start
@@ -267,11 +281,12 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     public void onStop(@NonNull LifecycleOwner owner) {
         isAppVisible = false;
         Log.i(TAG, "App is no longer visible.");
+
         KeyCachingService.onAppBackgrounded(this);
         messageNotifier.setVisibleThread(-1);
-        if (poller != null) {
+        /*if (poller != null) {
             poller.stopIfNeeded();
-        }
+        }*/
         ClosedGroupPollerV2.getShared().stop();
     }
 
