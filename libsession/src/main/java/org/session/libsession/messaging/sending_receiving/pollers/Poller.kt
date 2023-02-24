@@ -43,7 +43,7 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
     var isCaughtUp = false
     var configPollingJob: Job? = null
     
-    val configDebouncer = WindowDebouncer(3000, debounceTimer)
+    private val configDebouncer = WindowDebouncer(3000, debounceTimer)
 
     // region Settings
     companion object {
@@ -143,9 +143,6 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
             // no new messages to process
             return
         }
-
-        Log.d("Loki-DBG", "Received configs with hashes: ${messages.map { it.second }}")
-        Log.d("Loki-DBG", "Hashes we have for config: ${configFactory.getHashesFor(forConfigObject)}")
 
         messages.forEach { (envelope, hash) ->
             try {

@@ -82,7 +82,7 @@ class ProfileManager(private val context: Context, private val configFactory: Co
         database.setUnidentifiedAccessMode(recipient, unidentifiedAccessMode)
     }
 
-    private fun contactUpdatedInternal(contact: Contact) {
+    override fun contactUpdatedInternal(contact: Contact) {
         val contactConfig = configFactory.contacts ?: return
         contactConfig.upsertContact(contact.sessionID) {
             this.name = contact.name.orEmpty()
@@ -93,7 +93,7 @@ class ProfileManager(private val context: Context, private val configFactory: Co
                 this.profilePicture = UserPic(url, key)
             }
         }
-        if (contactConfig.needsDump()) {
+        if (contactConfig.needsPush()) {
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
         }
     }

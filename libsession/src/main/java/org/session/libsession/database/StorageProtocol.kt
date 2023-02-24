@@ -204,7 +204,7 @@ interface StorageProtocol {
     fun removeReaction(emoji: String, messageTimestamp: Long, author: String, notifyUnread: Boolean)
     fun updateReactionIfNeeded(message: Message, sender: String, openGroupSentTimestamp: Long)
     fun deleteReactions(messageId: Long, mms: Boolean)
-    fun setBlocked(recipients: List<Recipient>, isBlocked: Boolean)
+    fun setBlocked(recipients: List<Recipient>, isBlocked: Boolean, fromConfigUpdate: Boolean = false)
     fun blockedContacts(): List<Recipient>
 
     // Shared configs

@@ -7,6 +7,7 @@ import network.loki.messenger.libsession_util.Contacts
 import network.loki.messenger.libsession_util.ConversationVolatileConfig
 import network.loki.messenger.libsession_util.UserProfile
 import network.loki.messenger.libsession_util.util.Conversation
+import network.loki.messenger.libsession_util.util.UserPic
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.BlindedIdMapping
@@ -318,7 +319,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         }
 
         // update pfp
-        if (userPic == null) {
+        if (userPic == UserPic.DEFAULT) {
             // clear picture if userPic is null
             TextSecurePreferences.setProfileKey(context, null)
             ProfileKeyUtil.setEncodedProfileKey(context, null)
@@ -335,10 +336,23 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
 
     private fun updateContacts(contacts: Contacts) {
         val extracted = contacts.all().toList()
+        val profileManager = SSKEnvironment.shared.profileManager
         extracted.forEach { contact ->
             val address = fromSerialized(contact.id)
             val recipient = Recipient.from(context, address, false)
-            setBlocked(listOf(recipient), contact.blocked)
+            setBlocked(listOf(recipient), contact.blocked, fromConfigUpdate = true)
+            setRecipientApproved(recipient, contact.approved)
+            setRecipientApprovedMe(recipient, contact.approvedMe)
+            profileManager.setName(context, recipient, contact.name)
+            profileManager.setNickname(context, recipient, contact.nickname)
+            if (contact.profilePicture != UserPic.DEFAULT) {
+                val (url, key) = contact.profilePicture
+                if (key.size != ProfileKeyUtil.PROFILE_KEY_BYTES) return@forEach
+                profileManager.setProfileKey(context, recipient, key)
+                profileManager.setUnidentifiedAccessMode(context, recipient, Recipient.UnidentifiedAccessMode.UNKNOWN)
+                profileManager.setProfilePictureURL(context, recipient, url)
+            }
+            Log.d("Loki-DBG", "Updated contact $contact")
         }
     }
 
@@ -356,7 +370,6 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
                     getOrCreateThreadIdFor("",null, it)
                 }
             }
-            Log.d("Loki-DBG", "Should update thread $threadId")
             if (threadId >= 0) {
                 markConversationAsRead(threadId, conversation.lastRead)
                 updateThread(threadId, false)
@@ -761,6 +774,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
 
     override fun setContact(contact: Contact) {
         DatabaseComponent.get(context).sessionContactDatabase().setContact(contact)
+        SSKEnvironment.shared.profileManager.contactUpdatedInternal(contact)
     }
 
     override fun getRecipientForThread(threadId: Long): Recipient? {
@@ -823,7 +837,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
                 threadDatabase.setHasSent(threadId, true)
             }
             if (contact.isBlocked == true) {
-                setBlocked(listOf(recipient), true)
+                setBlocked(listOf(recipient), true, fromConfigUpdate = true)
                 threadDatabase.deleteConversation(threadId)
             }
         }
@@ -1125,16 +1139,17 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         DatabaseComponent.get(context).reactionDatabase().deleteMessageReactions(MessageId(messageId, mms))
     }
 
-    override fun setBlocked(recipients: List<Recipient>, isBlocked: Boolean) {
+    override fun setBlocked(recipients: List<Recipient>, isBlocked: Boolean, fromConfigUpdate: Boolean) {
         val recipientDb = DatabaseComponent.get(context).recipientDatabase()
         recipientDb.setBlocked(recipients, isBlocked)
         recipients.filter { it.isContactRecipient }.forEach { recipient ->
             configFactory.contacts?.upsertContact(recipient.address.serialize()) {
-                this.blocked = true
+                this.blocked = isBlocked
             }
         }
         val contactsConfig = configFactory.contacts ?: return
-        if (contactsConfig.needsDump()) {
+        if (contactsConfig.needsPush() && !fromConfigUpdate) {
+            Log.d("Loki-DBG", "Needs to push contacts after blocking ${recipients.map { it.toShortString() }}")
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
         }
     }
