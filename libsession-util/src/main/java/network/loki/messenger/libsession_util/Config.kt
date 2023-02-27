@@ -3,6 +3,7 @@ package network.loki.messenger.libsession_util
 import network.loki.messenger.libsession_util.util.ConfigWithSeqNo
 import network.loki.messenger.libsession_util.util.Contact
 import network.loki.messenger.libsession_util.util.Conversation
+import network.loki.messenger.libsession_util.util.GroupInfo
 import network.loki.messenger.libsession_util.util.UserPic
 import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage.Kind
 
@@ -33,6 +34,7 @@ sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
     external fun encryptionDomain(): String
     external fun confirmPushed(seqNo: Long, newHash: String)
     external fun merge(toMerge: Array<Pair<String,ByteArray>>): Int
+    external fun obsoleteHashes(): List<String>
     external fun removeObsoleteHashes(toRemove: Array<String>)
 
     external fun configNamespace(): Int
@@ -153,6 +155,11 @@ class UserGroupsConfig(pointer: Long): ConfigBase(pointer) {
         external fun newInstance(ed25519SecretKey: ByteArray, initialDump: ByteArray): UserGroupsConfig
     }
 
-
+    external fun getCommunityInfo(baseUrl: String, room: String): GroupInfo.CommunityInfo?
+    external fun getLegacyGroupInfo(sessionId: String): GroupInfo.LegacyGroupInfo?
+    external fun getOrConstructCommunityInfo(baseUrl: String, room: String, pubKeyHex: String): GroupInfo.CommunityInfo
+    external fun getOrConstructLegacyGroupInfo(sessionId: String): GroupInfo.LegacyGroupInfo
+    external fun set(communityInfo: GroupInfo.CommunityInfo)
+    external fun set(legacyGroupInfo: GroupInfo.LegacyGroupInfo)
 
 }

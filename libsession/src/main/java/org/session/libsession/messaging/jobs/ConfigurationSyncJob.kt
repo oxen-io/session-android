@@ -73,7 +73,7 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
         }
 
         val toDeleteRequest = configsRequiringPush.map { base ->
-            configFactory.getHashesFor(base)
+            base.obsoleteHashes()
             // accumulate by adding together
         }.reduce(List<String>::plus).let { toDeleteFromAllNamespaces ->
             if (toDeleteFromAllNamespaces.isEmpty()) null
@@ -137,11 +137,9 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
                 // confirm pushed seqno
                 val thisSeqNo = toPushMessage.seqNo
                 config.confirmPushed(thisSeqNo, insertHash)
-                config.
                 // wipe any of the existing hashes which we deleted (they may or may not be in this namespace)
-                if (configFactory.removeHashesFor(config, deletedHashes.toSet())) {
-                    Log.d(TAG, "Successfully removed the deleted hashes from ${config.javaClass.simpleName}")
-                }
+                config.removeObsoleteHashes(deletedHashes.toTypedArray())
+                Log.d(TAG, "Successfully removed the deleted hashes from ${config.javaClass.simpleName}")
                 // dump and write config after successful
                 if (config.needsDump()) { // usually this will be true?
                     configFactory.persist(config)

@@ -130,7 +130,19 @@ Java_network_loki_messenger_libsession_1util_ConfigBase_removeObsoleteHashes(JNI
     for (int i = 0; i < number; i++) {
         auto jElement = (jstring) env->GetObjectArrayElement(to_remove, i);
         auto element_as_string = env->GetStringUTFChars(jElement, nullptr);
-        conf->confirm_removed(element_as_string);
+        // TODO: uncomment when this is re-implemented
+//        conf->confirm_removed(element_as_string);
         env->ReleaseStringUTFChars(jElement, element_as_string);
     }
+}
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_network_loki_messenger_libsession_1util_ConfigBase_obsoleteHashes(JNIEnv *env, jobject thiz) {
+    auto conf = ptrToConfigBase(env, thiz);
+    jclass stack = env->FindClass("java/util/Stack");
+    jmethodID init = env->GetMethodID(stack, "<init>", "()V");
+    jobject our_stack = env->NewObject(stack, init);
+    jmethodID push = env->GetMethodID(stack, "push", "(Ljava/lang/Object;)Ljava/lang/Object;");
+    // TODO: implement obsoleteHashes()
+    return our_stack;
 }

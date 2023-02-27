@@ -10,9 +10,6 @@ interface ConfigFactoryProtocol {
     val contacts: Contacts?
     val convoVolatile: ConversationVolatileConfig?
     fun persist(forConfigObject: ConfigBase)
-    fun appendHash(configObject: ConfigBase, hash: String)
-    fun getHashesFor(forConfigObject: ConfigBase): List<String>
-    fun removeHashesFor(config: ConfigBase, deletedHashes: Set<String>): Boolean
 }
 
 interface ConfigFactoryUpdateListener {

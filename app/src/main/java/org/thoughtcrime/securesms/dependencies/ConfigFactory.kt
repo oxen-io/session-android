@@ -121,29 +121,4 @@ class ConfigFactory(private val context: Context,
         }
     }
 
-    override fun appendHash(configObject: ConfigBase, hash: String) {
-        when (configObject) {
-            is UserProfile -> userHashes.add(hash)
-            is Contacts -> contactsHashes.add(hash)
-            is ConversationVolatileConfig -> convoHashes.add(hash)
-            else -> throw UnsupportedOperationException("Can't support type of ${configObject::class.simpleName} yet")
-        }
-    }
-
-    override fun getHashesFor(forConfigObject: ConfigBase): List<String> =
-        when (forConfigObject) {
-            is UserProfile -> userHashes.toList()
-            is Contacts -> contactsHashes.toList()
-            is ConversationVolatileConfig -> convoHashes.toList()
-            else -> throw UnsupportedOperationException("Can't support type of ${forConfigObject::class.simpleName} yet")
-        }
-
-    override fun removeHashesFor(forConfigObject: ConfigBase, deletedHashes: Set<String>) =
-        when (forConfigObject) {
-            is UserProfile -> userHashes.removeAll(deletedHashes)
-            is Contacts -> contactsHashes.removeAll(deletedHashes)
-            is ConversationVolatileConfig -> convoHashes.removeAll(deletedHashes)
-            else -> throw UnsupportedOperationException("Can't support type of ${forConfigObject::class.simpleName} yet")
-        }
-
 }

@@ -137,7 +137,7 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
             namespace,
             updateLatestHash = false,
             updateStoredHashes = false,
-        ).filter { (_, hash) -> !configFactory.getHashesFor(forConfigObject).contains(hash) }
+        ).filter { (_, hash) -> !forConfigObject.obsoleteHashes().contains(hash) }
 
         if (messages.isEmpty()) {
             // no new messages to process
@@ -153,8 +153,7 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                     return@forEach
                 }
                 Log.d("Loki-DBG", "Merging config of kind ${message.kind} into ${forConfigObject.javaClass.simpleName}")
-                forConfigObject.merge(message.data)
-                configFactory.appendHash(forConfigObject, hash!!)
+                forConfigObject.merge(hash!! to message.data)
             } catch (e: Exception) {
                 Log.e("Loki", e)
             }
