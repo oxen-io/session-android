@@ -136,13 +136,12 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
 
                 // confirm pushed seqno
                 val thisSeqNo = toPushMessage.seqNo
-                config.confirmPushed(thisSeqNo)
+                config.confirmPushed(thisSeqNo, insertHash)
+                config.
                 // wipe any of the existing hashes which we deleted (they may or may not be in this namespace)
                 if (configFactory.removeHashesFor(config, deletedHashes.toSet())) {
                     Log.d(TAG, "Successfully removed the deleted hashes from ${config.javaClass.simpleName}")
                 }
-                // store the new hash in list of hashes to track against
-                configFactory.appendHash(config, insertHash)
                 // dump and write config after successful
                 if (config.needsDump()) { // usually this will be true?
                     configFactory.persist(config)

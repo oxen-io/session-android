@@ -18,7 +18,7 @@ class ConfigDatabase(context: Context, helper: SQLCipherOpenHelper): Database(co
 
         const val CREATE_CONFIG_TABLE_COMMAND =
             "CREATE TABLE $TABLE_NAME ($VARIANT TEXT NOT NULL, $PUBKEY TEXT NOT NULL, $DATA BLOB, $COMBINED_MESSAGE_HASHES TEXT, PRIMARY KEY($VARIANT, $PUBKEY));"
-        private const val VARIANT_WHERE = "$VARIANT = ?"
+
         private const val VARIANT_AND_PUBKEY_WHERE = "$VARIANT = ? AND $PUBKEY = ?"
     }
 

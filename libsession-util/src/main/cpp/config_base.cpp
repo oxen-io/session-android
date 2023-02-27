@@ -23,10 +23,12 @@ Java_network_loki_messenger_libsession_1util_ConfigBase_needsDump(JNIEnv *env, j
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_ConfigBase_push(JNIEnv *env, jobject thiz) {
     auto config = ptrToConfigBase(env, thiz);
-    auto pair = config->push();
-    session::ustring to_push_str = pair.first;
+    auto push_tuple = config->push();
+    auto to_push_str = std::get<1>(push_tuple);
+    auto to_delete = std::get<2>(push_tuple);
+
     jbyteArray returnByteArray = util::bytes_from_ustring(env, to_push_str);
-    jlong seqNo = pair.second;
+    jlong seqNo = std::get<0>(push_tuple);
     jclass returnObjectClass = env->FindClass("network/loki/messenger/libsession_util/util/ConfigWithSeqNo");
     jmethodID methodId = env->GetMethodID(returnObjectClass, "<init>", "([BJ)V");
     jobject returnObject = env->NewObject(returnObjectClass, methodId, returnByteArray, seqNo);
@@ -56,34 +58,38 @@ Java_network_loki_messenger_libsession_1util_ConfigBase_encryptionDomain(JNIEnv 
 
 JNIEXPORT void JNICALL
 Java_network_loki_messenger_libsession_1util_ConfigBase_confirmPushed(JNIEnv *env, jobject thiz,
-                                                                      jlong seq_no) {
+                                                                      jlong seq_no,
+                                                                      jstring new_hash_jstring) {
     auto conf = ptrToConfigBase(env, thiz);
-    conf->confirm_pushed(seq_no);
+    auto new_hash = env->GetStringUTFChars(new_hash_jstring, nullptr);
+    conf->confirm_pushed(seq_no, new_hash);
+    env->ReleaseStringUTFChars(new_hash_jstring, new_hash);
 }
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "bugprone-reserved-identifier"
 JNIEXPORT jint JNICALL
-Java_network_loki_messenger_libsession_1util_ConfigBase_merge___3_3B(JNIEnv *env, jobject thiz,
+Java_network_loki_messenger_libsession_1util_ConfigBase_merge___3Lkotlin_Pair_2(JNIEnv *env, jobject thiz,
                                                                      jobjectArray to_merge) {
     auto conf = ptrToConfigBase(env, thiz);
     size_t number = env->GetArrayLength(to_merge);
-    std::vector<session::ustring> configs = {};
+    std::vector<std::pair<std::string,session::ustring>> configs = {};
     for (int i = 0; i < number; i++) {
-        auto jArr = (jbyteArray) env->GetObjectArrayElement(to_merge, i);
-        auto bytes = util::ustring_from_bytes(env, jArr);
-        configs.push_back(bytes);
+        auto jElement = (jobject) env->GetObjectArrayElement(to_merge, i);
+        auto pair = extractHashAndData(env, jElement);
+        configs.push_back(pair);
     }
     return conf->merge(configs);
 }
 
 JNIEXPORT jint JNICALL
-Java_network_loki_messenger_libsession_1util_ConfigBase_merge___3B(JNIEnv *env, jobject thiz,
-                                                                   jbyteArray to_merge) {
+Java_network_loki_messenger_libsession_1util_ConfigBase_merge__Lkotlin_Pair_2(JNIEnv *env, jobject thiz,
+                                                                   jobject to_merge) {
     auto conf = ptrToConfigBase(env, thiz);
-    std::vector<session::ustring> configs = {util::ustring_from_bytes(env, to_merge)};
+    std::vector<std::pair<std::string, session::ustring>> configs = {extractHashAndData(env, to_merge)};
     return conf->merge(configs);
 }
+
 #pragma clang diagnostic pop
 }
 extern "C"
@@ -100,6 +106,7 @@ Java_network_loki_messenger_libsession_1util_ConfigBase_00024Companion_kindFor(J
     auto user_class = env->FindClass("network/loki/messenger/libsession_util/UserProfile");
     auto contact_class = env->FindClass("network/loki/messenger/libsession_util/Contacts");
     auto convo_volatile_class = env->FindClass("network/loki/messenger/libsession_util/ConversationVolatileConfig");
+    auto group_list_class = env->FindClass("network/loki/messenger/libsession_util/UserGroupsConfig");
     switch (config_namespace) {
         case (int)session::config::Namespace::UserProfile:
             return user_class;
@@ -107,7 +114,23 @@ Java_network_loki_messenger_libsession_1util_ConfigBase_00024Companion_kindFor(J
             return contact_class;
         case (int)session::config::Namespace::ConvoInfoVolatile:
             return convo_volatile_class;
+        case (int)session::config::Namespace::UserGroups:
+            return group_list_class;
         default:
             return nullptr;
+    }
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_network_loki_messenger_libsession_1util_ConfigBase_removeObsoleteHashes(JNIEnv *env,
+                                                                             jobject thiz,
+                                                                             jobjectArray to_remove) {
+    auto conf = ptrToConfigBase(env, thiz);
+    size_t number = env->GetArrayLength(to_remove);
+    for (int i = 0; i < number; i++) {
+        auto jElement = (jstring) env->GetObjectArrayElement(to_remove, i);
+        auto element_as_string = env->GetStringUTFChars(jElement, nullptr);
+        conf->confirm_removed(element_as_string);
+        env->ReleaseStringUTFChars(jElement, element_as_string);
     }
 }
