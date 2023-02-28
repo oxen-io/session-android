@@ -31,8 +31,6 @@ Java_network_loki_messenger_libsession_1util_UserGroupsConfig_00024Companion_new
     jmethodID constructor = env->GetMethodID(contactsClass, "<init>", "(J)V");
     jobject newConfig = env->NewObject(contactsClass, constructor, reinterpret_cast<jlong>(user_groups));
 
-    user_groups->get_or_construct_legacy_group()
-
     return newConfig;
 }
 #pragma clang diagnostic pop
@@ -50,7 +48,21 @@ Java_network_loki_messenger_libsession_1util_UserGroupsConfig_getCommunityInfo(J
                                                                                jobject thiz,
                                                                                jstring base_url,
                                                                                jstring room) {
+    auto conf = ptrToUserGroups(env, thiz);
+    auto base_url_bytes = env->GetStringUTFChars(base_url, nullptr);
+    auto room_bytes = env->GetStringUTFChars(room, nullptr);
+
+    auto community = conf->get_community(base_url_bytes, room_bytes);
+
+    jobject community_info = nullptr;
+
+    if (community) {
+        serialize_legacy_group_info()
+    }
+
     // TODO: implement getCommunityInfo()
+    env->ReleaseStringUTFChars(base_url, base_url_bytes);
+    env->ReleaseStringUTFChars(room, room_bytes);
 }
 
 extern "C"

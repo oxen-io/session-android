@@ -120,29 +120,18 @@ Java_network_loki_messenger_libsession_1util_ConfigBase_00024Companion_kindFor(J
             return nullptr;
     }
 }
-extern "C"
-JNIEXPORT void JNICALL
-Java_network_loki_messenger_libsession_1util_ConfigBase_removeObsoleteHashes(JNIEnv *env,
-                                                                             jobject thiz,
-                                                                             jobjectArray to_remove) {
-    auto conf = ptrToConfigBase(env, thiz);
-    size_t number = env->GetArrayLength(to_remove);
-    for (int i = 0; i < number; i++) {
-        auto jElement = (jstring) env->GetObjectArrayElement(to_remove, i);
-        auto element_as_string = env->GetStringUTFChars(jElement, nullptr);
-        // TODO: uncomment when this is re-implemented
-//        conf->confirm_removed(element_as_string);
-        env->ReleaseStringUTFChars(jElement, element_as_string);
-    }
-}
+
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_network_loki_messenger_libsession_1util_ConfigBase_obsoleteHashes(JNIEnv *env, jobject thiz) {
+Java_network_loki_messenger_libsession_1util_ConfigBase_currentHashes(JNIEnv *env, jobject thiz) {
     auto conf = ptrToConfigBase(env, thiz);
     jclass stack = env->FindClass("java/util/Stack");
     jmethodID init = env->GetMethodID(stack, "<init>", "()V");
     jobject our_stack = env->NewObject(stack, init);
     jmethodID push = env->GetMethodID(stack, "push", "(Ljava/lang/Object;)Ljava/lang/Object;");
-    // TODO: implement obsoleteHashes()
+    auto vec = conf->current_hashes();
+    for (std::string element: vec) {
+        env->CallObjectMethod(our_stack, push, env->NewStringUTF(element.data()));
+    }
     return our_stack;
 }

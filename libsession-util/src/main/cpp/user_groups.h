@@ -3,6 +3,7 @@
 
 #include "jni.h"
 #include "util.h"
+#include "conversation.h"
 #include "session/config/user_groups.hpp"
 
 inline session::config::UserGroups* ptrToUserGroups(JNIEnv *env, jobject obj) {
@@ -48,6 +49,13 @@ inline jobject serialize_legacy_group_info(JNIEnv *env, session::config::legacy_
 }
 
 inline jobject serialize_members(JNIEnv *env, std::map<std::string, bool> members_map) {
+    return nullptr;
+}
+
+inline jobject serialize_community_info(JNIEnv *env, session::config::community_info info) {
+    auto priority = info.priority;
+    auto open_group = session::config::community::parse_full_url(info.full_url());
+    auto serialized_community = serialize_open_group(env, (session::config::community) info);
     return nullptr;
 }
 

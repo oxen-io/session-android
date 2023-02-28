@@ -34,8 +34,7 @@ sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
     external fun encryptionDomain(): String
     external fun confirmPushed(seqNo: Long, newHash: String)
     external fun merge(toMerge: Array<Pair<String,ByteArray>>): Int
-    external fun obsoleteHashes(): List<String>
-    external fun removeObsoleteHashes(toRemove: Array<String>)
+    external fun currentHashes(): List<String>
 
     external fun configNamespace(): Int
 

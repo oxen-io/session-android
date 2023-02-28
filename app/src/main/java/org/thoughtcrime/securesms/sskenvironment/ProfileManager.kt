@@ -4,6 +4,7 @@ import android.content.Context
 import network.loki.messenger.libsession_util.util.UserPic
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.SSKEnvironment
+import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
@@ -84,6 +85,7 @@ class ProfileManager(private val context: Context, private val configFactory: Co
 
     override fun contactUpdatedInternal(contact: Contact) {
         val contactConfig = configFactory.contacts ?: return
+        if (contact.sessionID == TextSecurePreferences.getLocalNumber(context)) return
         contactConfig.upsertContact(contact.sessionID) {
             this.name = contact.name.orEmpty()
             this.nickname = contact.nickname.orEmpty()

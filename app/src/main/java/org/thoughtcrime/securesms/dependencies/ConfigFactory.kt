@@ -47,10 +47,7 @@ class ConfigFactory(private val context: Context,
             Log.d("Loki-DBG", "Getting user configs and hashes")
             val userDump = configDatabase.retrieveConfigAndHashes(SharedConfigMessage.Kind.USER_PROFILE.name, publicKey)
             _userConfig = if (userDump != null) {
-                val (bytes, hashes) = userDump
-                userHashes.clear()
-                userHashes.addAll(hashes)
-                UserProfile.newInstance(secretKey, bytes)
+                UserProfile.newInstance(secretKey, userDump)
             } else {
                 UserProfile.newInstance(secretKey)
             }
@@ -63,10 +60,7 @@ class ConfigFactory(private val context: Context,
             val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
             val contactsDump = configDatabase.retrieveConfigAndHashes(SharedConfigMessage.Kind.CONTACTS.name, publicKey)
             _contacts = if (contactsDump != null) {
-                val (bytes, hashes) = contactsDump
-                contactsHashes.clear()
-                contactsHashes.addAll(hashes)
-                Contacts.newInstance(secretKey, bytes)
+                Contacts.newInstance(secretKey, contactsDump)
             } else {
                 Contacts.newInstance(secretKey)
             }
@@ -79,10 +73,7 @@ class ConfigFactory(private val context: Context,
             val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
             val convoDump = configDatabase.retrieveConfigAndHashes(SharedConfigMessage.Kind.CONVO_INFO_VOLATILE.name, publicKey)
             _convoVolatileConfig = if (convoDump != null) {
-                val (bytes, hashes) = convoDump
-                convoHashes.clear()
-                convoHashes.addAll(hashes)
-                ConversationVolatileConfig.newInstance(secretKey, bytes)
+                ConversationVolatileConfig.newInstance(secretKey, convoDump)
             } else {
                 ConversationVolatileConfig.newInstance(secretKey)
             }
@@ -94,19 +85,19 @@ class ConfigFactory(private val context: Context,
     private fun persistUserConfigDump() = synchronized(userLock) {
         val dumped = user?.dump() ?: return
         val (_, publicKey) = maybeGetUserInfo() ?: return
-        configDatabase.storeConfig(SharedConfigMessage.Kind.USER_PROFILE.name, publicKey, dumped, userHashes.toList())
+        configDatabase.storeConfig(SharedConfigMessage.Kind.USER_PROFILE.name, publicKey, dumped)
     }
 
     private fun persistContactsConfigDump() = synchronized(contactsLock) {
         val dumped = contacts?.dump() ?: return
         val (_, publicKey) = maybeGetUserInfo() ?: return
-        configDatabase.storeConfig(SharedConfigMessage.Kind.CONTACTS.name, publicKey, dumped, contactsHashes.toList())
+        configDatabase.storeConfig(SharedConfigMessage.Kind.CONTACTS.name, publicKey, dumped)
     }
 
     private fun persistConvoVolatileConfigDump() = synchronized (convoVolatileLock) {
         val dumped = convoVolatile?.dump() ?: return
         val (_, publicKey) = maybeGetUserInfo() ?: return
-        configDatabase.storeConfig(SharedConfigMessage.Kind.CONVO_INFO_VOLATILE.name, publicKey, dumped, convoHashes.toList())
+        configDatabase.storeConfig(SharedConfigMessage.Kind.CONVO_INFO_VOLATILE.name, publicKey, dumped)
     }
 
     override fun persist(forConfigObject: ConfigBase) {

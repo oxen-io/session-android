@@ -57,6 +57,15 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
         // don't run anything if we don't need to push anything
         if (configsRequiringPush.isEmpty()) return delegate.handleJobSucceeded(this, dispatcherName)
 
+        // need to get the current hashes before we call `push()`
+        val toDeleteRequest = configsRequiringPush.map { base ->
+            // accumulate by adding together
+            base.currentHashes()
+        }.reduce(List<String>::plus).let { toDeleteFromAllNamespaces ->
+            if (toDeleteFromAllNamespaces.isEmpty()) null
+            else SnodeAPI.buildAuthenticatedDeleteBatchInfo(destination.destinationPublicKey(), toDeleteFromAllNamespaces)
+        }
+
         // allow null results here so the list index matches configsRequiringPush
         val batchObjects: List<Pair<SharedConfigurationMessage, SnodeAPI.SnodeBatchRequestInfo>?> = configsRequiringPush.map { config ->
             val (data, seqNo) = config.push()
@@ -70,14 +79,6 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
                 snodeMessage
             ) ?: return@map null // this entry will be null otherwise
             message to authenticated // to keep track of seqNo for calling confirmPushed later
-        }
-
-        val toDeleteRequest = configsRequiringPush.map { base ->
-            base.obsoleteHashes()
-            // accumulate by adding together
-        }.reduce(List<String>::plus).let { toDeleteFromAllNamespaces ->
-            if (toDeleteFromAllNamespaces.isEmpty()) null
-            else SnodeAPI.buildAuthenticatedDeleteBatchInfo(destination.destinationPublicKey(), toDeleteFromAllNamespaces)
         }
 
         if (batchObjects.any { it == null }) {
@@ -137,8 +138,6 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
                 // confirm pushed seqno
                 val thisSeqNo = toPushMessage.seqNo
                 config.confirmPushed(thisSeqNo, insertHash)
-                // wipe any of the existing hashes which we deleted (they may or may not be in this namespace)
-                config.removeObsoleteHashes(deletedHashes.toTypedArray())
                 Log.d(TAG, "Successfully removed the deleted hashes from ${config.javaClass.simpleName}")
                 // dump and write config after successful
                 if (config.needsDump()) { // usually this will be true?

@@ -14,7 +14,7 @@ inline session::config::Contacts *ptrToContacts(JNIEnv *env, jobject obj) {
 inline jobject serialize_contact(JNIEnv *env, session::config::contact_info info) {
     jclass contactClass = env->FindClass("network/loki/messenger/libsession_util/util/Contact");
     jmethodID constructor = env->GetMethodID(contactClass, "<init>",
-                                             "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZZLnetwork/loki/messenger/libsession_util/util/UserPic;)V");
+                                             "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZZLnetwork/loki/messenger/libsession_util/util/UserPic;I)V");
     jstring id = env->NewStringUTF(info.session_id.data());
     jstring name = env->NewStringUTF(info.name.data());
     jstring nickname = env->NewStringUTF(info.nickname.data());
@@ -23,14 +23,14 @@ inline jobject serialize_contact(JNIEnv *env, session::config::contact_info info
     approvedMe = info.approved_me;
     blocked = info.blocked;
     jobject profilePic = util::serialize_user_pic(env, info.profile_picture);
-    jobject returnObj = env->NewObject(contactClass, constructor, id, name, nickname, approved, approvedMe, blocked, profilePic);
+    jobject returnObj = env->NewObject(contactClass, constructor, id, name, nickname, approved, approvedMe, blocked, profilePic, info.priority);
     return returnObj;
 }
 
 inline session::config::contact_info* deserialize_contact(JNIEnv *env, jobject info) {
     jclass contactClass = env->FindClass("network/loki/messenger/libsession_util/util/Contact");
 
-    jfieldID getId, getName, getNick, getApproved, getApprovedMe, getBlocked, getUserPic;
+    jfieldID getId, getName, getNick, getApproved, getApprovedMe, getBlocked, getUserPic, getPriority;
     getId = env->GetFieldID(contactClass, "id", "Ljava/lang/String;");
     getName = env->GetFieldID(contactClass, "name", "Ljava/lang/String;");
     getNick = env->GetFieldID(contactClass, "nickname", "Ljava/lang/String;");
@@ -38,11 +38,13 @@ inline session::config::contact_info* deserialize_contact(JNIEnv *env, jobject i
     getApprovedMe = env->GetFieldID(contactClass, "approvedMe", "Z");
     getBlocked = env->GetFieldID(contactClass, "blocked", "Z");
     getUserPic = env->GetFieldID(contactClass, "profilePicture", "Lnetwork/loki/messenger/libsession_util/util/UserPic;");
+    getPriority = env->GetFieldID(contactClass, "priority", "I");
     jstring name, nickname, session_id;
     session_id = static_cast<jstring>(env->GetObjectField(info, getId));
     name = static_cast<jstring>(env->GetObjectField(info, getName));
     nickname = static_cast<jstring>(env->GetObjectField(info, getNick));
     bool approved, approvedMe, blocked;
+    int priority = env->GetIntField(info, getPriority);
     approved = env->GetBooleanField(info, getApproved);
     approvedMe = env->GetBooleanField(info, getApprovedMe);
     blocked = env->GetBooleanField(info, getBlocked);
@@ -85,6 +87,8 @@ inline session::config::contact_info* deserialize_contact(JNIEnv *env, jobject i
     if (nickname_bytes) {
         env->ReleaseStringUTFChars(nickname, nickname_bytes);
     }
+
+    contact_info->priority = priority;
 
     return contact_info;
 }

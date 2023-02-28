@@ -7,5 +7,6 @@ data class Contact(
     var approved: Boolean = false,
     var approvedMe: Boolean = false,
     var blocked: Boolean = false,
-    var profilePicture: UserPic = UserPic.DEFAULT
+    var profilePicture: UserPic = UserPic.DEFAULT,
+    var priority: Int
 )
