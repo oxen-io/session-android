@@ -6,12 +6,15 @@
 #include <optional>
 #include "session/types.hpp"
 #include "session/config/profile_pic.hpp"
+#include "session/config/user_groups.hpp"
 
 namespace util {
     jbyteArray bytes_from_ustring(JNIEnv* env, session::ustring_view from_str);
     session::ustring ustring_from_bytes(JNIEnv* env, jbyteArray byteArray);
     jobject serialize_user_pic(JNIEnv *env, session::config::profile_pic pic);
     std::pair<jstring, jbyteArray> deserialize_user_pic(JNIEnv *env, jobject user_pic);
+    jobject serialize_base_community(JNIEnv *env, const session::config::community& base_community);
+    session::config::community deserialize_base_community(JNIEnv *env, jobject base_community);
 }
 
 #endif

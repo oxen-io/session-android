@@ -141,7 +141,8 @@ object ConfigurationMessageUtilities {
                 blocked = settings.isBlocked,
                 approved = settings.isApproved,
                 approvedMe = settings.hasApprovedMe(),
-                profilePicture = userPic ?: UserPic.DEFAULT
+                profilePicture = userPic ?: UserPic.DEFAULT,
+                priority = 0 // TODO: read this in from a pinned priority
             )
             contactConfig.set(contactInfo)
         }

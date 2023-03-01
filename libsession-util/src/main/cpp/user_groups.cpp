@@ -57,7 +57,7 @@ Java_network_loki_messenger_libsession_1util_UserGroupsConfig_getCommunityInfo(J
     jobject community_info = nullptr;
 
     if (community) {
-        serialize_legacy_group_info()
+        community_info = serialize_community_info(env, *community);
     }
 
     // TODO: implement getCommunityInfo()
@@ -89,7 +89,7 @@ Java_network_loki_messenger_libsession_1util_UserGroupsConfig_getOrConstructLega
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_network_loki_messenger_libsession_1util_UserGroupsConfig_set__Lnetwork_loki_messenger_libsession_1util_util_GroupInfo_CommunityInfo_2(
+Java_network_loki_messenger_libsession_1util_UserGroupsConfig_set__Lnetwork_loki_messenger_libsession_1util_util_GroupInfo_CommunityGroupInfo_2(
         JNIEnv *env, jobject thiz, jobject community_info) {
     // TODO: implement set()
 }

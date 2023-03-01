@@ -366,7 +366,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
                 is Conversation.LegacyGroup -> conversation.groupId.let {
                     getOrCreateThreadIdFor("", it,null)
                 }
-                is Conversation.Community -> conversation.baseUrl.let {
+                is Conversation.Community -> conversation.baseCommunityInfo.baseUrl.let {
                     getOrCreateThreadIdFor("",null, it)
                 }
             }

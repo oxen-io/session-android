@@ -37,6 +37,20 @@ namespace util {
         return {pic, key};
     }
 
+    jobject serialize_base_community(JNIEnv *env, const session::config::community& community) {
+        jclass base_community_clazz = env->FindClass("network/loki/messenger/libsession_util/util/BaseCommunityInfo");
+        jmethodID base_community_constructor = env->GetMethodID(base_community_clazz, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+        auto base_url = env->NewStringUTF(community.base_url().data());
+        auto room = env->NewStringUTF(community.room().data());
+        auto pubkey_jstring = env->NewStringUTF(community.pubkey_hex().data());
+        jobject ret = env->NewObject(base_community_clazz, base_community_constructor, base_url, room, pubkey_jstring);
+        return ret;
+    }
+
+    session::config::community deserialize_base_community(JNIEnv *env, jobject base_community) {
+
+    }
+
 }
 
 extern "C"

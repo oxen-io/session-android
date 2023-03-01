@@ -23,14 +23,12 @@ inline jobject serialize_one_to_one(JNIEnv *env, session::config::convo::one_to_
 
 inline jobject serialize_open_group(JNIEnv *env, session::config::convo::community community) {
     jclass clazz = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$Community");
-    jmethodID constructor = env->GetMethodID(clazz, "<init>", "(Ljava/lang/String;Ljava/lang/String;[BJZ)V");
-    auto base_url = env->NewStringUTF(community.base_url().data());
-    auto room = env->NewStringUTF(community.room().data());
-    auto pubkey_ustring = community.pubkey();
-    auto pubkey_jarray = util::bytes_from_ustring(env, session::ustring_view {pubkey_ustring.data(), pubkey_ustring.size()});
+    auto base_community = util::serialize_base_community(env, community);
+    jmethodID constructor = env->GetMethodID(clazz, "<init>",
+                                             "(Lnetwork/loki/messenger/libsession_util/util/BaseCommunityInfo;JZ)V");
     auto last_read = community.last_read;
     auto unread = community.unread;
-    jobject serialized = env->NewObject(clazz, constructor, base_url, room, pubkey_jarray, last_read, unread);
+    jobject serialized = env->NewObject(clazz, constructor, base_community, last_read, unread);
     return serialized;
 }
 
@@ -72,25 +70,23 @@ inline session::config::convo::one_to_one* deserialize_one_to_one(JNIEnv *env, j
 
 inline session::config::convo::community* deserialize_open_group(JNIEnv *env, jobject info) {
     auto clazz = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$Community");
-    auto url_getter = env->GetFieldID(clazz, "baseUrl", "Ljava/lang/String;");
-    auto room_getter = env->GetFieldID(clazz, "room", "Ljava/lang/String;");
-    auto pub_key_getter = env->GetFieldID(clazz, "pubKey", "[B");
+
+    auto base_community_getter = env->GetFieldID(clazz, "baseCommunityInfo", "Lnetwork/loki/messenger/libsession_util/util/BaseCommunityInfo;");
+
     auto last_read_getter = env->GetFieldID(clazz, "lastRead", "J");
     auto unread_getter = env->GetFieldID(clazz, "unread", "Z");
-    jstring base_url = static_cast<jstring>(env->GetObjectField(info, url_getter));
-    jstring room = static_cast<jstring>(env->GetObjectField(info, room_getter));
-    jbyteArray pub_key = (jbyteArray)env->GetObjectField(info, pub_key_getter);
-    auto base_bytes = env->GetStringUTFChars(base_url, nullptr);
-    auto base_string = std::string {base_bytes};
-    auto room_bytes = env->GetStringUTFChars(room, nullptr);
-    auto room_string = std::string {room_bytes};
-    auto pub_key_ustring = util::ustring_from_bytes(env, pub_key);
 
-    auto deserialized = new session::config::convo::community(base_string, room_string,pub_key_ustring);
+    auto base_community_info = env->GetObjectField(info, base_community_getter);
+
+    auto base_community_deserialized = util::deserialize_base_community(env, base_community_info);
+
+    auto deserialized = new session::config::convo::community{
+        base_community_deserialized.base_url(),
+        base_community_deserialized.room(),
+        base_community_deserialized.pubkey()
+    };
     deserialized->last_read = env->GetLongField(info, last_read_getter);
     deserialized->unread = env->GetBooleanField(info, unread_getter);
-    env->ReleaseStringUTFChars(base_url, base_bytes);
-    env->ReleaseStringUTFChars(room, room_bytes);
     return deserialized;
 }
 

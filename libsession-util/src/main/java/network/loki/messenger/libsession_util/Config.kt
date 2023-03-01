@@ -154,11 +154,11 @@ class UserGroupsConfig(pointer: Long): ConfigBase(pointer) {
         external fun newInstance(ed25519SecretKey: ByteArray, initialDump: ByteArray): UserGroupsConfig
     }
 
-    external fun getCommunityInfo(baseUrl: String, room: String): GroupInfo.CommunityInfo?
+    external fun getCommunityInfo(baseUrl: String, room: String): GroupInfo.CommunityGroupInfo?
     external fun getLegacyGroupInfo(sessionId: String): GroupInfo.LegacyGroupInfo?
-    external fun getOrConstructCommunityInfo(baseUrl: String, room: String, pubKeyHex: String): GroupInfo.CommunityInfo
+    external fun getOrConstructCommunityInfo(baseUrl: String, room: String, pubKeyHex: String): GroupInfo.CommunityGroupInfo
     external fun getOrConstructLegacyGroupInfo(sessionId: String): GroupInfo.LegacyGroupInfo
-    external fun set(communityInfo: GroupInfo.CommunityInfo)
+    external fun set(communityInfo: GroupInfo.CommunityGroupInfo)
     external fun set(legacyGroupInfo: GroupInfo.LegacyGroupInfo)
 
 }
