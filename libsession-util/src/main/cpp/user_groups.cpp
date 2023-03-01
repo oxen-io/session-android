@@ -59,10 +59,9 @@ Java_network_loki_messenger_libsession_1util_UserGroupsConfig_getCommunityInfo(J
     if (community) {
         community_info = serialize_community_info(env, *community);
     }
-
-    // TODO: implement getCommunityInfo()
     env->ReleaseStringUTFChars(base_url, base_url_bytes);
     env->ReleaseStringUTFChars(room, room_bytes);
+    return community_info;
 }
 
 extern "C"
@@ -70,33 +69,59 @@ JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_UserGroupsConfig_getLegacyGroupInfo(JNIEnv *env,
                                                                                  jobject thiz,
                                                                                  jstring session_id) {
-    // TODO: implement getLegacyGroupInfo()
+    auto conf = ptrToUserGroups(env, thiz);
+    auto id_bytes = env->GetStringUTFChars(session_id, nullptr);
+    auto legacy_group = conf->get_legacy_group(id_bytes);
+    jobject return_group = nullptr;
+    if (legacy_group) {
+        return_group = serialize_legacy_group_info(env, *legacy_group);
+    }
+    env->ReleaseStringUTFChars(session_id, id_bytes);
+    return return_group;
 }
 
 extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_UserGroupsConfig_getOrConstructCommunityInfo(
         JNIEnv *env, jobject thiz, jstring base_url, jstring room, jstring pub_key_hex) {
-    // TODO: implement getOrConstructCommunityInfo()
+    auto conf = ptrToUserGroups(env, thiz);
+    auto base_url_bytes = env->GetStringUTFChars(base_url, nullptr);
+    auto room_bytes = env->GetStringUTFChars(room, nullptr);
+    auto pub_hex_bytes = env->GetStringUTFChars(pub_key_hex, nullptr);
+
+    auto group = conf->get_or_construct_community(base_url_bytes, room_bytes, pub_hex_bytes);
+
+    env->ReleaseStringUTFChars(base_url, base_url_bytes);
+    env->ReleaseStringUTFChars(room, room_bytes);
+    env->ReleaseStringUTFChars(pub_key_hex, pub_hex_bytes);
+    return serialize_community_info(env, group);
 }
 
 extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_UserGroupsConfig_getOrConstructLegacyGroupInfo(
         JNIEnv *env, jobject thiz, jstring session_id) {
-    // TODO: implement getOrConstructLegacyGroupInfo()
+    auto conf = ptrToUserGroups(env, thiz);
+    auto id_bytes = env->GetStringUTFChars(session_id, nullptr);
+    auto group = conf->get_or_construct_legacy_group(id_bytes);
+    env->ReleaseStringUTFChars(session_id, id_bytes);
+    return serialize_legacy_group_info(env, group);
 }
 
 extern "C"
 JNIEXPORT void JNICALL
 Java_network_loki_messenger_libsession_1util_UserGroupsConfig_set__Lnetwork_loki_messenger_libsession_1util_util_GroupInfo_CommunityGroupInfo_2(
         JNIEnv *env, jobject thiz, jobject community_info) {
-    // TODO: implement set()
+    auto conf = ptrToUserGroups(env, thiz);
+    auto deserialized = (env, community_info);
+    conf->set(deserialized);
 }
 
 extern "C"
 JNIEXPORT void JNICALL
 Java_network_loki_messenger_libsession_1util_UserGroupsConfig_set__Lnetwork_loki_messenger_libsession_1util_util_GroupInfo_LegacyGroupInfo_2(
         JNIEnv *env, jobject thiz, jobject legacy_group_info) {
-    // TODO: implement set()
+    auto conf = ptrToUserGroups(env, thiz);
+    auto deserialized = deserialize_legacy_group_info(env, legacy_group_info);
+    conf->set(*deserialized);
 }
