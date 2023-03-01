@@ -12,15 +12,35 @@ inline session::config::UserGroups* ptrToUserGroups(JNIEnv *env, jobject obj) {
     return (session::config::UserGroups*) env->GetLongField(obj, pointerField);
 }
 
-/**
-val sessionId: String,
-val name: String,
-val members: Map<String, Boolean>,
-val hidden: Boolean,
-val encPubKey: String,
-val encSecKey: String,
-val priority: Int
- */
+inline void deserialize_members_into(JNIEnv *env, jobject members_map, session::config::legacy_group_info *to_append_group) {
+    jclass map_class = env->FindClass("java/util/Map");
+    jclass map_entry_class = env->FindClass("java/util/Map$Entry");
+    jclass set_class = env->FindClass("java/util/Set");
+    jclass iterator_class = env->FindClass("java/util/Iterator");
+    jclass boxed_bool = env->FindClass("java/lang/Boolean");
+
+    jmethodID get_entry_set = env->GetMethodID(map_class, "entrySet", "()Ljava/util/Set;");
+    jmethodID get_at = env->GetMethodID(set_class, "iterator", "()Ljava/util/Iterator;");
+    jmethodID has_next = env->GetMethodID(iterator_class, "hasNext", "()Z");
+    jmethodID next = env->GetMethodID(iterator_class, "next", "()Ljava/lang/Object;");
+    jmethodID get_key = env->GetMethodID(map_entry_class, "getKey", "()Ljava/lang/Object;");
+    jmethodID get_value = env->GetMethodID(map_entry_class, "getValue", "()Ljava/lang/Object;");
+    jmethodID get_bool_value = env->GetMethodID(boxed_bool, "booleanValue", "()Z");
+
+    jobject entry_set = env->CallObjectMethod(members_map, get_entry_set);
+    jobject iterator = env->CallObjectMethod(entry_set, get_at);
+
+    while (env->CallBooleanMethod(iterator, has_next)) {
+        jobject entry = env->CallObjectMethod(iterator, next);
+        jstring key = static_cast<jstring>(env->CallObjectMethod(entry, get_key));
+        jobject boxed = env->CallObjectMethod(entry, get_value);
+        bool is_admin = env->CallBooleanMethod(boxed, get_bool_value);
+        auto member_string = env->GetStringUTFChars(key, nullptr);
+        to_append_group->insert(member_string, is_admin);
+        env->ReleaseStringUTFChars(key, member_string);
+    }
+}
+
 inline session::config::legacy_group_info* deserialize_legacy_group_info(JNIEnv *env, jobject info) {
     auto clazz = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$LegacyGroupInfo");
     auto id_field = env->GetFieldID(clazz, "sessionId", "Ljava/lang/String;");
@@ -46,7 +66,9 @@ inline session::config::legacy_group_info* deserialize_legacy_group_info(JNIEnv 
     auto info_deserialized = new session::config::legacy_group_info(id_bytes);
 
     info_deserialized->priority = priority;
-    // TODO: iterate over map and insert as admins
+    deserialize_members_into(env, members_map, info_deserialized);
+    info_deserialized->name = name_bytes;
+    info_deserialized->hidden = hidden;
     info_deserialized->enc_pubkey = enc_pub_key_bytes;
     info_deserialized->enc_seckey = enc_sec_key_bytes;
     env->ReleaseStringUTFChars(id, id_bytes);
@@ -54,15 +76,26 @@ inline session::config::legacy_group_info* deserialize_legacy_group_info(JNIEnv 
     return info_deserialized;
 }
 
-inline std::map<std::string, bool> deserialize_members(JNIEnv *env, jobject members_map) {
+inline jobject serialize_members(JNIEnv *env, std::map<std::string, bool> members_map) {
+    jclass map_class = env->FindClass("java/util/HashMap");
+    jclass boxed_bool = env->FindClass("java/lang/Boolean");
+    jmethodID map_constructor = env->GetMethodID(map_class, "<init>", "()V");
+    jmethodID insert = env->GetMethodID(map_class, "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
+    jmethodID new_bool = env->GetMethodID(boxed_bool, "<init>", "(Z)V");
 
-}
-
-inline jobject serialize_legacy_group_info(JNIEnv *env, session::config::legacy_group_info info) {
+    jobject new_map = env->NewObject(map_class, map_constructor);
+    for (auto it = members_map.begin(); it != members_map.end(); it++) {
+        auto session_id = env->NewStringUTF(it->first.data());
+        bool is_admin = it->second;
+        auto jbool = env->NewObject(boxed_bool, new_bool, is_admin);
+        env->CallObjectMethod(new_map, insert, session_id, jbool);
+        ++it;
+    }
     return nullptr;
 }
 
-inline jobject serialize_members(JNIEnv *env, std::map<std::string, bool> members_map) {
+inline jobject serialize_legacy_group_info(JNIEnv *env, session::config::legacy_group_info info) {
+
     return nullptr;
 }
 

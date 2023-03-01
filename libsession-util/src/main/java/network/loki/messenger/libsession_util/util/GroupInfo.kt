@@ -11,11 +11,39 @@ sealed class GroupInfo {
         val hidden: Boolean,
         val encPubKey: ByteArray,
         val encSecKey: ByteArray,
-        val priority: Int
+        val priority: Int = 0
     ): GroupInfo() {
         companion object {
             @Suppress("FunctionName")
             external fun NAME_MAX_LENGTH(): Int
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as LegacyGroupInfo
+
+            if (sessionId != other.sessionId) return false
+            if (name != other.name) return false
+            if (members != other.members) return false
+            if (hidden != other.hidden) return false
+            if (!encPubKey.contentEquals(other.encPubKey)) return false
+            if (!encSecKey.contentEquals(other.encSecKey)) return false
+            if (priority != other.priority) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = sessionId.hashCode()
+            result = 31 * result + name.hashCode()
+            result = 31 * result + members.hashCode()
+            result = 31 * result + hidden.hashCode()
+            result = 31 * result + encPubKey.contentHashCode()
+            result = 31 * result + encSecKey.contentHashCode()
+            result = 31 * result + priority
+            return result
         }
     }
 
