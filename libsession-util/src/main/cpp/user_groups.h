@@ -91,20 +91,31 @@ inline jobject serialize_members(JNIEnv *env, std::map<std::string, bool> member
         env->CallObjectMethod(new_map, insert, session_id, jbool);
         ++it;
     }
-    return nullptr;
+    return new_map;
 }
 
 inline jobject serialize_legacy_group_info(JNIEnv *env, session::config::legacy_group_info info) {
+    jstring session_id = env->NewStringUTF(info.session_id.data());
+    jstring name = env->NewStringUTF(info.name.data());
+    jobject members = serialize_members(env, info.members());
+    jbyteArray enc_pubkey = util::bytes_from_ustring(env, info.enc_pubkey);
+    jbyteArray enc_seckey = util::bytes_from_ustring(env, info.enc_seckey);
+    int priority = info.priority;
+    bool hidden = info.hidden;
 
-    return nullptr;
+    jclass legacy_group_class = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$LegacyGroupInfo");
+    jmethodID constructor = env->GetMethodID(legacy_group_class, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Z[B[BI)V");
+    jobject serialized = env->NewObject(legacy_group_class, constructor, session_id, name, members, hidden, enc_pubkey, enc_seckey, priority);
+    return serialized;
 }
 
 inline jobject serialize_community_info(JNIEnv *env, session::config::community_info info) {
     auto priority = info.priority;
-    auto serialized_community = util::serialize_base_community(env, info);
+    auto serialized_info = util::serialize_base_community(env, info);
     auto clazz = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$CommunityGroupInfo");
-
-    return serialized_community;
+    jmethodID constructor = env->GetMethodID(clazz, "<init>", "(Lnetwork/loki/messenger/libsession_util/util/BaseCommunityInfo;I)V");
+    jobject serialized = env->NewObject(clazz, constructor, serialized_info, priority);
+    return serialized;
 }
 
 #endif //SESSION_ANDROID_USER_GROUPS_H
