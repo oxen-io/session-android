@@ -1,6 +1,6 @@
 package network.loki.messenger.libsession_util
 
-import network.loki.messenger.libsession_util.util.ConfigWithSeqNo
+import network.loki.messenger.libsession_util.util.ConfigPush
 import network.loki.messenger.libsession_util.util.Contact
 import network.loki.messenger.libsession_util.util.Conversation
 import network.loki.messenger.libsession_util.util.GroupInfo
@@ -29,7 +29,7 @@ sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
     external fun dirty(): Boolean
     external fun needsPush(): Boolean
     external fun needsDump(): Boolean
-    external fun push(): ConfigWithSeqNo
+    external fun push(): ConfigPush
     external fun dump(): ByteArray
     external fun encryptionDomain(): String
     external fun confirmPushed(seqNo: Long, newHash: String)
@@ -160,5 +160,12 @@ class UserGroupsConfig(pointer: Long): ConfigBase(pointer) {
     external fun getOrConstructLegacyGroupInfo(sessionId: String): GroupInfo.LegacyGroupInfo
     external fun set(communityInfo: GroupInfo.CommunityGroupInfo)
     external fun set(legacyGroupInfo: GroupInfo.LegacyGroupInfo)
-
+    external fun erase(communityInfo: GroupInfo.CommunityGroupInfo)
+    external fun erase(legacyGroupInfo: GroupInfo.LegacyGroupInfo)
+    external fun sizeCommunityInfo(): Int
+    external fun sizeLegacyGroupInfo(): Int
+    external fun size(): Int
+    external fun all(): List<GroupInfo>
+    external fun allCommunityInfo(): List<GroupInfo.CommunityGroupInfo>
+    external fun allLegacyGroupInfo(): List<GroupInfo.LegacyGroupInfo>
 }

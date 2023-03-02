@@ -89,7 +89,7 @@ class InstrumentedTests {
         val push1 = contacts.push()
 
         assertEquals(1, push1.seqNo)
-        contacts.confirmPushed(push1.seqNo)
+        contacts.confirmPushed(push1.seqNo, "fakehash1")
         assertFalse(contacts.needsPush())
         assertTrue(contacts.needsDump())
 
@@ -103,10 +103,10 @@ class InstrumentedTests {
         contacts2.set(c2)
         val push2 = contacts2.push()
         assertEquals(2, push2.seqNo)
-        contacts2.confirmPushed(push2.seqNo)
+        contacts2.confirmPushed(push2.seqNo, "fakehash2")
         assertFalse(contacts2.needsPush())
 
-        contacts.merge(push2.config)
+        contacts.merge("fakehash2" to push2.config)
 
 
         assertFalse(contacts.needsPush())
@@ -136,11 +136,11 @@ class InstrumentedTests {
         assertEquals(toPush.seqNo, toPush2.seqNo)
         assertThat(toPush2.config, not(equals(toPush.config)))
 
-        contacts.confirmPushed(toPush.seqNo)
-        contacts2.confirmPushed(toPush2.seqNo)
+        contacts.confirmPushed(toPush.seqNo, "fakehash3a")
+        contacts2.confirmPushed(toPush2.seqNo, "fakehash3b")
 
-        contacts.merge(toPush2.config)
-        contacts2.merge(toPush.config)
+        contacts.merge("fakehash3b" to toPush2.config)
+        contacts2.merge("fakehash3a" to toPush.config)
 
         assertTrue(contacts.needsPush())
         assertTrue(contacts2.needsPush())
@@ -150,6 +150,10 @@ class InstrumentedTests {
 
         assertEquals(mergePush.seqNo, mergePush2.seqNo)
         assertArrayEquals(mergePush.config, mergePush2.config)
+
+        assertTrue(mergePush.obsoleteHashes.containsAll(listOf("fakehash3b", "fakehash3a")))
+        assertTrue(mergePush2.obsoleteHashes.containsAll(listOf("fakehash3b", "fakehash3a")))
+
     }
 
     @Test
@@ -217,22 +221,13 @@ class InstrumentedTests {
                 "e" +
                 "e").encodeToByteArray()
 
-        val expectedPush1Encrypted = Hex.fromStringCondensed(
-            "877c8e0f5d33f5fffa5a4e162785a9a89918e95de1c4b925201f1f5c29d9ee4f8c36e2b278fce1e6" +
-                    "b9d999689dd86ff8e79e0a04004fa54d24da89bc2604cb1df8c1356da8f14710543ecec44f2d57fc" +
-                    "56ea8b7e73d119c69d755f4d513d5d069f02396b8ec0cbed894169836f57ca4b782ce705895c593b" +
-                    "4230d50c175d44a08045388d3f4160bacb617b9ae8de3ebc8d9024245cd09ce102627cab2acf1b91" +
-                    "26159211359606611ca5814de320d1a7099a65c99b0eebbefb92a115f5efa6b9132809300ac010c6" +
-                    "857cfbd62af71b0fa97eccec75cb95e67edf40b35fdb9cad125a6976693ab085c6bba96a2e51826e" +
-                    "81e16b9ec1232af5680f2ced55310486"
-        )
-
         assertEquals(1, newSeqNo)
-        assertArrayEquals(expectedPush1Encrypted, newToPush)
         // We haven't dumped, so still need to dump:
         assertTrue(userProfile.needsDump())
         // We did call push but we haven't confirmed it as stored yet, so this will still return true:
         assertTrue(userProfile.needsPush())
+
+        userProfile.confirmPushed(newSeqNo, "fakehash1")
 
         val dump = userProfile.dump()
         // (in a real client we'd now store this to disk)
@@ -247,7 +242,7 @@ class InstrumentedTests {
 
         val newConf = UserProfile.newInstance(edSk)
 
-        val accepted = newConf.merge(arrayOf(expectedPush1Encrypted))
+        val accepted = newConf.merge("fakehash1" to newToPush)
         assertEquals(1, accepted)
 
         assertTrue(newConf.needsDump())
@@ -263,13 +258,16 @@ class InstrumentedTests {
         val conf = userProfile.push()
         val conf2 = newConf.push()
 
+        userProfile.confirmPushed(conf.seqNo, "fakehash1")
+        newConf.confirmPushed(conf2.seqNo, "fakehash2")
+
         userProfile.dump()
         userProfile.dump()
 
         assertFalse(conf.config.contentEquals(conf2.config))
 
-        newConf.merge(arrayOf(conf.config))
-        userProfile.merge(arrayOf(conf2.config))
+        newConf.merge("fakehash1" to conf.config)
+        userProfile.merge("fakehash2" to conf2.config)
 
         assertTrue(newConf.needsPush())
         assertTrue(userProfile.needsPush())
@@ -278,16 +276,20 @@ class InstrumentedTests {
 
         assertEquals(3, newSeq1.seqNo)
 
+        userProfile.confirmPushed(newSeq1.seqNo, "fakehash3")
+
         // assume newConf push gets rejected as it was last to write and clear previous config by hash on oxenss
-        newConf.merge(arrayOf(newSeq1.config))
+        newConf.merge("fakehash3" to newSeq1.config)
 
         val newSeqMerge = newConf.push()
+
+        newConf.confirmPushed(newSeqMerge.seqNo, "fakehash4")
 
         assertEquals("Nibbler", newConf.getName())
         assertEquals(4, newSeqMerge.seqNo)
 
         // userProfile device polls and merges
-        userProfile.merge(arrayOf(newSeqMerge.config))
+        userProfile.merge("fakehash4" to newSeqMerge.config)
 
 
         val userConfigMerge = userProfile.push()
@@ -308,14 +310,16 @@ class InstrumentedTests {
         val b = UserProfile.newInstance(kp.secretKey)
         a.setName("A")
         val (aPush, aSeq) = a.push()
+        a.confirmPushed(aSeq, "hashfroma")
         b.setName("B")
         // polls and sees invalid state, has to merge
-        b.merge(aPush)
+        b.merge("hashfroma" to aPush)
         val (bPush, bSeq) = b.push()
+        b.confirmPushed(bSeq, "hashfromb")
         assertEquals("B", b.getName())
         assertEquals(1, aSeq)
         assertEquals(2, bSeq)
-        a.merge(bPush)
+        a.merge("hashfromb" to bPush)
         assertEquals(2, a.push().seqNo)
     }
 
@@ -456,11 +460,12 @@ class InstrumentedTests {
         val openGroupPubKey = Hex.fromStringCondensed("0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef")
 
         val og = convos.getOrConstructCommunity("http://Example.ORG:5678", "SudokuRoom", openGroupPubKey)
+        val ogCommunity = og.baseCommunityInfo
 
-        assertEquals("http://example.org:5678", og.baseUrl) // Note: lower-case
-        assertEquals("sudokuroom", og.room) // Note: lower-case
-        assertEquals(32, og.pubKey.size);
-        assertEquals("0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef", og.pubKeyHex)
+        assertEquals("http://example.org:5678", ogCommunity.baseUrl) // Note: lower-case
+        assertEquals("sudokuroom", ogCommunity.room) // Note: lower-case
+        assertEquals(64, ogCommunity.pubKeyHex.length)
+        assertEquals("0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef", ogCommunity.pubKeyHex)
 
         og.unread = true
 
@@ -470,7 +475,7 @@ class InstrumentedTests {
 
         assertEquals(1, seqNo)
 
-        convos.confirmPushed(seqNo)
+        convos.confirmPushed(seqNo, "fakehash1")
 
         assertTrue(convos.needsDump())
         assertFalse(convos.needsPush())
@@ -487,9 +492,10 @@ class InstrumentedTests {
         assertEquals(false, x1.unread)
 
         val x2 = convos2.getCommunity("http://EXAMPLE.org:5678", "sudokuRoom")!!
-        assertEquals("http://example.org:5678", x2.baseUrl)
-        assertEquals("sudokuroom", x2.room)
-        assertEquals(x2.pubKeyHex, Hex.toStringCondensed(openGroupPubKey))
+        val x2Info = x2.baseCommunityInfo
+        assertEquals("http://example.org:5678", x2Info.baseUrl)
+        assertEquals("sudokuroom", x2Info.room)
+        assertEquals(x2Info.pubKeyHex, Hex.toStringCondensed(openGroupPubKey))
         assertTrue(x2.unread)
 
         val anotherId = "051111111111111111111111111111111111111111111111111111111111111111"
@@ -508,8 +514,8 @@ class InstrumentedTests {
         val (toPush2, seqNo2) = convos2.push()
         assertEquals(2, seqNo2)
 
-        convos.merge(toPush2)
-        convos2.confirmPushed(seqNo2)
+        convos2.confirmPushed(seqNo2, "fakehash2")
+        convos.merge("fakehash2" to toPush2)
 
         assertFalse(convos.needsPush())
         assertEquals(seqNo2, convos.push().seqNo)
@@ -527,7 +533,7 @@ class InstrumentedTests {
             for (convo in allConvos) {
                 when (convo) {
                     is Conversation.OneToOne -> seen.add("1-to-1: ${convo.sessionId}")
-                    is Conversation.Community -> seen.add("og: ${convo.baseUrl}/r/${convo.room}")
+                    is Conversation.Community -> seen.add("og: ${convo.baseCommunityInfo.baseUrl}/r/${convo.baseCommunityInfo.room}")
                     is Conversation.LegacyGroup -> seen.add("cl: ${convo.groupId}")
                 }
             }
@@ -551,7 +557,7 @@ class InstrumentedTests {
         )
         assertEquals(1, convos.allCommunities().size)
         assertEquals("http://example.org:5678",
-            convos.allCommunities().map(Conversation.Community::baseUrl).first()
+            convos.allCommunities().map { it.baseCommunityInfo.baseUrl }.first()
         )
         assertEquals(1, convos.allLegacyClosedGroups().size)
         assertEquals("05cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",

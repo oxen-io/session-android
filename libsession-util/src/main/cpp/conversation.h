@@ -53,7 +53,7 @@ inline jobject serialize_any(JNIEnv *env, session::config::convo::any any) {
     return nullptr;
 }
 
-inline session::config::convo::one_to_one* deserialize_one_to_one(JNIEnv *env, jobject info) {
+inline session::config::convo::one_to_one deserialize_one_to_one(JNIEnv *env, jobject info) {
     auto clazz = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$OneToOne");
     auto id_getter = env->GetFieldID(clazz, "sessionId", "Ljava/lang/String;");
     auto last_read_getter = env->GetFieldID(clazz, "lastRead", "J");
@@ -61,36 +61,35 @@ inline session::config::convo::one_to_one* deserialize_one_to_one(JNIEnv *env, j
     jstring id = static_cast<jstring>(env->GetObjectField(info, id_getter));
     auto id_chars = env->GetStringUTFChars(id, nullptr);
     std::string id_string = std::string{id_chars};
-    auto deserialized = new session::config::convo::one_to_one(id_string);
-    deserialized->last_read = env->GetLongField(info, last_read_getter);
-    deserialized->unread = env->GetBooleanField(info, unread_getter);
+    auto deserialized = session::config::convo::one_to_one{id_string};
+    deserialized.last_read = env->GetLongField(info, last_read_getter);
+    deserialized.unread = env->GetBooleanField(info, unread_getter);
     env->ReleaseStringUTFChars(id, id_chars);
     return deserialized;
 }
 
-inline session::config::convo::community* deserialize_open_group(JNIEnv *env, jobject info) {
+inline session::config::convo::community deserialize_community(JNIEnv *env, jobject info) {
     auto clazz = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$Community");
-
     auto base_community_getter = env->GetFieldID(clazz, "baseCommunityInfo", "Lnetwork/loki/messenger/libsession_util/util/BaseCommunityInfo;");
-
     auto last_read_getter = env->GetFieldID(clazz, "lastRead", "J");
     auto unread_getter = env->GetFieldID(clazz, "unread", "Z");
 
     auto base_community_info = env->GetObjectField(info, base_community_getter);
 
     auto base_community_deserialized = util::deserialize_base_community(env, base_community_info);
-
-    auto deserialized = new session::config::convo::community{
+    auto deserialized = session::config::convo::community{
         base_community_deserialized.base_url(),
         base_community_deserialized.room(),
         base_community_deserialized.pubkey()
     };
-    deserialized->last_read = env->GetLongField(info, last_read_getter);
-    deserialized->unread = env->GetBooleanField(info, unread_getter);
+
+    deserialized.last_read = env->GetLongField(info, last_read_getter);
+    deserialized.unread = env->GetBooleanField(info, unread_getter);
+
     return deserialized;
 }
 
-inline session::config::convo::legacy_group* deserialize_legacy_closed_group(JNIEnv *env, jobject info) {
+inline session::config::convo::legacy_group deserialize_legacy_closed_group(JNIEnv *env, jobject info) {
     auto clazz = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$LegacyGroup");
     auto group_id_getter = env->GetFieldID(clazz, "groupId", "Ljava/lang/String;");
     auto last_read_getter = env->GetFieldID(clazz, "lastRead", "J");
@@ -98,26 +97,26 @@ inline session::config::convo::legacy_group* deserialize_legacy_closed_group(JNI
     auto group_id = static_cast<jstring>(env->GetObjectField(info, group_id_getter));
     auto group_id_bytes = env->GetStringUTFChars(group_id, nullptr);
     auto group_id_string = std::string{group_id_bytes};
-    auto deserialized = new session::config::convo::legacy_group(group_id_string);
-    deserialized->last_read = env->GetLongField(info, last_read_getter);
-    deserialized->unread = env->GetBooleanField(info, unread_getter);
+    auto deserialized = session::config::convo::legacy_group(group_id_string);
+    deserialized.last_read = env->GetLongField(info, last_read_getter);
+    deserialized.unread = env->GetBooleanField(info, unread_getter);
     env->ReleaseStringUTFChars(group_id, group_id_bytes);
     return deserialized;
 }
 
-inline session::config::convo::any* deserialize_any(JNIEnv *env, jobject convo) {
+inline std::optional<session::config::convo::any> deserialize_any(JNIEnv *env, jobject convo) {
     auto oto_class = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$OneToOne");
     auto og_class = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$Community");
     auto lgc_class = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$LegacyGroup");
     auto object_class = env->GetObjectClass(convo);
     if (env->IsSameObject(object_class, oto_class)) {
-        return new session::config::convo::any{*deserialize_one_to_one(env, convo)};
+        return session::config::convo::any{deserialize_one_to_one(env, convo)};
     } else if (env->IsSameObject(object_class, og_class)) {
-        return new session::config::convo::any{*deserialize_open_group(env, convo)};
+        return session::config::convo::any{deserialize_community(env, convo)};
     } else if (env->IsSameObject(object_class, lgc_class)) {
-        return new session::config::convo::any{*deserialize_legacy_closed_group(env, convo)};
+        return session::config::convo::any{deserialize_legacy_closed_group(env, convo)};
     }
-    return nullptr;
+    return std::nullopt;
 }
 
 #endif //SESSION_ANDROID_CONVERSATION_H

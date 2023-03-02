@@ -29,9 +29,17 @@ Java_network_loki_messenger_libsession_1util_ConfigBase_push(JNIEnv *env, jobjec
 
     jbyteArray returnByteArray = util::bytes_from_ustring(env, to_push_str);
     jlong seqNo = std::get<0>(push_tuple);
-    jclass returnObjectClass = env->FindClass("network/loki/messenger/libsession_util/util/ConfigWithSeqNo");
-    jmethodID methodId = env->GetMethodID(returnObjectClass, "<init>", "([BJ)V");
-    jobject returnObject = env->NewObject(returnObjectClass, methodId, returnByteArray, seqNo);
+    jclass returnObjectClass = env->FindClass("network/loki/messenger/libsession_util/util/ConfigPush");
+    jclass stackClass = env->FindClass("java/util/Stack");
+    jmethodID methodId = env->GetMethodID(returnObjectClass, "<init>", "([BJLjava/util/List;)V");
+    jmethodID stack_init = env->GetMethodID(stackClass, "<init>", "()V");
+    jobject our_stack = env->NewObject(stackClass, stack_init);
+    jmethodID push_stack = env->GetMethodID(stackClass, "push", "(Ljava/lang/Object;)Ljava/lang/Object;");
+    for (auto entry : to_delete) {
+        auto entry_jstring = env->NewStringUTF(entry.data());
+        env->CallObjectMethod(our_stack, push_stack, entry_jstring);
+    }
+    jobject returnObject = env->NewObject(returnObjectClass, methodId, returnByteArray, seqNo, our_stack);
     return returnObject;
 }
 

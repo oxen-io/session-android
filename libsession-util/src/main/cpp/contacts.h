@@ -27,7 +27,7 @@ inline jobject serialize_contact(JNIEnv *env, session::config::contact_info info
     return returnObj;
 }
 
-inline session::config::contact_info* deserialize_contact(JNIEnv *env, jobject info) {
+inline session::config::contact_info deserialize_contact(JNIEnv *env, jobject info) {
     jclass contactClass = env->FindClass("network/loki/messenger/libsession_util/util/Contact");
 
     jfieldID getId, getName, getNick, getApproved, getApprovedMe, getBlocked, getUserPic, getPriority;
@@ -66,18 +66,18 @@ inline session::config::contact_info* deserialize_contact(JNIEnv *env, jobject i
     auto name_bytes = name ? env->GetStringUTFChars(name, nullptr) : nullptr;
     auto nickname_bytes = nickname ? env->GetStringUTFChars(nickname, nullptr) : nullptr;
 
-    auto contact_info = new session::config::contact_info(session_id_bytes);
+    auto contact_info = session::config::contact_info(session_id_bytes);
     if (name_bytes) {
-        contact_info->name = name_bytes;
+        contact_info.name = name_bytes;
     }
     if (nickname_bytes) {
-        contact_info->nickname = nickname_bytes;
+        contact_info.nickname = nickname_bytes;
     }
-    contact_info->approved = approved;
-    contact_info->approved_me = approvedMe;
-    contact_info->blocked = blocked;
+    contact_info.approved = approved;
+    contact_info.approved_me = approvedMe;
+    contact_info.blocked = blocked;
     if (!url.empty() && !key.empty()) {
-        contact_info->profile_picture = session::config::profile_pic(url, key);
+        contact_info.profile_picture = session::config::profile_pic(url, key);
     }
 
     env->ReleaseStringUTFChars(session_id, session_id_bytes);
@@ -88,7 +88,7 @@ inline session::config::contact_info* deserialize_contact(JNIEnv *env, jobject i
         env->ReleaseStringUTFChars(nickname, nickname_bytes);
     }
 
-    contact_info->priority = priority;
+    contact_info.priority = priority;
 
     return contact_info;
 }

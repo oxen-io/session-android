@@ -48,7 +48,23 @@ namespace util {
     }
 
     session::config::community deserialize_base_community(JNIEnv *env, jobject base_community) {
+        jclass base_community_clazz = env->FindClass("network/loki/messenger/libsession_util/util/BaseCommunityInfo");
+        jfieldID base_url_field = env->GetFieldID(base_community_clazz, "baseUrl", "Ljava/lang/String;");
+        jfieldID room_field = env->GetFieldID(base_community_clazz, "room", "Ljava/lang/String;");
+        jfieldID pubkey_hex_field = env->GetFieldID(base_community_clazz, "pubKeyHex", "Ljava/lang/String;");
+        auto base_url = (jstring)env->GetObjectField(base_community,base_url_field);
+        auto room = (jstring)env->GetObjectField(base_community, room_field);
+        auto pub_key_hex = (jstring)env->GetObjectField(base_community, pubkey_hex_field);
+        auto base_url_chars = env->GetStringUTFChars(base_url, nullptr);
+        auto room_chars = env->GetStringUTFChars(room, nullptr);
+        auto pub_key_hex_chars = env->GetStringUTFChars(pub_key_hex, nullptr);
 
+        auto community = session::config::community(base_url_chars, room_chars, pub_key_hex_chars);
+
+        env->ReleaseStringUTFChars(base_url, base_url_chars);
+        env->ReleaseStringUTFChars(room, room_chars);
+        env->ReleaseStringUTFChars(pub_key_hex, pub_key_hex_chars);
+        return community;
     }
 
 }

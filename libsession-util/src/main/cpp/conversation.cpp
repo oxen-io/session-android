@@ -121,13 +121,13 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_set(JNIE
     jclass to_store_class = env->GetObjectClass(to_store);
     if (env->IsSameObject(to_store_class, one_to_one)) {
         // store as 1to1
-        convos->set(*deserialize_one_to_one(env, to_store));
+        convos->set(deserialize_one_to_one(env, to_store));
     } else if (env->IsSameObject(to_store_class,open_group)) {
         // store as open_group
-        convos->set(*deserialize_open_group(env, to_store));
+        convos->set(deserialize_community(env, to_store));
     } else if (env->IsSameObject(to_store_class,legacy_closed_group)) {
         // store as legacy_closed_group
-        convos->set(*deserialize_legacy_closed_group(env, to_store));
+        convos->set(deserialize_legacy_closed_group(env, to_store));
     }
 }
 extern "C"
@@ -213,8 +213,8 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_eraseCom
                                                                                        jobject thiz,
                                                                                        jobject open_group) {
     auto convos = ptrToConvoInfo(env, thiz);
-    auto deserialized = deserialize_open_group(env, open_group);
-    return convos->erase(*deserialized);
+    auto deserialized = deserialize_community(env, open_group);
+    return convos->erase(deserialized);
 }
 extern "C"
 JNIEXPORT jboolean JNICALL
@@ -269,7 +269,7 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_erase(JN
                                                                               jobject conversation) {
     auto convos = ptrToConvoInfo(env, thiz);
     auto deserialized = deserialize_any(env, conversation);
-    if (deserialized == nullptr) return false;
+    if (!deserialized.has_value()) return false;
     return convos->erase(*deserialized);
 }
 extern "C"

@@ -31,7 +31,7 @@ Java_network_loki_messenger_libsession_1util_Contacts_set(JNIEnv *env, jobject t
                                                           jobject contact) {
     auto contacts = ptrToContacts(env, thiz);
     auto contact_info = deserialize_contact(env, contact);
-    contacts->set(*contact_info);
+    contacts->set(contact_info);
 }
 
 extern "C"

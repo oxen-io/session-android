@@ -12,7 +12,7 @@ inline session::config::UserGroups* ptrToUserGroups(JNIEnv *env, jobject obj) {
     return (session::config::UserGroups*) env->GetLongField(obj, pointerField);
 }
 
-inline void deserialize_members_into(JNIEnv *env, jobject members_map, session::config::legacy_group_info *to_append_group) {
+inline void deserialize_members_into(JNIEnv *env, jobject members_map, session::config::legacy_group_info& to_append_group) {
     jclass map_class = env->FindClass("java/util/Map");
     jclass map_entry_class = env->FindClass("java/util/Map$Entry");
     jclass set_class = env->FindClass("java/util/Set");
@@ -36,12 +36,12 @@ inline void deserialize_members_into(JNIEnv *env, jobject members_map, session::
         jobject boxed = env->CallObjectMethod(entry, get_value);
         bool is_admin = env->CallBooleanMethod(boxed, get_bool_value);
         auto member_string = env->GetStringUTFChars(key, nullptr);
-        to_append_group->insert(member_string, is_admin);
+        to_append_group.insert(member_string, is_admin);
         env->ReleaseStringUTFChars(key, member_string);
     }
 }
 
-inline session::config::legacy_group_info* deserialize_legacy_group_info(JNIEnv *env, jobject info) {
+inline session::config::legacy_group_info deserialize_legacy_group_info(JNIEnv *env, jobject info) {
     auto clazz = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$LegacyGroupInfo");
     auto id_field = env->GetFieldID(clazz, "sessionId", "Ljava/lang/String;");
     auto name_field = env->GetFieldID(clazz, "name", "Ljava/lang/String;");
@@ -63,17 +63,29 @@ inline session::config::legacy_group_info* deserialize_legacy_group_info(JNIEnv 
     auto enc_pub_key_bytes = util::ustring_from_bytes(env, enc_pub_key);
     auto enc_sec_key_bytes = util::ustring_from_bytes(env, enc_sec_key);
 
-    auto info_deserialized = new session::config::legacy_group_info(id_bytes);
+    auto info_deserialized = session::config::legacy_group_info(id_bytes);
 
-    info_deserialized->priority = priority;
+    info_deserialized.priority = priority;
     deserialize_members_into(env, members_map, info_deserialized);
-    info_deserialized->name = name_bytes;
-    info_deserialized->hidden = hidden;
-    info_deserialized->enc_pubkey = enc_pub_key_bytes;
-    info_deserialized->enc_seckey = enc_sec_key_bytes;
+    info_deserialized.name = name_bytes;
+    info_deserialized.hidden = hidden;
+    info_deserialized.enc_pubkey = enc_pub_key_bytes;
+    info_deserialized.enc_seckey = enc_sec_key_bytes;
     env->ReleaseStringUTFChars(id, id_bytes);
     env->ReleaseStringUTFChars(name, name_bytes);
     return info_deserialized;
+}
+
+inline session::config::community_info deserialize_community_info(JNIEnv *env, jobject info) {
+    auto clazz = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$CommunityGroupInfo");
+    auto base_info = env->GetFieldID(clazz, "community", "Lnetwork/loki/messenger/libsession_util/util/BaseCommunityInfo;");
+    auto priority = env->GetFieldID(clazz, "priority", "I");
+    jobject base_community_info = env->GetObjectField(info, base_info);
+    auto deserialized_base_info = util::deserialize_base_community(env, base_community_info);
+    int deserialized_priority = env->GetIntField(info, priority);
+    auto community_info = session::config::community_info(deserialized_base_info.base_url(), deserialized_base_info.room(), deserialized_base_info.pubkey_hex());
+    community_info.priority = deserialized_priority;
+    return community_info;
 }
 
 inline jobject serialize_members(JNIEnv *env, std::map<std::string, bool> members_map) {
