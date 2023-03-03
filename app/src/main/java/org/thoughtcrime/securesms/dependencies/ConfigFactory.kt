@@ -8,8 +8,8 @@ import network.loki.messenger.libsession_util.UserProfile
 import org.session.libsession.utilities.ConfigFactoryProtocol
 import org.session.libsession.utilities.ConfigFactoryUpdateListener
 import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage
-import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.database.ConfigDatabase
+import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import java.util.concurrent.ConcurrentSkipListSet
 
 class ConfigFactory(private val context: Context,
@@ -42,14 +42,14 @@ class ConfigFactory(private val context: Context,
 
     override val user: UserProfile? get() = synchronized(userLock) {
         if (_userConfig == null) {
-            Log.d("Loki-DBG", "Getting user info")
             val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
-            Log.d("Loki-DBG", "Getting user configs and hashes")
             val userDump = configDatabase.retrieveConfigAndHashes(SharedConfigMessage.Kind.USER_PROFILE.name, publicKey)
             _userConfig = if (userDump != null) {
                 UserProfile.newInstance(secretKey, userDump)
             } else {
-                UserProfile.newInstance(secretKey)
+                ConfigurationMessageUtilities.generateUserProfileConfigDump()?.let { dump ->
+                    UserProfile.newInstance(secretKey, dump)
+                } ?: UserProfile.newInstance(secretKey)
             }
         }
         _userConfig
@@ -62,7 +62,9 @@ class ConfigFactory(private val context: Context,
             _contacts = if (contactsDump != null) {
                 Contacts.newInstance(secretKey, contactsDump)
             } else {
-                Contacts.newInstance(secretKey)
+                ConfigurationMessageUtilities.generateContactConfigDump()?.let { dump ->
+                    Contacts.newInstance(secretKey, dump)
+                } ?: Contacts.newInstance(secretKey)
             }
         }
         _contacts
@@ -75,7 +77,10 @@ class ConfigFactory(private val context: Context,
             _convoVolatileConfig = if (convoDump != null) {
                 ConversationVolatileConfig.newInstance(secretKey, convoDump)
             } else {
-                ConversationVolatileConfig.newInstance(secretKey)
+                // TODO: generate convo volatile config here
+                ConfigurationMessageUtilities.generateConversationVolatileDump(context)?.let { dump ->
+                    ConversationVolatileConfig.newInstance(secretKey, dump)
+                } ?: ConversationVolatileConfig.newInstance(secretKey)
             }
         }
         _convoVolatileConfig

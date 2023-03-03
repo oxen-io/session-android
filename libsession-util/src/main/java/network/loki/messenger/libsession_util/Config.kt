@@ -43,11 +43,6 @@ sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
 
     external fun free()
 
-    @Override
-    fun finalize() {
-        free()
-    }
-
 }
 
 class Contacts(pointer: Long) : ConfigBase(pointer) {
@@ -98,6 +93,8 @@ class UserProfile(pointer: Long) : ConfigBase(pointer) {
     external fun getName(): String?
     external fun getPic(): UserPic
     external fun setPic(userPic: UserPic)
+    external fun setNtsPriority(priority: Int)
+    external fun setNtsHidden(isHidden: Boolean)
 }
 
 class ConversationVolatileConfig(pointer: Long): ConfigBase(pointer) {

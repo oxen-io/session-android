@@ -15,6 +15,7 @@ import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.sending_receiving.MessageSender
+import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.TextSecurePreferences
@@ -116,7 +117,7 @@ object ConfigurationMessageUtilities {
         return dump
     }
 
-    fun generateContactConfigDump(context: Context): ByteArray? {
+    fun generateContactConfigDump(): ByteArray? {
         val secretKey = maybeUserSecretKey() ?: return null
         val storage = MessagingModuleConfiguration.shared.storage
         val localUserKey = storage.getUserPublicKey() ?: return null
@@ -142,7 +143,7 @@ object ConfigurationMessageUtilities {
                 approved = settings.isApproved,
                 approvedMe = settings.hasApprovedMe(),
                 profilePicture = userPic ?: UserPic.DEFAULT,
-                priority = 0 // TODO: read this in from a pinned priority
+                priority = if ()
             )
             contactConfig.set(contactInfo)
         }
@@ -154,7 +155,6 @@ object ConfigurationMessageUtilities {
     fun generateConversationVolatileDump(context: Context): ByteArray? {
         val secretKey = maybeUserSecretKey() ?: return null
         val storage = MessagingModuleConfiguration.shared.storage
-        val localUserKey = storage.getUserPublicKey() ?: return null
         val convoConfig = ConversationVolatileConfig.newInstance(secretKey)
         val threadDb = DatabaseComponent.get(context).threadDatabase()
         threadDb.approvedConversationList.use { cursor ->
@@ -172,9 +172,18 @@ object ConfigurationMessageUtilities {
                         val groupPublicKey = GroupUtil.doubleDecodeGroupId(recipient.address.serialize())
                         convoConfig.getOrConstructLegacyGroup(groupPublicKey)
                     }
-                    recipient.isContactRecipient -> convoConfig.getOrConstructOneToOne(recipient.address.serialize())
+                    recipient.isContactRecipient -> {
+                        val sessionId = SessionId(recipient.address.serialize())
+
+                        if (recipient.isLocalNumber) null // this is handled by the user profile NTS data
+                        else convoConfig.getOrConstructOneToOne(recipient.address.serialize())
+                    }
                     else -> null
-                } ?: continue
+                }
+                if (contact == null) {
+                    current = reader.next
+                    continue
+                }
                 contact.lastRead = current.lastSeen
                 contact.unread = false // TODO: make the forced unread work at DB level
                 convoConfig.set(contact)

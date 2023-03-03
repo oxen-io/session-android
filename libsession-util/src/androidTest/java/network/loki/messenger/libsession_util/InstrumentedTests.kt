@@ -188,6 +188,7 @@ class InstrumentedTests {
         userProfile.setName("Kallie")
         val newUserPic = UserPic("http://example.org/omg-pic-123.bmp", "secret78901234567890123456789012".encodeToByteArray())
         userProfile.setPic(newUserPic)
+        userProfile.setNtsPriority(9)
 
         // Retrieve them just to make sure they set properly:
         assertEquals("Kallie", userProfile.getName())
@@ -205,20 +206,22 @@ class InstrumentedTests {
             Hex.fromStringCondensed("ea173b57beca8af18c3519a7bbf69c3e7a05d1c049fa9558341d8ebb48b0c965")
 
         val expectedPush1Decrypted = ("d" +
-                "1:#" + "i1e"+
-                "1:&" + "d"+
-                "1:n" + "6:Kallie"+
-                "1:p" + "34:http://example.org/omg-pic-123.bmp"+
-                "1:q" + "32:secret78901234567890123456789012"+
+                "1:#"+ "i1e" +
+                "1:&"+ "d"+
+                "1:+"+ "i9e"+
+                "1:n"+ "6:Kallie"+
+                "1:p"+ "34:http://example.org/omg-pic-123.bmp"+
+                "1:q"+ "32:secret78901234567890123456789012"+
                 "e"+
-                "1:<" + "l"+
-                "l" + "i0e" + "32:").encodeToByteArray() + expHash0 + ("de" + "e" +
-                "e" +
-                "1:=" + "d" +
-                "1:n" + "0:" +
-                "1:p" + "0:" +
-                "1:q" + "0:" +
-                "e" +
+                "1:<"+ "l"+
+                "l"+ "i0e"+ "32:").encodeToByteArray() + expHash0 + ("de"+ "e"+
+                "e"+
+                "1:="+ "d"+
+                "1:+" +"0:"+
+                "1:n" +"0:"+
+                "1:p" +"0:"+
+                "1:q" +"0:"+
+                "e"+
                 "e").encodeToByteArray()
 
         assertEquals(1, newSeqNo)
@@ -227,18 +230,19 @@ class InstrumentedTests {
         // We did call push but we haven't confirmed it as stored yet, so this will still return true:
         assertTrue(userProfile.needsPush())
 
-        userProfile.confirmPushed(newSeqNo, "fakehash1")
-
         val dump = userProfile.dump()
         // (in a real client we'd now store this to disk)
         assertFalse(userProfile.needsDump())
         val expectedDump = ("d" +
-                "1:!i2e" +
+                "1:!"+ "i2e" +
                 "1:$").encodeToByteArray() + expectedPush1Decrypted.size.toString().encodeToByteArray() +
                 ":".encodeToByteArray() + expectedPush1Decrypted +
+                "1:(0:1:)le".encodeToByteArray()+
                 "e".encodeToByteArray()
 
         assertArrayEquals(expectedDump, dump)
+
+        userProfile.confirmPushed(newSeqNo, "fakehash1")
 
         val newConf = UserProfile.newInstance(edSk)
 
@@ -258,16 +262,16 @@ class InstrumentedTests {
         val conf = userProfile.push()
         val conf2 = newConf.push()
 
-        userProfile.confirmPushed(conf.seqNo, "fakehash1")
-        newConf.confirmPushed(conf2.seqNo, "fakehash2")
+        userProfile.confirmPushed(conf.seqNo, "fakehash2")
+        newConf.confirmPushed(conf2.seqNo, "fakehash3")
 
         userProfile.dump()
         userProfile.dump()
 
         assertFalse(conf.config.contentEquals(conf2.config))
 
-        newConf.merge("fakehash1" to conf.config)
-        userProfile.merge("fakehash2" to conf2.config)
+        newConf.merge("fakehash2" to conf.config)
+        userProfile.merge("fakehash3" to conf2.config)
 
         assertTrue(newConf.needsPush())
         assertTrue(userProfile.needsPush())
@@ -276,20 +280,20 @@ class InstrumentedTests {
 
         assertEquals(3, newSeq1.seqNo)
 
-        userProfile.confirmPushed(newSeq1.seqNo, "fakehash3")
+        userProfile.confirmPushed(newSeq1.seqNo, "fakehash4")
 
         // assume newConf push gets rejected as it was last to write and clear previous config by hash on oxenss
-        newConf.merge("fakehash3" to newSeq1.config)
+        newConf.merge("fakehash4" to newSeq1.config)
 
         val newSeqMerge = newConf.push()
 
-        newConf.confirmPushed(newSeqMerge.seqNo, "fakehash4")
+        newConf.confirmPushed(newSeqMerge.seqNo, "fakehash5")
 
         assertEquals("Nibbler", newConf.getName())
         assertEquals(4, newSeqMerge.seqNo)
 
         // userProfile device polls and merges
-        userProfile.merge("fakehash4" to newSeqMerge.config)
+        userProfile.merge("fakehash5" to newSeqMerge.config)
 
 
         val userConfigMerge = userProfile.push()
