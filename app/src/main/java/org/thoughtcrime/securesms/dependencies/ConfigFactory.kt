@@ -11,7 +11,6 @@ import org.session.libsession.utilities.ConfigFactoryUpdateListener
 import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage
 import org.thoughtcrime.securesms.database.ConfigDatabase
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
-import java.util.concurrent.ConcurrentSkipListSet
 
 class ConfigFactory(private val context: Context,
                     private val configDatabase: ConfigDatabase,
@@ -29,10 +28,8 @@ class ConfigFactory(private val context: Context,
 
     private val userLock = Object()
     private var _userConfig: UserProfile? = null
-    private val userHashes = ConcurrentSkipListSet<String>()
     private val contactsLock = Object()
     private var _contacts: Contacts? = null
-    private val contactsHashes = ConcurrentSkipListSet<String>()
     private val convoVolatileLock = Object()
     private var _convoVolatileConfig: ConversationVolatileConfig? = null
     private val userGroupsLock = Object()
@@ -101,6 +98,8 @@ class ConfigFactory(private val context: Context,
         }
         _userGroups
     }
+
+    override fun getUserConfigs(): List<ConfigBase> = listOfNotNull(user, contacts, convoVolatile, userGroups)
 
 
     private fun persistUserConfigDump() = synchronized(userLock) {
