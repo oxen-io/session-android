@@ -4,6 +4,7 @@ import android.content.Context
 import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.Contacts
 import network.loki.messenger.libsession_util.ConversationVolatileConfig
+import network.loki.messenger.libsession_util.UserGroupsConfig
 import network.loki.messenger.libsession_util.UserProfile
 import org.session.libsession.utilities.ConfigFactoryProtocol
 import org.session.libsession.utilities.ConfigFactoryUpdateListener
@@ -34,7 +35,8 @@ class ConfigFactory(private val context: Context,
     private val contactsHashes = ConcurrentSkipListSet<String>()
     private val convoVolatileLock = Object()
     private var _convoVolatileConfig: ConversationVolatileConfig? = null
-    private val convoHashes = ConcurrentSkipListSet<String>()
+    private val userGroupsLock = Object()
+    private var _userGroups: UserGroupsConfig? = null
 
     private val listeners: MutableList<ConfigFactoryUpdateListener> = mutableListOf()
     fun registerListener(listener: ConfigFactoryUpdateListener) { listeners += listener }
@@ -77,13 +79,27 @@ class ConfigFactory(private val context: Context,
             _convoVolatileConfig = if (convoDump != null) {
                 ConversationVolatileConfig.newInstance(secretKey, convoDump)
             } else {
-                // TODO: generate convo volatile config here
                 ConfigurationMessageUtilities.generateConversationVolatileDump(context)?.let { dump ->
                     ConversationVolatileConfig.newInstance(secretKey, dump)
                 } ?: ConversationVolatileConfig.newInstance(secretKey)
             }
         }
         _convoVolatileConfig
+    }
+
+    override val userGroups: UserGroupsConfig? get() = synchronized(userGroupsLock) {
+        if (_userGroups == null) {
+            val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
+            val userGroupsDump = configDatabase.retrieveConfigAndHashes(SharedConfigMessage.Kind.GROUPS.name, publicKey)
+            _userGroups = if (userGroupsDump != null) {
+                UserGroupsConfig.Companion.newInstance(secretKey, userGroupsDump)
+            } else {
+                ConfigurationMessageUtilities.generateUserGroupDump(context)?.let { dump ->
+                    UserGroupsConfig.Companion.newInstance(secretKey, dump)
+                } ?: UserGroupsConfig.newInstance(secretKey)
+            }
+        }
+        _userGroups
     }
 
 
@@ -105,6 +121,12 @@ class ConfigFactory(private val context: Context,
         configDatabase.storeConfig(SharedConfigMessage.Kind.CONVO_INFO_VOLATILE.name, publicKey, dumped)
     }
 
+    private fun persistUserGroupsConfigDump() = synchronized(userGroupsLock) {
+        val dumped = userGroups?.dump() ?: return
+        val (_, publicKey) = maybeGetUserInfo() ?: return
+        configDatabase.storeConfig(SharedConfigMessage.Kind.GROUPS.name, publicKey, dumped)
+    }
+
     override fun persist(forConfigObject: ConfigBase) {
         listeners.forEach { listener ->
             listener.notifyUpdates(forConfigObject)
@@ -113,6 +135,7 @@ class ConfigFactory(private val context: Context,
             is UserProfile -> persistUserConfigDump()
             is Contacts -> persistContactsConfigDump()
             is ConversationVolatileConfig -> persistConvoVolatileConfigDump()
+            is UserGroupsConfig -> persistUserGroupsConfigDump()
             else -> throw UnsupportedOperationException("Can't support type of ${forConfigObject::class.simpleName} yet")
         }
     }

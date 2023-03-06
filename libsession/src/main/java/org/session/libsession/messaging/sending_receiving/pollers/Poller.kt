@@ -9,6 +9,7 @@ import kotlinx.coroutines.runBlocking
 import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.Contacts
 import network.loki.messenger.libsession_util.ConversationVolatileConfig
+import network.loki.messenger.libsession_util.UserGroupsConfig
 import network.loki.messenger.libsession_util.UserProfile
 import nl.komponents.kovenant.Deferred
 import nl.komponents.kovenant.Promise
@@ -175,7 +176,7 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                     requestSparseArray[personalMessages.namespace!!] = personalMessages
                 }
                 // get the latest convo info volatile
-                listOfNotNull(configFactory.user, configFactory.contacts, configFactory.convoVolatile).mapNotNull { config ->
+                configFactory.getUserConfigs().mapNotNull { config ->
                     SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
                         snode, userPublicKey,
                         config.configNamespace()
@@ -236,6 +237,7 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                                             UserProfile::class.java -> processConfig(snode, body, key, configFactory.user)
                                             Contacts::class.java -> processConfig(snode, body, key, configFactory.contacts)
                                             ConversationVolatileConfig::class.java -> processConfig(snode, body, key, configFactory.convoVolatile)
+                                            UserGroupsConfig::class.java -> processConfig(snode, body, key, configFactory.userGroups)
                                         }
                                     }
                                 }

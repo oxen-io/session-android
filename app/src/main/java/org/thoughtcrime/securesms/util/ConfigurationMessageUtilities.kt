@@ -194,7 +194,6 @@ object ConfigurationMessageUtilities {
                     }
                     recipient.isContactRecipient -> {
                         val sessionId = SessionId(recipient.address.serialize())
-
                         if (recipient.isLocalNumber) null // this is handled by the user profile NTS data
                         else convoConfig.getOrConstructOneToOne(recipient.address.serialize())
                     }
@@ -237,7 +236,6 @@ object ConfigurationMessageUtilities {
             val sessionId = GroupUtil.doubleEncodeGroupID(group.getId())
             val admins = group.admins.map { it.serialize() to true }.toMap()
             val members = group.members.filterNot { it.serialize() !in admins.keys }.map { it.serialize() to false }.toMap()
-            val encPub = storage.getClosedGroupEncryptionKeyPairs(group.)
             GroupInfo.LegacyGroupInfo(
                 sessionId = sessionId,
                 name = group.title,
@@ -248,7 +246,6 @@ object ConfigurationMessageUtilities {
                 encSecKey = encryptionKeyPair.privateKey.serialize()
             )
         }
-
         (allOpenGroups + allLgc).forEach { groupInfo ->
             groupConfig.set(groupInfo)
         }
