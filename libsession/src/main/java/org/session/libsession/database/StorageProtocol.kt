@@ -153,6 +153,7 @@ interface StorageProtocol {
     fun getOrCreateThreadIdFor(address: Address): Long
     fun getOrCreateThreadIdFor(publicKey: String, groupPublicKey: String?, openGroupID: String?): Long
     fun getThreadId(publicKeyOrOpenGroupID: String): Long?
+    fun getThreadId(openGroup: OpenGroup): Long?
     fun getThreadId(address: Address): Long?
     fun getThreadId(recipient: Recipient): Long?
     fun getThreadIdForMms(mmsId: Long): Long
@@ -160,6 +161,8 @@ interface StorageProtocol {
     fun trimThread(threadID: Long, threadLimit: Int)
     fun trimThreadBefore(threadID: Long, timestamp: Long)
     fun getMessageCount(threadID: Long): Long
+    fun setPinned(threadID: Long, isPinned: Boolean)
+    fun isPinned(threadID: Long): Boolean
 
     // Contacts
     fun getContactWithSessionID(sessionID: String): Contact?

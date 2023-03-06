@@ -4,25 +4,6 @@
 #pragma clang diagnostic push
 
 extern "C"
-JNIEXPORT jobject JNICALL
-Java_network_loki_messenger_libsession_1util_util_Conversation_00024Community_00024Companion_parseFullUrl(
-        JNIEnv *env, jobject thiz, jstring full_url) {
-    auto bytes = env->GetStringUTFChars(full_url, nullptr);
-    auto [base, room, pk] = session::config::convo::community::parse_full_url(bytes);
-    env->ReleaseStringUTFChars(full_url, bytes);
-
-    jclass clazz = env->FindClass("kotlin/Triple");
-    jmethodID constructor = env->GetMethodID(clazz, "<init>", "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V");
-
-    auto base_j = env->NewStringUTF(base.data());
-    auto room_j = env->NewStringUTF(room.data());
-    auto pk_jbytes = util::bytes_from_ustring(env, pk);
-
-    jobject triple = env->NewObject(clazz, constructor, base_j, room_j, pk_jbytes);
-    return triple;
-}
-
-extern "C"
 #pragma ide diagnostic ignored "bugprone-reserved-identifier"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_00024Companion_newInstance___3B(

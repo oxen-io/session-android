@@ -112,6 +112,22 @@ Java_network_loki_messenger_libsession_1util_UserGroupsConfig_getOrConstructLega
 
 extern "C"
 JNIEXPORT void JNICALL
+Java_network_loki_messenger_libsession_1util_UserGroupsConfig_set__Lnetwork_loki_messenger_libsession_1util_util_GroupInfo_2(
+        JNIEnv *env, jobject thiz, jobject group_info) {
+    auto conf = ptrToUserGroups(env, thiz);
+    auto communityInfo = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$CommunityGroupInfo");
+    auto legacyInfo = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$LegacyGroupInfo");
+    if (env->GetObjectClass(group_info) == communityInfo) {
+        auto deserialized = deserialize_community_info(env, group_info);
+        conf->set(deserialized);
+    } else if (env->GetObjectClass(group_info) == legacyInfo) {
+        auto deserialized = deserialize_legacy_group_info(env, group_info);
+        conf->set(deserialized);
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
 Java_network_loki_messenger_libsession_1util_UserGroupsConfig_set__Lnetwork_loki_messenger_libsession_1util_util_GroupInfo_CommunityGroupInfo_2(
         JNIEnv *env, jobject thiz, jobject community_info) {
     auto conf = ptrToUserGroups(env, thiz);

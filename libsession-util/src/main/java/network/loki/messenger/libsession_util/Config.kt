@@ -155,6 +155,7 @@ class UserGroupsConfig(pointer: Long): ConfigBase(pointer) {
     external fun getLegacyGroupInfo(sessionId: String): GroupInfo.LegacyGroupInfo?
     external fun getOrConstructCommunityInfo(baseUrl: String, room: String, pubKeyHex: String): GroupInfo.CommunityGroupInfo
     external fun getOrConstructLegacyGroupInfo(sessionId: String): GroupInfo.LegacyGroupInfo
+    external fun set(groupInfo: GroupInfo)
     external fun set(communityInfo: GroupInfo.CommunityGroupInfo)
     external fun set(legacyGroupInfo: GroupInfo.LegacyGroupInfo)
     external fun erase(communityInfo: GroupInfo.CommunityGroupInfo)

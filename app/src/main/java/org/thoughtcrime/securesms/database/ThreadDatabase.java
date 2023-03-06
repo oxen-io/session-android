@@ -740,6 +740,19 @@ public class ThreadDatabase extends Database {
     notifyConversationListeners(threadId);
   }
 
+  public boolean isPinned(long threadId) {
+    SQLiteDatabase db = getReadableDatabase();
+    Cursor         cursor = db.query(TABLE_NAME, new String[]{DATE}, ID_WHERE, new String[]{String.valueOf(threadId)}, null, null, null);
+    try {
+      if (cursor != null && cursor.moveToFirst()) {
+        return cursor.getInt(0) == 1;
+      }
+      return false;
+    } finally {
+      if (cursor != null) cursor.close();
+    }
+  }
+
   public void markAllAsRead(long threadId, boolean isGroupRecipient, long lastSeenTime) {
     List<MarkedMessageInfo> messages = setRead(threadId, lastSeenTime);
     if (isGroupRecipient) {

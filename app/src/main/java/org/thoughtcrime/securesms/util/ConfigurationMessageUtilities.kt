@@ -4,9 +4,12 @@ import android.content.Context
 import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.Contacts
 import network.loki.messenger.libsession_util.ConversationVolatileConfig
+import network.loki.messenger.libsession_util.UserGroupsConfig
 import network.loki.messenger.libsession_util.UserProfile
+import network.loki.messenger.libsession_util.util.BaseCommunityInfo
 import network.loki.messenger.libsession_util.util.Contact
 import network.loki.messenger.libsession_util.util.Conversation
+import network.loki.messenger.libsession_util.util.GroupInfo
 import network.loki.messenger.libsession_util.util.UserPic
 import nl.komponents.kovenant.Promise
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -19,7 +22,9 @@ import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 
 object ConfigurationMessageUtilities {
@@ -103,6 +108,8 @@ object ConfigurationMessageUtilities {
     private fun maybeUserSecretKey() = MessagingModuleConfiguration.shared.getUserED25519KeyPair()?.secretKey?.asBytes
 
     fun generateUserProfileConfigDump(): ByteArray? {
+        val storage = MessagingModuleConfiguration.shared.storage
+        val ownPublicKey = storage.getUserPublicKey() ?: return null
         val config = ConfigurationMessage.getCurrent(listOf()) ?: return null
         val secretKey = maybeUserSecretKey() ?: return null
         val profile = UserProfile.newInstance(secretKey)
@@ -111,6 +118,13 @@ object ConfigurationMessageUtilities {
         val picKey = config.profileKey
         if (!picUrl.isNullOrEmpty() && picKey.isNotEmpty()) {
             profile.setPic(UserPic(picUrl, picKey))
+        }
+        val ownThreadId = storage.getThreadId(Address.fromSerialized(ownPublicKey))
+        profile.setNtsHidden(ownThreadId != null)
+        if (ownThreadId != null) {
+            // have NTS thread
+            val ntsPinned = storage.isPinned(ownThreadId)
+            profile.setNtsPriority(if (ntsPinned) 1 else 0) // TODO: implement the pinning priority here in future
         }
         val dump = profile.dump()
         profile.free()
@@ -124,10 +138,16 @@ object ConfigurationMessageUtilities {
         val contactsWithSettings = storage.getAllContacts().filter { recipient ->
             recipient.sessionID != localUserKey
         }.map { contact ->
-            contact to storage.getRecipientSettings(Address.fromSerialized(contact.sessionID))!!
+            val address = Address.fromSerialized(contact.sessionID)
+            val thread = storage.getThreadId(address)
+            val isPinned = if (thread != null) {
+                storage.isPinned(thread)
+            } else false
+
+            Triple(contact, storage.getRecipientSettings(address)!!, isPinned)
         }
         val contactConfig = Contacts.newInstance(secretKey)
-        for ((contact, settings) in contactsWithSettings) {
+        for ((contact, settings, isPinned) in contactsWithSettings) {
             val url = contact.profilePictureURL
             val key = contact.profilePictureEncryptionKey
             val userPic = if (url.isNullOrEmpty() || key?.isNotEmpty() != true) {
@@ -143,7 +163,7 @@ object ConfigurationMessageUtilities {
                 approved = settings.isApproved,
                 approvedMe = settings.hasApprovedMe(),
                 profilePicture = userPic ?: UserPic.DEFAULT,
-                priority = if ()
+                priority = if (isPinned) 1 else 0
             )
             contactConfig.set(contactInfo)
         }
@@ -193,6 +213,47 @@ object ConfigurationMessageUtilities {
 
         val dump = convoConfig.dump()
         convoConfig.free()
+        return dump
+    }
+
+    fun generateUserGroupDump(context: Context): ByteArray? {
+        val secretKey = maybeUserSecretKey() ?: return null
+        val storage = MessagingModuleConfiguration.shared.storage
+        val groupConfig = UserGroupsConfig.newInstance(secretKey)
+        val allOpenGroups = storage.getAllOpenGroups().values.mapNotNull { openGroup ->
+            val (baseUrl, room, pubKey) = BaseCommunityInfo.parseFullUrl(openGroup.joinURL) ?: return@mapNotNull null
+            val pubKeyHex = Hex.toStringCondensed(pubKey)
+            val baseInfo = BaseCommunityInfo(baseUrl, room, pubKeyHex)
+            val threadId = storage.getThreadId(openGroup) ?: return@mapNotNull null
+            val isPinned = storage.isPinned(threadId)
+            GroupInfo.CommunityGroupInfo(baseInfo, if (isPinned) 1 else 0)
+        }
+
+        val allLgc = storage.getAllGroups().filter { it.isClosedGroup }.mapNotNull { group ->
+            val groupPublicKey = GroupUtil.doubleDecodeGroupID(group.encodedId).toHexString()
+            val encryptionKeyPair = storage.getLatestClosedGroupEncryptionKeyPair(groupPublicKey) ?: return@mapNotNull null
+            val threadId = storage.getThreadId(group.encodedId)
+            val isPinned = threadId?.let { storage.isPinned(threadId) } ?: false
+            val sessionId = GroupUtil.doubleEncodeGroupID(group.getId())
+            val admins = group.admins.map { it.serialize() to true }.toMap()
+            val members = group.members.filterNot { it.serialize() !in admins.keys }.map { it.serialize() to false }.toMap()
+            val encPub = storage.getClosedGroupEncryptionKeyPairs(group.)
+            GroupInfo.LegacyGroupInfo(
+                sessionId = sessionId,
+                name = group.title,
+                members = admins + members,
+                hidden = threadId == null,
+                priority = if (isPinned) 1 else 0,
+                encPubKey = encryptionKeyPair.publicKey.serialize(),
+                encSecKey = encryptionKeyPair.privateKey.serialize()
+            )
+        }
+
+        (allOpenGroups + allLgc).forEach { groupInfo ->
+            groupConfig.set(groupInfo)
+        }
+        val dump = groupConfig.dump()
+        groupConfig.free()
         return dump
     }
 

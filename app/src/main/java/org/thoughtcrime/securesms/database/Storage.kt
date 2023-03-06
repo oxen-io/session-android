@@ -745,6 +745,11 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         return getThreadId(address)
     }
 
+    override fun getThreadId(openGroup: OpenGroup): Long? {
+        val address = fromSerialized("${openGroup.server}.${openGroup.room}")
+        return getThreadId(address)
+    }
+
     override fun getThreadId(address: Address): Long? {
         val recipient = Recipient.from(context, address, false)
         return getThreadId(recipient)
@@ -866,7 +871,15 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         return mmsSmsDb.getConversationCount(threadID)
     }
 
+    override fun setPinned(threadID: Long, isPinned: Boolean) {
+        val threadDB = DatabaseComponent.get(context).threadDatabase()
+        threadDB.setPinned(threadID, isPinned)
+    }
 
+    override fun isPinned(threadID: Long): Boolean {
+        val threadDB = DatabaseComponent.get(context).threadDatabase()
+        return threadDB.isPinned(threadID)
+    }
 
     override fun getAttachmentDataUri(attachmentId: AttachmentId): Uri {
         return PartAuthority.getAttachmentDataUri(attachmentId)

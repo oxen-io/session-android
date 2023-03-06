@@ -102,3 +102,21 @@ Java_network_loki_messenger_libsession_1util_util_Sodium_ed25519PkToCurve25519(J
     jbyteArray curve_pk_jarray = util::bytes_from_ustring(env, session::ustring_view {curve_pk.data(), curve_pk.size()});
     return curve_pk_jarray;
 }
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_network_loki_messenger_libsession_1util_util_BaseCommunityInfo_00024Companion_parseFullUrl(
+        JNIEnv *env, jobject thiz, jstring full_url) {
+    auto bytes = env->GetStringUTFChars(full_url, nullptr);
+    auto [base, room, pk] = session::config::community::parse_full_url(bytes);
+    env->ReleaseStringUTFChars(full_url, bytes);
+
+    jclass clazz = env->FindClass("kotlin/Triple");
+    jmethodID constructor = env->GetMethodID(clazz, "<init>", "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V");
+
+    auto base_j = env->NewStringUTF(base.data());
+    auto room_j = env->NewStringUTF(room.data());
+    auto pk_jbytes = util::bytes_from_ustring(env, pk);
+
+    jobject triple = env->NewObject(clazz, constructor, base_j, room_j, pk_jbytes);
+    return triple;
+}
