@@ -410,10 +410,13 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         for (group in lgc) {
             if (group !is GroupInfo.LegacyGroupInfo) continue
             val existingGroup = existingClosedGroups.firstOrNull { GroupUtil.doubleDecodeGroupId(it.encodedId) == group.sessionId }
+            val existingThread = existingGroup?.let { getThreadId(existingGroup.encodedId) }
             if (existingGroup != null) {
                 Log.d("Loki-DBG", "Existing closed group, don't add")
-                if (group.hidden) {
-                    threadDb.setThreadArchived(existingGroup.)
+                if (group.hidden && existingThread != null) {
+                    threadDb.setThreadArchived(existingThread)
+                } else if (existingThread == null) {
+                    Log.w("Loki-DBG", "Existing group had no thread to hide")
                 }
             } else {
                 val members = group.members.keys.map { Address.fromSerialized(it) }
