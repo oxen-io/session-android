@@ -7,4 +7,5 @@ data class BaseCommunityInfo(val baseUrl: String, val room: String, val pubKeyHe
         }
         external fun parseFullUrl(fullUrl: String): Triple<String, String, ByteArray>?
     }
+    external fun fullUrl(): String
 }

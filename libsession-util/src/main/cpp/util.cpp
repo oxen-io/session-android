@@ -120,3 +120,11 @@ Java_network_loki_messenger_libsession_1util_util_BaseCommunityInfo_00024Compani
     jobject triple = env->NewObject(clazz, constructor, base_j, room_j, pk_jbytes);
     return triple;
 }
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_network_loki_messenger_libsession_1util_util_BaseCommunityInfo_fullUrl(JNIEnv *env,
+                                                                            jobject thiz) {
+    auto deserialized = util::deserialize_base_community(env, thiz);
+    auto full_url = deserialized.full_url();
+    return env->NewStringUTF(full_url.data());
+}

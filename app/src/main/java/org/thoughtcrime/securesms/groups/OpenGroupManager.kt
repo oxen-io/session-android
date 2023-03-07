@@ -58,14 +58,14 @@ object OpenGroupManager {
     }
 
     @WorkerThread
-    fun add(server: String, room: String, publicKey: String, context: Context): OpenGroupApi.RoomInfo? {
+    fun add(server: String, room: String, publicKey: String, context: Context): Pair<Long,OpenGroupApi.RoomInfo?> {
         val openGroupID = "$server.$room"
         var threadID = GroupManager.getOpenGroupThreadID(openGroupID, context)
         val storage = MessagingModuleConfiguration.shared.storage
         val threadDB = DatabaseComponent.get(context).lokiThreadDatabase()
         // Check it it's added already
         val existingOpenGroup = threadDB.getOpenGroupChat(threadID)
-        if (existingOpenGroup != null) { return null }
+        if (existingOpenGroup != null) { return threadID to null }
         // Clear any existing data if needed
         storage.removeLastDeletionServerID(room, server)
         storage.removeLastMessageServerID(room, server)
@@ -83,7 +83,7 @@ object OpenGroupManager {
         }
         val openGroup = OpenGroup(server = server, room = room, publicKey = publicKey, name = info.name, imageId = info.imageId, canWrite = info.write, infoUpdates = info.infoUpdates)
         threadDB.setOpenGroupChat(openGroup, threadID)
-        return info
+        return threadID to info
     }
 
     fun restartPollerForServer(server: String) {
@@ -129,13 +129,14 @@ object OpenGroupManager {
         }
     }
 
+    @WorkerThread
     fun addOpenGroup(urlAsString: String, context: Context): OpenGroupApi.RoomInfo? {
         val url = HttpUrl.parse(urlAsString) ?: return null
         val server = OpenGroup.getServer(urlAsString)
         val room = url.pathSegments().firstOrNull() ?: return null
         val publicKey = url.queryParameter("public_key") ?: return null
 
-        return add(server.toString().removeSuffix("/"), room, publicKey, context) // assume migrated from calling function
+        return add(server.toString().removeSuffix("/"), room, publicKey, context).second // assume migrated from calling function
     }
 
     fun updateOpenGroup(openGroup: OpenGroup, context: Context) {

@@ -5,8 +5,10 @@ import android.net.Uri
 import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.Contacts
 import network.loki.messenger.libsession_util.ConversationVolatileConfig
+import network.loki.messenger.libsession_util.UserGroupsConfig
 import network.loki.messenger.libsession_util.UserProfile
 import network.loki.messenger.libsession_util.util.Conversation
+import network.loki.messenger.libsession_util.util.GroupInfo
 import network.loki.messenger.libsession_util.util.UserPic
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.database.StorageProtocol
@@ -302,6 +304,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
             is UserProfile -> updateUser(forConfigObject)
             is Contacts -> updateContacts(forConfigObject)
             is ConversationVolatileConfig -> updateConvoVolatile(forConfigObject)
+            is UserGroupsConfig -> updateUserGroups(forConfigObject)
         }
     }
 
@@ -373,6 +376,52 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
             if (threadId >= 0) {
                 markConversationAsRead(threadId, conversation.lastRead)
                 updateThread(threadId, false)
+            }
+        }
+    }
+
+    private fun updateUserGroups(userGroups: UserGroupsConfig) {
+        val threadDb = DatabaseComponent.get(context).threadDatabase()
+        val (communities, lgc) = userGroups.all().partition { it is GroupInfo.CommunityGroupInfo }
+        val allOpenGroups = getAllOpenGroups()
+        val toDelete = allOpenGroups.filter { it.value.joinURL !in communities.map { (it as GroupInfo.CommunityGroupInfo).community.fullUrl() } }
+        val existingOpenGroups: Map<Long, OpenGroup> = allOpenGroups.filterKeys { it !in toDelete.keys }
+        val existingJoinUrls = existingOpenGroups.values.map { it.joinURL }
+        val existingClosedGroups = getAllGroups()
+
+        // delete the ones which are not listed in the config
+        toDelete.values.forEach { openGroup ->
+            OpenGroupManager.delete(openGroup.server, openGroup.room, context)
+        }
+
+        for (groupInfo in communities) {
+            if (groupInfo !is GroupInfo.CommunityGroupInfo) continue
+            val groupBaseCommunity = groupInfo.community
+            if (groupBaseCommunity.fullUrl() !in existingJoinUrls) {
+                // add it
+                val (threadId, _) = OpenGroupManager.add(groupBaseCommunity.baseUrl, groupBaseCommunity.room, groupBaseCommunity.pubKeyHex, context)
+                threadDb.setPinned(threadId, groupInfo.priority >= 1)
+            } else {
+                val (threadId, _) = existingOpenGroups.entries.first { (_, v) -> v.joinURL == groupInfo.community.fullUrl() }
+                threadDb.setPinned(threadId, groupInfo.priority >= 1)
+            }
+        }
+
+        for (group in lgc) {
+            if (group !is GroupInfo.LegacyGroupInfo) continue
+            val existingGroup = existingClosedGroups.firstOrNull { GroupUtil.doubleDecodeGroupId(it.encodedId) == group.sessionId }
+            if (existingGroup != null) {
+                Log.d("Loki-DBG", "Existing closed group, don't add")
+                if (group.hidden) {
+                    threadDb.setThreadArchived(existingGroup.)
+                }
+            } else {
+                val members = group.members.keys.map { Address.fromSerialized(it) }
+                val admins = group.members.filter { it.value /*admin = true*/ }.keys.map { Address.fromSerialized(it) }
+                val groupId = GroupUtil.doubleEncodeGroupID(group.sessionId)
+                val title = group.name
+                val formationTimestamp = 0L
+                createGroup(groupId, title, members, null, null, admins, formationTimestamp)
             }
         }
     }
