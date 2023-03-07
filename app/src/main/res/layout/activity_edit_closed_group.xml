@@ -49,6 +49,7 @@
                     android:inputType="text"
                     android:singleLine="true"
                     android:imeOptions="actionDone"
+                    android:contentDescription="@string/AccessibilityId_group_name"
                     android:hint="@string/activity_edit_closed_group_edit_text_hint" />
 
                 <ImageView

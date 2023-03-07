@@ -945,7 +945,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     override fun block(deleteThread: Boolean) {
         val title = R.string.RecipientPreferenceActivity_block_this_contact_question
         val message = R.string.RecipientPreferenceActivity_you_will_no_longer_receive_messages_and_calls_from_this_contact
-        AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(this)
             .setTitle(title)
             .setMessage(message)
             .setNegativeButton(android.R.string.cancel, null)
@@ -956,6 +956,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     finish()
                 }
             }.show()
+        val button = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
+        button.setContentDescription("Confirm block")
     }
 
     override fun copySessionID(sessionId: String) {

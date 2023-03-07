@@ -58,6 +58,7 @@
     <string name="AccessibilityId_notification_settings">Notification settings</string>
     <string name="AccessibilityId_mute_notifications">Mute notifications</string>
     <string name="AccessibilityId_delete">Delete</string>
+    <string name="AccessibilityId_enable">Enable</string>
     <!--  Conversation options for closed group-->
     <string name="AccessibilityId_edit_group">Edit group</string>
     <string name="AccessibilityId_leave_group">Leave group</string>
@@ -68,6 +69,7 @@
     <string name="AccessibilityId_add_members">Add members</string>
     <string name="AccessibilityId_done">Done</string>
     <string name="AccessibilityId_mentions_list">Mentions list</string>
+    <string name="AccessibilityId_contact_mentions">Contact mentions</string>
     <!--  Conversation icons -->
     <string name="AccessibilityId_call_button">Call button</string>
     <string name="AccessibilityId_settings">Settings</string>
@@ -107,12 +109,13 @@
     <string name="AccessibilityId_message_sent_status_pending">Message sent status pending</string>
     <string name="AccessibilityId_message_request_config_message">Message request has been accepted</string>
     <string name="AccessibilityId_message_body">Message Body</string>
+    <string name="AccessibilityId_voice_message">Voice message</string>
+    <string name="AccessibilityId_document">Document</string>
     <string name="AccessibilityId_deleted_message">Deleted message</string>
     <string name="AccessibilityId_delete_message">Delete message</string>
     <string name="AccessibilityId_reply_message">Reply to message</string>
     <string name="AccessibilityId_select">Select</string>
     <string name="AccessibilityId_save_attachment">Save attachment</string>
-
     <!-- Delete message modal-->
     <string name="AccessibilityId_delete_just_for_me">Delete just for me</string>
     <string name="AccessibilityId_delete_for_everyone">Delete for everyone</string>
@@ -128,10 +131,18 @@
     <string name="AccessibilityId_apply">Apply</string>
     <string name="AccessibilityId_cancel">Cancel</string>
     <string name="AccessibilityId_message_user">Message user</string>
-
-<!--    Recovery Phrase Dialog-->
+    <string name="AccessibilityId_notifications">Notifications</string>
+    <string name="AccessibilityId_conversations">Conversations</string>
+    <string name="AccessibilityId_message_requests">Message requests</string>
+    <string name="AccessibilityId_appearance">Appearance</string>
+    <string name="AccessibilityId_invite_friend">Invite a friend</string>
+    <string name="AccessibilityId_help">Help</string>
+    <string name="AccessibilityId_clear_data">Clear data</string>
+    <!--    Recovery Phrase Dialog-->
     <string name="AccessibilityId_cancel_button">Cancel</string>
-
+    <!--    Link preview Dialog-->
+    <string name="AccessibilityId_enable_link_preview_button">Enable</string>
+    <string name="AccessibilityId_cancel_link_preview_button">Cancel</string>
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">New message</string>
     <!-- AlbumThumbnailView -->

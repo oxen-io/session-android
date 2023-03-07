@@ -192,7 +192,8 @@
                     android:id="@+id/notificationsButton"
                     android:paddingHorizontal="@dimen/large_spacing"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/setting_button_height">
+                    android:layout_height="@dimen/setting_button_height"
+                    android:contentDescription="@string/AccessibilityId_notifications">
                     <ImageView
                         android:id="@+id/notificationsContainer"
                         android:layout_width="@dimen/small_profile_picture_size"
@@ -212,7 +213,8 @@
                         android:textStyle="bold"
                         android:gravity="center"
                         android:layout_toEndOf="@+id/notificationsContainer"
-                        android:text="@string/activity_settings_notifications_button_title" />
+                        android:text="@string/activity_settings_notifications_button_title"
+                        />
                 </RelativeLayout>
 
 
@@ -226,7 +228,9 @@
                     android:id="@+id/chatsButton"
                     android:paddingHorizontal="@dimen/large_spacing"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/setting_button_height">
+                    android:layout_height="@dimen/setting_button_height"
+                    android:contentDescription="@string/AccessibilityId_conversations">
+
                     <ImageView
                         android:id="@+id/chatsContainer"
                         android:layout_width="@dimen/small_profile_picture_size"
@@ -259,7 +263,8 @@
                     android:id="@+id/messageRequestsButton"
                     android:paddingHorizontal="@dimen/large_spacing"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/setting_button_height">
+                    android:layout_height="@dimen/setting_button_height"
+                    android:contentDescription="@string/AccessibilityId_message_requests">
                     <ImageView
                         android:id="@+id/messageRequestsContainer"
                         android:layout_width="@dimen/small_profile_picture_size"
@@ -292,7 +297,8 @@
                     android:id="@+id/appearanceButton"
                     android:paddingHorizontal="@dimen/large_spacing"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/setting_button_height">
+                    android:layout_height="@dimen/setting_button_height"
+                    android:contentDescription="@string/AccessibilityId_appearance">
                     <ImageView
                         android:id="@+id/appearanceContainer"
                         android:layout_width="@dimen/small_profile_picture_size"
@@ -325,7 +331,8 @@
                     android:id="@+id/inviteFriendButton"
                     android:paddingHorizontal="@dimen/large_spacing"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/setting_button_height">
+                    android:layout_height="@dimen/setting_button_height"
+                    android:contentDescription="@string/AccessibilityId_invite_friend">
                     <ImageView
                         android:id="@+id/inviteFriendContainer"
                         android:layout_width="@dimen/small_profile_picture_size"
@@ -358,7 +365,8 @@
                     android:id="@+id/seedButton"
                     android:paddingHorizontal="@dimen/large_spacing"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/setting_button_height">
+                    android:layout_height="@dimen/setting_button_height"
+                    android:contentDescription="@string/AccessibilityId_recovery_phrase">
                     <ImageView
                         android:id="@+id/seedContainer"
                         android:layout_width="@dimen/small_profile_picture_size"
@@ -391,7 +399,8 @@
                     android:id="@+id/helpButton"
                     android:paddingHorizontal="@dimen/large_spacing"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/setting_button_height">
+                    android:layout_height="@dimen/setting_button_height"
+                    android:contentDescription="@string/AccessibilityId_help">
                     <ImageView
                         android:id="@+id/helpContainer"
                         android:layout_width="@dimen/small_profile_picture_size"
@@ -424,7 +433,8 @@
                     android:id="@+id/clearAllDataButton"
                     android:paddingHorizontal="@dimen/large_spacing"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/setting_button_height">
+                    android:layout_height="@dimen/setting_button_height"
+                    android:contentDescription="@string/AccessibilityId_clear_data">
                     <ImageView
                         android:id="@+id/clearContainer"
                         android:layout_width="@dimen/small_profile_picture_size"
