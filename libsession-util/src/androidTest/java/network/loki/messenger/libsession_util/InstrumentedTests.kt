@@ -2,11 +2,7 @@ package network.loki.messenger.libsession_util
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import network.loki.messenger.libsession_util.util.Contact
-import network.loki.messenger.libsession_util.util.Conversation
-import network.loki.messenger.libsession_util.util.KeyPair
-import network.loki.messenger.libsession_util.util.Sodium
-import network.loki.messenger.libsession_util.util.UserPic
+import network.loki.messenger.libsession_util.util.*
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert.*
@@ -295,7 +291,6 @@ class InstrumentedTests {
         // userProfile device polls and merges
         userProfile.merge("fakehash5" to newSeqMerge.config)
 
-
         val userConfigMerge = userProfile.push()
 
         assertEquals(4, userConfigMerge.seqNo)
@@ -364,41 +359,41 @@ class InstrumentedTests {
 
     @Test
     fun test_open_group_urls() {
-        val (base1, room1, pk1) = Conversation.Community.parseFullUrl(
+        val (base1, room1, pk1) = BaseCommunityInfo.parseFullUrl(
             "https://example.com/" +
             "someroom?public_key=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
         )!!
 
-        val (base2, room2, pk2) = Conversation.Community.parseFullUrl(
+        val (base2, room2, pk2) = BaseCommunityInfo.parseFullUrl(
             "HTTPS://EXAMPLE.COM/" +
             "someroom?public_key=0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF"
         )!!
 
-        val (base3, room3, pk3) = Conversation.Community.parseFullUrl(
+        val (base3, room3, pk3) = BaseCommunityInfo.parseFullUrl(
             "HTTPS://EXAMPLE.COM/r/" +
             "someroom?public_key=0123456789aBcdEF0123456789abCDEF0123456789ABCdef0123456789ABCDEF"
         )!!
 
-        val (base4, room4, pk4) = Conversation.Community.parseFullUrl(
+        val (base4, room4, pk4) = BaseCommunityInfo.parseFullUrl(
             "http://example.com/r/" +
             "someroom?public_key=0123456789aBcdEF0123456789abCDEF0123456789ABCdef0123456789ABCDEF"
         )!!
 
-        val (base5, room5, pk5) = Conversation.Community.parseFullUrl(
+        val (base5, room5, pk5) = BaseCommunityInfo.parseFullUrl(
             "HTTPS://EXAMPLE.com:443/r/" +
             "someroom?public_key=0123456789aBcdEF0123456789abCDEF0123456789ABCdef0123456789ABCDEF"
         )!!
 
-        val (base6, room6, pk6) = Conversation.Community.parseFullUrl(
+        val (base6, room6, pk6) = BaseCommunityInfo.parseFullUrl(
             "HTTP://EXAMPLE.com:80/r/" +
             "someroom?public_key=0123456789aBcdEF0123456789abCDEF0123456789ABCdef0123456789ABCDEF"
         )!!
 
-        val (base7, room7, pk7) = Conversation.Community.parseFullUrl(
+        val (base7, room7, pk7) = BaseCommunityInfo.parseFullUrl(
             "http://example.com:80/r/" +
             "someroom?public_key=ASNFZ4mrze8BI0VniavN7wEjRWeJq83vASNFZ4mrze8"
         )!!
-        val (base8, room8, pk8) = Conversation.Community.parseFullUrl(
+        val (base8, room8, pk8) = BaseCommunityInfo.parseFullUrl(
             "http://example.com:80/r/" +
             "someroom?public_key=yrtwk3hjixg66yjdeiuauk6p7hy1gtm8tgih55abrpnsxnpm3zzo"
         )!!

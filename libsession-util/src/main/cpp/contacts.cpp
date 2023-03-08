@@ -30,7 +30,7 @@ JNIEXPORT void JNICALL
 Java_network_loki_messenger_libsession_1util_Contacts_set(JNIEnv *env, jobject thiz,
                                                           jobject contact) {
     auto contacts = ptrToContacts(env, thiz);
-    auto contact_info = deserialize_contact(env, contact);
+    auto contact_info = deserialize_contact(env, contact, contacts);
     contacts->set(contact_info);
 }
 

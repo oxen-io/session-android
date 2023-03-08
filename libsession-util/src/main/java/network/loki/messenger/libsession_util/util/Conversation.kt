@@ -15,14 +15,7 @@ sealed class Conversation {
         val baseCommunityInfo: BaseCommunityInfo,
         override var lastRead: Long,
         override var unread: Boolean
-    ) : Conversation() {
-        companion object {
-            init {
-                System.loadLibrary("session_util")
-            }
-            external fun parseFullUrl(fullUrl: String): Triple<String, String, ByteArray>?
-        }
-    }
+    ) : Conversation()
 
     data class LegacyGroup(
         val groupId: String,

@@ -2,37 +2,20 @@ package org.thoughtcrime.securesms.database
 
 import android.content.Context
 import android.net.Uri
-import network.loki.messenger.libsession_util.ConfigBase
-import network.loki.messenger.libsession_util.Contacts
-import network.loki.messenger.libsession_util.ConversationVolatileConfig
-import network.loki.messenger.libsession_util.UserGroupsConfig
-import network.loki.messenger.libsession_util.UserProfile
+import network.loki.messenger.libsession_util.*
 import network.loki.messenger.libsession_util.util.Conversation
-import network.loki.messenger.libsession_util.util.GroupInfo
 import network.loki.messenger.libsession_util.util.UserPic
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.BlindedIdMapping
 import org.session.libsession.messaging.calls.CallMessageType
 import org.session.libsession.messaging.contacts.Contact
-import org.session.libsession.messaging.jobs.AttachmentUploadJob
-import org.session.libsession.messaging.jobs.ConfigurationSyncJob
-import org.session.libsession.messaging.jobs.GroupAvatarDownloadJob
-import org.session.libsession.messaging.jobs.Job
-import org.session.libsession.messaging.jobs.JobQueue
-import org.session.libsession.messaging.jobs.MessageReceiveJob
-import org.session.libsession.messaging.jobs.MessageSendJob
+import org.session.libsession.messaging.jobs.*
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
-import org.session.libsession.messaging.messages.signal.IncomingEncryptedMessage
-import org.session.libsession.messaging.messages.signal.IncomingGroupMessage
-import org.session.libsession.messaging.messages.signal.IncomingMediaMessage
-import org.session.libsession.messaging.messages.signal.IncomingTextMessage
-import org.session.libsession.messaging.messages.signal.OutgoingGroupMediaMessage
-import org.session.libsession.messaging.messages.signal.OutgoingMediaMessage
-import org.session.libsession.messaging.messages.signal.OutgoingTextMessage
+import org.session.libsession.messaging.messages.signal.*
 import org.session.libsession.messaging.messages.visible.Attachment
 import org.session.libsession.messaging.messages.visible.Profile
 import org.session.libsession.messaging.messages.visible.Reaction
@@ -49,13 +32,8 @@ import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.messaging.utilities.UpdateMessageData
 import org.session.libsession.snode.OnionRequestAPI
-import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.*
 import org.session.libsession.utilities.Address.Companion.fromSerialized
-import org.session.libsession.utilities.GroupRecord
-import org.session.libsession.utilities.GroupUtil
-import org.session.libsession.utilities.ProfileKeyUtil
-import org.session.libsession.utilities.SSKEnvironment
-import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.messages.SignalServiceAttachmentPointer
@@ -71,6 +49,7 @@ import org.thoughtcrime.securesms.database.model.MessageId
 import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
+import org.thoughtcrime.securesms.groups.GroupManager
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.jobs.RetrieveProfileAvatarJob
 import org.thoughtcrime.securesms.mms.PartAuthority
@@ -382,20 +361,26 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
 
     private fun updateUserGroups(userGroups: UserGroupsConfig) {
         val threadDb = DatabaseComponent.get(context).threadDatabase()
-        val (communities, lgc) = userGroups.all().partition { it is GroupInfo.CommunityGroupInfo }
+        val communities = userGroups.allCommunityInfo()
+        val lgc = userGroups.allLegacyGroupInfo()
         val allOpenGroups = getAllOpenGroups()
-        val toDelete = allOpenGroups.filter { it.value.joinURL !in communities.map { (it as GroupInfo.CommunityGroupInfo).community.fullUrl() } }
-        val existingOpenGroups: Map<Long, OpenGroup> = allOpenGroups.filterKeys { it !in toDelete.keys }
+        val toDeleteCommunities = allOpenGroups.filter { it.value.joinURL !in communities.map { it.community.fullUrl() } }
+        val existingOpenGroups: Map<Long, OpenGroup> = allOpenGroups.filterKeys { it !in toDeleteCommunities.keys }
         val existingJoinUrls = existingOpenGroups.values.map { it.joinURL }
         val existingClosedGroups = getAllGroups()
+        val lgcIds = lgc.map { it.sessionId }
+        val toDeleteClosedGroups = existingClosedGroups.filter { group ->
+            GroupUtil.doubleDecodeGroupId(group.encodedId) !in lgcIds
+        }
 
         // delete the ones which are not listed in the config
-        toDelete.values.forEach { openGroup ->
+        toDeleteCommunities.values.forEach { openGroup ->
             OpenGroupManager.delete(openGroup.server, openGroup.room, context)
         }
 
+//        GroupManager.deleteGroup()
+
         for (groupInfo in communities) {
-            if (groupInfo !is GroupInfo.CommunityGroupInfo) continue
             val groupBaseCommunity = groupInfo.community
             if (groupBaseCommunity.fullUrl() !in existingJoinUrls) {
                 // add it
@@ -408,7 +393,6 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         }
 
         for (group in lgc) {
-            if (group !is GroupInfo.LegacyGroupInfo) continue
             val existingGroup = existingClosedGroups.firstOrNull { GroupUtil.doubleDecodeGroupId(it.encodedId) == group.sessionId }
             val existingThread = existingGroup?.let { getThreadId(existingGroup.encodedId) }
             if (existingGroup != null) {
