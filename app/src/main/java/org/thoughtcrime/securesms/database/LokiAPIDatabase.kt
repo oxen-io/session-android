@@ -458,9 +458,8 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         return ECKeyPair(DjbECPublicKey(keyPair.publicKey.serialize().removingIdPrefixIfNeeded()), DjbECPrivateKey(keyPair.privateKey.serialize()))
     }
 
-    fun addClosedGroupEncryptionKeyPair(encryptionKeyPair: ECKeyPair, groupPublicKey: String) {
+    fun addClosedGroupEncryptionKeyPair(encryptionKeyPair: ECKeyPair, groupPublicKey: String, timestamp: Long) {
         val database = databaseHelper.writableDatabase
-        val timestamp = Date().time.toString()
         val index = "$groupPublicKey-$timestamp"
         val encryptionKeyPairPublicKey = encryptionKeyPair.publicKey.serialize().toHexString().removingIdPrefixIfNeeded()
         val encryptionKeyPairPrivateKey = encryptionKeyPair.privateKey.serialize().toHexString()

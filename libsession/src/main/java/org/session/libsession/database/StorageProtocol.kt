@@ -56,6 +56,7 @@ interface StorageProtocol {
     fun getConfigSyncJob(destination: Destination): Job?
     fun resumeMessageSendJobIfNeeded(messageSendJobID: String)
     fun isJobCanceled(job: Job): Boolean
+    fun cancelPendingMessageSendJobs(threadID: Long)
 
     // Authorization
     fun getAuthToken(room: String, server: String): String?
@@ -130,7 +131,7 @@ interface StorageProtocol {
     fun getAllActiveClosedGroupPublicKeys(): Set<String>
     fun addClosedGroupPublicKey(groupPublicKey: String)
     fun removeClosedGroupPublicKey(groupPublicKey: String)
-    fun addClosedGroupEncryptionKeyPair(encryptionKeyPair: ECKeyPair, groupPublicKey: String)
+    fun addClosedGroupEncryptionKeyPair(encryptionKeyPair: ECKeyPair, groupPublicKey: String, timestamp: Long)
     fun removeAllClosedGroupEncryptionKeyPairs(groupPublicKey: String)
     fun insertIncomingInfoMessage(context: Context, senderPublicKey: String, groupID: String, type: SignalServiceGroup.Type,
         name: String, members: Collection<String>, admins: Collection<String>, sentTimestamp: Long)
@@ -163,6 +164,7 @@ interface StorageProtocol {
     fun getMessageCount(threadID: Long): Long
     fun setPinned(threadID: Long, isPinned: Boolean)
     fun isPinned(threadID: Long): Boolean
+    fun deleteConversation(threadID: Long)
 
     // Contacts
     fun getContactWithSessionID(sessionID: String): Contact?

@@ -51,6 +51,7 @@ inline session::config::legacy_group_info deserialize_legacy_group_info(JNIEnv *
     auto enc_pub_key_field = env->GetFieldID(clazz, "encPubKey", "[B");
     auto enc_sec_key_field = env->GetFieldID(clazz, "encSecKey", "[B");
     auto priority_field = env->GetFieldID(clazz, "priority", "I");
+    auto disappearing_timer_field = env->GetFieldID(clazz, "disappearingTimer", "J");
     jstring id = static_cast<jstring>(env->GetObjectField(info, id_field));
     jstring name = static_cast<jstring>(env->GetObjectField(info, name_field));
     jobject members_map = env->GetObjectField(info, members_field);
@@ -72,8 +73,7 @@ inline session::config::legacy_group_info deserialize_legacy_group_info(JNIEnv *
     info_deserialized.hidden = hidden;
     info_deserialized.enc_pubkey = enc_pub_key_bytes;
     info_deserialized.enc_seckey = enc_sec_key_bytes;
-    // TODO: this
-    // info_deserialized.disappearing_timer
+    info_deserialized.disappearing_timer = std::chrono::seconds(env->GetLongField(info, disappearing_timer_field));
     env->ReleaseStringUTFChars(id, id_bytes);
     env->ReleaseStringUTFChars(name, name_bytes);
     return info_deserialized;
@@ -119,8 +119,8 @@ inline jobject serialize_legacy_group_info(JNIEnv *env, session::config::legacy_
     bool hidden = info.hidden;
 
     jclass legacy_group_class = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$LegacyGroupInfo");
-    jmethodID constructor = env->GetMethodID(legacy_group_class, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Z[B[BI)V");
-    jobject serialized = env->NewObject(legacy_group_class, constructor, session_id, name, members, hidden, enc_pubkey, enc_seckey, priority);
+    jmethodID constructor = env->GetMethodID(legacy_group_class, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Z[B[BIJ)V");
+    jobject serialized = env->NewObject(legacy_group_class, constructor, session_id, name, members, hidden, enc_pubkey, enc_seckey, priority, (jlong) info.disappearing_timer.count());
     return serialized;
 }
 

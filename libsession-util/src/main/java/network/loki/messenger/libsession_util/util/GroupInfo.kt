@@ -11,7 +11,8 @@ sealed class GroupInfo {
         val hidden: Boolean,
         val encPubKey: ByteArray,
         val encSecKey: ByteArray,
-        val priority: Int = 0
+        val priority: Int = 0,
+        val disappearingTimer: Long
     ): GroupInfo() {
         companion object {
             @Suppress("FunctionName")

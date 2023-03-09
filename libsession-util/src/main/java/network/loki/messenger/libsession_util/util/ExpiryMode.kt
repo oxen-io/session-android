@@ -1,7 +1,7 @@
 package network.loki.messenger.libsession_util.util
 
-sealed class ExpiryMode(val expiryMinutes: Long) {
+sealed class ExpiryMode(val expirySeconds: Long) {
     object NONE: ExpiryMode(0)
-    class AfterSend(minutes: Long): ExpiryMode(minutes)
-    class AfterRead(minutes: Long): ExpiryMode(minutes)
+    class AfterSend(seconds: Long): ExpiryMode(seconds)
+    class AfterRead(seconds: Long): ExpiryMode(seconds)
 }

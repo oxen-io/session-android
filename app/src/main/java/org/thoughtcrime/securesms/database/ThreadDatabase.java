@@ -514,7 +514,7 @@ public class ThreadDatabase extends Database {
   public void setLastSeen(long threadId, long timestamp) {
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
     ContentValues contentValues = new ContentValues(1);
-    long lastSeenTime = timestamp == -1 ? SnodeAPI.INSTANCE.getNowWithOffset() : timestamp;
+    long lastSeenTime = timestamp == -1 ? SnodeAPI.getNowWithOffset() : timestamp;
     contentValues.put(LAST_SEEN, lastSeenTime);
     db.beginTransaction();
     db.update(TABLE_NAME, contentValues, ID_WHERE, new String[] {String.valueOf(threadId)});

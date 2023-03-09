@@ -748,7 +748,7 @@ private fun MessageReceiver.handleClosedGroupMemberLeft(message: ClosedGroupCont
     }
 }
 
-private fun isValidGroupUpdate(group: GroupRecord, sentTimestamp: Long, senderPublicKey: String): Boolean  {
+private fun isValidGroupUpdate(group: GroupRecord, sentTimestamp: Long, senderPublicKey: String): Boolean {
     val oldMembers = group.members.map { it.serialize() }
     // Check that the message isn't from before the group was created
     if (group.formationTimestamp > sentTimestamp) {

@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.database
 import android.content.Context
 import android.net.Uri
 import network.loki.messenger.libsession_util.*
+import network.loki.messenger.libsession_util.util.BaseCommunityInfo
 import network.loki.messenger.libsession_util.util.Conversation
 import network.loki.messenger.libsession_util.util.UserPic
 import org.session.libsession.avatars.AvatarHelper
@@ -27,14 +28,19 @@ import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
+import org.session.libsession.messaging.sending_receiving.notifications.PushNotificationAPI
+import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPollerV2
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
 import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.messaging.utilities.UpdateMessageData
 import org.session.libsession.snode.OnionRequestAPI
+import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.*
 import org.session.libsession.utilities.Address.Companion.fromSerialized
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsignal.crypto.ecc.DjbECPrivateKey
+import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.messages.SignalServiceAttachmentPointer
 import org.session.libsignal.messages.SignalServiceGroup
@@ -49,7 +55,7 @@ import org.thoughtcrime.securesms.database.model.MessageId
 import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.groups.GroupManager
+import org.thoughtcrime.securesms.groups.ClosedGroupManager
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.jobs.RetrieveProfileAvatarJob
 import org.thoughtcrime.securesms.mms.PartAuthority
@@ -119,7 +125,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
                     // recipient is open group
                     recipient.isOpenGroupRecipient -> {
                         val openGroupJoinUrl = getOpenGroup(threadId)?.joinURL ?: return
-                        Conversation.Community.parseFullUrl(openGroupJoinUrl)?.let { (base, room, pubKey) ->
+                        BaseCommunityInfo.parseFullUrl(openGroupJoinUrl)?.let { (base, room, pubKey) ->
                             config.getOrConstructCommunity(base, room, pubKey)
                         } ?: return
                     }
@@ -269,6 +275,11 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         return DatabaseComponent.get(context).sessionJobDatabase().isJobCanceled(job)
     }
 
+    override fun cancelPendingMessageSendJobs(threadID: Long) {
+        val jobDb = DatabaseComponent.get(context).sessionJobDatabase()
+        jobDb.cancelPendingMessageSendJobs(threadID)
+    }
+
     override fun getAuthToken(room: String, server: String): String? {
         val id = "$server.$room"
         return DatabaseComponent.get(context).lokiAPIDatabase().getAuthToken(id)
@@ -361,6 +372,10 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
 
     private fun updateUserGroups(userGroups: UserGroupsConfig) {
         val threadDb = DatabaseComponent.get(context).threadDatabase()
+        val localUserPublicKey = getUserPublicKey() ?: return Log.w(
+            "Loki-DBG",
+            "No user public key when trying to update user groups from config"
+        )
         val communities = userGroups.allCommunityInfo()
         val lgc = userGroups.allLegacyGroupInfo()
         val allOpenGroups = getAllOpenGroups()
@@ -378,7 +393,14 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
             OpenGroupManager.delete(openGroup.server, openGroup.room, context)
         }
 
-//        GroupManager.deleteGroup()
+        toDeleteClosedGroups.forEach { deleteGroup ->
+            val threadId = getThreadId(deleteGroup.encodedId)
+            if (threadId == null) {
+                Log.w("Loki-DBG", "Existing group had no thread to delete")
+            } else {
+                ClosedGroupManager.silentlyRemoveGroup(context,threadId,GroupUtil.doubleDecodeGroupId(deleteGroup.encodedId), deleteGroup.encodedId, localUserPublicKey, delete = true)
+            }
+        }
 
         for (groupInfo in communities) {
             val groupBaseCommunity = groupInfo.community
@@ -407,8 +429,24 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
                 val admins = group.members.filter { it.value /*admin = true*/ }.keys.map { Address.fromSerialized(it) }
                 val groupId = GroupUtil.doubleEncodeGroupID(group.sessionId)
                 val title = group.name
-                val formationTimestamp = 0L
+                val formationTimestamp = SnodeAPI.nowWithOffset // TODO: formation timestamp for legacy ? current time?
                 createGroup(groupId, title, members, null, null, admins, formationTimestamp)
+                setProfileSharing(Address.fromSerialized(groupId), true)
+                // Add the group to the user's set of public keys to poll for
+                addClosedGroupPublicKey(group.sessionId)
+                // Store the encryption key pair
+                val keyPair = ECKeyPair(DjbECPublicKey(group.encPubKey), DjbECPrivateKey(group.encSecKey))
+                addClosedGroupEncryptionKeyPair(keyPair, group.sessionId, SnodeAPI.nowWithOffset)
+                // Set expiration timer
+                val expireTimer = group.expiration
+                setExpirationTimer(groupId, expireTimer)
+                // Notify the PN server
+                PushNotificationAPI.performOperation(PushNotificationAPI.ClosedGroupOperation.Subscribe, group.sessionId, localUserPublicKey)
+                // Notify the user
+                val threadID = getOrCreateThreadIdFor(Address.fromSerialized(groupId))
+                insertOutgoingInfoMessage(context, groupId, SignalServiceGroup.Type.CREATION, title, members.map { it.serialize() }, admins.map { it.serialize() }, threadID, formationTimestamp)
+                // Start polling
+                ClosedGroupPollerV2.shared.startPolling(group.sessionId)
             }
         }
     }
@@ -696,8 +734,8 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         DatabaseComponent.get(context).lokiAPIDatabase().removeClosedGroupPublicKey(groupPublicKey)
     }
 
-    override fun addClosedGroupEncryptionKeyPair(encryptionKeyPair: ECKeyPair, groupPublicKey: String) {
-        DatabaseComponent.get(context).lokiAPIDatabase().addClosedGroupEncryptionKeyPair(encryptionKeyPair, groupPublicKey)
+    override fun addClosedGroupEncryptionKeyPair(encryptionKeyPair: ECKeyPair, groupPublicKey: String, timestamp: Long) {
+        DatabaseComponent.get(context).lokiAPIDatabase().addClosedGroupEncryptionKeyPair(encryptionKeyPair, groupPublicKey, timestamp)
     }
 
     override fun removeAllClosedGroupEncryptionKeyPairs(groupPublicKey: String) {
@@ -716,7 +754,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
 
     override fun setExpirationTimer(groupID: String, duration: Int) {
         val recipient = Recipient.from(context, fromSerialized(groupID), false)
-        DatabaseComponent.get(context).recipientDatabase().setExpireMessages(recipient, duration);
+        DatabaseComponent.get(context).recipientDatabase().setExpireMessages(recipient, duration)
     }
 
     override fun setServerCapabilities(server: String, capabilities: List<String>) {
@@ -915,6 +953,11 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
     override fun isPinned(threadID: Long): Boolean {
         val threadDB = DatabaseComponent.get(context).threadDatabase()
         return threadDB.isPinned(threadID)
+    }
+
+    override fun deleteConversation(threadID: Long) {
+        val threadDB = DatabaseComponent.get(context).threadDatabase()
+        threadDB.deleteConversation(threadID)
     }
 
     override fun getAttachmentDataUri(attachmentId: AttachmentId): Uri {

@@ -67,6 +67,40 @@ namespace util {
         return community;
     }
 
+    jobject serialize_expiry(JNIEnv *env, const session::config::expiration_mode& mode, const std::chrono::seconds& time_seconds) {
+        jclass none = env->FindClass("network/loki/messenger/libsession_util/util/ExpiryMode$NONE");
+        jfieldID none_instance = env->GetStaticFieldID(none, "INSTANCE", "Lnetwork/loki/messenger/libsession_util/util/ExpiryMode$NONE;");
+        jclass after_send = env->FindClass("network/loki/messenger/libsession_util/util/ExpiryMode$AfterSend");
+        jmethodID send_init = env->GetMethodID(after_send, "<init>", "(J)V");
+        jclass after_read = env->FindClass("network/loki/messenger/libsession_util/util/ExpiryMode$AfterRead");
+        jmethodID read_init = env->GetMethodID(after_read, "<init>", "(J)V");
+
+        if (mode == session::config::expiration_mode::none) {
+            return env->GetStaticObjectField(none, none_instance);
+        } else if (mode == session::config::expiration_mode::after_send) {
+            return env->NewObject(after_send, send_init, time_seconds.count());
+        } else if (mode == session::config::expiration_mode::after_read) {
+            return env->NewObject(after_read, read_init, time_seconds.count());
+        }
+        return nullptr;
+    }
+
+    std::pair<session::config::expiration_mode, long> deserialize_expiry(JNIEnv *env, jobject expiry_mode) {
+        jclass parent = env->FindClass("network/loki/messenger/libsession_util/util/ExpiryMode");
+        jclass after_read = env->FindClass("network/loki/messenger/libsession_util/util/ExpiryMode$AfterRead");
+        jclass after_send = env->FindClass("network/loki/messenger/libsession_util/util/ExpiryMode$AfterSend");
+        jfieldID duration_seconds = env->GetFieldID(parent, "expirySeconds", "J");
+
+        jclass object_class = env->GetObjectClass(expiry_mode);
+
+        if (object_class == after_read) {
+            return std::pair(session::config::expiration_mode::after_read, env->GetLongField(expiry_mode, duration_seconds));
+        } else if (object_class == after_send) {
+            return std::pair(session::config::expiration_mode::after_send, env->GetLongField(expiry_mode, duration_seconds));
+        }
+        return std::pair(session::config::expiration_mode::none, 0);
+    }
+
 }
 
 extern "C"
