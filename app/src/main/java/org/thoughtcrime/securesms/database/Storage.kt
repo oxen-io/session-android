@@ -9,6 +9,7 @@ import network.loki.messenger.libsession_util.UserGroupsConfig
 import network.loki.messenger.libsession_util.UserProfile
 import network.loki.messenger.libsession_util.util.BaseCommunityInfo
 import network.loki.messenger.libsession_util.util.Conversation
+import network.loki.messenger.libsession_util.util.ExpiryMode
 import network.loki.messenger.libsession_util.util.UserPic
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.database.StorageProtocol
@@ -359,6 +360,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
             setRecipientApprovedMe(recipient, contact.approvedMe)
             profileManager.setName(context, recipient, contact.name)
             profileManager.setNickname(context, recipient, contact.nickname)
+
             if (contact.profilePicture != UserPic.DEFAULT) {
                 val (url, key) = contact.profilePicture
                 if (key.size != ProfileKeyUtil.PROFILE_KEY_BYTES) return@forEach
@@ -460,7 +462,6 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
                 addClosedGroupEncryptionKeyPair(keyPair, group.sessionId, SnodeAPI.nowWithOffset)
                 // Set expiration timer
                 val expireTimer = group.disappearingTimer
-                setExpirationTimer()
                 setExpirationTimer(groupId, expireTimer.toInt())
                 // Notify the PN server
                 PushNotificationAPI.performOperation(PushNotificationAPI.ClosedGroupOperation.Subscribe, group.sessionId, localUserPublicKey)
@@ -774,9 +775,21 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
             .updateTimestampUpdated(groupID, updatedTimestamp)
     }
 
-    override fun setExpirationTimer(groupID: String, duration: Int) {
-        val recipient = Recipient.from(context, fromSerialized(groupID), false)
+    override fun setExpirationTimer(address: String, duration: Int) {
+        val recipient = Recipient.from(context, fromSerialized(address), false)
         DatabaseComponent.get(context).recipientDatabase().setExpireMessages(recipient, duration)
+        if (recipient.isContactRecipient) {
+            configFactory.contacts?.upsertContact(address) {
+                this.expiryMode = if (duration != 0) {
+                    ExpiryMode.AfterRead(duration.toLong())
+                } else { // = 0 / delete
+                    ExpiryMode.NONE
+                }
+            }
+            if (configFactory.contacts?.needsPush() == true) {
+                ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+            }
+        }
     }
 
     override fun setServerCapabilities(server: String, capabilities: List<String>) {

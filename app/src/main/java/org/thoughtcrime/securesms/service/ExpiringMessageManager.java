@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.service;
 import android.content.Context;
 
 import org.jetbrains.annotations.NotNull;
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate;
 import org.session.libsession.messaging.messages.signal.IncomingMediaMessage;
 import org.session.libsession.messaging.messages.signal.OutgoingExpirationUpdateMessage;
@@ -123,7 +124,7 @@ public class ExpiringMessageManager implements SSKEnvironment.MessageExpirationM
       database.insertSecureDecryptedMessageInbox(mediaMessage, -1,  true);
 
       //set the timer to the conversation
-      DatabaseComponent.get(context).recipientDatabase().setExpireMessages(recipient, duration);
+      MessagingModuleConfiguration.getShared().getStorage().setExpirationTimer(recipient.getAddress().serialize(), duration);
 
     } catch (IOException | MmsException ioe) {
       Log.e("Loki", "Failed to insert expiration update message.");
@@ -149,7 +150,7 @@ public class ExpiringMessageManager implements SSKEnvironment.MessageExpirationM
         recipient = Recipient.from(context, Address.fromSerialized(GroupUtil.doubleEncodeGroupID(groupId)), false);
       }
       //set the timer to the conversation
-      DatabaseComponent.get(context).recipientDatabase().setExpireMessages(recipient, duration);
+      MessagingModuleConfiguration.getShared().getStorage().setExpirationTimer(recipient.getAddress().serialize(), duration);
 
     } catch (MmsException | IOException ioe) {
       Log.e("Loki", "Failed to insert expiration update message.");

@@ -1052,7 +1052,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             if (group?.isActive == false) { return }
         }
         ExpirationDialog.show(this, thread.expireMessages) { expirationTime: Int ->
-            recipientDb.setExpireMessages(thread, expirationTime)
+            storage.setExpirationTimer(thread.address.serialize(), expirationTime)
             val message = ExpirationTimerUpdate(expirationTime)
             message.recipient = thread.address.serialize()
             message.sentTimestamp = System.currentTimeMillis()
