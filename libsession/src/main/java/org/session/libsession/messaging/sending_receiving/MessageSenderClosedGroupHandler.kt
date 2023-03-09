@@ -10,6 +10,7 @@ import org.session.libsession.messaging.messages.control.ClosedGroupControlMessa
 import org.session.libsession.messaging.sending_receiving.MessageSender.Error
 import org.session.libsession.messaging.sending_receiving.notifications.PushNotificationAPI
 import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPollerV2
+import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Address.Companion.fromSerialized
 import org.session.libsession.utilities.GroupUtil
@@ -17,14 +18,14 @@ import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.crypto.ecc.Curve
 import org.session.libsignal.crypto.ecc.ECKeyPair
-import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.messages.SignalServiceGroup
 import org.session.libsignal.protos.SignalServiceProtos
+import org.session.libsignal.utilities.Hex
+import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.ThreadUtils
+import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.hexEncodedPublicKey
 import org.session.libsignal.utilities.removingIdPrefixIfNeeded
-import org.session.libsignal.utilities.Hex
-import org.session.libsignal.utilities.ThreadUtils
-import org.session.libsignal.utilities.Log
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -68,7 +69,7 @@ fun MessageSender.create(name: String, members: Collection<String>): Promise<Str
         // Add the group to the user's set of public keys to poll for
         storage.addClosedGroupPublicKey(groupPublicKey)
         // Store the encryption key pair
-        storage.addClosedGroupEncryptionKeyPair(encryptionKeyPair, groupPublicKey)
+        storage.addClosedGroupEncryptionKeyPair(encryptionKeyPair, groupPublicKey, sentTime)
         // Notify the user
         val threadID = storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
         storage.insertOutgoingInfoMessage(context, groupID, SignalServiceGroup.Type.CREATION, name, members, admins, threadID, sentTime)
@@ -282,7 +283,7 @@ fun MessageSender.generateAndSendNewEncryptionKeyPair(groupPublicKey: String, ta
     // Distribute it
     sendEncryptionKeyPair(groupPublicKey, newKeyPair, targetMembers)?.success {
         // Store it * after * having sent out the message to the group
-        storage.addClosedGroupEncryptionKeyPair(newKeyPair, groupPublicKey)
+        storage.addClosedGroupEncryptionKeyPair(newKeyPair, groupPublicKey, SnodeAPI.nowWithOffset)
         pendingKeyPairs[groupPublicKey] = Optional.absent()
     }
 }
@@ -298,7 +299,7 @@ fun MessageSender.sendEncryptionKeyPair(groupPublicKey: String, newKeyPair: ECKe
         ClosedGroupControlMessage.KeyPairWrapper(publicKey, ByteString.copyFrom(ciphertext))
     }
     val kind = ClosedGroupControlMessage.Kind.EncryptionKeyPair(ByteString.copyFrom(Hex.fromStringCondensed(groupPublicKey)), wrappers)
-    val sentTime = System.currentTimeMillis()
+    val sentTime = SnodeAPI.nowWithOffset
     val closedGroupControlMessage = ClosedGroupControlMessage(kind)
     closedGroupControlMessage.sentTimestamp = sentTime
     return if (force) {

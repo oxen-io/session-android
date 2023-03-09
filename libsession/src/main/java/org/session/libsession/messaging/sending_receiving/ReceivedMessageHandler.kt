@@ -152,7 +152,7 @@ private fun handleConfigurationMessage(message: ConfigurationMessage) {
     for (closedGroup in message.closedGroups) {
         if (allClosedGroupPublicKeys.contains(closedGroup.publicKey)) {
             // just handle the closed group encryption key pairs to avoid sync'd devices getting out of sync
-            storage.addClosedGroupEncryptionKeyPair(closedGroup.encryptionKeyPair!!, closedGroup.publicKey)
+            storage.addClosedGroupEncryptionKeyPair(closedGroup.encryptionKeyPair!!, closedGroup.publicKey, message.sentTimestamp!!)
         } else if (firstTimeSync) {
             // only handle new closed group if it's first time sync
             handleNewClosedGroup(message.sender!!, message.sentTimestamp!!, closedGroup.publicKey, closedGroup.name,
@@ -475,7 +475,7 @@ private fun handleNewClosedGroup(sender: String, sentTimestamp: Long, groupPubli
     // Add the group to the user's set of public keys to poll for
     storage.addClosedGroupPublicKey(groupPublicKey)
     // Store the encryption key pair
-    storage.addClosedGroupEncryptionKeyPair(encryptionKeyPair, groupPublicKey)
+    storage.addClosedGroupEncryptionKeyPair(encryptionKeyPair, groupPublicKey, sentTimestamp)
     // Set expiration timer
     storage.setExpirationTimer(groupID, expireTimer)
     // Notify the PN server
@@ -527,7 +527,7 @@ private fun MessageReceiver.handleClosedGroupEncryptionKeyPair(message: ClosedGr
         Log.d("Loki", "Ignoring duplicate closed group encryption key pair.")
         return
     }
-    storage.addClosedGroupEncryptionKeyPair(keyPair, groupPublicKey)
+    storage.addClosedGroupEncryptionKeyPair(keyPair, groupPublicKey, message.sentTimestamp!!)
     Log.d("Loki", "Received a new closed group encryption key pair.")
 }
 
