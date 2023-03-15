@@ -34,6 +34,7 @@ import com.annimon.stream.Stream
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityConversationV2Binding
 import network.loki.messenger.databinding.ViewVisibleMessageBinding
@@ -355,7 +356,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             // transitioning to the activity
             weakActivity.get()?.adapter ?: return@launch
 
-            runOnUiThread {
+            withContext(Dispatchers.Main) {
                 setUpRecyclerView()
                 setUpTypingObserver()
                 setUpRecipientObserver()
