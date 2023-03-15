@@ -94,19 +94,19 @@ class BatchMessageReceiveJob(
                 } catch (e: Exception) {
                     when (e) {
                         is MessageReceiver.Error.DuplicateMessage, MessageReceiver.Error.SelfSend -> {
-                            Log.i(TAG, "Couldn't receive message, failed with error: ${e.message}")
+                            Log.i(TAG, "Couldn't receive message, failed with error: ${e.message} (id: $id)")
                         }
                         is MessageReceiver.Error -> {
                             if (!e.isRetryable) {
-                                Log.e(TAG, "Couldn't receive message, failed permanently", e)
+                                Log.e(TAG, "Couldn't receive message, failed permanently (id: $id)", e)
                             }
                             else {
-                                Log.e(TAG, "Couldn't receive message, failed", e)
+                                Log.e(TAG, "Couldn't receive message, failed (id: $id)", e)
                                 failures += messageParameters
                             }
                         }
                         else -> {
-                            Log.e(TAG, "Couldn't receive message, failed", e)
+                            Log.e(TAG, "Couldn't receive message, failed (id: $id)", e)
                             failures += messageParameters
                         }
                     }
@@ -155,11 +155,11 @@ class BatchMessageReceiveJob(
                                     else -> MessageReceiver.handle(message, proto, openGroupID)
                                 }
                             } catch (e: Exception) {
-                                Log.e(TAG, "Couldn't process message.", e)
+                                Log.e(TAG, "Couldn't process message (id: $id)", e)
                                 if (e is MessageReceiver.Error && !e.isRetryable) {
-                                    Log.e(TAG, "Message failed permanently",e)
+                                    Log.e(TAG, "Message failed permanently (id: $id)", e)
                                 } else {
-                                    Log.e(TAG, "Message failed",e)
+                                    Log.e(TAG, "Message failed (id: $id)", e)
                                     failures += parameters
                                 }
                             }
@@ -196,12 +196,12 @@ class BatchMessageReceiveJob(
     }
 
     private fun handleSuccess(dispatcherName: String) {
-        Log.i(TAG, "Completed processing of ${messages.size} messages")
+        Log.i(TAG, "Completed processing of ${messages.size} messages (id: $id)")
         this.delegate?.handleJobSucceeded(this, dispatcherName)
     }
 
     private fun handleFailure(dispatcherName: String) {
-        Log.i(TAG, "Handling failure of ${failures.size} messages (${messages.size - failures.size} processed successfully)")
+        Log.i(TAG, "Handling failure of ${failures.size} messages (${messages.size - failures.size} processed successfully) (id: $id)")
         this.delegate?.handleJobFailed(this, dispatcherName, Exception("One or more jobs resulted in failure"))
     }
 

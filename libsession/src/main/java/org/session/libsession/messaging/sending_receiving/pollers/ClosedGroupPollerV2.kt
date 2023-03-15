@@ -54,10 +54,9 @@ class ClosedGroupPollerV2 {
         setUpPolling(groupPublicKey)
     }
 
-    fun stop() {
-        val storage = MessagingModuleConfiguration.shared.storage
-        val allGroupPublicKeys = storage.getAllClosedGroupPublicKeys()
-        allGroupPublicKeys.iterator().forEach { stopPolling(it) }
+    fun stopAll() {
+        futures.forEach { it.value.cancel(false) }
+        isPolling.forEach { isPolling[it.key] = false }
     }
 
     fun stopPolling(groupPublicKey: String) {
