@@ -73,6 +73,7 @@ fun MessageSender.create(name: String, members: Collection<String>): Promise<Str
         // Notify the user
         val threadID = storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
         storage.insertOutgoingInfoMessage(context, groupID, SignalServiceGroup.Type.CREATION, name, members, admins, threadID, sentTime)
+        storage.createInitialConfigGroup(groupPublicKey, name, GroupUtil.createConfigMemberMap(members, admins), sentTime, encryptionKeyPair)
         // Notify the PN server
         PushNotificationAPI.performOperation(PushNotificationAPI.ClosedGroupOperation.Subscribe, groupPublicKey, userPublicKey)
         // Start polling
@@ -82,24 +83,6 @@ fun MessageSender.create(name: String, members: Collection<String>): Promise<Str
     }
     // Return
     return deferred.promise
-}
-
-fun MessageSender.update(groupPublicKey: String, members: List<String>, name: String) {
-    val context = MessagingModuleConfiguration.shared.context
-    val storage = MessagingModuleConfiguration.shared.storage
-    val groupID = GroupUtil.doubleEncodeGroupID(groupPublicKey)
-    val group = storage.getGroup(groupID) ?: run {
-        Log.d("Loki", "Can't update nonexistent closed group.")
-        throw Error.NoThread
-    }
-    // Update name if needed
-    if (name != group.title) { setName(groupPublicKey, name) }
-    // Add members if needed
-    val addedMembers = members - group.members.map { it.serialize() }
-    if (!addedMembers.isEmpty()) { addMembers(groupPublicKey, addedMembers) }
-    // Remove members if needed
-    val removedMembers = group.members.map { it.serialize() } - members
-    if (removedMembers.isEmpty()) { removeMembers(groupPublicKey, removedMembers) }
 }
 
 fun MessageSender.setName(groupPublicKey: String, newName: String) {

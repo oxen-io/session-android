@@ -233,3 +233,23 @@ Java_network_loki_messenger_libsession_1util_UserGroupsConfig_allLegacyGroupInfo
     jobject legacy_stack = iterator_as_java_stack(env, conf->begin_legacy_groups(), conf->end());
     return legacy_stack;
 }
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_network_loki_messenger_libsession_1util_UserGroupsConfig_eraseCommunity(JNIEnv *env,
+                                                                             jobject thiz,
+                                                                             jobject base_community_info) {
+    auto conf = ptrToUserGroups(env, thiz);
+    auto base_community = util::deserialize_base_community(env, base_community_info);
+    return conf->erase_community(base_community.base_url(),base_community.room());
+}
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_network_loki_messenger_libsession_1util_UserGroupsConfig_eraseLegacyGroup(JNIEnv *env,
+                                                                               jobject thiz,
+                                                                               jstring session_id) {
+    auto conf = ptrToUserGroups(env, thiz);
+    auto session_id_bytes = env->GetStringUTFChars(session_id, nullptr);
+    bool return_bool = conf->erase_legacy_group(session_id_bytes);
+    env->ReleaseStringUTFChars(session_id, session_id_bytes);
+    return return_bool;
+}

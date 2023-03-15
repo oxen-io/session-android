@@ -257,13 +257,13 @@ class DefaultConversationRepository @Inject constructor(
 
     override suspend fun deleteThread(threadId: Long): ResultOf<Unit> {
         sessionJobDb.cancelPendingMessageSendJobs(threadId)
-        threadDb.deleteConversation(threadId)
+        storage.deleteConversation(threadId)
         return ResultOf.Success(Unit)
     }
 
     override suspend fun deleteMessageRequest(thread: ThreadRecord): ResultOf<Unit> {
         sessionJobDb.cancelPendingMessageSendJobs(thread.threadId)
-        threadDb.deleteConversation(thread.threadId)
+        storage.deleteConversation(thread.threadId)
         return ResultOf.Success(Unit)
     }
 
@@ -290,7 +290,7 @@ class DefaultConversationRepository @Inject constructor(
 
     override fun declineMessageRequest(threadId: Long) {
         sessionJobDb.cancelPendingMessageSendJobs(threadId)
-        threadDb.deleteConversation(threadId)
+        storage.deleteConversation(threadId)
     }
 
     override fun hasReceived(threadId: Long): Boolean {

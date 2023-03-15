@@ -16,6 +16,7 @@ import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
@@ -28,16 +29,28 @@ import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.ThemeUtil
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.contacts.SelectContactsActivity
+import org.thoughtcrime.securesms.database.Storage
+import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
+import org.thoughtcrime.securesms.groups.ClosedGroupManager.updateLegacyGroup
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.util.fadeIn
 import org.thoughtcrime.securesms.util.fadeOut
 import java.io.IOException
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
+
+    @Inject
+    lateinit var groupConfigFactory: ConfigFactory
+    @Inject
+    lateinit var storage: Storage
+
     private val originalMembers = HashSet<String>()
     private val zombies = HashSet<String>()
     private val members = HashSet<String>()
@@ -306,6 +319,7 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
             promise.successUi {
                 loaderContainer.fadeOut()
                 isLoading = false
+                updateGroupConfig()
                 finish()
             }.failUi { exception ->
                 val message = if (exception is MessageSender.Error) exception.description else "An error occurred"
@@ -316,5 +330,13 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
         }
     }
 
-    class GroupMembers(val members: List<String>, val zombieMembers: List<String>) { }
+    private fun updateGroupConfig() {
+        val latestRecipient = storage.getRecipientSettings(Address.fromSerialized(groupID))
+            ?: return Log.w("Loki", "No recipient settings when trying to update group config")
+        val latestGroup = storage.getGroup(groupID)
+            ?: return Log.w("Loki", "No group record when trying to update group config")
+        groupConfigFactory.updateLegacyGroup(latestRecipient, latestGroup)
+    }
+
+    class GroupMembers(val members: List<String>, val zombieMembers: List<String>)
 }

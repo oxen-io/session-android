@@ -437,7 +437,22 @@ private fun MessageReceiver.handleClosedGroupControlMessage(message: ClosedGroup
         is ClosedGroupControlMessage.Kind.MembersRemoved -> handleClosedGroupMembersRemoved(message)
         is ClosedGroupControlMessage.Kind.MemberLeft -> handleClosedGroupMemberLeft(message)
     }
+    if (message.kind !is ClosedGroupControlMessage.Kind.New) {
+        // update the config
+        val closedGroupPublicKey = message.getPublicKey()
+        val storage = MessagingModuleConfiguration.shared.storage
+        storage.updateGroupConfig(closedGroupPublicKey)
+    }
 }
+
+private fun ClosedGroupControlMessage.getPublicKey(): String = kind!!.let { when (it) {
+    is ClosedGroupControlMessage.Kind.New -> it.publicKey.toByteArray().toHexString()
+    is ClosedGroupControlMessage.Kind.EncryptionKeyPair -> it.publicKey?.toByteArray()?.toHexString() ?: groupPublicKey!!
+    is ClosedGroupControlMessage.Kind.MemberLeft -> groupPublicKey!!
+    is ClosedGroupControlMessage.Kind.MembersAdded -> groupPublicKey!!
+    is ClosedGroupControlMessage.Kind.MembersRemoved -> groupPublicKey!!
+    is ClosedGroupControlMessage.Kind.NameChange -> groupPublicKey!!
+}}
 
 private fun MessageReceiver.handleNewClosedGroup(message: ClosedGroupControlMessage) {
     val kind = message.kind!! as? ClosedGroupControlMessage.Kind.New ?: return
@@ -476,6 +491,7 @@ private fun handleNewClosedGroup(sender: String, sentTimestamp: Long, groupPubli
     storage.addClosedGroupPublicKey(groupPublicKey)
     // Store the encryption key pair
     storage.addClosedGroupEncryptionKeyPair(encryptionKeyPair, groupPublicKey, sentTimestamp)
+    storage.createInitialConfigGroup(groupPublicKey, name, GroupUtil.createConfigMemberMap(members, admins), formationTimestamp, encryptionKeyPair)
     // Set expiration timer
     storage.setExpirationTimer(groupID, expireTimer)
     // Notify the PN server

@@ -7,10 +7,7 @@ import network.loki.messenger.libsession_util.Contacts
 import network.loki.messenger.libsession_util.ConversationVolatileConfig
 import network.loki.messenger.libsession_util.UserGroupsConfig
 import network.loki.messenger.libsession_util.UserProfile
-import network.loki.messenger.libsession_util.util.BaseCommunityInfo
-import network.loki.messenger.libsession_util.util.Conversation
-import network.loki.messenger.libsession_util.util.ExpiryMode
-import network.loki.messenger.libsession_util.util.UserPic
+import network.loki.messenger.libsession_util.util.*
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.BlindedIdMapping
@@ -468,6 +465,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
                 // Notify the user
                 val threadID = getOrCreateThreadIdFor(Address.fromSerialized(groupId))
                 insertOutgoingInfoMessage(context, groupId, SignalServiceGroup.Type.CREATION, title, members.map { it.serialize() }, admins.map { it.serialize() }, threadID, formationTimestamp)
+                // Don't create config group here, it's from a config update
                 // Start polling
                 ClosedGroupPollerV2.shared.startPolling(group.sessionId)
             }
@@ -671,12 +669,53 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
 
     override fun createGroup(groupId: String, title: String?, members: List<Address>, avatar: SignalServiceAttachmentPointer?, relay: String?, admins: List<Address>, formationTimestamp: Long) {
         DatabaseComponent.get(context).groupDatabase().create(groupId, title, members, avatar, relay, admins, formationTimestamp)
+    }
+
+    override fun createInitialConfigGroup(groupPublicKey: String, name: String, members: Map<String, Boolean>, formationTimestamp: Long, encryptionKeyPair: ECKeyPair) {
         val volatiles = configFactory.convoVolatile ?: return
-        val groupPublicKey = GroupUtil.doubleDecodeGroupId(groupId)
+        val userGroups = configFactory.userGroups ?: return
         val groupVolatileConfig = volatiles.getOrConstructLegacyGroup(groupPublicKey)
         groupVolatileConfig.lastRead = formationTimestamp
         volatiles.set(groupVolatileConfig)
+        val groupInfo = GroupInfo.LegacyGroupInfo(
+            sessionId = groupPublicKey,
+            name = name,
+            members = members,
+            hidden = false,
+            encPubKey = encryptionKeyPair.publicKey.serialize(),
+            encSecKey = encryptionKeyPair.privateKey.serialize(),
+            disappearingTimer = 0L
+        )
+        // shouldn't exist, don't use getOrConstruct + copy
+        userGroups.set(groupInfo)
         ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+    }
+
+    override fun updateGroupConfig(groupPublicKey: String) {
+        val groupID = GroupUtil.doubleEncodeGroupID(groupPublicKey)
+        val groupAddress = fromSerialized(groupID)
+        // TODO: probably add a check in here for isActive?
+        // TODO: also check if local user is a member / maybe run delete otherwise?
+        val existingGroup = getGroup(groupID)
+            ?: return Log.w("Loki-DBG", "No existing group for ${groupPublicKey.take(4)}...${groupPublicKey.takeLast(4)} when updating group config")
+        val userGroups = configFactory.userGroups ?: return
+        val name = existingGroup.title
+        val admins = existingGroup.admins.map { it.serialize() }
+        val members = existingGroup.members.map { it.serialize() }
+        val membersMap = GroupUtil.createConfigMemberMap(admins = admins, members = members)
+        val latestKeyPair = getLatestClosedGroupEncryptionKeyPair(groupPublicKey)
+            ?: return Log.w("Loki-DBG", "No latest closed group encryption key pair for ${groupPublicKey.take(4)}...${groupPublicKey.takeLast(4)} when updating group config")
+        val recipientSettings = getRecipientSettings(groupAddress) ?: return
+        val threadID = getThreadId(groupAddress) ?: return
+        val groupInfo = userGroups.getOrConstructLegacyGroupInfo(groupPublicKey).copy(
+            name = name,
+            members = membersMap,
+            encPubKey = latestKeyPair.publicKey.serialize(),
+            encSecKey = latestKeyPair.privateKey.serialize(),
+            priority = if (isPinned(threadID)) 1 else 0,
+            disappearingTimer = recipientSettings.expireMessages.toLong()
+        )
+        userGroups.set(groupInfo)
     }
 
     override fun isGroupActive(groupPublicKey: String): Boolean {

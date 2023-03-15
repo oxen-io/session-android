@@ -625,7 +625,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                     OpenGroupManager.delete(v2OpenGroup.server, v2OpenGroup.room, this@HomeActivity)
                 } else {
                     lifecycleScope.launch(Dispatchers.IO) {
-                        threadDb.deleteConversation(threadID)
+                        storage.deleteConversation(threadID)
                     }
                 }
                 // Update the badge count

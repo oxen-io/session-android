@@ -6,11 +6,7 @@ import network.loki.messenger.libsession_util.Contacts
 import network.loki.messenger.libsession_util.ConversationVolatileConfig
 import network.loki.messenger.libsession_util.UserGroupsConfig
 import network.loki.messenger.libsession_util.UserProfile
-import network.loki.messenger.libsession_util.util.BaseCommunityInfo
-import network.loki.messenger.libsession_util.util.Contact
-import network.loki.messenger.libsession_util.util.Conversation
-import network.loki.messenger.libsession_util.util.GroupInfo
-import network.loki.messenger.libsession_util.util.UserPic
+import network.loki.messenger.libsession_util.util.*
 import nl.komponents.kovenant.Promise
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.ConfigurationSyncJob
@@ -21,6 +17,7 @@ import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
+import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.Log
@@ -163,7 +160,8 @@ object ConfigurationMessageUtilities {
                 approved = settings.isApproved,
                 approvedMe = settings.hasApprovedMe(),
                 profilePicture = userPic ?: UserPic.DEFAULT,
-                priority = if (isPinned) 1 else 0
+                priority = if (isPinned) 1 else 0,
+                expiryMode = if (settings.expireMessages == 0) ExpiryMode.NONE else ExpiryMode.AfterRead(settings.expireMessages.toLong())
             )
             contactConfig.set(contactInfo)
         }
@@ -185,7 +183,7 @@ object ConfigurationMessageUtilities {
                 val contact = when {
                     recipient.isOpenGroupRecipient -> {
                         val openGroup = storage.getOpenGroup(current.threadId) ?: continue
-                        val (base, room, pubKey) = Conversation.Community.parseFullUrl(openGroup.joinURL) ?: continue
+                        val (base, room, pubKey) = BaseCommunityInfo.parseFullUrl(openGroup.joinURL) ?: continue
                         convoConfig.getOrConstructCommunity(base, room, pubKey)
                     }
                     recipient.isClosedGroupRecipient -> {
@@ -229,7 +227,9 @@ object ConfigurationMessageUtilities {
         }
 
         val allLgc = storage.getAllGroups().filter { it.isClosedGroup }.mapNotNull { group ->
-            val groupPublicKey = GroupUtil.doubleDecodeGroupID(group.encodedId).toHexString()
+            val groupAddress = Address.fromSerialized(group.encodedId)
+            val groupPublicKey = GroupUtil.doubleDecodeGroupID(groupAddress.serialize()).toHexString()
+            val recipient = storage.getRecipientSettings(groupAddress) ?: return@mapNotNull null
             val encryptionKeyPair = storage.getLatestClosedGroupEncryptionKeyPair(groupPublicKey) ?: return@mapNotNull null
             val threadId = storage.getThreadId(group.encodedId)
             val isPinned = threadId?.let { storage.isPinned(threadId) } ?: false
@@ -243,7 +243,8 @@ object ConfigurationMessageUtilities {
                 hidden = threadId == null,
                 priority = if (isPinned) 1 else 0,
                 encPubKey = encryptionKeyPair.publicKey.serialize(),
-                encSecKey = encryptionKeyPair.privateKey.serialize()
+                encSecKey = encryptionKeyPair.privateKey.serialize(),
+                disappearingTimer = recipient.expireMessages.toLong()
             )
         }
         (allOpenGroups + allLgc).forEach { groupInfo ->
