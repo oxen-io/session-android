@@ -159,6 +159,7 @@ class UserGroupsConfig(pointer: Long): ConfigBase(pointer) {
     external fun set(groupInfo: GroupInfo)
     external fun erase(communityInfo: GroupInfo)
     external fun eraseCommunity(baseCommunityInfo: BaseCommunityInfo): Boolean
+    external fun eraseCommunity(server: String, room: String): Boolean
     external fun eraseLegacyGroup(sessionId: String): Boolean
     external fun sizeCommunityInfo(): Int
     external fun sizeLegacyGroupInfo(): Int

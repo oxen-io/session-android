@@ -626,10 +626,12 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 } else {
                     lifecycleScope.launch(Dispatchers.IO) {
                         storage.deleteConversation(threadID)
+                        // Update the badge count
+                        withContext(Dispatchers.Main) {
+                            ApplicationContext.getInstance(context).messageNotifier.updateNotification(context)
+                        }
                     }
                 }
-                // Update the badge count
-                ApplicationContext.getInstance(context).messageNotifier.updateNotification(context)
                 // Notify the user
                 val toastMessage = if (recipient.isGroupRecipient) R.string.MessageRecord_left_group else R.string.activity_home_conversation_deleted_message
                 Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show()

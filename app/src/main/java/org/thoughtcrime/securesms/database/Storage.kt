@@ -411,7 +411,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         val toAddCommunities = communities.filter { it.community.fullUrl() !in existingCommunities.map { it.value.joinURL } }
 
         val existingJoinUrls = existingCommunities.values.map { it.joinURL }
-        val existingClosedGroups = getAllGroups()
+        val existingClosedGroups = getAllGroups().filter { it.isClosedGroup }
         val lgcIds = lgc.map { it.sessionId }
         val toDeleteClosedGroups = existingClosedGroups.filter { group ->
             GroupUtil.doubleDecodeGroupId(group.encodedId) !in lgcIds
@@ -1062,6 +1062,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
     }
 
     override fun deleteConversation(threadID: Long) {
+        // TODO: delete from either contacts / convo volatile or the closed groups
         val threadDB = DatabaseComponent.get(context).threadDatabase()
         threadDB.deleteConversation(threadID)
     }

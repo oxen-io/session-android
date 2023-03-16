@@ -115,12 +115,13 @@ JNIEXPORT void JNICALL
 Java_network_loki_messenger_libsession_1util_UserGroupsConfig_set__Lnetwork_loki_messenger_libsession_1util_util_GroupInfo_2(
         JNIEnv *env, jobject thiz, jobject group_info) {
     auto conf = ptrToUserGroups(env, thiz);
-    auto communityInfo = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$CommunityGroupInfo");
-    auto legacyInfo = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$LegacyGroupInfo");
-    if (env->GetObjectClass(group_info) == communityInfo) {
+    auto community_info = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$CommunityGroupInfo");
+    auto legacy_info = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$LegacyGroupInfo");
+    auto object_class = env->GetObjectClass(group_info);
+    if (env->IsSameObject(community_info, object_class)) {
         auto deserialized = deserialize_community_info(env, group_info, conf);
         conf->set(deserialized);
-    } else if (env->GetObjectClass(group_info) == legacyInfo) {
+    } else if (env->IsSameObject(legacy_info, object_class)) {
         auto deserialized = deserialize_legacy_group_info(env, group_info, conf);
         conf->set(deserialized);
     }
@@ -214,15 +215,34 @@ Java_network_loki_messenger_libsession_1util_UserGroupsConfig_allLegacyGroupInfo
     jobject legacy_stack = iterator_as_java_stack(env, conf->begin_legacy_groups(), conf->end());
     return legacy_stack;
 }
+
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_network_loki_messenger_libsession_1util_UserGroupsConfig_eraseCommunity(JNIEnv *env,
+Java_network_loki_messenger_libsession_1util_UserGroupsConfig_eraseCommunity__Lnetwork_loki_messenger_libsession_1util_util_BaseCommunityInfo_2(JNIEnv *env,
                                                                              jobject thiz,
                                                                              jobject base_community_info) {
     auto conf = ptrToUserGroups(env, thiz);
     auto base_community = util::deserialize_base_community(env, base_community_info);
     return conf->erase_community(base_community.base_url(),base_community.room());
 }
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_network_loki_messenger_libsession_1util_UserGroupsConfig_eraseCommunity__Ljava_lang_String_2Ljava_lang_String_2(
+        JNIEnv *env, jobject thiz, jstring server, jstring room) {
+    auto conf = ptrToUserGroups(env, thiz);
+    auto server_bytes = env->GetStringUTFChars(server, nullptr);
+    auto room_bytes = env->GetStringUTFChars(room, nullptr);
+    auto community = conf->get_community(server_bytes, room_bytes);
+    bool deleted = false;
+    if (community) {
+        deleted = conf->erase(*community);
+    }
+    env->ReleaseStringUTFChars(server, server_bytes);
+    env->ReleaseStringUTFChars(room, room_bytes);
+    return deleted;
+}
+
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_network_loki_messenger_libsession_1util_UserGroupsConfig_eraseLegacyGroup(JNIEnv *env,

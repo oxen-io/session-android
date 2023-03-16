@@ -9,6 +9,7 @@ import network.loki.messenger.libsession_util.UserProfile
 import org.session.libsession.utilities.ConfigFactoryProtocol
 import org.session.libsession.utilities.ConfigFactoryUpdateListener
 import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage
+import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.database.ConfigDatabase
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import java.util.concurrent.Executors
@@ -130,15 +131,19 @@ class ConfigFactory(private val context: Context,
 
     override fun persist(forConfigObject: ConfigBase) {
         factoryExecutor.submit {
-            listeners.forEach { listener ->
-                listener.notifyUpdates(forConfigObject)
-            }
-            when (forConfigObject) {
-                is UserProfile -> persistUserConfigDump()
-                is Contacts -> persistContactsConfigDump()
-                is ConversationVolatileConfig -> persistConvoVolatileConfigDump()
-                is UserGroupsConfig -> persistUserGroupsConfigDump()
-                else -> throw UnsupportedOperationException("Can't support type of ${forConfigObject::class.simpleName} yet")
+            try {
+                listeners.forEach { listener ->
+                    listener.notifyUpdates(forConfigObject)
+                }
+                when (forConfigObject) {
+                    is UserProfile -> persistUserConfigDump()
+                    is Contacts -> persistContactsConfigDump()
+                    is ConversationVolatileConfig -> persistConvoVolatileConfigDump()
+                    is UserGroupsConfig -> persistUserGroupsConfigDump()
+                    else -> throw UnsupportedOperationException("Can't support type of ${forConfigObject::class.simpleName} yet")
+                }
+            } catch (e: Exception){
+                Log.e("Loki-DBG", e)
             }
         }
     }
