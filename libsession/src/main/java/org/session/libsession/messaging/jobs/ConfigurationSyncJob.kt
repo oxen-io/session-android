@@ -48,11 +48,7 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
         val configFactory = MessagingModuleConfiguration.shared.configFactory
 
         // get latest states, filter out configs that don't need push
-        val configsRequiringPush = listOfNotNull(
-            configFactory.user,
-            configFactory.contacts,
-            configFactory.convoVolatile
-        ).filter { config -> config.needsPush() }
+        val configsRequiringPush = configFactory.getUserConfigs().filter { config -> config.needsPush() }
 
         // don't run anything if we don't need to push anything
         if (configsRequiringPush.isEmpty()) return delegate.handleJobSucceeded(this, dispatcherName)
