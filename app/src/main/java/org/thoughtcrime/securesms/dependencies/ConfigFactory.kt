@@ -11,6 +11,7 @@ import org.session.libsession.utilities.ConfigFactoryUpdateListener
 import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage
 import org.thoughtcrime.securesms.database.ConfigDatabase
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
+import java.util.concurrent.Executors
 
 class ConfigFactory(private val context: Context,
                     private val configDatabase: ConfigDatabase,
@@ -34,6 +35,7 @@ class ConfigFactory(private val context: Context,
     private var _convoVolatileConfig: ConversationVolatileConfig? = null
     private val userGroupsLock = Object()
     private var _userGroups: UserGroupsConfig? = null
+    private val factoryExecutor = Executors.newSingleThreadExecutor()
 
     private val listeners: MutableList<ConfigFactoryUpdateListener> = mutableListOf()
     fun registerListener(listener: ConfigFactoryUpdateListener) { listeners += listener }
@@ -127,15 +129,17 @@ class ConfigFactory(private val context: Context,
     }
 
     override fun persist(forConfigObject: ConfigBase) {
-        listeners.forEach { listener ->
-            listener.notifyUpdates(forConfigObject)
-        }
-        when (forConfigObject) {
-            is UserProfile -> persistUserConfigDump()
-            is Contacts -> persistContactsConfigDump()
-            is ConversationVolatileConfig -> persistConvoVolatileConfigDump()
-            is UserGroupsConfig -> persistUserGroupsConfigDump()
-            else -> throw UnsupportedOperationException("Can't support type of ${forConfigObject::class.simpleName} yet")
+        factoryExecutor.submit {
+            listeners.forEach { listener ->
+                listener.notifyUpdates(forConfigObject)
+            }
+            when (forConfigObject) {
+                is UserProfile -> persistUserConfigDump()
+                is Contacts -> persistContactsConfigDump()
+                is ConversationVolatileConfig -> persistConvoVolatileConfigDump()
+                is UserGroupsConfig -> persistUserGroupsConfigDump()
+                else -> throw UnsupportedOperationException("Can't support type of ${forConfigObject::class.simpleName} yet")
+            }
         }
     }
 

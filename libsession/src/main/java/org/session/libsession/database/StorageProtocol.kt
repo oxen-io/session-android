@@ -72,7 +72,7 @@ interface StorageProtocol {
     fun updateOpenGroup(openGroup: OpenGroup)
     fun getOpenGroup(threadId: Long): OpenGroup?
     fun addOpenGroup(urlAsString: String): OpenGroupApi.RoomInfo?
-    fun onOpenGroupAdded(server: String)
+    fun onOpenGroupAdded(server: String, room: String)
     fun hasBackgroundGroupAddJob(groupJoinUrl: String): Boolean
     fun setOpenGroupServerMessageID(messageID: Long, serverID: Long, threadID: Long, isSms: Boolean)
     fun getOpenGroup(room: String, server: String): OpenGroup?

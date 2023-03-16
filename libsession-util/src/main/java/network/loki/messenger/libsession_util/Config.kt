@@ -1,6 +1,11 @@
 package network.loki.messenger.libsession_util
 
-import network.loki.messenger.libsession_util.util.*
+import network.loki.messenger.libsession_util.util.BaseCommunityInfo
+import network.loki.messenger.libsession_util.util.ConfigPush
+import network.loki.messenger.libsession_util.util.Contact
+import network.loki.messenger.libsession_util.util.Conversation
+import network.loki.messenger.libsession_util.util.GroupInfo
+import network.loki.messenger.libsession_util.util.UserPic
 import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage.Kind
 
 
@@ -152,10 +157,7 @@ class UserGroupsConfig(pointer: Long): ConfigBase(pointer) {
     external fun getOrConstructCommunityInfo(baseUrl: String, room: String, pubKeyHex: String): GroupInfo.CommunityGroupInfo
     external fun getOrConstructLegacyGroupInfo(sessionId: String): GroupInfo.LegacyGroupInfo
     external fun set(groupInfo: GroupInfo)
-    external fun set(communityInfo: GroupInfo.CommunityGroupInfo)
-    external fun set(legacyGroupInfo: GroupInfo.LegacyGroupInfo)
-    external fun erase(communityInfo: GroupInfo.CommunityGroupInfo)
-    external fun erase(legacyGroupInfo: GroupInfo.LegacyGroupInfo)
+    external fun erase(communityInfo: GroupInfo)
     external fun eraseCommunity(baseCommunityInfo: BaseCommunityInfo): Boolean
     external fun eraseLegacyGroup(sessionId: String): Boolean
     external fun sizeCommunityInfo(): Int

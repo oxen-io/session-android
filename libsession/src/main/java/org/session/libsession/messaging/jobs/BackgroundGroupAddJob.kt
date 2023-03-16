@@ -45,7 +45,7 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
                 JobQueue.shared.add(GroupAvatarDownloadJob(openGroup.server, openGroup.room, imageId))
             }
             Log.d(KEY, "onOpenGroupAdded(${openGroup.server})")
-            storage.onOpenGroupAdded(openGroup.server)
+            storage.onOpenGroupAdded(openGroup.server, openGroup.room)
         } catch (e: Exception) {
             Log.e("OpenGroupDispatcher", "Failed to add group because",e)
             delegate?.handleJobFailed(this, dispatcherName, e)

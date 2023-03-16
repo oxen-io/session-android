@@ -165,9 +165,9 @@ private fun handleConfigurationMessage(message: ConfigurationMessage) {
             .replace(OpenGroupApi.httpDefaultServer, OpenGroupApi.defaultServer)
     }) {
         if (allV2OpenGroups.contains(openGroup)) continue
-        Log.d("OpenGroup", "All open groups doesn't contain $openGroup")
+        Log.d("OpenGroup", "All open groups doesn't contain open group")
         if (!storage.hasBackgroundGroupAddJob(openGroup)) {
-            Log.d("OpenGroup", "Doesn't contain background job for $openGroup, adding")
+            Log.d("OpenGroup", "Doesn't contain background job for open group, adding")
             JobQueue.shared.add(BackgroundGroupAddJob(openGroup))
         }
     }

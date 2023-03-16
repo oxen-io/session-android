@@ -6,7 +6,11 @@ import network.loki.messenger.libsession_util.Contacts
 import network.loki.messenger.libsession_util.ConversationVolatileConfig
 import network.loki.messenger.libsession_util.UserGroupsConfig
 import network.loki.messenger.libsession_util.UserProfile
-import network.loki.messenger.libsession_util.util.*
+import network.loki.messenger.libsession_util.util.BaseCommunityInfo
+import network.loki.messenger.libsession_util.util.Contact
+import network.loki.messenger.libsession_util.util.ExpiryMode
+import network.loki.messenger.libsession_util.util.GroupInfo
+import network.loki.messenger.libsession_util.util.UserPic
 import nl.komponents.kovenant.Promise
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.ConfigurationSyncJob
@@ -17,7 +21,6 @@ import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
-import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.Log
@@ -167,6 +170,7 @@ object ConfigurationMessageUtilities {
         }
         val dump = contactConfig.dump()
         contactConfig.free()
+        if (dump.isEmpty()) return null
         return dump
     }
 
@@ -177,7 +181,7 @@ object ConfigurationMessageUtilities {
         val threadDb = DatabaseComponent.get(context).threadDatabase()
         threadDb.approvedConversationList.use { cursor ->
             val reader = threadDb.readerFor(cursor)
-            var current = reader.current
+            var current = reader.next
             while (current != null) {
                 val recipient = current.recipient
                 val contact = when {
@@ -210,6 +214,7 @@ object ConfigurationMessageUtilities {
 
         val dump = convoConfig.dump()
         convoConfig.free()
+        if (dump.isEmpty()) return null
         return dump
     }
 
@@ -226,7 +231,7 @@ object ConfigurationMessageUtilities {
             GroupInfo.CommunityGroupInfo(baseInfo, if (isPinned) 1 else 0)
         }
 
-        val allLgc = storage.getAllGroups().filter { it.isClosedGroup }.mapNotNull { group ->
+        val allLgc = storage.getAllGroups().filter { it.isClosedGroup && it.isActive }.mapNotNull { group ->
             val groupAddress = Address.fromSerialized(group.encodedId)
             val groupPublicKey = GroupUtil.doubleDecodeGroupID(groupAddress.serialize()).toHexString()
             val recipient = storage.getRecipientSettings(groupAddress) ?: return@mapNotNull null
@@ -252,6 +257,7 @@ object ConfigurationMessageUtilities {
         }
         val dump = groupConfig.dump()
         groupConfig.free()
+        if (dump.isEmpty()) return null
         return dump
     }
 

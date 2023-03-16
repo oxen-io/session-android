@@ -136,9 +136,9 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
             snode,
             userPublicKey,
             namespace,
-            updateLatestHash = false,
-            updateStoredHashes = false,
-        ).filter { (_, hash) -> !forConfigObject.currentHashes().contains(hash) }
+            updateLatestHash = true,
+            updateStoredHashes = true,
+        ) // TODO: might not be needed anymore .filter { (_, hash) -> !forConfigObject.currentHashes().contains(hash) }
 
         if (messages.isEmpty()) {
             // no new messages to process

@@ -7,13 +7,18 @@ import network.loki.messenger.libsession_util.Contacts
 import network.loki.messenger.libsession_util.ConversationVolatileConfig
 import network.loki.messenger.libsession_util.UserGroupsConfig
 import network.loki.messenger.libsession_util.UserProfile
-import network.loki.messenger.libsession_util.util.*
+import network.loki.messenger.libsession_util.util.BaseCommunityInfo
+import network.loki.messenger.libsession_util.util.Conversation
+import network.loki.messenger.libsession_util.util.ExpiryMode
+import network.loki.messenger.libsession_util.util.GroupInfo
+import network.loki.messenger.libsession_util.util.UserPic
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.BlindedIdMapping
 import org.session.libsession.messaging.calls.CallMessageType
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.AttachmentUploadJob
+import org.session.libsession.messaging.jobs.BackgroundGroupAddJob
 import org.session.libsession.messaging.jobs.ConfigurationSyncJob
 import org.session.libsession.messaging.jobs.GroupAvatarDownloadJob
 import org.session.libsession.messaging.jobs.Job
@@ -64,6 +69,7 @@ import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.messages.SignalServiceAttachmentPointer
 import org.session.libsignal.messages.SignalServiceGroup
 import org.session.libsignal.utilities.Base64
+import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.KeyHelper
 import org.session.libsignal.utilities.Log
@@ -400,8 +406,11 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         val lgc = userGroups.allLegacyGroupInfo()
         val allOpenGroups = getAllOpenGroups()
         val toDeleteCommunities = allOpenGroups.filter { it.value.joinURL !in communities.map { it.community.fullUrl() } }
-        val existingOpenGroups: Map<Long, OpenGroup> = allOpenGroups.filterKeys { it !in toDeleteCommunities.keys }
-        val existingJoinUrls = existingOpenGroups.values.map { it.joinURL }
+
+        val existingCommunities: Map<Long, OpenGroup> = allOpenGroups.filterKeys { it !in toDeleteCommunities.keys }
+        val toAddCommunities = communities.filter { it.community.fullUrl() !in existingCommunities.map { it.value.joinURL } }
+
+        val existingJoinUrls = existingCommunities.values.map { it.joinURL }
         val existingClosedGroups = getAllGroups()
         val lgcIds = lgc.map { it.sessionId }
         val toDeleteClosedGroups = existingClosedGroups.filter { group ->
@@ -422,6 +431,14 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
             }
         }
 
+        toAddCommunities.forEach { toAddCommunity ->
+            val joinUrl = toAddCommunity.community.fullUrl()
+            if (!hasBackgroundGroupAddJob(joinUrl)) {
+                Log.d("Loki-DBG", "Doesn't contain background job for open group, adding from config update")
+                JobQueue.shared.add(BackgroundGroupAddJob(joinUrl))
+            }
+        }
+
         for (groupInfo in communities) {
             val groupBaseCommunity = groupInfo.community
             if (groupBaseCommunity.fullUrl() !in existingJoinUrls) {
@@ -429,7 +446,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
                 val (threadId, _) = OpenGroupManager.add(groupBaseCommunity.baseUrl, groupBaseCommunity.room, groupBaseCommunity.pubKeyHex, context)
                 threadDb.setPinned(threadId, groupInfo.priority >= 1)
             } else {
-                val (threadId, _) = existingOpenGroups.entries.first { (_, v) -> v.joinURL == groupInfo.community.fullUrl() }
+                val (threadId, _) = existingCommunities.entries.first { (_, v) -> v.joinURL == groupInfo.community.fullUrl() }
                 threadDb.setPinned(threadId, groupInfo.priority >= 1)
             }
         }
@@ -699,6 +716,10 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         val existingGroup = getGroup(groupID)
             ?: return Log.w("Loki-DBG", "No existing group for ${groupPublicKey.take(4)}...${groupPublicKey.takeLast(4)} when updating group config")
         val userGroups = configFactory.userGroups ?: return
+        if (!existingGroup.isActive) {
+            userGroups.eraseLegacyGroup(groupPublicKey)
+            return
+        }
         val name = existingGroup.title
         val admins = existingGroup.admins.map { it.serialize() }
         val members = existingGroup.members.map { it.serialize() }
@@ -855,8 +876,19 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         return OpenGroupManager.addOpenGroup(urlAsString, context)
     }
 
-    override fun onOpenGroupAdded(server: String) {
+    override fun onOpenGroupAdded(server: String, room: String) {
         OpenGroupManager.restartPollerForServer(server.removeSuffix("/"))
+        val groups = configFactory.userGroups ?: return
+        val volatileConfig = configFactory.convoVolatile ?: return
+        val openGroup = getOpenGroup(room, server) ?: return
+        val (infoServer, infoRoom, pubKey) = BaseCommunityInfo.parseFullUrl(openGroup.joinURL) ?: return
+        val pubKeyHex = Hex.toStringCondensed(pubKey)
+        val communityInfo = groups.getOrConstructCommunityInfo(infoServer, infoRoom, pubKeyHex)
+        groups.set(communityInfo)
+        val volatile = volatileConfig.getOrConstructCommunity(infoServer, infoRoom, pubKey).copy(
+            lastRead = SnodeAPI.nowWithOffset,
+        )
+        volatileConfig.set(volatile)
     }
 
     override fun hasBackgroundGroupAddJob(groupJoinUrl: String): Boolean {

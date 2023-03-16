@@ -29,7 +29,7 @@ Java_network_loki_messenger_libsession_1util_UserGroupsConfig_00024Companion_new
 
     auto* user_groups = new session::config::UserGroups(secret_key, initial);
 
-    jclass contactsClass = env->FindClass("network/loki/messenger/libsession_util/Contacts");
+    jclass contactsClass = env->FindClass("network/loki/messenger/libsession_util/UserGroupsConfig");
     jmethodID constructor = env->GetMethodID(contactsClass, "<init>", "(J)V");
     jobject newConfig = env->NewObject(contactsClass, constructor, reinterpret_cast<jlong>(user_groups));
 
@@ -126,40 +126,21 @@ Java_network_loki_messenger_libsession_1util_UserGroupsConfig_set__Lnetwork_loki
     }
 }
 
-extern "C"
-JNIEXPORT void JNICALL
-Java_network_loki_messenger_libsession_1util_UserGroupsConfig_set__Lnetwork_loki_messenger_libsession_1util_util_GroupInfo_CommunityGroupInfo_2(
-        JNIEnv *env, jobject thiz, jobject community_info) {
-    auto conf = ptrToUserGroups(env, thiz);
-    auto deserialized = deserialize_community_info(env, community_info, conf);
-    conf->set(deserialized);
-}
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_network_loki_messenger_libsession_1util_UserGroupsConfig_set__Lnetwork_loki_messenger_libsession_1util_util_GroupInfo_LegacyGroupInfo_2(
-        JNIEnv *env, jobject thiz, jobject legacy_group_info) {
+Java_network_loki_messenger_libsession_1util_UserGroupsConfig_erase__Lnetwork_loki_messenger_libsession_1util_util_GroupInfo_2(
+        JNIEnv *env, jobject thiz, jobject group_info) {
     auto conf = ptrToUserGroups(env, thiz);
-    auto deserialized = deserialize_legacy_group_info(env, legacy_group_info, conf);
-    conf->set(deserialized);
-}
-#pragma clang diagnostic pop
-extern "C"
-JNIEXPORT void JNICALL
-Java_network_loki_messenger_libsession_1util_UserGroupsConfig_erase__Lnetwork_loki_messenger_libsession_1util_util_GroupInfo_CommunityGroupInfo_2(
-        JNIEnv *env, jobject thiz, jobject community_info) {
-    auto conf = ptrToUserGroups(env, thiz);
-    auto deserialized = deserialize_community_info(env, community_info, conf);
-    conf->erase(deserialized);
-}
-
-extern "C"
-JNIEXPORT void JNICALL
-Java_network_loki_messenger_libsession_1util_UserGroupsConfig_erase__Lnetwork_loki_messenger_libsession_1util_util_GroupInfo_LegacyGroupInfo_2(
-        JNIEnv *env, jobject thiz, jobject legacy_group_info) {
-    auto conf = ptrToUserGroups(env, thiz);
-    auto deserialized = deserialize_legacy_group_info(env, legacy_group_info, conf);
-    conf->erase(deserialized);
+    auto communityInfo = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$CommunityGroupInfo");
+    auto legacyInfo = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$LegacyGroupInfo");
+    if (env->GetObjectClass(group_info) == communityInfo) {
+        auto deserialized = deserialize_community_info(env, group_info, conf);
+        conf->erase(deserialized);
+    } else if (env->GetObjectClass(group_info) == legacyInfo) {
+        auto deserialized = deserialize_legacy_group_info(env, group_info, conf);
+        conf->erase(deserialized);
+    }
 }
 
 extern "C"
