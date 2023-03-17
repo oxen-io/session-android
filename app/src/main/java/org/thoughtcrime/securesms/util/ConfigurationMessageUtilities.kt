@@ -74,10 +74,12 @@ object ConfigurationMessageUtilities {
         if (ConfigBase.isNewConfigEnabled) {
             // schedule job if none exist
             // don't schedule job if we already have one
+            Log.d("Loki-DBG", "Forcing config sync")
             val ourDestination = Destination.Contact(userPublicKey)
             val currentStorageJob = storage.getConfigSyncJob(ourDestination)
             if (currentStorageJob != null) {
                 (currentStorageJob as ConfigurationSyncJob).shouldRunAgain.set(true)
+                Log.d("Loki-DBG", "Not scheduling another one")
                 return Promise.ofFail(NullPointerException("A job is already pending or in progress, don't schedule another job"))
             }
             val newConfigSync = ConfigurationSyncJob(ourDestination)
