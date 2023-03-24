@@ -241,7 +241,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 }
             } ?: finish()
         }
-        viewModelFactory.create(threadId, MessagingModuleConfiguration.shared.getUserED25519KeyPair())
+        viewModelFactory.create(threadId, MessagingModuleConfiguration.shared.getUserED25519KeyPair(), contentResolver)
     }
     private var actionMode: ActionMode? = null
     private var unreadCount = 0
@@ -664,6 +664,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 }
                 if (uiState.isMessageRequestAccepted == true) {
                     binding?.messageRequestBar?.visibility = View.GONE
+                }
+                if (!uiState.conversationExists && !isFinishing) {
+                    // Conversation should be deleted now, just go back
+                    finish()
                 }
             }
         }

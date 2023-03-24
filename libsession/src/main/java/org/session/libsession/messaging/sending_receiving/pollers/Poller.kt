@@ -138,7 +138,7 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
             namespace,
             updateLatestHash = true,
             updateStoredHashes = true,
-        ) // TODO: might not be needed anymore .filter { (_, hash) -> !forConfigObject.currentHashes().contains(hash) }
+        )
 
         if (messages.isEmpty()) {
             // no new messages to process
@@ -184,12 +184,6 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                 }.forEach { request ->
                     // namespaces here should always be set
                     requestSparseArray[request.namespace!!] = request
-                }
-
-                if (requestSparseArray.size() == 1) {
-                    // only one (the personal messages)
-                    Log.d("Loki-DBG", "Not building requests for the configs, current config state:")
-                    Log.d("Loki-DBG", "${listOf(configFactory.user, configFactory.contacts, configFactory.convoVolatile)}")
                 }
 
                 val requests = requestSparseArray.valueIterator().asSequence().toList()
