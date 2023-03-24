@@ -18,7 +18,12 @@ class GroupAvatarDownloadJob(val server: String, val room: String, val imageId: 
             return
         }
         val storage = MessagingModuleConfiguration.shared.storage
-        val storedImageId = storage.getOpenGroup(room, server)?.imageId
+        val openGroup = storage.getOpenGroup(room, server)
+        if (openGroup == null) {
+            delegate?.handleJobFailedPermanently(this, dispatcherName, Exception("GroupAvatarDownloadJob openGroup is null"))
+            return
+        }
+        val storedImageId = openGroup.imageId
 
         if (storedImageId == null || storedImageId != imageId) {
             delegate?.handleJobFailedPermanently(this, dispatcherName, Exception("GroupAvatarDownloadJob imageId does not match the OpenGroup"))

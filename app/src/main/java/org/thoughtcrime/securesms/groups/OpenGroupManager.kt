@@ -104,7 +104,7 @@ object OpenGroupManager {
         val storage = MessagingModuleConfiguration.shared.storage
         val configFactory = MessagingModuleConfiguration.shared.configFactory
         val threadDB = DatabaseComponent.get(context).threadDatabase()
-        val openGroupID = "$server.$room"
+        val openGroupID = "${server.removeSuffix("/")}.$room"
         val threadID = GroupManager.getOpenGroupThreadID(openGroupID, context)
         val recipient = threadDB.getRecipientForThreadId(threadID) ?: return
         threadDB.setThreadArchived(threadID)
