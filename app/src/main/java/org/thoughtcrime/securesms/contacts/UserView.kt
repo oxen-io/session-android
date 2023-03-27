@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.LinearLayout
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewUserBinding
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionManagerUtilities
@@ -51,7 +52,7 @@ class UserView : LinearLayout {
             val contact = DatabaseComponent.get(context).sessionContactDatabase().getContactWithSessionID(publicKey)
             return contact?.displayName(Contact.ContactContext.REGULAR) ?: publicKey
         }
-        val threadID = DatabaseComponent.get(context).threadDatabase().getOrCreateThreadIdFor(user)
+        val threadID = MessagingModuleConfiguration.shared.storage.getOrCreateThreadIdFor(user.address)
         MentionManagerUtilities.populateUserPublicKeyCacheIfNeeded(threadID, context) // FIXME: This is a bad place to do this
         val address = user.address.serialize()
         binding.profilePictureView.root.glide = glide

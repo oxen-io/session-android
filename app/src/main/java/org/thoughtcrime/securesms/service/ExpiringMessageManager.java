@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.service;
 import android.content.Context;
 
 import org.jetbrains.annotations.NotNull;
+import org.session.libsession.database.StorageProtocol;
 import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate;
 import org.session.libsession.messaging.messages.signal.IncomingMediaMessage;
@@ -107,6 +108,10 @@ public class ExpiringMessageManager implements SSKEnvironment.MessageExpirationM
         Address groupAddress = Address.fromSerialized(groupID);
         recipient = Recipient.from(context, groupAddress, false);
       }
+      Long threadId = MessagingModuleConfiguration.getShared().getStorage().getThreadId(recipient);
+      if (threadId == null) {
+        return;
+      }
 
       IncomingMediaMessage mediaMessage = new IncomingMediaMessage(address, sentTimestamp, -1,
               duration * 1000L, true,
@@ -121,7 +126,7 @@ public class ExpiringMessageManager implements SSKEnvironment.MessageExpirationM
               Optional.absent(),
               Optional.absent());
       //insert the timer update message
-      database.insertSecureDecryptedMessageInbox(mediaMessage, -1,  true);
+      database.insertSecureDecryptedMessageInbox(mediaMessage, threadId, true);
 
       //set the timer to the conversation
       MessagingModuleConfiguration.getShared().getStorage().setExpirationTimer(recipient.getAddress().serialize(), duration);
@@ -140,6 +145,10 @@ public class ExpiringMessageManager implements SSKEnvironment.MessageExpirationM
 
     Address address = Address.fromSerialized((message.getSyncTarget() != null && !message.getSyncTarget().isEmpty()) ? message.getSyncTarget() : message.getRecipient());
     Recipient recipient = Recipient.from(context, address, false);
+    if (message.getThreadID() == null || message.getThreadID() < 0) {
+      StorageProtocol storage = MessagingModuleConfiguration.getShared().getStorage();
+      message.setThreadID(storage.getOrCreateThreadIdFor(address));
+    }
 
     try {
       OutgoingExpirationUpdateMessage timerUpdateMessage = new OutgoingExpirationUpdateMessage(recipient, sentTimestamp, duration * 1000L, groupId);

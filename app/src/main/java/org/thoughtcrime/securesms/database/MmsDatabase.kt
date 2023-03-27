@@ -20,13 +20,11 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import com.annimon.stream.Stream
-import com.google.android.mms.pdu_alt.NotificationInd
 import com.google.android.mms.pdu_alt.PduHeaders
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import org.session.libsession.messaging.messages.signal.IncomingMediaMessage
-import org.session.libsession.messaging.messages.signal.OutgoingExpirationUpdateMessage
 import org.session.libsession.messaging.messages.signal.OutgoingGroupMediaMessage
 import org.session.libsession.messaging.messages.signal.OutgoingMediaMessage
 import org.session.libsession.messaging.messages.signal.OutgoingSecureMediaMessage
@@ -40,16 +38,13 @@ import org.session.libsession.utilities.Address.Companion.UNKNOWN
 import org.session.libsession.utilities.Address.Companion.fromExternal
 import org.session.libsession.utilities.Address.Companion.fromSerialized
 import org.session.libsession.utilities.Contact
-import org.session.libsession.utilities.GroupUtil.doubleEncodeGroupID
 import org.session.libsession.utilities.IdentityKeyMismatch
 import org.session.libsession.utilities.IdentityKeyMismatchList
 import org.session.libsession.utilities.NetworkFailure
 import org.session.libsession.utilities.NetworkFailureList
 import org.session.libsession.utilities.TextSecurePreferences.Companion.isReadReceiptsEnabled
 import org.session.libsession.utilities.Util.toIsoBytes
-import org.session.libsession.utilities.Util.toIsoString
 import org.session.libsession.utilities.recipients.Recipient
-import org.session.libsession.utilities.recipients.RecipientFormattingException
 import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils.queue
@@ -234,34 +229,6 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         }
     }
 
-    @Throws(RecipientFormattingException::class, MmsException::class)
-    private fun getThreadIdFor(retrieved: IncomingMediaMessage): Long {
-        return if (retrieved.groupId != null) {
-            val groupRecipients = Recipient.from(
-                context,
-                retrieved.groupId,
-                true
-            )
-            get(context).threadDatabase().getOrCreateThreadIdFor(groupRecipients)
-        } else {
-            val sender = Recipient.from(
-                context,
-                retrieved.from,
-                true
-            )
-            get(context).threadDatabase().getOrCreateThreadIdFor(sender)
-        }
-    }
-
-    private fun getThreadIdFor(notification: NotificationInd): Long {
-        val fromString =
-            if (notification.from != null && notification.from.textString != null) toIsoString(
-                notification.from.textString
-            ) else ""
-        val recipient = Recipient.from(context, fromExternal(context, fromString), false)
-        return get(context).threadDatabase().getOrCreateThreadIdFor(recipient)
-    }
-
     private fun rawQuery(where: String, arguments: Array<String>?): Cursor {
         val database = databaseHelper.readableDatabase
         return database.rawQuery(
@@ -270,10 +237,6 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                     " LEFT OUTER JOIN " + ReactionDatabase.TABLE_NAME + " ON (" + TABLE_NAME + "." + ID + " = " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.MESSAGE_ID + " AND " + ReactionDatabase.TABLE_NAME + "." + ReactionDatabase.IS_MMS + " = 1)" +
                     " WHERE " + where + " GROUP BY " + TABLE_NAME + "." + ID, arguments
         )
-    }
-
-    fun getMessages(idsAsString: String): Cursor {
-        return rawQuery(idsAsString, null)
     }
 
     fun getMessage(messageId: Long): Cursor {
@@ -633,15 +596,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         serverTimestamp: Long,
         runThreadUpdate: Boolean
     ): Optional<InsertResult> {
-        var threadId = threadId
-        if (threadId == -1L || retrieved.isGroupMessage) {
-            try {
-                threadId = getThreadIdFor(retrieved)
-            } catch (e: RecipientFormattingException) {
-                Log.w("MmsDatabase", e)
-                if (threadId == -1L) throw MmsException(e)
-            }
-        }
+        if (threadId < 0 ) throw MmsException("No thread ID supplied!")
         val contentValues = ContentValues()
         contentValues.put(DATE_SENT, retrieved.sentTimeMillis)
         contentValues.put(ADDRESS, retrieved.from.serialize())
@@ -710,27 +665,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         serverTimestamp: Long,
         runThreadUpdate: Boolean
     ): Optional<InsertResult> {
-        var threadId = threadId
-        if (threadId == -1L) {
-            if (retrieved.isGroup) {
-                val decodedGroupId: String = if (retrieved is OutgoingExpirationUpdateMessage) {
-                    retrieved.groupId
-                } else {
-                    (retrieved as OutgoingGroupMediaMessage).groupId
-                }
-                val groupId: String
-                groupId = try {
-                    doubleEncodeGroupID(decodedGroupId)
-                } catch (e: IOException) {
-                    Log.e(TAG, "Couldn't encrypt group ID")
-                    throw MmsException(e)
-                }
-                val group = Recipient.from(context, fromSerialized(groupId), false)
-                threadId = get(context).threadDatabase().getOrCreateThreadIdFor(group)
-            } else {
-                threadId = get(context).threadDatabase().getOrCreateThreadIdFor(retrieved.recipient)
-            }
-        }
+        if (threadId < 0 ) throw MmsException("No thread ID supplied!")
         val messageId = insertMessageOutbox(retrieved, threadId, false, null, serverTimestamp, runThreadUpdate)
         if (messageId == -1L) {
             return Optional.absent()

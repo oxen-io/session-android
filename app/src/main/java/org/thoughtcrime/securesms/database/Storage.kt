@@ -202,12 +202,15 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         }
         val targetRecipient = Recipient.from(context, targetAddress, false)
         if (!targetRecipient.isGroupRecipient) {
-            val recipientDb = DatabaseComponent.get(context).recipientDatabase()
             if (isUserSender || isUserBlindedSender) {
                 setRecipientApproved(targetRecipient, true)
             } else {
                 setRecipientApprovedMe(targetRecipient, true)
             }
+        }
+        if (message.threadID == null && !targetRecipient.isOpenGroupRecipient) {
+            // open group recipients should explicitly create threads
+            message.threadID = getOrCreateThreadIdFor(targetAddress)
         }
         if (message.isMediaMessage() || attachments.isNotEmpty()) {
             val quote: Optional<QuoteModel> = if (quotes != null) Optional.of(quotes) else Optional.absent()
@@ -222,7 +225,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
                     it.toSignalPointer()
                 }
                 val mediaMessage = IncomingMediaMessage.from(message, senderAddress, targetRecipient.expireMessages * 1000L, group, signalServiceAttachments, quote, linkPreviews)
-                mmsDatabase.insertSecureDecryptedMessageInbox(mediaMessage, message.threadID ?: -1, message.receivedTimestamp ?: 0, runThreadUpdate)
+                mmsDatabase.insertSecureDecryptedMessageInbox(mediaMessage, message.threadID!!, message.receivedTimestamp ?: 0, runThreadUpdate)
             }
             if (insertResult.isPresent) {
                 messageID = insertResult.get().messageId
@@ -998,6 +1001,11 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
                 profileManager.setUnidentifiedAccessMode(context, recipient, Recipient.UnidentifiedAccessMode.UNKNOWN)
                 profileManager.setProfilePictureURL(context, recipient, url)
             }
+            if (contact.hidden) {
+                getThreadId(fromSerialized(contact.id))?.let { conversationThreadId ->
+                    deleteConversation(conversationThreadId)
+                }
+            }
             Log.d("Loki-DBG", "Updated contact $contact")
         }
     }
@@ -1075,8 +1083,21 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
 
     override fun deleteConversation(threadID: Long) {
         // TODO: delete from either contacts / convo volatile or the closed groups
+        val recipient = getRecipientForThread(threadID)
         val threadDB = DatabaseComponent.get(context).threadDatabase()
         threadDB.deleteConversation(threadID)
+        if (recipient != null) {
+            if (recipient.isContactRecipient) {
+                // TODO: handle contact
+                val contacts = configFactory.contacts ?: return
+                contacts.upsertContact(recipient.address.serialize()) {
+                    this.hidden = true
+                }
+                ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+            } else if (recipient.isClosedGroupRecipient) {
+                // TODO: handle closed group
+            }
+        }
     }
 
     override fun getAttachmentDataUri(attachmentId: AttachmentId): Uri {
@@ -1093,6 +1114,8 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         val recipient = Recipient.from(context, address, false)
 
         if (recipient.isBlocked) return
+
+        val threadId = getThreadId(recipient) ?: return
 
         val mediaMessage = IncomingMediaMessage(
             address,
@@ -1112,7 +1135,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
             Optional.of(message)
         )
 
-        database.insertSecureDecryptedMessageInbox(mediaMessage, -1, runThreadUpdate = true)
+        database.insertSecureDecryptedMessageInbox(mediaMessage, threadId, runThreadUpdate = true)
     }
 
     override fun insertMessageRequestResponse(response: MessageRequestResponse) {
@@ -1131,7 +1154,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
             val mmsDb = DatabaseComponent.get(context).mmsDatabase()
             val smsDb = DatabaseComponent.get(context).smsDatabase()
             val sender = Recipient.from(context, fromSerialized(senderPublicKey), false)
-            val threadId = threadDB.getOrCreateThreadIdFor(sender)
+            val threadId = getOrCreateThreadIdFor(sender.address)
             val profile = response.profile
             if (profile != null) {
                 val profileManager = SSKEnvironment.shared.profileManager

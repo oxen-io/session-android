@@ -237,7 +237,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                         it
                     }
                     val recipient = Recipient.from(this, address, false)
-                    threadId = threadDb.getOrCreateThreadIdFor(recipient)
+                    threadId = storage.getOrCreateThreadIdFor(recipient.address)
                 }
             } ?: finish()
         }

@@ -7,6 +7,7 @@ data class Contact(
     var approved: Boolean = false,
     var approvedMe: Boolean = false,
     var blocked: Boolean = false,
+    var hidden: Boolean = false,
     var profilePicture: UserPic = UserPic.DEFAULT,
     var priority: Int = 0,
     var expiryMode: ExpiryMode
