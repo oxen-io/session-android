@@ -30,6 +30,7 @@ import nl.komponents.kovenant.all
 import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.successUi
 import org.session.libsession.avatars.AvatarHelper
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.ProfileKeyUtil
 import org.session.libsession.utilities.ProfilePictureUtilities
@@ -92,7 +93,9 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             profilePictureView.root.displayName = displayName
             profilePictureView.root.isLarge = true
             profilePictureView.root.update()
-            profilePictureView.root.setOnClickListener { showEditProfilePictureUI() }
+            profilePictureView.root.setOnClickListener {
+                showEditProfilePictureUI()
+            }
             ctnGroupNameSection.setOnClickListener { startActionMode(DisplayNameEditActionModeCallback()) }
             btnGroupNameDisplay.text = displayName
             publicKeyTextView.text = hexEncodedPublicKey
@@ -268,6 +271,14 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
     private fun showQRCode() {
         val intent = Intent(this, QRCodeActivity::class.java)
         push(intent)
+    }
+
+    private fun deleteProfilePicture() {
+        MessagingModuleConfiguration.shared.storage.clearUserPic()
+        with (binding.profilePictureView.root) {
+            recycle()
+            update()
+        }
     }
 
     private fun showEditProfilePictureUI() {

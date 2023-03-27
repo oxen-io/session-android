@@ -338,11 +338,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
 
         // update pfp
         if (userPic == UserPic.DEFAULT) {
-            // clear picture if userPic is null
-            TextSecurePreferences.setProfileKey(context, null)
-            ProfileKeyUtil.setEncodedProfileKey(context, null)
-            profileManager.setProfileKey(context, recipient, null)
-            setUserProfilePictureURL(null)
+            clearUserPic()
         } else if (userPic.key.isNotEmpty() && userPic.url.isNotEmpty()
             && TextSecurePreferences.getProfilePictureURL(context) != userPic.url) {
             val profileKey = Base64.encodeBytes(userPic.key)
@@ -354,25 +350,25 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
 
     private fun updateContacts(contacts: Contacts) {
         val extracted = contacts.all().toList()
-        val profileManager = SSKEnvironment.shared.profileManager
-        extracted.forEach { contact ->
-            val address = fromSerialized(contact.id)
-            val recipient = Recipient.from(context, address, false)
-            setBlocked(listOf(recipient), contact.blocked, fromConfigUpdate = true)
-            setRecipientApproved(recipient, contact.approved)
-            setRecipientApprovedMe(recipient, contact.approvedMe)
-            profileManager.setName(context, recipient, contact.name)
-            profileManager.setNickname(context, recipient, contact.nickname)
+        addLibSessionContacts(extracted)
+    }
 
-            if (contact.profilePicture != UserPic.DEFAULT) {
-                val (url, key) = contact.profilePicture
-                if (key.size != ProfileKeyUtil.PROFILE_KEY_BYTES) return@forEach
-                profileManager.setProfileKey(context, recipient, key)
-                profileManager.setUnidentifiedAccessMode(context, recipient, Recipient.UnidentifiedAccessMode.UNKNOWN)
-                profileManager.setProfilePictureURL(context, recipient, url)
-            }
-            Log.d("Loki-DBG", "Updated contact $contact")
-        }
+    override fun clearUserPic() {
+        val userPublicKey = getUserPublicKey() ?: return
+        val recipientDatabase = DatabaseComponent.get(context).recipientDatabase()
+        // would love to get rid of recipient and context from this
+        val recipient = Recipient.from(context, fromSerialized(userPublicKey), false)
+        // clear picture if userPic is null
+        TextSecurePreferences.setProfileKey(context, null)
+        TextSecurePreferences.setProfileAvatarId(context, 0)
+        ProfileKeyUtil.setEncodedProfileKey(context, null)
+        SSKEnvironment.shared.profileManager.setProfileKey(context, recipient, null)
+        recipientDatabase.setProfileAvatar(recipient, null)
+
+        setUserProfilePictureURL(null)
+        Recipient.removeCached(fromSerialized(userPublicKey))
+        configFactory.user?.setPic(UserPic.DEFAULT)
+        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
     }
 
     private fun updateConvoVolatile(convos: ConversationVolatileConfig) {
@@ -972,21 +968,37 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
     }
 
     override fun addLibSessionContacts(contacts: List<LibSessionContact>) {
-        val recipientDatabase = DatabaseComponent.get(context).recipientDatabase()
-        val threadDatabase = DatabaseComponent.get(context).threadDatabase()
         val mappingDb = DatabaseComponent.get(context).blindedIdMappingDatabase()
         val moreContacts = contacts.filter { contact ->
             val id = SessionId(contact.id)
             id.prefix != IdPrefix.BLINDED || mappingDb.getBlindedIdMapping(contact.id).none { it.sessionId != null }
         }
-        for (contact in moreContacts) {
+        val profileManager = SSKEnvironment.shared.profileManager
+        moreContacts.forEach { contact ->
             val address = fromSerialized(contact.id)
-            val recipient = Recipient.from(context, address, true)
-            val (url, key) = contact.profilePicture.let { it.url to it.key }
-            // set or clear the avatar
-            recipientDatabase.setProfileAvatar(recipient, url)
-            recipientDatabase.setProfileKey(recipient, key)
+            val recipient = Recipient.from(context, address, false)
+            setBlocked(listOf(recipient), contact.blocked, fromConfigUpdate = true)
+            setRecipientApproved(recipient, contact.approved)
+            setRecipientApprovedMe(recipient, contact.approvedMe)
+            if (contact.name.isNotEmpty()) {
+                profileManager.setName(context, recipient, contact.name)
+            } else {
+                profileManager.setName(context, recipient, null)
+            }
+            if (contact.nickname.isNotEmpty()) {
+                profileManager.setNickname(context, recipient, contact.nickname)
+            } else {
+                profileManager.setNickname(context, recipient, null)
+            }
 
+            if (contact.profilePicture != UserPic.DEFAULT) {
+                val (url, key) = contact.profilePicture
+                if (key.size != ProfileKeyUtil.PROFILE_KEY_BYTES) return@forEach
+                profileManager.setProfileKey(context, recipient, key)
+                profileManager.setUnidentifiedAccessMode(context, recipient, Recipient.UnidentifiedAccessMode.UNKNOWN)
+                profileManager.setProfilePictureURL(context, recipient, url)
+            }
+            Log.d("Loki-DBG", "Updated contact $contact")
         }
     }
 

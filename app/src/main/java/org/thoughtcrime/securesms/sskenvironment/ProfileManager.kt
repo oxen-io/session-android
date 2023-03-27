@@ -29,7 +29,7 @@ class ProfileManager(private val context: Context, private val configFactory: Co
         contactUpdatedInternal(contact)
     }
 
-    override fun setName(context: Context, recipient: Recipient, name: String) {
+    override fun setName(context: Context, recipient: Recipient, name: String?) {
         // New API
         val sessionID = recipient.address.serialize()
         val contactDatabase = DatabaseComponent.get(context).sessionContactDatabase()

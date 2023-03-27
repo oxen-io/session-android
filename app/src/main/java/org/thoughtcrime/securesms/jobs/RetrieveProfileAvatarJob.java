@@ -93,7 +93,7 @@ public class RetrieveProfileAvatarJob extends BaseJob {
     if (TextUtils.isEmpty(profileAvatar)) {
       Log.w(TAG, "Removing profile avatar for: " + recipient.getAddress().serialize());
       AvatarHelper.delete(context, recipient.getAddress());
-      database.setProfileAvatar(recipient, profileAvatar);
+      database.setProfileAvatar(recipient, null);
       return;
     }
 
