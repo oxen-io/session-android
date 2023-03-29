@@ -16,6 +16,7 @@
         />
 
     <TextView
+        android:contentDescription="@string/AccessibilityId_contact"
         android:textSize="@dimen/text_size"
         android:textStyle="bold"
         android:layout_width="0dp"
