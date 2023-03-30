@@ -238,6 +238,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     }
                     val recipient = Recipient.from(this, address, false)
                     threadId = storage.getOrCreateThreadIdFor(recipient.address)
+                    // assume created thread
+                    if (recipient.isContactRecipient && !recipient.isLocalNumber) {
+                        storage.setRecipientApproved(recipient, true) // assume approved when we CREATE the thread, not send first message
+                    }
                 }
             } ?: finish()
         }
@@ -706,7 +710,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     // region Animation & Updating
     override fun onModified(recipient: Recipient) {
         runOnUiThread {
-            val threadRecipient = viewModel.recipient ?: return@runOnUiThread
+            val threadRecipient = viewModel.recipient ?: return@runOnUiThread Log.d("Loki-DBG", "Recipient no longer here, go back?")
             if (threadRecipient.isContactRecipient) {
                 binding?.blockedBanner?.isVisible = threadRecipient.isBlocked
             }

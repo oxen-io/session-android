@@ -22,28 +22,40 @@ import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.WindowDebouncer
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
+import java.util.*
 
 object ConfigurationMessageUtilities {
+
+    val debouncer = WindowDebouncer(3000, Timer())
+
+    private fun scheduleConfigSync(userPublicKey: String) {
+        debouncer.publish {
+            // don't schedule job if we already have one
+            val storage = MessagingModuleConfiguration.shared.storage
+            val ourDestination = Destination.Contact(userPublicKey)
+            val currentStorageJob = storage.getConfigSyncJob(ourDestination)
+            if (currentStorageJob != null) {
+                (currentStorageJob as ConfigurationSyncJob).shouldRunAgain.set(true)
+                Log.d("Loki-DBG", "Not scheduling another one")
+                return@publish
+            }
+            val newConfigSync = ConfigurationSyncJob(ourDestination)
+            Log.d("Loki", "Scheduling new ConfigurationSyncJob")
+            JobQueue.shared.add(newConfigSync)
+        }
+    }
 
     @JvmStatic
     fun syncConfigurationIfNeeded(context: Context) {
         // add if check here to schedule new config job process and return early
         val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return
-        val storage = MessagingModuleConfiguration.shared.storage
         if (ConfigBase.isNewConfigEnabled) {
-            // don't schedule job if we already have one
-            val ourDestination = Destination.Contact(userPublicKey)
-            if (storage.getConfigSyncJob(ourDestination) != null) {
-                Log.d("Loki", "ConfigSyncJob is already running for our destination")
-                return
-            }
-            val newConfigSync = ConfigurationSyncJob(ourDestination)
-            Log.d("Loki", "Scheduling new ConfigurationSyncJob")
-            JobQueue.shared.add(newConfigSync)
+            scheduleConfigSync(userPublicKey)
             return
         }
         val lastSyncTime = TextSecurePreferences.getLastConfigurationSyncTime(context)
@@ -70,22 +82,11 @@ object ConfigurationMessageUtilities {
     fun forceSyncConfigurationNowIfNeeded(context: Context): Promise<Unit, Exception> {
         // add if check here to schedule new config job process and return early
         val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return Promise.ofFail(NullPointerException("User Public Key is null"))
-        val storage = MessagingModuleConfiguration.shared.storage
         if (ConfigBase.isNewConfigEnabled) {
             // schedule job if none exist
             // don't schedule job if we already have one
             Log.d("Loki-DBG", "Forcing config sync")
-            val ourDestination = Destination.Contact(userPublicKey)
-            val currentStorageJob = storage.getConfigSyncJob(ourDestination)
-            if (currentStorageJob != null) {
-                (currentStorageJob as ConfigurationSyncJob).shouldRunAgain.set(true)
-                Log.d("Loki-DBG", "Not scheduling another one")
-                return Promise.ofFail(NullPointerException("A job is already pending or in progress, don't schedule another job"))
-            }
-            val newConfigSync = ConfigurationSyncJob(ourDestination)
-            Log.d("Loki", "Scheduling new ConfigurationSyncJob")
-            JobQueue.shared.add(newConfigSync)
-            // treat this promise as succeeding now (so app continues running and doesn't block UI)
+            scheduleConfigSync(userPublicKey)
             return Promise.ofSuccess(Unit)
         }
         val contacts = ContactUtilities.getAllContacts(context).filter { recipient ->

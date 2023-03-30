@@ -89,8 +89,73 @@ import org.thoughtcrime.securesms.util.SessionMetaProtocol
 import java.security.MessageDigest
 import network.loki.messenger.libsession_util.util.Contact as LibSessionContact
 
-class Storage(context: Context, helper: SQLCipherOpenHelper, private val configFactory: ConfigFactory) : Database(context, helper), StorageProtocol {
-    
+class Storage(context: Context, helper: SQLCipherOpenHelper, private val configFactory: ConfigFactory) : Database(context, helper), StorageProtocol,
+    ThreadDatabase.ConversationThreadUpdateListener {
+
+    init {
+        DatabaseComponent.get(context).threadDatabase().setUpdateListener(this)
+    }
+
+    // TODO: maybe add time here from formation / creation message
+    override fun threadCreated(address: Address, threadId: Long) {
+        val volatile = configFactory.convoVolatile ?: return
+        if (address.isGroup) {
+            val groups = configFactory.userGroups ?: return
+            if (address.isClosedGroup) {
+                val sessionId = GroupUtil.doubleDecodeGroupId(address.serialize())
+                val legacyGroup = groups.getOrConstructLegacyGroupInfo(sessionId)
+                groups.set(legacyGroup)
+                val newVolatileParams = volatile.getOrConstructLegacyGroup(sessionId).copy(
+                    lastRead = SnodeAPI.nowWithOffset,
+                )
+                volatile.set(newVolatileParams)
+            } else if (address.isOpenGroup) {
+                // these should be added on the group join / group info fetch
+                Log.w("Loki", "Thread created called for open group address, not adding any extra information")
+            }
+        } else if (address.isContact) {
+            // don't update our own address into the contacts DB
+            if (getUserPublicKey() != address.serialize()) {
+                val contacts = configFactory.contacts ?: return
+                contacts.upsertContact(address.serialize())
+            } else {
+                val userProfile = configFactory.user ?: return
+                userProfile.setNtsHidden(false)
+            }
+            val newVolatileParams = volatile.getOrConstructOneToOne(address.serialize()).copy(
+                lastRead = SnodeAPI.nowWithOffset
+            )
+            volatile.set(newVolatileParams)
+        }
+    }
+
+    override fun threadDeleted(address: Address, threadId: Long) {
+        val volatile = configFactory.convoVolatile ?: return
+        if (address.isGroup) {
+            val groups = configFactory.userGroups ?: return
+            if (address.isClosedGroup) {
+                val sessionId = GroupUtil.doubleDecodeGroupId(address.serialize())
+                volatile.eraseLegacyClosedGroup(sessionId)
+                groups.eraseLegacyGroup(sessionId)
+            } else if (address.isOpenGroup) {
+                // these should be removed in the group leave / handling new configs
+                Log.w("Loki", "Thread delete called for open group address, expecting to be handled elsewhere")
+            }
+        } else {
+            volatile.eraseOneToOne(address.serialize())
+            if (getUserPublicKey() != address.serialize()) {
+                val contacts = configFactory.contacts ?: return
+                contacts.upsertContact(address.serialize()) {
+                    // hidden = true TODO: maybe this?
+                }
+            } else {
+                val userProfile = configFactory.user ?: return
+                userProfile.setNtsHidden(true)
+            }
+        }
+        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+    }
+
     override fun getUserPublicKey(): String? {
         return TextSecurePreferences.getLocalNumber(context)
     }
@@ -167,7 +232,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
 
     override fun updateThread(threadId: Long, unarchive: Boolean) {
         val threadDb = DatabaseComponent.get(context).threadDatabase()
-        threadDb.update(threadId, unarchive)
+        threadDb.update(threadId, unarchive, false)
     }
 
     override fun persist(message: VisibleMessage,
@@ -349,6 +414,16 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
             profileManager.setProfileKey(context, recipient, userPic.key)
             setUserProfilePictureURL(userPic.url)
         }
+        if (userProfile.getNtsHidden()) {
+            // delete nts thread if needed
+            val ourThread = getThreadId(recipient) ?: return
+            deleteConversation(ourThread)
+        } else {
+            // create note to self thread if needed (?)
+            val ourThread = getOrCreateThreadIdFor(recipient.address)
+            setPinned(ourThread, userProfile.getNtsPriority() > 0)
+        }
+
     }
 
     private fun updateContacts(contacts: Contacts) {
@@ -378,15 +453,9 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         val extracted = convos.all()
         for (conversation in extracted) {
             val threadId = when (conversation) {
-                is Conversation.OneToOne -> conversation.sessionId.let {
-                    getOrCreateThreadIdFor(fromSerialized(it))
-                }
-                is Conversation.LegacyGroup -> conversation.groupId.let {
-                    getOrCreateThreadIdFor("", it,null)
-                }
-                is Conversation.Community -> conversation.baseCommunityInfo.baseUrl.let {
-                    getOrCreateThreadIdFor("",null, it)
-                }
+                is Conversation.OneToOne -> getOrCreateThreadIdFor(fromSerialized(conversation.sessionId))
+                is Conversation.LegacyGroup -> getOrCreateThreadIdFor("", conversation.groupId,null)
+                is Conversation.Community -> getOrCreateThreadIdFor("",null, "${conversation.baseCommunityInfo.baseUrl}.${conversation.baseCommunityInfo.room}")
             }
             if (threadId >= 0) {
                 markConversationAsRead(threadId, conversation.lastRead)
@@ -408,8 +477,8 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
 
         val existingCommunities: Map<Long, OpenGroup> = allOpenGroups.filterKeys { it !in toDeleteCommunities.keys }
         val toAddCommunities = communities.filter { it.community.fullUrl() !in existingCommunities.map { it.value.joinURL } }
-
         val existingJoinUrls = existingCommunities.values.map { it.joinURL }
+
         val existingClosedGroups = getAllGroups().filter { it.isClosedGroup }
         val lgcIds = lgc.map { it.sessionId }
         val toDeleteClosedGroups = existingClosedGroups.filter { group ->
@@ -837,7 +906,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
     override fun setExpirationTimer(address: String, duration: Int) {
         val recipient = Recipient.from(context, fromSerialized(address), false)
         DatabaseComponent.get(context).recipientDatabase().setExpireMessages(recipient, duration)
-        if (recipient.isContactRecipient) {
+        if (recipient.isContactRecipient && !recipient.isLocalNumber) {
             configFactory.contacts?.upsertContact(address) {
                 this.expiryMode = if (duration != 0) {
                     ExpiryMode.AfterRead(duration.toLong())
@@ -1074,6 +1143,33 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
     override fun setPinned(threadID: Long, isPinned: Boolean) {
         val threadDB = DatabaseComponent.get(context).threadDatabase()
         threadDB.setPinned(threadID, isPinned)
+        val threadRecipient = getRecipientForThread(threadID) ?: return
+        if (threadRecipient.isLocalNumber) {
+            val user = configFactory.user ?: return
+            user.setNtsPriority(if (isPinned) 1 else 0)
+        } else if (threadRecipient.isContactRecipient) {
+            val contacts = configFactory.contacts ?: return
+            contacts.upsertContact(threadRecipient.address.serialize()) {
+                priority = if (isPinned) 1 else 0
+            }
+        } else if (threadRecipient.isGroupRecipient) {
+            val groups = configFactory.userGroups ?: return
+            if (threadRecipient.isClosedGroupRecipient) {
+                val sessionId = GroupUtil.doubleDecodeGroupId(threadRecipient.address.serialize())
+                val newGroupInfo = groups.getOrConstructLegacyGroupInfo(sessionId).copy (
+                    priority = if (isPinned) 1 else 0
+                )
+                groups.set(newGroupInfo)
+            } else if (threadRecipient.isOpenGroupRecipient) {
+                val openGroup = getOpenGroup(threadID) ?: return
+                val (baseUrl, room, pubKeyHex) = BaseCommunityInfo.parseFullUrl(openGroup.joinURL) ?: return
+                val newGroupInfo = groups.getOrConstructCommunityInfo(baseUrl, room, Hex.toStringCondensed(pubKeyHex)).copy (
+                    priority = if (isPinned) 1 else 0
+                )
+                groups.set(newGroupInfo)
+            }
+        }
+        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
     }
 
     override fun isPinned(threadID: Long): Boolean {
@@ -1234,6 +1330,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
 
     override fun setRecipientApproved(recipient: Recipient, approved: Boolean) {
         DatabaseComponent.get(context).recipientDatabase().setApproved(recipient, approved)
+        if (recipient.isLocalNumber || !recipient.isContactRecipient) return
         configFactory.contacts?.upsertContact(recipient.address.serialize()) {
             this.approved = approved
         }
@@ -1241,6 +1338,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
 
     override fun setRecipientApprovedMe(recipient: Recipient, approvedMe: Boolean) {
         DatabaseComponent.get(context).recipientDatabase().setApprovedMe(recipient, approvedMe)
+        if (recipient.isLocalNumber || !recipient.isContactRecipient) return
         configFactory.contacts?.upsertContact(recipient.address.serialize()) {
             this.approvedMe = approvedMe
         }
@@ -1376,7 +1474,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
     override fun setBlocked(recipients: List<Recipient>, isBlocked: Boolean, fromConfigUpdate: Boolean) {
         val recipientDb = DatabaseComponent.get(context).recipientDatabase()
         recipientDb.setBlocked(recipients, isBlocked)
-        recipients.filter { it.isContactRecipient }.forEach { recipient ->
+        recipients.filter { it.isContactRecipient && !it.isLocalNumber }.forEach { recipient ->
             configFactory.contacts?.upsertContact(recipient.address.serialize()) {
                 this.blocked = isBlocked
             }

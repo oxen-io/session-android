@@ -205,7 +205,7 @@ object FullBackupImporter {
         db.query(ThreadDatabase.TABLE_NAME, arrayOf(ThreadDatabase.ID),
                 ThreadDatabase.EXPIRES_IN + " > 0", null, null, null, null).use { cursor ->
             while (cursor != null && cursor.moveToNext()) {
-                DatabaseComponent.get(context).threadDatabase().update(cursor.getLong(0), false)
+                DatabaseComponent.get(context).threadDatabase().update(cursor.getLong(0), false, true)
             }
         }
     }

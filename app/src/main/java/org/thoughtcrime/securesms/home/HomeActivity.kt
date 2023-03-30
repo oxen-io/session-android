@@ -573,7 +573,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
     private fun setConversationPinned(threadId: Long, pinned: Boolean) {
         lifecycleScope.launch(Dispatchers.IO) {
-            threadDb.setPinned(threadId, pinned)
+            storage.setPinned(threadId, pinned)
             homeViewModel.tryUpdateChannel()
         }
     }

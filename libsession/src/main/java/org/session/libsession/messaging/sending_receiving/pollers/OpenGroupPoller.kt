@@ -86,7 +86,9 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                     isCaughtUp = true
                 }
             }
-            executorService?.schedule(this@OpenGroupPoller::poll, pollInterval, TimeUnit.MILLISECONDS)
+            if (hasStarted) {
+                executorService?.schedule(this@OpenGroupPoller::poll, pollInterval, TimeUnit.MILLISECONDS)
+            }
         }.fail {
             updateCapabilitiesIfNeeded(isPostCapabilitiesRetry, it)
         }.map { }
@@ -115,6 +117,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         roomToken: String,
         pollInfo: OpenGroupApi.RoomPollInfo
     ) {
+        if (!hasStarted) return
         val storage = MessagingModuleConfiguration.shared.storage
         val groupId = "$server.$roomToken"
         val dbGroupId = GroupUtil.getEncodedOpenGroupID(groupId.toByteArray())

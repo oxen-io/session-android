@@ -64,7 +64,7 @@ class Contacts(pointer: Long) : ConfigBase(pointer) {
     /**
      * Similar to [updateIfExists], but will create the underlying contact if it doesn't exist before passing to [updateFunction]
      */
-    fun upsertContact(sessionId: String, updateFunction: Contact.()->Unit) {
+    fun upsertContact(sessionId: String, updateFunction: Contact.()->Unit = {}) {
         val contact = getOrConstruct(sessionId)
         updateFunction(contact)
         set(contact)
@@ -95,7 +95,9 @@ class UserProfile(pointer: Long) : ConfigBase(pointer) {
     external fun getPic(): UserPic
     external fun setPic(userPic: UserPic)
     external fun setNtsPriority(priority: Int)
+    external fun getNtsPriority(): Int
     external fun setNtsHidden(isHidden: Boolean)
+    external fun getNtsHidden(): Boolean
 }
 
 class ConversationVolatileConfig(pointer: Long): ConfigBase(pointer) {

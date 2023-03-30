@@ -147,7 +147,7 @@ public class SmsDatabase extends MessagingDatabase {
 
     long threadId = getThreadIdForMessage(id);
 
-    DatabaseComponent.get(context).threadDatabase().update(threadId, false);
+    DatabaseComponent.get(context).threadDatabase().update(threadId, false, true);
     notifyConversationListeners(threadId);
   }
 
@@ -236,7 +236,7 @@ public class SmsDatabase extends MessagingDatabase {
 
     long threadId = getThreadIdForMessage(id);
 
-    DatabaseComponent.get(context).threadDatabase().update(threadId, false);
+    DatabaseComponent.get(context).threadDatabase().update(threadId, false, true);
     notifyConversationListeners(threadId);
   }
 
@@ -299,7 +299,7 @@ public class SmsDatabase extends MessagingDatabase {
                              ID + " = ?",
                              new String[] {String.valueOf(cursor.getLong(cursor.getColumnIndexOrThrow(ID)))});
 
-            DatabaseComponent.get(context).threadDatabase().update(threadId, false);
+            DatabaseComponent.get(context).threadDatabase().update(threadId, false, true);
             notifyConversationListeners(threadId);
             foundMessage = true;
           }
@@ -383,7 +383,7 @@ public class SmsDatabase extends MessagingDatabase {
 
     long threadId = getThreadIdForMessage(messageId);
 
-    DatabaseComponent.get(context).threadDatabase().update(threadId, true);
+    DatabaseComponent.get(context).threadDatabase().update(threadId, true, true);
     notifyConversationListeners(threadId);
     notifyConversationListListeners();
 
@@ -470,7 +470,7 @@ public class SmsDatabase extends MessagingDatabase {
       long           messageId = db.insert(TABLE_NAME, null, values);
 
       if (runThreadUpdate) {
-        DatabaseComponent.get(context).threadDatabase().update(threadId, true);
+        DatabaseComponent.get(context).threadDatabase().update(threadId, true, true);
       }
 
       if (message.getSubscriptionId() != -1) {
@@ -546,7 +546,7 @@ public class SmsDatabase extends MessagingDatabase {
     }
 
     if (runThreadUpdate) {
-      DatabaseComponent.get(context).threadDatabase().update(threadId, true);
+      DatabaseComponent.get(context).threadDatabase().update(threadId, true, true);
     }
     DatabaseComponent.get(context).threadDatabase().setLastSeen(threadId);
 
@@ -595,7 +595,7 @@ public class SmsDatabase extends MessagingDatabase {
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
     long threadId = getThreadIdForMessage(messageId);
     db.delete(TABLE_NAME, ID_WHERE, new String[] {messageId+""});
-    boolean threadDeleted = DatabaseComponent.get(context).threadDatabase().update(threadId, false);
+    boolean threadDeleted = DatabaseComponent.get(context).threadDatabase().update(threadId, false, true);
     notifyConversationListeners(threadId);
     return threadDeleted;
   }
@@ -619,7 +619,7 @@ public class SmsDatabase extends MessagingDatabase {
       ID + " IN (" + StringUtils.join(argsArray, ',') + ")",
       argValues
     );
-    boolean threadDeleted = DatabaseComponent.get(context).threadDatabase().update(threadId, false);
+    boolean threadDeleted = DatabaseComponent.get(context).threadDatabase().update(threadId, false, true);
     notifyConversationListeners(threadId);
     return threadDeleted;
   }

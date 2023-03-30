@@ -72,6 +72,11 @@ import java.util.Set;
 
 public class ThreadDatabase extends Database {
 
+  public interface ConversationThreadUpdateListener {
+    public void threadCreated(@NonNull Address address, long threadId);
+    public void threadDeleted(@NonNull Address address, long threadId);
+  }
+
   private static final String TAG = ThreadDatabase.class.getSimpleName();
 
   private final Map<Long, Address> addressCache = new HashMap<>();
@@ -139,8 +144,14 @@ public class ThreadDatabase extends Database {
             "ADD COLUMN " + UNREAD_MENTION_COUNT + " INTEGER DEFAULT 0;";
   }
 
+  private ConversationThreadUpdateListener updateListener;
+
   public ThreadDatabase(Context context, SQLCipherOpenHelper databaseHelper) {
     super(context, databaseHelper);
+  }
+
+  public void setUpdateListener(ConversationThreadUpdateListener updateListener) {
+    this.updateListener = updateListener;
   }
 
   private long createThreadForRecipient(Address address, boolean group, int distributionType) {
@@ -205,10 +216,14 @@ public class ThreadDatabase extends Database {
   }
 
   private void deleteThread(long threadId) {
+    Recipient recipient = getRecipientForThreadId(threadId);
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
-    db.delete(TABLE_NAME, ID_WHERE, new String[] {threadId + ""});
+    int numberRemoved = db.delete(TABLE_NAME, ID_WHERE, new String[] {threadId + ""});
     addressCache.remove(threadId);
     notifyConversationListListeners();
+    if (updateListener != null && numberRemoved > 0 && recipient != null) {
+      updateListener.threadDeleted(recipient.getAddress(), threadId);
+    }
   }
 
   private void deleteThreads(Set<Long> threadIds) {
@@ -276,7 +291,7 @@ public class ThreadDatabase extends Database {
         DatabaseComponent.get(context).smsDatabase().deleteMessagesInThreadBeforeDate(threadId, lastTweetDate);
         DatabaseComponent.get(context).mmsDatabase().deleteMessagesInThreadBeforeDate(threadId, lastTweetDate);
 
-        update(threadId, false);
+        update(threadId, false, true);
         notifyConversationListeners(threadId);
       }
     } finally {
@@ -289,7 +304,7 @@ public class ThreadDatabase extends Database {
     Log.i("ThreadDatabase", "Trimming thread: " + threadId + " before :"+timestamp);
     DatabaseComponent.get(context).smsDatabase().deleteMessagesInThreadBeforeDate(threadId, timestamp);
     DatabaseComponent.get(context).mmsDatabase().deleteMessagesInThreadBeforeDate(threadId, timestamp);
-    update(threadId, false);
+    update(threadId, false, true);
     notifyConversationListeners(threadId);
   }
 
@@ -475,7 +490,7 @@ public class ThreadDatabase extends Database {
   }
 
   public Cursor getApprovedConversationList() {
-    String where  = "((" + MESSAGE_COUNT + " != 0 AND (" + HAS_SENT + " = 1 OR " + RecipientDatabase.APPROVED + " = 1 OR "+ GroupDatabase.TABLE_NAME +"."+GROUP_ID+" LIKE '"+CLOSED_GROUP_PREFIX+"%')) OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') " +
+    String where  = "((" + HAS_SENT + " = 1 OR " + RecipientDatabase.APPROVED + " = 1 OR "+ GroupDatabase.TABLE_NAME +"."+GROUP_ID+" LIKE '"+CLOSED_GROUP_PREFIX+"%') OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') " +
             "AND " + ARCHIVED + " = 0 ";
     return getConversationList(where);
   }
@@ -640,13 +655,19 @@ public class ThreadDatabase extends Database {
 
     try {
       cursor = db.query(TABLE_NAME, new String[]{ID}, where, recipientsArg, null, null, null);
-
+      long threadId;
+      boolean created = false;
       if (cursor != null && cursor.moveToFirst()) {
-        return cursor.getLong(cursor.getColumnIndexOrThrow(ID));
+        threadId = cursor.getLong(cursor.getColumnIndexOrThrow(ID));
       } else {
         DatabaseComponent.get(context).recipientDatabase().setProfileSharing(recipient, true);
-        return createThreadForRecipient(recipient.getAddress(), recipient.isGroupRecipient(), distributionType);
+        threadId = createThreadForRecipient(recipient.getAddress(), recipient.isGroupRecipient(), distributionType);
+        created = true;
       }
+      if (created && updateListener != null) {
+        updateListener.threadCreated(recipient.getAddress(), threadId);
+      }
+      return threadId;
     } finally {
       if (cursor != null)
         cursor.close();
@@ -687,11 +708,11 @@ public class ThreadDatabase extends Database {
     notifyConversationListeners(threadId);
   }
 
-  public boolean update(long threadId, boolean unarchive) {
+  public boolean update(long threadId, boolean unarchive, boolean shouldDeleteOnEmpty) {
     MmsSmsDatabase mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase();
     long count                    = mmsSmsDatabase.getConversationCount(threadId);
 
-    boolean shouldDeleteEmptyThread = deleteThreadOnEmpty(threadId);
+    boolean shouldDeleteEmptyThread = !shouldDeleteOnEmpty ? false : deleteThreadOnEmpty(threadId);
 
     if (count == 0 && shouldDeleteEmptyThread) {
       deleteThread(threadId);

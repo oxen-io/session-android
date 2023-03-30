@@ -90,3 +90,15 @@ Java_network_loki_messenger_libsession_1util_UserProfile_setNtsHidden(JNIEnv *en
     auto profile = ptrToProfile(env, thiz);
     profile->set_nts_hidden(is_hidden);
 }
+extern "C"
+JNIEXPORT jint JNICALL
+Java_network_loki_messenger_libsession_1util_UserProfile_getNtsPriority(JNIEnv *env, jobject thiz) {
+    auto profile = ptrToProfile(env, thiz);
+    return profile->get_nts_priority();
+}
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_network_loki_messenger_libsession_1util_UserProfile_getNtsHidden(JNIEnv *env, jobject thiz) {
+    auto profile = ptrToProfile(env, thiz);
+    return profile->get_nts_hidden();
+}
