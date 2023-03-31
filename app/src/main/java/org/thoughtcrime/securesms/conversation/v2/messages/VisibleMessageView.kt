@@ -26,6 +26,7 @@ import network.loki.messenger.databinding.ViewVisibleMessageBinding
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.contacts.Contact.ContactContext
 import org.session.libsession.messaging.open_groups.OpenGroupApi
+import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.ViewUtil
 import org.session.libsession.utilities.getColorFromAttr
@@ -315,7 +316,7 @@ class VisibleMessageView : LinearLayout {
             if (message.expireStarted > 0) {
                 binding.expirationTimerView.setExpirationTime(message.expireStarted, message.expiresIn)
                 binding.expirationTimerView.startAnimation()
-                if (message.expireStarted + message.expiresIn <= System.currentTimeMillis()) {
+                if (message.expireStarted + message.expiresIn <= SnodeAPI.nowWithOffset) {
                     ApplicationContext.getInstance(context).expiringMessageManager.checkSchedule()
                 }
             } else if (!message.isMediaPending) {

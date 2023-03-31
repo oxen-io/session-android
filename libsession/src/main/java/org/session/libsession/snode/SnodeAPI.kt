@@ -57,7 +57,7 @@ object SnodeAPI {
     internal var clockOffset = 0L
 
     @JvmStatic
-    val nowWithOffset
+    public val nowWithOffset
         get() = System.currentTimeMillis() + clockOffset
 
     internal var forkInfo by observable(database.getForkInfo()) { _, oldValue, newValue ->
@@ -590,7 +590,7 @@ object SnodeAPI {
             val parameters = message.toJSON().toMutableMap<String,Any>()
             // Construct signature
             if (requiresAuth) {
-                val sigTimestamp = System.currentTimeMillis() + SnodeAPI.clockOffset
+                val sigTimestamp = nowWithOffset
                 val ed25519PublicKey = userED25519KeyPair.publicKey.asHexString
                 val signature = ByteArray(Sign.BYTES)
                 // assume namespace here is non-zero, as zero namespace doesn't require auth

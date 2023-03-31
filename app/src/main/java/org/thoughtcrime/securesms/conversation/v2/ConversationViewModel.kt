@@ -38,11 +38,17 @@ class ConversationViewModel(
     private val _uiState = MutableStateFlow(ConversationUiState(conversationExists = recipient != null))
     val uiState: StateFlow<ConversationUiState> = _uiState
 
+    private var _recipient: RetrieveOnce<Recipient> = RetrieveOnce {
+        repository.maybeGetRecipientForThreadId(threadId)
+    }
     val recipient: Recipient?
-        get() = repository.maybeGetRecipientForThreadId(threadId)
+        get() = _recipient.value
 
+    private var _openGroup: RetrieveOnce<OpenGroup> = RetrieveOnce {
+        storage.getOpenGroup(threadId)
+    }
     val openGroup: OpenGroup?
-        get() = storage.getOpenGroup(threadId)
+        get() = _openGroup.value
 
     val serverCapabilities: List<String>
         get() = openGroup?.let { storage.getServerCapabilities(it.server) } ?: listOf()
@@ -186,6 +192,10 @@ class ConversationViewModel(
         return repository.hasReceived(threadId)
     }
 
+    fun updateRecipient() {
+        _recipient.updateTo(repository.maybeGetRecipientForThreadId(threadId))
+    }
+
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {
         fun create(threadId: Long, edKeyPair: KeyPair?, contentResolver: ContentResolver): Factory
@@ -213,3 +223,19 @@ data class ConversationUiState(
     val isMessageRequestAccepted: Boolean? = null,
     val conversationExists: Boolean
 )
+
+data class RetrieveOnce<T>(val retrieval: () -> T?) {
+    private var triedToRetrieve: Boolean = false
+    private var _value: T? = null
+
+    val value: T?
+        get() {
+            if (triedToRetrieve) { return _value }
+
+            triedToRetrieve = true
+            _value = retrieval()
+            return _value
+        }
+
+    fun updateTo(value: T?) { _value = value }
+}

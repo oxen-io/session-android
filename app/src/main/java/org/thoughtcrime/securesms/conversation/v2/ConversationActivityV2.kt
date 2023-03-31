@@ -166,6 +166,7 @@ import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.SaveAttachmentTask
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.toPx
+import java.lang.ref.WeakReference
 import java.util.Locale
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.atomic.AtomicLong
@@ -364,12 +365,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // messageIdToScroll
         messageToScrollTimestamp.set(intent.getLongExtra(SCROLL_MESSAGE_ID, -1))
         messageToScrollAuthor.set(intent.getParcelableExtra(SCROLL_MESSAGE_AUTHOR))
-        val thread = threadDb.getRecipientForThreadId(viewModel.threadId)
-        if (thread == null) {
+        val recipient = viewModel.recipient
+        val openGroup = recipient.let { viewModel.openGroup }
+        if (recipient == null || (recipient.isOpenGroupRecipient && openGroup == null)) {
             Toast.makeText(this, "This thread has been deleted.", Toast.LENGTH_LONG).show()
             return finish()
         }
-        setUpRecyclerView()
+
         setUpToolBar()
         setUpInputBar()
         setUpLinkPreviewObserver()
@@ -396,22 +398,31 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 }
             }
         }
-        unreadCount = mmsSmsDb.getUnreadCount(viewModel.threadId)
+
         updateUnreadCountIndicator()
-        setUpTypingObserver()
-        setUpRecipientObserver()
         updateSubtitle()
-        getLatestOpenGroupInfoIfNeeded()
         setUpBlockedBanner()
         binding!!.searchBottomBar.setEventListener(this)
-        setUpSearchResultObserver()
-        scrollToFirstUnreadMessageIfNeeded()
         showOrHideInputIfNeeded()
         setUpMessageRequestsBar()
-        viewModel.recipient?.let { recipient ->
-            if (recipient.isOpenGroupRecipient && viewModel.openGroup == null) {
-                Toast.makeText(this, "This thread has been deleted.", Toast.LENGTH_LONG).show()
-                return finish()
+
+        val weakActivity = WeakReference(this)
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            unreadCount = mmsSmsDb.getUnreadCount(viewModel.threadId)
+
+            // Note: We are accessing the `adapter` property because we want it to be loaded on
+            // the background thread to avoid blocking the UI thread and potentially hanging when
+            // transitioning to the activity
+            weakActivity.get()?.adapter ?: return@launch
+
+            withContext(Dispatchers.Main) {
+                setUpRecyclerView()
+                setUpTypingObserver()
+                setUpRecipientObserver()
+                getLatestOpenGroupInfoIfNeeded()
+                setUpSearchResultObserver()
+                scrollToFirstUnreadMessageIfNeeded()
             }
         }
 
@@ -709,6 +720,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     // region Animation & Updating
     override fun onModified(recipient: Recipient) {
+        viewModel.updateRecipient()
+
         runOnUiThread {
             val threadRecipient = viewModel.recipient ?: return@runOnUiThread Log.d("Loki-DBG", "Recipient no longer here, go back?")
             if (threadRecipient.isContactRecipient) {
@@ -1063,7 +1076,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             storage.setExpirationTimer(thread.address.serialize(), expirationTime)
             val message = ExpirationTimerUpdate(expirationTime)
             message.recipient = thread.address.serialize()
-            message.sentTimestamp = System.currentTimeMillis()
+            message.sentTimestamp = SnodeAPI.nowWithOffset
             val expiringMessageManager = ApplicationContext.getInstance(this).expiringMessageManager
             expiringMessageManager.setExpirationTimer(message)
             MessageSender.send(message, thread.address)
@@ -1192,7 +1205,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // Create the message
         val recipient = viewModel.recipient ?: return
         val reactionMessage = VisibleMessage()
-        val emojiTimestamp = System.currentTimeMillis()
+        val emojiTimestamp = SnodeAPI.nowWithOffset
         reactionMessage.sentTimestamp = emojiTimestamp
         val author = textSecurePreferences.getLocalNumber()!!
         // Put the message in the database
@@ -1225,7 +1238,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private fun sendEmojiRemoval(emoji: String, originalMessage: MessageRecord) {
         val recipient = viewModel.recipient ?: return
         val message = VisibleMessage()
-        val emojiTimestamp = System.currentTimeMillis()
+        val emojiTimestamp = SnodeAPI.nowWithOffset
         message.sentTimestamp = emojiTimestamp
         val author = textSecurePreferences.getLocalNumber()!!
         reactionDb.deleteReaction(emoji, MessageId(originalMessage.id, originalMessage.isMms), author, false)
@@ -1454,7 +1467,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
         // Create the message
         val message = VisibleMessage()
-        message.sentTimestamp = System.currentTimeMillis()
+        message.sentTimestamp = SnodeAPI.nowWithOffset
         message.text = text
         val outgoingTextMessage = OutgoingTextMessage.from(message, recipient)
         // Clear the input bar
@@ -1478,7 +1491,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         processMessageRequestApproval()
         // Create the message
         val message = VisibleMessage()
-        message.sentTimestamp = System.currentTimeMillis()
+        message.sentTimestamp = SnodeAPI.nowWithOffset
         message.text = body
         val quote = quotedMessage?.let {
             val quotedAttachments = (it as? MmsMessageRecord)?.slideDeck?.asAttachments() ?: listOf()
@@ -1875,7 +1888,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private fun sendMediaSavedNotification() {
         val recipient = viewModel.recipient ?: return
         if (recipient.isGroupRecipient) { return }
-        val timestamp = System.currentTimeMillis()
+        val timestamp = SnodeAPI.nowWithOffset
         val kind = DataExtractionNotification.Kind.MediaSaved(timestamp)
         val message = DataExtractionNotification(kind)
         MessageSender.send(message, recipient.address)

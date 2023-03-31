@@ -60,6 +60,7 @@ import androidx.viewpager.widget.ViewPager;
 import org.session.libsession.messaging.messages.control.DataExtractionNotification;
 import org.session.libsession.messaging.sending_receiving.MessageSender;
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment;
+import org.session.libsession.snode.SnodeAPI;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.Util;
 import org.session.libsession.utilities.recipients.Recipient;
@@ -423,7 +424,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
               .onAnyDenied(() -> Toast.makeText(this, R.string.MediaPreviewActivity_unable_to_write_to_external_storage_without_permission, Toast.LENGTH_LONG).show())
               .onAllGranted(() -> {
                 SaveAttachmentTask saveTask = new SaveAttachmentTask(MediaPreviewActivity.this);
-                long saveDate = (mediaItem.date > 0) ? mediaItem.date : System.currentTimeMillis();
+                long saveDate = (mediaItem.date > 0) ? mediaItem.date : SnodeAPI.getNowWithOffset();
                 saveTask.executeOnExecutor(
                         AsyncTask.THREAD_POOL_EXECUTOR,
                         new Attachment(mediaItem.uri, mediaItem.type, saveDate, null));
@@ -437,7 +438,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
 
   private void sendMediaSavedNotificationIfNeeded() {
     if (conversationRecipient.isGroupRecipient()) return;
-    DataExtractionNotification message = new DataExtractionNotification(new DataExtractionNotification.Kind.MediaSaved(System.currentTimeMillis()));
+    DataExtractionNotification message = new DataExtractionNotification(new DataExtractionNotification.Kind.MediaSaved(SnodeAPI.getNowWithOffset()));
     MessageSender.send(message, conversationRecipient.getAddress());
   }
 

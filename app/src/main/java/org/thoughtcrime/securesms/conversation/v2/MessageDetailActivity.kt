@@ -10,6 +10,7 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
+import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.ExpirationUtil
 import org.session.libsession.utilities.TextSecurePreferences
@@ -88,7 +89,7 @@ class MessageDetailActivity: PassphraseRequiredActionBarActivity() {
             binding.expiresContainer.visibility = View.GONE
         } else {
             binding.expiresContainer.visibility = View.VISIBLE
-            val elapsed = System.currentTimeMillis() - messageRecord!!.expireStarted
+            val elapsed = SnodeAPI.nowWithOffset - messageRecord!!.expireStarted
             val remaining = messageRecord!!.expiresIn - elapsed
 
             val duration = ExpirationUtil.getExpirationDisplayValue(this, Math.max((remaining / 1000).toInt(), 1))

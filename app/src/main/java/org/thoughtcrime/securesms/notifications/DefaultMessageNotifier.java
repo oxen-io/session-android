@@ -44,6 +44,7 @@ import org.session.libsession.messaging.open_groups.OpenGroup;
 import org.session.libsession.messaging.sending_receiving.notifications.MessageNotifier;
 import org.session.libsession.messaging.utilities.SessionId;
 import org.session.libsession.messaging.utilities.SodiumUtilities;
+import org.session.libsession.snode.SnodeAPI;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.Contact;
 import org.session.libsession.utilities.ServiceUtil;
@@ -137,7 +138,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
       Intent intent = new Intent(context, ConversationActivityV2.class);
       intent.putExtra(ConversationActivityV2.ADDRESS, recipient.getAddress());
       intent.putExtra(ConversationActivityV2.THREAD_ID, threadId);
-      intent.setData((Uri.parse("custom://" + System.currentTimeMillis())));
+      intent.setData((Uri.parse("custom://" + SnodeAPI.getNowWithOffset())));
 
       FailedNotificationBuilder builder = new FailedNotificationBuilder(context, TextSecurePreferences.getNotificationPrivacy(context), intent);
       ((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE))

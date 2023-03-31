@@ -54,6 +54,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.session.libsession.messaging.messages.control.DataExtractionNotification;
 import org.session.libsession.messaging.sending_receiving.MessageSender;
+import org.session.libsession.snode.SnodeAPI;
 import org.session.libsession.utilities.Address;
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter;
 import org.thoughtcrime.securesms.database.MediaDatabase;
@@ -366,7 +367,7 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
 
     private void sendMediaSavedNotificationIfNeeded() {
       if (recipient.isGroupRecipient()) return;
-      DataExtractionNotification message = new DataExtractionNotification(new DataExtractionNotification.Kind.MediaSaved(System.currentTimeMillis()));
+      DataExtractionNotification message = new DataExtractionNotification(new DataExtractionNotification.Kind.MediaSaved(SnodeAPI.getNowWithOffset()));
       MessageSender.send(message, recipient.getAddress());
     }
 
