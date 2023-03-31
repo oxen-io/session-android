@@ -73,8 +73,8 @@ import java.util.Set;
 public class ThreadDatabase extends Database {
 
   public interface ConversationThreadUpdateListener {
-    public void threadCreated(@NonNull Address address, long threadId);
-    public void threadDeleted(@NonNull Address address, long threadId);
+    void threadCreated(@NonNull Address address, long threadId);
+    void threadDeleted(@NonNull Address address, long threadId);
   }
 
   private static final String TAG = ThreadDatabase.class.getSimpleName();
