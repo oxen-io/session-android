@@ -81,6 +81,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                     is Endpoint.Outbox, is Endpoint.OutboxSince -> {
                         handleDirectMessages(server, true, response.body as List<OpenGroupApi.DirectMessage>)
                     }
+                    else -> { /* We don't care about the result of any other calls (won't be polled for) */}
                 }
                 if (secondToLastJob == null && !isCaughtUp) {
                     isCaughtUp = true
