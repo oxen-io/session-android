@@ -275,7 +275,7 @@
     <!-- ShortcutLauncherActivity -->
     <string name="ShortcutLauncherActivity_invalid_shortcut">Érvénytelen parancsikon</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <string name="SingleRecipientNotificationBuilder_signal">Ülés</string>
+    <string name="SingleRecipientNotificationBuilder_signal">Session</string>
     <string name="SingleRecipientNotificationBuilder_new_message">Új üzenet</string>
     <!-- TransferControlView -->
     <plurals name="TransferControlView_n_items">
@@ -533,14 +533,14 @@
     <string name="your_session_id">Az ön Session azonosítója</string>
     <string name="activity_landing_title_2">Az ön Session-ja itt kezdődik...</string>
     <string name="activity_landing_register_button_title">Session azonosító létrehozása</string>
-    <string name="activity_landing_restore_button_title">Folytassa az ülését</string>
+    <string name="activity_landing_restore_button_title">Session azonosító helyreállítása</string>
     <string name="view_fake_chat_bubble_1">Mi az a Session?</string>
     <string name="view_fake_chat_bubble_2">Ez egy decentralizált, titkosított üzenetküldő alkalmazás</string>
     <string name="view_fake_chat_bubble_3">Tehát nem gyűjti a személyes adataimat vagy a beszélgetés metaadatait? Hogyan működik?</string>
-    <string name="view_fake_chat_bubble_4">Fejlett névtelen útválasztási és end-to-end titkosítási technológiák kombinációjának használata.</string>
-    <string name="view_fake_chat_bubble_5">A barátok nem engedik, hogy a barátok kompromittált hírnököket használjanak. Szívesen.</string>
+    <string name="view_fake_chat_bubble_4">Fejlett névtelen útválasztási és végponttól-végpontig titkosítási technológiák kombinációjának használata.</string>
+    <string name="view_fake_chat_bubble_5">A barátok nem engednek barátokat, hogy megbízhatatlan üzenetküldő appot használjanak. Szívesen.</string>
     <string name="activity_register_title">Ismerd meg a Session ID-d</string>
-    <string name="activity_register_explanation">Az üles azonosító az az egyedi cím, amelyet az emberek használhatnak, hogy kapcsolatba lépjenek Önnel az Ülés során. Mivel nincs kapcsolat a valódi személyazonosságával, az Ülés azonosító teljesen névtelen, és privát.</string>
+    <string name="activity_register_explanation">A Session azonosító az az egyedi cím, amelyet az emberek használhatnak, hogy kapcsolatba lépjenek Önnel a Sessionon. Mivel nincs kapcsolat a valódi személyazonosságával, az Session azonosító teljesen névtelen, és privát.</string>
     <string name="activity_restore_title">Fiók visszaállítása</string>
     <string name="activity_restore_explanation">Írja be azt a helyreállítási kifejezést, amelyet a fiók visszaállításához regisztrálásakor kapott.</string>
     <string name="activity_restore_seed_edit_text_hint">Írja be a helyreállítási kifejezést</string>
@@ -552,7 +552,7 @@
     <string name="activity_pn_mode_recommended_option_tag">Ajánlott</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Kérjük, válasszon egy lehetőséget</string>
     <string name="activity_home_empty_state_message">Még nincsenek névjegyei</string>
-    <string name="activity_home_empty_state_button_title">Indítson el egy ülést</string>
+    <string name="activity_home_empty_state_button_title">Indítson el egy beszélgetést</string>
     <string name="activity_home_leave_group_dialog_message">Biztosan elhagyja ezt a csoportot?</string>
     <string name="activity_home_leaving_group_failed_message">"Nem sikerült kilépni a csoportból"</string>
     <string name="activity_home_delete_conversation_dialog_message">Biztosan törli ezt a beszélgetést?</string>
@@ -573,8 +573,8 @@
     <string name="activity_path_destination_row_title">Célállomás</string>
     <string name="activity_path_learn_more_button_title">Tudj meg többet</string>
     <string name="activity_path_resolving_progress">Feloldás...</string>
-    <string name="activity_create_private_chat_title">Új Ülés</string>
-    <string name="activity_create_private_chat_enter_session_id_tab_title">Adja meg az Ülés azonosítóját</string>
+    <string name="activity_create_private_chat_title">Új Session</string>
+    <string name="activity_create_private_chat_enter_session_id_tab_title">Adja meg a Session azonosítóját</string>
     <string name="activity_create_private_chat_scan_qr_code_tab_title">QR kód beolvasása</string>
     <string name="activity_create_private_chat_scan_qr_code_explanation">A beszélgetés elindításához olvassa be a felhasználó QR kódját. A QR kód a fiókbeállításokban található a QR kód ikonra koppintva.</string>
     <string name="fragment_enter_public_key_edit_text_hint">Írja be Session azonosítóját vagy ONS nevét</string>
