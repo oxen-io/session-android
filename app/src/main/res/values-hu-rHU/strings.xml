@@ -92,7 +92,8 @@
         <item quantity="one">Ez végelegesen törölni fogja a kiválasztott üzenetet.</item>
         <item quantity="other">Ez véglegesen törölni fogja mind a(z) %1$d db kiválasztott üzenetet.</item>
     </plurals>
-    <string name="ConversationFragment_ban_selected_user">Tiltja ezt a felhasználót?</string>
+    <string name="ConversationActivity_call_title">Hívás engedély szükséges</string>
+    <string name="ConversationFragment_ban_selected_user">Tiltod ezt a felhasználót?</string>
     <string name="ConversationFragment_save_to_sd_card">Mentés tárolóra?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">A média mentése a tárolóra lehetővé teszi bármelyik másik alkalmazásnak a készülékeden, hogy hozzáférjen.\n\nFolytatod?</item>
@@ -206,7 +207,7 @@
     <string name="ThreadRecord_called_you">Hívott téged</string>
     <string name="ThreadRecord_missed_call">Nem fogadott hívás</string>
     <string name="ThreadRecord_media_message">Média üzenet</string>
-    <string name="ThreadRecord_s_is_on_signal">%s a Session-on van!</string>
+    <string name="ThreadRecord_s_is_on_signal">%s elérhető a Session-on!</string>
     <string name="ThreadRecord_disappearing_messages_disabled">Eltűnő üzenetek letiltva</string>
     <string name="ThreadRecord_disappearing_message_time_updated_to_s">Eltűnő üzenet ideje beállítva erre: %s</string>
     <string name="ThreadRecord_s_took_a_screenshot">%s készített egy képernyőképet.</string>
@@ -236,7 +237,7 @@
     <string name="MediaPreviewActivity_you">Te</string>
     <string name="MediaPreviewActivity_unssuported_media_type">Nem támogatott médiatípus</string>
     <string name="MediaPreviewActivity_draft">Piszkozat</string>
-    <string name="MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied">A Session- nek szüksége van fájlhozzáférési engedélyekhez, hogy menteni tudjon külső tárhelyre, de ezt az engedélyt megtagadták. Kérjük, hogy a készüléke beállításaiban engedélyezze a \"fájlok és média\" opciót a Session számára.</string>
+    <string name="MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied">A Session- nek szüksége van fájlhozzáférési engedélyekhez, hogy menteni tudjon külső tárhelyre. Kérlek, hogy a rendszerbeállításokban engedélyezd a \"fájlok és média\" opciót a Session számára.</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Nem lehet engedély nélkül menteni a külső tárolóra</string>
     <string name="MediaPreviewActivity_media_delete_confirmation_title">Törlöd az üzenetet?</string>
     <string name="MediaPreviewActivity_media_delete_confirmation_message">Ez véglegesen törölni fogja ezt az üzenetet.</string>
@@ -250,8 +251,8 @@
     <string name="MessageNotifier_mark_all_as_read">Összes megjelölése olvasottként</string>
     <string name="MessageNotifier_mark_read">Olvasottnak jelöl</string>
     <string name="MessageNotifier_reply">Válasz</string>
-    <string name="MessageNotifier_pending_signal_messages">Függő Session üzenetek</string>
-    <string name="MessageNotifier_you_have_pending_signal_messages">Függő Session üzeneteid vannak, koppints a megnyitáshoz és letöltéshez</string>
+    <string name="MessageNotifier_pending_signal_messages">Függőben lévő Session üzenetek</string>
+    <string name="MessageNotifier_you_have_pending_signal_messages">Függőben lévő Session üzeneteid vannak, koppints a megnyitáshoz és letöltéshez</string>
     <string name="MessageNotifier_contact_message">%1$s %2$s</string>
     <string name="MessageNotifier_unknown_contact_message">Névjegy</string>
     <!-- Notification Channels -->
@@ -530,15 +531,15 @@
     <string name="share">Megosztás</string>
     <string name="invalid_session_id">Érvénytelen Session azonosító</string>
     <string name="cancel">Mégse</string>
-    <string name="your_session_id">Az ön Session azonosítója</string>
-    <string name="activity_landing_title_2">Az ön Session-ja itt kezdődik...</string>
+    <string name="your_session_id">A session azonosítód</string>
+    <string name="activity_landing_title_2">A Session itt kezdődik...</string>
     <string name="activity_landing_register_button_title">Session azonosító létrehozása</string>
     <string name="activity_landing_restore_button_title">Session azonosító helyreállítása</string>
     <string name="view_fake_chat_bubble_1">Mi az a Session?</string>
     <string name="view_fake_chat_bubble_2">Ez egy decentralizált, titkosított üzenetküldő alkalmazás</string>
     <string name="view_fake_chat_bubble_3">Tehát nem gyűjti a személyes adataimat vagy a beszélgetés metaadatait? Hogyan működik?</string>
-    <string name="view_fake_chat_bubble_4">Fejlett névtelen útválasztási és végponttól-végpontig titkosítási technológiák kombinációjának használata.</string>
-    <string name="view_fake_chat_bubble_5">A barátok nem engednek barátokat, hogy megbízhatatlan üzenetküldő appot használjanak. Szívesen.</string>
+    <string name="view_fake_chat_bubble_4">Fejlett anonim útválasztási és végponttól-végpontig titkosítási technológiák használatával.</string>
+    <string name="view_fake_chat_bubble_5">A barátként nem engedhetem, hogy megbízhatatlan üzenetküldő appokat használj. Szívesen.</string>
     <string name="activity_register_title">Ismerd meg a Session ID-d</string>
     <string name="activity_register_explanation">A Session azonosító az az egyedi cím, amelyet az emberek használhatnak, hogy kapcsolatba lépjenek Önnel a Sessionon. Mivel nincs kapcsolat a valódi személyazonosságával, az Session azonosító teljesen névtelen, és privát.</string>
     <string name="activity_restore_title">Fiók visszaállítása</string>
