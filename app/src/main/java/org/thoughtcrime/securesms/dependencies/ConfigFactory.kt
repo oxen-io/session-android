@@ -43,6 +43,7 @@ class ConfigFactory(private val context: Context,
     fun unregisterListener(listener: ConfigFactoryUpdateListener) { listeners -= listener }
 
     override val user: UserProfile? get() = synchronized(userLock) {
+        if (!ConfigBase.isNewConfigEnabled) return null
         if (_userConfig == null) {
             val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
             val userDump = configDatabase.retrieveConfigAndHashes(SharedConfigMessage.Kind.USER_PROFILE.name, publicKey)
@@ -58,6 +59,7 @@ class ConfigFactory(private val context: Context,
     }
 
     override val contacts: Contacts? get() = synchronized(contactsLock) {
+        if (!ConfigBase.isNewConfigEnabled) return null
         if (_contacts == null) {
             val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
             val contactsDump = configDatabase.retrieveConfigAndHashes(SharedConfigMessage.Kind.CONTACTS.name, publicKey)
@@ -73,6 +75,7 @@ class ConfigFactory(private val context: Context,
     }
 
     override val convoVolatile: ConversationVolatileConfig? get() = synchronized(convoVolatileLock) {
+        if (!ConfigBase.isNewConfigEnabled) return null
         if (_convoVolatileConfig == null) {
             val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
             val convoDump = configDatabase.retrieveConfigAndHashes(SharedConfigMessage.Kind.CONVO_INFO_VOLATILE.name, publicKey)
@@ -88,6 +91,7 @@ class ConfigFactory(private val context: Context,
     }
 
     override val userGroups: UserGroupsConfig? get() = synchronized(userGroupsLock) {
+        if (!ConfigBase.isNewConfigEnabled) return null
         if (_userGroups == null) {
             val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
             val userGroupsDump = configDatabase.retrieveConfigAndHashes(SharedConfigMessage.Kind.GROUPS.name, publicKey)

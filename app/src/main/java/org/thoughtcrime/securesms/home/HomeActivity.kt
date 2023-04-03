@@ -27,6 +27,7 @@ import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityHomeBinding
 import network.loki.messenger.databinding.ViewMessageRequestBannerBinding
+import network.loki.messenger.libsession_util.ConfigBase
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -182,6 +183,11 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         binding.recyclerView.adapter = homeAdapter
         binding.globalSearchRecycler.adapter = globalSearchAdapter
 
+        binding.configOutdatedView.setOnClickListener {
+            textSecurePreferences.setHasLegacyConfig(false)
+            updateLegacyConfigView()
+        }
+
         // Set up empty state view
         binding.createNewPrivateChatButton.setOnClickListener { showNewConversation() }
         IP2Country.configureIfNeeded(this@HomeActivity)
@@ -335,6 +341,10 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         }
     }
 
+    private fun updateLegacyConfigView() {
+        binding.configOutdatedView.isVisible = ConfigBase.isNewConfigEnabled && textSecurePreferences.getHasLegacyConfig()
+    }
+
     override fun onResume() {
         super.onResume()
         ApplicationContext.getInstance(this).messageNotifier.setHomeScreenVisible(true)
@@ -345,7 +355,12 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         if (textSecurePreferences.getHasViewedSeed()) {
             binding.seedReminderView.isVisible = false
         }
-        if (textSecurePreferences.getConfigurationMessageSynced()) {
+
+        updateLegacyConfigView()
+
+        // TODO: remove this after enough updates that we can rely on ConfigBase.isNewConfigEnabled to always return true
+        // This will only run if we aren't using new configs, as they are schedule to sync when there are changes applied
+        if (textSecurePreferences.getConfigurationMessageSynced() && !ConfigBase.isNewConfigEnabled) {
             lifecycleScope.launch(Dispatchers.IO) {
                 ConfigurationMessageUtilities.syncConfigurationIfNeeded(this@HomeActivity)
             }

@@ -67,13 +67,14 @@ object ConversationMenuHelper {
             if (thread.expireMessages > 0) {
                 inflater.inflate(R.menu.menu_conversation_expiration_on, menu)
                 val item = menu.findItem(R.id.menu_expiring_messages)
-                val actionView = item.actionView
-                val iconView = actionView.findViewById<ImageView>(R.id.menu_badge_icon)
-                val badgeView = actionView.findViewById<TextView>(R.id.expiration_badge)
-                @ColorInt val color = context.getColorFromAttr(android.R.attr.textColorPrimary)
-                iconView.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.MULTIPLY)
-                badgeView.text = ExpirationUtil.getExpirationAbbreviatedDisplayValue(context, thread.expireMessages)
-                actionView.setOnClickListener { onOptionsItemSelected(item) }
+                item.actionView?.let { actionView ->
+                    val iconView = actionView.findViewById<ImageView>(R.id.menu_badge_icon)
+                    val badgeView = actionView.findViewById<TextView>(R.id.expiration_badge)
+                    @ColorInt val color = context.getColorFromAttr(android.R.attr.textColorPrimary)
+                    iconView.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.MULTIPLY)
+                    badgeView.text = ExpirationUtil.getExpirationAbbreviatedDisplayValue(context, thread.expireMessages)
+                    actionView.setOnClickListener { onOptionsItemSelected(item) }
+                }
             } else {
                 inflater.inflate(R.menu.menu_conversation_expiration_off, menu)
             }

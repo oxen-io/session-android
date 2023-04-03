@@ -27,8 +27,9 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp">
 
-                <include layout="@layout/view_profile_picture"
+                <include
                     android:id="@+id/profileButton"
+                    layout="@layout/view_profile_picture"
                     android:layout_width="@dimen/small_profile_picture_size"
                     android:layout_height="@dimen/small_profile_picture_size"
                     android:layout_alignParentLeft="true"
@@ -37,10 +38,10 @@
 
                 <org.thoughtcrime.securesms.home.PathStatusView
                     android:id="@+id/pathStatusView"
-                    android:layout_alignBottom="@+id/profileButton"
-                    android:layout_alignEnd="@+id/profileButton"
                     android:layout_width="@dimen/path_status_view_size"
-                    android:layout_height="@dimen/path_status_view_size"/>
+                    android:layout_height="@dimen/path_status_view_size"
+                    android:layout_alignEnd="@+id/profileButton"
+                    android:layout_alignBottom="@+id/profileButton" />
 
                 <ImageView
                     android:id="@+id/sessionHeaderImage"
@@ -72,16 +73,17 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:visibility="gone"
                 android:id="@+id/search_toolbar"
-                android:layout_marginHorizontal="@dimen/medium_spacing"
                 android:layout_width="match_parent"
-                android:layout_height="?actionBarSize">
+                android:layout_height="?actionBarSize"
+                android:layout_marginHorizontal="@dimen/medium_spacing"
+                android:visibility="gone">
+
                 <org.thoughtcrime.securesms.home.search.GlobalSearchInputLayout
-                    android:layout_centerVertical="true"
                     android:id="@+id/globalSearchInputLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true" />
             </RelativeLayout>
 
             <View
@@ -95,15 +97,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <TextView
+                android:visibility="gone"
+                android:textColor="?message_sent_text_color"
+                android:background="?colorAccent"
+                android:id="@+id/configOutdatedView"
+                android:textSize="9sp"
+                android:paddingVertical="4dp"
+                android:paddingHorizontal="64dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_home_outdated_client_config"
+                />
+
         </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>
 
     <RelativeLayout
-        android:focusable="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipChildren="false">
+        android:clipChildren="false"
+        android:focusable="false">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -116,14 +132,14 @@
             tools:listitem="@layout/view_conversation" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:visibility="gone"
-            android:scrollbars="vertical"
             android:id="@+id/globalSearchRecycler"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/view_global_search_result"
             tools:itemCount="6"
-            android:layout_height="match_parent"/>
+            tools:listitem="@layout/view_global_search_result" />
 
         <LinearLayout
             android:id="@+id/emptyStateContainer"
@@ -159,6 +175,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:background="@drawable/new_conversation_button_background"
+            android:contentDescription="@string/activity_appearance_follow_system_category"
             android:layout_marginBottom="@dimen/new_conversation_button_bottom_offset"
             android:src="@drawable/ic_plus"
             app:tint="@color/white" />

@@ -1,6 +1,7 @@
 package org.session.libsession.messaging.sending_receiving
 
 import android.text.TextUtils
+import network.loki.messenger.libsession_util.ConfigBase
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.BackgroundGroupAddJob
@@ -148,6 +149,9 @@ private fun handleConfigurationMessage(message: ConfigurationMessage) {
 
     TextSecurePreferences.setConfigurationMessageSynced(context, true)
     TextSecurePreferences.setLastProfileUpdateTime(context, message.sentTimestamp!!)
+    if (ConfigBase.isNewConfigEnabled) {
+        TextSecurePreferences.setHasLegacyConfig(context, true)
+    }
     val allClosedGroupPublicKeys = storage.getAllClosedGroupPublicKeys()
     for (closedGroup in message.closedGroups) {
         if (allClosedGroupPublicKeys.contains(closedGroup.publicKey)) {

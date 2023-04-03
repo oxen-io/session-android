@@ -35,7 +35,7 @@ class ConversationViewModel(
     private val storage: Storage
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ConversationUiState(conversationExists = recipient != null))
+    private val _uiState = MutableStateFlow(ConversationUiState(conversationExists = true))
     val uiState: StateFlow<ConversationUiState> = _uiState
 
     private var _recipient: RetrieveOnce<Recipient> = RetrieveOnce {

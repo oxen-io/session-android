@@ -103,6 +103,8 @@ interface TextSecurePreferences {
     fun setUpdateApkDigest(value: String?)
     fun getUpdateApkDigest(): String?
     fun getLocalNumber(): String?
+    fun getHasLegacyConfig(): Boolean
+    fun setHasLegacyConfig(newValue: Boolean)
     fun setLocalNumber(localNumber: String)
     fun removeLocalNumber()
     fun isEnterSendsEnabled(): Boolean
@@ -264,6 +266,9 @@ interface TextSecurePreferences {
         const val AUTOPLAY_AUDIO_MESSAGES = "pref_autoplay_audio"
         const val FINGERPRINT_KEY_GENERATED = "fingerprint_key_generated"
         const val SELECTED_ACCENT_COLOR = "selected_accent_color"
+
+        const val HAS_RECEIVED_LEGACY_CONFIG = "has_received_legacy_config"
+
         const val GREEN_ACCENT = "accent_green"
         const val BLUE_ACCENT = "accent_blue"
         const val PURPLE_ACCENT = "accent_purple"
@@ -623,6 +628,16 @@ interface TextSecurePreferences {
         @JvmStatic
         fun getLocalNumber(context: Context): String? {
             return getStringPreference(context, LOCAL_NUMBER_PREF, null)
+        }
+
+        @JvmStatic
+        fun getHasLegacyConfig(context: Context): Boolean {
+            return getBooleanPreference(context, HAS_RECEIVED_LEGACY_CONFIG, false)
+        }
+
+        @JvmStatic
+        fun setHasLegacyConfig(context: Context, newValue: Boolean) {
+            setBooleanPreference(context, HAS_RECEIVED_LEGACY_CONFIG, newValue)
         }
 
         fun setLocalNumber(context: Context, localNumber: String) {
@@ -1277,6 +1292,14 @@ class AppTextSecurePreferences @Inject constructor(
 
     override fun getLocalNumber(): String? {
         return getStringPreference(TextSecurePreferences.LOCAL_NUMBER_PREF, null)
+    }
+
+    override fun getHasLegacyConfig(): Boolean {
+        return getBooleanPreference(TextSecurePreferences.HAS_RECEIVED_LEGACY_CONFIG, false)
+    }
+
+    override fun setHasLegacyConfig(newValue: Boolean) {
+        return setBooleanPreference(TextSecurePreferences.HAS_RECEIVED_LEGACY_CONFIG, newValue)
     }
 
     override fun setLocalNumber(localNumber: String) {

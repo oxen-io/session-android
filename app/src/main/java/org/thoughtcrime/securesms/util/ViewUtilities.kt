@@ -8,11 +8,11 @@ import android.content.Context
 import android.graphics.PointF
 import android.graphics.Rect
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.annotation.ColorInt
 import androidx.annotation.DimenRes
 import network.loki.messenger.R
 import org.session.libsession.utilities.getColorFromAttr
-import android.view.inputmethod.InputMethodManager
 
 fun View.contains(point: PointF): Boolean {
     return hitRect.contains(point.x.toInt(), point.y.toInt())
@@ -54,7 +54,7 @@ fun View.fadeIn(duration: Long = 150) {
 
 fun View.fadeOut(duration: Long = 150) {
     animate().setDuration(duration).alpha(0.0f).setListener(object : AnimatorListenerAdapter() {
-        override fun onAnimationEnd(animation: Animator?) {
+        override fun onAnimationEnd(animation: Animator) {
             super.onAnimationEnd(animation)
             visibility = View.GONE
         }

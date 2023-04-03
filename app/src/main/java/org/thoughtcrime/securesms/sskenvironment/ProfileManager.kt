@@ -17,6 +17,7 @@ import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 class ProfileManager(private val context: Context, private val configFactory: ConfigFactory) : SSKEnvironment.ProfileManagerProtocol {
 
     override fun setNickname(context: Context, recipient: Recipient, nickname: String?) {
+        if (recipient.isLocalNumber) return
         val sessionID = recipient.address.serialize()
         val contactDatabase = DatabaseComponent.get(context).sessionContactDatabase()
         var contact = contactDatabase.getContactWithSessionID(sessionID)
@@ -31,6 +32,7 @@ class ProfileManager(private val context: Context, private val configFactory: Co
 
     override fun setName(context: Context, recipient: Recipient, name: String?) {
         // New API
+        if (recipient.isLocalNumber) return
         val sessionID = recipient.address.serialize()
         val contactDatabase = DatabaseComponent.get(context).sessionContactDatabase()
         var contact = contactDatabase.getContactWithSessionID(sessionID)
@@ -48,6 +50,7 @@ class ProfileManager(private val context: Context, private val configFactory: Co
     }
 
     override fun setProfilePictureURL(context: Context, recipient: Recipient, profilePictureURL: String) {
+        if (recipient.isLocalNumber) return
         val job = RetrieveProfileAvatarJob(recipient, profilePictureURL)
         val jobManager = ApplicationContext.getInstance(context).jobManager
         jobManager.add(job)
@@ -64,6 +67,7 @@ class ProfileManager(private val context: Context, private val configFactory: Co
     }
 
     override fun setProfileKey(context: Context, recipient: Recipient, profileKey: ByteArray?) {
+        if (recipient.isLocalNumber) return
         // New API
         val sessionID = recipient.address.serialize()
         val contactDatabase = DatabaseComponent.get(context).sessionContactDatabase()

@@ -873,4 +873,5 @@
     <string name="delivery_status_failed">Failed to send</string>
     <string name="giphy_permission_title">Search GIFs?</string>
     <string name="giphy_permission_message">Session will connect to Giphy to provide search results. You will not have full metadata protection when sending GIFs.</string>
+    <string name="activity_home_outdated_client_config">Some of your devices are using outdated versions. Syncing may be unreliable until they are updated.</string>
 </resources>

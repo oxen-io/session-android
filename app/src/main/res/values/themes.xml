@@ -389,6 +389,8 @@
         <item name="message_selected">@color/classic_dark_2</item>
     </style>
 
+    <style name="Classic.Dark.Test" parent="Theme.Session.DayNight.NoActionBar"/>
+
     <style name="Classic.Light">
         <!-- Main styles -->
         <item name="sessionLogoTint">@color/classic_light_0</item>

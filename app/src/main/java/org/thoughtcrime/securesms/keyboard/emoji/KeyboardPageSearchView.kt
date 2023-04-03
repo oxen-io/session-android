@@ -154,7 +154,7 @@ class KeyboardPageSearchView @JvmOverloads constructor(
         .setDuration(REVEAL_DURATION)
         .alpha(0f)
         .setListener(object : AnimationCompleteListener() {
-          override fun onAnimationEnd(animation: Animator?) {
+          override fun onAnimationEnd(animation: Animator) {
             visibility = INVISIBLE
           }
         })
