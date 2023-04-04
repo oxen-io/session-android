@@ -47,6 +47,7 @@
     <string name="AccessibilityId_message_request_banner">Message requests banner</string>
     <string name="AccessibilityId_message_request">Message request</string>
     <string name="AccessibilityId_empty_message_request_folder">No pending message requests</string>
+    <string name="AccessibilityId_clear_all_message_requests">Clear all</string>
     <!--New conversation pop up-->
     <string name="AccessibilityId_new_conversation_button">New conversation button</string>
     <string name="AccessibilityId_new_direct_message">New direct message</string>

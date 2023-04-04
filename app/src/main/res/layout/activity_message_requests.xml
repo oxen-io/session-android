@@ -49,6 +49,7 @@
         </LinearLayout>
 
         <Button
+            android:contentDescription="@string/AccessibilityId_clear_all_message_requests"
             android:id="@+id/clearAllMessageRequestsButton"
             style="@style/Widget.Session.Button.Common.DestructiveOutline"
             android:layout_width="196dp"
