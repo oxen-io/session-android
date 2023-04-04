@@ -8,10 +8,9 @@ sealed class GroupInfo {
         val sessionId: String,
         val name: String,
         val members: Map<String, Boolean>,
-        val hidden: Boolean,
         val encPubKey: ByteArray,
         val encSecKey: ByteArray,
-        val priority: Int = 0,
+        val priority: Int,
         val disappearingTimer: Long
     ): GroupInfo() {
         companion object {
@@ -28,7 +27,6 @@ sealed class GroupInfo {
             if (sessionId != other.sessionId) return false
             if (name != other.name) return false
             if (members != other.members) return false
-            if (hidden != other.hidden) return false
             if (!encPubKey.contentEquals(other.encPubKey)) return false
             if (!encSecKey.contentEquals(other.encSecKey)) return false
             if (priority != other.priority) return false
@@ -40,7 +38,6 @@ sealed class GroupInfo {
             var result = sessionId.hashCode()
             result = 31 * result + name.hashCode()
             result = 31 * result + members.hashCode()
-            result = 31 * result + hidden.hashCode()
             result = 31 * result + encPubKey.contentHashCode()
             result = 31 * result + encSecKey.contentHashCode()
             result = 31 * result + priority

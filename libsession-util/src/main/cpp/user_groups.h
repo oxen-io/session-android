@@ -47,7 +47,6 @@ inline session::config::legacy_group_info deserialize_legacy_group_info(JNIEnv *
     auto id_field = env->GetFieldID(clazz, "sessionId", "Ljava/lang/String;");
     auto name_field = env->GetFieldID(clazz, "name", "Ljava/lang/String;");
     auto members_field = env->GetFieldID(clazz, "members", "Ljava/util/Map;");
-    auto hidden_field = env->GetFieldID(clazz, "hidden", "Z");
     auto enc_pub_key_field = env->GetFieldID(clazz, "encPubKey", "[B");
     auto enc_sec_key_field = env->GetFieldID(clazz, "encSecKey", "[B");
     auto priority_field = env->GetFieldID(clazz, "priority", "I");
@@ -55,7 +54,6 @@ inline session::config::legacy_group_info deserialize_legacy_group_info(JNIEnv *
     jstring id = static_cast<jstring>(env->GetObjectField(info, id_field));
     jstring name = static_cast<jstring>(env->GetObjectField(info, name_field));
     jobject members_map = env->GetObjectField(info, members_field);
-    bool hidden = env->GetBooleanField(info, hidden_field);
     jbyteArray enc_pub_key = static_cast<jbyteArray>(env->GetObjectField(info, enc_pub_key_field));
     jbyteArray enc_sec_key = static_cast<jbyteArray>(env->GetObjectField(info, enc_sec_key_field));
     int priority = env->GetIntField(info, priority_field);
@@ -67,10 +65,12 @@ inline session::config::legacy_group_info deserialize_legacy_group_info(JNIEnv *
 
     auto info_deserialized = conf->get_or_construct_legacy_group(id_bytes);
 
-    info_deserialized.priority = priority;
+    auto current_members = info_deserialized.members();
+    for (auto member = current_members.begin(); member != current_members.end(); ++member) {
+        info_deserialized.erase(member->first);
+    }
     deserialize_members_into(env, members_map, info_deserialized);
     info_deserialized.name = name_bytes;
-    info_deserialized.hidden = hidden;
     info_deserialized.enc_pubkey = enc_pub_key_bytes;
     info_deserialized.enc_seckey = enc_sec_key_bytes;
     info_deserialized.disappearing_timer = std::chrono::seconds(env->GetLongField(info, disappearing_timer_field));
@@ -116,11 +116,10 @@ inline jobject serialize_legacy_group_info(JNIEnv *env, session::config::legacy_
     jbyteArray enc_pubkey = util::bytes_from_ustring(env, info.enc_pubkey);
     jbyteArray enc_seckey = util::bytes_from_ustring(env, info.enc_seckey);
     int priority = info.priority;
-    bool hidden = info.hidden;
 
     jclass legacy_group_class = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$LegacyGroupInfo");
-    jmethodID constructor = env->GetMethodID(legacy_group_class, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Z[B[BIJ)V");
-    jobject serialized = env->NewObject(legacy_group_class, constructor, session_id, name, members, hidden, enc_pubkey, enc_seckey, priority, (jlong) info.disappearing_timer.count());
+    jmethodID constructor = env->GetMethodID(legacy_group_class, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;[B[BIJ)V");
+    jobject serialized = env->NewObject(legacy_group_class, constructor, session_id, name, members, enc_pubkey, enc_seckey, priority, (jlong) info.disappearing_timer.count());
     return serialized;
 }
 

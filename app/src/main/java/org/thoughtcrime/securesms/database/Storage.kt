@@ -117,10 +117,12 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
             // don't update our own address into the contacts DB
             if (getUserPublicKey() != address.serialize()) {
                 val contacts = configFactory.contacts ?: return
-                contacts.upsertContact(address.serialize())
+                contacts.upsertContact(address.serialize()) {
+                    priority = ConfigBase.PRIORITY_VISIBLE
+                }
             } else {
                 val userProfile = configFactory.user ?: return
-                userProfile.setNtsHidden(false)
+                userProfile.setNtsPriority(ConfigBase.PRIORITY_VISIBLE)
             }
             val newVolatileParams = volatile.getOrConstructOneToOne(address.serialize()).copy(
                 lastRead = SnodeAPI.nowWithOffset
@@ -146,11 +148,11 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
             if (getUserPublicKey() != address.serialize()) {
                 val contacts = configFactory.contacts ?: return
                 contacts.upsertContact(address.serialize()) {
-                    // hidden = true TODO: maybe this?
+                    priority = ConfigBase.PRIORITY_HIDDEN
                 }
             } else {
                 val userProfile = configFactory.user ?: return
-                userProfile.setNtsHidden(true)
+                userProfile.setNtsPriority(ConfigBase.PRIORITY_HIDDEN)
             }
         }
         ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
@@ -414,7 +416,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
             profileManager.setProfileKey(context, recipient, userPic.key)
             setUserProfilePictureURL(userPic.url)
         }
-        if (userProfile.getNtsHidden()) {
+        if (userProfile.getNtsPriority() == ConfigBase.PRIORITY_HIDDEN) {
             // delete nts thread if needed
             val ourThread = getThreadId(recipient) ?: return
             deleteConversation(ourThread)
@@ -524,8 +526,8 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
             val existingThread = existingGroup?.let { getThreadId(existingGroup.encodedId) }
             if (existingGroup != null) {
                 Log.d("Loki-DBG", "Existing closed group, don't add")
-                if (group.hidden && existingThread != null) {
-                    threadDb.setThreadArchived(existingThread)
+                if (group.priority == ConfigBase.PRIORITY_HIDDEN && existingThread != null) {
+                    threadDb.deleteConversation(existingThread)
                 } else if (existingThread == null) {
                     Log.w("Loki-DBG", "Existing group had no thread to hide")
                 }
@@ -766,7 +768,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
             sessionId = groupPublicKey,
             name = name,
             members = members,
-            hidden = false,
+            priority = ConfigBase.PRIORITY_VISIBLE,
             encPubKey = encryptionKeyPair.publicKey.serialize(),
             encSecKey = encryptionKeyPair.privateKey.serialize(),
             disappearingTimer = 0L
@@ -801,7 +803,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
             members = membersMap,
             encPubKey = latestKeyPair.publicKey.serialize(),
             encSecKey = latestKeyPair.privateKey.serialize(),
-            priority = if (isPinned(threadID)) 1 else 0,
+            priority = if (isPinned(threadID)) ConfigBase.PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE,
             disappearingTimer = recipientSettings.expireMessages.toLong()
         )
         userGroups.set(groupInfo)
@@ -1070,7 +1072,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
                 profileManager.setUnidentifiedAccessMode(context, recipient, Recipient.UnidentifiedAccessMode.UNKNOWN)
                 profileManager.setProfilePictureURL(context, recipient, url)
             }
-            if (contact.hidden) {
+            if (contact.priority == ConfigBase.PRIORITY_HIDDEN) {
                 getThreadId(fromSerialized(contact.id))?.let { conversationThreadId ->
                     deleteConversation(conversationThreadId)
                 }
@@ -1146,25 +1148,25 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         val threadRecipient = getRecipientForThread(threadID) ?: return
         if (threadRecipient.isLocalNumber) {
             val user = configFactory.user ?: return
-            user.setNtsPriority(if (isPinned) 1 else 0)
+            user.setNtsPriority(if (isPinned) ConfigBase.PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE)
         } else if (threadRecipient.isContactRecipient) {
             val contacts = configFactory.contacts ?: return
             contacts.upsertContact(threadRecipient.address.serialize()) {
-                priority = if (isPinned) 1 else 0
+                priority = if (isPinned) ConfigBase.PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE
             }
         } else if (threadRecipient.isGroupRecipient) {
             val groups = configFactory.userGroups ?: return
             if (threadRecipient.isClosedGroupRecipient) {
                 val sessionId = GroupUtil.doubleDecodeGroupId(threadRecipient.address.serialize())
                 val newGroupInfo = groups.getOrConstructLegacyGroupInfo(sessionId).copy (
-                    priority = if (isPinned) 1 else 0
+                    priority = if (isPinned) ConfigBase.PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE
                 )
                 groups.set(newGroupInfo)
             } else if (threadRecipient.isOpenGroupRecipient) {
                 val openGroup = getOpenGroup(threadID) ?: return
                 val (baseUrl, room, pubKeyHex) = BaseCommunityInfo.parseFullUrl(openGroup.joinURL) ?: return
                 val newGroupInfo = groups.getOrConstructCommunityInfo(baseUrl, room, Hex.toStringCondensed(pubKeyHex)).copy (
-                    priority = if (isPinned) 1 else 0
+                    priority = if (isPinned) ConfigBase.PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE
                 )
                 groups.set(newGroupInfo)
             }
@@ -1187,7 +1189,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
                 // TODO: handle contact
                 val contacts = configFactory.contacts ?: return
                 contacts.upsertContact(recipient.address.serialize()) {
-                    this.hidden = true
+                    this.priority = ConfigBase.PRIORITY_HIDDEN
                 }
                 ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
             } else if (recipient.isClosedGroupRecipient) {

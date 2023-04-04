@@ -13,18 +13,17 @@ inline session::config::Contacts *ptrToContacts(JNIEnv *env, jobject obj) {
 
 inline jobject serialize_contact(JNIEnv *env, session::config::contact_info info) {
     jclass contactClass = env->FindClass("network/loki/messenger/libsession_util/util/Contact");
-    jmethodID constructor = env->GetMethodID(contactClass, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZZZLnetwork/loki/messenger/libsession_util/util/UserPic;ILnetwork/loki/messenger/libsession_util/util/ExpiryMode;)V");
+    jmethodID constructor = env->GetMethodID(contactClass, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZZLnetwork/loki/messenger/libsession_util/util/UserPic;ILnetwork/loki/messenger/libsession_util/util/ExpiryMode;)V");
     jstring id = env->NewStringUTF(info.session_id.data());
     jstring name = env->NewStringUTF(info.name.data());
     jstring nickname = env->NewStringUTF(info.nickname.data());
-    jboolean approved, approvedMe, blocked, hidden;
+    jboolean approved, approvedMe, blocked;
     approved = info.approved;
     approvedMe = info.approved_me;
     blocked = info.blocked;
-    hidden = info.hidden;
     jobject profilePic = util::serialize_user_pic(env, info.profile_picture);
     jobject returnObj = env->NewObject(contactClass, constructor, id, name, nickname, approved,
-                                       approvedMe, blocked, hidden, profilePic, info.priority,
+                                       approvedMe, blocked, profilePic, info.priority,
                                        util::serialize_expiry(env, info.exp_mode, info.exp_timer));
     return returnObj;
 }
@@ -40,7 +39,6 @@ deserialize_contact(JNIEnv *env, jobject info, session::config::Contacts *conf) 
     getApproved = env->GetFieldID(contactClass, "approved", "Z");
     getApprovedMe = env->GetFieldID(contactClass, "approvedMe", "Z");
     getBlocked = env->GetFieldID(contactClass, "blocked", "Z");
-    getHidden = env->GetFieldID(contactClass, "hidden", "Z");
     getUserPic = env->GetFieldID(contactClass, "profilePicture",
                                  "Lnetwork/loki/messenger/libsession_util/util/UserPic;");
     getPriority = env->GetFieldID(contactClass, "priority", "I");
@@ -54,7 +52,6 @@ deserialize_contact(JNIEnv *env, jobject info, session::config::Contacts *conf) 
     approved = env->GetBooleanField(info, getApproved);
     approvedMe = env->GetBooleanField(info, getApprovedMe);
     blocked = env->GetBooleanField(info, getBlocked);
-    hidden = env->GetBooleanField(info, getHidden);
     jobject user_pic = env->GetObjectField(info, getUserPic);
     jobject expiry_mode = env->GetObjectField(info, getExpiry);
 
@@ -86,7 +83,6 @@ deserialize_contact(JNIEnv *env, jobject info, session::config::Contacts *conf) 
     contact_info.approved = approved;
     contact_info.approved_me = approvedMe;
     contact_info.blocked = blocked;
-    contact_info.hidden = hidden;
     if (!url.empty() && !key.empty()) {
         contact_info.profile_picture = session::config::profile_pic(url, key);
     } else {

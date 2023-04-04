@@ -25,6 +25,10 @@ sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
 
         const val isNewConfigEnabled = true
 
+        const val PRIORITY_HIDDEN = -1
+        const val PRIORITY_VISIBLE = 0
+        const val PRIORITY_PINNED = 1
+
     }
 
     external fun dirty(): Boolean
@@ -96,8 +100,6 @@ class UserProfile(pointer: Long) : ConfigBase(pointer) {
     external fun setPic(userPic: UserPic)
     external fun setNtsPriority(priority: Int)
     external fun getNtsPriority(): Int
-    external fun setNtsHidden(isHidden: Boolean)
-    external fun getNtsHidden(): Boolean
 }
 
 class ConversationVolatileConfig(pointer: Long): ConfigBase(pointer) {

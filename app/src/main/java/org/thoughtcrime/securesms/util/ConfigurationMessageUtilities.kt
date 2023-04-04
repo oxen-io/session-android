@@ -27,7 +27,7 @@ import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import java.util.*
+import java.util.Timer
 
 object ConfigurationMessageUtilities {
 
@@ -123,7 +123,11 @@ object ConfigurationMessageUtilities {
             profile.setPic(UserPic(picUrl, picKey))
         }
         val ownThreadId = storage.getThreadId(Address.fromSerialized(ownPublicKey))
-        profile.setNtsHidden(ownThreadId != null)
+        profile.setNtsPriority(
+            if (ownThreadId != null)
+                if (storage.isPinned(ownThreadId)) ConfigBase.PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE
+            else ConfigBase.PRIORITY_HIDDEN
+        )
         if (ownThreadId != null) {
             // have NTS thread
             val ntsPinned = storage.isPinned(ownThreadId)
@@ -248,8 +252,7 @@ object ConfigurationMessageUtilities {
                 sessionId = sessionId,
                 name = group.title,
                 members = admins + members,
-                hidden = threadId == null,
-                priority = if (isPinned) 1 else 0,
+                priority = if (isPinned) ConfigBase.PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE,
                 encPubKey = encryptionKeyPair.publicKey.serialize(),
                 encSecKey = encryptionKeyPair.privateKey.serialize(),
                 disappearingTimer = recipient.expireMessages.toLong()

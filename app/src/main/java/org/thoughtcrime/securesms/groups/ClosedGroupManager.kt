@@ -1,7 +1,7 @@
 package org.thoughtcrime.securesms.groups
 
 import android.content.Context
-import network.loki.messenger.libsession_util.util.GroupInfo
+import network.loki.messenger.libsession_util.ConfigBase
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.sending_receiving.notifications.PushNotificationAPI
 import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPollerV2
@@ -9,7 +9,6 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupRecord
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.recipients.Recipient
-import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 
@@ -54,7 +53,7 @@ object ClosedGroupManager {
             members = latestMemberMap,
             name = group.title,
             disappearingTimer = groupRecipientSettings.expireMessages.toLong(),
-            priority = if (storage.isPinned(threadId)) 1 else 0,
+            priority = if (storage.isPinned(threadId)) ConfigBase.PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE,
             encSecKey = latestKeyPair.privateKey.serialize(),
             encPubKey = latestKeyPair.publicKey.serialize()
         )
