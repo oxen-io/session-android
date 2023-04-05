@@ -36,6 +36,7 @@ import org.session.libsession.messaging.calls.CallMessageType;
 import org.session.libsession.messaging.messages.signal.IncomingGroupMessage;
 import org.session.libsession.messaging.messages.signal.IncomingTextMessage;
 import org.session.libsession.messaging.messages.signal.OutgoingTextMessage;
+import org.session.libsession.snode.SnodeAPI;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.IdentityKeyMismatch;
 import org.session.libsession.utilities.IdentityKeyMismatchList;
@@ -227,7 +228,7 @@ public class SmsDatabase extends MessagingDatabase {
 
   @Override
   public void markExpireStarted(long id) {
-    markExpireStarted(id, System.currentTimeMillis());
+    markExpireStarted(id, SnodeAPI.getNowWithOffset());
   }
 
   @Override
@@ -530,7 +531,7 @@ public class SmsDatabase extends MessagingDatabase {
     contentValues.put(ADDRESS, address.serialize());
     contentValues.put(THREAD_ID, threadId);
     contentValues.put(BODY, message.getMessageBody());
-    contentValues.put(DATE_RECEIVED, System.currentTimeMillis());
+    contentValues.put(DATE_RECEIVED, SnodeAPI.getNowWithOffset());
     contentValues.put(DATE_SENT, message.getSentTimestampMillis());
     contentValues.put(READ, 1);
     contentValues.put(TYPE, type);
@@ -765,11 +766,11 @@ public class SmsDatabase extends MessagingDatabase {
     public MessageRecord getCurrent() {
       return new SmsMessageRecord(id, message.getMessageBody(),
                                   message.getRecipient(), message.getRecipient(),
-                                  System.currentTimeMillis(), System.currentTimeMillis(),
+                                  SnodeAPI.getNowWithOffset(), SnodeAPI.getNowWithOffset(),
                                   0, message.isSecureMessage() ? MmsSmsColumns.Types.getOutgoingEncryptedMessageType() : MmsSmsColumns.Types.getOutgoingSmsMessageType(),
                                   threadId, 0, new LinkedList<IdentityKeyMismatch>(),
                                   message.getExpiresIn(),
-                                  System.currentTimeMillis(), 0, false, Collections.emptyList(), false);
+                                  SnodeAPI.getNowWithOffset(), 0, false, Collections.emptyList(), false);
     }
   }
 

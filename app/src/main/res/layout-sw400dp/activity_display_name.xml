@@ -33,6 +33,7 @@
     <EditText
         style="@style/SessionEditText"
         android:id="@+id/displayNameEditText"
+        android:contentDescription="@string/AccessibilityId_enter_display_name"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_marginLeft="@dimen/very_large_spacing"
@@ -52,6 +53,7 @@
     <Button
         style="@style/Widget.Session.Button.Common.ProminentFilled"
         android:id="@+id/registerButton"
+        android:contentDescription="@string/AccessibilityId_continue"
         android:layout_width="match_parent"
         android:layout_height="@dimen/medium_button_height"
         android:layout_marginLeft="@dimen/massive_spacing"

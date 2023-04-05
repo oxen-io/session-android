@@ -29,7 +29,8 @@
                 android:layout_height="16dp"
                 android:src="@drawable/ic_crown"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true" />
+                android:layout_alignParentBottom="true"
+                android:contentDescription="@string/AccessibilityId_contact_mentions"/>
 
         </RelativeLayout>
 
@@ -41,6 +42,7 @@
             android:textSize="@dimen/small_font_size"
             android:textColor="?android:textColorPrimary"
             android:maxLines="1"
+            android:contentDescription="@string/AccessibilityId_contact_mentions"
             android:ellipsize="end" />
 
     </LinearLayout>

@@ -5,6 +5,7 @@
 
     <item
         android:id="@+id/menu_expiring_messages"
+        android:contentDescription="@string/AccessibilityId_disappearing_messages_timer"
         app:actionLayout="@layout/expiration_timer_menu"
         app:showAsAction="always"
         android:title="@string/menu_conversation_expiring_on__messages_expiring" />

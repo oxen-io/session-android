@@ -28,6 +28,7 @@
 
     <TextView
         style="@style/SessionIDTextView"
+        android:contentDescription="@string/AccessibilityId_recovery_phrase"
         android:id="@+id/seedTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,6 +47,7 @@
 
         <Button
             style="@style/Widget.Session.Button.Dialog.UnimportantText"
+            android:contentDescription="@string/AccessibilityId_cancel_button"
             android:id="@+id/copyButton"
             android:layout_width="0dp"
             android:layout_height="@dimen/small_button_height"
@@ -55,6 +57,7 @@
 
         <Button
             style="@style/Widget.Session.Button.Dialog.UnimportantText"
+            android:contentDescription="@string/AccessibilityId_copy_recovery_phrase"
             android:id="@+id/closeButton"
             android:layout_width="0dp"
             android:layout_height="@dimen/small_button_height"

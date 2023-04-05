@@ -110,7 +110,7 @@ class DefaultConversationRepository @Inject constructor(
         val openGroup = lokiThreadDb.getOpenGroupChat(threadId) ?: return
         for (contact in contacts) {
             val message = VisibleMessage()
-            message.sentTimestamp = System.currentTimeMillis()
+            message.sentTimestamp = SnodeAPI.nowWithOffset
             val openGroupInvitation = OpenGroupInvitation()
             openGroupInvitation.name = openGroup.name
             openGroupInvitation.url = openGroup.joinURL

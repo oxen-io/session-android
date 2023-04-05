@@ -4,8 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="@string/menu_apply_button"
         android:id="@+id/action_apply"
-        app:showAsAction="always|withText"/>
+        android:title="@string/menu_apply_button"
+        android:contentDescription="@string/AccessibilityId_apply_changes"
+        app:showAsAction="always|withText" />
 
 </menu>

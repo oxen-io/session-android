@@ -318,6 +318,25 @@ public class GroupDatabase extends Database implements LokiOpenGroupDatabaseProt
     notifyConversationListListeners();
   }
 
+  @Override
+  public void removeProfilePicture(String groupID) {
+    databaseHelper.getWritableDatabase()
+            .execSQL("UPDATE " + TABLE_NAME +
+                    " SET " + AVATAR + " = NULL, " +
+                    AVATAR_ID + " = NULL, " +
+                    AVATAR_KEY + " = NULL, " +
+                    AVATAR_CONTENT_TYPE + " = NULL, " +
+                    AVATAR_RELAY + " = NULL, " +
+                    AVATAR_DIGEST + " = NULL, " +
+                    AVATAR_URL + " = NULL" +
+                    " WHERE " +
+                    GROUP_ID + " = ?",
+            new String[] {groupID});
+
+    Recipient.applyCached(Address.fromSerialized(groupID), recipient -> recipient.setGroupAvatarId(null));
+    notifyConversationListListeners();
+  }
+
   public boolean hasDownloadedProfilePicture(String groupId) {
     try (Cursor cursor = databaseHelper.getReadableDatabase().query(TABLE_NAME, new String[]{AVATAR}, GROUP_ID + " = ?",
             new String[] {groupId},

@@ -80,7 +80,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:visibility="gone"
             android:id="@+id/linkPreviewView"
-            android:layout_width="wrap_content"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"/>
 
         <androidx.constraintlayout.widget.Barrier
@@ -99,6 +99,7 @@
             app:barrierDirection="bottom"/>
 
         <org.thoughtcrime.securesms.components.emoji.EmojiTextView
+            android:contentDescription="@string/AccessibilityId_message_body"
             app:layout_constraintHorizontal_bias="0"
             tools:visibility="visible"
             android:visibility="gone"

@@ -19,6 +19,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/AccessibilityId_recovery_phrase_reminder"
         android:gravity="center_vertical"
         android:padding="@dimen/medium_spacing"
         android:orientation="horizontal">
@@ -58,6 +59,7 @@
 
         <Button
             style="@style/Widget.Session.Button.Common.ProminentOutline"
+            android:contentDescription="@string/AccessibilityId_continue"
             android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="28dp"

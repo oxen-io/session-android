@@ -35,6 +35,7 @@ import com.annimon.stream.Stream;
 import net.zetetic.database.sqlcipher.SQLiteDatabase;
 
 import org.jetbrains.annotations.NotNull;
+import org.session.libsession.snode.SnodeAPI;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.Contact;
 import org.session.libsession.utilities.DelimiterUtil;
@@ -146,7 +147,7 @@ public class ThreadDatabase extends Database {
 
   private long createThreadForRecipient(Address address, boolean group, int distributionType) {
     ContentValues contentValues = new ContentValues(4);
-    long date                   = System.currentTimeMillis();
+    long date                   = SnodeAPI.getNowWithOffset();
 
     contentValues.put(DATE, date - date % 1000);
     contentValues.put(ADDRESS, address.serialize());
@@ -301,7 +302,7 @@ public class ThreadDatabase extends Database {
     contentValues.put(UNREAD_MENTION_COUNT, 0);
 
     if (lastSeen) {
-      contentValues.put(LAST_SEEN, System.currentTimeMillis());
+      contentValues.put(LAST_SEEN, SnodeAPI.getNowWithOffset());
     }
 
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
@@ -520,7 +521,7 @@ public class ThreadDatabase extends Database {
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
     ContentValues contentValues = new ContentValues(1);
     if (timestamp == -1) {
-      contentValues.put(LAST_SEEN, System.currentTimeMillis());
+      contentValues.put(LAST_SEEN, SnodeAPI.getNowWithOffset());
     } else {
       contentValues.put(LAST_SEEN, timestamp);
     }

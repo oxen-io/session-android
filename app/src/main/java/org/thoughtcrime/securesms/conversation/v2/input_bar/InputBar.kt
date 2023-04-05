@@ -57,9 +57,9 @@ class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, Li
     val attachmentButtonsContainerHeight: Int
         get() = binding.attachmentsButtonContainer.height
 
-    private val attachmentsButton by lazy { InputBarButton(context, R.drawable.ic_plus_24) }
-    private val microphoneButton by lazy { InputBarButton(context, R.drawable.ic_microphone) }
-    private val sendButton by lazy { InputBarButton(context, R.drawable.ic_arrow_up, true) }
+    private val attachmentsButton by lazy { InputBarButton(context, R.drawable.ic_plus_24).apply { contentDescription = context.getString(R.string.AccessibilityId_attachments_button)} }
+    private val microphoneButton by lazy { InputBarButton(context, R.drawable.ic_microphone).apply { contentDescription = context.getString(R.string.AccessibilityId_microphone_button)} }
+    private val sendButton by lazy { InputBarButton(context, R.drawable.ic_arrow_up, true).apply { contentDescription = context.getString(R.string.AccessibilityId_send_message_button)} }
 
     // region Lifecycle
     constructor(context: Context) : super(context) { initialize() }

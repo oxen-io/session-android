@@ -39,6 +39,7 @@
             android:visibility="gone">
 
             <TextView
+                android:contentDescription="@string/AccessibilityId_empty_message_request_folder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/message_request_empty_state_message"
@@ -48,6 +49,7 @@
         </LinearLayout>
 
         <Button
+            android:contentDescription="@string/AccessibilityId_clear_all_message_requests"
             android:id="@+id/clearAllMessageRequestsButton"
             style="@style/Widget.Session.Button.Common.DestructiveOutline"
             android:layout_width="196dp"

@@ -39,6 +39,7 @@
     <TextView
         style="@style/SessionIDTextView"
         android:id="@+id/seedTextView"
+        android:contentDescription="@string/AccessibilityId_recovery_phrase"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/very_large_spacing"
@@ -67,6 +68,7 @@
 
     <Button
         style="@style/Widget.Session.Button.Common.ProminentOutline"
+        android:contentDescription="@string/AccessibilityId_copy_recovery_phrase"
         android:id="@+id/copyButton"
         android:layout_width="196dp"
         android:layout_height="@dimen/medium_button_height"

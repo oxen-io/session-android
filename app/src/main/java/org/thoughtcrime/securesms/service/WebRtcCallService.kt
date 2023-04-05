@@ -1,6 +1,6 @@
 package org.thoughtcrime.securesms.service
 
-import android.app.Service
+import android.app.ForegroundServiceStartNotAllowedException
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -17,6 +17,8 @@ import android.telephony.PhoneStateListener.LISTEN_NONE
 import android.telephony.TelephonyManager
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import dagger.hilt.android.AndroidEntryPoint
 import org.session.libsession.messaging.calls.CallMessageType
@@ -25,6 +27,7 @@ import org.session.libsession.utilities.FutureTaskListener
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.calls.WebRtcCallActivity
+import org.thoughtcrime.securesms.notifications.BackgroundPollWorker
 import org.thoughtcrime.securesms.util.CallNotificationBuilder
 import org.thoughtcrime.securesms.util.CallNotificationBuilder.Companion.TYPE_ESTABLISHED
 import org.thoughtcrime.securesms.util.CallNotificationBuilder.Companion.TYPE_INCOMING_CONNECTING
@@ -46,7 +49,7 @@ import javax.inject.Inject
 import org.thoughtcrime.securesms.webrtc.data.State as CallState
 
 @AndroidEntryPoint
-class WebRtcCallService : Service(), CallManager.WebRtcListener {
+class WebRtcCallService : LifecycleService(), CallManager.WebRtcListener {
 
     companion object {
 
@@ -238,7 +241,10 @@ class WebRtcCallService : Service(), CallManager.WebRtcListener {
         scheduledReconnect?.cancel(false)
         scheduledTimeout = null
         scheduledReconnect = null
-        stopForeground(true)
+
+        lifecycleScope.launchWhenCreated {
+            stopForeground(true)
+        }
     }
 
     private fun isSameCall(intent: Intent): Boolean {
@@ -253,7 +259,9 @@ class WebRtcCallService : Service(), CallManager.WebRtcListener {
 
     private fun isIdle() = callManager.isIdle()
 
-    override fun onBind(intent: Intent?): IBinder? = null
+    override fun onBind(intent: Intent): IBinder? {
+        return super.onBind(intent)
+    }
 
     override fun onHangup() {
         serviceExecutor.execute {
@@ -272,7 +280,8 @@ class WebRtcCallService : Service(), CallManager.WebRtcListener {
         if (intent == null || intent.action == null) return START_NOT_STICKY
         serviceExecutor.execute {
             val action = intent.action
-            Log.i("Loki", "Handling ${intent.action}")
+            val callId = ((intent.getSerializableExtra(EXTRA_CALL_ID) as? UUID)?.toString() ?: "No callId")
+            Log.i("Loki", "Handling ${intent.action} for call: ${callId}")
             when {
                 action == ACTION_INCOMING_RING && isSameCall(intent) && callManager.currentConnectionState == CallState.Reconnecting -> handleNewOffer(
                     intent
@@ -361,7 +370,9 @@ class WebRtcCallService : Service(), CallManager.WebRtcListener {
         insertMissedCall(recipient, false)
 
         if (callState == CallState.Idle) {
-            stopForeground(true)
+            lifecycleScope.launchWhenCreated {
+                stopForeground(true)
+            }
         }
     }
 
@@ -409,6 +420,11 @@ class WebRtcCallService : Service(), CallManager.WebRtcListener {
             callManager.initializeAudioForCall()
             callManager.startIncomingRinger()
             callManager.setAudioEnabled(true)
+
+            BackgroundPollWorker.scheduleOnce(
+                this,
+                arrayOf(BackgroundPollWorker.Targets.DMS)
+            )
         }
     }
 
@@ -573,7 +589,9 @@ class WebRtcCallService : Service(), CallManager.WebRtcListener {
     private fun handleRemoteHangup(intent: Intent) {
         if (callManager.callId != getCallId(intent)) {
             Log.e(TAG, "Hangup for non-active call...")
-            stopForeground(true)
+            lifecycleScope.launchWhenCreated {
+                stopForeground(true)
+            }
             return
         }
 
@@ -717,10 +735,16 @@ class WebRtcCallService : Service(), CallManager.WebRtcListener {
     }
 
     private fun setCallInProgressNotification(type: Int, recipient: Recipient?) {
-        startForeground(
-            CallNotificationBuilder.WEBRTC_NOTIFICATION,
-            CallNotificationBuilder.getCallInProgressNotification(this, type, recipient)
-        )
+        try {
+            startForeground(
+                CallNotificationBuilder.WEBRTC_NOTIFICATION,
+                CallNotificationBuilder.getCallInProgressNotification(this, type, recipient)
+            )
+        }
+        catch(e: ForegroundServiceStartNotAllowedException) {
+            Log.e(TAG, "Failed to setCallInProgressNotification as a foreground service for type: ${type}, trying to update instead")
+        }
+
         if (!CallNotificationBuilder.areNotificationsEnabled(this) && type == TYPE_INCOMING_PRE_OFFER) {
             // start an intent for the fullscreen
             val foregroundIntent = Intent(this, WebRtcCallActivity::class.java)
@@ -769,10 +793,14 @@ class WebRtcCallService : Service(), CallManager.WebRtcListener {
         callReceiver?.let { receiver ->
             unregisterReceiver(receiver)
         }
+        wiredHeadsetStateReceiver?.let { unregisterReceiver(it) }
+        powerButtonReceiver?.let { unregisterReceiver(it) }
         networkChangedReceiver?.unregister(this)
         wantsToAnswerReceiver?.let { receiver ->
             LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
         }
+        powerButtonReceiver = null
+        wiredHeadsetStateReceiver = null
         networkChangedReceiver = null
         callReceiver = null
         uncaughtExceptionHandlerManager?.unregister()

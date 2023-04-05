@@ -77,10 +77,10 @@ object MessageSender {
         val userPublicKey = storage.getUserPublicKey()
         // Set the timestamp, sender and recipient
         if (message.sentTimestamp == null) {
-            message.sentTimestamp = System.currentTimeMillis() // Visible messages will already have their sent timestamp set
+            message.sentTimestamp = SnodeAPI.nowWithOffset // Visible messages will already have their sent timestamp set
         }
 
-        val messageSendTime = System.currentTimeMillis()
+        val messageSendTime = SnodeAPI.nowWithOffset
 
         message.sender = userPublicKey
         val isSelfSend = (message.recipient == userPublicKey)
@@ -180,7 +180,20 @@ object MessageSender {
                         val hash = it["hash"] as? String
                         message.serverHash = hash
                         handleSuccessfulMessageSend(message, destination, isSyncMessage)
-                        val shouldNotify = ((message is VisibleMessage || message is UnsendRequest || message is CallMessage) && !isSyncMessage)
+
+                        val shouldNotify: Boolean = when (message) {
+                            is VisibleMessage, is UnsendRequest -> !isSyncMessage
+                            is CallMessage -> {
+                                // Note: Other 'CallMessage' types are too big to send as push notifications
+                                // so only send the 'preOffer' message as a notification
+                                when (message.type) {
+                                    SignalServiceProtos.CallMessage.Type.PRE_OFFER -> true
+                                    else -> false
+                                }
+                            }
+                            else -> false
+                        }
+
                         /*
                         if (message is ClosedGroupControlMessage && message.kind is ClosedGroupControlMessage.Kind.New) {
                             shouldNotify = true
@@ -210,7 +223,7 @@ object MessageSender {
         val deferred = deferred<Unit, Exception>()
         val storage = MessagingModuleConfiguration.shared.storage
         if (message.sentTimestamp == null) {
-            message.sentTimestamp = System.currentTimeMillis()
+            message.sentTimestamp = SnodeAPI.nowWithOffset
         }
         val userEdKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!
         var serverCapabilities = listOf<String>()

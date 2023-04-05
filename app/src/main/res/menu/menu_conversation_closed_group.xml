@@ -5,11 +5,13 @@
 
     <item
         android:id="@+id/menu_edit_group"
+        android:contentDescription="@string/AccessibilityId_edit_group"
         android:title="@string/conversation__menu_edit_group"
         app:showAsAction="collapseActionView" />
 
     <item
         android:id="@+id/menu_leave_group"
+        android:contentDescription="@string/AccessibilityId_leave_group"
         android:title="@string/conversation__menu_leave_group"
         app:showAsAction="collapseActionView"/>
 

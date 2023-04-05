@@ -32,6 +32,7 @@
                     android:id="@+id/btnCancelGroupNameEdit"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:contentDescription="@string/AccessibilityId_cancel_name_change"
                     android:src="@drawable/ic_baseline_clear_24"/>
 
                 <EditText
@@ -48,6 +49,7 @@
                     android:inputType="text"
                     android:singleLine="true"
                     android:imeOptions="actionDone"
+                    android:contentDescription="@string/AccessibilityId_group_name"
                     android:hint="@string/activity_edit_closed_group_edit_text_hint" />
 
                 <ImageView
@@ -55,6 +57,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
+                    android:contentDescription="@string/AccessibilityId_accept_name_change"
                     android:src="@drawable/ic_baseline_done_24"/>
 
             </LinearLayout>
@@ -72,6 +75,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:contentDescription="@string/AccessibilityId_group_name"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="@dimen/very_large_font_size"
                     android:textStyle="bold"
@@ -113,10 +117,10 @@
                 style="@style/Widget.Session.Button.Common.ProminentOutline"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/small_button_height"
-                android:layout_marginTop="@dimen/small_spacing"
+                android:layout_marginVertical="@dimen/small_spacing"
                 android:layout_marginEnd="@dimen/medium_spacing"
                 android:layout_marginStart="@dimen/small_spacing"
-                android:layout_marginBottom="@dimen/small_spacing"
+                android:contentDescription="@string/AccessibilityId_add_members"
                 android:paddingStart="@dimen/medium_spacing"
                 android:paddingEnd="@dimen/medium_spacing"
                 android:text="@string/activity_edit_closed_group_add_members" />

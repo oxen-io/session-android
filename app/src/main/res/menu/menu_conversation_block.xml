@@ -4,6 +4,7 @@
 
     <item
         android:title="@string/recipient_preferences__block"
+        android:contentDescription="@string/AccessibilityId_block"
         android:id="@+id/menu_block" />
 
 </menu>

@@ -272,7 +272,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         if (poller != null) {
             poller.stopIfNeeded();
         }
-        ClosedGroupPollerV2.getShared().stop();
+        ClosedGroupPollerV2.getShared().stopAll();
     }
 
     @Override
@@ -452,11 +452,15 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
             String token = task.getResult().getToken();
             String userPublicKey = TextSecurePreferences.getLocalNumber(this);
             if (userPublicKey == null) return Unit.INSTANCE;
-            if (TextSecurePreferences.isUsingFCM(this)) {
-                LokiPushNotificationManager.register(token, userPublicKey, this, force);
-            } else {
-                LokiPushNotificationManager.unregister(token, this);
-            }
+
+            AsyncTask.THREAD_POOL_EXECUTOR.execute(() -> {
+                if (TextSecurePreferences.isUsingFCM(this)) {
+                    LokiPushNotificationManager.register(token, userPublicKey, this, force);
+                } else {
+                    LokiPushNotificationManager.unregister(token, this);
+                }
+            });
+
             return Unit.INSTANCE;
         });
     }

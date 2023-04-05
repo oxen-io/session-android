@@ -14,6 +14,7 @@ import com.annimon.stream.Stream;
 
 import org.session.libsession.messaging.messages.control.ReadReceipt;
 import org.session.libsession.messaging.sending_receiving.MessageSender;
+import org.session.libsession.snode.SnodeAPI;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.recipients.Recipient;
@@ -86,7 +87,7 @@ public class MarkReadReceiver extends BroadcastReceiver {
       List<Long> timestamps = Stream.of(addressMap.get(address)).map(SyncMessageId::getTimetamp).toList();
       if (!SessionMetaProtocol.shouldSendReadReceipt(Recipient.from(context, address, false))) { continue; }
       ReadReceipt readReceipt = new ReadReceipt(timestamps);
-      readReceipt.setSentTimestamp(System.currentTimeMillis());
+      readReceipt.setSentTimestamp(SnodeAPI.getNowWithOffset());
       MessageSender.send(readReceipt, address);
     }
   }

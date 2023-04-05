@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="64dp"
     android:background="@drawable/conversation_view_background"
+    android:contentDescription="@string/AccessibilityId_contact"
     android:orientation="vertical">
 
     <LinearLayout
@@ -23,6 +24,7 @@
 
         <TextView
             android:id="@+id/nameTextView"
+            android:contentDescription="@string/AccessibilityId_contact"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/medium_spacing"
@@ -36,6 +38,7 @@
 
         <ImageView
             android:id="@+id/actionIndicatorImageView"
+            android:contentDescription="@string/AccessibilityId_select_contact"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="@dimen/medium_spacing"

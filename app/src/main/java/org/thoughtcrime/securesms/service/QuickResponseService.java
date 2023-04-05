@@ -9,6 +9,7 @@ import android.widget.Toast;
 import network.loki.messenger.R;
 
 import org.session.libsession.messaging.messages.visible.VisibleMessage;
+import org.session.libsession.snode.SnodeAPI;
 import org.session.libsession.utilities.Address;
 import org.session.libsignal.utilities.Log;
 import org.session.libsession.messaging.sending_receiving.MessageSender;
@@ -50,7 +51,7 @@ public class QuickResponseService extends IntentService {
       if (!TextUtils.isEmpty(content)) {
         VisibleMessage message = new VisibleMessage();
         message.setText(content);
-        message.setSentTimestamp(System.currentTimeMillis());
+        message.setSentTimestamp(SnodeAPI.getNowWithOffset());
         MessageSender.send(message, Address.fromExternal(this, number));
       }
     } catch (URISyntaxException e) {

@@ -59,6 +59,7 @@
         <Button
             style="@style/Widget.Session.Button.Common.ProminentOutline"
             android:id="@+id/button"
+            android:contentDescription="@string/AccessibilityId_continue"
             android:layout_width="wrap_content"
             android:layout_height="28dp"
             android:layout_marginLeft="4dp"

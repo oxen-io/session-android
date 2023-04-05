@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.permissions;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -162,12 +164,13 @@ public class Permissions {
 
     @SuppressWarnings("ConstantConditions")
     private void executePermissionsRequestWithRationale(PermissionsRequest request) {
-      RationaleDialog.createFor(permissionObject.getContext(), rationaleDialogMessage, rationalDialogHeader)
-                     .setPositiveButton(R.string.Permissions_continue, (dialog, which) -> executePermissionsRequest(request))
-                     .setNegativeButton(R.string.Permissions_not_now, (dialog, which) -> executeNoPermissionsRequest(request))
-                     .show()
-                     .getWindow()
-                     .setLayout((int)(permissionObject.getWindowWidth() * .75), ViewGroup.LayoutParams.WRAP_CONTENT);
+      AlertDialog dialog = RationaleDialog.createFor(permissionObject.getContext(), rationaleDialogMessage, rationalDialogHeader)
+              .setPositiveButton(R.string.Permissions_continue, (d, which) -> executePermissionsRequest(request))
+              .setNegativeButton(R.string.Permissions_not_now, (d, which) -> executeNoPermissionsRequest(request))
+              .show();
+      dialog.getWindow().setLayout((int)(permissionObject.getWindowWidth() * .75), ViewGroup.LayoutParams.WRAP_CONTENT);
+      Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+      positiveButton.setContentDescription("Continue");
     }
 
     private void executePermissionsRequest(PermissionsRequest request) {
@@ -353,12 +356,17 @@ public class Permissions {
       Context context = this.context.get();
 
       if (context != null) {
-        new AlertDialog.Builder(context, R.style.ThemeOverlay_Session_AlertDialog)
+        AlertDialog alertDialog = new AlertDialog.Builder(context, R.style.ThemeOverlay_Session_AlertDialog)
             .setTitle(R.string.Permissions_permission_required)
             .setMessage(message)
             .setPositiveButton(R.string.Permissions_continue, (dialog, which) -> context.startActivity(getApplicationSettingsIntent(context)))
             .setNegativeButton(android.R.string.cancel, null)
-            .show();
+            .create();
+        Button positiveButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        if (positiveButton != null) {
+          positiveButton.setContentDescription(context.getString(R.string.AccessibilityId_continue));
+        }
+        alertDialog.show();
       }
     }
   }

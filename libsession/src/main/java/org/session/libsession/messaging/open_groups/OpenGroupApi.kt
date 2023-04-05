@@ -23,6 +23,7 @@ import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.snode.OnionResponse
+import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.Base64.decode
 import org.session.libsignal.utilities.Base64.encodeBytes
@@ -303,7 +304,7 @@ object OpenGroupApi {
             val headers = request.headers.toMutableMap()
             if (request.isAuthRequired) {
                 val nonce = sodium.nonce(16)
-                val timestamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())
+                val timestamp = TimeUnit.MILLISECONDS.toSeconds(SnodeAPI.nowWithOffset)
                 var pubKey = ""
                 var signature = ByteArray(Sign.BYTES)
                 var bodyHash = ByteArray(0)

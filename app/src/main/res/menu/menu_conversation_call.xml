@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:title="@string/conversation_context__menu_call"
+        android:contentDescription="@string/AccessibilityId_call_button"
         android:icon="@drawable/ic_baseline_call_24"
         app:showAsAction="always"
         android:id="@+id/menu_call"/>

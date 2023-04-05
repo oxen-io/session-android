@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms.conversation.v2.menus
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.PorterDuff
@@ -185,7 +186,7 @@ object ConversationMenuHelper {
     private fun call(context: Context, thread: Recipient) {
 
         if (!TextSecurePreferences.isCallNotificationsEnabled(context)) {
-            AlertDialog.Builder(context)
+            val dialog = AlertDialog.Builder(context)
                 .setTitle(R.string.ConversationActivity_call_title)
                 .setMessage(R.string.ConversationActivity_call_prompt)
                 .setPositiveButton(R.string.activity_settings_title) { _, _ ->
@@ -194,7 +195,10 @@ object ConversationMenuHelper {
                 }
                 .setNeutralButton(R.string.cancel) { d, _ ->
                     d.dismiss()
-                }.show()
+                }.create()
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE)?.contentDescription = context.getString(R.string.AccessibilityId_settings)
+            dialog.getButton(DialogInterface.BUTTON_NEGATIVE)?.contentDescription = context.getString(R.string.AccessibilityId_cancel_button)
+            dialog.show()
             return
         }
 

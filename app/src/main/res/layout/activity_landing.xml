@@ -32,6 +32,7 @@
 
     <Button
         style="@style/Widget.Session.Button.Common.ProminentFilled"
+        android:contentDescription="@string/AccessibilityId_create_session_id"
         android:id="@+id/registerButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/medium_button_height"
@@ -41,6 +42,7 @@
 
     <Button
         style="@style/Widget.Session.Button.Common.ProminentOutline"
+        android:contentDescription="@string/AccessibilityId_restore_your_session"
         android:id="@+id/restoreButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/medium_button_height"
@@ -50,11 +52,11 @@
         android:text="@string/activity_landing_restore_button_title" />
 
     <Button
+        android:contentDescription="@string/AccessibilityId_link_a_device"
         android:id="@+id/linkButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/onboarding_button_bottom_offset"
-        android:layout_marginLeft="@dimen/massive_spacing"
-        android:layout_marginRight="@dimen/massive_spacing"
+        android:layout_marginHorizontal="@dimen/massive_spacing"
         android:gravity="center"
         android:background="@color/transparent"
         android:textAllCaps="false"

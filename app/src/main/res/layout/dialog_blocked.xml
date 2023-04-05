@@ -45,6 +45,7 @@
         <Button
             style="@style/Widget.Session.Button.Dialog.Unimportant"
             android:id="@+id/unblockButton"
+            android:contentDescription="@string/AccessibilityId_block_confirm"
             android:layout_width="0dp"
             android:layout_height="@dimen/small_button_height"
             android:layout_weight="1"
