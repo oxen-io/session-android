@@ -54,6 +54,7 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="22dp"
+                android:contentDescription="@string/AccessibilityId_edit_user_nickname"
                 android:paddingTop="2dp"
                 android:src="@drawable/ic_baseline_edit_24" />
 
@@ -71,6 +72,7 @@
                 android:id="@+id/cancelNicknameEditingButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:contentDescription="@string/AccessibilityId_cancel"
                 android:src="@drawable/ic_baseline_clear_24" />
 
             <EditText
@@ -79,11 +81,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/small_spacing"
-                android:layout_marginEnd="@dimen/small_spacing"
+                android:layout_marginHorizontal="@dimen/small_spacing"
+                android:contentDescription="@string/AccessibilityId_username"
                 android:textAlignment="center"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
+                android:paddingVertical="12dp"
                 android:inputType="text"
                 android:singleLine="true"
                 android:imeOptions="actionDone"
@@ -94,6 +95,7 @@
                 android:id="@+id/saveNicknameButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:contentDescription="@string/AccessibilityId_apply"
                 android:src="@drawable/ic_baseline_done_24" />
 
         </LinearLayout>
@@ -106,6 +108,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/medium_spacing"
+        android:contentDescription="@string/AccessibilityId_session_id"
         android:textSize="@dimen/medium_font_size"
         android:textIsSelectable="true"
         tools:text="05987d601943c267879be41830888066c6a024cbdc9a548d06813924bf3372ea78" />
@@ -116,8 +119,8 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/medium_button_height"
         android:layout_marginTop="@dimen/medium_spacing"
-        android:paddingLeft="@dimen/large_spacing"
-        android:paddingRight="@dimen/large_spacing"
+        android:contentDescription="@string/AccessibilityId_message_user"
+        android:paddingHorizontal="@dimen/large_spacing"
         android:text="@string/ConversationActivity_message" />
 
 </LinearLayout>

@@ -40,6 +40,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/small_button_height"
             android:layout_weight="1"
+            android:contentDescription="@string/AccessibilityId_dont_download_media"
             android:text="@string/cancel" />
 
         <Button
@@ -49,6 +50,7 @@
             android:layout_height="@dimen/small_button_height"
             android:layout_weight="1"
             android:layout_marginStart="@dimen/medium_spacing"
+            android:contentDescription="@string/AccessibilityId_download_media"
             android:text="@string/dialog_download_button_title" />
 
     </LinearLayout>

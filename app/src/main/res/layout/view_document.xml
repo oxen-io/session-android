@@ -7,7 +7,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:padding="@dimen/medium_spacing"
-    android:gravity="center">
+    android:gravity="center"
+    android:contentDescription="@string/AccessibilityId_document">
 
     <ImageView
         android:id="@+id/documentViewIconImageView"

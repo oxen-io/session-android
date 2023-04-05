@@ -13,6 +13,9 @@ import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -194,7 +197,7 @@ class VisibleMessageView : LinearLayout {
         binding.dateBreakTextView.isVisible = showDateBreak
         // Message status indicator
         if (message.isOutgoing) {
-            val (iconID, iconColor, textId) = getMessageStatusImage(message)
+            val (iconID, iconColor, textId, contentDescription) = getMessageStatusImage(message)
             if (textId != null) {
                 binding.messageStatusTextView.setText(textId)
 
@@ -209,6 +212,7 @@ class VisibleMessageView : LinearLayout {
                 }
                 binding.messageStatusImageView.setImageDrawable(drawable)
             }
+            binding.messageStatusImageView.contentDescription = contentDescription
 
             val lastMessageID = mmsSmsDb.getLastMessageID(message.threadId)
             binding.messageStatusTextView.isVisible = (
@@ -283,17 +287,43 @@ class VisibleMessageView : LinearLayout {
         }
     }
 
-    private fun getMessageStatusImage(message: MessageRecord): Triple<Int?,Int?,Int?> {
+    data class MessageStatusInfo(@DrawableRes val iconId: Int?,
+                                 @ColorInt val iconTint: Int?,
+                                 @StringRes val messageText: Int?,
+                                 val contentDescription: String?)
+
+    private fun getMessageStatusImage(message: MessageRecord): MessageStatusInfo {
         return when {
-            !message.isOutgoing -> Triple(null, null, null)
+            !message.isOutgoing -> MessageStatusInfo(null,
+                null,
+                null,
+                null)
             message.isFailed ->
-                Triple(R.drawable.ic_delivery_status_failed, resources.getColor(R.color.destructive, context.theme), R.string.delivery_status_failed)
+                MessageStatusInfo(
+                    R.drawable.ic_delivery_status_failed,
+                    resources.getColor(R.color.destructive, context.theme),
+                    R.string.delivery_status_failed,
+                    null
+                )
             message.isPending ->
-                Triple(R.drawable.ic_delivery_status_sending, context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_sending)
+                MessageStatusInfo(
+                    R.drawable.ic_delivery_status_sending,
+                    context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_sending,
+                    context.getString(R.string.AccessibilityId_message_sent_status_pending)
+                )
             message.isRead ->
-                Triple(R.drawable.ic_delivery_status_read, context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_read)
+                MessageStatusInfo(
+                    R.drawable.ic_delivery_status_read,
+                    context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_read,
+                    null
+                )
             else ->
-                Triple(R.drawable.ic_delivery_status_sent, context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_sent)
+                MessageStatusInfo(
+                    R.drawable.ic_delivery_status_sent,
+                    context.getColorFromAttr(R.attr.message_status_color),
+                    R.string.delivery_status_sent,
+                    context.getString(R.string.AccessibilityId_message_sent_status_tick)
+                )
         }
     }
 

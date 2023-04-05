@@ -32,6 +32,7 @@
 
     <EditText
         style="@style/SmallSessionEditText"
+        android:contentDescription="@string/AccessibilityId_enter_display_name"
         android:id="@+id/displayNameEditText"
         android:layout_width="match_parent"
         android:layout_height="64dp"
@@ -51,6 +52,7 @@
 
     <Button
         style="@style/Widget.Session.Button.Common.ProminentFilled"
+        android:contentDescription="@string/AccessibilityId_continue"
         android:id="@+id/registerButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/medium_button_height"

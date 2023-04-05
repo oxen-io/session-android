@@ -5,8 +5,9 @@ import androidx.annotation.AttrRes
 /**
  * Represents an action to be rendered
  */
-data class ActionItem(
+data class ActionItem @JvmOverloads constructor(
   @AttrRes val iconRes: Int,
   val title: CharSequence,
-  val action: Runnable
+  val action: Runnable,
+  val contentDescription: String? = null
 )

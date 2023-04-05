@@ -59,6 +59,7 @@
 
         <TextView
             android:id="@+id/createPrivateChatButton"
+            android:contentDescription="@string/AccessibilityId_new_direct_message"
             android:layout_width="match_parent"
             android:layout_height="@dimen/setting_button_height"
             android:drawablePadding="@dimen/large_spacing"
@@ -84,6 +85,7 @@
 
         <TextView
             android:id="@+id/createClosedGroupButton"
+            android:contentDescription="@string/AccessibilityId_create_group"
             android:layout_width="match_parent"
             android:layout_height="@dimen/setting_button_height"
             android:drawablePadding="@dimen/large_spacing"
@@ -109,6 +111,7 @@
 
         <TextView
             android:id="@+id/joinCommunityButton"
+            android:contentDescription="@string/AccessibilityId_join_community"
             android:layout_width="match_parent"
             android:layout_height="@dimen/setting_button_height"
             android:drawablePadding="@dimen/large_spacing"

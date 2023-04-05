@@ -19,6 +19,7 @@
             android:textSize="@dimen/very_large_font_size"
             android:textStyle="bold"
             android:textColor="?android:textColorPrimary"
+            android:contentDescription="@string/AccessibilityId_message_notifications"
             android:text="@string/activity_pn_mode_message_notifications" />
 
         <TextView
@@ -32,6 +33,7 @@
             android:text="@string/activity_pn_mode_explanation" />
 
         <org.thoughtcrime.securesms.util.PNModeView
+            android:contentDescription="@string/AccessibilityId_fast_mode_notifications_option"
             android:id="@+id/fcmOptionView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,6 +72,7 @@
         </org.thoughtcrime.securesms.util.PNModeView>
 
         <org.thoughtcrime.securesms.util.PNModeView
+            android:contentDescription="@string/AccessibilityId_slow_mode_notifications_option"
             android:id="@+id/backgroundPollingOptionView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,7 +89,8 @@
                 android:textSize="@dimen/medium_font_size"
                 android:textColor="?android:textColorPrimary"
                 android:textStyle="bold"
-                android:text="@string/activity_pn_mode_slow_mode" />
+                android:text="@string/activity_pn_mode_slow_mode"
+                />
 
             <TextView
                 android:layout_width="match_parent"
@@ -101,6 +105,7 @@
         <Button
             style="@style/Widget.Session.Button.Common.ProminentFilled"
             android:id="@+id/registerButton"
+            android:contentDescription="@string/AccessibilityId_continue_message_notifications"
             android:layout_width="match_parent"
             android:layout_height="@dimen/medium_button_height"
             android:layout_marginLeft="@dimen/massive_spacing"

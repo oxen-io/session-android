@@ -35,9 +35,9 @@
         android:id="@+id/mnemonicEditText"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:layout_marginLeft="@dimen/very_large_spacing"
+        android:layout_marginHorizontal="@dimen/very_large_spacing"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="@dimen/very_large_spacing"
+        android:contentDescription="@string/AccessibilityId_enter_your_recovery_phrase"
         android:paddingTop="0dp"
         android:paddingBottom="0dp"
         android:gravity="center_vertical"
@@ -55,9 +55,9 @@
         android:id="@+id/continueButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/medium_button_height"
-        android:layout_marginLeft="@dimen/massive_spacing"
-        android:layout_marginRight="@dimen/massive_spacing"
+        android:layout_marginHorizontal="@dimen/massive_spacing"
         android:layout_marginBottom="@dimen/medium_spacing"
+        android:contentDescription="@string/AccessibilityId_link_device"
         android:text="@string/continue_2" />
 
 </LinearLayout>

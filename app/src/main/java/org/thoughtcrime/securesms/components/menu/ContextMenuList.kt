@@ -77,6 +77,7 @@ class ContextMenuList(recyclerView: RecyclerView, onItemClick: () -> Unit) {
         context.theme.resolveAttribute(model.item.iconRes, typedValue, true)
         icon.setImageDrawable(ContextCompat.getDrawable(context, typedValue.resourceId))
       }
+      itemView.contentDescription = model.item.contentDescription
       title.text = model.item.title
       itemView.setOnClickListener {
         model.item.action.run()

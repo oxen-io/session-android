@@ -12,6 +12,7 @@
 
     <cn.carbswang.android.numberpickerview.library.NumberPickerView
         android:id="@+id/expiration_number_picker"
+        android:contentDescription="@string/AccessibilityId_disappearing_messages_time_picker"
         android:layout_alignParentTop="true"
         app:npv_WrapSelectorWheel="false"
         app:npv_DividerColor="#cbc8ea"

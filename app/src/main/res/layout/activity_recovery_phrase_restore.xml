@@ -32,19 +32,20 @@
         android:text="@string/activity_restore_explanation" />
 
     <EditText
-        style="@style/SmallSessionEditText"
         android:id="@+id/mnemonicEditText"
+        style="@style/SmallSessionEditText"
+        android:contentDescription="@string/AccessibilityId_enter_your_recovery_phrase"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_marginLeft="@dimen/very_large_spacing"
         android:layout_marginTop="10dp"
         android:layout_marginRight="@dimen/very_large_spacing"
-        android:paddingTop="0dp"
-        android:paddingBottom="0dp"
         android:gravity="center_vertical"
+        android:hint="@string/activity_restore_seed_edit_text_hint"
         android:inputType="textMultiLine"
         android:maxLines="3"
-        android:hint="@string/activity_restore_seed_edit_text_hint" />
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp" />
 
     <View
         android:layout_width="match_parent"
@@ -53,6 +54,7 @@
 
     <Button
         style="@style/Widget.Session.Button.Common.ProminentFilled"
+        android:contentDescription="@string/AccessibilityId_continue"
         android:id="@+id/restoreButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/medium_button_height"

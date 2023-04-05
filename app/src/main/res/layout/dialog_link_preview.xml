@@ -40,7 +40,8 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/small_button_height"
             android:layout_weight="1"
-            android:text="@string/cancel" />
+            android:text="@string/cancel"
+            android:contentDescription="@string/AccessibilityId_cancel_link_preview_button"/>
 
         <Button
             style="@style/Widget.Session.Button.Dialog.Unimportant"
@@ -49,7 +50,10 @@
             android:layout_height="@dimen/small_button_height"
             android:layout_weight="1"
             android:layout_marginStart="@dimen/medium_spacing"
-            android:text="@string/dialog_link_preview_enable_button_title" />
+            android:text="@string/dialog_link_preview_enable_button_title"
+            android:contentDescription="@string/AccessibilityId_enable_link_preview_button"
+            />
+
 
     </LinearLayout>
 

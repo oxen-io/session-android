@@ -34,7 +34,8 @@
                     android:layout_height="@dimen/small_profile_picture_size"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="9dp" />
+                    android:layout_marginLeft="9dp"
+                    android:contentDescription="@string/AccessibilityId_user_settings" />
 
                 <org.thoughtcrime.securesms.home.PathStatusView
                     android:id="@+id/pathStatusView"
@@ -56,6 +57,7 @@
 
                 <RelativeLayout
                     android:id="@+id/searchViewContainer"
+                    android:contentDescription="@string/AccessibilityId_search_icon"
                     android:layout_width="@dimen/small_profile_picture_size"
                     android:layout_height="@dimen/small_profile_picture_size"
                     android:layout_alignParentRight="true"
@@ -170,6 +172,7 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/newConversationButton"
+            android:contentDescription="@string/AccessibilityId_new_conversation_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

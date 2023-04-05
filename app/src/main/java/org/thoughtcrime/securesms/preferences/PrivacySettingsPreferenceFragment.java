@@ -5,10 +5,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -179,7 +181,7 @@ public class PrivacySettingsPreferenceFragment extends ListSummaryPreferenceFrag
       boolean val = (boolean) newValue;
       if (val) {
         // check if we've shown the info dialog and check for microphone permissions
-        new AlertDialog.Builder(new ContextThemeWrapper(context.requireContext(), R.style.ThemeOverlay_Session_AlertDialog))
+        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(context.requireContext(), R.style.ThemeOverlay_Session_AlertDialog))
                 .setTitle(R.string.dialog_voice_video_title)
                 .setMessage(R.string.dialog_voice_video_message)
                 .setPositiveButton(R.string.dialog_link_preview_enable_button_title, (d, w) -> {
@@ -189,7 +191,9 @@ public class PrivacySettingsPreferenceFragment extends ListSummaryPreferenceFrag
 
                 })
                 .show();
-        return false;
+          Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+          positiveButton.setContentDescription("Enable");
+      return false;
       } else {
         return true;
       }

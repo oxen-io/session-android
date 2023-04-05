@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ListView
 import dagger.hilt.android.AndroidEntryPoint
+import network.loki.messenger.R
 import org.session.libsession.messaging.mentions.Mention
 import org.thoughtcrime.securesms.database.LokiThreadDatabase
 import org.thoughtcrime.securesms.mms.GlideRequests
@@ -41,7 +42,9 @@ class MentionCandidatesView(context: Context, attrs: AttributeSet?, defStyleAttr
         override fun getItem(position: Int): Mention { return candidates[position] }
 
         override fun getView(position: Int, cellToBeReused: View?, parent: ViewGroup): View {
-            val cell = cellToBeReused as MentionCandidateView? ?: MentionCandidateView(context)
+            val cell = cellToBeReused as MentionCandidateView? ?: MentionCandidateView(context).apply {
+                contentDescription = context.getString(R.string.AccessibilityId_contact)
+            }
             val mentionCandidate = getItem(position)
             cell.glide = glide
             cell.candidate = mentionCandidate
