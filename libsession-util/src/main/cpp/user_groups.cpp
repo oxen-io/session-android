@@ -178,7 +178,6 @@ inline jobject iterator_as_java_stack(JNIEnv *env, const session::config::UserGr
         jobject serialized = nullptr;
         if (auto* lgc = std::get_if<session::config::legacy_group_info>(&item)) {
             serialized = serialize_legacy_group_info(env, *lgc);
-
         } else if (auto* community = std::get_if<session::config::community_info>(&item)) {
             serialized = serialize_community_info(env, *community);
         }

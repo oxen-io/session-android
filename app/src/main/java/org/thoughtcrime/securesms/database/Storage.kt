@@ -98,17 +98,21 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
 
     // TODO: maybe add time here from formation / creation message
     override fun threadCreated(address: Address, threadId: Long) {
+        Log.d("Loki-DBG", "creating thread for $address")
         val volatile = configFactory.convoVolatile ?: return
         if (address.isGroup) {
             val groups = configFactory.userGroups ?: return
             if (address.isClosedGroup) {
                 val sessionId = GroupUtil.doubleDecodeGroupId(address.serialize())
-                val legacyGroup = groups.getOrConstructLegacyGroupInfo(sessionId)
-                groups.set(legacyGroup)
-                val newVolatileParams = volatile.getOrConstructLegacyGroup(sessionId).copy(
-                    lastRead = SnodeAPI.nowWithOffset,
-                )
-                volatile.set(newVolatileParams)
+                val closedGroup = getGroup(address.toGroupString())
+                if (closedGroup != null && closedGroup.isActive) {
+                    val legacyGroup = groups.getOrConstructLegacyGroupInfo(sessionId)
+                    groups.set(legacyGroup)
+                    val newVolatileParams = volatile.getOrConstructLegacyGroup(sessionId).copy(
+                        lastRead = SnodeAPI.nowWithOffset,
+                    )
+                    volatile.set(newVolatileParams)
+                }
             } else if (address.isOpenGroup) {
                 // these should be added on the group join / group info fetch
                 Log.w("Loki", "Thread created called for open group address, not adding any extra information")
@@ -132,6 +136,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
     }
 
     override fun threadDeleted(address: Address, threadId: Long) {
+        Log.d("Loki-DBG", "deleting thread for $address")
         val volatile = configFactory.convoVolatile ?: return
         if (address.isGroup) {
             val groups = configFactory.userGroups ?: return
@@ -1181,11 +1186,14 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
 
     override fun deleteConversation(threadID: Long) {
         // TODO: delete from either contacts / convo volatile or the closed groups
+        // TODO: message request deletion properly (not just doing a hidden priority)
         val recipient = getRecipientForThread(threadID)
         val threadDB = DatabaseComponent.get(context).threadDatabase()
         threadDB.deleteConversation(threadID)
         if (recipient != null) {
+            Log.d("Loki-DBG", "Deleting conversation for ${recipient.address}")
             if (recipient.isContactRecipient) {
+                if (recipient.isLocalNumber) return
                 // TODO: handle contact
                 val contacts = configFactory.contacts ?: return
                 contacts.upsertContact(recipient.address.serialize()) {
@@ -1194,6 +1202,16 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
                 ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
             } else if (recipient.isClosedGroupRecipient) {
                 // TODO: handle closed group
+                val volatile = configFactory.convoVolatile ?: return
+                val groups = configFactory.userGroups ?: return
+                val closedGroup = getGroup(recipient.address.toGroupString())
+                val groupPublicKey = GroupUtil.doubleDecodeGroupId(recipient.address.serialize())
+                if (closedGroup != null) {
+                    volatile.eraseLegacyClosedGroup(groupPublicKey)
+                    groups.eraseLegacyGroup(groupPublicKey)
+                } else {
+                    Log.w("Loki-DBG", "Failed to find a closed group for $groupPublicKey, ${recipient.address.serialize()}")
+                }
             }
         }
     }

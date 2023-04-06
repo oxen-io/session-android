@@ -229,8 +229,8 @@ fun MessageSender.leave(groupPublicKey: String, notifyUser: Boolean = true): Pro
         sendNonDurably(closedGroupControlMessage, Address.fromSerialized(groupID)).success {
             // Notify the user
             val infoType = SignalServiceGroup.Type.QUIT
-            val threadID = storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
             if (notifyUser) {
+                val threadID = storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
                 storage.insertOutgoingInfoMessage(context, groupID, infoType, name, updatedMembers, admins, threadID, sentTime)
             }
             // Remove the group private key and unsubscribe from PNs

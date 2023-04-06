@@ -73,6 +73,7 @@ inline session::config::legacy_group_info deserialize_legacy_group_info(JNIEnv *
     info_deserialized.name = name_bytes;
     info_deserialized.enc_pubkey = enc_pub_key_bytes;
     info_deserialized.enc_seckey = enc_sec_key_bytes;
+    info_deserialized.priority = priority;
     info_deserialized.disappearing_timer = std::chrono::seconds(env->GetLongField(info, disappearing_timer_field));
     env->ReleaseStringUTFChars(id, id_bytes);
     env->ReleaseStringUTFChars(name, name_bytes);
@@ -104,7 +105,6 @@ inline jobject serialize_members(JNIEnv *env, std::map<std::string, bool> member
         bool is_admin = it->second;
         auto jbool = env->NewObject(boxed_bool, new_bool, is_admin);
         env->CallObjectMethod(new_map, insert, session_id, jbool);
-        ++it;
     }
     return new_map;
 }

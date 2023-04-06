@@ -245,11 +245,10 @@ object ConfigurationMessageUtilities {
             val encryptionKeyPair = storage.getLatestClosedGroupEncryptionKeyPair(groupPublicKey) ?: return@mapNotNull null
             val threadId = storage.getThreadId(group.encodedId)
             val isPinned = threadId?.let { storage.isPinned(threadId) } ?: false
-            val sessionId = GroupUtil.doubleEncodeGroupID(group.getId())
             val admins = group.admins.map { it.serialize() to true }.toMap()
             val members = group.members.filterNot { it.serialize() !in admins.keys }.map { it.serialize() to false }.toMap()
             GroupInfo.LegacyGroupInfo(
-                sessionId = sessionId,
+                sessionId = groupPublicKey,
                 name = group.title,
                 members = admins + members,
                 priority = if (isPinned) ConfigBase.PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE,

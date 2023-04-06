@@ -761,8 +761,10 @@ private fun MessageReceiver.handleClosedGroupMemberLeft(message: ClosedGroupCont
     }
     // Notify the user
     if (userLeft) {
-        val threadID = storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
-        storage.insertOutgoingInfoMessage(context, groupID, SignalServiceGroup.Type.QUIT, name, members, admins, threadID, message.sentTimestamp!!)
+        val threadID = storage.getThreadId(Address.fromSerialized(groupID))
+        if (threadID != null) {
+            storage.insertOutgoingInfoMessage(context, groupID, SignalServiceGroup.Type.QUIT, name, members, admins, threadID, message.sentTimestamp!!)
+        }
     } else {
         storage.insertIncomingInfoMessage(context, senderPublicKey, groupID, SignalServiceGroup.Type.QUIT, name, members, admins, message.sentTimestamp!!)
     }
