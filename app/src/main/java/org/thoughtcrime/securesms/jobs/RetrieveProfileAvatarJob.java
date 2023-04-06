@@ -14,7 +14,6 @@ import org.session.libsession.utilities.Util;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsignal.exceptions.PushNetworkException;
 import org.session.libsignal.streams.ProfileCipherInputStream;
-import org.session.libsignal.utilities.Base64;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.database.RecipientDatabase;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
@@ -79,19 +78,7 @@ public class RetrieveProfileAvatarJob extends BaseJob {
   @Override
   public void onRun() throws IOException {
     RecipientDatabase database   = DatabaseComponent.get(context).recipientDatabase();
-    byte[] profileKey = null;
-    if (recipient.resolve().isLocalNumber()) {
-      try {
-        String encodedProfileKey = TextSecurePreferences.getProfileKey(context);
-        if (encodedProfileKey != null) {
-          profileKey = Base64.decode(encodedProfileKey);
-        }
-      } catch (Exception e) {
-        Log.e(TAG, "Failed to decode local user profile key", e);
-      }
-    } else {
-      profileKey = recipient.resolve().getProfileKey();
-    }
+    byte[]            profileKey = recipient.resolve().getProfileKey();
 
     if (profileKey == null || (profileKey.length != 32 && profileKey.length != 16)) {
       Log.w(TAG, "Recipient profile key is gone!");
