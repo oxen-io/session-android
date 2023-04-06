@@ -84,7 +84,7 @@ import java.util.concurrent.ExecutorService;
 import kotlin.jvm.Synchronized;
 
 public class AttachmentDatabase extends Database {
-  
+
   private static final String TAG = AttachmentDatabase.class.getSimpleName();
 
   public  static final String TABLE_NAME             = "part";
@@ -428,7 +428,7 @@ public class AttachmentDatabase extends Database {
     ContentValues      values      = new ContentValues();
     DataInfo           dataInfo    = setAttachmentData(inputStream);
 
-    if (placeholder != null && placeholder.isQuote() && !placeholder.getContentType().startsWith("image")) {
+    if (isPlaceHolderThere(placeholder)) {
       values.put(THUMBNAIL, dataInfo.file.getAbsolutePath());
       values.put(THUMBNAIL_RANDOM, dataInfo.random);
     } else {
@@ -454,6 +454,10 @@ public class AttachmentDatabase extends Database {
     }
 
     thumbnailExecutor.submit(new ThumbnailFetchCallable(attachmentId));
+  }
+
+  private boolean isPlaceHolderThere(DatabaseAttachment placeholder){
+    return placeholder != null && placeholder.isQuote() && !placeholder.getContentType().startsWith("image");
   }
 
   public void updateAttachmentAfterUploadSucceeded(@NonNull AttachmentId id, @NonNull Attachment attachment) {

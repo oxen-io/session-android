@@ -267,7 +267,7 @@ public class ThreadDatabase extends Database {
     try {
       cursor = DatabaseComponent.get(context).mmsSmsDatabase().getConversation(threadId, true);
 
-      if (cursor != null && length > 0 && cursor.getCount() > length) {
+      if (isCursorGreaterThanLength(cursor, length)) {
         Log.w("ThreadDatabase", "Cursor count is greater than length!");
         cursor.moveToPosition(length - 1);
 
@@ -285,6 +285,10 @@ public class ThreadDatabase extends Database {
       if (cursor != null)
         cursor.close();
     }
+  }
+
+  public boolean isCursorGreaterThanLength(Cursor cursor, int length) {
+    return cursor != null && length > 0 && cursor.getCount() > length;
   }
 
   public void trimThreadBefore(long threadId, long timestamp) {

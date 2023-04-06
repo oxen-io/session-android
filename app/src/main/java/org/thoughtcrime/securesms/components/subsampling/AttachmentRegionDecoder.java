@@ -21,7 +21,7 @@ public class AttachmentRegionDecoder implements ImageRegionDecoder {
 
   private static final String TAG = AttachmentRegionDecoder.class.getSimpleName();
 
-  private SkiaImageRegionDecoder passthrough;
+  private SkiaImageRegionDecoder passThrough;
 
   private BitmapRegionDecoder bitmapRegionDecoder;
 
@@ -29,8 +29,8 @@ public class AttachmentRegionDecoder implements ImageRegionDecoder {
   public Point init(Context context, Uri uri) throws Exception {
     Log.d(TAG, "Init!");
     if (!PartAuthority.isLocalUri(uri)) {
-      passthrough = new SkiaImageRegionDecoder();
-      return passthrough.init(context, uri);
+      passThrough = new SkiaImageRegionDecoder();
+      return passThrough.init(context, uri);
     }
 
     InputStream inputStream = PartAuthority.getAttachmentStream(context, uri);
@@ -45,8 +45,8 @@ public class AttachmentRegionDecoder implements ImageRegionDecoder {
   public Bitmap decodeRegion(Rect rect, int sampleSize) {
     Log.d(TAG, "Decode region: " + rect);
 
-    if (passthrough != null) {
-      return passthrough.decodeRegion(rect, sampleSize);
+    if (passThrough != null) {
+      return passThrough.decodeRegion(rect, sampleSize);
     }
 
     synchronized(this) {
@@ -66,14 +66,14 @@ public class AttachmentRegionDecoder implements ImageRegionDecoder {
 
   public boolean isReady() {
     Log.d(TAG, "isReady");
-    return (passthrough != null && passthrough.isReady()) ||
+    return (passThrough != null && passThrough.isReady()) ||
            (bitmapRegionDecoder != null && !bitmapRegionDecoder.isRecycled());
   }
 
   public void recycle() {
-    if (passthrough != null) {
-      passthrough.recycle();
-      passthrough = null;
+    if (passThrough != null) {
+      passThrough.recycle();
+      passThrough = null;
     } else {
       bitmapRegionDecoder.recycle();
     }

@@ -105,7 +105,7 @@ public class AttachmentSecret {
   private static class ByteArrayDeserializer extends JsonDeserializer<byte[]> {
 
     @Override
-    public byte[] deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+    public byte[] deserialize(JsonParser p, DeserializationContext context) throws IOException {
       return Base64.decode(p.getValueAsString(), Base64.NO_WRAP | Base64.NO_PADDING);
     }
   }

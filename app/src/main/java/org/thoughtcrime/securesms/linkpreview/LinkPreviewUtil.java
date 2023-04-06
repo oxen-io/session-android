@@ -120,33 +120,11 @@ public final class LinkPreviewUtil {
     Map<String, String> openGraphTags    = new HashMap<>();
     Matcher             openGraphMatcher = OPEN_GRAPH_TAG_PATTERN.matcher(html);
 
-    while (openGraphMatcher.find()) {
-      String tag      = openGraphMatcher.group();
-      String property = openGraphMatcher.groupCount() > 0 ? openGraphMatcher.group(1) : null;
-
-      if (property != null) {
-        Matcher contentMatcher = OPEN_GRAPH_CONTENT_PATTERN.matcher(tag);
-        if (contentMatcher.find() && contentMatcher.groupCount() > 0) {
-          String content = htmlDecoder.fromEncoded(contentMatcher.group(1));
-          openGraphTags.put(property.toLowerCase(), content);
-        }
-      }
-    }
+    extractTags(htmlDecoder, openGraphTags, openGraphMatcher);
 
     Matcher articleMatcher = ARTICLE_TAG_PATTERN.matcher(html);
 
-    while (articleMatcher.find()) {
-      String tag      = articleMatcher.group();
-      String property = articleMatcher.groupCount() > 0 ? articleMatcher.group(1) : null;
-
-      if (property != null) {
-        Matcher contentMatcher = OPEN_GRAPH_CONTENT_PATTERN.matcher(tag);
-        if (contentMatcher.find() && contentMatcher.groupCount() > 0) {
-          String content = htmlDecoder.fromEncoded(contentMatcher.group(1));
-          openGraphTags.put(property.toLowerCase(), content);
-        }
-      }
-    }
+    extractTags(htmlDecoder, openGraphTags, articleMatcher);
 
     String htmlTitle  = "";
     String faviconUrl = "";
@@ -165,6 +143,21 @@ public final class LinkPreviewUtil {
     }
 
     return new OpenGraph(openGraphTags, htmlTitle, faviconUrl);
+  }
+
+  private static void extractTags(@NonNull HtmlDecoder htmlDecoder, Map<String, String> openGraphTags, Matcher articleMatcher) {
+    while (articleMatcher.find()) {
+      String tag      = articleMatcher.group();
+      String property = articleMatcher.groupCount() > 0 ? articleMatcher.group(1) : null;
+
+      if (property != null) {
+        Matcher contentMatcher = OPEN_GRAPH_CONTENT_PATTERN.matcher(tag);
+        if (contentMatcher.find() && contentMatcher.groupCount() > 0) {
+          String content = htmlDecoder.fromEncoded(contentMatcher.group(1));
+          openGraphTags.put(property.toLowerCase(), content);
+        }
+      }
+    }
   }
 
   public static final class OpenGraph {

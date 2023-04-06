@@ -142,13 +142,13 @@ public class BucketedThreadMediaLoader extends AsyncTaskLoader<BucketedThreadMed
       private final List<MediaDatabase.MediaRecord> records = new LinkedList<>();
 
       private final long   startTime;
-      private final long   endtime;
+      private final long endTime;
       private final String name;
 
-      TimeBucket(String name, long startTime, long endtime) {
+      TimeBucket(String name, long startTime, long endTime) {
         this.name      = name;
         this.startTime = startTime;
-        this.endtime   = endtime;
+        this.endTime = endTime;
       }
 
       void add(MediaDatabase.MediaRecord record) {
@@ -156,7 +156,7 @@ public class BucketedThreadMediaLoader extends AsyncTaskLoader<BucketedThreadMed
       }
 
       boolean inRange(long timestamp) {
-        return timestamp > startTime && timestamp <= endtime;
+        return timestamp > startTime && timestamp <= endTime;
       }
 
       boolean isEmpty() {
