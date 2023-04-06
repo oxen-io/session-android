@@ -50,10 +50,10 @@ class ProfileManager(private val context: Context, private val configFactory: Co
     }
 
     override fun setProfilePictureURL(context: Context, recipient: Recipient, profilePictureURL: String) {
-        if (recipient.isLocalNumber) return
         val job = RetrieveProfileAvatarJob(recipient, profilePictureURL)
         val jobManager = ApplicationContext.getInstance(context).jobManager
         jobManager.add(job)
+        if (recipient.isLocalNumber) return
         val sessionID = recipient.address.serialize()
         val contactDatabase = DatabaseComponent.get(context).sessionContactDatabase()
         var contact = contactDatabase.getContactWithSessionID(sessionID)
@@ -67,9 +67,13 @@ class ProfileManager(private val context: Context, private val configFactory: Co
     }
 
     override fun setProfileKey(context: Context, recipient: Recipient, profileKey: ByteArray?) {
-        if (recipient.isLocalNumber) return
         // New API
         val sessionID = recipient.address.serialize()
+        // Old API
+        val database = DatabaseComponent.get(context).recipientDatabase()
+        database.setProfileKey(recipient, profileKey)
+        if (recipient.isLocalNumber) return
+
         val contactDatabase = DatabaseComponent.get(context).sessionContactDatabase()
         var contact = contactDatabase.getContactWithSessionID(sessionID)
         if (contact == null) contact = Contact(sessionID)
@@ -78,9 +82,6 @@ class ProfileManager(private val context: Context, private val configFactory: Co
             contact.profilePictureEncryptionKey = profileKey
             contactDatabase.setContact(contact)
         }
-        // Old API
-        val database = DatabaseComponent.get(context).recipientDatabase()
-        database.setProfileKey(recipient, profileKey)
         contactUpdatedInternal(contact)
     }
 
