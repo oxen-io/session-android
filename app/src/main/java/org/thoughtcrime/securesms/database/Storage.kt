@@ -98,7 +98,8 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
 
     // TODO: maybe add time here from formation / creation message
     override fun threadCreated(address: Address, threadId: Long) {
-        Log.d("Loki-DBG", "creating thread for $address")
+        Log.d("Loki-DBG", "creating thread for $address\nExecution context:\n${Thread.currentThread().stackTrace.joinToString("\n")}")
+
         val volatile = configFactory.convoVolatile ?: return
         if (address.isGroup) {
             val groups = configFactory.userGroups ?: return
@@ -136,7 +137,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
     }
 
     override fun threadDeleted(address: Address, threadId: Long) {
-        Log.d("Loki-DBG", "deleting thread for $address")
+        Log.d("Loki-DBG", "deleting thread for $address\nExecution context:\n${Thread.currentThread().stackTrace.joinToString("\n")}")
         val volatile = configFactory.convoVolatile ?: return
         if (address.isGroup) {
             val groups = configFactory.userGroups ?: return
@@ -460,11 +461,11 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         val extracted = convos.all()
         for (conversation in extracted) {
             val threadId = when (conversation) {
-                is Conversation.OneToOne -> getOrCreateThreadIdFor(fromSerialized(conversation.sessionId))
-                is Conversation.LegacyGroup -> getOrCreateThreadIdFor("", conversation.groupId,null)
-                is Conversation.Community -> getOrCreateThreadIdFor("",null, "${conversation.baseCommunityInfo.baseUrl}.${conversation.baseCommunityInfo.room}")
+                is Conversation.OneToOne -> getThreadIdFor(conversation.sessionId, null, null, createThread = false)
+                is Conversation.LegacyGroup -> getThreadIdFor("", conversation.groupId,null, createThread = false)
+                is Conversation.Community -> getThreadIdFor("",null, "${conversation.baseCommunityInfo.baseUrl}.${conversation.baseCommunityInfo.room}", createThread = false)
             }
-            if (threadId >= 0) {
+            if (threadId != null) {
                 markConversationAsRead(threadId, conversation.lastRead)
                 updateThread(threadId, false)
             }
@@ -981,17 +982,19 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
         return DatabaseComponent.get(context).threadDatabase().getOrCreateThreadIdFor(recipient)
     }
 
-    override fun getOrCreateThreadIdFor(publicKey: String, groupPublicKey: String?, openGroupID: String?): Long {
+    override fun getThreadIdFor(publicKey: String, groupPublicKey: String?, openGroupID: String?, createThread: Boolean): Long? {
         val database = DatabaseComponent.get(context).threadDatabase()
         return if (!openGroupID.isNullOrEmpty()) {
             val recipient = Recipient.from(context, fromSerialized(GroupUtil.getEncodedOpenGroupID(openGroupID.toByteArray())), false)
-            database.getThreadIdIfExistsFor(recipient)
+            database.getThreadIdIfExistsFor(recipient).let { if (it == -1L) null else it }
         } else if (!groupPublicKey.isNullOrEmpty()) {
             val recipient = Recipient.from(context, fromSerialized(GroupUtil.doubleEncodeGroupID(groupPublicKey)), false)
-            database.getOrCreateThreadIdFor(recipient)
+            if (createThread) database.getOrCreateThreadIdFor(recipient)
+            else database.getThreadIdIfExistsFor(recipient).let { if (it == -1L) null else it }
         } else {
             val recipient = Recipient.from(context, fromSerialized(publicKey), false)
-            database.getOrCreateThreadIdFor(recipient)
+            if (createThread) database.getOrCreateThreadIdFor(recipient)
+            else database.getThreadIdIfExistsFor(recipient).let { if (it == -1L) null else it }
         }
     }
 

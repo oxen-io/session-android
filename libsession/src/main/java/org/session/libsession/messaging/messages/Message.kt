@@ -11,6 +11,7 @@ abstract class Message {
     var receivedTimestamp: Long? = null
     var recipient: String? = null
     var sender: String? = null
+    var isSenderSelf: Boolean = false
     var groupPublicKey: String? = null
     var openGroupServerMessageID: Long? = null
     var serverHash: String? = null

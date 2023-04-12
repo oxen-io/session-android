@@ -1013,4 +1013,9 @@
     <string name="giphy_permission_title">Search GIFs?</string>
     <string name="giphy_permission_message">Session will connect to Giphy to provide search results. You will not have full metadata protection when sending GIFs.</string>
     <string name="activity_home_outdated_client_config">Some of your devices are using outdated versions. Syncing may be unreliable until they are updated.</string>
+
+    <string name="activity_conversation_empty_state_read_only">There are no messages in <b>%s</b>.</string>
+    <string name="activity_conversation_empty_state_note_to_self">You have no messages in Note to Self.</string>
+    <string name="activity_conversation_empty_state_default">You have no messages from <b>%s</b>.\nSend a message to start the conversation!</string>
+
 </resources>

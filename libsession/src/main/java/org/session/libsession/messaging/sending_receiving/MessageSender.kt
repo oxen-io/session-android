@@ -440,7 +440,7 @@ object MessageSender {
     }
 
     fun sendNonDurably(message: Message, address: Address): Promise<Unit, Exception> {
-        val threadID = MessagingModuleConfiguration.shared.storage.getOrCreateThreadIdFor(address)
+        val threadID = MessagingModuleConfiguration.shared.storage.getThreadId(address)
         message.threadID = threadID
         val destination = Destination.from(address)
         return send(message, destination)

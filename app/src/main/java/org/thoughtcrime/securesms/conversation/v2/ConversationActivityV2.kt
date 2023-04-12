@@ -3,37 +3,30 @@ package org.thoughtcrime.securesms.conversation.v2
 import android.Manifest
 import android.animation.FloatEvaluator
 import android.animation.ValueAnimator
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
 import android.content.res.Resources
 import android.database.Cursor
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.net.Uri
-import android.os.AsyncTask
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.provider.MediaStore
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.SpannedString
 import android.text.TextUtils
+import android.text.style.StyleSpan
 import android.util.Pair
 import android.util.TypedValue
-import android.view.ActionMode
-import android.view.Menu
-import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.View
-import android.view.WindowManager
+import android.view.*
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.DimenRes
 import androidx.appcompat.app.AlertDialog
+import androidx.core.text.set
+import androidx.core.text.toSpannable
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -79,12 +72,8 @@ import org.session.libsession.messaging.sending_receiving.link_preview.LinkPrevi
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
 import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.snode.SnodeAPI
-import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.*
 import org.session.libsession.utilities.Address.Companion.fromSerialized
-import org.session.libsession.utilities.GroupUtil
-import org.session.libsession.utilities.MediaTypes
-import org.session.libsession.utilities.Stub
-import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.concurrent.SimpleTask
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.recipients.RecipientModifiedListener
@@ -117,25 +106,10 @@ import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageViewDelegate
 import org.thoughtcrime.securesms.conversation.v2.search.SearchBottomBar
 import org.thoughtcrime.securesms.conversation.v2.search.SearchViewModel
-import org.thoughtcrime.securesms.conversation.v2.utilities.AttachmentManager
-import org.thoughtcrime.securesms.conversation.v2.utilities.BaseDialog
-import org.thoughtcrime.securesms.conversation.v2.utilities.MentionManagerUtilities
-import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities
-import org.thoughtcrime.securesms.conversation.v2.utilities.ResendMessageUtilities
+import org.thoughtcrime.securesms.conversation.v2.utilities.*
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
 import org.thoughtcrime.securesms.crypto.MnemonicUtilities
-import org.thoughtcrime.securesms.database.GroupDatabase
-import org.thoughtcrime.securesms.database.LokiAPIDatabase
-import org.thoughtcrime.securesms.database.LokiMessageDatabase
-import org.thoughtcrime.securesms.database.LokiThreadDatabase
-import org.thoughtcrime.securesms.database.MmsDatabase
-import org.thoughtcrime.securesms.database.MmsSmsDatabase
-import org.thoughtcrime.securesms.database.ReactionDatabase
-import org.thoughtcrime.securesms.database.RecipientDatabase
-import org.thoughtcrime.securesms.database.SessionContactDatabase
-import org.thoughtcrime.securesms.database.SmsDatabase
-import org.thoughtcrime.securesms.database.Storage
-import org.thoughtcrime.securesms.database.ThreadDatabase
+import org.thoughtcrime.securesms.database.*
 import org.thoughtcrime.securesms.database.model.MessageId
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
@@ -148,26 +122,13 @@ import org.thoughtcrime.securesms.linkpreview.LinkPreviewViewModel
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewViewModel.LinkPreviewState
 import org.thoughtcrime.securesms.mediasend.Media
 import org.thoughtcrime.securesms.mediasend.MediaSendActivity
-import org.thoughtcrime.securesms.mms.AudioSlide
-import org.thoughtcrime.securesms.mms.GifSlide
-import org.thoughtcrime.securesms.mms.GlideApp
-import org.thoughtcrime.securesms.mms.ImageSlide
-import org.thoughtcrime.securesms.mms.MediaConstraints
-import org.thoughtcrime.securesms.mms.Slide
-import org.thoughtcrime.securesms.mms.SlideDeck
-import org.thoughtcrime.securesms.mms.VideoSlide
+import org.thoughtcrime.securesms.mms.*
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.reactions.ReactionsDialogFragment
 import org.thoughtcrime.securesms.reactions.any.ReactWithAnyEmojiDialogFragment
-import org.thoughtcrime.securesms.util.ActivityDispatcher
-import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
-import org.thoughtcrime.securesms.util.DateUtils
-import org.thoughtcrime.securesms.util.MediaUtil
-import org.thoughtcrime.securesms.util.SaveAttachmentTask
-import org.thoughtcrime.securesms.util.push
-import org.thoughtcrime.securesms.util.toPx
+import org.thoughtcrime.securesms.util.*
 import java.lang.ref.WeakReference
-import java.util.Locale
+import java.util.*
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
@@ -401,6 +362,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
         updateUnreadCountIndicator()
         updateSubtitle()
+        updatePlaceholder()
         setUpBlockedBanner()
         binding!!.searchBottomBar.setEventListener(this)
         showOrHideInputIfNeeded()
@@ -982,6 +944,37 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val firstVisiblePosition = layoutManager?.findFirstVisibleItemPosition() ?: -1
         unreadCount = min(unreadCount, firstVisiblePosition).coerceAtLeast(0)
         updateUnreadCountIndicator()
+    }
+
+    private fun updatePlaceholder() {
+        val recipient = viewModel.recipient
+            ?: return Log.w("Loki", "recipient was null in placeholder update")
+        val binding = binding ?: return
+        val openGroup = viewModel.openGroup
+        val (textResource, insertParam) = when {
+            recipient.isLocalNumber -> R.string.activity_conversation_empty_state_note_to_self to null
+            openGroup != null && !openGroup.canWrite -> R.string.activity_conversation_empty_state_read_only to recipient.toShortString()
+            else -> R.string.activity_conversation_empty_state_default to recipient.toShortString()
+        }
+        val showPlaceholder = adapter.itemCount == 0
+        binding.placeholderText.isVisible = showPlaceholder
+        if (showPlaceholder) {
+            if (insertParam != null) {
+                val span = getText(textResource) as SpannedString
+                val annotations = span.getSpans(0, span.length, StyleSpan::class.java)
+                val boldSpan = annotations.first()
+                val spannedParam = insertParam.toSpannable()
+                spannedParam[0 until spannedParam.length] = StyleSpan(boldSpan.style)
+                val originalStart = span.getSpanStart(boldSpan)
+                val originalEnd = span.getSpanEnd(boldSpan)
+                val newString = SpannableStringBuilder(span)
+                    .replace(originalStart, originalEnd, spannedParam)
+                binding.placeholderText.text = newString
+            } else {
+                binding.placeholderText.setText(textResource)
+            }
+
+        }
     }
 
     private fun showOrHideScrollToBottomButton(show: Boolean = true) {

@@ -155,7 +155,7 @@ interface StorageProtocol {
 
     // Thread
     fun getOrCreateThreadIdFor(address: Address): Long
-    fun getOrCreateThreadIdFor(publicKey: String, groupPublicKey: String?, openGroupID: String?): Long
+    fun getThreadIdFor(publicKey: String, groupPublicKey: String?, openGroupID: String?, createThread: Boolean): Long?
     fun getThreadId(publicKeyOrOpenGroupID: String): Long?
     fun getThreadId(openGroup: OpenGroup): Long?
     fun getThreadId(address: Address): Long?

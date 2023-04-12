@@ -202,6 +202,19 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:padding="@dimen/medium_spacing"
+        android:textSize="@dimen/small_font_size"
+        android:textColor="?android:textColorSecondary"
+        android:textAlignment="center"
+        android:id="@+id/placeholderText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/blockedBanner"
+        android:elevation="8dp"
+        tools:text="@string/activity_conversation_empty_state_default"
+        />
+
     <LinearLayout
         android:id="@+id/messageRequestBar"
         android:layout_width="match_parent"

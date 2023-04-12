@@ -10,6 +10,7 @@ import nl.komponents.kovenant.task
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.Message
+import org.session.libsession.messaging.messages.control.ClosedGroupControlMessage
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
 import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.visible.ParsedMessage
@@ -61,13 +62,29 @@ class BatchMessageReceiveJob(
         private val OPEN_GROUP_ID_KEY = "open_group_id"
     }
 
-    private fun getThreadId(message: Message, storage: StorageProtocol): Long {
+    private fun shouldCreateThread(parsedMessage: ParsedMessage): Boolean {
+        val message = parsedMessage.message
+        return message is VisibleMessage
+                || !message.isSenderSelf
+        // TODO: sort out which messages should create threads: message requests? group creation threads? visible messages? others? calls?
+
+//                || (message is ClosedGroupControlMessage && message.kind is ClosedGroupControlMessage.Kind.New) // this was creating threads for self send messages (i.e. synced group creation)
+//        if (message is ClosedGroupControlMessage && message.kind is ClosedGroupControlMessage.Kind.New) {
+//            return true
+//        }
+//        if (parsedMessage.message.isSenderSelf ) {
+//            // all the cases where we should add a self send creating the thread, i.e. group invite? visible message?
+//        }
+//        !parsedMessage.message.isSenderSelf || parsedMessage.message is VisibleMessage
+    }
+
+    private fun getThreadId(message: Message, storage: StorageProtocol, shouldCreateThread: Boolean): Long? {
         val senderOrSync = when (message) {
             is VisibleMessage -> message.syncTarget ?: message.sender!!
             is ExpirationTimerUpdate -> message.syncTarget ?: message.sender!!
             else -> message.sender!!
         }
-        return storage.getOrCreateThreadIdFor(senderOrSync, message.groupPublicKey, openGroupID)
+        return storage.getThreadIdFor(senderOrSync, message.groupPublicKey, openGroupID, createThread = shouldCreateThread)
     }
 
     override suspend fun execute(dispatcherName: String) {
@@ -88,9 +105,9 @@ class BatchMessageReceiveJob(
                 try {
                     val (message, proto) = MessageReceiver.parse(data, openGroupMessageServerID, openGroupPublicKey = serverPublicKey)
                     message.serverHash = serverHash
-                    val threadID = getThreadId(message, storage)
                     val parsedParams = ParsedMessage(messageParameters, message, proto)
-                    if (!threadMap.containsKey(threadID)) {
+                    val threadID = getThreadId(message, storage, shouldCreateThread(parsedParams))
+                    if (threadID != null && !threadMap.containsKey(threadID)) {
                         threadMap[threadID] = mutableListOf(parsedParams)
                     } else {
                         threadMap[threadID]!! += parsedParams

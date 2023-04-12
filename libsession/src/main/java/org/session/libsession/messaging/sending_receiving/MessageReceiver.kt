@@ -149,6 +149,9 @@ object MessageReceiver {
         if (!message.isSelfSendValid && (sender == userPublicKey || isUserBlindedSender)) {
             throw Error.SelfSend
         }
+        if (sender == userPublicKey || isUserBlindedSender) {
+            message.isSenderSelf = true
+        }
         // Guard against control messages in open groups
         if (isOpenGroupMessage && message !is VisibleMessage) {
             throw Error.InvalidMessage
