@@ -10,8 +10,15 @@ import nl.komponents.kovenant.task
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.Message
+import org.session.libsession.messaging.messages.control.CallMessage
 import org.session.libsession.messaging.messages.control.ClosedGroupControlMessage
+import org.session.libsession.messaging.messages.control.ConfigurationMessage
+import org.session.libsession.messaging.messages.control.DataExtractionNotification
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
+import org.session.libsession.messaging.messages.control.MessageRequestResponse
+import org.session.libsession.messaging.messages.control.ReadReceipt
+import org.session.libsession.messaging.messages.control.SharedConfigurationMessage
+import org.session.libsession.messaging.messages.control.TypingIndicator
 import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.visible.ParsedMessage
 import org.session.libsession.messaging.messages.visible.VisibleMessage
@@ -54,6 +61,9 @@ class BatchMessageReceiveJob(
 
         const val BATCH_DEFAULT_NUMBER = 512
 
+        // used for processing messages that don't have a thread and shouldn't create one
+        const val NO_THREAD_MAPPING = -1L
+
         // Keys used for database storage
         private val NUM_MESSAGES_KEY = "numMessages"
         private val DATA_KEY = "data"
@@ -64,18 +74,22 @@ class BatchMessageReceiveJob(
 
     private fun shouldCreateThread(parsedMessage: ParsedMessage): Boolean {
         val message = parsedMessage.message
-        return message is VisibleMessage
-                || !message.isSenderSelf
-        // TODO: sort out which messages should create threads: message requests? group creation threads? visible messages? others? calls?
-
-//                || (message is ClosedGroupControlMessage && message.kind is ClosedGroupControlMessage.Kind.New) // this was creating threads for self send messages (i.e. synced group creation)
-//        if (message is ClosedGroupControlMessage && message.kind is ClosedGroupControlMessage.Kind.New) {
-//            return true
-//        }
-//        if (parsedMessage.message.isSenderSelf ) {
-//            // all the cases where we should add a self send creating the thread, i.e. group invite? visible message?
-//        }
-//        !parsedMessage.message.isSenderSelf || parsedMessage.message is VisibleMessage
+        if (message is VisibleMessage) return true
+        else { // message is control message otherwise
+            return when(message) {
+                is SharedConfigurationMessage -> false
+                is ClosedGroupControlMessage -> message.kind is ClosedGroupControlMessage.Kind.New
+                is DataExtractionNotification -> false
+                is MessageRequestResponse -> false
+                is ExpirationTimerUpdate -> false
+                is ConfigurationMessage -> false
+                is TypingIndicator -> false
+                is UnsendRequest -> false
+                is ReadReceipt -> false
+                is CallMessage -> false // TODO: maybe
+                else -> false // shouldn't happen, or I guess would be Visible
+            }
+        }
     }
 
     private fun getThreadId(message: Message, storage: StorageProtocol, shouldCreateThread: Boolean): Long? {
@@ -106,8 +120,8 @@ class BatchMessageReceiveJob(
                     val (message, proto) = MessageReceiver.parse(data, openGroupMessageServerID, openGroupPublicKey = serverPublicKey)
                     message.serverHash = serverHash
                     val parsedParams = ParsedMessage(messageParameters, message, proto)
-                    val threadID = getThreadId(message, storage, shouldCreateThread(parsedParams))
-                    if (threadID != null && !threadMap.containsKey(threadID)) {
+                    val threadID = getThreadId(message, storage, shouldCreateThread(parsedParams)) ?: NO_THREAD_MAPPING
+                    if (!threadMap.containsKey(threadID)) {
                         threadMap[threadID] = mutableListOf(parsedParams)
                     } else {
                         threadMap[threadID]!! += parsedParams
@@ -136,76 +150,97 @@ class BatchMessageReceiveJob(
 
             // iterate over threads and persist them (persistence is the longest constant in the batch process operation)
             runBlocking(Dispatchers.IO) {
-                val deferredThreadMap = threadMap.entries.map { (threadId, messages) ->
-                    async {
-                        // The LinkedHashMap should preserve insertion order
-                        val messageIds = linkedMapOf<Long, Pair<Boolean, Boolean>>()
-                        val myLastSeen = storage.getLastSeen(threadId)
-                        var newLastSeen = myLastSeen
-                        messages.forEach { (parameters, message, proto) ->
-                            try {
-                                when (message) {
-                                    is VisibleMessage -> {
-                                        val isUserBlindedSender = message.sender == serverPublicKey?.let { SodiumUtilities.blindedKeyPair(it, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!) }?.let { SessionId(
-                                            IdPrefix.BLINDED, it.publicKey.asBytes).hexString }
-                                        val sentTimestamp = message.sentTimestamp!!
-                                        if (message.sender == localUserPublicKey || isUserBlindedSender) {
-                                            if (sentTimestamp > newLastSeen) {
-                                                newLastSeen = sentTimestamp // use sent timestamp here since that is technically the last one we have
-                                            }
-                                        }
-                                        val messageId = MessageReceiver.handleVisibleMessage(
-                                            message, proto, openGroupID,
-                                            runThreadUpdate = false,
-                                            runProfileUpdate = true
-                                        )
 
-                                        if (messageId != null && message.reaction == null) {
-                                            messageIds[messageId] = Pair(
-                                                (message.sender == localUserPublicKey || isUserBlindedSender),
-                                                message.hasMention
+                fun processMessages(threadId: Long, messages: List<ParsedMessage>) = async {
+                    // The LinkedHashMap should preserve insertion order
+                    val messageIds = linkedMapOf<Long, Pair<Boolean, Boolean>>()
+                    val myLastSeen = storage.getLastSeen(threadId)
+                    var newLastSeen = myLastSeen
+                    messages.forEach { (parameters, message, proto) ->
+                        try {
+                            when (message) {
+                                is VisibleMessage -> {
+                                    val isUserBlindedSender =
+                                        message.sender == serverPublicKey?.let {
+                                            SodiumUtilities.blindedKeyPair(
+                                                it,
+                                                MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!
                                             )
+                                        }?.let {
+                                            SessionId(
+                                                IdPrefix.BLINDED, it.publicKey.asBytes
+                                            ).hexString
                                         }
-                                        parameters.openGroupMessageServerID?.let {
-                                            MessageReceiver.handleOpenGroupReactions(threadId, it, parameters.reactions)
-                                        }
-                                    }
-
-                                    is UnsendRequest -> {
-                                        val deletedMessageId = MessageReceiver.handleUnsendRequest(message)
-
-                                        // If we removed a message then ensure it isn't in the 'messageIds'
-                                        if (deletedMessageId != null) {
-                                            messageIds.remove(deletedMessageId)
+                                    val sentTimestamp = message.sentTimestamp!!
+                                    if (message.sender == localUserPublicKey || isUserBlindedSender) {
+                                        if (sentTimestamp > newLastSeen) {
+                                            newLastSeen =
+                                                sentTimestamp // use sent timestamp here since that is technically the last one we have
                                         }
                                     }
+                                    val messageId = MessageReceiver.handleVisibleMessage(
+                                        message, proto, openGroupID,
+                                        runThreadUpdate = false,
+                                        runProfileUpdate = true
+                                    )
 
-                                    else -> MessageReceiver.handle(message, proto, openGroupID)
+                                    if (messageId != null && message.reaction == null) {
+                                        messageIds[messageId] = Pair(
+                                            (message.sender == localUserPublicKey || isUserBlindedSender),
+                                            message.hasMention
+                                        )
+                                    }
+                                    parameters.openGroupMessageServerID?.let {
+                                        MessageReceiver.handleOpenGroupReactions(
+                                            threadId,
+                                            it,
+                                            parameters.reactions
+                                        )
+                                    }
                                 }
-                            } catch (e: Exception) {
-                                Log.e(TAG, "Couldn't process message (id: $id)", e)
-                                if (e is MessageReceiver.Error && !e.isRetryable) {
-                                    Log.e(TAG, "Message failed permanently (id: $id)", e)
-                                } else {
-                                    Log.e(TAG, "Message failed (id: $id)", e)
-                                    failures += parameters
+
+                                is UnsendRequest -> {
+                                    val deletedMessageId =
+                                        MessageReceiver.handleUnsendRequest(message)
+
+                                    // If we removed a message then ensure it isn't in the 'messageIds'
+                                    if (deletedMessageId != null) {
+                                        messageIds.remove(deletedMessageId)
+                                    }
                                 }
+
+                                else -> MessageReceiver.handle(message, proto, openGroupID)
+                            }
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Couldn't process message (id: $id)", e)
+                            if (e is MessageReceiver.Error && !e.isRetryable) {
+                                Log.e(TAG, "Message failed permanently (id: $id)", e)
+                            } else {
+                                Log.e(TAG, "Message failed (id: $id)", e)
+                                failures += parameters
                             }
                         }
-                        // increment unreads, notify, and update thread
-                        // last seen will be the current last seen if not changed (re-computes the read counts for thread record)
-                        // might have been updated from a different thread at this point
-                        val currentLastSeen = storage.getLastSeen(threadId)
-                        if (currentLastSeen > newLastSeen) {
-                            newLastSeen = currentLastSeen
-                        }
-                        storage.markConversationAsRead(threadId, newLastSeen)
-                        storage.updateThread(threadId, true)
-                        SSKEnvironment.shared.notificationManager.updateNotification(context, threadId)
                     }
+                    // increment unreads, notify, and update thread
+                    // last seen will be the current last seen if not changed (re-computes the read counts for thread record)
+                    // might have been updated from a different thread at this point
+                    val currentLastSeen = storage.getLastSeen(threadId)
+                    if (currentLastSeen > newLastSeen) {
+                        newLastSeen = currentLastSeen
+                    }
+                    storage.markConversationAsRead(threadId, newLastSeen)
+                    storage.updateThread(threadId, true)
+                    SSKEnvironment.shared.notificationManager.updateNotification(context, threadId)
+                }
+
+                val withoutDefault = threadMap.entries.filter { it.key != NO_THREAD_MAPPING }
+                val noThreadMessages = threadMap[NO_THREAD_MAPPING] ?: listOf()
+                val deferredThreadMap = withoutDefault.map { (threadId, messages) ->
+                    processMessages(threadId, messages)
                 }
                 // await all thread processing
                 deferredThreadMap.awaitAll()
+                processMessages(NO_THREAD_MAPPING, noThreadMessages)
             }
             if (failures.isEmpty()) {
                 handleSuccess(dispatcherName)

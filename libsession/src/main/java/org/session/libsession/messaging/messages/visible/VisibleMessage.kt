@@ -11,7 +11,7 @@ import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Log
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment as SignalAttachment
 
-class VisibleMessage : Message()  {
+class VisibleMessage : Message() {
     /** In the case of a sync message, the public key of the person the message was targeted at.
      *
      * **Note:** `nil` if this isn't a sync message.

@@ -154,18 +154,14 @@ public class RecipientDatabase extends Database {
 
   public Optional<RecipientSettings> getRecipientSettings(@NonNull Address address) {
     SQLiteDatabase database = databaseHelper.getReadableDatabase();
-    Cursor         cursor   = null;
 
-    try {
-      cursor = database.query(TABLE_NAME, null, ADDRESS + " = ?", new String[] {address.serialize()}, null, null, null);
+    try (Cursor cursor = database.query(TABLE_NAME, null, ADDRESS + " = ?", new String[]{address.serialize()}, null, null, null)) {
 
       if (cursor != null && cursor.moveToNext()) {
         return getRecipientSettings(cursor);
       }
 
       return Optional.absent();
-    } finally {
-      if (cursor != null) cursor.close();
     }
   }
 
@@ -250,6 +246,16 @@ public class RecipientDatabase extends Database {
     updateOrInsert(recipient.getAddress(), contentValues);
     recipient.resolve().setForceSmsSelection(forceSmsSelection);
     notifyRecipientListeners();
+  }
+
+  public boolean getApproved(@NonNull Address address) {
+    SQLiteDatabase db = getReadableDatabase();
+    try (Cursor cursor = db.query(TABLE_NAME, new String[]{APPROVED}, ADDRESS + " = ?", new String[]{address.serialize()}, null, null, null)) {
+      if (cursor != null && cursor.moveToNext()) {
+        return cursor.getInt(cursor.getColumnIndexOrThrow(APPROVED)) == 1;
+      }
+    }
+    return false;
   }
 
   public void setApproved(@NonNull Recipient recipient, boolean approved) {

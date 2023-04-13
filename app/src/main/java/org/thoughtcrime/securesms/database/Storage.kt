@@ -98,6 +98,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
 
     // TODO: maybe add time here from formation / creation message
     override fun threadCreated(address: Address, threadId: Long) {
+        if (!getRecipientApproved(address)) return // don't store unapproved / message requests
         Log.d("Loki-DBG", "creating thread for $address\nExecution context:\n${Thread.currentThread().stackTrace.joinToString("\n")}")
 
         val volatile = configFactory.convoVolatile ?: return
@@ -1037,6 +1038,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
 
     override fun setContact(contact: Contact) {
         DatabaseComponent.get(context).sessionContactDatabase().setContact(contact)
+        if (!getRecipientApproved(Address.fromSerialized(contact.sessionID))) return
         SSKEnvironment.shared.profileManager.contactUpdatedInternal(contact)
     }
 
@@ -1050,6 +1052,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
     }
 
     override fun addLibSessionContacts(contacts: List<LibSessionContact>) {
+        Log.d("Loki-DBG", "Adding contacts from execution context:\n${Thread.currentThread().stackTrace.joinToString("\n")}")
         val mappingDb = DatabaseComponent.get(context).blindedIdMappingDatabase()
         val moreContacts = contacts.filter { contact ->
             val id = SessionId(contact.id)
@@ -1197,7 +1200,6 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
             Log.d("Loki-DBG", "Deleting conversation for ${recipient.address}")
             if (recipient.isContactRecipient) {
                 if (recipient.isLocalNumber) return
-                // TODO: handle contact
                 val contacts = configFactory.contacts ?: return
                 contacts.upsertContact(recipient.address.serialize()) {
                     this.priority = ConfigBase.PRIORITY_HIDDEN
@@ -1349,6 +1351,10 @@ class Storage(context: Context, helper: SQLCipherOpenHelper, private val configF
             )
             mmsDb.insertSecureDecryptedMessageInbox(message, threadId, runThreadUpdate = true)
         }
+    }
+
+    override fun getRecipientApproved(address: Address): Boolean {
+        return DatabaseComponent.get(context).recipientDatabase().getApproved(address)
     }
 
     override fun setRecipientApproved(recipient: Recipient, approved: Boolean) {
