@@ -17,6 +17,7 @@ import org.session.libsignal.messages.SignalServiceGroup;
 import org.session.libsignal.utilities.Log;
 import org.session.libsignal.utilities.guava.Optional;
 import org.thoughtcrime.securesms.database.MmsDatabase;
+import org.thoughtcrime.securesms.database.MmsSmsDatabase;
 import org.thoughtcrime.securesms.database.SmsDatabase;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
@@ -37,12 +38,14 @@ public class ExpiringMessageManager implements SSKEnvironment.MessageExpirationM
 
   private final SmsDatabase smsDatabase;
   private final MmsDatabase mmsDatabase;
+  private final MmsSmsDatabase mmsSmsDatabase;
   private final Context     context;
 
   public ExpiringMessageManager(Context context) {
     this.context     = context.getApplicationContext();
     this.smsDatabase = DatabaseComponent.get(context).smsDatabase();
     this.mmsDatabase = DatabaseComponent.get(context).mmsDatabase();
+    this.mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase();
 
     executor.execute(new LoadTask());
     executor.execute(new ProcessTask());
@@ -81,12 +84,11 @@ public class ExpiringMessageManager implements SSKEnvironment.MessageExpirationM
     }
 
     if (message.getId() != null) {
-      DatabaseComponent.get(context).smsDatabase().deleteMessage(message.getId());
+      smsDatabase.deleteMessage(message.getId());
     }
   }
 
   private void insertIncomingExpirationTimerMessage(ExpirationTimerUpdate message) {
-    MmsDatabase database = DatabaseComponent.get(context).mmsDatabase();
 
     String senderPublicKey = message.getSender();
     Long sentTimestamp = message.getSentTimestamp();
@@ -126,7 +128,7 @@ public class ExpiringMessageManager implements SSKEnvironment.MessageExpirationM
               Optional.absent(),
               Optional.absent());
       //insert the timer update message
-      database.insertSecureDecryptedMessageInbox(mediaMessage, threadId, true);
+      mmsDatabase.insertSecureDecryptedMessageInbox(mediaMessage, threadId, true);
 
       //set the timer to the conversation
       MessagingModuleConfiguration.getShared().getStorage().setExpirationTimer(recipient.getAddress().serialize(), duration);
@@ -137,7 +139,6 @@ public class ExpiringMessageManager implements SSKEnvironment.MessageExpirationM
   }
 
   private void insertOutgoingExpirationTimerMessage(ExpirationTimerUpdate message) {
-    MmsDatabase database = DatabaseComponent.get(context).mmsDatabase();
 
     Long sentTimestamp = message.getSentTimestamp();
     String groupId = message.getGroupPublicKey();
@@ -152,7 +153,7 @@ public class ExpiringMessageManager implements SSKEnvironment.MessageExpirationM
 
     try {
       OutgoingExpirationUpdateMessage timerUpdateMessage = new OutgoingExpirationUpdateMessage(recipient, sentTimestamp, duration * 1000L, groupId);
-      database.insertSecureDecryptedMessageOutbox(timerUpdateMessage, -1, sentTimestamp, true);
+      mmsDatabase.insertSecureDecryptedMessageOutbox(timerUpdateMessage, -1, sentTimestamp, true);
 
       if (groupId != null) {
         // we need the group ID as recipient for setExpireMessages below
@@ -173,7 +174,7 @@ public class ExpiringMessageManager implements SSKEnvironment.MessageExpirationM
 
   @Override
   public void startAnyExpiration(long timestamp, @NotNull String author) {
-    MessageRecord messageRecord = DatabaseComponent.get(context).mmsSmsDatabase().getMessageFor(timestamp, author);
+    MessageRecord messageRecord = mmsSmsDatabase.getMessageFor(timestamp, author);
     if (messageRecord != null) {
       boolean mms = messageRecord.isMms();
       Recipient recipient = messageRecord.getRecipient();

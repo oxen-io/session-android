@@ -89,7 +89,7 @@ import org.thoughtcrime.securesms.util.SessionMetaProtocol
 import java.security.MessageDigest
 import network.loki.messenger.libsession_util.util.Contact as LibSessionContact
 
-class Storage(context: Context, helper: SQLCipherOpenHelper, private val configFactory: ConfigFactory) : Database(context, helper), StorageProtocol,
+open class Storage(context: Context, helper: SQLCipherOpenHelper, private val configFactory: ConfigFactory) : Database(context, helper), StorageProtocol,
     ThreadDatabase.ConversationThreadUpdateListener {
 
     init {
