@@ -122,7 +122,8 @@ class InstrumentedTests {
             nickname = "Nickname 3",
             approved = true,
             blocked = true,
-            profilePicture = UserPic("http://example.com/huge.bmp", "qwertyuio01234567890123456789012".encodeToByteArray())
+            profilePicture = UserPic("http://example.com/huge.bmp", "qwertyuio01234567890123456789012".encodeToByteArray()),
+            expiryMode = ExpiryMode.NONE
         )
         contacts2.set(third)
         assertTrue(contacts.needsPush())
@@ -262,7 +263,6 @@ class InstrumentedTests {
         newConf.confirmPushed(conf2.seqNo, "fakehash3")
 
         userProfile.dump()
-        userProfile.dump()
 
         assertFalse(conf.config.contentEquals(conf2.config))
 
@@ -285,18 +285,18 @@ class InstrumentedTests {
 
         newConf.confirmPushed(newSeqMerge.seqNo, "fakehash5")
 
-        assertEquals("Nibbler", newConf.getName())
-        assertEquals(4, newSeqMerge.seqNo)
+        assertEquals("Raz", newConf.getName())
+        assertEquals(3, newSeqMerge.seqNo)
 
         // userProfile device polls and merges
         userProfile.merge("fakehash5" to newSeqMerge.config)
 
         val userConfigMerge = userProfile.push()
 
-        assertEquals(4, userConfigMerge.seqNo)
+        assertEquals(3, userConfigMerge.seqNo)
 
-        assertEquals("Nibbler", newConf.getName())
-        assertEquals("Nibbler", userProfile.getName())
+        assertEquals("Raz", newConf.getName())
+        assertEquals("Raz", userProfile.getName())
 
         userProfile.free()
         newConf.free()

@@ -1018,7 +1018,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             } else {
                 binding.placeholderText.setText(textResource)
             }
-
         }
     }
 

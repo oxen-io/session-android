@@ -325,7 +325,7 @@ public class Recipient implements RecipientModifiedListener {
       return contact.displayName(Contact.ContactContext.REGULAR);
     } else {
       Contact contact = storage.getContactWithSessionID(sessionID);
-      if (contact == null) { return sessionID; }
+      if (contact == null) { return null; }
       return contact.displayName(Contact.ContactContext.REGULAR);
     }
   }
@@ -483,7 +483,13 @@ public class Recipient implements RecipientModifiedListener {
 
   public synchronized String toShortString() {
     String name = getName();
-    return (name != null ? name : address.serialize());
+    if (name != null) return name;
+    String sessionId = address.serialize();
+    if (sessionId.length() < 4) return sessionId; // so substrings don't throw out of bounds exceptions
+    int takeAmount = 4;
+    String start = sessionId.substring(0, takeAmount);
+    String end = sessionId.substring(sessionId.length()-takeAmount);
+    return start+"..."+end;
   }
 
   public synchronized @NonNull Drawable getFallbackContactPhotoDrawable(Context context, boolean inverted) {

@@ -6,7 +6,6 @@ import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.util.AttributeSet
 import android.util.TypedValue
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
@@ -128,7 +127,7 @@ class ConversationView : LinearLayout {
         return if (recipient.isLocalNumber) {
             context.getString(R.string.note_to_self)
         } else {
-            recipient.name // Internally uses the Contact API
+            recipient.toShortString() // Internally uses the Contact API
         }
     }
     // endregion
