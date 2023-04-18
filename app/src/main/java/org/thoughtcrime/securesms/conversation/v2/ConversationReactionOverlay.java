@@ -203,10 +203,11 @@ public final class ConversationReactionOverlay extends FrameLayout {
                                boolean isMessageOnLeft) {
     contextMenu = new ConversationContextMenu(dropdownAnchor, getMenuActionItems(messageRecord));
 
-    float itemX = isMessageOnLeft ? scrubberHorizontalMargin :
+    float endX = isMessageOnLeft ? scrubberHorizontalMargin :
             selectedConversationModel.getBubbleX() - conversationItem.getWidth() + selectedConversationModel.getBubbleWidth();
-    conversationItem.setX(itemX);
-    conversationItem.setY(selectedConversationModel.getBubbleY() - statusBarHeight);
+    float endY = selectedConversationModel.getBubbleY() - statusBarHeight;
+    conversationItem.setX(endX);
+    conversationItem.setY(endY);
 
     Bitmap  conversationItemSnapshot = selectedConversationModel.getBitmap();
     boolean isWideLayout             = contextMenu.getMaxWidth() + scrubberWidth < getWidth();
@@ -214,8 +215,6 @@ public final class ConversationReactionOverlay extends FrameLayout {
     int overlayHeight = getHeight();
     int bubbleWidth   = selectedConversationModel.getBubbleWidth();
 
-    float endX            = itemX;
-    float endY            = conversationItem.getY();
     float endApparentTop  = endY;
     float endScale        = 1f;
 
@@ -265,9 +264,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
           }
         } else {
           endY = overlayHeight - contextMenu.getMaxHeight() - menuPadding - conversationItemSnapshot.getHeight();
-
-          float contextMenuTop = endY + conversationItemSnapshot.getHeight();
-          reactionBarBackgroundY = getReactionBarOffsetForTouch(selectedConversationModel.getBubbleY(), contextMenuTop, menuPadding, reactionBarOffset, reactionBarHeight, reactionBarTopPadding, endY);
+          reactionBarBackgroundY = endY - reactionBarHeight - menuPadding;
         }
 
         endApparentTop = endY;
