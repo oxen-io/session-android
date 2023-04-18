@@ -127,7 +127,7 @@ import network.loki.messenger.libsession_util.UserProfile;
  * @author Moxie Marlinspike
  */
 @HiltAndroidApp
-public class ApplicationContext extends Application implements DefaultLifecycleObserver, ConfigFactoryUpdateListener {
+public class ApplicationContext extends BaseApplication implements DefaultLifecycleObserver, ConfigFactoryUpdateListener {
 
     public static final String PREFERENCES_NAME = "SecureSMS-Preferences";
 
