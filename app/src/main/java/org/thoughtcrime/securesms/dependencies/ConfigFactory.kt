@@ -14,9 +14,11 @@ import org.thoughtcrime.securesms.database.ConfigDatabase
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import java.util.concurrent.Executors
 
-class ConfigFactory(private val context: Context,
-                    private val configDatabase: ConfigDatabase,
-                    private val maybeGetUserInfo: ()->Pair<ByteArray, String>?):
+class ConfigFactory(
+    private val context: Context,
+    private val configDatabase: ConfigDatabase,
+    private val maybeGetUserInfo: () -> Pair<ByteArray, String>?
+) :
     ConfigFactoryProtocol {
 
     fun keyPairChanged() { // this should only happen restoring or clearing data
@@ -36,77 +38,99 @@ class ConfigFactory(private val context: Context,
     private var _convoVolatileConfig: ConversationVolatileConfig? = null
     private val userGroupsLock = Object()
     private var _userGroups: UserGroupsConfig? = null
-    private val factoryExecutor = Executors.newSingleThreadExecutor()
 
     private val listeners: MutableList<ConfigFactoryUpdateListener> = mutableListOf()
-    fun registerListener(listener: ConfigFactoryUpdateListener) { listeners += listener }
-    fun unregisterListener(listener: ConfigFactoryUpdateListener) { listeners -= listener }
-
-    override val user: UserProfile? get() = synchronized(userLock) {
-        if (!ConfigBase.isNewConfigEnabled) return null
-        if (_userConfig == null) {
-            val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
-            val userDump = configDatabase.retrieveConfigAndHashes(SharedConfigMessage.Kind.USER_PROFILE.name, publicKey)
-            _userConfig = if (userDump != null) {
-                UserProfile.newInstance(secretKey, userDump)
-            } else {
-                ConfigurationMessageUtilities.generateUserProfileConfigDump()?.let { dump ->
-                    UserProfile.newInstance(secretKey, dump)
-                } ?: UserProfile.newInstance(secretKey)
-            }
-        }
-        _userConfig
+    fun registerListener(listener: ConfigFactoryUpdateListener) {
+        listeners += listener
     }
 
-    override val contacts: Contacts? get() = synchronized(contactsLock) {
-        if (!ConfigBase.isNewConfigEnabled) return null
-        if (_contacts == null) {
-            val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
-            val contactsDump = configDatabase.retrieveConfigAndHashes(SharedConfigMessage.Kind.CONTACTS.name, publicKey)
-            _contacts = if (contactsDump != null) {
-                Contacts.newInstance(secretKey, contactsDump)
-            } else {
-                ConfigurationMessageUtilities.generateContactConfigDump()?.let { dump ->
-                    Contacts.newInstance(secretKey, dump)
-                } ?: Contacts.newInstance(secretKey)
-            }
-        }
-        _contacts
+    fun unregisterListener(listener: ConfigFactoryUpdateListener) {
+        listeners -= listener
     }
 
-    override val convoVolatile: ConversationVolatileConfig? get() = synchronized(convoVolatileLock) {
-        if (!ConfigBase.isNewConfigEnabled) return null
-        if (_convoVolatileConfig == null) {
-            val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
-            val convoDump = configDatabase.retrieveConfigAndHashes(SharedConfigMessage.Kind.CONVO_INFO_VOLATILE.name, publicKey)
-            _convoVolatileConfig = if (convoDump != null) {
-                ConversationVolatileConfig.newInstance(secretKey, convoDump)
-            } else {
-                ConfigurationMessageUtilities.generateConversationVolatileDump(context)?.let { dump ->
-                    ConversationVolatileConfig.newInstance(secretKey, dump)
-                } ?: ConversationVolatileConfig.newInstance(secretKey)
+    override val user: UserProfile?
+        get() = synchronized(userLock) {
+            if (!ConfigBase.isNewConfigEnabled) return null
+            if (_userConfig == null) {
+                val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
+                val userDump = configDatabase.retrieveConfigAndHashes(
+                    SharedConfigMessage.Kind.USER_PROFILE.name,
+                    publicKey
+                )
+                _userConfig = if (userDump != null) {
+                    UserProfile.newInstance(secretKey, userDump)
+                } else {
+                    ConfigurationMessageUtilities.generateUserProfileConfigDump()?.let { dump ->
+                        UserProfile.newInstance(secretKey, dump)
+                    } ?: UserProfile.newInstance(secretKey)
+                }
             }
+            _userConfig
         }
-        _convoVolatileConfig
-    }
 
-    override val userGroups: UserGroupsConfig? get() = synchronized(userGroupsLock) {
-        if (!ConfigBase.isNewConfigEnabled) return null
-        if (_userGroups == null) {
-            val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
-            val userGroupsDump = configDatabase.retrieveConfigAndHashes(SharedConfigMessage.Kind.GROUPS.name, publicKey)
-            _userGroups = if (userGroupsDump != null) {
-                UserGroupsConfig.Companion.newInstance(secretKey, userGroupsDump)
-            } else {
-                ConfigurationMessageUtilities.generateUserGroupDump(context)?.let { dump ->
-                    UserGroupsConfig.Companion.newInstance(secretKey, dump)
-                } ?: UserGroupsConfig.newInstance(secretKey)
+    override val contacts: Contacts?
+        get() = synchronized(contactsLock) {
+            if (!ConfigBase.isNewConfigEnabled) return null
+            if (_contacts == null) {
+                val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
+                val contactsDump = configDatabase.retrieveConfigAndHashes(
+                    SharedConfigMessage.Kind.CONTACTS.name,
+                    publicKey
+                )
+                _contacts = if (contactsDump != null) {
+                    Contacts.newInstance(secretKey, contactsDump)
+                } else {
+                    ConfigurationMessageUtilities.generateContactConfigDump()?.let { dump ->
+                        Contacts.newInstance(secretKey, dump)
+                    } ?: Contacts.newInstance(secretKey)
+                }
             }
+            _contacts
         }
-        _userGroups
-    }
 
-    override fun getUserConfigs(): List<ConfigBase> = listOfNotNull(user, contacts, convoVolatile, userGroups)
+    override val convoVolatile: ConversationVolatileConfig?
+        get() = synchronized(convoVolatileLock) {
+            if (!ConfigBase.isNewConfigEnabled) return null
+            if (_convoVolatileConfig == null) {
+                val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
+                val convoDump = configDatabase.retrieveConfigAndHashes(
+                    SharedConfigMessage.Kind.CONVO_INFO_VOLATILE.name,
+                    publicKey
+                )
+                _convoVolatileConfig = if (convoDump != null) {
+                    ConversationVolatileConfig.newInstance(secretKey, convoDump)
+                } else {
+                    ConfigurationMessageUtilities.generateConversationVolatileDump(context)
+                        ?.let { dump ->
+                            ConversationVolatileConfig.newInstance(secretKey, dump)
+                        } ?: ConversationVolatileConfig.newInstance(secretKey)
+                }
+            }
+            _convoVolatileConfig
+        }
+
+    override val userGroups: UserGroupsConfig?
+        get() = synchronized(userGroupsLock) {
+            if (!ConfigBase.isNewConfigEnabled) return null
+            if (_userGroups == null) {
+                val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
+                val userGroupsDump = configDatabase.retrieveConfigAndHashes(
+                    SharedConfigMessage.Kind.GROUPS.name,
+                    publicKey
+                )
+                _userGroups = if (userGroupsDump != null) {
+                    UserGroupsConfig.Companion.newInstance(secretKey, userGroupsDump)
+                } else {
+                    ConfigurationMessageUtilities.generateUserGroupDump(context)?.let { dump ->
+                        UserGroupsConfig.Companion.newInstance(secretKey, dump)
+                    } ?: UserGroupsConfig.newInstance(secretKey)
+                }
+            }
+            _userGroups
+        }
+
+    override fun getUserConfigs(): List<ConfigBase> =
+        listOfNotNull(user, contacts, convoVolatile, userGroups)
 
 
     private fun persistUserConfigDump() = synchronized(userLock) {
@@ -121,10 +145,14 @@ class ConfigFactory(private val context: Context,
         configDatabase.storeConfig(SharedConfigMessage.Kind.CONTACTS.name, publicKey, dumped)
     }
 
-    private fun persistConvoVolatileConfigDump() = synchronized (convoVolatileLock) {
+    private fun persistConvoVolatileConfigDump() = synchronized(convoVolatileLock) {
         val dumped = convoVolatile?.dump() ?: return
         val (_, publicKey) = maybeGetUserInfo() ?: return
-        configDatabase.storeConfig(SharedConfigMessage.Kind.CONVO_INFO_VOLATILE.name, publicKey, dumped)
+        configDatabase.storeConfig(
+            SharedConfigMessage.Kind.CONVO_INFO_VOLATILE.name,
+            publicKey,
+            dumped
+        )
     }
 
     private fun persistUserGroupsConfigDump() = synchronized(userGroupsLock) {
@@ -134,22 +162,19 @@ class ConfigFactory(private val context: Context,
     }
 
     override fun persist(forConfigObject: ConfigBase) {
-        factoryExecutor.submit {
-            try {
-                listeners.forEach { listener ->
-                    listener.notifyUpdates(forConfigObject)
-                }
-                when (forConfigObject) {
-                    is UserProfile -> persistUserConfigDump()
-                    is Contacts -> persistContactsConfigDump()
-                    is ConversationVolatileConfig -> persistConvoVolatileConfigDump()
-                    is UserGroupsConfig -> persistUserGroupsConfigDump()
-                    else -> throw UnsupportedOperationException("Can't support type of ${forConfigObject::class.simpleName} yet")
-                }
-            } catch (e: Exception){
-                Log.e("Loki-DBG", e)
+        try {
+            listeners.forEach { listener ->
+                listener.notifyUpdates(forConfigObject)
             }
+            when (forConfigObject) {
+                is UserProfile -> persistUserConfigDump()
+                is Contacts -> persistContactsConfigDump()
+                is ConversationVolatileConfig -> persistConvoVolatileConfigDump()
+                is UserGroupsConfig -> persistUserGroupsConfigDump()
+                else -> throw UnsupportedOperationException("Can't support type of ${forConfigObject::class.simpleName} yet")
+            }
+        } catch (e: Exception) {
+            Log.e("Loki-DBG", e)
         }
     }
-
 }

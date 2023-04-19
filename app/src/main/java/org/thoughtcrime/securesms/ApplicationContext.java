@@ -127,7 +127,7 @@ import network.loki.messenger.libsession_util.UserProfile;
  * @author Moxie Marlinspike
  */
 @HiltAndroidApp
-public class ApplicationContext extends BaseApplication implements DefaultLifecycleObserver, ConfigFactoryUpdateListener {
+public class ApplicationContext extends Application implements DefaultLifecycleObserver, ConfigFactoryUpdateListener {
 
     public static final String PREFERENCES_NAME = "SecureSMS-Preferences";
 
@@ -149,7 +149,7 @@ public class ApplicationContext extends BaseApplication implements DefaultLifecy
     private PersistentLogger persistentLogger;
 
     @Inject LokiAPIDatabase lokiAPIDatabase;
-    @Inject Storage storage;
+    @Inject public Storage storage;
     @Inject MessageDataProvider messageDataProvider;
     @Inject JobDatabase jobDatabase;
     @Inject TextSecurePreferences textSecurePreferences;
@@ -209,6 +209,7 @@ public class ApplicationContext extends BaseApplication implements DefaultLifecy
         }
         storage.notifyConfigUpdates(forConfigObject);
     }
+
     @Override
     public void onCreate() {
         DatabaseModule.init(this);
