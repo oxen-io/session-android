@@ -52,14 +52,6 @@ find_library( # Sets the name of the path variable.
         # you want CMake to locate.
         log)
 
-# Copy libsodium-internal.so into the library output dir manually because gradle invokes cmake in
-# ways that doesn't properly do this:
-#get_target_property(sodium_lib_loc libsodium-internal IMPORTED_LOCATION)
-#get_filename_component(sodium_lib_filename "${sodium_lib_loc}" NAME)
-#add_custom_command(TARGET session_util POST_BUILD
-#    COMMAND
-#    ${CMAKE_COMMAND} -E copy ${sodium_lib_loc} ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${sodium_lib_loc})#${PROJECT_SOURCE_DIR}/../jniLibs/${CMAKE_ANDROID_ARCH_ABI}/${sodium_lib_filename})
-
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
