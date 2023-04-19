@@ -22,6 +22,7 @@ import androidx.activity.viewModels
 import androidx.annotation.DimenRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.drawToBitmap
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -344,6 +345,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         updateSubtitle()
         setUpBlockedBanner()
         binding!!.searchBottomBar.setEventListener(this)
+        updateSendAfterApprovalText()
         showOrHideInputIfNeeded()
         setUpMessageRequestsBar()
 
@@ -653,13 +655,19 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             setUpMessageRequestsBar()
             invalidateOptionsMenu()
             updateSubtitle()
+            updateSendAfterApprovalText()
             showOrHideInputIfNeeded()
+
             binding?.toolbarContent?.profilePictureView?.root?.update(threadRecipient)
             binding?.toolbarContent?.conversationTitleView?.text = when {
                 threadRecipient.isLocalNumber -> getString(R.string.note_to_self)
                 else -> threadRecipient.toShortString()
             }
         }
+    }
+
+    private fun updateSendAfterApprovalText() {
+        binding?.textSendAfterApproval?.isGone = viewModel.recipient?.hasApprovedMe() ?: true
     }
 
     private fun showOrHideInputIfNeeded() {

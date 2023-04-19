@@ -227,6 +227,7 @@
     <string name="ConversationActivity_search_position">%1$d of %2$d</string>
     <string name="ConversationActivity_call_title">Call Permissions Required</string>
     <string name="ConversationActivity_call_prompt">You can enable the \'Voice and video calls\' permission in the Privacy Settings.</string>
+    <string name="ConversationActivity_send_after_approval">You will be able to send voice messages and attachments once the recipient has approved this message request</string>
     <!-- ConversationFragment -->
     <plurals name="ConversationFragment_delete_selected_messages">
         <item quantity="one">Delete selected message?</item>
