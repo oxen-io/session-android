@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.preferences.appearance
 
+import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.SparseArray
@@ -17,6 +18,7 @@ import org.session.libsession.utilities.TextSecurePreferences.Companion.CLASSIC_
 import org.session.libsession.utilities.TextSecurePreferences.Companion.OCEAN_DARK
 import org.session.libsession.utilities.TextSecurePreferences.Companion.OCEAN_LIGHT
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
+import org.thoughtcrime.securesms.conversation.v2.WindowUtil
 import org.thoughtcrime.securesms.util.ThemeState
 
 @AndroidEntryPoint
@@ -149,5 +151,8 @@ class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.On
             }
         }
 
+        // apply lightStatusBar manually as API 26 does not update properly via applyTheme
+        // https://issuetracker.google.com/issues/65883460?pli=1
+        if (SDK_INT in 26..27) WindowUtil.setLightStatusBarFromTheme(this@AppearanceSettingsActivity)
     }
 }
