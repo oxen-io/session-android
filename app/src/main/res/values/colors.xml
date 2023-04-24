@@ -60,6 +60,9 @@
     <color name="transparent_white_40">#40ffffff</color>
     <color name="transparent_white_aa">#aaffffff</color>
 
+    <color name="navigation_bar">@color/compose_view_background</color>
+    <color name="classic_light_navigation_bar">@color/navigation_bar</color>
+    <color name="ocean_light_navigation_bar">@color/navigation_bar</color>
     <color name="action_mode_status_bar">@color/gray65</color>
     <color name="touch_highlight">#22000000</color>
 

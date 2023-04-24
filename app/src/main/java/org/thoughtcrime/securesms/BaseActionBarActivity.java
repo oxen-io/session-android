@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms;
 
+import static android.os.Build.VERSION.SDK_INT;
 import static org.session.libsession.utilities.TextSecurePreferences.SELECTED_ACCENT_COLOR;
 
 import android.app.ActivityManager;
@@ -18,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.dynamiclanguage.DynamicLanguageActivityHelper;
 import org.session.libsession.utilities.dynamiclanguage.DynamicLanguageContextWrapper;
+import org.thoughtcrime.securesms.conversation.v2.WindowUtil;
 import org.thoughtcrime.securesms.util.ActivityUtilitiesKt;
 import org.thoughtcrime.securesms.util.ThemeState;
 import org.thoughtcrime.securesms.util.UiModeUtilities;
@@ -92,6 +94,11 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
     if (!currentThemeState.equals(ActivityUtilitiesKt.themeState(getPreferences()))) {
       recreate();
     }
+
+    // apply lightStatusBar manually as API 26 does not update properly via applyTheme
+    // https://issuetracker.google.com/issues/65883460?pli=1
+    if (SDK_INT >= 26 && SDK_INT <= 27) WindowUtil.setLightStatusBarFromTheme(this);
+    if (SDK_INT == 27) WindowUtil.setLightNavigationBarFromTheme(this);
   }
 
   @Override
