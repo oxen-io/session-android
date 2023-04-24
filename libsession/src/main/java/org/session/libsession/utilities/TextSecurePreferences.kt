@@ -638,6 +638,7 @@ interface TextSecurePreferences {
         @JvmStatic
         fun setHasLegacyConfig(context: Context, newValue: Boolean) {
             setBooleanPreference(context, HAS_RECEIVED_LEGACY_CONFIG, newValue)
+            _events.tryEmit(HAS_RECEIVED_LEGACY_CONFIG)
         }
 
         fun setLocalNumber(context: Context, localNumber: String) {
@@ -1299,7 +1300,8 @@ class AppTextSecurePreferences @Inject constructor(
     }
 
     override fun setHasLegacyConfig(newValue: Boolean) {
-        return setBooleanPreference(TextSecurePreferences.HAS_RECEIVED_LEGACY_CONFIG, newValue)
+        setBooleanPreference(TextSecurePreferences.HAS_RECEIVED_LEGACY_CONFIG, newValue)
+        TextSecurePreferences._events.tryEmit(TextSecurePreferences.HAS_RECEIVED_LEGACY_CONFIG)
     }
 
     override fun setLocalNumber(localNumber: String) {

@@ -13,7 +13,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -204,6 +206,15 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         this.broadcastReceiver = broadcastReceiver
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, IntentFilter("blockedContactsChanged"))
 
+        // subscribe to outdated config updates, this should be removed after long enough time for device migration
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                TextSecurePreferences.events.filter { it == TextSecurePreferences.HAS_RECEIVED_LEGACY_CONFIG }.collect {
+                    updateLegacyConfigView()
+                }
+            }
+        }
+
         lifecycleScope.launchWhenStarted {
             launch(Dispatchers.IO) {
                 // Double check that the long poller is up
@@ -224,6 +235,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                     }
                 }
             }
+
             // monitor the global search VM query
             launch {
                 binding.globalSearchInputLayout.query
