@@ -527,10 +527,10 @@ public class ThreadDatabase extends Database {
   }
 
   public void setLastSeen(long threadId, long timestamp) {
-    SQLiteDatabase db = databaseHelper.getWritableDatabase();
-
     // edge case where we set the last seen time for a conversation before it loads messages (joining community for example)
     if (getMessageCount(threadId) <= 0) return;
+
+    SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
     ContentValues contentValues = new ContentValues(1);
     long lastSeenTime = timestamp == -1 ? SnodeAPI.getNowWithOffset() : timestamp;

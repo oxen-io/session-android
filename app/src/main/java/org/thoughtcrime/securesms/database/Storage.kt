@@ -93,10 +93,6 @@ import network.loki.messenger.libsession_util.util.Contact as LibSessionContact
 open class Storage(context: Context, helper: SQLCipherOpenHelper, private val configFactory: ConfigFactory) : Database(context, helper), StorageProtocol,
     ThreadDatabase.ConversationThreadUpdateListener {
 
-    init {
-        DatabaseComponent.get(context).threadDatabase().setUpdateListener(this)
-    }
-
     // TODO: maybe add time here from formation / creation message
     override fun threadCreated(address: Address, threadId: Long) {
         if (!getRecipientApproved(address)) return // don't store unapproved / message requests
@@ -131,9 +127,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                 val userProfile = configFactory.user ?: return
                 userProfile.setNtsPriority(ConfigBase.PRIORITY_VISIBLE)
             }
-            val newVolatileParams = volatile.getOrConstructOneToOne(address.serialize()).copy(
-                lastRead = SnodeAPI.nowWithOffset
-            )
+            val newVolatileParams = volatile.getOrConstructOneToOne(address.serialize())
             volatile.set(newVolatileParams)
         }
     }
@@ -964,7 +958,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         val communityInfo = groups.getOrConstructCommunityInfo(infoServer, infoRoom, pubKeyHex)
         groups.set(communityInfo)
         val volatile = volatileConfig.getOrConstructCommunity(infoServer, infoRoom, pubKey)
-        volatileConfig.set(volatile)
+        volatileConfig.set(volatile.copy(lastRead = 0))
     }
 
     override fun hasBackgroundGroupAddJob(groupJoinUrl: String): Boolean {
@@ -1194,8 +1188,6 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     }
 
     override fun deleteConversation(threadID: Long) {
-        // TODO: delete from either contacts / convo volatile or the closed groups
-        // TODO: message request deletion properly (not just doing a hidden priority)
         val recipient = getRecipientForThread(threadID)
         val threadDB = DatabaseComponent.get(context).threadDatabase()
         threadDB.deleteConversation(threadID)

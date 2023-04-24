@@ -135,7 +135,11 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideStorage(@ApplicationContext context: Context, openHelper: SQLCipherOpenHelper, configFactory: ConfigFactory) = Storage(context,openHelper, configFactory)
+    fun provideStorage(@ApplicationContext context: Context, openHelper: SQLCipherOpenHelper, configFactory: ConfigFactory, threadDatabase: ThreadDatabase): Storage {
+        val storage = Storage(context,openHelper, configFactory)
+        threadDatabase.setUpdateListener(storage)
+        return storage
+    }
 
     @Provides
     @Singleton

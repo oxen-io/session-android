@@ -441,7 +441,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 // only update the conversation every 3 seconds maximum
                 // channel is rendezvous and shouldn't block on try send calls as often as we want
                 val bufferedFlow = bufferedLastSeenChannel.consumeAsFlow()
-                    .debounce(1.seconds)
+                    .debounce(30.seconds)
                 bufferedFlow.collectLatest {
                     withContext(Dispatchers.IO) {
                         storage.markConversationAsRead(viewModel.threadId, SnodeAPI.nowWithOffset)

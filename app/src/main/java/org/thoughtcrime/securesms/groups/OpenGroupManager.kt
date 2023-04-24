@@ -119,6 +119,7 @@ object OpenGroupManager {
             }
         }
         configFactory.userGroups?.eraseCommunity(server, room)
+        configFactory.convoVolatile?.eraseCommunity(server, room)
         // Delete
         storage.removeLastDeletionServerID(room, server)
         storage.removeLastMessageServerID(room, server)
