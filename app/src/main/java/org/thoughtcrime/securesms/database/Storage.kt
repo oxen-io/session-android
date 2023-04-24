@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.database
 import android.content.Context
 import android.net.Uri
 import network.loki.messenger.libsession_util.ConfigBase
+import network.loki.messenger.libsession_util.ConfigBase.Companion.PRIORITY_PINNED
 import network.loki.messenger.libsession_util.Contacts
 import network.loki.messenger.libsession_util.ConversationVolatileConfig
 import network.loki.messenger.libsession_util.UserGroupsConfig
@@ -521,10 +522,10 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
             if (groupBaseCommunity.fullUrl() !in existingJoinUrls) {
                 // add it
                 val (threadId, _) = OpenGroupManager.add(groupBaseCommunity.baseUrl, groupBaseCommunity.room, groupBaseCommunity.pubKeyHex, context)
-                threadDb.setPinned(threadId, groupInfo.priority >= 1)
+                threadDb.setPinned(threadId, groupInfo.priority == PRIORITY_PINNED)
             } else {
                 val (threadId, _) = existingCommunities.entries.first { (_, v) -> v.joinURL == groupInfo.community.fullUrl() }
-                threadDb.setPinned(threadId, groupInfo.priority >= 1)
+                threadDb.setPinned(threadId, groupInfo.priority == PRIORITY_PINNED)
             }
         }
 
@@ -962,9 +963,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         val pubKeyHex = Hex.toStringCondensed(pubKey)
         val communityInfo = groups.getOrConstructCommunityInfo(infoServer, infoRoom, pubKeyHex)
         groups.set(communityInfo)
-        val volatile = volatileConfig.getOrConstructCommunity(infoServer, infoRoom, pubKey).copy(
-            lastRead = SnodeAPI.nowWithOffset,
-        )
+        val volatile = volatileConfig.getOrConstructCommunity(infoServer, infoRoom, pubKey)
         volatileConfig.set(volatile)
     }
 
@@ -1086,6 +1085,10 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
             if (contact.priority == ConfigBase.PRIORITY_HIDDEN) {
                 getThreadId(fromSerialized(contact.id))?.let { conversationThreadId ->
                     deleteConversation(conversationThreadId)
+                }
+            } else {
+                getThreadId(fromSerialized(contact.id))?.let { conversationThreadId ->
+                    setPinned(conversationThreadId, contact.priority == ConfigBase.PRIORITY_PINNED)
                 }
             }
             Log.d("Loki-DBG", "Updated contact $contact")
