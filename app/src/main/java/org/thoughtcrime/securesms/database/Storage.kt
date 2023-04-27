@@ -212,6 +212,10 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         val threadDb = DatabaseComponent.get(context).threadDatabase()
         getRecipientForThread(threadId)?.let { recipient ->
             threadDb.markAllAsRead(threadId, recipient.isGroupRecipient, lastSeenTime)
+
+            // don't process configs for inbox recipients
+            if (recipient.isOpenGroupInboxRecipient) return
+
             configFactory.convoVolatile?.let { config ->
                 val convo = when {
                     // recipient closed group

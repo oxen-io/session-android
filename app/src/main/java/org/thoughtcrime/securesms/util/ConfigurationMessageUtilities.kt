@@ -204,6 +204,7 @@ object ConfigurationMessageUtilities {
                     recipient.isContactRecipient -> {
                         val sessionId = SessionId(recipient.address.serialize())
                         if (recipient.isLocalNumber) null // this is handled by the user profile NTS data
+                        if (recipient.isOpenGroupInboxRecipient) null // specifically exclude
                         else convoConfig.getOrConstructOneToOne(recipient.address.serialize())
                     }
                     else -> null

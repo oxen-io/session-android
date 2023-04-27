@@ -7,6 +7,8 @@ import network.loki.messenger.libsession_util.util.Conversation
 import network.loki.messenger.libsession_util.util.GroupInfo
 import network.loki.messenger.libsession_util.util.UserPic
 import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage.Kind
+import org.session.libsignal.utilities.IdPrefix
+import org.session.libsignal.utilities.Log
 
 
 sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
@@ -69,6 +71,13 @@ class Contacts(pointer: Long) : ConfigBase(pointer) {
      * Similar to [updateIfExists], but will create the underlying contact if it doesn't exist before passing to [updateFunction]
      */
     fun upsertContact(sessionId: String, updateFunction: Contact.()->Unit = {}) {
+        if (sessionId.startsWith(IdPrefix.BLINDED.value)) {
+            Log.w("Loki", "Trying to create a contact with a blinded ID prefix")
+            return
+        } else if (sessionId.startsWith(IdPrefix.UN_BLINDED.value)) {
+            Log.w("Loki", "Trying to create a contact with an un-blinded ID prefix")
+            return
+        }
         val contact = getOrConstruct(sessionId)
         updateFunction(contact)
         set(contact)
@@ -79,6 +88,13 @@ class Contacts(pointer: Long) : ConfigBase(pointer) {
      * the [updateFunction] doesn't run if there is no contact
      */
     fun updateIfExists(sessionId: String, updateFunction: Contact.()->Unit) {
+        if (sessionId.startsWith(IdPrefix.BLINDED.value)) {
+            Log.w("Loki", "Trying to create a contact with a blinded ID prefix")
+            return
+        } else if (sessionId.startsWith(IdPrefix.UN_BLINDED.value)) {
+            Log.w("Loki", "Trying to create a contact with an un-blinded ID prefix")
+            return
+        }
         val contact = get(sessionId) ?: return
         updateFunction(contact)
         set(contact)
