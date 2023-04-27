@@ -133,7 +133,9 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     }
 
     override fun threadDeleted(address: Address, threadId: Long) {
+        if (SessionId(address.serialize()).prefix != IdPrefix.STANDARD) return
         Log.d("Loki-DBG", "deleting thread for $address\nExecution context:\n${Thread.currentThread().stackTrace.joinToString("\n")}")
+
         val volatile = configFactory.convoVolatile ?: return
         if (address.isGroup) {
             val groups = configFactory.userGroups ?: return
@@ -228,7 +230,13 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                         } ?: return
                     }
                     // otherwise recipient is one to one
-                    recipient.isContactRecipient -> config.getOrConstructOneToOne(recipient.address.serialize())
+                    recipient.isContactRecipient -> {
+                        // don't process non-standard session IDs though
+                        val sessionId = SessionId(recipient.address.serialize())
+                        if (sessionId.prefix != IdPrefix.STANDARD) return
+
+                        config.getOrConstructOneToOne(recipient.address.serialize())
+                    }
                     else -> throw NullPointerException("Weren't expecting to have a convo with address ${recipient.address.serialize()}")
                 }
                 convo.lastRead = lastSeenTime
