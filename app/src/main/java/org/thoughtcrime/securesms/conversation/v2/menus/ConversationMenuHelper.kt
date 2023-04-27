@@ -88,7 +88,7 @@ object ConversationMenuHelper {
         if (thread.isContactRecipient) {
             if (thread.isBlocked) {
                 inflater.inflate(R.menu.menu_conversation_unblock, menu)
-            } else {
+            } else if (!thread.isLocalNumber) {
                 inflater.inflate(R.menu.menu_conversation_block, menu)
             }
         }
