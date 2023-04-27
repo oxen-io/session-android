@@ -326,7 +326,7 @@
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textColorHint">@color/gray27</item>
         <item name="android:windowBackground">?colorPrimary</item>
-        <item name="android:navigationBarColor">@color/compose_view_background</item>
+        <item name="android:navigationBarColor">@color/navigation_bar</item>
         <item name="dialog_background_color">@color/classic_dark_1</item>
         <item name="bottomSheetDialogTheme">@style/Classic.Dark.BottomSheet</item>
         <item name="actionMenuTextColor">?android:textColorPrimary</item>
@@ -404,7 +404,7 @@
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textColorHint">@color/gray27</item>
         <item name="android:windowBackground">?colorPrimary</item>
-        <item name="android:navigationBarColor">?colorPrimary</item>
+        <item name="android:navigationBarColor">@color/classic_light_navigation_bar</item>
         <item name="colorCellBackground">@color/classic_light_6</item>
         <item name="colorSettingsBackground">@color/classic_light_5</item>
         <item name="colorDividerBackground">@color/classic_light_3</item>
@@ -490,7 +490,7 @@
         <item name="android:textColorHint">@color/ocean_dark_5</item>
         <item name="android:windowBackground">?colorPrimary</item>
         <item name="android:colorBackground">@color/default_background_start</item>
-        <item name="android:navigationBarColor">@color/compose_view_background</item>
+        <item name="android:navigationBarColor">@color/navigation_bar</item>
         <item name="default_background_end">?colorPrimary</item>
         <item name="default_background_start">?colorPrimaryDark</item>
         <item name="colorCellBackground">@color/ocean_dark_3</item>
@@ -570,7 +570,7 @@
         <item name="android:textColorTertiary">@color/ocean_light_2</item>
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:textColorHint">@color/ocean_light_6</item>
-        <item name="android:navigationBarColor">@color/ocean_light_7</item>
+        <item name="android:navigationBarColor">@color/ocean_light_navigation_bar</item>
         <item name="android:windowBackground">?colorPrimary</item>
         <item name="android:colorBackground">@color/default_background_start</item>
         <item name="default_background_end">@color/ocean_light_7</item>

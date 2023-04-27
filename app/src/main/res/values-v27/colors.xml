@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="classic_light_navigation_bar">@color/classic_light_6</color>
+    <color name="ocean_light_navigation_bar">@color/ocean_light_7</color>
+</resources>

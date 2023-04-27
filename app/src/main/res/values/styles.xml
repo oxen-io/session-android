@@ -228,11 +228,13 @@
     <style name="FakeChatViewMessageBubble.Incoming">
         <item name="android:background">@drawable/fake_chat_view_incoming_message_background</item>
         <item name="android:elevation">10dp</item>
+        <item name="android:textColor">?message_received_text_color</item>
     </style>
 
     <style name="FakeChatViewMessageBubble.Outgoing">
         <item name="android:background">@drawable/fake_chat_view_outgoing_message_background</item>
         <item name="android:elevation">10dp</item>
+        <item name="android:textColor">?message_sent_text_color</item>
     </style>
     <!-- Session -->
 
