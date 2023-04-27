@@ -117,6 +117,8 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                 Log.w("Loki", "Thread created called for open group address, not adding any extra information")
             }
         } else if (address.isContact) {
+            // non-standard contact prefixes: 15, 00 etc shouldn't be stored in config
+            if (SessionId(address.serialize()).prefix != IdPrefix.STANDARD) return
             // don't update our own address into the contacts DB
             if (getUserPublicKey() != address.serialize()) {
                 val contacts = configFactory.contacts ?: return
@@ -133,7 +135,6 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     }
 
     override fun threadDeleted(address: Address, threadId: Long) {
-        if (SessionId(address.serialize()).prefix != IdPrefix.STANDARD) return
         Log.d("Loki-DBG", "deleting thread for $address\nExecution context:\n${Thread.currentThread().stackTrace.joinToString("\n")}")
 
         val volatile = configFactory.convoVolatile ?: return
@@ -148,6 +149,8 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                 Log.w("Loki", "Thread delete called for open group address, expecting to be handled elsewhere")
             }
         } else {
+            // non-standard contact prefixes: 15, 00 etc shouldn't be stored in config
+            if (SessionId(address.serialize()).prefix != IdPrefix.STANDARD) return
             volatile.eraseOneToOne(address.serialize())
             if (getUserPublicKey() != address.serialize()) {
                 val contacts = configFactory.contacts ?: return
