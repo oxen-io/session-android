@@ -1273,7 +1273,14 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         val userPublicKey = getUserPublicKey()
         val senderPublicKey = response.sender!!
         val recipientPublicKey = response.recipient!!
-        if (userPublicKey == null || (userPublicKey != recipientPublicKey && userPublicKey != senderPublicKey)) return
+
+        if (
+            userPublicKey == null
+            || (userPublicKey != recipientPublicKey && userPublicKey != senderPublicKey)
+            // this is true if it is a sync message
+            || (userPublicKey == recipientPublicKey && userPublicKey == senderPublicKey)
+        ) return
+
         val recipientDb = DatabaseComponent.get(context).recipientDatabase()
         val threadDB = DatabaseComponent.get(context).threadDatabase()
         if (userPublicKey == senderPublicKey) {
