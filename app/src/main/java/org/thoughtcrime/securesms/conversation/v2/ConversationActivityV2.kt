@@ -440,8 +440,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 // only update the conversation every 3 seconds maximum
                 // channel is rendezvous and shouldn't block on try send calls as often as we want
+                withContext(Dispatchers.IO) {
+                    storage.markConversationAsRead(viewModel.threadId, SnodeAPI.nowWithOffset)
+                }
                 val bufferedFlow = bufferedLastSeenChannel.consumeAsFlow()
-                    .debounce(30.seconds)
                 bufferedFlow.collectLatest {
                     withContext(Dispatchers.IO) {
                         storage.markConversationAsRead(viewModel.threadId, SnodeAPI.nowWithOffset)
@@ -496,7 +498,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             if (author != null && messageTimestamp >= 0) {
                 jumpToMessage(author, messageTimestamp, null)
             }
-            // TODO: buffer this
             bufferedLastSeenChannel.trySend(Unit)
         }
         updatePlaceholder()
