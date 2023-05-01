@@ -36,10 +36,14 @@ public abstract class MessagingDatabase extends Database implements MmsSmsColumn
   public abstract void markExpireStarted(long messageId);
   public abstract void markExpireStarted(long messageId, long startTime);
 
+  public abstract void markAsSending(long messageId);
+  public abstract void markAsSentFailed(long messageId);
   public abstract void markAsSent(long messageId, boolean secure);
   public abstract void markUnidentified(long messageId, boolean unidentified);
 
   public abstract void markAsDeleted(long messageId, boolean read, boolean hasMention);
+
+  public abstract void updateSentTimestamp(long messageId, long newTimestamp, long threadId);
 
   public abstract boolean deleteMessage(long messageId);
   public abstract boolean deleteMessages(long[] messageId, long threadId);

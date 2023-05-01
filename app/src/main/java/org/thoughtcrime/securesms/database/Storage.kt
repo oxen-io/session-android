@@ -75,6 +75,8 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
     private val groupMemberDatabase = DatabaseComponent.get(context).groupMemberDatabase()
     private val sessionContactDatabase = DatabaseComponent.get(context).sessionContactDatabase()
 
+    private fun getMmsDatabaseElseSms(isMms: Boolean) = if (isMms) mmsDatabase else smsDatabase
+
     override fun getUserPublicKey(): String? = TextSecurePreferences.getLocalNumber(context)
 
     override fun getUserX25519KeyPair(): ECKeyPair = lokiAPIDatabase.getUserX25519KeyPair()
@@ -335,47 +337,28 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         openGroupSentTimestamp: Long,
         threadId: Long
     ) {
-        if (isMms) {
-            mmsDatabase.updateSentTimestamp(messageID, openGroupSentTimestamp, threadId)
-        } else {
-            smsDatabase.updateSentTimestamp(messageID, openGroupSentTimestamp, threadId)
-        }
+        getMmsDatabaseElseSms(isMms).updateSentTimestamp(messageID, openGroupSentTimestamp, threadId)
     }
 
     override fun markAsSent(timestamp: Long, author: String) {
-        val messageRecord = mmsSmsDatabase.getMessageFor(timestamp, author) ?: return
-        if (messageRecord.isMms) {
-            mmsDatabase.markAsSent(messageRecord.getId(), true)
-        } else {
-            smsDatabase.markAsSent(messageRecord.getId(), true)
-        }
+        mmsSmsDatabase.getMessageFor(timestamp, author)
+            ?.let { getMmsDatabaseElseSms(it.isMms).markAsSent(it.id, true) }
     }
 
     override fun markAsSending(timestamp: Long, author: String) {
-        val messageRecord = mmsSmsDatabase.getMessageFor(timestamp, author) ?: return
-        if (messageRecord.isMms) {
-            mmsDatabase.markAsSending(messageRecord.getId())
-        } else {
-            smsDatabase.markAsSending(messageRecord.getId())
-        }
+        mmsSmsDatabase.getMessageFor(timestamp, author)
+            ?.let { getMmsDatabaseElseSms(it.isMms).markAsSending(it.id) }
     }
 
     override fun markUnidentified(timestamp: Long, author: String) {
-        val messageRecord = mmsSmsDatabase.getMessageFor(timestamp, author) ?: return
-        if (messageRecord.isMms) {
-            mmsDatabase.markUnidentified(messageRecord.getId(), true)
-        } else {
-            smsDatabase.markUnidentified(messageRecord.getId(), true)
-        }
+        mmsSmsDatabase.getMessageFor(timestamp, author)
+            ?.let { getMmsDatabaseElseSms(it.isMms).markUnidentified(it.id, true) }
     }
 
     override fun setErrorMessage(timestamp: Long, author: String, error: Exception) {
         val messageRecord = mmsSmsDatabase.getMessageFor(timestamp, author) ?: return
-        if (messageRecord.isMms) {
-            mmsDatabase.markAsSentFailed(messageRecord.getId())
-        } else {
-            smsDatabase.markAsSentFailed(messageRecord.getId())
-        }
+        getMmsDatabaseElseSms(messageRecord.isMms).markAsSentFailed(messageRecord.id)
+
         if (error.localizedMessage != null) {
             if (error is OnionRequestAPI.HTTPRequestFailedAtDestinationException && error.statusCode == 429) {
                 "429: Rate limited."

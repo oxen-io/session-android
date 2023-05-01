@@ -198,6 +198,7 @@ public class SmsDatabase extends MessagingDatabase {
     updateTypeBitmask(id, Types.BASE_TYPE_MASK, Types.BASE_SENT_TYPE | (isSecure ? Types.PUSH_MESSAGE_BIT | Types.SECURE_MESSAGE_BIT : 0));
   }
 
+  @Override
   public void markAsSending(long id) {
     updateTypeBitmask(id, Types.BASE_TYPE_MASK, Types.BASE_SENDING_TYPE);
   }
@@ -245,6 +246,7 @@ public class SmsDatabase extends MessagingDatabase {
     notifyConversationListeners(threadId);
   }
 
+  @Override
   public void markAsSentFailed(long id) {
     updateTypeBitmask(id, Types.BASE_TYPE_MASK, Types.BASE_SENT_FAILED_TYPE);
   }
@@ -362,6 +364,7 @@ public class SmsDatabase extends MessagingDatabase {
     return results;
   }
 
+  @Override
   public void updateSentTimestamp(long messageId, long newTimestamp, long threadId) {
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
     db.execSQL("UPDATE " + TABLE_NAME + " SET " + DATE_SENT + " = ? " +

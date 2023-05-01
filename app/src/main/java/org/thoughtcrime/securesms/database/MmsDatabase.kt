@@ -181,7 +181,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         }
     }
 
-    fun updateSentTimestamp(messageId: Long, newTimestamp: Long, threadId: Long) {
+    override fun updateSentTimestamp(messageId: Long, newTimestamp: Long, threadId: Long) {
         val db = databaseHelper.writableDatabase
         db.execSQL(
             "UPDATE $TABLE_NAME SET $DATE_SENT = ? WHERE $ID = ?",
@@ -276,11 +276,11 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         notifyConversationListeners(threadId)
     }
 
-    fun markAsSending(messageId: Long) {
+    override fun markAsSending(messageId: Long) {
         markAs(messageId, MmsSmsColumns.Types.BASE_SENDING_TYPE)
     }
 
-    fun markAsSentFailed(messageId: Long) {
+    override fun markAsSentFailed(messageId: Long) {
         markAs(messageId, MmsSmsColumns.Types.BASE_SENT_FAILED_TYPE)
     }
 
