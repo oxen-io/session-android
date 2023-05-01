@@ -85,7 +85,6 @@ object ConfigurationMessageUtilities {
         if (ConfigBase.isNewConfigEnabled) {
             // schedule job if none exist
             // don't schedule job if we already have one
-            Log.d("Loki-DBG", "Forcing config sync")
             scheduleConfigSync(userPublicKey)
             return Promise.ofSuccess(Unit)
         }

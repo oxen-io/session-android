@@ -240,8 +240,8 @@ public class DefaultMessageNotifier implements MessageNotifier {
             !(recipient.isApproved() || threads.getLastSeenAndHasSent(threadId).second())) {
       TextSecurePreferences.removeHasHiddenMessageRequests(context);
     }
-    if (isVisible && recipient != null) {
-      List<MarkedMessageInfo> messageIds = threads.setRead(threadId, false);
+    if (isVisible && recipient != null && threads.getMessageCount(threadId) > 0) {
+      List<MarkedMessageInfo> messageIds = threads.setRead(threadId, true);
       if (SessionMetaProtocol.shouldSendReadReceipt(recipient)) { MarkReadReceiver.process(context, messageIds); }
     }
 

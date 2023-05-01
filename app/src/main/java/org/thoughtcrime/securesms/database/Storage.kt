@@ -216,7 +216,8 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     override fun markConversationAsRead(threadId: Long, lastSeenTime: Long) {
         val threadDb = DatabaseComponent.get(context).threadDatabase()
         getRecipientForThread(threadId)?.let { recipient ->
-            threadDb.markAllAsRead(threadId, recipient.isGroupRecipient, lastSeenTime)
+            // don't set the last read in the volatile if we didn't set it in the DB
+            if (!threadDb.markAllAsRead(threadId, recipient.isGroupRecipient, lastSeenTime)) return
 
             // don't process configs for inbox recipients
             if (recipient.isOpenGroupInboxRecipient) return
@@ -1060,7 +1061,6 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     }
 
     override fun addLibSessionContacts(contacts: List<LibSessionContact>) {
-        Log.d("Loki-DBG", "Adding contacts from execution context:\n${Thread.currentThread().stackTrace.joinToString("\n")}")
         val mappingDb = DatabaseComponent.get(context).blindedIdMappingDatabase()
         val moreContacts = contacts.filter { contact ->
             val id = SessionId(contact.id)

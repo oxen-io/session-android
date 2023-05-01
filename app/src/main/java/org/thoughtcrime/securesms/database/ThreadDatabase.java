@@ -315,6 +315,7 @@ public class ThreadDatabase extends Database {
 
     ContentValues contentValues = new ContentValues(1);
     contentValues.put(READ, 1);
+    Log.d("Loki-DBG", "setRead "+threadId+" @ "+lastReadTime);
     contentValues.put(LAST_SEEN, lastReadTime);
 
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
@@ -335,6 +336,7 @@ public class ThreadDatabase extends Database {
     contentValues.put(UNREAD_MENTION_COUNT, 0);
 
     if (lastSeen) {
+      Log.d("Loki-DBG", "setRead "+threadId+" @ current time");
       contentValues.put(LAST_SEEN, SnodeAPI.getNowWithOffset());
     }
 
@@ -526,9 +528,16 @@ public class ThreadDatabase extends Database {
     return db.rawQuery(query, null);
   }
 
-  public void setLastSeen(long threadId, long timestamp) {
+  /**
+   * @param threadId
+   * @param timestamp
+   * @return true if we have set the last seen for the thread, false if there were no messages in the thread
+   */
+  public boolean setLastSeen(long threadId, long timestamp) {
     // edge case where we set the last seen time for a conversation before it loads messages (joining community for example)
-    if (getMessageCount(threadId) <= 0) return;
+    MmsSmsDatabase mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase();
+    if (mmsSmsDatabase.getConversationCount(threadId) <= 0) return false;
+    Log.d("Loki-DBG", "setLastSeen "+threadId+" @ "+timestamp);
 
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
@@ -552,11 +561,17 @@ public class ThreadDatabase extends Database {
     db.execSQL(reflectUpdates, new Object[]{threadId});
     db.setTransactionSuccessful();
     db.endTransaction();
+    Log.d("Loki-DBG", "Updated last seen to "+timestamp);
     notifyConversationListListeners();
+    return true;
   }
 
-  public void setLastSeen(long threadId) {
-    setLastSeen(threadId, -1);
+  /**
+   * @param threadId
+   * @return true if we have set the last seen for the thread, false if there were no messages in the thread
+   */
+  public boolean setLastSeen(long threadId) {
+    return setLastSeen(threadId, -1);
   }
 
   public Pair<Long, Boolean> getLastSeenAndHasSent(long threadId) {
@@ -716,7 +731,7 @@ public class ThreadDatabase extends Database {
     MmsSmsDatabase mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase();
     long count                    = mmsSmsDatabase.getConversationCount(threadId);
 
-    boolean shouldDeleteEmptyThread = !shouldDeleteOnEmpty ? false : deleteThreadOnEmpty(threadId);
+    boolean shouldDeleteEmptyThread = shouldDeleteOnEmpty && deleteThreadOnEmpty(threadId);
 
     if (count == 0 && shouldDeleteEmptyThread) {
       deleteThread(threadId);
@@ -778,7 +793,16 @@ public class ThreadDatabase extends Database {
     }
   }
 
-  public void markAllAsRead(long threadId, boolean isGroupRecipient, long lastSeenTime) {
+  /**
+   * @param threadId
+   * @param isGroupRecipient
+   * @param lastSeenTime
+   * @return true if we have set the last seen for the thread, false if there were no messages in the thread
+   */
+  public boolean markAllAsRead(long threadId, boolean isGroupRecipient, long lastSeenTime) {
+    MmsSmsDatabase mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase();
+    if (mmsSmsDatabase.getConversationCount(threadId) <= 0) return false;
+    Log.d("Loki-DBG", "markAllAsRead "+threadId+" @ "+lastSeenTime);
     List<MarkedMessageInfo> messages = setRead(threadId, lastSeenTime);
     if (isGroupRecipient) {
       for (MarkedMessageInfo message: messages) {
@@ -788,7 +812,7 @@ public class ThreadDatabase extends Database {
       MarkReadReceiver.process(context, messages);
     }
     ApplicationContext.getInstance(context).messageNotifier.updateNotification(context, threadId);
-    setLastSeen(threadId, lastSeenTime);
+    return setLastSeen(threadId, lastSeenTime);
   }
 
   private boolean deleteThreadOnEmpty(long threadId) {

@@ -443,7 +443,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 withContext(Dispatchers.IO) {
                     storage.markConversationAsRead(viewModel.threadId, SnodeAPI.nowWithOffset)
                 }
-                val bufferedFlow = bufferedLastSeenChannel.consumeAsFlow()
+                val bufferedFlow = bufferedLastSeenChannel.consumeAsFlow().debounce(3.seconds)
                 bufferedFlow.collectLatest {
                     withContext(Dispatchers.IO) {
                         storage.markConversationAsRead(viewModel.threadId, SnodeAPI.nowWithOffset)
