@@ -54,14 +54,30 @@ import org.thoughtcrime.securesms.util.SessionMetaProtocol
 import java.security.MessageDigest
 
 class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context, helper), StorageProtocol {
-    
-    override fun getUserPublicKey(): String? {
-        return TextSecurePreferences.getLocalNumber(context)
-    }
 
-    override fun getUserX25519KeyPair(): ECKeyPair {
-        return DatabaseComponent.get(context).lokiAPIDatabase().getUserX25519KeyPair()
-    }
+    private val smsDatabase = DatabaseComponent.get(context).smsDatabase()
+    private val mmsDatabase = DatabaseComponent.get(context).mmsDatabase()
+    private val mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase()
+
+    private val recipientDatabase = DatabaseComponent.get(context).recipientDatabase()
+
+    private val attachmentDatabase = DatabaseComponent.get(context).attachmentDatabase()
+    private val sessionJobDatabase = DatabaseComponent.get(context).sessionJobDatabase()
+
+    private val threadDatabase = DatabaseComponent.get(context).threadDatabase()
+    private val lokiThreadDatabase = DatabaseComponent.get(context).lokiThreadDatabase()
+    private val lokiAPIDatabase = DatabaseComponent.get(context).lokiAPIDatabase()
+    private val lokiMessageDatabase = DatabaseComponent.get(context).lokiMessageDatabase()
+
+    private val blindedIdMappingDatabase = DatabaseComponent.get(context).blindedIdMappingDatabase()
+    private val reactionDatabase = DatabaseComponent.get(context).reactionDatabase()
+    private val groupDatabase = DatabaseComponent.get(context).groupDatabase()
+    private val groupMemberDatabase = DatabaseComponent.get(context).groupMemberDatabase()
+    private val sessionContactDatabase = DatabaseComponent.get(context).sessionContactDatabase()
+
+    override fun getUserPublicKey(): String? = TextSecurePreferences.getLocalNumber(context)
+
+    override fun getUserX25519KeyPair(): ECKeyPair = lokiAPIDatabase.getUserX25519KeyPair()
 
     override fun getUserProfile(): Profile {
         val displayName = TextSecurePreferences.getProfileName(context)!!
@@ -71,47 +87,35 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
     }
 
     override fun setUserProfilePictureURL(newValue: String) {
-        val ourRecipient = fromSerialized(getUserPublicKey()!!).let {
-            Recipient.from(context, it, false)
-        }
+        val ourRecipient = getUserPublicKey()!!.let(::fromSerialized)
+            .let { Recipient.from(context, it, false) }
         TextSecurePreferences.setProfilePictureURL(context, newValue)
         RetrieveProfileAvatarJob(ourRecipient, newValue)
         ApplicationContext.getInstance(context).jobManager.add(RetrieveProfileAvatarJob(ourRecipient, newValue))
     }
 
-    override fun getOrGenerateRegistrationID(): Int {
-        var registrationID = TextSecurePreferences.getLocalRegistrationId(context)
-        if (registrationID == 0) {
-            registrationID = KeyHelper.generateRegistrationId(false)
-            TextSecurePreferences.setLocalRegistrationId(context, registrationID)
-        }
-        return registrationID
-    }
+    override fun getOrGenerateRegistrationID(): Int =
+        TextSecurePreferences.getLocalRegistrationId(context).takeUnless { it == 0 }
+            ?: KeyHelper.generateRegistrationId(false)
+                .also { TextSecurePreferences.setLocalRegistrationId(context, it) }
 
-    override fun persistAttachments(messageID: Long, attachments: List<Attachment>): List<Long> {
-        val database = DatabaseComponent.get(context).attachmentDatabase()
-        val databaseAttachments = attachments.mapNotNull { it.toSignalAttachment() }
-        return database.insertAttachments(messageID, databaseAttachments)
-    }
+    override fun persistAttachments(messageID: Long, attachments: List<Attachment>): List<Long> =
+        attachments.mapNotNull { it.toSignalAttachment() }
+            .let { attachmentDatabase.insertAttachments(messageID, it) }
 
-    override fun getAttachmentsForMessage(messageID: Long): List<DatabaseAttachment> {
-        val database = DatabaseComponent.get(context).attachmentDatabase()
-        return database.getAttachmentsForMessage(messageID)
-    }
+    override fun getAttachmentsForMessage(messageID: Long): List<DatabaseAttachment> =
+        attachmentDatabase.getAttachmentsForMessage(messageID)
 
     override fun markConversationAsRead(threadId: Long, updateLastSeen: Boolean) {
-        val threadDb = DatabaseComponent.get(context).threadDatabase()
-        threadDb.setRead(threadId, updateLastSeen)
+        threadDatabase.setRead(threadId, updateLastSeen)
     }
 
     override fun incrementUnread(threadId: Long, amount: Int, unreadMentionAmount: Int) {
-        val threadDb = DatabaseComponent.get(context).threadDatabase()
-        threadDb.incrementUnread(threadId, amount, unreadMentionAmount)
+        threadDatabase.incrementUnread(threadId, amount, unreadMentionAmount)
     }
 
     override fun updateThread(threadId: Long, unarchive: Boolean) {
-        val threadDb = DatabaseComponent.get(context).threadDatabase()
-        threadDb.update(threadId, unarchive)
+        threadDatabase.update(threadId, unarchive)
     }
 
     override fun persist(message: VisibleMessage,
@@ -127,37 +131,32 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         val isUserSender = (message.sender!! == getUserPublicKey())
         val isUserBlindedSender = message.threadID?.takeIf { it >= 0 }?.let { getOpenGroup(it)?.publicKey }
             ?.let { SodiumUtilities.sessionId(getUserPublicKey()!!, message.sender!!, it) } ?: false
-        val group: Optional<SignalServiceGroup> = when {
-            openGroupID != null -> Optional.of(SignalServiceGroup(openGroupID.toByteArray(), SignalServiceGroup.GroupType.PUBLIC_CHAT))
+        val group = when {
+            openGroupID != null -> SignalServiceGroup(openGroupID.toByteArray(), SignalServiceGroup.GroupType.PUBLIC_CHAT)
             groupPublicKey != null -> {
                 val doubleEncoded = GroupUtil.doubleEncodeGroupID(groupPublicKey)
-                Optional.of(SignalServiceGroup(GroupUtil.getDecodedGroupIDAsData(doubleEncoded), SignalServiceGroup.GroupType.SIGNAL))
+                SignalServiceGroup(GroupUtil.getDecodedGroupIDAsData(doubleEncoded), SignalServiceGroup.GroupType.SIGNAL)
             }
-            else -> Optional.absent()
+            else -> null
         }
-        val pointers = attachments.mapNotNull {
-            it.toSignalAttachment()
-        }
-        val targetAddress = if ((isUserSender || isUserBlindedSender) && !message.syncTarget.isNullOrEmpty()) {
-            fromSerialized(message.syncTarget!!)
-        } else if (group.isPresent) {
-            fromSerialized(GroupUtil.getEncodedId(group.get()))
-        } else {
-            senderAddress
-        }
+        val pointers = attachments.mapNotNull(Attachment::toSignalAttachment)
+
+        val targetAddress = message.syncTarget
+            ?.takeIf { (isUserSender || isUserBlindedSender) && it.isNotEmpty() }
+            ?.let(::fromSerialized)
+            ?: group?.let(GroupUtil::getEncodedId)?.let(::fromSerialized) ?: senderAddress
+
         val targetRecipient = Recipient.from(context, targetAddress, false)
         if (!targetRecipient.isGroupRecipient) {
-            val recipientDb = DatabaseComponent.get(context).recipientDatabase()
             if (isUserSender || isUserBlindedSender) {
-                recipientDb.setApproved(targetRecipient, true)
+                recipientDatabase.setApproved(targetRecipient, true)
             } else {
-                recipientDb.setApprovedMe(targetRecipient, true)
+                recipientDatabase.setApprovedMe(targetRecipient, true)
             }
         }
         if (message.isMediaMessage() || attachments.isNotEmpty()) {
             val quote: Optional<QuoteModel> = if (quotes != null) Optional.of(quotes) else Optional.absent()
             val linkPreviews: Optional<List<LinkPreview>> = if (linkPreview.isEmpty()) Optional.absent() else Optional.of(linkPreview.mapNotNull { it!! })
-            val mmsDatabase = DatabaseComponent.get(context).mmsDatabase()
             val insertResult = if (isUserSender || isUserBlindedSender) {
                 val mediaMessage = OutgoingMediaMessage.from(message, targetRecipient, pointers, quote.orNull(), linkPreviews.orNull()?.firstOrNull())
                 mmsDatabase.insertSecureDecryptedMessageOutbox(mediaMessage, message.threadID ?: -1, message.sentTimestamp!!, runThreadUpdate)
@@ -166,14 +165,13 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
                 val signalServiceAttachments = attachments.mapNotNull {
                     it.toSignalPointer()
                 }
-                val mediaMessage = IncomingMediaMessage.from(message, senderAddress, targetRecipient.expireMessages * 1000L, group, signalServiceAttachments, quote, linkPreviews)
+                val mediaMessage = IncomingMediaMessage.from(message, senderAddress, targetRecipient.expireMessages * 1000L, Optional.fromNullable(group), signalServiceAttachments, quote, linkPreviews)
                 mmsDatabase.insertSecureDecryptedMessageInbox(mediaMessage, message.threadID ?: -1, message.receivedTimestamp ?: 0, runIncrement, runThreadUpdate)
             }
             if (insertResult.isPresent) {
                 messageID = insertResult.get().messageId
             }
         } else {
-            val smsDatabase = DatabaseComponent.get(context).smsDatabase()
             val isOpenGroupInvitation = (message.openGroupInvitation != null)
 
             val insertResult = if (isUserSender || isUserBlindedSender) {
@@ -182,7 +180,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
                 smsDatabase.insertMessageOutbox(message.threadID ?: -1, textMessage, message.sentTimestamp!!, runThreadUpdate)
             } else {
                 val textMessage = if (isOpenGroupInvitation) IncomingTextMessage.fromOpenGroupInvitation(message.openGroupInvitation, senderAddress, message.sentTimestamp)
-                else IncomingTextMessage.from(message, senderAddress, group, targetRecipient.expireMessages * 1000L)
+                else IncomingTextMessage.from(message, senderAddress, Optional.fromNullable(group), targetRecipient.expireMessages * 1000L)
                 val encrypted = IncomingEncryptedMessage(textMessage, textMessage.messageBody)
                 smsDatabase.insertMessageInbox(encrypted, message.receivedTimestamp ?: 0, runIncrement, runThreadUpdate)
             }
@@ -192,149 +190,133 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         }
         message.serverHash?.let { serverHash ->
             messageID?.let { id ->
-                DatabaseComponent.get(context).lokiMessageDatabase().setMessageServerHash(id, serverHash)
+                lokiMessageDatabase.setMessageServerHash(id, serverHash)
             }
         }
         return messageID
     }
 
     override fun persistJob(job: Job) {
-        DatabaseComponent.get(context).sessionJobDatabase().persistJob(job)
+        sessionJobDatabase.persistJob(job)
     }
 
     override fun markJobAsSucceeded(jobId: String) {
-        DatabaseComponent.get(context).sessionJobDatabase().markJobAsSucceeded(jobId)
+        sessionJobDatabase.markJobAsSucceeded(jobId)
     }
 
     override fun markJobAsFailedPermanently(jobId: String) {
-        DatabaseComponent.get(context).sessionJobDatabase().markJobAsFailedPermanently(jobId)
+        sessionJobDatabase.markJobAsFailedPermanently(jobId)
     }
 
-    override fun getAllPendingJobs(type: String): Map<String, Job?> {
-        return DatabaseComponent.get(context).sessionJobDatabase().getAllPendingJobs(type)
-    }
+    override fun getAllPendingJobs(type: String): Map<String, Job?> =
+        sessionJobDatabase.getAllPendingJobs(type)
 
-    override fun getAttachmentUploadJob(attachmentID: Long): AttachmentUploadJob? {
-        return DatabaseComponent.get(context).sessionJobDatabase().getAttachmentUploadJob(attachmentID)
-    }
+    override fun getAttachmentUploadJob(attachmentID: Long): AttachmentUploadJob? =
+        sessionJobDatabase.getAttachmentUploadJob(attachmentID)
 
-    override fun getMessageSendJob(messageSendJobID: String): MessageSendJob? {
-        return DatabaseComponent.get(context).sessionJobDatabase().getMessageSendJob(messageSendJobID)
-    }
+    override fun getMessageSendJob(messageSendJobID: String): MessageSendJob? =
+        sessionJobDatabase.getMessageSendJob(messageSendJobID)
 
-    override fun getMessageReceiveJob(messageReceiveJobID: String): MessageReceiveJob? {
-        return DatabaseComponent.get(context).sessionJobDatabase().getMessageReceiveJob(messageReceiveJobID)
-    }
+    override fun getMessageReceiveJob(messageReceiveJobID: String): MessageReceiveJob? =
+        sessionJobDatabase.getMessageReceiveJob(messageReceiveJobID)
 
-    override fun getGroupAvatarDownloadJob(server: String, room: String, imageId: String?): GroupAvatarDownloadJob? {
-        return DatabaseComponent.get(context).sessionJobDatabase().getGroupAvatarDownloadJob(server, room, imageId)
-    }
+    override fun getGroupAvatarDownloadJob(server: String, room: String, imageId: String?): GroupAvatarDownloadJob? =
+        sessionJobDatabase.getGroupAvatarDownloadJob(server, room, imageId)
 
     override fun resumeMessageSendJobIfNeeded(messageSendJobID: String) {
-        val job = DatabaseComponent.get(context).sessionJobDatabase().getMessageSendJob(messageSendJobID) ?: return
-        JobQueue.shared.resumePendingSendMessage(job)
+        sessionJobDatabase.getMessageSendJob(messageSendJobID)
+            ?.let(JobQueue.shared::resumePendingSendMessage)
     }
 
-    override fun isJobCanceled(job: Job): Boolean {
-        return DatabaseComponent.get(context).sessionJobDatabase().isJobCanceled(job)
-    }
+    override fun isJobCanceled(job: Job): Boolean = sessionJobDatabase.isJobCanceled(job)
 
     override fun getAuthToken(room: String, server: String): String? {
         val id = "$server.$room"
-        return DatabaseComponent.get(context).lokiAPIDatabase().getAuthToken(id)
+        return lokiAPIDatabase.getAuthToken(id)
     }
 
     override fun setAuthToken(room: String, server: String, newValue: String) {
         val id = "$server.$room"
-        DatabaseComponent.get(context).lokiAPIDatabase().setAuthToken(id, newValue)
+        lokiAPIDatabase.setAuthToken(id, newValue)
     }
 
     override fun removeAuthToken(room: String, server: String) {
         val id = "$server.$room"
-        DatabaseComponent.get(context).lokiAPIDatabase().setAuthToken(id, null)
+        lokiAPIDatabase.setAuthToken(id, null)
     }
 
     override fun getOpenGroup(threadId: Long): OpenGroup? {
-        if (threadId.toInt() < 0) { return null }
-        val database = databaseHelper.readableDatabase
-        return database.get(LokiThreadDatabase.publicChatTable, "${LokiThreadDatabase.threadID} = ?", arrayOf( threadId.toString() )) { cursor ->
+        if (threadId < 0) { return null }
+        return databaseHelper.readableDatabase.get(LokiThreadDatabase.publicChatTable, "${LokiThreadDatabase.threadID} = ?", arrayOf( threadId.toString() )) { cursor ->
             val publicChatAsJson = cursor.getString(LokiThreadDatabase.publicChat)
             OpenGroup.fromJSON(publicChatAsJson)
         }
     }
 
-    override fun getOpenGroupPublicKey(server: String): String? {
-        return DatabaseComponent.get(context).lokiAPIDatabase().getOpenGroupPublicKey(server)
-    }
+    override fun getOpenGroupPublicKey(server: String): String? =
+        lokiAPIDatabase.getOpenGroupPublicKey(server)
 
     override fun setOpenGroupPublicKey(server: String, newValue: String) {
-        DatabaseComponent.get(context).lokiAPIDatabase().setOpenGroupPublicKey(server, newValue)
+        lokiAPIDatabase.setOpenGroupPublicKey(server, newValue)
     }
 
-    override fun getLastMessageServerID(room: String, server: String): Long? {
-        return DatabaseComponent.get(context).lokiAPIDatabase().getLastMessageServerID(room, server)
-    }
+    override fun getLastMessageServerID(room: String, server: String): Long? =
+        lokiAPIDatabase.getLastMessageServerID(room, server)
 
     override fun setLastMessageServerID(room: String, server: String, newValue: Long) {
-        DatabaseComponent.get(context).lokiAPIDatabase().setLastMessageServerID(room, server, newValue)
+        lokiAPIDatabase.setLastMessageServerID(room, server, newValue)
     }
 
     override fun removeLastMessageServerID(room: String, server: String) {
-        DatabaseComponent.get(context).lokiAPIDatabase().removeLastMessageServerID(room, server)
+        lokiAPIDatabase.removeLastMessageServerID(room, server)
     }
 
-    override fun getLastDeletionServerID(room: String, server: String): Long? {
-        return DatabaseComponent.get(context).lokiAPIDatabase().getLastDeletionServerID(room, server)
-    }
+    override fun getLastDeletionServerID(room: String, server: String): Long? =
+        lokiAPIDatabase.getLastDeletionServerID(room, server)
 
     override fun setLastDeletionServerID(room: String, server: String, newValue: Long) {
-        DatabaseComponent.get(context).lokiAPIDatabase().setLastDeletionServerID(room, server, newValue)
+        lokiAPIDatabase.setLastDeletionServerID(room, server, newValue)
     }
 
     override fun removeLastDeletionServerID(room: String, server: String) {
-        DatabaseComponent.get(context).lokiAPIDatabase().removeLastDeletionServerID(room, server)
+        lokiAPIDatabase.removeLastDeletionServerID(room, server)
     }
 
     override fun setUserCount(room: String, server: String, newValue: Int) {
-        DatabaseComponent.get(context).lokiAPIDatabase().setUserCount(room, server, newValue)
+        lokiAPIDatabase.setUserCount(room, server, newValue)
     }
 
     override fun setOpenGroupServerMessageID(messageID: Long, serverID: Long, threadID: Long, isSms: Boolean) {
-        DatabaseComponent.get(context).lokiMessageDatabase().setServerID(messageID, serverID, isSms)
-        DatabaseComponent.get(context).lokiMessageDatabase().setOriginalThreadID(messageID, serverID, threadID)
+        lokiMessageDatabase.setServerID(messageID, serverID, isSms)
+        lokiMessageDatabase.setOriginalThreadID(messageID, serverID, threadID)
     }
 
-    override fun getOpenGroup(room: String, server: String): OpenGroup? {
-        return getAllOpenGroups().values.firstOrNull { it.server == server && it.room == room }
-    }
+    override fun getOpenGroup(room: String, server: String): OpenGroup? =
+        getAllOpenGroups().values.firstOrNull { it.server == server && it.room == room }
 
     override fun setGroupMemberRoles(members: List<GroupMember>) {
-        DatabaseComponent.get(context).groupMemberDatabase().setGroupMembers(members)
+        groupMemberDatabase.setGroupMembers(members)
     }
 
-    override fun isDuplicateMessage(timestamp: Long): Boolean {
-        return getReceivedMessageTimestamps().contains(timestamp)
-    }
+    override fun isDuplicateMessage(timestamp: Long): Boolean =
+        getReceivedMessageTimestamps().contains(timestamp)
 
     override fun updateTitle(groupID: String, newValue: String) {
-        DatabaseComponent.get(context).groupDatabase().updateTitle(groupID, newValue)
+        groupDatabase.updateTitle(groupID, newValue)
     }
 
     override fun updateProfilePicture(groupID: String, newValue: ByteArray) {
-        DatabaseComponent.get(context).groupDatabase().updateProfilePicture(groupID, newValue)
+        groupDatabase.updateProfilePicture(groupID, newValue)
     }
 
     override fun removeProfilePicture(groupID: String) {
-        DatabaseComponent.get(context).groupDatabase().removeProfilePicture(groupID)
+        groupDatabase.removeProfilePicture(groupID)
     }
 
-    override fun hasDownloadedProfilePicture(groupID: String): Boolean {
-        return DatabaseComponent.get(context).groupDatabase().hasDownloadedProfilePicture(groupID)
-    }
+    override fun hasDownloadedProfilePicture(groupID: String): Boolean =
+        groupDatabase.hasDownloadedProfilePicture(groupID)
 
-    override fun getReceivedMessageTimestamps(): Set<Long> {
-        return SessionMetaProtocol.getTimestamps()
-    }
+    override fun getReceivedMessageTimestamps(): Set<Long> = SessionMetaProtocol.getTimestamps()
 
     override fun addReceivedMessageTimestamp(timestamp: Long) {
         SessionMetaProtocol.addTimestamp(timestamp)
@@ -344,11 +326,8 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         SessionMetaProtocol.removeTimestamps(timestamps)
     }
 
-    override fun getMessageIdInDatabase(timestamp: Long, author: String): Long? {
-        val database = DatabaseComponent.get(context).mmsSmsDatabase()
-        val address = fromSerialized(author)
-        return database.getMessageFor(timestamp, address)?.getId()
-    }
+    override fun getMessageIdInDatabase(timestamp: Long, author: String): Long? =
+        mmsSmsDatabase.getMessageFor(timestamp, fromSerialized(author))?.getId()
 
     override fun updateSentTimestamp(
         messageID: Long,
@@ -357,114 +336,91 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         threadId: Long
     ) {
         if (isMms) {
-            val mmsDb = DatabaseComponent.get(context).mmsDatabase()
-            mmsDb.updateSentTimestamp(messageID, openGroupSentTimestamp, threadId)
+            mmsDatabase.updateSentTimestamp(messageID, openGroupSentTimestamp, threadId)
         } else {
-            val smsDb = DatabaseComponent.get(context).smsDatabase()
-            smsDb.updateSentTimestamp(messageID, openGroupSentTimestamp, threadId)
+            smsDatabase.updateSentTimestamp(messageID, openGroupSentTimestamp, threadId)
         }
     }
 
     override fun markAsSent(timestamp: Long, author: String) {
-        val database = DatabaseComponent.get(context).mmsSmsDatabase()
-        val messageRecord = database.getMessageFor(timestamp, author) ?: return
+        val messageRecord = mmsSmsDatabase.getMessageFor(timestamp, author) ?: return
         if (messageRecord.isMms) {
-            val mmsDatabase = DatabaseComponent.get(context).mmsDatabase()
             mmsDatabase.markAsSent(messageRecord.getId(), true)
         } else {
-            val smsDatabase = DatabaseComponent.get(context).smsDatabase()
             smsDatabase.markAsSent(messageRecord.getId(), true)
         }
     }
 
     override fun markAsSending(timestamp: Long, author: String) {
-        val database = DatabaseComponent.get(context).mmsSmsDatabase()
-        val messageRecord = database.getMessageFor(timestamp, author) ?: return
+        val messageRecord = mmsSmsDatabase.getMessageFor(timestamp, author) ?: return
         if (messageRecord.isMms) {
-            val mmsDatabase = DatabaseComponent.get(context).mmsDatabase()
             mmsDatabase.markAsSending(messageRecord.getId())
         } else {
-            val smsDatabase = DatabaseComponent.get(context).smsDatabase()
             smsDatabase.markAsSending(messageRecord.getId())
-            messageRecord.isPending
         }
     }
 
     override fun markUnidentified(timestamp: Long, author: String) {
-        val database = DatabaseComponent.get(context).mmsSmsDatabase()
-        val messageRecord = database.getMessageFor(timestamp, author) ?: return
+        val messageRecord = mmsSmsDatabase.getMessageFor(timestamp, author) ?: return
         if (messageRecord.isMms) {
-            val mmsDatabase = DatabaseComponent.get(context).mmsDatabase()
             mmsDatabase.markUnidentified(messageRecord.getId(), true)
         } else {
-            val smsDatabase = DatabaseComponent.get(context).smsDatabase()
             smsDatabase.markUnidentified(messageRecord.getId(), true)
         }
     }
 
     override fun setErrorMessage(timestamp: Long, author: String, error: Exception) {
-        val database = DatabaseComponent.get(context).mmsSmsDatabase()
-        val messageRecord = database.getMessageFor(timestamp, author) ?: return
+        val messageRecord = mmsSmsDatabase.getMessageFor(timestamp, author) ?: return
         if (messageRecord.isMms) {
-            val mmsDatabase = DatabaseComponent.get(context).mmsDatabase()
             mmsDatabase.markAsSentFailed(messageRecord.getId())
         } else {
-            val smsDatabase = DatabaseComponent.get(context).smsDatabase()
             smsDatabase.markAsSentFailed(messageRecord.getId())
         }
         if (error.localizedMessage != null) {
-            val message: String
             if (error is OnionRequestAPI.HTTPRequestFailedAtDestinationException && error.statusCode == 429) {
-                message = "429: Rate limited."
+                "429: Rate limited."
             } else {
-                message = error.localizedMessage!!
+                error.localizedMessage!!
             }
-            DatabaseComponent.get(context).lokiMessageDatabase().setErrorMessage(messageRecord.getId(), message)
         } else {
-            DatabaseComponent.get(context).lokiMessageDatabase().setErrorMessage(messageRecord.getId(), error.javaClass.simpleName)
-        }
+            error.javaClass.simpleName
+        }.let { lokiMessageDatabase.setErrorMessage(messageRecord.id, it) }
     }
 
     override fun clearErrorMessage(messageID: Long) {
-        val db = DatabaseComponent.get(context).lokiMessageDatabase()
-        db.clearErrorMessage(messageID)
+        lokiMessageDatabase.clearErrorMessage(messageID)
     }
 
     override fun setMessageServerHash(messageID: Long, serverHash: String) {
-        DatabaseComponent.get(context).lokiMessageDatabase().setMessageServerHash(messageID, serverHash)
+        lokiMessageDatabase.setMessageServerHash(messageID, serverHash)
     }
 
-    override fun getGroup(groupID: String): GroupRecord? {
-        val group = DatabaseComponent.get(context).groupDatabase().getGroup(groupID)
-        return if (group.isPresent) { group.get() } else null
-    }
+    override fun getGroup(groupID: String): GroupRecord? = groupDatabase.getGroup(groupID).orNull()
 
     override fun createGroup(groupId: String, title: String?, members: List<Address>, avatar: SignalServiceAttachmentPointer?, relay: String?, admins: List<Address>, formationTimestamp: Long) {
-        DatabaseComponent.get(context).groupDatabase().create(groupId, title, members, avatar, relay, admins, formationTimestamp)
+        groupDatabase.create(groupId, title, members, avatar, relay, admins, formationTimestamp)
     }
 
-    override fun isGroupActive(groupPublicKey: String): Boolean {
-        return DatabaseComponent.get(context).groupDatabase().getGroup(GroupUtil.doubleEncodeGroupID(groupPublicKey)).orNull()?.isActive == true
-    }
+    override fun isGroupActive(groupPublicKey: String): Boolean =
+        groupDatabase.getGroup(GroupUtil.doubleEncodeGroupID(groupPublicKey)).orNull()?.isActive == true
 
     override fun setActive(groupID: String, value: Boolean) {
-        DatabaseComponent.get(context).groupDatabase().setActive(groupID, value)
+        groupDatabase.setActive(groupID, value)
     }
 
-    override fun getZombieMembers(groupID: String): Set<String> {
-        return DatabaseComponent.get(context).groupDatabase().getGroupZombieMembers(groupID).map { it.address.serialize() }.toHashSet()
-    }
+    override fun getZombieMembers(groupID: String): Set<String> =
+        groupDatabase.getGroupZombieMembers(groupID).map { it.address.serialize() }.toHashSet()
 
     override fun removeMember(groupID: String, member: Address) {
-        DatabaseComponent.get(context).groupDatabase().removeMember(groupID, member)
+        groupDatabase.removeMember(groupID, member)
     }
 
     override fun updateMembers(groupID: String, members: List<Address>) {
-        DatabaseComponent.get(context).groupDatabase().updateMembers(groupID, members)
+        groupDatabase.updateMembers(groupID, members)
     }
 
     override fun setZombieMembers(groupID: String, members: List<Address>) {
-        DatabaseComponent.get(context).groupDatabase().updateZombieMembers(groupID, members)
+        groupDatabase.updateZombieMembers(groupID, members)
     }
 
     override fun insertIncomingInfoMessage(context: Context, senderPublicKey: String, groupID: String, type: SignalServiceGroup.Type, name: String, members: Collection<String>, admins: Collection<String>, sentTimestamp: Long) {
@@ -472,8 +428,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         val m = IncomingTextMessage(fromSerialized(senderPublicKey), 1, sentTimestamp, "", Optional.of(group), 0, true, false)
         val updateData = UpdateMessageData.buildGroupUpdate(type, name, members)?.toJSON()
         val infoMessage = IncomingGroupMessage(m, groupID, updateData, true)
-        val smsDB = DatabaseComponent.get(context).smsDatabase()
-        smsDB.insertMessageInbox(infoMessage, true, true)
+        smsDatabase.insertMessageInbox(infoMessage, true, true)
     }
 
     override fun insertOutgoingInfoMessage(context: Context, groupID: String, type: SignalServiceGroup.Type, name: String, members: Collection<String>, admins: Collection<String>, threadID: Long, sentTimestamp: Long) {
@@ -482,177 +437,136 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
 
         val updateData = UpdateMessageData.buildGroupUpdate(type, name, members)?.toJSON() ?: ""
         val infoMessage = OutgoingGroupMediaMessage(recipient, updateData, groupID, null, sentTimestamp, 0, true, null, listOf(), listOf())
-        val mmsDB = DatabaseComponent.get(context).mmsDatabase()
-        val mmsSmsDB = DatabaseComponent.get(context).mmsSmsDatabase()
-        if (mmsSmsDB.getMessageFor(sentTimestamp, userPublicKey) != null) return
-        val infoMessageID = mmsDB.insertMessageOutbox(infoMessage, threadID, false, null, runThreadUpdate = true)
-        mmsDB.markAsSent(infoMessageID, true)
+        if (mmsSmsDatabase.getMessageFor(sentTimestamp, userPublicKey) != null) return
+        val infoMessageID = mmsDatabase.insertMessageOutbox(infoMessage, threadID, false, null, runThreadUpdate = true)
+        mmsDatabase.markAsSent(infoMessageID, true)
     }
 
     override fun isClosedGroup(publicKey: String): Boolean {
-        val isClosedGroup = DatabaseComponent.get(context).lokiAPIDatabase().isClosedGroup(publicKey)
+        val isClosedGroup = lokiAPIDatabase.isClosedGroup(publicKey)
         val address = fromSerialized(publicKey)
         return address.isClosedGroup || isClosedGroup
     }
 
-    override fun getClosedGroupEncryptionKeyPairs(groupPublicKey: String): MutableList<ECKeyPair> {
-        return DatabaseComponent.get(context).lokiAPIDatabase().getClosedGroupEncryptionKeyPairs(groupPublicKey).toMutableList()
-    }
+    override fun getClosedGroupEncryptionKeyPairs(groupPublicKey: String): MutableList<ECKeyPair> =
+        lokiAPIDatabase.getClosedGroupEncryptionKeyPairs(groupPublicKey).toMutableList()
 
-    override fun getLatestClosedGroupEncryptionKeyPair(groupPublicKey: String): ECKeyPair? {
-        return DatabaseComponent.get(context).lokiAPIDatabase().getLatestClosedGroupEncryptionKeyPair(groupPublicKey)
-    }
+    override fun getLatestClosedGroupEncryptionKeyPair(groupPublicKey: String): ECKeyPair? =
+        lokiAPIDatabase.getLatestClosedGroupEncryptionKeyPair(groupPublicKey)
 
-    override fun getAllClosedGroupPublicKeys(): Set<String> {
-        return DatabaseComponent.get(context).lokiAPIDatabase().getAllClosedGroupPublicKeys()
-    }
+    override fun getAllClosedGroupPublicKeys(): Set<String> =
+        lokiAPIDatabase.getAllClosedGroupPublicKeys()
 
-    override fun getAllActiveClosedGroupPublicKeys(): Set<String> {
-        return DatabaseComponent.get(context).lokiAPIDatabase().getAllClosedGroupPublicKeys().filter {
-            getGroup(GroupUtil.doubleEncodeGroupID(it))?.isActive == true
-        }.toSet()
-    }
+    override fun getAllActiveClosedGroupPublicKeys(): Set<String> =
+        lokiAPIDatabase.getAllClosedGroupPublicKeys()
+            .filter { getGroup(GroupUtil.doubleEncodeGroupID(it))?.isActive == true }
+            .toSet()
 
     override fun addClosedGroupPublicKey(groupPublicKey: String) {
-        DatabaseComponent.get(context).lokiAPIDatabase().addClosedGroupPublicKey(groupPublicKey)
+        lokiAPIDatabase.addClosedGroupPublicKey(groupPublicKey)
     }
 
     override fun removeClosedGroupPublicKey(groupPublicKey: String) {
-        DatabaseComponent.get(context).lokiAPIDatabase().removeClosedGroupPublicKey(groupPublicKey)
+        lokiAPIDatabase.removeClosedGroupPublicKey(groupPublicKey)
     }
 
     override fun addClosedGroupEncryptionKeyPair(encryptionKeyPair: ECKeyPair, groupPublicKey: String) {
-        DatabaseComponent.get(context).lokiAPIDatabase().addClosedGroupEncryptionKeyPair(encryptionKeyPair, groupPublicKey)
+        lokiAPIDatabase.addClosedGroupEncryptionKeyPair(encryptionKeyPair, groupPublicKey)
     }
 
     override fun removeAllClosedGroupEncryptionKeyPairs(groupPublicKey: String) {
-        DatabaseComponent.get(context).lokiAPIDatabase().removeAllClosedGroupEncryptionKeyPairs(groupPublicKey)
+        lokiAPIDatabase.removeAllClosedGroupEncryptionKeyPairs(groupPublicKey)
     }
 
     override fun updateFormationTimestamp(groupID: String, formationTimestamp: Long) {
-        DatabaseComponent.get(context).groupDatabase()
-            .updateFormationTimestamp(groupID, formationTimestamp)
+        groupDatabase.updateFormationTimestamp(groupID, formationTimestamp)
     }
 
     override fun updateTimestampUpdated(groupID: String, updatedTimestamp: Long) {
-        DatabaseComponent.get(context).groupDatabase()
-            .updateTimestampUpdated(groupID, updatedTimestamp)
+        groupDatabase.updateTimestampUpdated(groupID, updatedTimestamp)
     }
 
     override fun setExpirationTimer(groupID: String, duration: Int) {
-        val recipient = Recipient.from(context, fromSerialized(groupID), false)
-        DatabaseComponent.get(context).recipientDatabase().setExpireMessages(recipient, duration);
+        Recipient.from(context, fromSerialized(groupID), false)
+            .let { recipientDatabase.setExpireMessages(it, duration) }
     }
 
-    override fun setServerCapabilities(server: String, capabilities: List<String>) {
-        return DatabaseComponent.get(context).lokiAPIDatabase().setServerCapabilities(server, capabilities)
-    }
+    override fun setServerCapabilities(server: String, capabilities: List<String>) =
+        lokiAPIDatabase.setServerCapabilities(server, capabilities)
 
-    override fun getServerCapabilities(server: String): List<String> {
-        return DatabaseComponent.get(context).lokiAPIDatabase().getServerCapabilities(server)
-    }
+    override fun getServerCapabilities(server: String): List<String> =
+        lokiAPIDatabase.getServerCapabilities(server)
 
-    override fun getAllOpenGroups(): Map<Long, OpenGroup> {
-        return DatabaseComponent.get(context).lokiThreadDatabase().getAllOpenGroups()
-    }
+    override fun getAllOpenGroups(): Map<Long, OpenGroup> =
+        lokiThreadDatabase.getAllOpenGroups()
 
     override fun updateOpenGroup(openGroup: OpenGroup) {
         OpenGroupManager.updateOpenGroup(openGroup, context)
     }
 
-    override fun getAllGroups(): List<GroupRecord> {
-        return DatabaseComponent.get(context).groupDatabase().allGroups
-    }
+    override fun getAllGroups(): List<GroupRecord> = groupDatabase.allGroups
 
-    override fun addOpenGroup(urlAsString: String): OpenGroupApi.RoomInfo? {
-        return OpenGroupManager.addOpenGroup(urlAsString, context)
-    }
+    override fun addOpenGroup(urlAsString: String): OpenGroupApi.RoomInfo? =
+        OpenGroupManager.addOpenGroup(urlAsString, context)
 
     override fun onOpenGroupAdded(server: String) {
         OpenGroupManager.restartPollerForServer(server.removeSuffix("/"))
     }
 
-    override fun hasBackgroundGroupAddJob(groupJoinUrl: String): Boolean {
-        val jobDb = DatabaseComponent.get(context).sessionJobDatabase()
-        return jobDb.hasBackgroundGroupAddJob(groupJoinUrl)
-    }
+    override fun hasBackgroundGroupAddJob(groupJoinUrl: String): Boolean =
+        sessionJobDatabase.hasBackgroundGroupAddJob(groupJoinUrl)
 
     override fun setProfileSharing(address: Address, value: Boolean) {
-        val recipient = Recipient.from(context, address, false)
-        DatabaseComponent.get(context).recipientDatabase().setProfileSharing(recipient, value)
+        Recipient.from(context, address, false)
+            .let { recipientDatabase.setProfileSharing(it, value) }
     }
 
-    override fun getOrCreateThreadIdFor(address: Address): Long {
-        val recipient = Recipient.from(context, address, false)
-        return DatabaseComponent.get(context).threadDatabase().getOrCreateThreadIdFor(recipient)
-    }
+    override fun getOrCreateThreadIdFor(address: Address): Long =
+        Recipient.from(context, address, false)
+            .let(threadDatabase::getOrCreateThreadIdFor)
 
     override fun getOrCreateThreadIdFor(publicKey: String, groupPublicKey: String?, openGroupID: String?): Long {
-        val database = DatabaseComponent.get(context).threadDatabase()
-        return if (!openGroupID.isNullOrEmpty()) {
-            val recipient = Recipient.from(context, fromSerialized(GroupUtil.getEncodedOpenGroupID(openGroupID.toByteArray())), false)
-            database.getThreadIdIfExistsFor(recipient)
-        } else if (!groupPublicKey.isNullOrEmpty()) {
-            val recipient = Recipient.from(context, fromSerialized(GroupUtil.doubleEncodeGroupID(groupPublicKey)), false)
-            database.getOrCreateThreadIdFor(recipient)
-        } else {
-            val recipient = Recipient.from(context, fromSerialized(publicKey), false)
-            database.getOrCreateThreadIdFor(recipient)
-        }
+        val key = openGroupID?.takeUnless(String::isEmpty)?.toByteArray()?.let(GroupUtil::getEncodedOpenGroupID)
+            ?: groupPublicKey?.takeUnless(String::isEmpty)?.let(GroupUtil::doubleEncodeGroupID)
+            ?: publicKey
+
+        return fromSerialized(key)
+            .let { Recipient.from(context, it, false) }
+            .let(threadDatabase::getThreadIdIfExistsFor)
     }
 
-    override fun getThreadId(publicKeyOrOpenGroupID: String): Long? {
-        val address = fromSerialized(publicKeyOrOpenGroupID)
-        return getThreadId(address)
-    }
+    override fun getThreadId(publicKeyOrOpenGroupID: String): Long? =
+        fromSerialized(publicKeyOrOpenGroupID).let(::getThreadId)
 
-    override fun getThreadId(address: Address): Long? {
-        val recipient = Recipient.from(context, address, false)
-        return getThreadId(recipient)
-    }
+    override fun getThreadId(address: Address): Long? =
+        Recipient.from(context, address, false).let(::getThreadId)
 
-    override fun getThreadId(recipient: Recipient): Long? {
-        val threadID = DatabaseComponent.get(context).threadDatabase().getThreadIdIfExistsFor(recipient)
-        return if (threadID < 0) null else threadID
-    }
+    override fun getThreadId(recipient: Recipient): Long? =
+        threadDatabase.getThreadIdIfExistsFor(recipient).takeUnless { it < 0 }
 
-    override fun getThreadIdForMms(mmsId: Long): Long {
-        val mmsDb = DatabaseComponent.get(context).mmsDatabase()
-        val cursor = mmsDb.getMessage(mmsId)
-        val reader = mmsDb.readerFor(cursor)
-        val threadId = reader.next?.threadId
-        cursor.close()
-        return threadId ?: -1
-    }
+    override fun getThreadIdForMms(mmsId: Long): Long =
+        mmsDatabase.getMessage(mmsId).use { mmsDatabase.readerFor(it).next?.threadId ?: -1 }
 
-    override fun getContactWithSessionID(sessionID: String): Contact? {
-        return DatabaseComponent.get(context).sessionContactDatabase().getContactWithSessionID(sessionID)
-    }
+    override fun getContactWithSessionID(sessionID: String): Contact? =
+        sessionContactDatabase.getContactWithSessionID(sessionID)
 
-    override fun getAllContacts(): Set<Contact> {
-        return DatabaseComponent.get(context).sessionContactDatabase().getAllContacts()
-    }
+    override fun getAllContacts(): Set<Contact> =
+        sessionContactDatabase.getAllContacts()
 
     override fun setContact(contact: Contact) {
-        DatabaseComponent.get(context).sessionContactDatabase().setContact(contact)
+        sessionContactDatabase.setContact(contact)
     }
 
-    override fun getRecipientForThread(threadId: Long): Recipient? {
-        return DatabaseComponent.get(context).threadDatabase().getRecipientForThreadId(threadId)
-    }
+    override fun getRecipientForThread(threadId: Long): Recipient? =
+        threadDatabase.getRecipientForThreadId(threadId)
 
-    override fun getRecipientSettings(address: Address): Recipient.RecipientSettings? {
-        val recipientSettings = DatabaseComponent.get(context).recipientDatabase().getRecipientSettings(address)
-        return if (recipientSettings.isPresent) { recipientSettings.get() } else null
-    }
+    override fun getRecipientSettings(address: Address): Recipient.RecipientSettings? =
+        recipientDatabase.getRecipientSettings(address).orNull()
 
     override fun addContacts(contacts: List<ConfigurationMessage.Contact>) {
-        val recipientDatabase = DatabaseComponent.get(context).recipientDatabase()
-        val threadDatabase = DatabaseComponent.get(context).threadDatabase()
-        val mappingDb = DatabaseComponent.get(context).blindedIdMappingDatabase()
         val moreContacts = contacts.filter { contact ->
             val id = SessionId(contact.publicKey)
-            id.prefix != IdPrefix.BLINDED || mappingDb.getBlindedIdMapping(contact.publicKey).none { it.sessionId != null }
+            id.prefix != IdPrefix.BLINDED || blindedIdMappingDatabase.getBlindedIdMapping(contact.publicKey).none { it.sessionId != null }
         }
         for (contact in moreContacts) {
             val address = fromSerialized(contact.publicKey)
@@ -687,38 +601,28 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         }
     }
 
-    override fun getLastUpdated(threadID: Long): Long {
-        val threadDB = DatabaseComponent.get(context).threadDatabase()
-        return threadDB.getLastUpdated(threadID)
-    }
+    override fun getLastUpdated(threadID: Long): Long = threadDatabase.getLastUpdated(threadID)
 
     override fun trimThread(threadID: Long, threadLimit: Int) {
-        val threadDB = DatabaseComponent.get(context).threadDatabase()
-        threadDB.trimThread(threadID, threadLimit)
+        threadDatabase.trimThread(threadID, threadLimit)
     }
 
     override fun trimThreadBefore(threadID: Long, timestamp: Long) {
-        val threadDB = DatabaseComponent.get(context).threadDatabase()
-        threadDB.trimThreadBefore(threadID, timestamp)
+        threadDatabase.trimThreadBefore(threadID, timestamp)
     }
 
-    override fun getMessageCount(threadID: Long): Long {
-        val mmsSmsDb = DatabaseComponent.get(context).mmsSmsDatabase()
-        return mmsSmsDb.getConversationCount(threadID)
-    }
+    override fun getMessageCount(threadID: Long): Long =
+        mmsSmsDatabase.getConversationCount(threadID)
 
 
 
-    override fun getAttachmentDataUri(attachmentId: AttachmentId): Uri {
-        return PartAuthority.getAttachmentDataUri(attachmentId)
-    }
+    override fun getAttachmentDataUri(attachmentId: AttachmentId): Uri =
+        PartAuthority.getAttachmentDataUri(attachmentId)
 
-    override fun getAttachmentThumbnailUri(attachmentId: AttachmentId): Uri {
-        return PartAuthority.getAttachmentThumbnailUri(attachmentId)
-    }
+    override fun getAttachmentThumbnailUri(attachmentId: AttachmentId): Uri =
+        PartAuthority.getAttachmentThumbnailUri(attachmentId)
 
     override fun insertDataExtractionNotificationMessage(senderPublicKey: String, message: DataExtractionNotificationInfoMessage, sentTimestamp: Long) {
-        val database = DatabaseComponent.get(context).mmsDatabase()
         val address = fromSerialized(senderPublicKey)
         val recipient = Recipient.from(context, address, false)
 
@@ -742,7 +646,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
             Optional.of(message)
         )
 
-        database.insertSecureDecryptedMessageInbox(mediaMessage, -1, runIncrement = true, runThreadUpdate = true)
+        mmsDatabase.insertSecureDecryptedMessageInbox(mediaMessage, -1, runIncrement = true, runThreadUpdate = true)
     }
 
     override fun insertMessageRequestResponse(response: MessageRequestResponse) {
@@ -750,18 +654,14 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         val senderPublicKey = response.sender!!
         val recipientPublicKey = response.recipient!!
         if (userPublicKey == null || (userPublicKey != recipientPublicKey && userPublicKey != senderPublicKey)) return
-        val recipientDb = DatabaseComponent.get(context).recipientDatabase()
-        val threadDB = DatabaseComponent.get(context).threadDatabase()
         if (userPublicKey == senderPublicKey) {
             val requestRecipient = Recipient.from(context, fromSerialized(recipientPublicKey), false)
-            recipientDb.setApproved(requestRecipient, true)
-            val threadId = threadDB.getOrCreateThreadIdFor(requestRecipient)
-            threadDB.setHasSent(threadId, true)
+            recipientDatabase.setApproved(requestRecipient, true)
+            val threadId = threadDatabase.getOrCreateThreadIdFor(requestRecipient)
+            threadDatabase.setHasSent(threadId, true)
         } else {
-            val mmsDb = DatabaseComponent.get(context).mmsDatabase()
-            val smsDb = DatabaseComponent.get(context).smsDatabase()
             val sender = Recipient.from(context, fromSerialized(senderPublicKey), false)
-            val threadId = threadDB.getOrCreateThreadIdFor(sender)
+            val threadId = threadDatabase.getOrCreateThreadIdFor(sender)
             val profile = response.profile
             if (profile != null) {
                 val profileManager = SSKEnvironment.shared.profileManager
@@ -781,10 +681,9 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
                     profileManager.setProfilePictureURL(context, sender, profile.profilePictureURL!!)
                 }
             }
-            threadDB.setHasSent(threadId, true)
-            val mappingDb = DatabaseComponent.get(context).blindedIdMappingDatabase()
+            threadDatabase.setHasSent(threadId, true)
             val mappings = mutableMapOf<String, BlindedIdMapping>()
-            threadDB.readerFor(threadDB.conversationList).use { reader ->
+            threadDatabase.readerFor(threadDatabase.conversationList).use { reader ->
                 while (reader.next != null) {
                     val recipient = reader.current.recipient
                     val address = recipient.address.serialize()
@@ -799,7 +698,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
                             } else null
                         }
                     } ?: continue
-                    mappingDb.getBlindedIdMapping(blindedId).firstOrNull()?.let {
+                    blindedIdMappingDatabase.getBlindedIdMapping(blindedId).firstOrNull()?.let {
                         mappings[address] = it
                     }
                 }
@@ -808,15 +707,15 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
                 if (!SodiumUtilities.sessionId(senderPublicKey, mapping.value.blindedId, mapping.value.serverId)) {
                     continue
                 }
-                mappingDb.addBlindedIdMapping(mapping.value.copy(sessionId = senderPublicKey))
+                blindedIdMappingDatabase.addBlindedIdMapping(mapping.value.copy(sessionId = senderPublicKey))
 
-                val blindedThreadId = threadDB.getOrCreateThreadIdFor(Recipient.from(context, fromSerialized(mapping.key), false))
-                mmsDb.updateThreadId(blindedThreadId, threadId)
-                smsDb.updateThreadId(blindedThreadId, threadId)
-                threadDB.deleteConversation(blindedThreadId)
+                val blindedThreadId = threadDatabase.getOrCreateThreadIdFor(Recipient.from(context, fromSerialized(mapping.key), false))
+                mmsDatabase.updateThreadId(blindedThreadId, threadId)
+                smsDatabase.updateThreadId(blindedThreadId, threadId)
+                threadDatabase.deleteConversation(blindedThreadId)
             }
-            recipientDb.setApproved(sender, true)
-            recipientDb.setApprovedMe(sender, true)
+            recipientDatabase.setApproved(sender, true)
+            recipientDatabase.setApprovedMe(sender, true)
 
             val message = IncomingMediaMessage(
                 sender.address,
@@ -835,56 +734,51 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
                 Optional.absent(),
                 Optional.absent()
             )
-            mmsDb.insertSecureDecryptedMessageInbox(message, threadId, runIncrement = true, runThreadUpdate = true)
+            mmsDatabase.insertSecureDecryptedMessageInbox(message, threadId, runIncrement = true, runThreadUpdate = true)
         }
     }
 
     override fun setRecipientApproved(recipient: Recipient, approved: Boolean) {
-        DatabaseComponent.get(context).recipientDatabase().setApproved(recipient, approved)
+        recipientDatabase.setApproved(recipient, approved)
     }
 
     override fun setRecipientApprovedMe(recipient: Recipient, approvedMe: Boolean) {
-        DatabaseComponent.get(context).recipientDatabase().setApprovedMe(recipient, approvedMe)
+        recipientDatabase.setApprovedMe(recipient, approvedMe)
     }
 
     override fun insertCallMessage(senderPublicKey: String, callMessageType: CallMessageType, sentTimestamp: Long) {
-        val database = DatabaseComponent.get(context).smsDatabase()
         val address = fromSerialized(senderPublicKey)
         val callMessage = IncomingTextMessage.fromCallInfo(callMessageType, address, Optional.absent(), sentTimestamp)
-        database.insertCallMessage(callMessage)
+        smsDatabase.insertCallMessage(callMessage)
     }
 
-    override fun conversationHasOutgoing(userPublicKey: String): Boolean {
-        val database = DatabaseComponent.get(context).threadDatabase()
-        val threadId = database.getThreadIdIfExistsFor(userPublicKey)
+    override fun conversationHasOutgoing(userPublicKey: String): Boolean =
+        threadDatabase.getThreadIdIfExistsFor(userPublicKey)
+            .takeUnless { it == -1L }
+            ?.let(threadDatabase::getLastSeenAndHasSent)
+            ?.second()
+            ?: false
 
-        if (threadId == -1L) return false
-
-        return database.getLastSeenAndHasSent(threadId).second() ?: false
-    }
-
-    override fun getLastInboxMessageId(server: String): Long? {
-        return DatabaseComponent.get(context).lokiAPIDatabase().getLastInboxMessageId(server)
-    }
+    override fun getLastInboxMessageId(server: String): Long? =
+        lokiAPIDatabase.getLastInboxMessageId(server)
 
     override fun setLastInboxMessageId(server: String, messageId: Long) {
-        DatabaseComponent.get(context).lokiAPIDatabase().setLastInboxMessageId(server, messageId)
+        lokiAPIDatabase.setLastInboxMessageId(server, messageId)
     }
 
     override fun removeLastInboxMessageId(server: String) {
-        DatabaseComponent.get(context).lokiAPIDatabase().removeLastInboxMessageId(server)
+        lokiAPIDatabase.removeLastInboxMessageId(server)
     }
 
-    override fun getLastOutboxMessageId(server: String): Long? {
-        return DatabaseComponent.get(context).lokiAPIDatabase().getLastOutboxMessageId(server)
-    }
+    override fun getLastOutboxMessageId(server: String): Long? =
+        lokiAPIDatabase.getLastOutboxMessageId(server)
 
     override fun setLastOutboxMessageId(server: String, messageId: Long) {
-        DatabaseComponent.get(context).lokiAPIDatabase().setLastOutboxMessageId(server, messageId)
+        lokiAPIDatabase.setLastOutboxMessageId(server, messageId)
     }
 
     override fun removeLastOutboxMessageId(server: String) {
-        DatabaseComponent.get(context).lokiAPIDatabase().removeLastOutboxMessageId(server)
+        lokiAPIDatabase.removeLastOutboxMessageId(server)
     }
 
     override fun getOrCreateBlindedIdMapping(
@@ -893,31 +787,29 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         serverPublicKey: String,
         fromOutbox: Boolean
     ): BlindedIdMapping {
-        val db = DatabaseComponent.get(context).blindedIdMappingDatabase()
-        val mapping = db.getBlindedIdMapping(blindedId).firstOrNull() ?: BlindedIdMapping(blindedId, null, server, serverPublicKey)
+        val mapping = blindedIdMappingDatabase.getBlindedIdMapping(blindedId).firstOrNull() ?: BlindedIdMapping(blindedId, null, server, serverPublicKey)
         if (mapping.sessionId != null) {
             return mapping
         }
-        val threadDb = DatabaseComponent.get(context).threadDatabase()
-        threadDb.readerFor(threadDb.conversationList).use { reader ->
+        threadDatabase.readerFor(threadDatabase.conversationList).use { reader ->
             while (reader.next != null) {
                 val recipient = reader.current.recipient
                 val sessionId = recipient.address.serialize()
                 if (!recipient.isGroupRecipient && SodiumUtilities.sessionId(sessionId, blindedId, serverPublicKey)) {
                     val contactMapping = mapping.copy(sessionId = sessionId)
-                    db.addBlindedIdMapping(contactMapping)
+                    blindedIdMappingDatabase.addBlindedIdMapping(contactMapping)
                     return contactMapping
                 }
             }
         }
-        db.getBlindedIdMappingsExceptFor(server).forEach {
+        blindedIdMappingDatabase.getBlindedIdMappingsExceptFor(server).forEach {
             if (SodiumUtilities.sessionId(it.sessionId!!, blindedId, serverPublicKey)) {
                 val otherMapping = mapping.copy(sessionId = it.sessionId)
-                db.addBlindedIdMapping(otherMapping)
+                blindedIdMappingDatabase.addBlindedIdMapping(otherMapping)
                 return otherMapping
             }
         }
-        db.addBlindedIdMapping(mapping)
+        blindedIdMappingDatabase.addBlindedIdMapping(mapping)
         return mapping
     }
 
@@ -928,10 +820,10 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         val messageId = if (localId != null && localId > 0 && isMms != null) {
             MessageId(localId, isMms)
         } else if (timestamp != null && timestamp > 0) {
-            val messageRecord = DatabaseComponent.get(context).mmsSmsDatabase().getMessageForTimestamp(timestamp) ?: return
+            val messageRecord = mmsSmsDatabase.getMessageForTimestamp(timestamp) ?: return
             MessageId(messageRecord.id, messageRecord.isMms)
         } else return
-        DatabaseComponent.get(context).reactionDatabase().addReaction(
+        reactionDatabase.addReaction(
             messageId,
             ReactionRecord(
                 messageId = messageId.id,
@@ -949,14 +841,13 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
     }
 
     override fun removeReaction(emoji: String, messageTimestamp: Long, author: String, notifyUnread: Boolean) {
-        val messageRecord = DatabaseComponent.get(context).mmsSmsDatabase().getMessageForTimestamp(messageTimestamp) ?: return
+        val messageRecord = mmsSmsDatabase.getMessageForTimestamp(messageTimestamp) ?: return
         val messageId = MessageId(messageRecord.id, messageRecord.isMms)
-        DatabaseComponent.get(context).reactionDatabase().deleteReaction(emoji, messageId, author, notifyUnread)
+        reactionDatabase.deleteReaction(emoji, messageId, author, notifyUnread)
     }
 
     override fun updateReactionIfNeeded(message: Message, sender: String, openGroupSentTimestamp: Long) {
-        val database = DatabaseComponent.get(context).reactionDatabase()
-        var reaction = database.getReactionFor(message.sentTimestamp!!, sender) ?: return
+        var reaction = reactionDatabase.getReactionFor(message.sentTimestamp!!, sender) ?: return
         if (openGroupSentTimestamp != -1L) {
             addReceivedMessageTimestamp(openGroupSentTimestamp)
             reaction = reaction.copy(dateSent = openGroupSentTimestamp)
@@ -967,21 +858,17 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         message.openGroupServerMessageID?.let {
             reaction = reaction.copy(serverId = "$it")
         }
-        database.updateReaction(reaction)
+        reactionDatabase.updateReaction(reaction)
     }
 
     override fun deleteReactions(messageId: Long, mms: Boolean) {
-        DatabaseComponent.get(context).reactionDatabase().deleteMessageReactions(MessageId(messageId, mms))
+        reactionDatabase.deleteMessageReactions(MessageId(messageId, mms))
     }
 
     override fun unblock(toUnblock: List<Recipient>) {
-        val recipientDb = DatabaseComponent.get(context).recipientDatabase()
-        recipientDb.setBlocked(toUnblock, false)
+        recipientDatabase.setBlocked(toUnblock, false)
     }
 
-    override fun blockedContacts(): List<Recipient> {
-        val recipientDb = DatabaseComponent.get(context).recipientDatabase()
-        return recipientDb.blockedContacts
-    }
+    override fun blockedContacts(): List<Recipient> = recipientDatabase.blockedContacts
 
 }
