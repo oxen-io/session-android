@@ -315,7 +315,6 @@ public class ThreadDatabase extends Database {
 
     ContentValues contentValues = new ContentValues(1);
     contentValues.put(READ, 1);
-    Log.d("Loki-DBG", "setRead "+threadId+" @ "+lastReadTime);
     contentValues.put(LAST_SEEN, lastReadTime);
 
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
@@ -336,7 +335,6 @@ public class ThreadDatabase extends Database {
     contentValues.put(UNREAD_MENTION_COUNT, 0);
 
     if (lastSeen) {
-      Log.d("Loki-DBG", "setRead "+threadId+" @ current time");
       contentValues.put(LAST_SEEN, SnodeAPI.getNowWithOffset());
     }
 

@@ -31,7 +31,7 @@ import java.util.Timer
 
 object ConfigurationMessageUtilities {
 
-    val debouncer = WindowDebouncer(3000, Timer())
+    private val debouncer = WindowDebouncer(3000, Timer())
 
     private fun scheduleConfigSync(userPublicKey: String) {
         debouncer.publish {
@@ -41,11 +41,9 @@ object ConfigurationMessageUtilities {
             val currentStorageJob = storage.getConfigSyncJob(ourDestination)
             if (currentStorageJob != null) {
                 (currentStorageJob as ConfigurationSyncJob).shouldRunAgain.set(true)
-                Log.d("Loki-DBG", "Not scheduling another one")
                 return@publish
             }
             val newConfigSync = ConfigurationSyncJob(ourDestination)
-            Log.d("Loki", "Scheduling new ConfigurationSyncJob")
             JobQueue.shared.add(newConfigSync)
         }
     }

@@ -96,7 +96,6 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     // TODO: maybe add time here from formation / creation message
     override fun threadCreated(address: Address, threadId: Long) {
         if (!getRecipientApproved(address)) return // don't store unapproved / message requests
-        Log.d("Loki-DBG", "creating thread for $address\nExecution context:\n${Thread.currentThread().stackTrace.joinToString("\n")}")
 
         val volatile = configFactory.convoVolatile ?: return
         if (address.isGroup) {
@@ -135,7 +134,6 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     }
 
     override fun threadDeleted(address: Address, threadId: Long) {
-        Log.d("Loki-DBG", "deleting thread for $address\nExecution context:\n${Thread.currentThread().stackTrace.joinToString("\n")}")
 
         val volatile = configFactory.convoVolatile ?: return
         if (address.isGroup) {
@@ -1100,7 +1098,6 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                     setPinned(conversationThreadId, contact.priority == ConfigBase.PRIORITY_PINNED)
                 }
             }
-            Log.d("Loki-DBG", "Updated contact $contact")
         }
     }
 

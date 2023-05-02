@@ -156,7 +156,6 @@ class BatchMessageReceiveJob(
                     val messageIds = linkedMapOf<Long, Pair<Boolean, Boolean>>()
                     val myLastSeen = storage.getLastSeen(threadId)
                     var newLastSeen = if (myLastSeen == -1L) 0 else myLastSeen
-                    Log.d("Loki-DBG", "myLastSeen = $newLastSeen")
                     messages.forEach { (parameters, message, proto) ->
                         try {
                             when (message) {
@@ -226,11 +225,9 @@ class BatchMessageReceiveJob(
                     // last seen will be the current last seen if not changed (re-computes the read counts for thread record)
                     // might have been updated from a different thread at this point
                     val currentLastSeen = storage.getLastSeen(threadId).let { if (it == -1L) 0 else it }
-                    Log.d("Loki-DBG", "currentLastSeen = $currentLastSeen")
                     if (currentLastSeen > newLastSeen) {
                         newLastSeen = currentLastSeen
                     }
-                    Log.d("Loki-DBG", "newLastSeen = $newLastSeen")
                     storage.markConversationAsRead(threadId, newLastSeen)
                     storage.updateThread(threadId, true)
                     SSKEnvironment.shared.notificationManager.updateNotification(context, threadId)
@@ -243,7 +240,7 @@ class BatchMessageReceiveJob(
                 }
                 // await all thread processing
                 deferredThreadMap.awaitAll()
-                processMessages(NO_THREAD_MAPPING, noThreadMessages)
+                processMessages(NO_THREAD_MAPPING, noThreadMessages).await()
             }
             if (failures.isEmpty()) {
                 handleSuccess(dispatcherName)

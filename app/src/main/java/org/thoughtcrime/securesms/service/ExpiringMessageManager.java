@@ -153,7 +153,7 @@ public class ExpiringMessageManager implements SSKEnvironment.MessageExpirationM
 
     try {
       OutgoingExpirationUpdateMessage timerUpdateMessage = new OutgoingExpirationUpdateMessage(recipient, sentTimestamp, duration * 1000L, groupId);
-      mmsDatabase.insertSecureDecryptedMessageOutbox(timerUpdateMessage, -1, sentTimestamp, true);
+      mmsDatabase.insertSecureDecryptedMessageOutbox(timerUpdateMessage, message.getThreadID(), sentTimestamp, true);
 
       if (groupId != null) {
         // we need the group ID as recipient for setExpireMessages below
@@ -163,7 +163,7 @@ public class ExpiringMessageManager implements SSKEnvironment.MessageExpirationM
       MessagingModuleConfiguration.getShared().getStorage().setExpirationTimer(recipient.getAddress().serialize(), duration);
 
     } catch (MmsException | IOException ioe) {
-      Log.e("Loki", "Failed to insert expiration update message.");
+      Log.e("Loki", "Failed to insert expiration update message.", ioe);
     }
   }
 
