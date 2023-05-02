@@ -107,10 +107,10 @@ interface StorageProtocol {
     fun getMessageIdInDatabase(timestamp: Long, author: String): Long? // TODO: This is a weird name
     fun updateSentTimestamp(messageID: Long, isMms: Boolean, openGroupSentTimestamp: Long, threadId: Long)
     fun markAsSending(timestamp: Long, author: String)
-    fun markAsSent(timestamp: Long, author: String)
+    fun markAsSentAndSynced(timestamp: Long, author: String)
     fun markUnidentified(timestamp: Long, author: String)
-    fun setErrorMessage(timestamp: Long, author: String, error: Exception)
-    fun clearErrorMessage(messageID: Long)
+    fun setError(timestamp: Long, author: String, error: Exception)
+    fun clearError(messageID: Long)
     fun setMessageServerHash(messageID: Long, serverHash: String)
 
     // Closed Groups
@@ -201,4 +201,7 @@ interface StorageProtocol {
     fun deleteReactions(messageId: Long, mms: Boolean)
     fun unblock(toUnblock: List<Recipient>)
     fun blockedContacts(): List<Recipient>
+    fun markAsSyncing(timestamp: Long, author: String)
+    fun markAsResyncing(timestamp: Long, author: String)
+    fun markAsSyncFailed(timestamp: Long, author: String)
 }

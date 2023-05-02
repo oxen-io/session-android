@@ -194,8 +194,23 @@ public class SmsDatabase extends MessagingDatabase {
   }
 
   @Override
-  public void markAsSent(long id, boolean isSecure) {
-    updateTypeBitmask(id, Types.BASE_TYPE_MASK, Types.BASE_SENT_TYPE | (isSecure ? Types.PUSH_MESSAGE_BIT | Types.SECURE_MESSAGE_BIT : 0));
+  public void markAsSentAndSynced(long id, boolean isSecure) {
+    updateTypeBitmask(id, Types.BASE_TYPE_MASK, Types.BASE_SENT_AND_SYNCED_TYPE | (isSecure ? Types.PUSH_MESSAGE_BIT | Types.SECURE_MESSAGE_BIT : 0));
+  }
+
+  @Override
+  public void markAsSyncFailed(long id) {
+    updateTypeBitmask(id, Types.BASE_TYPE_MASK, Types.BASE_SYNC_FAILED_TYPE);
+  }
+
+  @Override
+  public void markAsSyncing(long id) {
+    updateTypeBitmask(id, Types.BASE_TYPE_MASK, Types.BASE_SYNCING_TYPE);
+  }
+
+  @Override
+  public void markAsResyncing(long id) {
+    updateTypeBitmask(id, Types.BASE_TYPE_MASK, Types.BASE_RESYNCING_TYPE);
   }
 
   @Override
@@ -512,7 +527,7 @@ public class SmsDatabase extends MessagingDatabase {
     if (messageId == -1) {
       return Optional.absent();
     }
-    markAsSent(messageId, true);
+    markAsSentAndSynced(messageId, true);
     return Optional.fromNullable(new InsertResult(messageId, threadId));
   }
 

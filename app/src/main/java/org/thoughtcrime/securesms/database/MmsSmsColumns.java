@@ -41,18 +41,21 @@ public interface MmsSmsColumns {
     protected static final long BASE_INBOX_TYPE                    = 20;
     protected static final long BASE_OUTBOX_TYPE                   = 21;
     protected static final long BASE_SENDING_TYPE                  = 22;
-    protected static final long BASE_SENT_TYPE                     = 23;
+    protected static final long BASE_SENT_AND_SYNCED_TYPE          = 23;
     protected static final long BASE_SENT_FAILED_TYPE              = 24;
     protected static final long BASE_PENDING_SECURE_SMS_FALLBACK   = 25;
     protected static final long BASE_PENDING_INSECURE_SMS_FALLBACK = 26;
     public    static final long BASE_DRAFT_TYPE                    = 27;
     protected static final long BASE_DELETED_TYPE                  = 28;
+    protected static final long BASE_SYNCING_TYPE                  = 29;
+    protected static final long BASE_SYNC_FAILED_TYPE              = 30;
+    protected static final long BASE_RESYNCING_TYPE                = 31;
 
-    protected static final long[] OUTGOING_MESSAGE_TYPES = {BASE_OUTBOX_TYPE, BASE_SENT_TYPE,
-                                                            BASE_SENDING_TYPE, BASE_SENT_FAILED_TYPE,
-                                                            BASE_PENDING_SECURE_SMS_FALLBACK,
-                                                            BASE_PENDING_INSECURE_SMS_FALLBACK,
-                                                            OUTGOING_CALL_TYPE};
+    protected static final long[] OUTGOING_MESSAGE_TYPES = {
+            BASE_OUTBOX_TYPE, BASE_SENT_AND_SYNCED_TYPE, BASE_SENDING_TYPE, BASE_SENT_FAILED_TYPE,
+            BASE_SYNCING_TYPE, BASE_SYNC_FAILED_TYPE, BASE_RESYNCING_TYPE,
+            BASE_PENDING_SECURE_SMS_FALLBACK, BASE_PENDING_INSECURE_SMS_FALLBACK,
+            OUTGOING_CALL_TYPE};
 
 
     // TODO: Clean unused keys
@@ -109,6 +112,14 @@ public interface MmsSmsColumns {
       return (type & BASE_TYPE_MASK) == BASE_DRAFT_TYPE;
     }
 
+    public static boolean isSyncFailedMessageType(long type) {
+      return (type & BASE_TYPE_MASK) == BASE_SYNC_FAILED_TYPE;
+    }
+
+    public static boolean isResyncing(long type) {
+      return (type & BASE_TYPE_MASK) == BASE_RESYNCING_TYPE;
+    }
+
     public static boolean isFailedMessageType(long type) {
       return (type & BASE_TYPE_MASK) == BASE_SENT_FAILED_TYPE;
     }
@@ -141,7 +152,7 @@ public interface MmsSmsColumns {
     }
 
     public static boolean isSentType(long type) {
-      return (type & BASE_TYPE_MASK) == BASE_SENT_TYPE;
+      return (type & BASE_TYPE_MASK) == BASE_SENT_AND_SYNCED_TYPE;
     }
 
     public static boolean isPendingSmsFallbackType(long type) {
@@ -291,21 +302,5 @@ public interface MmsSmsColumns {
     public static boolean isMessageRequestResponse(long type) {
       return (type & MESSAGE_REQUEST_RESPONSE_BIT) != 0;
     }
-
-    public static long translateFromSystemBaseType(long theirType) {
-
-      switch ((int)theirType) {
-        case 1: return BASE_INBOX_TYPE;
-        case 2: return BASE_SENT_TYPE;
-        case 3: return BASE_DRAFT_TYPE;
-        case 4: return BASE_OUTBOX_TYPE;
-        case 5: return BASE_SENT_FAILED_TYPE;
-        case 6: return BASE_OUTBOX_TYPE;
-      }
-
-      return BASE_INBOX_TYPE;
-    }
   }
-
-
 }

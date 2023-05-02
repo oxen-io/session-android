@@ -20,7 +20,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import com.annimon.stream.Stream
-import com.google.android.mms.pdu_alt.NotificationInd
 import com.google.android.mms.pdu_alt.PduHeaders
 import org.json.JSONArray
 import org.json.JSONException
@@ -48,7 +47,6 @@ import org.session.libsession.utilities.NetworkFailure
 import org.session.libsession.utilities.NetworkFailureList
 import org.session.libsession.utilities.TextSecurePreferences.Companion.isReadReceiptsEnabled
 import org.session.libsession.utilities.Util.toIsoBytes
-import org.session.libsession.utilities.Util.toIsoString
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.recipients.RecipientFormattingException
 import org.session.libsignal.utilities.JsonUtil
@@ -276,6 +274,18 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         notifyConversationListeners(threadId)
     }
 
+    override fun markAsSyncFailed(messageId: Long) {
+        markAs(messageId, MmsSmsColumns.Types.BASE_SYNC_FAILED_TYPE)
+    }
+
+    override fun markAsSyncing(messageId: Long) {
+        markAs(messageId, MmsSmsColumns.Types.BASE_SYNCING_TYPE)
+    }
+
+    override fun markAsResyncing(messageId: Long) {
+        markAs(messageId, MmsSmsColumns.Types.BASE_RESYNCING_TYPE)
+    }
+
     override fun markAsSending(messageId: Long) {
         markAs(messageId, MmsSmsColumns.Types.BASE_SENDING_TYPE)
     }
@@ -284,8 +294,8 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         markAs(messageId, MmsSmsColumns.Types.BASE_SENT_FAILED_TYPE)
     }
 
-    override fun markAsSent(messageId: Long, secure: Boolean) {
-        markAs(messageId, MmsSmsColumns.Types.BASE_SENT_TYPE or if (secure) MmsSmsColumns.Types.PUSH_MESSAGE_BIT or MmsSmsColumns.Types.SECURE_MESSAGE_BIT else 0)
+    override fun markAsSentAndSynced(messageId: Long, secure: Boolean) {
+        markAs(messageId, MmsSmsColumns.Types.BASE_SENT_AND_SYNCED_TYPE or if (secure) MmsSmsColumns.Types.PUSH_MESSAGE_BIT or MmsSmsColumns.Types.SECURE_MESSAGE_BIT else 0)
     }
 
     override fun markUnidentified(messageId: Long, unidentified: Boolean) {
@@ -648,8 +658,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                 } else {
                     (retrieved as OutgoingGroupMediaMessage).groupId
                 }
-                val groupId: String
-                groupId = try {
+                val groupId: String = try {
                     doubleEncodeGroupID(decodedGroupId)
                 } catch (e: IOException) {
                     Log.e(TAG, "Couldn't encrypt group ID")
@@ -665,7 +674,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         if (messageId == -1L) {
             return Optional.absent()
         }
-        markAsSent(messageId, true)
+        markAsSentAndSynced(messageId, true)
         return Optional.fromNullable(InsertResult(messageId, threadId))
     }
 

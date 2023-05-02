@@ -38,10 +38,16 @@ class MessageSendJob(val message: Message, val destination: Destination) : Job {
         val message = message as? VisibleMessage
         val storage = MessagingModuleConfiguration.shared.storage
 
-        val sentTimestamp = this.message.sentTimestamp
         val sender = storage.getUserPublicKey()
-        if (sentTimestamp != null && sender != null) {
-            storage.markAsSending(sentTimestamp, sender)
+        val isSelfSend = message?.recipient == sender
+
+        val sentTimestamp = this.message.sentTimestamp
+        if(sentTimestamp != null && sender != null) {
+            if (isSelfSend) {
+                storage.markAsResyncing(sentTimestamp, sender)
+            } else {
+                storage.markAsSending(sentTimestamp, sender)
+            }
         }
 
         if (message != null) {

@@ -59,15 +59,10 @@ class SessionJobDatabase(context: Context, helper: SQLCipherOpenHelper) : Databa
         }.toMap()
     }
 
-    fun getAttachmentUploadJob(attachmentID: Long): AttachmentUploadJob? {
-        val database = databaseHelper.readableDatabase
-        val result = mutableListOf<AttachmentUploadJob>()
-        database.getAll(sessionJobTable, "$jobType = ?", arrayOf( AttachmentUploadJob.KEY )) { cursor ->
-            val job = jobFromCursor(cursor) as AttachmentUploadJob?
-            if (job != null) { result.add(job) }
-        }
-        return result.firstOrNull { job -> job.attachmentID == attachmentID }
-    }
+    fun getAttachmentUploadJob(attachmentID: Long): AttachmentUploadJob? =
+        databaseHelper.readableDatabase.getAll(sessionJobTable, "$jobType = ?", arrayOf( AttachmentUploadJob.KEY )) { cursor ->
+            jobFromCursor(cursor) as AttachmentUploadJob?
+        }.firstOrNull { it?.attachmentID == attachmentID }
 
     fun getMessageSendJob(messageSendJobID: String): MessageSendJob? {
         val database = databaseHelper.readableDatabase
@@ -131,10 +126,11 @@ class SessionJobDatabase(context: Context, helper: SQLCipherOpenHelper) : Databa
     private fun jobFromCursor(cursor: Cursor): Job? {
         val type = cursor.getString(jobType)
         val data = SessionJobHelper.dataSerializer.deserialize(cursor.getString(serializedData))
-        val job = SessionJobHelper.sessionJobInstantiator.instantiate(type, data) ?: return null
-        job.id = cursor.getString(jobID)
-        job.failureCount = cursor.getInt(failureCount)
-        return job
+        return SessionJobHelper.sessionJobInstantiator.instantiate(type, data)
+            ?.apply {
+                id = cursor.getString(jobID)
+                failureCount = cursor.getInt(failureCount)
+            }
     }
 
     fun hasBackgroundGroupAddJob(groupJoinUrl: String): Boolean {

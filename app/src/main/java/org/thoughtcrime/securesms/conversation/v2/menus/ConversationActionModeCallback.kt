@@ -114,6 +114,7 @@ interface ConversationActionModeCallbackDelegate {
     fun copyMessages(messages: Set<MessageRecord>)
     fun copySessionID(messages: Set<MessageRecord>)
     fun resendMessage(messages: Set<MessageRecord>)
+    fun resyncMessage(messages: Set<MessageRecord>)
     fun showMessageDetail(messages: Set<MessageRecord>)
     fun saveAttachment(messages: Set<MessageRecord>)
     fun reply(messages: Set<MessageRecord>)

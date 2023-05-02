@@ -8,12 +8,7 @@ import org.session.libsession.messaging.jobs.MessageSendJob
 import org.session.libsession.messaging.jobs.NotifyPNServerJob
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.Message
-import org.session.libsession.messaging.messages.control.CallMessage
-import org.session.libsession.messaging.messages.control.ClosedGroupControlMessage
-import org.session.libsession.messaging.messages.control.ConfigurationMessage
-import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
-import org.session.libsession.messaging.messages.control.MessageRequestResponse
-import org.session.libsession.messaging.messages.control.UnsendRequest
+import org.session.libsession.messaging.messages.control.*
 import org.session.libsession.messaging.messages.visible.LinkPreview
 import org.session.libsession.messaging.messages.visible.Quote
 import org.session.libsession.messaging.messages.visible.VisibleMessage
@@ -35,7 +30,6 @@ import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
-import org.session.libsession.messaging.sending_receiving.attachments.Attachment as SignalAttachment
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview as SignalLinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel as SignalQuote
 
@@ -86,7 +80,7 @@ object MessageSender {
         val isSelfSend = (message.recipient == userPublicKey)
         // Set the failure handler (need it here already for precondition failure handling)
         fun handleFailure(error: Exception) {
-            handleFailedMessageSend(message, error)
+            handleFailedMessageSend(message, error, isSyncMessage)
             if (destination is Destination.Contact && message is VisibleMessage && !isSelfSend) {
                 SnodeModule.shared.broadcaster.broadcast("messageFailed", message.sentTimestamp!!)
             }
@@ -255,7 +249,7 @@ object MessageSender {
         message.sender = messageSender
         // Set the failure handler (need it here already for precondition failure handling)
         fun handleFailure(error: Exception) {
-            handleFailedMessageSend(message, error)
+            handleFailedMessageSend(message, error, isSyncMessage = false)
             deferred.reject(error)
         }
         try {
@@ -335,7 +329,7 @@ object MessageSender {
                 storage.setMessageServerHash(messageID, it)
             }
             // in case any errors from previous sends
-            storage.clearErrorMessage(messageID)
+            storage.clearError(messageID)
             // Track the open group server message ID
             if (message.openGroupServerMessageID != null && (destination is Destination.LegacyOpenGroup || destination is Destination.OpenGroup)) {
                 val server: String
@@ -359,9 +353,9 @@ object MessageSender {
                     storage.setOpenGroupServerMessageID(messageID, message.openGroupServerMessageID!!, threadID, !(message as VisibleMessage).isMediaMessage())
                 }
             }
-            // Mark the message as sent
-            storage.markAsSent(message.sentTimestamp!!, userPublicKey)
+
             storage.markUnidentified(message.sentTimestamp!!, userPublicKey)
+
             // Start the disappearing messages timer if needed
             if (message is VisibleMessage && !isSyncMessage) {
                 SSKEnvironment.shared.messageExpirationManager.startAnyExpiration(message.sentTimestamp!!, userPublicKey)
@@ -369,6 +363,7 @@ object MessageSender {
         } ?: run {
             storage.updateReactionIfNeeded(message, message.sender?:userPublicKey, openGroupSentTimestamp)
         }
+
         // Sync the message if:
         // • it's a visible message
         // • the destination was a contact
@@ -376,19 +371,27 @@ object MessageSender {
         if (destination is Destination.Contact && !isSyncMessage) {
             if (message is VisibleMessage) { message.syncTarget = destination.publicKey }
             if (message is ExpirationTimerUpdate) { message.syncTarget = destination.publicKey }
+
+            storage.markAsSyncing(message.sentTimestamp!!, userPublicKey)
             sendToSnodeDestination(Destination.Contact(userPublicKey), message, true)
+        } else {
+            storage.markAsSentAndSynced(message.sentTimestamp!!, userPublicKey)
         }
     }
 
-    fun handleFailedMessageSend(message: Message, error: Exception) {
+    fun handleFailedMessageSend(message: Message, error: Exception, isSyncMessage: Boolean = false) {
         val storage = MessagingModuleConfiguration.shared.storage
         val userPublicKey = storage.getUserPublicKey()!!
-        storage.setErrorMessage(message.sentTimestamp!!, message.sender?:userPublicKey, error)
+        if (isSyncMessage) {
+            storage.markAsSyncFailed(message.sentTimestamp!!, message.sender?:userPublicKey)
+        } else {
+            storage.setError(message.sentTimestamp!!, message.sender?:userPublicKey, error)
+        }
     }
 
     // Convenience
     @JvmStatic
-    fun send(message: VisibleMessage, address: Address, attachments: List<SignalAttachment>, quote: SignalQuote?, linkPreview: SignalLinkPreview?) {
+    fun send(message: VisibleMessage, address: Address, quote: SignalQuote?, linkPreview: SignalLinkPreview?) {
         val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
         val attachmentIDs = messageDataProvider.getAttachmentIDsFor(message.id!!)
         message.attachmentIDs.addAll(attachmentIDs)
@@ -412,12 +415,6 @@ object MessageSender {
         val destination = Destination.from(address)
         val job = MessageSendJob(message, destination)
         JobQueue.shared.add(job)
-    }
-
-    fun sendNonDurably(message: VisibleMessage, attachments: List<SignalAttachment>, address: Address): Promise<Unit, Exception> {
-        val attachmentIDs = MessagingModuleConfiguration.shared.messageDataProvider.getAttachmentIDsFor(message.id!!)
-        message.attachmentIDs.addAll(attachmentIDs)
-        return sendNonDurably(message, address)
     }
 
     fun sendNonDurably(message: Message, address: Address): Promise<Unit, Exception> {

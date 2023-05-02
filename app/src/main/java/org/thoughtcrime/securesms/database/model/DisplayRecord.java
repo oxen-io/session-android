@@ -86,10 +86,18 @@ public abstract class DisplayRecord {
       || deliveryStatus >= SmsDatabase.Status.STATUS_FAILED;
   }
 
+  public boolean isSyncFailed() {
+    return MmsSmsColumns.Types.isSyncFailedMessageType(type);
+  }
+
   public boolean isPending() {
     return MmsSmsColumns.Types.isPendingMessageType(type)
       && !MmsSmsColumns.Types.isIdentityVerified(type)
       && !MmsSmsColumns.Types.isIdentityDefault(type);
+  }
+
+  public boolean isResyncing() {
+    return MmsSmsColumns.Types.isResyncing(type);
   }
 
   public boolean isRead() { return readReceiptCount > 0; }

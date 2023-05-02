@@ -700,6 +700,10 @@ public final class ConversationReactionOverlay extends FrameLayout {
     if (message.isFailed()) {
       items.add(new ActionItem(R.attr.menu_reply_icon, getContext().getResources().getString(R.string.conversation_context__menu_resend_message), () -> handleActionItemClicked(Action.RESEND)));
     }
+    // Resync
+    if (message.isSyncFailed()) {
+      items.add(new ActionItem(R.attr.menu_reply_icon, getContext().getResources().getString(R.string.conversation_context__menu_resync_message), () -> handleActionItemClicked(Action.RESYNC)));
+    }
     // Save media
     if (message.isMms() && ((MediaMmsMessageRecord)message).containsMediaSlide()) {
       items.add(new ActionItem(R.attr.menu_save_icon, getContext().getResources().getString(R.string.conversation_context_image__save_attachment), () -> handleActionItemClicked(Action.DOWNLOAD),
@@ -885,6 +889,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
   public enum Action {
     REPLY,
     RESEND,
+    RESYNC,
     DOWNLOAD,
     COPY_MESSAGE,
     COPY_SESSION_ID,

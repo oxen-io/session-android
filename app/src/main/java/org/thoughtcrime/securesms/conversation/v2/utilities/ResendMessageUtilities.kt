@@ -2,33 +2,34 @@ package org.thoughtcrime.securesms.conversation.v2.utilities
 
 import android.content.Context
 import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.visible.LinkPreview
 import org.session.libsession.messaging.messages.visible.OpenGroupInvitation
 import org.session.libsession.messaging.messages.visible.Quote
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.utilities.UpdateMessageData
+import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 
 object ResendMessageUtilities {
-
-    fun resend(context: Context, messageRecord: MessageRecord, userBlindedKey: String?) {
+    fun resend(context: Context, messageRecord: MessageRecord, userBlindedKey: String?, isSync: Boolean) {
         val recipient: Recipient = messageRecord.recipient
         val message = VisibleMessage()
         message.id = messageRecord.getId()
         if (messageRecord.isOpenGroupInvitation) {
-            val openGroupInvitation = OpenGroupInvitation()
-            UpdateMessageData.fromJSON(messageRecord.body)?.let { updateMessageData ->
-                val kind = updateMessageData.kind
-                if (kind is UpdateMessageData.Kind.OpenGroupInvitation) {
-                    openGroupInvitation.name = kind.groupName
-                    openGroupInvitation.url = kind.groupUrl
+            message.openGroupInvitation = OpenGroupInvitation()
+                .apply {
+                    UpdateMessageData.fromJSON(messageRecord.body)
+                        ?.let { it.kind as? UpdateMessageData.Kind.OpenGroupInvitation }
+                        ?.let {
+                            name = it.groupName
+                            url = it.groupUrl
+                        }
                 }
-            }
-            message.openGroupInvitation = openGroupInvitation
         } else {
             message.text = messageRecord.body
         }
@@ -46,17 +47,26 @@ object ResendMessageUtilities {
             }
             if (mmsMessageRecord.quote != null) {
                 message.quote = Quote.from(mmsMessageRecord.quote!!.quoteModel)
-                if (userBlindedKey != null && messageRecord.quote!!.author.serialize() == TextSecurePreferences.getLocalNumber(context)) {
-                    message.quote!!.publicKey = userBlindedKey
-                }
+                    ?.apply {
+                        if (userBlindedKey != null && messageRecord.quote!!.author.serialize() == TextSecurePreferences.getLocalNumber(context)) {
+                            publicKey = userBlindedKey
+                        }
+                    }
             }
             message.addSignalAttachments(mmsMessageRecord.slideDeck.asAttachments())
         }
-        val sentTimestamp = message.sentTimestamp
-        val sender = MessagingModuleConfiguration.shared.storage.getUserPublicKey()
-        if (sentTimestamp != null && sender != null) {
-            MessagingModuleConfiguration.shared.storage.markAsSending(sentTimestamp, sender)
+        val publicKey = MessagingModuleConfiguration.shared.storage.getUserPublicKey() ?: return
+        if (isSync) {
+            MessagingModuleConfiguration.shared.storage.markAsResyncing(messageRecord.timestamp, publicKey)
+        } else {
+            MessagingModuleConfiguration.shared.storage.markAsSending(messageRecord.timestamp, publicKey)
         }
-        MessageSender.send(message, recipient.address)
+
+        val toSendAddress = when {
+            messageRecord.isFailed -> recipient.address
+            messageRecord.isSyncFailed -> Address.fromSerialized(TextSecurePreferences.getLocalNumber(context)!!)
+            else -> throw Exception("uhh this shouldn't happen")
+        }
+        MessageSender.send(message, toSendAddress)
     }
 }

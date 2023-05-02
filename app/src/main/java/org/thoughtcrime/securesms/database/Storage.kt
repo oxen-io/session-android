@@ -41,6 +41,7 @@ import org.session.libsignal.messages.SignalServiceAttachmentPointer
 import org.session.libsignal.messages.SignalServiceGroup
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.KeyHelper
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.guava.Optional
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
@@ -52,6 +53,8 @@ import org.thoughtcrime.securesms.jobs.RetrieveProfileAvatarJob
 import org.thoughtcrime.securesms.mms.PartAuthority
 import org.thoughtcrime.securesms.util.SessionMetaProtocol
 import java.security.MessageDigest
+
+private const val TAG = "Storage"
 
 class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context, helper), StorageProtocol {
 
@@ -247,12 +250,11 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         lokiAPIDatabase.setAuthToken(id, null)
     }
 
-    override fun getOpenGroup(threadId: Long): OpenGroup? {
-        if (threadId < 0) { return null }
-        return databaseHelper.readableDatabase.get(LokiThreadDatabase.publicChatTable, "${LokiThreadDatabase.threadID} = ?", arrayOf( threadId.toString() )) { cursor ->
-            val publicChatAsJson = cursor.getString(LokiThreadDatabase.publicChat)
-            OpenGroup.fromJSON(publicChatAsJson)
-        }
+    override fun getOpenGroup(threadId: Long): OpenGroup? =
+        if (threadId < 0) null
+    else databaseHelper.readableDatabase.get(LokiThreadDatabase.publicChatTable, "${LokiThreadDatabase.threadID} = ?", arrayOf( threadId.toString() )) { cursor ->
+        val publicChatAsJson = cursor.getString(LokiThreadDatabase.publicChat)
+        OpenGroup.fromJSON(publicChatAsJson)
     }
 
     override fun getOpenGroupPublicKey(server: String): String? =
@@ -340,12 +342,32 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         getMmsDatabaseElseSms(isMms).updateSentTimestamp(messageID, openGroupSentTimestamp, threadId)
     }
 
-    override fun markAsSent(timestamp: Long, author: String) {
+    override fun markAsSentAndSynced(timestamp: Long, author: String) {
+        Log.d(TAG, "markAsSentAndSynced() called with: timestamp = $timestamp, author = $author")
         mmsSmsDatabase.getMessageFor(timestamp, author)
-            ?.let { getMmsDatabaseElseSms(it.isMms).markAsSent(it.id, true) }
+            ?.let { getMmsDatabaseElseSms(it.isMms).markAsSentAndSynced(it.id, true) }
+    }
+
+    override fun markAsSyncing(timestamp: Long, author: String) {
+        Log.d(TAG, "markAsSyncing() called with: timestamp = $timestamp, author = $author")
+        mmsSmsDatabase.getMessageFor(timestamp, author)
+            ?.let { getMmsDatabaseElseSms(it.isMms).markAsSyncing(it.id) }
+    }
+
+    override fun markAsResyncing(timestamp: Long, author: String) {
+        Log.d(TAG, "markAsResyncing() called with: timestamp = $timestamp, author = $author")
+        mmsSmsDatabase.getMessageFor(timestamp, author)
+            ?.let { getMmsDatabaseElseSms(it.isMms).markAsResyncing(it.id) }
+    }
+
+    override fun markAsSyncFailed(timestamp: Long, author: String) {
+        Log.d(TAG, "markAsSyncFailed() called with: timestamp = $timestamp, author = $author")
+        mmsSmsDatabase.getMessageFor(timestamp, author)
+            ?.let { getMmsDatabaseElseSms(it.isMms).markAsSyncFailed(it.id) }
     }
 
     override fun markAsSending(timestamp: Long, author: String) {
+        Log.d(TAG, "markAsSending() called with: timestamp = $timestamp, author = $author")
         mmsSmsDatabase.getMessageFor(timestamp, author)
             ?.let { getMmsDatabaseElseSms(it.isMms).markAsSending(it.id) }
     }
@@ -355,7 +377,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
             ?.let { getMmsDatabaseElseSms(it.isMms).markUnidentified(it.id, true) }
     }
 
-    override fun setErrorMessage(timestamp: Long, author: String, error: Exception) {
+    override fun setError(timestamp: Long, author: String, error: Exception) {
         val messageRecord = mmsSmsDatabase.getMessageFor(timestamp, author) ?: return
         getMmsDatabaseElseSms(messageRecord.isMms).markAsSentFailed(messageRecord.id)
 
@@ -370,7 +392,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         }.let { lokiMessageDatabase.setErrorMessage(messageRecord.id, it) }
     }
 
-    override fun clearErrorMessage(messageID: Long) {
+    override fun clearError(messageID: Long) {
         lokiMessageDatabase.clearErrorMessage(messageID)
     }
 
@@ -422,7 +444,7 @@ class Storage(context: Context, helper: SQLCipherOpenHelper) : Database(context,
         val infoMessage = OutgoingGroupMediaMessage(recipient, updateData, groupID, null, sentTimestamp, 0, true, null, listOf(), listOf())
         if (mmsSmsDatabase.getMessageFor(sentTimestamp, userPublicKey) != null) return
         val infoMessageID = mmsDatabase.insertMessageOutbox(infoMessage, threadID, false, null, runThreadUpdate = true)
-        mmsDatabase.markAsSent(infoMessageID, true)
+        mmsDatabase.markAsSentAndSynced(infoMessageID, true)
     }
 
     override fun isClosedGroup(publicKey: String): Boolean {

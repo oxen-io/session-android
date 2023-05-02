@@ -1457,7 +1457,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // Put the message in the database
         message.id = mmsDb.insertMessageOutbox(outgoingTextMessage, viewModel.threadId, false, null, runThreadUpdate = true)
         // Send it
-        MessageSender.send(message, recipient.address, attachments, quote, linkPreview)
+        MessageSender.send(message, recipient.address, quote, linkPreview)
         // Send a typing stopped message
         ApplicationContext.getInstance(this).typingStatusSender.onTypingStopped(viewModel.threadId)
     }
@@ -1757,7 +1757,14 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     override fun resendMessage(messages: Set<MessageRecord>) {
         messages.iterator().forEach { messageRecord ->
-            ResendMessageUtilities.resend(this, messageRecord, viewModel.blindedPublicKey)
+            ResendMessageUtilities.resend(this, messageRecord, viewModel.blindedPublicKey, false)
+        }
+        endActionMode()
+    }
+
+    override fun resyncMessage(messages: Set<MessageRecord>) {
+        messages.iterator().forEach { messageRecord ->
+            ResendMessageUtilities.resend(this, messageRecord, viewModel.blindedPublicKey, true)
         }
         endActionMode()
     }
@@ -1916,6 +1923,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             when (action) {
                 ConversationReactionOverlay.Action.REPLY -> reply(selectedItems)
                 ConversationReactionOverlay.Action.RESEND -> resendMessage(selectedItems)
+                ConversationReactionOverlay.Action.RESYNC -> resyncMessage(selectedItems)
                 ConversationReactionOverlay.Action.DOWNLOAD -> saveAttachment(selectedItems)
                 ConversationReactionOverlay.Action.COPY_MESSAGE -> copyMessages(selectedItems)
                 ConversationReactionOverlay.Action.VIEW_INFO -> showMessageDetail(selectedItems)

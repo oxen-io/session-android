@@ -65,7 +65,7 @@ class MessageDetailActivity: PassphraseRequiredActionBarActivity() {
         }
         updateContent()
         binding.resendButton.setOnClickListener {
-            ResendMessageUtilities.resend(this, messageRecord!!, blindedKey)
+            ResendMessageUtilities.resend(this, messageRecord!!, blindedKey, true)
             finish()
         }
     }
