@@ -229,7 +229,7 @@ object MessageSender {
         var serverCapabilities = listOf<String>()
         var blindedPublicKey: ByteArray? = null
         when(destination) {
-            is Destination.OpenGroup -> {
+            is Destination.IOpenGroup -> {
                 serverCapabilities = storage.getServerCapabilities(destination.server)
                 storage.getOpenGroup(destination.roomToken, destination.server)?.let {
                     blindedPublicKey = SodiumUtilities.blindedKeyPair(it.publicKey, userEdKeyPair)?.publicKey?.asBytes
@@ -238,12 +238,6 @@ object MessageSender {
             is Destination.OpenGroupInbox -> {
                 serverCapabilities = storage.getServerCapabilities(destination.server)
                 blindedPublicKey = SodiumUtilities.blindedKeyPair(destination.serverPublicKey, userEdKeyPair)?.publicKey?.asBytes
-            }
-            is Destination.LegacyOpenGroup -> {
-                serverCapabilities = storage.getServerCapabilities(destination.server)
-                storage.getOpenGroup(destination.roomToken, destination.server)?.let {
-                    blindedPublicKey = SodiumUtilities.blindedKeyPair(it.publicKey, userEdKeyPair)?.publicKey?.asBytes
-                }
             }
             else -> {}
         }
@@ -337,28 +331,7 @@ object MessageSender {
             // in case any errors from previous sends
             storage.clearErrorMessage(messageID)
             // Track the open group server message ID
-            if (message.openGroupServerMessageID != null && (destination is Destination.LegacyOpenGroup || destination is Destination.OpenGroup)) {
-                val server: String
-                val room: String
-                when (destination) {
-                    is Destination.LegacyOpenGroup -> {
-                        server = destination.server
-                        room = destination.roomToken
-                    }
-                    is Destination.OpenGroup -> {
-                        server = destination.server
-                        room = destination.roomToken
-                    }
-                    else -> {
-                        throw Exception("Destination was a different destination than we were expecting")
-                    }
-                }
-                val encoded = GroupUtil.getEncodedOpenGroupID("$server.$room".toByteArray())
-                val threadID = storage.getThreadId(Address.fromSerialized(encoded))
-                if (threadID != null && threadID >= 0) {
-                    storage.setOpenGroupServerMessageID(messageID, message.openGroupServerMessageID!!, threadID, !(message as VisibleMessage).isMediaMessage())
-                }
-            }
+            trackOpenGroupServerMessageId(messageID, message, destination)
             // Mark the message as sent
             storage.markAsSent(message.sentTimestamp!!, userPublicKey)
             storage.markUnidentified(message.sentTimestamp!!, userPublicKey)
@@ -378,6 +351,16 @@ object MessageSender {
             if (message is ExpirationTimerUpdate) { message.syncTarget = destination.publicKey }
             sendToSnodeDestination(Destination.Contact(userPublicKey), message, true)
         }
+    }
+
+    private fun trackOpenGroupServerMessageId(messageID: Long, message: Message, destination: Destination) {
+        val serverId = message.openGroupServerMessageID ?: return
+        val openGroup = destination as? Destination.IOpenGroup ?: return
+        val storage = MessagingModuleConfiguration.shared.storage
+
+        openGroup.run { "$server.$roomToken" }.toByteArray().let(GroupUtil::getEncodedOpenGroupID)
+            .let(Address::fromSerialized).let(storage::getThreadId)?.takeIf { it >= 0 }
+            ?.let { storage.setOpenGroupServerMessageID(messageID, serverId, it, !(message as VisibleMessage).isMediaMessage()) }
     }
 
     fun handleFailedMessageSend(message: Message, error: Exception) {

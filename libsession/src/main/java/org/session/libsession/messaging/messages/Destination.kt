@@ -7,23 +7,22 @@ import org.session.libsignal.utilities.toHexString
 
 sealed class Destination {
 
-    class Contact(var publicKey: String) : Destination() {
-        internal constructor(): this("")
-    }
-    class ClosedGroup(var groupPublicKey: String) : Destination() {
-        internal constructor(): this("")
-    }
-    class LegacyOpenGroup(var roomToken: String, var server: String) : Destination() {
-        internal constructor(): this("", "")
+    class Contact(var publicKey: String) : Destination()
+    class ClosedGroup(var groupPublicKey: String) : Destination()
+    class LegacyOpenGroup(override var roomToken: String, override var server: String) : IOpenGroup, Destination()
+
+    interface IOpenGroup {
+        val roomToken: String
+        val server: String
     }
 
     class OpenGroup(
-        var roomToken: String = "",
-        var server: String = "",
+        override var roomToken: String = "",
+        override var server: String = "",
         var whisperTo: List<String> = emptyList(),
         var whisperMods: Boolean = false,
         var fileIds: List<String> = emptyList()
-    ) : Destination()
+    ) : IOpenGroup, Destination()
 
     class OpenGroupInbox(
         var server: String,
