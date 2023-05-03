@@ -54,17 +54,12 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
         if (configsRequiringPush.isEmpty()) return delegate.handleJobSucceeded(this, dispatcherName)
 
         // need to get the current hashes before we call `push()`
-        val toDeleteRequest = configsRequiringPush.map { base ->
-            // accumulate by adding together
-            base.currentHashes()
-        }.reduce(List<String>::plus).let { toDeleteFromAllNamespaces ->
-            if (toDeleteFromAllNamespaces.isEmpty()) null
-            else SnodeAPI.buildAuthenticatedDeleteBatchInfo(destination.destinationPublicKey(), toDeleteFromAllNamespaces)
-        }
+        val toDeleteHashes = mutableListOf<String>()
 
         // allow null results here so the list index matches configsRequiringPush
         val batchObjects: List<Pair<SharedConfigurationMessage, SnodeAPI.SnodeBatchRequestInfo>?> = configsRequiringPush.map { config ->
-            val (data, seqNo) = config.push()
+            val (data, seqNo, obsoleteHashes) = config.push()
+            toDeleteHashes += obsoleteHashes
             SharedConfigurationMessage(config.protoKindFor(), data, seqNo) to config
         }.map { (message, config) ->
             // return a list of batch request objects
@@ -75,6 +70,11 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
                 snodeMessage
             ) ?: return@map null // this entry will be null otherwise
             message to authenticated // to keep track of seqNo for calling confirmPushed later
+        }
+
+        val toDeleteRequest = toDeleteHashes.let { toDeleteFromAllNamespaces ->
+            if (toDeleteFromAllNamespaces.isEmpty()) null
+            else SnodeAPI.buildAuthenticatedDeleteBatchInfo(destination.destinationPublicKey(), toDeleteFromAllNamespaces)
         }
 
         if (batchObjects.any { it == null }) {

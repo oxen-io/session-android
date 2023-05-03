@@ -440,6 +440,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 // only update the conversation every 3 seconds maximum
                 // channel is rendezvous and shouldn't block on try send calls as often as we want
+                val layoutManager = binding?.conversationRecyclerView?.layoutManager as? LinearLayoutManager ?: return@repeatOnLifecycle
+                val lastItemPos = layoutManager.findLastCompletelyVisibleItemPosition()
+//                adapter.item
                 withContext(Dispatchers.IO) {
                     storage.markConversationAsRead(viewModel.threadId, SnodeAPI.nowWithOffset)
                 }
