@@ -19,7 +19,7 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
     override var delegate: JobDelegate? = null
     override var id: String? = null
     override var failureCount: Int = 0
-    override val maxFailureCount: Int = 1
+    override val maxFailureCount: Int = 10
 
     val shouldRunAgain = AtomicBoolean(false)
 
@@ -142,7 +142,7 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error performing batch request", e)
-            return delegate.handleJobFailedPermanently(this, dispatcherName, e)
+            return delegate.handleJobFailed(this, dispatcherName, e)
         }
         delegate.handleJobSucceeded(this, dispatcherName)
         if (shouldRunAgain.get() && storage.getConfigSyncJob(destination) == null) {
