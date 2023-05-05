@@ -302,7 +302,7 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
             isLoading = true
             loaderContainer.fadeIn()
             val promise: Promise<Any, Exception> = if (!members.contains(Recipient.from(this, Address.fromSerialized(userPublicKey), false))) {
-                MessageSender.explicitLeave(groupPublicKey!!, true)
+                MessageSender.explicitLeave(groupPublicKey!!, false)
             } else {
                 task {
                     if (hasNameChanged) {

@@ -78,7 +78,7 @@ class BatchMessageReceiveJob(
         else { // message is control message otherwise
             return when(message) {
                 is SharedConfigurationMessage -> false
-                is ClosedGroupControlMessage -> message.kind is ClosedGroupControlMessage.Kind.New
+                is ClosedGroupControlMessage -> false // message.kind is ClosedGroupControlMessage.Kind.New && !message.isSenderSelf
                 is DataExtractionNotification -> false
                 is MessageRequestResponse -> false
                 is ExpirationTimerUpdate -> false

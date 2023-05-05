@@ -133,12 +133,12 @@ public class GroupDatabase extends Database implements LokiOpenGroupDatabaseProt
     return new Reader(cursor);
   }
 
-  public List<GroupRecord> getAllGroups() {
+  public List<GroupRecord> getAllGroups(boolean includeInactive) {
     Reader reader = getGroups();
     GroupRecord record;
     List<GroupRecord> groups = new LinkedList<>();
     while ((record = reader.getNext()) != null) {
-      if (record.isActive()) { groups.add(record); }
+      if (record.isActive() || includeInactive) { groups.add(record); }
     }
     reader.close();
     return groups;

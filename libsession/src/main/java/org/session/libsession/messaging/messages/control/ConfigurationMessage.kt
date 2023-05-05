@@ -122,7 +122,7 @@ class ConfigurationMessage(var closedGroups: List<ClosedGroup>, var openGroups: 
             val displayName = TextSecurePreferences.getProfileName(context) ?: return null
             val profilePicture = TextSecurePreferences.getProfilePictureURL(context)
             val profileKey = ProfileKeyUtil.getProfileKey(context)
-            val groups = storage.getAllGroups()
+            val groups = storage.getAllGroups(includeInactive = false)
             for (group in groups) {
                 if (group.isClosedGroup) {
                     if (!group.members.contains(Address.fromSerialized(storage.getUserPublicKey()!!))) continue

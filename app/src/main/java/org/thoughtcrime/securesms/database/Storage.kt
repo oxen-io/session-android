@@ -497,7 +497,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         val toAddCommunities = communities.filter { it.community.fullUrl() !in existingCommunities.map { it.value.joinURL } }
         val existingJoinUrls = existingCommunities.values.map { it.joinURL }
 
-        val existingClosedGroups = getAllGroups().filter { it.isClosedGroup }
+        val existingClosedGroups = getAllGroups(includeInactive = true).filter { it.isClosedGroup }
         val lgcIds = lgc.map { it.sessionId }
         val toDeleteClosedGroups = existingClosedGroups.filter { group ->
             GroupUtil.doubleDecodeGroupId(group.encodedId) !in lgcIds
@@ -513,6 +513,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
             if (threadId == null) {
                 Log.w("Loki-DBG", "Existing group had no thread to delete")
             } else {
+                Log.d("Loki-DBG", "Deleting group for thread $threadId")
                 ClosedGroupManager.silentlyRemoveGroup(context,threadId,GroupUtil.doubleDecodeGroupId(deleteGroup.encodedId), deleteGroup.encodedId, localUserPublicKey, delete = true)
             }
         }
@@ -954,8 +955,8 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         OpenGroupManager.updateOpenGroup(openGroup, context)
     }
 
-    override fun getAllGroups(): List<GroupRecord> {
-        return DatabaseComponent.get(context).groupDatabase().allGroups
+    override fun getAllGroups(includeInactive: Boolean): List<GroupRecord> {
+        return DatabaseComponent.get(context).groupDatabase().getAllGroups(includeInactive)
     }
 
     override fun addOpenGroup(urlAsString: String): OpenGroupApi.RoomInfo? {

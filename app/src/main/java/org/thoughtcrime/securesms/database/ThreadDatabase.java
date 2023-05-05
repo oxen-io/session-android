@@ -535,7 +535,6 @@ public class ThreadDatabase extends Database {
     // edge case where we set the last seen time for a conversation before it loads messages (joining community for example)
     MmsSmsDatabase mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase();
     if (mmsSmsDatabase.getConversationCount(threadId) <= 0) return false;
-    Log.d("Loki-DBG", "setLastSeen "+threadId+" @ "+timestamp);
 
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
@@ -559,7 +558,6 @@ public class ThreadDatabase extends Database {
     db.execSQL(reflectUpdates, new Object[]{threadId});
     db.setTransactionSuccessful();
     db.endTransaction();
-    Log.d("Loki-DBG", "Updated last seen to "+timestamp);
     notifyConversationListListeners();
     return true;
   }
@@ -800,7 +798,6 @@ public class ThreadDatabase extends Database {
   public boolean markAllAsRead(long threadId, boolean isGroupRecipient, long lastSeenTime) {
     MmsSmsDatabase mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase();
     if (mmsSmsDatabase.getConversationCount(threadId) <= 0) return false;
-    Log.d("Loki-DBG", "markAllAsRead "+threadId+" @ "+lastSeenTime);
     List<MarkedMessageInfo> messages = setRead(threadId, lastSeenTime);
     if (isGroupRecipient) {
       for (MarkedMessageInfo message: messages) {

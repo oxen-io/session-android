@@ -459,7 +459,7 @@ private fun ClosedGroupControlMessage.getPublicKey(): String = kind!!.let { when
 private fun MessageReceiver.handleNewClosedGroup(message: ClosedGroupControlMessage) {
     val kind = message.kind!! as? ClosedGroupControlMessage.Kind.New ?: return
     val recipient = Recipient.from(MessagingModuleConfiguration.shared.context, Address.fromSerialized(message.sender!!), false)
-    if (!recipient.isApproved && !recipient.isLocalNumber) return
+    if (!recipient.isApproved && !recipient.isLocalNumber) return Log.e("Loki", "not accepting new closed group from unapproved recipient")
     val groupPublicKey = kind.publicKey.toByteArray().toHexString()
     val members = kind.members.map { it.toByteArray().toHexString() }
     val admins = kind.admins.map { it.toByteArray().toHexString() }
@@ -758,12 +758,7 @@ private fun MessageReceiver.handleClosedGroupMemberLeft(message: ClosedGroupCont
         storage.setZombieMembers(groupID, zombies.plus(senderPublicKey).map { Address.fromSerialized(it) })
     }
     // Notify the user
-    if (userLeft) {
-        val threadID = storage.getThreadId(Address.fromSerialized(groupID))
-        if (threadID != null) {
-            storage.insertOutgoingInfoMessage(context, groupID, SignalServiceGroup.Type.QUIT, name, members, admins, threadID, message.sentTimestamp!!)
-        }
-    } else {
+    if (!userLeft) {
         storage.insertIncomingInfoMessage(context, senderPublicKey, groupID, SignalServiceGroup.Type.QUIT, name, members, admins, message.sentTimestamp!!)
     }
 }

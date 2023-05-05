@@ -426,7 +426,7 @@ object MessageSender {
 
     @JvmStatic
     fun send(message: Message, address: Address) {
-        val threadID = MessagingModuleConfiguration.shared.storage.getOrCreateThreadIdFor(address)
+        val threadID = MessagingModuleConfiguration.shared.storage.getThreadId(address)
         message.threadID = threadID
         val destination = Destination.from(address)
         val job = MessageSendJob(message, destination)

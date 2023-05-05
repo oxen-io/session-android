@@ -148,7 +148,7 @@ interface StorageProtocol {
     fun setExpirationTimer(address: String, duration: Int)
 
     // Groups
-    fun getAllGroups(): List<GroupRecord>
+    fun getAllGroups(includeInactive: Boolean): List<GroupRecord>
 
     // Settings
     fun setProfileSharing(address: Address, value: Boolean)

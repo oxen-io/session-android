@@ -321,7 +321,7 @@ object ConversationMenuHelper {
             }
             try {
                 if (isClosedGroup) {
-                    MessageSender.leave(groupPublicKey!!, true)
+                    MessageSender.leave(groupPublicKey!!, notifyUser = false)
                 } else {
                     Toast.makeText(context, R.string.ConversationActivity_error_leaving_group, Toast.LENGTH_LONG).show()
                 }
