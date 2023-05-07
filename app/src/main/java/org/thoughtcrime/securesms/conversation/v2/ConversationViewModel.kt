@@ -31,6 +31,9 @@ class ConversationViewModel(
     private val storage: Storage
 ) : ViewModel() {
 
+    val showSendAfterApprovalText: Boolean
+        get() = recipient?.run { address.isGroup.not() && hasApprovedMe().not() } ?: false
+
     private val _uiState = MutableStateFlow(ConversationUiState())
     val uiState: StateFlow<ConversationUiState> = _uiState
 

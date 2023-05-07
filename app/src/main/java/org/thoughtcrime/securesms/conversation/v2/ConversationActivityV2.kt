@@ -667,7 +667,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun updateSendAfterApprovalText() {
-        binding?.textSendAfterApproval?.isGone = viewModel.recipient?.hasApprovedMe() ?: true
+        binding?.textSendAfterApproval?.isVisible = viewModel.showSendAfterApprovalText
     }
 
     private fun showOrHideInputIfNeeded() {
