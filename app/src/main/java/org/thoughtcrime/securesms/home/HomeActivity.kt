@@ -326,7 +326,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 
     private fun setupMessageRequestsBanner() {
-        val messageRequestCount = threadDb.unapprovedConversationCount + threadDb.blindedConversationList.use { it.count }
+        val messageRequestCount = threadDb.unapprovedConversationCount
         // Set up message requests
         if (messageRequestCount > 0 && !textSecurePreferences.hasHiddenMessageRequests()) {
             with(ViewMessageRequestBannerBinding.inflate(layoutInflater)) {

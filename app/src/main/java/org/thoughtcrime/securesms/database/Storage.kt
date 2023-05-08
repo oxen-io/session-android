@@ -1205,7 +1205,6 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         val threadDB = DatabaseComponent.get(context).threadDatabase()
         threadDB.deleteConversation(threadID)
         if (recipient != null) {
-            Log.d("Loki-DBG", "Deleting conversation for ${recipient.address}")
             if (recipient.isContactRecipient) {
                 if (recipient.isLocalNumber) return
                 val contacts = configFactory.contacts ?: return
