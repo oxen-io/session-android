@@ -27,6 +27,7 @@ import org.thoughtcrime.securesms.conversation.v2.messages.ControlMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageViewDelegate
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter
+import org.thoughtcrime.securesms.database.ThreadDatabase.Reader
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
@@ -219,11 +220,14 @@ class ConversationAdapter(
 
     fun findLastSeenItemPosition(lastSeenTimestamp: Long): Int? {
         val cursor = this.cursor
-        if (lastSeenTimestamp <= 0L || cursor == null || !isActiveCursor) return null
+        if (cursor == null || !isActiveCursor) return null
+        if (lastSeenTimestamp == 0L && cursor.moveToLast()) {
+            return cursor.position
+        }
         for (i in 0 until itemCount) {
             cursor.moveToPosition(i)
             val message = messageDB.readerFor(cursor).current
-            if (message.isOutgoing || message.dateReceived <= lastSeenTimestamp) { return i }
+            if (message.isOutgoing || message.dateSent <= lastSeenTimestamp) { return i }
         }
         return null
     }
@@ -242,5 +246,12 @@ class ConversationAdapter(
     fun onSearchQueryUpdated(query: String?) {
         this.searchQuery = query
         notifyDataSetChanged()
+    }
+
+    fun getTimestampForItemAt(firstVisiblePosition: Int): Long? {
+        val cursor = this.cursor ?: return null
+        if (!cursor.moveToPosition(firstVisiblePosition)) return null
+        val message = messageDB.readerFor(cursor).current ?: return null
+        return message.timestamp
     }
 }

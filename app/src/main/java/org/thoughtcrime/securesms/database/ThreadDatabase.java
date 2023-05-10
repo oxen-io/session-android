@@ -64,6 +64,7 @@ import org.thoughtcrime.securesms.notifications.MarkReadReceiver;
 import org.thoughtcrime.securesms.util.SessionMetaProtocol;
 
 import java.io.Closeable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -313,8 +314,12 @@ public class ThreadDatabase extends Database {
     final List<MarkedMessageInfo> smsRecords = DatabaseComponent.get(context).smsDatabase().setMessagesRead(threadId, lastReadTime);
     final List<MarkedMessageInfo> mmsRecords = DatabaseComponent.get(context).mmsDatabase().setMessagesRead(threadId, lastReadTime);
 
-    ContentValues contentValues = new ContentValues(1);
-    contentValues.put(READ, 1);
+    if (smsRecords.isEmpty() && mmsRecords.isEmpty()) {
+      return Collections.emptyList();
+    }
+
+    ContentValues contentValues = new ContentValues(2);
+    contentValues.put(READ, smsRecords.isEmpty() && mmsRecords.isEmpty());
     contentValues.put(LAST_SEEN, lastReadTime);
 
     SQLiteDatabase db = databaseHelper.getWritableDatabase();

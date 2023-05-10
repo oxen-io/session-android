@@ -498,13 +498,8 @@ private fun handleNewClosedGroup(sender: String, sentTimestamp: Long, groupPubli
     storage.setExpirationTimer(groupID, expireTimer)
     // Notify the PN server
     PushNotificationAPI.performOperation(PushNotificationAPI.ClosedGroupOperation.Subscribe, groupPublicKey, storage.getUserPublicKey()!!)
-    // Notify the user
-    if (userPublicKey == sender && !groupExists) {
-        val threadID = storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
-        storage.insertOutgoingInfoMessage(context, groupID, SignalServiceGroup.Type.CREATION, name, members, admins, threadID, sentTimestamp)
-    } else if (userPublicKey != sender) {
-        storage.insertIncomingInfoMessage(context, sender, groupID, SignalServiceGroup.Type.CREATION, name, members, admins, sentTimestamp)
-    }
+    // Create thread
+    storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
     // Start polling
     ClosedGroupPollerV2.shared.startPolling(groupPublicKey)
 }
