@@ -32,7 +32,7 @@ class ConversationViewModel(
 ) : ViewModel() {
 
     val showSendAfterApprovalText: Boolean
-        get() = recipient?.run { isContactRecipient && address.serialize() != storage.getUserPublicKey() && !hasApprovedMe() } ?: false
+        get() = recipient?.run { isContactRecipient && !isLocalNumber && !hasApprovedMe() } ?: false
 
     private val _uiState = MutableStateFlow(ConversationUiState())
     val uiState: StateFlow<ConversationUiState> = _uiState
