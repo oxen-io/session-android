@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:visibility="gone"
-        android:layout_above="@+id/messageRequestBar"
+        android:layout_above="@+id/textSendAfterApproval"
         />
 
     <org.thoughtcrime.securesms.conversation.v2.input_bar.InputBar
@@ -117,6 +117,18 @@
             android:alpha="0" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textSendAfterApproval"
+        android:text="@string/ConversationActivity_send_after_approval"
+        android:visibility="gone"
+        android:textAlignment="center"
+        android:textColor="@color/classic_light_2"
+        android:padding="22dp"
+        android:textSize="12sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/messageRequestBar"/>
 
     <RelativeLayout
         android:id="@+id/scrollToBottomButton"
