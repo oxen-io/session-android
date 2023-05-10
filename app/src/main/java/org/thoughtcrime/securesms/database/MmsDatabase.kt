@@ -199,25 +199,6 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         }
     }
 
-    @Throws(RecipientFormattingException::class, MmsException::class)
-    private fun getThreadIdFor(retrieved: IncomingMediaMessage): Long {
-        return if (retrieved.groupId != null) {
-            val groupRecipients = Recipient.from(
-                context,
-                retrieved.groupId,
-                true
-            )
-            get(context).threadDatabase().getOrCreateThreadIdFor(groupRecipients)
-        } else {
-            val sender = Recipient.from(
-                context,
-                retrieved.from,
-                true
-            )
-            get(context).threadDatabase().getOrCreateThreadIdFor(sender)
-        }
-    }
-
     private fun rawQuery(where: String, arguments: Array<String>?): Cursor {
         val database = databaseHelper.readableDatabase
         return database.rawQuery(
