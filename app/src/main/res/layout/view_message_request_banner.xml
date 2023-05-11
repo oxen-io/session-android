@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:contentDescription="@string/AccessibilityId_message_request_banner"
     android:layout_height="wrap_content"
     android:background="@drawable/conversation_view_background"
+    android:contentDescription="@string/AccessibilityId_message_request_banner"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingStart="@dimen/accent_line_thickness"
@@ -72,11 +72,15 @@
         android:alpha="0.4"
         android:ellipsize="end"
         android:maxLines="1"
+        android:textAlignment="textEnd"
         android:textColor="?android:textColorPrimary"
         android:textSize="@dimen/small_font_size"
+        app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toEndOf="@id/unreadCountIndicator"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="9:41 AM" />
+        tools:text="11 Apr, 9:41 AM" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

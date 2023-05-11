@@ -126,10 +126,9 @@ open class ThumbnailView: FrameLayout {
                 buildThumbnailGlideRequest(glide, slide).into(GlideDrawableListeningTarget(binding.thumbnailImage, binding.thumbnailLoadIndicator, result))
             }
             slide.hasPlaceholder() -> {
-                buildPlaceholderGlideRequest(glide, slide).into(GlideBitmapListeningTarget(binding.thumbnailImage, binding.thumbnailLoadIndicator, result))
+                buildPlaceholderGlideRequest(glide, slide).into(GlideBitmapListeningTarget(binding.thumbnailImage, null, result))
             }
             else -> {
-                binding.thumbnailLoadIndicator.isVisible = false
                 glide.clear(binding.thumbnailImage)
                 result.set(false)
             }

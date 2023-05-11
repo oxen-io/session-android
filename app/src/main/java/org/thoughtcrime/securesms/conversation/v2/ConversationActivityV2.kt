@@ -40,6 +40,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.text.set
 import androidx.core.text.toSpannable
 import androidx.core.view.drawToBitmap
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
@@ -409,6 +410,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         updatePlaceholder()
         setUpBlockedBanner()
         binding!!.searchBottomBar.setEventListener(this)
+        updateSendAfterApprovalText()
         showOrHideInputIfNeeded()
         setUpMessageRequestsBar()
 
@@ -741,13 +743,19 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             setUpMessageRequestsBar()
             invalidateOptionsMenu()
             updateSubtitle()
+            updateSendAfterApprovalText()
             showOrHideInputIfNeeded()
+
             binding?.toolbarContent?.profilePictureView?.root?.update(threadRecipient)
             binding?.toolbarContent?.conversationTitleView?.text = when {
                 threadRecipient.isLocalNumber -> getString(R.string.note_to_self)
                 else -> threadRecipient.toShortString()
             }
         }
+    }
+
+    private fun updateSendAfterApprovalText() {
+        binding?.textSendAfterApproval?.isVisible = viewModel.showSendAfterApprovalText
     }
 
     private fun showOrHideInputIfNeeded() {
