@@ -1,6 +1,5 @@
 package org.thoughtcrime.securesms.repository
 
-import org.jetbrains.annotations.Contract
 import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
@@ -65,7 +64,7 @@ interface ConversationRepository {
 
     suspend fun deleteMessageRequest(thread: ThreadRecord): ResultOf<Unit>
 
-    suspend fun clearAllMessageRequests(): ResultOf<Unit>
+    suspend fun clearAllMessageRequests(block: Boolean): ResultOf<Unit>
 
     suspend fun acceptMessageRequest(threadId: Long, recipient: Recipient): ResultOf<Unit>
 
@@ -131,7 +130,6 @@ class DefaultConversationRepository @Inject constructor(
     }
 
     // This assumes that recipient.isContactRecipient is true
-    @Contract
     override fun setBlocked(recipient: Recipient, blocked: Boolean) {
         storage.setBlocked(listOf(recipient), blocked)
     }
@@ -267,10 +265,14 @@ class DefaultConversationRepository @Inject constructor(
         return ResultOf.Success(Unit)
     }
 
-    override suspend fun clearAllMessageRequests(): ResultOf<Unit> {
+    override suspend fun clearAllMessageRequests(block: Boolean): ResultOf<Unit> {
         threadDb.readerFor(threadDb.unapprovedConversationList).use { reader ->
             while (reader.next != null) {
                 deleteMessageRequest(reader.current)
+                val recipient = reader.current.recipient
+                if (block && !recipient.isOpenGroupInboxRecipient) {
+                    setBlocked(recipient, true)
+                }
             }
         }
         return ResultOf.Success(Unit)
