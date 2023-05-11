@@ -239,6 +239,9 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                         }
                         poll(snode, deferred)
                     }
+                }.fail {
+                    Log.e("Loki", "Failed to get raw batch response", it)
+                    poll(snode, deferred)
                 }
             }
         }
