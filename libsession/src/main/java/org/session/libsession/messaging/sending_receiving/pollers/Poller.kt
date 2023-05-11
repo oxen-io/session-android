@@ -34,6 +34,7 @@ import org.session.libsignal.utilities.Snode
 import java.security.SecureRandom
 import java.util.Timer
 import java.util.TimerTask
+import kotlin.time.Duration.Companion.days
 
 private class PromiseCanceledException : Exception("Promise canceled.")
 
@@ -176,7 +177,9 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                     requestSparseArray[personalMessages.namespace!!] = personalMessages
                 }
                 // get the latest convo info volatile
+                val hashesToExtend = mutableSetOf<String>()
                 configFactory.getUserConfigs().mapNotNull { config ->
+                    hashesToExtend += config.currentHashes()
                     SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
                         snode, userPublicKey,
                         config.configNamespace()
@@ -186,7 +189,19 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                     requestSparseArray[request.namespace!!] = request
                 }
 
-                val requests = requestSparseArray.valueIterator().asSequence().toList()
+                val requests =
+                    requestSparseArray.valueIterator().asSequence().toMutableList()
+
+                if (hashesToExtend.isNotEmpty()) {
+                    SnodeAPI.buildAuthenticatedAlterTtlBatchRequest(
+                        messageHashes = hashesToExtend.toList(),
+                        publicKey = userPublicKey,
+                        newExpiry = SnodeAPI.nowWithOffset + 14.days.inWholeMilliseconds,
+                        extend = true
+                    )?.let { extensionRequest ->
+                        requests += extensionRequest
+                    }
+                }
 
                 SnodeAPI.getRawBatchResponse(snode, userPublicKey, requests).bind { rawResponses ->
                     isCaughtUp = true

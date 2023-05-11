@@ -493,6 +493,20 @@ object SnodeAPI {
         )
     }
 
+    fun buildAuthenticatedAlterTtlBatchRequest(
+        messageHashes: List<String>,
+        newExpiry: Long,
+        publicKey: String,
+        shorten: Boolean = false,
+        extend: Boolean = false): SnodeBatchRequestInfo? {
+        val params = buildAlterTtlParams(messageHashes, newExpiry, publicKey, extend, shorten) ?: return null
+        return SnodeBatchRequestInfo(
+            Snode.Method.Expire.rawValue,
+            params,
+            null
+        )
+    }
+
     fun getRawBatchResponse(snode: Snode, publicKey: String, requests: List<SnodeBatchRequestInfo>, sequence: Boolean = false): RawResponsePromise {
         val parameters = mutableMapOf<String, Any>(
             "requests" to requests
@@ -533,8 +547,24 @@ object SnodeAPI {
     }
 
     fun alterTtl(messageHashes: List<String>, newExpiry: Long, publicKey: String, extend: Boolean = false, shorten: Boolean = false): RawResponsePromise {
-        val userEd25519KeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return Promise.ofFail(NullPointerException("No user key pair"))
         return retryIfNeeded(maxRetryCount) {
+            val params = buildAlterTtlParams(messageHashes, newExpiry, publicKey, extend, shorten)
+                ?: return@retryIfNeeded Promise.ofFail(
+                    Exception("Couldn't build signed params for alterTtl request for newExpiry=$newExpiry, extend=$extend, shorten=$shorten")
+                )
+            getSingleTargetSnode(publicKey).bind { snode ->
+                invoke(Snode.Method.Expire, snode, params, publicKey)
+            }
+        }
+    }
+
+    private fun buildAlterTtlParams( // TODO: in future this will probably need to use the closed group subkeys / admin keys for group swarms
+        messageHashes: List<String>,
+        newExpiry: Long,
+        publicKey: String,
+        extend: Boolean = false,
+        shorten: Boolean = false): Map<String, Any>? {
+        val userEd25519KeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return null
         val params = mutableMapOf(
             "expiry" to newExpiry,
             "messages" to messageHashes,
@@ -559,16 +589,13 @@ object SnodeAPI {
             )
         } catch (e: Exception) {
             Log.e("Loki", "Signing data failed with user secret key", e)
-            return@retryIfNeeded Promise.ofFail(e)
+            return null
         }
         params["pubkey"] = publicKey
         params["pubkey_ed25519"] = ed25519PublicKey
         params["signature"] = Base64.encodeBytes(signature)
 
-        getSingleTargetSnode(publicKey).bind { snode ->
-            invoke(Snode.Method.Expire, snode, params, publicKey)
-        }
-        }
+        return params
     }
 
     fun getMessages(publicKey: String): MessageListPromise {
