@@ -70,9 +70,8 @@ fun MessageSender.create(name: String, members: Collection<String>): Promise<Str
         storage.addClosedGroupPublicKey(groupPublicKey)
         // Store the encryption key pair
         storage.addClosedGroupEncryptionKeyPair(encryptionKeyPair, groupPublicKey, sentTime)
-        // Notify the user
-        val threadID = storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
-        storage.insertOutgoingInfoMessage(context, groupID, SignalServiceGroup.Type.CREATION, name, members, admins, threadID, sentTime)
+        // Create the thread
+        storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
         storage.createInitialConfigGroup(groupPublicKey, name, GroupUtil.createConfigMemberMap(members, admins), sentTime, encryptionKeyPair)
         // Notify the PN server
         PushNotificationAPI.performOperation(PushNotificationAPI.ClosedGroupOperation.Subscribe, groupPublicKey, userPublicKey)

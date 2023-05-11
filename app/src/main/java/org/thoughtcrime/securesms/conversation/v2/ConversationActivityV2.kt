@@ -59,6 +59,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
@@ -175,6 +176,7 @@ import org.thoughtcrime.securesms.util.toPx
 import java.lang.ref.WeakReference
 import java.util.Locale
 import java.util.concurrent.ExecutionException
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
@@ -273,7 +275,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     val searchViewModel: SearchViewModel by viewModels()
     var searchViewItem: MenuItem? = null
 
-    private val bufferedLastSeenChannel = Channel<Unit>(capacity = Channel.RENDEZVOUS, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val bufferedLastSeenChannel = Channel<Long>(capacity = 512, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
     private val isScrolledToBottom: Boolean
         get() {
@@ -341,6 +343,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private val cameraButton by lazy { InputBarButton(this, R.drawable.ic_baseline_photo_camera_24, hasOpaqueBackground = true) }
     private val messageToScrollTimestamp = AtomicLong(-1)
     private val messageToScrollAuthor = AtomicReference<Address?>(null)
+    private val firstLoad = AtomicBoolean(true)
 
     private lateinit var reactionDelegate: ConversationReactionDelegate
     private val reactWithAnyEmojiStartPage = -1
@@ -442,16 +445,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 // only update the conversation every 3 seconds maximum
                 // channel is rendezvous and shouldn't block on try send calls as often as we want
-                val layoutManager = binding?.conversationRecyclerView?.layoutManager as? LinearLayoutManager ?: return@repeatOnLifecycle
-                val lastItemPos = layoutManager.findLastCompletelyVisibleItemPosition()
-//                adapter.item
-                withContext(Dispatchers.IO) {
-                    storage.markConversationAsRead(viewModel.threadId, SnodeAPI.nowWithOffset)
-                }
-                val bufferedFlow = bufferedLastSeenChannel.consumeAsFlow().debounce(3.seconds)
-                bufferedFlow.collectLatest {
+                val bufferedFlow = bufferedLastSeenChannel.consumeAsFlow()
+                bufferedFlow.filter {
+                    it > storage.getLastSeen(viewModel.threadId)
+                }.collectLatest { latestMessageRead ->
                     withContext(Dispatchers.IO) {
-                        storage.markConversationAsRead(viewModel.threadId, SnodeAPI.nowWithOffset)
+                        storage.markConversationAsRead(viewModel.threadId, latestMessageRead)
                     }
                 }
             }
@@ -502,8 +501,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             val author = messageToScrollAuthor.getAndSet(null)
             if (author != null && messageTimestamp >= 0) {
                 jumpToMessage(author, messageTimestamp, null)
+            } else if (firstLoad.getAndSet(false)) {
+                scrollToFirstUnreadMessageIfNeeded()
             }
-            bufferedLastSeenChannel.trySend(Unit)
         }
         updatePlaceholder()
     }
@@ -998,7 +998,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         binding.typingIndicatorViewContainer.isVisible = wasTypingIndicatorVisibleBefore && isScrolledToBottom
         binding.typingIndicatorViewContainer.isVisible
         showOrHideScrollToBottomButton()
-        val firstVisiblePosition = layoutManager?.findFirstVisibleItemPosition() ?: -1
+        val firstVisiblePosition = layoutManager?.findFirstCompletelyVisibleItemPosition() ?: RecyclerView.NO_POSITION
+        if (!firstLoad.get() && firstVisiblePosition != RecyclerView.NO_POSITION) {
+            val visibleItemTimestamp = adapter.getTimestampForItemAt(firstVisiblePosition)
+            if (visibleItemTimestamp != null) {
+                bufferedLastSeenChannel.trySend(visibleItemTimestamp)
+            }
+        }
         unreadCount = min(unreadCount, firstVisiblePosition).coerceAtLeast(0)
         updateUnreadCountIndicator()
     }
