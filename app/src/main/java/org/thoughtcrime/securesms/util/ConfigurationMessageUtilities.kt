@@ -18,13 +18,11 @@ import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.sending_receiving.MessageSender
-import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.WindowDebouncer
 import org.session.libsignal.utilities.Hex
-import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import java.util.Timer
@@ -199,9 +197,8 @@ object ConfigurationMessageUtilities {
                         convoConfig.getOrConstructLegacyGroup(groupPublicKey)
                     }
                     recipient.isContactRecipient -> {
-                        val sessionId = SessionId(recipient.address.serialize())
                         if (recipient.isLocalNumber) null // this is handled by the user profile NTS data
-                        if (recipient.isOpenGroupInboxRecipient) null // specifically exclude
+                        else if (recipient.isOpenGroupInboxRecipient) null // specifically exclude
                         else convoConfig.getOrConstructOneToOne(recipient.address.serialize())
                     }
                     else -> null

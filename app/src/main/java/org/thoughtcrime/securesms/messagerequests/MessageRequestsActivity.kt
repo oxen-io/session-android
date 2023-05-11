@@ -117,7 +117,7 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
         val dialog = AlertDialog.Builder(this)
         dialog.setMessage(resources.getString(R.string.message_requests_clear_all_message))
         dialog.setPositiveButton(R.string.yes) { _, _ ->
-            viewModel.clearAllMessageRequests()
+            viewModel.clearAllMessageRequests(true)
             LoaderManager.getInstance(this).restartLoader(0, null, this)
             lifecycleScope.launch(Dispatchers.IO) {
                 ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@MessageRequestsActivity)

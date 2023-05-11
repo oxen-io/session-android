@@ -60,6 +60,7 @@ class UserDetailsBottomSheet: BottomSheetDialogFragment() {
             profilePictureView.root.update(recipient)
             nameTextViewContainer.visibility = View.VISIBLE
             nameTextViewContainer.setOnClickListener {
+                if (recipient.isOpenGroupInboxRecipient) return@setOnClickListener
                 nameTextViewContainer.visibility = View.INVISIBLE
                 nameEditTextContainer.visibility = View.VISIBLE
                 nicknameEditText.text = null
@@ -85,6 +86,8 @@ class UserDetailsBottomSheet: BottomSheetDialogFragment() {
                 }
             }
             nameTextView.text = recipient.name ?: publicKey // Uses the Contact API internally
+
+            nameEditIcon.isVisible = threadRecipient.isContactRecipient
 
             publicKeyTextView.isVisible = !threadRecipient.isOpenGroupRecipient && !threadRecipient.isOpenGroupInboxRecipient
             messageButton.isVisible = !threadRecipient.isOpenGroupRecipient || IdPrefix.fromValue(publicKey) == IdPrefix.BLINDED

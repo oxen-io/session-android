@@ -52,6 +52,7 @@
                 android:text="Spiderman" />
 
             <ImageView
+                android:id="@+id/nameEditIcon"
                 android:layout_width="20dp"
                 android:layout_height="22dp"
                 android:contentDescription="@string/AccessibilityId_edit_user_nickname"
