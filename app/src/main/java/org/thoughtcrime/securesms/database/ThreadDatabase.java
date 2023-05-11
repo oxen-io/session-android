@@ -779,6 +779,7 @@ public class ThreadDatabase extends Database {
             new String[] {String.valueOf(threadId)});
 
     notifyConversationListeners(threadId);
+    notifyConversationListListeners();
   }
 
   public boolean isPinned(long threadId) {
