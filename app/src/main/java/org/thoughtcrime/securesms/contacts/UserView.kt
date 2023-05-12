@@ -48,12 +48,12 @@ class UserView : LinearLayout {
 
     // region Updating
     fun bind(user: Recipient, glide: GlideRequests, actionIndicator: ActionIndicator, isSelected: Boolean = false) {
+        val isLocalUser = user.isLocalNumber
         fun getUserDisplayName(publicKey: String): String {
+            if (isLocalUser) return context.getString(R.string.MessageRecord_you)
             val contact = DatabaseComponent.get(context).sessionContactDatabase().getContactWithSessionID(publicKey)
             return contact?.displayName(Contact.ContactContext.REGULAR) ?: publicKey
         }
-        val threadID = MessagingModuleConfiguration.shared.storage.getOrCreateThreadIdFor(user.address)
-        MentionManagerUtilities.populateUserPublicKeyCacheIfNeeded(threadID, context) // FIXME: This is a bad place to do this
         val address = user.address.serialize()
         binding.profilePictureView.root.glide = glide
         binding.profilePictureView.root.update(user)
