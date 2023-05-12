@@ -97,6 +97,9 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     // TODO: maybe add time here from formation / creation message
     override fun threadCreated(address: Address, threadId: Long) {
         if (!getRecipientApproved(address)) return // don't store unapproved / message requests
+        if (getUserPublicKey() == address.serialize()) {
+            Log.d("Loki-DBG", "NTS created, context:\n${Thread.currentThread().stackTrace.joinToString("\n")}")
+        }
 
         val volatile = configFactory.convoVolatile ?: return
         if (address.isGroup) {

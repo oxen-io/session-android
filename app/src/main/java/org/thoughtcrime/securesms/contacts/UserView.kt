@@ -54,8 +54,9 @@ class UserView : LinearLayout {
             val contact = DatabaseComponent.get(context).sessionContactDatabase().getContactWithSessionID(publicKey)
             return contact?.displayName(Contact.ContactContext.REGULAR) ?: publicKey
         }
-        val threadID = MessagingModuleConfiguration.shared.storage.getOrCreateThreadIdFor(user.address)
-        MentionManagerUtilities.populateUserPublicKeyCacheIfNeeded(threadID, context) // FIXME: This is a bad place to do this
+        MessagingModuleConfiguration.shared.storage.getThreadId(user.address)?.let { threadID ->
+            MentionManagerUtilities.populateUserPublicKeyCacheIfNeeded(threadID, context) // FIXME: This is a bad place to do this
+        }
         val address = user.address.serialize()
         binding.profilePictureView.root.glide = glide
         binding.profilePictureView.root.update(user)
