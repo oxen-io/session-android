@@ -48,7 +48,9 @@ class UserView : LinearLayout {
 
     // region Updating
     fun bind(user: Recipient, glide: GlideRequests, actionIndicator: ActionIndicator, isSelected: Boolean = false) {
+        val isLocalUser = user.isLocalNumber
         fun getUserDisplayName(publicKey: String): String {
+            if (isLocalUser) return context.getString(R.string.MessageRecord_you)
             val contact = DatabaseComponent.get(context).sessionContactDatabase().getContactWithSessionID(publicKey)
             return contact?.displayName(Contact.ContactContext.REGULAR) ?: publicKey
         }
