@@ -49,7 +49,6 @@ import org.thoughtcrime.securesms.home.UserDetailsBottomSheet
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.*
 import java.util.Date
-import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.min
@@ -191,7 +190,7 @@ class VisibleMessageView : LinearLayout {
         binding.senderNameTextView.text = contact?.displayName(contactContext) ?: senderSessionID
         // Date break
         val showDateBreak = isStartOfMessageCluster || snIsSelected
-        binding.dateBreakTextView.text = if (showDateBreak) dateUtil.getDisplayFormattedTimeSpanString(message.timestamp) else null
+        binding.dateBreakTextView.text = if (showDateBreak) dateUtil.format(message.timestamp) else null
         binding.dateBreakTextView.isVisible = showDateBreak
         // Message status indicator
         if (message.isOutgoing) {

@@ -7,13 +7,13 @@ import org.thoughtcrime.securesms.util.DateUtils.isSameDay
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class DateUtil (
-    private val context: Context,
+@Singleton
+class DateUtil @Inject constructor (
+    @ApplicationContext private val context: Context,
     private val clock: Clock
 ) {
-    @Inject constructor(@ApplicationContext context: Context): this(context, AndroidClock)
-
     /**
      * If the message was sent/received on the same day we show: 12 hour time + am/pm
      *   12:43 pm
@@ -25,7 +25,7 @@ class DateUtil (
      *   09/03/23
      */
     @JvmOverloads
-    fun getDisplayFormattedTimeSpanString(timestamp: Long, locale: Locale = Locale.getDefault()): String {
+    fun format(timestamp: Long, locale: Locale = Locale.getDefault()): String {
         if (isWithin(timestamp, 1, TimeUnit.MINUTES)) {
             return context.getString(R.string.DateUtils_just_now)
         }

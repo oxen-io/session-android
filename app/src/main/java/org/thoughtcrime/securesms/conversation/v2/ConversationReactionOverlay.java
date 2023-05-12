@@ -172,7 +172,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
     conversationBubble.setLayoutParams(new LinearLayout.LayoutParams(conversationItemSnapshot.getWidth(), conversationItemSnapshot.getHeight()));
     conversationBubble.setBackground(new BitmapDrawable(getResources(), conversationItemSnapshot));
     TextView conversationTimestamp = conversationItem.findViewById(R.id.conversation_item_timestamp);
-    conversationTimestamp.setText(dateUtil.getDisplayFormattedTimeSpanString(messageRecord.getTimestamp()));
+    conversationTimestamp.setText(dateUtil.format(messageRecord.getTimestamp()));
 
     updateConversationTimestamp(messageRecord);
 

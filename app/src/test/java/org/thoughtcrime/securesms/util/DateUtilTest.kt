@@ -36,7 +36,7 @@ class DateUtilTest(
     fun test() {
         whenever(clock.currentTimeMillis).thenReturn(now)
         ShadowSettings.set24HourTimeFormat(is24HourTime)
-        val timestamp = dateUtil.getDisplayFormattedTimeSpanString(then, locale)
+        val timestamp = dateUtil.format(then, locale)
         assertEquals(expected, timestamp)
     }
 
@@ -60,43 +60,43 @@ class DateUtilTest(
             ),
             timespan(
                 millis(2001, DECEMBER, 30),
-                millis( 2001, DECEMBER, 30, second = 59),
+                millis(2001, DECEMBER, 30, second = 59),
                 assertion(Locale.US, "Now", "Now"),
             ),
             timespan(
                 millis(2001, DECEMBER, 30),
-                millis( 2001, DECEMBER, 30, minute = 1),
+                millis(2001, DECEMBER, 30, minute = 1),
                 assertion(Locale.US, "Now", "Now")
             ),
             timespan(
                 millis(2001, DECEMBER, 30),
-                millis( 2001, DECEMBER, 30, minute = 1, second = 1),
+                millis(2001, DECEMBER, 30, minute = 1, second = 1),
                 assertion(Locale.US, "10:30 AM", "10:30"),
-                assertion(Locale.JAPAN, "10:30 AM", "10:30")
+                assertion(Locale.JAPAN, "10:30 午前", "10:30")
             ),
             timespan(
                 millis(2001, DECEMBER, 30),
-                millis( 2001, DECEMBER, 30, minute = 1, second = 1),
+                millis(2001, DECEMBER, 30, minute = 1, second = 1),
                 assertion(Locale.US, "10:30 AM", "10:30")
             ),
             timespan(
                 millis(2001, DECEMBER, 30, hour = 12, minute = 15),
-                millis( 2001, DECEMBER, 30, hour = 12, minute = 16, second = 1),
-                        assertion(Locale.US, "10:45 PM", "22:45")
+                millis(2001, DECEMBER, 30, hour = 12, minute = 16, second = 1),
+                assertion(Locale.US, "10:45 PM", "22:45")
             ),
             timespan(
                 millis(2001, DECEMBER, 25),
-                millis( 2001, DECEMBER, 30),
+                millis(2001, DECEMBER, 30),
                 assertion(Locale.US, "Tue 10:30 AM", "Tue 10:30")
             ),
             timespan(
                 millis(2001, NOVEMBER, 25),
-                millis( 2001, DECEMBER, 10),
+                millis(2001, DECEMBER, 10),
                 assertion(Locale.US, "Nov 25 10:30 AM", "Nov 25 10:30")
             ),
             timespan(
                 millis(2001, JANUARY),
-                millis( 2003, JANUARY),
+                millis(2003, JANUARY),
                 assertion(Locale.US, "Jan 1 10:30 AM, 2001", "Jan 1 10:30, 2001")
             ),
         ).flatten()

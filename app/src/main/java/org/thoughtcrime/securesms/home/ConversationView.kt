@@ -6,7 +6,6 @@ import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.util.AttributeSet
 import android.util.TypedValue
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
@@ -21,9 +20,7 @@ import org.thoughtcrime.securesms.database.RecipientDatabase.NOTIFY_TYPE_NONE
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.DateUtil
-import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.getAccentColor
-import java.util.Locale
 import javax.inject.Inject
 
 class ConversationView : LinearLayout {
@@ -89,7 +86,7 @@ class ConversationView : LinearLayout {
         val senderDisplayName = getUserDisplayName(thread.recipient)
                 ?: thread.recipient.address.toString()
         binding.conversationViewDisplayNameTextView.text = senderDisplayName
-        binding.timestampTextView.text = dateUtil.getDisplayFormattedTimeSpanString(thread.date)
+        binding.timestampTextView.text = dateUtil.format(thread.date)
         val recipient = thread.recipient
         binding.muteIndicatorImageView.isVisible = recipient.isMuted || recipient.notifyType != NOTIFY_TYPE_ALL
         val drawableRes = if (recipient.isMuted || recipient.notifyType == NOTIFY_TYPE_NONE) {

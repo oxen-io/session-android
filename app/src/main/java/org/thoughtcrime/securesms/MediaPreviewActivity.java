@@ -81,7 +81,6 @@ import org.thoughtcrime.securesms.util.SaveAttachmentTask;
 import org.thoughtcrime.securesms.util.SaveAttachmentTask.Attachment;
 
 import java.io.IOException;
-import java.util.Locale;
 import java.util.WeakHashMap;
 
 import network.loki.messenger.R;
@@ -242,7 +241,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
       CharSequence relativeTimeSpan;
 
       if (mediaItem.date > 0) {
-        relativeTimeSpan = dateUtil.getDisplayFormattedTimeSpanString(mediaItem.date);
+        relativeTimeSpan = dateUtil.format(mediaItem.date);
       } else {
         relativeTimeSpan = getString(R.string.MediaPreviewActivity_draft);
       }

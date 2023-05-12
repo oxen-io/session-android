@@ -65,7 +65,6 @@ import org.thoughtcrime.securesms.onboarding.SeedReminderViewDelegate
 import org.thoughtcrime.securesms.preferences.SettingsActivity
 import org.thoughtcrime.securesms.util.*
 import java.io.IOException
-import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -95,7 +94,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         HomeAdapter(context = this, listener = this)
     }
 
-    private val globalSearchAdapter = GlobalSearchAdapter { model ->
+    private val globalSearchAdapter = GlobalSearchAdapter(dateUtil) { model ->
         when (model) {
             is GlobalSearchAdapter.Model.Message -> {
                 val threadId = model.messageResult.threadId
@@ -285,7 +284,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         if (messageRequestCount > 0 && !textSecurePreferences.hasHiddenMessageRequests()) {
             with(ViewMessageRequestBannerBinding.inflate(layoutInflater)) {
                 unreadCountTextView.text = messageRequestCount.toString()
-                timestampTextView.text = dateUtil.getDisplayFormattedTimeSpanString(threadDb.latestUnapprovedConversationTimestamp)
+                timestampTextView.text = dateUtil.format(threadDb.latestUnapprovedConversationTimestamp)
                 root.setOnClickListener { showMessageRequests() }
                 root.setOnLongClickListener { hideMessageRequests(); true }
                 root.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
