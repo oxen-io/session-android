@@ -292,39 +292,46 @@ class VisibleMessageView : LinearLayout {
                                  @StringRes val messageText: Int?,
                                  val contentDescription: String?)
 
-    private fun getMessageStatusImage(message: MessageRecord): MessageStatusInfo {
-        return when {
-            !message.isOutgoing -> MessageStatusInfo(null,
-                null,
-                null,
-                null)
-            message.isFailed ->
-                MessageStatusInfo(
-                    R.drawable.ic_delivery_status_failed,
-                    resources.getColor(R.color.destructive, context.theme),
-                    R.string.delivery_status_failed,
-                    null
-                )
-            message.isPending ->
-                MessageStatusInfo(
-                    R.drawable.ic_delivery_status_sending,
-                    context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_sending,
-                    context.getString(R.string.AccessibilityId_message_sent_status_pending)
-                )
-            message.isRead ->
-                MessageStatusInfo(
-                    R.drawable.ic_delivery_status_read,
-                    context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_read,
-                    null
-                )
-            else ->
-                MessageStatusInfo(
-                    R.drawable.ic_delivery_status_sent,
-                    context.getColorFromAttr(R.attr.message_status_color),
-                    R.string.delivery_status_sent,
-                    context.getString(R.string.AccessibilityId_message_sent_status_tick)
-                )
-        }
+    private fun getMessageStatusImage(message: MessageRecord): MessageStatusInfo = when {
+        message.isFailed ->
+            MessageStatusInfo(
+                R.drawable.ic_delivery_status_failed,
+                resources.getColor(R.color.destructive, context.theme),
+                R.string.delivery_status_failed,
+                null
+            )
+        message.isSyncFailed ->
+            MessageStatusInfo(
+                R.drawable.ic_delivery_status_failed,
+                context.getColor(R.color.accent_orange),
+                R.string.delivery_status_sync_failed,
+                null
+            )
+        message.isPending ->
+            MessageStatusInfo(
+                R.drawable.ic_delivery_status_sending,
+                context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_sending,
+                context.getString(R.string.AccessibilityId_message_sent_status_pending)
+            )
+        message.isResyncing ->
+            MessageStatusInfo(
+                R.drawable.ic_delivery_status_sending,
+                context.getColor(R.color.accent_orange), R.string.delivery_status_syncing,
+                context.getString(R.string.AccessibilityId_message_sent_status_syncing)
+            )
+        message.isRead ->
+            MessageStatusInfo(
+                R.drawable.ic_delivery_status_read,
+                context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_read,
+                null
+            )
+        else ->
+            MessageStatusInfo(
+                R.drawable.ic_delivery_status_sent,
+                context.getColorFromAttr(R.attr.message_status_color),
+                R.string.delivery_status_sent,
+                context.getString(R.string.AccessibilityId_message_sent_status_tick)
+            )
     }
 
     private fun updateExpirationTimer(message: MessageRecord) {

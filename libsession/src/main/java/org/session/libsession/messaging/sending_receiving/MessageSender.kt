@@ -14,6 +14,7 @@ import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.control.SharedConfigurationMessage
+import org.session.libsession.messaging.messages.control.SharedConfigurationMessage
 import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.visible.LinkPreview
 import org.session.libsession.messaging.messages.visible.Quote
@@ -62,12 +63,11 @@ object MessageSender {
     }
 
     // Convenience
-    fun send(message: Message, destination: Destination): Promise<Unit, Exception> {
+    fun send(message: Message, destination: Destination, isSyncMessage: Boolean = false): Promise<Unit, Exception> {
         return if (destination is Destination.LegacyOpenGroup || destination is Destination.OpenGroup || destination is Destination.OpenGroupInbox) {
             sendToOpenGroupDestination(destination, message)
         } else {
-            val userPublicKey = MessagingModuleConfiguration.shared.storage.getUserPublicKey()
-            sendToSnodeDestination(destination, message, destination is Destination.Contact && destination.publicKey == userPublicKey)
+            sendToSnodeDestination(destination, message, isSyncMessage)
         }
     }
 
@@ -160,6 +160,7 @@ object MessageSender {
         )
     }
 
+    // One-on-One Chats & Closed Groups
     private fun sendToSnodeDestination(destination: Destination, message: Message, isSyncMessage: Boolean = false): Promise<Unit, Exception> {
         val deferred = deferred<Unit, Exception>()
         val promise = deferred.promise
@@ -171,7 +172,7 @@ object MessageSender {
 
         // Set the failure handler (need it here already for precondition failure handling)
         fun handleFailure(error: Exception) {
-            handleFailedMessageSend(message, error)
+            handleFailedMessageSend(message, error, isSyncMessage)
             if (destination is Destination.Contact && message is VisibleMessage && !isSelfSend()) {
                 SnodeModule.shared.broadcaster.broadcast("messageFailed", message.sentTimestamp!!)
             }
@@ -393,16 +394,23 @@ object MessageSender {
         // • the destination was a contact
         // • we didn't sync it already
         if (destination is Destination.Contact && !isSyncMessage) {
-            if (message is VisibleMessage) { message.syncTarget = destination.publicKey }
-            if (message is ExpirationTimerUpdate) { message.syncTarget = destination.publicKey }
+            if (message is VisibleMessage) message.syncTarget = destination.publicKey
+            if (message is ExpirationTimerUpdate) message.syncTarget = destination.publicKey
+
+            storage.markAsSyncing(message.sentTimestamp!!, userPublicKey)
             sendToSnodeDestination(Destination.Contact(userPublicKey), message, true)
         }
     }
 
-    fun handleFailedMessageSend(message: Message, error: Exception) {
+    fun handleFailedMessageSend(message: Message, error: Exception, isSyncMessage: Boolean = false) {
         val storage = MessagingModuleConfiguration.shared.storage
         val userPublicKey = storage.getUserPublicKey()!!
-        storage.setErrorMessage(message.sentTimestamp!!, message.sender?:userPublicKey, error)
+
+        val timestamp = message.sentTimestamp!!
+        val author = message.sender ?: userPublicKey
+
+        if (isSyncMessage) storage.markAsSyncFailed(timestamp, author, error)
+        else storage.markAsSentFailed(timestamp, author, error)
     }
 
     // Convenience

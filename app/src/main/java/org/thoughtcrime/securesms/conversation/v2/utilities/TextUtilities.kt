@@ -38,13 +38,12 @@ object TextUtilities {
     fun TextView.getIntersectedModalSpans(hitRect: Rect): List<ModalURLSpan> {
         val textLayout = layout ?: return emptyList()
         val lineRect = Rect()
-        val bodyTextRect = Rect()
-        getGlobalVisibleRect(bodyTextRect)
+        val offset = intArrayOf(0, 0).also { getLocationOnScreen(it) }
         val textSpannable = text.toSpannable()
         return (0 until textLayout.lineCount).flatMap { line ->
             textLayout.getLineBounds(line, lineRect)
-            lineRect.offset(bodyTextRect.left + totalPaddingLeft, bodyTextRect.top + totalPaddingTop)
-            if ((Rect(lineRect)).contains(hitRect)) {
+            lineRect.offset(offset[0] + totalPaddingLeft, offset[1] + totalPaddingTop)
+            if (lineRect.contains(hitRect)) {
                 // calculate the url span intersected with (if any)
                 val off = textLayout.getOffsetForHorizontal(line, hitRect.left.toFloat()) // left and right will be the same
                 textSpannable.getSpans<ModalURLSpan>(off, off).toList()

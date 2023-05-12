@@ -252,6 +252,16 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         notifyConversationListeners(threadId)
     }
 
+    override fun markAsSyncing(messageId: Long) {
+        markAs(messageId, MmsSmsColumns.Types.BASE_SYNCING_TYPE)
+    }
+    override fun markAsResyncing(messageId: Long) {
+        markAs(messageId, MmsSmsColumns.Types.BASE_RESYNCING_TYPE)
+    }
+    override fun markAsSyncFailed(messageId: Long) {
+        markAs(messageId, MmsSmsColumns.Types.BASE_SYNC_FAILED_TYPE)
+    }
+
     fun markAsSending(messageId: Long) {
         markAs(messageId, MmsSmsColumns.Types.BASE_SENDING_TYPE)
     }

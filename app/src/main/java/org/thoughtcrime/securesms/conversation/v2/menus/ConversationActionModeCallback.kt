@@ -70,6 +70,8 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
         menu.findItem(R.id.menu_message_details).isVisible = (selectedItems.size == 1 && firstMessage.isOutgoing)
         // Resend
         menu.findItem(R.id.menu_context_resend).isVisible = (selectedItems.size == 1 && firstMessage.isFailed)
+        // Resync
+        menu.findItem(R.id.menu_context_resync).isVisible = (selectedItems.size == 1 && firstMessage.isSyncFailed)
         // Save media
         menu.findItem(R.id.menu_context_save_attachment).isVisible = (selectedItems.size == 1
             && firstMessage.isMms && (firstMessage as MediaMmsMessageRecord).containsMediaSlide())
@@ -90,6 +92,7 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
             R.id.menu_context_ban_and_delete_all -> delegate?.banAndDeleteAll(selectedItems)
             R.id.menu_context_copy -> delegate?.copyMessages(selectedItems)
             R.id.menu_context_copy_public_key -> delegate?.copySessionID(selectedItems)
+            R.id.menu_context_resync -> delegate?.resyncMessage(selectedItems)
             R.id.menu_context_resend -> delegate?.resendMessage(selectedItems)
             R.id.menu_message_details -> delegate?.showMessageDetail(selectedItems)
             R.id.menu_context_save_attachment -> delegate?.saveAttachment(selectedItems)
@@ -113,6 +116,7 @@ interface ConversationActionModeCallbackDelegate {
     fun banAndDeleteAll(messages: Set<MessageRecord>)
     fun copyMessages(messages: Set<MessageRecord>)
     fun copySessionID(messages: Set<MessageRecord>)
+    fun resyncMessage(messages: Set<MessageRecord>)
     fun resendMessage(messages: Set<MessageRecord>)
     fun showMessageDetail(messages: Set<MessageRecord>)
     fun saveAttachment(messages: Set<MessageRecord>)

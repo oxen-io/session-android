@@ -138,6 +138,7 @@
         android:layout_height="50dp"
         android:layout_alignParentEnd="true"
         android:layout_above="@+id/messageRequestBar"
+        android:layout_alignWithParentIfMissing="true"
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="32dp">
 

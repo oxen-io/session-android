@@ -7,6 +7,10 @@ import android.os.Build
 import android.os.Handler
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
+import org.session.libsignal.utilities.Log
+import org.thoughtcrime.securesms.jobmanager.impl.JsonDataSerializer
+
+private const val TAG = "ScreenshotObserver"
 
 class ScreenshotObserver(private val context: Context, handler: Handler, private val screenshotTriggered: ()->Unit): ContentObserver(handler) {
 
@@ -31,22 +35,26 @@ class ScreenshotObserver(private val context: Context, handler: Handler, private
         val projection = arrayOf(
             MediaStore.Images.Media.DATA
         )
-        context.contentResolver.query(
-            uri,
-            projection,
-            null,
-            null,
-            null
-        )?.use { cursor ->
-            val dataColumn = cursor.getColumnIndex(MediaStore.Images.Media.DATA)
-            while (cursor.moveToNext()) {
-                val path = cursor.getString(dataColumn)
-                if (path.contains("screenshot", true)) {
-                    if (cache.add(uri.hashCode())) {
-                        screenshotTriggered()
+        try {
+            context.contentResolver.query(
+                uri,
+                projection,
+                null,
+                null,
+                null
+            )?.use { cursor ->
+                val dataColumn = cursor.getColumnIndex(MediaStore.Images.Media.DATA)
+                while (cursor.moveToNext()) {
+                    val path = cursor.getString(dataColumn)
+                    if (path.contains("screenshot", true)) {
+                        if (cache.add(uri.hashCode())) {
+                            screenshotTriggered()
+                        }
                     }
                 }
             }
+        } catch (e: SecurityException) {
+            Log.e(TAG, e)
         }
     }
 
@@ -56,28 +64,32 @@ class ScreenshotObserver(private val context: Context, handler: Handler, private
             MediaStore.Images.Media.DISPLAY_NAME,
             MediaStore.Images.Media.RELATIVE_PATH
         )
-        context.contentResolver.query(
-            uri,
-            projection,
-            null,
-            null,
-            null
-        )?.use { cursor ->
-            val relativePathColumn =
-                cursor.getColumnIndex(MediaStore.Images.Media.RELATIVE_PATH)
-            val displayNameColumn =
-                cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)
-            while (cursor.moveToNext()) {
-                val name = cursor.getString(displayNameColumn)
-                val relativePath = cursor.getString(relativePathColumn)
-                if (name.contains("screenshot", true) or
-                    relativePath.contains("screenshot", true)) {
-                    if (cache.add(uri.hashCode())) {
-                        screenshotTriggered()
+
+        try {
+            context.contentResolver.query(
+                uri,
+                projection,
+                null,
+                null,
+                null
+            )?.use { cursor ->
+                val relativePathColumn =
+                    cursor.getColumnIndex(MediaStore.Images.Media.RELATIVE_PATH)
+                val displayNameColumn =
+                    cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)
+                while (cursor.moveToNext()) {
+                    val name = cursor.getString(displayNameColumn)
+                    val relativePath = cursor.getString(relativePathColumn)
+                    if (name.contains("screenshot", true) or
+                        relativePath.contains("screenshot", true)) {
+                        if (cache.add(uri.hashCode())) {
+                            screenshotTriggered()
+                        }
                     }
                 }
             }
+        } catch (e: IllegalStateException) {
+            Log.e(TAG, e)
         }
     }
-
 }

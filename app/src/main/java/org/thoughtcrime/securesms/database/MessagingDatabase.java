@@ -37,6 +37,13 @@ public abstract class MessagingDatabase extends Database implements MmsSmsColumn
   public abstract void markExpireStarted(long messageId, long startTime);
 
   public abstract void markAsSent(long messageId, boolean secure);
+
+  public abstract void markAsSyncing(long id);
+
+  public abstract void markAsResyncing(long id);
+
+  public abstract void markAsSyncFailed(long id);
+
   public abstract void markUnidentified(long messageId, boolean unidentified);
 
   public abstract void markAsDeleted(long messageId, boolean read, boolean hasMention);
@@ -199,7 +206,6 @@ public abstract class MessagingDatabase extends Database implements MmsSmsColumn
     contentValues.put(THREAD_ID, newThreadId);
     db.update(getTableName(), contentValues, where, args);
   }
-
   public static class SyncMessageId {
 
     private final Address address;

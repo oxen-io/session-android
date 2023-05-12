@@ -112,6 +112,7 @@
     <!-- Conversation View-->
     <string name="AccessibilityId_message_sent_status_tick">Message sent status: Sent</string>
     <string name="AccessibilityId_message_sent_status_pending">Message sent status pending</string>
+    <string name="AccessibilityId_message_sent_status_syncing">Message sent status syncing</string>
     <string name="AccessibilityId_message_request_config_message">Message request has been accepted</string>
     <string name="AccessibilityId_message_body">Message Body</string>
     <string name="AccessibilityId_voice_message">Voice message</string>
@@ -627,6 +628,7 @@
     <string name="conversation_context__menu_delete_message">Delete message</string>
     <string name="conversation_context__menu_ban_user">Ban user</string>
     <string name="conversation_context__menu_ban_and_delete_all">Ban and delete all</string>
+    <string name="conversation_context__menu_resync_message">Resync message</string>
     <string name="conversation_context__menu_resend_message">Resend message</string>
     <string name="conversation_context__menu_reply">Reply</string>
     <string name="conversation_context__menu_reply_to_message">Reply to message</string>
@@ -1007,9 +1009,11 @@
     <string name="new_conversation_dialog_close_button_content_description">Close Dialog</string>
     <string name="ErrorNotifier_migration">Database Upgrade Failed</string>
     <string name="ErrorNotifier_migration_downgrade">Please contact support to report the error.</string>
+    <string name="delivery_status_syncing">Syncing</string>
     <string name="delivery_status_sending">Sending</string>
     <string name="delivery_status_read">Read</string>
     <string name="delivery_status_sent">Sent</string>
+    <string name="delivery_status_sync_failed">Failed to sync</string>
     <string name="delivery_status_failed">Failed to send</string>
     <string name="giphy_permission_title">Search GIFs?</string>
     <string name="giphy_permission_message">Session will connect to Giphy to provide search results. You will not have full metadata protection when sending GIFs.</string>

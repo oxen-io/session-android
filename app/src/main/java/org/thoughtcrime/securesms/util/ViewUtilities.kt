@@ -5,14 +5,16 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.FloatEvaluator
 import android.animation.ValueAnimator
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.PointF
 import android.graphics.Rect
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.annotation.ColorInt
 import androidx.annotation.DimenRes
 import network.loki.messenger.R
 import org.session.libsession.utilities.getColorFromAttr
+import android.view.inputmethod.InputMethodManager
+import androidx.core.graphics.applyCanvas
 
 fun View.contains(point: PointF): Boolean {
     return hitRect.contains(point.x.toInt(), point.y.toInt())
@@ -65,3 +67,9 @@ fun View.hideKeyboard() {
     val imm = this.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(this.windowToken, 0)
 }
+
+fun View.drawToBitmap(config: Bitmap.Config = Bitmap.Config.ARGB_8888): Bitmap =
+    Bitmap.createBitmap(width, height, config).applyCanvas {
+        translate(-scrollX.toFloat(), -scrollY.toFloat())
+        draw(this)
+    }

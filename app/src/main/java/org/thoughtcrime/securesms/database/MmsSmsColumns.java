@@ -47,8 +47,13 @@ public interface MmsSmsColumns {
     protected static final long BASE_PENDING_INSECURE_SMS_FALLBACK = 26;
     public    static final long BASE_DRAFT_TYPE                    = 27;
     protected static final long BASE_DELETED_TYPE                  = 28;
+    protected static final long BASE_SYNCING_TYPE                  = 29;
+    protected static final long BASE_RESYNCING_TYPE                = 30;
+    protected static final long BASE_SYNC_FAILED_TYPE              = 31;
 
     protected static final long[] OUTGOING_MESSAGE_TYPES = {BASE_OUTBOX_TYPE, BASE_SENT_TYPE,
+                                                            BASE_SYNCING_TYPE, BASE_RESYNCING_TYPE,
+                                                            BASE_SYNC_FAILED_TYPE,
                                                             BASE_SENDING_TYPE, BASE_SENT_FAILED_TYPE,
                                                             BASE_PENDING_SECURE_SMS_FALLBACK,
                                                             BASE_PENDING_INSECURE_SMS_FALLBACK,
@@ -107,6 +112,18 @@ public interface MmsSmsColumns {
 
     public static boolean isDraftMessageType(long type) {
       return (type & BASE_TYPE_MASK) == BASE_DRAFT_TYPE;
+    }
+
+    public static boolean isResyncingType(long type) {
+      return (type & BASE_TYPE_MASK) == BASE_RESYNCING_TYPE;
+    }
+
+    public static boolean isSyncingType(long type) {
+      return (type & BASE_TYPE_MASK) == BASE_SYNCING_TYPE;
+    }
+
+    public static boolean isSyncFailedMessageType(long type) {
+      return (type & BASE_TYPE_MASK) == BASE_SYNC_FAILED_TYPE;
     }
 
     public static boolean isFailedMessageType(long type) {

@@ -11,20 +11,23 @@ import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Log
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment as SignalAttachment
 
-class VisibleMessage : Message() {
-    /** In the case of a sync message, the public key of the person the message was targeted at.
-     *
-     * **Note:** `nil` if this isn't a sync message.
-     */
-    var syncTarget: String? = null
-    var text: String? = null
-    val attachmentIDs: MutableList<Long> = mutableListOf()
-    var quote: Quote? = null
-    var linkPreview: LinkPreview? = null
-    var profile: Profile? = null
-    var openGroupInvitation: OpenGroupInvitation? = null
-    var reaction: Reaction? = null
+/**
+ * @param syncTarget In the case of a sync message, the public key of the person the message was targeted at.
+ *
+ * **Note:** `nil` if this isn't a sync message.
+ */
+class VisibleMessage(
+    var syncTarget: String? = null,
+    var text: String? = null,
+    val attachmentIDs: MutableList<Long> = mutableListOf(),
+    var quote: Quote? = null,
+    var linkPreview: LinkPreview? = null,
+    var profile: Profile? = null,
+    var openGroupInvitation: OpenGroupInvitation? = null,
+    var reaction: Reaction? = null,
     var hasMention: Boolean = false
+) : Message()  {
+
     override val isSelfSendValid: Boolean = true
 
     // region Validation

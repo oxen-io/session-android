@@ -203,6 +203,21 @@ public class SmsDatabase extends MessagingDatabase {
   }
 
   @Override
+  public void markAsSyncing(long id) {
+    updateTypeBitmask(id, Types.BASE_TYPE_MASK, Types.BASE_SYNCING_TYPE);
+  }
+
+  @Override
+  public void markAsResyncing(long id) {
+    updateTypeBitmask(id, Types.BASE_TYPE_MASK, Types.BASE_RESYNCING_TYPE);
+  }
+
+  @Override
+  public void markAsSyncFailed(long id) {
+    updateTypeBitmask(id, Types.BASE_TYPE_MASK, Types.BASE_SYNC_FAILED_TYPE);
+  }
+
+  @Override
   public void markUnidentified(long id, boolean unidentified) {
     ContentValues contentValues = new ContentValues(1);
     contentValues.put(UNIDENTIFIED, unidentified ? 1 : 0);

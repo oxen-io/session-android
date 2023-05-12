@@ -33,6 +33,11 @@
         app:showAsAction="always" />
 
     <item
+        android:title="@string/conversation_context__menu_resync_message"
+        android:id="@+id/menu_context_resync"
+        app:showAsAction="never" />
+
+    <item
         android:title="@string/conversation_context__menu_resend_message"
         android:id="@+id/menu_context_resend"
         app:showAsAction="never" />
