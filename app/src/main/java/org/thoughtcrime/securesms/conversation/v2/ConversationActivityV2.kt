@@ -153,6 +153,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     @Inject lateinit var storage: Storage
     @Inject lateinit var reactionDb: ReactionDatabase
     @Inject lateinit var viewModelFactory: ConversationViewModel.AssistedFactory
+    @Inject lateinit var dateUtil: DateUtil
 
     private val screenshotObserver by lazy {
         ScreenshotObserver(this, Handler(Looper.getMainLooper())) {
@@ -1727,7 +1728,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             val body = MentionUtilities.highlightMentions(message.body, viewModel.threadId, this)
             if (TextUtils.isEmpty(body)) { continue }
             if (messageSize > 1) {
-                val formattedTimestamp = DateUtils.getDisplayFormattedTimeSpanString(this, Locale.getDefault(), message.timestamp)
+                val formattedTimestamp = dateUtil.getDisplayFormattedTimeSpanString(message.timestamp)
                 builder.append("$formattedTimestamp: ")
             }
             builder.append(body)

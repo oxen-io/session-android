@@ -6,16 +6,21 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewMessageRequestBinding
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities.highlightMentions
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.mms.GlideRequests
+import org.thoughtcrime.securesms.util.DateUtil
 import org.thoughtcrime.securesms.util.DateUtils
 import java.util.Locale
 
+@AndroidEntryPoint
 class MessageRequestView : LinearLayout {
+    lateinit var dateUtil: DateUtil
+
     private lateinit var binding: ViewMessageRequestBinding
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels
     var thread: ThreadRecord? = null
@@ -38,7 +43,7 @@ class MessageRequestView : LinearLayout {
         val senderDisplayName = getUserDisplayName(thread.recipient)
             ?: thread.recipient.address.toString()
         binding.displayNameTextView.text = senderDisplayName
-        binding.timestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), thread.date)
+        binding.timestampTextView.text = dateUtil.getDisplayFormattedTimeSpanString(thread.date)
         val rawSnippet = thread.getDisplayBody(context)
         val snippet = highlightMentions(rawSnippet, thread.threadId, context)
         binding.snippetTextView.text = snippet

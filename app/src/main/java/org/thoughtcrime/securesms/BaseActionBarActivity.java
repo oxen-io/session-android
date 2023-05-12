@@ -21,13 +21,21 @@ import org.session.libsession.utilities.dynamiclanguage.DynamicLanguageActivityH
 import org.session.libsession.utilities.dynamiclanguage.DynamicLanguageContextWrapper;
 import org.thoughtcrime.securesms.conversation.v2.WindowUtil;
 import org.thoughtcrime.securesms.util.ActivityUtilitiesKt;
+import org.thoughtcrime.securesms.util.DateUtil;
 import org.thoughtcrime.securesms.util.ThemeState;
 import org.thoughtcrime.securesms.util.UiModeUtilities;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import network.loki.messenger.R;
 
+@AndroidEntryPoint
 public abstract class BaseActionBarActivity extends AppCompatActivity {
   private static final String TAG = BaseActionBarActivity.class.getSimpleName();
+
+  @Inject DateUtil dateUtil;
+
   public ThemeState currentThemeState;
 
   private TextSecurePreferences getPreferences() {

@@ -14,6 +14,7 @@ import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.ContentView
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.GroupConversation
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.Message
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.SavedMessages
+import org.thoughtcrime.securesms.util.DateUtil
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.SearchUtil
 import java.util.Locale
@@ -134,7 +135,7 @@ fun ContentView.bindModel(query: String?, model: Message) {
 //    if (hasUnreads) {
 //        binding.unreadCountTextView.text = model.unread.toString()
 //    }
-    binding.searchResultTimestamp.text = DateUtils.getDisplayFormattedTimeSpanString(binding.root.context, Locale.getDefault(), model.messageResult.sentTimestampMs)
+    binding.searchResultTimestamp.text = DateUtil(binding.root.context).getDisplayFormattedTimeSpanString(model.messageResult.sentTimestampMs)
     binding.searchResultProfilePicture.root.update(model.messageResult.conversationRecipient)
     val textSpannable = SpannableStringBuilder()
     if (model.messageResult.conversationRecipient != model.messageResult.messageRecipient) {
