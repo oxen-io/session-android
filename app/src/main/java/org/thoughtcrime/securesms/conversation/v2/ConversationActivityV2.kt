@@ -40,7 +40,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.text.set
 import androidx.core.text.toSpannable
 import androidx.core.view.drawToBitmap
-import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
@@ -58,7 +57,6 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -93,6 +91,7 @@ import org.session.libsession.utilities.MediaTypes
 import org.session.libsession.utilities.Stub
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.concurrent.SimpleTask
+import org.session.libsession.utilities.isScrolledToBottom
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.recipients.RecipientModifiedListener
 import org.session.libsignal.crypto.MnemonicCodec
@@ -184,7 +183,6 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
-import kotlin.time.Duration.Companion.seconds
 
 // Some things that seemingly belong to the input bar (e.g. the voice message recording UI) are actually
 // part of the conversation activity layout. This is just because it makes the layout a lot simpler. The
@@ -988,14 +986,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun handleRecyclerViewScrolled() {
-        // FIXME: Checking isScrolledToBottom is a quick fix for an issue where the
-        //        typing indicator overlays the recycler view when scrolled up
         val binding = binding ?: return
         val wasTypingIndicatorVisibleBefore = binding.typingIndicatorViewContainer.isVisible
         binding.typingIndicatorViewContainer.isVisible = wasTypingIndicatorVisibleBefore && isScrolledToBottom
         binding.typingIndicatorViewContainer.isVisible
         showOrHideScrollToBottomButton()
-        val firstVisiblePosition = layoutManager?.findFirstCompletelyVisibleItemPosition() ?: RecyclerView.NO_POSITION
+        val firstVisiblePosition = layoutManager?.findFirstVisibleItemPosition() ?: RecyclerView.NO_POSITION
         if (!firstLoad.get() && firstVisiblePosition != RecyclerView.NO_POSITION) {
             val visibleItemTimestamp = adapter.getTimestampForItemAt(firstVisiblePosition)
             if (visibleItemTimestamp != null) {
