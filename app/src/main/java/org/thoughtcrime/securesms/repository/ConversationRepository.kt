@@ -270,7 +270,7 @@ class DefaultConversationRepository @Inject constructor(
             while (reader.next != null) {
                 deleteMessageRequest(reader.current)
                 val recipient = reader.current.recipient
-                if (block && !recipient.isOpenGroupInboxRecipient) {
+                if (block) {
                     setBlocked(recipient, true)
                 }
             }

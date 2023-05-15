@@ -49,7 +49,7 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
         adapter.glide = glide
         binding.recyclerView.adapter = adapter
 
-        binding.clearAllMessageRequestsButton.setOnClickListener { deleteAllAndBlock() }
+        binding.clearAllMessageRequestsButton.setOnClickListener { deleteAll() }
     }
 
     override fun onResume() {
@@ -113,11 +113,11 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
         binding.clearAllMessageRequestsButton.isVisible = threadCount != 0
     }
 
-    private fun deleteAllAndBlock() {
+    private fun deleteAll() {
         val dialog = AlertDialog.Builder(this)
         dialog.setMessage(resources.getString(R.string.message_requests_clear_all_message))
         dialog.setPositiveButton(R.string.yes) { _, _ ->
-            viewModel.clearAllMessageRequests(true)
+            viewModel.clearAllMessageRequests(false)
             LoaderManager.getInstance(this).restartLoader(0, null, this)
             lifecycleScope.launch(Dispatchers.IO) {
                 ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@MessageRequestsActivity)
