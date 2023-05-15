@@ -62,7 +62,7 @@ object MessageSender {
     }
 
     // Convenience
-    fun send(message: Message, destination: Destination, isSyncMessage: Boolean = false): Promise<Unit, Exception> {
+    fun send(message: Message, destination: Destination, isSyncMessage: Boolean): Promise<Unit, Exception> {
         return if (destination is Destination.LegacyOpenGroup || destination is Destination.OpenGroup || destination is Destination.OpenGroupInbox) {
             sendToOpenGroupDestination(destination, message)
         } else {
@@ -440,17 +440,17 @@ object MessageSender {
         JobQueue.shared.add(job)
     }
 
-    fun sendNonDurably(message: VisibleMessage, attachments: List<SignalAttachment>, address: Address): Promise<Unit, Exception> {
+    fun sendNonDurably(message: VisibleMessage, attachments: List<SignalAttachment>, address: Address, isSyncMessage: Boolean): Promise<Unit, Exception> {
         val attachmentIDs = MessagingModuleConfiguration.shared.messageDataProvider.getAttachmentIDsFor(message.id!!)
         message.attachmentIDs.addAll(attachmentIDs)
-        return sendNonDurably(message, address)
+        return sendNonDurably(message, address, isSyncMessage)
     }
 
-    fun sendNonDurably(message: Message, address: Address): Promise<Unit, Exception> {
+    fun sendNonDurably(message: Message, address: Address, isSyncMessage: Boolean): Promise<Unit, Exception> {
         val threadID = MessagingModuleConfiguration.shared.storage.getThreadId(address)
         message.threadID = threadID
         val destination = Destination.from(address)
-        return send(message, destination)
+        return send(message, destination, isSyncMessage)
     }
 
     // Closed groups

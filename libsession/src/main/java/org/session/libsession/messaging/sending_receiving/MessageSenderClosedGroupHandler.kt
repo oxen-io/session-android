@@ -55,11 +55,12 @@ fun MessageSender.create(name: String, members: Collection<String>): Promise<Str
         // Send a closed group update message to all members individually
         val closedGroupUpdateKind = ClosedGroupControlMessage.Kind.New(ByteString.copyFrom(Hex.fromStringCondensed(groupPublicKey)), name, encryptionKeyPair, membersAsData, adminsAsData, 0)
         val sentTime = SnodeAPI.nowWithOffset
+        val ourPubKey = storage.getUserPublicKey()
         for (member in members) {
             val closedGroupControlMessage = ClosedGroupControlMessage(closedGroupUpdateKind)
             closedGroupControlMessage.sentTimestamp = sentTime
             try {
-                sendNonDurably(closedGroupControlMessage, Address.fromSerialized(member)).get()
+                sendNonDurably(closedGroupControlMessage, Address.fromSerialized(member), member == ourPubKey).get()
             } catch (e: Exception) {
                 deferred.reject(e)
                 return@queue
@@ -225,7 +226,7 @@ fun MessageSender.leave(groupPublicKey: String, notifyUser: Boolean = true): Pro
         val sentTime = SnodeAPI.nowWithOffset
         closedGroupControlMessage.sentTimestamp = sentTime
         storage.setActive(groupID, false)
-        sendNonDurably(closedGroupControlMessage, Address.fromSerialized(groupID)).success {
+        sendNonDurably(closedGroupControlMessage, Address.fromSerialized(groupID), isSyncMessage = false).success {
             // Notify the user
             val infoType = SignalServiceGroup.Type.QUIT
             if (notifyUser) {
@@ -285,7 +286,8 @@ fun MessageSender.sendEncryptionKeyPair(groupPublicKey: String, newKeyPair: ECKe
     val closedGroupControlMessage = ClosedGroupControlMessage(kind)
     closedGroupControlMessage.sentTimestamp = sentTime
     return if (force) {
-        MessageSender.sendNonDurably(closedGroupControlMessage, Address.fromSerialized(destination))
+        val isSync = MessagingModuleConfiguration.shared.storage.getUserPublicKey() == destination
+        MessageSender.sendNonDurably(closedGroupControlMessage, Address.fromSerialized(destination), isSyncMessage = isSync)
     } else {
         MessageSender.send(closedGroupControlMessage, Address.fromSerialized(destination))
         null

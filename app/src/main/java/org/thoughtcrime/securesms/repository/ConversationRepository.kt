@@ -281,7 +281,7 @@ class DefaultConversationRepository @Inject constructor(
     override suspend fun acceptMessageRequest(threadId: Long, recipient: Recipient): ResultOf<Unit> = suspendCoroutine { continuation ->
         storage.setRecipientApproved(recipient, true)
         val message = MessageRequestResponse(true)
-        MessageSender.send(message, Destination.from(recipient.address))
+        MessageSender.send(message, Destination.from(recipient.address), isSyncMessage = recipient.isLocalNumber)
             .success {
                 threadDb.setHasSent(threadId, true)
                 continuation.resume(ResultOf.Success(Unit))

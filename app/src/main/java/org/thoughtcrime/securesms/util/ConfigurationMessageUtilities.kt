@@ -98,7 +98,7 @@ object ConfigurationMessageUtilities {
             )
         }
         val configurationMessage = ConfigurationMessage.getCurrent(contacts) ?: return Promise.ofSuccess(Unit)
-        val promise = MessageSender.send(configurationMessage, Destination.from(Address.fromSerialized(userPublicKey)))
+        val promise = MessageSender.send(configurationMessage, Destination.from(Address.fromSerialized(userPublicKey)), isSyncMessage = true)
         TextSecurePreferences.setLastConfigurationSyncTime(context, System.currentTimeMillis())
         return promise
     }

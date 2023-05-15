@@ -64,7 +64,8 @@ class MessageSendJob(val message: Message, val destination: Destination) : Job {
                 return
             } // Wait for all attachments to upload before continuing
         }
-        val promise = MessageSender.send(this.message, this.destination).success {
+        val isSync = destination is Destination.Contact && destination.publicKey == sender
+        val promise = MessageSender.send(this.message, this.destination, isSync).success {
             this.handleSuccess(dispatcherName)
         }.fail { exception ->
             var logStacktrace = true
