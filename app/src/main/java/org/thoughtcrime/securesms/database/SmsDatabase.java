@@ -564,7 +564,7 @@ public class SmsDatabase extends MessagingDatabase {
     if (runThreadUpdate) {
       DatabaseComponent.get(context).threadDatabase().update(threadId, true, true);
     }
-    DatabaseComponent.get(context).threadDatabase().setLastSeen(threadId);
+    DatabaseComponent.get(context).threadDatabase().setLastSeen(threadId, message.getSentTimestampMillis());
 
     DatabaseComponent.get(context).threadDatabase().setHasSent(threadId, true);
 

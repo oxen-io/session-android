@@ -154,7 +154,6 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                     Log.w("Loki-DBG", "shared config message handled in configs wasn't SharedConfigurationMessage but was ${message.javaClass.simpleName}")
                     return@forEach
                 }
-                Log.d("Loki-DBG", "Merging config of kind ${message.kind} into ${forConfigObject.javaClass.simpleName}")
                 forConfigObject.merge(hash!! to message.data)
             } catch (e: Exception) {
                 Log.e("Loki", e)

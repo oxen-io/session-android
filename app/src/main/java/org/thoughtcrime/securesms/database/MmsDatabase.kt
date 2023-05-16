@@ -739,7 +739,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             )
         }
         with (get(context).threadDatabase()) {
-            setLastSeen(threadId)
+            setLastSeen(threadId, message.sentTimeMillis)
             setHasSent(threadId, true)
             if (runThreadUpdate) {
                 update(threadId, true, true)

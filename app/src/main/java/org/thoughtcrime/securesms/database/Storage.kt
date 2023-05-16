@@ -514,9 +514,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
 
         toDeleteClosedGroups.forEach { deleteGroup ->
             val threadId = getThreadId(deleteGroup.encodedId)
-            if (threadId == null) {
-                Log.w("Loki-DBG", "Existing group had no thread to delete")
-            } else {
+            if (threadId != null) {
                 Log.d("Loki-DBG", "Deleting group for thread $threadId")
                 ClosedGroupManager.silentlyRemoveGroup(context,threadId,GroupUtil.doubleDecodeGroupId(deleteGroup.encodedId), deleteGroup.encodedId, localUserPublicKey, delete = true)
             }
