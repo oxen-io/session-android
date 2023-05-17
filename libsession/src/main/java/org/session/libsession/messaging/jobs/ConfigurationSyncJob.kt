@@ -90,6 +90,7 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
             Log.d(TAG, "Including delete request for current hashes")
         }
 
+        // TODO: re-add all this to do actual network sync job
         val batchResponse = SnodeAPI.getSingleTargetSnode(destination.destinationPublicKey()).bind { snode ->
             SnodeAPI.getRawBatchResponse(
                 snode,

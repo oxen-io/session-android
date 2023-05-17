@@ -41,7 +41,7 @@ import org.thoughtcrime.securesms.database.model.SmsMessageRecord
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.SearchUtil
 import org.thoughtcrime.securesms.util.getAccentColor
-import java.util.*
+import java.util.Locale
 import kotlin.math.roundToInt
 
 class VisibleMessageContentView : ConstraintLayout {
@@ -131,7 +131,6 @@ class VisibleMessageContentView : ConstraintLayout {
                     delegate?.scrollToMessageIfPossible(quote.id)
                 }
             }
-            val hasMedia = message.slideDeck.asAttachments().isNotEmpty()
         }
 
         if (message is MmsMessageRecord) {

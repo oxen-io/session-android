@@ -593,6 +593,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
 
       if (oldVersion < lokiV41) {
         db.execSQL(ConfigDatabase.CREATE_CONFIG_TABLE_COMMAND);
+        // TODO: delete threads where necessary for one to ones
       }
 
       db.setTransactionSuccessful();

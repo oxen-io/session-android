@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.first
 import org.hamcrest.CoreMatchers.endsWith
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.anyLong
@@ -31,7 +30,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
     private lateinit var recipient: Recipient
 
     private val viewModel: ConversationViewModel by lazy {
-        ConversationViewModel(threadId, edKeyPair, repository, storage)
+        ConversationViewModel(threadId, edKeyPair, mock(), repository, storage)
     }
 
     @Before

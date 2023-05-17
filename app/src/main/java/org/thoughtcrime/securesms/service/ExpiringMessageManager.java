@@ -144,24 +144,23 @@ public class ExpiringMessageManager implements SSKEnvironment.MessageExpirationM
     String groupId = message.getGroupPublicKey();
     int duration = message.getDuration();
 
-    Address address = Address.fromSerialized((message.getSyncTarget() != null && !message.getSyncTarget().isEmpty()) ? message.getSyncTarget() : message.getRecipient());
-    Recipient recipient = Recipient.from(context, address, false);
-    if (message.getThreadID() == null || message.getThreadID() < 0) {
-      StorageProtocol storage = MessagingModuleConfiguration.getShared().getStorage();
-      message.setThreadID(storage.getOrCreateThreadIdFor(address));
-    }
+    Address address;
 
     try {
+      if (groupId != null) {
+        address = Address.fromSerialized(GroupUtil.doubleEncodeGroupID(groupId));
+      } else {
+        address = Address.fromSerialized((message.getSyncTarget() != null && !message.getSyncTarget().isEmpty()) ? message.getSyncTarget() : message.getRecipient());
+      }
+
+      Recipient recipient = Recipient.from(context, address, false);
+      StorageProtocol storage = MessagingModuleConfiguration.getShared().getStorage();
+      message.setThreadID(storage.getOrCreateThreadIdFor(address));
+
       OutgoingExpirationUpdateMessage timerUpdateMessage = new OutgoingExpirationUpdateMessage(recipient, sentTimestamp, duration * 1000L, groupId);
       mmsDatabase.insertSecureDecryptedMessageOutbox(timerUpdateMessage, message.getThreadID(), sentTimestamp, true);
-
-      if (groupId != null) {
-        // we need the group ID as recipient for setExpireMessages below
-        recipient = Recipient.from(context, Address.fromSerialized(GroupUtil.doubleEncodeGroupID(groupId)), false);
-      }
       //set the timer to the conversation
       MessagingModuleConfiguration.getShared().getStorage().setExpirationTimer(recipient.getAddress().serialize(), duration);
-
     } catch (MmsException | IOException ioe) {
       Log.e("Loki", "Failed to insert expiration update message.", ioe);
     }
