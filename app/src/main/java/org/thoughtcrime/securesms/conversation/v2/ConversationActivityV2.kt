@@ -498,6 +498,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 jumpToMessage(author, messageTimestamp, null)
             } else if (firstLoad.getAndSet(false)) {
                 scrollToFirstUnreadMessageIfNeeded()
+                handleRecyclerViewScrolled()
             }
         }
         updatePlaceholder()
