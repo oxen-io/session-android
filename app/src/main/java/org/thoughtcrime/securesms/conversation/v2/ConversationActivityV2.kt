@@ -1573,7 +1573,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             showVoiceMessageUI()
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             audioRecorder.startRecording()
-            stopAudioHandler.postDelayed(stopVoiceMessageRecordingTask, 60000) // Limit voice messages to 1 minute each
+            stopAudioHandler.postDelayed(stopVoiceMessageRecordingTask, 300000) // Limit voice messages to 5 minute each
         } else {
             Permissions.with(this)
                 .request(Manifest.permission.RECORD_AUDIO)
