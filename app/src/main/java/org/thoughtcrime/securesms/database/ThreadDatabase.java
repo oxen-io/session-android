@@ -563,6 +563,7 @@ public class ThreadDatabase extends Database {
     db.execSQL(reflectUpdates, new Object[]{threadId});
     db.setTransactionSuccessful();
     db.endTransaction();
+    notifyConversationListeners(threadId);
     notifyConversationListListeners();
     return true;
   }

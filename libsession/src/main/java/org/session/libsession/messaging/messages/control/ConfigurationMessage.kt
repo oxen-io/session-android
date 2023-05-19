@@ -124,7 +124,7 @@ class ConfigurationMessage(var closedGroups: List<ClosedGroup>, var openGroups: 
             val profileKey = ProfileKeyUtil.getProfileKey(context)
             val groups = storage.getAllGroups(includeInactive = false)
             for (group in groups) {
-                if (group.isClosedGroup) {
+                if (group.isClosedGroup && group.isActive) {
                     if (!group.members.contains(Address.fromSerialized(storage.getUserPublicKey()!!))) continue
                     val groupPublicKey = GroupUtil.doubleDecodeGroupID(group.encodedId).toHexString()
                     val encryptionKeyPair = storage.getLatestClosedGroupEncryptionKeyPair(groupPublicKey) ?: continue

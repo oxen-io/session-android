@@ -994,6 +994,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         showOrHideScrollToBottomButton()
         val firstVisiblePosition = layoutManager?.findFirstVisibleItemPosition() ?: RecyclerView.NO_POSITION
         if (!firstLoad.get() && firstVisiblePosition != RecyclerView.NO_POSITION) {
+            if (firstVisiblePosition == 0) {
+                // last item, set it to now?
+                bufferedLastSeenChannel.trySend(SnodeAPI.nowWithOffset)
+            }
             val visibleItemTimestamp = adapter.getTimestampForItemAt(firstVisiblePosition)
             if (visibleItemTimestamp != null) {
                 bufferedLastSeenChannel.trySend(visibleItemTimestamp)

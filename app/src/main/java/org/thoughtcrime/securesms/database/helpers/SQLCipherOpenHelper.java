@@ -41,6 +41,7 @@ import org.thoughtcrime.securesms.database.SessionJobDatabase;
 import org.thoughtcrime.securesms.database.SmsDatabase;
 import org.thoughtcrime.securesms.database.ThreadDatabase;
 import org.thoughtcrime.securesms.notifications.NotificationChannels;
+import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities;
 
 import java.io.File;
 
@@ -593,7 +594,8 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
 
       if (oldVersion < lokiV41) {
         db.execSQL(ConfigDatabase.CREATE_CONFIG_TABLE_COMMAND);
-        // TODO: delete threads where necessary for one to ones
+        db.execSQL(ConfigurationMessageUtilities.DELETE_INACTIVE_GROUPS);
+        db.execSQL(ConfigurationMessageUtilities.DELETE_INACTIVE_ONE_TO_ONES);
       }
 
       db.setTransactionSuccessful();

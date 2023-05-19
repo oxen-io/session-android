@@ -24,6 +24,9 @@ import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.WindowDebouncer
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.toHexString
+import org.thoughtcrime.securesms.database.GroupDatabase
+import org.thoughtcrime.securesms.database.GroupMemberDatabase
+import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import java.util.Timer
 
@@ -260,5 +263,16 @@ object ConfigurationMessageUtilities {
         if (dump.isEmpty()) return null
         return dump
     }
+
+    @JvmField
+    val DELETE_INACTIVE_GROUPS: String = """
+        DELETE FROM ${GroupDatabase.TABLE_NAME} WHERE ${GroupDatabase.GROUP_ID} IN (SELECT ${ThreadDatabase.ADDRESS} FROM ${ThreadDatabase.TABLE_NAME} WHERE ${ThreadDatabase.MESSAGE_COUNT} <= 0 AND ${ThreadDatabase.ADDRESS} LIKE '${GroupUtil.CLOSED_GROUP_PREFIX}%');
+        DELETE FROM ${ThreadDatabase.TABLE_NAME} WHERE ${ThreadDatabase.ADDRESS} IN (SELECT ${ThreadDatabase.ADDRESS} FROM ${ThreadDatabase.TABLE_NAME} WHERE ${ThreadDatabase.MESSAGE_COUNT} <= 0 AND ${ThreadDatabase.ADDRESS} LIKE '${GroupUtil.CLOSED_GROUP_PREFIX}%');
+    """.trimIndent()
+
+    @JvmField
+    val DELETE_INACTIVE_ONE_TO_ONES: String = """
+        DELETE FROM ${ThreadDatabase.TABLE_NAME} WHERE ${ThreadDatabase.MESSAGE_COUNT} <= 0 AND ${ThreadDatabase.ADDRESS} NOT LIKE '${GroupUtil.CLOSED_GROUP_PREFIX}%' AND ${ThreadDatabase.ADDRESS} NOT LIKE '${GroupUtil.OPEN_GROUP_PREFIX}%' AND ${ThreadDatabase.ADDRESS} NOT LIKE '${GroupUtil.OPEN_GROUP_INBOX_PREFIX}%';
+    """.trimIndent()
 
 }

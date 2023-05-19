@@ -99,6 +99,8 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         if (!getRecipientApproved(address)) return // don't store unapproved / message requests
         if (getUserPublicKey() == address.serialize()) {
             Log.d("Loki-DBG", "NTS created, context:\n${Thread.currentThread().stackTrace.joinToString("\n")}")
+        } else {
+            Log.d("Loki-DBG", "Thread created ${address.serialize()}")
         }
 
         val volatile = configFactory.convoVolatile ?: return
