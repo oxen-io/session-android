@@ -10,7 +10,7 @@
             android:summary="@string/preferences_notifications_strategy_category_fast_mode_summary"
             android:defaultValue="false" />
 
-        <Preference android:layout="@layout/go_to_device_settings"
+        <Preference android:title="@string/go_to_device_notification_settings"
             android:key="pref_notification_priority" />
 
     </PreferenceCategory>

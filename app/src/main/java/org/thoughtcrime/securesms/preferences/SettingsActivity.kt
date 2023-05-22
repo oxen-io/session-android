@@ -2,10 +2,7 @@ package org.thoughtcrime.securesms.preferences
 
 import android.Manifest
 import android.app.Activity
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
@@ -19,6 +16,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.BuildConfig
@@ -38,6 +36,7 @@ import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol
 import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.avatar.AvatarSelection
+import org.thoughtcrime.securesms.components.ProfilePictureView
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.home.PathActivity
 import org.thoughtcrime.securesms.messagerequests.MessageRequestsActivity
@@ -66,8 +65,6 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
     private var displayNameEditActionMode: ActionMode? = null
         set(value) { field = value; handleDisplayNameEditActionModeChanged() }
     private lateinit var glide: GlideRequests
-    private var displayNameToBeUploaded: String? = null
-    private var profilePictureToBeUploaded: ByteArray? = null
     private var tempFile: File? = null
 
     private val hexEncodedPublicKey: String
@@ -88,11 +85,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         val displayName = TextSecurePreferences.getProfileName(this) ?: hexEncodedPublicKey
         glide = GlideApp.with(this)
         with(binding) {
-            profilePictureView.root.glide = glide
-            profilePictureView.root.publicKey = hexEncodedPublicKey
-            profilePictureView.root.displayName = displayName
-            profilePictureView.root.isLarge = true
-            profilePictureView.root.update()
+            setupProfilePictureView(profilePictureView.root)
             profilePictureView.root.setOnClickListener {
                 showEditProfilePictureUI()
             }
@@ -114,6 +107,14 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             clearAllDataButton.setOnClickListener { clearAllData() }
             versionTextView.text = String.format(getString(R.string.version_s), "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
         }
+    }
+
+    private fun setupProfilePictureView(view: ProfilePictureView) {
+        view.glide = glide
+        view.publicKey = hexEncodedPublicKey
+        view.displayName = TextSecurePreferences.getProfileName(this) ?: hexEncodedPublicKey
+        view.isLarge = true
+        view.update()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -165,9 +166,9 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                 }
                 AsyncTask.execute {
                     try {
-                        profilePictureToBeUploaded = BitmapUtil.createScaledBytes(this@SettingsActivity, AvatarSelection.getResultUri(data), ProfileMediaConstraints()).bitmap
+                        val profilePictureToBeUploaded = BitmapUtil.createScaledBytes(this@SettingsActivity, AvatarSelection.getResultUri(data), ProfileMediaConstraints()).bitmap
                         Handler(Looper.getMainLooper()).post {
-                            updateProfile(true)
+                            updateProfile(true, profilePictureToBeUploaded)
                         }
                     } catch (e: BitmapDecodingException) {
                         e.printStackTrace()
@@ -201,25 +202,32 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         }
     }
 
-    private fun updateProfile(isUpdatingProfilePicture: Boolean) {
+    private fun updateProfile(
+        isUpdatingProfilePicture: Boolean,
+        profilePicture: ByteArray? = null,
+        displayName: String? = null
+    ) {
         binding.loader.isVisible = true
         val promises = mutableListOf<Promise<*, Exception>>()
-        val displayName = displayNameToBeUploaded
         if (displayName != null) {
             TextSecurePreferences.setProfileName(this, displayName)
             configFactory.user?.setName(displayName)
         }
-        val profilePicture = profilePictureToBeUploaded
         val encodedProfileKey = ProfileKeyUtil.generateEncodedProfileKey(this)
-        if (isUpdatingProfilePicture && profilePicture != null) {
-            promises.add(ProfilePictureUtilities.upload(profilePicture, encodedProfileKey, this))
+        if (isUpdatingProfilePicture) {
+            if (profilePicture != null) {
+                promises.add(ProfilePictureUtilities.upload(profilePicture, encodedProfileKey, this))
+            } else {
+                TextSecurePreferences.setLastProfilePictureUpload(this, System.currentTimeMillis())
+                TextSecurePreferences.setProfilePictureURL(this, null)
+            }
         }
         val compoundPromise = all(promises)
         compoundPromise.successUi { // Do this on the UI thread so that it happens before the alwaysUi clause below
             val userConfig = configFactory.user
-            if (isUpdatingProfilePicture && profilePicture != null) {
+            if (isUpdatingProfilePicture) {
                 AvatarHelper.setAvatar(this, Address.fromSerialized(TextSecurePreferences.getLocalNumber(this)!!), profilePicture)
-                TextSecurePreferences.setProfileAvatarId(this, SecureRandom().nextInt())
+                TextSecurePreferences.setProfileAvatarId(this, profilePicture?.let { SecureRandom().nextInt() } ?: 0 )
                 ProfileKeyUtil.setEncodedProfileKey(this, encodedProfileKey)
                 // new config
                 val url = TextSecurePreferences.getProfilePictureURL(this)
@@ -239,10 +247,10 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             if (displayName != null) {
                 binding.btnGroupNameDisplay.text = displayName
             }
-            binding.profilePictureView.root.recycle() // Clear the cached image before updating
-            binding.profilePictureView.root.update()
-            displayNameToBeUploaded = null
-            profilePictureToBeUploaded = null
+            if (isUpdatingProfilePicture) {
+                binding.profilePictureView.root.recycle() // Clear the cached image before updating
+                binding.profilePictureView.root.update()
+            }
             binding.loader.isVisible = false
         }
     }
@@ -263,8 +271,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             Toast.makeText(this, R.string.activity_settings_display_name_too_long_error, Toast.LENGTH_SHORT).show()
             return false
         }
-        displayNameToBeUploaded = displayName
-        updateProfile(false)
+        updateProfile(false, displayName = displayName)
         return true
     }
 
@@ -282,6 +289,28 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
     }
 
     private fun showEditProfilePictureUI() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.activity_settings_set_display_picture)
+            .setView(R.layout.dialog_change_avatar)
+            .setPositiveButton(R.string.activity_settings_upload) { _, _ ->
+                startAvatarSelection()
+            }
+            .setNegativeButton(R.string.cancel) { _, _ -> }
+            .apply {
+                if (TextSecurePreferences.getProfileAvatarId(context) != 0) {
+                    setNeutralButton(R.string.activity_settings_remove) { _, _ -> removeAvatar() }
+                }
+            }
+            .show().apply {
+                findViewById<ProfilePictureView>(R.id.profile_picture_view)?.let(::setupProfilePictureView)
+            }
+    }
+
+    private fun removeAvatar() {
+        updateProfile(true)
+    }
+
+    private fun startAvatarSelection() {
         // Ask for an optional camera permission.
         Permissions.with(this)
             .request(Manifest.permission.CAMERA)

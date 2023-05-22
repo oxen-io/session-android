@@ -319,7 +319,6 @@
         <item name="colorPrimaryDark">@color/classic_dark_0</item>
         <item name="colorControlNormal">?android:textColorPrimary</item>
         <item name="colorControlActivated">?colorAccent</item>
-        <item name="android:colorControlHighlight">?colorAccent</item>
         <item name="android:textColorPrimary">@color/classic_dark_6</item>
         <item name="android:textColorSecondary">?android:textColorPrimary</item>
         <item name="android:textColorTertiary">@color/classic_dark_5</item>
@@ -334,7 +333,7 @@
         <item name="colorCellBackground">@color/classic_dark_1</item>
         <item name="colorSettingsBackground">@color/classic_dark_1</item>
         <item name="colorDividerBackground">@color/classic_dark_3</item>
-        <item name="colorCellRipple">@color/classic_dark_3</item>
+        <item name="android:colorControlHighlight">@color/classic_dark_3</item>
         <item name="actionBarPopupTheme">@style/Dark.Popup</item>
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
@@ -382,7 +381,6 @@
         <item name="input_bar_lock_view_background">@color/classic_dark_2</item>
         <item name="input_bar_lock_view_border">@color/classic_dark_3</item>
         <item name="mention_candidates_view_background">@color/classic_dark_2</item>
-        <item name="mention_candidates_view_background_ripple">@color/classic_dark_3</item>
         <item name="scroll_to_bottom_button_background">@color/classic_dark_1</item>
         <item name="scroll_to_bottom_button_border">@color/classic_dark_3</item>
         <item name="conversation_unread_count_indicator_background">@color/classic_dark_4</item>
@@ -397,7 +395,6 @@
         <item name="colorPrimaryDark">@color/classic_light_6</item>
         <item name="colorControlNormal">?android:textColorPrimary</item>
         <item name="colorControlActivated">?colorAccent</item>
-        <item name="android:colorControlHighlight">?colorAccent</item>
         <item name="android:textColorPrimary">@color/classic_light_0</item>
         <item name="android:textColorSecondary">@color/classic_light_1</item>
         <item name="android:textColorTertiary">@color/classic_light_1</item>
@@ -408,7 +405,7 @@
         <item name="colorCellBackground">@color/classic_light_6</item>
         <item name="colorSettingsBackground">@color/classic_light_5</item>
         <item name="colorDividerBackground">@color/classic_light_3</item>
-        <item name="colorCellRipple">@color/classic_light_3</item>
+        <item name="android:colorControlHighlight">@color/classic_light_3</item>
         <item name="bottomSheetDialogTheme">@style/Classic.Light.BottomSheet</item>
         <item name="android:actionMenuTextColor">?android:textColorPrimary</item>
         <item name="popupTheme">?actionBarPopupTheme</item>
@@ -467,7 +464,6 @@
         <item name="input_bar_lock_view_background">@color/classic_light_4</item>
         <item name="input_bar_lock_view_border">@color/classic_light_2</item>
         <item name="mention_candidates_view_background">?colorCellBackground</item>
-        <item name="mention_candidates_view_background_ripple">?colorCellRipple</item>
         <item name="scroll_to_bottom_button_background">@color/classic_light_4</item>
         <item name="scroll_to_bottom_button_border">@color/classic_light_2</item>
         <item name="conversation_unread_count_indicator_background">@color/classic_dark_4</item>
@@ -482,7 +478,6 @@
         <item name="colorPrimaryDark">@color/ocean_dark_2</item>
         <item name="colorControlNormal">@color/ocean_dark_7</item>
         <item name="colorControlActivated">?colorAccent</item>
-        <item name="android:colorControlHighlight">?colorAccent</item>
         <item name="android:textColorPrimary">@color/ocean_dark_7</item>
         <item name="android:textColorSecondary">@color/ocean_dark_5</item>
         <item name="android:textColorTertiary">@color/ocean_dark_5</item>
@@ -496,7 +491,7 @@
         <item name="colorCellBackground">@color/ocean_dark_3</item>
         <item name="colorSettingsBackground">@color/ocean_dark_1</item>
         <item name="colorDividerBackground">@color/ocean_dark_4</item>
-        <item name="colorCellRipple">@color/ocean_dark_4</item>
+        <item name="android:colorControlHighlight">@color/ocean_dark_4</item>
         <item name="bottomSheetDialogTheme">@style/Ocean.Dark.BottomSheet</item>
         <item name="popupTheme">?actionBarPopupTheme</item>
         <item name="actionMenuTextColor">?android:textColorPrimary</item>
@@ -549,7 +544,6 @@
         <item name="input_bar_lock_view_background">?colorPrimary</item>
         <item name="input_bar_lock_view_border">?colorPrimary</item>
         <item name="mention_candidates_view_background">@color/ocean_dark_2</item>
-        <item name="mention_candidates_view_background_ripple">@color/ocean_dark_3</item>
         <item name="scroll_to_bottom_button_background">@color/ocean_dark_4</item>
         <item name="scroll_to_bottom_button_border">?colorPrimary</item>
         <item name="conversation_unread_count_indicator_background">@color/ocean_dark_4</item>
@@ -564,7 +558,6 @@
         <item name="colorPrimaryDark">@color/ocean_light_6</item>
         <item name="colorControlNormal">@color/ocean_light_1</item>
         <item name="colorControlActivated">?colorAccent</item>
-        <item name="android:colorControlHighlight">?colorAccent</item>
         <item name="android:textColorPrimary">@color/ocean_light_1</item>
         <item name="android:textColorSecondary">@color/ocean_light_2</item>
         <item name="android:textColorTertiary">@color/ocean_light_2</item>
@@ -578,7 +571,7 @@
         <item name="colorCellBackground">@color/ocean_light_5</item>
         <item name="colorSettingsBackground">@color/ocean_light_6</item>
         <item name="colorDividerBackground">@color/ocean_light_3</item>
-        <item name="colorCellRipple">@color/ocean_light_4</item>
+        <item name="android:colorControlHighlight">@color/ocean_light_4</item>
         <item name="bottomSheetDialogTheme">@style/Ocean.Light.BottomSheet</item>
         <item name="actionBarPopupTheme">@style/Light.Popup</item>
         <item name="popupTheme">?actionBarPopupTheme</item>
@@ -633,7 +626,6 @@
         <item name="input_bar_lock_view_background">@color/ocean_light_5</item>
         <item name="input_bar_lock_view_border">@color/ocean_light_1</item>
         <item name="mention_candidates_view_background">?colorCellBackground</item>
-        <item name="mention_candidates_view_background_ripple">?colorCellRipple</item>
         <item name="scroll_to_bottom_button_background">?input_bar_button_background_opaque</item>
         <item name="scroll_to_bottom_button_border">?input_bar_button_background_opaque_border</item>
         <item name="conversation_unread_count_indicator_background">?colorAccent</item>

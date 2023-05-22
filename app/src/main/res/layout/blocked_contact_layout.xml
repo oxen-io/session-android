@@ -7,7 +7,6 @@
     android:paddingHorizontal="@dimen/medium_spacing"
     android:paddingVertical="@dimen/small_spacing"
     android:gravity="center_vertical"
-    android:background="?selectableItemBackground"
     android:id="@+id/backgroundContainer">
     <include layout="@layout/view_profile_picture"
         android:id="@+id/profilePictureView"
