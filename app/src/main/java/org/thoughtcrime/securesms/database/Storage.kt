@@ -178,11 +178,12 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         return Profile(displayName, profileKey, profilePictureUrl)
     }
 
-    override fun setUserProfilePictureURL(newProfilePicture: String?) {
+    override fun setUserProfilePicture(newProfilePicture: String?, newProfileKey: ByteArray?) {
         val ourRecipient = fromSerialized(getUserPublicKey()!!).let {
             Recipient.from(context, it, false)
         }
         TextSecurePreferences.setProfilePictureURL(context, newProfilePicture)
+        TextSecurePreferences.setProfileKey(context, newProfileKey?.let { Base64.encodeBytes(it) })
         ApplicationContext.getInstance(context).jobManager.add(RetrieveProfileAvatarJob(ourRecipient, newProfilePicture))
     }
 
@@ -427,10 +428,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
             clearUserPic()
         } else if (userPic.key.isNotEmpty() && userPic.url.isNotEmpty()
             && TextSecurePreferences.getProfilePictureURL(context) != userPic.url) {
-            val profileKey = Base64.encodeBytes(userPic.key)
-            ProfileKeyUtil.setEncodedProfileKey(context, profileKey)
-            profileManager.setProfileKey(context, recipient, userPic.key)
-            setUserProfilePictureURL(userPic.url)
+            setUserProfilePicture(userPic.url, userPic.key)
         }
         if (userProfile.getNtsPriority() == PRIORITY_HIDDEN) {
             // delete nts thread if needed
@@ -458,10 +456,9 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         TextSecurePreferences.setProfileKey(context, null)
         TextSecurePreferences.setProfileAvatarId(context, 0)
         ProfileKeyUtil.setEncodedProfileKey(context, null)
-        SSKEnvironment.shared.profileManager.setProfileKey(context, recipient, null)
         recipientDatabase.setProfileAvatar(recipient, null)
 
-        setUserProfilePictureURL(null)
+        setUserProfilePicture(null, null)
         Recipient.removeCached(fromSerialized(userPublicKey))
         configFactory.user?.setPic(UserPic.DEFAULT)
         ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
@@ -1124,9 +1121,8 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
             if (contact.profilePicture != UserPic.DEFAULT) {
                 val (url, key) = contact.profilePicture
                 if (key.size != ProfileKeyUtil.PROFILE_KEY_BYTES) return@forEach
-                profileManager.setProfileKey(context, recipient, key)
+                profileManager.setProfilePicture(context, recipient, url, key)
                 profileManager.setUnidentifiedAccessMode(context, recipient, Recipient.UnidentifiedAccessMode.UNKNOWN)
-                profileManager.setProfilePictureURL(context, recipient, url)
             }
             if (contact.priority == PRIORITY_HIDDEN) {
                 getThreadId(fromSerialized(contact.id))?.let { conversationThreadId ->
@@ -1342,9 +1338,8 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                 val profileKeyChanged = (sender.profileKey == null || !MessageDigest.isEqual(sender.profileKey, newProfileKey))
 
                 if ((profileKeyValid && profileKeyChanged) || (profileKeyValid && needsProfilePicture)) {
-                    profileManager.setProfileKey(context, sender, newProfileKey!!)
+                    profileManager.setProfilePicture(context, sender, profile.profilePictureURL!!, newProfileKey!!)
                     profileManager.setUnidentifiedAccessMode(context, sender, Recipient.UnidentifiedAccessMode.UNKNOWN)
-                    profileManager.setProfilePictureURL(context, sender, profile.profilePictureURL!!)
                 }
             }
             threadDB.setHasSent(threadId, true)

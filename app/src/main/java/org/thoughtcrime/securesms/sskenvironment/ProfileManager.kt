@@ -49,24 +49,12 @@ class ProfileManager(private val context: Context, private val configFactory: Co
         contactUpdatedInternal(contact)
     }
 
-    override fun setProfilePictureURL(context: Context, recipient: Recipient, profilePictureURL: String) {
-        val job = RetrieveProfileAvatarJob(recipient, profilePictureURL)
-        val jobManager = ApplicationContext.getInstance(context).jobManager
-        jobManager.add(job)
-        if (recipient.isLocalNumber) return
-        val sessionID = recipient.address.serialize()
-        val contactDatabase = DatabaseComponent.get(context).sessionContactDatabase()
-        var contact = contactDatabase.getContactWithSessionID(sessionID)
-        if (contact == null) contact = Contact(sessionID)
-        contact.threadID = DatabaseComponent.get(context).storage().getThreadId(recipient.address)
-        if (contact.profilePictureURL != profilePictureURL) {
-            contact.profilePictureURL = profilePictureURL
-            contactDatabase.setContact(contact)
-        }
-        contactUpdatedInternal(contact)
-    }
-
-    override fun setProfileKey(context: Context, recipient: Recipient, profileKey: ByteArray?) {
+    override fun setProfilePicture(
+        context: Context,
+        recipient: Recipient,
+        profilePictureURL: String?,
+        profileKey: ByteArray?
+    ) {
         // New API
         val sessionID = recipient.address.serialize()
         // Old API
@@ -78,12 +66,17 @@ class ProfileManager(private val context: Context, private val configFactory: Co
         var contact = contactDatabase.getContactWithSessionID(sessionID)
         if (contact == null) contact = Contact(sessionID)
         contact.threadID = DatabaseComponent.get(context).storage().getThreadId(recipient.address)
-        if (!contact.profilePictureEncryptionKey.contentEquals(profileKey)) {
+        if (!contact.profilePictureEncryptionKey.contentEquals(profileKey) || contact.profilePictureURL != profilePictureURL) {
             contact.profilePictureEncryptionKey = profileKey
+            contact.profilePictureURL = profilePictureURL
             contactDatabase.setContact(contact)
         }
+        val job = RetrieveProfileAvatarJob(recipient, profilePictureURL)
+        val jobManager = ApplicationContext.getInstance(context).jobManager
+        jobManager.add(job)
         contactUpdatedInternal(contact)
     }
+
 
     override fun setUnidentifiedAccessMode(context: Context, recipient: Recipient, unidentifiedAccessMode: Recipient.UnidentifiedAccessMode) {
         val database = DatabaseComponent.get(context).recipientDatabase()

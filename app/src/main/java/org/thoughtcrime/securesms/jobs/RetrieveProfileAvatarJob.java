@@ -106,14 +106,15 @@ public class RetrieveProfileAvatarJob extends BaseJob {
 
       Util.copy(avatarStream, new FileOutputStream(decryptDestination));
       decryptDestination.renameTo(AvatarHelper.getAvatarFile(context, recipient.getAddress()));
+      if (recipient.isLocalNumber()) {
+        TextSecurePreferences.setProfileAvatarId(context, new SecureRandom().nextInt());
+      }
+      database.setProfileAvatar(recipient, profileAvatar);
+    } catch (Exception e) {
+
     } finally {
       if (downloadDestination != null) downloadDestination.delete();
     }
-
-    if (recipient.isLocalNumber()) {
-      TextSecurePreferences.setProfileAvatarId(context, new SecureRandom().nextInt());
-    }
-    database.setProfileAvatar(recipient, profileAvatar);
   }
 
   @Override

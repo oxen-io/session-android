@@ -188,10 +188,7 @@ private fun handleConfigurationMessage(message: ConfigurationMessage) {
         && TextSecurePreferences.getProfilePictureURL(context) != message.profilePicture) {
         val profileKey = Base64.encodeBytes(message.profileKey)
         ProfileKeyUtil.setEncodedProfileKey(context, profileKey)
-        profileManager.setProfileKey(context, recipient, message.profileKey)
-        if (!message.profilePicture.isNullOrEmpty() && TextSecurePreferences.getProfilePictureURL(context) != message.profilePicture) {
-            storage.setUserProfilePictureURL(message.profilePicture!!)
-        }
+        profileManager.setProfilePicture(context, recipient, message.profilePicture, message.profileKey)
     }
     storage.addContacts(message.contacts)
 }
@@ -264,9 +261,8 @@ fun MessageReceiver.handleVisibleMessage(
             val profileKeyChanged = (recipient.profileKey == null || !MessageDigest.isEqual(recipient.profileKey, newProfileKey))
 
             if ((profileKeyValid && profileKeyChanged) || (profileKeyValid && needsProfilePicture)) {
-                profileManager.setProfileKey(context, recipient, newProfileKey!!)
+                profileManager.setProfilePicture(context, recipient, profile.profilePictureURL, newProfileKey)
                 profileManager.setUnidentifiedAccessMode(context, recipient, Recipient.UnidentifiedAccessMode.UNKNOWN)
-                profileManager.setProfilePictureURL(context, recipient, profile.profilePictureURL!!)
             }
         }
     }
