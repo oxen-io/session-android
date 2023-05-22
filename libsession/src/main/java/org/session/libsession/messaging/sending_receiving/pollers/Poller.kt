@@ -151,7 +151,7 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                 val (message, _) = MessageReceiver.parse(data = envelope.toByteArray(), openGroupServerID = null)
                 // sanity checks
                 if (message !is SharedConfigurationMessage) {
-                    Log.w("Loki-DBG", "shared config message handled in configs wasn't SharedConfigurationMessage but was ${message.javaClass.simpleName}")
+                    Log.w("Loki", "shared config message handled in configs wasn't SharedConfigurationMessage but was ${message.javaClass.simpleName}")
                     return@forEach
                 }
                 forConfigObject.merge(hash!! to message.data)
@@ -213,11 +213,11 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                         if (personalResponseIndex >= 0) {
                             responseList.getOrNull(personalResponseIndex)?.let { rawResponse ->
                                 if (rawResponse["code"] as? Int != 200) {
-                                    Log.e("Loki-DBG", "Batch sub-request for personal messages had non-200 response code, returned code ${(rawResponse["code"] as? Int) ?: "[unknown]"}")
+                                    Log.e("Loki", "Batch sub-request for personal messages had non-200 response code, returned code ${(rawResponse["code"] as? Int) ?: "[unknown]"}")
                                 } else {
                                     val body = rawResponse["body"] as? RawResponse
                                     if (body == null) {
-                                        Log.e("Loki-DBG", "Batch sub-request for personal messages didn't contain a body")
+                                        Log.e("Loki", "Batch sub-request for personal messages didn't contain a body")
                                     } else {
                                         processPersonalMessages(snode, body)
                                     }
@@ -230,12 +230,12 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                             requestSparseArray.keyIterator().withIndex().forEach { (requestIndex, key) ->
                                 responseList.getOrNull(requestIndex)?.let { rawResponse ->
                                     if (rawResponse["code"] as? Int != 200) {
-                                        Log.e("Loki-DBG", "Batch sub-request had non-200 response code, returned code ${(rawResponse["code"] as? Int) ?: "[unknown]"}")
+                                        Log.e("Loki", "Batch sub-request had non-200 response code, returned code ${(rawResponse["code"] as? Int) ?: "[unknown]"}")
                                         return@forEach
                                     }
                                     val body = rawResponse["body"] as? RawResponse
                                     if (body == null) {
-                                        Log.e("Loki-DBG", "Batch sub-request didn't contain a body")
+                                        Log.e("Loki", "Batch sub-request didn't contain a body")
                                         return@forEach
                                     }
                                     if (key == Namespace.DEFAULT) {

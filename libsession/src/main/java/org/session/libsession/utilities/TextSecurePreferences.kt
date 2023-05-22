@@ -180,6 +180,8 @@ interface TextSecurePreferences {
     fun setThemeStyle(themeStyle: String)
     fun setFollowSystemSettings(followSystemSettings: Boolean)
     fun autoplayAudioMessages(): Boolean
+    fun setForceNewConfig()
+    fun hasForcedNewConfig(): Boolean
     fun hasPreference(key: String): Boolean
     fun clearAll()
 
@@ -268,6 +270,7 @@ interface TextSecurePreferences {
         const val SELECTED_ACCENT_COLOR = "selected_accent_color"
 
         const val HAS_RECEIVED_LEGACY_CONFIG = "has_received_legacy_config"
+        const val HAS_FORCED_NEW_CONFIG = "has_forced_new_config"
 
         const val GREEN_ACCENT = "accent_green"
         const val BLUE_ACCENT = "accent_blue"
@@ -809,6 +812,16 @@ interface TextSecurePreferences {
         @JvmStatic
         fun setNotificationMessagesChannelVersion(context: Context, version: Int) {
             setIntegerPreference(context, NOTIFICATION_MESSAGES_CHANNEL_VERSION, version)
+        }
+
+        @JvmStatic
+        fun setForceNewConfig(context: Context) {
+            setBooleanPreference(context, HAS_FORCED_NEW_CONFIG, true)
+        }
+
+        @JvmStatic
+        fun hasForcedNewConfig(context: Context): Boolean {
+            return getBooleanPreference(context, HAS_FORCED_NEW_CONFIG, false)
         }
 
         @JvmStatic
@@ -1446,6 +1459,13 @@ class AppTextSecurePreferences @Inject constructor(
     override fun setNotificationMessagesChannelVersion(version: Int) {
         setIntegerPreference(TextSecurePreferences.NOTIFICATION_MESSAGES_CHANNEL_VERSION, version)
     }
+
+    override fun setForceNewConfig() {
+        setBooleanPreference(TextSecurePreferences.HAS_FORCED_NEW_CONFIG, true)
+    }
+
+    override fun hasForcedNewConfig(): Boolean =
+        getBooleanPreference(TextSecurePreferences.HAS_FORCED_NEW_CONFIG, false)
 
     override fun getBooleanPreference(key: String?, defaultValue: Boolean): Boolean {
         return getDefaultSharedPreferences(context).getBoolean(key, defaultValue)

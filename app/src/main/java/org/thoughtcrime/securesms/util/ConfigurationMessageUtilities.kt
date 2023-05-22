@@ -18,6 +18,7 @@ import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.sending_receiving.MessageSender
+import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.TextSecurePreferences
@@ -25,7 +26,6 @@ import org.session.libsession.utilities.WindowDebouncer
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.database.GroupDatabase
-import org.thoughtcrime.securesms.database.GroupMemberDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import java.util.Timer
@@ -53,7 +53,9 @@ object ConfigurationMessageUtilities {
     fun syncConfigurationIfNeeded(context: Context) {
         // add if check here to schedule new config job process and return early
         val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return
-        if (ConfigBase.isNewConfigEnabled) {
+        val forcedConfig = TextSecurePreferences.hasForcedNewConfig(context)
+        val currentTime = SnodeAPI.nowWithOffset
+        if (ConfigBase.isNewConfigEnabled(forcedConfig, currentTime)) {
             scheduleConfigSync(userPublicKey)
             return
         }
@@ -81,7 +83,9 @@ object ConfigurationMessageUtilities {
     fun forceSyncConfigurationNowIfNeeded(context: Context): Promise<Unit, Exception> {
         // add if check here to schedule new config job process and return early
         val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return Promise.ofFail(NullPointerException("User Public Key is null"))
-        if (ConfigBase.isNewConfigEnabled) {
+        val forcedConfig = TextSecurePreferences.hasForcedNewConfig(context)
+        val currentTime = SnodeAPI.nowWithOffset
+        if (ConfigBase.isNewConfigEnabled(forcedConfig, currentTime)) {
             // schedule job if none exist
             // don't schedule job if we already have one
             scheduleConfigSync(userPublicKey)

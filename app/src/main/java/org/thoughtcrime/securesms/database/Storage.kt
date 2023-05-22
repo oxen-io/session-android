@@ -94,14 +94,8 @@ import network.loki.messenger.libsession_util.util.Contact as LibSessionContact
 open class Storage(context: Context, helper: SQLCipherOpenHelper, private val configFactory: ConfigFactory) : Database(context, helper), StorageProtocol,
     ThreadDatabase.ConversationThreadUpdateListener {
 
-    // TODO: maybe add time here from formation / creation message
     override fun threadCreated(address: Address, threadId: Long) {
         if (!getRecipientApproved(address)) return // don't store unapproved / message requests
-        if (getUserPublicKey() == address.serialize()) {
-            Log.d("Loki-DBG", "NTS created, context:\n${Thread.currentThread().stackTrace.joinToString("\n")}")
-        } else {
-            Log.d("Loki-DBG", "Thread created ${address.serialize()}")
-        }
 
         val volatile = configFactory.convoVolatile ?: return
         if (address.isGroup) {
@@ -491,7 +485,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     private fun updateUserGroups(userGroups: UserGroupsConfig) {
         val threadDb = DatabaseComponent.get(context).threadDatabase()
         val localUserPublicKey = getUserPublicKey() ?: return Log.w(
-            "Loki-DBG",
+            "Loki",
             "No user public key when trying to update user groups from config"
         )
         val communities = userGroups.allCommunityInfo()

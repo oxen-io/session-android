@@ -596,6 +596,8 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
         db.execSQL(ConfigDatabase.CREATE_CONFIG_TABLE_COMMAND);
         db.execSQL(ConfigurationMessageUtilities.DELETE_INACTIVE_GROUPS);
         db.execSQL(ConfigurationMessageUtilities.DELETE_INACTIVE_ONE_TO_ONES);
+        // TODO: remove this for release
+        TextSecurePreferences.setForceNewConfig(context);
       }
 
       db.setTransactionSuccessful();

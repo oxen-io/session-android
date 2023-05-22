@@ -354,7 +354,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 
     private fun updateLegacyConfigView() {
-        binding.configOutdatedView.isVisible = ConfigBase.isNewConfigEnabled && textSecurePreferences.getHasLegacyConfig()
+        binding.configOutdatedView.isVisible = ConfigBase.isNewConfigEnabled(textSecurePreferences.hasForcedNewConfig(), SnodeAPI.nowWithOffset)
+                && textSecurePreferences.getHasLegacyConfig()
     }
 
     override fun onResume() {

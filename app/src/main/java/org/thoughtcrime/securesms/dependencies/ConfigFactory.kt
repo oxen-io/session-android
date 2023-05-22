@@ -6,13 +6,14 @@ import network.loki.messenger.libsession_util.Contacts
 import network.loki.messenger.libsession_util.ConversationVolatileConfig
 import network.loki.messenger.libsession_util.UserGroupsConfig
 import network.loki.messenger.libsession_util.UserProfile
+import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.ConfigFactoryProtocol
 import org.session.libsession.utilities.ConfigFactoryUpdateListener
+import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.database.ConfigDatabase
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
-import java.util.concurrent.Executors
 
 class ConfigFactory(
     private val context: Context,
@@ -39,6 +40,8 @@ class ConfigFactory(
     private val userGroupsLock = Object()
     private var _userGroups: UserGroupsConfig? = null
 
+    private val isConfigForcedOn = TextSecurePreferences.hasForcedNewConfig(context)
+
     private val listeners: MutableList<ConfigFactoryUpdateListener> = mutableListOf()
     fun registerListener(listener: ConfigFactoryUpdateListener) {
         listeners += listener
@@ -50,7 +53,7 @@ class ConfigFactory(
 
     override val user: UserProfile?
         get() = synchronized(userLock) {
-            if (!ConfigBase.isNewConfigEnabled) return null
+            if (!ConfigBase.isNewConfigEnabled(isConfigForcedOn, SnodeAPI.nowWithOffset)) return null
             if (_userConfig == null) {
                 val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
                 val userDump = configDatabase.retrieveConfigAndHashes(
@@ -70,7 +73,7 @@ class ConfigFactory(
 
     override val contacts: Contacts?
         get() = synchronized(contactsLock) {
-            if (!ConfigBase.isNewConfigEnabled) return null
+            if (!ConfigBase.isNewConfigEnabled(isConfigForcedOn, SnodeAPI.nowWithOffset)) return null
             if (_contacts == null) {
                 val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
                 val contactsDump = configDatabase.retrieveConfigAndHashes(
@@ -90,7 +93,7 @@ class ConfigFactory(
 
     override val convoVolatile: ConversationVolatileConfig?
         get() = synchronized(convoVolatileLock) {
-            if (!ConfigBase.isNewConfigEnabled) return null
+            if (!ConfigBase.isNewConfigEnabled(isConfigForcedOn, SnodeAPI.nowWithOffset)) return null
             if (_convoVolatileConfig == null) {
                 val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
                 val convoDump = configDatabase.retrieveConfigAndHashes(
@@ -111,7 +114,7 @@ class ConfigFactory(
 
     override val userGroups: UserGroupsConfig?
         get() = synchronized(userGroupsLock) {
-            if (!ConfigBase.isNewConfigEnabled) return null
+            if (!ConfigBase.isNewConfigEnabled(isConfigForcedOn, SnodeAPI.nowWithOffset)) return null
             if (_userGroups == null) {
                 val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
                 val userGroupsDump = configDatabase.retrieveConfigAndHashes(
@@ -174,7 +177,7 @@ class ConfigFactory(
                 else -> throw UnsupportedOperationException("Can't support type of ${forConfigObject::class.simpleName} yet")
             }
         } catch (e: Exception) {
-            Log.e("Loki-DBG", e)
+            Log.e("Loki", "failed to persist ${forConfigObject.javaClass.simpleName}", e)
         }
     }
 }
