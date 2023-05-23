@@ -48,7 +48,7 @@ class InstrumentedTests {
     }
 
     @Test
-    private fun testDirtyEmptyString() {
+    fun testDirtyEmptyString() {
         val contacts = Contacts.newInstance(keyPair.secretKey)
         val definitelyRealId = "050000000000000000000000000000000000000000000000000000000000000000"
         val contact = contacts.getOrConstruct(definitelyRealId)
@@ -57,6 +57,7 @@ class InstrumentedTests {
         contacts.set(contact.copy(name = "test"))
         assertTrue(contacts.dirty())
         val push = contacts.push()
+        contacts.dump()
         contacts.confirmPushed(push.seqNo, "abc123")
         contacts.set(contact.copy(name = "test2"))
         contacts.set(contact.copy(name = "test"))
