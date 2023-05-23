@@ -5,6 +5,7 @@ import android.net.Uri
 import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.ConfigBase.Companion.PRIORITY_HIDDEN
 import network.loki.messenger.libsession_util.ConfigBase.Companion.PRIORITY_PINNED
+import network.loki.messenger.libsession_util.ConfigBase.Companion.PRIORITY_VISIBLE
 import network.loki.messenger.libsession_util.Contacts
 import network.loki.messenger.libsession_util.ConversationVolatileConfig
 import network.loki.messenger.libsession_util.UserGroupsConfig
@@ -95,7 +96,18 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     ThreadDatabase.ConversationThreadUpdateListener {
 
     override fun threadCreated(address: Address, threadId: Long) {
-        if (!getRecipientApproved(address)) return // don't store unapproved / message requests
+        val localUserAddress = getUserPublicKey() ?: return
+        if (!getRecipientApproved(address) && localUserAddress != address.serialize()) return // don't store unapproved / message requests
+
+        if (localUserAddress == address.serialize()) {
+            val userConfig = configFactory.user ?: return
+            if (userConfig.getNtsPriority() == PRIORITY_HIDDEN) {
+                // if it's hidden set it visible, otherwise it's pinned so don't change
+                userConfig.setNtsPriority(PRIORITY_VISIBLE)
+                DatabaseComponent.get(context).threadDatabase().setHasSent(threadId, true)
+            }
+            return
+        }
 
         val volatile = configFactory.convoVolatile ?: return
         if (address.isGroup) {

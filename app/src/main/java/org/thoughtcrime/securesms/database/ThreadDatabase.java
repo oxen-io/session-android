@@ -728,6 +728,7 @@ public class ThreadDatabase extends Database {
                                                 new String[] {String.valueOf(threadId)});
 
     notifyConversationListeners(threadId);
+    notifyConversationListListeners();
   }
 
   public boolean update(long threadId, boolean unarchive, boolean shouldDeleteOnEmpty) {
