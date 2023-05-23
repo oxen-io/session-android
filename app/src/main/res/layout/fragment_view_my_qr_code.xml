@@ -62,7 +62,7 @@
                 android:text="@string/fragment_view_my_qr_code_explanation" />
 
             <Button
-                style="@style/Widget.Session.Button.Common.UnimportantOutline"
+                style="@style/Widget.Session.Button.Common.ProminentOutline"
                 android:id="@+id/shareButton"
                 android:layout_width="196dp"
                 android:layout_height="@dimen/medium_button_height"
