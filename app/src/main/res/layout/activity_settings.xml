@@ -121,6 +121,7 @@
                 <!-- Path -->
                 <RelativeLayout
                     android:id="@+id/pathButton"
+                    android:background="?selectableItemBackground"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:paddingHorizontal="@dimen/large_spacing"
@@ -157,6 +158,7 @@
 
                 <RelativeLayout
                     android:id="@+id/privacyButton"
+                    android:background="?selectableItemBackground"
                     android:paddingHorizontal="@dimen/large_spacing"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/setting_button_height">
@@ -190,6 +192,7 @@
 
                 <RelativeLayout
                     android:id="@+id/notificationsButton"
+                    android:background="?selectableItemBackground"
                     android:paddingHorizontal="@dimen/large_spacing"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/setting_button_height"
@@ -226,6 +229,7 @@
 
                 <RelativeLayout
                     android:id="@+id/chatsButton"
+                    android:background="?selectableItemBackground"
                     android:paddingHorizontal="@dimen/large_spacing"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/setting_button_height"
@@ -261,6 +265,7 @@
 
                 <RelativeLayout
                     android:id="@+id/messageRequestsButton"
+                    android:background="?selectableItemBackground"
                     android:paddingHorizontal="@dimen/large_spacing"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/setting_button_height"
@@ -295,6 +300,7 @@
 
                 <RelativeLayout
                     android:id="@+id/appearanceButton"
+                    android:background="?selectableItemBackground"
                     android:paddingHorizontal="@dimen/large_spacing"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/setting_button_height"
@@ -329,6 +335,7 @@
 
                 <RelativeLayout
                     android:id="@+id/inviteFriendButton"
+                    android:background="?selectableItemBackground"
                     android:paddingHorizontal="@dimen/large_spacing"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/setting_button_height"
@@ -363,6 +370,7 @@
 
                 <RelativeLayout
                     android:id="@+id/seedButton"
+                    android:background="?selectableItemBackground"
                     android:paddingHorizontal="@dimen/large_spacing"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/setting_button_height"
@@ -397,6 +405,7 @@
 
                 <RelativeLayout
                     android:id="@+id/helpButton"
+                    android:background="?selectableItemBackground"
                     android:paddingHorizontal="@dimen/large_spacing"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/setting_button_height"
@@ -431,6 +440,7 @@
 
                 <RelativeLayout
                     android:id="@+id/clearAllDataButton"
+                    android:background="?selectableItemBackground"
                     android:paddingHorizontal="@dimen/large_spacing"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/setting_button_height"
