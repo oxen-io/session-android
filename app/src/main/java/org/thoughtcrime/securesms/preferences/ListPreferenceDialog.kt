@@ -4,9 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.ListPreference
-import androidx.recyclerview.widget.DividerItemDecoration
 import network.loki.messenger.databinding.DialogListPreferenceBinding
-import org.thoughtcrime.securesms.conversation.v2.utilities.BaseDialog
 
 fun listPreferenceDialog(
     context: Context,
@@ -20,25 +18,23 @@ fun listPreferenceDialog(
     binding.titleTextView.text = listPreference.dialogTitle
     binding.messageTextView.text = listPreference.dialogMessage
 
-    val options = listPreference.entryValues.zip(listPreference.entries) { value, title ->
-        RadioOption(value.toString(), title.toString())
-    }
-    val valueIndex = listPreference.findIndexOfValue(listPreference.value)
     builder.setView(binding.root)
 
     val dialog = builder.show()
 
-    val optionAdapter = RadioOptionAdapter(valueIndex) {
+    val valueIndex = listPreference.findIndexOfValue(listPreference.value)
+    RadioOptionAdapter(valueIndex) {
         listPreference.value = it.value
         dialog.dismiss()
         dialogListener()
-    }.apply { submitList(options) }
-
-    binding.recyclerView.apply {
-        adapter = optionAdapter
-        addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        setHasFixedSize(true)
     }
+        .apply {
+            listPreference.entryValues.zip(listPreference.entries) { value, title ->
+                RadioOption(value.toString(), title.toString())
+            }.let(this::submitList)
+        }
+        .let { binding.recyclerView.adapter = it }
+
     binding.closeButton.setOnClickListener { dialog.dismiss() }
 
     return dialog
