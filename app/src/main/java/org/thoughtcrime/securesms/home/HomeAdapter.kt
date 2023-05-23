@@ -10,10 +10,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.NO_ID
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.database.model.ThreadRecord
+import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.mms.GlideRequests
 
 class HomeAdapter(
     private val context: Context,
+    private val configFactory: ConfigFactory,
     private val listener: ConversationClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ListUpdateCallback {
 
@@ -29,7 +31,7 @@ class HomeAdapter(
         get() = _data.toList()
         set(newData) {
             val previousData = _data.toList()
-            val diff = HomeDiffUtil(previousData, newData, context)
+            val diff = HomeDiffUtil(previousData, newData, context, configFactory)
             val diffResult = DiffUtil.calculateDiff(diff)
             _data = newData
             diffResult.dispatchUpdatesTo(this as ListUpdateCallback)

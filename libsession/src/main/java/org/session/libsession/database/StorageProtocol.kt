@@ -156,6 +156,7 @@ interface StorageProtocol {
     // Settings
     fun setProfileSharing(address: Address, value: Boolean)
 
+
     // Thread
     fun getOrCreateThreadIdFor(address: Address): Long
     fun getThreadIdFor(publicKey: String, groupPublicKey: String?, openGroupID: String?, createThread: Boolean): Long?
@@ -217,6 +218,7 @@ interface StorageProtocol {
     fun updateReactionIfNeeded(message: Message, sender: String, openGroupSentTimestamp: Long)
     fun deleteReactions(messageId: Long, mms: Boolean)
     fun setBlocked(recipients: List<Recipient>, isBlocked: Boolean, fromConfigUpdate: Boolean = false)
+    fun setRecipientHash(recipient: Recipient, recipientHash: String?)
     fun blockedContacts(): List<Recipient>
 
     // Shared configs

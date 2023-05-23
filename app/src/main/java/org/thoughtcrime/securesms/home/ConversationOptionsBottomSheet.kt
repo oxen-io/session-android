@@ -7,10 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.databinding.FragmentConversationBottomSheetBinding
 import org.thoughtcrime.securesms.database.model.ThreadRecord
+import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.util.UiModeUtilities
+import org.thoughtcrime.securesms.util.getConversationUnread
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ConversationOptionsBottomSheet(private val parentContext: Context) : BottomSheetDialogFragment(), View.OnClickListener {
     private lateinit var binding: FragmentConversationBottomSheetBinding
     //FIXME AC: Supplying a threadRecord directly into the field from an activity
@@ -18,6 +23,8 @@ class ConversationOptionsBottomSheet(private val parentContext: Context) : Botto
     // We should be dealing with IDs and all sorts of serializable data instead
     // if we want to use dialog fragments properly.
     lateinit var thread: ThreadRecord
+
+    @Inject lateinit var configFactory: ConfigFactory
 
     var onViewDetailsTapped: (() -> Unit?)? = null
     var onCopyConversationId: (() -> Unit?)? = null
@@ -77,7 +84,7 @@ class ConversationOptionsBottomSheet(private val parentContext: Context) : Botto
         binding.notificationsTextView.isVisible = recipient.isGroupRecipient && !recipient.isMuted
         binding.notificationsTextView.setOnClickListener(this)
         binding.deleteTextView.setOnClickListener(this)
-        binding.markAllAsReadTextView.isVisible = thread.unreadCount > 0
+        binding.markAllAsReadTextView.isVisible = thread.unreadCount > 0 || configFactory.convoVolatile?.getConversationUnread(thread) == true
         binding.markAllAsReadTextView.setOnClickListener(this)
         binding.pinTextView.isVisible = !thread.isPinned
         binding.unpinTextView.isVisible = thread.isPinned

@@ -218,6 +218,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     override fun markConversationAsRead(threadId: Long, lastSeenTime: Long) {
         val threadDb = DatabaseComponent.get(context).threadDatabase()
         getRecipientForThread(threadId)?.let { recipient ->
+            val currentLastRead = threadDb.getLastSeenAndHasSent(threadId).first()
             // don't set the last read in the volatile if we didn't set it in the DB
             if (!threadDb.markAllAsRead(threadId, recipient.isGroupRecipient, lastSeenTime)) return
 
@@ -246,6 +247,10 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                     else -> throw NullPointerException("Weren't expecting to have a convo with address ${recipient.address.serialize()}")
                 }
                 convo.lastRead = lastSeenTime
+                if (convo.unread) {
+                    convo.unread = lastSeenTime <= currentLastRead
+                    notifyConversationListListeners()
+                }
                 config.set(convo)
                 ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
             }
@@ -1088,8 +1093,11 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
 
     override fun setContact(contact: Contact) {
         DatabaseComponent.get(context).sessionContactDatabase().setContact(contact)
-        if (!getRecipientApproved(Address.fromSerialized(contact.sessionID))) return
-        SSKEnvironment.shared.profileManager.contactUpdatedInternal(contact)
+        val address = fromSerialized(contact.sessionID)
+        if (!getRecipientApproved(address)) return
+        val recipientHash = SSKEnvironment.shared.profileManager.contactUpdatedInternal(contact)
+        val recipient = Recipient.from(context, address, false)
+        setRecipientHash(recipient, recipientHash)
     }
 
     override fun getRecipientForThread(threadId: Long): Recipient? {
@@ -1140,6 +1148,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                     setPinned(conversationThreadId, contact.priority == PRIORITY_PINNED)
                 }
             }
+            setRecipientHash(recipient, contact.hashCode().toString())
         }
     }
 
@@ -1182,6 +1191,11 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         if (contacts.isNotEmpty()) {
             threadDatabase.notifyConversationListListeners()
         }
+    }
+
+    override fun setRecipientHash(recipient: Recipient, recipientHash: String?) {
+        val recipientDb = DatabaseComponent.get(context).recipientDatabase()
+        recipientDb.setRecipientHash(recipient, recipientHash)
     }
 
     override fun getLastUpdated(threadID: Long): Long {

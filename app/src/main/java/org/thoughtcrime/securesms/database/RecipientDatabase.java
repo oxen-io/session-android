@@ -62,13 +62,14 @@ public class RecipientDatabase extends Database {
   private static final String UNIDENTIFIED_ACCESS_MODE = "unidentified_access_mode";
   private static final String FORCE_SMS_SELECTION      = "force_sms_selection";
   private static final String NOTIFY_TYPE              = "notify_type"; // all, mentions only, none
+  private static final String WRAPPER_HASH             = "wrapper_hash";
 
   private static final String[] RECIPIENT_PROJECTION = new String[] {
       BLOCK, APPROVED, APPROVED_ME, NOTIFICATION, CALL_RINGTONE, VIBRATE, CALL_VIBRATE, MUTE_UNTIL, COLOR, SEEN_INVITE_REMINDER, DEFAULT_SUBSCRIPTION_ID, EXPIRE_MESSAGES, REGISTERED,
       PROFILE_KEY, SYSTEM_DISPLAY_NAME, SYSTEM_PHOTO_URI, SYSTEM_PHONE_LABEL, SYSTEM_CONTACT_URI,
       SIGNAL_PROFILE_NAME, SIGNAL_PROFILE_AVATAR, PROFILE_SHARING, NOTIFICATION_CHANNEL,
       UNIDENTIFIED_ACCESS_MODE,
-      FORCE_SMS_SELECTION, NOTIFY_TYPE,
+      FORCE_SMS_SELECTION, NOTIFY_TYPE, WRAPPER_HASH
   };
 
   static final List<String> TYPED_RECIPIENT_PROJECTION = Stream.of(RECIPIENT_PROJECTION)
@@ -136,6 +137,11 @@ public class RecipientDatabase extends Database {
             "OR "+ADDRESS+" IN (SELECT "+GroupDatabase.TABLE_NAME+"."+GroupDatabase.ADMINS+" FROM "+GroupDatabase.TABLE_NAME+")))";
   }
 
+  public static String getAddWrapperHash() {
+    return "ALTER TABLE "+TABLE_NAME+" "+
+            "ADD COLUMN "+WRAPPER_HASH+" TEXT DEFAULT NULL;";
+  }
+
   public static final int NOTIFY_TYPE_ALL = 0;
   public static final int NOTIFY_TYPE_MENTIONS = 1;
   public static final int NOTIFY_TYPE_NONE = 2;
@@ -190,6 +196,7 @@ public class RecipientDatabase extends Database {
     String  notificationChannel    = cursor.getString(cursor.getColumnIndexOrThrow(NOTIFICATION_CHANNEL));
     int     unidentifiedAccessMode = cursor.getInt(cursor.getColumnIndexOrThrow(UNIDENTIFIED_ACCESS_MODE));
     boolean forceSmsSelection      = cursor.getInt(cursor.getColumnIndexOrThrow(FORCE_SMS_SELECTION))  == 1;
+    String  wrapperHash            = cursor.getString(cursor.getColumnIndexOrThrow(WRAPPER_HASH));
 
     MaterialColor color;
     byte[] profileKey = null;
@@ -221,7 +228,7 @@ public class RecipientDatabase extends Database {
                                              systemPhoneLabel, systemContactUri,
                                              signalProfileName, signalProfileAvatar, profileSharing,
                                              notificationChannel, Recipient.UnidentifiedAccessMode.fromMode(unidentifiedAccessMode),
-                                             forceSmsSelection));
+                                             forceSmsSelection, wrapperHash));
   }
 
   public void setColor(@NonNull Recipient recipient, @NonNull MaterialColor color) {
@@ -256,6 +263,14 @@ public class RecipientDatabase extends Database {
       }
     }
     return false;
+  }
+
+  public void setRecipientHash(@NonNull Recipient recipient, String recipientHash) {
+    ContentValues values = new ContentValues();
+    values.put(WRAPPER_HASH, recipientHash);
+    updateOrInsert(recipient.getAddress(), values);
+    recipient.resolve().setWrapperHash(recipientHash);
+    notifyRecipientListeners();
   }
 
   public void setApproved(@NonNull Recipient recipient, boolean approved) {

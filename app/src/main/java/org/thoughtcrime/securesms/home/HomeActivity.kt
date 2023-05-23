@@ -106,7 +106,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         get() = textSecurePreferences.getLocalNumber()!!
 
     private val homeAdapter: HomeAdapter by lazy {
-        HomeAdapter(context = this, listener = this)
+        HomeAdapter(context = this, configFactory = configFactory, listener = this)
     }
 
     private val globalSearchAdapter = GlobalSearchAdapter { model ->
