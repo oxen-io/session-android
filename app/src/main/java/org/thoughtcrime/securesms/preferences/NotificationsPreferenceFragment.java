@@ -2,6 +2,8 @@ package org.thoughtcrime.securesms.preferences;
 
 import static android.app.Activity.RESULT_OK;
 
+import static org.thoughtcrime.securesms.preferences.ListPreferenceDialogKt.listPreferenceDialog;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -77,10 +79,10 @@ public class NotificationsPreferenceFragment extends ListSummaryPreferenceFragme
         .setOnPreferenceClickListener(preference -> {
           ListPreference listPreference = (ListPreference) preference;
           listPreference.setDialogMessage(R.string.preferences_notifications__content_message);
-          new ListPreferenceDialog(listPreference, () -> {
-              initializeListSummary((ListPreference) findPreference(TextSecurePreferences.NOTIFICATION_PRIVACY_PREF));
+          listPreferenceDialog(getContext(), listPreference, () -> {
+              initializeListSummary(findPreference(TextSecurePreferences.NOTIFICATION_PRIVACY_PREF));
               return null;
-          }).show(getChildFragmentManager(), "ListPreferenceDialog");
+          });
           return true;
         });
 

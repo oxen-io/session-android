@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?dialog_background_color">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/titleTextView"
@@ -21,11 +20,10 @@
 
     <ImageView
         android:id="@+id/closeButton"
+        android:background="?selectableItemBackgroundBorderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/medium_spacing"
-        android:clickable="true"
-        android:focusable="true"
         android:src="@drawable/ic_baseline_close_24"
         app:layout_constraintBottom_toBottomOf="@id/titleTextView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,7 +34,6 @@
         android:id="@+id/messageTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?dialog_background_color"
         android:drawablePadding="@dimen/large_spacing"
         android:gravity="center_horizontal|center_vertical"
         android:paddingHorizontal="@dimen/large_spacing"
