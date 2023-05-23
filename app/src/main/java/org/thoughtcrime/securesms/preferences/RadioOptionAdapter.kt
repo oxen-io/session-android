@@ -16,8 +16,8 @@ class RadioOptionAdapter(
 ) : ListAdapter<RadioOption, RadioOptionAdapter.ViewHolder>(RadioOptionDiffer()) {
 
     class RadioOptionDiffer: DiffUtil.ItemCallback<RadioOption>() {
-        override fun areItemsTheSame(oldItem: RadioOption, newItem: RadioOption) = oldItem === newItem
-        override fun areContentsTheSame(oldItem: RadioOption, newItem: RadioOption) = oldItem == newItem
+        override fun areItemsTheSame(oldItem: RadioOption, newItem: RadioOption) = oldItem.title == newItem.title
+        override fun areContentsTheSame(oldItem: RadioOption, newItem: RadioOption) = oldItem.value == newItem.value
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,7 +31,7 @@ class RadioOptionAdapter(
         holder.bind(option, isSelected) {
             onClickListener(it)
             selectedOptionPosition = position
-            notifyDataSetChanged()
+            notifyItemRangeChanged(0, itemCount)
         }
     }
 
