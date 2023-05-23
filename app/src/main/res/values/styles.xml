@@ -56,7 +56,6 @@
         <item name="elevation">1dp</item>
         <item name="tabIndicatorColor">@color/transparent</item>
         <item name="tabIndicatorHeight">@dimen/accent_line_thickness</item>
-        <item name="tabRippleColor">@color/cell_selected</item>
         <item name="tabTextAppearance">@style/TextAppearance.Session.Tab</item>
     </style>
 
