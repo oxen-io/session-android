@@ -41,7 +41,12 @@ object OpenGroupManager {
         if (isPolling) { return }
         isPolling = true
         val storage = MessagingModuleConfiguration.shared.storage
-        val servers = storage.getAllOpenGroups().values.map { it.server }.toSet()
+        val (serverGroups, toDelete) = storage.getAllOpenGroups().values.partition { storage.getThreadId(it) != null }
+        toDelete.forEach { openGroup ->
+            delete(openGroup.server, openGroup.room, MessagingModuleConfiguration.shared.context)
+        }
+
+        val servers = serverGroups.map { it.server }.toSet()
         servers.forEach { server ->
             pollers[server]?.stop() // Shouldn't be necessary
             val poller = OpenGroupPoller(server, executorService)

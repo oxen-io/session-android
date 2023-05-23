@@ -20,7 +20,7 @@ class GroupAvatarDownloadJob(val server: String, val room: String, val imageId: 
         }
         val storage = MessagingModuleConfiguration.shared.storage
         val openGroup = storage.getOpenGroup(room, server)
-        if (openGroup == null) {
+        if (openGroup == null || storage.getThreadId(openGroup) == null) {
             delegate?.handleJobFailedPermanently(this, dispatcherName, Exception("GroupAvatarDownloadJob openGroup is null"))
             return
         }

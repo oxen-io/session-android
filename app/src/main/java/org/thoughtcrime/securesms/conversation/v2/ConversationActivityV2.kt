@@ -245,10 +245,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     }
                     val recipient = Recipient.from(this, address, false)
                     threadId = storage.getOrCreateThreadIdFor(recipient.address)
-                    // assume created thread
-                    if (recipient.isContactRecipient && !recipient.isLocalNumber) {
-                        storage.setRecipientApproved(recipient, true) // assume approved when we CREATE the thread, not send first message
-                    }
                 }
             } ?: finish()
         }
