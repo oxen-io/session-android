@@ -661,7 +661,6 @@
         <item name="colorCellBackground">@color/classic_dark_1</item>
         <item name="colorSettingsBackground">@color/classic_dark_1</item>
         <item name="colorDividerBackground">@color/classic_dark_3</item>
-        <item name="colorCellRipple">@color/classic_dark_3</item>
         <item name="actionBarPopupTheme">@style/Dark.Popup</item>
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
@@ -709,7 +708,6 @@
         <item name="input_bar_lock_view_background">@color/classic_dark_2</item>
         <item name="input_bar_lock_view_border">@color/classic_dark_3</item>
         <item name="mention_candidates_view_background">@color/classic_dark_2</item>
-        <item name="mention_candidates_view_background_ripple">@color/classic_dark_3</item>
         <item name="scroll_to_bottom_button_background">@color/classic_dark_1</item>
         <item name="scroll_to_bottom_button_border">@color/classic_dark_3</item>
         <item name="conversation_unread_count_indicator_background">@color/classic_dark_4</item>

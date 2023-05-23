@@ -96,6 +96,8 @@ class ProfileManager(private val context: Context, private val configFactory: Co
             val key = contact.profilePictureEncryptionKey
             if (!url.isNullOrEmpty() && key != null && key.size == 32) {
                 this.profilePicture = UserPic(url, key)
+            } else if (url.isNullOrEmpty() && key == null) {
+                this.profilePicture = UserPic.DEFAULT
             }
         }
         if (contactConfig.needsPush()) {

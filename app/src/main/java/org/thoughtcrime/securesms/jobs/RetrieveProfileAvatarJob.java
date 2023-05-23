@@ -111,7 +111,7 @@ public class RetrieveProfileAvatarJob extends BaseJob {
       }
       database.setProfileAvatar(recipient, profileAvatar);
     } catch (Exception e) {
-
+      Log.e("Loki", "Failed to download profile avatar", e);
     } finally {
       if (downloadDestination != null) downloadDestination.delete();
     }
