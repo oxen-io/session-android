@@ -182,8 +182,9 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         val ourRecipient = fromSerialized(getUserPublicKey()!!).let {
             Recipient.from(context, it, false)
         }
-        TextSecurePreferences.setProfilePictureURL(context, newProfilePicture)
+        ourRecipient.resolve().profileKey = newProfileKey
         TextSecurePreferences.setProfileKey(context, newProfileKey?.let { Base64.encodeBytes(it) })
+        TextSecurePreferences.setProfilePictureURL(context, newProfilePicture)
         ApplicationContext.getInstance(context).jobManager.add(RetrieveProfileAvatarJob(ourRecipient, newProfilePicture))
     }
 
@@ -437,6 +438,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         } else {
             // create note to self thread if needed (?)
             val ourThread = getOrCreateThreadIdFor(recipient.address)
+            DatabaseComponent.get(context).threadDatabase().setHasSent(ourThread, true)
             setPinned(ourThread, userProfile.getNtsPriority() > 0)
         }
 
@@ -1008,7 +1010,10 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         val communityInfo = groups.getOrConstructCommunityInfo(infoServer, infoRoom, pubKeyHex)
         groups.set(communityInfo)
         val volatile = volatileConfig.getOrConstructCommunity(infoServer, infoRoom, pubKey)
-        volatileConfig.set(volatile.copy(lastRead = 0))
+        if (volatile.lastRead != 0L) {
+            val threadId = getThreadId(openGroup) ?: return
+            markConversationAsRead(threadId, volatile.lastRead)
+        }
     }
 
     override fun hasBackgroundGroupAddJob(groupJoinUrl: String): Boolean {

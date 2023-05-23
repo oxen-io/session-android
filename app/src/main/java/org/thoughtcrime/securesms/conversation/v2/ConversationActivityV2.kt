@@ -248,6 +248,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     // assume created thread
                     if (recipient.isContactRecipient && !recipient.isLocalNumber) {
                         storage.setRecipientApproved(recipient, true) // assume approved when we CREATE the thread, not send first message
+                    } else if (recipient.isLocalNumber) {
+                        // this gets around the filtering of unapproved / unsent threads
+                        // since the sql query would have to take into account whether address == local user address
+                        threadDb.setHasSent(threadId, true)
                     }
                 }
             } ?: finish()

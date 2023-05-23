@@ -2,7 +2,10 @@ package org.thoughtcrime.securesms.preferences
 
 import android.Manifest
 import android.app.Activity
-import android.content.*
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
@@ -232,16 +235,16 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                 // new config
                 val url = TextSecurePreferences.getProfilePictureURL(this)
                 val profileKey = ProfileKeyUtil.getProfileKey(this)
-                if (!url.isNullOrEmpty() && profileKey.isNotEmpty()) {
+                if (profilePicture == null) {
+                    userConfig?.setPic(UserPic.DEFAULT)
+                } else if (!url.isNullOrEmpty() && profileKey.isNotEmpty()) {
                     userConfig?.setPic(UserPic(url, profileKey))
                 }
             }
-            if (profilePicture != null || displayName != null) {
-                if (userConfig != null && userConfig.needsDump()) {
-                    configFactory.persist(userConfig)
-                }
-                ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@SettingsActivity)
+            if (userConfig != null && userConfig.needsDump()) {
+                configFactory.persist(userConfig)
             }
+            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@SettingsActivity)
         }
         compoundPromise.alwaysUi {
             if (displayName != null) {

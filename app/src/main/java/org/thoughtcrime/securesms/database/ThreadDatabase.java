@@ -539,7 +539,8 @@ public class ThreadDatabase extends Database {
   public boolean setLastSeen(long threadId, long timestamp) {
     // edge case where we set the last seen time for a conversation before it loads messages (joining community for example)
     MmsSmsDatabase mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase();
-    if (mmsSmsDatabase.getConversationCount(threadId) <= 0) return false;
+    Recipient forThreadId = getRecipientForThreadId(threadId);
+    if (mmsSmsDatabase.getConversationCount(threadId) <= 0 && forThreadId != null && forThreadId.isOpenGroupRecipient()) return false;
 
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
