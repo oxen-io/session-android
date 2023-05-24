@@ -131,14 +131,11 @@
         <item name="android:background">@drawable/unimportant_dialog_text_button_background</item>
     </style>
 
-<<<<<<< Updated upstream
     <style name="Widget.Session.Button.Dialog.Destructive">
         <item name="android:background">@drawable/destructive_dialog_button_background</item>
         <item name="android:textColor">@color/black</item>
     </style>
 
-=======
->>>>>>> Stashed changes
     <style name="Widget.Session.Button.Dialog.DestructiveText">
         <item name="android:background">@drawable/destructive_dialog_text_button_background</item>
         <item name="android:textColor">@color/destructive</item>
