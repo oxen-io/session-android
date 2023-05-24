@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.TypedValue
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 @ColorInt
@@ -17,7 +18,9 @@ fun Context.getColorFromAttr(
 }
 
 val RecyclerView.isScrolledToBottom: Boolean
-    get() {
-        val contentHeight = height - (paddingTop + paddingBottom)
-        return computeVerticalScrollRange() == computeVerticalScrollOffset() + contentHeight
-    }
+    get() = layoutManager
+        .takeIf { it is LinearLayoutManager }
+        ?.findViewByPosition(0)
+        ?.bottom
+        ?.let { it - 1 <= this.measuredHeight }
+        ?: false
