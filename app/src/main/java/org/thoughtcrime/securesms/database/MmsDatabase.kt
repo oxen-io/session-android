@@ -739,7 +739,10 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             )
         }
         with (get(context).threadDatabase()) {
-            setLastSeen(threadId, message.sentTimeMillis)
+            val lastSeen = getLastSeenAndHasSent(threadId).first()
+            if (lastSeen < message.sentTimeMillis) {
+                setLastSeen(threadId, message.sentTimeMillis)
+            }
             setHasSent(threadId, true)
             if (runThreadUpdate) {
                 update(threadId, true, true)

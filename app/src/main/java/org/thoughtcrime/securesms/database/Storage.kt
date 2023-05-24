@@ -482,7 +482,9 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                 is Conversation.Community -> getThreadIdFor("",null, "${conversation.baseCommunityInfo.baseUrl}.${conversation.baseCommunityInfo.room}", createThread = false)
             }
             if (threadId != null) {
-                markConversationAsRead(threadId, conversation.lastRead)
+                if (conversation.lastRead > getLastSeen(threadId)) {
+                    markConversationAsRead(threadId, conversation.lastRead)
+                }
                 updateThread(threadId, false)
             }
         }
