@@ -52,6 +52,13 @@ class LokiThreadDatabase(context: Context, helper: SQLCipherOpenHelper) : Databa
         }
     }
 
+    fun getThreadId(openGroup: OpenGroup): Long? {
+        val database = databaseHelper.readableDatabase
+        return database.get(publicChatTable, "$publicChat = ?", arrayOf(JsonUtil.toJson(openGroup.toJson()))) { cursor ->
+            cursor.getLong(threadID)
+        }
+    }
+
     fun setOpenGroupChat(openGroup: OpenGroup, threadID: Long) {
         if (threadID < 0) {
             return

@@ -227,6 +227,7 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                         // in case we had null configs, the array won't be fully populated
                         // index of the sparse array key iterator should be the request index, with the key being the namespace
                         configDebouncer.publish {
+                            // TODO: add in specific ordering of config namespaces for processing
                             requestSparseArray.keyIterator().withIndex().forEach { (requestIndex, key) ->
                                 responseList.getOrNull(requestIndex)?.let { rawResponse ->
                                     if (rawResponse["code"] as? Int != 200) {

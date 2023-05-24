@@ -21,6 +21,7 @@ inline jobject serialize_contact(JNIEnv *env, session::config::contact_info info
     approved = info.approved;
     approvedMe = info.approved_me;
     blocked = info.blocked;
+    auto created = info.created;
     jobject profilePic = util::serialize_user_pic(env, info.profile_picture);
     jobject returnObj = env->NewObject(contactClass, constructor, id, name, nickname, approved,
                                        approvedMe, blocked, profilePic, info.priority,

@@ -9,5 +9,5 @@ data class Contact(
     var blocked: Boolean = false,
     var profilePicture: UserPic = UserPic.DEFAULT,
     var priority: Int = 0,
-    var expiryMode: ExpiryMode
+    var expiryMode: ExpiryMode,
 )

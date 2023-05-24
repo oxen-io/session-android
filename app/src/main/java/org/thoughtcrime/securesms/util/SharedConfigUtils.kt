@@ -7,7 +7,7 @@ import org.thoughtcrime.securesms.database.model.ThreadRecord
 
 fun ConversationVolatileConfig.getConversationUnread(thread: ThreadRecord): Boolean {
     val recipient = thread.recipient
-    if (recipient.isContactRecipient) {
+    if (recipient.isContactRecipient && recipient.isOpenGroupInboxRecipient) {
         return getOneToOne(recipient.address.serialize())?.unread == true
     } else if (recipient.isClosedGroupRecipient) {
         return getLegacyClosedGroup(GroupUtil.doubleDecodeGroupId(recipient.address.toGroupString()))?.unread == true

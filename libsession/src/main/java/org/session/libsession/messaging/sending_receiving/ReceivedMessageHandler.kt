@@ -263,6 +263,8 @@ fun MessageReceiver.handleVisibleMessage(
             if ((profileKeyValid && profileKeyChanged) || (profileKeyValid && needsProfilePicture)) {
                 profileManager.setProfilePicture(context, recipient, profile.profilePictureURL, newProfileKey)
                 profileManager.setUnidentifiedAccessMode(context, recipient, Recipient.UnidentifiedAccessMode.UNKNOWN)
+            } else if (newProfileKey == null || newProfileKey.isEmpty() || profile.profilePictureURL.isNullOrEmpty()) {
+                profileManager.setProfilePicture(context, recipient, null, null)
             }
         }
     }

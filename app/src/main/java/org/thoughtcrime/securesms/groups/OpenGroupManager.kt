@@ -43,6 +43,7 @@ object OpenGroupManager {
         val storage = MessagingModuleConfiguration.shared.storage
         val (serverGroups, toDelete) = storage.getAllOpenGroups().values.partition { storage.getThreadId(it) != null }
         toDelete.forEach { openGroup ->
+            Log.w("Loki", "Need to delete a group")
             delete(openGroup.server, openGroup.room, MessagingModuleConfiguration.shared.context)
         }
 
@@ -116,7 +117,7 @@ object OpenGroupManager {
         val groupID = recipient.address.serialize()
         // Stop the poller if needed
         val openGroups = storage.getAllOpenGroups().filter { it.value.server == server }
-        if (openGroups.count() == 1) {
+        if (openGroups.isNotEmpty()) {
             synchronized(pollUpdaterLock) {
                 val poller = pollers[server]
                 poller?.stop()
