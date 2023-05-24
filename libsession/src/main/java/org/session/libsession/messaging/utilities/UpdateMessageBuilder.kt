@@ -7,6 +7,7 @@ import org.session.libsession.messaging.calls.CallMessageType
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage
 import org.session.libsession.utilities.ExpirationUtil
+import org.session.libsession.utilities.truncateIdForDisplay
 
 object UpdateMessageBuilder {
 
@@ -16,7 +17,7 @@ object UpdateMessageBuilder {
         if (!isOutgoing && senderId == null) return message
         val storage = MessagingModuleConfiguration.shared.storage
         val senderName: String = if (!isOutgoing) {
-            storage.getContactWithSessionID(senderId!!)?.displayName(Contact.ContactContext.REGULAR) ?: truncate(senderId)
+            storage.getContactWithSessionID(senderId!!)?.displayName(Contact.ContactContext.REGULAR) ?: truncateIdForDisplay(senderId)
         } else { context.getString(R.string.MessageRecord_you) }
 
         when (updateData) {
@@ -81,7 +82,7 @@ object UpdateMessageBuilder {
         if (!isOutgoing && senderId == null) return ""
         val storage = MessagingModuleConfiguration.shared.storage
         val senderName: String? = if (!isOutgoing) {
-            storage.getContactWithSessionID(senderId!!)?.displayName(Contact.ContactContext.REGULAR) ?: truncate(senderId)
+            storage.getContactWithSessionID(senderId!!)?.displayName(Contact.ContactContext.REGULAR) ?: truncateIdForDisplay(senderId)
         } else { context.getString(R.string.MessageRecord_you) }
         return if (duration <= 0) {
             if (isOutgoing) context.getString(R.string.MessageRecord_you_disabled_disappearing_messages)
@@ -95,7 +96,7 @@ object UpdateMessageBuilder {
 
     fun buildDataExtractionMessage(context: Context, kind: DataExtractionNotificationInfoMessage.Kind, senderId: String? = null): String {
         val storage = MessagingModuleConfiguration.shared.storage
-        val senderName = storage.getContactWithSessionID(senderId!!)?.displayName(Contact.ContactContext.REGULAR) ?: truncate(senderId)
+        val senderName = storage.getContactWithSessionID(senderId!!)?.displayName(Contact.ContactContext.REGULAR) ?: truncateIdForDisplay(senderId)
         return when (kind) {
             DataExtractionNotificationInfoMessage.Kind.SCREENSHOT ->
                 context.getString(R.string.MessageRecord_s_took_a_screenshot, senderName)
@@ -119,6 +120,3 @@ object UpdateMessageBuilder {
         }
     }
 }
-
-private fun truncate(id: String): String =
-    id.takeIf { it.length > 8 }?.apply{ "${take(4)}...${takeLast(4)}" } ?: id
