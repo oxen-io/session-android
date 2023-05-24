@@ -73,7 +73,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         super.onCreate(savedInstanceState, isReady)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val displayName = TextSecurePreferences.getProfileName(this) ?: hexEncodedPublicKey
+        val displayName = getDisplayName()
         glide = GlideApp.with(this)
         with(binding) {
             setupProfilePictureView(profilePictureView.root)
@@ -98,10 +98,16 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         }
     }
 
+    private fun getDisplayName(): String =
+        TextSecurePreferences.getProfileName(this) ?: truncate(hexEncodedPublicKey)
+
+    private fun truncate(key: String): String =
+        key.takeIf { it.length > 8 } ?: "${key.take(4)}…${key.takeLast(4)}"
+
     private fun setupProfilePictureView(view: ProfilePictureView) {
         view.glide = glide
         view.publicKey = hexEncodedPublicKey
-        view.displayName = TextSecurePreferences.getProfileName(this) ?: hexEncodedPublicKey
+        view.displayName = getDisplayName()
         view.isLarge = true
         view.update()
     }
