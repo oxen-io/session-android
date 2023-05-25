@@ -171,7 +171,7 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
             runBlocking(Dispatchers.IO) {
                 val requestSparseArray = SparseArray<SnodeAPI.SnodeBatchRequestInfo>()
                 // get messages
-                SnodeAPI.buildAuthenticatedRetrieveBatchRequest(snode, userPublicKey)!!.also { personalMessages ->
+                SnodeAPI.buildAuthenticatedRetrieveBatchRequest(snode, userPublicKey, maxSize = -2)!!.also { personalMessages ->
                     // namespaces here should always be set
                     requestSparseArray[personalMessages.namespace!!] = personalMessages
                 }
@@ -181,7 +181,8 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                     hashesToExtend += config.currentHashes()
                     SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
                         snode, userPublicKey,
-                        config.configNamespace()
+                        config.configNamespace(),
+                        maxSize = -8
                     )
                 }.forEach { request ->
                     // namespaces here should always be set

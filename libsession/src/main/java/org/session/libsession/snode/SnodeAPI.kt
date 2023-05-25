@@ -453,7 +453,7 @@ object SnodeAPI {
         )
     }
 
-    fun buildAuthenticatedRetrieveBatchRequest(snode: Snode, publicKey: String, namespace: Int = 0): SnodeBatchRequestInfo? {
+    fun buildAuthenticatedRetrieveBatchRequest(snode: Snode, publicKey: String, namespace: Int = 0, maxSize: Int? = null): SnodeBatchRequestInfo? {
         val lastHashValue = database.getLastMessageHashValue(snode, publicKey, namespace) ?: ""
         val params = mutableMapOf<String, Any>(
             "pubkey" to publicKey,
@@ -486,6 +486,9 @@ object SnodeAPI {
         if (namespace != 0) {
             params["namespace"] = namespace
         }
+        if (maxSize != null) {
+            params["max_size"] = maxSize
+        }
         return SnodeBatchRequestInfo(
             Snode.Method.Retrieve.rawValue,
             params,
@@ -511,7 +514,20 @@ object SnodeAPI {
         val parameters = mutableMapOf<String, Any>(
             "requests" to requests
         )
-        return invoke(if (sequence) Snode.Method.Sequence else Snode.Method.Batch, snode, parameters, publicKey)
+        return invoke(if (sequence) Snode.Method.Sequence else Snode.Method.Batch, snode, parameters, publicKey).success { rawResponses ->
+            val responseList = (rawResponses["results"] as List<RawResponse>)
+            responseList.forEachIndexed { index, response ->
+                if (response["code"] as? Int != 200) {
+                    Log.w("Loki", "response code was not 200")
+                    handleSnodeError(
+                        response["code"] as? Int ?: 0,
+                        response,
+                        snode,
+                        publicKey
+                    )
+                }
+            }
+        }
     }
 
     fun getExpiries(messageHashes: List<String>, publicKey: String) : RawResponsePromise {
