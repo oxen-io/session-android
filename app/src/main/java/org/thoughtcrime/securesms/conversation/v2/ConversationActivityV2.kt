@@ -211,8 +211,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private var emojiPickerVisible = false
 
-    private val canScroll: Boolean
-        get() = binding?.conversationRecyclerView?.computeVerticalScrollOffset()?.let { it >= 0 } ?: false
     private val isScrolledToBottom: Boolean
         get() = binding?.conversationRecyclerView?.isScrolledToBottom ?: true
 
@@ -917,7 +915,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun showScrollToBottomButtonIfApplicable() {
-        binding?.scrollToBottomButton?.isVisible = !emojiPickerVisible && !isScrolledToBottom && canScroll && adapter.itemCount > 0
+        binding?.scrollToBottomButton?.isVisible = !emojiPickerVisible && !isScrolledToBottom && adapter.itemCount > 0
     }
 
     private fun updateUnreadCountIndicator() {
