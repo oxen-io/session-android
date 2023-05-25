@@ -5,6 +5,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.util.Pair
 import androidx.annotation.VisibleForTesting
+import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Util
 import org.session.libsignal.utilities.guava.Optional
 import java.util.Collections
@@ -26,6 +27,8 @@ class Address private constructor(address: String) : Parcelable, Comparable<Addr
         get() = GroupUtil.isOpenGroup(address)
     val isOpenGroupInbox: Boolean
         get() = GroupUtil.isOpenGroupInbox(address)
+    val isOpenGroupOutbox: Boolean
+        get() = address.startsWith(IdPrefix.BLINDED.value)
     val isContact: Boolean
         get() = !(isGroup || isOpenGroupInbox)
 

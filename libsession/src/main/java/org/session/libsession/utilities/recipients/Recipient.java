@@ -442,6 +442,10 @@ public class Recipient implements RecipientModifiedListener {
     return address.isOpenGroup();
   }
 
+  public boolean isOpenGroupOutboxRecipient() {
+    return address.isOpenGroupOutbox();
+  }
+
   public boolean isOpenGroupInboxRecipient() {
     return address.isOpenGroupInbox();
   }

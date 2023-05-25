@@ -501,7 +501,9 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         val communities = userGroups.allCommunityInfo()
         val lgc = userGroups.allLegacyGroupInfo()
         val allOpenGroups = getAllOpenGroups()
-        val toDeleteCommunities = allOpenGroups.filter { it.value.joinURL !in communities.map { it.community.fullUrl() } }
+        val toDeleteCommunities = allOpenGroups.filter {
+            Conversation.Community(BaseCommunityInfo(it.value.server, it.value.room, it.value.publicKey), 0, false).baseCommunityInfo.fullUrl() !in communities.map { it.community.fullUrl() }
+        }
 
         val existingCommunities: Map<Long, OpenGroup> = allOpenGroups.filterKeys { it !in toDeleteCommunities.keys }
         val toAddCommunities = communities.filter { it.community.fullUrl() !in existingCommunities.map { it.value.joinURL } }
@@ -521,7 +523,6 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         toDeleteClosedGroups.forEach { deleteGroup ->
             val threadId = getThreadId(deleteGroup.encodedId)
             if (threadId != null) {
-                Log.d("Loki-DBG", "Deleting group for thread $threadId")
                 ClosedGroupManager.silentlyRemoveGroup(context,threadId,GroupUtil.doubleDecodeGroupId(deleteGroup.encodedId), deleteGroup.encodedId, localUserPublicKey, delete = true)
             }
         }
@@ -529,7 +530,6 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         toAddCommunities.forEach { toAddCommunity ->
             val joinUrl = toAddCommunity.community.fullUrl()
             if (!hasBackgroundGroupAddJob(joinUrl)) {
-                Log.d("Loki-DBG", "Doesn't contain background job for open group, adding from config update")
                 JobQueue.shared.add(BackgroundGroupAddJob(joinUrl))
             }
         }
@@ -550,7 +550,6 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
             val existingGroup = existingClosedGroups.firstOrNull { GroupUtil.doubleDecodeGroupId(it.encodedId) == group.sessionId }
             val existingThread = existingGroup?.let { getThreadId(existingGroup.encodedId) }
             if (existingGroup != null) {
-                Log.d("Loki-DBG", "Existing closed group, don't add")
                 if (group.priority == PRIORITY_HIDDEN && existingThread != null) {
                     threadDb.deleteConversation(existingThread)
                     // TODO: stop polling here also

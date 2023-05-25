@@ -650,7 +650,9 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 // Delete the conversation
                 val v2OpenGroup = DatabaseComponent.get(this@HomeActivity).lokiThreadDatabase().getOpenGroupChat(threadID)
                 if (v2OpenGroup != null) {
-                    OpenGroupManager.delete(v2OpenGroup.server, v2OpenGroup.room, this@HomeActivity)
+                    withContext(Dispatchers.IO) {
+                        OpenGroupManager.delete(v2OpenGroup.server, v2OpenGroup.room, this@HomeActivity)
+                    }
                 } else {
                     lifecycleScope.launch(Dispatchers.IO) {
                         storage.deleteConversation(threadID)

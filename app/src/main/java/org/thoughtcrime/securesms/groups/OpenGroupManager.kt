@@ -9,7 +9,6 @@ import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPoller
 import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.ThreadUtils
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import java.util.concurrent.Executors
@@ -106,6 +105,7 @@ object OpenGroupManager {
         }
     }
 
+    @WorkerThread
     fun delete(server: String, room: String, context: Context) {
         val storage = MessagingModuleConfiguration.shared.storage
         val configFactory = MessagingModuleConfiguration.shared.configFactory
@@ -133,11 +133,9 @@ object OpenGroupManager {
         storage.removeLastOutboxMessageId(server)
         val lokiThreadDB = DatabaseComponent.get(context).lokiThreadDatabase()
         lokiThreadDB.removeOpenGroupChat(threadID)
-        ThreadUtils.queue {
-            storage.deleteConversation(threadID) // Must be invoked on a background thread
-            GroupManager.deleteGroup(groupID, context) // Must be invoked on a background thread
-            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
-        }
+        storage.deleteConversation(threadID) // Must be invoked on a background thread
+        GroupManager.deleteGroup(groupID, context) // Must be invoked on a background thread
+        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
     }
 
     @WorkerThread
