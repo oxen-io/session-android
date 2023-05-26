@@ -128,13 +128,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleText" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/massive_spacing"
-        app:layout_constraintBottom_toBottomOf="@+id/recyclerView"
-        android:background="@drawable/conversation_menu_gradient"
-        />
-
     <Button
         android:id="@+id/createNewPrivateChatButton"
         style="@style/Widget.Session.Button.Common.ProminentOutline"

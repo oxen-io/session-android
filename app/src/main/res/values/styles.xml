@@ -262,7 +262,7 @@
         <item name="android:padding">@dimen/normal_padding</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:selectable">true</item>
-        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
     </style>
 
     <style name="PopupMenu.ConversationItem" parent="@style/Widget.AppCompat.PopupMenu">
