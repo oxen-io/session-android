@@ -91,7 +91,7 @@
 
     <style name="Widget.Session.Button.Common.ProminentOutline">
         <item name="android:background">@drawable/prominent_outline_button_medium_background</item>
-        <item name="android:textColor">?attr/prominentButtonColor</item>
+        <item name="android:textColor">@color/prominent_button_color</item>
     </style>
 
     <style name="Widget.Session.Button.Common.UnimportantOutline">
@@ -106,7 +106,7 @@
 
     <style name="Widget.Session.Button.Common.DestructiveOutline">
         <item name="android:background">@drawable/destructive_outline_button_medium_background</item>
-        <item name="android:textColor">@color/destructive</item>
+        <item name="android:textColor">@color/destructive_button_color</item>
     </style>
 
     <style name="Widget.Session.Button.Dialog" parent="">
