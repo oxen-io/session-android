@@ -303,6 +303,8 @@
         <item name="dividerHorizontal">?dividerVertical</item>
         <item name="message_received_background_color">#F2F2F2</item>
         <item name="colorAccent">@color/classic_accent</item>
+        <item name="colorControlHighlight">?android:colorControlHighlight</item>
+        <item name="tabStyle">@style/Widget.Session.TabLayout</item>
     </style>
 
     <style name="Ocean">
@@ -310,6 +312,8 @@
         <item name="dividerHorizontal">?dividerVertical</item>
         <item name="message_received_background_color">#F2F2F2</item>
         <item name="colorAccent">@color/ocean_accent</item>
+        <item name="colorControlHighlight">?android:colorControlHighlight</item>
+        <item name="tabStyle">@style/Widget.Session.TabLayout</item>
     </style>
 
     <style name="Classic.Dark">

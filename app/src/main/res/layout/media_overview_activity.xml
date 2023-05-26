@@ -21,7 +21,6 @@
 
         <org.thoughtcrime.securesms.components.ControllableTabLayout
                 android:id="@+id/tab_layout"
-                style="@style/Widget.Session.TabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"/>

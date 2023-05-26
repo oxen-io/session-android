@@ -56,7 +56,6 @@
         <item name="elevation">1dp</item>
         <item name="tabIndicatorColor">@color/transparent</item>
         <item name="tabIndicatorHeight">@dimen/accent_line_thickness</item>
-        <item name="tabRippleColor">@color/cell_selected</item>
         <item name="tabTextAppearance">@style/TextAppearance.Session.Tab</item>
     </style>
 
@@ -116,19 +115,10 @@
         <item name="android:textColor">?android:textColorPrimary</item>
     </style>
 
-    <style name="Widget.Session.Button.Dialog.Unimportant">
-        <item name="android:background">@drawable/unimportant_dialog_button_background</item>
-    </style>
-
     <style name="Widget.Session.Button.Dialog.UnimportantText">
         <item name="android:background">@drawable/unimportant_dialog_text_button_background</item>
     </style>
-
-    <style name="Widget.Session.Button.Dialog.Destructive">
-        <item name="android:background">@drawable/destructive_dialog_button_background</item>
-        <item name="android:textColor">@color/black</item>
-    </style>
-
+    
     <style name="Widget.Session.Button.Dialog.DestructiveText">
         <item name="android:background">@drawable/destructive_dialog_text_button_background</item>
         <item name="android:textColor">@color/destructive</item>
