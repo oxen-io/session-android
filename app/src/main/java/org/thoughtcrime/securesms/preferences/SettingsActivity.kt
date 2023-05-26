@@ -32,11 +32,8 @@ import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.successUi
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.utilities.Address
-import org.session.libsession.utilities.ProfileKeyUtil
-import org.session.libsession.utilities.ProfilePictureUtilities
+import org.session.libsession.utilities.*
 import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol
-import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.avatar.AvatarSelection
 import org.thoughtcrime.securesms.components.ProfilePictureView
@@ -85,7 +82,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         super.onCreate(savedInstanceState, isReady)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val displayName = TextSecurePreferences.getProfileName(this) ?: hexEncodedPublicKey
+        val displayName = getDisplayName()
         glide = GlideApp.with(this)
         with(binding) {
             setupProfilePictureView(profilePictureView.root)
@@ -112,10 +109,13 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         }
     }
 
+    private fun getDisplayName(): String =
+        TextSecurePreferences.getProfileName(this) ?: truncateIdForDisplay(hexEncodedPublicKey)
+
     private fun setupProfilePictureView(view: ProfilePictureView) {
         view.glide = glide
         view.publicKey = hexEncodedPublicKey
-        view.displayName = TextSecurePreferences.getProfileName(this) ?: hexEncodedPublicKey
+        view.displayName = getDisplayName()
         view.isLarge = true
         view.update()
     }

@@ -47,7 +47,6 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
-        style="@style/Widget.Session.TabLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tab_bar_height"
         app:layout_constraintEnd_toEndOf="parent"

@@ -42,6 +42,7 @@ class ClearAllDataDialog : BaseDialog() {
         var selectedOption = device
         val optionAdapter = RadioOptionAdapter { selectedOption = it }
         binding.recyclerView.apply {
+            itemAnimator = null
             adapter = optionAdapter
             addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
             setHasFixedSize(true)

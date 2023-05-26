@@ -17,7 +17,4 @@ fun Context.getColorFromAttr(
 }
 
 val RecyclerView.isScrolledToBottom: Boolean
-    get() {
-        val contentHeight = height - (paddingTop + paddingBottom)
-        return computeVerticalScrollRange() == computeVerticalScrollOffset() + contentHeight
-    }
+    get() = computeVerticalScrollOffset() + computeVerticalScrollExtent() >= computeVerticalScrollRange()

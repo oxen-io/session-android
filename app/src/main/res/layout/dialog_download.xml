@@ -35,7 +35,7 @@
         android:orientation="horizontal">
 
         <Button
-            style="@style/Widget.Session.Button.Dialog.Unimportant"
+            style="@style/Widget.Session.Button.Dialog.UnimportantText"
             android:id="@+id/cancelButton"
             android:layout_width="0dp"
             android:layout_height="@dimen/small_button_height"
@@ -44,7 +44,7 @@
             android:text="@string/cancel" />
 
         <Button
-            style="@style/Widget.Session.Button.Dialog.Unimportant"
+            style="@style/Widget.Session.Button.Dialog.UnimportantText"
             android:id="@+id/downloadButton"
             android:layout_width="0dp"
             android:layout_height="@dimen/small_button_height"
