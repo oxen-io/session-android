@@ -166,10 +166,10 @@
         <item quantity="other">Vymazať zvolené správy?</item>
     </plurals>
     <plurals name="MediaOverviewActivity_Media_delete_confirm_message">
-        <item quantity="one">Týmto natrvalo odstánite vybranú správu.</item>
-        <item quantity="few">Týmto natrvalo odstánite %1$d vybrané správy.</item>
-        <item quantity="many">Týmto natrvalo odstánite všetkých %1$d vybraných správ.</item>
-        <item quantity="other">Týmto natrvalo odstánite všetkých %1$d vybraných správ.</item>
+        <item quantity="one">Týmto natrvalo odstránite vybranú správu.</item>
+        <item quantity="few">Týmto natrvalo odstránite %1$d vybrané správy.</item>
+        <item quantity="many">Týmto natrvalo odstránite všetkých %1$d vybraných správ.</item>
+        <item quantity="other">Týmto natrvalo odstránite všetkých %1$d vybraných správ.</item>
     </plurals>
     <string name="MediaOverviewActivity_Media_delete_progress_title">Mazanie</string>
     <string name="MediaOverviewActivity_Media_delete_progress_message">Mažú sa správy...</string>
