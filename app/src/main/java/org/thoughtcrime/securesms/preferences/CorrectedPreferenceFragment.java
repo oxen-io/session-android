@@ -125,29 +125,6 @@ public abstract class CorrectedPreferenceFragment extends PreferenceFragmentComp
         return next instanceof PreferenceCategory;
       }
 
-      public Drawable getBackground(Context context, int position) {
-        int viewType = getPreferenceType(position);
-        Drawable background;
-        switch (viewType) {
-          case SINGLE_TYPE:
-            background = ContextCompat.getDrawable(context, R.drawable.preference_single);
-            break;
-          case TOP_TYPE:
-            background = ContextCompat.getDrawable(context, R.drawable.preference_top);
-            break;
-          case MIDDLE_TYPE:
-            background = ContextCompat.getDrawable(context, R.drawable.preference_middle);
-            break;
-          case BOTTOM_TYPE:
-            background = ContextCompat.getDrawable(context, R.drawable.preference_bottom);
-            break;
-          default:
-            background = null;
-            break;
-        }
-        return background;
-      }
-
       @Override
       public void onBindViewHolder(PreferenceViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
@@ -163,11 +140,9 @@ public abstract class CorrectedPreferenceFragment extends PreferenceFragmentComp
           if (iconFrame != null) {
             iconFrame.setVisibility(preference.getIcon() == null ? View.GONE : View.VISIBLE);
           }
-          Drawable background = getBackground(holder.itemView.getContext(), position);
-          holder.itemView.setBackground(background);
           TextView titleView = holder.itemView.findViewById(android.R.id.title);
           if (titleView != null) {
-            ((TextView) titleView).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+            titleView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
           }
           boolean isTop = isTop(position);
           boolean isBottom = isBottom(position);
