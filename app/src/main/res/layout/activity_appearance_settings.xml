@@ -292,29 +292,39 @@
             android:layout_height="wrap_content"
             android:text="@string/activity_appearance_follow_system_category"/>
 
-        <LinearLayout
-            android:padding="@dimen/medium_spacing"
+        <androidx.cardview.widget.CardView
+            app:cardElevation="0dp"
+            android:elevation="0dp"
+            app:cardBackgroundColor="?colorSettingsBackground"
+            app:cardCornerRadius="@dimen/dialog_corner_radius"
+            android:layout_margin="@dimen/medium_spacing"
             android:layout_marginBottom="@dimen/massive_spacing"
-            android:background="@drawable/preference_single"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-            <TextView
-                android:textColor="?android:textColorPrimary"
-                android:textStyle="bold"
-                android:textSize="@dimen/medium_font_size"
-                android:paddingHorizontal="@dimen/large_spacing"
-                android:paddingVertical="@dimen/small_spacing"
-                android:text="@string/activity_appearance_follow_system_explanation"
-                android:layout_width="0dp"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/system_settings_switch_holder"
+                android:background="?selectableItemBackground"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/system_settings_switch"
-                android:paddingHorizontal="@dimen/large_spacing"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+                android:addStatesFromChildren="true"
+                android:gravity="center">
+                <TextView
+                    android:textColor="?android:textColorPrimary"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/medium_font_size"
+                    android:paddingHorizontal="@dimen/large_spacing"
+                    android:paddingVertical="@dimen/small_spacing"
+                    android:text="@string/activity_appearance_follow_system_explanation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/system_settings_switch"
+                    android:paddingHorizontal="@dimen/large_spacing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 </ScrollView>
