@@ -128,7 +128,6 @@ class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.On
             // system settings toggle
             systemSettingsSwitch.setOnCheckedChangeListener { _, isChecked -> viewModel.setNewFollowSystemSettings(isChecked) }
             systemSettingsSwitchHolder.setOnClickListener { systemSettingsSwitch.toggle() }
-
         }
 
         lifecycleScope.launchWhenResumed {
