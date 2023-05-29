@@ -36,10 +36,10 @@
                     android:id="@+id/theme_option_classic_dark"
                     android:addStatesFromChildren="true"
                     android:background="?selectableItemBackground"
-                    android:paddingHorizontal="@dimen/large_spacing"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingVertical="@dimen/medium_spacing"
+                    android:paddingHorizontal="@dimen/small_spacing"
+                    android:paddingVertical="@dimen/small_spacing"
                     android:orientation="horizontal">
                     <ImageView
                         android:theme="@style/Classic.Dark"
@@ -63,13 +63,20 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
+
+                <View
+                    android:alpha="0.15"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:textColorPrimary"/>
+
                 <LinearLayout
                     android:id="@+id/theme_option_classic_light"
                     android:addStatesFromChildren="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?selectableItemBackground"
-                    android:paddingHorizontal="@dimen/large_spacing"
+                    android:paddingHorizontal="@dimen/small_spacing"
                     android:paddingVertical="@dimen/small_spacing"
                     android:orientation="horizontal">
                     <ImageView
@@ -94,14 +101,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
+
+                <View
+                    android:alpha="0.15"
+                    android:layout_marginHorizontal="@dimen/medium_spacing"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:textColorPrimary"/>
+
                 <LinearLayout
                     android:id="@+id/theme_option_ocean_dark"
                     android:addStatesFromChildren="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?selectableItemBackground"
-                    android:paddingHorizontal="@dimen/large_spacing"
-                    android:paddingVertical="@dimen/medium_spacing"
+                    android:paddingHorizontal="@dimen/small_spacing"
+                    android:paddingVertical="@dimen/small_spacing"
                     android:orientation="horizontal">
                     <ImageView
                         android:theme="@style/Ocean.Dark"
@@ -125,15 +140,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
+
+                <View
+                    android:alpha="0.15"
+                    android:layout_marginHorizontal="@dimen/medium_spacing"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:textColorPrimary"/>
+
                 <LinearLayout
                     android:id="@+id/theme_option_ocean_light"
                     android:addStatesFromChildren="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?selectableItemBackground"
-                    android:paddingHorizontal="@dimen/large_spacing"
-                    android:paddingTop="@dimen/medium_spacing"
-                    android:paddingBottom="@dimen/large_spacing"
+                    android:paddingHorizontal="@dimen/small_spacing"
+                    android:paddingVertical="@dimen/small_spacing"
                     android:orientation="horizontal">
                     <ImageView
                         android:theme="@style/Ocean.Light"
@@ -230,8 +252,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginVertical="@dimen/medium_spacing"
-            android:layout_marginHorizontal="@dimen/large_spacing">
+            android:layout_marginVertical="@dimen/small_spacing"
+            android:layout_marginHorizontal="@dimen/small_spacing">
             <View
                 android:id="@+id/accent_green"
                 android:background="@drawable/padded_circle_tintable"
