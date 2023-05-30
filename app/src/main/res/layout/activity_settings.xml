@@ -159,7 +159,8 @@
                     android:id="@+id/privacyButton"
                     android:paddingHorizontal="@dimen/large_spacing"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/setting_button_height">
+                    android:layout_height="@dimen/setting_button_height"
+                    android:contentDescription="@string/AccessibilityId_privacy">
                     <ImageView
                         android:id="@+id/privacyContainer"
                         android:layout_width="@dimen/small_profile_picture_size"

@@ -114,6 +114,7 @@ object ConversationMenuHelper {
             inflater.inflate(R.menu.menu_conversation_call, menu)
         }
 
+
         // Search
         val searchViewItem = menu.findItem(R.id.menu_search)
         (context as ConversationActivityV2).searchViewItem = searchViewItem
