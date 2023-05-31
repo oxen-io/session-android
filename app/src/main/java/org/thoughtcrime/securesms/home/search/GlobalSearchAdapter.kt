@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewGlobalSearchHeaderBinding
 import network.loki.messenger.databinding.ViewGlobalSearchResultBinding
@@ -13,10 +14,14 @@ import org.session.libsession.utilities.GroupRecord
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.search.model.MessageResult
+import org.thoughtcrime.securesms.util.DateUtil
 import java.security.InvalidParameterException
 import org.session.libsession.messaging.contacts.Contact as ContactModel
 
-class GlobalSearchAdapter (private val modelCallback: (Model)->Unit): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class GlobalSearchAdapter(
+    private val dateUtil: DateUtil,
+    private val modelCallback: (Model) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         const val HEADER_VIEW_TYPE = 0
@@ -47,8 +52,10 @@ class GlobalSearchAdapter (private val modelCallback: (Model)->Unit): RecyclerVi
         } else {
             ContentView(
                 LayoutInflater.from(parent.context)
-                    .inflate(R.layout.view_global_search_result, parent, false)
-            , modelCallback)
+                    .inflate(R.layout.view_global_search_result, parent, false),
+                dateUtil,
+                modelCallback
+            )
         }
 
     override fun onBindViewHolder(
@@ -69,7 +76,7 @@ class GlobalSearchAdapter (private val modelCallback: (Model)->Unit): RecyclerVi
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        onBindViewHolder(holder,position, mutableListOf())
+        onBindViewHolder(holder, position, mutableListOf())
     }
 
     class HeaderView(view: View) : RecyclerView.ViewHolder(view) {
@@ -87,8 +94,11 @@ class GlobalSearchAdapter (private val modelCallback: (Model)->Unit): RecyclerVi
         }
     }
 
-    class ContentView(view: View, private val modelCallback: (Model) -> Unit) : RecyclerView.ViewHolder(view) {
-
+    class ContentView(
+        view: View,
+        private val dateUtil: DateUtil,
+        private val modelCallback: (Model) -> Unit
+    ) : RecyclerView.ViewHolder(view) {
         val binding = ViewGlobalSearchResultBinding.bind(view).apply {
             searchResultProfilePicture.root.glide = GlideApp.with(root)
         }
@@ -102,7 +112,7 @@ class GlobalSearchAdapter (private val modelCallback: (Model)->Unit): RecyclerVi
             when (model) {
                 is Model.GroupConversation -> bindModel(query, model)
                 is Model.Contact -> bindModel(query, model)
-                is Model.Message -> bindModel(query, model)
+                is Model.Message -> bindModel(dateUtil, query, model)
                 is Model.SavedMessages -> bindModel(model)
                 is Model.Header -> throw InvalidParameterException("Can't display Model.Header as ContentView")
             }
@@ -112,14 +122,14 @@ class GlobalSearchAdapter (private val modelCallback: (Model)->Unit): RecyclerVi
     }
 
     data class MessageModel(
-            val threadRecipient: Recipient,
-            val messageRecipient: Recipient,
-            val messageSnippet: String
+        val threadRecipient: Recipient,
+        val messageRecipient: Recipient,
+        val messageSnippet: String
     )
 
     sealed class Model {
         data class Header(@StringRes val title: Int) : Model()
-        data class SavedMessages(val currentUserPublicKey: String): Model()
+        data class SavedMessages(val currentUserPublicKey: String) : Model()
         data class Contact(val contact: ContactModel) : Model()
         data class GroupConversation(val groupRecord: GroupRecord) : Model()
         data class Message(val messageResult: MessageResult, val unread: Int) : Model()

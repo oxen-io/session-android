@@ -47,12 +47,8 @@ import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.home.UserDetailsBottomSheet
 import org.thoughtcrime.securesms.mms.GlideRequests
-import org.thoughtcrime.securesms.util.DateUtils
-import org.thoughtcrime.securesms.util.disableClipping
-import org.thoughtcrime.securesms.util.toDp
-import org.thoughtcrime.securesms.util.toPx
+import org.thoughtcrime.securesms.util.*
 import java.util.Date
-import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.min
@@ -62,6 +58,7 @@ import kotlin.math.sqrt
 @AndroidEntryPoint
 class VisibleMessageView : LinearLayout {
 
+    @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var threadDb: ThreadDatabase
     @Inject lateinit var lokiThreadDb: LokiThreadDatabase
     @Inject lateinit var lokiApiDb: LokiAPIDatabase
@@ -193,7 +190,7 @@ class VisibleMessageView : LinearLayout {
         binding.senderNameTextView.text = contact?.displayName(contactContext) ?: senderSessionID
         // Date break
         val showDateBreak = isStartOfMessageCluster || snIsSelected
-        binding.dateBreakTextView.text = if (showDateBreak) DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), message.timestamp) else null
+        binding.dateBreakTextView.text = if (showDateBreak) dateUtil.format(message.timestamp) else null
         binding.dateBreakTextView.isVisible = showDateBreak
         // Message status indicator
         if (message.isOutgoing) {

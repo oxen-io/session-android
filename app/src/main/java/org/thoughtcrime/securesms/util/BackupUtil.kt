@@ -74,15 +74,6 @@ object BackupUtil {
     }
 
     @JvmStatic
-    fun getLastBackupTimeString(context: Context, locale: Locale): String {
-        val timestamp = DatabaseComponent.get(context).lokiBackupFilesDatabase().getLastBackupFileTime()
-        if (timestamp == null) {
-            return context.getString(R.string.BackupUtil_never)
-        }
-        return DateUtils.getDisplayFormattedTimeSpanString(context, locale, timestamp.time)
-    }
-
-    @JvmStatic
     fun getLastBackup(context: Context): BackupFileRecord? {
         return DatabaseComponent.get(context).lokiBackupFilesDatabase().getLastBackupFile()
     }

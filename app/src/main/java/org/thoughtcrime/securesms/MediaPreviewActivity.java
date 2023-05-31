@@ -77,12 +77,10 @@ import org.thoughtcrime.securesms.mms.GlideRequests;
 import org.thoughtcrime.securesms.mms.Slide;
 import org.thoughtcrime.securesms.permissions.Permissions;
 import org.thoughtcrime.securesms.util.AttachmentUtil;
-import org.thoughtcrime.securesms.util.DateUtils;
 import org.thoughtcrime.securesms.util.SaveAttachmentTask;
 import org.thoughtcrime.securesms.util.SaveAttachmentTask.Attachment;
 
 import java.io.IOException;
-import java.util.Locale;
 import java.util.WeakHashMap;
 
 import network.loki.messenger.R;
@@ -243,7 +241,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
       CharSequence relativeTimeSpan;
 
       if (mediaItem.date > 0) {
-        relativeTimeSpan = DateUtils.getDisplayFormattedTimeSpanString(this, Locale.getDefault(), mediaItem.date);
+        relativeTimeSpan = dateUtil.format(mediaItem.date);
       } else {
         relativeTimeSpan = getString(R.string.MediaPreviewActivity_draft);
       }

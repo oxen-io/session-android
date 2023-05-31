@@ -45,7 +45,7 @@ public class DateUtils extends android.text.format.DateUtils {
   private static final SimpleDateFormat DAY_PRECISION_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
   private static final SimpleDateFormat HOUR_PRECISION_DATE_FORMAT = new SimpleDateFormat("yyyyMMddHH");
 
-  private static boolean isWithin(final long millis, final long span, final TimeUnit unit) {
+  static boolean isWithin(final long millis, final long span, final TimeUnit unit) {
     return System.currentTimeMillis() - millis <= unit.toMillis(span);
   }
 
@@ -64,20 +64,6 @@ public class DateUtils extends android.text.format.DateUtils {
 
   public static String getHourFormat(Context c) {
     return (DateFormat.is24HourFormat(c)) ? "HH:mm" : "hh:mm a";
-  }
-
-  public static String getDisplayFormattedTimeSpanString(final Context c, final Locale locale, final long timestamp) {
-    if (isWithin(timestamp, 1, TimeUnit.MINUTES)) {
-      return c.getString(R.string.DateUtils_just_now);
-    } else if (isToday(timestamp)) {
-      return getFormattedDateTime(timestamp, getHourFormat(c), locale);
-    } else if (isWithin(timestamp, 6, TimeUnit.DAYS)) {
-      return getFormattedDateTime(timestamp, "EEE " + getHourFormat(c), locale);
-    } else if (isWithin(timestamp, 365, TimeUnit.DAYS)) {
-      return getFormattedDateTime(timestamp, "MMM d " + getHourFormat(c), locale);
-    } else {
-      return getFormattedDateTime(timestamp, "MMM d " + getHourFormat(c) + ", yyyy", locale);
-    }
   }
 
   public static SimpleDateFormat getDetailedDateFormatter(Context context, Locale locale) {

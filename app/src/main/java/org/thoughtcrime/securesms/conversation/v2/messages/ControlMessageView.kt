@@ -7,11 +7,17 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewControlMessageBinding
 import org.thoughtcrime.securesms.database.model.MessageRecord
+import org.thoughtcrime.securesms.util.DateUtil
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ControlMessageView : LinearLayout {
+
+    @Inject lateinit var dateUtil: DateUtil
 
     private lateinit var binding: ViewControlMessageBinding
 
@@ -28,7 +34,7 @@ class ControlMessageView : LinearLayout {
 
     // region Updating
     fun bind(message: MessageRecord, previous: MessageRecord?) {
-        binding.dateBreakTextView.showDateBreak(message, previous)
+        binding.dateBreakTextView.showDateBreak(dateUtil, message, previous)
         binding.iconImageView.visibility = View.GONE
         var messageBody: CharSequence = message.getDisplayBody(context)
         binding.root.contentDescription= null

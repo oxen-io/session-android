@@ -43,18 +43,21 @@ import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.database.model.ReactionRecord;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import org.thoughtcrime.securesms.util.AnimationCompleteListener;
-import org.thoughtcrime.securesms.util.DateUtils;
+import org.thoughtcrime.securesms.util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import kotlin.Unit;
 import network.loki.messenger.R;
 
+@AndroidEntryPoint
 public final class ConversationReactionOverlay extends FrameLayout {
-
+  @Inject DateUtil dateUtil;
   public  static final float LONG_PRESS_SCALE_FACTOR    = 0.95f;
   private static final Interpolator INTERPOLATOR = new DecelerateInterpolator();
 
@@ -169,7 +172,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
     conversationBubble.setLayoutParams(new LinearLayout.LayoutParams(conversationItemSnapshot.getWidth(), conversationItemSnapshot.getHeight()));
     conversationBubble.setBackground(new BitmapDrawable(getResources(), conversationItemSnapshot));
     TextView conversationTimestamp = conversationItem.findViewById(R.id.conversation_item_timestamp);
-    conversationTimestamp.setText(DateUtils.getDisplayFormattedTimeSpanString(getContext(), Locale.getDefault(), messageRecord.getTimestamp()));
+    conversationTimestamp.setText(dateUtil.format(messageRecord.getTimestamp()));
 
     updateConversationTimestamp(messageRecord);
 

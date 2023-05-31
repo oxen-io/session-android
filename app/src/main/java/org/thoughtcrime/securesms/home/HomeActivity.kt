@@ -63,15 +63,8 @@ import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.onboarding.SeedActivity
 import org.thoughtcrime.securesms.onboarding.SeedReminderViewDelegate
 import org.thoughtcrime.securesms.preferences.SettingsActivity
-import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
-import org.thoughtcrime.securesms.util.DateUtils
-import org.thoughtcrime.securesms.util.IP2Country
-import org.thoughtcrime.securesms.util.disableClipping
-import org.thoughtcrime.securesms.util.push
-import org.thoughtcrime.securesms.util.show
-import org.thoughtcrime.securesms.util.themeState
+import org.thoughtcrime.securesms.util.*
 import java.io.IOException
-import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -84,6 +77,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     private lateinit var glide: GlideRequests
     private var broadcastReceiver: BroadcastReceiver? = null
 
+    @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var threadDb: ThreadDatabase
     @Inject lateinit var mmsSmsDatabase: MmsSmsDatabase
     @Inject lateinit var recipientDatabase: RecipientDatabase
@@ -100,7 +94,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         HomeAdapter(context = this, listener = this)
     }
 
-    private val globalSearchAdapter = GlobalSearchAdapter { model ->
+    private val globalSearchAdapter = GlobalSearchAdapter(dateUtil) { model ->
         when (model) {
             is GlobalSearchAdapter.Model.Message -> {
                 val threadId = model.messageResult.threadId
@@ -290,11 +284,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         if (messageRequestCount > 0 && !textSecurePreferences.hasHiddenMessageRequests()) {
             with(ViewMessageRequestBannerBinding.inflate(layoutInflater)) {
                 unreadCountTextView.text = messageRequestCount.toString()
-                timestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(
-                    this@HomeActivity,
-                    Locale.getDefault(),
-                    threadDb.latestUnapprovedConversationTimestamp
-                )
+                timestampTextView.text = dateUtil.format(threadDb.latestUnapprovedConversationTimestamp)
                 root.setOnClickListener { showMessageRequests() }
                 root.setOnLongClickListener { hideMessageRequests(); true }
                 root.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
