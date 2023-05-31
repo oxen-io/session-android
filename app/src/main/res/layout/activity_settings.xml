@@ -61,7 +61,7 @@
 
             </RelativeLayout>
 
-            <org.thoughtcrime.securesms.components.LabeledSeparatorView
+            <include layout="@layout/view_separator"
                 android:id="@+id/separatorView"
                 android:layout_width="match_parent"
                 android:layout_height="32dp"

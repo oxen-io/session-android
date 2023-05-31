@@ -5,6 +5,7 @@ import android.util.TypedValue
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.math.max
 
 @ColorInt
 fun Context.getColorFromAttr(
@@ -17,4 +18,4 @@ fun Context.getColorFromAttr(
 }
 
 val RecyclerView.isScrolledToBottom: Boolean
-    get() = computeVerticalScrollOffset() + computeVerticalScrollExtent() >= computeVerticalScrollRange()
+    get() = max(0, computeVerticalScrollOffset()) + computeVerticalScrollExtent() >= computeVerticalScrollRange()

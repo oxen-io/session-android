@@ -1572,7 +1572,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         DatabaseComponent.get(context).reactionDatabase().deleteMessageReactions(MessageId(messageId, mms))
     }
 
-    override fun setBlocked(recipients: List<Recipient>, isBlocked: Boolean, fromConfigUpdate: Boolean) {
+    override fun setBlocked(recipients: Iterable<Recipient>, isBlocked: Boolean, fromConfigUpdate: Boolean) {
         val recipientDb = DatabaseComponent.get(context).recipientDatabase()
         recipientDb.setBlocked(recipients, isBlocked)
         recipients.filter { it.isContactRecipient && !it.isLocalNumber }.forEach { recipient ->

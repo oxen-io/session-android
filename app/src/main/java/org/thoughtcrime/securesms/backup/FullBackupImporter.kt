@@ -12,6 +12,7 @@ import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Conversions
 import org.session.libsession.utilities.Util
+import org.session.libsignal.crypto.CipherUtil.CIPHER_LOCK
 import org.session.libsignal.crypto.kdf.HKDFv3
 import org.session.libsignal.utilities.ByteUtil
 import org.session.libsignal.utilities.Log
@@ -243,7 +244,7 @@ object FullBackupImporter {
                 val split = ByteUtil.split(derived, 32, 32)
                 cipherKey = split[0]
                 macKey = split[1]
-                cipher = Cipher.getInstance("AES/CTR/NoPadding")
+                cipher = synchronized(CIPHER_LOCK) { Cipher.getInstance("AES/CTR/NoPadding") }
                 mac = Mac.getInstance("HmacSHA256")
                 mac.init(SecretKeySpec(macKey, "HmacSHA256"))
                 counter = Conversions.byteArrayToInt(iv)
@@ -269,20 +270,26 @@ object FullBackupImporter {
             var length = length
             try {
                 Conversions.intToByteArray(iv, 0, counter++)
-                cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(cipherKey, "AES"), IvParameterSpec(iv))
-                mac.update(iv)
-                val buffer = ByteArray(8192)
-                while (length > 0) {
-                    val read = inputStream.read(buffer, 0, Math.min(buffer.size, length))
-                    if (read == -1) throw IOException("File ended early!")
-                    mac.update(buffer, 0, read)
-                    val plaintext = cipher.update(buffer, 0, read)
-                    if (plaintext != null) {
-                        out.write(plaintext, 0, plaintext.size)
+                val plaintext = synchronized(CIPHER_LOCK) {
+                    cipher.init(
+                        Cipher.DECRYPT_MODE,
+                        SecretKeySpec(cipherKey, "AES"),
+                        IvParameterSpec(iv)
+                    )
+                    mac.update(iv)
+                    val buffer = ByteArray(8192)
+                    while (length > 0) {
+                        val read = inputStream.read(buffer, 0, Math.min(buffer.size, length))
+                        if (read == -1) throw IOException("File ended early!")
+                        mac.update(buffer, 0, read)
+                        val plaintext = cipher.update(buffer, 0, read)
+                        if (plaintext != null) {
+                            out.write(plaintext, 0, plaintext.size)
+                        }
+                        length -= read
                     }
-                    length -= read
+                    cipher.doFinal()
                 }
-                val plaintext = cipher.doFinal()
                 if (plaintext != null) {
                     out.write(plaintext, 0, plaintext.size)
                 }
@@ -325,8 +332,10 @@ object FullBackupImporter {
                     throw IOException("Bad MAC")
                 }
                 Conversions.intToByteArray(iv, 0, counter++)
-                cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(cipherKey, "AES"), IvParameterSpec(iv))
-                val plaintext = cipher.doFinal(frame, 0, frame.size - 10)
+                val plaintext = synchronized(CIPHER_LOCK) {
+                    cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(cipherKey, "AES"), IvParameterSpec(iv))
+                    cipher.doFinal(frame, 0, frame.size - 10)
+                }
                 BackupFrame.parseFrom(plaintext)
             } catch (e: Exception) {
                 when (e) {

@@ -112,7 +112,7 @@
 
     <style name="Widget.Session.Button.Common.DestructiveOutline">
         <item name="android:background">@drawable/destructive_outline_button_medium_background</item>
-        <item name="android:textColor">@color/destructive</item>
+        <item name="android:textColor">@color/button_destructive</item>
         <item name="android:drawableTint">?android:textColorPrimary</item>
     </style>
 

@@ -70,7 +70,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/promptTextView">
 
-                <org.thoughtcrime.securesms.components.LabeledSeparatorView
+                <include layout="@layout/view_separator"
                     android:id="@+id/separatorView"
                     android:layout_width="match_parent"
                     android:layout_height="32dp"

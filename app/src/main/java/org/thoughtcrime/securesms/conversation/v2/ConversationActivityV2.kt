@@ -270,6 +270,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     var searchViewItem: MenuItem? = null
 
     private val bufferedLastSeenChannel = Channel<Long>(capacity = 512, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private var emojiPickerVisible = false
 
     private val isScrolledToBottom: Boolean
         get() = binding?.conversationRecyclerView?.isScrolledToBottom ?: true
@@ -521,17 +522,22 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
             }
         })
+
+        binding!!.conversationRecyclerView.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            showScrollToBottomButtonIfApplicable()
+        }
     }
 
     // called from onCreate
     private fun setUpToolBar() {
-        setSupportActionBar(binding?.toolbar)
+        val binding = binding ?: return
+        setSupportActionBar(binding.toolbar)
         val actionBar = supportActionBar ?: return
         val recipient = viewModel.recipient ?: return
         actionBar.title = ""
         actionBar.setDisplayHomeAsUpEnabled(true)
         actionBar.setHomeButtonEnabled(true)
-        binding!!.toolbarContent.conversationTitleView.text = when {
+        binding.toolbarContent.conversationTitleView.text = when {
             recipient.isLocalNumber -> getString(R.string.note_to_self)
             else -> recipient.toShortString()
         }
@@ -541,13 +547,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             R.dimen.small_profile_picture_size
         }
         val size = resources.getDimension(sizeID).roundToInt()
-        binding!!.toolbarContent.profilePictureView.root.layoutParams = LinearLayout.LayoutParams(size, size)
-        binding!!.toolbarContent.profilePictureView.root.glide = glide
+        binding.toolbarContent.profilePictureView.root.layoutParams = LinearLayout.LayoutParams(size, size)
+        binding.toolbarContent.profilePictureView.root.glide = glide
         MentionManagerUtilities.populateUserPublicKeyCacheIfNeeded(viewModel.threadId, this)
-        val profilePictureView = binding!!.toolbarContent.profilePictureView.root
-        viewModel.recipient?.let { recipient ->
-            profilePictureView.update(recipient)
-        }
+        val profilePictureView = binding.toolbarContent.profilePictureView.root
+        viewModel.recipient?.let(profilePictureView::update)
     }
 
     // called from onCreate
@@ -986,8 +990,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val binding = binding ?: return
         val wasTypingIndicatorVisibleBefore = binding.typingIndicatorViewContainer.isVisible
         binding.typingIndicatorViewContainer.isVisible = wasTypingIndicatorVisibleBefore && isScrolledToBottom
-        binding.typingIndicatorViewContainer.isVisible
-        showOrHideScrollToBottomButton()
+        showScrollToBottomButtonIfApplicable()
         val firstVisiblePosition = layoutManager?.findFirstVisibleItemPosition() ?: RecyclerView.NO_POSITION
         if (!firstLoad.get() && firstVisiblePosition != RecyclerView.NO_POSITION) {
             if (firstVisiblePosition == 0) {
@@ -1033,8 +1036,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
-    private fun showOrHideScrollToBottomButton(show: Boolean = true) {
-        binding?.scrollToBottomButton?.isVisible = show && !isScrolledToBottom && adapter.itemCount > 0
+    private fun showScrollToBottomButtonIfApplicable() {
+        binding?.scrollToBottomButton?.isVisible = !emojiPickerVisible && !isScrolledToBottom && adapter.itemCount > 0
     }
 
     private fun updateUnreadCountIndicator() {
@@ -1206,21 +1209,26 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             Log.e("Loki", "Failed to show emoji picker", e)
             return
         }
+
+        val binding = binding ?: return
+
+        emojiPickerVisible = true
         ViewUtil.hideKeyboard(this, visibleMessageView)
-        binding?.reactionsShade?.isVisible = true
-        showOrHideScrollToBottomButton(false)
-        binding?.conversationRecyclerView?.suppressLayout(true)
+        binding.reactionsShade.isVisible = true
+        binding.scrollToBottomButton.isVisible = false
+        binding.conversationRecyclerView.suppressLayout(true)
         reactionDelegate.setOnActionSelectedListener(ReactionsToolbarListener(message))
         reactionDelegate.setOnHideListener(object: ConversationReactionOverlay.OnHideListener {
             override fun startHide() {
-                binding?.reactionsShade?.let {
+                emojiPickerVisible = false
+                binding.reactionsShade.let {
                     ViewUtil.fadeOut(it, resources.getInteger(R.integer.reaction_scrubber_hide_duration), View.GONE)
                 }
-                showOrHideScrollToBottomButton(true)
+                showScrollToBottomButtonIfApplicable()
             }
 
             override fun onHide() {
-                binding?.conversationRecyclerView?.suppressLayout(false)
+                binding.conversationRecyclerView.suppressLayout(false)
 
                 WindowUtil.setLightStatusBarFromTheme(this@ConversationActivityV2);
                 WindowUtil.setLightNavigationBarFromTheme(this@ConversationActivityV2);

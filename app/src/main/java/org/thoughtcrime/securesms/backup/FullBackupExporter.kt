@@ -14,6 +14,7 @@ import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId
 import org.session.libsession.utilities.Conversions
 import org.session.libsession.utilities.Util
+import org.session.libsignal.crypto.CipherUtil.CIPHER_LOCK
 import org.session.libsignal.crypto.kdf.HKDFv3
 import org.session.libsignal.utilities.ByteUtil
 import org.session.libsignal.utilities.Log
@@ -278,7 +279,7 @@ object FullBackupExporter {
         return false
     }
 
-    private class BackupFrameOutputStream : Closeable, Flushable {
+    private class BackupFrameOutputStream(outputStream: OutputStream, passphrase: String) : Closeable, Flushable {
 
         private val outputStream: OutputStream
         private var cipher: Cipher
@@ -289,7 +290,7 @@ object FullBackupExporter {
 
         private var counter: Int = 0
 
-        constructor(outputStream: OutputStream, passphrase: String) : super() {
+        init {
             try {
                 val salt = Util.getSecretBytes(32)
                 val key = BackupUtil.computeBackupKey(passphrase, salt)
@@ -381,18 +382,24 @@ object FullBackupExporter {
         private fun writeStream(inputStream: InputStream) {
             try {
                 Conversions.intToByteArray(iv, 0, counter++)
-                cipher.init(Cipher.ENCRYPT_MODE, SecretKeySpec(cipherKey, "AES"), IvParameterSpec(iv))
-                mac.update(iv)
-                val buffer = ByteArray(8192)
-                var read: Int
-                while (inputStream.read(buffer).also { read = it } != -1) {
-                    val ciphertext = cipher.update(buffer, 0, read)
-                    if (ciphertext != null) {
-                        outputStream.write(ciphertext)
-                        mac.update(ciphertext)
+                val remainder = synchronized(CIPHER_LOCK) {
+                    cipher.init(
+                        Cipher.ENCRYPT_MODE,
+                        SecretKeySpec(cipherKey, "AES"),
+                        IvParameterSpec(iv)
+                    )
+                    mac.update(iv)
+                    val buffer = ByteArray(8192)
+                    var read: Int
+                    while (inputStream.read(buffer).also { read = it } != -1) {
+                        val ciphertext = cipher.update(buffer, 0, read)
+                        if (ciphertext != null) {
+                            outputStream.write(ciphertext)
+                            mac.update(ciphertext)
+                        }
                     }
+                    cipher.doFinal()
                 }
-                val remainder = cipher.doFinal()
                 outputStream.write(remainder)
                 mac.update(remainder)
                 val attachmentDigest = mac.doFinal()
@@ -414,8 +421,10 @@ object FullBackupExporter {
         private fun write(out: OutputStream, frame: BackupFrame) {
             try {
                 Conversions.intToByteArray(iv, 0, counter++)
-                cipher.init(Cipher.ENCRYPT_MODE, SecretKeySpec(cipherKey, "AES"), IvParameterSpec(iv))
-                val frameCiphertext = cipher.doFinal(frame.toByteArray())
+                val frameCiphertext = synchronized(CIPHER_LOCK) {
+                    cipher.init(Cipher.ENCRYPT_MODE, SecretKeySpec(cipherKey, "AES"), IvParameterSpec(iv))
+                    cipher.doFinal(frame.toByteArray())
+                }
                 val frameMac = mac.doFinal(frameCiphertext)
                 val length = Conversions.intToByteArray(frameCiphertext.size + 10)
                 out.write(length)
