@@ -692,7 +692,8 @@ private fun MessageReceiver.handleClosedGroupMembersRemoved(message: ClosedGroup
     val wasCurrentUserRemoved = userPublicKey in removedMembers
     // Admin should send a MEMBERS_LEFT message but handled here just in case
     if (didAdminLeave || wasCurrentUserRemoved) {
-        disableLocalGroupAndUnsubscribe(groupPublicKey, groupID, userPublicKey)
+        disableLocalGroupAndUnsubscribe(groupPublicKey, groupID, userPublicKey, true)
+        return
     } else {
         storage.updateMembers(groupID, newMembers.map { Address.fromSerialized(it) })
         // Update zombie members
@@ -746,7 +747,11 @@ private fun MessageReceiver.handleClosedGroupMemberLeft(message: ClosedGroupCont
     val updatedMemberList = members - senderPublicKey
     val userLeft = (userPublicKey == senderPublicKey)
     if (didAdminLeave || userLeft) {
-        disableLocalGroupAndUnsubscribe(groupPublicKey, groupID, userPublicKey)
+        disableLocalGroupAndUnsubscribe(groupPublicKey, groupID, userPublicKey, delete = userLeft)
+
+        if (userLeft) {
+            return
+        }
     } else {
         storage.updateMembers(groupID, updatedMemberList.map { Address.fromSerialized(it) })
         // Update zombie members
@@ -774,7 +779,7 @@ private fun isValidGroupUpdate(group: GroupRecord, sentTimestamp: Long, senderPu
     return true
 }
 
-fun MessageReceiver.disableLocalGroupAndUnsubscribe(groupPublicKey: String, groupID: String, userPublicKey: String) {
+fun MessageReceiver.disableLocalGroupAndUnsubscribe(groupPublicKey: String, groupID: String, userPublicKey: String, delete: Boolean) {
     val storage = MessagingModuleConfiguration.shared.storage
     storage.removeClosedGroupPublicKey(groupPublicKey)
     // Remove the key pairs
@@ -786,5 +791,11 @@ fun MessageReceiver.disableLocalGroupAndUnsubscribe(groupPublicKey: String, grou
     PushNotificationAPI.performOperation(PushNotificationAPI.ClosedGroupOperation.Unsubscribe, groupPublicKey, userPublicKey)
     // Stop polling
     ClosedGroupPollerV2.shared.stopPolling(groupPublicKey)
+
+    if (delete) {
+        val threadId = storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
+        storage.cancelPendingMessageSendJobs(threadId)
+        storage.deleteConversation(threadId)
+    }
 }
 // endregion

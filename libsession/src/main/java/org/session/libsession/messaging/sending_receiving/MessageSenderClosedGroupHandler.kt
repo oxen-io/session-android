@@ -234,7 +234,7 @@ fun MessageSender.leave(groupPublicKey: String, notifyUser: Boolean = true): Pro
                 storage.insertOutgoingInfoMessage(context, groupID, infoType, name, updatedMembers, admins, threadID, sentTime)
             }
             // Remove the group private key and unsubscribe from PNs
-            MessageReceiver.disableLocalGroupAndUnsubscribe(groupPublicKey, groupID, userPublicKey)
+            MessageReceiver.disableLocalGroupAndUnsubscribe(groupPublicKey, groupID, userPublicKey, true)
             deferred.resolve(Unit)
         }.fail {
             storage.setActive(groupID, true)
