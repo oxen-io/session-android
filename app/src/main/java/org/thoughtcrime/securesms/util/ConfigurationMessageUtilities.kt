@@ -256,7 +256,8 @@ object ConfigurationMessageUtilities {
                 priority = if (isPinned) ConfigBase.PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE,
                 encPubKey = encryptionKeyPair.publicKey.serialize(),
                 encSecKey = encryptionKeyPair.privateKey.serialize(),
-                disappearingTimer = recipient.expireMessages.toLong()
+                disappearingTimer = recipient.expireMessages.toLong(),
+                joinedAt = group.formationTimestamp
             )
         }
         (allOpenGroups + allLgc).forEach { groupInfo ->

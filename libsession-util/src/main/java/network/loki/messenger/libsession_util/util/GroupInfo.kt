@@ -11,7 +11,8 @@ sealed class GroupInfo {
         val encPubKey: ByteArray,
         val encSecKey: ByteArray,
         val priority: Int,
-        val disappearingTimer: Long
+        val disappearingTimer: Long,
+        val joinedAt: Long
     ): GroupInfo() {
         companion object {
             @Suppress("FunctionName")
@@ -30,6 +31,8 @@ sealed class GroupInfo {
             if (!encPubKey.contentEquals(other.encPubKey)) return false
             if (!encSecKey.contentEquals(other.encSecKey)) return false
             if (priority != other.priority) return false
+            if (disappearingTimer != other.disappearingTimer) return false
+            if (joinedAt != other.joinedAt) return false
 
             return true
         }
@@ -41,6 +44,8 @@ sealed class GroupInfo {
             result = 31 * result + encPubKey.contentHashCode()
             result = 31 * result + encSecKey.contentHashCode()
             result = 31 * result + priority
+            result = 31 * result + disappearingTimer.hashCode()
+            result = 31 * result + joinedAt.hashCode()
             return result
         }
     }
