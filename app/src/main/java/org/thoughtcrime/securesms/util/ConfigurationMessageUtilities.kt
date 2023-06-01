@@ -257,7 +257,7 @@ object ConfigurationMessageUtilities {
                 encPubKey = encryptionKeyPair.publicKey.serialize(),
                 encSecKey = encryptionKeyPair.privateKey.serialize(),
                 disappearingTimer = recipient.expireMessages.toLong(),
-                joinedAt = group.formationTimestamp
+                joinedAt = (group.formationTimestamp / 1000L)
             )
         }
         (allOpenGroups + allLgc).forEach { groupInfo ->

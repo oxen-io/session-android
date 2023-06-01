@@ -564,7 +564,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                 val admins = group.members.filter { it.value /*admin = true*/ }.keys.map { Address.fromSerialized(it) }
                 val groupId = GroupUtil.doubleEncodeGroupID(group.sessionId)
                 val title = group.name
-                val formationTimestamp = group.joinedAt
+                val formationTimestamp = (group.joinedAt * 1000L)
                 createGroup(groupId, title, members, null, null, admins, formationTimestamp)
                 setProfileSharing(Address.fromSerialized(groupId), true)
                 // Add the group to the user's set of public keys to poll for
@@ -836,7 +836,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
             encPubKey = encryptionKeyPair.publicKey.serialize(),
             encSecKey = encryptionKeyPair.privateKey.serialize(),
             disappearingTimer = 0L,
-            joinedAt = formationTimestamp
+            joinedAt = (formationTimestamp / 1000L)
         )
         // shouldn't exist, don't use getOrConstruct + copy
         userGroups.set(groupInfo)
