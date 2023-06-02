@@ -9,6 +9,7 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupRecord
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 
@@ -54,8 +55,8 @@ object ClosedGroupManager {
             name = group.title,
             disappearingTimer = groupRecipientSettings.expireMessages.toLong(),
             priority = if (storage.isPinned(threadId)) ConfigBase.PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE,
-            encSecKey = latestKeyPair.privateKey.serialize(),
-            encPubKey = latestKeyPair.publicKey.serialize()
+            encPubKey = (latestKeyPair.publicKey as DjbECPublicKey).publicKey,  // 'serialize()' inserts an extra byte
+            encSecKey = latestKeyPair.privateKey.serialize()
         )
         groups.set(toSet)
     }

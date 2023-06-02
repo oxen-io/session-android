@@ -833,7 +833,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
             name = name,
             members = members,
             priority = ConfigBase.PRIORITY_VISIBLE,
-            encPubKey = encryptionKeyPair.publicKey.serialize(),
+            encPubKey = (encryptionKeyPair.publicKey as DjbECPublicKey).publicKey,  // 'serialize()' inserts an extra byte
             encSecKey = encryptionKeyPair.privateKey.serialize(),
             disappearingTimer = 0L,
             joinedAt = (formationTimestamp / 1000L)
@@ -866,7 +866,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         val groupInfo = userGroups.getOrConstructLegacyGroupInfo(groupPublicKey).copy(
             name = name,
             members = membersMap,
-            encPubKey = latestKeyPair.publicKey.serialize(),
+            encPubKey = (latestKeyPair.publicKey as DjbECPublicKey).publicKey,  // 'serialize()' inserts an extra byte
             encSecKey = latestKeyPair.privateKey.serialize(),
             priority = if (isPinned(threadID)) PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE,
             disappearingTimer = recipientSettings.expireMessages.toLong()

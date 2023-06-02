@@ -23,6 +23,7 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.WindowDebouncer
+import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.database.GroupDatabase
@@ -254,7 +255,7 @@ object ConfigurationMessageUtilities {
                 name = group.title,
                 members = admins + members,
                 priority = if (isPinned) ConfigBase.PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE,
-                encPubKey = encryptionKeyPair.publicKey.serialize(),
+                encPubKey = (encryptionKeyPair.publicKey as DjbECPublicKey).publicKey,  // 'serialize()' inserts an extra byte
                 encSecKey = encryptionKeyPair.privateKey.serialize(),
                 disappearingTimer = recipient.expireMessages.toLong(),
                 joinedAt = (group.formationTimestamp / 1000L)
