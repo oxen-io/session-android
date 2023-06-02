@@ -32,6 +32,7 @@ import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.successUi
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.*
 import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
@@ -242,7 +243,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                 }
             }
             if (userConfig != null && userConfig.needsDump()) {
-                configFactory.persist(userConfig)
+                configFactory.persist(userConfig, SnodeAPI.nowWithOffset)
             }
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@SettingsActivity)
         }

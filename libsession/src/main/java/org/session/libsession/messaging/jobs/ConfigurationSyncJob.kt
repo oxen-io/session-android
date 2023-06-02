@@ -2,6 +2,7 @@ package org.session.libsession.messaging.jobs
 
 import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.ConfigBase.Companion.protoKindFor
+import network.loki.messenger.libsession_util.UserGroupsConfig
 import nl.komponents.kovenant.functional.bind
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.Destination
@@ -60,6 +61,7 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
         val toDeleteHashes = mutableListOf<String>()
 
         // allow null results here so the list index matches configsRequiringPush
+        val sentTimestamp: Long = SnodeAPI.nowWithOffset
         val batchObjects: List<Pair<SharedConfigurationMessage, SnodeAPI.SnodeBatchRequestInfo>?> = configsRequiringPush.map { config ->
             val (data, seqNo, obsoleteHashes) = config.push()
             toDeleteHashes += obsoleteHashes
@@ -140,7 +142,7 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
                 Log.d(TAG, "Successfully removed the deleted hashes from ${config.javaClass.simpleName}")
                 // dump and write config after successful
                 if (config.needsDump()) { // usually this will be true?
-                    configFactory.persist(config)
+                    configFactory.persist(config, toPushMessage.sentTimestamp ?: sentTimestamp)
                 }
             }
         } catch (e: Exception) {

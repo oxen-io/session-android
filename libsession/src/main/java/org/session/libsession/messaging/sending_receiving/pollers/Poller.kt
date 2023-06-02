@@ -146,6 +146,7 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
             return
         }
 
+        var latestMessageTimestamp: Long? = null
         messages.forEach { (envelope, hash) ->
             try {
                 val (message, _) = MessageReceiver.parse(data = envelope.toByteArray(), openGroupServerID = null)
@@ -155,13 +156,14 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                     return@forEach
                 }
                 forConfigObject.merge(hash!! to message.data)
+                latestMessageTimestamp = if ((message.sentTimestamp ?: 0L) > (latestMessageTimestamp ?: 0L)) { message.sentTimestamp } else { latestMessageTimestamp }
             } catch (e: Exception) {
                 Log.e("Loki", e)
             }
         }
         // process new results
         if (forConfigObject.needsDump()) {
-            configFactory.persist(forConfigObject)
+            configFactory.persist(forConfigObject, latestMessageTimestamp ?: SnodeAPI.nowWithOffset)
         }
     }
 

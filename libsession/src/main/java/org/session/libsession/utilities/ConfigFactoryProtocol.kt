@@ -12,7 +12,8 @@ interface ConfigFactoryProtocol {
     val convoVolatile: ConversationVolatileConfig?
     val userGroups: UserGroupsConfig?
     fun getUserConfigs(): List<ConfigBase>
-    fun persist(forConfigObject: ConfigBase)
+    fun persist(forConfigObject: ConfigBase, timestamp: Long)
+    fun canPerformChange(variant: String, publicKey: String, changeTimestampMs: Long): Boolean
 }
 
 interface ConfigFactoryUpdateListener {

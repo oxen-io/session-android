@@ -123,7 +123,7 @@ inline jobject serialize_legacy_group_info(JNIEnv *env, session::config::legacy_
 
     jclass legacy_group_class = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$LegacyGroupInfo");
     jmethodID constructor = env->GetMethodID(legacy_group_class, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;[B[BIJJ)V");
-    jobject serialized = env->NewObject(legacy_group_class, constructor, session_id, name, members, enc_pubkey, enc_seckey, priority, joined_at, (jlong) info.disappearing_timer.count());
+    jobject serialized = env->NewObject(legacy_group_class, constructor, session_id, name, members, enc_pubkey, enc_seckey, priority, (jlong) info.disappearing_timer.count(), joined_at);
     return serialized;
 }
 

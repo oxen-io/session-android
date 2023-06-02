@@ -21,6 +21,13 @@ class ConfigFactory(
     private val maybeGetUserInfo: () -> Pair<ByteArray, String>?
 ) :
     ConfigFactoryProtocol {
+    companion object {
+        // This is a buffer period within which we will process messages which would result in a
+        // config change, any message which would normally result in a config change which was sent
+        // before `lastConfigMessage.timestamp - configChangeBufferPeriod` will not  actually have
+        // it's changes applied (control text will still be added though)
+        val configChangeBufferPeriod: Long = (2 * 60 * 1000)
+    }
 
     fun keyPairChanged() { // this should only happen restoring or clearing data
         _userConfig?.free()
@@ -136,48 +143,58 @@ class ConfigFactory(
         listOfNotNull(user, contacts, convoVolatile, userGroups)
 
 
-    private fun persistUserConfigDump() = synchronized(userLock) {
+    private fun persistUserConfigDump(timestamp: Long) = synchronized(userLock) {
         val dumped = user?.dump() ?: return
         val (_, publicKey) = maybeGetUserInfo() ?: return
-        configDatabase.storeConfig(SharedConfigMessage.Kind.USER_PROFILE.name, publicKey, dumped)
+        configDatabase.storeConfig(SharedConfigMessage.Kind.USER_PROFILE.name, publicKey, dumped, timestamp)
     }
 
-    private fun persistContactsConfigDump() = synchronized(contactsLock) {
+    private fun persistContactsConfigDump(timestamp: Long) = synchronized(contactsLock) {
         val dumped = contacts?.dump() ?: return
         val (_, publicKey) = maybeGetUserInfo() ?: return
-        configDatabase.storeConfig(SharedConfigMessage.Kind.CONTACTS.name, publicKey, dumped)
+        configDatabase.storeConfig(SharedConfigMessage.Kind.CONTACTS.name, publicKey, dumped, timestamp)
     }
 
-    private fun persistConvoVolatileConfigDump() = synchronized(convoVolatileLock) {
+    private fun persistConvoVolatileConfigDump(timestamp: Long) = synchronized(convoVolatileLock) {
         val dumped = convoVolatile?.dump() ?: return
         val (_, publicKey) = maybeGetUserInfo() ?: return
         configDatabase.storeConfig(
             SharedConfigMessage.Kind.CONVO_INFO_VOLATILE.name,
             publicKey,
-            dumped
+            dumped,
+            timestamp
         )
     }
 
-    private fun persistUserGroupsConfigDump() = synchronized(userGroupsLock) {
+    private fun persistUserGroupsConfigDump(timestamp: Long) = synchronized(userGroupsLock) {
         val dumped = userGroups?.dump() ?: return
         val (_, publicKey) = maybeGetUserInfo() ?: return
-        configDatabase.storeConfig(SharedConfigMessage.Kind.GROUPS.name, publicKey, dumped)
+        configDatabase.storeConfig(SharedConfigMessage.Kind.GROUPS.name, publicKey, dumped, timestamp)
     }
 
-    override fun persist(forConfigObject: ConfigBase) {
+    override fun persist(forConfigObject: ConfigBase, timestamp: Long) {
         try {
             listeners.forEach { listener ->
                 listener.notifyUpdates(forConfigObject)
             }
             when (forConfigObject) {
-                is UserProfile -> persistUserConfigDump()
-                is Contacts -> persistContactsConfigDump()
-                is ConversationVolatileConfig -> persistConvoVolatileConfigDump()
-                is UserGroupsConfig -> persistUserGroupsConfigDump()
+                is UserProfile -> persistUserConfigDump(timestamp)
+                is Contacts -> persistContactsConfigDump(timestamp)
+                is ConversationVolatileConfig -> persistConvoVolatileConfigDump(timestamp)
+                is UserGroupsConfig -> persistUserGroupsConfigDump(timestamp)
                 else -> throw UnsupportedOperationException("Can't support type of ${forConfigObject::class.simpleName} yet")
             }
         } catch (e: Exception) {
             Log.e("Loki", "failed to persist ${forConfigObject.javaClass.simpleName}", e)
         }
+    }
+
+    override fun canPerformChange(variant: String, publicKey: String, changeTimestampMs: Long): Boolean {
+        if (!ConfigBase.isNewConfigEnabled(isConfigForcedOn, SnodeAPI.nowWithOffset)) return true
+
+        val lastUpdateTimestampMs = configDatabase.retrieveConfigLastUpdateTimestamp(variant, publicKey)
+
+        // Ensure the change occurred after the last config message was handled (minus the buffer period)
+        return (changeTimestampMs >= (lastUpdateTimestampMs - ConfigFactory.configChangeBufferPeriod))
     }
 }

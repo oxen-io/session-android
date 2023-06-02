@@ -223,4 +223,5 @@ interface StorageProtocol {
 
     // Shared configs
     fun notifyConfigUpdates(forConfigObject: ConfigBase)
+    fun canPerformConfigChange(variant: String, publicKey: String, changeTimestampMs: Long): Boolean
 }

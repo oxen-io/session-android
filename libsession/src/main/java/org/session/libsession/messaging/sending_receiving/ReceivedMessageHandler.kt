@@ -42,6 +42,7 @@ import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.messages.SignalServiceGroup
 import org.session.libsignal.protos.SignalServiceProtos
+import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
@@ -440,7 +441,14 @@ private fun MessageReceiver.handleClosedGroupControlMessage(message: ClosedGroup
         is ClosedGroupControlMessage.Kind.MembersRemoved -> handleClosedGroupMembersRemoved(message)
         is ClosedGroupControlMessage.Kind.MemberLeft -> handleClosedGroupMemberLeft(message)
     }
-    if (message.kind !is ClosedGroupControlMessage.Kind.New) {
+    if (
+            message.kind !is ClosedGroupControlMessage.Kind.New &&
+            MessagingModuleConfiguration.shared.storage.canPerformConfigChange(
+                    SharedConfigMessage.Kind.GROUPS.name,
+                    MessagingModuleConfiguration.shared.storage.getUserPublicKey()!!,
+                    message.sentTimestamp!!
+            )
+    ) {
         // update the config
         val closedGroupPublicKey = message.getPublicKey()
         val storage = MessagingModuleConfiguration.shared.storage
@@ -471,10 +479,24 @@ private fun MessageReceiver.handleNewClosedGroup(message: ClosedGroupControlMess
 private fun handleNewClosedGroup(sender: String, sentTimestamp: Long, groupPublicKey: String, name: String, encryptionKeyPair: ECKeyPair, members: List<String>, admins: List<String>, formationTimestamp: Long, expireTimer: Int) {
     val context = MessagingModuleConfiguration.shared.context
     val storage = MessagingModuleConfiguration.shared.storage
-    val userPublicKey = TextSecurePreferences.getLocalNumber(context)
-    // Create the group
+    val userPublicKey = storage.getUserPublicKey()!!
     val groupID = GroupUtil.doubleEncodeGroupID(groupPublicKey)
     val groupExists = storage.getGroup(groupID) != null
+
+    if (!storage.canPerformConfigChange(SharedConfigMessage.Kind.GROUPS.name, userPublicKey, sentTimestamp)) {
+        // If the closed group already exists then store the encryption keys (since the config only stores
+        // the latest key we won't be able to decrypt older messages if we were added to the group within
+        // the last two weeks and the key has been rotated - unfortunately if the user was added more than
+        // two weeks ago and the keys were rotated within the last two weeks then we won't be able to decrypt
+        // messages received before the key rotation)
+        if (groupExists) {
+            storage.addClosedGroupEncryptionKeyPair(encryptionKeyPair, groupPublicKey, sentTimestamp)
+            storage.updateGroupConfig(groupPublicKey)
+        }
+        return
+    }
+
+    // Create the group
     if (groupExists) {
         // Update the group
         if (!storage.isGroupActive(groupPublicKey)) {
@@ -498,7 +520,7 @@ private fun handleNewClosedGroup(sender: String, sentTimestamp: Long, groupPubli
     // Set expiration timer
     storage.setExpirationTimer(groupID, expireTimer)
     // Notify the PN server
-    PushNotificationAPI.performOperation(PushNotificationAPI.ClosedGroupOperation.Subscribe, groupPublicKey, storage.getUserPublicKey()!!)
+    PushNotificationAPI.performOperation(PushNotificationAPI.ClosedGroupOperation.Subscribe, groupPublicKey, userPublicKey)
     // Create thread
     storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
     // Start polling
@@ -569,7 +591,12 @@ private fun MessageReceiver.handleClosedGroupNameChanged(message: ClosedGroupCon
     val members = group.members.map { it.serialize() }
     val admins = group.admins.map { it.serialize() }
     val name = kind.name
-    storage.updateTitle(groupID, name)
+
+    // Only update the group in storage if it isn't invalidated by the config state
+    if (storage.canPerformConfigChange(SharedConfigMessage.Kind.GROUPS.name, userPublicKey!!, message.sentTimestamp!!)) {
+        storage.updateTitle(groupID, name)
+    }
+
     // Notify the user
     if (userPublicKey == senderPublicKey) {
         val threadID = storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
@@ -603,12 +630,16 @@ private fun MessageReceiver.handleClosedGroupMembersAdded(message: ClosedGroupCo
 
     val updateMembers = kind.members.map { it.toByteArray().toHexString() }
     val newMembers = members + updateMembers
-    storage.updateMembers(groupID, newMembers.map { Address.fromSerialized(it) })
 
-    // Update zombie members in case the added members are zombies
-    val zombies = storage.getZombieMembers(groupID)
-    if (zombies.intersect(updateMembers).isNotEmpty()) {
-        storage.setZombieMembers(groupID, zombies.minus(updateMembers).map { Address.fromSerialized(it) })
+    // Only update the group in storage if it isn't invalidated by the config state
+    if (storage.canPerformConfigChange(SharedConfigMessage.Kind.GROUPS.name, userPublicKey, message.sentTimestamp!!)) {
+        storage.updateMembers(groupID, newMembers.map { Address.fromSerialized(it) })
+
+        // Update zombie members in case the added members are zombies
+        val zombies = storage.getZombieMembers(groupID)
+        if (zombies.intersect(updateMembers).isNotEmpty()) {
+            storage.setZombieMembers(groupID, zombies.minus(updateMembers).map { Address.fromSerialized(it) })
+        }
     }
 
     // Notify the user
@@ -690,14 +721,18 @@ private fun MessageReceiver.handleClosedGroupMembersRemoved(message: ClosedGroup
         Log.d("Loki", "Received a MEMBERS_REMOVED instead of a MEMBERS_LEFT from sender: $senderPublicKey.")
     }
     val wasCurrentUserRemoved = userPublicKey in removedMembers
-    // Admin should send a MEMBERS_LEFT message but handled here just in case
-    if (didAdminLeave || wasCurrentUserRemoved) {
-        disableLocalGroupAndUnsubscribe(groupPublicKey, groupID, userPublicKey, true)
-        return
-    } else {
-        storage.updateMembers(groupID, newMembers.map { Address.fromSerialized(it) })
-        // Update zombie members
-        storage.setZombieMembers(groupID, zombies.minus(removedMembers).map { Address.fromSerialized(it) })
+
+    // Only update the group in storage if it isn't invalidated by the config state
+    if (storage.canPerformConfigChange(SharedConfigMessage.Kind.GROUPS.name, userPublicKey, message.sentTimestamp!!)) {
+        // Admin should send a MEMBERS_LEFT message but handled here just in case
+        if (didAdminLeave || wasCurrentUserRemoved) {
+            disableLocalGroupAndUnsubscribe(groupPublicKey, groupID, userPublicKey, true)
+            return
+        } else {
+            storage.updateMembers(groupID, newMembers.map { Address.fromSerialized(it) })
+            // Update zombie members
+            storage.setZombieMembers(groupID, zombies.minus(removedMembers).map { Address.fromSerialized(it) })
+        }
     }
 
     // Notify the user
@@ -746,18 +781,23 @@ private fun MessageReceiver.handleClosedGroupMemberLeft(message: ClosedGroupCont
     val didAdminLeave = admins.contains(senderPublicKey)
     val updatedMemberList = members - senderPublicKey
     val userLeft = (userPublicKey == senderPublicKey)
-    if (didAdminLeave || userLeft) {
-        disableLocalGroupAndUnsubscribe(groupPublicKey, groupID, userPublicKey, delete = userLeft)
 
-        if (userLeft) {
-            return
+    // Only update the group in storage if it isn't invalidated by the config state
+    if (storage.canPerformConfigChange(SharedConfigMessage.Kind.GROUPS.name, userPublicKey, message.sentTimestamp!!)) {
+        if (didAdminLeave || userLeft) {
+            disableLocalGroupAndUnsubscribe(groupPublicKey, groupID, userPublicKey, delete = userLeft)
+
+            if (userLeft) {
+                return
+            }
+        } else {
+            storage.updateMembers(groupID, updatedMemberList.map { Address.fromSerialized(it) })
+            // Update zombie members
+            val zombies = storage.getZombieMembers(groupID)
+            storage.setZombieMembers(groupID, zombies.plus(senderPublicKey).map { Address.fromSerialized(it) })
         }
-    } else {
-        storage.updateMembers(groupID, updatedMemberList.map { Address.fromSerialized(it) })
-        // Update zombie members
-        val zombies = storage.getZombieMembers(groupID)
-        storage.setZombieMembers(groupID, zombies.plus(senderPublicKey).map { Address.fromSerialized(it) })
     }
+
     // Notify the user
     if (!userLeft) {
         storage.insertIncomingInfoMessage(context, senderPublicKey, groupID, SignalServiceGroup.Type.QUIT, name, members, admins, message.sentTimestamp!!)

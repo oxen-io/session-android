@@ -411,6 +411,10 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         notifyUpdates(forConfigObject)
     }
 
+    override fun canPerformConfigChange(variant: String, publicKey: String, changeTimestampMs: Long): Boolean {
+        return configFactory.canPerformChange(variant, publicKey, changeTimestampMs)
+    }
+
     fun notifyUpdates(forConfigObject: ConfigBase) {
         when (forConfigObject) {
             is UserProfile -> updateUser(forConfigObject)
@@ -869,7 +873,8 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
             encPubKey = (latestKeyPair.publicKey as DjbECPublicKey).publicKey,  // 'serialize()' inserts an extra byte
             encSecKey = latestKeyPair.privateKey.serialize(),
             priority = if (isPinned(threadID)) PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE,
-            disappearingTimer = recipientSettings.expireMessages.toLong()
+            disappearingTimer = recipientSettings.expireMessages.toLong(),
+            joinedAt = (existingGroup.formationTimestamp / 1000L)
         )
         userGroups.set(groupInfo)
     }
@@ -1263,6 +1268,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     override fun deleteConversation(threadID: Long) {
         val recipient = getRecipientForThread(threadID)
         val threadDB = DatabaseComponent.get(context).threadDatabase()
+        val groupDB = DatabaseComponent.get(context).groupDatabase()
         threadDB.deleteConversation(threadID)
         if (recipient != null) {
             if (recipient.isContactRecipient) {
@@ -1276,9 +1282,11 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                 // TODO: handle closed group
                 val volatile = configFactory.convoVolatile ?: return
                 val groups = configFactory.userGroups ?: return
-                val closedGroup = getGroup(recipient.address.toGroupString())
+                val groupID = recipient.address.toGroupString()
+                val closedGroup = getGroup(groupID)
                 val groupPublicKey = GroupUtil.doubleDecodeGroupId(recipient.address.serialize())
                 if (closedGroup != null) {
+                    groupDB.delete(groupID) // TODO: Should we delete the group? (seems odd to leave it)
                     volatile.eraseLegacyClosedGroup(groupPublicKey)
                     groups.eraseLegacyGroup(groupPublicKey)
                 } else {
