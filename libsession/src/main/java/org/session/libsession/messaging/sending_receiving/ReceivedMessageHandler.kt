@@ -6,6 +6,7 @@ import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.BackgroundGroupAddJob
 import org.session.libsession.messaging.jobs.JobQueue
+import org.session.libsession.messaging.jobs.RetrieveProfileAvatarJob
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.CallMessage
 import org.session.libsession.messaging.messages.control.ClosedGroupControlMessage

@@ -76,7 +76,6 @@ import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.KeyHelper
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.guava.Optional
-import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 import org.thoughtcrime.securesms.database.model.MessageId
 import org.thoughtcrime.securesms.database.model.ReactionRecord
@@ -85,7 +84,8 @@ import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.groups.ClosedGroupManager
 import org.thoughtcrime.securesms.groups.GroupManager
 import org.thoughtcrime.securesms.groups.OpenGroupManager
-import org.thoughtcrime.securesms.jobs.RetrieveProfileAvatarJob
+import org.session.libsession.messaging.jobs.RetrieveProfileAvatarJob
+import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.mms.PartAuthority
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.SessionMetaProtocol
@@ -182,6 +182,11 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         return Profile(displayName, profileKey, profilePictureUrl)
     }
 
+    override fun setProfileAvatar(recipient: Recipient, profileAvatar: String?) {
+        val database = DatabaseComponent.get(context).recipientDatabase()
+        database.setProfileAvatar(recipient, profileAvatar)
+    }
+
     override fun setUserProfilePicture(newProfilePicture: String?, newProfileKey: ByteArray?) {
         val ourRecipient = fromSerialized(getUserPublicKey()!!).let {
             Recipient.from(context, it, false)
@@ -189,7 +194,10 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         ourRecipient.resolve().profileKey = newProfileKey
         TextSecurePreferences.setProfileKey(context, newProfileKey?.let { Base64.encodeBytes(it) })
         TextSecurePreferences.setProfilePictureURL(context, newProfilePicture)
-        ApplicationContext.getInstance(context).jobManager.add(RetrieveProfileAvatarJob(ourRecipient, newProfilePicture))
+
+        if (newProfileKey != null) {
+            JobQueue.shared.add(RetrieveProfileAvatarJob(Base64.encodeBytes(newProfileKey), ourRecipient.address))
+        }
     }
 
     override fun getOrGenerateRegistrationID(): Int {
@@ -363,7 +371,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     }
 
     override fun getAllPendingJobs(type: String): Map<String, Job?> {
-        return DatabaseComponent.get(context).sessionJobDatabase().getAllPendingJobs(type)
+        return DatabaseComponent.get(context).sessionJobDatabase().getAllJobs(type)
     }
 
     override fun getAttachmentUploadJob(attachmentID: Long): AttachmentUploadJob? {
@@ -383,7 +391,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     }
 
     override fun getConfigSyncJob(destination: Destination): Job? {
-        return DatabaseComponent.get(context).sessionJobDatabase().getAllPendingJobs(ConfigurationSyncJob.KEY).values.firstOrNull {
+        return DatabaseComponent.get(context).sessionJobDatabase().getAllJobs(ConfigurationSyncJob.KEY).values.firstOrNull {
             (it as? ConfigurationSyncJob)?.destination == destination
         }
     }
@@ -469,11 +477,11 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         val recipient = Recipient.from(context, fromSerialized(userPublicKey), false)
         // clear picture if userPic is null
         TextSecurePreferences.setProfileKey(context, null)
-        TextSecurePreferences.setProfileAvatarId(context, 0)
         ProfileKeyUtil.setEncodedProfileKey(context, null)
         recipientDatabase.setProfileAvatar(recipient, null)
+        TextSecurePreferences.setProfileAvatarId(context, 0)
+        TextSecurePreferences.setProfilePictureURL(context, null)
 
-        setUserProfilePicture(null, null)
         Recipient.removeCached(fromSerialized(userPublicKey))
         configFactory.user?.setPic(UserPic.DEFAULT)
         ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
@@ -1193,9 +1201,10 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                 setRecipientApproved(recipient, true)
                 threadDatabase.setHasSent(threadId, true)
             }
-            if (contact.isBlocked == true) {
-                setBlocked(listOf(recipient), true, fromConfigUpdate = true)
-                threadDatabase.deleteConversation(threadId)
+
+            val contactIsBlocked: Boolean? = contact.isBlocked
+            if (contactIsBlocked != null && recipient.isBlocked != contactIsBlocked) {
+                setBlocked(listOf(recipient), contactIsBlocked, fromConfigUpdate = true)
             }
         }
         if (contacts.isNotEmpty()) {

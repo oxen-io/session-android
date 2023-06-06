@@ -4,6 +4,7 @@ import android.content.Context
 import network.loki.messenger.libsession_util.util.UserPic
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
@@ -11,8 +12,8 @@ import org.session.libsignal.utilities.IdPrefix
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.jobs.RetrieveProfileAvatarJob
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
+import org.session.libsession.messaging.jobs.RetrieveProfileAvatarJob
 
 class ProfileManager(private val context: Context, private val configFactory: ConfigFactory) : SSKEnvironment.ProfileManagerProtocol {
 
@@ -55,13 +56,9 @@ class ProfileManager(private val context: Context, private val configFactory: Co
         profilePictureURL: String?,
         profileKey: ByteArray?
     ) {
-        // New API
+        val job = RetrieveProfileAvatarJob(profilePictureURL, recipient.address)
+        JobQueue.shared.add(job)
         val sessionID = recipient.address.serialize()
-        // Old API
-        val database = DatabaseComponent.get(context).recipientDatabase()
-        database.setProfileKey(recipient, profileKey)
-        if (recipient.isLocalNumber) return
-
         val contactDatabase = DatabaseComponent.get(context).sessionContactDatabase()
         var contact = contactDatabase.getContactWithSessionID(sessionID)
         if (contact == null) contact = Contact(sessionID)
@@ -71,12 +68,8 @@ class ProfileManager(private val context: Context, private val configFactory: Co
             contact.profilePictureURL = profilePictureURL
             contactDatabase.setContact(contact)
         }
-        val job = RetrieveProfileAvatarJob(recipient, profilePictureURL)
-        val jobManager = ApplicationContext.getInstance(context).jobManager
-        jobManager.add(job)
         contactUpdatedInternal(contact)
     }
-
 
     override fun setUnidentifiedAccessMode(context: Context, recipient: Recipient, unidentifiedAccessMode: Recipient.UnidentifiedAccessMode) {
         val database = DatabaseComponent.get(context).recipientDatabase()

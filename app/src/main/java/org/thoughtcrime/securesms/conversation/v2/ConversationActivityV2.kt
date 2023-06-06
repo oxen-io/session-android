@@ -656,7 +656,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val name = contact?.displayName(Contact.ContactContext.REGULAR) ?: sessionID
         binding?.blockedBannerTextView?.text = resources.getString(R.string.activity_conversation_blocked_banner_text, name)
         binding?.blockedBanner?.isVisible = recipient.isBlocked
-        binding?.blockedBanner?.setOnClickListener { viewModel.unblock() }
+        binding?.blockedBanner?.setOnClickListener { viewModel.unblock(this@ConversationActivityV2) }
     }
 
     private fun setUpLinkPreviewObserver() {
@@ -1094,7 +1094,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             .setMessage(message)
             .setNegativeButton(android.R.string.cancel, null)
             .setPositiveButton(R.string.RecipientPreferenceActivity_block) { _, _ ->
-                viewModel.block()
+                viewModel.block(this@ConversationActivityV2)
                 if (deleteThread) {
                     viewModel.deleteThread()
                     finish()
@@ -1148,7 +1148,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             .setMessage(message)
             .setNegativeButton(android.R.string.cancel, null)
             .setPositiveButton(R.string.ConversationActivity_unblock) { _, _ ->
-                viewModel.unblock()
+                viewModel.unblock(this@ConversationActivityV2)
             }.show()
     }
 
@@ -1489,7 +1489,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     override fun sendMessage() {
         val recipient = viewModel.recipient ?: return
         if (recipient.isContactRecipient && recipient.isBlocked) {
-            BlockedDialog(recipient).show(supportFragmentManager, "Blocked Dialog")
+            BlockedDialog(recipient, this).show(supportFragmentManager, "Blocked Dialog")
             return
         }
         val binding = binding ?: return

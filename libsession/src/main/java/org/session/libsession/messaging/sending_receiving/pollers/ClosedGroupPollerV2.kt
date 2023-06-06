@@ -79,7 +79,12 @@ class ClosedGroupPollerV2 {
         // reasonable fake time interval to use instead.
         val storage = MessagingModuleConfiguration.shared.storage
         val groupID = GroupUtil.doubleEncodeGroupID(groupPublicKey)
-        val threadID = storage.getThreadId(groupID) ?: return
+        val threadID = storage.getThreadId(groupID)
+        if (threadID == null) {
+            Log.d("Loki", "Stopping group poller due to missing thread for closed group: $groupPublicKey.")
+            stopPolling(groupPublicKey)
+            return
+        }
         val lastUpdated = storage.getLastUpdated(threadID)
         val timeSinceLastMessage = if (lastUpdated != -1L) Date().time - lastUpdated else 5 * 60 * 1000
         val minPollInterval = Companion.minPollInterval

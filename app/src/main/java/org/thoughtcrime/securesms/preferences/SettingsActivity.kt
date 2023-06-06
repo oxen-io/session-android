@@ -33,8 +33,10 @@ import nl.komponents.kovenant.ui.successUi
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.snode.SnodeAPI
+import org.session.libsession.avatars.ProfileContactPhoto
 import org.session.libsession.utilities.*
 import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol
+import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.avatar.AvatarSelection
 import org.thoughtcrime.securesms.components.ProfilePictureView
@@ -115,10 +117,12 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
     private fun setupProfilePictureView(view: ProfilePictureView) {
         view.glide = glide
-        view.publicKey = hexEncodedPublicKey
-        view.displayName = getDisplayName()
-        view.isLarge = true
-        view.update()
+        view.apply {
+            publicKey = hexEncodedPublicKey
+            displayName = getDisplayName()
+            isLarge = true
+            update()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -222,8 +226,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             if (profilePicture != null) {
                 promises.add(ProfilePictureUtilities.upload(profilePicture, encodedProfileKey, this))
             } else {
-                TextSecurePreferences.setLastProfilePictureUpload(this, System.currentTimeMillis())
-                TextSecurePreferences.setProfilePictureURL(this, null)
+                MessagingModuleConfiguration.shared.storage.clearUserPic()
             }
         }
         val compoundPromise = all(promises)
@@ -284,14 +287,6 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         push(intent)
     }
 
-    private fun deleteProfilePicture() {
-        MessagingModuleConfiguration.shared.storage.clearUserPic()
-        with (binding.profilePictureView.root) {
-            recycle()
-            update()
-        }
-    }
-
     private fun showEditProfilePictureUI() {
         AlertDialog.Builder(this)
             .setTitle(R.string.activity_settings_set_display_picture)
@@ -306,7 +301,17 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                 }
             }
             .show().apply {
-                findViewById<ProfilePictureView>(R.id.profile_picture_view)?.let(::setupProfilePictureView)
+                val profilePic = findViewById<ProfilePictureView>(R.id.profile_picture_view)
+                    ?.also(::setupProfilePictureView)
+
+                val pictureIcon = findViewById<View>(R.id.ic_pictures)
+
+                val recipient = Recipient.from(context, Address.fromSerialized(hexEncodedPublicKey), false)
+
+                val photoSet = (recipient.contactPhoto as ProfileContactPhoto).avatarObject !in setOf("0", "")
+
+                profilePic?.isVisible = photoSet
+                pictureIcon?.isVisible = !photoSet
             }
     }
 

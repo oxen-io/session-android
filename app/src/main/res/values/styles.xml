@@ -23,14 +23,13 @@
     </style>
 
     <style name="ThemeOverlay.Session.AlertDialog" parent="ThemeOverlay.AppCompat.Dialog.Alert">
-        <item name="android:background">@drawable/default_dialog_background</item>
+        <item name="android:colorBackground">?attr/dialog_background_color</item>
         <item name="dialog_background_color">?colorPrimary</item>
         <item name="android:colorBackgroundFloating">?colorPrimary</item>
         <item name="backgroundTint">?colorPrimary</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:backgroundDimAmount">0.6</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowBackground">@null</item>
         <item name="textColorAlertDialogListItem">?android:textColorPrimary</item>
     </style>
 
