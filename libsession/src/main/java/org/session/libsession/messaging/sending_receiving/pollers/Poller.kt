@@ -43,9 +43,6 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
     private var hasStarted: Boolean = false
     private val usedSnodes: MutableSet<Snode> = mutableSetOf()
     var isCaughtUp = false
-    var configPollingJob: Job? = null
-    
-    private val configDebouncer = WindowDebouncer(3000, debounceTimer)
 
     // region Settings
     companion object {
@@ -211,7 +208,34 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                         return@bind Promise.ofSuccess(Unit)
                     } else {
                         val responseList = (rawResponses["results"] as List<RawResponse>)
-                        // the first response will be the personal messages
+                        // in case we had null configs, the array won't be fully populated
+                        // index of the sparse array key iterator should be the request index, with the key being the namespace
+                        // TODO: add in specific ordering of config namespaces for processing
+                        requestSparseArray.keyIterator().withIndex().forEach { (requestIndex, key) ->
+                            responseList.getOrNull(requestIndex)?.let { rawResponse ->
+                                if (rawResponse["code"] as? Int != 200) {
+                                    Log.e("Loki", "Batch sub-request had non-200 response code, returned code ${(rawResponse["code"] as? Int) ?: "[unknown]"}")
+                                    return@forEach
+                                }
+                                val body = rawResponse["body"] as? RawResponse
+                                if (body == null) {
+                                    Log.e("Loki", "Batch sub-request didn't contain a body")
+                                    return@forEach
+                                }
+                                if (key == Namespace.DEFAULT) {
+                                    return@forEach // continue, skip default namespace
+                                } else {
+                                    when (ConfigBase.kindFor(key)) {
+                                        UserProfile::class.java -> processConfig(snode, body, key, configFactory.user)
+                                        Contacts::class.java -> processConfig(snode, body, key, configFactory.contacts)
+                                        ConversationVolatileConfig::class.java -> processConfig(snode, body, key, configFactory.convoVolatile)
+                                        UserGroupsConfig::class.java -> processConfig(snode, body, key, configFactory.userGroups)
+                                    }
+                                }
+                            }
+                        }
+
+                        // the first response will be the personal messages (we want these to be processed after config messages)
                         val personalResponseIndex = requestSparseArray.indexOfKey(Namespace.DEFAULT)
                         if (personalResponseIndex >= 0) {
                             responseList.getOrNull(personalResponseIndex)?.let { rawResponse ->
@@ -227,34 +251,7 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                                 }
                             }
                         }
-                        // in case we had null configs, the array won't be fully populated
-                        // index of the sparse array key iterator should be the request index, with the key being the namespace
-                        configDebouncer.publish {
-                            // TODO: add in specific ordering of config namespaces for processing
-                            requestSparseArray.keyIterator().withIndex().forEach { (requestIndex, key) ->
-                                responseList.getOrNull(requestIndex)?.let { rawResponse ->
-                                    if (rawResponse["code"] as? Int != 200) {
-                                        Log.e("Loki", "Batch sub-request had non-200 response code, returned code ${(rawResponse["code"] as? Int) ?: "[unknown]"}")
-                                        return@forEach
-                                    }
-                                    val body = rawResponse["body"] as? RawResponse
-                                    if (body == null) {
-                                        Log.e("Loki", "Batch sub-request didn't contain a body")
-                                        return@forEach
-                                    }
-                                    if (key == Namespace.DEFAULT) {
-                                        return@forEach // continue, skip default namespace
-                                    } else {
-                                        when (ConfigBase.kindFor(key)) {
-                                            UserProfile::class.java -> processConfig(snode, body, key, configFactory.user)
-                                            Contacts::class.java -> processConfig(snode, body, key, configFactory.contacts)
-                                            ConversationVolatileConfig::class.java -> processConfig(snode, body, key, configFactory.convoVolatile)
-                                            UserGroupsConfig::class.java -> processConfig(snode, body, key, configFactory.userGroups)
-                                        }
-                                    }
-                                }
-                            }
-                        }
+
                         poll(snode, deferred)
                     }
                 }.fail {
