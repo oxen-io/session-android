@@ -13,6 +13,8 @@ interface ConfigFactoryProtocol {
     val userGroups: UserGroupsConfig?
     fun getUserConfigs(): List<ConfigBase>
     fun persist(forConfigObject: ConfigBase, timestamp: Long)
+
+    fun conversationInConfig(publicKey: String?, groupPublicKey: String?, openGroupId: String?, visibleOnly: Boolean): Boolean
     fun canPerformChange(variant: String, publicKey: String, changeTimestampMs: Long): Boolean
 }
 

@@ -92,15 +92,6 @@ class BatchMessageReceiveJob(
         }
     }
 
-    private fun getThreadId(message: Message, storage: StorageProtocol, shouldCreateThread: Boolean): Long? {
-        val senderOrSync = when (message) {
-            is VisibleMessage -> message.syncTarget ?: message.sender!!
-            is ExpirationTimerUpdate -> message.syncTarget ?: message.sender!!
-            else -> message.sender!!
-        }
-        return storage.getThreadIdFor(senderOrSync, message.groupPublicKey, openGroupID, createThread = shouldCreateThread)
-    }
-
     override suspend fun execute(dispatcherName: String) {
         executeAsync(dispatcherName).get()
     }
@@ -120,7 +111,7 @@ class BatchMessageReceiveJob(
                     val (message, proto) = MessageReceiver.parse(data, openGroupMessageServerID, openGroupPublicKey = serverPublicKey)
                     message.serverHash = serverHash
                     val parsedParams = ParsedMessage(messageParameters, message, proto)
-                    val threadID = getThreadId(message, storage, shouldCreateThread(parsedParams)) ?: NO_THREAD_MAPPING
+                    val threadID = Message.getThreadId(message, openGroupID, storage, shouldCreateThread(parsedParams)) ?: NO_THREAD_MAPPING
                     if (!threadMap.containsKey(threadID)) {
                         threadMap[threadID] = mutableListOf(parsedParams)
                     } else {
@@ -179,7 +170,7 @@ class BatchMessageReceiveJob(
                                         }
                                     }
                                     val messageId = MessageReceiver.handleVisibleMessage(
-                                        message, proto, openGroupID,
+                                        message, proto, openGroupID, threadId,
                                         runThreadUpdate = false,
                                         runProfileUpdate = true
                                     )
@@ -209,7 +200,7 @@ class BatchMessageReceiveJob(
                                     }
                                 }
 
-                                else -> MessageReceiver.handle(message, proto, openGroupID)
+                                else -> MessageReceiver.handle(message, proto, threadId, openGroupID)
                             }
                         } catch (e: Exception) {
                             Log.e(TAG, "Couldn't process message (id: $id)", e)

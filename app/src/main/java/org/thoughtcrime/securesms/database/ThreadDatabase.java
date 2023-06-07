@@ -658,6 +658,24 @@ public class ThreadDatabase extends Database {
     return getOrCreateThreadIdFor(recipient, DistributionTypes.DEFAULT);
   }
 
+  public boolean getThreadArchived(long threadId) {
+    SQLiteDatabase db = databaseHelper.getReadableDatabase();
+    Cursor cursor = null;
+
+    try {
+      cursor = db.query(TABLE_NAME, null, ID + " = ?", new String[] {threadId+""}, null, null, null);
+
+      if (cursor != null && cursor.moveToFirst()) {
+        return (cursor.getInt(cursor.getColumnIndexOrThrow(ARCHIVED)) == 1);
+      }
+    } finally {
+      if (cursor != null)
+        cursor.close();
+    }
+
+    return false;
+  }
+
   public void setThreadArchived(long threadId) {
     ContentValues contentValues = new ContentValues(1);
     contentValues.put(ARCHIVED, 1);

@@ -12,6 +12,7 @@ import org.session.libsession.messaging.jobs.MessageReceiveJob
 import org.session.libsession.messaging.jobs.MessageReceiveParameters
 import org.session.libsession.messaging.jobs.OpenGroupDeleteJob
 import org.session.libsession.messaging.jobs.TrimThreadJob
+import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.Endpoint
@@ -261,7 +262,8 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                     }
                     mappingCache[it.recipient] = mapping
                 }
-                MessageReceiver.handle(message, proto, null)
+                val threadId = Message.getThreadId(message, null, MessagingModuleConfiguration.shared.storage, false)
+                MessageReceiver.handle(message, proto, threadId ?: -1, null)
             } catch (e: Exception) {
                 Log.e("Loki", "Couldn't handle direct message", e)
             }

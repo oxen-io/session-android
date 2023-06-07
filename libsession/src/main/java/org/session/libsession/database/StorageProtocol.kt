@@ -166,6 +166,7 @@ interface StorageProtocol {
     fun getThreadId(address: Address): Long?
     fun getThreadId(recipient: Recipient): Long?
     fun getThreadIdForMms(mmsId: Long): Long
+    fun getThreadArchived(threadId: Long): Boolean
     fun getLastUpdated(threadID: Long): Long
     fun trimThread(threadID: Long, threadLimit: Int)
     fun trimThreadBefore(threadID: Long, timestamp: Long)
@@ -224,5 +225,6 @@ interface StorageProtocol {
 
     // Shared configs
     fun notifyConfigUpdates(forConfigObject: ConfigBase)
+    fun conversationInConfig(publicKey: String?, groupPublicKey: String?, openGroupId: String?, visibleOnly: Boolean): Boolean
     fun canPerformConfigChange(variant: String, publicKey: String, changeTimestampMs: Long): Boolean
 }

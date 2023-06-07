@@ -13,6 +13,8 @@ import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.database.ConfigDatabase
+import org.thoughtcrime.securesms.dependencies.DatabaseComponent.Companion.get
+import org.thoughtcrime.securesms.groups.GroupManager
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 
 class ConfigFactory(
@@ -187,6 +189,45 @@ class ConfigFactory(
         } catch (e: Exception) {
             Log.e("Loki", "failed to persist ${forConfigObject.javaClass.simpleName}", e)
         }
+    }
+
+    override fun conversationInConfig(
+        publicKey: String?,
+        groupPublicKey: String?,
+        openGroupId: String?,
+        visibleOnly: Boolean
+    ): Boolean {
+        if (!ConfigBase.isNewConfigEnabled(isConfigForcedOn, SnodeAPI.nowWithOffset)) return true
+
+        val (_, userPublicKey) = maybeGetUserInfo() ?: return true
+
+        if (openGroupId != null) {
+            val userGroups = userGroups ?: return false
+            val threadId = GroupManager.getOpenGroupThreadID(openGroupId, context)
+            val openGroup = get(context).lokiThreadDatabase().getOpenGroupChat(threadId) ?: return false
+
+            // Not handling the `hidden` behaviour for communities so just indicate the existence
+            return (userGroups.getCommunityInfo(openGroup.server, openGroup.room) != null)
+        }
+        else if (groupPublicKey != null) {
+            val userGroups = userGroups ?: return false
+
+            // Not handling the `hidden` behaviour for legacy groups so just indicate the existence
+            return (userGroups.getLegacyGroupInfo(groupPublicKey) != null)
+        }
+        else if (publicKey == userPublicKey) {
+            val user = user ?: return false
+
+            return (!visibleOnly || user.getNtsPriority() != ConfigBase.PRIORITY_HIDDEN)
+        }
+        else if (publicKey != null) {
+            val contacts = contacts ?: return false
+            val targetContact = contacts.get(publicKey) ?: return false
+
+            return (!visibleOnly || targetContact.priority != ConfigBase.PRIORITY_HIDDEN)
+        }
+
+        return false
     }
 
     override fun canPerformChange(variant: String, publicKey: String, changeTimestampMs: Long): Boolean {

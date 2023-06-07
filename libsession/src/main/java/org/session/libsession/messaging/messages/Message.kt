@@ -1,6 +1,9 @@
 package org.session.libsession.messaging.messages
 
 import com.google.protobuf.ByteString
+import org.session.libsession.database.StorageProtocol
+import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
+import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsignal.protos.SignalServiceProtos
 
@@ -18,6 +21,17 @@ abstract class Message {
 
     open val ttl: Long = 14 * 24 * 60 * 60 * 1000
     open val isSelfSendValid: Boolean = false
+
+    companion object {
+        fun getThreadId(message: Message, openGroupID: String?, storage: StorageProtocol, shouldCreateThread: Boolean): Long? {
+            val senderOrSync = when (message) {
+                is VisibleMessage -> message.syncTarget ?: message.sender!!
+                is ExpirationTimerUpdate -> message.syncTarget ?: message.sender!!
+                else -> message.sender!!
+            }
+            return storage.getThreadIdFor(senderOrSync, message.groupPublicKey, openGroupID, createThread = shouldCreateThread)
+        }
+    }
 
     open fun isValid(): Boolean {
         val sentTimestamp = sentTimestamp

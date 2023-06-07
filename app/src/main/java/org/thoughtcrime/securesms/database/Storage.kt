@@ -419,6 +419,10 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         notifyUpdates(forConfigObject)
     }
 
+    override fun conversationInConfig(publicKey: String?, groupPublicKey: String?, openGroupId: String?, visibleOnly: Boolean): Boolean {
+        return configFactory.conversationInConfig(publicKey, groupPublicKey, openGroupId, visibleOnly)
+    }
+
     override fun canPerformConfigChange(variant: String, publicKey: String, changeTimestampMs: Long): Boolean {
         return configFactory.canPerformChange(variant, publicKey, changeTimestampMs)
     }
@@ -1215,6 +1219,11 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     override fun setRecipientHash(recipient: Recipient, recipientHash: String?) {
         val recipientDb = DatabaseComponent.get(context).recipientDatabase()
         recipientDb.setRecipientHash(recipient, recipientHash)
+    }
+
+    override fun getThreadArchived(threadId: Long): Boolean {
+        val threadDB = DatabaseComponent.get(context).threadDatabase()
+        return threadDB.getThreadArchived(threadId)
     }
 
     override fun getLastUpdated(threadID: Long): Long {
