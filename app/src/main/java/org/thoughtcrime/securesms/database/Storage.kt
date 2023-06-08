@@ -1221,11 +1221,6 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         recipientDb.setRecipientHash(recipient, recipientHash)
     }
 
-    override fun getThreadArchived(threadId: Long): Boolean {
-        val threadDB = DatabaseComponent.get(context).threadDatabase()
-        return threadDB.getThreadArchived(threadId)
-    }
-
     override fun getLastUpdated(threadID: Long): Long {
         val threadDB = DatabaseComponent.get(context).threadDatabase()
         return threadDB.getLastUpdated(threadID)

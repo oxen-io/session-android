@@ -166,7 +166,6 @@ interface StorageProtocol {
     fun getThreadId(address: Address): Long?
     fun getThreadId(recipient: Recipient): Long?
     fun getThreadIdForMms(mmsId: Long): Long
-    fun getThreadArchived(threadId: Long): Boolean
     fun getLastUpdated(threadID: Long): Long
     fun trimThread(threadID: Long, threadLimit: Int)
     fun trimThreadBefore(threadID: Long, timestamp: Long)

@@ -61,22 +61,52 @@ internal fun MessageReceiver.isBlocked(publicKey: String): Boolean {
 }
 
 fun MessageReceiver.handle(message: Message, proto: SignalServiceProtos.Content, threadId: Long, openGroupID: String?) {
+    // Do nothing if the message was outdated
+    if (MessageReceiver.messageIsOutdated(message, threadId, openGroupID)) { return }
+
     when (message) {
         is ReadReceipt -> handleReadReceipt(message)
         is TypingIndicator -> handleTypingIndicator(message)
         is ClosedGroupControlMessage -> handleClosedGroupControlMessage(message)
         is ExpirationTimerUpdate -> handleExpirationTimerUpdate(message)
-        is DataExtractionNotification -> handleDataExtractionNotification(message, threadId)
+        is DataExtractionNotification -> handleDataExtractionNotification(message)
         is ConfigurationMessage -> handleConfigurationMessage(message)
         is UnsendRequest -> handleUnsendRequest(message)
-        is MessageRequestResponse -> handleMessageRequestResponse(message, threadId)
+        is MessageRequestResponse -> handleMessageRequestResponse(message)
         is VisibleMessage -> handleVisibleMessage(
             message, proto, openGroupID, threadId,
             runThreadUpdate = true,
             runProfileUpdate = true
         )
-        is CallMessage -> handleCallMessage(message, threadId)
+        is CallMessage -> handleCallMessage(message)
     }
+}
+
+fun MessageReceiver.messageIsOutdated(message: Message, threadId: Long, openGroupID: String?): Boolean {
+    when (message) {
+        is ReadReceipt -> return false // No visible artifact created so better to keep for more reliable read states
+        is UnsendRequest -> return false // We should always process the removal of messages just in case
+    }
+
+    // Determine the state of the conversation and the validity of the message
+    val storage = MessagingModuleConfiguration.shared.storage
+    val userPublicKey = storage.getUserPublicKey()!!
+    val threadRecipient = storage.getRecipientForThread(threadId)
+    val conversationVisibleInConfig = storage.conversationInConfig(
+        if (message.groupPublicKey == null) threadRecipient?.address?.serialize() else null,
+        message.groupPublicKey,
+        openGroupID,
+        true
+    )
+    val canPerformChange = storage.canPerformConfigChange(
+        if (threadRecipient?.address?.serialize() == userPublicKey) SharedConfigMessage.Kind.USER_PROFILE.name else SharedConfigMessage.Kind.CONTACTS.name,
+        userPublicKey,
+        message.sentTimestamp!!
+    )
+
+    // If the thread is visible or the message was sent more recently than the last config message (minus
+    // buffer period) then we should process the message, if not then throw as the message is outdated
+    return (conversationVisibleInConfig || canPerformChange)
 }
 
 // region Control Messages
@@ -85,33 +115,7 @@ private fun MessageReceiver.handleReadReceipt(message: ReadReceipt) {
     SSKEnvironment.shared.readReceiptManager.processReadReceipts(context, message.sender!!, message.timestamps!!, message.receivedTimestamp!!)
 }
 
-private fun MessageReceiver.handleCallMessage(message: CallMessage, threadId: Long) {
-    // Only process the message if the thread is not archived or it was sent after the libSession buffer period
-    val storage = MessagingModuleConfiguration.shared.storage
-    val userPublicKey = storage.getUserPublicKey()!!
-    val recipient = storage.getRecipientForThread(threadId)
-    val dbThreadIsVisible = (
-        threadId > 0 &&
-        recipient != null &&
-        !recipient.isContactRecipient &&
-        !storage.getThreadArchived(threadId)
-    )
-
-    if (
-        !dbThreadIsVisible &&
-        !storage.conversationInConfig(
-            recipient?.address?.serialize(),
-            null,
-            null,
-            true
-        ) &&
-        !storage.canPerformConfigChange(
-            SharedConfigMessage.Kind.CONTACTS.name,
-            userPublicKey,
-            message.sentTimestamp!!
-        )
-    ) { return }
-
+private fun MessageReceiver.handleCallMessage(message: CallMessage) {
     // TODO: refactor this out to persistence, just to help debug the flow and send/receive in synchronous testing
     WebRtcUtils.SIGNAL_QUEUE.trySend(message)
 }
@@ -152,36 +156,11 @@ private fun MessageReceiver.handleExpirationTimerUpdate(message: ExpirationTimer
     }
 }
 
-private fun MessageReceiver.handleDataExtractionNotification(message: DataExtractionNotification, threadId: Long) {
+private fun MessageReceiver.handleDataExtractionNotification(message: DataExtractionNotification) {
     // We don't handle data extraction messages for groups (they shouldn't be sent, but just in case we filter them here too)
     if (message.groupPublicKey != null) return
     val storage = MessagingModuleConfiguration.shared.storage
     val senderPublicKey = message.sender!!
-
-    // Only process the message if the thread is not archived or it was sent after the libSession buffer period
-    val userPublicKey = storage.getUserPublicKey()!!
-    val recipient = storage.getRecipientForThread(threadId)
-    val dbThreadIsVisible = (
-        threadId > 0 &&
-        recipient != null &&
-        !recipient.isContactRecipient &&
-        !storage.getThreadArchived(threadId)
-    )
-
-    if (
-        !dbThreadIsVisible &&
-        !storage.conversationInConfig(
-            recipient?.address?.serialize(),
-            null,
-            null,
-            true
-        ) &&
-        !storage.canPerformConfigChange(
-            if (recipient?.address?.serialize() == userPublicKey) SharedConfigMessage.Kind.USER_PROFILE.name else SharedConfigMessage.Kind.CONTACTS.name,
-            userPublicKey,
-            message.sentTimestamp!!
-        )
-    ) { return }
 
     val notification: DataExtractionNotificationInfoMessage = when(message.kind) {
         is DataExtractionNotification.Kind.Screenshot -> DataExtractionNotificationInfoMessage(DataExtractionNotificationInfoMessage.Kind.SCREENSHOT)
@@ -267,33 +246,7 @@ fun MessageReceiver.handleUnsendRequest(message: UnsendRequest): Long? {
     return deletedMessageId
 }
 
-fun handleMessageRequestResponse(message: MessageRequestResponse, threadId: Long) {
-    // Only process the message if the thread is not archived or it was sent after the libSession buffer period
-    val storage = MessagingModuleConfiguration.shared.storage
-    val userPublicKey = storage.getUserPublicKey()!!
-    val recipient = storage.getRecipientForThread(threadId)
-    val dbThreadIsVisible = (
-        threadId > 0 &&
-        recipient != null &&
-        !recipient.isContactRecipient &&
-        !storage.getThreadArchived(threadId)
-    )
-
-    if (
-        !dbThreadIsVisible &&
-        !storage.conversationInConfig(
-            recipient?.address?.serialize(),
-            null,
-            null,
-            true
-        ) &&
-        !storage.canPerformConfigChange(
-            SharedConfigMessage.Kind.CONTACTS.name,
-            userPublicKey,
-            message.sentTimestamp!!
-        )
-    ) { return }
-
+fun handleMessageRequestResponse(message: MessageRequestResponse) {
     MessagingModuleConfiguration.shared.storage.insertMessageRequestResponse(message)
 }
 //endregion
@@ -308,32 +261,11 @@ fun MessageReceiver.handleVisibleMessage(
 ): Long? {
     val storage = MessagingModuleConfiguration.shared.storage
     val context = MessagingModuleConfiguration.shared.context
-    val userPublicKey = storage.getUserPublicKey()!!
+    val userPublicKey = storage.getUserPublicKey()
     val messageSender: String? = message.sender
 
-    // Only process the message if the thread is not archived or it was sent after the libSession buffer period
-    val threadRecipient = storage.getRecipientForThread(threadId)
-    val dbThreadIsVisible = (
-        threadId > 0 &&
-        threadRecipient != null &&
-        !threadRecipient.isContactRecipient &&
-        !storage.getThreadArchived(threadId)
-    )
-
-    if (
-        !dbThreadIsVisible &&
-        !storage.conversationInConfig(
-            if (message.groupPublicKey == null) threadRecipient?.address?.serialize() else null,
-            message.groupPublicKey,
-            openGroupID,
-            true
-        ) &&
-        !storage.canPerformConfigChange(
-            if (threadRecipient?.address?.serialize() == userPublicKey) SharedConfigMessage.Kind.USER_PROFILE.name else SharedConfigMessage.Kind.CONTACTS.name,
-            userPublicKey,
-            message.sentTimestamp!!
-        )
-    ) { return null }
+    // Do nothing if the message was outdated
+    if (MessageReceiver.messageIsOutdated(message, threadId, openGroupID)) { return null }
 
     // Get or create thread
     // FIXME: In case this is an open group this actually * doesn't * create the thread if it doesn't yet
@@ -341,6 +273,7 @@ fun MessageReceiver.handleVisibleMessage(
     val threadID = storage.getThreadIdFor(message.syncTarget ?: messageSender!!, message.groupPublicKey, openGroupID, createThread = true)
         // Thread doesn't exist; should only be reached in a case where we are processing open group messages for a no longer existent thread
         ?: throw MessageReceiver.Error.NoThread
+    val threadRecipient = storage.getRecipientForThread(threadID)
     val userBlindedKey = openGroupID?.let {
         val openGroup = storage.getOpenGroup(threadID) ?: return@let null
         val blindedKey = SodiumUtilities.blindedKeyPair(openGroup.publicKey, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!) ?: return@let null
