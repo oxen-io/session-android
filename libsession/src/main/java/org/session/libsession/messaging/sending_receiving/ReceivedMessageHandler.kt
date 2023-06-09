@@ -105,8 +105,8 @@ fun MessageReceiver.messageIsOutdated(message: Message, threadId: Long, openGrou
     )
 
     // If the thread is visible or the message was sent more recently than the last config message (minus
-    // buffer period) then we should process the message, if not then throw as the message is outdated
-    return (conversationVisibleInConfig || canPerformChange)
+    // buffer period) then we should process the message, if not then the message is outdated
+    return (!conversationVisibleInConfig && !canPerformChange)
 }
 
 // region Control Messages
