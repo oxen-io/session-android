@@ -36,6 +36,7 @@ import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
 class ConversationAdapter(
     context: Context,
     cursor: Cursor,
+    private val isReversed: Boolean,
     private val onItemPress: (MessageRecord, Int, VisibleMessageView, MotionEvent) -> Unit,
     private val onItemSwipeToReply: (MessageRecord, Int) -> Unit,
     private val onItemLongPress: (MessageRecord, Int, VisibleMessageView) -> Unit,
@@ -186,14 +187,18 @@ class ConversationAdapter(
     private fun getMessageBefore(position: Int, cursor: Cursor): MessageRecord? {
         // The message that's visually before the current one is actually after the current
         // one for the cursor because the layout is reversed
-        if (!cursor.moveToPosition(position + 1)) { return null }
+        if (isReversed && !cursor.moveToPosition(position + 1)) { return null }
+        if (!isReversed && !cursor.moveToPosition(position - 1)) { return null }
+
         return messageDB.readerFor(cursor).current
     }
 
     private fun getMessageAfter(position: Int, cursor: Cursor): MessageRecord? {
         // The message that's visually after the current one is actually before the current
         // one for the cursor because the layout is reversed
-        if (!cursor.moveToPosition(position - 1)) { return null }
+        if (isReversed && !cursor.moveToPosition(position - 1)) { return null }
+        if (!isReversed && !cursor.moveToPosition(position + 1)) { return null }
+
         return messageDB.readerFor(cursor).current
     }
 
@@ -221,13 +226,29 @@ class ConversationAdapter(
     fun findLastSeenItemPosition(lastSeenTimestamp: Long): Int? {
         val cursor = this.cursor
         if (cursor == null || !isActiveCursor) return null
-        if (lastSeenTimestamp == 0L && cursor.moveToLast()) {
-            return cursor.position
+        if (lastSeenTimestamp == 0L) {
+            if (isReversed && cursor.moveToLast()) { return cursor.position }
+            if (!isReversed && cursor.moveToFirst()) { return cursor.position }
         }
+
+        // Loop from the newest message to the oldest until we find one older (or equal to)
+        // the lastSeenTimestamp, then return that message index
         for (i in 0 until itemCount) {
-            cursor.moveToPosition(i)
-            val message = messageDB.readerFor(cursor).current
-            if (message.isOutgoing || message.dateSent <= lastSeenTimestamp) { return i }
+            if (isReversed) {
+                cursor.moveToPosition(i)
+                val message = messageDB.readerFor(cursor).current
+                if (message.isOutgoing || message.dateSent <= lastSeenTimestamp) {
+                    return i
+                }
+            }
+            else {
+                val index = ((itemCount - 1) - i)
+                cursor.moveToPosition(index)
+                val message = messageDB.readerFor(cursor).current
+                if (message.isOutgoing || message.dateSent <= lastSeenTimestamp) {
+                    return Math.min(itemCount - 1, (index + 1))
+                }
+            }
         }
         return null
     }

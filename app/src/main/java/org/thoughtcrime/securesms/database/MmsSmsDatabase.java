@@ -259,8 +259,8 @@ public class MmsSmsDatabase extends Database {
     return -1;
   }
 
-  public int getMessagePositionInConversation(long threadId, long sentTimestamp, @NonNull Address address) {
-    String order     = MmsSmsColumns.NORMALIZED_DATE_SENT + " DESC";
+  public int getMessagePositionInConversation(long threadId, long sentTimestamp, @NonNull Address address, boolean reverse) {
+    String order     = MmsSmsColumns.NORMALIZED_DATE_SENT + (reverse ? " DESC" : " ASC");
     String selection = MmsSmsColumns.THREAD_ID + " = " + threadId;
 
     try (Cursor cursor = queryTables(new String[]{ MmsSmsColumns.NORMALIZED_DATE_SENT, MmsSmsColumns.ADDRESS }, selection, order, null)) {

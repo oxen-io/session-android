@@ -289,11 +289,16 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         MnemonicCodec(loadFileContents).encode(hexEncodedSeed!!, MnemonicCodec.Language.Configuration.english)
     }
 
+    // There is a bug when initially joining a community where all messages will immediately be marked
+    // as read if we reverse the message list so this is now hard-coded to false
+    private val reverseMessageList = false
+
     private val adapter by lazy {
-        val cursor = mmsSmsDb.getConversation(viewModel.threadId, !isIncomingMessageRequestThread())
+        val cursor = mmsSmsDb.getConversation(viewModel.threadId, reverseMessageList)
         val adapter = ConversationAdapter(
             this,
             cursor,
+            reverseMessageList,
             onItemPress = { message, position, view, event ->
                 handlePress(message, position, view, event)
             },
@@ -380,22 +385,24 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         setUpUiStateObserver()
         binding!!.scrollToBottomButton.setOnClickListener {
             val layoutManager = (binding?.conversationRecyclerView?.layoutManager as? LinearLayoutManager) ?: return@setOnClickListener
+            val targetPosition = if (reverseMessageList) 0 else adapter.itemCount
 
             if (layoutManager.isSmoothScrolling) {
-                binding?.conversationRecyclerView?.scrollToPosition(0)
+                binding?.conversationRecyclerView?.scrollToPosition(targetPosition)
             } else {
                 // It looks like 'smoothScrollToPosition' will actually load all intermediate items in
                 // order to do the scroll, this can be very slow if there are a lot of messages so
                 // instead we check the current position and if there are more than 10 items to scroll
                 // we jump instantly to the 10th item and scroll from there (this should happen quick
                 // enough to give a similar scroll effect without having to load everything)
-                val position = layoutManager.findFirstVisibleItemPosition()
-                if (position > 10) {
-                    binding?.conversationRecyclerView?.scrollToPosition(10)
+                val position = if (reverseMessageList) layoutManager.findFirstVisibleItemPosition() else layoutManager.findLastVisibleItemPosition()
+                val targetBuffer = if (reverseMessageList) 10 else Math.max(0, (adapter.itemCount - 1) - 10)
+                if (position > targetBuffer) {
+                    binding?.conversationRecyclerView?.scrollToPosition(targetBuffer)
                 }
 
                 binding?.conversationRecyclerView?.post {
-                    binding?.conversationRecyclerView?.smoothScrollToPosition(0)
+                    binding?.conversationRecyclerView?.smoothScrollToPosition(targetPosition)
                 }
             }
         }
@@ -420,12 +427,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             weakActivity.get()?.adapter ?: return@launch
 
             withContext(Dispatchers.Main) {
+                updateUnreadCountIndicator()
                 setUpRecyclerView()
                 setUpTypingObserver()
                 setUpRecipientObserver()
                 getLatestOpenGroupInfoIfNeeded()
                 setUpSearchResultObserver()
-                scrollToFirstUnreadMessageIfNeeded()
+                scrollToFirstUnreadMessageIfNeeded(true)
             }
         }
 
@@ -483,18 +491,29 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun onCreateLoader(id: Int, bundle: Bundle?): Loader<Cursor> {
-        return ConversationLoader(viewModel.threadId, !isIncomingMessageRequestThread(), this@ConversationActivityV2)
+        return ConversationLoader(viewModel.threadId, reverseMessageList, this@ConversationActivityV2)
     }
 
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
+        val oldCount = adapter.itemCount
+        val newCount = cursor?.count ?: 0
         adapter.changeCursor(cursor)
+
         if (cursor != null) {
             val messageTimestamp = messageToScrollTimestamp.getAndSet(-1)
             val author = messageToScrollAuthor.getAndSet(null)
+
             if (author != null && messageTimestamp >= 0) {
                 jumpToMessage(author, messageTimestamp, null)
-            } else if (firstLoad.getAndSet(false)) {
-                scrollToFirstUnreadMessageIfNeeded()
+            }
+            else if (firstLoad.getAndSet(false)) {
+                scrollToFirstUnreadMessageIfNeeded(true)
+                handleRecyclerViewScrolled()
+            }
+            else if (oldCount != newCount) {
+                // Update the unreadCount value to be loaded from the database since we got a new message
+                unreadCount = mmsSmsDb.getUnreadCount(viewModel.threadId)
+                updateUnreadCountIndicator()
                 handleRecyclerViewScrolled()
             }
         }
@@ -508,7 +527,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     // called from onCreate
     private fun setUpRecyclerView() {
         binding!!.conversationRecyclerView.adapter = adapter
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, !isIncomingMessageRequestThread())
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, reverseMessageList)
         binding!!.conversationRecyclerView.layoutManager = layoutManager
         // Workaround for the fact that CursorRecyclerViewAdapter doesn't auto-update automatically (even though it says it will)
         LoaderManager.getInstance(this).restartLoader(0, null, this)
@@ -697,9 +716,17 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
-    private fun scrollToFirstUnreadMessageIfNeeded() {
+    private fun scrollToFirstUnreadMessageIfNeeded(isFirstLoad: Boolean = false) {
         val lastSeenTimestamp = threadDb.getLastSeenAndHasSent(viewModel.threadId).first()
         val lastSeenItemPosition = adapter.findLastSeenItemPosition(lastSeenTimestamp) ?: return
+
+        // If this is triggered when first opening a conversation then we want to position the top
+        // of the first unread message in the middle of the screen
+        if (isFirstLoad && !reverseMessageList) {
+            layoutManager?.scrollToPositionWithOffset(lastSeenItemPosition, ((layoutManager?.height ?: 0) / 2))
+            return
+        }
+
         if (lastSeenItemPosition <= 3) { return }
         binding?.conversationRecyclerView?.scrollToPosition(lastSeenItemPosition)
     }
@@ -785,11 +812,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private fun acceptMessageRequest() {
         binding?.messageRequestBar?.isVisible = false
-        binding?.conversationRecyclerView?.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
-        adapter.notifyDataSetChanged()
         viewModel.acceptMessageRequest()
-        LoaderManager.getInstance(this).restartLoader(0, null, this)
+
         lifecycleScope.launch(Dispatchers.IO) {
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@ConversationActivityV2)
         }
@@ -991,18 +1015,23 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val wasTypingIndicatorVisibleBefore = binding.typingIndicatorViewContainer.isVisible
         binding.typingIndicatorViewContainer.isVisible = wasTypingIndicatorVisibleBefore && isScrolledToBottom
         showScrollToBottomButtonIfApplicable()
-        val firstVisiblePosition = layoutManager?.findFirstVisibleItemPosition() ?: RecyclerView.NO_POSITION
-        if (!firstLoad.get() && firstVisiblePosition != RecyclerView.NO_POSITION) {
-            if (firstVisiblePosition == 0) {
-                // last item, set it to now?
-                bufferedLastSeenChannel.trySend(SnodeAPI.nowWithOffset)
-            }
-            val visibleItemTimestamp = adapter.getTimestampForItemAt(firstVisiblePosition)
+        val maybeTargetVisiblePosition = if (reverseMessageList) layoutManager?.findFirstVisibleItemPosition() else layoutManager?.findLastVisibleItemPosition()
+        val targetVisiblePosition = maybeTargetVisiblePosition ?: RecyclerView.NO_POSITION
+        if (!firstLoad.get() && targetVisiblePosition != RecyclerView.NO_POSITION) {
+            val visibleItemTimestamp = adapter.getTimestampForItemAt(targetVisiblePosition)
             if (visibleItemTimestamp != null) {
                 bufferedLastSeenChannel.trySend(visibleItemTimestamp)
             }
         }
-        unreadCount = min(unreadCount, firstVisiblePosition).coerceAtLeast(0)
+
+        if (reverseMessageList) {
+            unreadCount = min(unreadCount, targetVisiblePosition).coerceAtLeast(0)
+        }
+        else {
+            val layoutUnreadCount = layoutManager?.let { (it.itemCount - 1) - it.findLastVisibleItemPosition() }
+                ?: RecyclerView.NO_POSITION
+            unreadCount = min(unreadCount, layoutUnreadCount).coerceAtLeast(0)
+        }
         updateUnreadCountIndicator()
     }
 
@@ -1493,10 +1522,16 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             return
         }
         val binding = binding ?: return
-        if (binding.inputBar.linkPreview != null || binding.inputBar.quote != null) {
+        val sentMessageInfo = if (binding.inputBar.linkPreview != null || binding.inputBar.quote != null) {
             sendAttachments(listOf(), getMessageBody(), binding.inputBar.quote, binding.inputBar.linkPreview)
         } else {
             sendTextOnlyMessage()
+        }
+
+        // Jump to the newly sent message once it gets added
+        if (sentMessageInfo != null) {
+            messageToScrollAuthor.set(sentMessageInfo.first)
+            messageToScrollTimestamp.set(sentMessageInfo.second)
         }
     }
 
@@ -1515,19 +1550,21 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
-    private fun sendTextOnlyMessage(hasPermissionToSendSeed: Boolean = false) {
-        val recipient = viewModel.recipient ?: return
+    private fun sendTextOnlyMessage(hasPermissionToSendSeed: Boolean = false): Pair<Address, Long>? {
+        val recipient = viewModel.recipient ?: return null
+        val sentTimestamp = SnodeAPI.nowWithOffset
         processMessageRequestApproval()
         val text = getMessageBody()
         val userPublicKey = textSecurePreferences.getLocalNumber()
         val isNoteToSelf = (recipient.isContactRecipient && recipient.address.toString() == userPublicKey)
         if (text.contains(seed) && !isNoteToSelf && !hasPermissionToSendSeed) {
             val dialog = SendSeedDialog { sendTextOnlyMessage(true) }
-            return dialog.show(supportFragmentManager, "Send Seed Dialog")
+            dialog.show(supportFragmentManager, "Send Seed Dialog")
+            return null
         }
         // Create the message
         val message = VisibleMessage()
-        message.sentTimestamp = SnodeAPI.nowWithOffset
+        message.sentTimestamp = sentTimestamp
         message.text = text
         val outgoingTextMessage = OutgoingTextMessage.from(message, recipient)
         // Clear the input bar
@@ -1544,14 +1581,16 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         MessageSender.send(message, recipient.address)
         // Send a typing stopped message
         ApplicationContext.getInstance(this).typingStatusSender.onTypingStopped(viewModel.threadId)
+        return Pair(recipient.address, sentTimestamp)
     }
 
-    private fun sendAttachments(attachments: List<Attachment>, body: String?, quotedMessage: MessageRecord? = null, linkPreview: LinkPreview? = null) {
-        val recipient = viewModel.recipient ?: return
+    private fun sendAttachments(attachments: List<Attachment>, body: String?, quotedMessage: MessageRecord? = null, linkPreview: LinkPreview? = null): Pair<Address, Long>? {
+        val recipient = viewModel.recipient ?: return null
+        val sentTimestamp = SnodeAPI.nowWithOffset
         processMessageRequestApproval()
         // Create the message
         val message = VisibleMessage()
-        message.sentTimestamp = SnodeAPI.nowWithOffset
+        message.sentTimestamp = sentTimestamp
         message.text = body
         val quote = quotedMessage?.let {
             val quotedAttachments = (it as? MmsMessageRecord)?.slideDeck?.asAttachments() ?: listOf()
@@ -1585,6 +1624,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         MessageSender.send(message, recipient.address, attachments, quote, linkPreview)
         // Send a typing stopped message
         ApplicationContext.getInstance(this).typingStatusSender.onTypingStopped(viewModel.threadId)
+        return Pair(recipient.address, sentTimestamp)
     }
 
     private fun showGIFPicker() {
@@ -2028,7 +2068,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private fun jumpToMessage(author: Address, timestamp: Long, onMessageNotFound: Runnable?) {
         SimpleTask.run(lifecycle, {
-            mmsSmsDb.getMessagePositionInConversation(viewModel.threadId, timestamp, author)
+            mmsSmsDb.getMessagePositionInConversation(viewModel.threadId, timestamp, author, reverseMessageList)
         }) { p: Int -> moveToMessagePosition(p, onMessageNotFound) }
     }
 
