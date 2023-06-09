@@ -111,6 +111,8 @@ class VisibleMessageView : LinearLayout {
     private fun initialize() {
         isHapticFeedbackEnabled = true
         setWillNotDraw(false)
+        binding.root.disableClipping()
+        binding.mainContainer.disableClipping()
         binding.messageInnerContainer.disableClipping()
         binding.messageContentView.root.disableClipping()
     }
@@ -410,6 +412,10 @@ class VisibleMessageView : LinearLayout {
     fun recycle() {
         binding.profilePictureView.root.recycle()
         binding.messageContentView.root.recycle()
+    }
+
+    fun playHighlight() {
+        binding.messageContentView.root.playHighlight()
     }
     // endregion
 

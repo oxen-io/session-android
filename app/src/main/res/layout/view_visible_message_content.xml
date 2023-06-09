@@ -7,7 +7,7 @@
     android:id="@+id/mainContainerConstraint"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <org.thoughtcrime.securesms.util.MessageBubbleView
         android:id="@+id/contentParent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -111,7 +111,7 @@
             android:id="@+id/bodyTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </org.thoughtcrime.securesms.util.MessageBubbleView>
 
     <include layout="@layout/album_thumbnail_view"
         android:visibility="gone"

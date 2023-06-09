@@ -176,6 +176,7 @@ import java.lang.ref.WeakReference
 import java.util.Locale
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
@@ -341,6 +342,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private val messageToScrollTimestamp = AtomicLong(-1)
     private val messageToScrollAuthor = AtomicReference<Address?>(null)
     private val firstLoad = AtomicBoolean(true)
+    private val forceHighlightNextLoad = AtomicInteger(-1)
 
     private lateinit var reactionDelegate: ConversationReactionDelegate
     private val reactWithAnyEmojiStartPage = -1
@@ -419,15 +421,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val weakActivity = WeakReference(this)
 
         lifecycleScope.launch(Dispatchers.IO) {
-            unreadCount = mmsSmsDb.getUnreadCount(viewModel.threadId)
-
             // Note: We are accessing the `adapter` property because we want it to be loaded on
             // the background thread to avoid blocking the UI thread and potentially hanging when
             // transitioning to the activity
             weakActivity.get()?.adapter ?: return@launch
 
             withContext(Dispatchers.Main) {
-                updateUnreadCountIndicator()
                 setUpRecyclerView()
                 setUpTypingObserver()
                 setUpRecipientObserver()
@@ -503,18 +502,40 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             val messageTimestamp = messageToScrollTimestamp.getAndSet(-1)
             val author = messageToScrollAuthor.getAndSet(null)
 
+            // Update the unreadCount value to be loaded from the database since we got a new message
+            if (firstLoad.get() || oldCount != newCount) {
+                // Update the unreadCount value to be loaded from the database since we got a new message
+                unreadCount = mmsSmsDb.getUnreadCount(viewModel.threadId)
+                updateUnreadCountIndicator()
+            }
+
             if (author != null && messageTimestamp >= 0) {
                 jumpToMessage(author, messageTimestamp, null)
             }
             else if (firstLoad.getAndSet(false)) {
-                scrollToFirstUnreadMessageIfNeeded(true)
+                // We can't actually just 'shouldHighlight = true' here because any unread messages will
+                // immediately be marked as ready triggering a reload of the cursor
+                val lastSeenItemPosition = scrollToFirstUnreadMessageIfNeeded(true)
                 handleRecyclerViewScrolled()
+
+                if (lastSeenItemPosition != null) {
+                    forceHighlightNextLoad.set(lastSeenItemPosition)
+                }
             }
             else if (oldCount != newCount) {
-                // Update the unreadCount value to be loaded from the database since we got a new message
-                unreadCount = mmsSmsDb.getUnreadCount(viewModel.threadId)
-                updateUnreadCountIndicator()
                 handleRecyclerViewScrolled()
+            }
+            else {
+                // Really annoying but if a message gets marked as read during the initial load it'll
+                // immediately result in a subsequent load of the cursor, if we trigger the highlight
+                // within the 'firstLoad' it generally ends up getting repositioned as the views get
+                // recycled and the wrong view is highlighted - by doing it on the subsequent load the
+                // correct view is highlighted
+                val forceHighlightPosition = forceHighlightNextLoad.getAndSet(-1)
+
+                if (forceHighlightPosition != -1) {
+                    highlightViewAtPosition(forceHighlightPosition)
+                }
             }
         }
         updatePlaceholder()
@@ -716,19 +737,29 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
-    private fun scrollToFirstUnreadMessageIfNeeded(isFirstLoad: Boolean = false) {
+    private fun scrollToFirstUnreadMessageIfNeeded(isFirstLoad: Boolean = false, shouldHighlight: Boolean = false): Int? {
         val lastSeenTimestamp = threadDb.getLastSeenAndHasSent(viewModel.threadId).first()
-        val lastSeenItemPosition = adapter.findLastSeenItemPosition(lastSeenTimestamp) ?: return
+        val lastSeenItemPosition = adapter.findLastSeenItemPosition(lastSeenTimestamp) ?: return -1
 
         // If this is triggered when first opening a conversation then we want to position the top
         // of the first unread message in the middle of the screen
         if (isFirstLoad && !reverseMessageList) {
             layoutManager?.scrollToPositionWithOffset(lastSeenItemPosition, ((layoutManager?.height ?: 0) / 2))
-            return
+
+            if (shouldHighlight) { highlightViewAtPosition(lastSeenItemPosition) }
+
+            return lastSeenItemPosition
         }
 
-        if (lastSeenItemPosition <= 3) { return }
+        if (lastSeenItemPosition <= 3) { return lastSeenItemPosition }
         binding?.conversationRecyclerView?.scrollToPosition(lastSeenItemPosition)
+        return lastSeenItemPosition
+    }
+
+    private fun highlightViewAtPosition(position: Int) {
+        binding?.conversationRecyclerView?.post {
+            (layoutManager?.findViewByPosition(position) as? VisibleMessageView)?.playHighlight()
+        }
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
