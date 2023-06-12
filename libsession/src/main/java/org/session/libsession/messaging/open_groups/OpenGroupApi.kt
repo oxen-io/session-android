@@ -109,7 +109,24 @@ object OpenGroupApi {
         val defaultWrite: Boolean = false,
         val upload: Boolean = false,
         val defaultUpload: Boolean = false,
-    )
+    ) {
+        fun toPollInfo() = RoomPollInfo(
+            token = token,
+            activeUsers = activeUsers,
+            admin = admin,
+            globalAdmin = globalAdmin,
+            moderator = moderator,
+            globalModerator = globalModerator,
+            read = read,
+            defaultRead = defaultRead,
+            defaultAccessible = defaultAccessible,
+            write = write,
+            defaultWrite = defaultWrite,
+            upload = upload,
+            defaultUpload = defaultUpload,
+            details = this
+        )
+    }
 
     @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
     data class PinnedMessage(
