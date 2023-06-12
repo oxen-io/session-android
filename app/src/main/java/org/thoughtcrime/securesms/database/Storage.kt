@@ -196,7 +196,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         TextSecurePreferences.setProfilePictureURL(context, newProfilePicture)
 
         if (newProfileKey != null) {
-            JobQueue.shared.add(RetrieveProfileAvatarJob(Base64.encodeBytes(newProfileKey), ourRecipient.address))
+            JobQueue.shared.add(RetrieveProfileAvatarJob(newProfilePicture, ourRecipient.address))
         }
     }
 
