@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/prominent_button_color">
+    android:color="?prominentButtonColor">
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="@dimen/medium_button_corner_radius"/>
-            <stroke android:width="@dimen/border_thickness" android:color="@color/prominent_button_color" />
-        </shape>
-    </item>
-    <item android:id="@android:id/mask">
-        <shape android:shape="rectangle">
-            <corners android:radius="@dimen/medium_button_corner_radius"/>
-            <solid android:color="@color/black"/>
+            <solid android:color="?colorPrimary"/>
+            <corners android:radius="@dimen/medium_button_corner_radius" />
+            <stroke
+                android:color="?prominentButtonColor"
+                android:width="@dimen/border_thickness" />
         </shape>
     </item>
 </ripple>

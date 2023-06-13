@@ -5,5 +5,5 @@
 
     <solid  android:color="@color/profile_picture_background" />
 
-    <corners android:radius="38dp" />
+    <corners android:radius="40dp" />
 </shape>

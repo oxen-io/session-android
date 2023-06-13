@@ -495,6 +495,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 .setPositiveButton(R.string.RecipientPreferenceActivity_block) { dialog, _ ->
                     lifecycleScope.launch(Dispatchers.IO) {
                         recipientDatabase.setBlocked(thread.recipient, true)
+                        // TODO: Remove in UserConfig branch
+                        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@HomeActivity)
                         withContext(Dispatchers.Main) {
                             binding.recyclerView.adapter!!.notifyDataSetChanged()
                             dialog.dismiss()
@@ -511,6 +513,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 .setPositiveButton(R.string.RecipientPreferenceActivity_unblock) { dialog, _ ->
                     lifecycleScope.launch(Dispatchers.IO) {
                         recipientDatabase.setBlocked(thread.recipient, false)
+                        // TODO: Remove in UserConfig branch
+                        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@HomeActivity)
                         withContext(Dispatchers.Main) {
                             binding.recyclerView.adapter!!.notifyDataSetChanged()
                             dialog.dismiss()

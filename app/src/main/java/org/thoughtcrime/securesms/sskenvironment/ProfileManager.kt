@@ -2,11 +2,11 @@ package org.thoughtcrime.securesms.sskenvironment
 
 import android.content.Context
 import org.session.libsession.messaging.contacts.Contact
+import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsession.utilities.recipients.Recipient
-import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.jobs.RetrieveProfileAvatarJob
+import org.session.libsession.messaging.jobs.RetrieveProfileAvatarJob
 
 class ProfileManager : SSKEnvironment.ProfileManagerProtocol {
 
@@ -40,9 +40,8 @@ class ProfileManager : SSKEnvironment.ProfileManagerProtocol {
     }
 
     override fun setProfilePictureURL(context: Context, recipient: Recipient, profilePictureURL: String) {
-        val job = RetrieveProfileAvatarJob(recipient, profilePictureURL)
-        val jobManager = ApplicationContext.getInstance(context).jobManager
-        jobManager.add(job)
+        val job = RetrieveProfileAvatarJob(profilePictureURL, recipient.address)
+        JobQueue.shared.add(job)
         val sessionID = recipient.address.serialize()
         val contactDatabase = DatabaseComponent.get(context).sessionContactDatabase()
         var contact = contactDatabase.getContactWithSessionID(sessionID)

@@ -46,7 +46,7 @@ class SessionJobDatabase(context: Context, helper: SQLCipherOpenHelper) : Databa
         databaseHelper.writableDatabase.delete(sessionJobTable, "${Companion.jobID} = ?", arrayOf( jobID ))
     }
 
-    fun getAllPendingJobs(type: String): Map<String, Job?> {
+    fun getAllJobs(type: String): Map<String, Job?> {
         val database = databaseHelper.readableDatabase
         return database.getAll(sessionJobTable, "$jobType = ?", arrayOf( type )) { cursor ->
             val jobID = cursor.getString(jobID)

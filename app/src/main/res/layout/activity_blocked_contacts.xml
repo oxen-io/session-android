@@ -4,28 +4,37 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/unblockButton"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@drawable/preference_single_no_padding"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:cardCornerRadius="?preferenceCornerRadius"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="?colorSettingsBackground"
         android:layout_marginHorizontal="@dimen/medium_spacing"
         android:layout_marginVertical="@dimen/large_spacing"
-        />
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            />
+
+    </androidx.cardview.widget.CardView>
+
 
     <TextView
         android:id="@+id/emptyStateMessageTextView"
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@+id/recyclerView"
+        app:layout_constraintTop_toTopOf="@+id/cardView"
         android:layout_marginTop="@dimen/medium_spacing"
-        app:layout_constraintStart_toStartOf="@+id/recyclerView"
-        app:layout_constraintEnd_toEndOf="@+id/recyclerView"
+        app:layout_constraintStart_toStartOf="@+id/cardView"
+        app:layout_constraintEnd_toEndOf="@+id/cardView"
         android:text="@string/blocked_contacts_empty_state"
         />
 
@@ -38,7 +47,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView"
+        app:layout_constraintTop_toBottomOf="@+id/cardView"
         android:id="@+id/unblockButton"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginVertical="@dimen/large_spacing"
@@ -49,6 +58,6 @@
         android:id="@+id/nonEmptyStateGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="unblockButton,recyclerView"/>
+        app:constraint_referenced_ids="unblockButton,cardView"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

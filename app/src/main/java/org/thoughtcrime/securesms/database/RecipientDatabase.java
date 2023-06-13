@@ -276,7 +276,7 @@ public class RecipientDatabase extends Database {
     notifyRecipientListeners();
   }
 
-  public void setBlocked(@NonNull List<Recipient> recipients, boolean blocked) {
+  public void setBlocked(@NonNull Iterable<Recipient> recipients, boolean blocked) {
     SQLiteDatabase db = getWritableDatabase();
     db.beginTransaction();
     try {

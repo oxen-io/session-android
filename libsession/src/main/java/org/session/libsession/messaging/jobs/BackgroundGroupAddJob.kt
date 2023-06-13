@@ -39,13 +39,7 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
                 delegate?.handleJobFailed(this, dispatcherName, DuplicateGroupException())
                 return
             }
-            // get image
-            storage.setOpenGroupPublicKey(openGroup.server, openGroup.serverPublicKey)
-            val info = storage.addOpenGroup(openGroup.joinUrl())
-            val imageId = info?.imageId
-            if (imageId != null && storage.getGroupAvatarDownloadJob(openGroup.server, openGroup.room, imageId) == null) {
-                JobQueue.shared.add(GroupAvatarDownloadJob(openGroup.server, openGroup.room, imageId))
-            }
+            storage.addOpenGroup(openGroup.joinUrl())
             Log.d(KEY, "onOpenGroupAdded(${openGroup.server})")
             storage.onOpenGroupAdded(openGroup.server)
         } catch (e: Exception) {

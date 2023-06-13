@@ -1,20 +1,25 @@
 package org.thoughtcrime.securesms.conversation.v2.dialogs
 
+import android.content.Context
 import android.graphics.Typeface
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.DialogBlockedBinding
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.BaseDialog
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
+import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 
 /** Shown upon sending a message to a user that's blocked. */
-class BlockedDialog(private val recipient: Recipient) : BaseDialog() {
+class BlockedDialog(private val recipient: Recipient, private val context: Context) : BaseDialog() {
 
     override fun setContentView(builder: AlertDialog.Builder) {
         val binding = DialogBlockedBinding.inflate(LayoutInflater.from(requireContext()))
@@ -37,5 +42,10 @@ class BlockedDialog(private val recipient: Recipient) : BaseDialog() {
     private fun unblock() {
         DatabaseComponent.get(requireContext()).recipientDatabase().setBlocked(recipient, false)
         dismiss()
+
+        // TODO: Remove in UserConfig branch
+        GlobalScope.launch(Dispatchers.IO) {
+            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+        }
     }
 }

@@ -32,7 +32,6 @@ interface DatabaseComponent {
     fun recipientDatabase(): RecipientDatabase
     fun groupReceiptDatabase(): GroupReceiptDatabase
     fun searchDatabase(): SearchDatabase
-    fun jobDatabase(): JobDatabase
     fun lokiAPIDatabase(): LokiAPIDatabase
     fun lokiMessageDatabase(): LokiMessageDatabase
     fun lokiThreadDatabase(): LokiThreadDatabase

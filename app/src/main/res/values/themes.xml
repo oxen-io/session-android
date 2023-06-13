@@ -54,6 +54,7 @@
        <item name="menu_unpin_icon">@drawable/ic_outline_pin_off_24</item>
        <item name="menu_mark_all_as_read">@drawable/ic_outline_mark_chat_read_24</item>
        <item name="emoji_show_less_icon">@drawable/ic_chevron_up_light</item>
+       <item name="accentColor">?colorAccent</item>
        <item name="prominentButtonColor">?colorAccent</item>
        <item name="attachment_document_icon_small">@drawable/ic_document_small_dark</item>
        <item name="attachment_document_icon_large">@drawable/ic_document_large_dark</item>
@@ -246,12 +247,8 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
-    <style name="Theme.TextSecure.Dialog.Rationale" parent="Theme.AppCompat.DayNight.Dialog.Alert">
-        <item name="android:windowBackground">@drawable/default_dialog_background</item>
-    </style>
-
     <style name="Theme.TextSecure.Dialog.MediaSendProgress" parent="@android:style/Theme.Dialog">
-        <item name="android:background">@drawable/default_dialog_background</item>
+        <item name="android:colorBackground">?attr/dialog_background_color</item>
         <item name="android:windowNoTitle">true</item>
     </style>
 
@@ -303,7 +300,6 @@
         <item name="dividerHorizontal">?dividerVertical</item>
         <item name="message_received_background_color">#F2F2F2</item>
         <item name="colorAccent">@color/classic_accent</item>
-        <item name="colorControlHighlight">?android:colorControlHighlight</item>
         <item name="tabStyle">@style/Widget.Session.TabLayout</item>
     </style>
 
@@ -312,7 +308,6 @@
         <item name="dividerHorizontal">?dividerVertical</item>
         <item name="message_received_background_color">#F2F2F2</item>
         <item name="colorAccent">@color/ocean_accent</item>
-        <item name="colorControlHighlight">?android:colorControlHighlight</item>
         <item name="tabStyle">@style/Widget.Session.TabLayout</item>
     </style>
 
@@ -338,10 +333,12 @@
         <item name="colorSettingsBackground">@color/classic_dark_1</item>
         <item name="colorDividerBackground">@color/classic_dark_3</item>
         <item name="android:colorControlHighlight">@color/classic_dark_3</item>
+        <item name="colorControlHighlight">@color/classic_dark_3</item>
         <item name="actionBarPopupTheme">@style/Dark.Popup</item>
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
+        <item name="accentColor">?colorAccent</item>
         <item name="prominentButtonColor">?colorAccent</item>
         <item name="elementBorderColor">@color/classic_dark_3</item>
 
@@ -410,6 +407,7 @@
         <item name="colorSettingsBackground">@color/classic_light_5</item>
         <item name="colorDividerBackground">@color/classic_light_3</item>
         <item name="android:colorControlHighlight">@color/classic_light_3</item>
+        <item name="colorControlHighlight">@color/classic_light_3</item>
         <item name="bottomSheetDialogTheme">@style/Classic.Light.BottomSheet</item>
         <item name="android:actionMenuTextColor">?android:textColorPrimary</item>
         <item name="popupTheme">?actionBarPopupTheme</item>
@@ -417,6 +415,7 @@
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
+        <item name="accentColor">?colorAccent</item>
         <item name="prominentButtonColor">?android:textColorPrimary</item>
         <item name="elementBorderColor">@color/classic_light_3</item>
 
@@ -496,6 +495,7 @@
         <item name="colorSettingsBackground">@color/ocean_dark_1</item>
         <item name="colorDividerBackground">@color/ocean_dark_4</item>
         <item name="android:colorControlHighlight">@color/ocean_dark_4</item>
+        <item name="colorControlHighlight">@color/ocean_dark_4</item>
         <item name="bottomSheetDialogTheme">@style/Ocean.Dark.BottomSheet</item>
         <item name="popupTheme">?actionBarPopupTheme</item>
         <item name="actionMenuTextColor">?android:textColorPrimary</item>
@@ -503,6 +503,7 @@
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
+        <item name="accentColor">?colorAccent</item>
         <item name="prominentButtonColor">?colorAccent</item>
         <item name="elementBorderColor">@color/ocean_dark_4</item>
 
@@ -576,6 +577,7 @@
         <item name="colorSettingsBackground">@color/ocean_light_6</item>
         <item name="colorDividerBackground">@color/ocean_light_3</item>
         <item name="android:colorControlHighlight">@color/ocean_light_4</item>
+        <item name="colorControlHighlight">@color/ocean_light_4</item>
         <item name="bottomSheetDialogTheme">@style/Ocean.Light.BottomSheet</item>
         <item name="actionBarPopupTheme">@style/Light.Popup</item>
         <item name="popupTheme">?actionBarPopupTheme</item>
@@ -583,6 +585,7 @@
         <item name="actionBarWidgetTheme">@null</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
+        <item name="accentColor">?colorAccent</item>
         <item name="prominentButtonColor">?android:textColorPrimary</item>
         <item name="elementBorderColor">@color/ocean_light_3</item>
 
