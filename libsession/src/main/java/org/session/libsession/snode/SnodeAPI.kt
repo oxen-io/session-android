@@ -836,11 +836,11 @@ object SnodeAPI {
                 Log.e("Loki", "Failed to delete all messages from: $hexSnodePublicKey due to error: $reason ($statusCode).")
                 false
             } else {
-                val hashes = json["deleted"] as List<String> // Hashes of deleted messages
+                val hashes = (json["deleted"] as Map<String,List<String>>).flatMap { (_, hashes) -> hashes }.sorted() // Hashes of deleted messages
                 val signature = json["signature"] as String
                 val snodePublicKey = Key.fromHexString(hexSnodePublicKey)
                 // The signature looks like ( PUBKEY_HEX || TIMESTAMP || DELETEDHASH[0] || ... || DELETEDHASH[N] )
-                val message = (userPublicKey + timestamp.toString() + hashes.fold("") { a, v -> a + v }).toByteArray()
+                val message = (userPublicKey + timestamp.toString() + hashes.joinToString(separator = "")).toByteArray()
                 sodium.cryptoSignVerifyDetached(Base64.decode(signature), message, message.size, snodePublicKey.asBytes)
             }
         }
