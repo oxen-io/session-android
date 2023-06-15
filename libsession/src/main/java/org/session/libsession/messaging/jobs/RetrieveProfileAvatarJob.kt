@@ -1,16 +1,14 @@
 package org.session.libsession.messaging.jobs
 
-import android.text.TextUtils
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.utilities.Data
+import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.DownloadUtilities.downloadFile
 import org.session.libsession.utilities.TextSecurePreferences.Companion.setProfileAvatarId
+import org.session.libsession.utilities.TextSecurePreferences.Companion.setProfilePictureURL
 import org.session.libsession.utilities.Util.copy
 import org.session.libsession.utilities.Util.equals
-import org.session.libsession.utilities.Address
-import org.session.libsession.utilities.TextSecurePreferences
-import org.session.libsession.utilities.TextSecurePreferences.Companion.setProfilePictureURL
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.streams.ProfileCipherInputStream
 import org.session.libsignal.utilities.Log
@@ -20,7 +18,7 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import java.security.SecureRandom
 
-class RetrieveProfileAvatarJob(private val profileAvatar: String?, private val recipientAddress: Address): Job {
+class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipientAddress: Address): Job {
     override var delegate: JobDelegate? = null
     override var id: String? = null
     override var failureCount: Int = 0

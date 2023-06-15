@@ -3,17 +3,16 @@ package org.thoughtcrime.securesms.sskenvironment
 import android.content.Context
 import network.loki.messenger.libsession_util.util.UserPic
 import org.session.libsession.messaging.contacts.Contact
-import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.jobs.JobQueue
+import org.session.libsession.messaging.jobs.RetrieveProfileAvatarJob
+import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.IdPrefix
-import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
-import org.session.libsession.messaging.jobs.RetrieveProfileAvatarJob
 
 class ProfileManager(private val context: Context, private val configFactory: ConfigFactory) : SSKEnvironment.ProfileManagerProtocol {
 
@@ -57,7 +56,14 @@ class ProfileManager(private val context: Context, private val configFactory: Co
         profileKey: ByteArray?
     ) {
         val job = RetrieveProfileAvatarJob(profilePictureURL, recipient.address)
-        JobQueue.shared.add(job)
+        if (DatabaseComponent
+                .get(context)
+                .sessionJobDatabase()
+                .getAllJobs(RetrieveProfileAvatarJob.KEY).none {
+                    (it.value as? RetrieveProfileAvatarJob)?.recipientAddress == recipient.address
+                }) {
+            JobQueue.shared.add(job)
+        }
         val sessionID = recipient.address.serialize()
         val contactDatabase = DatabaseComponent.get(context).sessionContactDatabase()
         var contact = contactDatabase.getContactWithSessionID(sessionID)
