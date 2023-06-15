@@ -896,6 +896,10 @@ object SnodeAPI {
                     Log.d("Loki", "Got a 421 without an associated public key.")
                 }
             }
+            404 -> {
+                Log.d("Loki", "404, probably no file found")
+                return Error.Generic
+            }
             else -> {
                 handleBadSnode()
                 Log.d("Loki", "Unhandled response code: ${statusCode}.")
