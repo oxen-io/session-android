@@ -166,6 +166,7 @@ object ConfigurationMessageUtilities {
             } else {
                 UserPic(url, key)
             }
+
             val contactInfo = Contact(
                 id = contact.sessionID,
                 name = contact.name.orEmpty(),
@@ -208,6 +209,7 @@ object ConfigurationMessageUtilities {
                     recipient.isContactRecipient -> {
                         if (recipient.isLocalNumber) null // this is handled by the user profile NTS data
                         else if (recipient.isOpenGroupInboxRecipient) null // specifically exclude
+                        else if (!recipient.address.serialize().startsWith(IdPrefix.STANDARD.value)) null
                         else convoConfig.getOrConstructOneToOne(recipient.address.serialize())
                     }
                     else -> null
