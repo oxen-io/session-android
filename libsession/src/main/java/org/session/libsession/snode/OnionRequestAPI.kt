@@ -446,8 +446,8 @@ object OnionRequestAPI {
         val payloadData = JsonUtil.toJson(payload).toByteArray()
         return sendOnionRequest(Destination.Snode(snode), payloadData, version).recover { exception ->
             val error = when (exception) {
-                is HTTP.HTTPRequestFailedException -> SnodeAPI.handleSnodeError(exception.statusCode, exception.json, snode, publicKey)
                 is HTTPRequestFailedAtDestinationException -> SnodeAPI.handleSnodeError(exception.statusCode, exception.json, snode, publicKey)
+                is HTTP.HTTPRequestFailedException -> SnodeAPI.handleSnodeError(exception.statusCode, exception.json, snode, publicKey)
                 else -> null
             }
             if (error != null) { throw error }
