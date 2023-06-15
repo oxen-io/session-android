@@ -25,6 +25,7 @@ import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.WindowDebouncer
 import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.session.libsignal.utilities.Hex
+import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.ThreadDatabase
@@ -146,7 +147,7 @@ object ConfigurationMessageUtilities {
         val storage = MessagingModuleConfiguration.shared.storage
         val localUserKey = storage.getUserPublicKey() ?: return null
         val contactsWithSettings = storage.getAllContacts().filter { recipient ->
-            recipient.sessionID != localUserKey
+            recipient.sessionID != localUserKey && recipient.sessionID.startsWith(IdPrefix.STANDARD.value)
         }.map { contact ->
             val address = Address.fromSerialized(contact.sessionID)
             val thread = storage.getThreadId(address)
