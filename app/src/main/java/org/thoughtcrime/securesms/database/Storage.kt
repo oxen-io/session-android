@@ -27,6 +27,7 @@ import org.session.libsession.messaging.jobs.Job
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageReceiveJob
 import org.session.libsession.messaging.jobs.MessageSendJob
+import org.session.libsession.messaging.jobs.RetrieveProfileAvatarJob
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
@@ -84,8 +85,6 @@ import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.groups.ClosedGroupManager
 import org.thoughtcrime.securesms.groups.GroupManager
 import org.thoughtcrime.securesms.groups.OpenGroupManager
-import org.session.libsession.messaging.jobs.RetrieveProfileAvatarJob
-import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.mms.PartAuthority
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.SessionMetaProtocol
@@ -1197,11 +1196,11 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
             recipientDatabase.setProfileSharing(recipient, true)
             recipientDatabase.setRegistered(recipient, Recipient.RegisteredState.REGISTERED)
             // create Thread if needed
-            val threadId = threadDatabase.getOrCreateThreadIdFor(recipient)
+            val threadId = threadDatabase.getThreadIdIfExistsFor(recipient)
             if (contact.didApproveMe == true) {
                 recipientDatabase.setApprovedMe(recipient, true)
             }
-            if (contact.isApproved == true) {
+            if (contact.isApproved == true && threadId != -1L) {
                 setRecipientApproved(recipient, true)
                 threadDatabase.setHasSent(threadId, true)
             }
