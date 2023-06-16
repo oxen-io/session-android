@@ -5,6 +5,7 @@ import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.BackgroundGroupAddJob
 import org.session.libsession.messaging.jobs.JobQueue
+import org.session.libsession.messaging.jobs.RetrieveProfileAvatarJob
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.CallMessage
 import org.session.libsession.messaging.messages.control.ClosedGroupControlMessage
@@ -183,7 +184,7 @@ private fun handleConfigurationMessage(message: ConfigurationMessage) {
         ProfileKeyUtil.setEncodedProfileKey(context, profileKey)
         profileManager.setProfileKey(context, recipient, message.profileKey)
         if (!message.profilePicture.isNullOrEmpty() && TextSecurePreferences.getProfilePictureURL(context) != message.profilePicture) {
-            storage.setUserProfilePictureURL(message.profilePicture!!)
+            JobQueue.shared.add(RetrieveProfileAvatarJob(message.profilePicture!!, recipient.address))
         }
     }
     storage.addContacts(message.contacts)

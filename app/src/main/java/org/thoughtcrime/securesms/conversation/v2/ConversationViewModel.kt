@@ -1,7 +1,9 @@
 package org.thoughtcrime.securesms.conversation.v2
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.goterl.lazysodium.utils.KeyPair
 import dagger.assisted.Assisted
@@ -22,6 +24,7 @@ import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.repository.ConversationRepository
+import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import java.util.UUID
 
 class ConversationViewModel(
@@ -78,17 +81,27 @@ class ConversationViewModel(
         repository.inviteContacts(threadId, contacts)
     }
 
-    fun block() {
+    fun block(context: Context) {
         val recipient = recipient ?: return Log.w("Loki", "Recipient was null for block action")
         if (recipient.isContactRecipient) {
             repository.setBlocked(recipient, true)
+
+            // TODO: Remove in UserConfig branch
+            GlobalScope.launch(Dispatchers.IO) {
+                ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+            }
         }
     }
 
-    fun unblock() {
+    fun unblock(context: Context) {
         val recipient = recipient ?: return Log.w("Loki", "Recipient was null for unblock action")
         if (recipient.isContactRecipient) {
             repository.setBlocked(recipient, false)
+
+            // TODO: Remove in UserConfig branch
+            GlobalScope.launch(Dispatchers.IO) {
+                ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+            }
         }
     }
 

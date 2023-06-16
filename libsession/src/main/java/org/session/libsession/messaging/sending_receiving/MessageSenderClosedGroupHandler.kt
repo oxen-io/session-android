@@ -52,19 +52,10 @@ fun MessageSender.create(name: String, members: Collection<String>): Promise<Str
         storage.createGroup(groupID, name, LinkedList(members.map { Address.fromSerialized(it) }),
             null, null, LinkedList(admins.map { Address.fromSerialized(it) }), SnodeAPI.nowWithOffset)
         storage.setProfileSharing(Address.fromSerialized(groupID), true)
+
         // Send a closed group update message to all members individually
         val closedGroupUpdateKind = ClosedGroupControlMessage.Kind.New(ByteString.copyFrom(Hex.fromStringCondensed(groupPublicKey)), name, encryptionKeyPair, membersAsData, adminsAsData, 0)
         val sentTime = SnodeAPI.nowWithOffset
-        for (member in members) {
-            val closedGroupControlMessage = ClosedGroupControlMessage(closedGroupUpdateKind)
-            closedGroupControlMessage.sentTimestamp = sentTime
-            try {
-                sendNonDurably(closedGroupControlMessage, Address.fromSerialized(member)).get()
-            } catch (e: Exception) {
-                deferred.reject(e)
-                return@queue
-            }
-        }
 
         // Add the group to the user's set of public keys to poll for
         storage.addClosedGroupPublicKey(groupPublicKey)
@@ -73,6 +64,24 @@ fun MessageSender.create(name: String, members: Collection<String>): Promise<Str
         // Notify the user
         val threadID = storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
         storage.insertOutgoingInfoMessage(context, groupID, SignalServiceGroup.Type.CREATION, name, members, admins, threadID, sentTime)
+
+        for (member in members) {
+            val closedGroupControlMessage = ClosedGroupControlMessage(closedGroupUpdateKind)
+            closedGroupControlMessage.sentTimestamp = sentTime
+            try {
+                sendNonDurably(closedGroupControlMessage, Address.fromSerialized(member)).get()
+            } catch (e: Exception) {
+                // We failed to properly create the group so delete it's associated data (in the past
+                // we didn't create this data until the messages successfully sent but this resulted
+                // in race conditions due to the `NEW` message sent to our own swarm)
+                storage.removeClosedGroupPublicKey(groupPublicKey)
+                storage.removeAllClosedGroupEncryptionKeyPairs(groupPublicKey)
+                storage.deleteConversation(threadID)
+                deferred.reject(e)
+                return@queue
+            }
+        }
+
         // Notify the PN server
         PushNotificationAPI.performOperation(PushNotificationAPI.ClosedGroupOperation.Subscribe, groupPublicKey, userPublicKey)
         // Start polling

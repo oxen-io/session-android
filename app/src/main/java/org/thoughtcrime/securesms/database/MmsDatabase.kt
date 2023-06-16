@@ -60,6 +60,7 @@ import org.thoughtcrime.securesms.database.SmsDatabase.InsertListener
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord
 import org.thoughtcrime.securesms.database.model.MessageRecord
+import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.database.model.NotificationMmsMessageRecord
 import org.thoughtcrime.securesms.database.model.Quote
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent.Companion.get
@@ -1405,11 +1406,13 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             val retrievedQuote = get(context).mmsSmsDatabase().getMessageFor(quoteId, quoteAuthor)
             val quoteText = retrievedQuote?.body
             val quoteMissing = retrievedQuote == null
-            val attachments = get(context).attachmentDatabase().getAttachment(cursor)
-            val quoteAttachments: List<Attachment?>? =
-                Stream.of(attachments).filter { obj: DatabaseAttachment? -> obj!!.isQuote }
+            val quoteDeck = (
+                (retrievedQuote as? MmsMessageRecord)?.slideDeck ?:
+                Stream.of(get(context).attachmentDatabase().getAttachment(cursor))
+                    .filter { obj: DatabaseAttachment? -> obj!!.isQuote }
                     .toList()
-            val quoteDeck = SlideDeck(context, quoteAttachments!!)
+                    .let { SlideDeck(context, it) }
+            )
             return Quote(
                 quoteId,
                 fromExternal(context, quoteAuthor),
