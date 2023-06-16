@@ -1,12 +1,11 @@
 package org.session.libsignal.utilities
 
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-import java.util.concurrent.LinkedBlockingQueue
-import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
+import android.os.Process
+import java.util.concurrent.*
 
 object ThreadUtils {
+
+    const val PRIORITY_IMPORTANT_BACKGROUND_THREAD = Process.THREAD_PRIORITY_DEFAULT + Process.THREAD_PRIORITY_LESS_FAVORABLE
 
     val executorPool: ExecutorService = Executors.newCachedThreadPool()
 

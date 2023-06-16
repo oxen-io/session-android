@@ -60,8 +60,7 @@ class ModalUrlBottomSheet(private val url: String): BottomSheetDialogFragment(),
     override fun onStart() {
         super.onStart()
         val window = dialog?.window ?: return
-        val isLightMode = UiModeUtilities.isDayUiMode(requireContext())
-        window.setDimAmount(if (isLightMode) 0.1f else 0.75f)
+        window.setDimAmount(0.6f)
     }
 
     override fun onClick(v: View?) {

@@ -79,8 +79,9 @@
 
             <include layout="@layout/view_visible_message_content"
                 android:id="@+id/messageContentView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
 
             <org.thoughtcrime.securesms.conversation.v2.components.ExpirationTimerView
                 android:id="@+id/expirationTimerView"
@@ -90,14 +91,9 @@
                 android:layout_marginHorizontal="@dimen/small_spacing"
                 android:contentDescription="@string/AccessibilityId_timer_icon"
                 android:visibility="invisible"
-                tools:visibility="visible" />
-
-            <View
-                android:id="@+id/messageContentSpacing"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:minWidth="@dimen/very_large_spacing" />
+                tools:visibility="visible"
+                tools:src="@drawable/timer60"
+                tools:tint="@color/black"/>
 
         </LinearLayout>
 

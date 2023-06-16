@@ -6,6 +6,8 @@
 
 package org.session.libsignal.streams;
 
+import static org.session.libsignal.crypto.CipherUtil.CIPHER_LOCK;
+
 import org.session.libsignal.utilities.Util;
 
 import java.io.IOException;
@@ -68,16 +70,17 @@ public class AttachmentCipherOutputStream extends DigestingOutputStream {
   @Override
   public void flush() throws IOException {
     try {
-      byte[] ciphertext = cipher.doFinal();
+      byte[] ciphertext;
+      synchronized (CIPHER_LOCK) {
+        ciphertext = cipher.doFinal();
+      }
       byte[] auth       = mac.doFinal(ciphertext);
 
       super.write(ciphertext);
       super.write(auth);
 
       super.flush();
-    } catch (IllegalBlockSizeException e) {
-      throw new AssertionError(e);
-    } catch (BadPaddingException e) {
+    } catch (IllegalBlockSizeException | BadPaddingException e) {
       throw new AssertionError(e);
     }
   }
@@ -97,9 +100,7 @@ public class AttachmentCipherOutputStream extends DigestingOutputStream {
   private Cipher initializeCipher() {
     try {
       return Cipher.getInstance("AES/CBC/PKCS5Padding");
-    } catch (NoSuchAlgorithmException e) {
-      throw new AssertionError(e);
-    } catch (NoSuchPaddingException e) {
+    } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
       throw new AssertionError(e);
     }
   }

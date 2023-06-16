@@ -407,12 +407,6 @@
                 <action android:name="network.loki.securesms.RESTART" />
             </intent-filter>
         </receiver>
-        <receiver android:name="org.thoughtcrime.securesms.service.LocalBackupListener"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
         <receiver android:name="org.thoughtcrime.securesms.service.PersistentConnectionBootListener"
             android:exported="true">
             <intent-filter>
@@ -447,16 +441,8 @@
             </intent-filter>
         </receiver>
         <service
-            android:name="org.thoughtcrime.securesms.jobmanager.JobSchedulerScheduler$SystemService"
-            android:enabled="@bool/enable_job_service"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            tools:targetApi="26" />
-        <service
             android:name="org.thoughtcrime.securesms.jobmanager.KeepAliveService"
             android:enabled="@bool/enable_alarm_manager" />
-        <receiver
-            android:name="org.thoughtcrime.securesms.jobmanager.AlarmManagerScheduler$RetryReceiver"
-            android:enabled="@bool/enable_alarm_manager" /> <!-- Probably don't need this one -->
         <uses-library
             android:name="com.sec.android.app.multiwindow"
             android:required="false" />

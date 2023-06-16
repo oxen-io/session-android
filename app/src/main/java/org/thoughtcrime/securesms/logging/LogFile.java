@@ -1,5 +1,7 @@
 package org.thoughtcrime.securesms.logging;
 
+import static org.session.libsignal.crypto.CipherUtil.CIPHER_LOCK;
+
 import androidx.annotation.NonNull;
 
 import org.session.libsession.utilities.Conversions;
@@ -66,15 +68,17 @@ class LogFile {
 
       byte[] plaintext = entry.getBytes();
       try {
-        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(secret, "AES"), new IvParameterSpec(ivBuffer));
+        synchronized (CIPHER_LOCK) {
+          cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(secret, "AES"), new IvParameterSpec(ivBuffer));
 
-        int    cipherLength = cipher.getOutputSize(plaintext.length);
-        byte[] ciphertext   = ciphertextBuffer.get(cipherLength);
-        cipherLength = cipher.doFinal(plaintext, 0, plaintext.length, ciphertext);
+          int cipherLength = cipher.getOutputSize(plaintext.length);
+          byte[] ciphertext = ciphertextBuffer.get(cipherLength);
+          cipherLength = cipher.doFinal(plaintext, 0, plaintext.length, ciphertext);
 
-        outputStream.write(ivBuffer);
-        outputStream.write(Conversions.intToByteArray(cipherLength));
-        outputStream.write(ciphertext, 0, cipherLength);
+          outputStream.write(ivBuffer);
+          outputStream.write(Conversions.intToByteArray(cipherLength));
+          outputStream.write(ciphertext, 0, cipherLength);
+        }
 
         outputStream.flush();
       } catch (ShortBufferException | InvalidAlgorithmParameterException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
@@ -134,10 +138,11 @@ class LogFile {
         Util.readFully(inputStream, ciphertext, length);
 
         try {
-          cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(secret, "AES"), new IvParameterSpec(ivBuffer));
-          byte[] plaintext = cipher.doFinal(ciphertext, 0, length);
-
-          return new String(plaintext);
+          synchronized (CIPHER_LOCK) {
+            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(secret, "AES"), new IvParameterSpec(ivBuffer));
+            byte[] plaintext = cipher.doFinal(ciphertext, 0, length);
+            return new String(plaintext);
+          }
         } catch (InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
           throw new AssertionError(e);
         }

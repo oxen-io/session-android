@@ -26,8 +26,10 @@ import nl.komponents.kovenant.all
 import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.successUi
 import org.session.libsession.avatars.AvatarHelper
+import org.session.libsession.avatars.ProfileContactPhoto
 import org.session.libsession.utilities.*
 import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol
+import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.avatar.AvatarSelection
 import org.thoughtcrime.securesms.components.ProfilePictureView
@@ -100,10 +102,12 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
     private fun setupProfilePictureView(view: ProfilePictureView) {
         view.glide = glide
-        view.publicKey = hexEncodedPublicKey
-        view.displayName = getDisplayName()
-        view.isLarge = true
-        view.update()
+        view.apply {
+            publicKey = hexEncodedPublicKey
+            displayName = getDisplayName()
+            isLarge = true
+            update()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -273,7 +277,17 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                 }
             }
             .show().apply {
-                findViewById<ProfilePictureView>(R.id.profile_picture_view)?.let(::setupProfilePictureView)
+                val profilePic = findViewById<ProfilePictureView>(R.id.profile_picture_view)
+                    ?.also(::setupProfilePictureView)
+
+                val pictureIcon = findViewById<View>(R.id.ic_pictures)
+
+                val recipient = Recipient.from(context, Address.fromSerialized(hexEncodedPublicKey), false)
+
+                val photoSet = (recipient.contactPhoto as ProfileContactPhoto).avatarObject !in setOf("0", "")
+
+                profilePic?.isVisible = photoSet
+                pictureIcon?.isVisible = !photoSet
             }
     }
 

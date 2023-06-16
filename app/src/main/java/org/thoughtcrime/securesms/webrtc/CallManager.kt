@@ -93,6 +93,10 @@ class CallManager(context: Context, audioManager: AudioManagerCompat, private va
         peerConnectionObservers.remove(listener)
     }
 
+    fun shutDownAudioManager() {
+        signalAudioManager.shutdown()
+    }
+
     private val _audioEvents = MutableStateFlow(AudioEnabled(false))
     val audioEvents = _audioEvents.asSharedFlow()
     private val _videoEvents = MutableStateFlow(VideoEnabled(false))

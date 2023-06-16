@@ -15,7 +15,7 @@ import java.util.concurrent.Executors
 
 object OpenGroupManager {
     private val executorService = Executors.newScheduledThreadPool(4)
-    private var pollers = mutableMapOf<String, OpenGroupPoller>() // One for each server
+    private val pollers = mutableMapOf<String, OpenGroupPoller>() // One for each server
     private var isPolling = false
     private val pollUpdaterLock = Any()
 
@@ -41,11 +41,11 @@ object OpenGroupManager {
         isPolling = true
         val storage = MessagingModuleConfiguration.shared.storage
         val servers = storage.getAllOpenGroups().values.map { it.server }.toSet()
-        servers.forEach { server ->
-            pollers[server]?.stop() // Shouldn't be necessary
-            val poller = OpenGroupPoller(server, executorService)
-            poller.startIfNeeded()
-            pollers[server] = poller
+        synchronized(pollUpdaterLock) {
+            servers.forEach { server ->
+                pollers[server]?.stop() // Shouldn't be necessary
+                pollers[server] = OpenGroupPoller(server, executorService).apply { startIfNeeded() }
+            }
         }
     }
 
@@ -60,7 +60,7 @@ object OpenGroupManager {
     @WorkerThread
     fun add(server: String, room: String, publicKey: String, context: Context): OpenGroupApi.RoomInfo? {
         val openGroupID = "$server.$room"
-        var threadID = GroupManager.getOpenGroupThreadID(openGroupID, context)
+        val threadID = GroupManager.getOpenGroupThreadID(openGroupID, context)
         val storage = MessagingModuleConfiguration.shared.storage
         val threadDB = DatabaseComponent.get(context).lokiThreadDatabase()
         // Check it it's added already
@@ -76,13 +76,16 @@ object OpenGroupManager {
         // Get capabilities & room info
         val (capabilities, info) = OpenGroupApi.getCapabilitiesAndRoomInfo(room, server).get()
         storage.setServerCapabilities(server, capabilities.capabilities)
-        storage.setUserCount(room, server, info.activeUsers)
         // Create the group locally if not available already
         if (threadID < 0) {
-            threadID = GroupManager.createOpenGroup(openGroupID, context, null, info.name).threadId
+            GroupManager.createOpenGroup(openGroupID, context, null, info.name)
         }
-        val openGroup = OpenGroup(server = server, room = room, publicKey = publicKey, name = info.name, imageId = info.imageId, canWrite = info.write, infoUpdates = info.infoUpdates)
-        threadDB.setOpenGroupChat(openGroup, threadID)
+        OpenGroupPoller.handleRoomPollInfo(
+            server = server,
+            roomToken = room,
+            pollInfo = info.toPollInfo(),
+            createGroupIfMissingWithPublicKey = publicKey
+        )
         return info
     }
 

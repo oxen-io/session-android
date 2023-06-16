@@ -24,7 +24,6 @@ import org.thoughtcrime.securesms.database.EmojiSearchDatabase;
 import org.thoughtcrime.securesms.database.GroupDatabase;
 import org.thoughtcrime.securesms.database.GroupMemberDatabase;
 import org.thoughtcrime.securesms.database.GroupReceiptDatabase;
-import org.thoughtcrime.securesms.database.JobDatabase;
 import org.thoughtcrime.securesms.database.LokiAPIDatabase;
 import org.thoughtcrime.securesms.database.LokiBackupFilesDatabase;
 import org.thoughtcrime.securesms.database.LokiMessageDatabase;
@@ -282,9 +281,6 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
     db.execSQL(RecipientDatabase.CREATE_TABLE);
     db.execSQL(GroupReceiptDatabase.CREATE_TABLE);
     for (String sql : SearchDatabase.CREATE_TABLE) {
-      db.execSQL(sql);
-    }
-    for (String sql : JobDatabase.CREATE_TABLE) {
       db.execSQL(sql);
     }
     db.execSQL(LokiAPIDatabase.getCreateSnodePoolTableCommand());

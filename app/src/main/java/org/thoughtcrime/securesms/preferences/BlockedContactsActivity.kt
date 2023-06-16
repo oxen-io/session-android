@@ -27,7 +27,7 @@ class BlockedContactsActivity: PassphraseRequiredActionBarActivity() {
         AlertDialog.Builder(this)
             .setTitle(title)
             .setMessage(message)
-            .setPositiveButton(R.string.continue_2) { _, _ -> viewModel.unblock() }
+            .setPositiveButton(R.string.continue_2) { _, _ -> viewModel.unblock(this@BlockedContactsActivity) }
             .setNegativeButton(R.string.cancel) { _, _ -> }
             .show()
     }

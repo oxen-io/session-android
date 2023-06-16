@@ -15,7 +15,7 @@ class SignalAudioHandler(looper: Looper) : Handler(looper) {
         }
     }
 
-    fun isOnHandler(): Boolean {
+    private fun isOnHandler(): Boolean {
         return Looper.myLooper() == looper
     }
 }

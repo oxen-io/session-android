@@ -799,6 +799,7 @@ class WebRtcCallService : LifecycleService(), CallManager.WebRtcListener {
         wantsToAnswerReceiver?.let { receiver ->
             LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
         }
+        callManager.shutDownAudioManager()
         powerButtonReceiver = null
         wiredHeadsetStateReceiver = null
         networkChangedReceiver = null

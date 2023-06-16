@@ -1,13 +1,13 @@
 package org.thoughtcrime.securesms.crypto;
 
 
-import android.os.Build;
+import static org.session.libsignal.crypto.CipherUtil.CIPHER_LOCK;
+
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.util.Base64;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -45,8 +45,6 @@ public final class KeyStoreHelper {
   private static final String ANDROID_KEY_STORE = "AndroidKeyStore";
   private static final String KEY_ALIAS         = "SignalSecret";
 
-  private static final Object lock = new Object();
-
   public static SealedData seal(@NonNull byte[] input) {
     SecretKey secretKey = getOrCreateKeyStoreEntry();
 
@@ -54,7 +52,7 @@ public final class KeyStoreHelper {
       // Cipher operations are not thread-safe so we synchronize over them through doFinal to
       // prevent crashes with quickly repeated encrypt/decrypt operations
       // https://github.com/mozilla-mobile/android-components/issues/5342
-      synchronized (lock) {
+      synchronized (CIPHER_LOCK) {
         Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
         cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 
@@ -75,7 +73,7 @@ public final class KeyStoreHelper {
       // Cipher operations are not thread-safe so we synchronize over them through doFinal to
       // prevent crashes with quickly repeated encrypt/decrypt operations
       // https://github.com/mozilla-mobile/android-components/issues/5342
-      synchronized (lock) {
+      synchronized (CIPHER_LOCK) {
         Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
         cipher.init(Cipher.DECRYPT_MODE, secretKey, new GCMParameterSpec(128, sealedData.iv));
 
@@ -208,7 +206,5 @@ public final class KeyStoreHelper {
         return Base64.decode(p.getValueAsString(), Base64.NO_WRAP | Base64.NO_PADDING);
       }
     }
-
   }
-
 }

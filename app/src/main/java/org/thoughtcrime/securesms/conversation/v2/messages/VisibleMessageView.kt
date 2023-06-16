@@ -338,11 +338,9 @@ class VisibleMessageView : LinearLayout {
         val container = binding.messageInnerContainer
         val content = binding.messageContentView.root
         val expiration = binding.expirationTimerView
-        val spacing = binding.messageContentSpacing
         container.removeAllViewsInLayout()
         container.addView(if (message.isOutgoing) expiration else content)
         container.addView(if (message.isOutgoing) content else expiration)
-        container.addView(spacing, if (message.isOutgoing) 0 else 2)
         val containerParams = container.layoutParams as ConstraintLayout.LayoutParams
         containerParams.horizontalBias = if (message.isOutgoing) 1f else 0f
         container.layoutParams = containerParams
