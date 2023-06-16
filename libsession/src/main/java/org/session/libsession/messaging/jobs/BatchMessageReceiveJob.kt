@@ -7,7 +7,6 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
-import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.CallMessage
@@ -103,12 +102,13 @@ class BatchMessageReceiveJob(
             val context = MessagingModuleConfiguration.shared.context
             val localUserPublicKey = storage.getUserPublicKey()
             val serverPublicKey = openGroupID?.let { storage.getOpenGroupPublicKey(it.split(".").dropLast(1).joinToString(".")) }
+            val currentClosedGroups = storage.getAllActiveClosedGroupPublicKeys()
 
             // parse and collect IDs
             messages.forEach { messageParameters ->
                 val (data, serverHash, openGroupMessageServerID) = messageParameters
                 try {
-                    val (message, proto) = MessageReceiver.parse(data, openGroupMessageServerID, openGroupPublicKey = serverPublicKey)
+                    val (message, proto) = MessageReceiver.parse(data, openGroupMessageServerID, openGroupPublicKey = serverPublicKey, currentClosedGroups = currentClosedGroups)
                     message.serverHash = serverHash
                     val parsedParams = ParsedMessage(messageParameters, message, proto)
                     val threadID = Message.getThreadId(message, openGroupID, storage, shouldCreateThread(parsedParams)) ?: NO_THREAD_MAPPING

@@ -35,13 +35,14 @@ object MessageReceiver {
         object NoThread: Error("Couldn't find thread for message.")
         object SelfSend: Error("Message addressed at self.")
         object InvalidGroupPublicKey: Error("Invalid group public key.")
+        object NoGroupThread: Error("No thread exists for this group.")
         object NoGroupKeyPair: Error("Missing group key pair.")
         object NoUserED25519KeyPair : Error("Couldn't find user ED25519 key pair.")
 
         internal val isRetryable: Boolean = when (this) {
             is DuplicateMessage, is InvalidMessage, is UnknownMessage,
             is UnknownEnvelopeType, is InvalidSignature, is NoData,
-            is SenderBlocked, is SelfSend -> false
+            is SenderBlocked, is SelfSend, is NoGroupThread -> false
             else -> true
         }
     }
@@ -52,6 +53,7 @@ object MessageReceiver {
         isOutgoing: Boolean? = null,
         otherBlindedPublicKey: String? = null,
         openGroupPublicKey: String? = null,
+        currentClosedGroups: Set<String>?
     ): Pair<Message, SignalServiceProtos.Content> {
         val storage = MessagingModuleConfiguration.shared.storage
         val userPublicKey = storage.getUserPublicKey()
@@ -172,6 +174,9 @@ object MessageReceiver {
         // If the message failed to process the first time around we retry it later (if the error is retryable). In this case the timestamp
         // will already be in the database but we don't want to treat the message as a duplicate. The isRetry flag is a simple workaround
         // for this issue.
+        if (groupPublicKey != null && groupPublicKey !in (currentClosedGroups ?: emptySet())) {
+            throw Error.NoGroupThread
+        }
         if ((message is ClosedGroupControlMessage && message.kind is ClosedGroupControlMessage.Kind.New) || message is SharedConfigurationMessage) {
             // Allow duplicates in this case to avoid the following situation:
             // • The app performed a background poll or received a push notification

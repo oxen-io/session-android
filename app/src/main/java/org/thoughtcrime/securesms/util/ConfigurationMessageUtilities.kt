@@ -148,6 +148,7 @@ object ConfigurationMessageUtilities {
         val localUserKey = storage.getUserPublicKey() ?: return null
         val contactsWithSettings = storage.getAllContacts().filter { recipient ->
             recipient.sessionID != localUserKey && recipient.sessionID.startsWith(IdPrefix.STANDARD.value)
+                    && storage.getThreadId(recipient.sessionID) != null
         }.map { contact ->
             val address = Address.fromSerialized(contact.sessionID)
             val thread = storage.getThreadId(address)

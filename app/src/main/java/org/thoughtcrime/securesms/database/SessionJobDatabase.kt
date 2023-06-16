@@ -93,6 +93,7 @@ class SessionJobDatabase(context: Context, helper: SQLCipherOpenHelper) : Databa
     fun cancelPendingMessageSendJobs(threadID: Long) {
         val database = databaseHelper.writableDatabase
         val attachmentUploadJobKeys = mutableListOf<String>()
+        database.beginTransaction()
         database.getAll(sessionJobTable, "$jobType = ?", arrayOf( AttachmentUploadJob.KEY )) { cursor ->
             val job = jobFromCursor(cursor) as AttachmentUploadJob?
             if (job != null && job.threadID == threadID.toString()) { attachmentUploadJobKeys.add(job.id!!) }
@@ -103,15 +104,19 @@ class SessionJobDatabase(context: Context, helper: SQLCipherOpenHelper) : Databa
             if (job != null && job.message.threadID == threadID) { messageSendJobKeys.add(job.id!!) }
         }
         if (attachmentUploadJobKeys.isNotEmpty()) {
-            val attachmentUploadJobKeysAsString = attachmentUploadJobKeys.joinToString(", ")
-            database.delete(sessionJobTable, "${Companion.jobType} = ? AND ${Companion.jobID} IN (?)",
-                arrayOf( AttachmentUploadJob.KEY, attachmentUploadJobKeysAsString ))
+            attachmentUploadJobKeys.forEach {
+                database.delete(sessionJobTable, "${Companion.jobType} = ? AND ${Companion.jobID} = ?",
+                    arrayOf( AttachmentUploadJob.KEY, it ))
+            }
         }
         if (messageSendJobKeys.isNotEmpty()) {
-            val messageSendJobKeysAsString = messageSendJobKeys.joinToString(", ")
-            database.delete(sessionJobTable, "${Companion.jobType} = ? AND ${Companion.jobID} IN (?)",
-                arrayOf( MessageSendJob.KEY, messageSendJobKeysAsString ))
+            messageSendJobKeys.forEach {
+                database.delete(sessionJobTable, "${Companion.jobType} = ? AND ${Companion.jobID} = ?",
+                    arrayOf( MessageSendJob.KEY, it ))
+            }
         }
+        database.setTransactionSuccessful()
+        database.endTransaction()
     }
 
     fun isJobCanceled(job: Job): Boolean {
