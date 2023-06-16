@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?colorControlHighlight">
     <item android:left="@dimen/medium_spacing"
         android:top="@dimen/small_spacing"
         android:right="@dimen/medium_spacing"
@@ -9,4 +10,4 @@
             <corners android:radius="?preferenceCornerRadius"/>
         </shape>
     </item>
-</layer-list>
+</ripple>
