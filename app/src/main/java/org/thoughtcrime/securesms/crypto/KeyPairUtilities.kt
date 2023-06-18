@@ -16,7 +16,7 @@ object KeyPairUtilities {
     private val sodium by lazy { LazySodiumAndroid(SodiumAndroid()) }
 
     fun generate(): KeyPairGenerationResult {
-        val seed = sodium.randomBytesBuf(16)
+        val seed = sodium.randomBytesBuf(32)
         try {
             return generate(seed)
         } catch (exception: Exception) {
@@ -25,8 +25,7 @@ object KeyPairUtilities {
     }
 
     fun generate(seed: ByteArray): KeyPairGenerationResult {
-        val padding = ByteArray(16) { 0 }
-        val ed25519KeyPair = sodium.cryptoSignSeedKeypair(seed + padding)
+        val ed25519KeyPair = sodium.cryptoSignSeedKeypair(seed)
         val sodiumX25519KeyPair = sodium.convertKeyPairEd25519ToCurve25519(ed25519KeyPair)
         val x25519KeyPair = ECKeyPair(DjbECPublicKey(sodiumX25519KeyPair.publicKey.asBytes), DjbECPrivateKey(sodiumX25519KeyPair.secretKey.asBytes))
         return KeyPairGenerationResult(seed, ed25519KeyPair, x25519KeyPair)
