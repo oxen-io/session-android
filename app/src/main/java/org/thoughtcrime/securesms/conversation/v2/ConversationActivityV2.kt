@@ -299,6 +299,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val adapter = ConversationAdapter(
             this,
             cursor,
+            storage.getLastSeen(viewModel.threadId),
             reverseMessageList,
             onItemPress = { message, position, view, event ->
                 handlePress(message, position, view, event)
@@ -342,7 +343,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private val messageToScrollTimestamp = AtomicLong(-1)
     private val messageToScrollAuthor = AtomicReference<Address?>(null)
     private val firstLoad = AtomicBoolean(true)
-    private val forceHighlightNextLoad = AtomicInteger(-1)
 
     private lateinit var reactionDelegate: ConversationReactionDelegate
     private val reactWithAnyEmojiStartPage = -1
@@ -426,13 +426,25 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             // transitioning to the activity
             weakActivity.get()?.adapter ?: return@launch
 
+            // 'Get' instead of 'GetAndSet' here because we want to trigger the highlight in 'onFirstLoad'
+            // by triggering 'jumpToMessage' using these values
+            val messageTimestamp = messageToScrollTimestamp.get()
+            val author = messageToScrollAuthor.get()
+            val targetPosition = if (author != null && messageTimestamp >= 0) mmsSmsDb.getMessagePositionInConversation(viewModel.threadId, messageTimestamp, author, reverseMessageList) else -1
+
             withContext(Dispatchers.Main) {
                 setUpRecyclerView()
                 setUpTypingObserver()
                 setUpRecipientObserver()
                 getLatestOpenGroupInfoIfNeeded()
                 setUpSearchResultObserver()
-                scrollToFirstUnreadMessageIfNeeded(true)
+
+                if (author != null && messageTimestamp >= 0 && targetPosition >= 0) {
+                    binding?.conversationRecyclerView?.scrollToPosition(targetPosition)
+                }
+                else {
+                    scrollToFirstUnreadMessageIfNeeded(true)
+                }
             }
         }
 
@@ -514,32 +526,14 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             }
 
             if (author != null && messageTimestamp >= 0) {
-                jumpToMessage(author, messageTimestamp, null)
+                jumpToMessage(author, messageTimestamp, true, null)
             }
             else if (firstLoad.getAndSet(false)) {
-                // We can't actually just 'shouldHighlight = true' here because any unread messages will
-                // immediately be marked as ready triggering a reload of the cursor
-                val lastSeenItemPosition = scrollToFirstUnreadMessageIfNeeded(true)
+                scrollToFirstUnreadMessageIfNeeded(true)
                 handleRecyclerViewScrolled()
-
-                if (initialUnreadCount > 0 && lastSeenItemPosition != null) {
-                    forceHighlightNextLoad.set(lastSeenItemPosition)
-                }
             }
             else if (oldCount != newCount) {
                 handleRecyclerViewScrolled()
-            }
-            else {
-                // Really annoying but if a message gets marked as read during the initial load it'll
-                // immediately result in a subsequent load of the cursor, if we trigger the highlight
-                // within the 'firstLoad' it generally ends up getting repositioned as the views get
-                // recycled and the wrong view is highlighted - by doing it on the subsequent load the
-                // correct view is highlighted
-                val forceHighlightPosition = forceHighlightNextLoad.getAndSet(-1)
-
-                if (forceHighlightPosition != -1) {
-                    highlightViewAtPosition(forceHighlightPosition)
-                }
             }
         }
         updatePlaceholder()
@@ -2064,7 +2058,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             if (result == null) return@Observer
             if (result.getResults().isNotEmpty()) {
                 result.getResults()[result.position]?.let {
-                    jumpToMessage(it.messageRecipient.address, it.sentTimestampMs) {
+                    jumpToMessage(it.messageRecipient.address, it.sentTimestampMs, true) {
                         searchViewModel.onMissingResult() }
                 }
             }
@@ -2101,15 +2095,21 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         this.searchViewModel.onMoveDown()
     }
 
-    private fun jumpToMessage(author: Address, timestamp: Long, onMessageNotFound: Runnable?) {
+    private fun jumpToMessage(author: Address, timestamp: Long, highlight: Boolean, onMessageNotFound: Runnable?) {
         SimpleTask.run(lifecycle, {
             mmsSmsDb.getMessagePositionInConversation(viewModel.threadId, timestamp, author, reverseMessageList)
-        }) { p: Int -> moveToMessagePosition(p, onMessageNotFound) }
+        }) { p: Int -> moveToMessagePosition(p, highlight, onMessageNotFound) }
     }
 
-    private fun moveToMessagePosition(position: Int, onMessageNotFound: Runnable?) {
+    private fun moveToMessagePosition(position: Int, highlight: Boolean, onMessageNotFound: Runnable?) {
         if (position >= 0) {
             binding?.conversationRecyclerView?.scrollToPosition(position)
+
+            if (highlight) {
+                runOnUiThread {
+                    highlightViewAtPosition(position)
+                }
+            }
         } else {
             onMessageNotFound?.run()
         }

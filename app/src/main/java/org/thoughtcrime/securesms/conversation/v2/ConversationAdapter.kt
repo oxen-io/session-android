@@ -36,6 +36,7 @@ import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
 class ConversationAdapter(
     context: Context,
     cursor: Cursor,
+    private val originalLastSeen: Long,
     private val isReversed: Boolean,
     private val onItemPress: (MessageRecord, Int, VisibleMessageView, MotionEvent) -> Unit,
     private val onItemSwipeToReply: (MessageRecord, Int) -> Unit,
@@ -130,6 +131,7 @@ class ConversationAdapter(
                         searchQuery,
                         contact,
                         senderId,
+                        originalLastSeen,
                         visibleMessageViewDelegate,
                         onAttachmentNeedsDownload
                 )
