@@ -146,7 +146,10 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
         var latestMessageTimestamp: Long? = null
         messages.forEach { (envelope, hash) ->
             try {
-                val (message, _) = MessageReceiver.parse(data = envelope.toByteArray(), openGroupServerID = null)
+                val (message, _) = MessageReceiver.parse(data = envelope.toByteArray(),
+                    // assume no groups in personal poller messages
+                    openGroupServerID = null, currentClosedGroups = emptySet()
+                )
                 // sanity checks
                 if (message !is SharedConfigurationMessage) {
                     Log.w("Loki", "shared config message handled in configs wasn't SharedConfigurationMessage but was ${message.javaClass.simpleName}")

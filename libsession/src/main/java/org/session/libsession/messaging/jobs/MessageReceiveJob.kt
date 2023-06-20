@@ -33,12 +33,13 @@ class MessageReceiveJob(val data: ByteArray, val serverHash: String? = null, val
     fun executeAsync(dispatcherName: String): Promise<Unit, Exception> {
         val deferred = deferred<Unit, Exception>()
         try {
-            val isRetry: Boolean = failureCount != 0
+            val storage = MessagingModuleConfiguration.shared.storage
             val serverPublicKey = openGroupID?.let {
-                MessagingModuleConfiguration.shared.storage.getOpenGroupPublicKey(it.split(".").dropLast(1).joinToString("."))
+                storage.getOpenGroupPublicKey(it.split(".").dropLast(1).joinToString("."))
             }
-            val (message, proto) = MessageReceiver.parse(this.data, this.openGroupMessageServerID, openGroupPublicKey = serverPublicKey)
-            val threadId = Message.getThreadId(message, this.openGroupID, MessagingModuleConfiguration.shared.storage, false)
+            val currentClosedGroups = storage.getAllActiveClosedGroupPublicKeys()
+            val (message, proto) = MessageReceiver.parse(this.data, this.openGroupMessageServerID, openGroupPublicKey = serverPublicKey, currentClosedGroups = currentClosedGroups)
+            val threadId = Message.getThreadId(message, this.openGroupID, storage, false)
             message.serverHash = serverHash
             MessageReceiver.handle(message, proto, threadId ?: -1, this.openGroupID)
             this.handleSuccess(dispatcherName)

@@ -262,7 +262,8 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                     null,
                     fromOutbox,
                     if (fromOutbox) it.recipient else it.sender,
-                    serverPublicKey
+                    serverPublicKey,
+                    emptySet() // this shouldn't be necessary as we are polling open groups here
                 )
                 if (fromOutbox) {
                     val mapping = mappingCache[it.recipient] ?: storage.getOrCreateBlindedIdMapping(
