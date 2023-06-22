@@ -2,7 +2,6 @@ package org.session.libsession.messaging.jobs
 
 import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.ConfigBase.Companion.protoKindFor
-import network.loki.messenger.libsession_util.UserGroupsConfig
 import nl.komponents.kovenant.functional.bind
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.Destination
@@ -109,7 +108,7 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
             @Suppress("UNCHECKED_CAST")
             val responseList = (rawResponses["results"] as List<RawResponse>)
             // we are always adding in deletions at the end
-            val deletionResponse = if (toDeleteRequest != null) responseList.last() else null
+            val deletionResponse = if (toDeleteRequest != null && responseList.isNotEmpty()) responseList.last() else null
             val deletedHashes = deletionResponse?.let {
                 @Suppress("UNCHECKED_CAST")
                 // get the sub-request body

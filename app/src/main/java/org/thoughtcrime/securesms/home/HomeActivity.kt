@@ -1,5 +1,7 @@
 package org.thoughtcrime.securesms.home
 
+import android.Manifest
+import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -69,6 +71,7 @@ import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.onboarding.SeedActivity
 import org.thoughtcrime.securesms.onboarding.SeedReminderViewDelegate
+import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.preferences.SettingsActivity
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.DateUtils
@@ -86,6 +89,11 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     ConversationClickListener,
     SeedReminderViewDelegate,
     GlobalSearchInputLayout.GlobalSearchInputLayoutListener {
+
+    companion object {
+        const val FROM_ONBOARDING = "HomeActivity_FROM_ONBOARDING"
+    }
+
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var glide: GlideRequests
@@ -242,23 +250,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                         .onEach(globalSearchViewModel::postQuery)
                         .collect()
             }
-//            launch(IO) {
-//                val publicKey = TextSecurePreferences.getLocalNumber(this@HomeActivity) ?: return@launch
-//                // do a expire
-//                try {
-//                    val promise = SnodeAPI.alterTtl(
-//                        listOf(
-//                            "message hashes"
-//                        ),
-//                        some long in the future,
-//                        publicKey
-//                    )
-//                    val result = promise.get()
-//                    Log.d("TTL", "ttl result: $result")
-//                } catch (e: Exception) {
-//                    Log.e("TTL", "Expiry didn't work", e)
-//                }
-//            }
             // Get group results and display them
             launch {
                 globalSearchViewModel.result.collect { result ->
@@ -305,6 +296,14 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             }
         }
         EventBus.getDefault().register(this@HomeActivity)
+        if (intent.hasExtra(FROM_ONBOARDING)
+            && intent.getBooleanExtra(FROM_ONBOARDING, false)
+            && !(getSystemService(NOTIFICATION_SERVICE) as NotificationManager).areNotificationsEnabled()
+        ) {
+            Permissions.with(this)
+                .request(Manifest.permission.POST_NOTIFICATIONS)
+                .execute()
+        }
     }
 
     override fun onInputFocusChanged(hasFocus: Boolean) {

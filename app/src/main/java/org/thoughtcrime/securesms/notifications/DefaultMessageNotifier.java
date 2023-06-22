@@ -60,7 +60,6 @@ import org.thoughtcrime.securesms.conversation.v2.utilities.MentionManagerUtilit
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities;
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities;
 import org.thoughtcrime.securesms.database.LokiThreadDatabase;
-import org.thoughtcrime.securesms.database.MessagingDatabase.MarkedMessageInfo;
 import org.thoughtcrime.securesms.database.MmsSmsDatabase;
 import org.thoughtcrime.securesms.database.RecipientDatabase;
 import org.thoughtcrime.securesms.database.ThreadDatabase;
@@ -240,10 +239,6 @@ public class DefaultMessageNotifier implements MessageNotifier {
             !(recipient.isApproved() || threads.getLastSeenAndHasSent(threadId).second())) {
       TextSecurePreferences.removeHasHiddenMessageRequests(context);
     }
-//    if (isVisible && recipient != null && threads.getMessageCount(threadId) > 0) {
-//      List<MarkedMessageInfo> messageIds = threads.setRead(threadId, false);
-//      if (SessionMetaProtocol.shouldSendReadReceipt(recipient)) { MarkReadReceiver.process(context, messageIds); }
-//    }
 
     if (!TextSecurePreferences.isNotificationsEnabled(context) ||
         (recipient != null && recipient.isMuted()))

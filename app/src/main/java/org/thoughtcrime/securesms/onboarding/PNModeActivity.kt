@@ -163,6 +163,7 @@ class PNModeActivity : BaseActionBarActivity() {
         application.registerForFCMIfNeeded(true)
         val intent = Intent(this, HomeActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        intent.putExtra(HomeActivity.FROM_ONBOARDING, true)
         show(intent)
     }
     // endregion

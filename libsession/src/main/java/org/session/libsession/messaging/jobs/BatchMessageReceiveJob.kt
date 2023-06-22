@@ -212,6 +212,7 @@ class BatchMessageReceiveJob(
                             }
                         }
                     }
+                    if (threadId == NO_THREAD_MAPPING) return@async
                     // increment unreads, notify, and update thread
                     // last seen will be the current last seen if not changed (re-computes the read counts for thread record)
                     // might have been updated from a different thread at this point
