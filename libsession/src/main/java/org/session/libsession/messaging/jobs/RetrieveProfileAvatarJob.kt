@@ -34,14 +34,14 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipient
     }
 
     override suspend fun execute(dispatcherName: String) {
+        val delegate = delegate ?: return
         val context = MessagingModuleConfiguration.shared.context
         val storage = MessagingModuleConfiguration.shared.storage
         val recipient = Recipient.from(context, recipientAddress, true)
         val profileKey = recipient.resolve().profileKey
 
         if (profileKey == null || (profileKey.size != 32 && profileKey.size != 16)) {
-            Log.w(TAG, "Recipient profile key is gone!")
-            return
+            return delegate.handleJobFailedPermanently(this, dispatcherName, Exception("Recipient profile key is gone!"))
         }
 
         // Commit '78d1e9d' (fix: open group threads and avatar downloads) had this commented out so
@@ -85,9 +85,11 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipient
             storage.setProfileAvatar(recipient, profileAvatar)
         } catch (e: Exception) {
             Log.e("Loki", "Failed to download profile avatar", e)
+            return delegate.handleJobFailedPermanently(this, dispatcherName, e)
         } finally {
             downloadDestination.delete()
         }
+        return delegate.handleJobSucceeded(this, dispatcherName)
     }
 
     override fun serialize(): Data {

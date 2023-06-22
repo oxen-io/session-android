@@ -240,6 +240,7 @@ android {
 
     buildTypes {
         release {
+            debuggable true
             minifyEnabled false
         }
         debug {
