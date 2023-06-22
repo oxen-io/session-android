@@ -551,8 +551,12 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
             val groupBaseCommunity = groupInfo.community
             if (groupBaseCommunity.fullUrl() !in existingJoinUrls) {
                 // add it
-                val (threadId, _) = OpenGroupManager.add(groupBaseCommunity.baseUrl, groupBaseCommunity.room, groupBaseCommunity.pubKeyHex, context)
-                threadDb.setPinned(threadId, groupInfo.priority == PRIORITY_PINNED)
+                try {
+                    val (threadId, _) = OpenGroupManager.add(groupBaseCommunity.baseUrl, groupBaseCommunity.room, groupBaseCommunity.pubKeyHex, context)
+                    threadDb.setPinned(threadId, groupInfo.priority == PRIORITY_PINNED)
+                } catch (e: Exception) {
+                    Log.e("Loki", "Failed to get Open Group Info on syncing config",e)
+                }
             } else {
                 val (threadId, _) = existingCommunities.entries.first { (_, v) -> v.joinURL == groupInfo.community.fullUrl() }
                 threadDb.setPinned(threadId, groupInfo.priority == PRIORITY_PINNED)
