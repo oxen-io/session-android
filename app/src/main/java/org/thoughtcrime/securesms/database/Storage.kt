@@ -95,7 +95,6 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     ThreadDatabase.ConversationThreadUpdateListener {
 
     override fun threadCreated(address: Address, threadId: Long) {
-        Log.wtf("Loki", "Create thread for $address\ncontext:\n${Thread.currentThread().stackTrace.joinToString("\n")}")
         val localUserAddress = getUserPublicKey() ?: return
         if (!getRecipientApproved(address) && localUserAddress != address.serialize()) return // don't store unapproved / message requests
 
@@ -137,7 +136,6 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     }
 
     override fun threadDeleted(address: Address, threadId: Long) {
-        Log.wtf("Loki", "Delete thread for $address\ncontext:\n${Thread.currentThread().stackTrace.joinToString("\n")}")
         val volatile = configFactory.convoVolatile ?: return
         if (address.isGroup) {
             val groups = configFactory.userGroups ?: return
