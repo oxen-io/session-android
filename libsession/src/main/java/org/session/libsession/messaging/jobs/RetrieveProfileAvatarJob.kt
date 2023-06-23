@@ -17,12 +17,13 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.security.SecureRandom
+import java.util.concurrent.ConcurrentSkipListSet
 
 class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipientAddress: Address): Job {
     override var delegate: JobDelegate? = null
     override var id: String? = null
     override var failureCount: Int = 0
-    override val maxFailureCount: Int = 0
+    override val maxFailureCount: Int = 3
 
     companion object {
         val TAG = RetrieveProfileAvatarJob::class.simpleName
@@ -31,10 +32,14 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipient
         // Keys used for database storage
         private const val PROFILE_AVATAR_KEY = "profileAvatar"
         private const val RECEIPIENT_ADDRESS_KEY = "recipient"
+
+        val errorUrls = ConcurrentSkipListSet<String>()
+
     }
 
     override suspend fun execute(dispatcherName: String) {
         val delegate = delegate ?: return
+        if (profileAvatar in errorUrls) return delegate.handleJobFailed(this, dispatcherName, Exception("Profile URL 404'd this app instance"))
         val context = MessagingModuleConfiguration.shared.context
         val storage = MessagingModuleConfiguration.shared.storage
         val recipient = Recipient.from(context, recipientAddress, true)
@@ -85,7 +90,10 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipient
             storage.setProfileAvatar(recipient, profileAvatar)
         } catch (e: Exception) {
             Log.e("Loki", "Failed to download profile avatar", e)
-            return delegate.handleJobFailedPermanently(this, dispatcherName, e)
+            if (failureCount + 1 >= maxFailureCount) {
+                errorUrls += profileAvatar
+            }
+            return delegate.handleJobFailed(this, dispatcherName, e)
         } finally {
             downloadDestination.delete()
         }

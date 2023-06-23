@@ -419,6 +419,8 @@ object OnionRequestAPI {
                     Log.d("Loki","Destination server returned ${exception.statusCode}")
                 } else if (message == "Loki Server error") {
                     Log.d("Loki", "message was $message")
+                } else if (exception.statusCode == 404) {
+                    // 404 is probably file server missing a file, don't rebuild path or mark a snode as bad here
                 } else { // Only drop snode/path if not receiving above two exception cases
                     handleUnspecificError()
                 }
