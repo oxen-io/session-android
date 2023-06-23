@@ -41,6 +41,7 @@ interface StorageProtocol {
     fun getUserX25519KeyPair(): ECKeyPair
     fun getUserProfile(): Profile
     fun setProfileAvatar(recipient: Recipient, profileAvatar: String?)
+    fun setProfilePicture(recipient: Recipient, newProfilePicture: String?, newProfileKey: ByteArray?)
     fun setUserProfilePicture(newProfilePicture: String?, newProfileKey: ByteArray?)
     fun clearUserPic()
     // Signal

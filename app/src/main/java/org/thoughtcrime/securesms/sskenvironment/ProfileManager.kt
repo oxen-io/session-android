@@ -55,15 +55,18 @@ class ProfileManager(private val context: Context, private val configFactory: Co
         profilePictureURL: String?,
         profileKey: ByteArray?
     ) {
-        val job = RetrieveProfileAvatarJob(profilePictureURL, recipient.address)
-        if (DatabaseComponent
-                .get(context)
-                .sessionJobDatabase()
-                .getAllJobs(RetrieveProfileAvatarJob.KEY).none {
-                    (it.value as? RetrieveProfileAvatarJob)?.recipientAddress == recipient.address
-                }) {
-            JobQueue.shared.add(job)
-        }
+        val hasPendingDownload = DatabaseComponent
+            .get(context)
+            .sessionJobDatabase()
+            .getAllJobs(RetrieveProfileAvatarJob.KEY).any {
+                (it.value as? RetrieveProfileAvatarJob)?.recipientAddress == recipient.address
+            }
+        val resolved = recipient.resolve()
+        DatabaseComponent.get(context).storage().setProfilePicture(
+            recipient = resolved,
+            newProfileKey = profileKey,
+            newProfilePicture = profilePictureURL
+        )
         val sessionID = recipient.address.serialize()
         val contactDatabase = DatabaseComponent.get(context).sessionContactDatabase()
         var contact = contactDatabase.getContactWithSessionID(sessionID)
@@ -75,6 +78,10 @@ class ProfileManager(private val context: Context, private val configFactory: Co
             contactDatabase.setContact(contact)
         }
         contactUpdatedInternal(contact)
+        if (!hasPendingDownload) {
+            val job = RetrieveProfileAvatarJob(profilePictureURL, recipient.address)
+            JobQueue.shared.add(job)
+        }
     }
 
     override fun setUnidentifiedAccessMode(context: Context, recipient: Recipient, unidentifiedAccessMode: Recipient.UnidentifiedAccessMode) {

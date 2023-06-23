@@ -184,6 +184,12 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         database.setProfileAvatar(recipient, profileAvatar)
     }
 
+    override fun setProfilePicture(recipient: Recipient, newProfilePicture: String?, newProfileKey: ByteArray?) {
+        val db = DatabaseComponent.get(context).recipientDatabase()
+        db.setProfileAvatar(recipient, newProfilePicture)
+        db.setProfileKey(recipient, newProfileKey)
+    }
+
     override fun setUserProfilePicture(newProfilePicture: String?, newProfileKey: ByteArray?) {
         val ourRecipient = fromSerialized(getUserPublicKey()!!).let {
             Recipient.from(context, it, false)
