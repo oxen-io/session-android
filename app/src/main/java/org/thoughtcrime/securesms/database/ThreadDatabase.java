@@ -366,6 +366,14 @@ public class ThreadDatabase extends Database {
     notifyConversationListListeners();
   }
 
+  public void setDate(long threadId, long date) {
+    ContentValues contentValues = new ContentValues(1);
+    contentValues.put(DATE, date);
+    SQLiteDatabase db = databaseHelper.getWritableDatabase();
+    int updated = db.update(TABLE_NAME, contentValues, ID_WHERE, new String[] {threadId+""});
+    if (updated > 0) notifyConversationListListeners();
+  }
+
   public int getDistributionType(long threadId) {
     SQLiteDatabase db     = databaseHelper.getReadableDatabase();
     Cursor         cursor = db.query(TABLE_NAME, new String[]{TYPE}, ID_WHERE, new String[]{String.valueOf(threadId)}, null, null, null);

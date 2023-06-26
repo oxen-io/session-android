@@ -1,10 +1,8 @@
 package org.session.libsession.messaging.sending_receiving.pollers
 
 import android.util.SparseArray
-import androidx.core.util.keyIterator
 import androidx.core.util.valueIterator
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.runBlocking
 import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.Contacts
@@ -27,7 +25,6 @@ import org.session.libsession.snode.RawResponse
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.snode.SnodeModule
 import org.session.libsession.utilities.ConfigFactoryProtocol
-import org.session.libsession.utilities.WindowDebouncer
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Namespace
 import org.session.libsignal.utilities.Snode
@@ -214,7 +211,14 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                         // in case we had null configs, the array won't be fully populated
                         // index of the sparse array key iterator should be the request index, with the key being the namespace
                         // TODO: add in specific ordering of config namespaces for processing
-                        requestSparseArray.keyIterator().withIndex().forEach { (requestIndex, key) ->
+                        listOfNotNull(
+                            configFactory.user?.configNamespace(),
+                            configFactory.contacts?.configNamespace(),
+                            configFactory.userGroups?.configNamespace(),
+                            configFactory.convoVolatile?.configNamespace()
+                        ).map {
+                            it to requestSparseArray.indexOfKey(it)
+                        }.filter { (_, i) -> i >= 0 }.forEach { (key, requestIndex) ->
                             responseList.getOrNull(requestIndex)?.let { rawResponse ->
                                 if (rawResponse["code"] as? Int != 200) {
                                     Log.e("Loki", "Batch sub-request had non-200 response code, returned code ${(rawResponse["code"] as? Int) ?: "[unknown]"}")

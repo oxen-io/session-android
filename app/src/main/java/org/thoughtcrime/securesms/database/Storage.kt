@@ -595,6 +595,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                 PushNotificationAPI.performOperation(PushNotificationAPI.ClosedGroupOperation.Subscribe, group.sessionId, localUserPublicKey)
                 // Notify the user
                 val threadID = getOrCreateThreadIdFor(Address.fromSerialized(groupId))
+                threadDb.setDate(threadID, formationTimestamp)
                 insertOutgoingInfoMessage(context, groupId, SignalServiceGroup.Type.CREATION, title, members.map { it.serialize() }, admins.map { it.serialize() }, threadID, formationTimestamp)
                 // Don't create config group here, it's from a config update
                 // Start polling
@@ -1276,6 +1277,11 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     override fun isPinned(threadID: Long): Boolean {
         val threadDB = DatabaseComponent.get(context).threadDatabase()
         return threadDB.isPinned(threadID)
+    }
+
+    override fun setThreadDate(threadId: Long, newDate: Long) {
+        val threadDb = DatabaseComponent.get(context).threadDatabase()
+        threadDb.setDate(threadId, newDate)
     }
 
     override fun deleteConversation(threadID: Long) {

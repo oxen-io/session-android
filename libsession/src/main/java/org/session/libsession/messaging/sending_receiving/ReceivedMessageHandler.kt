@@ -6,7 +6,6 @@ import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.BackgroundGroupAddJob
 import org.session.libsession.messaging.jobs.JobQueue
-import org.session.libsession.messaging.jobs.RetrieveProfileAvatarJob
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.CallMessage
 import org.session.libsession.messaging.messages.control.ClosedGroupControlMessage
@@ -559,7 +558,8 @@ private fun handleNewClosedGroup(sender: String, sentTimestamp: Long, groupPubli
     // Notify the PN server
     PushNotificationAPI.performOperation(PushNotificationAPI.ClosedGroupOperation.Subscribe, groupPublicKey, userPublicKey)
     // Create thread
-    storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
+    val threadId = storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
+    storage.setThreadDate(threadId, formationTimestamp)
     // Start polling
     ClosedGroupPollerV2.shared.startPolling(groupPublicKey)
 }

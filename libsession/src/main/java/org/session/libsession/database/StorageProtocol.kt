@@ -174,6 +174,7 @@ interface StorageProtocol {
     fun setPinned(threadID: Long, isPinned: Boolean)
     fun isPinned(threadID: Long): Boolean
     fun deleteConversation(threadID: Long)
+    fun setThreadDate(threadId: Long, newDate: Long)
 
     // Contacts
     fun getContactWithSessionID(sessionID: String): Contact?
