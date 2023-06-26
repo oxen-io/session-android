@@ -176,7 +176,6 @@ import java.lang.ref.WeakReference
 import java.util.Locale
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
@@ -788,7 +787,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         viewModel.updateRecipient()
 
         runOnUiThread {
-            val threadRecipient = viewModel.recipient ?: return@runOnUiThread Log.d("Loki-DBG", "Recipient no longer here, go back?")
+            val threadRecipient = viewModel.recipient ?: return@runOnUiThread
             if (threadRecipient.isContactRecipient) {
                 binding?.blockedBanner?.isVisible = threadRecipient.isBlocked
             }

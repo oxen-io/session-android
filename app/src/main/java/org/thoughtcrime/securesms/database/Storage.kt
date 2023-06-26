@@ -567,8 +567,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
             val existingThread = existingGroup?.let { getThreadId(existingGroup.encodedId) }
             if (existingGroup != null) {
                 if (group.priority == PRIORITY_HIDDEN && existingThread != null) {
-                    threadDb.deleteConversation(existingThread)
-                    // TODO: stop polling here also
+                    ClosedGroupManager.silentlyRemoveGroup(context,existingThread,GroupUtil.doubleDecodeGroupId(existingGroup.encodedId), existingGroup.encodedId, localUserPublicKey, delete = true)
                 } else if (existingThread == null) {
                     Log.w("Loki-DBG", "Existing group had no thread to hide")
                 } else {
@@ -866,7 +865,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         // TODO: probably add a check in here for isActive?
         // TODO: also check if local user is a member / maybe run delete otherwise?
         val existingGroup = getGroup(groupID)
-            ?: return Log.w("Loki-DBG", "No existing group for ${groupPublicKey.take(4)}...${groupPublicKey.takeLast(4)} when updating group config")
+            ?: return Log.w("Loki-DBG", "No existing group for ${groupPublicKey.take(4)}} when updating group config")
         val userGroups = configFactory.userGroups ?: return
         if (!existingGroup.isActive) {
             userGroups.eraseLegacyGroup(groupPublicKey)
@@ -877,7 +876,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         val members = existingGroup.members.map { it.serialize() }
         val membersMap = GroupUtil.createConfigMemberMap(admins = admins, members = members)
         val latestKeyPair = getLatestClosedGroupEncryptionKeyPair(groupPublicKey)
-            ?: return Log.w("Loki-DBG", "No latest closed group encryption key pair for ${groupPublicKey.take(4)}...${groupPublicKey.takeLast(4)} when updating group config")
+            ?: return Log.w("Loki-DBG", "No latest closed group encryption key pair for ${groupPublicKey.take(4)}} when updating group config")
         val recipientSettings = getRecipientSettings(groupAddress) ?: return
         val threadID = getThreadId(groupAddress) ?: return
         val groupInfo = userGroups.getOrConstructLegacyGroupInfo(groupPublicKey).copy(
@@ -1309,7 +1308,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                     volatile.eraseLegacyClosedGroup(groupPublicKey)
                     groups.eraseLegacyGroup(groupPublicKey)
                 } else {
-                    Log.w("Loki-DBG", "Failed to find a closed group for $groupPublicKey, ${recipient.address.serialize()}")
+                    Log.w("Loki-DBG", "Failed to find a closed group for ${groupPublicKey.take(4)}")
                 }
             }
         }
@@ -1610,7 +1609,6 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         }
         val contactsConfig = configFactory.contacts ?: return
         if (contactsConfig.needsPush() && !fromConfigUpdate) {
-            Log.d("Loki-DBG", "Needs to push contacts after blocking ${recipients.map { it.toShortString() }}")
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
         }
     }

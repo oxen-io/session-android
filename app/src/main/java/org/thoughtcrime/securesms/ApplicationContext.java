@@ -108,7 +108,6 @@ import dagger.hilt.EntryPoints;
 import dagger.hilt.android.HiltAndroidApp;
 import kotlin.Unit;
 import kotlinx.coroutines.Job;
-import network.loki.messenger.BuildConfig;
 import network.loki.messenger.libsession_util.ConfigBase;
 import network.loki.messenger.libsession_util.UserProfile;
 
@@ -500,6 +499,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
                 });
             } catch (Exception exception) {
                 // Do nothing
+                Log.e("Loki-Avatar", "Uploading avatar failed", exception);
             }
         });
     }
