@@ -60,6 +60,7 @@ import org.thoughtcrime.securesms.database.LokiAPIDatabase;
 import org.thoughtcrime.securesms.database.Storage;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 import org.thoughtcrime.securesms.database.model.EmojiSearchData;
+import org.thoughtcrime.securesms.dependencies.AppComponent;
 import org.thoughtcrime.securesms.dependencies.ConfigFactory;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import org.thoughtcrime.securesms.dependencies.DatabaseModule;
@@ -160,6 +161,10 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
 
     public static ApplicationContext getInstance(Context context) {
         return (ApplicationContext) context.getApplicationContext();
+    }
+
+    public TextSecurePreferences getPrefs() {
+        return EntryPoints.get(getApplicationContext(), AppComponent.class).getPrefs();
     }
 
     public DatabaseComponent getDatabaseComponent() {

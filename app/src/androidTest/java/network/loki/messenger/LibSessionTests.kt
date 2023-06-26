@@ -57,7 +57,7 @@ class LibSessionTests {
 
     private fun fakePollNewConfig(configBase: ConfigBase, toMerge: ByteArray) {
         configBase.merge(nextFakeHash to toMerge)
-        MessagingModuleConfiguration.shared.configFactory.persist(configBase)
+        MessagingModuleConfiguration.shared.configFactory.persist(configBase, System.currentTimeMillis())
     }
 
     @Before
