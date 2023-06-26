@@ -14,7 +14,7 @@
 
         <!-- TODO: check figure out what is needed for this -->
         <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
-            android:defaultValue="true"
+            android:defaultValue="@bool/screen_security_default"
             android:key="pref_screen_security"
             android:title="@string/preferences__screen_security"
             android:summary="@string/preferences__disable_screen_security_to_allow_screen_shots" />

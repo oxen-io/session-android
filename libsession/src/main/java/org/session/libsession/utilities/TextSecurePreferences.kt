@@ -649,7 +649,7 @@ interface TextSecurePreferences {
 
         @JvmStatic
         fun isScreenSecurityEnabled(context: Context): Boolean {
-            return getBooleanPreference(context, SCREEN_SECURITY_PREF, !BuildConfig.DEBUG)
+            return getBooleanPreference(context, SCREEN_SECURITY_PREF, context.resources.getBoolean(R.bool.screen_security_default))
         }
 
         fun getLastVersionCode(context: Context): Int {
