@@ -147,6 +147,9 @@ class BatchMessageReceiveJob(
                     val messageIds = linkedMapOf<Long, Pair<Boolean, Boolean>>()
                     val myLastSeen = storage.getLastSeen(threadId)
                     var newLastSeen = if (myLastSeen == -1L) 0 else myLastSeen
+                    if (!openGroupID.isNullOrEmpty()) {
+                        Log.d("Loki-DBG", "pre-lastSeen for: $openGroupID is $newLastSeen")
+                    }
                     messages.forEach { (parameters, message, proto) ->
                         try {
                             when (message) {
@@ -217,8 +220,14 @@ class BatchMessageReceiveJob(
                     // last seen will be the current last seen if not changed (re-computes the read counts for thread record)
                     // might have been updated from a different thread at this point
                     val currentLastSeen = storage.getLastSeen(threadId).let { if (it == -1L) 0 else it }
+                    if (!openGroupID.isNullOrEmpty()) {
+                        Log.d("Loki-DBG", "current-lastSeen (w/ my message read) for: $openGroupID is $currentLastSeen")
+                    }
                     if (currentLastSeen > newLastSeen) {
                         newLastSeen = currentLastSeen
+                    }
+                    if (!openGroupID.isNullOrEmpty()) {
+                        Log.d("Loki-DBG", "new-lastSeen for: $openGroupID is $currentLastSeen")
                     }
                     storage.markConversationAsRead(threadId, newLastSeen)
                     storage.updateThread(threadId, true)

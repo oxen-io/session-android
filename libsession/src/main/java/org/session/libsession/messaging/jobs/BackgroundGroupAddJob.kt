@@ -40,6 +40,7 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
             }
             storage.addOpenGroup(openGroup.joinUrl())
             Log.d(KEY, "onOpenGroupAdded(${openGroup.server})")
+            Log.d("Loki-DBG", "added group $joinUrl")
             storage.onOpenGroupAdded(openGroup.server, openGroup.room)
         } catch (e: Exception) {
             Log.e("OpenGroupDispatcher", "Failed to add group because",e)
