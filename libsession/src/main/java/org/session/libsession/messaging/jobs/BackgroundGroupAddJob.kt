@@ -28,6 +28,7 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
     }
 
     override suspend fun execute(dispatcherName: String) {
+        Log.d("Loki-DBG", "adding group $joinUrl")
         try {
             val openGroup = OpenGroupUrlParser.parseUrl(joinUrl)
             val storage = MessagingModuleConfiguration.shared.storage

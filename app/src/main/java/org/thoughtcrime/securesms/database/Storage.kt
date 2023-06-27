@@ -228,12 +228,12 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         return threadDb.getLastSeenAndHasSent(threadId)?.first() ?: 0L
     }
 
-    override fun markConversationAsRead(threadId: Long, lastSeenTime: Long) {
+    override fun markConversationAsRead(threadId: Long, lastSeenTime: Long, force: Boolean) {
         val threadDb = DatabaseComponent.get(context).threadDatabase()
         getRecipientForThread(threadId)?.let { recipient ->
             val currentLastRead = threadDb.getLastSeenAndHasSent(threadId).first()
             // don't set the last read in the volatile if we didn't set it in the DB
-            if (!threadDb.markAllAsRead(threadId, recipient.isGroupRecipient, lastSeenTime)) return
+            if (!threadDb.markAllAsRead(threadId, recipient.isGroupRecipient, lastSeenTime, force) && !force) return
 
             // don't process configs for inbox recipients
             if (recipient.isOpenGroupInboxRecipient) return
@@ -500,11 +500,11 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
             val threadId = when (conversation) {
                 is Conversation.OneToOne -> getThreadIdFor(conversation.sessionId, null, null, createThread = false)
                 is Conversation.LegacyGroup -> getThreadIdFor("", conversation.groupId,null, createThread = false)
-                is Conversation.Community -> getThreadIdFor("",null, "${conversation.baseCommunityInfo.baseUrl}.${conversation.baseCommunityInfo.room}", createThread = false)
+                is Conversation.Community -> getThreadIdFor("",null, "${conversation.baseCommunityInfo.baseUrl.removeSuffix("/")}.${conversation.baseCommunityInfo.room}", createThread = false)
             }
             if (threadId != null) {
                 if (conversation.lastRead > getLastSeen(threadId)) {
-                    markConversationAsRead(threadId, conversation.lastRead)
+                    markConversationAsRead(threadId, conversation.lastRead, force = true)
                 }
                 updateThread(threadId, false)
             }
@@ -1040,7 +1040,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         val volatile = volatileConfig.getOrConstructCommunity(infoServer, infoRoom, pubKey)
         if (volatile.lastRead != 0L) {
             val threadId = getThreadId(openGroup) ?: return
-            markConversationAsRead(threadId, volatile.lastRead)
+            markConversationAsRead(threadId, volatile.lastRead, force = true)
         }
     }
 

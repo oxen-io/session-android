@@ -57,7 +57,7 @@ public class MarkReadReceiver extends BroadcastReceiver {
           for (long threadId : threadIds) {
             Log.i(TAG, "Marking as read: " + threadId);
             StorageProtocol storage = MessagingModuleConfiguration.getShared().getStorage();
-            storage.markConversationAsRead(threadId,currentTime);
+            storage.markConversationAsRead(threadId,currentTime, true);
           }
           return null;
         }
