@@ -229,7 +229,7 @@ class BatchMessageReceiveJob(
                     if (!openGroupID.isNullOrEmpty()) {
                         Log.d("Loki-DBG", "new-lastSeen for: $openGroupID is $currentLastSeen")
                     }
-                    storage.markConversationAsRead(threadId, newLastSeen)
+                    storage.markConversationAsRead(threadId, newLastSeen, force = true)
                     storage.updateThread(threadId, true)
                     SSKEnvironment.shared.notificationManager.updateNotification(context, threadId)
                 }

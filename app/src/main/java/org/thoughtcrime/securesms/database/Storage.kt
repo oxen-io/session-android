@@ -496,6 +496,8 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
 
     private fun updateConvoVolatile(convos: ConversationVolatileConfig) {
         val extracted = convos.all()
+        Log.d("Loki-DBG", "All conversations")
+        Log.d("Loki-DBG", convos.allCommunities().joinToString("\n"))
         for (conversation in extracted) {
             val threadId = when (conversation) {
                 is Conversation.OneToOne -> getThreadIdFor(conversation.sessionId, null, null, createThread = false)
@@ -1046,6 +1048,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
             markConversationAsRead(threadId, volatile.lastRead, force = true)
             Log.d("Loki-DBG", "set latest volatile read for $room to ${volatile.lastRead}")
         }
+        volatileConfig.set(volatile)
     }
 
     override fun hasBackgroundGroupAddJob(groupJoinUrl: String): Boolean {
