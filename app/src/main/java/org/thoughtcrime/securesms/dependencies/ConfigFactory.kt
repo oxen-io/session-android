@@ -1,6 +1,7 @@
 package org.thoughtcrime.securesms.dependencies
 
 import android.content.Context
+import android.os.Trace
 import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.Contacts
 import network.loki.messenger.libsession_util.ConversationVolatileConfig
@@ -60,11 +61,20 @@ class ConfigFactory(
         listeners -= listener
     }
 
+    private inline fun <T> synchronizedWithLog(lock: Any, body: ()->T): T {
+        Trace.beginSection("synchronizedWithLog")
+        val result = synchronized(lock) {
+            body()
+        }
+        Trace.endSection()
+        return result
+    }
+
     override val user: UserProfile?
-        get() = synchronized(userLock) {
+        get() = synchronizedWithLog(userLock) {
             if (!ConfigBase.isNewConfigEnabled(isConfigForcedOn, SnodeAPI.nowWithOffset)) return null
             if (_userConfig == null) {
-                val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
+                val (secretKey, publicKey) = maybeGetUserInfo() ?: return null
                 val userDump = configDatabase.retrieveConfigAndHashes(
                     SharedConfigMessage.Kind.USER_PROFILE.name,
                     publicKey
@@ -81,10 +91,10 @@ class ConfigFactory(
         }
 
     override val contacts: Contacts?
-        get() = synchronized(contactsLock) {
+        get() = synchronizedWithLog(contactsLock) {
             if (!ConfigBase.isNewConfigEnabled(isConfigForcedOn, SnodeAPI.nowWithOffset)) return null
             if (_contacts == null) {
-                val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
+                val (secretKey, publicKey) = maybeGetUserInfo() ?: return null
                 val contactsDump = configDatabase.retrieveConfigAndHashes(
                     SharedConfigMessage.Kind.CONTACTS.name,
                     publicKey
@@ -101,10 +111,10 @@ class ConfigFactory(
         }
 
     override val convoVolatile: ConversationVolatileConfig?
-        get() = synchronized(convoVolatileLock) {
+        get() = synchronizedWithLog(convoVolatileLock) {
             if (!ConfigBase.isNewConfigEnabled(isConfigForcedOn, SnodeAPI.nowWithOffset)) return null
             if (_convoVolatileConfig == null) {
-                val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
+                val (secretKey, publicKey) = maybeGetUserInfo() ?: return null
                 val convoDump = configDatabase.retrieveConfigAndHashes(
                     SharedConfigMessage.Kind.CONVO_INFO_VOLATILE.name,
                     publicKey
@@ -122,10 +132,10 @@ class ConfigFactory(
         }
 
     override val userGroups: UserGroupsConfig?
-        get() = synchronized(userGroupsLock) {
+        get() = synchronizedWithLog(userGroupsLock) {
             if (!ConfigBase.isNewConfigEnabled(isConfigForcedOn, SnodeAPI.nowWithOffset)) return null
             if (_userGroups == null) {
-                val (secretKey, publicKey) = maybeGetUserInfo() ?: return@synchronized null
+                val (secretKey, publicKey) = maybeGetUserInfo() ?: return null
                 val userGroupsDump = configDatabase.retrieveConfigAndHashes(
                     SharedConfigMessage.Kind.GROUPS.name,
                     publicKey

@@ -175,15 +175,17 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         }
         binding.sessionToolbar.disableClipping()
         // Set up seed reminder view
-        val hasViewedSeed = textSecurePreferences.getHasViewedSeed()
-        if (!hasViewedSeed) {
-            binding.seedReminderView.isVisible = true
-            binding.seedReminderView.title = SpannableString("You're almost finished! 80%") // Intentionally not yet translated
-            binding.seedReminderView.subtitle = resources.getString(R.string.view_seed_reminder_subtitle_1)
-            binding.seedReminderView.setProgress(80, false)
-            binding.seedReminderView.delegate = this@HomeActivity
-        } else {
-            binding.seedReminderView.isVisible = false
+        lifecycleScope.launchWhenStarted {
+            val hasViewedSeed = textSecurePreferences.getHasViewedSeed()
+            if (!hasViewedSeed) {
+                binding.seedReminderView.isVisible = true
+                binding.seedReminderView.title = SpannableString("You're almost finished! 80%") // Intentionally not yet translated
+                binding.seedReminderView.subtitle = resources.getString(R.string.view_seed_reminder_subtitle_1)
+                binding.seedReminderView.setProgress(80, false)
+                binding.seedReminderView.delegate = this@HomeActivity
+            } else {
+                binding.seedReminderView.isVisible = false
+            }
         }
         setupMessageRequestsBanner()
         // Set up recycler view
