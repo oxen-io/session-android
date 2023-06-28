@@ -4,11 +4,12 @@
     android:layout_marginHorizontal="@dimen/large_spacing"
     android:layout_marginVertical="@dimen/medium_spacing"
     android:layout_height="wrap_content">
-    <TextView
+    <Button
         android:contentDescription="@string/AccessibilityId_blocked_contacts"
-        android:layout_width="match_parent"
+        style="@style/Widget.Session.Button.Common.Borderless"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/medium_spacing"
+        android:paddingHorizontal="@dimen/medium_spacing"
         android:text="@string/blocked_contacts_title"
         android:textColor="@color/destructive"
         android:textSize="16sp"

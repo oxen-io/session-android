@@ -52,6 +52,7 @@
         android:text="@string/activity_landing_restore_button_title" />
 
     <Button
+        style="@style/Widget.Session.Button.Common.Borderless"
         android:id="@+id/linkButton"
         android:contentDescription="@string/AccessibilityId_link_a_device"
         android:layout_width="match_parent"
@@ -59,7 +60,6 @@
         android:layout_marginLeft="@dimen/massive_spacing"
         android:layout_marginRight="@dimen/massive_spacing"
         android:gravity="center"
-        android:background="@color/transparent"
         android:textAllCaps="false"
         android:textSize="@dimen/medium_font_size"
         android:text="@string/activity_link_device_link_device" />

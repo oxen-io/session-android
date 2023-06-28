@@ -50,15 +50,14 @@
         android:textAlignment="center"
         tools:text="nautical novelty populate onion awkward bent etiquette plant submarine itches vipers september axis maximum populate" />
 
-    <TextView
+    <Button
         android:id="@+id/revealButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_width="196dp"
+        android:layout_height="@dimen/onboarding_button_bottom_offset"
         android:textAlignment="center"
         android:textSize="16sp"
-        android:textColor="?android:textColorPrimary"
         android:alpha="0.6"
+        style="@style/Widget.Session.Button.Common.Borderless"
         android:text="@string/activity_seed_reveal_button_title" />
 
     <View

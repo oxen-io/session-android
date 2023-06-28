@@ -52,13 +52,13 @@
         android:text="@string/activity_landing_restore_button_title" />
 
     <Button
+        style="@style/Widget.Session.Button.Common.Borderless"
         android:contentDescription="@string/AccessibilityId_link_a_device"
         android:id="@+id/linkButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/onboarding_button_bottom_offset"
         android:layout_marginHorizontal="@dimen/massive_spacing"
         android:gravity="center"
-        android:background="@color/transparent"
         android:textAllCaps="false"
         android:textSize="@dimen/medium_font_size"
         android:text="@string/activity_link_device_link_device" />
