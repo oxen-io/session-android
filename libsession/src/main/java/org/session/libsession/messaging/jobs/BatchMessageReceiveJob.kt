@@ -229,8 +229,10 @@ class BatchMessageReceiveJob(
                     if (!openGroupID.isNullOrEmpty()) {
                         Log.d("Loki-DBG", "new-lastSeen for: $openGroupID is $currentLastSeen")
                     }
-                    storage.markConversationAsRead(threadId, newLastSeen, force = true)
-                    storage.updateThread(threadId, true)
+                    if (newLastSeen > 0) {
+                        storage.markConversationAsRead(threadId, newLastSeen, force = true)
+                        storage.updateThread(threadId, true)
+                    }
                     SSKEnvironment.shared.notificationManager.updateNotification(context, threadId)
                 }
 
@@ -241,7 +243,9 @@ class BatchMessageReceiveJob(
                 }
                 // await all thread processing
                 deferredThreadMap.awaitAll()
-                processMessages(NO_THREAD_MAPPING, noThreadMessages).await()
+                if (noThreadMessages.isNotEmpty()) {
+                    processMessages(NO_THREAD_MAPPING, noThreadMessages).await()
+                }
             }
             if (failures.isEmpty()) {
                 handleSuccess(dispatcherName)
