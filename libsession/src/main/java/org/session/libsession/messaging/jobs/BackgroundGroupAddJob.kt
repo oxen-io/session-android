@@ -28,7 +28,6 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
     }
 
     override suspend fun execute(dispatcherName: String) {
-        Log.d("Loki-DBG", "adding group $joinUrl")
         try {
             val openGroup = OpenGroupUrlParser.parseUrl(joinUrl)
             val storage = MessagingModuleConfiguration.shared.storage
@@ -39,8 +38,6 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
                 return
             }
             storage.addOpenGroup(openGroup.joinUrl())
-            Log.d(KEY, "onOpenGroupAdded(${openGroup.server})")
-            Log.d("Loki-DBG", "added group $joinUrl")
             storage.onOpenGroupAdded(openGroup.server, openGroup.room)
         } catch (e: Exception) {
             Log.e("OpenGroupDispatcher", "Failed to add group because",e)

@@ -496,8 +496,6 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
 
     private fun updateConvoVolatile(convos: ConversationVolatileConfig) {
         val extracted = convos.all()
-        Log.d("Loki-DBG", "All conversations")
-        Log.d("Loki-DBG", convos.allCommunities().joinToString("\n"))
         for (conversation in extracted) {
             val threadId = when (conversation) {
                 is Conversation.OneToOne -> getThreadIdFor(conversation.sessionId, null, null, createThread = false)
@@ -551,7 +549,6 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         toAddCommunities.forEach { toAddCommunity ->
             val joinUrl = toAddCommunity.community.fullUrl()
             if (!hasBackgroundGroupAddJob(joinUrl)) {
-                Log.d("Loki-DBG", "Adding background $joinUrl")
                 JobQueue.shared.add(BackgroundGroupAddJob(joinUrl))
             }
         }
@@ -1033,7 +1030,6 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
 
     override fun onOpenGroupAdded(server: String, room: String) {
         OpenGroupManager.restartPollerForServer(server.removeSuffix("/"))
-        Log.d("Loki-DBG", "Checking onOpenGroupAdded: $server $room")
         val groups = configFactory.userGroups ?: return
         val volatileConfig = configFactory.convoVolatile ?: return
         val openGroup = getOpenGroup(room, server) ?: return
@@ -1042,11 +1038,9 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         val communityInfo = groups.getOrConstructCommunityInfo(infoServer, infoRoom, pubKeyHex)
         groups.set(communityInfo)
         val volatile = volatileConfig.getOrConstructCommunity(infoServer, infoRoom, pubKey)
-        Log.d("Loki-DBG", "latest volatile read for $room is ${volatile.lastRead}")
         if (volatile.lastRead != 0L) {
             val threadId = getThreadId(openGroup) ?: return
             markConversationAsRead(threadId, volatile.lastRead, force = true)
-            Log.d("Loki-DBG", "set latest volatile read for $room to ${volatile.lastRead}")
         }
         volatileConfig.set(volatile)
     }
