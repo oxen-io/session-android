@@ -1,6 +1,7 @@
 package org.session.libsession.utilities
 
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.session.libsession.messaging.file_server.FileServerApi
 import org.session.libsignal.utilities.HTTP
 import org.session.libsignal.utilities.Log
@@ -34,8 +35,8 @@ object DownloadUtilities {
      */
     @JvmStatic
     fun downloadFile(outputStream: OutputStream, urlAsString: String) {
-        val url = HttpUrl.parse(urlAsString)!!
-        val fileID = url.pathSegments().last()
+        val url = urlAsString.toHttpUrlOrNull()!!
+        val fileID = url.pathSegments.last()
         try {
             FileServerApi.download(fileID).get().let {
                 outputStream.write(it)

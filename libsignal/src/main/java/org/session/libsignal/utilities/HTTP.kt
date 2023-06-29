@@ -1,10 +1,14 @@
 package org.session.libsignal.utilities
 
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
+import okhttp3.dnsoverhttps.DnsOverHttps
+import java.net.InetAddress
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
@@ -15,7 +19,13 @@ object HTTP {
     var isConnectedToNetwork: (() -> Boolean) = { false }
 
     private val seedNodeConnection by lazy {
-        OkHttpClient().newBuilder()
+        val bootstrapClient = OkHttpClient.Builder().build()
+        val dns =DnsOverHttps.Builder().client(bootstrapClient)
+            .url("https://1.1.1.1/dns-query".toHttpUrl())
+            .bootstrapDnsHosts(InetAddress.getByName("8.8.4.4"), InetAddress.getByName("8.8.8.8"))
+            .build()
+        bootstrapClient.newBuilder()
+            .dns(dns)
             .callTimeout(timeout, TimeUnit.SECONDS)
             .connectTimeout(timeout, TimeUnit.SECONDS)
             .readTimeout(timeout, TimeUnit.SECONDS)
@@ -33,7 +43,13 @@ object HTTP {
         }
         val sslContext = SSLContext.getInstance("SSL")
         sslContext.init(null, arrayOf( trustManager ), SecureRandom())
-        OkHttpClient().newBuilder()
+        val bootstrapClient = OkHttpClient.Builder().build()
+        val dns = DnsOverHttps.Builder().client(bootstrapClient)
+            .url("https://1.1.1.1/dns-query".toHttpUrl())
+            .bootstrapDnsHosts(InetAddress.getByName("8.8.4.4"), InetAddress.getByName("8.8.8.8"))
+            .build()
+        bootstrapClient.newBuilder()
+            .dns(dns)
             .sslSocketFactory(sslContext.socketFactory, trustManager)
             .hostnameVerifier { _, _ -> true }
             .callTimeout(timeout, TimeUnit.SECONDS)
@@ -53,7 +69,13 @@ object HTTP {
         }
         val sslContext = SSLContext.getInstance("SSL")
         sslContext.init(null, arrayOf( trustManager ), SecureRandom())
-        return OkHttpClient().newBuilder()
+        val bootstrapClient = OkHttpClient.Builder().build()
+        val dns =DnsOverHttps.Builder().client(bootstrapClient)
+            .url("https://1.1.1.1/dns-query".toHttpUrl())
+            .bootstrapDnsHosts(InetAddress.getByName("8.8.4.4"), InetAddress.getByName("8.8.8.8"))
+            .build()
+        return bootstrapClient.newBuilder()
+            .dns(dns)
             .sslSocketFactory(sslContext.socketFactory, trustManager)
             .hostnameVerifier { _, _ -> true }
             .callTimeout(timeout, TimeUnit.SECONDS)
@@ -106,7 +128,7 @@ object HTTP {
             Verb.GET -> request.get()
             Verb.PUT, Verb.POST -> {
                 if (body == null) { throw Exception("Invalid request body.") }
-                val contentType = MediaType.get("application/json; charset=utf-8")
+                val contentType = "application/json; charset=utf-8".toMediaType()
                 @Suppress("NAME_SHADOWING") val body = RequestBody.create(contentType, body)
                 if (verb == Verb.PUT) request.put(body) else request.post(body)
             }
@@ -131,9 +153,9 @@ object HTTP {
             // Override the actual error so that we can correctly catch failed requests in OnionRequestAPI
             throw HTTPRequestFailedException(0, null, "HTTP request failed due to: ${exception.message}")
         }
-        return when (val statusCode = response.code()) {
+        return when (val statusCode = response.code) {
             200 -> {
-                response.body()?.bytes() ?: throw Exception("An error occurred.")
+                response.body?.bytes() ?: throw Exception("An error occurred.")
             }
             else -> {
                 Log.d("Loki", "${verb.rawValue} request to $url failed with status code: $statusCode.")

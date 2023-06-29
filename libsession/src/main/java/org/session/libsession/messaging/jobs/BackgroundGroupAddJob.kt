@@ -1,6 +1,7 @@
 package org.session.libsession.messaging.jobs
 
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
@@ -23,9 +24,9 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
     override val maxFailureCount: Int = 1
 
     val openGroupId: String? get() {
-        val url = HttpUrl.parse(joinUrl) ?: return null
+        val url = joinUrl.toHttpUrlOrNull() ?: return null
         val server = OpenGroup.getServer(joinUrl)?.toString()?.removeSuffix("/") ?: return null
-        val room = url.pathSegments().firstOrNull() ?: return null
+        val room = url.pathSegments.firstOrNull() ?: return null
         return "$server.$room"
     }
 
