@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.groups
 import android.content.Context
 import androidx.annotation.WorkerThread
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.open_groups.GroupMemberRole
 import org.session.libsession.messaging.open_groups.OpenGroup
@@ -133,9 +134,9 @@ object OpenGroupManager {
     }
 
     fun addOpenGroup(urlAsString: String, context: Context): OpenGroupApi.RoomInfo? {
-        val url = HttpUrl.parse(urlAsString) ?: return null
+        val url = urlAsString.toHttpUrlOrNull() ?: return null
         val server = OpenGroup.getServer(urlAsString)
-        val room = url.pathSegments().firstOrNull() ?: return null
+        val room = url.pathSegments.firstOrNull() ?: return null
         val publicKey = url.queryParameter("public_key") ?: return null
 
         return add(server.toString().removeSuffix("/"), room, publicKey, context) // assume migrated from calling function
