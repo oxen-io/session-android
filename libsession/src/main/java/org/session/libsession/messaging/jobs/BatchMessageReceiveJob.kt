@@ -222,8 +222,8 @@ class BatchMessageReceiveJob(
                     }
                     if (newLastSeen > 0) {
                         storage.markConversationAsRead(threadId, newLastSeen, force = true)
-                        storage.updateThread(threadId, true)
                     }
+                    storage.updateThread(threadId, true)
                     SSKEnvironment.shared.notificationManager.updateNotification(context, threadId)
                 }
 
