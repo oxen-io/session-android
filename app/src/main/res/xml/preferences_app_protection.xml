@@ -13,7 +13,7 @@
             android:summary="@string/preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint" />
 
         <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
-            android:defaultValue="true"
+            android:defaultValue="@bool/screen_security_default"
             android:key="pref_screen_security"
             android:title="@string/preferences__screen_security"
             android:summary="@string/preferences__disable_screen_security_to_allow_screen_shots" />
