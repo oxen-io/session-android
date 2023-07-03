@@ -136,6 +136,10 @@ dependencies {
     // Core library
     androidTestImplementation "androidx.test:core:$testCoreVersion"
 
+    androidTestImplementation('com.adevinta.android:barista:4.2.0') {
+        exclude group: 'org.jetbrains.kotlin'
+    }
+
     // AndroidJUnitRunner and JUnit Rules
     androidTestImplementation 'androidx.test:runner:1.5.2'
     androidTestImplementation 'androidx.test:rules:1.5.0'

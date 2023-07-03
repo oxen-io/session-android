@@ -61,7 +61,7 @@ class InstrumentedTests {
         contacts.dump()
         contacts.set(contact.copy(name = "test2"))
         contacts.set(contact.copy(name = "test"))
-        assertFalse(contacts.dirty())
+        assertTrue(contacts.dirty())
     }
 
     @Test

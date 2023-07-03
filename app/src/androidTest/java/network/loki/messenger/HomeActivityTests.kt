@@ -1,5 +1,6 @@
 package network.loki.messenger
 
+import android.Manifest
 import android.app.Instrumentation
 import android.content.ClipboardManager
 import android.content.Context
@@ -21,6 +22,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
+import com.adevinta.android.barista.interaction.PermissionGranter
 import network.loki.messenger.util.InputBarButtonDrawableMatcher.Companion.inputButtonWithDrawable
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -85,6 +87,8 @@ class HomeActivityTests {
         }
         onView(withId(R.id.backgroundPollingOptionView)).perform(ViewActions.click())
         onView(withId(R.id.registerButton)).perform(ViewActions.click())
+        // allow notification permission
+        PermissionGranter.allowPermissionsIfNeeded(Manifest.permission.POST_NOTIFICATIONS)
     }
 
     private fun goToMyChat() {
@@ -100,6 +104,7 @@ class HomeActivityTests {
             copied = clipboardManager.primaryClip!!.getItemAt(0).text.toString()
         }
         onView(withId(R.id.publicKeyEditText)).perform(ViewActions.typeText(copied))
+        onView(withId(R.id.publicKeyEditText)).perform(ViewActions.closeSoftKeyboard())
         onView(withId(R.id.createPrivateChatButton)).perform(ViewActions.click())
     }
 

@@ -693,7 +693,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val name = contact?.displayName(Contact.ContactContext.REGULAR) ?: sessionID
         binding?.blockedBannerTextView?.text = resources.getString(R.string.activity_conversation_blocked_banner_text, name)
         binding?.blockedBanner?.isVisible = recipient.isBlocked
-        binding?.blockedBanner?.setOnClickListener { viewModel.unblock(this@ConversationActivityV2) }
+        binding?.blockedBanner?.setOnClickListener { viewModel.unblock() }
     }
 
     private fun setUpLinkPreviewObserver() {
@@ -1151,7 +1151,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             .setMessage(message)
             .setNegativeButton(android.R.string.cancel, null)
             .setPositiveButton(R.string.RecipientPreferenceActivity_block) { _, _ ->
-                viewModel.block(this@ConversationActivityV2)
+                viewModel.block()
                 if (deleteThread) {
                     viewModel.deleteThread()
                     finish()
@@ -1205,7 +1205,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             .setMessage(message)
             .setNegativeButton(android.R.string.cancel, null)
             .setPositiveButton(R.string.ConversationActivity_unblock) { _, _ ->
-                viewModel.unblock(this@ConversationActivityV2)
+                viewModel.unblock()
             }.show()
     }
 
