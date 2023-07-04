@@ -24,8 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.thoughtcrime.securesms.components.CustomDefaultPreference;
 import org.thoughtcrime.securesms.conversation.v2.ViewUtil;
-import org.thoughtcrime.securesms.preferences.widgets.ColorPickerPreference;
-import org.thoughtcrime.securesms.preferences.widgets.ColorPickerPreferenceDialogFragmentCompat;
 
 import network.loki.messenger.R;
 
@@ -60,9 +58,7 @@ public abstract class CorrectedPreferenceFragment extends PreferenceFragmentComp
   public void onDisplayPreferenceDialog(Preference preference) {
     DialogFragment dialogFragment = null;
 
-    if (preference instanceof ColorPickerPreference) {
-      dialogFragment = ColorPickerPreferenceDialogFragmentCompat.newInstance(preference.getKey());
-    } else if (preference instanceof CustomDefaultPreference) {
+    if (preference instanceof CustomDefaultPreference) {
       dialogFragment = CustomDefaultPreference.CustomDefaultPreferenceDialogFragmentCompat.newInstance(preference.getKey());
     }
 

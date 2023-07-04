@@ -11,7 +11,6 @@ import androidx.core.app.NotificationCompat;
 import net.zetetic.database.sqlcipher.SQLiteConnection;
 import net.zetetic.database.sqlcipher.SQLiteDatabase;
 import net.zetetic.database.sqlcipher.SQLiteDatabaseHook;
-import net.zetetic.database.sqlcipher.SQLiteException;
 import net.zetetic.database.sqlcipher.SQLiteOpenHelper;
 
 import org.session.libsession.utilities.TextSecurePreferences;
@@ -151,7 +150,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
     connection.execute("PRAGMA cipher_page_size = 4096;", null, null);
   }
 
-  private static SQLiteDatabase open(String path, DatabaseSecret databaseSecret, boolean useSQLCipher4) throws SQLiteException {
+  private static SQLiteDatabase open(String path, DatabaseSecret databaseSecret, boolean useSQLCipher4) {
     return SQLiteDatabase.openDatabase(path, databaseSecret.asString(), null, SQLiteDatabase.OPEN_READWRITE, new SQLiteDatabaseHook() {
       @Override
       public void preKey(SQLiteConnection connection) { SQLCipherOpenHelper.applySQLCipherPragmas(connection, useSQLCipher4); }
