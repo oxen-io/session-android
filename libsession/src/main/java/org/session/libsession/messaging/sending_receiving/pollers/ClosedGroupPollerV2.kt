@@ -81,7 +81,7 @@ class ClosedGroupPollerV2 {
         val groupID = GroupUtil.doubleEncodeGroupID(groupPublicKey)
         val threadID = storage.getThreadId(groupID)
         if (threadID == null) {
-            Log.d("Loki", "Stopping group poller due to missing thread for closed group: ${groupPublicKey.take(4)}...${groupPublicKey.takeLast(4)}.")
+            Log.d("Loki", "Stopping group poller due to missing thread for closed group: $groupPublicKey.")
             stopPolling(groupPublicKey)
             return
         }
