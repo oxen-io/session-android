@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.AttributeSet
 import android.view.View
+import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceViewHolder
 
