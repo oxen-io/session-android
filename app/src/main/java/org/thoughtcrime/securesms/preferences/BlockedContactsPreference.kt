@@ -3,7 +3,6 @@ package org.thoughtcrime.securesms.preferences
 import android.content.Context
 import android.content.Intent
 import android.util.AttributeSet
-import android.view.View
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceViewHolder
 
@@ -16,8 +15,7 @@ class BlockedContactsPreference @JvmOverloads constructor(
         super.onBindViewHolder(holder)
 
         holder.itemView.setOnClickListener {
-            val intent = Intent(context, BlockedContactsActivity::class.java)
-            context.startActivity(intent)
+            Intent(context, BlockedContactsActivity::class.java).let(context::startActivity)
         }
     }
 }
