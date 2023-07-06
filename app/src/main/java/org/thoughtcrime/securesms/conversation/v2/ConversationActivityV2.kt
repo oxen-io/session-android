@@ -396,11 +396,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 // instead we check the current position and if there are more than 10 items to scroll
                 // we jump instantly to the 10th item and scroll from there (this should happen quick
                 // enough to give a similar scroll effect without having to load everything)
-                val position = if (reverseMessageList) layoutManager.findFirstVisibleItemPosition() else layoutManager.findLastVisibleItemPosition()
-                val targetBuffer = if (reverseMessageList) 10 else Math.max(0, (adapter.itemCount - 1) - 10)
-                if (position > targetBuffer) {
-                    binding?.conversationRecyclerView?.scrollToPosition(targetBuffer)
-                }
+//                val position = if (reverseMessageList) layoutManager.findFirstVisibleItemPosition() else layoutManager.findLastVisibleItemPosition()
+//                val targetBuffer = if (reverseMessageList) 10 else Math.max(0, (adapter.itemCount - 1) - 10)
+//                if (position > targetBuffer) {
+//                    binding?.conversationRecyclerView?.scrollToPosition(targetBuffer)
+//                }
 
                 binding?.conversationRecyclerView?.post {
                     binding?.conversationRecyclerView?.smoothScrollToPosition(targetPosition)
