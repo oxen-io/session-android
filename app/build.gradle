@@ -156,7 +156,7 @@ dependencies {
     testImplementation 'org.robolectric:shadows-multidex:4.4'
 }
 
-def canonicalVersionCode = 350
+def canonicalVersionCode = 351
 def canonicalVersionName = "1.17.0"
 
 def postFixSize = 10
