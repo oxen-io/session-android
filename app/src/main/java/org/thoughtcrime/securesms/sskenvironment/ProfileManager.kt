@@ -94,7 +94,6 @@ class ProfileManager(private val context: Context, private val configFactory: Co
         if (contact.sessionID == TextSecurePreferences.getLocalNumber(context)) return null
         val sessionId = SessionId(contact.sessionID)
         if (sessionId.prefix != IdPrefix.STANDARD) return null // only internally store standard session IDs
-        if (contactConfig.get(contact.sessionID) == null) return null // don't insert, only update
         contactConfig.upsertContact(contact.sessionID) {
             this.name = contact.name.orEmpty()
             this.nickname = contact.nickname.orEmpty()
