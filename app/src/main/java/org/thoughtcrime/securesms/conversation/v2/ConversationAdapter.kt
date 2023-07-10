@@ -27,11 +27,11 @@ import org.thoughtcrime.securesms.conversation.v2.messages.ControlMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageViewDelegate
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter
-import org.thoughtcrime.securesms.database.ThreadDatabase.Reader
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
+import kotlin.math.min
 
 class ConversationAdapter(
     context: Context,
@@ -238,17 +238,17 @@ class ConversationAdapter(
         for (i in 0 until itemCount) {
             if (isReversed) {
                 cursor.moveToPosition(i)
-                val message = messageDB.readerFor(cursor).current
-                if (message.isOutgoing || message.dateSent <= lastSeenTimestamp) {
+                val (outgoing, dateSent) = messageDB.timestampAndDirectionForCurrent(cursor)
+                if (outgoing || dateSent <= lastSeenTimestamp) {
                     return i
                 }
             }
             else {
                 val index = ((itemCount - 1) - i)
                 cursor.moveToPosition(index)
-                val message = messageDB.readerFor(cursor).current
-                if (message.isOutgoing || message.dateSent <= lastSeenTimestamp) {
-                    return Math.min(itemCount - 1, (index + 1))
+                val (outgoing, dateSent) = messageDB.timestampAndDirectionForCurrent(cursor)
+                if (outgoing || dateSent <= lastSeenTimestamp) {
+                    return min(itemCount - 1, (index + 1))
                 }
             }
         }
@@ -260,8 +260,8 @@ class ConversationAdapter(
         if (timestamp <= 0L || cursor == null || !isActiveCursor) return null
         for (i in 0 until itemCount) {
             cursor.moveToPosition(i)
-            val message = messageDB.readerFor(cursor).current
-            if (message.dateSent == timestamp) { return i }
+            val (_, dateSent) = messageDB.timestampAndDirectionForCurrent(cursor)
+            if (dateSent == timestamp) { return i }
         }
         return null
     }

@@ -220,7 +220,7 @@ object ConfigurationMessageUtilities {
                     continue
                 }
                 contact.lastRead = current.lastSeen
-                contact.unread = false // TODO: make the forced unread work at DB level
+                contact.unread = false
                 convoConfig.set(contact)
                 current = reader.next
             }
