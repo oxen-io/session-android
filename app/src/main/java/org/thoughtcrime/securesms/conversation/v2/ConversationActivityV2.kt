@@ -512,7 +512,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         if (cursor != null) {
             val messageTimestamp = messageToScrollTimestamp.getAndSet(-1)
             val author = messageToScrollAuthor.getAndSet(null)
-            var initialUnreadCount = 0
+            val initialUnreadCount: Int
 
             // Update the unreadCount value to be loaded from the database since we got a new message
             if (firstLoad.get() || oldCount != newCount) {
@@ -525,7 +525,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             }
 
             if (author != null && messageTimestamp >= 0) {
-                jumpToMessage(author, messageTimestamp, true, null)
+                jumpToMessage(author, messageTimestamp, firstLoad.get(), null)
             }
             else if (firstLoad.getAndSet(false)) {
                 scrollToFirstUnreadMessageIfNeeded(true)
@@ -734,7 +734,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
-    private fun scrollToFirstUnreadMessageIfNeeded(isFirstLoad: Boolean = false, shouldHighlight: Boolean = false): Int? {
+    private fun scrollToFirstUnreadMessageIfNeeded(isFirstLoad: Boolean = false, shouldHighlight: Boolean = false): Int {
         val lastSeenTimestamp = threadDb.getLastSeenAndHasSent(viewModel.threadId).first()
         val lastSeenItemPosition = adapter.findLastSeenItemPosition(lastSeenTimestamp) ?: return -1
 

@@ -127,7 +127,7 @@ class VisibleMessageView : LinearLayout {
         searchQuery: String?,
         contact: Contact?,
         senderSessionID: String,
-        originalLastSeen: Long,
+        lastSeen: Long,
         delegate: VisibleMessageViewDelegate?,
         onAttachmentNeedsDownload: (Long, Long) -> Unit
     ) {
@@ -195,7 +195,7 @@ class VisibleMessageView : LinearLayout {
             if (thread.isOpenGroupRecipient) ContactContext.OPEN_GROUP else ContactContext.REGULAR
         binding.senderNameTextView.text = contact?.displayName(contactContext) ?: senderSessionID
         // Unread marker
-        binding.unreadMarkerContainer.isVisible = message.timestamp > originalLastSeen && (previous == null || previous.timestamp <= originalLastSeen)
+        binding.unreadMarkerContainer.isVisible = lastSeen != -1L && message.timestamp > lastSeen && (previous == null || previous.timestamp <= lastSeen) && !message.isOutgoing
         // Date break
         val showDateBreak = isStartOfMessageCluster || snIsSelected
         binding.dateBreakTextView.text = if (showDateBreak) DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), message.timestamp) else null

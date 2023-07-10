@@ -132,11 +132,6 @@ object ConfigurationMessageUtilities {
                 if (storage.isPinned(ownThreadId)) ConfigBase.PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE
             else ConfigBase.PRIORITY_HIDDEN
         )
-        if (ownThreadId != null) {
-            // have NTS thread
-            val ntsPinned = storage.isPinned(ownThreadId)
-            profile.setNtsPriority(if (ntsPinned) 1 else 0) // TODO: implement the pinning priority here in future
-        }
         val dump = profile.dump()
         profile.free()
         return dump

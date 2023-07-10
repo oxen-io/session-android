@@ -31,12 +31,13 @@ import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
+import java.util.concurrent.atomic.AtomicLong
 import kotlin.math.min
 
 class ConversationAdapter(
     context: Context,
     cursor: Cursor,
-    private val originalLastSeen: Long,
+    originalLastSeen: Long,
     private val isReversed: Boolean,
     private val onItemPress: (MessageRecord, Int, VisibleMessageView, MotionEvent) -> Unit,
     private val onItemSwipeToReply: (MessageRecord, Int) -> Unit,
@@ -55,6 +56,8 @@ class ConversationAdapter(
     private val updateQueue = Channel<String>(1024, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     private val contactCache = SparseArray<Contact>(100)
     private val contactLoadedCache = SparseBooleanArray(100)
+    private val lastSeen = AtomicLong(originalLastSeen)
+
     init {
         lifecycleCoroutineScope.launch(IO) {
             while (isActive) {
@@ -131,7 +134,7 @@ class ConversationAdapter(
                         searchQuery,
                         contact,
                         senderId,
-                        originalLastSeen,
+                        lastSeen.get(),
                         visibleMessageViewDelegate,
                         onAttachmentNeedsDownload
                 )
