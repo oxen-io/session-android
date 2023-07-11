@@ -16,6 +16,7 @@
             android:layout_height="@dimen/small_profile_picture_size"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
+            android:scaleType="centerCrop"
             android:background="@drawable/profile_picture_view_small_background" />
 
         <ImageView
@@ -24,6 +25,7 @@
             android:layout_height="@dimen/small_profile_picture_size"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
+            android:scaleType="centerCrop"
             android:background="@drawable/profile_picture_view_small_background" />
 
     </RelativeLayout>

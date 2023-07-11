@@ -52,12 +52,19 @@ class ProfilePictureView @JvmOverloads constructor(
                     .sorted()
                     .take(2)
                     .toMutableList()
-            val pk = members.getOrNull(0)?.serialize() ?: ""
-            publicKey = pk
-            displayName = getUserDisplayName(pk)
-            val apk = members.getOrNull(1)?.serialize() ?: ""
-            additionalPublicKey = apk
-            additionalDisplayName = getUserDisplayName(apk)
+            if (members.size <= 1) {
+                publicKey = ""
+                displayName = ""
+                additionalPublicKey = ""
+                additionalDisplayName = ""
+            } else {
+                val pk = members.getOrNull(0)?.serialize() ?: ""
+                publicKey = pk
+                displayName = getUserDisplayName(pk)
+                val apk = members.getOrNull(1)?.serialize() ?: ""
+                additionalPublicKey = apk
+                additionalDisplayName = getUserDisplayName(apk)
+            }
         } else if(recipient.isOpenGroupInboxRecipient) {
             val publicKey = GroupUtil.getDecodedOpenGroupInbox(recipient.address.serialize())
             this.publicKey = publicKey
@@ -113,7 +120,7 @@ class ProfilePictureView @JvmOverloads constructor(
             if (signalProfilePicture != null && avatar != "0" && avatar != "") {
                 glide.clear(imageView)
                 glide.load(signalProfilePicture)
-                    .placeholder(unknownRecipientDrawable)
+                    .placeholder(R.drawable.ic_profile_default)
                     .centerCrop()
                     .error(glide.load(placeholder))
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -121,17 +128,21 @@ class ProfilePictureView @JvmOverloads constructor(
                     .into(imageView)
             } else if (recipient.isOpenGroupRecipient && recipient.groupAvatarId == null) {
                 glide.clear(imageView)
-                imageView.setImageDrawable(unknownOpenGroupDrawable)
+                glide.load(R.drawable.ic_notification)
+                    .centerCrop()
+                    .into(imageView)
             } else {
                 glide.clear(imageView)
                 glide.load(placeholder)
-                    .placeholder(unknownRecipientDrawable)
+                    .placeholder(R.drawable.ic_profile_default)
                     .centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.NONE).circleCrop().into(imageView)
             }
             profilePicturesCache[publicKey] = recipient.profileAvatar
         } else {
-            imageView.setImageDrawable(null)
+            glide.load(R.drawable.ic_profile_default)
+                .centerInside()
+                .into(imageView)
         }
     }
 
