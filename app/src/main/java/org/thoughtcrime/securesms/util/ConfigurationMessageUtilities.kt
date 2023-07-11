@@ -240,7 +240,9 @@ object ConfigurationMessageUtilities {
             GroupInfo.CommunityGroupInfo(baseInfo, if (isPinned) 1 else 0)
         }
 
-        val allLgc = storage.getAllGroups(includeInactive = false).filter { it.isClosedGroup }.mapNotNull { group ->
+        val allLgc = storage.getAllGroups(includeInactive = false).filter {
+            it.isClosedGroup && it.isActive && it.members.size > 1
+        }.mapNotNull { group ->
             val groupAddress = Address.fromSerialized(group.encodedId)
             val groupPublicKey = GroupUtil.doubleDecodeGroupID(groupAddress.serialize()).toHexString()
             val recipient = storage.getRecipientSettings(groupAddress) ?: return@mapNotNull null
