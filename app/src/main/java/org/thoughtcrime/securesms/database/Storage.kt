@@ -580,7 +580,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                 val groupId = GroupUtil.doubleEncodeGroupID(group.sessionId)
                 val title = group.name
                 val formationTimestamp = (group.joinedAt * 1000L)
-                createGroup(groupId, title, members, null, null, admins, formationTimestamp)
+                createGroup(groupId, title, admins + members, null, null, admins, formationTimestamp)
                 setProfileSharing(Address.fromSerialized(groupId), true)
                 // Add the group to the user's set of public keys to poll for
                 addClosedGroupPublicKey(group.sessionId)
