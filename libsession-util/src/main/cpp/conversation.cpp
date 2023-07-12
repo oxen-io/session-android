@@ -58,15 +58,19 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_eraseAll
     jmethodID bool_get = env->GetMethodID(bool_class, "booleanValue", "()Z");
 
     int removed = 0;
+    auto to_erase = std::vector<session::config::convo::any>();
 
-    for (auto it = conversations->begin(); it != conversations->end(); ) {
+    for (auto it = conversations->begin(); it != conversations->end(); ++it) {
         auto result = env->CallObjectMethod(predicate, predicate_call, serialize_any(env, *it));
         bool bool_result = env->CallBooleanMethod(result, bool_get);
         if (bool_result) {
-            it = conversations->erase(it);
+            to_erase.push_back(*it);
+        }
+    }
+
+    for (auto & entry : to_erase) {
+        if (conversations->erase(entry)) {
             removed++;
-        } else {
-            ++it;
         }
     }
 
