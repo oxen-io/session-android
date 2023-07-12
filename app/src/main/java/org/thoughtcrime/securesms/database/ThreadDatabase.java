@@ -778,6 +778,7 @@ public class ThreadDatabase extends Database {
       if (reader != null)
         reader.close();
       notifyConversationListListeners();
+      notifyConversationListeners(threadId);
     }
   }
 
