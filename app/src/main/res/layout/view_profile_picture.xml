@@ -31,6 +31,7 @@
     </RelativeLayout>
 
     <ImageView
+        android:scaleType="centerCrop"
         android:id="@+id/singleModeImageView"
         android:layout_width="@dimen/medium_profile_picture_size"
         android:layout_height="@dimen/medium_profile_picture_size"
@@ -38,6 +39,7 @@
 
     <ImageView
         android:id="@+id/largeSingleModeImageView"
+        android:scaleType="centerCrop"
         android:layout_width="@dimen/large_profile_picture_size"
         android:layout_height="@dimen/large_profile_picture_size"
         android:background="@drawable/profile_picture_view_large_background" />

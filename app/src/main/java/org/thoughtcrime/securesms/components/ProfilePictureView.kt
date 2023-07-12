@@ -129,19 +129,21 @@ class ProfilePictureView @JvmOverloads constructor(
             } else if (recipient.isOpenGroupRecipient && recipient.groupAvatarId == null) {
                 glide.clear(imageView)
                 glide.load(unknownOpenGroupDrawable)
+                    .centerCrop()
                     .circleCrop()
                     .into(imageView)
             } else {
                 glide.clear(imageView)
                 glide.load(placeholder)
                     .placeholder(unknownRecipientDrawable)
+                    .centerCrop()
                     .circleCrop()
                     .diskCacheStrategy(DiskCacheStrategy.NONE).circleCrop().into(imageView)
             }
             profilePicturesCache[publicKey] = recipient.profileAvatar
         } else {
             glide.load(unknownRecipientDrawable)
-                .circleCrop()
+                .centerCrop()
                 .into(imageView)
         }
     }
