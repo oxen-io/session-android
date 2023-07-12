@@ -795,7 +795,7 @@ public class ThreadDatabase extends Database {
 
   public boolean isPinned(long threadId) {
     SQLiteDatabase db = getReadableDatabase();
-    Cursor         cursor = db.query(TABLE_NAME, new String[]{DATE}, ID_WHERE, new String[]{String.valueOf(threadId)}, null, null, null);
+    Cursor         cursor = db.query(TABLE_NAME, new String[]{IS_PINNED}, ID_WHERE, new String[]{String.valueOf(threadId)}, null, null, null);
     try {
       if (cursor != null && cursor.moveToFirst()) {
         return cursor.getInt(0) == 1;
