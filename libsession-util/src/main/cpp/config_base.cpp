@@ -4,24 +4,28 @@
 extern "C" {
 JNIEXPORT jboolean JNICALL
 Java_network_loki_messenger_libsession_1util_ConfigBase_dirty(JNIEnv *env, jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
     auto* configBase = ptrToConfigBase(env, thiz);
     return configBase->is_dirty();
 }
 
 JNIEXPORT jboolean JNICALL
 Java_network_loki_messenger_libsession_1util_ConfigBase_needsPush(JNIEnv *env, jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
     auto config = ptrToConfigBase(env, thiz);
     return config->needs_push();
 }
 
 JNIEXPORT jboolean JNICALL
 Java_network_loki_messenger_libsession_1util_ConfigBase_needsDump(JNIEnv *env, jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
     auto config = ptrToConfigBase(env, thiz);
     return config->needs_dump();
 }
 
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_ConfigBase_push(JNIEnv *env, jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
     auto config = ptrToConfigBase(env, thiz);
     auto push_tuple = config->push();
     auto to_push_str = std::get<1>(push_tuple);
@@ -51,6 +55,7 @@ Java_network_loki_messenger_libsession_1util_ConfigBase_free(JNIEnv *env, jobjec
 
 JNIEXPORT jbyteArray JNICALL
 Java_network_loki_messenger_libsession_1util_ConfigBase_dump(JNIEnv *env, jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
     auto config = ptrToConfigBase(env, thiz);
     auto dumped = config->dump();
     jbyteArray bytes = util::bytes_from_ustring(env, dumped);
@@ -68,6 +73,7 @@ JNIEXPORT void JNICALL
 Java_network_loki_messenger_libsession_1util_ConfigBase_confirmPushed(JNIEnv *env, jobject thiz,
                                                                       jlong seq_no,
                                                                       jstring new_hash_jstring) {
+    std::lock_guard lock{util::util_mutex_};
     auto conf = ptrToConfigBase(env, thiz);
     auto new_hash = env->GetStringUTFChars(new_hash_jstring, nullptr);
     conf->confirm_pushed(seq_no, new_hash);
@@ -79,6 +85,7 @@ Java_network_loki_messenger_libsession_1util_ConfigBase_confirmPushed(JNIEnv *en
 JNIEXPORT jint JNICALL
 Java_network_loki_messenger_libsession_1util_ConfigBase_merge___3Lkotlin_Pair_2(JNIEnv *env, jobject thiz,
                                                                      jobjectArray to_merge) {
+    std::lock_guard lock{util::util_mutex_};
     auto conf = ptrToConfigBase(env, thiz);
     size_t number = env->GetArrayLength(to_merge);
     std::vector<std::pair<std::string,session::ustring>> configs = {};
@@ -93,6 +100,7 @@ Java_network_loki_messenger_libsession_1util_ConfigBase_merge___3Lkotlin_Pair_2(
 JNIEXPORT jint JNICALL
 Java_network_loki_messenger_libsession_1util_ConfigBase_merge__Lkotlin_Pair_2(JNIEnv *env, jobject thiz,
                                                                    jobject to_merge) {
+    std::lock_guard lock{util::util_mutex_};
     auto conf = ptrToConfigBase(env, thiz);
     std::vector<std::pair<std::string, session::ustring>> configs = {extractHashAndData(env, to_merge)};
     return conf->merge(configs);
@@ -132,6 +140,7 @@ Java_network_loki_messenger_libsession_1util_ConfigBase_00024Companion_kindFor(J
 extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_ConfigBase_currentHashes(JNIEnv *env, jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
     auto conf = ptrToConfigBase(env, thiz);
     jclass stack = env->FindClass("java/util/Stack");
     jmethodID init = env->GetMethodID(stack, "<init>", "()V");
