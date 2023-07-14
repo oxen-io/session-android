@@ -1,38 +1,34 @@
 package org.thoughtcrime.securesms.preferences
 
+import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.view.LayoutInflater
+import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import network.loki.messenger.R
-import network.loki.messenger.databinding.DialogSeedBinding
 import org.session.libsignal.crypto.MnemonicCodec
 import org.session.libsignal.utilities.hexEncodedPrivateKey
+import org.thoughtcrime.securesms.createSessionDialog
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
 import org.thoughtcrime.securesms.crypto.MnemonicUtilities
-import org.thoughtcrime.securesms.conversation.v2.utilities.BaseDialog
 
-class SeedDialog : BaseDialog() {
-
+class SeedDialog: DialogFragment() {
     private val seed by lazy {
-        var hexEncodedSeed = IdentityKeyUtil.retrieve(requireContext(), IdentityKeyUtil.LOKI_SEED)
-        if (hexEncodedSeed == null) {
-            hexEncodedSeed = IdentityKeyUtil.getIdentityKeyPair(requireContext()).hexEncodedPrivateKey // Legacy account
-        }
-        val loadFileContents: (String) -> String = { fileName ->
-            MnemonicUtilities.loadFileContents(requireContext(), fileName)
-        }
-        MnemonicCodec(loadFileContents).encode(hexEncodedSeed!!, MnemonicCodec.Language.Configuration.english)
+        val hexEncodedSeed = IdentityKeyUtil.retrieve(requireContext(), IdentityKeyUtil.LOKI_SEED)
+            ?: IdentityKeyUtil.getIdentityKeyPair(requireContext()).hexEncodedPrivateKey // Legacy account
+
+        MnemonicCodec { fileName -> MnemonicUtilities.loadFileContents(requireContext(), fileName) }
+            .encode(hexEncodedSeed, MnemonicCodec.Language.Configuration.english)
     }
 
-    override fun setContentView(builder: AlertDialog.Builder) {
-        val binding = DialogSeedBinding.inflate(LayoutInflater.from(requireContext()))
-        binding.seedTextView.text = seed
-        binding.closeButton.setOnClickListener { dismiss() }
-        binding.copyButton.setOnClickListener { copySeed() }
-        builder.setView(binding.root)
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {
+        title(R.string.dialog_seed_title)
+        text(R.string.dialog_seed_explanation)
+        text(seed, R.style.SessionIDTextView)
+        button(R.string.copy, R.string.AccessibilityId_copy_recovery_phrase) { copySeed() }
+        button(R.string.close) { dismiss() }
     }
 
     private fun copySeed() {

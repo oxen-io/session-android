@@ -2,7 +2,6 @@ package org.thoughtcrime.securesms.onboarding
 
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
-import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.drawable.TransitionDrawable
 import android.net.Uri
@@ -20,6 +19,7 @@ import org.session.libsession.utilities.ThemeUtil
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.BaseActionBarActivity
 import org.thoughtcrime.securesms.home.HomeActivity
+import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.GlowViewUtilities
 import org.thoughtcrime.securesms.util.PNModeView
 import org.thoughtcrime.securesms.util.disableClipping
@@ -151,12 +151,13 @@ class PNModeActivity : BaseActionBarActivity() {
 
     private fun register() {
         if (selectedOptionView == null) {
-            val dialog = AlertDialog.Builder(this)
-            dialog.setTitle(R.string.activity_pn_mode_no_option_picked_dialog_title)
-            dialog.setPositiveButton(R.string.ok) { _, _ -> }
-            dialog.create().show()
+            showSessionDialog {
+                title(R.string.activity_pn_mode_no_option_picked_dialog_title)
+                button(R.string.ok)
+            }
             return
         }
+
         TextSecurePreferences.setIsUsingFCM(this, (selectedOptionView == binding.fcmOptionView))
         val application = ApplicationContext.getInstance(this)
         application.startPollingIfNeeded()

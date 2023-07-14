@@ -1,6 +1,5 @@
 package org.thoughtcrime.securesms.conversation.v2
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
@@ -31,6 +30,7 @@ import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
+import org.thoughtcrime.securesms.showSessionDialog
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.math.min
 
@@ -153,17 +153,15 @@ class ConversationAdapter(
                 viewHolder.view.bind(message, messageBefore)
                 if (message.isCallLog && message.isFirstMissedCall) {
                     viewHolder.view.setOnClickListener {
-                        AlertDialog.Builder(context)
-                            .setTitle(R.string.CallNotificationBuilder_first_call_title)
-                            .setMessage(R.string.CallNotificationBuilder_first_call_message)
-                            .setPositiveButton(R.string.activity_settings_title) { _, _ ->
-                                val intent = Intent(context, PrivacySettingsActivity::class.java)
-                                context.startActivity(intent)
+                        context.showSessionDialog {
+                            title(R.string.CallNotificationBuilder_first_call_title)
+                            text(R.string.CallNotificationBuilder_first_call_message)
+                            button(R.string.activity_settings_title) {
+                                Intent(context, PrivacySettingsActivity::class.java)
+                                    .let(context::startActivity)
                             }
-                            .setNeutralButton(R.string.cancel) { d, _ ->
-                                d.dismiss()
-                            }
-                            .show()
+                            cancelButton()
+                        }
                     }
                 } else {
                     viewHolder.view.setOnClickListener(null)

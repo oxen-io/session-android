@@ -2,7 +2,6 @@ package org.thoughtcrime.securesms.conversation.v2.menus
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.PorterDuff
@@ -15,7 +14,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorInt
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.SearchView
@@ -34,7 +32,6 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.MediaOverviewActivity
-import org.thoughtcrime.securesms.MuteDialog
 import org.thoughtcrime.securesms.ShortcutLauncherActivity
 import org.thoughtcrime.securesms.calls.WebRtcCallActivity
 import org.thoughtcrime.securesms.contacts.SelectContactsActivity
@@ -45,6 +42,8 @@ import org.thoughtcrime.securesms.groups.EditClosedGroupActivity
 import org.thoughtcrime.securesms.groups.EditClosedGroupActivity.Companion.groupIDKey
 import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
 import org.thoughtcrime.securesms.service.WebRtcCallService
+import org.thoughtcrime.securesms.showSessionDialog
+import org.thoughtcrime.securesms.showMuteDialog
 import org.thoughtcrime.securesms.util.BitmapUtil
 import java.io.IOException
 
@@ -187,29 +186,23 @@ object ConversationMenuHelper {
     private fun call(context: Context, thread: Recipient) {
 
         if (!TextSecurePreferences.isCallNotificationsEnabled(context)) {
-            val dialog = AlertDialog.Builder(context)
-                .setTitle(R.string.ConversationActivity_call_title)
-                .setMessage(R.string.ConversationActivity_call_prompt)
-                .setPositiveButton(R.string.activity_settings_title) { _, _ ->
-                    val intent = Intent(context, PrivacySettingsActivity::class.java)
-                    context.startActivity(intent)
+            context.showSessionDialog {
+                title(R.string.ConversationActivity_call_title)
+                text(R.string.ConversationActivity_call_prompt)
+                button(R.string.activity_settings_title, R.string.AccessibilityId_settings) {
+                    Intent(context, PrivacySettingsActivity::class.java).let(context::startActivity)
                 }
-                .setNeutralButton(R.string.cancel) { d, _ ->
-                    d.dismiss()
-                }.create()
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE)?.contentDescription = context.getString(R.string.AccessibilityId_settings)
-            dialog.getButton(DialogInterface.BUTTON_NEGATIVE)?.contentDescription = context.getString(R.string.AccessibilityId_cancel_button)
-            dialog.show()
+                cancelButton()
+            }
             return
         }
 
-        val service = WebRtcCallService.createCall(context, thread)
-        context.startService(service)
+        WebRtcCallService.createCall(context, thread)
+            .let(context::startService)
 
-        val activity = Intent(context, WebRtcCallActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-        context.startActivity(activity)
+        Intent(context, WebRtcCallActivity::class.java)
+            .apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
+            .let(context::startActivity)
 
     }
 
@@ -296,9 +289,7 @@ object ConversationMenuHelper {
 
     private fun leaveClosedGroup(context: Context, thread: Recipient) {
         if (!thread.isClosedGroupRecipient) { return }
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle(context.resources.getString(R.string.ConversationActivity_leave_group))
-        builder.setCancelable(true)
+
         val group = DatabaseComponent.get(context).groupDatabase().getGroup(thread.address.toGroupString()).orNull()
         val admins = group.admins
         val sessionID = TextSecurePreferences.getLocalNumber(context)
@@ -308,29 +299,25 @@ object ConversationMenuHelper {
         } else {
             context.resources.getString(R.string.ConversationActivity_are_you_sure_you_want_to_leave_this_group)
         }
-        builder.setMessage(message)
-        builder.setPositiveButton(R.string.yes) { _, _ ->
-            var groupPublicKey: String?
-            var isClosedGroup: Boolean
-            try {
-                groupPublicKey = doubleDecodeGroupID(thread.address.toString()).toHexString()
-                isClosedGroup = DatabaseComponent.get(context).lokiAPIDatabase().isClosedGroup(groupPublicKey)
-            } catch (e: IOException) {
-                groupPublicKey = null
-                isClosedGroup = false
-            }
-            try {
-                if (isClosedGroup) {
-                    MessageSender.leave(groupPublicKey!!, notifyUser = false)
-                } else {
-                    Toast.makeText(context, R.string.ConversationActivity_error_leaving_group, Toast.LENGTH_LONG).show()
+
+        fun onLeaveFailed() = Toast.makeText(context, R.string.ConversationActivity_error_leaving_group, Toast.LENGTH_LONG).show()
+
+        context.showSessionDialog {
+            title(R.string.ConversationActivity_leave_group)
+            text(message)
+            button(R.string.yes) {
+                try {
+                    val groupPublicKey = doubleDecodeGroupID(thread.address.toString()).toHexString()
+                    val isClosedGroup = DatabaseComponent.get(context).lokiAPIDatabase().isClosedGroup(groupPublicKey)
+
+                    if (isClosedGroup) MessageSender.leave(groupPublicKey, notifyUser = false)
+                    else onLeaveFailed()
+                } catch (e: Exception) {
+                    onLeaveFailed()
                 }
-            } catch (e: Exception) {
-                Toast.makeText(context, R.string.ConversationActivity_error_leaving_group, Toast.LENGTH_LONG).show()
             }
+            button(R.string.no)
         }
-        builder.setNegativeButton(R.string.no, null)
-        builder.show()
     }
 
     private fun inviteContacts(context: Context, thread: Recipient) {
@@ -345,7 +332,7 @@ object ConversationMenuHelper {
     }
 
     private fun mute(context: Context, thread: Recipient) {
-        MuteDialog.show(ContextThemeWrapper(context, context.theme)) { until: Long ->
+        showMuteDialog(ContextThemeWrapper(context, context.theme)) { until ->
             DatabaseComponent.get(context).recipientDatabase().setMuted(thread, until)
         }
     }

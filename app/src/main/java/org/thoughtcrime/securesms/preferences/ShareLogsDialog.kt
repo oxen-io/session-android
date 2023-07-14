@@ -1,17 +1,18 @@
 package org.thoughtcrime.securesms.preferences
 
+import android.app.Dialog
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Intent
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.view.LayoutInflater
 import android.webkit.MimeTypeMap
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
@@ -20,11 +21,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.BuildConfig
 import network.loki.messenger.R
-import network.loki.messenger.databinding.DialogShareLogsBinding
 import org.session.libsignal.utilities.ExternalStorageUtil
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.ApplicationContext
-import org.thoughtcrime.securesms.conversation.v2.utilities.BaseDialog
+import org.thoughtcrime.securesms.createSessionDialog
 import org.thoughtcrime.securesms.util.FileProviderUtil
 import org.thoughtcrime.securesms.util.StreamUtil
 import java.io.File
@@ -33,21 +33,15 @@ import java.io.IOException
 import java.util.Objects
 import java.util.concurrent.TimeUnit
 
-class ShareLogsDialog : BaseDialog() {
+class ShareLogsDialog : DialogFragment() {
 
     private var shareJob: Job? = null
 
-    override fun setContentView(builder: AlertDialog.Builder) {
-        val binding = DialogShareLogsBinding.inflate(LayoutInflater.from(requireContext()))
-        binding.cancelButton.setOnClickListener {
-            dismiss()
-        }
-        binding.shareButton.setOnClickListener {
-            // start the export and share
-            shareLogs()
-        }
-        builder.setView(binding.root)
-        builder.setCancelable(false)
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {
+        title(R.string.dialog_share_logs_title)
+        text(R.string.dialog_share_logs_explanation)
+        button(R.string.share) { shareLogs() }
+        cancelButton { dismiss() }
     }
 
     private fun shareLogs() {

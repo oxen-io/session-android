@@ -1,20 +1,21 @@
 package org.thoughtcrime.securesms.conversation.v2.dialogs
 
-import android.view.LayoutInflater
-import androidx.appcompat.app.AlertDialog
-import network.loki.messenger.databinding.DialogLinkPreviewBinding
+import android.app.Dialog
+import android.os.Bundle
+import androidx.fragment.app.DialogFragment
+import network.loki.messenger.R
 import org.session.libsession.utilities.TextSecurePreferences
-import org.thoughtcrime.securesms.conversation.v2.utilities.BaseDialog
+import org.thoughtcrime.securesms.createSessionDialog
 
 /** Shown the first time the user inputs a URL that could generate a link preview, to
  * let them know that Session offers the ability to send and receive link previews. */
-class LinkPreviewDialog(private val onEnabled: () -> Unit) : BaseDialog() {
+class LinkPreviewDialog(private val onEnabled: () -> Unit) : DialogFragment() {
 
-    override fun setContentView(builder: AlertDialog.Builder) {
-        val binding = DialogLinkPreviewBinding.inflate(LayoutInflater.from(requireContext()))
-        binding.cancelButton.setOnClickListener { dismiss() }
-        binding.enableLinkPreviewsButton.setOnClickListener { enable() }
-        builder.setView(binding.root)
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {
+        title(R.string.dialog_link_preview_title)
+        text(R.string.dialog_link_preview_explanation)
+        button(R.string.dialog_link_preview_enable_button_title) { enable() }
+        cancelButton { dismiss() }
     }
 
     private fun enable() {

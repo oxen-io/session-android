@@ -71,6 +71,7 @@
 
     <!--  TODO These button styles require proper background selectors for up/down visual state.  -->
     <style name="Widget.Session.Button.Common" parent="">
+        <item name="android:gravity">center</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">@dimen/medium_font_size</item>
         <item name="android:fontFamily">sans-serif-medium</item>
@@ -110,6 +111,7 @@
     </style>
 
     <style name="Widget.Session.Button.Dialog" parent="">
+        <item name="android:gravity">center</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">@dimen/small_font_size</item>
         <item name="android:textColor">?android:textColorPrimary</item>

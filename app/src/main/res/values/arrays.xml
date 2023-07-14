@@ -169,14 +169,6 @@
       <item>@string/arrays__use_custom</item>
   </string-array>
 
-  <string-array name="mute_durations">
-      <item>@string/arrays__mute_for_one_hour</item>
-      <item>@string/arrays__mute_for_two_hours</item>
-      <item>@string/arrays__mute_for_one_day</item>
-      <item>@string/arrays__mute_for_seven_days</item>
-      <item>@string/arrays__mute_forever</item>
-  </string-array>
-
     <string-array name="pref_notification_privacy_entries">
       <item>@string/arrays__name_and_message</item>
       <item>@string/arrays__name_only</item>

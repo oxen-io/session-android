@@ -41,6 +41,7 @@ import androidx.core.text.set
 import androidx.core.text.toSpannable
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -100,7 +101,6 @@ import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.hexEncodedPrivateKey
 import org.thoughtcrime.securesms.ApplicationContext
-import org.thoughtcrime.securesms.ExpirationDialog
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.attachments.ScreenshotObserver
 import org.thoughtcrime.securesms.audio.AudioRecorder
@@ -164,6 +164,8 @@ import org.thoughtcrime.securesms.mms.VideoSlide
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.reactions.ReactionsDialogFragment
 import org.thoughtcrime.securesms.reactions.any.ReactWithAnyEmojiDialogFragment
+import org.thoughtcrime.securesms.showExpirationDialog
+import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.ActivityDispatcher
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.DateUtils
@@ -496,8 +498,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         push(intent, false)
     }
 
-    override fun showDialog(baseDialog: BaseDialog, tag: String?) {
-        baseDialog.show(supportFragmentManager, tag)
+    override fun showDialog(dialogFragment: DialogFragment, tag: String?) {
+        dialogFragment.show(supportFragmentManager, tag)
     }
 
     override fun onCreateLoader(id: Int, bundle: Bundle?): Loader<Cursor> {
@@ -1143,21 +1145,18 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun block(deleteThread: Boolean) {
-        val title = R.string.RecipientPreferenceActivity_block_this_contact_question
-        val message = R.string.RecipientPreferenceActivity_you_will_no_longer_receive_messages_and_calls_from_this_contact
-        val dialog = AlertDialog.Builder(this)
-            .setTitle(title)
-            .setMessage(message)
-            .setNegativeButton(android.R.string.cancel, null)
-            .setPositiveButton(R.string.RecipientPreferenceActivity_block) { _, _ ->
+        showSessionDialog {
+            title(R.string.RecipientPreferenceActivity_block_this_contact_question)
+            text(R.string.RecipientPreferenceActivity_you_will_no_longer_receive_messages_and_calls_from_this_contact)
+            destructiveButton(R.string.RecipientPreferenceActivity_block, R.string.AccessibilityId_block_confirm) {
                 viewModel.block()
                 if (deleteThread) {
                     viewModel.deleteThread()
                     finish()
                 }
-            }.show()
-        val button = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
-        button.setContentDescription("Confirm block")
+            }
+            cancelButton()
+        }
     }
 
     override fun copySessionID(sessionId: String) {
@@ -1184,28 +1183,27 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             val group = groupDb.getGroup(thread.address.toGroupString()).orNull()
             if (group?.isActive == false) { return }
         }
-        ExpirationDialog.show(this, thread.expireMessages) { expirationTime: Int ->
+        showExpirationDialog(thread.expireMessages) { expirationTime ->
             storage.setExpirationTimer(thread.address.serialize(), expirationTime)
             val message = ExpirationTimerUpdate(expirationTime)
             message.recipient = thread.address.serialize()
             message.sentTimestamp = SnodeAPI.nowWithOffset
-            val expiringMessageManager = ApplicationContext.getInstance(this).expiringMessageManager
-            expiringMessageManager.setExpirationTimer(message)
+            ApplicationContext.getInstance(this).expiringMessageManager.setExpirationTimer(message)
             MessageSender.send(message, thread.address)
             invalidateOptionsMenu()
         }
     }
 
     override fun unblock() {
-        val title = R.string.ConversationActivity_unblock_this_contact_question
-        val message = R.string.ConversationActivity_you_will_once_again_be_able_to_receive_messages_and_calls_from_this_contact
-        AlertDialog.Builder(this)
-            .setTitle(title)
-            .setMessage(message)
-            .setNegativeButton(android.R.string.cancel, null)
-            .setPositiveButton(R.string.ConversationActivity_unblock) { _, _ ->
-                viewModel.unblock()
-            }.show()
+        showSessionDialog {
+            title(R.string.ConversationActivity_unblock_this_contact_question)
+            text(R.string.ConversationActivity_you_will_once_again_be_able_to_receive_messages_and_calls_from_this_contact)
+            destructiveButton(
+                R.string.ConversationActivity_unblock,
+                R.string.AccessibilityId_block_confirm
+            ) { viewModel.unblock() }
+            cancelButton()
+        }
     }
 
     // `position` is the adapter position; not the visual position
@@ -1657,22 +1655,21 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private fun showGIFPicker() {
         val hasSeenGIFMetaDataWarning: Boolean = textSecurePreferences.hasSeenGIFMetaDataWarning()
         if (!hasSeenGIFMetaDataWarning) {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle(R.string.giphy_permission_title)
-            builder.setMessage(R.string.giphy_permission_message)
-            builder.setPositiveButton(R.string.continue_2) { dialog: DialogInterface, _: Int ->
-                textSecurePreferences.setHasSeenGIFMetaDataWarning()
-                AttachmentManager.selectGif(this, PICK_GIF)
-                dialog.dismiss()
+            showSessionDialog {
+                title(R.string.giphy_permission_title)
+                text(R.string.giphy_permission_message)
+                button(R.string.continue_2) {
+                    textSecurePreferences.setHasSeenGIFMetaDataWarning()
+                    selectGif()
+                }
+                cancelButton()
             }
-            builder.setNegativeButton(R.string.cancel) { dialog: DialogInterface, _: Int ->
-                dialog.dismiss()
-            }
-            builder.create().show()
         } else {
-            AttachmentManager.selectGif(this, PICK_GIF)
+            selectGif()
         }
     }
+
+    private fun selectGif() = AttachmentManager.selectGif(this, PICK_GIF)
 
     private fun showDocumentPicker() {
         AttachmentManager.selectDocument(this, PICK_DOCUMENT)
@@ -1820,35 +1817,23 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val allHasHash = messages.all { lokiMessageDb.getMessageServerHash(it.id) != null }
         if (recipient.isOpenGroupRecipient) {
             val messageCount = 1
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
-            builder.setMessage(resources.getQuantityString(R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages, messageCount, messageCount))
-            builder.setCancelable(true)
-            builder.setPositiveButton(R.string.delete) { _, _ ->
-                for (message in messages) {
-                    viewModel.deleteForEveryone(message)
-                }
-                endActionMode()
+
+            showSessionDialog {
+                title(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
+                text(resources.getQuantityString(R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages, messageCount, messageCount))
+                button(R.string.delete) { messages.forEach(viewModel::deleteForEveryone); endActionMode() }
+                cancelButton { endActionMode() }
             }
-            builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
-                dialog.dismiss()
-                endActionMode()
-            }
-            builder.show()
         } else if (allSentByCurrentUser && allHasHash) {
             val bottomSheet = DeleteOptionsBottomSheet()
             bottomSheet.recipient = recipient
             bottomSheet.onDeleteForMeTapped = {
-                for (message in messages) {
-                    viewModel.deleteLocally(message)
-                }
+                messages.forEach(viewModel::deleteLocally)
                 bottomSheet.dismiss()
                 endActionMode()
             }
             bottomSheet.onDeleteForEveryoneTapped = {
-                for (message in messages) {
-                    viewModel.deleteForEveryone(message)
-                }
+                messages.forEach(viewModel::deleteForEveryone)
                 bottomSheet.dismiss()
                 endActionMode()
             }
@@ -1859,54 +1844,32 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)
         } else {
             val messageCount = 1
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
-            builder.setMessage(resources.getQuantityString(R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages, messageCount, messageCount))
-            builder.setCancelable(true)
-            builder.setPositiveButton(R.string.delete) { _, _ ->
-                for (message in messages) {
-                    viewModel.deleteLocally(message)
-                }
-                endActionMode()
+
+            showSessionDialog {
+                title(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
+                text(resources.getQuantityString(R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages, messageCount, messageCount))
+                button(R.string.delete) { messages.forEach(viewModel::deleteLocally); endActionMode() }
+                cancelButton(::endActionMode)
             }
-            builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
-                dialog.dismiss()
-                endActionMode()
-            }
-            builder.show()
         }
     }
 
     override fun banUser(messages: Set<MessageRecord>) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(R.string.ConversationFragment_ban_selected_user)
-        builder.setMessage("This will ban the selected user from this room. It won't ban them from other rooms.")
-        builder.setCancelable(true)
-        builder.setPositiveButton(R.string.ban) { _, _ ->
-            viewModel.banUser(messages.first().individualRecipient)
-            endActionMode()
+        showSessionDialog {
+            title(R.string.ConversationFragment_ban_selected_user)
+            text("This will ban the selected user from this room. It won't ban them from other rooms.")
+            button(R.string.ban) { viewModel.banUser(messages.first().individualRecipient); endActionMode() }
+            cancelButton(::endActionMode)
         }
-        builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
-            dialog.dismiss()
-            endActionMode()
-        }
-        builder.show()
     }
 
     override fun banAndDeleteAll(messages: Set<MessageRecord>) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(R.string.ConversationFragment_ban_selected_user)
-        builder.setMessage("This will ban the selected user from this room and delete all messages sent by them. It won't ban them from other rooms or delete the messages they sent there.")
-        builder.setCancelable(true)
-        builder.setPositiveButton(R.string.ban) { _, _ ->
-            viewModel.banAndDeleteAll(messages.first().individualRecipient)
-            endActionMode()
+        showSessionDialog {
+            title(R.string.ConversationFragment_ban_selected_user)
+            text("This will ban the selected user from this room and delete all messages sent by them. It won't ban them from other rooms or delete the messages they sent there.")
+            button(R.string.ban) { viewModel.banAndDeleteAll(messages.first().individualRecipient); endActionMode() }
+            cancelButton(::endActionMode)
         }
-        builder.setNegativeButton(android.R.string.cancel) { dialog, _ ->
-            dialog.dismiss()
-            endActionMode()
-        }
-        builder.show()
     }
 
     override fun copyMessages(messages: Set<MessageRecord>) {
@@ -1970,7 +1933,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     override fun saveAttachment(messages: Set<MessageRecord>) {
         val message = messages.first() as MmsMessageRecord
-        SaveAttachmentTask.showWarningDialog(this, { _, _ ->
+        SaveAttachmentTask.showWarningDialog(this) {
             Permissions.with(this)
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .maxSdkVersion(Build.VERSION_CODES.P)
@@ -1998,7 +1961,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                         Toast.LENGTH_LONG).show()
                 }
                 .execute()
-        })
+        }
     }
 
     override fun reply(messages: Set<MessageRecord>) {
