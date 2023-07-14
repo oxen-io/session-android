@@ -32,10 +32,10 @@ class ProfilePictureView @JvmOverloads constructor(
     var isLarge = false
 
     private val profilePicturesCache = mutableMapOf<String, String?>()
-    private val unknownRecipientDrawable = ResourceContactPhoto(R.drawable.ic_profile_default)
-        .asDrawable(context, ContactColors.UNKNOWN_COLOR.toConversationColor(context), false)
-    private val unknownOpenGroupDrawable = ResourceContactPhoto(R.drawable.ic_notification)
-        .asDrawable(context, ContactColors.UNKNOWN_COLOR.toConversationColor(context), false)
+    private val unknownRecipientDrawable by lazy { ResourceContactPhoto(R.drawable.ic_profile_default)
+        .asDrawable(context, ContactColors.UNKNOWN_COLOR.toConversationColor(context), false) }
+    private val unknownOpenGroupDrawable by lazy { ResourceContactPhoto(R.drawable.ic_notification)
+        .asDrawable(context, ContactColors.UNKNOWN_COLOR.toConversationColor(context), false) }
 
     // endregion
 
@@ -120,7 +120,7 @@ class ProfilePictureView @JvmOverloads constructor(
             if (signalProfilePicture != null && avatar != "0" && avatar != "") {
                 glide.clear(imageView)
                 glide.load(signalProfilePicture)
-                    .placeholder(R.drawable.ic_profile_default)
+                    .placeholder(unknownRecipientDrawable)
                     .centerCrop()
                     .error(glide.load(placeholder))
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -128,20 +128,22 @@ class ProfilePictureView @JvmOverloads constructor(
                     .into(imageView)
             } else if (recipient.isOpenGroupRecipient && recipient.groupAvatarId == null) {
                 glide.clear(imageView)
-                glide.load(R.drawable.ic_notification)
+                glide.load(unknownOpenGroupDrawable)
                     .centerCrop()
+                    .circleCrop()
                     .into(imageView)
             } else {
                 glide.clear(imageView)
                 glide.load(placeholder)
-                    .placeholder(R.drawable.ic_profile_default)
+                    .placeholder(unknownRecipientDrawable)
                     .centerCrop()
+                    .circleCrop()
                     .diskCacheStrategy(DiskCacheStrategy.NONE).circleCrop().into(imageView)
             }
             profilePicturesCache[publicKey] = recipient.profileAvatar
         } else {
-            glide.load(R.drawable.ic_profile_default)
-                .centerInside()
+            glide.load(unknownRecipientDrawable)
+                .centerCrop()
                 .into(imageView)
         }
     }

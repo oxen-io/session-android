@@ -219,7 +219,7 @@ class BatchMessageReceiveJob(
                     if (currentLastSeen > newLastSeen) {
                         newLastSeen = currentLastSeen
                     }
-                    if (newLastSeen > 0) {
+                    if (newLastSeen > 0 || currentLastSeen == 0L) {
                         storage.markConversationAsRead(threadId, newLastSeen, force = true)
                     }
                     storage.updateThread(threadId, true)

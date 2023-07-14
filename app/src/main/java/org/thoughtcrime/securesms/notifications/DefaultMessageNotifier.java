@@ -159,8 +159,9 @@ public class DefaultMessageNotifier implements MessageNotifier {
     executor.cancel();
   }
 
-  private void cancelActiveNotifications(@NonNull Context context) {
+  private boolean cancelActiveNotifications(@NonNull Context context) {
     NotificationManager notifications = ServiceUtil.getNotificationManager(context);
+    boolean hasNotifications = notifications.getActiveNotifications().length > 0;
     notifications.cancel(SUMMARY_NOTIFICATION_ID);
 
     try {
@@ -174,6 +175,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
       Log.w(TAG, e);
       notifications.cancelAll();
     }
+    return hasNotifications;
   }
 
   private void cancelOrphanedNotifications(@NonNull Context context, NotificationState notificationState) {
@@ -246,8 +248,18 @@ public class DefaultMessageNotifier implements MessageNotifier {
       return;
     }
 
-    if (!isVisible && !homeScreenVisible) {
+    if ((!isVisible && !homeScreenVisible) || hasExistingNotifications(context)) {
       updateNotification(context, signal, 0);
+    }
+  }
+
+  private boolean hasExistingNotifications(Context context) {
+    NotificationManager notifications = ServiceUtil.getNotificationManager(context);
+    try {
+      StatusBarNotification[] activeNotifications = notifications.getActiveNotifications();
+      return activeNotifications.length > 0;
+    } catch (Exception e) {
+      return false;
     }
   }
 
@@ -262,8 +274,8 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
       if ((telcoCursor == null || telcoCursor.isAfterLast()) || !TextSecurePreferences.hasSeenWelcomeScreen(context))
       {
-        cancelActiveNotifications(context);
         updateBadge(context, 0);
+        cancelActiveNotifications(context);
         clearReminder(context);
         return;
       }

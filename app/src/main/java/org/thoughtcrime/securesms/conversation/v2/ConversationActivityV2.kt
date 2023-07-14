@@ -512,14 +512,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         if (cursor != null) {
             val messageTimestamp = messageToScrollTimestamp.getAndSet(-1)
             val author = messageToScrollAuthor.getAndSet(null)
-            val initialUnreadCount: Int
+            val initialUnreadCount = mmsSmsDb.getUnreadCount(viewModel.threadId)
 
             // Update the unreadCount value to be loaded from the database since we got a new message
-            if (firstLoad.get() || oldCount != newCount) {
+            if (firstLoad.get() || oldCount != newCount || initialUnreadCount != unreadCount) {
                 // Update the unreadCount value to be loaded from the database since we got a new
                 // message (we need to store it in a local variable as it can get overwritten on
                 // another thread before the 'firstLoad.getAndSet(false)' case below)
-                initialUnreadCount = mmsSmsDb.getUnreadCount(viewModel.threadId)
                 unreadCount = initialUnreadCount
                 updateUnreadCountIndicator()
             }

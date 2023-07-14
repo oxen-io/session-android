@@ -3,6 +3,9 @@
 #include <sodium/crypto_sign.h>
 
 namespace util {
+
+    std::mutex util_mutex_ = std::mutex();
+
     jbyteArray bytes_from_ustring(JNIEnv* env, session::ustring_view from_str) {
         size_t length = from_str.length();
         auto jlength = (jsize)length;

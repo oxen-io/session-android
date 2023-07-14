@@ -133,7 +133,7 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
                     Log.w(TAG, "No hash returned for the configuration in namespace ${config.configNamespace()}")
                     return@forEachIndexed
                 }
-                Log.d(TAG, "Hash $insertHash returned from store request for new config")
+                Log.d(TAG, "Hash ${insertHash.take(4)} returned from store request for new config")
 
                 // confirm pushed seqno
                 val thisSeqNo = toPushMessage.seqNo

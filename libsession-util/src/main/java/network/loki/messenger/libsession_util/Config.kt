@@ -26,7 +26,7 @@ sealed class ConfigBase(protected val /* yucky */ pointer: Long) {
         }
 
         // TODO: time in future to activate (hardcoded to 1st jan 2024 for testing, change before release)
-        private const val ACTIVATE_TIME = 1704027600
+        private const val ACTIVATE_TIME = 1690761600000
 
         fun isNewConfigEnabled(forced: Boolean, currentTime: Long) =
             forced || currentTime >= ACTIVATE_TIME

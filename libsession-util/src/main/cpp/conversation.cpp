@@ -8,6 +8,7 @@ extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_00024Companion_newInstance___3B(
         JNIEnv *env, jobject thiz, jbyteArray ed25519_secret_key) {
+    std::lock_guard lock{util::util_mutex_};
     auto secret_key = util::ustring_from_bytes(env, ed25519_secret_key);
     auto* convo_info_volatile = new session::config::ConvoInfoVolatile(secret_key, std::nullopt);
 
@@ -22,6 +23,7 @@ extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_00024Companion_newInstance___3B_3B(
         JNIEnv *env, jobject thiz, jbyteArray ed25519_secret_key, jbyteArray initial_dump) {
+    std::lock_guard lock{util::util_mutex_};
     auto secret_key = util::ustring_from_bytes(env, ed25519_secret_key);
     auto initial = util::ustring_from_bytes(env, initial_dump);
     auto* convo_info_volatile = new session::config::ConvoInfoVolatile(secret_key, initial);
@@ -39,6 +41,7 @@ extern "C"
 JNIEXPORT jint JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_sizeOneToOnes(JNIEnv *env,
                                                                                       jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
     auto conversations = ptrToConvoInfo(env, thiz);
     return conversations->size_1to1();
 }
@@ -49,6 +52,7 @@ JNIEXPORT jint JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_eraseAll(JNIEnv *env,
                                                                                  jobject thiz,
                                                                                  jobject predicate) {
+    std::lock_guard lock{util::util_mutex_};
     auto conversations = ptrToConvoInfo(env, thiz);
 
     jclass predicate_class = env->FindClass("kotlin/jvm/functions/Function1");
@@ -58,15 +62,19 @@ Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_eraseAll
     jmethodID bool_get = env->GetMethodID(bool_class, "booleanValue", "()Z");
 
     int removed = 0;
+    auto to_erase = std::vector<session::config::convo::any>();
 
-    for (auto it = conversations->begin(); it != conversations->end(); ) {
+    for (auto it = conversations->begin(); it != conversations->end(); ++it) {
         auto result = env->CallObjectMethod(predicate, predicate_call, serialize_any(env, *it));
         bool bool_result = env->CallBooleanMethod(result, bool_get);
         if (bool_result) {
-            it = conversations->erase(it);
+            to_erase.push_back(*it);
+        }
+    }
+
+    for (auto & entry : to_erase) {
+        if (conversations->erase(entry)) {
             removed++;
-        } else {
-            ++it;
         }
     }
 
@@ -77,6 +85,7 @@ extern "C"
 JNIEXPORT jint JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_size(JNIEnv *env,
                                                                              jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
     auto config = ptrToConvoInfo(env, thiz);
     return (jint)config->size();
 }
@@ -84,6 +93,7 @@ extern "C"
 JNIEXPORT jboolean JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_empty(JNIEnv *env,
                                                                               jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
     auto config = ptrToConvoInfo(env, thiz);
     return config->empty();
 }
@@ -92,6 +102,7 @@ JNIEXPORT void JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_set(JNIEnv *env,
                                                                             jobject thiz,
                                                                             jobject to_store) {
+    std::lock_guard lock{util::util_mutex_};
 
     auto convos = ptrToConvoInfo(env, thiz);
 
@@ -116,6 +127,7 @@ JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getOneToOne(JNIEnv *env,
                                                                                     jobject thiz,
                                                                                     jstring pub_key_hex) {
+    std::lock_guard lock{util::util_mutex_};
     auto convos = ptrToConvoInfo(env, thiz);
     auto param = env->GetStringUTFChars(pub_key_hex, nullptr);
     auto internal = convos->get_1to1(param);
@@ -129,6 +141,7 @@ extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getOrConstructOneToOne(
         JNIEnv *env, jobject thiz, jstring pub_key_hex) {
+    std::lock_guard lock{util::util_mutex_};
     auto convos = ptrToConvoInfo(env, thiz);
     auto param = env->GetStringUTFChars(pub_key_hex, nullptr);
     auto internal = convos->get_or_construct_1to1(param);
@@ -140,6 +153,7 @@ JNIEXPORT jboolean JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_eraseOneToOne(JNIEnv *env,
                                                                                       jobject thiz,
                                                                                       jstring pub_key_hex) {
+    std::lock_guard lock{util::util_mutex_};
     auto convos = ptrToConvoInfo(env, thiz);
     auto param = env->GetStringUTFChars(pub_key_hex, nullptr);
     auto result = convos->erase_1to1(param);
@@ -151,6 +165,7 @@ extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getCommunity__Ljava_lang_String_2Ljava_lang_String_2(
         JNIEnv *env, jobject thiz, jstring base_url, jstring room) {
+    std::lock_guard lock{util::util_mutex_};
     auto convos = ptrToConvoInfo(env, thiz);
     auto base_url_chars = env->GetStringUTFChars(base_url, nullptr);
     auto room_chars = env->GetStringUTFChars(room, nullptr);
@@ -165,6 +180,7 @@ extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getOrConstructCommunity__Ljava_lang_String_2Ljava_lang_String_2_3B(
         JNIEnv *env, jobject thiz, jstring base_url, jstring room, jbyteArray pub_key) {
+    std::lock_guard lock{util::util_mutex_};
     auto convos = ptrToConvoInfo(env, thiz);
     auto base_url_chars = env->GetStringUTFChars(base_url, nullptr);
     auto room_chars = env->GetStringUTFChars(room, nullptr);
@@ -177,6 +193,7 @@ extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getOrConstructCommunity__Ljava_lang_String_2Ljava_lang_String_2Ljava_lang_String_2(
         JNIEnv *env, jobject thiz, jstring base_url, jstring room, jstring pub_key_hex) {
+    std::lock_guard lock{util::util_mutex_};
     auto convos = ptrToConvoInfo(env, thiz);
     auto base_url_chars = env->GetStringUTFChars(base_url, nullptr);
     auto room_chars = env->GetStringUTFChars(room, nullptr);
@@ -193,6 +210,7 @@ JNIEXPORT jboolean JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_eraseCommunity__Lnetwork_loki_messenger_libsession_1util_util_Conversation_Community_2(JNIEnv *env,
                                                                                        jobject thiz,
                                                                                        jobject open_group) {
+    std::lock_guard lock{util::util_mutex_};
     auto convos = ptrToConvoInfo(env, thiz);
     auto deserialized = deserialize_community(env, open_group, convos);
     return convos->erase(deserialized);
@@ -201,6 +219,7 @@ extern "C"
 JNIEXPORT jboolean JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_eraseCommunity__Ljava_lang_String_2Ljava_lang_String_2(
         JNIEnv *env, jobject thiz, jstring base_url, jstring room) {
+    std::lock_guard lock{util::util_mutex_};
     auto convos = ptrToConvoInfo(env, thiz);
     auto base_url_chars = env->GetStringUTFChars(base_url, nullptr);
     auto room_chars = env->GetStringUTFChars(room, nullptr);
@@ -213,6 +232,7 @@ extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getLegacyClosedGroup(
         JNIEnv *env, jobject thiz, jstring group_id) {
+    std::lock_guard lock{util::util_mutex_};
     auto convos = ptrToConvoInfo(env, thiz);
     auto id_chars = env->GetStringUTFChars(group_id, nullptr);
     auto lgc = convos->get_legacy_group(id_chars);
@@ -227,6 +247,7 @@ extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_getOrConstructLegacyGroup(
         JNIEnv *env, jobject thiz, jstring group_id) {
+    std::lock_guard lock{util::util_mutex_};
     auto convos = ptrToConvoInfo(env, thiz);
     auto id_chars = env->GetStringUTFChars(group_id, nullptr);
     auto lgc = convos->get_or_construct_legacy_group(id_chars);
@@ -237,6 +258,7 @@ extern "C"
 JNIEXPORT jboolean JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_eraseLegacyClosedGroup(
         JNIEnv *env, jobject thiz, jstring group_id) {
+    std::lock_guard lock{util::util_mutex_};
     auto convos = ptrToConvoInfo(env, thiz);
     auto id_chars = env->GetStringUTFChars(group_id, nullptr);
     auto result = convos->erase_legacy_group(id_chars);
@@ -248,6 +270,7 @@ JNIEXPORT jboolean JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_erase(JNIEnv *env,
                                                                               jobject thiz,
                                                                               jobject conversation) {
+    std::lock_guard lock{util::util_mutex_};
     auto convos = ptrToConvoInfo(env, thiz);
     auto deserialized = deserialize_any(env, conversation, convos);
     if (!deserialized.has_value()) return false;
@@ -257,6 +280,7 @@ extern "C"
 JNIEXPORT jint JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_sizeCommunities(JNIEnv *env,
                                                                                        jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
     auto convos = ptrToConvoInfo(env, thiz);
     return convos->size_communities();
 }
@@ -264,6 +288,7 @@ extern "C"
 JNIEXPORT jint JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_sizeLegacyClosedGroups(
         JNIEnv *env, jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
     auto convos = ptrToConvoInfo(env, thiz);
     return convos->size_legacy_groups();
 }
@@ -271,6 +296,7 @@ extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_all(JNIEnv *env,
                                                                             jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
     auto convos = ptrToConvoInfo(env, thiz);
     jclass stack = env->FindClass("java/util/Stack");
     jmethodID init = env->GetMethodID(stack, "<init>", "()V");
@@ -286,6 +312,7 @@ extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_allOneToOnes(JNIEnv *env,
                                                                                      jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
     auto convos = ptrToConvoInfo(env, thiz);
     jclass stack = env->FindClass("java/util/Stack");
     jmethodID init = env->GetMethodID(stack, "<init>", "()V");
@@ -299,6 +326,7 @@ extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_allCommunities(JNIEnv *env,
                                                                                       jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
     auto convos = ptrToConvoInfo(env, thiz);
     jclass stack = env->FindClass("java/util/Stack");
     jmethodID init = env->GetMethodID(stack, "<init>", "()V");
@@ -312,6 +340,7 @@ extern "C"
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_ConversationVolatileConfig_allLegacyClosedGroups(
         JNIEnv *env, jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
     auto convos = ptrToConvoInfo(env, thiz);
     jclass stack = env->FindClass("java/util/Stack");
     jmethodID init = env->GetMethodID(stack, "<init>", "()V");

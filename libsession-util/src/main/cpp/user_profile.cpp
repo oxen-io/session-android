@@ -7,6 +7,7 @@ extern "C" {
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_UserProfile_00024Companion_newInstance___3B_3B(
         JNIEnv *env, jobject thiz, jbyteArray ed25519_secret_key, jbyteArray initial_dump) {
+    std::lock_guard lock{util::util_mutex_};
     auto secret_key = util::ustring_from_bytes(env, ed25519_secret_key);
     auto initial = util::ustring_from_bytes(env, initial_dump);
     auto* profile = new session::config::UserProfile(secret_key, std::optional(initial));
@@ -23,7 +24,7 @@ Java_network_loki_messenger_libsession_1util_UserProfile_00024Companion_newInsta
         JNIEnv* env,
         jobject,
         jbyteArray secretKey) {
-
+    std::lock_guard lock{util::util_mutex_};
     auto* profile = new session::config::UserProfile(util::ustring_from_bytes(env, secretKey), std::nullopt);
 
     jclass userClass = env->FindClass("network/loki/messenger/libsession_util/UserProfile");
@@ -39,6 +40,7 @@ Java_network_loki_messenger_libsession_1util_UserProfile_setName(
         JNIEnv* env,
         jobject thiz,
         jstring newName) {
+    std::lock_guard lock{util::util_mutex_};
     auto profile = ptrToProfile(env, thiz);
     auto name_chars = env->GetStringUTFChars(newName, nullptr);
     profile->set_name(name_chars);
@@ -47,6 +49,7 @@ Java_network_loki_messenger_libsession_1util_UserProfile_setName(
 
 JNIEXPORT jstring JNICALL
 Java_network_loki_messenger_libsession_1util_UserProfile_getName(JNIEnv *env, jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
     auto profile = ptrToProfile(env, thiz);
     auto name = profile->get_name();
     if (name == std::nullopt) return nullptr;
@@ -56,6 +59,7 @@ Java_network_loki_messenger_libsession_1util_UserProfile_getName(JNIEnv *env, jo
 
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_UserProfile_getPic(JNIEnv *env, jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
     auto profile = ptrToProfile(env, thiz);
     auto pic = profile->get_profile_pic();
 
@@ -67,6 +71,7 @@ Java_network_loki_messenger_libsession_1util_UserProfile_getPic(JNIEnv *env, job
 JNIEXPORT void JNICALL
 Java_network_loki_messenger_libsession_1util_UserProfile_setPic(JNIEnv *env, jobject thiz,
                                                                 jobject user_pic) {
+    std::lock_guard lock{util::util_mutex_};
     auto profile = ptrToProfile(env, thiz);
     auto pic = util::deserialize_user_pic(env, user_pic);
     auto url = env->GetStringUTFChars(pic.first, nullptr);
@@ -80,12 +85,14 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_network_loki_messenger_libsession_1util_UserProfile_setNtsPriority(JNIEnv *env, jobject thiz,
                                                                         jint priority) {
+    std::lock_guard lock{util::util_mutex_};
     auto profile = ptrToProfile(env, thiz);
     profile->set_nts_priority(priority);
 }
 extern "C"
 JNIEXPORT jint JNICALL
 Java_network_loki_messenger_libsession_1util_UserProfile_getNtsPriority(JNIEnv *env, jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
     auto profile = ptrToProfile(env, thiz);
     return profile->get_nts_priority();
 }
