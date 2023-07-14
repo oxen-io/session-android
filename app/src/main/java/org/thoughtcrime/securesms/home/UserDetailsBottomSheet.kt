@@ -26,7 +26,6 @@ import org.session.libsignal.utilities.IdPrefix
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.mms.GlideApp
-import org.thoughtcrime.securesms.util.UiModeUtilities
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -94,7 +93,7 @@ class UserDetailsBottomSheet: BottomSheetDialogFragment() {
             publicKeyTextView.isVisible = !threadRecipient.isOpenGroupRecipient
                     && !threadRecipient.isOpenGroupInboxRecipient
                     && !threadRecipient.isOpenGroupOutboxRecipient
-            messageButton.isVisible = !threadRecipient.isOpenGroupRecipient || IdPrefix.fromValue(publicKey) == IdPrefix.BLINDED
+            messageButton.isVisible = !threadRecipient.isOpenGroupRecipient || IdPrefix.fromValue(publicKey)?.isBlinded() == true
             publicKeyTextView.text = publicKey
             publicKeyTextView.setOnLongClickListener {
                 val clipboard =

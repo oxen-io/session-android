@@ -81,6 +81,9 @@ class Contacts(pointer: Long) : ConfigBase(pointer) {
         } else if (sessionId.startsWith(IdPrefix.UN_BLINDED.value)) {
             Log.w("Loki", "Trying to create a contact with an un-blinded ID prefix")
             return
+        } else if (sessionId.startsWith(IdPrefix.BLINDEDV2.value)) {
+            Log.w("Loki", "Trying to create a contact with a blindedv2 ID prefix")
+            return
         }
         val contact = getOrConstruct(sessionId)
         updateFunction(contact)
@@ -97,6 +100,9 @@ class Contacts(pointer: Long) : ConfigBase(pointer) {
             return
         } else if (sessionId.startsWith(IdPrefix.UN_BLINDED.value)) {
             Log.w("Loki", "Trying to create a contact with an un-blinded ID prefix")
+            return
+        } else if (sessionId.startsWith(IdPrefix.BLINDEDV2.value)) {
+            Log.w("Loki", "Trying to create a contact with a blindedv2 ID prefix")
             return
         }
         val contact = get(sessionId) ?: return

@@ -28,7 +28,7 @@ class Address private constructor(address: String) : Parcelable, Comparable<Addr
     val isOpenGroupInbox: Boolean
         get() = GroupUtil.isOpenGroupInbox(address)
     val isOpenGroupOutbox: Boolean
-        get() = address.startsWith(IdPrefix.BLINDED.value)
+        get() = address.startsWith(IdPrefix.BLINDED.value) || address.startsWith(IdPrefix.BLINDEDV2.value)
     val isContact: Boolean
         get() = !(isGroup || isOpenGroupInbox)
 

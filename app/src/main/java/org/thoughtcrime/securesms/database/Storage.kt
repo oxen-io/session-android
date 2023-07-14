@@ -1134,7 +1134,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         val mappingDb = DatabaseComponent.get(context).blindedIdMappingDatabase()
         val moreContacts = contacts.filter { contact ->
             val id = SessionId(contact.id)
-            id.prefix != IdPrefix.BLINDED || mappingDb.getBlindedIdMapping(contact.id).none { it.sessionId != null }
+            id.prefix?.isBlinded() == false || mappingDb.getBlindedIdMapping(contact.id).none { it.sessionId != null }
         }
         val profileManager = SSKEnvironment.shared.profileManager
         moreContacts.forEach { contact ->

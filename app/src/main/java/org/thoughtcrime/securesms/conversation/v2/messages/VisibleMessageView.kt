@@ -167,6 +167,7 @@ class VisibleMessageView : LinearLayout {
                     if (thread.isOpenGroupRecipient) {
                         val openGroup = lokiThreadDb.getOpenGroupChat(threadID)
                         if (IdPrefix.fromValue(senderSessionID) == IdPrefix.BLINDED && openGroup?.canWrite == true) {
+                            // TODO: support v2 soon
                             val intent = Intent(context, ConversationActivityV2::class.java)
                             intent.putExtra(ConversationActivityV2.FROM_GROUP_THREAD_ID, threadID)
                             intent.putExtra(ConversationActivityV2.ADDRESS, Address.fromSerialized(senderSessionID))
@@ -180,7 +181,7 @@ class VisibleMessageView : LinearLayout {
                     val openGroup = lokiThreadDb.getOpenGroupChat(threadID) ?: return
                     var standardPublicKey = ""
                     var blindedPublicKey: String? = null
-                    if (IdPrefix.fromValue(senderSessionID) == IdPrefix.BLINDED) {
+                    if (IdPrefix.fromValue(senderSessionID)?.isBlinded() == true) {
                         blindedPublicKey = senderSessionID
                     } else {
                         standardPublicKey = senderSessionID

@@ -12,7 +12,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import org.session.libsession.BuildConfig
 import org.session.libsession.R
 import org.session.libsession.utilities.TextSecurePreferences.Companion.AUTOPLAY_AUDIO_MESSAGES
 import org.session.libsession.utilities.TextSecurePreferences.Companion.CALL_NOTIFICATIONS_ENABLED
@@ -180,7 +179,6 @@ interface TextSecurePreferences {
     fun setThemeStyle(themeStyle: String)
     fun setFollowSystemSettings(followSystemSettings: Boolean)
     fun autoplayAudioMessages(): Boolean
-    fun setForceNewConfig()
     fun hasForcedNewConfig(): Boolean
     fun hasPreference(key: String): Boolean
     fun clearAll()
@@ -812,11 +810,6 @@ interface TextSecurePreferences {
         @JvmStatic
         fun setNotificationMessagesChannelVersion(context: Context, version: Int) {
             setIntegerPreference(context, NOTIFICATION_MESSAGES_CHANNEL_VERSION, version)
-        }
-
-        @JvmStatic
-        fun setForceNewConfig(context: Context) {
-            setBooleanPreference(context, HAS_FORCED_NEW_CONFIG, true)
         }
 
         @JvmStatic
@@ -1458,10 +1451,6 @@ class AppTextSecurePreferences @Inject constructor(
 
     override fun setNotificationMessagesChannelVersion(version: Int) {
         setIntegerPreference(TextSecurePreferences.NOTIFICATION_MESSAGES_CHANNEL_VERSION, version)
-    }
-
-    override fun setForceNewConfig() {
-        setBooleanPreference(TextSecurePreferences.HAS_FORCED_NEW_CONFIG, true)
     }
 
     override fun hasForcedNewConfig(): Boolean =

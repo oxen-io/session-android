@@ -73,7 +73,7 @@ object MessageReceiver {
         } else {
             when (envelope.type) {
                 SignalServiceProtos.Envelope.Type.SESSION_MESSAGE -> {
-                    if (IdPrefix.fromValue(envelope.source) == IdPrefix.BLINDED) {
+                    if (IdPrefix.fromValue(envelope.source)?.isBlinded() == true) {
                         openGroupPublicKey ?: throw Error.InvalidGroupPublicKey
                         otherBlindedPublicKey ?: throw Error.DecryptionFailed
                         val decryptionResult = MessageDecrypter.decryptBlinded(
