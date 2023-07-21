@@ -50,16 +50,18 @@ class ConversationView : LinearLayout {
     // region Updating
     fun bind(thread: ThreadRecord, isTyping: Boolean, glide: GlideRequests) {
         this.thread = thread
-        if (thread.isPinned) {
-            binding.conversationViewDisplayNameTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                0,
-                0,
-                R.drawable.ic_pin,
-                0
-            )
-        } else {
-            binding.conversationViewDisplayNameTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
-        }
+
+        binding.conversationViewDisplayNameTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(
+            when {
+                thread.recipient.address.isClosedGroup -> R.drawable.ic_group_icon
+                thread.recipient.address.isOpenGroup -> R.drawable.ic_community
+                else -> 0
+            },
+            0,
+            if (thread.isPinned) R.drawable.ic_pin else 0,
+            0
+        )
+
         binding.root.background = if (thread.unreadCount > 0) {
             ContextCompat.getDrawable(context, R.drawable.conversation_unread_background)
         } else {

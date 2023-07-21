@@ -41,8 +41,8 @@
                 <TextView
                     android:id="@+id/conversationViewDisplayNameTextView"
                     android:contentDescription="@string/AccessibilityId_conversation_list_item"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/unreadCountIndicator"
                     app:layout_constraintTop_toTopOf="parent"
@@ -57,7 +57,6 @@
                     android:textSize="@dimen/medium_font_size"
                     android:textStyle="bold"
                     android:textColor="?android:textColorPrimary"
-                    app:drawableTint="?conversation_pinned_icon_color"
                     tools:drawableRight="@drawable/ic_pin"
                     tools:text="I'm a very long display name. What are you going to do about it?" />
 
