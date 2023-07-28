@@ -13,8 +13,9 @@ import android.provider.MediaStore
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.BuildConfig
@@ -42,11 +43,12 @@ class ShareLogsDialog : DialogFragment() {
         cancelButton { dismiss() }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     private fun shareLogs() {
         val persistentLogger = ApplicationContext.getInstance(context).persistentLogger
-        lifecycleScope.launch(Dispatchers.Main) {
+        val context = requireContext().applicationContext
+        GlobalScope.launch(Dispatchers.Main) {
             try {
-                val context = requireContext()
                 val outputUri: Uri = withContext(Dispatchers.IO) { ExternalStorageUtil.getDownloadUri() }
                 val mediaUri = withContext(Dispatchers.IO) { getExternalFile() }
                 if (mediaUri == null) {
