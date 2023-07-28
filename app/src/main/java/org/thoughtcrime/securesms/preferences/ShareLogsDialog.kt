@@ -13,6 +13,10 @@ import android.provider.MediaStore
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import network.loki.messenger.BuildConfig
 import network.loki.messenger.R
 import org.session.libsignal.utilities.ExternalStorageUtil
@@ -32,7 +36,7 @@ class ShareLogsDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {
         title(R.string.dialog_share_logs_title)
         text(R.string.dialog_share_logs_explanation)
-        button(R.string.share) {
+        button(R.string.share, dismiss = false) {
             shareLogs()
         }
         cancelButton { dismiss() }
@@ -40,63 +44,70 @@ class ShareLogsDialog : DialogFragment() {
 
     private fun shareLogs() {
         val persistentLogger = ApplicationContext.getInstance(context).persistentLogger
-        try {
-            val context = requireContext()
-            val outputUri: Uri = ExternalStorageUtil.getDownloadUri()
-            val mediaUri = getExternalFile()
-            if (mediaUri == null) {
-                // show toast saying media saved
-                dismiss()
-                return
-            }
-
-            val inputStream = persistentLogger.logs.get().byteInputStream()
-            val updateValues = ContentValues()
-            if (outputUri.scheme == ContentResolver.SCHEME_FILE) {
-                FileOutputStream(mediaUri.path).use { outputStream ->
-                    StreamUtil.copy(inputStream, outputStream)
-                    MediaScannerConnection.scanFile(
-                        context,
-                        arrayOf(mediaUri.path),
-                        arrayOf("text/plain"),
-                        null
-                    )
+        lifecycleScope.launch(Dispatchers.Main) {
+            try {
+                val context = requireContext()
+                val outputUri: Uri = withContext(Dispatchers.IO) { ExternalStorageUtil.getDownloadUri() }
+                val mediaUri = withContext(Dispatchers.IO) { getExternalFile() }
+                if (mediaUri == null) {
+                    // show toast saying media saved
+                    dismiss()
+                    return@launch
                 }
-            } else {
-                context.contentResolver.openOutputStream(mediaUri, "w").use { outputStream ->
-                    val total: Long = StreamUtil.copy(inputStream, outputStream)
-                    if (total > 0) {
-                        updateValues.put(MediaStore.MediaColumns.SIZE, total)
+
+                val inputStream =
+                    withContext(Dispatchers.IO) {
+                        persistentLogger.logs.get().byteInputStream()
+                    }
+                val updateValues = ContentValues()
+                if (outputUri.scheme == ContentResolver.SCHEME_FILE) {
+                    withContext(Dispatchers.IO) {
+                        FileOutputStream(mediaUri.path).use { outputStream ->
+                            StreamUtil.copy(inputStream, outputStream)
+                            MediaScannerConnection.scanFile(
+                                context,
+                                arrayOf(mediaUri.path),
+                                arrayOf("text/plain"),
+                                null
+                            )
+                        }
+                    }
+                } else {
+                    context.contentResolver.openOutputStream(mediaUri, "w").use { outputStream ->
+                        val total: Long = StreamUtil.copy(inputStream, outputStream)
+                        if (total > 0) {
+                            updateValues.put(MediaStore.MediaColumns.SIZE, total)
+                        }
                     }
                 }
-            }
-            if (Build.VERSION.SDK_INT > 28) {
-                updateValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
-            }
-            if (updateValues.size() > 0) {
-                context.contentResolver.update(mediaUri, updateValues, null, null)
-            }
+                if (Build.VERSION.SDK_INT > 28) {
+                    updateValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
+                }
+                if (updateValues.size() > 0) {
+                    context.contentResolver.update(mediaUri, updateValues, null, null)
+                }
 
-            val shareUri = if (mediaUri.scheme == ContentResolver.SCHEME_FILE) {
-                FileProviderUtil.getUriFor(context, File(mediaUri.path!!))
-            } else {
-                mediaUri
+                val shareUri = if (mediaUri.scheme == ContentResolver.SCHEME_FILE) {
+                    FileProviderUtil.getUriFor(context, File(mediaUri.path!!))
+                } else {
+                    mediaUri
+                }
+
+                val shareIntent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_STREAM, shareUri)
+                    type = "text/plain"
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+
+                startActivity(Intent.createChooser(shareIntent, getString(R.string.share)))
+
+                dismiss()
+            } catch (e: Exception) {
+                Log.e("Loki", "Error saving logs", e)
+                Toast.makeText(context, "Error saving logs", Toast.LENGTH_LONG).show()
+                dismiss()
             }
-
-            val shareIntent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_STREAM, shareUri)
-                type = "text/plain"
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
-
-            startActivity(Intent.createChooser(shareIntent, getString(R.string.share)))
-
-            dismiss()
-        } catch (e: Exception) {
-            Log.e("Loki", "Error saving logs", e)
-            Toast.makeText(context, "Error saving logs", Toast.LENGTH_LONG).show()
-            dismiss()
         }
     }
 
