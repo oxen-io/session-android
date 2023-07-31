@@ -140,7 +140,7 @@ open class ThumbnailView: FrameLayout {
 
         val dimens = dimensDelegate.resourceSize()
 
-        val request = glide.load(DecryptableUri(slide.thumbnailUri!!))
+        var request = glide.load(DecryptableUri(slide.thumbnailUri!!))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .let { request ->
                     if (dimens[WIDTH] == 0 || dimens[HEIGHT] == 0) {
@@ -150,7 +150,12 @@ open class ThumbnailView: FrameLayout {
                     }
                 }
                 .transition(DrawableTransitionOptions.withCrossFade())
-                .centerCrop()
+
+        request = if (radius > 0) {
+            request.transforms(CenterCrop(), RoundedCorners(radius))
+        } else {
+            request.transforms(CenterCrop())
+        }
 
         return if (slide.isInProgress) request else request.apply(RequestOptions.errorOf(R.drawable.ic_missing_thumbnail_picture))
     }
