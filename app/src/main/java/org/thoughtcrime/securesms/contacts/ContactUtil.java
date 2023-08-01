@@ -1,4 +1,4 @@
-package org.thoughtcrime.securesms.contactshare;
+package org.thoughtcrime.securesms.contacts;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
@@ -24,7 +24,7 @@ public final class ContactUtil {
     return SpanUtil.italic(context.getString(R.string.MessageNotifier_unknown_contact_message));
   }
 
-  public static @NonNull String getDisplayName(@Nullable Contact contact) {
+  private static @NonNull String getDisplayName(@Nullable Contact contact) {
     if (contact == null) {
       return "";
     }
