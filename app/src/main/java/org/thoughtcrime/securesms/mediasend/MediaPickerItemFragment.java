@@ -1,18 +1,9 @@
 package org.thoughtcrime.securesms.mediasend;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,8 +12,18 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import org.thoughtcrime.securesms.mms.GlideApp;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.session.libsession.utilities.Util;
+import org.thoughtcrime.securesms.mms.GlideApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,11 +131,10 @@ public class MediaPickerItemFragment extends Fragment implements MediaPickerItem
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.mediapicker_menu_add:
-        adapter.setForcedMultiSelect(true);
-        viewModel.onMultiSelectStarted();
-        return true;
+    if (item.getItemId() == R.id.mediapicker_menu_add) {
+      adapter.setForcedMultiSelect(true);
+      viewModel.onMultiSelectStarted();
+      return true;
     }
     return false;
   }

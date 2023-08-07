@@ -255,7 +255,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
 
       NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
         .setSmallIcon(R.drawable.ic_notification)
-        .setColor(context.getResources().getColor(R.color.textsecure_primary))
+        .setColor(context.getResources().getColor(org.session.libsession.R.color.textsecure_primary))
         .setCategory(NotificationCompat.CATEGORY_ERROR)
         .setContentTitle(context.getString(R.string.ErrorNotifier_migration))
         .setContentText(context.getString(R.string.ErrorNotifier_migration_downgrade))

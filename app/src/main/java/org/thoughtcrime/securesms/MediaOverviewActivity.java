@@ -20,7 +20,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,7 +34,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.Toolbar;
@@ -56,6 +54,10 @@ import org.session.libsession.messaging.messages.control.DataExtractionNotificat
 import org.session.libsession.messaging.sending_receiving.MessageSender;
 import org.session.libsession.snode.SnodeAPI;
 import org.session.libsession.utilities.Address;
+import org.session.libsession.utilities.Util;
+import org.session.libsession.utilities.ViewUtil;
+import org.session.libsession.utilities.recipients.Recipient;
+import org.session.libsession.utilities.task.ProgressDialogAsyncTask;
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter;
 import org.thoughtcrime.securesms.database.MediaDatabase;
 import org.thoughtcrime.securesms.database.loaders.BucketedThreadMediaLoader;
@@ -63,13 +65,9 @@ import org.thoughtcrime.securesms.database.loaders.BucketedThreadMediaLoader.Buc
 import org.thoughtcrime.securesms.database.loaders.ThreadMediaLoader;
 import org.thoughtcrime.securesms.mms.GlideApp;
 import org.thoughtcrime.securesms.permissions.Permissions;
-import org.session.libsession.utilities.recipients.Recipient;
 import org.thoughtcrime.securesms.util.AttachmentUtil;
 import org.thoughtcrime.securesms.util.SaveAttachmentTask;
 import org.thoughtcrime.securesms.util.StickyHeaderDecoration;
-import org.session.libsession.utilities.Util;
-import org.session.libsession.utilities.ViewUtil;
-import org.session.libsession.utilities.task.ProgressDialogAsyncTask;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -436,17 +434,20 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
 
       @Override
       public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-          case R.id.save:
-            handleSaveMedia(getListAdapter().getSelectedMedia());
-            return true;
-          case R.id.delete:
-            handleDeleteMedia(getListAdapter().getSelectedMedia());
-            actionMode.finish();
-            return true;
-          case R.id.select_all:
-            handleSelectAllMedia();
-            return true;
+        int itemId = menuItem.getItemId();
+        if (itemId == R.id.save) {
+          handleSaveMedia(getListAdapter().getSelectedMedia());
+          return true;
+        } else if (itemId == R.id.save) {
+          handleSaveMedia(getListAdapter().getSelectedMedia());
+          return true;
+        } else if (itemId == R.id.delete) {
+          handleDeleteMedia(getListAdapter().getSelectedMedia());
+          actionMode.finish();
+          return true;
+        } else if (itemId == R.id.select_all) {
+          handleSelectAllMedia();
+          return true;
         }
         return false;
       }

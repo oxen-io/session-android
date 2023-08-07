@@ -155,7 +155,7 @@ public abstract class CorrectedPreferenceFragment extends PreferenceFragmentComp
           holder.itemView.setLayoutParams(layoutParams);
           setZeroPaddingToLayoutChildren(holder.itemView);
         } else {
-          View iconFrame = holder.itemView.findViewById(R.id.icon_frame);
+          View iconFrame = holder.itemView.findViewById(androidx.preference.R.id.icon_frame);
           if (iconFrame != null) {
             iconFrame.setVisibility(preference.getIcon() == null ? View.GONE : View.VISIBLE);
           }

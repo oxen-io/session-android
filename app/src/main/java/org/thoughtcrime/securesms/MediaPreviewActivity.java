@@ -47,7 +47,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.util.Pair;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.app.LoaderManager;
@@ -491,12 +490,22 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
   public boolean onOptionsItemSelected(MenuItem item) {
     super.onOptionsItemSelected(item);
 
-    switch (item.getItemId()) {
-      case R.id.media_preview__overview: showOverview(); return true;
-      case R.id.media_preview__forward:  forward();      return true;
-      case R.id.save:                    saveToDisk();   return true;
-      case R.id.delete:                  deleteMedia();  return true;
-      case android.R.id.home:            finish();       return true;
+    int id = item.getItemId();
+    if (id == R.id.media_preview__overview) {
+      showOverview();
+      return true;
+    } else if (id == R.id.media_preview__forward) {
+      forward();
+      return true;
+    } else if (id == R.id.save) {
+      saveToDisk();
+      return true;
+    } else if (id == R.id.delete) {
+      deleteMedia();
+      return true;
+    } else if (id == android.R.id.home) {
+      finish();
+      return true;
     }
 
     return false;

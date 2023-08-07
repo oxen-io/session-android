@@ -39,7 +39,7 @@ object MentionUtilities {
                 val publicKey = text.subSequence(matcher.start() + 1, matcher.end()).toString() // +1 to get rid of the @
                 val isUserBlindedPublicKey = openGroup?.let { SodiumUtilities.sessionId(userPublicKey, publicKey, it.publicKey) } ?: false
                 val userDisplayName: String? = if (publicKey.equals(userPublicKey, ignoreCase = true) || isUserBlindedPublicKey) {
-                    context.getString(R.string.MessageRecord_you)
+                    context.getString(org.session.libsession.R.string.MessageRecord_you)
                 } else {
                     val contact = DatabaseComponent.get(context).sessionContactDatabase().getContactWithSessionID(publicKey)
                     @Suppress("NAME_SHADOWING") val context = if (openGroup != null) Contact.ContactContext.OPEN_GROUP else Contact.ContactContext.REGULAR

@@ -5,7 +5,6 @@ import android.os.Parcelable
 import android.util.SparseArray
 import android.view.View
 import androidx.activity.viewModels
-import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.children
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,13 +32,13 @@ class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.On
 
     private val accentColors
         get() = mapOf(
-            binding.accentGreen to R.style.PrimaryGreen,
-            binding.accentBlue to R.style.PrimaryBlue,
-            binding.accentYellow to R.style.PrimaryYellow,
-            binding.accentPink to R.style.PrimaryPink,
-            binding.accentPurple to R.style.PrimaryPurple,
-            binding.accentOrange to R.style.PrimaryOrange,
-            binding.accentRed to R.style.PrimaryRed
+            binding.accentGreen to org.session.libsession.R.style.PrimaryGreen,
+            binding.accentBlue to org.session.libsession.R.style.PrimaryBlue,
+            binding.accentYellow to org.session.libsession.R.style.PrimaryYellow,
+            binding.accentPink to org.session.libsession.R.style.PrimaryPink,
+            binding.accentPurple to org.session.libsession.R.style.PrimaryPurple,
+            binding.accentOrange to org.session.libsession.R.style.PrimaryOrange,
+            binding.accentRed to org.session.libsession.R.style.PrimaryRed
         )
 
     private val themeViews
@@ -73,9 +72,9 @@ class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.On
             viewModel.setNewStyle(mappedStyle)
             if (currentBase != newBase) {
                 if (newBase == R.style.Ocean) {
-                    viewModel.setNewAccent(R.style.PrimaryBlue)
+                    viewModel.setNewAccent(org.session.libsession.R.style.PrimaryBlue)
                 } else if (newBase == R.style.Classic) {
-                    viewModel.setNewAccent(R.style.PrimaryGreen)
+                    viewModel.setNewAccent(org.session.libsession.R.style.PrimaryGreen)
                 }
             }
         }

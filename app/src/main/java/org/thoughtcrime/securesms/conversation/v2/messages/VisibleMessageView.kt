@@ -310,7 +310,7 @@ class VisibleMessageView : LinearLayout {
         message.isSyncFailed ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_failed,
-                context.getColor(R.color.accent_orange),
+                context.getColor(org.session.libsession.R.color.accent_orange),
                 R.string.delivery_status_sync_failed,
                 null
             )
@@ -323,7 +323,7 @@ class VisibleMessageView : LinearLayout {
         message.isResyncing ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sending,
-                context.getColor(R.color.accent_orange), R.string.delivery_status_syncing,
+                context.getColor(org.session.libsession.R.color.accent_orange), R.string.delivery_status_syncing,
                 context.getString(R.string.AccessibilityId_message_sent_status_syncing)
             )
         message.isRead ->

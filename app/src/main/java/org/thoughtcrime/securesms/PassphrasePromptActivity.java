@@ -46,7 +46,6 @@ import org.thoughtcrime.securesms.crypto.BiometricSecretProvider;
 import org.thoughtcrime.securesms.service.KeyCachingService;
 import org.thoughtcrime.securesms.util.AnimationCompleteListener;
 
-import java.security.InvalidKeyException;
 import java.security.Signature;
 
 import network.loki.messenger.R;
@@ -170,7 +169,7 @@ public class PassphrasePromptActivity extends BaseActionBarActivity {
     hint.setSpan(new TypefaceSpan("sans-serif"), 0, hint.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
     fingerprintPrompt.setImageResource(R.drawable.ic_fingerprint_white_48dp);
-    fingerprintPrompt.getBackground().setColorFilter(getResources().getColor(R.color.signal_primary), PorterDuff.Mode.SRC_IN);
+    fingerprintPrompt.getBackground().setColorFilter(getResources().getColor(org.session.libsession.R.color.signal_primary), PorterDuff.Mode.SRC_IN);
 
     lockScreenButton.setOnClickListener(v -> resumeScreenLock());
   }
@@ -258,7 +257,7 @@ public class PassphrasePromptActivity extends BaseActionBarActivity {
               handleAuthenticated();
 
               fingerprintPrompt.setImageResource(R.drawable.ic_fingerprint_white_48dp);
-              fingerprintPrompt.getBackground().setColorFilter(getResources().getColor(R.color.signal_primary), PorterDuff.Mode.SRC_IN);
+              fingerprintPrompt.getBackground().setColorFilter(getResources().getColor(org.session.libsession.R.color.signal_primary), PorterDuff.Mode.SRC_IN);
             }
           }).start();
         }
@@ -288,7 +287,7 @@ public class PassphrasePromptActivity extends BaseActionBarActivity {
           handleAuthenticated();
 
           fingerprintPrompt.setImageResource(R.drawable.ic_fingerprint_white_48dp);
-          fingerprintPrompt.getBackground().setColorFilter(getResources().getColor(R.color.signal_primary), PorterDuff.Mode.SRC_IN);
+          fingerprintPrompt.getBackground().setColorFilter(getResources().getColor(org.session.libsession.R.color.signal_primary), PorterDuff.Mode.SRC_IN);
         }
       }).start();
     }
@@ -310,7 +309,7 @@ public class PassphrasePromptActivity extends BaseActionBarActivity {
         @Override
         public void onAnimationEnd(Animation animation) {
           fingerprintPrompt.setImageResource(R.drawable.ic_fingerprint_white_48dp);
-          fingerprintPrompt.getBackground().setColorFilter(getResources().getColor(R.color.signal_primary), PorterDuff.Mode.SRC_IN);
+          fingerprintPrompt.getBackground().setColorFilter(getResources().getColor(org.session.libsession.R.color.signal_primary), PorterDuff.Mode.SRC_IN);
         }
 
         @Override

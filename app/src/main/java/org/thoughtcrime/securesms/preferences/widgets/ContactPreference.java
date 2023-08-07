@@ -3,11 +3,11 @@ package org.thoughtcrime.securesms.preferences.widgets;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.util.AttributeSet;
+import android.widget.ImageView;
+
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
-import android.util.AttributeSet;
-import android.view.View;
-import android.widget.ImageView;
 
 import network.loki.messenger.R;
 
@@ -58,7 +58,7 @@ public class ContactPreference extends Preference {
     int color;
 
     if (secure) {
-      color = getContext().getResources().getColor(R.color.textsecure_primary);
+      color = getContext().getResources().getColor(org.session.libsession.R.color.textsecure_primary);
     } else {
       color = getContext().getResources().getColor(R.color.grey_600);
     }

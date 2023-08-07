@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms.notifications
 
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
@@ -37,7 +38,7 @@ class PushNotificationService : FirebaseMessagingService() {
             Log.d("Loki", "Failed to decode data for message.")
             val builder = NotificationCompat.Builder(this, NotificationChannels.OTHER)
                 .setSmallIcon(network.loki.messenger.R.drawable.ic_notification)
-                .setColor(this.getResources().getColor(network.loki.messenger.R.color.textsecure_primary))
+                .setColor(ContextCompat.getColor(this, org.session.libsession.R.color.textsecure_primary))
                 .setContentTitle("Session")
                 .setContentText("You've got a new message.")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)

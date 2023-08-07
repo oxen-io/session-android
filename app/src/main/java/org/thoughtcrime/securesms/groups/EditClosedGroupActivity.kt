@@ -102,7 +102,7 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
         setContentView(R.layout.activity_edit_closed_group)
 
         supportActionBar!!.setHomeAsUpIndicator(
-                ThemeUtil.getThemedDrawableResId(this, R.attr.actionModeCloseDrawable))
+                ThemeUtil.getThemedDrawableResId(this, androidx.appcompat.R.attr.actionModeCloseDrawable))
 
         groupID = intent.getStringExtra(groupIDKey)!!
         val groupInfo = DatabaseComponent.get(this).groupDatabase().getGroup(groupID).get()

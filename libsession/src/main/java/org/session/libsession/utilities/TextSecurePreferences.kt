@@ -740,7 +740,7 @@ interface TextSecurePreferences {
 
         @JvmStatic
         fun getNotificationLedColor(context: Context): Int {
-            return getIntegerPreference(context, LED_COLOR_PREF_PRIMARY, ThemeUtil.getThemedColor(context, R.attr.colorAccent))
+            return getIntegerPreference(context, LED_COLOR_PREF_PRIMARY, ThemeUtil.getThemedColor(context, androidx.appcompat.R.attr.colorAccent))
         }
 
         @JvmStatic

@@ -50,7 +50,7 @@ class InputBarButton : RelativeLayout {
         if (hasOpaqueBackground) {
             R.attr.input_bar_button_background_opaque
         } else if (isSendButton) {
-            R.attr.colorAccent
+            androidx.appcompat.R.attr.colorAccent
         } else {
             R.attr.input_bar_button_background
         }

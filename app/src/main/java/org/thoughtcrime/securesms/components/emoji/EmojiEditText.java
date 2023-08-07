@@ -24,7 +24,7 @@ public class EmojiEditText extends AppCompatEditText {
   }
 
   public EmojiEditText(Context context, AttributeSet attrs) {
-    this(context, attrs, R.attr.editTextStyle);
+    this(context, attrs, android.R.attr.editTextStyle);
   }
 
   public EmojiEditText(Context context, AttributeSet attrs, int defStyleAttr) {

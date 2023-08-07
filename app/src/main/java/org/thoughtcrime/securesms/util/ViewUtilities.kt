@@ -10,12 +10,11 @@ import android.graphics.PointF
 import android.graphics.Rect
 import android.util.Size
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.annotation.ColorInt
 import androidx.annotation.DimenRes
-import network.loki.messenger.R
-import org.session.libsession.utilities.getColorFromAttr
-import android.view.inputmethod.InputMethodManager
 import androidx.core.graphics.applyCanvas
+import org.session.libsession.utilities.getColorFromAttr
 import kotlin.math.roundToInt
 
 fun View.contains(point: PointF): Boolean {
@@ -30,7 +29,7 @@ val View.hitRect: Rect
     }
 
 @ColorInt
-fun Context.getAccentColor() = getColorFromAttr(R.attr.colorAccent)
+fun Context.getAccentColor() = getColorFromAttr(androidx.appcompat.R.attr.colorAccent)
 
 fun View.animateSizeChange(@DimenRes startSizeID: Int, @DimenRes endSizeID: Int, animationDuration: Long = 250) {
     val startSize = resources.getDimension(startSizeID)

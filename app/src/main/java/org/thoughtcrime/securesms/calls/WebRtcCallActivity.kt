@@ -22,7 +22,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityWebrtcBinding
 import org.apache.commons.lang3.time.DurationFormatUtils
 import org.session.libsession.avatars.ProfileContactPhoto
@@ -269,7 +268,7 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
                         val signalProfilePicture = latestRecipient.recipient.contactPhoto
                         val avatar = (signalProfilePicture as? ProfileContactPhoto)?.avatarObject
                         val sizeInPX =
-                            resources.getDimensionPixelSize(R.dimen.extra_large_profile_picture_size)
+                            resources.getDimensionPixelSize(org.session.libsession.R.dimen.extra_large_profile_picture_size)
                         binding.remoteRecipientName.text = displayName
                         if (signalProfilePicture != null && avatar != "0" && avatar != "") {
                             glide.clear(binding.remoteRecipient)

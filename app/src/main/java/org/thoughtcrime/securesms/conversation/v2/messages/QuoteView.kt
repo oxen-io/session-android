@@ -121,9 +121,9 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     // region Convenience
     @ColorInt private fun getLineColor(isOutgoingMessage: Boolean): Int {
         return when {
-            mode == Mode.Regular && !isOutgoingMessage -> context.getColorFromAttr(R.attr.colorAccent)
+            mode == Mode.Regular && !isOutgoingMessage -> context.getColorFromAttr(androidx.appcompat.R.attr.colorAccent)
             mode == Mode.Regular -> context.getColorFromAttr(R.attr.message_sent_text_color)
-            else -> context.getColorFromAttr(R.attr.colorAccent)
+            else -> context.getColorFromAttr(androidx.appcompat.R.attr.colorAccent)
         }
     }
 

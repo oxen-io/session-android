@@ -42,10 +42,10 @@ class PNModeActivity : BaseActionBarActivity() {
         with(binding) {
             contentView.disableClipping()
             fcmOptionView.setOnClickListener { toggleFCM() }
-            fcmOptionView.mainColor = ThemeUtil.getThemedColor(root.context, R.attr.colorPrimary)
+            fcmOptionView.mainColor = ThemeUtil.getThemedColor(root.context, androidx.appcompat.R.attr.colorPrimary)
             fcmOptionView.strokeColor = resources.getColorWithID(R.color.pn_option_border, theme)
             backgroundPollingOptionView.setOnClickListener { toggleBackgroundPolling() }
-            backgroundPollingOptionView.mainColor = ThemeUtil.getThemedColor(root.context, R.attr.colorPrimary)
+            backgroundPollingOptionView.mainColor = ThemeUtil.getThemedColor(root.context, androidx.appcompat.R.attr.colorPrimary)
             backgroundPollingOptionView.strokeColor = resources.getColorWithID(R.color.pn_option_border, theme)
             registerButton.setOnClickListener { register() }
         }
@@ -153,7 +153,7 @@ class PNModeActivity : BaseActionBarActivity() {
         if (selectedOptionView == null) {
             showSessionDialog {
                 title(R.string.activity_pn_mode_no_option_picked_dialog_title)
-                button(R.string.ok)
+                button(android.R.string.ok)
             }
             return
         }

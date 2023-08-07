@@ -53,7 +53,7 @@ class SessionDialogBuilder(val context: Context) {
 
     fun title(text: CharSequence?) = title(text?.toString())
     fun title(text: String?) {
-        text(text, R.style.TextAppearance_AppCompat_Title) { setPadding(dp20) }
+        text(text, androidx.appcompat.R.style.TextAppearance_AppCompat_Title) { setPadding(dp20) }
     }
 
     fun text(@StringRes id: Int, style: Int = 0) = text(context.getString(id), style)

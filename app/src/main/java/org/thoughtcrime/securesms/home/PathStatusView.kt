@@ -99,7 +99,7 @@ class PathStatusView : View {
                 val paths = withContext(Dispatchers.IO) { OnionRequestAPI.paths }
                 if (paths.isNotEmpty()) {
                     setBackgroundResource(R.drawable.accent_dot)
-                    val hasPathsColor = context.getColor(R.color.accent_green)
+                    val hasPathsColor = context.getColor(org.session.libsession.R.color.accent_green)
                     mainColor = hasPathsColor
                     sessionShadowColor = hasPathsColor
                 } else {
