@@ -40,7 +40,7 @@ class ShareLogsDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {
         title(R.string.dialog_share_logs_title)
         text(R.string.dialog_share_logs_explanation)
-        button(R.string.share) { shareLogs() }
+        button(R.string.share, dismiss = false) { shareLogs() }
         cancelButton { dismiss() }
     }
 
