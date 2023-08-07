@@ -30,7 +30,6 @@ import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityHomeBinding
 import network.loki.messenger.databinding.ViewMessageRequestBannerBinding
-import network.loki.messenger.libsession_util.ConfigBase
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -71,8 +70,8 @@ import org.thoughtcrime.securesms.onboarding.SeedActivity
 import org.thoughtcrime.securesms.onboarding.SeedReminderViewDelegate
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.preferences.SettingsActivity
-import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.showMuteDialog
+import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.IP2Country
@@ -354,8 +353,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 
     private fun updateLegacyConfigView() {
-        binding.configOutdatedView.isVisible = ConfigBase.isNewConfigEnabled(textSecurePreferences.hasForcedNewConfig(), SnodeAPI.nowWithOffset)
-                && textSecurePreferences.getHasLegacyConfig()
+        binding.configOutdatedView.isVisible = textSecurePreferences.getHasLegacyConfig()
     }
 
     override fun onResume() {

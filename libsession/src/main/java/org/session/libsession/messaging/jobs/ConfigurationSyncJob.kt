@@ -1,6 +1,5 @@
 package org.session.libsession.messaging.jobs
 
-import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.ConfigBase.Companion.protoKindFor
 import nl.komponents.kovenant.functional.bind
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -10,7 +9,6 @@ import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.utilities.Data
 import org.session.libsession.snode.RawResponse
 import org.session.libsession.snode.SnodeAPI
-import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.Log
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -26,14 +24,10 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
 
     override suspend fun execute(dispatcherName: String) {
         val storage = MessagingModuleConfiguration.shared.storage
-        val forcedConfig = TextSecurePreferences.hasForcedNewConfig(MessagingModuleConfiguration.shared.context)
-        val currentTime = SnodeAPI.nowWithOffset
         val userEdKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair()
         val userPublicKey = storage.getUserPublicKey()
         val delegate = delegate
-        if (destination is Destination.ClosedGroup // TODO: closed group configs will be handled in closed group feature
-            // if we haven't enabled the new configs don't run
-            || !ConfigBase.isNewConfigEnabled(forcedConfig, currentTime)
+        if (destination is Destination.ClosedGroup
             // if we don't have a user ed key pair for signing updates
             || userEdKeyPair == null
             // this will be useful to not handle null delegate cases
