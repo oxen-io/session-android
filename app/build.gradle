@@ -39,7 +39,7 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.recyclerview:recyclerview:1.3.1'
     implementation "com.google.android.material:material:$materialVersion"
     implementation 'com.google.android:flexbox:2.0.1'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
@@ -47,7 +47,7 @@ dependencies {
     implementation "androidx.preference:preference-ktx:$preferenceVersion"
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
-    implementation 'androidx.exifinterface:exifinterface:1.3.4'
+    implementation 'androidx.exifinterface:exifinterface:1.3.6'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
@@ -55,10 +55,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-process:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
     implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"
-    implementation 'androidx.activity:activity-ktx:1.5.1'
-    implementation 'androidx.fragment:fragment-ktx:1.5.3'
+    implementation 'androidx.activity:activity-ktx:1.7.2'
+    implementation 'androidx.fragment:fragment-ktx:1.6.1'
     implementation "androidx.core:core-ktx:$coreVersion"
-    implementation "androidx.work:work-runtime-ktx:2.7.1"
+    implementation "androidx.work:work-runtime-ktx:2.8.1"
     implementation ("com.google.firebase:firebase-messaging:18.0.0") {
         exclude group: 'com.google.firebase', module: 'firebase-core'
         exclude group: 'com.google.firebase', module: 'firebase-analytics'
@@ -132,12 +132,12 @@ dependencies {
     testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
     androidTestImplementation "org.mockito:mockito-android:$mockitoAndroidVersion"
     androidTestImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
-//    testImplementation "androidx.test:core:$testCoreVersion"
+    testImplementation "androidx.test:core:$testCoreVersion"
     testImplementation "androidx.arch.core:core-testing:2.2.0"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
     // Core library
-    androidTestImplementation "androidx.test:core:$testCoreVersion"
+    androidTestImplementation("androidx.test:core:$testCoreVersion")
 
     androidTestImplementation('com.adevinta.android:barista:4.2.0') {
         exclude group: 'org.jetbrains.kotlin'
@@ -145,21 +145,20 @@ dependencies {
 
     // AndroidJUnitRunner and JUnit Rules
     androidTestImplementation "androidx.test:runner:$testRunnerVersion"
-    androidTestImplementation 'androidx.test:rules:1.5.0'
+    androidTestImplementation "androidx.test:rules:$testRulesVersion"
 
     // Assertions
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.ext:truth:1.5.0'
-    androidTestImplementation 'com.google.truth:truth:1.1.3'
+    androidTestImplementation "androidx.test.ext:junit:1.1.5"
+    androidTestImplementation "androidx.test.ext:truth:$testExtTruthVersion"
 
     // Espresso dependencies
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.5.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.5.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.5.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-web:3.5.1'
-    androidTestImplementation 'androidx.test.espresso.idling:idling-concurrent:3.5.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-idling-resource:3.5.1'
+    androidTestImplementation "androidx.test.espresso:espresso-core:$testEspressoVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$testEspressoVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$testEspressoVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-accessibility:$testEspressoVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-web:$testEspressoVersion"
+    androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:$testEspressoVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$testEspressoVersion"
     androidTestUtil 'androidx.test:orchestrator:1.4.2'
 
     testImplementation 'org.robolectric:robolectric:4.4'
@@ -187,7 +186,7 @@ def abiPostFix = ['armeabi-v7a' : 1,
                   'universal'   : 5]
 
 android {
-    compileSdkVersion androidCompileSdkVersion
+    compileSdk androidCompileSdkVersion
     namespace 'network.loki.messenger'
     useLibrary 'org.apache.http.legacy'
 
@@ -337,10 +336,4 @@ def autoResConfig() {
 // Allow references to generated code
 kapt {
     correctErrorTypes = true
-}
-
-tasks.register("myConfigs") {
-    doLast {
-        configurations.forEach { println(it) }
-    }
 }
