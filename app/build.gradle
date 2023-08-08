@@ -6,7 +6,7 @@ buildscript {
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$gradlePluginVersion"
-//        classpath files('libs/gradle-witness.jar')
+        classpath files('libs/gradle-witness.jar')
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         classpath "com.google.gms:google-services:$googleServicesVersion"
@@ -39,7 +39,7 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
-    implementation 'androidx.recyclerview:recyclerview:1.3.1'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation "com.google.android.material:material:$materialVersion"
     implementation 'com.google.android:flexbox:2.0.1'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
@@ -47,7 +47,7 @@ dependencies {
     implementation "androidx.preference:preference-ktx:$preferenceVersion"
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
-    implementation 'androidx.exifinterface:exifinterface:1.3.6'
+    implementation 'androidx.exifinterface:exifinterface:1.3.4'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
@@ -55,10 +55,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-process:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
     implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"
-    implementation 'androidx.activity:activity-ktx:1.7.2'
-    implementation 'androidx.fragment:fragment-ktx:1.6.1'
+    implementation 'androidx.activity:activity-ktx:1.5.1'
+    implementation 'androidx.fragment:fragment-ktx:1.5.3'
     implementation "androidx.core:core-ktx:$coreVersion"
-    implementation "androidx.work:work-runtime-ktx:2.8.1"
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
     implementation ("com.google.firebase:firebase-messaging:18.0.0") {
         exclude group: 'com.google.firebase', module: 'firebase-core'
         exclude group: 'com.google.firebase', module: 'firebase-analytics'
@@ -191,12 +191,12 @@ android {
     useLibrary 'org.apache.http.legacy'
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = '1.8'
     }
 
     packagingOptions {
@@ -219,7 +219,6 @@ android {
     }
 
     buildFeatures {
-        buildConfig true
         compose true
     }
     composeOptions {
