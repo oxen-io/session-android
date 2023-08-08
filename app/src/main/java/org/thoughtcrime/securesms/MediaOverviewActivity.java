@@ -434,20 +434,17 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
 
       @Override
       public boolean onActionItemClicked(ActionMode mode, MenuItem menuItem) {
-        int itemId = menuItem.getItemId();
-        if (itemId == R.id.save) {
-          handleSaveMedia(getListAdapter().getSelectedMedia());
-          return true;
-        } else if (itemId == R.id.save) {
-          handleSaveMedia(getListAdapter().getSelectedMedia());
-          return true;
-        } else if (itemId == R.id.delete) {
-          handleDeleteMedia(getListAdapter().getSelectedMedia());
-          actionMode.finish();
-          return true;
-        } else if (itemId == R.id.select_all) {
-          handleSelectAllMedia();
-          return true;
+        switch (menuItem.getItemId()) {
+          case R.id.save:
+            handleSaveMedia(getListAdapter().getSelectedMedia());
+            return true;
+          case R.id.delete:
+            handleDeleteMedia(getListAdapter().getSelectedMedia());
+            actionMode.finish();
+            return true;
+          case R.id.select_all:
+            handleSelectAllMedia();
+            return true;
         }
         return false;
       }

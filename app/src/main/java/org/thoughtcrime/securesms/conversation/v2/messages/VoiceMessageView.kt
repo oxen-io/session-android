@@ -6,6 +6,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
 import androidx.core.view.isVisible
+import com.google.android.exoplayer2.ui.R.drawable.exo_icon_pause
+import com.google.android.exoplayer2.ui.R.drawable.exo_icon_play
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.databinding.ViewVoiceMessageBinding
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
@@ -118,8 +120,8 @@ class VoiceMessageView : RelativeLayout, AudioSlidePlayer.Listener {
 
     private fun renderIcon() {
         val iconID =
-            if (isPlaying) com.google.android.exoplayer2.ui.R.drawable.exo_icon_pause
-            else com.google.android.exoplayer2.ui.R.drawable.exo_icon_play
+            if (isPlaying) exo_icon_pause
+            else exo_icon_play
         binding.voiceMessagePlaybackImageView.setImageResource(iconID)
     }
 
