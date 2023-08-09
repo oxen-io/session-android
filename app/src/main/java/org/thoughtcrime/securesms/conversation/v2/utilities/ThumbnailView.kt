@@ -136,29 +136,26 @@ open class ThumbnailView: FrameLayout {
         return result
     }
 
-    fun buildThumbnailGlideRequest(glide: GlideRequests, slide: Slide): GlideRequest<Drawable> {
 
-        val dimens = dimensDelegate.resourceSize()
 
-        var request = glide.load(DecryptableUri(slide.thumbnailUri!!))
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .let { request ->
-                    if (dimens[WIDTH] == 0 || dimens[HEIGHT] == 0) {
-                        request.override(getDefaultWidth(), getDefaultHeight())
-                    } else {
-                        request.override(dimens[WIDTH], dimens[HEIGHT])
-                    }
+    private fun buildThumbnailGlideRequest(glide: GlideRequests, slide: Slide): GlideRequest<Drawable> =
+        glide.load(DecryptableUri(slide.thumbnailUri!!))
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .run {
+                val dimens = dimensDelegate.resourceSize()
+                if (dimens[WIDTH] == 0 || dimens[HEIGHT] == 0) {
+                    override(getDefaultWidth(), getDefaultHeight())
+                } else {
+                    override(dimens[WIDTH], dimens[HEIGHT])
                 }
-                .transition(DrawableTransitionOptions.withCrossFade())
-
-        request = if (radius > 0) {
-            request.transforms(CenterCrop(), RoundedCorners(radius))
-        } else {
-            request.transforms(CenterCrop())
-        }
-
-        return if (slide.isInProgress) request else request.apply(RequestOptions.errorOf(R.drawable.ic_missing_thumbnail_picture))
-    }
+            }
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .run {
+                listOfNotNull(CenterCrop(), radius.takeIf { it > 0 }?.let(::RoundedCorners))
+                    .toTypedArray().let(::transforms)
+            }.run {
+                takeIf { slide.isInProgress } ?: apply(RequestOptions.errorOf(R.drawable.ic_missing_thumbnail_picture))
+            }
 
     fun buildPlaceholderGlideRequest(glide: GlideRequests, slide: Slide): GlideRequest<Bitmap> {
 
