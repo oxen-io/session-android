@@ -109,7 +109,7 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                     val slide = attachments.thumbnailSlide!!
                     // This internally fetches the thumbnail
                     binding.quoteViewAttachmentThumbnailImageView.root.radius = toPx(4, resources)
-                    binding.quoteViewAttachmentThumbnailImageView.root.setImageResource(glide, slide, false, null)
+                    binding.quoteViewAttachmentThumbnailImageView.root.setImageResource(glide, slide, false)
                     binding.quoteViewAttachmentThumbnailImageView.root.isVisible = true
                     binding.quoteViewBodyTextView.text = if (MediaUtil.isVideo(slide.asAttachment())) resources.getString(R.string.Slide_video) else resources.getString(R.string.Slide_image)
                 }

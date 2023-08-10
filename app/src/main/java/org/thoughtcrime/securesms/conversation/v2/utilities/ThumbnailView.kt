@@ -21,18 +21,17 @@ import org.session.libsignal.utilities.ListenableFuture
 import org.session.libsignal.utilities.SettableFuture
 import org.thoughtcrime.securesms.components.GlideBitmapListeningTarget
 import org.thoughtcrime.securesms.components.GlideDrawableListeningTarget
-import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.mms.DecryptableStreamUriLoader.DecryptableUri
 import org.thoughtcrime.securesms.mms.GlideRequest
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.mms.Slide
-import kotlin.Boolean
-import kotlin.Int
-import kotlin.getValue
-import kotlin.lazy
-import kotlin.let
 
-open class ThumbnailView: FrameLayout {
+open class ThumbnailView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : FrameLayout(context, attrs, defStyleAttr) {
+
     companion object {
         private const val WIDTH = 0
         private const val HEIGHT = 1
@@ -41,9 +40,6 @@ open class ThumbnailView: FrameLayout {
     private val binding: ThumbnailViewBinding by lazy { ThumbnailViewBinding.bind(this) }
 
     // region Lifecycle
-    constructor(context: Context) : super(context) { initialize(null) }
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) { initialize(attrs) }
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) { initialize(attrs) }
 
     val loadIndicator: View by lazy { binding.thumbnailLoadIndicator }
 
@@ -52,19 +48,20 @@ open class ThumbnailView: FrameLayout {
     private var slide: Slide? = null
     var radius: Int = 0
 
-    private fun initialize(attrs: AttributeSet?) {
-        if (attrs != null) {
-            val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.ThumbnailView, 0, 0)
+    init {
+        attrs?.let { context.theme.obtainStyledAttributes(it, R.styleable.ThumbnailView, 0, 0) }
+            ?.apply {
+                dimensDelegate.setBounds(
+                    getDimensionPixelSize(R.styleable.ThumbnailView_minWidth, 0),
+                    getDimensionPixelSize(R.styleable.ThumbnailView_minHeight, 0),
+                    getDimensionPixelSize(R.styleable.ThumbnailView_maxWidth, 0),
+                    getDimensionPixelSize(R.styleable.ThumbnailView_maxHeight, 0)
+                )
 
-            dimensDelegate.setBounds(typedArray.getDimensionPixelSize(R.styleable.ThumbnailView_minWidth, 0),
-                    typedArray.getDimensionPixelSize(R.styleable.ThumbnailView_minHeight, 0),
-                    typedArray.getDimensionPixelSize(R.styleable.ThumbnailView_maxWidth, 0),
-                    typedArray.getDimensionPixelSize(R.styleable.ThumbnailView_maxHeight, 0))
+                radius = getDimensionPixelSize(R.styleable.ThumbnailView_thumbnail_radius, 0)
 
-            radius = typedArray.getDimensionPixelSize(R.styleable.ThumbnailView_thumbnail_radius, 0)
-
-            typedArray.recycle()
-        }
+                recycle()
+            }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -87,113 +84,104 @@ open class ThumbnailView: FrameLayout {
     // endregion
 
     // region Interaction
-    fun setImageResource(glide: GlideRequests, slide: Slide, isPreview: Boolean, mms: MmsMessageRecord?): ListenableFuture<Boolean> {
-        return setImageResource(glide, slide, isPreview, 0, 0, mms)
-    }
+    fun setImageResource(
+        glide: GlideRequests,
+        slide: Slide,
+        isPreview: Boolean
+    ): ListenableFuture<Boolean> = setImageResource(glide, slide, isPreview, 0, 0)
 
-    fun setImageResource(glide: GlideRequests, slide: Slide,
-                         isPreview: Boolean, naturalWidth: Int,
-                         naturalHeight: Int, mms: MmsMessageRecord?): ListenableFuture<Boolean> {
-
-        val currentSlide = this.slide
-
+    fun setImageResource(
+        glide: GlideRequests, slide: Slide,
+        isPreview: Boolean, naturalWidth: Int,
+        naturalHeight: Int
+    ): ListenableFuture<Boolean> {
         binding.playOverlay.isVisible = (slide.thumbnailUri != null && slide.hasPlayOverlay() &&
-                (slide.transferState == AttachmentTransferProgress.TRANSFER_PROGRESS_DONE || isPreview))
+            (slide.transferState == AttachmentTransferProgress.TRANSFER_PROGRESS_DONE || isPreview))
 
-        if (equals(currentSlide, slide)) {
+        if (equals(this.slide, slide)) {
             // don't re-load slide
             return SettableFuture(false)
-        }
-
-
-        if (currentSlide != null && currentSlide.fastPreflightId != null && currentSlide.fastPreflightId == slide.fastPreflightId) {
-            // not reloading slide for fast preflight
-            this.slide = slide
         }
 
         this.slide = slide
 
         binding.thumbnailLoadIndicator.isVisible = slide.isInProgress
-        binding.thumbnailDownloadIcon.isVisible = slide.transferState == AttachmentTransferProgress.TRANSFER_PROGRESS_FAILED
+        binding.thumbnailDownloadIcon.isVisible =
+            slide.transferState == AttachmentTransferProgress.TRANSFER_PROGRESS_FAILED
 
         dimensDelegate.setDimens(naturalWidth, naturalHeight)
         invalidate()
 
-        val result = SettableFuture<Boolean>()
-
-        when {
-            slide.thumbnailUri != null -> {
-                buildThumbnailGlideRequest(glide, slide).into(GlideDrawableListeningTarget(binding.thumbnailImage, binding.thumbnailLoadIndicator, result))
-            }
-            slide.hasPlaceholder() -> {
-                buildPlaceholderGlideRequest(glide, slide).into(GlideBitmapListeningTarget(binding.thumbnailImage, null, result))
-            }
-            else -> {
-                glide.clear(binding.thumbnailImage)
-                result.set(false)
+        return SettableFuture<Boolean>().also {
+            when {
+                slide.thumbnailUri != null -> {
+                    buildThumbnailGlideRequest(glide, slide).into(
+                        GlideDrawableListeningTarget(binding.thumbnailImage, binding.thumbnailLoadIndicator, it)
+                    )
+                }
+                slide.hasPlaceholder() -> {
+                    buildPlaceholderGlideRequest(glide, slide).into(
+                        GlideBitmapListeningTarget(binding.thumbnailImage, null, it)
+                    )
+                }
+                else -> {
+                    glide.clear(binding.thumbnailImage)
+                    it.set(false)
+                }
             }
         }
-        return result
     }
 
+    private fun buildThumbnailGlideRequest(
+        glide: GlideRequests,
+        slide: Slide
+    ): GlideRequest<Drawable> = glide.load(DecryptableUri(slide.thumbnailUri!!))
+        .diskCacheStrategy(DiskCacheStrategy.NONE)
+        .overrideDimensions()
+        .transition(DrawableTransitionOptions.withCrossFade())
+        .crop(radius)
+        .missingThumbnailPicture(slide.isInProgress)
 
-
-    private fun buildThumbnailGlideRequest(glide: GlideRequests, slide: Slide): GlideRequest<Drawable> =
-        glide.load(DecryptableUri(slide.thumbnailUri!!))
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .run {
-                val dimens = dimensDelegate.resourceSize()
-                if (dimens[WIDTH] == 0 || dimens[HEIGHT] == 0) {
-                    override(getDefaultWidth(), getDefaultHeight())
-                } else {
-                    override(dimens[WIDTH], dimens[HEIGHT])
-                }
-            }
-            .transition(DrawableTransitionOptions.withCrossFade())
-            .run {
-                listOfNotNull(CenterCrop(), radius.takeIf { it > 0 }?.let(::RoundedCorners))
-                    .toTypedArray().let(::transforms)
-            }.run {
-                takeIf { slide.isInProgress } ?: apply(RequestOptions.errorOf(R.drawable.ic_missing_thumbnail_picture))
-            }
-
-    fun buildPlaceholderGlideRequest(glide: GlideRequests, slide: Slide): GlideRequest<Bitmap> {
-
-        val dimens = dimensDelegate.resourceSize()
-
-        return glide.asBitmap()
-                .load(slide.getPlaceholderRes(context.theme))
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .let { request ->
-                    if (dimens[WIDTH] == 0 || dimens[HEIGHT] == 0) {
-                        request.override(getDefaultWidth(), getDefaultHeight())
-                    } else {
-                        request.override(dimens[WIDTH], dimens[HEIGHT])
-                    }
-                }
-                .fitCenter()
-    }
+    private fun buildPlaceholderGlideRequest(
+        glide: GlideRequests,
+        slide: Slide
+    ): GlideRequest<Bitmap> = glide.asBitmap()
+        .load(slide.getPlaceholderRes(context.theme))
+        .diskCacheStrategy(DiskCacheStrategy.NONE)
+        .overrideDimensions()
+        .fitCenter()
 
     open fun clear(glideRequests: GlideRequests) {
         glideRequests.clear(binding.thumbnailImage)
         slide = null
     }
 
-    fun setImageResource(glideRequests: GlideRequests, uri: Uri): ListenableFuture<Boolean> {
-        val future = SettableFuture<Boolean>()
+    fun setImageResource(
+        glideRequests: GlideRequests,
+        uri: Uri
+    ): ListenableFuture<Boolean> = glideRequests.load(DecryptableUri(uri))
+        .diskCacheStrategy(DiskCacheStrategy.NONE)
+        .transition(DrawableTransitionOptions.withCrossFade())
+        .crop(radius)
+        .intoDrawableTargetAsFuture()
 
-        var request: GlideRequest<Drawable> = glideRequests.load(DecryptableUri(uri))
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .transition(DrawableTransitionOptions.withCrossFade())
-
-        request = if (radius > 0) {
-            request.transforms(CenterCrop(), RoundedCorners(radius))
-        } else {
-            request.transforms(CenterCrop())
+    private fun GlideRequest<Drawable>.intoDrawableTargetAsFuture() =
+        SettableFuture<Boolean>().also {
+            binding.run {
+                GlideDrawableListeningTarget(thumbnailImage, thumbnailLoadIndicator, it)
+            }.let { into(it) }
         }
 
-        request.into(GlideDrawableListeningTarget(binding.thumbnailImage, binding.thumbnailLoadIndicator, future))
+    private fun <T> GlideRequest<T>.overrideDimensions() =
+        dimensDelegate.resourceSize().takeIf { 0 !in it }
+            ?.let { override(it[WIDTH], it[HEIGHT]) }
+            ?: override(getDefaultWidth(), getDefaultHeight())
 
-        return future
-    }
+    private fun <T> GlideRequest<T>.crop(radius: Int) =
+        if (radius > 0) transforms(CenterCrop(), RoundedCorners(radius))
+        else transforms(CenterCrop())
 }
+
+private fun <T> GlideRequest<T>.missingThumbnailPicture(
+    inProgress: Boolean
+) = takeIf { inProgress } ?: apply(RequestOptions.errorOf(R.drawable.ic_missing_thumbnail_picture))
