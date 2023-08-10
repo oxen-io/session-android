@@ -120,7 +120,7 @@ class SessionDialogBuilder(val context: Context) {
         @StringRes text: Int,
         @StringRes contentDescriptionRes: Int = text,
         @StyleRes style: Int = R.style.Widget_Session_Button_Dialog_UnimportantText,
-        dismiss: Boolean = false,
+        dismiss: Boolean = true,
         listener: (() -> Unit) = {}
     ) = Button(context, null, 0, style).apply {
             setText(text)
