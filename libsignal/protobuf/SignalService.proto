@@ -163,20 +163,21 @@ message DataMessage {
     required Action action    = 4;
   }
 
-  optional string                    body                      = 1;
-  repeated AttachmentPointer         attachments               = 2;
-  optional GroupContext              group                     = 3;
-  optional uint32                    flags                     = 4;
-  optional uint32                    expireTimer               = 5;
-  optional bytes                     profileKey                = 6;
-  optional uint64                    timestamp                 = 7;
-  optional Quote                     quote                     = 8;
-  repeated Preview                   preview                   = 10;
-  optional Reaction                  reaction                  = 11;
-  optional LokiProfile               profile                   = 101;
-  optional OpenGroupInvitation       openGroupInvitation       = 102;
-  optional ClosedGroupControlMessage closedGroupControlMessage = 104;
-  optional string                    syncTarget                = 105;
+  optional string                    body                           = 1;
+  repeated AttachmentPointer         attachments                    = 2;
+  optional GroupContext              group                          = 3;
+  optional uint32                    flags                          = 4;
+  optional uint32                    expireTimer                    = 5;
+  optional bytes                     profileKey                     = 6;
+  optional uint64                    timestamp                      = 7;
+  optional Quote                     quote                          = 8;
+  repeated Preview                   preview                        = 10;
+  optional Reaction                  reaction                       = 11;
+  optional LokiProfile               profile                        = 101;
+  optional OpenGroupInvitation       openGroupInvitation            = 102;
+  optional ClosedGroupControlMessage closedGroupControlMessage      = 104;
+  optional string                    syncTarget                     = 105;
+  optional bool                      blocksCommunityMessageRequests = 106;
 }
 
 message CallMessage {
