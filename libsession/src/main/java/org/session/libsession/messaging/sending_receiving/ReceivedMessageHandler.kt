@@ -304,6 +304,10 @@ fun MessageReceiver.handleVisibleMessage(
                 profileManager.setProfilePicture(context, recipient, null, null)
             }
         }
+
+        if (userPublicKey != messageSender && !isUserBlindedSender) {
+            recipient.setBlocksCommunityMessageRequests(message.blocksMessageRequests)
+        }
     }
     // Parse quote if needed
     var quoteModel: QuoteModel? = null

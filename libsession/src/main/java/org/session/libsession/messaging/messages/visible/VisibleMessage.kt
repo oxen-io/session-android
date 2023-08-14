@@ -75,6 +75,11 @@ class VisibleMessage(
                 val reaction = Reaction.fromProto(reactionProto)
                 result.reaction = reaction
             }
+
+            result.blocksMessageRequests =
+                if (dataMessage.hasBlocksCommunityMessageRequests()) dataMessage.blocksCommunityMessageRequests
+                else false
+
             return result
         }
     }
