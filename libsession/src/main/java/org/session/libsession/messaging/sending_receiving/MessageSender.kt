@@ -241,8 +241,14 @@ object MessageSender {
     private fun sendToOpenGroupDestination(destination: Destination, message: Message): Promise<Unit, Exception> {
         val deferred = deferred<Unit, Exception>()
         val storage = MessagingModuleConfiguration.shared.storage
+        val configFactory = MessagingModuleConfiguration.shared.configFactory
         if (message.sentTimestamp == null) {
             message.sentTimestamp = SnodeAPI.nowWithOffset
+        }
+        configFactory.user?.let { user ->
+            if (message is VisibleMessage) {
+                message.blocksMessageRequests = user.getBlocksCommunityMessageRequests()
+            }
         }
         val userEdKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!
         var serverCapabilities = listOf<String>()

@@ -25,7 +25,8 @@ class VisibleMessage(
     var profile: Profile? = null,
     var openGroupInvitation: OpenGroupInvitation? = null,
     var reaction: Reaction? = null,
-    var hasMention: Boolean = false
+    var hasMention: Boolean = false,
+    var blocksMessageRequests: Boolean = false
 ) : Message()  {
 
     override val isSelfSendValid: Boolean = true
@@ -141,6 +142,8 @@ class VisibleMessage(
                 return null
             }
         }
+        // Community blocked message requests flag
+        dataMessage.blocksCommunityMessageRequests = blocksMessageRequests
         // Sync target
         if (syncTarget != null) {
             dataMessage.syncTarget = syncTarget

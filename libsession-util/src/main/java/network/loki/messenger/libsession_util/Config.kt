@@ -126,6 +126,8 @@ class UserProfile(pointer: Long) : ConfigBase(pointer) {
     external fun setPic(userPic: UserPic)
     external fun setNtsPriority(priority: Int)
     external fun getNtsPriority(): Int
+    external fun getBlocksCommunityMessageRequests(): Boolean
+    external fun setBlocksCommunityMessageRequests(blocks: Boolean)
 }
 
 class ConversationVolatileConfig(pointer: Long): ConfigBase(pointer) {

@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.preference.Preference
+import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.BuildConfig
 import network.loki.messenger.R
 import org.session.libsession.utilities.TextSecurePreferences
@@ -15,13 +16,22 @@ import org.session.libsession.utilities.TextSecurePreferences.Companion.isPasswo
 import org.session.libsession.utilities.TextSecurePreferences.Companion.setScreenLockEnabled
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.service.KeyCachingService
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.CallNotificationBuilder.Companion.areNotificationsEnabled
+import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.IntentUtils
+import java.util.prefs.PreferenceChangeEvent
+import java.util.prefs.PreferenceChangeListener
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
+
+    @Inject lateinit var configFactory: ConfigFactory
+
     override fun onCreate(paramBundle: Bundle?) {
         super.onCreate(paramBundle)
         findPreference<Preference>(TextSecurePreferences.SCREEN_LOCK)!!
@@ -30,6 +40,19 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
             .onPreferenceChangeListener = TypingIndicatorsToggleListener()
         findPreference<Preference>(TextSecurePreferences.CALL_NOTIFICATIONS_ENABLED)!!
             .onPreferenceChangeListener = CallToggleListener(this) { setCall(it) }
+        val allowMessageRequestPref = findPreference<Preference>(TextSecurePreferences.ALLOW_MESSAGE_REQUESTS)!!
+        configFactory.user?.let { user ->
+            allowMessageRequestPref.setDefaultValue(!user.getBlocksCommunityMessageRequests())
+            allowMessageRequestPref
+                .onPreferenceChangeListener =
+                Preference.OnPreferenceChangeListener { _, newValue ->
+                    user.setBlocksCommunityMessageRequests(!(newValue as Boolean))
+                    ConfigurationMessageUtilities.syncConfigurationIfNeeded(requireContext())
+                    return@OnPreferenceChangeListener true
+                }
+        } ?: run {
+            allowMessageRequestPref.isVisible = false
+        }
         initializeVisibility()
     }
 

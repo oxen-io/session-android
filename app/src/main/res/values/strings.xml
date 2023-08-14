@@ -627,6 +627,9 @@
     <string name="preferences_notifications__priority">Priority</string>
     <string name="preferences_app_protection__screenshot_notifications">Screenshot Notifications</string>
     <string name="preferences_app_protected__screenshot_notifications_summary">Receive a notification when a contact takes a screenshot of a one-to-one chat.</string>
+    <string name="preferences__message_requests_category">Message Requests</string>
+    <string name="preferences__message_requests_title">Community Message Requests</string>
+    <string name="preferences__message_requests_summary">Allow message requests from Community conversations</string>
     <!-- **************************************** -->
     <!-- menus -->
     <!-- **************************************** -->
