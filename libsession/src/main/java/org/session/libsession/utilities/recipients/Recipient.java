@@ -100,6 +100,7 @@ public class Recipient implements RecipientModifiedListener {
   private           String         notificationChannel;
   private           boolean        forceSmsSelection;
   private           String         wrapperHash;
+  private           boolean        blocksCommunityMessageRequests;
 
   private @NonNull  UnidentifiedAccessMode unidentifiedAccessMode = UnidentifiedAccessMode.ENABLED;
 
@@ -192,6 +193,7 @@ public class Recipient implements RecipientModifiedListener {
       this.unidentifiedAccessMode = details.get().unidentifiedAccessMode;
       this.forceSmsSelection      = details.get().forceSmsSelection;
       this.notifyType             = details.get().notifyType;
+      this.blocksCommunityMessageRequests = details.get().blocksCommunityMessageRequests;
 
       this.participants.clear();
       this.participants.addAll(details.get().participants);
@@ -228,6 +230,7 @@ public class Recipient implements RecipientModifiedListener {
             Recipient.this.unidentifiedAccessMode = result.unidentifiedAccessMode;
             Recipient.this.forceSmsSelection      = result.forceSmsSelection;
             Recipient.this.notifyType             = result.notifyType;
+            Recipient.this.blocksCommunityMessageRequests = result.blocksCommunityMessageRequests;
 
             Recipient.this.participants.clear();
             Recipient.this.participants.addAll(result.participants);
@@ -281,6 +284,7 @@ public class Recipient implements RecipientModifiedListener {
     this.unidentifiedAccessMode = details.unidentifiedAccessMode;
     this.forceSmsSelection      = details.forceSmsSelection;
     this.wrapperHash            = details.wrapperHash;
+    this.blocksCommunityMessageRequests = details.blocksCommunityMessageRequests;
 
     this.participants.addAll(details.participants);
     this.resolving    = false;
@@ -343,6 +347,14 @@ public class Recipient implements RecipientModifiedListener {
     }
 
     if (notify) notifyListeners();
+  }
+
+  public void setBlocksCommunityMessageRequests(boolean blocksCommunityMessageRequests) {
+    synchronized (this) {
+      this.blocksCommunityMessageRequests = blocksCommunityMessageRequests;
+    }
+
+    notifyListeners();
   }
 
   public synchronized @NonNull MaterialColor getColor() {
@@ -759,12 +771,43 @@ public class Recipient implements RecipientModifiedListener {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Recipient recipient = (Recipient) o;
-    return resolving == recipient.resolving && mutedUntil == recipient.mutedUntil && notifyType == recipient.notifyType && blocked == recipient.blocked && approved == recipient.approved && approvedMe == recipient.approvedMe && expireMessages == recipient.expireMessages && address.equals(recipient.address) && Objects.equals(name, recipient.name) && Objects.equals(customLabel, recipient.customLabel) && Objects.equals(groupAvatarId, recipient.groupAvatarId) && Arrays.equals(profileKey, recipient.profileKey) && Objects.equals(profileName, recipient.profileName) && Objects.equals(profileAvatar, recipient.profileAvatar) && Objects.equals(wrapperHash, recipient.wrapperHash);
+    return resolving == recipient.resolving
+            && mutedUntil == recipient.mutedUntil
+            && notifyType == recipient.notifyType
+            && blocked == recipient.blocked
+            && approved == recipient.approved
+            && approvedMe == recipient.approvedMe
+            && expireMessages == recipient.expireMessages
+            && address.equals(recipient.address)
+            && Objects.equals(name, recipient.name)
+            && Objects.equals(customLabel, recipient.customLabel)
+            && Objects.equals(groupAvatarId, recipient.groupAvatarId)
+            && Arrays.equals(profileKey, recipient.profileKey)
+            && Objects.equals(profileName, recipient.profileName)
+            && Objects.equals(profileAvatar, recipient.profileAvatar)
+            && Objects.equals(wrapperHash, recipient.wrapperHash)
+            && blocksCommunityMessageRequests == recipient.blocksCommunityMessageRequests;
   }
 
   @Override
   public int hashCode() {
-    int result = Objects.hash(address, name, customLabel, resolving, groupAvatarId, mutedUntil, notifyType, blocked, approved, approvedMe, expireMessages, profileName, profileAvatar, wrapperHash);
+    int result = Objects.hash(
+            address,
+            name,
+            customLabel,
+            resolving,
+            groupAvatarId,
+            mutedUntil,
+            notifyType,
+            blocked,
+            approved,
+            approvedMe,
+            expireMessages,
+            profileName,
+            profileAvatar,
+            wrapperHash,
+            blocksCommunityMessageRequests
+    );
     result = 31 * result + Arrays.hashCode(profileKey);
     return result;
   }
@@ -869,55 +912,59 @@ public class Recipient implements RecipientModifiedListener {
     private final UnidentifiedAccessMode unidentifiedAccessMode;
     private final boolean                forceSmsSelection;
     private final String                 wrapperHash;
+    private final boolean                blocksCommunityMessageRequests;
 
     public RecipientSettings(boolean blocked, boolean approved, boolean approvedMe, long muteUntil,
-                      int notifyType,
-                      @NonNull VibrateState messageVibrateState,
-                      @NonNull VibrateState callVibrateState,
-                      @Nullable Uri messageRingtone,
-                      @Nullable Uri callRingtone,
-                      @Nullable MaterialColor color,
-                      int defaultSubscriptionId,
-                      int expireMessages,
-                      @NonNull RegisteredState registered,
-                      @Nullable byte[] profileKey,
-                      @Nullable String systemDisplayName,
-                      @Nullable String systemContactPhoto,
-                      @Nullable String systemPhoneLabel,
-                      @Nullable String systemContactUri,
-                      @Nullable String signalProfileName,
-                      @Nullable String signalProfileAvatar,
-                      boolean profileSharing,
-                      @Nullable String notificationChannel,
-                      @NonNull UnidentifiedAccessMode unidentifiedAccessMode,
-                      boolean forceSmsSelection,
-                      String wrapperHash)
+                             int notifyType,
+                             @NonNull VibrateState messageVibrateState,
+                             @NonNull VibrateState callVibrateState,
+                             @Nullable Uri messageRingtone,
+                             @Nullable Uri callRingtone,
+                             @Nullable MaterialColor color,
+                             int defaultSubscriptionId,
+                             int expireMessages,
+                             @NonNull RegisteredState registered,
+                             @Nullable byte[] profileKey,
+                             @Nullable String systemDisplayName,
+                             @Nullable String systemContactPhoto,
+                             @Nullable String systemPhoneLabel,
+                             @Nullable String systemContactUri,
+                             @Nullable String signalProfileName,
+                             @Nullable String signalProfileAvatar,
+                             boolean profileSharing,
+                             @Nullable String notificationChannel,
+                             @NonNull UnidentifiedAccessMode unidentifiedAccessMode,
+                             boolean forceSmsSelection,
+                             String wrapperHash,
+                             boolean blocksCommunityMessageRequests
+    )
     {
-      this.blocked                = blocked;
-      this.approved               = approved;
-      this.approvedMe             = approvedMe;
-      this.muteUntil              = muteUntil;
-      this.notifyType             = notifyType;
-      this.messageVibrateState    = messageVibrateState;
-      this.callVibrateState       = callVibrateState;
-      this.messageRingtone        = messageRingtone;
-      this.callRingtone           = callRingtone;
-      this.color                  = color;
-      this.defaultSubscriptionId  = defaultSubscriptionId;
-      this.expireMessages         = expireMessages;
-      this.registered             = registered;
-      this.profileKey             = profileKey;
-      this.systemDisplayName      = systemDisplayName;
-      this.systemContactPhoto     = systemContactPhoto;
-      this.systemPhoneLabel       = systemPhoneLabel;
-      this.systemContactUri       = systemContactUri;
-      this.signalProfileName      = signalProfileName;
-      this.signalProfileAvatar    = signalProfileAvatar;
-      this.profileSharing         = profileSharing;
-      this.notificationChannel    = notificationChannel;
-      this.unidentifiedAccessMode = unidentifiedAccessMode;
-      this.forceSmsSelection      = forceSmsSelection;
-      this.wrapperHash            = wrapperHash;
+      this.blocked                        = blocked;
+      this.approved                       = approved;
+      this.approvedMe                     = approvedMe;
+      this.muteUntil                      = muteUntil;
+      this.notifyType                     = notifyType;
+      this.messageVibrateState            = messageVibrateState;
+      this.callVibrateState               = callVibrateState;
+      this.messageRingtone                = messageRingtone;
+      this.callRingtone                   = callRingtone;
+      this.color                          = color;
+      this.defaultSubscriptionId          = defaultSubscriptionId;
+      this.expireMessages                 = expireMessages;
+      this.registered                     = registered;
+      this.profileKey                     = profileKey;
+      this.systemDisplayName              = systemDisplayName;
+      this.systemContactPhoto             = systemContactPhoto;
+      this.systemPhoneLabel               = systemPhoneLabel;
+      this.systemContactUri               = systemContactUri;
+      this.signalProfileName              = signalProfileName;
+      this.signalProfileAvatar            = signalProfileAvatar;
+      this.profileSharing                 = profileSharing;
+      this.notificationChannel            = notificationChannel;
+      this.unidentifiedAccessMode         = unidentifiedAccessMode;
+      this.forceSmsSelection              = forceSmsSelection;
+      this.wrapperHash                    = wrapperHash;
+      this.blocksCommunityMessageRequests = blocksCommunityMessageRequests;
     }
 
     public @Nullable MaterialColor getColor() {
@@ -1018,6 +1065,10 @@ public class Recipient implements RecipientModifiedListener {
 
     public String getWrapperHash() {
       return wrapperHash;
+    }
+
+    public boolean getBlocksCommunityMessageRequests() {
+      return blocksCommunityMessageRequests;
     }
 
   }
