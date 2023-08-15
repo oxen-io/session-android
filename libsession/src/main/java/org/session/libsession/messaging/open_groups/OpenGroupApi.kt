@@ -753,7 +753,8 @@ object OpenGroupApi {
             )
         }
         val serverCapabilities = storage.getServerCapabilities(server)
-        if (serverCapabilities.contains(Capability.BLIND.name.lowercase())) {
+        val isAcceptingCommunityRequests = storage.isCheckingCommunityRequests()
+        if (serverCapabilities.contains(Capability.BLIND.name.lowercase()) && isAcceptingCommunityRequests) {
             requests.add(
                 if (lastInboxMessageId == null) {
                     BatchRequestInfo(

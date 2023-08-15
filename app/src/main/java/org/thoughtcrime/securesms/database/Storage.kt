@@ -190,6 +190,11 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         db.setProfileKey(recipient, newProfileKey)
     }
 
+    override fun setBlocksCommunityMessageRequests(recipient: Recipient, blocksMessageRequests: Boolean) {
+        val db = DatabaseComponent.get(context).recipientDatabase()
+        db.setBlocksCommunityMessageRequests(recipient, blocksMessageRequests)
+    }
+
     override fun setUserProfilePicture(newProfilePicture: String?, newProfileKey: ByteArray?) {
         val ourRecipient = fromSerialized(getUserPublicKey()!!).let {
             Recipient.from(context, it, false)
@@ -428,6 +433,10 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
 
     override fun canPerformConfigChange(variant: String, publicKey: String, changeTimestampMs: Long): Boolean {
         return configFactory.canPerformChange(variant, publicKey, changeTimestampMs)
+    }
+
+    override fun isCheckingCommunityRequests(): Boolean {
+        return configFactory.user?.getBlocksCommunityMessageRequests() != true
     }
 
     fun notifyUpdates(forConfigObject: ConfigBase) {

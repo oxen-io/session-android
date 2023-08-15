@@ -23,8 +23,7 @@
     <PreferenceCategory android:title="@string/preferences__message_requests_category">
         <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
             android:persistent="false"
-            android:defaultValue="false"
-            android:key="libsession.BLOCK_MESSAGE_REQUESTS"
+            android:key="libsession.ALLOW_MESSAGE_REQUESTS"
             android:title="@string/preferences__message_requests_title"
             android:summary="@string/preferences__message_requests_summary"
             />

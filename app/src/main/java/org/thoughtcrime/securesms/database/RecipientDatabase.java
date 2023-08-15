@@ -406,7 +406,7 @@ public class RecipientDatabase extends Database {
     ContentValues contentValues = new ContentValues(1);
     contentValues.put(BLOCKS_COMMUNITY_MESSAGE_REQUESTS, isBlocked ? 1 : 0);
     updateOrInsert(recipient.getAddress(), contentValues);
-    recipient.setBlocksCommunityMessageRequests(isBlocked);
+    recipient.resolve().setBlocksCommunityMessageRequests(isBlocked);
     notifyRecipientListeners();
   }
 

@@ -106,7 +106,7 @@ Java_network_loki_messenger_libsession_1util_UserProfile_getBlocksCommunityMessa
     if (blinded_msg_requests.has_value()) {
         return *blinded_msg_requests;
     }
-    return false;
+    return true;
 }
 
 extern "C"

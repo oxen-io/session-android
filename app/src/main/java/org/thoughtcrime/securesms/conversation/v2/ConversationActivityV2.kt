@@ -105,13 +105,12 @@ import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.attachments.ScreenshotObserver
 import org.thoughtcrime.securesms.audio.AudioRecorder
 import org.thoughtcrime.securesms.contacts.SelectContactsActivity.Companion.selectedContactsKey
-import org.thoughtcrime.securesms.util.SimpleTextWatcher
 import org.thoughtcrime.securesms.conversation.v2.ConversationReactionOverlay.OnActionSelectedListener
 import org.thoughtcrime.securesms.conversation.v2.ConversationReactionOverlay.OnReactionSelectedListener
 import org.thoughtcrime.securesms.conversation.v2.MessageDetailActivity.Companion.MESSAGE_TIMESTAMP
+import org.thoughtcrime.securesms.conversation.v2.MessageDetailActivity.Companion.ON_DELETE
 import org.thoughtcrime.securesms.conversation.v2.MessageDetailActivity.Companion.ON_REPLY
 import org.thoughtcrime.securesms.conversation.v2.MessageDetailActivity.Companion.ON_RESEND
-import org.thoughtcrime.securesms.conversation.v2.MessageDetailActivity.Companion.ON_DELETE
 import org.thoughtcrime.securesms.conversation.v2.dialogs.BlockedDialog
 import org.thoughtcrime.securesms.conversation.v2.dialogs.LinkPreviewDialog
 import org.thoughtcrime.securesms.conversation.v2.dialogs.SendSeedDialog
@@ -174,6 +173,7 @@ import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.SaveAttachmentTask
+import org.thoughtcrime.securesms.util.SimpleTextWatcher
 import org.thoughtcrime.securesms.util.isScrolledToBottom
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.toPx
@@ -240,11 +240,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     val address = if (sessionId.prefix == IdPrefix.BLINDED && openGroup != null) {
                         storage.getOrCreateBlindedIdMapping(sessionId.hexString, openGroup.server, openGroup.publicKey).sessionId?.let {
                             fromSerialized(it)
-                        } ?: run {
-                            val openGroupInboxId =
-                                "${openGroup.server}!${openGroup.publicKey}!${sessionId.hexString}".toByteArray()
-                            fromSerialized(GroupUtil.getEncodedOpenGroupInboxID(openGroupInboxId))
-                        }
+                        } ?: GroupUtil.getEncodedOpenGroupInboxID(openGroup, sessionId)
                     } else {
                         it
                     }
@@ -596,7 +592,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     // called from onCreate
     private fun setUpInputBar() {
-        binding!!.inputBar.isVisible =  viewModel.openGroup == null || viewModel.openGroup?.canWrite == true
+        val recipient = viewModel.recipient ?: return
+        binding!!.inputBar.isVisible =
+            viewModel.openGroup?.canWrite == true
+                    || (viewModel.openGroup == null && !recipient.blocksCommunityMessageRequests)
         binding!!.inputBar.delegate = this
         binding!!.inputBarRecordingView.delegate = this
         // GIF button
@@ -1074,6 +1073,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val (textResource, insertParam) = when {
             recipient.isLocalNumber -> R.string.activity_conversation_empty_state_note_to_self to null
             openGroup != null && !openGroup.canWrite -> R.string.activity_conversation_empty_state_read_only to recipient.toShortString()
+            openGroup == null && recipient.blocksCommunityMessageRequests -> R.string.activity_conversation_empty_state_blocks_community_requests to recipient.toShortString()
             else -> R.string.activity_conversation_empty_state_default to recipient.toShortString()
         }
         val showPlaceholder = adapter.itemCount == 0

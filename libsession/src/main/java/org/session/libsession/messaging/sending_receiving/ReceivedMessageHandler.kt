@@ -261,7 +261,17 @@ fun MessageReceiver.handleVisibleMessage(
     val storage = MessagingModuleConfiguration.shared.storage
     val context = MessagingModuleConfiguration.shared.context
     val userPublicKey = storage.getUserPublicKey()
-    val messageSender: String? = message.sender
+    val openGroup = if (!openGroupID.isNullOrEmpty()) {
+        storage.getThreadId(Address.fromSerialized(GroupUtil.getEncodedOpenGroupID(openGroupID.toByteArray())))?.let {
+            storage.getOpenGroup(it)
+        }
+    } else null
+    val senderId = SessionId(message.sender!!)
+    val messageSender: String? = if (openGroup != null && senderId.prefix == IdPrefix.BLINDED) {
+        message.sender?.let {
+            GroupUtil.getEncodedOpenGroupInboxID(openGroup, SessionId(it)).serialize()
+        }
+    } else message.sender
 
     // Do nothing if the message was outdated
     if (MessageReceiver.messageIsOutdated(message, threadId, openGroupID)) { return null }
@@ -306,7 +316,7 @@ fun MessageReceiver.handleVisibleMessage(
         }
 
         if (userPublicKey != messageSender && !isUserBlindedSender) {
-            recipient.setBlocksCommunityMessageRequests(message.blocksMessageRequests)
+            storage.setBlocksCommunityMessageRequests(recipient, message.blocksMessageRequests)
         }
     }
     // Parse quote if needed

@@ -42,6 +42,7 @@ interface StorageProtocol {
     fun getUserProfile(): Profile
     fun setProfileAvatar(recipient: Recipient, profileAvatar: String?)
     fun setProfilePicture(recipient: Recipient, newProfilePicture: String?, newProfileKey: ByteArray?)
+    fun setBlocksCommunityMessageRequests(recipient: Recipient, blocksMessageRequests: Boolean)
     fun setUserProfilePicture(newProfilePicture: String?, newProfileKey: ByteArray?)
     fun clearUserPic()
     // Signal
@@ -228,4 +229,5 @@ interface StorageProtocol {
     fun notifyConfigUpdates(forConfigObject: ConfigBase)
     fun conversationInConfig(publicKey: String?, groupPublicKey: String?, openGroupId: String?, visibleOnly: Boolean): Boolean
     fun canPerformConfigChange(variant: String, publicKey: String, changeTimestampMs: Long): Boolean
+    fun isCheckingCommunityRequests(): Boolean
 }

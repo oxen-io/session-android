@@ -1036,6 +1036,7 @@
     <string name="activity_home_outdated_client_config">Some of your devices are using outdated versions. Syncing may be unreliable until they are updated.</string>
 
     <string name="activity_conversation_empty_state_read_only">There are no messages in <b>%s</b>.</string>
+    <string name="activity_conversation_empty_state_blocks_community_requests"><b>%s</b> has message requests from Community conversations turned off, so you cannot send them a message.</string>
     <string name="activity_conversation_empty_state_note_to_self">You have no messages in Note to Self.</string>
     <string name="activity_conversation_empty_state_default">You have no messages from <b>%s</b>.\nSend a message to start the conversation!</string>
 

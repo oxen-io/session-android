@@ -1,6 +1,7 @@
 package org.session.libsession.utilities
 
-import network.loki.messenger.libsession_util.util.GroupInfo
+import org.session.libsession.messaging.open_groups.OpenGroup
+import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsignal.messages.SignalServiceGroup
 import org.session.libsignal.utilities.Hex
 import java.io.IOException
@@ -13,6 +14,13 @@ object GroupUtil {
     @JvmStatic
     fun getEncodedOpenGroupID(groupID: ByteArray): String {
         return OPEN_GROUP_PREFIX + Hex.toStringCondensed(groupID)
+    }
+
+    @JvmStatic
+    fun getEncodedOpenGroupInboxID(openGroup: OpenGroup, sessionId: SessionId): Address {
+        val openGroupInboxId =
+            "${openGroup.server}!${openGroup.publicKey}!${sessionId.hexString}".toByteArray()
+        return Address.fromSerialized(getEncodedOpenGroupInboxID(openGroupInboxId))
     }
 
     @JvmStatic

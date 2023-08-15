@@ -349,6 +349,10 @@ public class Recipient implements RecipientModifiedListener {
     if (notify) notifyListeners();
   }
 
+  public boolean getBlocksCommunityMessageRequests() {
+    return blocksCommunityMessageRequests;
+  }
+
   public void setBlocksCommunityMessageRequests(boolean blocksCommunityMessageRequests) {
     synchronized (this) {
       this.blocksCommunityMessageRequests = blocksCommunityMessageRequests;
