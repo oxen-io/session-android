@@ -20,13 +20,10 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/preferences__message_requests_category">
-        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
-            android:persistent="false"
-            android:key="libsession.ALLOW_MESSAGE_REQUESTS"
-            android:title="@string/preferences__message_requests_title"
-            android:summary="@string/preferences__message_requests_summary"
-            />
+    <PreferenceCategory
+        android:title="@string/preferences__message_requests_category"
+        android:key="@string/preferences__message_requests_category"
+        android:persistent="false">
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/preferences__read_receipts">

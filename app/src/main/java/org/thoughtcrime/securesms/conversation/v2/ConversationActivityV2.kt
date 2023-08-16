@@ -87,7 +87,6 @@ import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Address.Companion.fromSerialized
-import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.MediaTypes
 import org.session.libsession.utilities.Stub
 import org.session.libsession.utilities.TextSecurePreferences
@@ -240,7 +239,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     val address = if (sessionId.prefix == IdPrefix.BLINDED && openGroup != null) {
                         storage.getOrCreateBlindedIdMapping(sessionId.hexString, openGroup.server, openGroup.publicKey).sessionId?.let {
                             fromSerialized(it)
-                        } ?: GroupUtil.getEncodedOpenGroupInboxID(openGroup, sessionId)
+                        } ?: fromSerialized(sessionId.hexString)
                     } else {
                         it
                     }
@@ -851,6 +850,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private fun isMessageRequestThread(): Boolean {
         val recipient = viewModel.recipient ?: return false
+        if (recipient.isLocalNumber) return false
         return !recipient.isGroupRecipient && !recipient.isApproved
     }
 
