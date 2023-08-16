@@ -98,7 +98,7 @@ Java_network_loki_messenger_libsession_1util_UserProfile_getNtsPriority(JNIEnv *
 }
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_network_loki_messenger_libsession_1util_UserProfile_getBlocksCommunityMessageRequests(
+Java_network_loki_messenger_libsession_1util_UserProfile_getCommunityMessageRequests(
         JNIEnv *env, jobject thiz) {
     std::lock_guard lock{util::util_mutex_};
     auto profile = ptrToProfile(env, thiz);
@@ -111,9 +111,17 @@ Java_network_loki_messenger_libsession_1util_UserProfile_getBlocksCommunityMessa
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_network_loki_messenger_libsession_1util_UserProfile_setBlocksCommunityMessageRequests(
+Java_network_loki_messenger_libsession_1util_UserProfile_setCommunityMessageRequests(
         JNIEnv *env, jobject thiz, jboolean blocks) {
     std::lock_guard lock{util::util_mutex_};
     auto profile = ptrToProfile(env, thiz);
     profile->set_blinded_msgreqs(std::optional{(bool)blocks});
+}
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_network_loki_messenger_libsession_1util_UserProfile_isBlockCommunityMessageRequestsSet(
+        JNIEnv *env, jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
+    auto profile = ptrToProfile(env, thiz);
+    return profile->get_blinded_msgreqs().has_value();
 }

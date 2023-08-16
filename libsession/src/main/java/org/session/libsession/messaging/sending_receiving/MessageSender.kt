@@ -247,7 +247,7 @@ object MessageSender {
         }
         configFactory.user?.let { user ->
             if (message is VisibleMessage) {
-                message.blocksMessageRequests = user.getBlocksCommunityMessageRequests()
+                message.blocksMessageRequests = user.getCommunityMessageRequests()
             }
         }
         val userEdKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!

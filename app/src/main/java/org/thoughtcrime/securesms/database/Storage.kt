@@ -436,7 +436,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     }
 
     override fun isCheckingCommunityRequests(): Boolean {
-        return configFactory.user?.getBlocksCommunityMessageRequests() != true
+        return configFactory.user?.getCommunityMessageRequests() != true
     }
 
     fun notifyUpdates(forConfigObject: ConfigBase) {

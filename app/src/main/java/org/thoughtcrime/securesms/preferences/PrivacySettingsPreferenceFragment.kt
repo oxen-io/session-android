@@ -47,14 +47,14 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
 
                         override fun getBoolean(key: String?, defValue: Boolean): Boolean {
                             if (key == TextSecurePreferences.ALLOW_MESSAGE_REQUESTS) {
-                                return !user.getBlocksCommunityMessageRequests()
+                                return user.getCommunityMessageRequests()
                             }
                             return super.getBoolean(key, defValue)
                         }
 
                         override fun putBoolean(key: String?, value: Boolean) {
                             if (key == TextSecurePreferences.ALLOW_MESSAGE_REQUESTS) {
-                                user.setBlocksCommunityMessageRequests(!value)
+                                user.setCommunityMessageRequests(value)
                                 return
                             }
                             super.putBoolean(key, value)
