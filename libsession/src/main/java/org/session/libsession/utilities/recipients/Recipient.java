@@ -325,7 +325,7 @@ public class Recipient implements RecipientModifiedListener {
         return this.name;
       }
     } else if (isOpenGroupInboxRecipient()){
-      String inboxID = GroupUtil.getDecodedOpenGroupInbox(sessionID);
+      String inboxID = GroupUtil.getDecodedOpenGroupInboxSessionId(sessionID);
       Contact contact = storage.getContactWithSessionID(inboxID);
       if (contact == null) { return sessionID; }
       return contact.displayName(Contact.ContactContext.REGULAR);

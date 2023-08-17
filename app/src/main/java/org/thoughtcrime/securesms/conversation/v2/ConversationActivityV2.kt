@@ -87,6 +87,7 @@ import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Address.Companion.fromSerialized
+import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.MediaTypes
 import org.session.libsession.utilities.Stub
 import org.session.libsession.utilities.TextSecurePreferences
@@ -239,7 +240,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     val address = if (sessionId.prefix == IdPrefix.BLINDED && openGroup != null) {
                         storage.getOrCreateBlindedIdMapping(sessionId.hexString, openGroup.server, openGroup.publicKey).sessionId?.let {
                             fromSerialized(it)
-                        } ?: fromSerialized(sessionId.hexString)
+                        } ?: GroupUtil.getEncodedOpenGroupInboxID(openGroup, sessionId)
                     } else {
                         it
                     }
@@ -248,7 +249,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 }
             } ?: finish()
         }
-        viewModelFactory.create(threadId, MessagingModuleConfiguration.shared.getUserED25519KeyPair(), contentResolver)
+        viewModelFactory.create(this@ConversationActivityV2, threadId, MessagingModuleConfiguration.shared.getUserED25519KeyPair(), contentResolver)
     }
     private var actionMode: ActionMode? = null
     private var unreadCount = 0
@@ -591,10 +592,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     // called from onCreate
     private fun setUpInputBar() {
-        val recipient = viewModel.recipient ?: return
+        val blindedRecipient = viewModel.blindedRecipient
         binding!!.inputBar.isVisible =
             viewModel.openGroup?.canWrite == true
-                    || (viewModel.openGroup == null && !recipient.blocksCommunityMessageRequests)
+                    || (blindedRecipient == null || !blindedRecipient.blocksCommunityMessageRequests)
         binding!!.inputBar.delegate = this
         binding!!.inputBarRecordingView.delegate = this
         // GIF button
@@ -1068,12 +1069,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private fun updatePlaceholder() {
         val recipient = viewModel.recipient
             ?: return Log.w("Loki", "recipient was null in placeholder update")
+        val blindedRecipient = viewModel.blindedRecipient
         val binding = binding ?: return
         val openGroup = viewModel.openGroup
         val (textResource, insertParam) = when {
             recipient.isLocalNumber -> R.string.activity_conversation_empty_state_note_to_self to null
             openGroup != null && !openGroup.canWrite -> R.string.activity_conversation_empty_state_read_only to recipient.toShortString()
-            openGroup == null && recipient.blocksCommunityMessageRequests -> R.string.activity_conversation_empty_state_blocks_community_requests to recipient.toShortString()
+            blindedRecipient != null && blindedRecipient.blocksCommunityMessageRequests -> R.string.activity_conversation_empty_state_blocks_community_requests to recipient.toShortString()
             else -> R.string.activity_conversation_empty_state_default to recipient.toShortString()
         }
         val showPlaceholder = adapter.itemCount == 0

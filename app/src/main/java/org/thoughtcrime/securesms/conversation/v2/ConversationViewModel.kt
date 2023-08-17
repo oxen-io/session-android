@@ -1,6 +1,7 @@
 package org.thoughtcrime.securesms.conversation.v2
 
 import android.content.ContentResolver
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -8,6 +9,7 @@ import app.cash.copper.flow.observeQuery
 import com.goterl.lazysodium.utils.KeyPair
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +20,8 @@ import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
+import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
@@ -28,6 +32,7 @@ import org.thoughtcrime.securesms.repository.ConversationRepository
 import java.util.UUID
 
 class ConversationViewModel(
+    private val context: Context,
     val threadId: Long,
     val edKeyPair: KeyPair?,
     private val contentResolver: ContentResolver,
@@ -46,6 +51,19 @@ class ConversationViewModel(
     }
     val recipient: Recipient?
         get() = _recipient.value
+
+    val blindedRecipient: Recipient?
+        get() = _recipient.value?.let { recipient ->
+            when {
+                recipient.isOpenGroupOutboxRecipient -> recipient
+                recipient.isOpenGroupInboxRecipient -> Recipient.from(
+                    context,
+                    Address.fromSerialized(GroupUtil.getDecodedOpenGroupInboxSessionId(recipient.address.serialize())),
+                    false
+                )
+                else -> null
+            }
+        }
 
     private var _openGroup: RetrieveOnce<OpenGroup> = RetrieveOnce {
         storage.getOpenGroup(threadId)
@@ -201,7 +219,7 @@ class ConversationViewModel(
 
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {
-        fun create(threadId: Long, edKeyPair: KeyPair?, contentResolver: ContentResolver): Factory
+        fun create(context: Context, threadId: Long, edKeyPair: KeyPair?, contentResolver: ContentResolver): Factory
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -209,12 +227,13 @@ class ConversationViewModel(
         @Assisted private val threadId: Long,
         @Assisted private val edKeyPair: KeyPair?,
         @Assisted private val contentResolver: ContentResolver,
+        @Assisted private val context: Context,
         private val repository: ConversationRepository,
         private val storage: Storage
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return ConversationViewModel(threadId, edKeyPair, contentResolver, repository, storage) as T
+            return ConversationViewModel(context, threadId, edKeyPair, contentResolver, repository, storage) as T
         }
     }
 }

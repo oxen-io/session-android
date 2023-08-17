@@ -60,7 +60,7 @@ object GroupUtil {
     }
 
     @JvmStatic
-    fun getDecodedOpenGroupInbox(groupID: String): String {
+    fun getDecodedOpenGroupInboxSessionId(groupID: String): String {
         val decodedGroupId = getDecodedGroupID(groupID)
         if (decodedGroupId.split("!").count() > 2) {
             return decodedGroupId.split("!", limit = 3)[2]

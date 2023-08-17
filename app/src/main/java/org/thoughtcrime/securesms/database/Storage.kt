@@ -436,7 +436,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     }
 
     override fun isCheckingCommunityRequests(): Boolean {
-        return configFactory.user?.getCommunityMessageRequests() != true
+        return configFactory.user?.getCommunityMessageRequests() == true
     }
 
     fun notifyUpdates(forConfigObject: ConfigBase) {
@@ -1414,7 +1414,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                     val blindedId = when {
                         recipient.isGroupRecipient -> null
                         recipient.isOpenGroupInboxRecipient -> {
-                            GroupUtil.getDecodedOpenGroupInbox(address)
+                            GroupUtil.getDecodedOpenGroupInboxSessionId(address)
                         }
                         else -> {
                             if (SessionId(address).prefix == IdPrefix.BLINDED) {

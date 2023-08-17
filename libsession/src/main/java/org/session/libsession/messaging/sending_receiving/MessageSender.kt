@@ -245,9 +245,10 @@ object MessageSender {
         if (message.sentTimestamp == null) {
             message.sentTimestamp = SnodeAPI.nowWithOffset
         }
+        // Attach the blocks message requests info
         configFactory.user?.let { user ->
             if (message is VisibleMessage) {
-                message.blocksMessageRequests = user.getCommunityMessageRequests()
+                message.blocksMessageRequests = !user.getCommunityMessageRequests()
             }
         }
         val userEdKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!
