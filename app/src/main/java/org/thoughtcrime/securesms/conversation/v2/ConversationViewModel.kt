@@ -9,7 +9,6 @@ import app.cash.copper.flow.observeQuery
 import com.goterl.lazysodium.utils.KeyPair
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -216,6 +215,10 @@ class ConversationViewModel(
     fun updateRecipient() {
         _recipient.updateTo(repository.maybeGetRecipientForThreadId(threadId))
     }
+
+    fun hideInputBar(): Boolean = openGroup?.canWrite != true &&
+                blindedRecipient?.blocksCommunityMessageRequests == true
+
 
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {

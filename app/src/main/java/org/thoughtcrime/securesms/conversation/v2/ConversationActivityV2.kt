@@ -40,6 +40,7 @@ import androidx.annotation.DimenRes
 import androidx.core.text.set
 import androidx.core.text.toSpannable
 import androidx.core.view.drawToBitmap
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Lifecycle
@@ -592,29 +593,27 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     // called from onCreate
     private fun setUpInputBar() {
-        val blindedRecipient = viewModel.blindedRecipient
-        binding!!.inputBar.isVisible =
-            viewModel.openGroup?.canWrite == true
-                    || (blindedRecipient == null || !blindedRecipient.blocksCommunityMessageRequests)
-        binding!!.inputBar.delegate = this
-        binding!!.inputBarRecordingView.delegate = this
+        val binding = binding ?: return
+        binding.inputBar.isGone = viewModel.hideInputBar()
+        binding.inputBar.delegate = this
+        binding.inputBarRecordingView.delegate = this
         // GIF button
-        binding!!.gifButtonContainer.addView(gifButton)
+        binding.gifButtonContainer.addView(gifButton)
         gifButton.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)
         gifButton.onUp = { showGIFPicker() }
         gifButton.snIsEnabled = false
         // Document button
-        binding!!.documentButtonContainer.addView(documentButton)
+        binding.documentButtonContainer.addView(documentButton)
         documentButton.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)
         documentButton.onUp = { showDocumentPicker() }
         documentButton.snIsEnabled = false
         // Library button
-        binding!!.libraryButtonContainer.addView(libraryButton)
+        binding.libraryButtonContainer.addView(libraryButton)
         libraryButton.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)
         libraryButton.onUp = { pickFromLibrary() }
         libraryButton.snIsEnabled = false
         // Camera button
-        binding!!.cameraButtonContainer.addView(cameraButton)
+        binding.cameraButtonContainer.addView(cameraButton)
         cameraButton.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)
         cameraButton.onUp = { showCamera() }
         cameraButton.snIsEnabled = false
