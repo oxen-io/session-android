@@ -249,7 +249,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 }
             } ?: finish()
         }
-        viewModelFactory.create(this@ConversationActivityV2, threadId, MessagingModuleConfiguration.shared.getUserED25519KeyPair(), contentResolver)
+        viewModelFactory.create(applicationContext, threadId, MessagingModuleConfiguration.shared.getUserED25519KeyPair(), contentResolver)
     }
     private var actionMode: ActionMode? = null
     private var unreadCount = 0

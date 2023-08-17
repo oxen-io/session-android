@@ -40,10 +40,11 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
         findPreference<Preference>(TextSecurePreferences.CALL_NOTIFICATIONS_ENABLED)!!
             .onPreferenceChangeListener = CallToggleListener(this) { setCall(it) }
         findPreference<PreferenceCategory>(getString(R.string.preferences__message_requests_category))?.let { category ->
-            configFactory.user?.let { user ->
-                val allowMessageRequestPref = SwitchPreferenceCompat(requireContext()).apply {
+            when (val user = configFactory.user) {
+                null -> category.isVisible = false
+                else -> SwitchPreferenceCompat(requireContext()).apply {
                     key = TextSecurePreferences.ALLOW_MESSAGE_REQUESTS
-                    preferenceDataStore = object:PreferenceDataStore() {
+                    preferenceDataStore = object : PreferenceDataStore() {
 
                         override fun getBoolean(key: String?, defValue: Boolean): Boolean {
                             if (key == TextSecurePreferences.ALLOW_MESSAGE_REQUESTS) {
@@ -62,10 +63,7 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
                     }
                     title = getString(R.string.preferences__message_requests_title)
                     summary = getString(R.string.preferences__message_requests_summary)
-                }
-                category.addPreference(allowMessageRequestPref)
-            } ?: run {
-                category.isVisible = false
+                }.let(category::addPreference)
             }
         }
         initializeVisibility()
