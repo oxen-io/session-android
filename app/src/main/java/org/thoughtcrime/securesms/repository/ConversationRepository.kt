@@ -1,5 +1,11 @@
 package org.thoughtcrime.securesms.repository
 
+import android.content.ContentResolver
+import android.content.Context
+import app.cash.copper.flow.observeQuery
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
@@ -15,6 +21,7 @@ import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.toHexString
+import org.thoughtcrime.securesms.database.DatabaseContentProviders
 import org.thoughtcrime.securesms.database.DraftDatabase
 import org.thoughtcrime.securesms.database.LokiMessageDatabase
 import org.thoughtcrime.securesms.database.LokiThreadDatabase
@@ -35,6 +42,8 @@ import kotlin.coroutines.suspendCoroutine
 
 interface ConversationRepository {
     fun maybeGetRecipientForThreadId(threadId: Long): Recipient?
+    fun maybeGetBlindedRecipient(recipient: Recipient): Recipient?
+    fun recipientUpdateFlow(threadId: Long): Flow<Recipient?>
     fun saveDraft(threadId: Long, text: String)
     fun getDraft(threadId: Long): String?
     fun clearDrafts(threadId: Long)
@@ -75,6 +84,7 @@ interface ConversationRepository {
 }
 
 class DefaultConversationRepository @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val textSecurePreferences: TextSecurePreferences,
     private val messageDataProvider: MessageDataProvider,
     private val threadDb: ThreadDatabase,
@@ -87,11 +97,27 @@ class DefaultConversationRepository @Inject constructor(
     private val storage: Storage,
     private val lokiMessageDb: LokiMessageDatabase,
     private val sessionJobDb: SessionJobDatabase,
-    private val configFactory: ConfigFactory
+    private val configFactory: ConfigFactory,
+    private val contentResolver: ContentResolver,
 ) : ConversationRepository {
 
     override fun maybeGetRecipientForThreadId(threadId: Long): Recipient? {
         return threadDb.getRecipientForThreadId(threadId)
+    }
+
+    override fun maybeGetBlindedRecipient(recipient: Recipient): Recipient? {
+        if (!recipient.isOpenGroupInboxRecipient) return null
+        return Recipient.from(
+            context,
+            Address.fromSerialized(GroupUtil.getDecodedOpenGroupInboxSessionId(recipient.address.serialize())),
+            false
+        )
+    }
+
+    override fun recipientUpdateFlow(threadId: Long): Flow<Recipient?> {
+        return contentResolver.observeQuery(DatabaseContentProviders.Conversation.getUriForThread(threadId)).map {
+            maybeGetRecipientForThreadId(threadId)
+        }
     }
 
     override fun saveDraft(threadId: Long, text: String) {

@@ -1,11 +1,8 @@
 package org.thoughtcrime.securesms.conversation.v2
 
-import android.content.ContentResolver
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import app.cash.copper.flow.observeQuery
 import com.goterl.lazysodium.utils.KeyPair
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -19,22 +16,17 @@ import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
-import org.session.libsession.utilities.Address
-import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
-import org.thoughtcrime.securesms.database.DatabaseContentProviders
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.repository.ConversationRepository
 import java.util.UUID
 
 class ConversationViewModel(
-    private val context: Context,
     val threadId: Long,
     val edKeyPair: KeyPair?,
-    private val contentResolver: ContentResolver,
     private val repository: ConversationRepository,
     private val storage: Storage
 ) : ViewModel() {
@@ -55,11 +47,7 @@ class ConversationViewModel(
         get() = _recipient.value?.let { recipient ->
             when {
                 recipient.isOpenGroupOutboxRecipient -> recipient
-                recipient.isOpenGroupInboxRecipient -> Recipient.from(
-                    context,
-                    Address.fromSerialized(GroupUtil.getDecodedOpenGroupInboxSessionId(recipient.address.serialize())),
-                    false
-                )
+                recipient.isOpenGroupInboxRecipient -> repository.maybeGetBlindedRecipient(recipient)
                 else -> null
             }
         }
@@ -79,12 +67,22 @@ class ConversationViewModel(
                 ?.let { SessionId(IdPrefix.BLINDED, it) }?.hexString
         }
 
+    val isMessageRequestThread : Boolean
+        get() {
+            val recipient = recipient ?: return false
+            return !recipient.isLocalNumber && !recipient.isGroupRecipient && !recipient.isApproved
+        }
+
+    val canReactToMessages: Boolean
+        // allow reactions if the open group is null (normal conversations) or the open group's capabilities include reactions
+        get() = (openGroup == null || OpenGroupApi.Capability.REACTIONS.name.lowercase() in serverCapabilities)
+
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            contentResolver.observeQuery(DatabaseContentProviders.Conversation.getUriForThread(threadId))
-                .collect {
-                    val recipientExists = storage.getRecipientForThread(threadId) != null
-                    if (!recipientExists && _uiState.value.conversationExists) {
+            repository.recipientUpdateFlow(threadId)
+                .collect { recipient ->
+                    if (recipient == null && _uiState.value.conversationExists) {
                         _uiState.update { it.copy(conversationExists = false) }
                     }
                 }
@@ -222,21 +220,19 @@ class ConversationViewModel(
 
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {
-        fun create(context: Context, threadId: Long, edKeyPair: KeyPair?, contentResolver: ContentResolver): Factory
+        fun create(threadId: Long, edKeyPair: KeyPair?): Factory
     }
 
     @Suppress("UNCHECKED_CAST")
     class Factory @AssistedInject constructor(
         @Assisted private val threadId: Long,
         @Assisted private val edKeyPair: KeyPair?,
-        @Assisted private val contentResolver: ContentResolver,
-        @Assisted private val context: Context,
         private val repository: ConversationRepository,
         private val storage: Storage
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return ConversationViewModel(context, threadId, edKeyPair, contentResolver, repository, storage) as T
+            return ConversationViewModel(threadId, edKeyPair, repository, storage) as T
         }
     }
 }

@@ -1,6 +1,7 @@
 package org.thoughtcrime.securesms.conversation.v2
 
 import com.goterl.lazysodium.utils.KeyPair
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import org.hamcrest.CoreMatchers.endsWith
 import org.hamcrest.CoreMatchers.equalTo
@@ -30,13 +31,14 @@ class ConversationViewModelTest: BaseViewModelTest() {
     private lateinit var recipient: Recipient
 
     private val viewModel: ConversationViewModel by lazy {
-        ConversationViewModel(threadId, edKeyPair, mock(), repository, storage)
+        ConversationViewModel(threadId, edKeyPair, repository, storage)
     }
 
     @Before
     fun setUp() {
         recipient = mock(Recipient::class.java)
         whenever(repository.maybeGetRecipientForThreadId(anyLong())).thenReturn(recipient)
+        whenever(repository.recipientUpdateFlow(anyLong())).thenReturn(emptyFlow())
     }
 
     @Test

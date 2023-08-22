@@ -79,7 +79,6 @@ import org.session.libsession.messaging.messages.signal.OutgoingTextMessage
 import org.session.libsession.messaging.messages.visible.Reaction
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.OpenGroupApi
-import org.session.libsession.messaging.open_groups.OpenGroupApi.Capability
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
@@ -250,7 +249,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 }
             } ?: finish()
         }
-        viewModelFactory.create(applicationContext, threadId, MessagingModuleConfiguration.shared.getUserED25519KeyPair(), contentResolver)
+        viewModelFactory.create(threadId, MessagingModuleConfiguration.shared.getUserED25519KeyPair())
     }
     private var actionMode: ActionMode? = null
     private var unreadCount = 0
@@ -309,8 +308,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 handleSwipeToReply(message)
             },
             onItemLongPress = { message, position, view ->
-                if (!isMessageRequestThread() &&
-                    (viewModel.openGroup == null || Capability.REACTIONS.name.lowercase() in viewModel.serverCapabilities)
+                if (!viewModel.isMessageRequestThread &&
+                    viewModel.canReactToMessages
                 ) {
                     showEmojiPicker(message, view)
                 } else {
@@ -762,7 +761,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         val recipient = viewModel.recipient ?: return false
-        if (!isMessageRequestThread()) {
+        if (!viewModel.isMessageRequestThread) {
             ConversationMenuHelper.onPrepareOptionsMenu(
                 menu,
                 menuInflater,
@@ -846,12 +845,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         lifecycleScope.launch(Dispatchers.IO) {
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@ConversationActivityV2)
         }
-    }
-
-    private fun isMessageRequestThread(): Boolean {
-        val recipient = viewModel.recipient ?: return false
-        if (recipient.isLocalNumber) return false
-        return !recipient.isGroupRecipient && !recipient.isApproved
     }
 
     private fun isOutgoingMessageRequestThread(): Boolean {
