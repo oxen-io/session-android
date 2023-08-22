@@ -1067,7 +1067,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val (textResource, insertParam) = when {
             recipient.isLocalNumber -> R.string.activity_conversation_empty_state_note_to_self to null
             openGroup != null && !openGroup.canWrite -> R.string.activity_conversation_empty_state_read_only to recipient.toShortString()
-            blindedRecipient != null && blindedRecipient.blocksCommunityMessageRequests -> R.string.activity_conversation_empty_state_blocks_community_requests to recipient.toShortString()
+            blindedRecipient?.blocksCommunityMessageRequests == true -> R.string.activity_conversation_empty_state_blocks_community_requests to recipient.toShortString()
             else -> R.string.activity_conversation_empty_state_default to recipient.toShortString()
         }
         val showPlaceholder = adapter.itemCount == 0

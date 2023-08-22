@@ -20,12 +20,12 @@ object GroupUtil {
     fun getEncodedOpenGroupInboxID(openGroup: OpenGroup, sessionId: SessionId): Address {
         val openGroupInboxId =
             "${openGroup.server}!${openGroup.publicKey}!${sessionId.hexString}".toByteArray()
-        return Address.fromSerialized(getEncodedOpenGroupInboxID(openGroupInboxId))
+        return getEncodedOpenGroupInboxID(openGroupInboxId)
     }
 
     @JvmStatic
-    fun getEncodedOpenGroupInboxID(groupInboxID: ByteArray): String {
-        return OPEN_GROUP_INBOX_PREFIX + Hex.toStringCondensed(groupInboxID)
+    fun getEncodedOpenGroupInboxID(groupInboxID: ByteArray): Address {
+        return Address.fromSerialized(OPEN_GROUP_INBOX_PREFIX + Hex.toStringCondensed(groupInboxID))
     }
 
     @JvmStatic

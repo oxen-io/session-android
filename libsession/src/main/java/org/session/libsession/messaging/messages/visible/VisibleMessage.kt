@@ -76,9 +76,7 @@ class VisibleMessage(
                 result.reaction = reaction
             }
 
-            result.blocksMessageRequests =
-                if (dataMessage.hasBlocksCommunityMessageRequests()) dataMessage.blocksCommunityMessageRequests
-                else false
+            result.blocksMessageRequests = with (dataMessage) { hasBlocksCommunityMessageRequests() && blocksCommunityMessageRequests }
 
             return result
         }
