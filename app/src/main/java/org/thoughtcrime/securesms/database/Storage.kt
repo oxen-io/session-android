@@ -1533,16 +1533,12 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         if (mapping.sessionId != null) {
             return mapping
         }
-        val threadDb = DatabaseComponent.get(context).threadDatabase()
-        threadDb.readerFor(threadDb.conversationList).use { reader ->
-            while (reader.next != null) {
-                val recipient = reader.current.recipient
-                val sessionId = recipient.address.serialize()
-                if (!recipient.isGroupRecipient && SodiumUtilities.sessionId(sessionId, blindedId, serverPublicKey)) {
-                    val contactMapping = mapping.copy(sessionId = sessionId)
-                    db.addBlindedIdMapping(contactMapping)
-                    return contactMapping
-                }
+        getAllContacts().forEach { contact ->
+            val sessionId = SessionId(contact.sessionID)
+            if (sessionId.prefix == IdPrefix.STANDARD && SodiumUtilities.sessionId(sessionId.hexString, blindedId, serverPublicKey)) {
+                val contactMapping = mapping.copy(sessionId = sessionId.hexString)
+                db.addBlindedIdMapping(contactMapping)
+                return contactMapping
             }
         }
         db.getBlindedIdMappingsExceptFor(server).forEach {
