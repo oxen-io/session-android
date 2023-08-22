@@ -214,7 +214,7 @@ class ConversationViewModel(
         _recipient.updateTo(repository.maybeGetRecipientForThreadId(threadId))
     }
 
-    fun hideInputBar(): Boolean = openGroup?.canWrite != true &&
+    fun hidesInputBar(): Boolean = openGroup?.canWrite != true &&
                 blindedRecipient?.blocksCommunityMessageRequests == true
 
 

@@ -593,7 +593,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     // called from onCreate
     private fun setUpInputBar() {
         val binding = binding ?: return
-        binding.inputBar.isGone = viewModel.hideInputBar()
+        binding.inputBar.isGone = viewModel.hidesInputBar()
         binding.inputBar.delegate = this
         binding.inputBarRecordingView.delegate = this
         // GIF button
