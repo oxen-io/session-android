@@ -50,7 +50,7 @@ import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
-import org.session.libsession.messaging.sending_receiving.notifications.PushNotificationAPI
+import org.session.libsession.messaging.sending_receiving.notifications.PushRegistryV1
 import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPollerV2
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
 import org.session.libsession.messaging.utilities.SessionId
@@ -600,7 +600,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                 val expireTimer = group.disappearingTimer
                 setExpirationTimer(groupId, expireTimer.toInt())
                 // Notify the PN server
-                PushNotificationAPI.performOperation(PushNotificationAPI.ClosedGroupOperation.Subscribe, group.sessionId, localUserPublicKey)
+                PushRegistryV1.subscribeGroup(group.sessionId, publicKey = localUserPublicKey)
                 // Notify the user
                 val threadID = getOrCreateThreadIdFor(Address.fromSerialized(groupId))
                 threadDb.setDate(threadID, formationTimestamp)

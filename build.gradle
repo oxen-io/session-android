@@ -2,13 +2,24 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        if (project.hasProperty('huawei')) maven {
+            url 'https://developer.huawei.com/repo/'
+            content {
+                includeGroup 'com.huawei.agconnect'
+            }
+        }
     }
+
     dependencies {
         classpath "com.android.tools.build:gradle:$gradlePluginVersion"
+        classpath files('libs/gradle-witness.jar')
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         classpath "com.google.gms:google-services:$googleServicesVersion"
         classpath files('libs/gradle-witness.jar')
         classpath "com.squareup:javapoet:1.13.0"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$daggerVersion"
+        if (project.hasProperty('huawei')) classpath 'com.huawei.agconnect:agcp:1.9.1.300'
     }
 }
 
@@ -52,6 +63,15 @@ allprojects {
         }
         jcenter()
         maven { url "https://jitpack.io" }
+        if (project.hasProperty('huawei')) maven {
+            url 'https://developer.huawei.com/repo/'
+            content {
+                includeGroup 'com.huawei.android.hms'
+                includeGroup 'com.huawei.agconnect'
+                includeGroup 'com.huawei.hmf'
+                includeGroup 'com.huawei.hms'
+            }
+        }
     }
 
     project.ext {

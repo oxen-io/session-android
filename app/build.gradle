@@ -24,13 +24,179 @@ apply plugin: 'kotlin-android'
 apply plugin: 'witness'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
-apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlinx-serialization'
 apply plugin: 'dagger.hilt.android.plugin'
 
-
 configurations.all {
     exclude module: "commons-logging"
+}
+
+def canonicalVersionCode = 354
+def canonicalVersionName = "1.17.0"
+
+def postFixSize = 10
+def abiPostFix = ['armeabi-v7a' : 1,
+                  'arm64-v8a'   : 2,
+                  'x86'         : 3,
+                  'x86_64'      : 4,
+                  'universal'   : 5]
+
+android {
+    compileSdkVersion androidCompileSdkVersion
+    namespace 'network.loki.messenger'
+    useLibrary 'org.apache.http.legacy'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'LICENSE'
+        exclude 'NOTICE'
+        exclude 'asm-license.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/proguard/androidx-annotations.pro'
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+            universalApk true
+        }
+    }
+
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.4.7'
+    }
+
+    defaultConfig {
+        versionCode canonicalVersionCode * postFixSize
+        versionName canonicalVersionName
+
+        minSdkVersion androidMinimumSdkVersion
+        targetSdkVersion androidTargetSdkVersion
+
+        multiDexEnabled = true
+
+        vectorDrawables.useSupportLibrary = true
+        project.ext.set("archivesBaseName", "session")
+
+        buildConfigField "long", "BUILD_TIMESTAMP", getLastCommitTimestamp() + "L"
+        buildConfigField "String", "CONTENT_PROXY_HOST", "\"contentproxy.signal.org\""
+        buildConfigField "int", "CONTENT_PROXY_PORT", "443"
+        buildConfigField "String", "USER_AGENT", "\"OWA\""
+        buildConfigField "String[]", "LANGUAGES", "new String[]{\"" + autoResConfig().collect { s -> s.replace('-r', '_') }.join('", "') + '"}'
+        buildConfigField "int", "CANONICAL_VERSION_CODE", "$canonicalVersionCode"
+
+        resConfigs autoResConfig()
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // The following argument makes the Android Test Orchestrator run its
+        // "pm clear" command after each test invocation. This command ensures
+        // that the app's state is completely cleared between tests.
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+        testOptions {
+            execution 'ANDROIDX_TEST_ORCHESTRATOR'
+        }
+    }
+
+    sourceSets {
+        String sharedTestDir = 'src/sharedTest/java'
+        test.java.srcDirs += sharedTestDir
+        androidTest.java.srcDirs += sharedTestDir
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+        debug {
+            minifyEnabled false
+        }
+    }
+
+    flavorDimensions "distribution"
+    productFlavors {
+        play {
+            dimension "distribution"
+            apply plugin: 'com.google.gms.google-services'
+            ext.websiteUpdateUrl = "null"
+            buildConfigField "boolean", "PLAY_STORE_DISABLED", "false"
+            buildConfigField "org.session.libsession.utilities.Device", "DEVICE", "org.session.libsession.utilities.Device.ANDROID"
+            buildConfigField "String", "NOPLAY_UPDATE_URL", "$ext.websiteUpdateUrl"
+        }
+
+        huawei {
+            dimension "distribution"
+            ext.websiteUpdateUrl = "null"
+            buildConfigField "boolean", "PLAY_STORE_DISABLED", "true"
+            buildConfigField "org.session.libsession.utilities.Device", "DEVICE", "org.session.libsession.utilities.Device.HUAWEI"
+            buildConfigField "String", "NOPLAY_UPDATE_URL", "$ext.websiteUpdateUrl"
+
+        }
+
+        website {
+            dimension "distribution"
+            ext.websiteUpdateUrl = "https://github.com/oxen-io/session-android/releases"
+            buildConfigField "boolean", "PLAY_STORE_DISABLED", "true"
+            buildConfigField "org.session.libsession.utilities.Device", "DEVICE", "org.session.libsession.utilities.Device.ANDROID"
+            buildConfigField "String", "NOPLAY_UPDATE_URL", "\"$ext.websiteUpdateUrl\""
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def abiName = output.getFilter("ABI") ?: 'universal'
+            def postFix = abiPostFix.get(abiName, 0)
+
+            if (postFix >= postFixSize) throw new AssertionError("postFix is too large")
+            output.outputFileName = output.outputFileName = "session-${variant.versionName}-${abiName}.apk"
+            output.versionCodeOverride = canonicalVersionCode * postFixSize + postFix
+        }
+    }
+
+    lintOptions {
+        abortOnError true
+        baseline file("lint-baseline.xml")
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+
+    buildFeatures {
+        dataBinding true
+        viewBinding true
+    }
+
+    def huaweiEnabled = project.properties['huawei'] != null
+
+    applicationVariants.configureEach { variant ->
+        if (variant.flavorName == 'huawei') {
+            variant.getPreBuildProvider().configure { task ->
+                task.doFirst {
+                    if (!huaweiEnabled) {
+                        def message = 'Huawei is not enabled. Please add -Phuawei command line arg. See BUILDING.md'
+                        logger.error(message)
+                        throw new GradleException(message)
+                    }
+                }
+            }
+        }
+    }
 }
 
 dependencies {
@@ -59,11 +225,12 @@ dependencies {
     implementation 'androidx.fragment:fragment-ktx:1.5.3'
     implementation "androidx.core:core-ktx:$coreVersion"
     implementation "androidx.work:work-runtime-ktx:2.7.1"
-    implementation ("com.google.firebase:firebase-messaging:18.0.0") {
+    playImplementation ("com.google.firebase:firebase-messaging:18.0.0") {
         exclude group: 'com.google.firebase', module: 'firebase-core'
         exclude group: 'com.google.firebase', module: 'firebase-analytics'
         exclude group: 'com.google.firebase', module: 'firebase-measurement-connector'
     }
+    if (project.hasProperty('huawei')) huaweiImplementation 'com.huawei.hms:push:6.7.0.300'
     implementation 'com.google.android.exoplayer:exoplayer-core:2.9.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.9.1'
     implementation 'org.conscrypt:conscrypt-android:2.0.0'
@@ -174,144 +341,6 @@ dependencies {
 
     implementation 'androidx.compose.foundation:foundation-layout:1.5.0-alpha02'
     implementation 'androidx.compose.material:material:1.5.0-alpha02'
-}
-
-def canonicalVersionCode = 354
-def canonicalVersionName = "1.17.0"
-
-def postFixSize = 10
-def abiPostFix = ['armeabi-v7a' : 1,
-                  'arm64-v8a'   : 2,
-                  'x86'         : 3,
-                  'x86_64'      : 4,
-                  'universal'   : 5]
-
-android {
-    compileSdkVersion androidCompileSdkVersion
-    namespace 'network.loki.messenger'
-    useLibrary 'org.apache.http.legacy'
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-
-    packagingOptions {
-        exclude 'LICENSE.txt'
-        exclude 'LICENSE'
-        exclude 'NOTICE'
-        exclude 'asm-license.txt'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/proguard/androidx-annotations.pro'
-    }
-
-    splits {
-        abi {
-            enable true
-            reset()
-            include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
-            universalApk true
-        }
-    }
-
-    buildFeatures {
-        compose true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.4.7'
-    }
-
-    defaultConfig {
-        versionCode canonicalVersionCode * postFixSize
-        versionName canonicalVersionName
-
-        minSdkVersion androidMinimumSdkVersion
-        targetSdkVersion androidTargetSdkVersion
-
-        multiDexEnabled = true
-
-        vectorDrawables.useSupportLibrary = true
-        project.ext.set("archivesBaseName", "session")
-
-        buildConfigField "long", "BUILD_TIMESTAMP", getLastCommitTimestamp() + "L"
-        buildConfigField "String", "CONTENT_PROXY_HOST", "\"contentproxy.signal.org\""
-        buildConfigField "int", "CONTENT_PROXY_PORT", "443"
-        buildConfigField "String", "USER_AGENT", "\"OWA\""
-        buildConfigField "String[]", "LANGUAGES", "new String[]{\"" + autoResConfig().collect { s -> s.replace('-r', '_') }.join('", "') + '"}'
-        buildConfigField "int", "CANONICAL_VERSION_CODE", "$canonicalVersionCode"
-
-        resConfigs autoResConfig()
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        // The following argument makes the Android Test Orchestrator run its
-        // "pm clear" command after each test invocation. This command ensures
-        // that the app's state is completely cleared between tests.
-        testInstrumentationRunnerArguments clearPackageData: 'true'
-        testOptions {
-            execution 'ANDROIDX_TEST_ORCHESTRATOR'
-        }
-    }
-
-    sourceSets {
-        String sharedTestDir = 'src/sharedTest/java'
-        test.java.srcDirs += sharedTestDir
-        androidTest.java.srcDirs += sharedTestDir
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-        }
-        debug {
-            minifyEnabled false
-        }
-    }
-
-    flavorDimensions "distribution"
-    productFlavors {
-        play {
-            ext.websiteUpdateUrl = "null"
-            buildConfigField "boolean", "PLAY_STORE_DISABLED", "false"
-            buildConfigField "String", "NOPLAY_UPDATE_URL", "$ext.websiteUpdateUrl"
-        }
-
-        website {
-            ext.websiteUpdateUrl = "https://github.com/oxen-io/session-android/releases"
-            buildConfigField "boolean", "PLAY_STORE_DISABLED", "true"
-            buildConfigField "String", "NOPLAY_UPDATE_URL", "\"$ext.websiteUpdateUrl\""
-        }
-    }
-
-    applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            def abiName = output.getFilter("ABI") ?: 'universal'
-            def postFix = abiPostFix.get(abiName, 0)
-
-            if (postFix >= postFixSize) throw new AssertionError("postFix is too large")
-            output.outputFileName = output.outputFileName = "session-${variant.versionName}-${abiName}.apk"
-            output.versionCodeOverride = canonicalVersionCode * postFixSize + postFix
-        }
-    }
-
-    lintOptions {
-        abortOnError true
-        baseline file("lint-baseline.xml")
-    }
-
-    testOptions {
-        unitTests {
-            includeAndroidResources = true
-        }
-    }
-
-    buildFeatures {
-        dataBinding true
-        viewBinding true
-    }
 }
 
 static def getLastCommitTimestamp() {

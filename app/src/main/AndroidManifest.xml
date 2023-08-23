@@ -310,14 +310,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.thoughtcrime.securesms.home.HomeActivity" />
         </activity>
-        <service
-            android:name="org.thoughtcrime.securesms.notifications.PushNotificationService"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
         <service android:enabled="true" android:name="org.thoughtcrime.securesms.service.WebRtcCallService"
             android:exported="false" />
         <service

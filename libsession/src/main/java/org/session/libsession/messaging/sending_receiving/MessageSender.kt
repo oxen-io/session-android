@@ -29,6 +29,7 @@ import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.snode.SnodeMessage
 import org.session.libsession.snode.SnodeModule
 import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.Device
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsignal.crypto.PushTransportDetails
@@ -461,8 +462,8 @@ object MessageSender {
     }
 
     // Closed groups
-    fun createClosedGroup(name: String, members: Collection<String>): Promise<String, Exception> {
-        return create(name, members)
+    fun createClosedGroup(device: Device, name: String, members: Collection<String>): Promise<String, Exception> {
+        return create(device, name, members)
     }
 
     fun explicitNameChange(groupPublicKey: String, newName: String) {

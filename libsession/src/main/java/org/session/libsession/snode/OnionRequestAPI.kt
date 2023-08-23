@@ -686,4 +686,7 @@ enum class Version(val value: String) {
 data class OnionResponse(
     val info: Map<*, *>,
     val body: ByteArray? = null
-)
+) {
+    val code: Int? get() = info["code"] as? Int
+    val message: String? get() = info["message"] as? String
+}

@@ -3,7 +3,7 @@ package org.thoughtcrime.securesms.groups
 import android.content.Context
 import network.loki.messenger.libsession_util.ConfigBase
 import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.messaging.sending_receiving.notifications.PushNotificationAPI
+import org.session.libsession.messaging.sending_receiving.notifications.PushRegistryV1
 import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPollerV2
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupRecord
@@ -24,7 +24,7 @@ object ClosedGroupManager {
         storage.removeAllClosedGroupEncryptionKeyPairs(groupPublicKey)
         storage.removeMember(groupID, Address.fromSerialized(userPublicKey))
         // Notify the PN server
-        PushNotificationAPI.performOperation(PushNotificationAPI.ClosedGroupOperation.Unsubscribe, groupPublicKey, userPublicKey)
+        PushRegistryV1.unsubscribeGroup(closedGroupPublicKey = groupPublicKey, publicKey = userPublicKey)
         // Stop polling
         ClosedGroupPollerV2.shared.stopPolling(groupPublicKey)
         storage.cancelPendingMessageSendJobs(threadId)

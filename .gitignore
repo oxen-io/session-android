@@ -15,4 +15,4 @@ signing.properties
 ffpr
 *.sh
 pkcs11.password
-play
+app/play

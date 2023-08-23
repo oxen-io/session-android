@@ -8,11 +8,12 @@ import nl.komponents.kovenant.deferred
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.control.ClosedGroupControlMessage
 import org.session.libsession.messaging.sending_receiving.MessageSender.Error
-import org.session.libsession.messaging.sending_receiving.notifications.PushNotificationAPI
+import org.session.libsession.messaging.sending_receiving.notifications.PushRegistryV1
 import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPollerV2
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Address.Companion.fromSerialized
+import org.session.libsession.utilities.Device
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
@@ -33,7 +34,11 @@ const val groupSizeLimit = 100
 
 val pendingKeyPairs = ConcurrentHashMap<String, Optional<ECKeyPair>>()
 
-fun MessageSender.create(name: String, members: Collection<String>): Promise<String, Exception> {
+fun MessageSender.create(
+    device: Device,
+    name: String,
+    members: Collection<String>
+): Promise<String, Exception> {
     val deferred = deferred<String, Exception>()
     ThreadUtils.queue {
         // Prepare
@@ -89,7 +94,7 @@ fun MessageSender.create(name: String, members: Collection<String>): Promise<Str
         // Add the group to the config now that it was successfully created
         storage.createInitialConfigGroup(groupPublicKey, name, GroupUtil.createConfigMemberMap(members, admins), sentTime, encryptionKeyPair)
         // Notify the PN server
-        PushNotificationAPI.performOperation(PushNotificationAPI.ClosedGroupOperation.Subscribe, groupPublicKey, userPublicKey)
+        PushRegistryV1.register(device = device, publicKey = userPublicKey)
         // Start polling
         ClosedGroupPollerV2.shared.startPolling(groupPublicKey)
         // Fulfill the promise

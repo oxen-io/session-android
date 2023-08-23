@@ -37,12 +37,12 @@ interface TextSecurePreferences {
     fun setLastConfigurationSyncTime(value: Long)
     fun getConfigurationMessageSynced(): Boolean
     fun setConfigurationMessageSynced(value: Boolean)
-    fun isUsingFCM(): Boolean
-    fun setIsUsingFCM(value: Boolean)
-    fun getFCMToken(): String?
-    fun setFCMToken(value: String)
-    fun getLastFCMUploadTime(): Long
-    fun setLastFCMUploadTime(value: Long)
+    fun isPushEnabled(): Boolean
+    fun setPushEnabled(value: Boolean)
+    fun getPushToken(): String?
+    fun setPushToken(value: String)
+    fun getPushRegisterTime(): Long
+    fun setPushRegisterTime(value: Long)
     fun isScreenLockEnabled(): Boolean
     fun setScreenLockEnabled(value: Boolean)
     fun getScreenLockTimeout(): Long
@@ -251,9 +251,9 @@ interface TextSecurePreferences {
         const val LINK_PREVIEWS = "pref_link_previews"
         const val GIF_METADATA_WARNING = "has_seen_gif_metadata_warning"
         const val GIF_GRID_LAYOUT = "pref_gif_grid_layout"
-        const val IS_USING_FCM = "pref_is_using_fcm"
-        const val FCM_TOKEN = "pref_fcm_token"
-        const val LAST_FCM_TOKEN_UPLOAD_TIME = "pref_last_fcm_token_upload_time_2"
+        const val IS_PUSH_ENABLED = "pref_is_using_fcm"
+        const val PUSH_TOKEN = "pref_fcm_token_2"
+        const val PUSH_REGISTER_TIME = "pref_last_fcm_token_upload_time_2"
         const val LAST_CONFIGURATION_SYNC_TIME = "pref_last_configuration_sync_time"
         const val CONFIGURATION_SYNCED = "pref_configuration_synced"
         const val LAST_PROFILE_UPDATE_TIME = "pref_last_profile_update_time"
@@ -311,31 +311,31 @@ interface TextSecurePreferences {
         }
 
         @JvmStatic
-        fun isUsingFCM(context: Context): Boolean {
-            return getBooleanPreference(context, IS_USING_FCM, false)
+        fun isPushEnabled(context: Context): Boolean {
+            return getBooleanPreference(context, IS_PUSH_ENABLED, false)
         }
 
         @JvmStatic
-        fun setIsUsingFCM(context: Context, value: Boolean) {
-            setBooleanPreference(context, IS_USING_FCM, value)
+        fun setPushEnabled(context: Context, value: Boolean) {
+            setBooleanPreference(context, IS_PUSH_ENABLED, value)
         }
 
         @JvmStatic
-        fun getFCMToken(context: Context): String? {
-            return getStringPreference(context, FCM_TOKEN, "")
+        fun getPushToken(context: Context): String? {
+            return getStringPreference(context, PUSH_TOKEN, "")
         }
 
         @JvmStatic
-        fun setFCMToken(context: Context, value: String) {
-            setStringPreference(context, FCM_TOKEN, value)
+        fun setPushToken(context: Context, value: String?) {
+            setStringPreference(context, PUSH_TOKEN, value)
         }
 
-        fun getLastFCMUploadTime(context: Context): Long {
-            return getLongPreference(context, LAST_FCM_TOKEN_UPLOAD_TIME, 0)
+        fun getPushRegisterTime(context: Context): Long {
+            return getLongPreference(context, PUSH_REGISTER_TIME, 0)
         }
 
-        fun setLastFCMUploadTime(context: Context, value: Long) {
-            setLongPreference(context, LAST_FCM_TOKEN_UPLOAD_TIME, value)
+        fun setPushRegisterTime(context: Context, value: Long) {
+            setLongPreference(context, PUSH_REGISTER_TIME, value)
         }
 
         // endregion
@@ -1010,7 +1010,6 @@ interface TextSecurePreferences {
         fun clearAll(context: Context) {
             getDefaultSharedPreferences(context).edit().clear().commit()
         }
-
     }
 }
 
@@ -1035,28 +1034,28 @@ class AppTextSecurePreferences @Inject constructor(
         TextSecurePreferences._events.tryEmit(TextSecurePreferences.CONFIGURATION_SYNCED)
     }
 
-    override fun isUsingFCM(): Boolean {
-        return getBooleanPreference(TextSecurePreferences.IS_USING_FCM, false)
+    override fun isPushEnabled(): Boolean {
+        return getBooleanPreference(TextSecurePreferences.IS_PUSH_ENABLED, false)
     }
 
-    override fun setIsUsingFCM(value: Boolean) {
-        setBooleanPreference(TextSecurePreferences.IS_USING_FCM, value)
+    override fun setPushEnabled(value: Boolean) {
+        setBooleanPreference(TextSecurePreferences.IS_PUSH_ENABLED, value)
     }
 
-    override fun getFCMToken(): String? {
-        return getStringPreference(TextSecurePreferences.FCM_TOKEN, "")
+    override fun getPushToken(): String? {
+        return getStringPreference(TextSecurePreferences.PUSH_TOKEN, "")
     }
 
-    override fun setFCMToken(value: String) {
-        setStringPreference(TextSecurePreferences.FCM_TOKEN, value)
+    override fun setPushToken(value: String) {
+        setStringPreference(TextSecurePreferences.PUSH_TOKEN, value)
     }
 
-    override fun getLastFCMUploadTime(): Long {
-        return getLongPreference(TextSecurePreferences.LAST_FCM_TOKEN_UPLOAD_TIME, 0)
+    override fun getPushRegisterTime(): Long {
+        return getLongPreference(TextSecurePreferences.PUSH_REGISTER_TIME, 0)
     }
 
-    override fun setLastFCMUploadTime(value: Long) {
-        setLongPreference(TextSecurePreferences.LAST_FCM_TOKEN_UPLOAD_TIME, value)
+    override fun setPushRegisterTime(value: Long) {
+        setLongPreference(TextSecurePreferences.PUSH_REGISTER_TIME, value)
     }
 
     override fun isScreenLockEnabled(): Boolean {

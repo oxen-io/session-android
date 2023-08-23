@@ -23,7 +23,7 @@ import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.attachments.PointerAttachment
 import org.session.libsession.messaging.sending_receiving.data_extraction.DataExtractionNotificationInfoMessage
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
-import org.session.libsession.messaging.sending_receiving.notifications.PushNotificationAPI
+import org.session.libsession.messaging.sending_receiving.notifications.PushRegistryV1
 import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPollerV2
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
 import org.session.libsession.messaging.utilities.SessionId
@@ -560,10 +560,14 @@ private fun handleNewClosedGroup(sender: String, sentTimestamp: Long, groupPubli
     // Set expiration timer
     storage.setExpirationTimer(groupID, expireTimer)
     // Notify the PN server
-    PushNotificationAPI.performOperation(PushNotificationAPI.ClosedGroupOperation.Subscribe, groupPublicKey, userPublicKey)
-    // Create thread
-    val threadId = storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
-    storage.setThreadDate(threadId, formationTimestamp)
+    PushRegistryV1.register(device = MessagingModuleConfiguration.shared.device, publicKey = userPublicKey)
+    // Notify the user
+    if (userPublicKey == sender && !groupExists) {
+        val threadID = storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
+        storage.insertOutgoingInfoMessage(context, groupID, SignalServiceGroup.Type.CREATION, name, members, admins, threadID, sentTimestamp)
+    } else if (userPublicKey != sender) {
+        storage.insertIncomingInfoMessage(context, sender, groupID, SignalServiceGroup.Type.CREATION, name, members, admins, sentTimestamp)
+    }
     // Start polling
     ClosedGroupPollerV2.shared.startPolling(groupPublicKey)
 }
@@ -869,7 +873,7 @@ fun MessageReceiver.disableLocalGroupAndUnsubscribe(groupPublicKey: String, grou
     storage.setActive(groupID, false)
     storage.removeMember(groupID, Address.fromSerialized(userPublicKey))
     // Notify the PN server
-    PushNotificationAPI.performOperation(PushNotificationAPI.ClosedGroupOperation.Unsubscribe, groupPublicKey, userPublicKey)
+    PushRegistryV1.unsubscribeGroup(groupPublicKey, publicKey = userPublicKey)
     // Stop polling
     ClosedGroupPollerV2.shared.stopPolling(groupPublicKey)
 
