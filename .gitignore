@@ -16,3 +16,4 @@ ffpr
 *.sh
 pkcs11.password
 app/play
+app/huawei
