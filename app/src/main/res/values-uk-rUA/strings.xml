@@ -194,8 +194,7 @@
         <item quantity="other">Ви не можете надсилати більше, ніж %d файлів.</item>
     </plurals>
     <!-- MediaRepository -->
-    <string name="MediaRepository_all_media">Всі медіа-файли
-Всі зображення</string>
+    <string name="MediaRepository_all_media">Всі медіафайли</string>
     <!-- MessageRecord -->
     <string name="MessageRecord_message_encrypted_with_a_legacy_protocol_version_that_is_no_longer_supported">Отримано повідомлення, яке зашифроване старою версією Session, яка вже не підтримується. Попросіть друга оновитися до останньої версії та надіслати повідомлення знову.</string>
     <string name="MessageRecord_left_group">Ви покинули групу.</string>
@@ -413,9 +412,9 @@
     <string name="arrays__settings_default">Типові налаштування</string>
     <string name="arrays__enabled">Увімкнено</string>
     <string name="arrays__disabled">Вимкнено</string>
-    <string name="arrays__name_and_message">Name and Content</string>
+    <string name="arrays__name_and_message">Ім\'я та вміст</string>
     <string name="arrays__name_only">Тільки ім\'я</string>
-    <string name="arrays__no_name_or_message">Немає назви або вмісту</string>
+    <string name="arrays__no_name_or_message">Нічого</string>
     <string name="arrays__images">Зображення</string>
     <string name="arrays__audio">Аудіо</string>
     <string name="arrays__video">Відео</string>
@@ -436,7 +435,7 @@
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Надіслати клавішею Enter</string>
-    <string name="preferences__pref_enter_sends_summary">Натискання клавіші Enter буде відправляти повідомлення замість початку нового рядка.</string>
+    <string name="preferences__pref_enter_sends_summary">Натискання клавіші Enter буде відправляти повідомлення замість переходу на новий рядок.</string>
     <string name="preferences__send_link_previews">Надсилати попередній перегляд посилань</string>
     <string name="preferences__link_previews">Передогляд посилань</string>
     <string name="preferences__link_previews_summary">Активувати передогляд для підтримуваних URL.</string>
@@ -482,7 +481,7 @@
     <string name="preferences__read_receipts_summary">Відправляти повідомлення про прочитання в особистих бесідах.</string>
     <string name="preferences__typing_indicators">Індикатор набору тексту</string>
     <string name="preferences__typing_indicators_summary">Перегляд і передача індикатора про набір в особистих бесідах.</string>
-    <string name="preferences__request_keyboard_to_disable_personalized_learning">Запитати клавіатуру, щоб вимкнути персоналізоване навчання</string>
+    <string name="preferences__request_keyboard_to_disable_personalized_learning">Заборони клавіатурі використовувати персоналізоване навчання</string>
     <string name="preferences__light_theme">Світла</string>
     <string name="preferences__dark_theme">Темна</string>
     <string name="preferences_chats__message_trimming">Обрізка повідомлень</string>
@@ -529,8 +528,7 @@
     <!-- conversation -->
     <string name="conversation__menu_edit_group">Редагувати групу</string>
     <string name="conversation__menu_leave_group">Вийти з групи</string>
-    <string name="conversation__menu_view_all_media">Всі медіа-файли
-Всі зображення</string>
+    <string name="conversation__menu_view_all_media">Всі медіафайли</string>
     <string name="conversation__menu_add_shortcut">Додати до домашнього екрану</string>
     <!-- conversation_popup -->
     <string name="conversation_popup__menu_expand_popup">Розгорнути спливаюче вікно</string>
@@ -541,8 +539,7 @@
     <!-- media_preview -->
     <string name="media_preview__save_title">Зберегти</string>
     <string name="media_preview__forward_title">Переслати</string>
-    <string name="media_preview__all_media_title">Всі медіа-файли
-Всі зображення</string>
+    <string name="media_preview__all_media_title">Всі медіафайли</string>
     <!-- media_overview -->
     <string name="media_overview_documents_fragment__no_documents_found">Немає документів</string>
     <!-- media_preview_activity -->
@@ -585,11 +582,11 @@
     <string name="next">Далі</string>
     <string name="share">Поділитися</string>
     <string name="invalid_session_id">Невірний Session ID</string>
-    <string name="cancel">Відміна</string>
+    <string name="cancel">Скасувати</string>
     <string name="your_session_id">Ваш Session ID</string>
     <string name="activity_landing_title_2">Ваша сесія починається тут...</string>
     <string name="activity_landing_register_button_title">Створити Session ID</string>
-    <string name="activity_landing_restore_button_title">Продовжити вашу сесію</string>
+    <string name="activity_landing_restore_button_title">Увійти в акаунт</string>
     <string name="view_fake_chat_bubble_1">Що таке Session?</string>
     <string name="view_fake_chat_bubble_2">Це децентралізований, шифрований месенджер</string>
     <string name="view_fake_chat_bubble_3">Тобто він не збирає мою особисту інформацію чи метадані моєї розмови? Як це працює?</string>
@@ -602,7 +599,7 @@
     <string name="activity_restore_seed_edit_text_hint">Введіть вашу фразу відновлення</string>
     <string name="activity_display_name_title_2">Виберіть ваш псевдонім для показу</string>
     <string name="activity_display_name_explanation">Це буде ваше ім\'я яке ви використовуєте в Session. Воно може бути вашим дійсним ім\'ям, альясом або чимусь іншим.</string>
-    <string name="activity_display_name_edit_text_hint">Введіть відображуватинимий псевдонім</string>
+    <string name="activity_display_name_edit_text_hint">Введіть ім\'я для показу</string>
     <string name="activity_display_name_display_name_missing_error">Будь ласка, виберіть відображуватимий псевдонім</string>
     <string name="activity_display_name_display_name_too_long_error">Будь ласка, виберіть коротший псевдонім</string>
     <string name="activity_pn_mode_recommended_option_tag">Рекомендовано</string>
@@ -616,10 +613,10 @@
     <string name="activity_seed_title">Ваша фраза відновлення</string>
     <string name="activity_seed_title_2">Знайомтесь з вашою фразою відновлення</string>
     <string name="activity_seed_explanation">Ваша фраза відновлення — це головний ключ до вашого Session ID. Ви можете використовувати її для відновлення вашого Session ID якщо ви втратите доступ до пристрою. Зберігайте вашу фразу відновлення у безпечному місці та не надавайте її нікому.</string>
-    <string name="activity_seed_reveal_button_title">Натисніть, щоб відобразити</string>
+    <string name="activity_seed_reveal_button_title">Натисніть, щоб відкрити</string>
     <string name="view_seed_reminder_title">Ви майже закінчили! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Захистіть свій обліковий запис, зберігши відновлювальну фразу</string>
-    <string name="view_seed_reminder_subtitle_2">Натисніть і утримуйте відредаговані слова, щоб відкрити фразу для відновлення, а потім збережіть її в безпечному місці, щоб захистити свій Session ID.</string>
+    <string name="view_seed_reminder_subtitle_2">Натисніть і утримуйте приховані слова, щоб відкрити фразу для відновлення, а потім збережіть її в безпечному місці, щоб захистити свій Session ID.</string>
     <string name="view_seed_reminder_subtitle_3">Переконайтеся, що ви зберегли свою фразу відновлення в безпечному місці</string>
     <string name="activity_path_title">Шлях</string>
     <string name="activity_path_explanation">Session приховує вашу IP-адресу, перенаправляючи ваші повідомлення через декілька сервісних вузлів в децентралізованій мережі Session. Це країни, через які зараз перенаправляється ваше з\'єднання:</string>
@@ -639,12 +636,12 @@
     <string name="fragment_scan_qr_code_camera_access_explanation">Session потрібен дозвіл до камери, щоб сканувати QR-код</string>
     <string name="fragment_scan_qr_code_grant_camera_access_button_title">Дозволити доступ до камери</string>
     <string name="activity_create_closed_group_title">Нова Закрита Група</string>
-    <string name="activity_create_closed_group_edit_text_hint">Введіть ім\'я групи</string>
+    <string name="activity_create_closed_group_edit_text_hint">Введіть назву групи</string>
     <string name="activity_create_closed_group_empty_state_message">У вас ще немає жодних контактів</string>
     <string name="activity_create_closed_group_empty_state_button_title">Почати розмову</string>
-    <string name="activity_create_closed_group_group_name_missing_error">Будь ласка, введіть ім\'я групи</string>
-    <string name="activity_create_closed_group_group_name_too_long_error">Будь ласка, введіть коротше ім\'я групи</string>
-    <string name="activity_create_closed_group_not_enough_group_members_error">Будь ласка виберіть принаймні 1 учасника групи</string>
+    <string name="activity_create_closed_group_group_name_missing_error">Будь ласка, введіть назву групи</string>
+    <string name="activity_create_closed_group_group_name_too_long_error">Будь ласка, введіть коротшу назву групи</string>
+    <string name="activity_create_closed_group_not_enough_group_members_error">Будь ласка, виберіть принаймні 1 учасника групи</string>
     <string name="activity_create_closed_group_too_many_group_members_error">Закрита група не може мати більше 100 учасників</string>
     <string name="activity_join_public_chat_title">Вступити до відкритої групи</string>
     <string name="activity_join_public_chat_error">Не вдалося приєднатися до групи</string>
@@ -653,7 +650,7 @@
     <string name="activity_join_public_chat_scan_qr_code_explanation">Відскануйте QR-код відкритої групи, до якої ви хотіли б приєднатися</string>
     <string name="fragment_enter_chat_url_edit_text_hint">Введіть URL-посилання відкритої групи</string>
     <string name="activity_settings_title">Параметри</string>
-    <string name="activity_settings_display_name_edit_text_hint">Введіть відображуватиниме ім’я</string>
+    <string name="activity_settings_display_name_edit_text_hint">Введіть ім\'я для показу</string>
     <string name="activity_settings_display_name_missing_error">Будь ласка, виберіть відображуватиме ім\'я</string>
     <string name="activity_settings_display_name_too_long_error">Будь ласка, виберіть коротше ім\'я</string>
     <string name="activity_settings_privacy_button_title">Конфіденційність</string>
@@ -681,8 +678,8 @@
     <string name="activity_help_settings__support">Служба підтримки</string>
     <string name="activity_help_settings__export_logs">Експорт логів</string>
     <string name="preferences_notifications_strategy_category_title">Стратегія сповіщення</string>
-    <string name="preferences_notifications_strategy_category_fast_mode_title">Використовувати швидкий режим</string>
-    <string name="preferences_notifications_strategy_category_fast_mode_summary">Ви будете надійно повідомляти про нові повідомлення і відразу ж за допомогою серверів сповіщень Google.</string>
+    <string name="preferences_notifications_strategy_category_fast_mode_title">Використ. швидкий режим</string>
+    <string name="preferences_notifications_strategy_category_fast_mode_summary">Ви отримуватимете сповіщення про нові повідомлення надійно та одразу за допомогою серверів сповіщень Google.</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">Змінити їм’я</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Відв’язати цей пристрій</string>
     <string name="dialog_seed_title">Ваша фраза відновлення</string>
@@ -700,9 +697,9 @@
     <string name="activity_qr_code_title">QR-код</string>
     <string name="activity_qr_code_view_my_qr_code_tab_title">Показати мій QR-код</string>
     <string name="activity_qr_code_view_scan_qr_code_tab_title">Сканувати QR-код</string>
-    <string name="activity_qr_code_view_scan_qr_code_explanation">Скануйте чийсь QR-код, щоб почати розмову з ними</string>
-    <string name="fragment_view_my_qr_code_title">Скануйте мене</string>
-    <string name="fragment_view_my_qr_code_explanation">Це ваш QR-код. Інші користувачі можуть сканувати його, щоб почати розмову з вами.</string>
+    <string name="activity_qr_code_view_scan_qr_code_explanation">Проскануйте чийсь QR-код, щоб почати розмову з ними</string>
+    <string name="fragment_view_my_qr_code_title">Проскануйте мене</string>
+    <string name="fragment_view_my_qr_code_explanation">Це ваш QR-код. Інші користувачі можуть просканувати його, щоб почати розмову з вами.</string>
     <string name="fragment_view_my_qr_code_share_title">Поділіться кудись QR-кодом</string>
     <string name="fragment_contact_selection_contacts_title">Контакти</string>
     <string name="fragment_contact_selection_closed_groups_title">Групи з закритим членством</string>
@@ -744,7 +741,7 @@
     <string name="activity_pn_mode_explanation">Існує два способи Session може сповіщати вас про нові повідомлення.</string>
     <string name="activity_pn_mode_fast_mode">Швидкий режим</string>
     <string name="activity_pn_mode_slow_mode">Повільний режим</string>
-    <string name="activity_pn_mode_fast_mode_explanation">Вас надійно повідомлятимуть про нові сповіщщеня негайно, використовуючи сервери сповіщень Google.</string>
+    <string name="activity_pn_mode_fast_mode_explanation">Ви отримуватимете сповіщення про нові повідомлення надійно та одразу за допомогою серверів сповіщень Google.</string>
     <string name="activity_pn_mode_slow_mode_explanation">Session буде періодично перевіряти наявність нових повідомлень у фоновому режимі.</string>
     <string name="fragment_recovery_phrase_title">Фраза відновлення</string>
     <string name="activity_prompt_passphrase_session_locked">Ви заблоковали Session</string>
@@ -830,7 +827,7 @@
     <string name="CallNotificationBuilder_system_notification_message">Якщо сповіщення вимкнуті, будуть перешкоджати вам отримувати дзвінки, перейдіть до налаштувань сповіщень Session?</string>
     <string name="dismiss">Відхилити</string>
     <string name="activity_settings_conversations_button_title">Бесіди</string>
-    <string name="activity_settings_message_appearance_button_title">Оформлення</string>
+    <string name="activity_settings_message_appearance_button_title">Зовнішній вигляд</string>
     <string name="activity_settings_help_button">Допомога</string>
     <string name="activity_appearance_themes_category">Теми</string>
     <string name="ocean_dark_theme_name">Океанське темний</string>
@@ -884,13 +881,13 @@
     <string name="dialog_new_conversation_title">Нова бесіда</string>
     <string name="dialog_new_message_title">Нове повідомлення</string>
     <string name="activity_create_group_title">Створити групу</string>
-    <string name="dialog_join_community_title">Приєднуйтесь до спільноти</string>
+    <string name="dialog_join_community_title">Приєднатися до спільноти</string>
     <string name="new_conversation_contacts_title">Контакти</string>
     <string name="new_conversation_unknown_contacts_section_title">Без назви</string>
     <string name="fragment_enter_public_key_prompt">Почніть нову розмову, ввівши чийсь Session ID або поділіться з ним своїм Session ID.</string>
     <string name="activity_create_group_create_button_title">Створити</string>
     <string name="search_contacts_hint">Пошук контактів</string>
-    <string name="activity_join_public_chat_enter_community_url_tab_title">URL-адрес спільноти</string>
+    <string name="activity_join_public_chat_enter_community_url_tab_title">URL-адреса спільноти</string>
     <string name="fragment_enter_community_url_edit_text_hint">Введіть URL-адресу спільноти</string>
     <string name="fragment_enter_community_url_join_button_title">Приєднатися</string>
     <string name="new_conversation_dialog_back_button_content_description">Перейти назад</string>
