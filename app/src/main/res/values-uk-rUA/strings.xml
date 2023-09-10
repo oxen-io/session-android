@@ -478,9 +478,9 @@
     <string name="preferences__default">Типово</string>
     <string name="preferences__incognito_keyboard">Клавіатура в режимі \"інкогніто\"</string>
     <string name="preferences__read_receipts">Звіти про перегляд</string>
-    <string name="preferences__read_receipts_summary">Відправляти повідомлення про прочитання в особистих бесідах.</string>
+    <string name="preferences__read_receipts_summary">Відправляти звіти про прочитання в особистих бесідах.</string>
     <string name="preferences__typing_indicators">Індикатор набору тексту</string>
-    <string name="preferences__typing_indicators_summary">Перегляд і передача індикатора про набір в особистих бесідах.</string>
+    <string name="preferences__typing_indicators_summary">Бачити та передавати індикатор про набір в особистих бесідах.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Заборони клавіатурі використовувати персоналізоване навчання</string>
     <string name="preferences__light_theme">Світла</string>
     <string name="preferences__dark_theme">Темна</string>
@@ -495,7 +495,7 @@
     <string name="preferences_notifications__in_chat_sounds">Звуки чату</string>
     <string name="preferences_notifications__content">Вміст сповіщення</string>
     <string name="preferences_notifications__content_message">Показати:</string>
-    <string name="preferences_notifications__summary">Інформація, що відображається в повідомленнях.</string>
+    <string name="preferences_notifications__summary">Інформація, що показується в сповіщеннях.</string>
     <string name="preferences_notifications__priority">Пріорітет</string>
     <string name="preferences_app_protection__screenshot_notifications">Повідомлення про скриншот</string>
     <string name="preferences_app_protected__screenshot_notifications_summary">Отримувати повідомлення, коли контакт робить скриншот особистої бесіди.</string>
@@ -642,7 +642,7 @@
     <string name="activity_create_closed_group_group_name_missing_error">Будь ласка, введіть назву групи</string>
     <string name="activity_create_closed_group_group_name_too_long_error">Будь ласка, введіть коротшу назву групи</string>
     <string name="activity_create_closed_group_not_enough_group_members_error">Будь ласка, виберіть принаймні 1 учасника групи</string>
-    <string name="activity_create_closed_group_too_many_group_members_error">Закрита група не може мати більше 100 учасників</string>
+    <string name="activity_create_closed_group_too_many_group_members_error">Група не може мати більше ніж 100 учасників</string>
     <string name="activity_join_public_chat_title">Вступити до відкритої групи</string>
     <string name="activity_join_public_chat_error">Не вдалося приєднатися до групи</string>
     <string name="activity_join_public_chat_enter_group_url_tab_title">URL-посилання відкритої групи</string>
@@ -688,7 +688,7 @@
     <string name="dialog_clear_all_data_explanation">Це остаточно видалить ваші повідомлення, сеанси та контакти.</string>
     <string name="dialog_clear_all_data_network_explanation">Ви хочете видалити тільки цей пристрій або видалити весь обліковий запис?</string>
     <string name="dialog_clear_all_data_message">Це остаточно видалить ваші повідомлення, сеанси і контакти. Хочете очистити тільки цей пристрій, або видалити весь обліковий запис?</string>
-    <string name="dialog_clear_all_data_clear_device_only">Спорожнити лише пристрій</string>
+    <string name="dialog_clear_all_data_clear_device_only">Очистити лише пристрій</string>
     <string name="dialog_clear_all_data_clear_device_and_network">Очистити пристрій та мережу</string>
     <string name="dialog_clear_all_data_clear_device_and_network_confirmation">Ви впевнені, що хочете видалити дані з мережі? Якщо ви продовжите, то не зможете відновити ваші повідомлення або контакти.</string>
     <string name="dialog_clear_all_data_clear">Очистити</string>
@@ -816,9 +816,9 @@
     <string name="decline_call">Відхилити дзвінок</string>
     <string name="preferences__voice_video_calls">Голосові та відео дзвінки</string>
     <string name="preferences__calls_beta">Дзвінки (Beta)</string>
-    <string name="preferences__allow_access_voice_video">Дозволяє голосові та відео дзвінки іншим користувачам.</string>
+    <string name="preferences__allow_access_voice_video">Вмикає можливість здійснювати голосові та відеодзвінки іншим користувачам.</string>
     <string name="dialog_voice_video_title">Голосові / відео виклики</string>
-    <string name="dialog_voice_video_message">Ваш IP-адрес видимо розмовнику і серверу Oxen Foundation під час використання бета-дзвінків. Ви дійсно хочете увімкнути голосові та відеодзвінки?</string>
+    <string name="dialog_voice_video_message">Ваша IP-адреса є видимою співрозмовнику і серверу Oxen Foundation під час використання бета-дзвінків. Ви дійсно хочете увімкнути голосові та відеодзвінки?</string>
     <string name="CallNotificationBuilder_first_call_title">Дзвінок пропущено</string>
     <string name="CallNotificationBuilder_first_call_message">Ви пропустили дзвінок, тому що вам потрібно ввімкнути дозвіл \"Голосові та відео дзвінки\" у параметрах конфіденційності.</string>
     <string name="WebRtcCallActivity_Session_Call">Дзвінок Session</string>
@@ -830,10 +830,10 @@
     <string name="activity_settings_message_appearance_button_title">Зовнішній вигляд</string>
     <string name="activity_settings_help_button">Допомога</string>
     <string name="activity_appearance_themes_category">Теми</string>
-    <string name="ocean_dark_theme_name">Океанське темний</string>
-    <string name="classic_dark_theme_name">Класичний темний</string>
-    <string name="ocean_light_theme_name">Океанське світлий</string>
-    <string name="classic_light_theme_name">Класичний світлий</string>
+    <string name="ocean_dark_theme_name">Океанічна темна</string>
+    <string name="classic_dark_theme_name">Класична темна</string>
+    <string name="ocean_light_theme_name">Океанічна світла</string>
+    <string name="classic_light_theme_name">Класична світла</string>
     <string name="activity_appearance_primary_color_category">Основний колір</string>
     <string name="ReactWithAnyEmojiBottomSheetDialogFragment__this_message">Це повідомлення</string>
     <string name="ReactWithAnyEmojiBottomSheetDialogFragment__recently_used">Нещодавно використані</string>
