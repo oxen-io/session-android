@@ -6,7 +6,7 @@
     <string name="ban">Бан</string>
     <string name="please_wait">Будь ласка, зачекайте…</string>
     <string name="save">Зберегти</string>
-    <string name="note_to_self">Замітка для себе</string>
+    <string name="note_to_self">Нотатка для себе</string>
     <string name="version_s">Версія %s</string>
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">Нове повідомлення</string>
@@ -19,7 +19,7 @@
         <item quantity="many">%d повідомлень на розмову</item>
         <item quantity="other">%d повідомлень на розмову</item>
     </plurals>
-    <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Вилучити всі старі повідомлення зараз?</string>
+    <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Видалити всі старі повідомлення зараз?</string>
     <plurals name="ApplicationPreferencesActivity_this_will_immediately_trim_all_conversations_to_the_d_most_recent_messages">
         <item quantity="one">Це одразу скоротить всі розмови до %d останнього повідомлення.</item>
         <item quantity="few">Це одразу скоротить всі розмови до %d останніх повідомлень.</item>
@@ -33,11 +33,11 @@
     <string name="DraftDatabase_Draft_image_snippet">(зображення)</string>
     <string name="DraftDatabase_Draft_audio_snippet">(звук)</string>
     <string name="DraftDatabase_Draft_video_snippet">(відео)</string>
-    <string name="DraftDatabase_Draft_quote_snippet">(відповісти)</string>
+    <string name="DraftDatabase_Draft_quote_snippet">(відповідь)</string>
     <!-- AttachmentManager -->
-    <string name="AttachmentManager_cant_open_media_selection">Неможливо знайти програму для обраного медіа.</string>
+    <string name="AttachmentManager_cant_open_media_selection">Неможливо знайти програму для обраного медіафайлу.</string>
     <string name="AttachmentManager_signal_requires_the_external_storage_permission_in_order_to_attach_photos_videos_or_audio">Session потребує дозволу «Сховище» для прикріплення фото, відео або аудіо, але наразі доступ заборонено. Будь ласка, перейдіть до налаштувань додатку, оберіть «Дозволи», та увімкніть «Сховище».</string>
-    <string name="AttachmentManager_signal_requires_the_camera_permission_in_order_to_take_photos_but_it_has_been_permanently_denied">Session потребує дозволу \"Камера\", щоб фотографувати або знімати відео, але наразі доступу немає. Будь ласка, перейдіть до налаштувань додатку, оберіть \"Дозволи\", та увімкніть \"Камера\".</string>
+    <string name="AttachmentManager_signal_requires_the_camera_permission_in_order_to_take_photos_but_it_has_been_permanently_denied">Session потребує дозволу «Камера», щоб фотографувати або знімати відео, але наразі доступу немає. Будь ласка, перейдіть до налаштувань додатку, оберіть «Дозволи», та увімкніть «Камера».</string>
     <!-- AudioSlidePlayer -->
     <string name="AudioSlidePlayer_error_playing_audio">Помилка відтворення аудіо!</string>
     <!-- BucketedThreadMedia -->
@@ -46,21 +46,21 @@
     <string name="BucketedThreadMedia_This_week">Цього тижня</string>
     <string name="BucketedThreadMedia_This_month">Цього місяця</string>
     <!-- CommunicationActions -->
-    <string name="CommunicationActions_no_browser_found">Браузера не знайдено</string>
+    <string name="CommunicationActions_no_browser_found">Не знайдено жодного браузера.</string>
     <!-- ContactsCursorLoader -->
     <string name="ContactsCursorLoader_groups">Групи</string>
     <!-- ConversationItem -->
-    <string name="ConversationItem_error_not_delivered">Помилка відправлення, переглянути деталі</string>
+    <string name="ConversationItem_error_not_delivered">Помилка відправлення, натисніть для перегляду деталей</string>
     <string name="ConversationItem_received_key_exchange_message_tap_to_process">Отримано повідомлення обміну ключами, торкніться, щоб продовжити.</string>
     <string name="ConversationItem_click_to_approve_unencrypted">Відправити не вдалося, натисніть для незахищеного запасного варіанту</string>
-    <string name="ConversationItem_unable_to_open_media">Неможливо знайти програму для відкриття цього медіа.</string>
+    <string name="ConversationItem_unable_to_open_media">Неможливо знайти програму для відкриття цього медіафайлу.</string>
     <string name="ConversationItem_copied_text">Скопійовано %s</string>
     <string name="ConversationItem_read_more">Читати далі</string>
-    <string name="ConversationItem_download_more">  Завантажити ще</string>
-    <string name="ConversationItem_pending">  Очікування</string>
+    <string name="ConversationItem_download_more"> &#160; Завантажити ще</string>
+    <string name="ConversationItem_pending">&#160; Очікування</string>
     <!-- ConversationActivity -->
     <string name="ConversationActivity_add_attachment">Додати вкладення</string>
-    <string name="ConversationActivity_select_contact_info">Оберіть інформацію контакту</string>
+    <string name="ConversationActivity_select_contact_info">Обрати інформацію про контакт</string>
     <string name="ConversationActivity_sorry_there_was_an_error_setting_your_attachment">Вибачте, сталася помилка при обробці вкладення.</string>
     <string name="ConversationActivity_message">Написати</string>
     <string name="ConversationActivity_compose">Написати лист</string>
@@ -70,7 +70,7 @@
     <string name="ConversationActivity_active_member_count">%1$d активних учасників</string>
     <string name="ConversationActivity_open_group_guidelines">Правила спільноти</string>
     <string name="ConversationActivity_invalid_recipient">Неприпустимий отримувач!</string>
-    <string name="ConversationActivity_added_to_home_screen">Додано до домашнього екрану</string>
+    <string name="ConversationActivity_added_to_home_screen">Додано до домашнього екрана</string>
     <string name="ConversationActivity_leave_group">Покинути групу?</string>
     <string name="ConversationActivity_are_you_sure_you_want_to_leave_this_group">Ви дійсно хочете покинути цю групу?</string>
     <string name="ConversationActivity_error_leaving_group">Помилка при виході з групи</string>
@@ -136,7 +136,7 @@
     <string name="CustomDefaultPreference_using_default">Використання типового: %s</string>
     <string name="CustomDefaultPreference_none">Жодного</string>
     <!-- DateUtils -->
-    <string name="DateUtils_just_now">Зараз</string>
+    <string name="DateUtils_just_now">Щойно</string>
     <string name="DateUtils_minutes_ago">%d хв</string>
     <string name="DateUtils_today">Сьогодні</string>
     <string name="DateUtils_yesterday">Вчора</string>
@@ -237,7 +237,7 @@
     <string name="ThreadRecord_missed_call">Пропущений виклик</string>
     <string name="ThreadRecord_media_message">Медіа повідомлення</string>
     <string name="ThreadRecord_s_is_on_signal">%s приєднався до Session!</string>
-    <string name="ThreadRecord_disappearing_messages_disabled">Зникаючі повідомлення заборонені</string>
+    <string name="ThreadRecord_disappearing_messages_disabled">Зникаючі повідомлення вимкнені</string>
     <string name="ThreadRecord_disappearing_message_time_updated_to_s">Час зникнення повідомлень встановлено на %s</string>
     <string name="ThreadRecord_s_took_a_screenshot">%s зробив скриншот.</string>
     <string name="ThreadRecord_media_saved_by_s">%s скачав медіафайл.</string>
@@ -568,7 +568,7 @@
     <string name="ProgressPreference_d_messages_so_far">Залишилось %d повідомлень</string>
     <string name="BackupUtil_never">Ніколи</string>
     <string name="preferences_app_protection__screen_lock">Заблокувати Session</string>
-    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Для розблокування Session потрібен відбиток пальця, PIN-код, графічний ключ або пароль.</string>
+    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Вимагати відбиток пальця, PIN-код, графічний ключ або пароль для розблокування Session.</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">Затримка блокування екрану при бездіяльності</string>
     <string name="AppProtectionPreferenceFragment_none">Жодного</string>
     <!-- Conversation activity -->
@@ -744,7 +744,7 @@
     <string name="activity_pn_mode_fast_mode_explanation">Ви отримуватимете сповіщення про нові повідомлення надійно та одразу за допомогою серверів сповіщень Google.</string>
     <string name="activity_pn_mode_slow_mode_explanation">Session буде періодично перевіряти наявність нових повідомлень у фоновому режимі.</string>
     <string name="fragment_recovery_phrase_title">Фраза відновлення</string>
-    <string name="activity_prompt_passphrase_session_locked">Ви заблоковали Session</string>
+    <string name="activity_prompt_passphrase_session_locked">Session заблокований</string>
     <string name="activity_prompt_passphrase_tap_to_unlock">Торкніться, щоб розблокувати</string>
     <string name="fragment_user_details_bottom_sheet_edit_text_hint">Введіть псевдонім</string>
     <string name="invalid_public_key">Неправильний пубюлічний ключ</string>
@@ -759,11 +759,11 @@
     <string name="copy_url">Копіювати URL</string>
     <string name="dialog_link_preview_title">Генерувати попередній перегляд посилань?</string>
     <string name="dialog_link_preview_explanation">Увімкнення попереднього перегляду для посиланнь які ви надсилаєте та отримуєте. Це може бути корисним, але Session потрібно буде зв\'язуватися з веб-сайтами для створення попереднього перегляду. Ви завжди можете вимкнути попередній перегляд в налаштуваннях Session.</string>
-    <string name="dialog_link_preview_enable_button_title">Включити</string>
+    <string name="dialog_link_preview_enable_button_title">Увімкнути</string>
     <string name="dialog_download_title">Довіряти %s?</string>
     <string name="dialog_download_explanation">Ви дійсно хочете скачати цей медіа файл відправлений %s?</string>
     <string name="dialog_download_button_title">Скачати</string>
-    <string name="activity_conversation_blocked_banner_text">%s ви заблоковали. Розблокувати їх?</string>
+    <string name="activity_conversation_blocked_banner_text">%s заблокований. Розблокувати його?</string>
     <string name="activity_conversation_block_user">Заблокувати користувача</string>
     <string name="activity_conversation_attachment_prep_failed">Не вдалося підготувати файл для надсилання.</string>
     <string name="media">Медіа-файли</string>
