@@ -122,6 +122,7 @@ android {
             minifyEnabled false
         }
         debug {
+            isDefault true
             minifyEnabled false
         }
     }
@@ -129,6 +130,7 @@ android {
     flavorDimensions "distribution"
     productFlavors {
         play {
+            isDefault true
             dimension "distribution"
             apply plugin: 'com.google.gms.google-services'
             ext.websiteUpdateUrl = "null"
