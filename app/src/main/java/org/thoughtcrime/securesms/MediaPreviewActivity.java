@@ -47,7 +47,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.util.Pair;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.app.LoaderManager;
@@ -534,7 +533,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
 
       viewModel.setCursor(this, data.first, leftIsRecent);
 
-      int item = restartItem >= 0 ? restartItem : data.second;
+      int item = restartItem >= 0 ? restartItem : data.second >= 0 ? data.second : 0;
       mediaPager.setCurrentItem(item);
 
       if (item == 0) {
