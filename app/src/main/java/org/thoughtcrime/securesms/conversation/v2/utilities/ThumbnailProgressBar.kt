@@ -30,8 +30,7 @@ class ThumbnailProgressBar: View {
     private val objectRect = Rect()
     private val drawingRect = Rect()
 
-    override fun dispatchDraw(canvas: Canvas?) {
-        if (canvas == null) return
+    override fun dispatchDraw(canvas: Canvas) {
 
         getDrawingRect(objectRect)
         drawingRect.set(objectRect)

@@ -12,11 +12,9 @@ buildscript {
 
     dependencies {
         classpath "com.android.tools.build:gradle:$gradlePluginVersion"
-        classpath files('libs/gradle-witness.jar')
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         classpath "com.google.gms:google-services:$googleServicesVersion"
-        classpath files('libs/gradle-witness.jar')
         classpath "com.squareup:javapoet:1.13.0"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$daggerVersion"
         if (project.hasProperty('huawei')) classpath 'com.huawei.agconnect:agcp:1.9.1.300'
@@ -55,12 +53,6 @@ allprojects {
                 includeGroupByRegex "org\\.signal.*"
             }
         }
-        maven {
-            url "https://repo1.maven.org/maven2/com/goterl/lazysodium-android"
-            content {
-                includeGroupByRegex "com\\.goterl.*"
-            }
-        }
         jcenter()
         maven { url "https://jitpack.io" }
         if (project.hasProperty('huawei')) maven {
@@ -76,7 +68,7 @@ allprojects {
 
     project.ext {
         androidMinimumSdkVersion = 23
-        androidTargetSdkVersion  = 33
-        androidCompileSdkVersion = 33
+        androidTargetSdkVersion  = 34
+        androidCompileSdkVersion = 34
     }
 }
