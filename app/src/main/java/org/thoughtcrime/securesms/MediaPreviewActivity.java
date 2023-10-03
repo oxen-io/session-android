@@ -533,11 +533,15 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
 
       viewModel.setCursor(this, data.first, leftIsRecent);
 
-      int item = restartItem >= 0 ? restartItem : data.second >= 0 ? data.second : 0;
-      mediaPager.setCurrentItem(item);
+      if (restartItem >= 0 || data.second >= 0) {
+        int item = restartItem >= 0 ? restartItem : data.second;
+        mediaPager.setCurrentItem(item);
 
-      if (item == 0) {
-        viewPagerListener.onPageSelected(0);
+        if (item == 0) {
+          viewPagerListener.onPageSelected(0);
+        }
+      } else {
+        Log.w(TAG, "one of restartItem "+restartItem+" and data.second "+data.second+" would cause OOB exception");
       }
     }
   }
