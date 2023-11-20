@@ -57,6 +57,9 @@
     <string name="AccessibilityId_new_direct_message">New direct message</string>
     <string name="AccessibilityId_create_group">Create group</string>
     <string name="AccessibilityId_join_community">Join community</string>
+    <!-- Join community pop up -->
+    <string name="AccessibilityId_community_input_box">Community input</string>
+    <string name="AccessibilityId_join_community_button">Join community button</string>
     <!--  Conversation options (three dots menu)-->
     <string name="AccessibilityId_all_media">All media</string>
     <string name="AccessibilityId_search">Search</string>
@@ -89,7 +92,7 @@
     <string name="AccessibilityId_block_message_request_button">Block message request</string>
     <string name="AccessibilityId_timer_icon">Timer icon</string>
 <!--    Configuration messages -->
-    <string name="AccessibilityId_control_message">Configuration message</string>
+    <string name="AccessibilityId_control_message">Control message</string>
     <string name="AccessibilityId_blocked_banner">Blocked banner</string>
     <string name="AccessibilityId_blocked_banner_text">Blocked banner text</string>
     <!--New Session -->
@@ -118,7 +121,7 @@
     <string name="AccessibilityId_message_sent_status_pending">Message sent status pending</string>
     <string name="AccessibilityId_message_sent_status_syncing">Message sent status syncing</string>
     <string name="AccessibilityId_message_request_config_message">Message request has been accepted</string>
-    <string name="AccessibilityId_message_body">Message Body</string>
+    <string name="AccessibilityId_message_body">Message body</string>
     <string name="AccessibilityId_voice_message">Voice message</string>
     <string name="AccessibilityId_document">Document</string>
     <string name="AccessibilityId_deleted_message">Deleted message</string>
