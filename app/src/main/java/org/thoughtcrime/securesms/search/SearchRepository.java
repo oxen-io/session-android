@@ -115,7 +115,7 @@ public class SearchRepository {
   public void query(@NonNull String query, long threadId, @NonNull Callback<CursorList<MessageResult>> callback) {
     String cleanQuery = sanitizeQuery(query);
 
-    if (!isValidQuery(cleanQuery)) {
+    if (cleanQuery.trim().isEmpty()) {
       callback.onResult(CursorList.emptyList());
       return;
     }
@@ -220,14 +220,6 @@ public class SearchRepository {
 
     return out.toString();
   }
-
-    private boolean isValidQuery(String query) {
-      if (query.trim().length() == 0) return false;
-
-      if (TextUtils.isEmpty(query)) return false;
-
-      return true;
-    }
 
   private static class ContactModelBuilder implements CursorList.ModelBuilder<Contact> {
 
