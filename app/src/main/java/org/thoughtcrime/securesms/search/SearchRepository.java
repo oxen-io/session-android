@@ -113,14 +113,16 @@ public class SearchRepository {
   }
 
   public void query(@NonNull String query, long threadId, @NonNull Callback<CursorList<MessageResult>> callback) {
-    if (TextUtils.isEmpty(query)) {
+    String cleanQuery = sanitizeQuery(query);
+
+    if (!isValidQuery(cleanQuery)) {
       callback.onResult(CursorList.emptyList());
       return;
     }
 
     executor.execute(() -> {
       long startTime = System.currentTimeMillis();
-      CursorList<MessageResult> messages = queryMessages(sanitizeQuery(query), threadId);
+      CursorList<MessageResult> messages = queryMessages(cleanQuery, threadId);
       Log.d(TAG, "[ConversationQuery] " + (System.currentTimeMillis() - startTime) + " ms");
 
       callback.onResult(messages);
@@ -218,6 +220,14 @@ public class SearchRepository {
 
     return out.toString();
   }
+
+    private boolean isValidQuery(String query) {
+      if (query.trim().length() == 0) return false;
+
+      if (TextUtils.isEmpty(query)) return false;
+
+      return true;
+    }
 
   private static class ContactModelBuilder implements CursorList.ModelBuilder<Contact> {
 
