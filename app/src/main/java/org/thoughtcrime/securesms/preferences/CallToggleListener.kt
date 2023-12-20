@@ -5,17 +5,22 @@ import androidx.fragment.app.Fragment
 import androidx.preference.Preference
 import network.loki.messenger.R
 import org.session.libsession.utilities.TextSecurePreferences
-import org.session.libsession.utilities.TextSecurePreferences.Companion.setBooleanPreference
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.showSessionDialog
+import javax.inject.Inject
 
 internal class CallToggleListener(
     private val context: Fragment,
     private val setCallback: (Boolean) -> Unit
 ) : Preference.OnPreferenceChangeListener {
 
+    @Inject lateinit var textPreferences: TextSecurePreferences
+
     override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
-        if (newValue == false) return true
+        if (newValue == false) {
+            textPreferences.resetShownCallNotification()
+            return true
+        }
 
         // check if we've shown the info dialog and check for microphone permissions
         context.showSessionDialog {
@@ -31,12 +36,9 @@ internal class CallToggleListener(
     private fun requestMicrophonePermission() {
         Permissions.with(context)
             .request(Manifest.permission.RECORD_AUDIO)
+            .withPermanentDenialDialog("Microphone permission permanently denied! Open the app permission settings to manually enable it?")
             .onAllGranted {
-                setBooleanPreference(
-                    context.requireContext(),
-                    TextSecurePreferences.CALL_NOTIFICATIONS_ENABLED,
-                    true
-                )
+                textPreferences.setCallNotificationsEnabled(true)
                 setCallback(true)
             }
             .onAnyDenied { setCallback(false) }

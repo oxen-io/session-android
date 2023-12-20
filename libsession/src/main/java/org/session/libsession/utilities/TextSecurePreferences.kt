@@ -167,7 +167,9 @@ interface TextSecurePreferences {
     fun setHasHiddenMessageRequests()
     fun setShownCallWarning(): Boolean
     fun setShownCallNotification(): Boolean
+    fun resetShownCallNotification()
     fun isCallNotificationsEnabled(): Boolean
+    fun setCallNotificationsEnabled(newValue: Boolean)
     fun getLastVacuum(): Long
     fun setLastVacuumNow()
     fun getFingerprintKeyGenerated(): Boolean
@@ -1573,6 +1575,10 @@ class AppTextSecurePreferences @Inject constructor(
         return getBooleanPreference(CALL_NOTIFICATIONS_ENABLED, false)
     }
 
+    override fun setCallNotificationsEnabled(newValue: Boolean) {
+        setBooleanPreference(CALL_NOTIFICATIONS_ENABLED, newValue)
+    }
+
     override fun getLastVacuum(): Long {
         return getLongPreference(LAST_VACUUM_TIME, 0)
     }
@@ -1589,6 +1595,9 @@ class AppTextSecurePreferences @Inject constructor(
         return previousValue != setValue
     }
 
+    override fun resetShownCallNotification() {
+        setBooleanPreference(SHOWN_CALL_NOTIFICATION, false)
+    }
 
     /**
      * Set the SHOWN_CALL_WARNING preference to `true`
