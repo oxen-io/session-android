@@ -7,14 +7,12 @@ import network.loki.messenger.R
 import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.showSessionDialog
-import javax.inject.Inject
 
 internal class CallToggleListener(
     private val context: Fragment,
+    private var textPreferences: TextSecurePreferences,
     private val setCallback: (Boolean) -> Unit
 ) : Preference.OnPreferenceChangeListener {
-
-    @Inject lateinit var textPreferences: TextSecurePreferences
 
     override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
         if (newValue == false) {

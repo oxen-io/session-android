@@ -30,6 +30,7 @@ import javax.inject.Inject
 class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
 
     @Inject lateinit var configFactory: ConfigFactory
+    @Inject lateinit var textPreferences: TextSecurePreferences
 
     override fun onCreate(paramBundle: Bundle?) {
         super.onCreate(paramBundle)
@@ -38,7 +39,7 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
         findPreference<Preference>(TextSecurePreferences.TYPING_INDICATORS)!!
             .onPreferenceChangeListener = TypingIndicatorsToggleListener()
         findPreference<Preference>(TextSecurePreferences.CALL_NOTIFICATIONS_ENABLED)!!
-            .onPreferenceChangeListener = CallToggleListener(this) { setCall(it) }
+            .onPreferenceChangeListener = CallToggleListener(this, textPreferences) { setCall(it) }
         findPreference<PreferenceCategory>(getString(R.string.preferences__message_requests_category))?.let { category ->
             when (val user = configFactory.user) {
                 null -> category.isVisible = false
