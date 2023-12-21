@@ -314,7 +314,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             }
         }
 
-        checkVoiceAndCallStatus()
+        checkVoiceCallStatus()
     }
 
     override fun onInputFocusChanged(hasFocus: Boolean) {
@@ -705,7 +705,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     // region Call permissions and status
 
     /**
-     * Check if RECORD_AUDIO permission in order for audio to work properly for
+     * Check RECORD_AUDIO permission in order for audio to work properly for
      * Voice and Video Calls.
      * If permission permanently denied (Don't allow), disable the calls.
      * If temporary permission expired (Only this time), ask again.
@@ -714,41 +714,36 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
      * @see hasWebRTCCallPermissions
      * @see onRequestPermissionsResult
      */
-    private fun checkVoiceAndCallStatus() {
-        hasWebRTCCallPermissions { allGranted ->
-            if (allGranted) {
-                // NO-OP
-                Log.d("CallPermission", "Permission granted | no op")
-                // textSecurePreferences.setCallNotificationsEnabled(true)
-            } else {
-                Log.d("CallPermission", "Permission not granted | disable calls")
-                textSecurePreferences.apply {
-                    setCallNotificationsEnabled(false)
-                    resetShownCallNotification()
+    private fun checkVoiceCallStatus() {
+        if (textSecurePreferences.isCallNotificationsEnabled()) {
+            hasWebRTCCallPermissions { allGranted ->
+                if (allGranted) {
+                    // NO-OP
+                } else {
+                    textSecurePreferences.apply {
+                        setCallNotificationsEnabled(false)
+                        resetShownCallNotification()
+                    }
                 }
             }
         }
     }
 
     private fun hasWebRTCCallPermissions(callback: (Boolean) -> Unit) {
-        Log.i("CallPermission", "hasWebRTCCallPermissions")
         Permissions.with(this)
             // TODO: REMOVE THE REQUEST AND JUST CHECK THE STATUS?
             .request(Manifest.permission.RECORD_AUDIO)
-            //.withRationaleDialog("Voice and Video Calls disabled. You can enabled them again in Privacy settings.")
             .onAllGranted {
-                Log.i("CallPermission", "hasWebRTCCallPermissions | onAllGranted")
                 callback(true)
             }
             .onAnyDenied {
-                Log.w("CallPermission", "hasWebRTCCallPermissions | onAnyDenied")
                 callback(false)
             }
             .execute()
     }
 
     /**
-     * Passes the grant result back into [Permissions].
+     * Passes the [grantResults] back into [Permissions].
      *
      * @see hasWebRTCCallPermissions
      */
