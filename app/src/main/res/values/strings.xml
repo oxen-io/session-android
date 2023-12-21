@@ -957,6 +957,7 @@
     <string name="preferences__allow_access_voice_video">Enables voice and video calls to and from other users.</string>
     <string name="dialog_voice_video_title">Voice / video calls</string>
     <string name="dialog_voice_video_message">Your IP address is visible to your call partner and an Oxen Foundation server while using beta calls. Are you sure you want to enable Voice and Video Calls?</string>
+    <string name="permission_voice_video_permanently_denied">Microphone permission permanently denied! Open the app permission settings to manually enable it?</string>
     <string name="CallNotificationBuilder_first_call_title">Call Missed</string>
     <string name="CallNotificationBuilder_first_call_message">You missed a call because you need to enable the \'Voice and video calls\' permission in the Privacy Settings.</string>
     <string name="WebRtcCallActivity_Session_Call">Session Call</string>

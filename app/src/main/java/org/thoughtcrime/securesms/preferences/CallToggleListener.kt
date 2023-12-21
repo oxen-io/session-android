@@ -34,7 +34,7 @@ internal class CallToggleListener(
     private fun requestMicrophonePermission() {
         Permissions.with(context)
             .request(Manifest.permission.RECORD_AUDIO)
-            .withPermanentDenialDialog("Microphone permission permanently denied! Open the app permission settings to manually enable it?")
+            .withPermanentDenialDialog(context.getString(R.string.permission_voice_video_permanently_denied))
             .onAllGranted {
                 textPreferences.setCallNotificationsEnabled(true)
                 setCallback(true)
