@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">Напусна групата.</string>
+    <string name="MessageRecord_you_created_a_new_group">Създаде групата.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s те добави към групата.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">Преименува групата на: %1$s</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s преименува групата на: %2$s</string>
+    <string name="MessageRecord_you_added_s_to_the_group">Добави %1$s към групата.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s добави %2$s към групата.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">Премахна %1$s от групата.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s премахна %2$s от групата.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">Беше премахнат от тази група.</string>
+    <string name="MessageRecord_you">Ти</string>
+    <string name="MessageRecord_s_called_you">%s ти се обади</string>
+    <string name="MessageRecord_called_s">Обади се на %s</string>
+    <string name="MessageRecord_missed_call_from">Пропуснато обаждане от %s</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$s направи екранна снимка.</string>
+    <!-- expiration -->
+    <string name="expiration_off">Изключено</string>
+    <string name="expiration_seconds_abbreviated">%d с</string>
+    <string name="expiration_minutes_abbreviated">%d м</string>
+    <string name="expiration_hours_abbreviated">%d ч</string>
+    <plurals name="expiration_days">
+        <item quantity="one">%d ден</item>
+        <item quantity="other">%d дни</item>
+    </plurals>
+    <plurals name="expiration_weeks">
+        <item quantity="one">%d седмица</item>
+        <item quantity="other">%d седмици</item>
+    </plurals>
+    <string name="ConversationItem_group_action_left">%1$s напусна групата.</string>
+    <!-- RecipientProvider -->
+</resources>

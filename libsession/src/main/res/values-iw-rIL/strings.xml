@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">עזבת את הקבוצה.</string>
+    <string name="MessageRecord_you_created_a_new_group">יצרת קבוצה חדשה.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s צירף/ה אותך לקבוצה.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">שינית את שם הקבוצה ל\"%1$s\"</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s שינה את שם הקבוצה ל\"%2$s\"</string>
+    <string name="MessageRecord_you_added_s_to_the_group">הוספת את %1$s לקבוצה.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s הוסיף/ה את %2$s לקבוצה.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">הסרת את %1$s מהקבוצה.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s הסיר/ה את %2$s מהקבוצה.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">הוסרת מהקבוצה.</string>
+    <string name="MessageRecord_you">את/ה</string>
+    <string name="MessageRecord_s_called_you">%s התקשר/ה אליך</string>
+    <string name="MessageRecord_called_s">התקשרת אל %s</string>
+    <string name="MessageRecord_missed_call_from">שיחה שלא נענתה מאת %s</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">הִשְׁבַּתְתָּ הודעות נעלמות.</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">%1$s השבית הודעות נעלמות.</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">הגדרת את קוצב הזמן של ההודעות הנעלמות על %1$s</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s הגדיר/ה את קוצב הזמן של ההודעות הנעלמות על %2$s</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$s צילם מסך.</string>
+    <string name="MessageRecord_media_saved_by_s">המדיה נשמרה על ־ידי %1$s.</string>
+    <!-- expiration -->
+    <string name="expiration_off">כבוי</string>
+    <plurals name="expiration_seconds">
+        <item quantity="one">שנייה אחת</item>
+        <item quantity="two">שתי שניות</item>
+        <item quantity="many">%d שניות</item>
+        <item quantity="other">%d שניות</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%d שנ׳</string>
+    <plurals name="expiration_minutes">
+        <item quantity="one">דקה אחת</item>
+        <item quantity="two">שתי דקות</item>
+        <item quantity="many">%d דקות</item>
+        <item quantity="other">%d דקות</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">%d ד׳</string>
+    <plurals name="expiration_hours">
+        <item quantity="one">שעה אחת</item>
+        <item quantity="two">שעתיים</item>
+        <item quantity="many">%d שעות</item>
+        <item quantity="other">%d שעות</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">%d שע׳</string>
+    <plurals name="expiration_days">
+        <item quantity="one">יום אחד</item>
+        <item quantity="two">יומיים</item>
+        <item quantity="many">%d ימים</item>
+        <item quantity="other">%d ימים</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">%d י׳</string>
+    <plurals name="expiration_weeks">
+        <item quantity="one">שבוע</item>
+        <item quantity="two">שבועיים</item>
+        <item quantity="many">%d שבועות</item>
+        <item quantity="other">%d שבועות</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">%d שב׳</string>
+    <string name="ConversationItem_group_action_left">%1$s עזב את הקבוצה.</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">קבוצה ללא שם</string>
+</resources>

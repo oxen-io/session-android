@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">Opustil(a) jste skupinu.</string>
+    <string name="MessageRecord_you_created_a_new_group">Nová skupina byla vytvořena.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s vás přidal do skupiny.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">Skupina byla přejmenována na %1$s</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">Uživatel %1$s přejmenoval skupinu na: %2$s</string>
+    <string name="MessageRecord_you_added_s_to_the_group">Uživatel %1$s byl přidán do skupiny.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">Uživatel %1$s přidal %2$s do skupiny.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">Uživatel %1$s byl odstraněn ze skupiny.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">Uživatel %1$s odstranil %2$s ze skupiny.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">Byli jste odebráni ze skupiny.</string>
+    <string name="MessageRecord_you">Vy</string>
+    <string name="MessageRecord_s_called_you">Uživatel %s vám volal</string>
+    <string name="MessageRecord_called_s">Uživatel %s vám volal</string>
+    <string name="MessageRecord_missed_call_from">Zmeškaný hovor od %s</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">Mizející zprávy byly zakázány.</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">Uživatel %1$s zakázal mizející zprávy.</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">Časovač mizejících zpráv byl nastaven na %1$s</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">Uživatel %1$s nastavil časovač mizejících zpráv na %2$s</string>
+    <string name="MessageRecord_s_took_a_screenshot">Uživatel %1$s pořídil snímek obrazovky.</string>
+    <string name="MessageRecord_media_saved_by_s">Uživatel %1$s uložil média.</string>
+    <!-- expiration -->
+    <string name="expiration_off">Vyp.</string>
+    <plurals name="expiration_seconds">
+        <item quantity="one">%d sekunda</item>
+        <item quantity="few">%d sekundy</item>
+        <item quantity="many">%d sekund</item>
+        <item quantity="other">%d sekund</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%ds</string>
+    <plurals name="expiration_minutes">
+        <item quantity="one">%d minuta</item>
+        <item quantity="few">%d minuty</item>
+        <item quantity="many">%d minut</item>
+        <item quantity="other">%d minut</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">%dm</string>
+    <plurals name="expiration_hours">
+        <item quantity="one">%d hodina</item>
+        <item quantity="few">%d hodiny</item>
+        <item quantity="many">%d hodin</item>
+        <item quantity="other">%d hodin</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">%dh</string>
+    <plurals name="expiration_days">
+        <item quantity="one">%d den</item>
+        <item quantity="few">%d dny</item>
+        <item quantity="many">%d dnů</item>
+        <item quantity="other">%d dnů</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">%dd</string>
+    <plurals name="expiration_weeks">
+        <item quantity="one">%d týden</item>
+        <item quantity="few">%d týdny</item>
+        <item quantity="many">%d týdnů</item>
+        <item quantity="other">%d týdnů</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">%dt</string>
+    <string name="ConversationItem_group_action_left">Uživatel %1$s opustil skupinu.</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">Nepojmenovaná skupina</string>
+</resources>

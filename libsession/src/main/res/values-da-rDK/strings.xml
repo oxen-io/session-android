@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">Du forlod gruppen.</string>
+    <string name="MessageRecord_you_created_a_new_group">Du har lavet en ny gruppe.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s tilføjede dig til gruppen.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">Du omdøbte gruppen tol %1$s</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s Omdøbte gruppen til: %2$s</string>
+    <string name="MessageRecord_you_added_s_to_the_group">Du tilføjede %1$s til gruppen.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s Tilføjede %2$s til gruppen.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">Du fjernede %1$s fra gruppen.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s fjernede %2$s fra gruppen.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">Du blev fjernet fra gruppen.</string>
+    <string name="MessageRecord_you">Du</string>
+    <string name="MessageRecord_s_called_you">%s Ringede til dig</string>
+    <string name="MessageRecord_called_s">Du ringede til %s</string>
+    <string name="MessageRecord_missed_call_from">Ubesvaret opkald fra %s</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">Du slog forsvindende beskeder fra.</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">%1$s slog forsvindende beskeder fra.</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">Du indstillede timern for forsvindende beskeder til %1$s</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s indstillede timern for forsvindende beskeder til %2$s</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$s tog et skærmbillede.</string>
+    <string name="MessageRecord_media_saved_by_s">Medie gemt af %1$s.</string>
+    <!-- expiration -->
+    <string name="expiration_off">Slukket</string>
+    <plurals name="expiration_seconds">
+        <item quantity="one">%d sekund</item>
+        <item quantity="other">%d sekunder</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%ds</string>
+    <plurals name="expiration_minutes">
+        <item quantity="one">%d minut</item>
+        <item quantity="other">%d minutter</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">%dm</string>
+    <plurals name="expiration_hours">
+        <item quantity="one">%d time</item>
+        <item quantity="other">%d timer</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">%dt</string>
+    <plurals name="expiration_days">
+        <item quantity="one">%d dag</item>
+        <item quantity="other">%d dage</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">%dd</string>
+    <plurals name="expiration_weeks">
+        <item quantity="one">%d uge</item>
+        <item quantity="other">%d uger</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">%du</string>
+    <string name="ConversationItem_group_action_left">%1$s har forladt gruppen.</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">Unavngivet gruppe</string>
+</resources>

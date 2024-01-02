@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">You have left the group.</string>
+    <string name="MessageRecord_you_created_a_new_group">Létrehoztad ezt a csoportot.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s added you to the group.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">You renamed the group to %1$s</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s átnevezte a csoportot erre: %2$s</string>
+    <string name="MessageRecord_you_added_s_to_the_group">Hozzáadtad a csoporthoz őt: %1$s.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s hozzáadta %2$s-t a csoporthoz.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">Eltávolítottad %1$s-t.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s eltávolította %2$s-t a csoportból.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">Eltávolítottak a csoportból.</string>
+    <string name="MessageRecord_you">Te</string>
+    <string name="MessageRecord_s_called_you">%s hívott téged</string>
+    <string name="MessageRecord_called_s">Kimenő hívás: %s</string>
+    <string name="MessageRecord_missed_call_from">Nem fogadott hívás tőle: %s</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">Kikapcsoltad az eltűnő üzeneteket.</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">%1$s kikapcsolta az eltűnő üzeneteket.</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">Beállítottad, hogy az üzenetek ennyi idő után tűnjenek el: %1$s</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s beállította, hogy az üzenetek ennyi idő után tűnjenek el: %2$s</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$s készített egy képernyőképet.</string>
+    <string name="MessageRecord_media_saved_by_s">Média mentve %1$s által.</string>
+    <!-- expiration -->
+    <string name="expiration_off">Ki</string>
+    <plurals name="expiration_seconds">
+        <item quantity="one">%d másodperce</item>
+        <item quantity="other">%d másodperce</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%dmp</string>
+    <plurals name="expiration_minutes">
+        <item quantity="one">%d perc</item>
+        <item quantity="other">%d perc</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">%dp</string>
+    <plurals name="expiration_hours">
+        <item quantity="one">%d órája</item>
+        <item quantity="other">%d órája</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">%dó</string>
+    <plurals name="expiration_days">
+        <item quantity="one">%d napja</item>
+        <item quantity="other">%d napja</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">%dn</string>
+    <plurals name="expiration_weeks">
+        <item quantity="one">%d hete</item>
+        <item quantity="other">%d hete</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">%dh</string>
+    <string name="ConversationItem_group_action_left">%1$s kilépett a csoportból.</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">Névtelen csoport</string>
+</resources>

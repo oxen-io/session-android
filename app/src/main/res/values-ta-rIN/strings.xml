@@ -1,16 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">செஸ்ஸன்</string>
     <string name="yes">ஆம்</string>
     <string name="no">இல்லை</string>
     <string name="delete">நீக்கு</string>
     <string name="ban">தடை</string>
+    <string name="please_wait">தயவு செய்து காத்திருக்கவும்…</string>
     <string name="save">சேமி</string>
     <string name="note_to_self">சுய குறிப்பு</string>
     <string name="version_s">பதிப்பு: %s</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">புதிய செய்தி</string>
     <!-- AlbumThumbnailView -->
+    <string name="AlbumThumbnailView_plus">\+%d</string>
     <!-- ApplicationPreferencesActivity -->
     <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">அனைத்து பழைய செய்திகளை நீக்க வேண்டுமா?</string>
     <plurals name="ApplicationPreferencesActivity_this_will_immediately_trim_all_conversations_to_the_d_most_recent_messages">
@@ -19,6 +45,7 @@
     </plurals>
     <string name="ApplicationPreferencesActivity_delete">நீக்கு</string>
     <string name="ApplicationPreferencesActivity_On">இயக்கவும்</string>
+    <string name="ApplicationPreferencesActivity_Off">அணை</string>
     <!-- DraftDatabase -->
     <string name="DraftDatabase_Draft_image_snippet">படம்</string>
     <string name="DraftDatabase_Draft_audio_snippet">(ஆடியோ)</string>
@@ -62,18 +89,34 @@
     <string name="ConversationActivity_leave_group">குழுவிலிருந்து வெளியேறு?</string>
     <string name="ConversationActivity_are_you_sure_you_want_to_leave_this_group">இந்த தளத்திலிருந்து வெளியேற விரும்புகின்றீர்களா?</string>
     <string name="ConversationActivity_error_leaving_group">குழுவிலிருந்து வெளியேறுவதில் பிழை</string>
+    <string name="ConversationActivity_unblock">விடுவி</string>
+    <string name="ConversationActivity_invite_to_open_group">உறுப்பினர்களைச் சேர்</string>
     <!-- ConversationFragment -->
+    <string name="ConversationFragment_ban_selected_user">இந்த பயனரை தடை செய்?</string>
     <!-- CreateProfileActivity -->
+    <string name="CreateProfileActivity_profile_photo">சுபவிபரப் புகைப்படம்</string>
     <!-- CustomDefaultPreference -->
+    <string name="CustomDefaultPreference_none">எதுவுமில்லை</string>
     <!-- DateUtils -->
+    <string name="DateUtils_just_now">இப்போது</string>
+    <string name="DateUtils_today">இன்று</string>
+    <string name="DateUtils_yesterday">நேற்று</string>
     <!-- DeviceListItem -->
+    <string name="DeviceListItem_today">இன்று</string>
     <!-- DocumentView -->
+    <string name="DocumentView_unknown_file">அறியப்படாத கோப்பு</string>
     <!-- GiphyActivity -->
     <!-- GiphyFragmentPageAdapter -->
+    <string name="GiphyFragmentPagerAdapter_gifs">GIFகள்</string>
+    <string name="GiphyFragmentPagerAdapter_stickers">ஸ்டிக்கர்கள்</string>
     <!-- CropImageActivity -->
+    <string name="CropImageActivity_profile_avatar">புகைப்படம்</string>
     <!-- InputPanel -->
     <!-- LongMessageActivity -->
+    <string name="LongMessageActivity_your_message">உங்கள் செய்திகள்</string>
     <!-- MediaOverviewActivity -->
+    <string name="MediaOverviewActivity_Media">மீடியா</string>
+    <string name="MediaOverviewActivity_Documents">ஆவணங்கள்</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
     <!-- MediaSendActivity -->
@@ -143,4 +186,7 @@
     <!-- Conversation activity -->
     <!-- Session -->
     <!-- Next round of translation -->
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
 </resources>

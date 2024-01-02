@@ -4,6 +4,31 @@
     <string name="no">Nedda</string>
     <string name="delete">Sangula</string>
     <string name="save">Tereka</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">Obubaka obupya</string>
     <!-- AlbumThumbnailView -->
@@ -216,9 +241,6 @@
     <string name="arrays__settings_default">Settingi ngabwezaali</string>
     <string name="arrays__enabled">Etereddwaako</string>
     <string name="arrays__disabled">Egyiddwaako</string>
-    <string name="arrays__name_and_message">Erinya n\'emessage</string>
-    <string name="arrays__name_only">Linnya lyoka</string>
-    <string name="arrays__no_name_or_message">Teli linnya oba obubaka</string>
     <string name="arrays__images">Ebifaananyi</string>
     <string name="arrays__audio">Doboozi</string>
     <string name="arrays__video">Vidiyo</string>
@@ -229,7 +251,6 @@
         <item quantity="other">%d saawa</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__pref_enter_sends_title">Epeesa eliyingira lyerisindika</string>
     <string name="preferences__screen_security">Okukuuma Screen yo</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">Bulokinga okukuba screenshots mubyakaberawo ne minda mu app zo</string>
     <string name="preferences__notifications">Obude</string>
@@ -312,4 +333,7 @@
     <!-- Conversation activity -->
     <!-- Session -->
     <!-- Next round of translation -->
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
 </resources>

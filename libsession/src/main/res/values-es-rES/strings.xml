@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">Has abandonado el grupo.</string>
+    <string name="MessageRecord_you_created_a_new_group">Has creado un nuevo grupo.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s te ha añadido al grupo.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">Has cambiado el nombre del grupo a %1$s</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s ha cambiado el nombre del grupo a: %2$s</string>
+    <string name="MessageRecord_you_added_s_to_the_group">Has añadido a %1$s al grupo.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s añadió a %2$s al grupo.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">Has eliminado a %1$s del grupo.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s eliminó a %2$s del grupo.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">Te han eliminado del grupo.</string>
+    <string name="MessageRecord_you">Tú</string>
+    <string name="MessageRecord_s_called_you">%s te ha llamado</string>
+    <string name="MessageRecord_called_s">Has llamado a %s</string>
+    <string name="MessageRecord_missed_call_from">Llamada perdida de %s</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">Has desactivado la desaparición de mensajes.</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">%1$s ha desactivado la desaparición de mensajes.</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">Has fijado la desaparición de mensajes en %1$s</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s ha fijado la desaparición de mensajes en %2$s</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$s ha hecho una captura de pantalla.</string>
+    <string name="MessageRecord_media_saved_by_s">%1$s guardó el archivo.</string>
+    <!-- expiration -->
+    <string name="expiration_off">Inactivo</string>
+    <plurals name="expiration_seconds">
+        <item quantity="one">un segundo</item>
+        <item quantity="other">%d segundos</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%ds</string>
+    <plurals name="expiration_minutes">
+        <item quantity="one">un minuto</item>
+        <item quantity="other">%d minutos</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">%dm</string>
+    <plurals name="expiration_hours">
+        <item quantity="one">una hora</item>
+        <item quantity="other">%d horas</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">%dh</string>
+    <plurals name="expiration_days">
+        <item quantity="one">un día</item>
+        <item quantity="other">%d días</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">%dd</string>
+    <plurals name="expiration_weeks">
+        <item quantity="one">una semana</item>
+        <item quantity="other">%d semanas</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">%dw</string>
+    <string name="ConversationItem_group_action_left">%1$s ha abandonado el grupo.</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">Grupo sin nombre</string>
+</resources>

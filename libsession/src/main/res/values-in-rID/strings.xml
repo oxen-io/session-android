@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">Anda telah meninggalkan grup.</string>
+    <string name="MessageRecord_you_created_a_new_group">Anda membuat grup baru.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s menambahkan anda ke grup.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">Anda mengganti nama grup menjadi %1$s</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s mengganti nama grup menjadi: %2$s</string>
+    <string name="MessageRecord_you_added_s_to_the_group">Anda menambahkan %1$s ke dalam grup.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s menambahkan %2$s ke dalam grup.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">Anda mengeluarkan %1$s dari grup.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s mengeluarkan %2$s dari grup.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">Anda dikeluarkan dari grup.</string>
+    <string name="MessageRecord_you">Anda</string>
+    <string name="MessageRecord_s_called_you">Panggilan masuk dari %s</string>
+    <string name="MessageRecord_called_s">Memanggil %s</string>
+    <string name="MessageRecord_missed_call_from">Panggilan tidak terjawab dari %s</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">Anda menonaktifkan pesan menghilang.</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">%1$s menonaktifkan pesan menghilang.</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">Anda mengatur pesan menghilang dalam %1$s</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s mengatur pesan menghilang dalam %2$s</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$s mengambil tangkapan layar.</string>
+    <string name="MessageRecord_media_saved_by_s">Media disimpan oleh %1$s.</string>
+    <!-- expiration -->
+    <string name="expiration_off">Mati</string>
+    <plurals name="expiration_seconds">
+        <item quantity="other">%d detik</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%d detik</string>
+    <plurals name="expiration_minutes">
+        <item quantity="other">%d menit</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">%d menit</string>
+    <plurals name="expiration_hours">
+        <item quantity="other">%d jam</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">%d jam</string>
+    <plurals name="expiration_days">
+        <item quantity="other">%d hari</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">%d hari</string>
+    <plurals name="expiration_weeks">
+        <item quantity="other">%d minggu</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">%d minggu</string>
+    <string name="ConversationItem_group_action_left">%1$s telah meninggalkan grup.</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">Grup tanpa nama</string>
+</resources>

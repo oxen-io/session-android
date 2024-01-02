@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Session</string>
     <string name="yes">Bəli</string>
     <string name="no">Xeyr</string>
     <string name="delete">Sil</string>
     <string name="ban">Qadağa qoy</string>
+    <string name="please_wait">Zəhmət olmasa gözləyin…</string>
     <string name="save">Yaddaşda saxla</string>
     <string name="note_to_self">Özümə qeyd</string>
     <string name="version_s">Versiya %s</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">Yeni mesaj</string>
     <!-- AlbumThumbnailView -->
@@ -63,6 +88,7 @@
     <string name="ConversationActivity_muted_until_date">%1$s qədər səssizdə</string>
     <string name="ConversationActivity_muted_forever">Səssizdə</string>
     <string name="ConversationActivity_member_count">%1$d üzv</string>
+    <string name="ConversationActivity_active_member_count">%1$d aktiv üzv</string>
     <string name="ConversationActivity_open_group_guidelines">Cəmiyyət Təlimatları</string>
     <string name="ConversationActivity_invalid_recipient">Etibarsız alıcı!</string>
     <string name="ConversationActivity_added_to_home_screen">Əsas ekrana əlavə edildi</string>
@@ -83,6 +109,8 @@
     <string name="ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video">Session, foto və video çəkmək üçün kameraya müraciət etməlidir, ancaq icazə birdəfəlik rədd edilib. Zəhmət olmasa \"İcazələr\" tənzimləmələrindən \"Kamera\"nı fəallaşdırın.</string>
     <string name="ConversationActivity_signal_needs_camera_permissions_to_take_photos_or_video">Session, foto və ya video çəkmək üçün kameraya müraciət etməlidir.</string>
     <string name="ConversationActivity_search_position">%1$d / %2$d</string>
+    <string name="ConversationActivity_call_title">Zəng icazələri tələb olunur</string>
+    <string name="ConversationActivity_call_prompt">Gizlilik Tənzimləmələrində \"Səsli və görüntülü zənglər\" icazəsini fəallaşdıra bilərsiniz.</string>
     <!-- ConversationFragment -->
     <plurals name="ConversationFragment_delete_selected_messages">
         <item quantity="one">Seçilmiş mesaj silinsin?</item>
@@ -105,6 +133,10 @@
     <plurals name="ConversationFragment_saving_n_attachments">
         <item quantity="one">Qoşma saxlanılır</item>
         <item quantity="other">%1$d qoşma saxlanılır</item>
+    </plurals>
+    <plurals name="ConversationFragment_saving_n_attachments_to_sd_card">
+        <item quantity="one">Qoşma anbarda saxlanılır…</item>
+        <item quantity="other">%1$d qoşma anbarda saxlanılır…</item>
     </plurals>
     <!-- CreateProfileActivity -->
     <string name="CreateProfileActivity_profile_photo">Profil şəkli</string>
@@ -167,10 +199,10 @@
     <!-- MediaRepository -->
     <string name="MediaRepository_all_media">Bütün media</string>
     <!-- MessageRecord -->
-    <string name="MessageRecord_message_encrypted_with_a_legacy_protocol_version_that_is_no_longer_supported">Artıq dəstəklənməyən Session-un əvvəlki versiyası istifadə edilərək şifrələnmiş bir mesaj alındı. Zəhmət olmasa göndərən şəxsdən tətbiqi ən son versiyaya yeniləyib mesajı təkrar göndərməsini xahiş edin.</string>
+    <string name="MessageRecord_message_encrypted_with_a_legacy_protocol_version_that_is_no_longer_supported">Artıq dəstəklənməyən Session-un əvvəlki versiyası istifadə edilərək şifrələnmiş bir mesaj alındı. Zəhmət olmasa göndərən şəxsdən tətbiqi ən son versiyaya güncəlləyib mesajı təkrar göndərməsini xahiş edin.</string>
     <string name="MessageRecord_left_group">Qrupu tərk etdiniz.</string>
-    <string name="MessageRecord_you_updated_group">Qrupu yenilədiniz.</string>
-    <string name="MessageRecord_s_updated_group">%s qrupu yenilədi.</string>
+    <string name="MessageRecord_you_updated_group">Qrupu güncəllədiniz.</string>
+    <string name="MessageRecord_s_updated_group">%s qrupu güncəllədi.</string>
     <!-- ExpirationDialog -->
     <string name="ExpirationDialog_disappearing_messages">Yox olan mesajlar</string>
     <string name="ExpirationDialog_your_messages_will_not_expire">Mesajlarınızın vaxtı bitməyəcək.</string>
@@ -193,12 +225,14 @@
     <string name="SmsMessageRecord_received_corrupted_key_exchange_message">Zədəli açar mübadilə
          mesajı alındı!
     </string>
+    <string name="SmsMessageRecord_received_key_exchange_message_for_invalid_protocol_version">        Yararsız protokol versiyası üçün açar mübadilə mesajı alındı.
+    </string>
     <string name="SmsMessageRecord_received_message_with_new_safety_number_tap_to_process">Yeni güvənli nömrəsi ilə mesaj alındı. Emal edib görüntüləmək üçün toxunun.</string>
     <string name="SmsMessageRecord_secure_session_reset">Güvənli seansı sıfırladınız.</string>
     <string name="SmsMessageRecord_secure_session_reset_s">%s, güvənli seansı sıfırladı.</string>
     <string name="SmsMessageRecord_duplicate_message">Təkrarlanan mesaj.</string>
     <!-- ThreadRecord -->
-    <string name="ThreadRecord_group_updated">Qrup yeniləndi</string>
+    <string name="ThreadRecord_group_updated">Qrup güncəlləndi</string>
     <string name="ThreadRecord_left_the_group">Qrupu tərk etdi</string>
     <string name="ThreadRecord_secure_session_reset">Güvənli seansı sıfırlandı.</string>
     <string name="ThreadRecord_draft">Qaralama:</string>
@@ -208,7 +242,7 @@
     <string name="ThreadRecord_media_message">Media mesajı</string>
     <string name="ThreadRecord_s_is_on_signal">%s artıq Session-dadır!</string>
     <string name="ThreadRecord_disappearing_messages_disabled">Yox olan mesajlar sıradan çıxarıldı</string>
-    <string name="ThreadRecord_disappearing_message_time_updated_to_s">Yox olan mesajlar üçün vaxtölçən %s olaraq tənzimləndi</string>
+    <string name="ThreadRecord_disappearing_message_time_updated_to_s">Yox olan mesajlar üçün taymer %s olaraq tənzimləndi</string>
     <string name="ThreadRecord_s_took_a_screenshot">%s ekran şəklini çəkdi.</string>
     <string name="ThreadRecord_media_saved_by_s">%s medianı yaddaşda saxladı.</string>
     <string name="ThreadRecord_safety_number_changed">Güvənli nömrə dəyişdirildi</string>
@@ -218,8 +252,8 @@
     <string name="ThreadRecord_empty_message">Bu danışıq boşdur</string>
     <string name="ThreadRecord_open_group_invitation">Açıq qrup dəvəti</string>
     <!-- UpdateApkReadyListener -->
-    <string name="UpdateApkReadyListener_Signal_update">Session yeniləməsi</string>
-    <string name="UpdateApkReadyListener_a_new_version_of_signal_is_available_tap_to_update">Session-ın yeni versiyası hazırdır, yeniləmək üçün toxunun</string>
+    <string name="UpdateApkReadyListener_Signal_update">Session güncəlləməsi</string>
+    <string name="UpdateApkReadyListener_a_new_version_of_signal_is_available_tap_to_update">Session-un yeni versiyası hazırdır, güncəlləmək üçün toxunun</string>
     <!-- MessageDisplayHelper -->
     <string name="MessageDisplayHelper_bad_encrypted_message">Pis şifrələnmiş mesaj</string>
     <string name="MessageDisplayHelper_message_encrypted_for_non_existing_session">Mesaj, mövcud olmayan seans üçün şifrələnib</string>
@@ -239,7 +273,7 @@
     <string name="MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied">Session, xarici anbarda saxlamaq üçün anbara müraciət etməlidir, ancaq bu icazə birdəfəlik rədd edilib. Zəhmət olmasa \"İcazələr\" tənzimləmələrindən \"Anbar\"ı fəallaşdırın.</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">İcazə olmadan xarici anbarda saxlanıla bilmir</string>
     <string name="MediaPreviewActivity_media_delete_confirmation_title">Mesaj silinsin?</string>
-    <string name="MediaPreviewActivity_media_delete_confirmation_message">Bu, bu mesajı birdəfəlik siləcək.</string>
+    <string name="MediaPreviewActivity_media_delete_confirmation_message">This will permanently delete this message.</string>
     <!-- MessageNotifier -->
     <string name="MessageNotifier_d_new_messages_in_d_conversations">%2$d danışıqda %1$d yeni mesaj</string>
     <string name="MessageNotifier_most_recent_from_s">Ən son: %1$s</string>
@@ -260,7 +294,7 @@
     <string name="NotificationChannel_failures">Xətalar</string>
     <string name="NotificationChannel_backups">Nüsxələr</string>
     <string name="NotificationChannel_locked_status">Kilid vəziyyəti</string>
-    <string name="NotificationChannel_app_updates">Tətbiq yeniləmələri</string>
+    <string name="NotificationChannel_app_updates">Tətbiq güncəlləmələri</string>
     <string name="NotificationChannel_other">Digər</string>
     <string name="NotificationChannel_group_messages">Mesajlar</string>
     <string name="NotificationChannel_missing_display_name">Bilinmir</string>
@@ -380,9 +414,9 @@
     <string name="arrays__settings_default">İlkin tənzimləmələr</string>
     <string name="arrays__enabled">Fəaldır</string>
     <string name="arrays__disabled">Sıradan çıxarıldı</string>
-    <string name="arrays__name_and_message">Ad və mesajlar</string>
+    <string name="arrays__name_and_message">Ad və məzmun</string>
     <string name="arrays__name_only">Yalnız ad</string>
-    <string name="arrays__no_name_or_message">Ad və ya mesaj yoxdur</string>
+    <string name="arrays__no_name_or_message">Ad və ya məzmun yoxdur</string>
     <string name="arrays__images">Təsvirlər</string>
     <string name="arrays__audio">Səs</string>
     <string name="arrays__video">Video</string>
@@ -401,8 +435,13 @@
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Enter düyməsi ilə göndər</string>
-    <string name="preferences__send_link_previews">Bağlantı önbaxışlarını göndər</string>
-    <string name="preferences__previews_are_supported_for">Imgur, Instagram, Pinterest, Reddit və YouTube bağlantıları üçün önbaxışlar dəstəklənir</string>
+    <string name="preferences__pref_enter_sends_summary">Enter düyməsinə toxunmaq, yeni bir sətir əlavə etmək əvəzinə mesajı göndərəcək.</string>
+    <string name="preferences__send_link_previews">Keçid önbaxışlarını göndər</string>
+    <string name="preferences__link_previews">Keçid önbaxışları</string>
+    <string name="preferences__link_previews_summary">Dəstəklənən URL-lər üçün keçid önbaxışları yarat.</string>
+    <string name="preferences__pref_autoplay_audio_category">Səsli mesajlar</string>
+    <string name="preferences__pref_autoplay_audio_title">Səsli mesajlar avto-oxut</string>
+    <string name="preferences__pref_autoplay_audio_summary">Ardıcıl səsli mesajları avtomatik oxut.</string>
     <string name="preferences__screen_security">Ekran güvənliyi</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">Sonuncular siyahısında və tətbiq daxilində ekran şəkillərini əngəllə</string>
     <string name="preferences__notifications">Bildirişlər</string>
@@ -410,6 +449,7 @@
     <string name="preferences__led_color_unknown">Bilinmir</string>
     <string name="preferences__pref_led_blink_title">LED yanıb sönmə forması</string>
     <string name="preferences__sound">Səs</string>
+    <string name="preferences__in_app_sounds">Tətbiq açıq ikən səs</string>
     <string name="preferences__silent">Səssiz</string>
     <string name="preferences__repeat_alerts">Xəbərdarlıqları təkrarla</string>
     <string name="preferences__never">Heç vaxt</string>
@@ -438,18 +478,27 @@
     <string name="preferences__default">İlkin</string>
     <string name="preferences__incognito_keyboard">Gizli klaviatura</string>
     <string name="preferences__read_receipts">Oxundu bildirişləri</string>
+    <string name="preferences__read_receipts_summary">Birə bir söhbətlərdə \"oxundu\" bildirişini göndərin.</string>
     <string name="preferences__typing_indicators">Yazma göstəriciləri</string>
-    <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Əgər yazma göstəricisi sıradan çıxarılsa, başqalarından gələn yazma göstəricilərini də görə bilməyəcəksiniz.</string>
+    <string name="preferences__typing_indicators_summary">Birə bir söhbətlərdə \"yazır\" bildirişini görün və paylaşın.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Klaviaturanın fərdiləşdirilmiş öyrənməni sıradan çıxartmasını tələb et</string>
     <string name="preferences__light_theme">Açıq</string>
     <string name="preferences__dark_theme">Tünd</string>
-    <string name="preferences_chats__message_trimming">Mesajları kəsmə</string>
+    <string name="preferences_chats__message_trimming">Mesajları kəs</string>
+    <string name="preferences_chats__message_trimming_title">Cəmiyyətləri kəs</string>
+    <string name="preferences_chats__message_trimming_summary">2,000-dan çox mesajı olan cəmiyyət söhbətlərindəki 6 aydan köhnə mesajları sil.</string>
     <string name="preferences_advanced__use_system_emoji">Sistem ifadəsini istifadə et</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Session-un daxili ifadə dəstəyini sıradan çıxart</string>
+    <string name="preferences_app_protection__screen_security">Ekran güvənliyi</string>
     <string name="preferences_chats__chats">Söhbətlər</string>
     <string name="preferences_notifications__messages">Mesajlar</string>
     <string name="preferences_notifications__in_chat_sounds">Söhbət daxili səslər</string>
+    <string name="preferences_notifications__content">Bildiriş məzmunu</string>
+    <string name="preferences_notifications__content_message">Göstər:</string>
+    <string name="preferences_notifications__summary">Bildirişlərdə göstərilən məlumat.</string>
     <string name="preferences_notifications__priority">Prioritet</string>
+    <string name="preferences_app_protection__screenshot_notifications">Ekran şəkli bildirişi</string>
+    <string name="preferences_app_protected__screenshot_notifications_summary">Birə bir söhbətdə qarşı tərəf ekran şəklini çəkəndə bir bildiriş al.</string>
     <!-- **************************************** -->
     <!-- menus -->
     <!-- **************************************** -->
@@ -462,7 +511,10 @@
     <string name="conversation_context__menu_ban_user">İstifadəçiyə qadağa qoy</string>
     <string name="conversation_context__menu_ban_and_delete_all">Hamısına qadağa qoy və hamısını sil</string>
     <string name="conversation_context__menu_resend_message">Mesajı yenidən göndər</string>
+    <string name="conversation_context__menu_reply">Cavabla</string>
     <string name="conversation_context__menu_reply_to_message">Mesajı cavabla</string>
+    <string name="conversation_context__menu_call">Zəng</string>
+    <string name="conversation_context__menu_select">Seç</string>
     <!-- conversation_context_image -->
     <string name="conversation_context_image__save_attachment">Qoşmanı yaddaşda saxla</string>
     <!-- conversation_expiring_off -->
@@ -515,8 +567,8 @@
     <string name="LocalBackupJob_creating_backup">Nüsxə yaradılır...</string>
     <string name="ProgressPreference_d_messages_so_far">İndiyə qədər %d mesaj</string>
     <string name="BackupUtil_never">Heç vaxt</string>
-    <string name="preferences_app_protection__screen_lock">Ekran kilidi</string>
-    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Android ekran kilidi və ya barmaq izi ilə Session-a müraciəti kilidlə</string>
+    <string name="preferences_app_protection__screen_lock">Session-ı kilidlə</string>
+    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Session-un kilidinin barmaq izi, PIN, naxış və ya parolla açılmasını tələb et.</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">Ekran kilidi üçün vaxt</string>
     <string name="AppProtectionPreferenceFragment_none">Heç biri</string>
     <!-- Conversation activity -->
@@ -524,6 +576,7 @@
     <!-- Session -->
     <string name="continue_2">Davam</string>
     <string name="copy">Kopyala</string>
+    <string name="close">Bağla</string>
     <string name="invalid_url">Etibarsız URL</string>
     <string name="copied_to_clipboard">Lövhəyə kopyalandı</string>
     <string name="next">Növbəti</string>
@@ -571,7 +624,7 @@
     <string name="activity_path_guard_node_row_title">Giriş Düyünü</string>
     <string name="activity_path_service_node_row_title">Xidmət Düyünü</string>
     <string name="activity_path_destination_row_title">Təyinat</string>
-    <string name="activity_path_learn_more_button_title">Daha Ətraflı</string>
+    <string name="activity_path_learn_more_button_title">Daha ətraflı</string>
     <string name="activity_path_resolving_progress">Həll edilir…</string>
     <string name="activity_create_private_chat_title">Yeni Seans</string>
     <string name="activity_create_private_chat_enter_session_id_tab_title">Session kimliyini daxil edin</string>
@@ -602,28 +655,43 @@
     <string name="activity_settings_display_name_too_long_error">Qısa bir ekran adı seçin</string>
     <string name="activity_settings_privacy_button_title">Gizlilik</string>
     <string name="activity_settings_notifications_button_title">Bildirişlər</string>
+    <string name="activity_settings_message_requests_button_title">Mesaj tələbləri</string>
     <string name="activity_settings_chats_button_title">Söhbətlər</string>
     <string name="activity_settings_devices_button_title">Cihazlar</string>
     <string name="activity_settings_invite_button_title">Dostu dəvət edin</string>
     <string name="activity_settings_faq_button_title">TSS</string>
     <string name="activity_settings_recovery_phrase_button_title">Bərpa parolu</string>
-    <string name="activity_settings_clear_all_data_button_title">Verilənləri təmizlə</string>
-    <string name="activity_settings_clear_all_data_and_network_button_title">Şəbəkə daxil olmaqla verilənləri təmizlə</string>
+    <string name="activity_settings_clear_all_data_button_title">Məlumatları təmizlə</string>
+    <string name="activity_settings_clear_all_data_and_network_button_title">Şəbəkə daxil olmaqla məlumatları təmizlə</string>
     <string name="activity_settings_help_translate_session">Session-un tərcüməsinə kömək et</string>
     <string name="activity_notification_settings_title">Bildirişlər</string>
     <string name="activity_notification_settings_style_section_title">Bildiriş stili</string>
     <string name="activity_notification_settings_content_section_title">Bildiriş məzmunu</string>
     <string name="activity_privacy_settings_title">Gizlilik</string>
+    <string name="activity_conversations_settings_title">Danışıqlar</string>
+    <string name="activity_help_settings_title">Kömək</string>
+    <string name="activity_help_settings__report_bug_title">Bir xəta bildir</string>
+    <string name="activity_help_settings__report_bug_summary">Jurnalları xaricə köçürün, daha sonra faylı Session-un Kömək Masasına yükləyin.</string>
+    <string name="activity_help_settings__translate_session">Session-u tərcümə et</string>
+    <string name="activity_help_settings__feedback">Əks-əlaqənizi görmək istərdik</string>
+    <string name="activity_help_settings__faq">TVS</string>
+    <string name="activity_help_settings__support">Dəstək</string>
+    <string name="activity_help_settings__export_logs">Jurnalları xaricə köçür</string>
     <string name="preferences_notifications_strategy_category_title">Bildiriş Strategiyası</string>
     <string name="preferences_notifications_strategy_category_fast_mode_title">Sürətli rejimi istifadə et</string>
     <string name="preferences_notifications_strategy_category_fast_mode_summary">Google-un bildiriş serverlərini istifadə edərək yeni mesajlardan dərhal və etibarlı şəkildə xəbərdar olacaqsınız.</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">Adı dəyişdir</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Cihazın əlaqəsini kəs</string>
     <string name="dialog_seed_title">Bərpa parolunuz</string>
-    <string name="dialog_seed_explanation">Bu, bərpa parolunuzdur. Bununla, Session kimliyinizi bərpa edə və ya yeni bir cihaza daşıya bilərsiniz.</string>
-    <string name="dialog_clear_all_data_title">Bütün verilənləri təmizlə</string>
+    <string name="dialog_seed_explanation">Hesabınızı bərpa etmək və ya bir cihazla əlaqə yaratmaq üçün bərpa ifadənizi istifadə edə bilərsiniz.</string>
+    <string name="dialog_clear_all_data_title">Bütün məlumatları təmizlə</string>
     <string name="dialog_clear_all_data_explanation">Bu, bütün mesajlarınızı, seanslarınızı və əlaqələrinizi birdəfəlik siləcək.</string>
     <string name="dialog_clear_all_data_network_explanation">Yalnız bu cihazı silmək istəyirsiniz, yoxsa hesabınızın tamamını silmək istəyirsiniz?</string>
+    <string name="dialog_clear_all_data_message">Bu, mesajlarınızı, seanslarınızı və kontaktlarınızı birdəfəlik siləcək. Yalnız bu cihazı təmizləmək istəyirsiniz, yoxsa bütün hesabı silmək istəyirsiniz?</string>
+    <string name="dialog_clear_all_data_clear_device_only">Yalnız cihazı təmizlə</string>
+    <string name="dialog_clear_all_data_clear_device_and_network">Cihazı və şəbəkəni təmizlə</string>
+    <string name="dialog_clear_all_data_clear_device_and_network_confirmation">Məlumatlarınızı şəbəkədən silmək istədiyinizə əminsiniz? Davam etsəniz, mesajlarınızı və ya kontaktlarınızı bərpa edə bilməyəcəksiniz.</string>
+    <string name="dialog_clear_all_data_clear">Təmizlə</string>
     <string name="dialog_clear_all_data_local_only">Yalnız sil</string>
     <string name="dialog_clear_all_data_clear_network">Bütün hesabı</string>
     <string name="activity_qr_code_title">QR Kod</string>
@@ -696,6 +764,7 @@
     <string name="dialog_download_explanation">%s göndərən medianı endirmək istədiyinizə əminsiniz?</string>
     <string name="dialog_download_button_title">Endir</string>
     <string name="activity_conversation_blocked_banner_text">%s əngəlləndi. Əngəldən çıxarılsın?</string>
+    <string name="activity_conversation_block_user">İstifadəçini əngəllə</string>
     <string name="activity_conversation_attachment_prep_failed">Qoşma, göndərilmək üzrə hazırlanmadı.</string>
     <string name="media">Media</string>
     <string name="UntrustedAttachmentView_download_attachment">%s - endirmək üçün toxunun</string>
@@ -712,7 +781,117 @@
     <string name="activity_settings_survey_feedback">Əks əlaqə/Anket</string>
     <string name="activity_settings_support">Sazlama jurnalı</string>
     <string name="dialog_share_logs_title">Jurnalları paylaş</string>
-    <string name="dialog_share_logs_explanation">Problemlərin aradan qaldırılması məqsədilə paylaşmaq üçün tətbiqetmə jurnallarını ixrac etmək istəyirsiniz?</string>
+    <string name="dialog_share_logs_explanation">Problemlərin aradan qaldırılması məqsədilə paylaşmaq üçün tətbiq jurnallarını xaricə köçürmək istəyirsiniz?</string>
     <string name="conversation_pin">Sancaqla</string>
     <string name="conversation_unpin">Sancağı götür</string>
+    <string name="mark_all_as_read">Hamısını oxundu olaraq işarələ</string>
+    <string name="global_search_contacts_groups">Əlaqələr və qruplar</string>
+    <string name="global_search_messages">Mesajlar</string>
+    <string name="activity_message_requests_title">Mesaj tələbləri</string>
+    <string name="message_requests_send_notice">Bu istifadəçiyə bir mesaj göndərməklə onun mesaj tələbi avtomatik olaraq qəbul ediləcək və Session kimliyiniz üzə çıxacaq.</string>
+    <string name="accept">Qəbul et</string>
+    <string name="decline">Rədd et</string>
+    <string name="message_requests_clear_all">Hamısını təmizlə</string>
+    <string name="message_requests_decline_message">Bu mesaj tələbini rədd etmək istədiyinizə əminsiniz?</string>
+    <string name="message_requests_block_message">Bu mesaj tələbini əngəlləmək istədiyinizə əminsiniz?</string>
+    <string name="message_requests_deleted">Mesaj tələbi silindi</string>
+    <string name="message_requests_clear_all_message">Bütün mesaj tələblərini təmizləmək istədiyinizə əminsiniz?</string>
+    <string name="message_requests_cleared">Mesaj tələbləri silindi</string>
+    <string name="message_requests_accepted">Mesaj tələbiniz qəbul edildi.</string>
+    <string name="message_requests_pending">Hazırda mesaj tələbiniz gözləmədədir.</string>
+    <string name="message_request_empty_state_message">Gözləyən mesaj tələbi yoxdur</string>
+    <string name="NewConversationButton_SessionTooltip">Birbaşa Mesaj</string>
+    <string name="NewConversationButton_ClosedGroupTooltip">Bağlı qrup</string>
+    <string name="NewConversationButton_OpenGroupTooltip">Açıq qrup</string>
+    <string name="message_requests_notification">Yeni bir mesaj tələbiniz var</string>
+    <string name="CallNotificationBuilder_connecting">Bağlantı qurulur…</string>
+    <string name="NotificationBarManager__incoming_signal_call">Gələn zəng</string>
+    <string name="NotificationBarManager__deny_call">Zəngi rədd et</string>
+    <string name="NotificationBarManager__answer_call">Zəngə cavab ver</string>
+    <string name="NotificationBarManager_call_in_progress">Zəng davam edir</string>
+    <string name="NotificationBarManager__cancel_call">Zəngi ləğv et</string>
+    <string name="NotificationBarManager__establishing_signal_call">Zəng bağlantısı qurulur</string>
+    <string name="NotificationBarManager__end_call">Zəngi bitir</string>
+    <string name="accept_call">Zəngi qəbul et</string>
+    <string name="decline_call">Zəngi rədd et</string>
+    <string name="preferences__voice_video_calls">Səsli və görüntülü zənglər</string>
+    <string name="preferences__calls_beta">Zənglər (Beta)</string>
+    <string name="preferences__allow_access_voice_video">Digər istifadəçilərlə səsli və görüntülü danışığı təmin edir.</string>
+    <string name="dialog_voice_video_title">Səsli / görüntülü zənglər</string>
+    <string name="dialog_voice_video_message">Səsli / görüntülü zənglərin hazırkı tətbiqi, IP ünvanınızı Oxen Foundation serverlərinə və zəng edən / zəng edilən istifadəçiyə göstərəcək</string>
+    <string name="CallNotificationBuilder_first_call_title">Zəng buraxıldı</string>
+    <string name="CallNotificationBuilder_first_call_message">Gizlilik Tənzimləmələrində \"Səsli və görüntülü zənglər\" icazəsini fəallaşdırmalı olduğunuz üçün bir zəngi buraxdınız.</string>
+    <string name="WebRtcCallActivity_Session_Call">Session zəngi</string>
+    <string name="WebRtcCallActivity_Reconnecting">Yenidən bağlantı qurulur…</string>
+    <string name="CallNotificationBuilder_system_notification_title">Bildirişlər</string>
+    <string name="CallNotificationBuilder_system_notification_message">Bildirişlərin sıradan çıxarılması, zəng almağınızı əngəlləyəcək, Session bildiriş tənzimləmələrinə gedirsiniz?</string>
+    <string name="dismiss">Rədd et</string>
+    <string name="activity_settings_conversations_button_title">Danışıqlar</string>
+    <string name="activity_settings_message_appearance_button_title">Görünüş</string>
+    <string name="activity_settings_help_button">Kömək</string>
+    <string name="activity_appearance_themes_category">Temalar</string>
+    <string name="ocean_dark_theme_name">Okean Qaranlıq</string>
+    <string name="classic_dark_theme_name">Klassik Qaranlıq</string>
+    <string name="ocean_light_theme_name">Okean İşıqlı</string>
+    <string name="classic_light_theme_name">Klassik İşıqlı</string>
+    <string name="activity_appearance_primary_color_category">Əsas rəng</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__this_message">Bu mesaj</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__recently_used">Təzəlikcə istifadə edilən</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__smileys_and_people">İfadələr və İnsanlar</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__nature" comment="Heading for an emoji list's category">Təbiət</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__food" comment="Heading for an emoji list's category">Qida</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__activities">Fəaliyyət</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__places" comment="Heading for an emoji list's category">Məkanlar</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__objects">Obyektlər</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__symbols">Simvollar</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__flags">Bayraqlar</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__emoticons">İfadələr</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__no_results_found">Heç bir nəticə tapılmadı</string>
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <string name="ReactionsBottomSheetDialogFragment_all">Bütün &#183; %1$d</string>
+    <!-- ReactionsConversationView -->
+    <string name="ReactionsConversationView_plus">+%1$d</string>
+    <!-- ReactionsRecipientAdapter -->
+    <string name="ReactionsRecipientAdapter_you">Siz</string>
+    <string name="reaction_notification">%1$s, %2$s mesajına reaksiya verdi</string>
+    <string name="ReactionsConversationView_show_less">Daha az göstər</string>
+    <string name="KeyboardPagerFragment_search_emoji">İfadə axtar</string>
+    <string name="KeyboardPagerfragment_back_to_emoji">İfadələrə qayıt</string>
+    <string name="KeyboardPagerfragment_clear_search_entry">Axtarış girişini təmizlə</string>
+    <string name="activity_appearance_follow_system_category">Avtomatik qaranlıq rejim</string>
+    <string name="activity_appearance_follow_system_explanation">Sistem tənzm. uyğun</string>
+    <string name="go_to_device_notification_settings">Cihazın bildiriş tənzimləmələrinə get</string>
+    <string name="blocked_contacts_title">Əngəllənən kontaktlar</string>
+    <string name="blocked_contacts_empty_state">Heç bir kontaktı əngəlləməmisiniz</string>
+    <string name="Unblock_dialog__title_single">%s - əngəldən çıxart</string>
+    <string name="Unblock_dialog__title_multiple">İstifadəçiləri əngəldən çıxart</string>
+    <string name="Unblock_dialog__message">%s əlaqəsini əngəldən çıxartmaq istədiyinizə əminsiniz?</string>
+    <plurals name="Unblock_dialog__message_multiple_overflow">
+        <item quantity="one">və digər %d nəfər</item>
+        <item quantity="other">və digər %d nəfər</item>
+    </plurals>
+    <plurals name="ReactionsRecipientAdapter_other_reactors">
+        <item quantity="one">Və daha %1$d nəfər bu mesaja %2$s reaksiyası verdi</item>
+        <item quantity="other">Və daha %1$d nəfər bu mesaja %2$s reaksiyası verdi</item>
+    </plurals>
+    <string name="dialog_new_conversation_title">Yeni danışıq</string>
+    <string name="dialog_new_message_title">Yeni mesaj</string>
+    <string name="activity_create_group_title">Qrup yarat</string>
+    <string name="dialog_join_community_title">Cəmiyyətə qoşul</string>
+    <string name="new_conversation_contacts_title">Kontaktlar</string>
+    <string name="new_conversation_unknown_contacts_section_title">Bilinmir</string>
+    <string name="fragment_enter_public_key_prompt">Birinin Session kimliyini daxil edərək və ya onunla Session kimliyinizi paylaşaraq yeni bir danışıq başladın.</string>
+    <string name="activity_create_group_create_button_title">Yarat</string>
+    <string name="search_contacts_hint">Kontaktları axtar</string>
+    <string name="activity_join_public_chat_enter_community_url_tab_title">Cəmiyyət URL-si</string>
+    <string name="fragment_enter_community_url_edit_text_hint">Cəmiyyət URL-sini daxil et</string>
+    <string name="fragment_enter_community_url_join_button_title">Qoşul</string>
+    <string name="new_conversation_dialog_back_button_content_description">Geri get</string>
+    <string name="new_conversation_dialog_close_button_content_description">Dialoqu bağla</string>
+    <string name="ErrorNotifier_migration">Verilənlər bazası yüksəltmə xətası</string>
+    <string name="ErrorNotifier_migration_downgrade">Xətanı bildirmək üçün zəhmət olmasa dəstəklə əlaqə saxlayın.</string>
+    <string name="delivery_status_sending">Göndərilir</string>
+    <string name="delivery_status_read">Oxundu</string>
+    <string name="delivery_status_sent">Göndərildi</string>
+    <string name="delivery_status_failed">Göndərilmədi</string>
 </resources>

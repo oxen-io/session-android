@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
@@ -92,4 +119,7 @@
     <!-- Conversation activity -->
     <!-- Session -->
     <!-- Next round of translation -->
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
 </resources>

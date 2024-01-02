@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Session</string>
     <string name="yes">نعم</string>
     <string name="no">لا</string>
     <string name="delete">حذف</string>
     <string name="ban">حظر</string>
+    <string name="please_wait">الرجاء الإنتظار…</string>
     <string name="save">حفظ</string>
     <string name="note_to_self">ملاحظة لنفسي</string>
     <string name="version_s">النسخة %s</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">رسالة جديدة</string>
     <!-- AlbumThumbnailView -->
@@ -71,6 +96,7 @@
     <string name="ConversationActivity_muted_until_date">كتم حتى %1$s</string>
     <string name="ConversationActivity_muted_forever">كتم</string>
     <string name="ConversationActivity_member_count">%1$d عضو</string>
+    <string name="ConversationActivity_active_member_count">%1$d أعضاء نشطين</string>
     <string name="ConversationActivity_open_group_guidelines">إرشادات المستخدمين</string>
     <string name="ConversationActivity_invalid_recipient">جهة اتصال غير صحيحة!</string>
     <string name="ConversationActivity_added_to_home_screen">تمت الإضافة للشاشة الرئيسية</string>
@@ -91,6 +117,8 @@
     <string name="ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video">يحتاج Session إلى إذن الكاميرا من أجل التقاط صور وفيديو  ولكن تم إيقاف الإذن على نحو دائم، رجاء زيارة إعدادات التطبيق ثم \"الأذونات\"، ثم تفعيل \"الكاميرا\".</string>
     <string name="ConversationActivity_signal_needs_camera_permissions_to_take_photos_or_video">يحتاج Session إلي إذن الكاميرا لالتقاط صور أو تسجيل فيديو</string>
     <string name="ConversationActivity_search_position">%1$d من %2$d</string>
+    <string name="ConversationActivity_call_title">صلاحيات الاتصال مطلوبة</string>
+    <string name="ConversationActivity_call_prompt">يمكنك تفعيل صَلاحِيَة \'الصوت و الصورة\' في إعدادات الخصوصية.</string>
     <!-- ConversationFragment -->
     <plurals name="ConversationFragment_delete_selected_messages">
         <item quantity="zero">حذف المختار؟</item>
@@ -231,6 +259,7 @@
     <string name="Slide_video">فيديو</string>
     <!-- SmsMessageRecord -->
     <string name="SmsMessageRecord_received_corrupted_key_exchange_message">تم استلام رسالة تبادل مفاتيح تالفة.</string>
+    <string name="SmsMessageRecord_received_key_exchange_message_for_invalid_protocol_version">        تم استلام رسالة تبادل المفتاح بسبب نسخة البروتوكول غير صالحة.    </string>
     <string name="SmsMessageRecord_received_message_with_new_safety_number_tap_to_process">تم استلام رسالة برقم أمان جديد. انقر للمعالجة والعرض.</string>
     <string name="SmsMessageRecord_secure_session_reset">لقد قمت بإعادة ضبط تأمين المحادثة.</string>
     <string name="SmsMessageRecord_secure_session_reset_s">%s أعاد ضبط تأمين المحادثة.</string>
@@ -422,9 +451,9 @@
     <string name="arrays__settings_default">الإعدادات الافتراضية</string>
     <string name="arrays__enabled">مفعل</string>
     <string name="arrays__disabled">معطل</string>
-    <string name="arrays__name_and_message">الاسم والرسالة</string>
-    <string name="arrays__name_only">الاسم فقط</string>
-    <string name="arrays__no_name_or_message">لا يوجد أسم أو رسالة</string>
+    <string name="arrays__name_and_message">الاسم و المحتوى</string>
+    <string name="arrays__name_only">فقط الاسم</string>
+    <string name="arrays__no_name_or_message">بدون اسم او محتوى</string>
     <string name="arrays__images">صور</string>
     <string name="arrays__audio">صوت</string>
     <string name="arrays__video">فيديو</string>
@@ -446,9 +475,14 @@
         <item quantity="other">%d ساعة</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__pref_enter_sends_title">مفتاح الدخول يقوم بالإرسال</string>
-    <string name="preferences__send_link_previews">إرسال معاينة الرابط</string>
-    <string name="preferences__previews_are_supported_for">المعاينات مدعومة لروابط Imgur، Instagram، Pinte، Reddit، واليوتيوب</string>
+    <string name="preferences__pref_enter_sends_title">ارسل مع مفتاح الدخول</string>
+    <string name="preferences__pref_enter_sends_summary">النقر على مفتاح الدخول سوف يرسل رسالة بدلاً من بَدْء سطر جديد.</string>
+    <string name="preferences__send_link_previews">أرسل معاينات الرابط</string>
+    <string name="preferences__link_previews">معاينات الرابط</string>
+    <string name="preferences__link_previews_summary">إنشاء معاينات الرابط لعناوين URL المدعومة.</string>
+    <string name="preferences__pref_autoplay_audio_category">رسائل صوتية</string>
+    <string name="preferences__pref_autoplay_audio_title">التشغيل التلقائي للرسائل الصوتية</string>
+    <string name="preferences__pref_autoplay_audio_summary">التشغيل المتتابع للرسائل الصوتية.</string>
     <string name="preferences__screen_security">تأمين الشاشة</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">منع لقطات الشاشة داخل التطبيق</string>
     <string name="preferences__notifications">الإشعارات</string>
@@ -456,6 +490,7 @@
     <string name="preferences__led_color_unknown">مجهول</string>
     <string name="preferences__pref_led_blink_title">نمط وميض LED</string>
     <string name="preferences__sound">صوت</string>
+    <string name="preferences__in_app_sounds">الصوت عندما يفتح التطبيق</string>
     <string name="preferences__silent">صامت</string>
     <string name="preferences__repeat_alerts">تكرار التنبيهات</string>
     <string name="preferences__never">أبدا</string>
@@ -483,19 +518,28 @@
     <string name="preferences__scan_through_all_conversations_and_enforce_conversation_length_limits">فحص وتقليم كل المحادثات وفق الحد الأقصى</string>
     <string name="preferences__default">افتراضي</string>
     <string name="preferences__incognito_keyboard">وضع التستّر للوحة المفاتيح</string>
-    <string name="preferences__read_receipts">قراءة تقارير الإستلام</string>
+    <string name="preferences__read_receipts">إيصالات القراءة</string>
+    <string name="preferences__read_receipts_summary">ارسل إيصالات القراءة في دردشة واحد إلى واحد.</string>
     <string name="preferences__typing_indicators">مؤشرات الكتابة</string>
-    <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">اِذا كانت مؤشرات الكتابة غير مفعلة, لن ترى مؤشرات الكتابة من الآخرين.</string>
+    <string name="preferences__typing_indicators_summary">شاهد شارك مؤشرات الكتابة في دردشة واحد لواحد.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">الطلب من لوحة المفاتيح تعطيل التعلم الذاتي</string>
     <string name="preferences__light_theme">فاتح</string>
     <string name="preferences__dark_theme">داكن</string>
     <string name="preferences_chats__message_trimming">تقليم الرسالة</string>
+    <string name="preferences_chats__message_trimming_title">تقليم المجتمعات</string>
+    <string name="preferences_chats__message_trimming_summary">حذف الرسائل الأقدم من 6 أشهر من المجتمعات التي لديها أكثر من 2000 رسالة.</string>
     <string name="preferences_advanced__use_system_emoji">استخدام الرموز التعبيرية بالنظام</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">تعطيل الرموز التعبيرية المدمجة في Session</string>
+    <string name="preferences_app_protection__screen_security">أمان الشاشة</string>
     <string name="preferences_chats__chats">دردشة</string>
     <string name="preferences_notifications__messages">الرسائل</string>
     <string name="preferences_notifications__in_chat_sounds">أصوات خلال الدردشة</string>
+    <string name="preferences_notifications__content">محتوى الإشعار</string>
+    <string name="preferences_notifications__content_message">أظهر:</string>
+    <string name="preferences_notifications__summary">المعلومة المبينة في التنبيهات.</string>
     <string name="preferences_notifications__priority">أولوية</string>
+    <string name="preferences_app_protection__screenshot_notifications">تنبيهات لقطة الشاشة</string>
+    <string name="preferences_app_protected__screenshot_notifications_summary">تلقي إشعار عندما يأخذ جهة الاتصال لقطة شاشة من محادثة واحد لواحد.</string>
     <!-- **************************************** -->
     <!-- menus -->
     <!-- **************************************** -->
@@ -508,7 +552,10 @@
     <string name="conversation_context__menu_ban_user">منع المستخدم</string>
     <string name="conversation_context__menu_ban_and_delete_all">منع و حذف الكل</string>
     <string name="conversation_context__menu_resend_message">إعادة الإرسال</string>
+    <string name="conversation_context__menu_reply">رد</string>
     <string name="conversation_context__menu_reply_to_message">الرَدّ على الرسالة</string>
+    <string name="conversation_context__menu_call">اتصل</string>
+    <string name="conversation_context__menu_select">حدد</string>
     <!-- conversation_context_image -->
     <string name="conversation_context_image__save_attachment">حفظ المرفق</string>
     <!-- conversation_expiring_off -->
@@ -561,8 +608,8 @@
     <string name="LocalBackupJob_creating_backup">جارٍ إنشاء نسخة احتياطية...</string>
     <string name="ProgressPreference_d_messages_so_far">%dرسالة إلى الآن</string>
     <string name="BackupUtil_never">أبدا</string>
-    <string name="preferences_app_protection__screen_lock">قفل الشاشة</string>
-    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">منع النفاذ إلى Session عبر تعيين قفل الشاشة أو بصمة الإصبع</string>
+    <string name="preferences_app_protection__screen_lock">اقفل الجَلسة</string>
+    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">يتطلب بصمة الإصبع, رَقَم التعريف الشخصي, النقش أو كلمة المرور لفتح الجَلسة.</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">نفاذ مهلة قفل الشاشة</string>
     <string name="AppProtectionPreferenceFragment_none">لا شيء </string>
     <!-- Conversation activity -->
@@ -570,6 +617,7 @@
     <!-- Session -->
     <string name="continue_2">متابعة</string>
     <string name="copy">اِنسخ</string>
+    <string name="close">اغلق</string>
     <string name="invalid_url">عنوان تعريف خاطئ</string>
     <string name="copied_to_clipboard">تم النسخ الى الحافظة المؤقتة</string>
     <string name="next">التالي</string>
@@ -648,6 +696,7 @@
     <string name="activity_settings_display_name_too_long_error">الرجاء إختيار اسم عرض أقصر</string>
     <string name="activity_settings_privacy_button_title">الخصوصية</string>
     <string name="activity_settings_notifications_button_title">الإشعارات</string>
+    <string name="activity_settings_message_requests_button_title">طلبات المُراسلة</string>
     <string name="activity_settings_chats_button_title">المحادثات</string>
     <string name="activity_settings_devices_button_title">الأجهزة</string>
     <string name="activity_settings_invite_button_title">أُدع صديق</string>
@@ -660,16 +709,30 @@
     <string name="activity_notification_settings_style_section_title">طريقة الإشعارات</string>
     <string name="activity_notification_settings_content_section_title">محتوى الإشعارات</string>
     <string name="activity_privacy_settings_title">الخصوصية</string>
+    <string name="activity_conversations_settings_title">المحادثات</string>
+    <string name="activity_help_settings_title">مساعدة</string>
+    <string name="activity_help_settings__report_bug_title">الإبلاغ عن خطأ</string>
+    <string name="activity_help_settings__report_bug_summary">اصدر السجلات الخاصة بك، ثم ارفع الملف عبر مكتب المساعدة الخاص بالجلسة.</string>
+    <string name="activity_help_settings__translate_session">ترجم الجلسة</string>
+    <string name="activity_help_settings__feedback">نتطلع لقراءة أراءك</string>
+    <string name="activity_help_settings__faq">الأسئلة الأكثر طرحاً</string>
+    <string name="activity_help_settings__support">الدعم</string>
+    <string name="activity_help_settings__export_logs">تصدير السجلات</string>
     <string name="preferences_notifications_strategy_category_title">طريقة الإشعارات</string>
     <string name="preferences_notifications_strategy_category_fast_mode_title">استخدام الوضع السريع</string>
     <string name="preferences_notifications_strategy_category_fast_mode_summary">سوف يتم تنبيهك بالرسائل الجديدة بشكل موثوق و فوري بإستخدام خوادم غوغل.</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">غَير الاسم</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">ألغي ربط الجهاز</string>
     <string name="dialog_seed_title">عبارة الاسترجاع الخاصة بك</string>
-    <string name="dialog_seed_explanation">هذه هي عبارة الاِسترجاع, يمكن بواسطتها اِسترجاع عنوان التعريف أو الاِنتقال اِلى جهاز جديد.</string>
+    <string name="dialog_seed_explanation">يمكنك استخدام عبارة الاسترداد لاستعادة حسابك أو ربط جهاز.</string>
     <string name="dialog_clear_all_data_title">اِمسح جميع البيانات</string>
     <string name="dialog_clear_all_data_explanation">سيؤدي هذا إلى حذف رسائلك, محادثاتك و متصليك نهائيا.</string>
     <string name="dialog_clear_all_data_network_explanation">هل تريد مسح من هذا الجهاز فقط، أو حذف حسابك كليا ؟</string>
+    <string name="dialog_clear_all_data_message">سيؤدي هذا إلى حذف رسائلك وجلساتك وجهات اتصالك بشكل دائم. هل ترغب في مسح هذا الجهاز فقط، أو حذف حسابك بأكمله؟</string>
+    <string name="dialog_clear_all_data_clear_device_only">مسح الجهاز فقط</string>
+    <string name="dialog_clear_all_data_clear_device_and_network">مسح الجهاز والشبكة</string>
+    <string name="dialog_clear_all_data_clear_device_and_network_confirmation">هل أنت متأكد من أنك تريد حذف بياناتك من الشبكة؟ إذا قمت بالمتابعة فلن تتمكن من استعادة الرسائل أو جهات اتصالك.</string>
+    <string name="dialog_clear_all_data_clear">مسح</string>
     <string name="dialog_clear_all_data_local_only">فقط اِمسح</string>
     <string name="dialog_clear_all_data_clear_network">الحساب كليا</string>
     <string name="activity_qr_code_title">رمز QR</string>
@@ -742,6 +805,7 @@
     <string name="dialog_download_explanation">هل انت متأكد من تنزيل الوسيط المرسل من طرف %s؟</string>
     <string name="dialog_download_button_title">تنزيل</string>
     <string name="activity_conversation_blocked_banner_text">%s محظور. إلغاء الحظر؟</string>
+    <string name="activity_conversation_block_user">حظر مستخدم</string>
     <string name="activity_conversation_attachment_prep_failed">فشل إعداد المرفق للإرسال.</string>
     <string name="media">وسائط</string>
     <string name="UntrustedAttachmentView_download_attachment">انضغط لتنزيل %s</string>
@@ -761,4 +825,106 @@
     <string name="dialog_share_logs_explanation">هل ترغب في تصدير سجلات ليتم مشاركتها من أجل اكتشاف الأخطاء وتصحيحها؟</string>
     <string name="conversation_pin">ًًًُُثَبت</string>
     <string name="conversation_unpin">الغ التثبيت</string>
+    <string name="mark_all_as_read">اعتبر جميع الرسائل مقروءة</string>
+    <string name="global_search_contacts_groups">جهات الاتصال و المجموعات</string>
+    <string name="global_search_messages">رسائل</string>
+    <string name="activity_message_requests_title">طلبات المُراسلة</string>
+    <string name="message_requests_send_notice">إرسال رسالة إلى هذا المستخدم سيقبل تلقائياً رسائله و يكشف عن معرفك (ID).</string>
+    <string name="accept">اِقبل</string>
+    <string name="decline">أرفض</string>
+    <string name="message_requests_clear_all">امسح الكل</string>
+    <string name="message_requests_decline_message">هل أنت متأكد من رفضك طلب المراسلة هذا؟</string>
+    <string name="message_requests_block_message">هل أنت متأكد من حظرك طلب المراسلة هذا؟</string>
+    <string name="message_requests_deleted">تم حذف طلب المراسلة</string>
+    <string name="message_requests_clear_all_message">هل أنت متأكد أنك تريد محو جميع طلبات المراسلة ؟</string>
+    <string name="message_requests_cleared">تم حذف طلبات المراسلة</string>
+    <string name="message_requests_accepted">تم قَبُول لطلب رسالتك.</string>
+    <string name="message_requests_pending">طلب رسالتك قيد الانتظار.</string>
+    <string name="message_request_empty_state_message">لا توجد طلبات رسالة معلقة</string>
+    <string name="NewConversationButton_SessionTooltip">رسالة مباشرة</string>
+    <string name="NewConversationButton_ClosedGroupTooltip">غلق المجموعة</string>
+    <string name="NewConversationButton_OpenGroupTooltip">افتح المجموعة</string>
+    <string name="message_requests_notification">لديك طلب مراسلة جديدة</string>
+    <string name="CallNotificationBuilder_connecting">جارٍ الاتصال…</string>
+    <string name="NotificationBarManager__incoming_signal_call">مكالمة واردة</string>
+    <string name="NotificationBarManager__deny_call">ارفض المكالمة</string>
+    <string name="NotificationBarManager__answer_call">اجب عن المكالمة</string>
+    <string name="NotificationBarManager_call_in_progress">المكالمة جارية</string>
+    <string name="NotificationBarManager__cancel_call">الغ المكالمة</string>
+    <string name="NotificationBarManager__establishing_signal_call">المكالمة قيد الإنشاء</string>
+    <string name="NotificationBarManager__end_call">أنهي المكالمة</string>
+    <string name="accept_call">اقبل المكالمة</string>
+    <string name="decline_call">ارفض المكالمة</string>
+    <string name="preferences__voice_video_calls">مكالمات صوتية و مرئية</string>
+    <string name="preferences__calls_beta">مكالمات (نسخة تجريبية)</string>
+    <string name="preferences__allow_access_voice_video">تمكين مكالمات الصوت والفيديو من والى المستخدمين الآخرين.</string>
+    <string name="dialog_voice_video_title">مكالمات صوت / صورة</string>
+    <string name="dialog_voice_video_message">عنوانك IP مرئي لجهة اتصالك وخادم مؤسسة Oxen أثناء استخدام المكالمات التجريبية. هل أنت متاكد من أنك تريد تمكين مكالمات الصوت والفيديو؟</string>
+    <string name="CallNotificationBuilder_first_call_title">مكالمة فائتة</string>
+    <string name="CallNotificationBuilder_first_call_message">مكالمة فائتة بسبب عدم تفعيل صَلاحِيَة \'مكالمات الصوت و الفيديو\' في اعدادات الخصوصية.</string>
+    <string name="WebRtcCallActivity_Session_Call">مكالمة Session</string>
+    <string name="WebRtcCallActivity_Reconnecting">جار إعادة الاتصال…</string>
+    <string name="CallNotificationBuilder_system_notification_title">تنبيهات</string>
+    <string name="CallNotificationBuilder_system_notification_message">تعطيل الإشعارات سيمنعك من تلقي المكالمات، أذهب إلى إعدادات التنبيهات؟</string>
+    <string name="dismiss">تخطي</string>
+    <string name="activity_settings_conversations_button_title">محادثات</string>
+    <string name="activity_settings_message_appearance_button_title">مظهر</string>
+    <string name="activity_settings_help_button">مساعدة</string>
+    <string name="activity_appearance_themes_category">تصميمات المظهر</string>
+    <string name="ocean_dark_theme_name">محيطي مظلم</string>
+    <string name="classic_dark_theme_name">عَتِيق مظلم</string>
+    <string name="ocean_light_theme_name">محيطي مضيء</string>
+    <string name="classic_light_theme_name">عتيق مظلم</string>
+    <string name="activity_appearance_primary_color_category">اللون الأساسي</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__this_message">هذه الرسالة</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__recently_used">مستخدمة حديثًا</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__smileys_and_people">ابتسامات&amp; واشخاص</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__nature" comment="Heading for an emoji list's category">حيوانات &amp; و طبيعة</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__food" comment="Heading for an emoji list's category">مأكولات &amp; و مشروبات</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__activities">نشاطات</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__places" comment="Heading for an emoji list's category">سفر &amp; و أماكن</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__objects">أجسام</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__symbols">رموز</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__flags">أعلام</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__emoticons">رموز المشاعر</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__no_results_found">لم يتم العثور على أي نتيجة</string>
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <string name="ReactionsBottomSheetDialogFragment_all">جميع &#183; %1$d</string>
+    <!-- ReactionsConversationView -->
+    <string name="ReactionsConversationView_plus">+ %1$d</string>
+    <!-- ReactionsRecipientAdapter -->
+    <string name="ReactionsRecipientAdapter_you">أنت</string>
+    <string name="reaction_notification">%1$s تفاعل مع رسالة %2$s</string>
+    <string name="ReactionsConversationView_show_less">اعرض أقلّ</string>
+    <string name="KeyboardPagerFragment_search_emoji">ابحث عن إيموجي</string>
+    <string name="KeyboardPagerfragment_back_to_emoji">العودة إلى الإيموجي</string>
+    <string name="KeyboardPagerfragment_clear_search_entry">محو إدخال البحث</string>
+    <string name="activity_appearance_follow_system_category">الوضع المظلم تلقائياً</string>
+    <string name="activity_appearance_follow_system_explanation">طابق إعدادات النظام</string>
+    <string name="go_to_device_notification_settings">اذهب إلى إعدادات تنبيهات الجهاز</string>
+    <string name="blocked_contacts_title">جهات الاتصال المحظورة</string>
+    <string name="blocked_contacts_empty_state">لا يوجد اي جهات اتصال محجوبة</string>
+    <string name="Unblock_dialog__title_single">ارفع الحَظر عن %s</string>
+    <string name="Unblock_dialog__title_multiple">ارفع الحظر عن المستخدمين</string>
+    <string name="Unblock_dialog__message">هل أنت متأكد من رفع الحظر عن %s؟</string>
+    <string name="dialog_new_conversation_title">مراسلة جديدة</string>
+    <string name="dialog_new_message_title">رسالة جديدة</string>
+    <string name="activity_create_group_title">أنشء مجموعة</string>
+    <string name="dialog_join_community_title">انضم إلى مجتمع</string>
+    <string name="new_conversation_contacts_title">جهات الاتصال</string>
+    <string name="new_conversation_unknown_contacts_section_title">غير معروف</string>
+    <string name="fragment_enter_public_key_prompt">ابدأ مراسلة جديدة بإدخال معرف جِلسة شخص ما أو مشاركة معرفك معهم.</string>
+    <string name="activity_create_group_create_button_title">أنشئ</string>
+    <string name="search_contacts_hint">ابحث في جهات الاتصال</string>
+    <string name="activity_join_public_chat_enter_community_url_tab_title">رابط المجتمع</string>
+    <string name="fragment_enter_community_url_edit_text_hint">أدخل رابط المجتمع</string>
+    <string name="fragment_enter_community_url_join_button_title">إنضم</string>
+    <string name="new_conversation_dialog_back_button_content_description">التنقل إلى الوراء</string>
+    <string name="new_conversation_dialog_close_button_content_description">أغلق مربع الحوار</string>
+    <string name="ErrorNotifier_migration">فشل ترقية قاعدة البيانات</string>
+    <string name="ErrorNotifier_migration_downgrade">تواصل مع الدعم رجاء, للتبليغ عن خطأ.</string>
+    <string name="delivery_status_sending">إرسال</string>
+    <string name="delivery_status_read">قراءة</string>
+    <string name="delivery_status_sent">تم الإرسال</string>
+    <string name="delivery_status_failed">فشل الإرسال</string>
 </resources>

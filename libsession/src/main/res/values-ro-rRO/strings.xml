@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">Ați părăsit grupul.</string>
+    <string name="MessageRecord_you_created_a_new_group">Ați creat un grup nou.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s v-a adăugat in grup.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">Ați redenumit grupul în %1$s</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s a redenumit grupul în: %2$s</string>
+    <string name="MessageRecord_you_added_s_to_the_group">Ați adăugat pe %1$s in grup.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s a adăugat pe %2$s in grup.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">L-ați eliminat pe %1$s din grup.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s a eliminat pe %2$s din grup.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">Ați fost eliminat din grup.</string>
+    <string name="MessageRecord_you">Dvs.</string>
+    <string name="MessageRecord_s_called_you">%s v-a apelat</string>
+    <string name="MessageRecord_called_s">Ați apelat pe %s</string>
+    <string name="MessageRecord_missed_call_from">Apel pierdut de la %s</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">Ați dezactivat dispariția mesajelor.</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">%1$s a dezactivat dispariția mesajelor.</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">Ați setat timpul pentru dispariția mesajelor la %1$s</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s a setat timpul pentru dispariția mesajelor la %2$s</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$s a făcut o captură de ecran.</string>
+    <string name="MessageRecord_media_saved_by_s">Conținut media salvat de %1$s.</string>
+    <!-- expiration -->
+    <string name="expiration_off">Oprit</string>
+    <plurals name="expiration_seconds">
+        <item quantity="one">%d secundă</item>
+        <item quantity="few">%d secunde</item>
+        <item quantity="other">%d secunde</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%ds</string>
+    <plurals name="expiration_minutes">
+        <item quantity="one">%d minut</item>
+        <item quantity="few">%d minute</item>
+        <item quantity="other">%d minute</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">%dm</string>
+    <plurals name="expiration_hours">
+        <item quantity="one">%d oră</item>
+        <item quantity="few">%d ore</item>
+        <item quantity="other">%d ore</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">%d ore</string>
+    <plurals name="expiration_days">
+        <item quantity="one">%d zi</item>
+        <item quantity="few">%d zile</item>
+        <item quantity="other">%d zile</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">%d zile</string>
+    <plurals name="expiration_weeks">
+        <item quantity="one">%d săptămână</item>
+        <item quantity="few">%d săptămâni</item>
+        <item quantity="other">%d săptămâni</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">%dsăpt.</string>
+    <string name="ConversationItem_group_action_left">%1$s a părăsit grupul.</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">Grup fără nume</string>
+</resources>

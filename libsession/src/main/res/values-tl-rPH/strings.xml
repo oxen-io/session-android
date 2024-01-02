@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">Umalis ka na sa grupo.</string>
+    <string name="MessageRecord_you_created_a_new_group">Lumikha ka ng bagong grupo.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">Isinali ka ni %1$s sa grupo.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">Pinalitan mo ang pangalan ng grupo sa %1$s</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">Pinalitan ni %1$s ang pangalan ng grupo sa: %2$s</string>
+    <string name="MessageRecord_you_added_s_to_the_group">Idinagdag mo sa grupo si %1$s.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">Idinagdag ni %1$s si %2$s sa grupo.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">Tinanggal mo si %1$s mula sa grupo.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">Tinanggal ni %1$s si %2$s mula sa grupo.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">Tinanggal ka mula sa grupo.</string>
+    <string name="MessageRecord_you">Ikaw/Mo</string>
+    <string name="MessageRecord_s_called_you">Tiniwagan ka ni %s</string>
+    <string name="MessageRecord_called_s">Tumawag kay %s</string>
+    <string name="MessageRecord_missed_call_from">Hindi nasagot na tawag mula kay %s</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">Na-disable ang mga nawawalang mensahe.</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">Na-disable ni %1$s ang mga nawawalang mensahe.</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">Na-set mo ang timer ng nawawawalang mensahe sa %1$s</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">Na-set ni %1$s ang timer ng nawawalang mensahe sa %2$s</string>
+    <string name="MessageRecord_s_took_a_screenshot">Nag-screenshot si %1$s.</string>
+    <string name="MessageRecord_media_saved_by_s">Na-save ni %1$s ang media.</string>
+    <!-- expiration -->
+    <string name="expiration_off">I-off</string>
+    <string name="expiration_seconds_abbreviated">%dsegundo</string>
+    <string name="expiration_minutes_abbreviated">%dminuto</string>
+    <string name="expiration_hours_abbreviated">%doras</string>
+    <string name="expiration_days_abbreviated">%daraw</string>
+    <string name="expiration_weeks_abbreviated">%dlinggo</string>
+    <string name="ConversationItem_group_action_left">Umalis sa grupo si %1$s.</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">Walang pangalang grupo</string>
+</resources>

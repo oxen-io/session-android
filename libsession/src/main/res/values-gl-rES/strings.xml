@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">Abandonaches o grupo.</string>
+    <string name="MessageRecord_you_created_a_new_group">Creaches un novo grupo.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s añadiuche a un grupo.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">Renombrou o nome do grupo a %1$s</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s renombrou o grupo a %2$s</string>
+    <string name="MessageRecord_you_added_s_to_the_group">Añadiches a %1$s ao grupo.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s añadiu a %2$s ao grupo.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">Eliminastes a %1$s do grupo.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s eliminou a %2$s do grupo.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">Fuches eliminado do grupo.</string>
+    <string name="MessageRecord_you">Ti</string>
+    <string name="MessageRecord_s_called_you">%s chamouche</string>
+    <string name="MessageRecord_called_s">Chamaches a %s</string>
+    <string name="MessageRecord_missed_call_from">Chamada perdida de %s</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">Desactivaches a desaparición de mensaxes.</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">%1$s desactivou a desaparición de mensaxes.</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">Estableciches o temporizador de desaparición das mensaxes a %1$s</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s estableceu o temporizador da desaparición de mensaxes a %2$s</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$s fixo unha captura de pantalla.</string>
+    <string name="MessageRecord_media_saved_by_s">%1$s gardou o arquivo.</string>
+    <!-- expiration -->
+    <string name="expiration_off">Apagado</string>
+    <string name="expiration_seconds_abbreviated">%ds</string>
+    <string name="expiration_minutes_abbreviated">%dm</string>
+    <string name="expiration_hours_abbreviated">%dh</string>
+    <string name="expiration_days_abbreviated">%dd</string>
+    <string name="expiration_weeks_abbreviated">%dsem.</string>
+    <string name="ConversationItem_group_action_left">%1$s abandonou o grupo.</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">Grupo sen nome</string>
+</resources>

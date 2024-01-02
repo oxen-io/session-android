@@ -4,6 +4,31 @@
     <string name="no">မလုပ်ပါ</string>
     <string name="delete">ဖျက်ပါ</string>
     <string name="save">သိမ်းသည် </string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">စာအသစ်</string>
     <!-- AlbumThumbnailView -->
@@ -276,9 +301,6 @@
     <string name="arrays__settings_default">အပြင်အဆင်များကို မူလသို့</string>
     <string name="arrays__enabled">လုပ်ဆောင်နိုင်သည်</string>
     <string name="arrays__disabled">မလုပ်ဆောင်နိုင်ပါ</string>
-    <string name="arrays__name_and_message">အမည်နှင့် စာ</string>
-    <string name="arrays__name_only">အမည်တစ်ခုတည်းသာ</string>
-    <string name="arrays__no_name_or_message">အမည် သို့မဟုတ် စာ မရှိ</string>
     <string name="arrays__images">ပုံများ</string>
     <string name="arrays__audio">အသံ</string>
     <string name="arrays__video">ဗီဒီယို</string>
@@ -292,7 +314,6 @@
     <string name="arrays__max">အများဆုံး</string>
     <!-- plurals.xml -->
     <!-- preferences.xml -->
-    <string name="preferences__pref_enter_sends_title">ထည့်ထားတဲ့ ကီးပို့ပါ</string>
     <string name="preferences__screen_security">အဖွင့်စာမျက်နှာ လုံခြုံရေး</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">မကြာသေးမီ စာရင်းနှင့် app အတွင်း Screenshot များကို တားမြစ်ပါ</string>
     <string name="preferences__notifications">အသိပေးချက်များ</string>
@@ -327,7 +348,6 @@
     <string name="preferences__scan_through_all_conversations_and_enforce_conversation_length_limits">စကားဝိုင်းများအားလုံးကို သေချာကြည့်ပြီး စကားဝိုင်း၏ အရှည်ကန့်သတ်ချက်ကို အတည်ပြုပါ</string>
     <string name="preferences__default">မူလ</string>
     <string name="preferences__incognito_keyboard">နောက်ယောင်ခံမှု မရှိသည့် ကီးဘုတ်</string>
-    <string name="preferences__read_receipts">ဖတ်ပြီးပြီ</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">မိမိ၏လုပ်ဆောင်ချက်ပေါ်မူတည်၍ မှတ်သားထားမှုကို မလုပ်ဆောင်ရန် ကီးဘုတ်ကို တောင်းဆိုပါ</string>
     <string name="preferences__light_theme">အလင်း</string>
     <string name="preferences__dark_theme">အမှောင်</string>
@@ -399,11 +419,12 @@
     <string name="LocalBackupJob_creating_backup">အရံသိမ်းဆည်းမှုများ ဖန်တီးနေပါသည်...</string>
     <string name="ProgressPreference_d_messages_so_far">လက်ရှိအချိန်အထိ %d စာ ရှိပါသည်</string>
     <string name="BackupUtil_never">ဘယ်တော့မှ</string>
-    <string name="preferences_app_protection__screen_lock">မျက်နှာပြင် ပိတ်ထားခြင်း</string>
-    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Session ကို မဝင်ရောက်နိုင်ရန် ဖုန်းမျက်နှာပြင်ကို ပိတ်ချသည့် စနစ်/ Screen Lock သို့မဟုတ် လက်ဗွေရာစနစ်ဖြင့် လုပ်ဆောင်ပါ</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">မျက်နှာပြင်ကို ထိတွေ့မှုမရှိသောကြောင့် ပိတ်ရန်အချိန်စေ့ပါပြီ</string>
     <string name="AppProtectionPreferenceFragment_none">မည်သည့်အရာမှ မဟုတ်သော</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <!-- Next round of translation -->
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
 </resources>

@@ -1,95 +1,719 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="yes">ဟုတ်ကဲ့</string>
+    <string name="no">မဟုတ်ပါ</string>
+    <string name="delete">ဖျက်ရန်</string>
+    <string name="ban">ပိတ်ပင်ရန်</string>
+    <string name="please_wait">ကျေးဇူးပြု၍ ခဏစောင့်ပါ…</string>
+    <string name="save">သိမ်းရန်</string>
+    <string name="note_to_self">မိမိအတွက် မှတ်စု</string>
+    <string name="version_s">ဗားရှင်း %s</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
+    <string name="AbstractNotificationBuilder_new_message">မက်ဆေ့ခ်ျ အသစ်</string>
     <!-- AlbumThumbnailView -->
+    <string name="AlbumThumbnailView_plus">\+%d</string>
     <!-- ApplicationPreferencesActivity -->
+    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
+        <item quantity="other">စကားဝိုင်းတစ်ခုလျှင် မက်ဆေ့ဂျ် %d စောင်</item>
+    </plurals>
+    <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">မက်ဆေ့ဂျ်ဟောင်းအားလုံးကို ယခု ဖျက်မည်လား။</string>
+    <plurals name="ApplicationPreferencesActivity_this_will_immediately_trim_all_conversations_to_the_d_most_recent_messages">
+        <item quantity="other">၎င်းက စကားဝိုင်းအားလုံးကို နောက်ဆုံးပြောထားသော မက်ဆေ့ဂျ် %d စောင်အထိ ချက်ချင်း ဖြတ်တောက်ပစ်ပါမည်</item>
+    </plurals>
+    <string name="ApplicationPreferencesActivity_delete">ဖျက်မည်</string>
+    <string name="ApplicationPreferencesActivity_On">ဖွင့်</string>
+    <string name="ApplicationPreferencesActivity_Off">ပိတ်</string>
     <!-- DraftDatabase -->
+    <string name="DraftDatabase_Draft_image_snippet">(ရုပ်ပုံ)</string>
+    <string name="DraftDatabase_Draft_audio_snippet">(အသံ)</string>
+    <string name="DraftDatabase_Draft_video_snippet">(ဗီဒီယို)</string>
+    <string name="DraftDatabase_Draft_quote_snippet">(ပြန်စာ)</string>
     <!-- AttachmentManager -->
+    <string name="AttachmentManager_cant_open_media_selection">မီဒီယာ ရွေးရန် အက်ပ် ရှာမတွေ့ပါ။</string>
+    <string name="AttachmentManager_signal_requires_the_external_storage_permission_in_order_to_attach_photos_videos_or_audio">Session သည် ဓာတ်ပုံများ၊ ဗီဒီယိုများ သို့မဟုတ် အသံ တွဲချိတ်ရန်အတွက် သိုလှောင်ခန်း ခွင့်ပြုချက် လိုအပ်သော်လည်း ၎င်းကို အမြဲတမ်းအတွက် ငြင်းပယ်ထားပါသည်။ ကျေးဇူးပြု၍ အက်ပ် ဆက်တင် မီနူးသို့ ဆက်သွားပါ၊ \"ခွင့်ပြုချက်များ\" ကို ရွေးပြီးနောက် \"သိုလှောင်ခန်း\" ကို ဖွင့်ပါ။</string>
+    <string name="AttachmentManager_signal_requires_the_camera_permission_in_order_to_take_photos_but_it_has_been_permanently_denied">Session သည် ဓာတ်ပုံရိုက်ရန်အတွက် ကင်မရာ ခွင့်ပြုချက် လိုအပ်သော်လည်း ၎င်းကို အမြဲတမ်းအတွက် ငြင်းပယ်ထားပါသည်။ ကျေးဇူးပြု၍ အက်ပ် ဆက်တင် မီနူးသို့ ဆက်သွားပါ၊ \"ခွင့်ပြုချက်များ\" ကို ရွေးပြီးနောက် \"ကင်မရာ\" ကို ဖွင့်ပါ။</string>
     <!-- AudioSlidePlayer -->
+    <string name="AudioSlidePlayer_error_playing_audio">အသံ ဖွင့်မရပါ။</string>
     <!-- BucketedThreadMedia -->
+    <string name="BucketedThreadMedia_Today">ဒီနေ့</string>
+    <string name="BucketedThreadMedia_Yesterday">မနေ့က</string>
+    <string name="BucketedThreadMedia_This_week">ဒီတစ်ပတ်</string>
+    <string name="BucketedThreadMedia_This_month">ဒီလ</string>
     <!-- CommunicationActions -->
+    <string name="CommunicationActions_no_browser_found">ဝက်ဘ်ဘရောက်ဇာ ရှာမတွေ့ပါ။</string>
     <!-- ContactsCursorLoader -->
+    <string name="ContactsCursorLoader_groups">အုပ်စုများ</string>
     <!-- ConversationItem -->
+    <string name="ConversationItem_error_not_delivered">ပေးပို့ မရပါ၊ အသေးစိတ်များကို ကြည့်ရန် နှိပ်ပါ</string>
+    <string name="ConversationItem_received_key_exchange_message_tap_to_process">သော့ လဲလှယ်သည့် မက်ဆေ့ဂျ်ကို လက်ခံရရှိသည်၊ စီမံဆောင်ရွက်ရန် နှိပ်ပါ။</string>
+    <string name="ConversationItem_click_to_approve_unencrypted">ပေးပို့ မရပါ၊ လုံခြုံမှုမရှိသော အရန်ရွေးချယ်မှုအတွက် နှိပ်ပါ</string>
+    <string name="ConversationItem_unable_to_open_media">ဤမီဒီယာကို ‌ဖွင့်နိုင်သည့် အက်ပ်ကို ရှာမတွေ့ပါ။</string>
+    <string name="ConversationItem_copied_text">%s ကို ကူးယူပြီးပါပြီ</string>
+    <string name="ConversationItem_read_more">ပိုမို ဖတ်ရှုရန်</string>
+    <string name="ConversationItem_download_more">&#160; နောက်ထပ် ဒေါင်းလုဒ်လုပ်ရန်</string>
+    <string name="ConversationItem_pending">&#160; ဆိုင်းငံ့ထားသည်</string>
     <!-- ConversationActivity -->
+    <string name="ConversationActivity_add_attachment">တွဲချိတ်မှု ထည့်မည်</string>
+    <string name="ConversationActivity_select_contact_info">ဆက်သွယ်ရန် အချက်အလက် ရွေးမည်</string>
+    <string name="ConversationActivity_sorry_there_was_an_error_setting_your_attachment">ဝမ်းနည်းပါသည်၊ သင့်တွဲချိတ်မှုကို သတ်မှတ်၍မရပါ။</string>
+    <string name="ConversationActivity_message">မက်ဆေ့ဂျ်</string>
+    <string name="ConversationActivity_compose">စာရေးမည်</string>
+    <string name="ConversationActivity_muted_until_date">%1$s အထိ အသံပိတ်ထားသည်</string>
+    <string name="ConversationActivity_muted_forever">အသံပိတ်ထားသည်</string>
+    <string name="ConversationActivity_member_count">အဖွဲ့ဝင် %1$d ဦး</string>
+    <string name="ConversationActivity_active_member_count">အသုံးပြုဆဲ အဖွဲ့ဝင် %1$d ဦး</string>
+    <string name="ConversationActivity_open_group_guidelines">ကွန်မြူနတီ လမ်းညွှန်ချက်များ</string>
+    <string name="ConversationActivity_invalid_recipient">မှားနေသော လက်ခံရရှိသူ</string>
+    <string name="ConversationActivity_added_to_home_screen">ဟုမ်းစကရင်ထဲသို့ ထည့်လိုက်ပါပြီ</string>
+    <string name="ConversationActivity_leave_group">အဖွဲ့မှ ထွက်ခွာမည်လား။</string>
+    <string name="ConversationActivity_are_you_sure_you_want_to_leave_this_group">သင် ဤအဖွဲ့မှ ထွက်ခွာလိုသည်မှာ သေချာပါသလား။</string>
+    <string name="ConversationActivity_error_leaving_group">အဖွဲ့မှ ထွက်ခွာရာတွင် အမှားအယွင်းဖြစ်နေပါသည်</string>
+    <string name="ConversationActivity_unblock_this_contact_question">ဤအဆက်အသွယ်အား ဘလော့ပြန်ဖြေမည်လား။</string>
+    <string name="ConversationActivity_you_will_once_again_be_able_to_receive_messages_and_calls_from_this_contact">သင်သည် ဤအဆက်အသွယ်ထံမှ မက်ဆေ့ခ်ျများနှင့်ဖုန်းခေါ်ဆိုမှုများကို ပြန်လည်လက်ခံရရှိနိုင်လိမ့်မည် ။</string>
+    <string name="ConversationActivity_unblock">ဘလော့ဖြေမည်</string>
+    <string name="ConversationActivity_attachment_exceeds_size_limits">ပူးတွဲပါဖိုင်သည် သင်ပို့နေသည့် မက်ဆေ့ချ်အမျိုးအစားအတွက် အရွယ်အစားကန့်သတ်ချက်ထက် ကျော်လွန်နေပါသည်။</string>
+    <string name="ConversationActivity_unable_to_record_audio">အသံကို သွင်းမရပါ။</string>
+    <string name="ConversationActivity_there_is_no_app_available_to_handle_this_link_on_your_device">သင့်စက်ထဲတွင် ဤလင့်ခ်ကို ဖွင့်ရန် အက်ပလီကေးရှင်းမရှိပါ ။</string>
+    <string name="ConversationActivity_invite_to_open_group">အဖွဲ့ဝင်များ ထည့်ပါ</string>
+    <string name="ConversationActivity_to_send_audio_messages_allow_signal_access_to_your_microphone">အသံမက်ဆေ့ချ်များ ပေးပို့နိုင်ရန် ဆက်ရှင်နေရာတွင် မိုက်ခရိုဖုန်းသုံးစွဲခွင့် လိုအပ်ပါသည်။</string>
+    <string name="ConversationActivity_signal_requires_the_microphone_permission_in_order_to_send_audio_messages">အသံမက်ဆေ့ချ်များ ပေးပို့ရန် ဆက်ရှင်နေရာတွင် မိုက်ခရိုဖုန်းသုံးစွဲခွင့် လိုအပ်သော်လည်း ၎င်းကိုဘယ်တော့မှ မသုံးစွဲပါဟု ပြုလုပ်ထားပါသည်။ အက်ပ်ဆက်တင်များတွင် \"ခွင့်ပြုချက်များ\" ကိုရွေးချယ်ပြီး \"မိုက်ခရိုဖုန်း\" ကိုဖွင့်ပါ ။</string>
+    <string name="ConversationActivity_to_capture_photos_and_video_allow_signal_access_to_the_camera">ဓါတ်ပုံများနှင့် ဗီဒီယိုများ ရိုက်ရန်အတွက် ဆက်ရှင်နေရာတွင် ကင်မရာသုံးစွဲခွင့် လိုအပ်ပါသည်။</string>
+    <string name="ConversationActivity_to_send_photos_and_video_allow_signal_access_to_storage">ဓါတ်ပုံများနှင့် ဗီဒီယိုများ ပို့ရန်အတွက် ဆက်ရှင်နေရာတွင် သိမ်းဆည်းနေရာသုံးစွဲခွင့် လိုအပ်ပါသည်။</string>
+    <string name="ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video">ဓါတ်ပုံများနှင့် ဗီဒီယိုများ ရိုက်ရန်အတွက် ဆက်ရှင်နေရာတွင် ကင်မရာသုံးစွဲခွင့် လိုအပ်သော်လည်း ၎င်းကိုဘယ်တော့မှ မသုံးစွဲပါဟု ပြုလုပ်ထားပါသည်။ အက်ပ်ဆက်တင်များတွင် \"ခွင့်ပြုချက်များ\" ကိုရွေးချယ်ပြီး \"ကင်မရာ\" ကိုဖွင့်ပါ ။</string>
+    <string name="ConversationActivity_signal_needs_camera_permissions_to_take_photos_or_video">ဓါတ်ပုံများနှင့် ဗီဒီယိုများ ရိုက်ရန်အတွက် ဆက်ရှင်နေရာတွင် ကင်မရာသုံးစွဲခွင့် လိုအပ်ပါသည်။</string>
+    <string name="ConversationActivity_search_position">%2$d ၏ %1$d</string>
+    <string name="ConversationActivity_call_title">ဖုန်းခေါ်ဆိုရန် ခွင့်ပြုချက်များ လိုအပ်သည်</string>
+    <string name="ConversationActivity_call_prompt">ကိုယ်ရေးကိုယ်တာဆက်တင်တွင် \'အသံ နှင့် ဗီဒီယိုခေါ်ဆိုမှုများအတွက် ခွင့်ပြုချက်ကို ပေးထားနိုင်ပါသည်။</string>
     <!-- ConversationFragment -->
+    <plurals name="ConversationFragment_delete_selected_messages">
+        <item quantity="other">ရွေးထားသော မက်ဆေ့ချ်များကို ဖျက်လိုပါသလား ။</item>
+    </plurals>
+    <plurals name="ConversationFragment_this_will_permanently_delete_all_n_selected_messages">
+        <item quantity="other">၎င်းသည် ရွေးချယ်ထားသော မက်ဆေ့ချ်အားလုံး %1$d ကို အပြီးအပိုင် ဖျက်လိုက်ပါမည်။</item>
+    </plurals>
+    <string name="ConversationFragment_ban_selected_user">ဤသုံးစွဲသူကို ပိတ်ပင်ထားလိုပါသလား။</string>
+    <string name="ConversationFragment_save_to_sd_card">သိုလှောင်နေရာတွင် သိမ်းဆည်းလိုပါသလား။</string>
+    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
+        <item quantity="other">မီဒီယာ %1$d အားလုံးကို သိုလှောင်နေရာတွင် သိမ်းဆည်းခြင်းသည် သင့်စက်ရှိ အခြားအက်ပ်များကို ၎င်းထဲသို့ ဝင်ရောက်ခွင့်ပြုပါမည် ။\ n\n ဆက်လက်လုပ်ဆောင်ပါသလား။</item>
+    </plurals>
+    <plurals name="ConversationFragment_error_while_saving_attachments_to_sd_card">
+        <item quantity="other">ပူးတွဲပါဖိုင်များကို သိုလှောင်နေရာတွင် သိမ်းဆည်းနေစဉ် အမှားအယွင်းရှိနေသည်။</item>
+    </plurals>
+    <plurals name="ConversationFragment_saving_n_attachments">
+        <item quantity="other">%1$d ပူးတွဲပါဖိုင်များကို သိမ်းဆည်းနေပါသည်။</item>
+    </plurals>
+    <plurals name="ConversationFragment_saving_n_attachments_to_sd_card">
+        <item quantity="other">%1$d ပူးတွဲပါဖိုင်များကို သိုလှောင်နေရာတွင် သိမ်းဆည်းနေပါသည်…</item>
+    </plurals>
     <!-- CreateProfileActivity -->
+    <string name="CreateProfileActivity_profile_photo">ပရိုဖိုင် ဓါတ်ပုံ</string>
     <!-- CustomDefaultPreference -->
+    <string name="CustomDefaultPreference_using_custom">စိတ်ကြိုက်အသုံးပြုနေခြင်း- %s</string>
+    <string name="CustomDefaultPreference_using_default">မူရင်းအတိုင်းအသုံးပြုခြင်း- %s</string>
+    <string name="CustomDefaultPreference_none">မရှိပါ</string>
     <!-- DateUtils -->
+    <string name="DateUtils_just_now">ယခု</string>
+    <string name="DateUtils_minutes_ago">%d မိနစ်</string>
+    <string name="DateUtils_today">ယနေ့</string>
+    <string name="DateUtils_yesterday">မနေ့က</string>
     <!-- DeviceListItem -->
+    <string name="DeviceListItem_today">ယနေ့</string>
     <!-- DocumentView -->
+    <string name="DocumentView_unknown_file">အမျိုးအမည်မသိ ဖိုင်</string>
     <!-- GiphyActivity -->
+    <string name="GiphyActivity_error_while_retrieving_full_resolution_gif">GIF ကို resolution အပြည့်အဝဖြင့် ယူနေစဉ် အမှားအယွင်းရှိနေသည်။</string>
     <!-- GiphyFragmentPageAdapter -->
+    <string name="GiphyFragmentPagerAdapter_gifs">GIF များ</string>
+    <string name="GiphyFragmentPagerAdapter_stickers">စတစ်ကာများ</string>
     <!-- CropImageActivity -->
+    <string name="CropImageActivity_profile_avatar">ဓါတ်ပုံ</string>
     <!-- InputPanel -->
+    <string name="InputPanel_tap_and_hold_to_record_a_voice_message_release_to_send">နှိပ်ထားပြီး အသံမက်ဆေ့ချ်ကို သွင်းပြီးနောက် ပို့ရန်အတွက် လွှတ်လိုက်ပါ။</string>
     <!-- LongMessageActivity -->
+    <string name="LongMessageActivity_unable_to_find_message">မက်ဆေ့ချ်ကို ရှာမတွေ့ပါ</string>
+    <string name="LongMessageActivity_message_from_s">%1$s ထံမှ မက်ဆေ့ချ်</string>
+    <string name="LongMessageActivity_your_message">သင့်မက်ဆေ့ချ်</string>
     <!-- MediaOverviewActivity -->
+    <string name="MediaOverviewActivity_Media">မီဒီယာ</string>
+    <plurals name="MediaOverviewActivity_Media_delete_confirm_title">
+        <item quantity="other">ရွေးထားသော မက်ဆေ့ချ်များကို ဖျက်လိုပါသလား။</item>
+    </plurals>
+    <plurals name="MediaOverviewActivity_Media_delete_confirm_message">
+        <item quantity="other">၎င်းသည် ရွေးချယ်ထားသော မက်ဆေ့ချ်အားလုံး %1$d ကို အပြီးအပိုင် ဖျက်လိုက်ပါမည်။</item>
+    </plurals>
+    <string name="MediaOverviewActivity_Media_delete_progress_title">ဖျက်နေပါသည်</string>
+    <string name="MediaOverviewActivity_Media_delete_progress_message">မက်ဆေ့ချ်များကို ဖျက်နေပါသည်...</string>
+    <string name="MediaOverviewActivity_Documents">စာရွက်စာတမ်းများ</string>
+    <string name="MediaOverviewActivity_Select_all">အားလုံးကို ရွေးပါ</string>
+    <string name="MediaOverviewActivity_collecting_attachments">ပူးတွဲပါဖိုင်များကို စုဆောင်းနေပါသည်...</string>
     <!-- NotificationMmsMessageRecord -->
+    <string name="NotificationMmsMessageRecord_multimedia_message">မာလ်တီမီဒီယာ မက်ဆေ့ချ်</string>
+    <string name="NotificationMmsMessageRecord_downloading_mms_message">MMS မက်ဆေ့ချ်ကို ဒေါင်းလုဒ်လုပ်နေပါသည်</string>
+    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">MMS မက်ဆေ့ချ်ကို ဒေါင်းလုဒ်လုပ်ရာတွင် အမှားအယွင်းဖြစ်နေပါသည်၊ ထပ်မံကြိုးစားရန် နှိပ်ပါ</string>
     <!-- MediaPickerActivity -->
+    <string name="MediaPickerActivity_send_to">%s ထံသို့ ပို့ပါ</string>
     <!-- MediaSendActivity -->
+    <string name="MediaSendActivity_add_a_caption">ခေါင်းစဉ်တစ်ခု ထည့်ပါ...</string>
+    <string name="MediaSendActivity_an_item_was_removed_because_it_exceeded_the_size_limit">အရွယ်အစားကန့်သတ်ချက်ထက်ကျော်လွန်သွားသောကြောင့် ပစ္စည်းတစ်ခု ဖယ်ရှားခံလိုက်ရသည်။</string>
+    <string name="MediaSendActivity_camera_unavailable">ကင်မရာ မရရှိနိုင်ပါ။</string>
+    <string name="MediaSendActivity_message_to_s">%s သို့ စာပို့ပါ</string>
+    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
+        <item quantity="other">%d ပစ္စည်းများထက် ပို၍ ဝေမျှမရပါ။</item>
+    </plurals>
     <!-- MediaRepository -->
+    <string name="MediaRepository_all_media">မီဒီယာအားလုံး</string>
     <!-- MessageRecord -->
+    <string name="MessageRecord_message_encrypted_with_a_legacy_protocol_version_that_is_no_longer_supported">ပံ့ပိုးပေးထားမှု မရှိတော့သော ဆက်ရှင်အဟောင်းဗားရှင်းကို အသုံးပြု၍ encrypt လုပ်ထားသော မက်ဆေ့ချ်ကို လက်ခံရရှိပါသည်။ ကျေးဇူးပြု၍ ပေးပို့သူအား နောက်ဆုံးဗားရှင်းကို အပ်ဒိတ်လုပ်ပြီး မက်ဆေ့ချ်ကို ပြန်ပို့ရန် တောင်းဆိုပါ။</string>
+    <string name="MessageRecord_left_group">သင်အဖွဲ့မှ ထွက်သွားပါပြီ။</string>
+    <string name="MessageRecord_you_updated_group">သင် အဖွဲ့ကို အပ်ဒိတ်လုပ်လိုက်ပါသည်။</string>
+    <string name="MessageRecord_s_updated_group">%s မှ အဖွဲ့ကို အပ်ဒိတ်လုပ်လိုက်ပါသည် ။</string>
     <!-- ExpirationDialog -->
+    <string name="ExpirationDialog_disappearing_messages">ပျောက်သွားမည့် မက်ဆေ့ချ်များ</string>
+    <string name="ExpirationDialog_your_messages_will_not_expire">သင်၏ မက်ဆေ့ချ်များမှာ သက်တမ်းကုန်သွားမည်မဟုတ်ပါ။</string>
+    <string name="ExpirationDialog_your_messages_will_disappear_s_after_they_have_been_seen">ဤစကားပြောဆိုမှုတွင် ပေးပို့ထားသော နှင့် လက်ခံရရှိသော မက်ဆေ့ချ်များသည်၎င်းတို့ကို တွေ့မြင်ပြီးနောက် %s တွင်ပျောက်ကွယ်သွားပါမည် ။</string>
     <!-- PassphrasePromptActivity -->
+    <string name="PassphrasePromptActivity_enter_passphrase">စကားဝှက်စာတန်းကို ထည့်ပါ</string>
     <!-- RecipientPreferencesActivity -->
+    <string name="RecipientPreferenceActivity_block_this_contact_question">ဤအဆက်အသွယ်အား ဘလော့ထားမည်လား။</string>
+    <string name="RecipientPreferenceActivity_you_will_no_longer_receive_messages_and_calls_from_this_contact">သင်သည် ဤအဆက်အသွယ်ထံမှ မက်ဆေ့ခ်ျများနှင့်ဖုန်းခေါ်ဆိုမှုများကို လက်ခံရရှိနိုင်မည်မဟုတ်ပါ။</string>
+    <string name="RecipientPreferenceActivity_block">ဘလော့ပါ</string>
+    <string name="RecipientPreferenceActivity_unblock_this_contact_question">ဤဆယ်သွယ်သူအား ဘလော့ပြန်ဖြေမည်လား။</string>
+    <string name="RecipientPreferenceActivity_you_will_once_again_be_able_to_receive_messages_and_calls_from_this_contact">သင်သည် ဤအဆက်အသွယ်ထံမှ မက်ဆေ့ခ်ျများနှင့်ဖုန်းခေါ်ဆိုမှုများကို ပြန်လည်လက်ခံရရှိနိုင်လိမ့်မည် ။</string>
+    <string name="RecipientPreferenceActivity_unblock">ဘလော့ဖြေမည်</string>
+    <string name="RecipientPreferenceActivity_notification_settings">အကြောင်းကြားစာ ဆက်တင်များ</string>
     <!-- Slide -->
+    <string name="Slide_image">ရုပ်ပုံ</string>
+    <string name="Slide_audio">အသံ</string>
+    <string name="Slide_video">ဗီဒီယို</string>
     <!-- SmsMessageRecord -->
+    <string name="SmsMessageRecord_received_corrupted_key_exchange_message">ပျက်စီးနေသော အဓိကအလဲအလှယ် မက်ဆေ့ချ်ကို လက်ခံရရှိခဲ့သည်။</string>
+    <string name="SmsMessageRecord_received_key_exchange_message_for_invalid_protocol_version">မမှန်ကန်သော ပရိုတိုကောဗားရှင်းအတွက် အဓိကအလဲအလှယ် မက်ဆေ့ချ်ကို လက်ခံရရှိခဲ့သည် ။</string>
+    <string name="SmsMessageRecord_received_message_with_new_safety_number_tap_to_process">လုံခြုံရေး နံပါတ်အသစ်ဖြင့် မက်ဆေ့ချ်ကို လက်ခံရရှိခဲ့သည် ။ လုပ်ဆောင်ပြီး ပြသရန် နှိပ်ပါ ။</string>
+    <string name="SmsMessageRecord_secure_session_reset">လုံခြုံသော ဆက်ရှင်အဖြစ် သင်ပြန်လည်သတ်မှတ်လိုက်ပါသည်။</string>
+    <string name="SmsMessageRecord_secure_session_reset_s">%s မှ လုံခြုံသော ဆက်ရှင်အဖြစ် ပြန်လည်သတ်မှတ်လိုက်ပါသည်။</string>
+    <string name="SmsMessageRecord_duplicate_message">မက်ဆေ့ချ်ကို မိတ္တူပွားပါ။</string>
     <!-- ThreadRecord -->
+    <string name="ThreadRecord_group_updated">အဖွဲ့ကို အပ်ဒိတ်လုပ်ထားသည်</string>
+    <string name="ThreadRecord_left_the_group">အဖွဲ့မှထွက်ခဲ့သည်</string>
+    <string name="ThreadRecord_secure_session_reset">လုံခြုံသော ဆက်ရှင်ကို ပြန်လည်သတ်မှတ်ပါ။</string>
+    <string name="ThreadRecord_draft">မူကြမ်း-</string>
+    <string name="ThreadRecord_called">သင် ခေါ်ဆိုခဲ့သည်</string>
+    <string name="ThreadRecord_called_you">သင်ကို ခေါ်ဆိုခဲ့သည်</string>
+    <string name="ThreadRecord_missed_call">လွတ်သွားသော ခေါ်ဆိုမှု</string>
+    <string name="ThreadRecord_media_message">မီဒီယာ မက်ဆေ့ချ်</string>
+    <string name="ThreadRecord_s_is_on_signal">%s မှာ ဆက်ရှင်တွင် ရှိနေပါသည်</string>
+    <string name="ThreadRecord_disappearing_messages_disabled">မက်ဆေ့ချ်များ ပျောက်သွားမည်ကို ပိတ်ထားသည်</string>
+    <string name="ThreadRecord_disappearing_message_time_updated_to_s">မက်ဆေ့ချ် ပျောက်သွားမည့်အချိန်ကို %s သို့သတ်မှတ်ထားသည်</string>
+    <string name="ThreadRecord_s_took_a_screenshot">%s က မျက်နှာပြင်ဓာတ်ပုံကို ရိုက်ယူခဲ့သည်။</string>
+    <string name="ThreadRecord_media_saved_by_s">မီဒီယာကို %s မှ ဆေ့ဖ်လုပ် သိမ်းဆည်းခဲ့သည်။</string>
+    <string name="ThreadRecord_safety_number_changed">လုံခြုံရေးနံပါတ်ပြောင်းထားသည်</string>
+    <string name="ThreadRecord_your_safety_number_with_s_has_changed">%s နှင့်အတူ သင့် လုံခြုံရေးနံပါတ် ပြောင်းလဲသွားပါသည်။</string>
+    <string name="ThreadRecord_you_marked_verified">သင်အတည်ပြုပြီးကြောင်း အမှတ်အသားပြုထားသည်</string>
+    <string name="ThreadRecord_you_marked_unverified">သင် အတည်မပြုရသေးကြောင်း အမှတ်အသားပြုထားသည်</string>
+    <string name="ThreadRecord_empty_message">ဤစကားပြောဆိုမှုတွင် ဘာမှ မရှိပါ</string>
+    <string name="ThreadRecord_open_group_invitation">အဖွဲ့ထဲ ဖိတ်ခေါ်ချက်ကို ဖွင့်ပါ</string>
     <!-- UpdateApkReadyListener -->
+    <string name="UpdateApkReadyListener_Signal_update">ဆက်ရှင် အသစ်ပြင်ဆင်မှု</string>
+    <string name="UpdateApkReadyListener_a_new_version_of_signal_is_available_tap_to_update">ဆက်ရှင်၏ အသစ်ဗားရှင် ရနေပါပြီ၊ အက်ဒိတ်လုပ်ရန် နှိပ်ပါ</string>
     <!-- MessageDisplayHelper -->
+    <string name="MessageDisplayHelper_bad_encrypted_message">မကောင်းသော encrypted လုပ်ထားသည့် မက်ဆေ့ချ်</string>
+    <string name="MessageDisplayHelper_message_encrypted_for_non_existing_session">မရှိသော ဆက်ရှင်အတွက် encrypted လုပ်ထားသော မက်ဆေ့ချ်</string>
     <!-- MmsMessageRecord -->
+    <string name="MmsMessageRecord_bad_encrypted_mms_message">မကောင်းသော encrypted လုပ်ထားသည့် MMS မက်ဆေ့ချ်</string>
+    <string name="MmsMessageRecord_mms_message_encrypted_for_non_existing_session">မရှိသော ဆက်ရှင်အတွက် encrypted လုပ်ထားသော MMS မက်ဆေ့ချ်</string>
     <!-- MuteDialog -->
+    <string name="MuteDialog_mute_notifications">အကြောင်းကြားစာများကို အသံပိတ်ထားပါ</string>
     <!-- KeyCachingService -->
+    <string name="KeyCachingService_signal_passphrase_cached">ဖွင့်ရန် ထိလိုက်ပါ။</string>
+    <string name="KeyCachingService_passphrase_cached">ဆက်ရှင်ကို ဖွင့်ထားပါသည်</string>
+    <string name="KeyCachingService_lock">ဆက်ရှင်ကို လော့ချထားပါ</string>
     <!-- MediaPreviewActivity -->
+    <string name="MediaPreviewActivity_you">သင်</string>
+    <string name="MediaPreviewActivity_unssuported_media_type">ပံ့ပိုးမပေးထားသော မီဒီယာအမျိုးအစား</string>
+    <string name="MediaPreviewActivity_draft">မူကြမ်း</string>
+    <string name="MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied">ပြင်ပသိုလှောင်နေရာတွင် သိမ်းဆည်းရန် ဆက်ရှင်နေရာတွင် သိုလှောင်သိမ်းဆည်းခွင့် လိုအပ်သော်လည်း ၎င်းကိုဘယ်တော့မှ မသုံးစွဲပါဟု ပြုလုပ်ထားပါသည်။ အက်ပ်ဆက်တင်များတွင် \"ခွင့်ပြုချက်များ\" ကိုရွေးချယ်ပြီး \"သိုလှောင်နေရာ\" ကိုဖွင့်ပါ ။</string>
+    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">ခွင့်ပြုချက်များ မရှိဘဲ ပြင်ပသိုလှောင်မှုတွင် သိမ်းဆည်း၍ မရနိုင်ပါ</string>
+    <string name="MediaPreviewActivity_media_delete_confirmation_title">မက်ဆေ့ချ်ကို ဖျက်လိုပါသလား။</string>
+    <string name="MediaPreviewActivity_media_delete_confirmation_message">၎င်းသည် မက်ဆေ့ချ်ကို အပြီးအပိုင်း ဖျက်လိုက်ပါမည်။</string>
     <!-- MessageNotifier -->
+    <string name="MessageNotifier_d_new_messages_in_d_conversations">%2$d စကားပြောဆိုမှုများတွင် %1$d မက်ဆေ့ချ်အသစ်များ</string>
+    <string name="MessageNotifier_most_recent_from_s">မကြာသေးမှီက ရထားမှု - %1$s</string>
+    <string name="MessageNotifier_locked_message">လော့ခ်ချထားသော မက်ဆေ့ချ်</string>
+    <string name="MessageNotifier_message_delivery_failed">မက်ဆေ့ချ်ပို့ခြင်း မအောင်မြင်ပါ။</string>
+    <string name="MessageNotifier_failed_to_deliver_message">မက်ဆေ့ချ် ပို့မရပါ။</string>
+    <string name="MessageNotifier_error_delivering_message">မက်ဆေ့ချ်ပို့ရာတွင် အမှားအယွင်းရှိပါသည်။</string>
+    <string name="MessageNotifier_mark_all_as_read">အားလုံးကို ဖတ်ပြီးပြီဟု မှတ်ပါ</string>
+    <string name="MessageNotifier_mark_read">ဖတ်ပြီးပြီ ဟု မှတ်ပါ</string>
+    <string name="MessageNotifier_reply">ပြန်လည်ဖြေကြားချက်</string>
+    <string name="MessageNotifier_pending_signal_messages">ဆိုင်းငံ့ထားသော ဆက်ရှင် မက်ဆေ့ချ်များ</string>
+    <string name="MessageNotifier_you_have_pending_signal_messages">သင်တွင် ဆိုင်းငံ့ထားသော ဆက်ရှင် မက်ဆေ့ဂျ်များ ရှိနေပါသည်၊ ဖွင့်ရန် နှိပ်ပြီး ရယူလိုက်ပါ</string>
+    <string name="MessageNotifier_unknown_contact_message">အဆက်အသွယ်</string>
     <!-- Notification Channels -->
+    <string name="NotificationChannel_messages">ပုံသေ</string>
+    <string name="NotificationChannel_calls">ခေါ်ဆိုမှုများ</string>
+    <string name="NotificationChannel_failures">ကျၡုံးမှုများ</string>
+    <string name="NotificationChannel_backups">အရံသိမ်းဆည်းထားမှုများ</string>
+    <string name="NotificationChannel_locked_status">လော့ခ်အခြေအနေ</string>
+    <string name="NotificationChannel_app_updates">အက်ပ် အပ်ဒိတ်များ</string>
+    <string name="NotificationChannel_other">အခြား</string>
+    <string name="NotificationChannel_group_messages">မက်ဆေ့ချ်များ</string>
+    <string name="NotificationChannel_missing_display_name">အမည်မသိ</string>
     <!-- QuickResponseService -->
+    <string name="QuickResponseService_quick_response_unavailable_when_Signal_is_locked">ဆက်ရှင်ကို လော့ခ်ချထားသောအခါ အမြန်တုံ့ပြန်မှု မရရှိနိုင်ပါ။</string>
+    <string name="QuickResponseService_problem_sending_message">မက်ဆေ့ချ်ပို့ရာတွင် ပြဿနာရှိပါသည်။</string>
     <!-- SaveAttachmentTask -->
+    <string name="SaveAttachmentTask_saved_to">%s သို့ သိမ်းဆည်းထားသည်</string>
+    <string name="SaveAttachmentTask_saved">သိမ်းဆည်းထားသည်</string>
     <!-- SearchToolbar -->
+    <string name="SearchToolbar_search">ရှာဖွေရန်</string>
     <!-- ShortcutLauncherActivity -->
+    <string name="ShortcutLauncherActivity_invalid_shortcut">shortcut မှားယွင်းနေပါသည်</string>
     <!-- SingleRecipientNotificationBuilder -->
+    <string name="SingleRecipientNotificationBuilder_signal">ဆက်ရှင်</string>
+    <string name="SingleRecipientNotificationBuilder_new_message">မက်ဆေ့ခ်ျ အသစ်</string>
     <!-- TransferControlView -->
+    <plurals name="TransferControlView_n_items">
+        <item quantity="other">%d ပစ္စည်းများ</item>
+    </plurals>
     <!-- VideoPlayer -->
+    <string name="VideoPlayer_error_playing_video">ဗီဒီယိုဖွင့်နေစဉ် အမှားအယွင်းရှိသည်။</string>
     <!-- attachment_type_selector -->
+    <string name="attachment_type_selector__audio">အသံ</string>
+    <string name="attachment_type_selector__audio_description">အသံ</string>
+    <string name="attachment_type_selector__contact">အဆက်အသွယ်</string>
+    <string name="attachment_type_selector__contact_description">အဆက်အသွယ်</string>
+    <string name="attachment_type_selector__camera">ကင်မရာ</string>
+    <string name="attachment_type_selector__camera_description">ကင်မရာ</string>
+    <string name="attachment_type_selector__location">တည်နေရာ</string>
+    <string name="attachment_type_selector__location_description">တည်နေရာ</string>
+    <string name="attachment_type_selector__gallery_description">ရုပ်ပုံ သို့မဟုတ် ဗီဒီယို</string>
+    <string name="attachment_type_selector__file_description">ဖိုင်</string>
+    <string name="attachment_type_selector__gallery">Gallery</string>
+    <string name="attachment_type_selector__file">ဖိုင်</string>
+    <string name="attachment_type_selector__drawer_description">ပူးတွဲပါဖိုင် အံဆွဲကို ဖွင့်ပိတ်ပါ</string>
     <!-- contact_selection_group_activity -->
+    <string name="contact_selection_group_activity__finding_contacts">အဆက်အသွယ်များကို ဖွင့်နေဆဲ&#8230;</string>
     <!-- conversation_activity -->
+    <string name="conversation_activity__send">ပို့ပါ</string>
+    <string name="conversation_activity__compose_description">မက်ဆေ့ချ် ဖွဲ့စည်းမှု</string>
+    <string name="conversation_activity__emoji_toggle_description">အီမိုဂျီ ကီးဘုတ်ကို ပြောင်းပါ</string>
+    <string name="conversation_activity__attachment_thumbnail">ပူးတွဲပါဖိုင် ပုံငယ်</string>
+    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">အမြန်ကင်မရာ ပူးတွဲပါဖိုင် အံဆွဲကို ဖွင့်ပိတ်ပါ</string>
+    <string name="conversation_activity__quick_attachment_drawer_record_and_send_audio_description">အသံဖိုင်ကို ဖမ်းပြီး ပူးတွဲပို့ပါ</string>
+    <string name="conversation_activity__quick_attachment_drawer_lock_record_description">အသံဖိုင်သွင်းထားခြင်းကို လော့ချထားပါ</string>
+    <string name="conversation_activity__enable_signal_for_sms">SMS အတွက်ဆက်ရှင်ကို ဖွင့်ပါ</string>
     <!-- conversation_input_panel -->
+    <string name="conversation_input_panel__slide_to_cancel">ပယ်ဖျက်ရန် ဆလိုက်ကို ပွတ်ဆွဲလိုက်ပါ</string>
+    <string name="conversation_input_panel__cancel">ပယ်ဖျက်ပါ</string>
     <!-- conversation_item -->
+    <string name="conversation_item__mms_image_description">မီဒီယာ မက်ဆေ့ချ်</string>
+    <string name="conversation_item__secure_message_description">လုံခြုံသော မက်ဆေ့ချ်</string>
     <!-- conversation_item_sent -->
+    <string name="conversation_item_sent__send_failed_indicator_description">မအောင်မြင်သည်ကို ပြန်ပို့ပါ</string>
+    <string name="conversation_item_sent__pending_approval_description">ဆိုင်းငံ့ထားသော ခွင့်ပြုချက်</string>
+    <string name="conversation_item_sent__delivered_description">ပေးပို့ခဲ့ပြီး</string>
+    <string name="conversation_item_sent__message_read">မက်ဆေ့ချ်  ဖတ်သည်။</string>
     <!-- conversation_item_received -->
+    <string name="conversation_item_received__contact_photo_description">အဆက်အသွယ်၏ ဓါတ်ပုံ</string>
     <!-- audio_view -->
+    <string name="audio_view__play_accessibility_description">ဖွင့်ပါ</string>
+    <string name="audio_view__pause_accessibility_description">ရပ်ပါ</string>
+    <string name="audio_view__download_accessibility_description">ဒေါင်းလုတ်ဆွဲပါ</string>
     <!-- open_group_invitation_view -->
+    <string name="open_group_invitation_view__join_accessibility_description">ပူးပေါင်းပါ</string>
+    <string name="open_group_invitation_view__open_group_invitation">အဖွဲ့ထဲ ဖိတ်ခေါ်ချက်ကို ဖွင့်ပါ</string>
+    <string name="open_group_guidelines_pinned_message">ပင်ထောက်ထားသော မက်ဆေ့ချ်</string>
+    <string name="open_group_guidelines_community_guidelines">ကွန်မြူနတီ လမ်းညွှန်ချက်များ</string>
+    <string name="open_group_guidelines_read">ဖတ်ထားသော</string>
     <!-- QuoteView -->
+    <string name="QuoteView_audio">အသံ</string>
+    <string name="QuoteView_video">ဗီဒီယို</string>
+    <string name="QuoteView_photo">ဓါတ်ပုံ</string>
+    <string name="QuoteView_you">သင်</string>
+    <string name="QuoteView_original_missing">မူရင်းမက်ဆေ့ဂျ်ကို ရှာမတွေ့ပါ</string>
     <!-- conversation_fragment -->
+    <string name="conversation_fragment__scroll_to_the_bottom_content_description">အောက်ခြေသို့ ဆွဲချပါ</string>
     <!-- giphy_activity -->
+    <string name="giphy_activity_toolbar__search_gifs_and_stickers">GIF များနှင့် စတစ်ကာများကို ရှာဖွေပါ</string>
     <!-- giphy_fragment -->
+    <string name="giphy_fragment__nothing_found">ဘာမှ မတွေ့ပါ</string>
     <!-- load_more_header -->
+    <string name="load_more_header__see_full_conversation">စကားပြောဆိုမှု အပြည့်အစုံကို ကြည့်ပါ</string>
+    <string name="load_more_header__loading">လုပ်ဆောင်ဆဲ</string>
     <!-- media_overview_activity -->
+    <string name="media_overview_activity__no_media">မီဒီယာ မရှိပါ</string>
     <!-- message_recipients_list_item -->
+    <string name="message_recipients_list_item__resend">ပြန်ပို့ပါ</string>
     <!-- recipient_preferences -->
+    <string name="recipient_preferences__block">ဘလော့ပါ</string>
     <!-- message_details_header -->
+    <string name="message_details_header__issues_need_your_attention">အချို့ ကိစ္စများတွင် သင်အလေးထားမှု လိုအပ်ပါသည်။</string>
+    <string name="message_details_header__sent">ပို့ထားပါသည်</string>
+    <string name="message_details_header__received">လက်ခံရရှိထားသည်</string>
+    <string name="message_details_header__disappears">ပျောက်သွားသည်</string>
+    <string name="message_details_header__via">မှတစ်ဆင့်</string>
+    <string name="message_details_header__to">သို့-</string>
+    <string name="message_details_header__from">မှ-</string>
+    <string name="message_details_header__with">နှင့်အတူ-</string>
     <!-- AndroidManifest.xml -->
+    <string name="AndroidManifest__create_passphrase">စကားဝှက်စာတန်း ဖန်တီးပါ</string>
+    <string name="AndroidManifest__select_contacts">အဆက်အသွယ်များကို ရွေးချယ်ပါ</string>
+    <string name="AndroidManifest__media_preview">မီဒီယာ အစမ်းကြည့်ရှုမှု</string>
     <!-- arrays.xml -->
+    <string name="arrays__use_default">ပုံသေထားသည့်အတိုင်း အသုံးပြုပါ</string>
+    <string name="arrays__use_custom">စိတ်ကြိုက်ပုံစံ အသုံးပြုပါ</string>
+    <string name="arrays__mute_for_one_hour">၁ နာရီ ကြာအသံပိတ်ထားပါ</string>
+    <string name="arrays__mute_for_two_hours">၂ နာရီ ကြာအသံပိတ်ထားပါ</string>
+    <string name="arrays__mute_for_one_day">၁ ရက်ကြာ အသံပိတ်ထားပါ</string>
+    <string name="arrays__mute_for_seven_days">၇ ရက်ကြာ အသံပိတ်ထားပါ</string>
+    <string name="arrays__mute_for_one_year">၁ နှစ် ကြာအသံပိတ်ထားပါ</string>
+    <string name="arrays__mute_forever">အမြဲတမ်း အသံပိတ်ထားပါ</string>
+    <string name="arrays__settings_default">ဆက်တင်များ ပုံသေ</string>
+    <string name="arrays__enabled">ဖွင့်ထားသည်</string>
+    <string name="arrays__disabled">ပိတ်ထားသည်</string>
+    <string name="arrays__name_and_message">အမည်နှင့် အကြောင်းအရာ</string>
+    <string name="arrays__name_only">အမည်သာ</string>
+    <string name="arrays__no_name_or_message">အမည် သို့မဟုတ် အကြောင်းအရာ မရှိပါ</string>
+    <string name="arrays__images">ရုပ်ပုံများ</string>
+    <string name="arrays__audio">အသံ</string>
+    <string name="arrays__video">ဗီဒီယို</string>
+    <string name="arrays__documents">စာရွက်စာတမ်းများ</string>
+    <string name="arrays__small">အသေး</string>
+    <string name="arrays__normal">ပုံမှန်</string>
+    <string name="arrays__large">အကြီး</string>
+    <string name="arrays__extra_large">ပိုကြီးသော</string>
+    <string name="arrays__default">ပုံသေ</string>
+    <string name="arrays__high">အမြင့်</string>
+    <string name="arrays__max">အများဆုံး</string>
     <!-- plurals.xml -->
+    <plurals name="hours_ago">
+        <item quantity="other">%d နာရီ</item>
+    </plurals>
     <!-- preferences.xml -->
+    <string name="preferences__pref_enter_sends_title">Enter Key ဖြင့် ပို့ပါ</string>
+    <string name="preferences__pref_enter_sends_summary">Enter key ကိုနှိပ်ခြင်းဖြင့် စာကြောင်းအသစ်ကို စမည့်အစား မက်ဆေ့ခ်ျကို ပေးပို့ပါမည်။</string>
+    <string name="preferences__send_link_previews">အစမ်းကြည့်ရှုလင့်ခ်များကို ပေးပို့ပါ</string>
+    <string name="preferences__link_previews">အစမ်းကြည့်ရှုလင့်ခ်များ</string>
+    <string name="preferences__link_previews_summary">ထောက်ပံ့ပေးထားသော URL များအတွက် အစမ်းကြည့်ရှုလင့်ခ်များကို ပြုလုပ်ပါ။</string>
+    <string name="preferences__pref_autoplay_audio_category">အသံမက်ဆေ့ခ်ျများ</string>
+    <string name="preferences__pref_autoplay_audio_title">အသံမက်ဆေ့ခ်ျများ အလိုအလျောက်ဖွင့်ပါ</string>
+    <string name="preferences__pref_autoplay_audio_summary">ဆက်တိုက် အသံမက်ဆေ့ချ်များကို အလိုအလျောက်ဖွင့်ပါ</string>
+    <string name="preferences__screen_security">မျက်နှာပြင် လုံခြုံရေး</string>
+    <string name="preferences__disable_screen_security_to_allow_screen_shots">မကြာသေးမီက စာရင်းများနှင့် အက်ပ်အတွင်း မျက်နှာပြင်ရိုက်ကူးမှုကို ပိတ်ပါ</string>
+    <string name="preferences__notifications">အကြောင်းကြားစာများ</string>
+    <string name="preferences__led_color">LED အရောင်</string>
+    <string name="preferences__led_color_unknown">အမည်မသိ</string>
+    <string name="preferences__pref_led_blink_title">LED မှိတ်တုတ်ပုံစံ</string>
+    <string name="preferences__sound">အသံ</string>
+    <string name="preferences__in_app_sounds">အက်ပ်ဖွင့်သောအခါ အသံ</string>
+    <string name="preferences__silent">အသံပိတ်ထားသည်</string>
+    <string name="preferences__repeat_alerts">ထပ်တလဲလဲ အချက်ပြချက်များ</string>
+    <string name="preferences__never">ဘယ်တော့မှ</string>
+    <string name="preferences__one_time">တစ်ကြိမ်</string>
+    <string name="preferences__two_times">နှစ်ကြိမ်</string>
+    <string name="preferences__three_times">သုံးကြိမ်</string>
+    <string name="preferences__five_times">ငါးကြိမ်</string>
+    <string name="preferences__ten_times">ဆယ်ကြိမ်</string>
+    <string name="preferences__vibrate">တုန်ခါမှု</string>
+    <string name="preferences__green">အစိမ်းရောင်</string>
+    <string name="preferences__red">အနီရောင်</string>
+    <string name="preferences__blue">အပြာရောင်</string>
+    <string name="preferences__orange">လိမ္မော်ရောင်</string>
+    <string name="preferences__cyan">စိမ်းပြာရောင်</string>
+    <string name="preferences__magenta">ပန်းခရမ်းရောင်</string>
+    <string name="preferences__white">အဖြူရောင်</string>
+    <string name="preferences__none">မရှိပါ</string>
+    <string name="preferences__fast">မြန်ဆန်သည်</string>
+    <string name="preferences__normal">ပုံမှန်</string>
+    <string name="preferences__slow">နှေးကွေးသည်</string>
+    <string name="preferences__automatically_delete_older_messages_once_a_conversation_exceeds_a_specified_length">စကားပြောဆိုမှုတစ်ခုတွင် သတ်မှတ်ထားသောအရှည်ထက် ကျော်လွန်သွားပါက အလိုအလျောက် အဟောင်းမက်ဆေ့ခ်ျများကို ဖျက်ပါ</string>
+    <string name="preferences__delete_old_messages">မက်ဆေ့ချ်အဟောင်းများကို ဖျက်ပါ</string>
+    <string name="preferences__conversation_length_limit">စကားပြောဆိုမှု အရှည်ကန့်သတ်ချက်</string>
+    <string name="preferences__trim_all_conversations_now">စကားပြောဆိုမှုအားလုံးကို ယခုပင် ဖြတ်တောက်ပါ</string>
+    <string name="preferences__scan_through_all_conversations_and_enforce_conversation_length_limits">စကားပြောဆိုမှုများအားလုံးကို စကန်ဖတ်ပြီး စကားပြောဆိုမှုအရှည်ကန့်သတ်ချက်များကို သတ်မှတ်ပါ</string>
+    <string name="preferences__default">ပုံသေ</string>
+    <string name="preferences__incognito_keyboard">လျှို့ဝှက်ပုံစံ ကီးဘုတ်</string>
+    <string name="preferences__read_receipts">ဖတ်ပြီးသော ပြေစာများ</string>
+    <string name="preferences__read_receipts_summary">တစ်ဦးနှင့်တစ်ဦး ပြောဆိုမှုများတွင် ဖတ်ပြီးသော ပြေစာများကို ပို့ပါ။</string>
+    <string name="preferences__typing_indicators">စာရိုက်နေသည်ကို ပြထားမှုများ</string>
+    <string name="preferences__typing_indicators_summary">တစ်ဉီးမှ တစ်ဉီး စကားပြောဆိုမှုများကို စာရိုက်နေကြောင်းကို မြင်စေပြီး ဝေမျှပါ</string>
+    <string name="preferences__request_keyboard_to_disable_personalized_learning">စိတ်ကြိုက်ပြုပြင်ထားသော လေ့လာသင်ယူမှုကို ပိတ်ရန် ကီးဘုတ်ကို တောင်းဆိုပါ</string>
+    <string name="preferences__light_theme">အလင်း</string>
+    <string name="preferences__dark_theme">အမှောင်</string>
+    <string name="preferences_chats__message_trimming">မက်ဆေ့ဂျ် ဖြတ်တောက်ခြင်း</string>
+    <string name="preferences_chats__message_trimming_title">ဖြတ်တောက်မှု အသိုင်းအဝိုင်းများ</string>
+    <string name="preferences_chats__message_trimming_summary">မက်ဆေ့ဂျ် ‌အစောင်ရေ 2,000 ကျော်သော အသိုက်အဝိုင်းများမှ သက်တမ်း 6 လထက်ပိုသော မက်ဆေ့ဂျ်များကို ဖျက်ပါ။</string>
+    <string name="preferences_advanced__use_system_emoji">စနစ် အီမိုဂျီကို အသုံးပြုမည်</string>
+    <string name="preferences_advanced__disable_signal_built_in_emoji_support">ဆက်ရှင်၏ အသင့်ပါ အီမိုဂျီ ပံ့ပိုးမှုကို ပိတ်မည်</string>
+    <string name="preferences_app_protection__screen_security">စခရင် လုံခြုံရေး</string>
+    <string name="preferences_chats__chats">ပြောဆိုမှုများ</string>
+    <string name="preferences_notifications__messages">မက်ဆေ့ဂျ်များ</string>
+    <string name="preferences_notifications__in_chat_sounds">ပြောဆိုနေစဉ် အသံများ</string>
+    <string name="preferences_notifications__content">အသိပေးချက် အကြောင်းအရာ</string>
+    <string name="preferences_notifications__content_message">ပြပါ-</string>
+    <string name="preferences_notifications__summary">အသိပေးချက်များတွင် ပြထားသော အချက်အလက်။</string>
+    <string name="preferences_notifications__priority">ဦးစားပေးမှု</string>
+    <string name="preferences_app_protection__screenshot_notifications">စခရင်ရှော့(တ်) အသိပေးချက်များ</string>
+    <string name="preferences_app_protected__screenshot_notifications_summary">အဆက်အသွယ်က တစ်ဦးနှင့်တစ်ဦး ပြောဆိုမှုကို စခရင်ရှော့(တ်) ရိုက်သည့်အခါ အသိပေးချက် ရယူပါ။</string>
     <!-- **************************************** -->
     <!-- menus -->
     <!-- **************************************** -->
     <!-- contact_selection_list -->
+    <string name="contact_selection_list__unknown_contact">... ထံသို့ မက်ဆေ့ဂျ်</string>
     <!-- conversation_context -->
+    <string name="conversation_context__menu_message_details">မက်ဆေ့ဂျ် အသေးစိတ်များ</string>
+    <string name="conversation_context__menu_copy_text">စာသား ကူးယူမည်</string>
+    <string name="conversation_context__menu_delete_message">မက်ဆေ့ဂျ် ဖျက်မည်</string>
+    <string name="conversation_context__menu_ban_user">သုံးစွဲသူကို ပိတ်ဆို့မည်</string>
+    <string name="conversation_context__menu_ban_and_delete_all">ပိတ်ဆို့ပြီး အားလုံးကို ‌ဖျက်မည်</string>
+    <string name="conversation_context__menu_resend_message">မက်ဆေ့ဂျ် ပြန်ပို့မည်</string>
+    <string name="conversation_context__menu_reply">စာပြန်မည်</string>
+    <string name="conversation_context__menu_reply_to_message">မက်‌ဆေ့ဂျ် ပြန်စာ</string>
+    <string name="conversation_context__menu_call">ခေါ််ဆိုမှု</string>
+    <string name="conversation_context__menu_select">ရွေးချယ်မည်</string>
     <!-- conversation_context_image -->
+    <string name="conversation_context_image__save_attachment">ပူးတွဲပါဖိုင်ကို သိမ်းမည်</string>
     <!-- conversation_expiring_off -->
+    <string name="conversation_expiring_off__disappearing_messages">‌ပျောက်သွားမည့် မက်‌ဆေ့ဂျ်များ</string>
     <!-- conversation_expiring_on -->
+    <string name="menu_conversation_expiring_on__messages_expiring">သက်တမ်းကုန်မည့် မက်ဆေ့ဂျ်များ</string>
     <!-- conversation_muted -->
+    <string name="conversation_muted__unmute">အသံဖွင့်မည်</string>
     <!-- conversation_unmuted -->
+    <string name="conversation_unmuted__mute_notifications">အသိပေးချက်များကို အသံပိတ်ပါ</string>
     <!-- conversation -->
+    <string name="conversation__menu_edit_group">အုပ်စုကို တည်းဖြတ်မည်</string>
+    <string name="conversation__menu_leave_group">အုပ်စုမှ ထွက်မည်</string>
+    <string name="conversation__menu_view_all_media">မီဒီယာ အားလုံး</string>
+    <string name="conversation__menu_add_shortcut">ပင်မ စခရင်သို့ ထည့်မည်</string>
     <!-- conversation_popup -->
+    <string name="conversation_popup__menu_expand_popup">အသိပေးချက်ကို ချဲ့ကြည့်မည်</string>
     <!-- conversation_group_options -->
+    <string name="conversation_group_options__delivery">ပေးပို့မှု</string>
+    <string name="conversation_group_options__conversation">စကားပြောဆိုမှု</string>
+    <string name="conversation_group_options__broadcast">ထုတ်လွှင့်မည်</string>
     <!-- media_preview -->
+    <string name="media_preview__save_title">သိမ်းမည်</string>
+    <string name="media_preview__forward_title">တစ်ဆင့်ပို့မည်</string>
+    <string name="media_preview__all_media_title">မီဒီယာ အားလုံး</string>
     <!-- media_overview -->
+    <string name="media_overview_documents_fragment__no_documents_found">စာရွက်စာတမ်း မရှိပါ</string>
     <!-- media_preview_activity -->
+    <string name="media_preview_activity__media_content_description">မီဒီယာ ကြိုကြည့်ခြင်း</string>
     <!-- Trimmer -->
+    <string name="trimmer__deleting">ဖျက်နေသည်</string>
+    <string name="trimmer__deleting_old_messages">မက်‌ဆေ့ဂျ်အဟောင်းများကို ဖျက်နေသည်...</string>
+    <string name="trimmer__old_messages_successfully_deleted">မက်ဆေ့ဂျ်အဟောင်းများကို ဖျက်ပြီးပါပြီ</string>
     <!-- transport_selection_list_item -->
+    <string name="Permissions_permission_required">ခွင့်ပြုချက် လိုအပ်သည်</string>
+    <string name="Permissions_continue">ဆက်လုပ်မည်</string>
+    <string name="Permissions_not_now">အခု မဟုတ်ပါ</string>
+    <string name="backup_enable_dialog__backups_will_be_saved_to_external_storage_and_encrypted_with_the_passphrase_below_you_must_have_this_passphrase_in_order_to_restore_a_backup">အရန်သိမ်းဆည်းမှုများကို ပြင်ပသိုလှောင်ခန်းသို့ သိမ်းဆည်းပြီး အောက်ပါ စကားဝှက်စာတန်းဖြင့် ဝှက်စာရေးပါမည်။ အရန်သိမ်းဆည်းမှုကို မူလအတိုင်းပြန်ထားရန် သင့်တွင် ဤစကားဝှက်စာတန်း ရှိရမည်။</string>
+    <string name="backup_enable_dialog__i_have_written_down_this_passphrase">ကျွန်ုပ်သည် ဤစကားဝှက်စာတန်းကို ချရေးပြီးပါပြီ။ ၎င်းကို မရှိပါက ကျွန်ုပ်သည် အရန်သိမ်းဆည်းမှုကို မူလအတိုင်း ပြန်ထားနိုင်မည်မဟုတ်ပါ။</string>
+    <string name="registration_activity__skip">ကျော်မည်</string>
+    <string name="RegistrationActivity_backup_failure_downgrade">Session ၏ ပိုသစ်သော ဗားရှင်းများမှ အရန်သိမ်းဆည်းမှုများကို တင်သွင်း၍ မရပါ</string>
+    <string name="RegistrationActivity_incorrect_backup_passphrase">အရန်သိမ်းဆည်းမှု စကားဝှက်စာတန်း မှားနေသည်</string>
+    <string name="BackupDialog_enable_local_backups">စက်တွင်း အရန်သိမ်းဆည်းမှုများကို ဖွင့်ထားမလား။</string>
+    <string name="BackupDialog_enable_backups">အရန်သိမ်းဆည်းမှုများကို ဖွင့်မည်</string>
+    <string name="BackupDialog_please_acknowledge_your_understanding_by_marking_the_confirmation_check_box">သင်သိနားလည်ကြောင်း ဖော်ပြရန် ကျေးဇူးပြု၍ အတည်ပြုချက် အမှန်ခြစ်ရန်အကွက်ကို ခြစ်ပါ။</string>
+    <string name="BackupDialog_delete_backups">အရန်သိမ်းဆည်းမှုများကို ဖျက်မလား။</string>
+    <string name="BackupDialog_disable_and_delete_all_local_backups">စက်တွင်း အရန်သိမ်းဆည်းမှုအားလုံးကို ပိတ်ပြီး ဖျက်မလား။</string>
+    <string name="BackupDialog_delete_backups_statement">အရန်သိမ်းဆည်းမှုများကို ဖျက်မည်</string>
+    <string name="BackupDialog_copied_to_clipboard">ကလစ်ဘုတ်သို့ ကူးယူပြီးပါပြီ</string>
+    <string name="LocalBackupJob_creating_backup">အရန်သိမ်းဆည်းမှု ဖန်တီးနေသည်...</string>
+    <string name="ProgressPreference_d_messages_so_far">ယခုအထိ မက်ဆေ့ဂျ် %d စောင်</string>
+    <string name="BackupUtil_never">ဘယ်တော့မှ</string>
+    <string name="preferences_app_protection__screen_lock">Session ကို လော့ခ်ချမည်</string>
+    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Session ကို လော့ခ်ဖွင့်ရန် လက်ဗွေ၊ PIN၊ ပုံစံ သို့မဟုတ် စကားဝှက် လိုအပ်သည်။</string>
+    <string name="preferences_app_protection__screen_lock_inactivity_timeout">စခရင်လော့ခ်ချမှု လှုပ်ရှားမှုမရှိခြင်း အချိန်ပြည့်ပါပြီ</string>
+    <string name="AppProtectionPreferenceFragment_none">မရှိပါ</string>
     <!-- Conversation activity -->
+    <string name="activity_conversation_copy_public_key_button_title">အများမြင် ကီးကို ကူးယူမည်</string>
     <!-- Session -->
+    <string name="continue_2">ဆက်လုပ်မည်</string>
+    <string name="copy">ကူးယူမည်</string>
+    <string name="close">ပိတ်မည်</string>
+    <string name="invalid_url">URL မှားနေသည်</string>
+    <string name="copied_to_clipboard">ကလစ်ဘုတ်သို့ ကူးယူပြီးပါပြီ</string>
+    <string name="next">ရှေ့သို့</string>
+    <string name="share">မျှဝေမည်</string>
+    <string name="invalid_session_id">Session ID မှားနေသည်</string>
+    <string name="cancel">ပယ်ဖျက်မည်</string>
+    <string name="your_session_id">သင့် Session ID</string>
+    <string name="activity_landing_title_2">သင့် Session ဤနေရာတွင် စတင်ပါသည်...</string>
+    <string name="activity_landing_register_button_title">Session ID ဖန်တီးပါ</string>
+    <string name="activity_landing_restore_button_title">သင့် Session ကို ဆက်လုပ်မည်</string>
+    <string name="view_fake_chat_bubble_1">Session ဆိုတာ ဘာလဲ။</string>
+    <string name="view_fake_chat_bubble_2">၎င်းသည် ဗဟိုထိန်းချုပ်မှုကင်းမဲ့သော ကုဒ်ဝှက်ထားသည့် မက်ဆေ့ဂျ်ပို့သည့် အက်ပ်ဖြစ်သည်</string>
+    <string name="view_fake_chat_bubble_3">ဒါဆိုရင် ၎င်းက ကျွန်ုပ်၏ ကိုယ်ရေးအကိုယ်တာ အချက်အလက်များ သို့မဟုတ် ‌မီတာဒေတာကို မစုဆောင်းဘူးလား။ ဘယ်လို အလုပ်လုပ်ပါသလဲ။</string>
+    <string name="view_fake_chat_bubble_4">အဆင့်မြင့် အမည်မသိ လမ်းကြောင်းသွားခြင်းနှင့် တစ်ဦးမှ တစ်ဦးထံ ကုဒ်ဝှက်သည့် နည်းပညာများကို ပေါင်းစပ် အသုံးပြုပါသည်။</string>
+    <string name="view_fake_chat_bubble_5">မိတ်ဆွေအချင်းချင်း မသမာမှုရှိသော စကားပြောခန်းများကို အသုံးမပြုပါ။ သင့်အား ကြိုဆိုပါသည်။</string>
+    <string name="activity_register_title">သင့် Session ID ကို နှုတ်ခွန်းဆက်စကား ဆိုလိုက်ပါ</string>
+    <string name="activity_register_explanation">သင့် Session ID သည် Session တွင် လူအများက သင့်အား ဆက်သွယ်ရန် အသုံးပြုရသည့် တစ်ခုတည်းသော လိပ်စာ ဖြစ်သည်။ သင် အမှန်တကယ် မည်သူမည်ဝါဖြစ်ကြောင်း ဆက်စပ်မှုမရှိသောကြောင့် သင့် Session ID မှာ ဒီဇိုင်းအရ လုံးဝ အမည်မသိနိုင်ဘဲ လျှို့ဝှက်လုံခြုံပါသည်။</string>
+    <string name="activity_restore_title">သင့်အကောင့်ကို မူလအတိုင်းပြန်ထားပါ</string>
+    <string name="activity_restore_explanation">သင့်အကောင့်ကို မူလအတိုင်းပြန်ထားရန် သင်စာရင်းသွင်းစဉ်က သင့်အား ပေးခဲ့သည့် ပြန်လည်ရယူရန် စကားစုကို ရိုက်ထည့်ပါ။</string>
+    <string name="activity_restore_seed_edit_text_hint">သင်၏ ပြန်လည်ရယူရန် စကားစုကို ရိုက်ထည့်ပါ</string>
+    <string name="activity_display_name_title_2">သင်၏ ပြသမည့်အမည်ကို ရွေးပါ</string>
+    <string name="activity_display_name_explanation">ယင်းသည် သင် Session အသုံးပြုစဉ်တွင် သင့်အမည် ဖြစ်ပါမည်။ ၎င်းသည် သင့်အမည်ရင်း၊ အမည်ပြောင် သို့မဟုတ် အခြားနှစ်သက်ရာတစ်ခုခု ဖြစ်နိုင်ပါသည်။</string>
+    <string name="activity_display_name_edit_text_hint">ပြသမည့်အမည်ကို ရိုက်ထည့်ပါ</string>
+    <string name="activity_display_name_display_name_missing_error">ပြသမည့်အမည်ကို ရွေးချယ်ပါ</string>
+    <string name="activity_display_name_display_name_too_long_error">ကျေးဇူးပြု၍ ပိုတိုသော ပြသမည့်အမည်ကို ရွေးချယ်ပါ</string>
+    <string name="activity_pn_mode_recommended_option_tag">အကြံပြုထားသည်</string>
+    <string name="activity_pn_mode_no_option_picked_dialog_title">ကျေးဇူးပြု၍ ရွေးစရာ တစ်ခုကို ရွေးချယ်ပါ</string>
+    <string name="activity_home_empty_state_message">သင့်တွင် အဆက်အသွယ်များ မရှိသေးပါ</string>
+    <string name="activity_home_empty_state_button_title">ဆက်ရှင်တစ်ခု စမည်</string>
+    <string name="activity_home_leave_group_dialog_message">ဤအုပ်စုမှ သင်ထွက်လိုသည်မှာ သေချာပါသလား။</string>
+    <string name="activity_home_leaving_group_failed_message">"အုပ်စုမှ ထွက်၍မရပါ"</string>
+    <string name="activity_home_delete_conversation_dialog_message">ဤစကားပြောဆိုမှုကို သင်ဖျက်လိုသည်မှာ သေချာပါ‌သလား။</string>
+    <string name="activity_home_conversation_deleted_message">စကားပြောဆိုမှု ဖျက်ပြီးပါပြီ</string>
+    <string name="activity_seed_title">သင်၏ ပြန်လည်ရယူရန် စကားစု</string>
+    <string name="activity_seed_title_2">သင်၏ ပြန်လည်ရယူရန် စကားစုကို ကြည့်ပါ</string>
+    <string name="activity_seed_explanation">သင်၏ ပြန်လည်ရယူရေး စကားစုသည် သင့် Session ID အတွက် အရေးကြီးအချက် တစ်ခုဖြစ်သည် — အကယ်၍ သင်၏ ကိရိယာကို အသုံးပြုခွင့် ဆုံးရှုံးသွားပါက ဤစကားစုကို အသုံးပြု၍ Session ID ကို ပြန်လည်ရယူနိုင်သည်။ သင်၏ ပြန်လည်ရယူရေး စကားစုကို လုံခြုံစိတ်ချရသော နေရာတွင် သိမ်းဆည်းပြီး မည်သူ့ကိုမျှ မပေးပါနှင့်။</string>
+    <string name="activity_seed_reveal_button_title">ဖော်ပြရန် ဖိထားပါ</string>
+    <string name="view_seed_reminder_title">80% ထိရောက်၍ ပြီးလုနီးပါး ဖြစ်နေပါပြီ။</string>
+    <string name="view_seed_reminder_subtitle_1">ပြန်လည်ရယူရေး စကားစုကို သိမ်းဆည်းခြင်းဖြင့် သင့်အကောင့်ကို လုံခြုံစွာထားပါ</string>
+    <string name="view_seed_reminder_subtitle_2">ပြန်လည်ရယူရေး စကားစုကို ဖော်ထုတ်ရန် ပြင်ဆင်ထားသော စကားလုံးများကို တို့၍ ဖိပြီးနောက် သင့်၏ Session ID ကို လုံခြုံစိတ်ချစေရန် သေချာ သိမ်းဆည်းပါ။</string>
+    <string name="view_seed_reminder_subtitle_3">သင်၏ ပြန်လည်ရယူရေး စကားစုကို လုံခြုံသော နေရာတွင် သိမ်းဆည်းရန် သေချာပါစေ</string>
+    <string name="activity_path_title">လမ်းကြောင်း</string>
+    <string name="activity_path_explanation">Session ၏ ဗဟိုချုပ်ကိုင်မှုမရှိသော ကွန်ရက်ရှိ ဝန်ဆောင်မှု Node အများအပြားမှတစ်ဆင့် သင့်မက်ဆေ့ဂျ်များကို ပြန်ဖွင့်ခြင်းဖြင့် Session သည် သင်၏ IP ကို ဖုံးကွယ်ထားသည်။ ဤနိုင်ငံများသည် သင်၏ ဆက်သွယ်ရေး လက်ရှိဖြတ်သန်းသွားသော နိုင်ငံများ ဖြစ်သည် -</string>
+    <string name="activity_path_device_row_title">သင်</string>
+    <string name="activity_path_guard_node_row_title">အဝင် Node</string>
+    <string name="activity_path_service_node_row_title">ဝန်ဆောင်မှု Node</string>
+    <string name="activity_path_destination_row_title">ဦးတည်ရာနေရာ</string>
+    <string name="activity_path_learn_more_button_title">ပိုမိုလေ့လာရန်</string>
+    <string name="activity_path_resolving_progress">ဖြေရှင်းပေးနေသည်…</string>
+    <string name="activity_create_private_chat_title">Session အသစ်</string>
+    <string name="activity_create_private_chat_enter_session_id_tab_title">Session ID အား ရိုက်ထည့်ပါ</string>
+    <string name="activity_create_private_chat_scan_qr_code_tab_title">QR ကုဒ်အား စကန်ဖတ်ပါ</string>
+    <string name="activity_create_private_chat_scan_qr_code_explanation">Session တစ်ခု စတင်ရန် အသုံးပြုသူ၏ QR ကုဒ်အား စကန်ဖတ်ပါ။ အကောင့်ဆက်တင်ထဲရှိ QR ကုဒ်ပုံငယ်အား တို့ထိ၍ QR ကုဒ်ကို ရှာတွေ့နိုင်သည်။</string>
+    <string name="fragment_enter_public_key_edit_text_hint">Session ID သို့မဟုတ် ONS အမည်အား ရိုက်ထည့်ပါ</string>
+    <string name="fragment_enter_public_key_explanation">သုံးစွဲများသည် ၎င်းတို့၏ ဆက်ရှင်အိုင်ဒီနံပါတ်ကို ၎င်းတို့ အကောင့်ဆက်တင်များ သို့သွားပြီး \"ဆက်ရှင်အိုင်ဒီနံပါတ် မျှဝေပါ\" သို့မဟုတ် ၎င်းတို့ QR ကုဒ်ကိုမျှဝေခြင်းဖြင့် မျှဝေပေးနိုင်သည် ။</string>
+    <string name="fragment_enter_public_key_error_message">ကျေးဇူးပြု၍ ဆက်ရှင်အိုင်ဒီ သို့မဟုတ် အိုအက်အက်စ် အမည်ကို စစ်ဆေးပြီး ထပ်မံကြိုးစားပါ။</string>
+    <string name="fragment_scan_qr_code_camera_access_explanation">ဆက်ရှင်သည် QR ကုဒ်များကို စကင်ဖတ်ရန် ကင်မရာသုံးစွဲခွင့်ပြုချက် လိုအပ်ပါသည်</string>
+    <string name="fragment_scan_qr_code_grant_camera_access_button_title">ကင်မရာသုံးစွဲခွင့် ပေးပါ</string>
+    <string name="activity_create_closed_group_title">ပိတ်ထားသော အဖွဲ့သစ်</string>
+    <string name="activity_create_closed_group_edit_text_hint">အဖွဲ့အမည်တစ်ခုထည့်ပါ</string>
+    <string name="activity_create_closed_group_empty_state_message">သင့်တွင် အဆက်အသွယ်များ မရှိသေးပါ</string>
+    <string name="activity_create_closed_group_empty_state_button_title">ဆက်ရှင်တစ်ခု စတင်ပါ</string>
+    <string name="activity_create_closed_group_group_name_missing_error">ကျေးဇူးပြု၍ အဖွဲ့တစ်ခုအမည် ထည့်ပါ</string>
+    <string name="activity_create_closed_group_group_name_too_long_error">ကျေးဇူးပြု၍ ပိုတိုသော အဖွဲ့အမည် ထည့်ပါ</string>
+    <string name="activity_create_closed_group_not_enough_group_members_error">အဖွဲ့ဝင် ၁ ဉီး အနည်းဆုံး ရွေးထည့်ပေးပါ</string>
+    <string name="activity_create_closed_group_too_many_group_members_error">ပိတ်ထားသောအဖွဲ့တွင် အဖွဲ့ဝင် ၁၀၀ ထက် ပို၍မရပါ</string>
+    <string name="activity_join_public_chat_title">ဖွင့်ထားသော အဖွဲ့တွင် ဝင်ပါ</string>
+    <string name="activity_join_public_chat_error">အဖွဲ့ထဲသို့ မဝင်နိုင်ပါ</string>
+    <string name="activity_join_public_chat_enter_group_url_tab_title">အဖွဲ့ URL ကိုဖွင့်ပါ</string>
+    <string name="activity_join_public_chat_scan_qr_code_tab_title">QR ကုဒ်ကို စကန်ဖတ်ပါ</string>
+    <string name="activity_join_public_chat_scan_qr_code_explanation">သင်ဝင်လိုသော ဖွင့်ထားသည့်အဖွဲ့၏ QR ကုဒ်ကို စကန်ဖတ်ပါ</string>
+    <string name="fragment_enter_chat_url_edit_text_hint">ဖွင့်ထားသော အဖွဲ့ URL ကို ထည့်ပါ</string>
+    <string name="activity_settings_title">ဆက်တင်များ</string>
+    <string name="activity_settings_display_name_edit_text_hint">ပြသထားမည့်အမည်ကို ထည့်ပါ</string>
+    <string name="activity_settings_display_name_missing_error">ကျေးဇူးပြု၍ ပြသမည့်အမည်ကို ရွေးချယ်ပါ</string>
+    <string name="activity_settings_display_name_too_long_error">ကျေးဇူးပြု၍ ပိုတိုသော ပြသမည့်အမည်ကို ရွေးချယ်ပါ</string>
+    <string name="activity_settings_privacy_button_title">ကိုယ်ရေးလုံခြုံမှု</string>
+    <string name="activity_settings_notifications_button_title">အကြောင်းကြားစာများ</string>
+    <string name="activity_settings_message_requests_button_title">မက်ဆေ့ချ်လာပို့တောင်းဆိုမှုများ</string>
+    <string name="activity_settings_chats_button_title">စကားပြောဆိုမှုများ</string>
+    <string name="activity_settings_devices_button_title">စက်ကိရိယာများ</string>
+    <string name="activity_settings_invite_button_title">သူငယ်ချင်းတစ်ဦးကို ဖိတ်ကြားပါ</string>
+    <string name="activity_settings_faq_button_title">မကြာခဏမေးလေ့ရှိသော မေးခွန်းများ(FAQ)</string>
+    <string name="activity_settings_recovery_phrase_button_title">ပြန်လည်ရယူရန် စကားဝှက်စာတန်း</string>
+    <string name="activity_settings_clear_all_data_button_title">ဒေတာများကို ရှင်းလင်းပါ</string>
+    <string name="activity_settings_clear_all_data_and_network_button_title">ကွန်ယက်အပါအဝင် ဒေတာများကို ရှင်းလင်းပါ</string>
+    <string name="activity_settings_help_translate_session">ဆက်ရှင်ကို ဘာသာပြန်ရန် ကျွန်ုပ်တို့ကိုကူညီပါ</string>
+    <string name="activity_notification_settings_title">အကြောင်းကြားစာများ</string>
+    <string name="activity_notification_settings_style_section_title">အကြောင်းကြားစာ စတိုင်ပုံစံ</string>
+    <string name="activity_notification_settings_content_section_title">အသိပေးချက် အကြောင်းအရာ</string>
+    <string name="activity_privacy_settings_title">ကိုယ်ရေးလုံခြုံမှု</string>
+    <string name="activity_conversations_settings_title">စကားပြောဆိုမှုများ</string>
+    <string name="activity_help_settings_title">အကူအညီ</string>
+    <string name="activity_help_settings__report_bug_title">ပြဿနာတစ်ခုကို အစီရင်ခံပါ</string>
+    <string name="activity_help_settings__report_bug_summary">သင့် လော့ဖိုင်များကို ထုတ်ပြီးနောက် ဖိုင်ကို ဆက်ရှင်၏ အကူအညီနေရာမှတဆင့် တင်ပါ။</string>
+    <string name="activity_help_settings__translate_session">ဆက်ရှင်ကို ဘာသာပြန်ပါ</string>
+    <string name="activity_help_settings__feedback">သင့်အကြံပြုချက်ကို ကျွန်ုပ်တို့ နှစ်သက်ပါသည်</string>
+    <string name="activity_help_settings__faq">မကြာခဏမေးလေ့ရှိသော မေးခွန်းများ(FAQ)</string>
+    <string name="activity_help_settings__support">ပံ့ပိုးမှု</string>
+    <string name="activity_help_settings__export_logs">လော့ဂ်ဖိုင်များ ထုတ်ပါ</string>
+    <string name="preferences_notifications_strategy_category_title">အကြောင်းကြားစာ နည်းဗျူဟာ</string>
+    <string name="preferences_notifications_strategy_category_fast_mode_title">အမြန်မုဒ်ကို သုံးပါ</string>
+    <string name="preferences_notifications_strategy_category_fast_mode_summary">Google ၏ အကြောင်းကြားစာ ဆာဗာများကိုသုံးပြီး ယုံကြည်စိတ်ချရပြီး ချက်ချင်းရမည့် မက်ဆေ့ချ်များဖြင့် အကြောင်းကြားပေးပါလိမ့်မည်။</string>
+    <string name="fragment_device_list_bottom_sheet_change_name_button_title">အမည်ပြောင်းပါ</string>
+    <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">စက်ပစ္စည်းနှင့် ချိတ်ဆက်ထားသည်ကို ဖြုတ်ပါ</string>
+    <string name="dialog_seed_title">သင်၏ ပြန်လည်ရယူရန် လျို့ဝှက်စကားစု</string>
+    <string name="dialog_seed_explanation">သင်သည် သင်၏အကောင့်ကိုပြန်လည်ရယူရန် သို့မဟုတ် စက်ကိရိယာတစ်ခုနှင့် ချိတ်ဆက်ရန်အတွက် သင့် ပြန်လည်ရယူရန်လျို့ဝှက်စကားစုကို အသုံးပြုနိုင်သည်။</string>
+    <string name="dialog_clear_all_data_title">ဒေတာအားလုံးကို ရှင်းလင်းပါ</string>
+    <string name="dialog_clear_all_data_explanation">၎င်းသည် သင့် မက်ဆေ့ခ်ျများ၊ ဆက်ရှင်များနှင့် အဆက်အသွယ်များကို အပြီးအပိုင် ဖျက်ပစ်လိမ့်မည်။</string>
+    <string name="dialog_clear_all_data_network_explanation">ဤစက်ကိရိယာကိုသာ ရှင်းလင်းလိုပါသလား သို့မဟုတ် သင် ၏ အကောင့်တစ်ခုလုံးကို ဖျက်ပစ်လိုပါသလား။</string>
+    <string name="dialog_clear_all_data_message">၎င်းသည် သင့်မက်ဆေ့ချ်များ၊ ဆက်ရှင်များနှင့် အဆက်အသွယ်များကို အပြီးတိုင်ဖျက်ပစ်မည်ဖြစ်သည်။ ဤစက်ကိရိယာကိုသာ ရှင်းလိုပါသလား သို့မဟုတ် သင့်အကောင့်တစ်ခုလုံးကို ဖျက်လိုပါသလား။</string>
+    <string name="dialog_clear_all_data_clear_device_only">စက်ကိရိယာကိုသာ ရှင်းလင်းပါ။</string>
+    <string name="dialog_clear_all_data_clear_device_and_network">စက်ကိရိယာနှင့် ကွန်ယက်ကို ရှင်းလင်းပါ</string>
+    <string name="dialog_clear_all_data_clear_device_and_network_confirmation">သင့်ဒေတာကို ကွန်ရက်မှ ဖျက်လိုသည်မှာ သေချာပါသလား။ သင်ဆက်လက်လုပ်ဆောင်မည်ဆိုပါက သင့်မက်ဆေ့ချ်များ သို့မဟုတ် အဆက်အသွယ်များကို ပြန်လည်ရယူနိုင်မည်မဟုတ်ပါ။</string>
+    <string name="dialog_clear_all_data_clear">ရှင်းလင်းပါ</string>
+    <string name="dialog_clear_all_data_local_only">ဖျက်ပစ်ရန်သာ</string>
+    <string name="dialog_clear_all_data_clear_network">အကောင့်တစ်ခုလုံး</string>
+    <string name="activity_qr_code_title">QR ကုဒ်</string>
+    <string name="activity_qr_code_view_my_qr_code_tab_title">ကျွန်ုပ် ၏ QR ကုဒ်ကို ကြည့်ပါ</string>
+    <string name="activity_qr_code_view_scan_qr_code_tab_title">QR ကုဒ်ကို စကန်ဖတ်ပါ</string>
+    <string name="activity_qr_code_view_scan_qr_code_explanation">တစ်စုံတစ်ယောက်၏ QR ကုဒ်ကို စကန်ဖတ်ပြီး ၎င်းတို့နှင့် စကားစပြောပါ</string>
+    <string name="fragment_view_my_qr_code_title">ကျွန်ုပ်ကို စကင်ဖတ်ပါ</string>
+    <string name="fragment_view_my_qr_code_explanation">ဤသည်မှာ သင် ၏ QR ကုဒ်ဖြစ်သည် ။ အခြားအသုံးပြုသူများသည် ၎င်းကိုစကန်ဖတ်နိုင်ပြီး သင်နှင့်အတူ ဆက်ရှင်တစ်ခုစတင်နိုင်သည်။</string>
+    <string name="fragment_view_my_qr_code_share_title">QR ကုဒ်ကို မျှဝေပါ</string>
+    <string name="fragment_contact_selection_contacts_title">အဆက်အသွယ်များ</string>
+    <string name="fragment_contact_selection_closed_groups_title">ပိတ်ထားသော အဖွဲ့များ</string>
+    <string name="fragment_contact_selection_open_groups_title">ဖွင့်နေသော အဖွဲ့များ</string>
+    <string name="fragment_contact_selection_empty_contacts">သင့်တွင် အဆက်အသွယ်များ မရှိသေးပါ</string>
     <!-- Next round of translation -->
+    <string name="menu_apply_button">လျှောက်ထားပါ</string>
+    <string name="menu_done_button">ပြီးသွားပြီ</string>
+    <string name="activity_edit_closed_group_title">အဖွဲ့ကို တည်းဖြတ်ပါ</string>
+    <string name="activity_edit_closed_group_edit_text_hint">အဖွဲ့အမည်အသစ် ထည့်ပါ</string>
+    <string name="activity_edit_closed_group_edit_members">အဖွဲ့ဝင်များ</string>
+    <string name="activity_edit_closed_group_add_members">အဖွဲ့ဝင်များ ထည့်ပါ</string>
+    <string name="activity_edit_closed_group_group_name_missing_error">အဖွဲ့အမည်ကို ဗလာအဖြစ် ထားမရပါ</string>
+    <string name="activity_edit_closed_group_not_enough_group_members_error">အဖွဲ့များတွင် အနည်းဆုံး အဖွဲ့ဝင် ၁ ဦး ရှိရမည်</string>
+    <string name="fragment_edit_group_bottom_sheet_remove">အသုံးပြုသူကို အဖွဲ့မှ ဖယ်လိုက်ပါ</string>
+    <string name="activity_select_contacts_title">အဆက်အသွယ်များကို ရွေးချယ်ပါ</string>
+    <string name="view_reset_secure_session_done_message">လုံခြုံသော ဆက်ရှင်အဖြစ် ပြန်လည်သတ်မှတ်ပြီးပါပြီ</string>
+    <string name="dialog_ui_mode_title">အပြင်အဆင်ပုံစံ</string>
+    <string name="dialog_ui_mode_option_day">နေ့</string>
+    <string name="dialog_ui_mode_option_night">ည</string>
+    <string name="dialog_ui_mode_option_system_default">ပုံသေ စနစ်</string>
+    <string name="activity_conversation_menu_copy_session_id">ဆက်ရှင်အိုင်ဒီကို ကူးပါ</string>
+    <string name="attachment">ပူးတွဲပါဖိုင်</string>
+    <string name="attachment_type_voice_message">အသံမက်ဆေ့ခ်ျ</string>
+    <string name="details">အသေးစိတ် အချက်အလက်များ</string>
+    <string name="dialog_backup_activation_failed">အရန်သိမ်းဆည်းမှုများကို ပြန်သွင်းရန် မအောင်မြင်ပါ။ ကျေးဇူးပြု၍ ထပ်စမ်းကြည့်ပါ သို့မဟုတ် အကူအညီထံသို့ ဆက်သွယ်ပါ။</string>
+    <string name="activity_backup_restore_title">အရံ ပြန်လည်သိမ်းဆည်းမှု</string>
+    <string name="activity_backup_restore_select_file">ဖိုင်တစ်ခုကို ရွေးပါ</string>
+    <string name="activity_backup_restore_explanation_1">အရံသိမ်းထားသော ဖိုင်တစ်ခုရွေးချယ်ပြီး ၎င်းဖြင့် ပြုလုပ်ထားသည့် စကားဝှက်စာတန်းကို ထည့်ပါ</string>
+    <string name="activity_backup_restore_passphrase">ကိန်းဂဏန်းအလုံး ၃၀ ပါ စကားဝှက်စာတန်း</string>
+    <string name="activity_link_device_skip_prompt">အချိန်အနည်းငယ်ကြာနေသည်၊ ကျော်သွားလိုပါသလား။</string>
+    <string name="activity_link_device_link_device">စက်ကိရိယာတစ်ခုကို ချိတ်ဆက်ပါ</string>
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
 </resources>

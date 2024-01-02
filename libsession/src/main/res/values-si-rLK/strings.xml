@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">ඔබ කණ්ඩායම හැර ගොස් ඇත.</string>
+    <string name="MessageRecord_you_created_a_new_group">ඔබ නව කණ්ඩායමක් සාදා ඇත.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s ඔබව සමූහයට එක් කළේය.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">ඔබ කණ්ඩායම %1$sලෙස නැවත නම් කළා</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s කණ්ඩායම නැවත නම් කළේ: %2$s</string>
+    <string name="MessageRecord_you_added_s_to_the_group">ඔබ කණ්ඩායමට %1$s එකතු කළා.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s කණ්ඩායමට %2$s ක් එකතු කරන ලදී.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">ඔබ සමූහයෙන් %1$s ඉවත් කළා.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s %2$s කණ්ඩායමෙන් ඉවත් කරන ලදී.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">ඔබව සමූහයෙන් ඉවත් කරන ලදී.</string>
+    <string name="MessageRecord_you">ඔබට</string>
+    <string name="MessageRecord_s_called_you">%s ඔබව ඇමතුවා</string>
+    <string name="MessageRecord_called_s">%sලෙස හැඳින්වේ</string>
+    <string name="MessageRecord_missed_call_from">%sසිට මඟ හැරුණු ඇමතුම</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">ඔබ අතුරුදහන් වන පණිවිඩ අක්‍රිය කර ඇත.</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">%1$s අබල කළ අතුරුදහන් වන පණිවිඩ.</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">ඔබ අතුරුදහන් වන පණිවිඩ ටයිමරය %1$sලෙස සකසා ඇත</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s අතුරුදහන් වන පණිවිඩ ටයිමරය %2$sලෙස සකසන්න</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$s තිර රුවක් ගත්තා.</string>
+    <string name="MessageRecord_media_saved_by_s">මාධ්‍ය %1$sකින් සුරකින ලදී.</string>
+    <!-- expiration -->
+    <string name="expiration_off">අක්රියයි</string>
+    <plurals name="expiration_seconds">
+        <item quantity="one">තත්පර %d</item>
+        <item quantity="other">තත්පර %d</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%dතත්</string>
+    <plurals name="expiration_minutes">
+        <item quantity="one">විනාඩි %d</item>
+        <item quantity="other">විනාඩි %d</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">මීටර් %d</string>
+    <plurals name="expiration_hours">
+        <item quantity="one">පැය %d යි</item>
+        <item quantity="other">පැය %d යි</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">පැය %d</string>
+    <plurals name="expiration_days">
+        <item quantity="one">දින %d යි</item>
+        <item quantity="other">දින %d යි</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">ද %d</string>
+    <plurals name="expiration_weeks">
+        <item quantity="one">සති %d යි</item>
+        <item quantity="other">සති %d</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">ස %d</string>
+    <string name="ConversationItem_group_action_left">%1$s කණ්ඩායම හැර ගොස් ඇත.</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">නම් නොකළ කණ්ඩායම</string>
+</resources>

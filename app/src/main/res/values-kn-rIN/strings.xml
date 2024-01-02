@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ಸೆಷನ್</string>
     <string name="yes">ಹೌದು</string>
     <string name="no">ಇಲ್ಲ</string>
     <string name="delete">ಅಳಿಸಿ ಹಾಕು</string>
     <string name="ban">ನಿಷೇಧಿಸು</string>
+    <string name="please_wait">ದಯವಿಟ್ಟು ನಿರೀಕ್ಷಿಸಿ…</string>
     <string name="save">ಉಳಿಸಿ</string>
     <string name="note_to_self">ನನಗಾಗಿ ಟಿಪ್ಪಣಿ</string>
     <string name="version_s">%s ಆವೃತ್ತಿ</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">ಹೊಸ ಸಂದೇಶ</string>
     <!-- AlbumThumbnailView -->
@@ -47,6 +72,7 @@
     <string name="ConversationActivity_error_leaving_group">ಗುಂಪನ್ನು ತೊರೆಯುವಲ್ಲಿ ದೋಷವಾಗಿದೆ</string>
     <string name="ConversationActivity_invite_to_open_group">ಸದಸ್ಯರನ್ನು ಸೇರಿಸು</string>
     <!-- ConversationFragment -->
+    <string name="ConversationFragment_ban_selected_user">ಈ ಬಳಕೆದಾರನನ್ನು ನಿಷೇಧಿಸುವುದೇ?</string>
     <!-- CreateProfileActivity -->
     <string name="CreateProfileActivity_profile_photo">ವ್ಯಕ್ತಿಚಿತ್ರ</string>
     <!-- CustomDefaultPreference -->
@@ -67,6 +93,7 @@
     <string name="CropImageActivity_profile_avatar">ಚಿತ್ರಪಟ</string>
     <!-- InputPanel -->
     <!-- LongMessageActivity -->
+    <string name="LongMessageActivity_unable_to_find_message">ಸಂದೇಶವನ್ನು ಹುಡುಕಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ</string>
     <string name="LongMessageActivity_your_message">ನಿಮ್ಮ ಸಂದೇಶ</string>
     <!-- MediaOverviewActivity -->
     <string name="MediaOverviewActivity_Media">ಮಾಧ್ಯಮ</string>
@@ -78,22 +105,32 @@
     <string name="NotificationMmsMessageRecord_multimedia_message">ಮಲ್ಟಿಮೀಡಿಯಾ ಸಂದೇಶ</string>
     <!-- MediaPickerActivity -->
     <!-- MediaSendActivity -->
+    <string name="MediaSendActivity_camera_unavailable">ಕ್ಯಾಮೆರಾ ಲಭ್ಯವಿಲ್ಲ.</string>
     <!-- MediaRepository -->
     <!-- MessageRecord -->
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->
     <!-- Slide -->
+    <string name="Slide_image">ಚಿತ್ರ</string>
+    <string name="Slide_audio">ಆಡಿಯೋ</string>
+    <string name="Slide_video">ವೀಡಿಯೊ</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
+    <string name="ThreadRecord_open_group_invitation">ತೆರೆದ ಗುಂಪು ಆಮಂತ್ರಣ</string>
     <!-- UpdateApkReadyListener -->
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->
     <!-- KeyCachingService -->
+    <string name="KeyCachingService_signal_passphrase_cached">ತೆರೆಯಲು ಮುಟ್ಟಿರಿ.</string>
     <!-- MediaPreviewActivity -->
+    <string name="MediaPreviewActivity_you">ನೀವು</string>
     <!-- MessageNotifier -->
+    <string name="MessageNotifier_reply">ಮಾರುತ್ತರ</string>
+    <string name="MessageNotifier_unknown_contact_message">ಸಂಪರ್ಕ</string>
     <!-- Notification Channels -->
+    <string name="NotificationChannel_messages">ಪೂರ್ವನಿಯೋಜಿತ</string>
     <string name="NotificationChannel_calls">ಕಾಲುಗಳು</string>
     <string name="NotificationChannel_failures">ವಿಫಲತೆಗಳು</string>
     <string name="NotificationChannel_backups">ಬ್ಯಾಕಪ್ಪುಗಳು</string>
@@ -113,12 +150,15 @@
     <!-- attachment_type_selector -->
     <string name="attachment_type_selector__audio">ಆಡಿಯೋ</string>
     <string name="attachment_type_selector__audio_description">ಆಡಿಯೋ</string>
+    <string name="attachment_type_selector__contact">ಸಂಪರ್ಕ</string>
+    <string name="attachment_type_selector__contact_description">ಸಂಪರ್ಕ</string>
     <string name="attachment_type_selector__camera">ಕ್ಯಾಮರಾ</string>
     <string name="attachment_type_selector__camera_description">ಕ್ಯಾಮರಾ</string>
     <string name="attachment_type_selector__location">ಸ್ಥಳ</string>
     <string name="attachment_type_selector__location_description">ಸ್ಥಳ</string>
     <string name="attachment_type_selector__gif">ಗಿಫ್</string>
     <string name="attachment_type_selector__gif_description">ಗಿಫ್</string>
+    <string name="attachment_type_selector__gallery_description">ಚಿತ್ರ ಅಥವಾ ವೀಡಿಯೊ</string>
     <string name="attachment_type_selector__file_description">ಕಡತ</string>
     <string name="attachment_type_selector__gallery">ಚಿತ್ರಶಾಲೆ</string>
     <string name="attachment_type_selector__file">ಕಡತ</string>
@@ -148,14 +188,19 @@
     <!-- giphy_activity -->
     <!-- giphy_fragment -->
     <!-- load_more_header -->
+    <string name="load_more_header__see_full_conversation">ಪೂರ್ಣ ಸಂಭಾಷಣೆಯನ್ನು ನೋಡು</string>
+    <string name="load_more_header__loading">ಲೋಡ್‌ ಆಗುತ್ತಿದೆ</string>
     <!-- media_overview_activity -->
+    <string name="media_overview_activity__no_media">ಯಾವುದೇ ಮಾಧ್ಯಮವಿಲ್ಲ</string>
     <!-- message_recipients_list_item -->
+    <string name="message_recipients_list_item__resend">ಮರುಕಳುಹಿಸು</string>
     <!-- recipient_preferences -->
     <string name="recipient_preferences__block">ತಡೆ</string>
     <!-- message_details_header -->
     <string name="message_details_header__sent">ಕಳುಹಿಸಿದೆ</string>
     <string name="message_details_header__received">ಸ್ವೀಕರಿಸಲಾಗಿದೆ</string>
     <string name="message_details_header__disappears">ಮಾಯವಾಗು</string>
+    <string name="message_details_header__via">ಮೂಲಕ</string>
     <string name="message_details_header__to">ಗೆ:</string>
     <string name="message_details_header__from">ಇಂದ:</string>
     <string name="message_details_header__with">ಜೊತೆಗೆ:</string>
@@ -163,8 +208,6 @@
     <!-- arrays.xml -->
     <string name="arrays__enabled">ಸಕ್ರಿಯಗೊಳಿಸಿದೆ</string>
     <string name="arrays__disabled">ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಿದೆ</string>
-    <string name="arrays__name_and_message">ಹೆಸರು ಮತ್ತು ಸಂದೇಶ</string>
-    <string name="arrays__name_only">ಹೆಸರು ಮಾತ್ರ</string>
     <string name="arrays__images">ಚಿತ್ರಗಳು</string>
     <string name="arrays__audio">ಆಡಿಯೋ</string>
     <string name="arrays__video">ವೀಡಿಯೊ</string>
@@ -174,6 +217,7 @@
     <string name="arrays__large">ದೊಡ್ಡ</string>
     <string name="arrays__extra_large">ಅತಿ ದೊಡ್ಡ</string>
     <string name="arrays__default">ಪೂರ್ವನಿಯೋಜಿತ</string>
+    <string name="arrays__max">ಗರಿಷ್ಟ</string>
     <!-- plurals.xml -->
     <!-- preferences.xml -->
     <string name="preferences__screen_security">ಪರದೆಯ ಭದ್ರತೆ</string>
@@ -201,6 +245,7 @@
     <string name="preferences__default">ಪೂರ್ವನಿಯೋಜಿತ</string>
     <string name="preferences__light_theme">ಪ್ರಕಾಶ</string>
     <string name="preferences__dark_theme">ಕತ್ತಲು</string>
+    <string name="preferences_chats__chats">ಸಂಭಾಷಣೆಗಳು</string>
     <string name="preferences_notifications__messages">ಸಂದೇಶಗಳು</string>
     <string name="preferences_notifications__priority">ಆದ್ಯತೆ</string>
     <!-- **************************************** -->
@@ -229,7 +274,9 @@
     <!-- media_preview_activity -->
     <!-- Trimmer -->
     <!-- transport_selection_list_item -->
-    <string name="preferences_app_protection__screen_lock">ಸ್ಕ್ರೀನ್ ಲಾಕ್</string>
+    <string name="Permissions_continue">ಮುಂದುವರೆಯಿರಿ</string>
+    <string name="Permissions_not_now">ಈಗಲ್ಲ</string>
+    <string name="BackupUtil_never">ಎಂದೆಂದಿಗೂ ಬೇಡ</string>
     <string name="AppProtectionPreferenceFragment_none">ಯಾವುದೂ ಇಲ್ಲ</string>
     <!-- Conversation activity -->
     <!-- Session -->
@@ -274,4 +321,7 @@
     <string name="notify_type_all">ಎಲ್ಲ</string>
     <string name="notify_type_mentions">ಉಲ್ಲೇಖಗಳು</string>
     <string name="deleted_message">ಈ ಸಂದೇಶವನ್ನು ಅಳಿಸಿ ಹಾಕಲಾಗಿದೆ</string>
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
 </resources>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Session</string>
     <string name="yes">Այո</string>
     <string name="no">Ոչ</string>
     <string name="delete">Ջնջել</string>
@@ -9,6 +8,31 @@
     <string name="save">Պահպանել</string>
     <string name="note_to_self">Նշում ինքս ինձ</string>
     <string name="version_s">Տարբերակ %s</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">Նոր հաղորդագրություն</string>
     <!-- AlbumThumbnailView -->
@@ -36,7 +60,7 @@
     <string name="AttachmentManager_signal_requires_the_external_storage_permission_in_order_to_attach_photos_videos_or_audio">Session֊ը պահանջում է Ֆայլերի կառավարման թույլտվություն՝ լուսանկարներ, տեսանյութեր կամ աուդիո ֆայլեր կցելու համար, սակայն այն ընդմիշտ մերժվել է: Խնդրում ենք մտնել հավելվածի կարգավորումների ցանկը, ընտրել «Թույլտվություններ» և միացնել ֆայլերի կառավարման թույլտվությունը.</string>
     <string name="AttachmentManager_signal_requires_the_camera_permission_in_order_to_take_photos_but_it_has_been_permanently_denied">Լուսանկարելու համար session-ը պահանջում է տեսախցիկի թույլտվություն: Խնդրում ենք անցնել հավելվածի կարգավորումների ցանկ, ընտրել «Թույլտվություններ» և միացնել «տեսախցիկ» թույլտվությունը.</string>
     <!-- AudioSlidePlayer -->
-    <string name="AudioSlidePlayer_error_playing_audio">Չհաջողվեց նվագարկել ծայնը!</string>
+    <string name="AudioSlidePlayer_error_playing_audio">Չհաջողվեց նվագարկել ձայնը։</string>
     <!-- BucketedThreadMedia -->
     <string name="BucketedThreadMedia_Today">Այսօր</string>
     <string name="BucketedThreadMedia_Yesterday">Երեկ</string>
@@ -64,6 +88,7 @@
     <string name="ConversationActivity_muted_until_date">Անջատված է մինչև %1$s</string>
     <string name="ConversationActivity_muted_forever">Լուռ է</string>
     <string name="ConversationActivity_member_count">%1$d անդամաներ</string>
+    <string name="ConversationActivity_active_member_count">%1$d ակտիվ անդամ</string>
     <string name="ConversationActivity_open_group_guidelines">Համայնքի կանոնները</string>
     <string name="ConversationActivity_invalid_recipient">Սխալ հասցեատեր</string>
     <string name="ConversationActivity_added_to_home_screen">Ավելացված է գլխավոր էկրանին</string>
@@ -84,6 +109,8 @@
     <string name="ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video">Session-ը պահանջում է տեսախցիկի թույլտվություն լուսանկարելու համար: Խնդրում ենք անցնել հավելվածի կարգավորումների ցանկ, ընտրել «Թույլտվություններ» և միացնել «Տեսախցիկ» թույլտվությունը.</string>
     <string name="ConversationActivity_signal_needs_camera_permissions_to_take_photos_or_video">Session-ը պահանջում է ֆոտոխցիկի թույլտվություն լուսանկարելու կամ տեսանյութեր ձայնագրելու համար.</string>
     <string name="ConversationActivity_search_position">%2$d֊ից %1$d֊ը</string>
+    <string name="ConversationActivity_call_title">Պահանջվում են զանգի թույլտվություններ</string>
+    <string name="ConversationActivity_call_prompt">Դուք կարող եք միացնել «Ձայնային և տեսազանգերի» թույլտվությունը Գաղտնիության կարգավորումներում:</string>
     <!-- ConversationFragment -->
     <plurals name="ConversationFragment_delete_selected_messages">
         <item quantity="one">Ջնջե՞լ ընտրված նամակը։</item>
@@ -198,7 +225,7 @@
     <string name="SmsMessageRecord_received_corrupted_key_exchange_message">Ստացվել է վնասված
         բանալիների փոխանակման հաղորդագրություն։
     </string>
-    <string name="SmsMessageRecord_received_key_exchange_message_for_invalid_protocol_version">        Ստացվել է բանալիների փոխանակման հաղորդագրություն անվավեր արձանագրման տարբերակի համար:
+    <string name="SmsMessageRecord_received_key_exchange_message_for_invalid_protocol_version">        Ստացավ գաղտնագրի փոխանակման հաղորդագրություն անվավեր արձանագրության տարբերակի համար:
     </string>
     <string name="SmsMessageRecord_received_message_with_new_safety_number_tap_to_process">Ստացվել է հաղորդագրություն նոր անվտանգության կոդով: Սեղմեք՝ հաղորդագրությունը մշակելու և ցուցադրելու համար:</string>
     <string name="SmsMessageRecord_secure_session_reset">Դուք վերագործարկել եք ապահով սեսսիան:</string>
@@ -387,9 +414,9 @@
     <string name="arrays__settings_default">Վերջին կարգավորումներ</string>
     <string name="arrays__enabled">Միացված</string>
     <string name="arrays__disabled">Անջատված</string>
-    <string name="arrays__name_and_message">Անունը և նամակը</string>
+    <string name="arrays__name_and_message">Անուն և բովանդակություն</string>
     <string name="arrays__name_only">Միայն անունը</string>
-    <string name="arrays__no_name_or_message">Չկա անուն կամ հաղորդագրություն</string>
+    <string name="arrays__no_name_or_message">Առանց անվան կամ բովանդակության</string>
     <string name="arrays__images">Նկարներ</string>
     <string name="arrays__audio">Աուդիո</string>
     <string name="arrays__video">Վիդեո</string>
@@ -407,9 +434,14 @@
         <item quantity="other">%d ժամ</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__pref_enter_sends_title">Գրեք ուղարկողի բանալին</string>
-    <string name="preferences__send_link_previews">Ուղարկել հղման նախադիտումներ</string>
-    <string name="preferences__previews_are_supported_for">Նախադիտումները աջակցվում են Imgur, Instagram, Pinterest, Reddit և YouTube հղումների համար</string>
+    <string name="preferences__pref_enter_sends_title">Ուղարկել Enter ստեղնով</string>
+    <string name="preferences__pref_enter_sends_summary">Enter ստեղնը սեղմելով՝ նոր տող սկսելու փոխարեն հաղորդագրություն կուղարկվի:</string>
+    <string name="preferences__send_link_previews">Ուղարկել հղումների նախադիտումները</string>
+    <string name="preferences__link_previews">Հղումների նախադիտումներ</string>
+    <string name="preferences__link_previews_summary">Ստեղծեք հղման նախադիտումներ աջակցվող URL-ների համար:</string>
+    <string name="preferences__pref_autoplay_audio_category">Աուդիո հաղորդագրություններ</string>
+    <string name="preferences__pref_autoplay_audio_title">Աուդիո հաղորդագրությունների ավտոմատ նվագարկում</string>
+    <string name="preferences__pref_autoplay_audio_summary">Ավտոմատ նվագարկել հաջորդական աուդիո հաղորդագրությունները:</string>
     <string name="preferences__screen_security">Էկրանակադրի անվտանգություն</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">Արգելափակել կադրահանումները «վերջին հավելվածներ» ցուցակում և հավելվածի ներսում։</string>
     <string name="preferences__notifications">Ծանուցումներ</string>
@@ -417,6 +449,7 @@
     <string name="preferences__led_color_unknown">Անհայտ</string>
     <string name="preferences__pref_led_blink_title">LED-ի թարթման նմուշ</string>
     <string name="preferences__sound">Ձայն</string>
+    <string name="preferences__in_app_sounds">Ձայն, երբ հավելվածը բաց է</string>
     <string name="preferences__silent">Լուռ</string>
     <string name="preferences__repeat_alerts">Կրկնել ահազանգերը</string>
     <string name="preferences__never">Երբեք</string>
@@ -444,19 +477,28 @@
     <string name="preferences__scan_through_all_conversations_and_enforce_conversation_length_limits">Սկանավորել բոլոր խոսակցությունները և կիրառել խոսակցության երկարության սահմանափակումներ</string>
     <string name="preferences__default">Սկզբնական</string>
     <string name="preferences__incognito_keyboard">Չհիշել բառերը</string>
-    <string name="preferences__read_receipts">Կարդալու ազդանշաններ</string>
-    <string name="preferences__typing_indicators">Գրելու ինդիկատորներ</string>
-    <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Եթե գրելու հնարավորությունը փակված է, դուք չեք կարող տեսնել մյուս օգտագործողների գրելը.</string>
+    <string name="preferences__read_receipts">Ընթերցման անդորրագրեր</string>
+    <string name="preferences__read_receipts_summary">Ուղարկեք ընթերցման անդորրագրերը մեկ առ մեկ զրույցներում:</string>
+    <string name="preferences__typing_indicators">Մուտքագրման ցուցիչներ</string>
+    <string name="preferences__typing_indicators_summary">Տեսեք և տարածեք մուտքագրման ցուցիչները մեկ առ մեկ զրույցներում:</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Առաջարկել ստեղնաշարի հավելվածին, որ այն չհիշի նոր բառերը</string>
     <string name="preferences__light_theme">Սպիտակ</string>
     <string name="preferences__dark_theme">Մուգ</string>
     <string name="preferences_chats__message_trimming">Նամակների կարճեցում</string>
+    <string name="preferences_chats__message_trimming_title">Կարճացրեք համայնքները</string>
+    <string name="preferences_chats__message_trimming_summary">Ջնջել 6 ամսից ավելի հին հաղորդագրությունները այն համայնքներից, որոնք ունեն ավելի քան 2000 հաղորդագրություն:</string>
     <string name="preferences_advanced__use_system_emoji">Օգտագործել համակարգի էմոջին</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Անջատել Session-ի ներկառուցված էմոջիների ապահովումը</string>
+    <string name="preferences_app_protection__screen_security">Էկրանի անվտանգություն</string>
     <string name="preferences_chats__chats">Չատեր</string>
     <string name="preferences_notifications__messages">Նամակներ</string>
     <string name="preferences_notifications__in_chat_sounds">Ձայներ չատում</string>
+    <string name="preferences_notifications__content">Ծանուցումների բովանդակություն</string>
+    <string name="preferences_notifications__content_message">Ցուցադրել:</string>
+    <string name="preferences_notifications__summary">Ծանուցումներում ցուցադրված տեղեկատվությունը:</string>
     <string name="preferences_notifications__priority">Առաջնայնություն</string>
+    <string name="preferences_app_protection__screenshot_notifications">Սքրինշոթի ծանուցումներ</string>
+    <string name="preferences_app_protected__screenshot_notifications_summary">Ստացեք ծանուցում, երբ զրուցակիցը պահպանում է մեկ առ մեկ զրույցի սքրինշոթ:</string>
     <!-- **************************************** -->
     <!-- menus -->
     <!-- **************************************** -->
@@ -469,7 +511,10 @@
     <string name="conversation_context__menu_ban_user">Արգելափակել օգտատիրոչը</string>
     <string name="conversation_context__menu_ban_and_delete_all">Արգելաֆակել և ջնջել ամբողջը</string>
     <string name="conversation_context__menu_resend_message">Կրկին ուղարկել հաղորդագրությունը</string>
+    <string name="conversation_context__menu_reply">Պատասխանել</string>
     <string name="conversation_context__menu_reply_to_message">Պատասխանել հաղորդագրությանը</string>
+    <string name="conversation_context__menu_call">Զանգել</string>
+    <string name="conversation_context__menu_select">Ընտրել</string>
     <!-- conversation_context_image -->
     <string name="conversation_context_image__save_attachment">Պահպանել կցորդը</string>
     <!-- conversation_expiring_off -->
@@ -522,8 +567,8 @@
     <string name="LocalBackupJob_creating_backup">Ստեղծվուն է կրկնօրինակ...</string>
     <string name="ProgressPreference_d_messages_so_far">Մինչ այժմ %d հաղորդագրություն</string>
     <string name="BackupUtil_never">Երբեք</string>
-    <string name="preferences_app_protection__screen_lock">Էկրանային կողպում</string>
-    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Կողպել Սեանսը Android-ի էկրանային կողպումով կամ մատնահետքով</string>
+    <string name="preferences_app_protection__screen_lock">Արգելափակել Session֊ը</string>
+    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Պահանջել մատնահետք, PIN, նախշ կամ գաղտնաբառ՝ Session-ը բացելու համար:</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">Էկրանային կողպման ինտերվալը</string>
     <string name="AppProtectionPreferenceFragment_none">Չկա</string>
     <!-- Conversation activity -->
@@ -531,6 +576,7 @@
     <!-- Session -->
     <string name="continue_2">Շարունակել</string>
     <string name="copy">Պատճենել</string>
+    <string name="close">Փակել</string>
     <string name="invalid_url">Սխալ Հղում</string>
     <string name="copied_to_clipboard">Պատճենվել է կցարանում</string>
     <string name="next">Հաջորդը</string>
@@ -609,6 +655,7 @@
     <string name="activity_settings_display_name_too_long_error">Այս ցուցադրվող անունը չափազանց երկար է</string>
     <string name="activity_settings_privacy_button_title">Գաղտնիություն</string>
     <string name="activity_settings_notifications_button_title">Ծանուցումներ</string>
+    <string name="activity_settings_message_requests_button_title">Հաղորդագրության հարցումներ</string>
     <string name="activity_settings_chats_button_title">Զրույցներ</string>
     <string name="activity_settings_devices_button_title">Սարքեր</string>
     <string name="activity_settings_invite_button_title">Հրավիրել ընկերոջը</string>
@@ -621,16 +668,30 @@
     <string name="activity_notification_settings_style_section_title">Ծանուցումների Ոճ</string>
     <string name="activity_notification_settings_content_section_title">Ծանուցումների Բովանդակություն</string>
     <string name="activity_privacy_settings_title">Գաղտնիություն</string>
+    <string name="activity_conversations_settings_title">Զրույցներ</string>
+    <string name="activity_help_settings_title">Աջակցություն</string>
+    <string name="activity_help_settings__report_bug_title">Հաղորդել սխալի մասին</string>
+    <string name="activity_help_settings__report_bug_summary">Արտահանեք ձեր տեղեկամատյանները, այնուհետև վերբեռնեք ֆայլը Sessions Help Desk-ի միջոցով:</string>
+    <string name="activity_help_settings__translate_session">Թարգմանել Session-ը</string>
+    <string name="activity_help_settings__feedback">Մենք կցանկանայինք ձեր կարծիքը</string>
+    <string name="activity_help_settings__faq">ՀՏՀ</string>
+    <string name="activity_help_settings__support">Աջակցում</string>
+    <string name="activity_help_settings__export_logs">Արտահանել տեղեկամատյանները</string>
     <string name="preferences_notifications_strategy_category_title">Ծանուցումների ոճ</string>
     <string name="preferences_notifications_strategy_category_fast_mode_title">Օգտագործել արագ ռեժիմը</string>
-    <string name="preferences_notifications_strategy_category_fast_mode_summary">Դուք մշտապես և անմիջապես կտեղեկացվեք նոր հաղորդագրությունների մասին՝ օգտագործելով Google-ի ծանուցումների սերվերները:</string>
+    <string name="preferences_notifications_strategy_category_fast_mode_summary">Նոր հաղորդագրությունների մասին դուք անպայման և անմիջապես կտեղեկացվեք Google-ի ծանուցումների սերվերների միջոցով:</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">Փոխել անունը</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Առանձնացնել սարքը</string>
     <string name="dialog_seed_title">Ձեր վերականգնման բառակապակցություն</string>
-    <string name="dialog_seed_explanation">Սա ձեր վերականգնման բառակապակցություն է: Դրա միջոցով դուք կարող եք վերականգնել կամ տեղափոխել ձեր Session ID-ն նոր սարք:</string>
+    <string name="dialog_seed_explanation">Դուք կարող եք օգտագործել ձեր վերականգնման գաղտնագիրը՝ ձեր հաշիվը վերականգնելու կամ սարքը կապելու համար:</string>
     <string name="dialog_clear_all_data_title">Ջնջել բոլոր տվյալները</string>
     <string name="dialog_clear_all_data_explanation">Սա ընդմիշտ կջնջի ձեր հաղորդագրությունները, սեսիաներն ու կոնտակտները:</string>
     <string name="dialog_clear_all_data_network_explanation">Ցանկանու՞մ եք մաքրել միայն այս սարքը, թե՞ ջնջել ձեր ամբողջ հաշիվը:</string>
+    <string name="dialog_clear_all_data_message">Սա ընդմիշտ կջնջի ձեր հաղորդագրությունները, նիստերն ու կոնտակտները: Ցանկանու՞մ եք մաքրել միայն այս սարքը, թե՞ ջնջել ձեր ամբողջ հաշիվը:</string>
+    <string name="dialog_clear_all_data_clear_device_only">Մաքրել միայն սարքը</string>
+    <string name="dialog_clear_all_data_clear_device_and_network">Մաքրել սարքը և ցանցը</string>
+    <string name="dialog_clear_all_data_clear_device_and_network_confirmation">Իսկապե՞ս ուզում եք ջնջել ձեր տվյալները ցանցից: Եթե շարունակեք, չեք կարողանա վերականգնել ձեր հաղորդագրությունները կամ կոնտակտները:</string>
+    <string name="dialog_clear_all_data_clear">Մաքրել</string>
     <string name="dialog_clear_all_data_local_only">Ջնջել միայն</string>
     <string name="dialog_clear_all_data_clear_network">Ամբողջ հաշիվ</string>
     <string name="activity_qr_code_title">QR կոդ</string>
@@ -703,6 +764,7 @@
     <string name="dialog_download_explanation">Վստա՞հ եք, որ ուզում եք ներբեռնել %s-ի կողմից ուղարկված մեդիա ֆայլը:</string>
     <string name="dialog_download_button_title">Ներբեռնել</string>
     <string name="activity_conversation_blocked_banner_text">%s֊ը արգելափակված է: Արգելահանե՞լ։</string>
+    <string name="activity_conversation_block_user">Արգելափակել օգտատիրոջը</string>
     <string name="activity_conversation_attachment_prep_failed">Չհաջողվեց պատրաստել կցորդն ուղարկելու համար:</string>
     <string name="media">Մեդիա</string>
     <string name="UntrustedAttachmentView_download_attachment">Հպեք՝ %s֊ը ներբեռնելու համար</string>
@@ -725,7 +787,111 @@
     <string name="mark_all_as_read">Նշել բոլորը, որպես տեսնված</string>
     <string name="global_search_contacts_groups">Կոնտակտներ և խմբեր</string>
     <string name="global_search_messages">Հաղորդագրություններ</string>
+    <string name="activity_message_requests_title">Հաղորդագրության հարցումներ</string>
+    <string name="message_requests_send_notice">Այս օգտատիրոջը հաղորդագրություն ուղարկելը ավտոմատ կերպով կընդունի նրա հաղորդագրության հարցումը և կբացահայտի ձեր Session ID-ն:</string>
+    <string name="accept">Ընդունել</string>
+    <string name="decline">Մերժել</string>
+    <string name="message_requests_clear_all">Մաքրել բոլորը</string>
+    <string name="message_requests_decline_message">Իսկապե՞ս ուզում եք մերժել այս հաղորդագրության հարցումը:</string>
+    <string name="message_requests_block_message">Իսկապե՞ս ուզում եք արգելաֆակել այս հաղորդագրության հարցումը:</string>
+    <string name="message_requests_deleted">Հաղորդագրության հարցումը ջնջվեց</string>
+    <string name="message_requests_clear_all_message">Իսկապե՞ս ուզում եք ջնջել հաղորդագրությունների բոլոր հարցումները:</string>
+    <string name="message_requests_cleared">Հաղորդագրության հարցումները ջնջվեցին</string>
+    <string name="message_requests_accepted">Ձեր հաղորդագրության հարցումն ընդունվել է:</string>
+    <string name="message_requests_pending">Ձեր հաղորդագրության հարցումն այժմ առկախ է:</string>
+    <string name="message_request_empty_state_message">Սպասող հաղորդագրությունների հարցումներ չկան</string>
     <string name="NewConversationButton_SessionTooltip">Անմիջական հաղորդագրություն</string>
     <string name="NewConversationButton_ClosedGroupTooltip">Փակ խումբ</string>
     <string name="NewConversationButton_OpenGroupTooltip">Բաց խումբ</string>
+    <string name="message_requests_notification">Դուք ունեք նոր հաղորդագրության հարցում</string>
+    <string name="CallNotificationBuilder_connecting">Միացում…</string>
+    <string name="NotificationBarManager__incoming_signal_call">Մուտքային զանգ</string>
+    <string name="NotificationBarManager__deny_call">Մերժել զանգը</string>
+    <string name="NotificationBarManager__answer_call">Պատասխանել զանգին</string>
+    <string name="NotificationBarManager_call_in_progress">Ընթացիկ զանգ</string>
+    <string name="NotificationBarManager__cancel_call">Չեղարկել զանգը</string>
+    <string name="NotificationBarManager__establishing_signal_call">Զանգի հաստատում</string>
+    <string name="NotificationBarManager__end_call">Ավարտել զանգը</string>
+    <string name="accept_call">Ընդունել զանգը</string>
+    <string name="decline_call">Անջատել զանգը</string>
+    <string name="preferences__voice_video_calls">Ձայնային և տեսազանգեր</string>
+    <string name="preferences__calls_beta">Զանգեր (Բետա)</string>
+    <string name="preferences__allow_access_voice_video">Միացնում է ձայնային և տեսազանգերը դեպի և այլ օգտվողների հետ:</string>
+    <string name="dialog_voice_video_title">Ձայնա/տեսազանգեր</string>
+    <string name="dialog_voice_video_message">Ձայնա/տեսազանգերի ընթացիկ իրականացումը ձեր IP հասցեն կբացահայտի Oxen Foundation սերվերներին և զանգահարող/զանգահարված օգտատիրոջը</string>
+    <string name="CallNotificationBuilder_first_call_title">Զանգը բաց թողնվեց</string>
+    <string name="CallNotificationBuilder_first_call_message">Դուք բաց եք թողել զանգը, քանի որ Գաղտնիության կարգավորումներում պետք է միացնեք «Ձայնային և տեսազանգերի» թույլտվությունը:</string>
+    <string name="WebRtcCallActivity_Session_Call">Session Զանգ</string>
+    <string name="WebRtcCallActivity_Reconnecting">Վերամիացում…</string>
+    <string name="CallNotificationBuilder_system_notification_title">Ծանուցումներ</string>
+    <string name="CallNotificationBuilder_system_notification_message">Ծանուցումների անջատված լինելը, կկանխի զանգեր ստանալը: Գնացեք Session֊ի ծանուցումների կարգավորումներ:</string>
+    <string name="dismiss">Փակել</string>
+    <string name="activity_settings_conversations_button_title">Զրույցներ</string>
+    <string name="activity_settings_message_appearance_button_title">Արտաքին տեսք</string>
+    <string name="activity_settings_help_button">Աջակցություն</string>
+    <string name="activity_appearance_themes_category">Ոճեր</string>
+    <string name="ocean_dark_theme_name">Օվկիանոսի մութ</string>
+    <string name="classic_dark_theme_name">Դասական մութ</string>
+    <string name="ocean_light_theme_name">Օվկիանոսի լույս</string>
+    <string name="classic_light_theme_name">Դասական լույս</string>
+    <string name="activity_appearance_primary_color_category">Հիմնական գույն</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__this_message">Այս հաղորդագրությունը</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__recently_used">Վերջերս օգտագործված</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__smileys_and_people">Զմայլիկներ &amp; Մարդուկներ</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__nature" comment="Heading for an emoji list's category">Բնություն</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__food" comment="Heading for an emoji list's category">Սնունդ</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__activities">Զբաղմունքներ</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__places" comment="Heading for an emoji list's category">Տեղեր</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__objects">Օբյեկտներ</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__symbols">Խորհրդանիշներ</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__flags">Դրոշներ</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__emoticons">Զմայլիկներ</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__no_results_found">Արդյունքներ չեն գտնվել</string>
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <string name="ReactionsBottomSheetDialogFragment_all">Բոլորը &#183; %1$d</string>
+    <!-- ReactionsConversationView -->
+    <string name="ReactionsConversationView_plus">+%1$d</string>
+    <!-- ReactionsRecipientAdapter -->
+    <string name="ReactionsRecipientAdapter_you">Դուք</string>
+    <string name="reaction_notification">%1$s արձագանքել է հաղորդագրությանը %2$s</string>
+    <string name="ReactionsConversationView_show_less">Ավելի քիչ ցույց տալ</string>
+    <string name="KeyboardPagerFragment_search_emoji">Ֆնտրել զմայլիկ</string>
+    <string name="KeyboardPagerfragment_back_to_emoji">Վերադարնալ զմայլիկներին</string>
+    <string name="KeyboardPagerfragment_clear_search_entry">Մաքրել որոնման մուտքագիրը</string>
+    <string name="activity_appearance_follow_system_category">Ավտոմատ մութ ռեժիմ</string>
+    <string name="activity_appearance_follow_system_explanation">Համապատասխանեցնել համակարգի կարգավորումներին</string>
+    <string name="go_to_device_notification_settings">Գնացեք սարքի ծանուցման կարգավորումներ</string>
+    <string name="blocked_contacts_title">Արգելափակված կոնտակտներ</string>
+    <string name="blocked_contacts_empty_state">Դուք արգելափակված կոնտակտներ չունեք</string>
+    <string name="Unblock_dialog__title_single">Արգելաբացել %s</string>
+    <string name="Unblock_dialog__title_multiple">Արգելաբացել օգտատերերին</string>
+    <string name="Unblock_dialog__message">Համոզվա՞ծ եք, որ ուզում եք արգելաբացել %s֊ին։</string>
+    <plurals name="Unblock_dialog__message_multiple_overflow">
+        <item quantity="one">և %d այլ</item>
+        <item quantity="other">և ևս %d</item>
+    </plurals>
+    <plurals name="ReactionsRecipientAdapter_other_reactors">
+        <item quantity="one">Եվ ևս %1$d արձագանքել է %2$s այս հաղորդագրությանը</item>
+        <item quantity="other">Եվ ևս %1$d արձագանքել են %2$s այս հաղորդագրությանը</item>
+    </plurals>
+    <string name="dialog_new_conversation_title">Նոր զրույց</string>
+    <string name="dialog_new_message_title">Նոր հաղորդագրություն</string>
+    <string name="activity_create_group_title">Ստեղծել խումբ</string>
+    <string name="dialog_join_community_title">Միանալ համայնքին</string>
+    <string name="new_conversation_contacts_title">Կոնտակտներ</string>
+    <string name="new_conversation_unknown_contacts_section_title">Անհայտ</string>
+    <string name="fragment_enter_public_key_prompt">Սկսեք նոր խոսակցություն՝ մուտքագրելով ինչ-որ մեկի Session ID-ն կամ կիսվեք ձեր Session ID-ով նրանց հետ:</string>
+    <string name="activity_create_group_create_button_title">Ստեղծել</string>
+    <string name="search_contacts_hint">Որոնել կոնտակտներ</string>
+    <string name="activity_join_public_chat_enter_community_url_tab_title">Համայնքի URL</string>
+    <string name="fragment_enter_community_url_edit_text_hint">Մուտքագրեք Համայնքի URL-ը</string>
+    <string name="fragment_enter_community_url_join_button_title">Միանալ</string>
+    <string name="new_conversation_dialog_back_button_content_description">Հետ գնալ</string>
+    <string name="new_conversation_dialog_close_button_content_description">Փակել երկխոսությունը</string>
+    <string name="ErrorNotifier_migration">Տվյալների բազայի թարմացումը ձախողվեց</string>
+    <string name="ErrorNotifier_migration_downgrade">Խնդրում ենք կապվել աջակցության հետ՝ սխալի մասին հայտնելու համար:</string>
+    <string name="delivery_status_sending">Ուղարկվում է...</string>
+    <string name="delivery_status_read">Կարդացված է</string>
+    <string name="delivery_status_sent">Ուղարկված է</string>
+    <string name="delivery_status_failed">Չհաջողվեց ուղարկել</string>
 </resources>

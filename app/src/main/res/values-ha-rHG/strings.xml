@@ -5,6 +5,31 @@
     <string name="delete">Jê bibe</string>
     <string name="save">Tomar bike</string>
     <string name="note_to_self">Bo min Nîşe</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">Peyama nû</string>
     <!-- AlbumThumbnailView -->
@@ -342,9 +367,6 @@
     <string name="arrays__settings_default">Sazkariyên jixweber</string>
     <string name="arrays__enabled">Rêdayî</string>
     <string name="arrays__disabled">Neçalakkirî</string>
-    <string name="arrays__name_and_message">Nav û peyam</string>
-    <string name="arrays__name_only">Tenê nav</string>
-    <string name="arrays__no_name_or_message">Nav an peyam nîn e</string>
     <string name="arrays__images">Wêne</string>
     <string name="arrays__audio">Deng</string>
     <string name="arrays__video">Vîdyo</string>
@@ -361,8 +383,6 @@
         <item quantity="other">%d demjimêr</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__pref_enter_sends_title">Tîpa Enter dişîne</string>
-    <string name="preferences__send_link_previews">Pêşdîtinên girêdanê bişîne</string>
     <string name="preferences__screen_security">Ewlehiya ekranê</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">Di lîsta yên dawiyê de û di sepanê de wêneyên ekranê asteng bike</string>
     <string name="preferences__notifications">Danezan</string>
@@ -396,9 +416,6 @@
     <string name="preferences__scan_through_all_conversations_and_enforce_conversation_length_limits">Hemû gotûbêjan sken bike û zorê bide ku sînorên dirêjiya axaftinê</string>
     <string name="preferences__default">Jixweber</string>
     <string name="preferences__incognito_keyboard">Textenivîsa veşartî</string>
-    <string name="preferences__read_receipts">Girtekan bixwîne</string>
-    <string name="preferences__typing_indicators">Nîşandêrên nivîsandinê</string>
-    <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Eger nîşanderên nivîsandinê girtî bin, tu yê nikaribî nîşanderên nivîsandinê bibînî ji ên din.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Textenivîsê bixwaze, da ku hînbûna kesanekirî neçalak bike</string>
     <string name="preferences__light_theme">Sivik</string>
     <string name="preferences__dark_theme">Tarî</string>
@@ -472,11 +489,12 @@
     <string name="LocalBackupJob_creating_backup">Paşekeft tê avakirin...</string>
     <string name="ProgressPreference_d_messages_so_far">Heta niha %d peyam</string>
     <string name="BackupUtil_never">Qet</string>
-    <string name="preferences_app_protection__screen_lock">Qufleya ekranê</string>
-    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Bi şoptilî an jî qufleya ekranê ya Androidê gihîna Sessionê qufle bike</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">Demboriya neçalakbûnê ya qufleya ekranê</string>
     <string name="AppProtectionPreferenceFragment_none">Tune</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <!-- Next round of translation -->
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
 </resources>

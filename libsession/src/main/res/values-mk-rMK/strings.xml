@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">Ја напуштивте групата.</string>
+    <string name="MessageRecord_you_created_a_new_group">Креиравте нова група.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s Ве додаде во групата.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">Ја преименувавте групата во %1$s</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s ја преименува групата во: %2$s</string>
+    <string name="MessageRecord_you_added_s_to_the_group">Го додадовте %1$s во групата.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s го додаде %2$s во групата.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">Го отстранивте %1$s од групата.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s го отстрани %2$s од групата.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">Вие сте отстранети од групата.</string>
+    <string name="MessageRecord_you">Вие</string>
+    <string name="MessageRecord_s_called_you">%s Ви заѕвони</string>
+    <!-- expiration -->
+    <!-- RecipientProvider -->
+</resources>

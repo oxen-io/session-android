@@ -3,8 +3,34 @@
     <string name="yes">Jah</string>
     <string name="no">Ei</string>
     <string name="delete">Kustuta</string>
+    <string name="please_wait">Palun oodake…</string>
     <string name="save">Salvesta</string>
     <string name="note_to_self">Märkus endale</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">Uus sõnum</string>
     <!-- AlbumThumbnailView -->
@@ -346,9 +372,6 @@
     <string name="arrays__settings_default">Seadete vaikeväärtus</string>
     <string name="arrays__enabled">Lubatud</string>
     <string name="arrays__disabled">Keelatud</string>
-    <string name="arrays__name_and_message">Nimi ja sõnum</string>
-    <string name="arrays__name_only">Ainult nimi</string>
-    <string name="arrays__no_name_or_message">Ei nime ega sõnumit</string>
     <string name="arrays__images">Pildid</string>
     <string name="arrays__audio">Heli</string>
     <string name="arrays__documents">Dokumendid</string>
@@ -365,9 +388,6 @@
         <item quantity="other">%d tundi</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__pref_enter_sends_title">Sisestusklahv saadab</string>
-    <string name="preferences__send_link_previews">Saada linkide eelvaateid</string>
-    <string name="preferences__previews_are_supported_for">Eelvaated on toetatud Imgur, Instagram, Pinterest, Reddit ja YouTube linkide puhul</string>
     <string name="preferences__screen_security">Kuva turvamine</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">Blokeeri kuvatõmmised viimatiste nimekirjas ja rakenduse sees</string>
     <string name="preferences__notifications">Teated</string>
@@ -402,9 +422,6 @@
     <string name="preferences__scan_through_all_conversations_and_enforce_conversation_length_limits">Skaneeri kõiki vestlusi ja jõusta vestluspikkuse limiite</string>
     <string name="preferences__default">Vaikimisi</string>
     <string name="preferences__incognito_keyboard">Inkognito klaviatuur</string>
-    <string name="preferences__read_receipts">Lugemiskinnitused</string>
-    <string name="preferences__typing_indicators">Kirjutamisindikaatorid</string>
-    <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Kui kirjutamisindikaatorid on keelatud, ei näe sa neid ka teiste puhul.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Palu klaviatuuril keelata isikupärastatud õppimine</string>
     <string name="preferences__light_theme">Hele</string>
     <string name="preferences__dark_theme">Tume</string>
@@ -478,11 +495,12 @@
     <string name="LocalBackupJob_creating_backup">Varunduse loomine...</string>
     <string name="ProgressPreference_d_messages_so_far">Siiani leidsime %d sõnumit</string>
     <string name="BackupUtil_never">Mitte kunagi</string>
-    <string name="preferences_app_protection__screen_lock">Ekraanilukk</string>
-    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Lukusta Sessioni juurdepääs Androidi lukustuskuva või sõrmejäljega</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">Ekraaniluku ebaaktiivsuse ajalõpp</string>
     <string name="AppProtectionPreferenceFragment_none">Puudub</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <!-- Next round of translation -->
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
 </resources>

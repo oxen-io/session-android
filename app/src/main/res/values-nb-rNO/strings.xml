@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Session</string>
     <string name="yes">Ja</string>
     <string name="no">Nei</string>
     <string name="delete">Slett</string>
     <string name="ban">Bannlys</string>
+    <string name="please_wait">Vennligst vent…</string>
     <string name="save">Lagre</string>
-    <string name="note_to_self">Notat til meg selv</string>
+    <string name="note_to_self">Egne notater</string>
     <string name="version_s">Versjon %s</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">Ny melding</string>
     <!-- AlbumThumbnailView -->
@@ -83,6 +108,8 @@
     <string name="ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video">Session krever tillatelse fra systemet for å kunne ta bilder eller filme, men du har valgt å avslå dette permanent. Gå til «Apper»-menyen på systemet og slå på tillatelsen «Kamera».</string>
     <string name="ConversationActivity_signal_needs_camera_permissions_to_take_photos_or_video">Du må gi Session «Kamera»-tillatelse på systemet for å kunne filme og ta bilder.</string>
     <string name="ConversationActivity_search_position">%1$d av %2$d</string>
+    <string name="ConversationActivity_call_title">Samtaletillatelser er påkrevd</string>
+    <string name="ConversationActivity_call_prompt">Du kan skru på «Lyd- og videosamtaler»-tillatelsene i personvernsinnstillingene.</string>
     <!-- ConversationFragment -->
     <plurals name="ConversationFragment_delete_selected_messages">
         <item quantity="one">Vil du slette valgt melding?</item>
@@ -105,6 +132,10 @@
     <plurals name="ConversationFragment_saving_n_attachments">
         <item quantity="one">Lagrer vedlegg</item>
         <item quantity="other">Lagrer %1$d vedlegg</item>
+    </plurals>
+    <plurals name="ConversationFragment_saving_n_attachments_to_sd_card">
+        <item quantity="one">Lagrer vedlegget til lagringsenheten…</item>
+        <item quantity="other">Lagrer %1$d vedleggene til lagringsenheten…</item>
     </plurals>
     <!-- CreateProfileActivity -->
     <string name="CreateProfileActivity_profile_photo">Profilbilde</string>
@@ -192,6 +223,7 @@
     <!-- SmsMessageRecord -->
     <string name="SmsMessageRecord_received_corrupted_key_exchange_message">Mottok ødelagt
 nøkkelutvekslingsmelding.</string>
+    <string name="SmsMessageRecord_received_key_exchange_message_for_invalid_protocol_version">        Mottok nøkkelutvekslingsmelding angående ugyldig protokollversjon.    </string>
     <string name="SmsMessageRecord_received_message_with_new_safety_number_tap_to_process">Mottatt melding med ny sikkerhetsnummer. Trykk for å behandle og vise.</string>
     <string name="SmsMessageRecord_secure_session_reset">Du tilbakestilte sikker økt.</string>
     <string name="SmsMessageRecord_secure_session_reset_s">%s tilbakestilte sikker økt.</string>
@@ -379,9 +411,9 @@ nøkkelutvekslingsmelding.</string>
     <string name="arrays__settings_default">Standardoppsett</string>
     <string name="arrays__enabled">Slått på</string>
     <string name="arrays__disabled">Slått av</string>
-    <string name="arrays__name_and_message">Navn og melding</string>
-    <string name="arrays__name_only">Bare navn</string>
-    <string name="arrays__no_name_or_message">Ingen navn eller melding</string>
+    <string name="arrays__name_and_message">Navn og innhold</string>
+    <string name="arrays__name_only">Kun navn</string>
+    <string name="arrays__no_name_or_message">Uten navn eller innhold</string>
     <string name="arrays__images">Bilder</string>
     <string name="arrays__audio">Lyd</string>
     <string name="arrays__video">Video</string>
@@ -399,9 +431,14 @@ nøkkelutvekslingsmelding.</string>
         <item quantity="other">%d timer</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__pref_enter_sends_title">Send med enter-tast</string>
-    <string name="preferences__send_link_previews">Send linkforhåndsvisninger</string>
-    <string name="preferences__previews_are_supported_for">Forhåndsvisninger støttes for Imgur, Instagram, Pinterest, Reddit og YouTube-koblinger.</string>
+    <string name="preferences__pref_enter_sends_title">Send med Enter Key</string>
+    <string name="preferences__pref_enter_sends_summary">Ved å trykke på Enter nøkkel vil sende melding i stedet for å starte en ny linje.</string>
+    <string name="preferences__send_link_previews">Send forhåndsvisning av lenker</string>
+    <string name="preferences__link_previews">Forhåndsvisning av lenker</string>
+    <string name="preferences__link_previews_summary">Generer forhåndsvisninger for støttede URL-er.</string>
+    <string name="preferences__pref_autoplay_audio_category">Lyd meldinger</string>
+    <string name="preferences__pref_autoplay_audio_title">Autostart lydmeldinger automatisk</string>
+    <string name="preferences__pref_autoplay_audio_summary">Automatisk avspilling av lydmeldinger.</string>
     <string name="preferences__screen_security">Skjermsikkerhet</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">Blokker skjermbilder i sist brukte-liste og i programmet</string>
     <string name="preferences__notifications">Varsler</string>
@@ -409,6 +446,7 @@ nøkkelutvekslingsmelding.</string>
     <string name="preferences__led_color_unknown">Ukjent</string>
     <string name="preferences__pref_led_blink_title">LED-blinkemønster</string>
     <string name="preferences__sound">Lyd</string>
+    <string name="preferences__in_app_sounds">Lyd når App er åpen</string>
     <string name="preferences__silent">Stille</string>
     <string name="preferences__repeat_alerts">Gjenta varsler</string>
     <string name="preferences__never">Aldri</string>
@@ -436,19 +474,27 @@ nøkkelutvekslingsmelding.</string>
     <string name="preferences__scan_through_all_conversations_and_enforce_conversation_length_limits">Søk gjennom alle samtaler og tving lengdegrenser for samtaler</string>
     <string name="preferences__default">Forvalgt</string>
     <string name="preferences__incognito_keyboard">Inkognito-tastatur</string>
-    <string name="preferences__read_receipts">Lesebekreftelser</string>
-    <string name="preferences__typing_indicators">Skriverindikatorer</string>
-    <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Hvis skriveindikatorer er deaktivert, vil du ikke kunne se skriveindikatorer fra andre.</string>
+    <string name="preferences__read_receipts">Lesekvitteringer</string>
+    <string name="preferences__read_receipts_summary">Send lesebekreftelser i en-til-en chat.</string>
+    <string name="preferences__typing_indicators">Inntastingsindikatorer</string>
+    <string name="preferences__typing_indicators_summary">Se og del inn indikatorer i én-til-én-chats.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Be tastatur om å slå av lærefunksjon</string>
     <string name="preferences__light_theme">Lys</string>
     <string name="preferences__dark_theme">Mørk</string>
     <string name="preferences_chats__message_trimming">Automatisk sletting</string>
+    <string name="preferences_chats__message_trimming_title">Trim Samfunn</string>
+    <string name="preferences_chats__message_trimming_summary">Slett meldinger eldre enn 6 måneder fra samfunn som har over 2 000 meldinger.</string>
     <string name="preferences_advanced__use_system_emoji">Bruk systemets emoji</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Slå av innebygd emoji-støtte i Session</string>
+    <string name="preferences_app_protection__screen_security">Skjermsikkerhet</string>
     <string name="preferences_chats__chats">Samtaler</string>
     <string name="preferences_notifications__messages">Meldinger</string>
     <string name="preferences_notifications__in_chat_sounds">Samtalelyder</string>
+    <string name="preferences_notifications__content">Varsling innhold</string>
+    <string name="preferences_notifications__summary">Informasjonen som vises i varslinger.</string>
     <string name="preferences_notifications__priority">Prioritet</string>
+    <string name="preferences_app_protection__screenshot_notifications">Skjermbilde varsler</string>
+    <string name="preferences_app_protected__screenshot_notifications_summary">Motta et varsel når en kontakt tar et skjermbilde av en en-til-en chat.</string>
     <!-- **************************************** -->
     <!-- menus -->
     <!-- **************************************** -->
@@ -461,7 +507,10 @@ nøkkelutvekslingsmelding.</string>
     <string name="conversation_context__menu_ban_user">Bannlys bruker</string>
     <string name="conversation_context__menu_ban_and_delete_all">Bannlys og slett alle</string>
     <string name="conversation_context__menu_resend_message">Send melding på nytt</string>
+    <string name="conversation_context__menu_reply">Svare</string>
     <string name="conversation_context__menu_reply_to_message">Svar på melding</string>
+    <string name="conversation_context__menu_call">Ringe</string>
+    <string name="conversation_context__menu_select">Velg</string>
     <!-- conversation_context_image -->
     <string name="conversation_context_image__save_attachment">Lagre vedlegg</string>
     <!-- conversation_expiring_off -->
@@ -514,8 +563,8 @@ nøkkelutvekslingsmelding.</string>
     <string name="LocalBackupJob_creating_backup">Tar sikkerhetskopi …</string>
     <string name="ProgressPreference_d_messages_so_far">%d meldinger hittil</string>
     <string name="BackupUtil_never">Aldri</string>
-    <string name="preferences_app_protection__screen_lock">Skjermlås</string>
-    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Lås Session med skjermlås eller fingeravtrykk</string>
+    <string name="preferences_app_protection__screen_lock">Lås Session</string>
+    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Krever fingeravtrykk, PIN, mønster eller passord for å låse opp sesjonen.</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">Tidsavbrudd for skjermlås ved inaktivitet.</string>
     <string name="AppProtectionPreferenceFragment_none">Ingen</string>
     <!-- Conversation activity -->
@@ -523,6 +572,7 @@ nøkkelutvekslingsmelding.</string>
     <!-- Session -->
     <string name="continue_2">Fortsett</string>
     <string name="copy">Kopier</string>
+    <string name="close">Lukk</string>
     <string name="invalid_url">Ugyldig URL</string>
     <string name="copied_to_clipboard">Kopiert til utklippstavle</string>
     <string name="next">Neste</string>
@@ -601,6 +651,7 @@ nøkkelutvekslingsmelding.</string>
     <string name="activity_settings_display_name_too_long_error">Vennligst velg et kortere visningsnavn</string>
     <string name="activity_settings_privacy_button_title">Personvern</string>
     <string name="activity_settings_notifications_button_title">Varsler</string>
+    <string name="activity_settings_message_requests_button_title">Meldingsforespørsel</string>
     <string name="activity_settings_chats_button_title">Samtaler</string>
     <string name="activity_settings_devices_button_title">Enheter</string>
     <string name="activity_settings_invite_button_title">Inviter en venn</string>
@@ -613,16 +664,30 @@ nøkkelutvekslingsmelding.</string>
     <string name="activity_notification_settings_style_section_title">Varsling Stil</string>
     <string name="activity_notification_settings_content_section_title">Varsling innhold</string>
     <string name="activity_privacy_settings_title">Personvern</string>
+    <string name="activity_conversations_settings_title">Samtaler</string>
+    <string name="activity_help_settings_title">Hjelp</string>
+    <string name="activity_help_settings__report_bug_title">Rapporter en feil</string>
+    <string name="activity_help_settings__report_bug_summary">Eksporter logger, deretter last opp filen gjennom sesjonens hjelp-gjenstand.</string>
+    <string name="activity_help_settings__translate_session">Oversett Session</string>
+    <string name="activity_help_settings__feedback">Vi ønsker gjerne dine tilbakemeldinger</string>
+    <string name="activity_help_settings__faq">Ofte Stilte Spørsmål</string>
+    <string name="activity_help_settings__support">Brukerstøtte</string>
+    <string name="activity_help_settings__export_logs">Eksportlogger</string>
     <string name="preferences_notifications_strategy_category_title">Melding Strategi</string>
     <string name="preferences_notifications_strategy_category_fast_mode_title">Bruk rask modus</string>
     <string name="preferences_notifications_strategy_category_fast_mode_summary">Du vil bli varslet om nye meldinger på en pålitelig måte, og umiddelbart ved hjelp av Googles varslingsservere.</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">Endre navn</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Koble fra enhet</string>
     <string name="dialog_seed_title">Din gjenopprettingsfrase</string>
-    <string name="dialog_seed_explanation">Dette er din gjenopprettingsfrase, med den, du kan gjenopprette eller overføre din Session-ID til en ny enhet.</string>
+    <string name="dialog_seed_explanation">Du kan bruke gjenopprettingsfrasen for å gjenopprette kontoen din eller koble en enhet.</string>
     <string name="dialog_clear_all_data_title">Fjern alle data</string>
     <string name="dialog_clear_all_data_explanation">Dette vil permanent slette dine meldinger, økter og kontakter.</string>
     <string name="dialog_clear_all_data_network_explanation">Ønsker du å rense kun denne enheten, eller slette hele kontoen din?</string>
+    <string name="dialog_clear_all_data_message">Dette vil slette meldinger, økter og kontakter for alltid. Vil du kun slette denne enheten, eller slette hele kontoen din?</string>
+    <string name="dialog_clear_all_data_clear_device_only">Tøm bare enheten</string>
+    <string name="dialog_clear_all_data_clear_device_and_network">Tøm enhet og nettverk</string>
+    <string name="dialog_clear_all_data_clear_device_and_network_confirmation">Er du sikker på at du vil slette dataene fra nettverket? Hvis du fortsetter vil du ikke kunne gjenopprette meldinger eller kontakter.</string>
+    <string name="dialog_clear_all_data_clear">Tøm</string>
     <string name="dialog_clear_all_data_local_only">Bare slett</string>
     <string name="dialog_clear_all_data_clear_network">Hele kontoen</string>
     <string name="activity_qr_code_title">QR-kode</string>
@@ -695,6 +760,7 @@ nøkkelutvekslingsmelding.</string>
     <string name="dialog_download_explanation">Er du sikker på at du vil laste ned medier sendt av %s?</string>
     <string name="dialog_download_button_title">Last ned</string>
     <string name="activity_conversation_blocked_banner_text">%s er blokkert. Opphev dem?</string>
+    <string name="activity_conversation_block_user">Blokker bruker</string>
     <string name="activity_conversation_attachment_prep_failed">Kunne ikke forberede vedlegg for sending.</string>
     <string name="media">Medier</string>
     <string name="UntrustedAttachmentView_download_attachment">Trykk for å laste ned %s</string>
@@ -714,4 +780,108 @@ nøkkelutvekslingsmelding.</string>
     <string name="dialog_share_logs_explanation">Ønsker du å eksportere applikasjonsloggene dine for å kunne dele for feilsøking?</string>
     <string name="conversation_pin">Fest</string>
     <string name="conversation_unpin">Løsne</string>
+    <string name="mark_all_as_read">Marker alle som lest</string>
+    <string name="global_search_contacts_groups">Kontakter og grupper</string>
+    <string name="global_search_messages">Meldinger</string>
+    <string name="activity_message_requests_title">Samtaleforespørsler</string>
+    <string name="message_requests_send_notice">Ved å sende en melding til denne brukeren vil du automatisk akseptere deres meldingsforespørsel og avsløre din Session-ID.</string>
+    <string name="accept">Godta</string>
+    <string name="decline">Avslå</string>
+    <string name="message_requests_clear_all">Tøm alle</string>
+    <string name="message_requests_decline_message">Er du sikker på at du vil avslå denne meldingsforespørselen?</string>
+    <string name="message_requests_block_message">Er du sikker på at du vil blokkere denne meldingsforespørselen?</string>
+    <string name="message_requests_deleted">Meldingsforespørsel slettet</string>
+    <string name="message_requests_clear_all_message">Er du sikker på at du vil slette alle meldingsforespørsler?</string>
+    <string name="message_requests_cleared">Meldingsforespørsler slettet</string>
+    <string name="message_requests_accepted">Din meldingsforespørsel har blitt akseptert.</string>
+    <string name="message_requests_pending">Din meldingsforespørsel står for øyeblikket på vent.</string>
+    <string name="message_request_empty_state_message">Ingen ventende meldingsforespørsler</string>
+    <string name="NewConversationButton_SessionTooltip">Direktemelding</string>
+    <string name="NewConversationButton_ClosedGroupTooltip">Lukket gruppe</string>
+    <string name="NewConversationButton_OpenGroupTooltip">Åpen gruppe</string>
+    <string name="message_requests_notification">Du har en ny meldingsforespørsel</string>
+    <string name="CallNotificationBuilder_connecting">Kobler til…</string>
+    <string name="NotificationBarManager__incoming_signal_call">Innkommende anrop</string>
+    <string name="NotificationBarManager__deny_call">Avslå anrop</string>
+    <string name="NotificationBarManager__answer_call">Besvare anrop</string>
+    <string name="NotificationBarManager_call_in_progress">Samtale pågår</string>
+    <string name="NotificationBarManager__cancel_call">Avbryt samtale</string>
+    <string name="NotificationBarManager__establishing_signal_call">Etablerer samtale</string>
+    <string name="NotificationBarManager__end_call">Avslutt samtale</string>
+    <string name="accept_call">Godta samtale</string>
+    <string name="decline_call">Avslå samtale</string>
+    <string name="preferences__voice_video_calls">Lyd- og videosamtaler</string>
+    <string name="preferences__calls_beta">Samtaler (Beta)</string>
+    <string name="preferences__allow_access_voice_video">Aktiverer tale- og videosamtaler til og fra andre brukere.</string>
+    <string name="dialog_voice_video_title">Lyd- / videosamtaler</string>
+    <string name="dialog_voice_video_message">Den nåværende implementasjonen av lyd- / videosamtaler gjør at IP-adressen din blir synliggjort til Oxen Foundation\'s servere og den anropende / oppringte brukeren</string>
+    <string name="CallNotificationBuilder_first_call_title">Anrop tapt</string>
+    <string name="CallNotificationBuilder_first_call_message">Du tapte et anrop fordi du trenger å skru på «Lyd- og videosamtaler»-tillatelsen i personvernsinnstillingene.</string>
+    <string name="WebRtcCallActivity_Session_Call">Session-samtale</string>
+    <string name="WebRtcCallActivity_Reconnecting">Kobler til på nytt…</string>
+    <string name="CallNotificationBuilder_system_notification_title">Varslinger</string>
+    <string name="CallNotificationBuilder_system_notification_message">Ved å ha varslinger avslått forhindres du i å motta anrop, gå til Session\'s varslingsinstillinger?</string>
+    <string name="dismiss">Avvis</string>
+    <string name="activity_settings_conversations_button_title">Samtaler</string>
+    <string name="activity_settings_message_appearance_button_title">Utseende</string>
+    <string name="activity_settings_help_button">Hjelp</string>
+    <string name="activity_appearance_themes_category">Temaer</string>
+    <string name="ocean_dark_theme_name">Hav Mørkt</string>
+    <string name="classic_dark_theme_name">Klassisk Mørk</string>
+    <string name="ocean_light_theme_name">Hav Lys</string>
+    <string name="classic_light_theme_name">Klassisk Lys</string>
+    <string name="activity_appearance_primary_color_category">Primærfarge</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__this_message">Denne meldingen</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__recently_used">Nylige brukte</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__smileys_and_people">Smilemerker og folk</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__nature" comment="Heading for an emoji list's category">Natur</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__food" comment="Heading for an emoji list's category">Mat</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__activities">Aktiviteter</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__places" comment="Heading for an emoji list's category">Steder</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__objects">Objekter</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__symbols">Symboler</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__flags">Flagg</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__emoticons">Emotikoner</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__no_results_found">Fant ingen resultater</string>
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <string name="ReactionsBottomSheetDialogFragment_all">Alle &#183;%1$d</string>
+    <!-- ReactionsConversationView -->
+    <string name="ReactionsConversationView_plus">+%1$d</string>
+    <!-- ReactionsRecipientAdapter -->
+    <string name="ReactionsRecipientAdapter_you">Du</string>
+    <string name="reaction_notification">%1$s reagerte på en melding %2$s</string>
+    <string name="ReactionsConversationView_show_less">Vise mindre</string>
+    <string name="KeyboardPagerFragment_search_emoji">Søke etter emoji\'er</string>
+    <string name="KeyboardPagerfragment_back_to_emoji">Tilbake til emoji</string>
+    <string name="KeyboardPagerfragment_clear_search_entry">Tømme søkefeltet</string>
+    <string name="activity_appearance_follow_system_category">Automatisk mørkmodus</string>
+    <string name="activity_appearance_follow_system_explanation">Match systeminnstillinger</string>
+    <string name="go_to_device_notification_settings">Gå til enhetens varslingsinnstillinger</string>
+    <string name="blocked_contacts_title">Blokkerte kontakter</string>
+    <string name="blocked_contacts_empty_state">Du har ingen blokkerte kontakter</string>
+    <string name="Unblock_dialog__title_single">Opphev blokkering %s</string>
+    <string name="Unblock_dialog__title_multiple">Avblokker brukere</string>
+    <string name="Unblock_dialog__message">Er du sikker på at du vil oppheve blokkeringen av %s?</string>
+    <plurals name="Unblock_dialog__message_multiple_overflow">
+        <item quantity="one">og %d andre</item>
+        <item quantity="other">og %d andre</item>
+    </plurals>
+    <plurals name="ReactionsRecipientAdapter_other_reactors">
+        <item quantity="one">Og %1$d annen har reagert %2$s til denne meldingen</item>
+        <item quantity="other">Og %1$d andre har reagert %2$s til denne meldingen</item>
+    </plurals>
+    <string name="dialog_new_conversation_title">Ny samtale</string>
+    <string name="dialog_new_message_title">Ny melding</string>
+    <string name="activity_create_group_title">Opprett gruppe</string>
+    <string name="dialog_join_community_title">Bli med i nettsamfunn</string>
+    <string name="new_conversation_contacts_title">Kontakter</string>
+    <string name="new_conversation_unknown_contacts_section_title">Ukjent</string>
+    <string name="fragment_enter_public_key_prompt">Start en ny samtale ved å oppgi noens Session ID eller dele din Session ID med dem.</string>
+    <string name="activity_create_group_create_button_title">Opprett</string>
+    <string name="search_contacts_hint">Søk etter kontakter</string>
+    <string name="activity_join_public_chat_enter_community_url_tab_title">Nettstedets URL</string>
+    <string name="fragment_enter_community_url_edit_text_hint">Angi samfunnets URL</string>
+    <string name="fragment_enter_community_url_join_button_title">Bli med</string>
+    <string name="new_conversation_dialog_back_button_content_description">Naviger tilbake</string>
+    <string name="new_conversation_dialog_close_button_content_description">Lukk dialog</string>
 </resources>

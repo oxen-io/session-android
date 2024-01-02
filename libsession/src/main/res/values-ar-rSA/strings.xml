@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">لقد غادرت المجموعة.</string>
+    <string name="MessageRecord_you_created_a_new_group">قمت بإنشاء مجموعة جديدة.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s اضافك الى المجموعة.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">قمت بتغييراسم المجموعة الى %1$s</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s قام باعادة تسمية المجموعة الى %2$s</string>
+    <string name="MessageRecord_you_added_s_to_the_group">لقد اضفت %1$s الى المجموعة.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s قام باضافة %2$s الى المجموعة.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">لقد ازلت %1$s من المجموعة.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s قام بازالة %2$s من الجمموعة.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">لفد تم الغاءك من المجموعة.</string>
+    <string name="MessageRecord_you">انت</string>
+    <string name="MessageRecord_s_called_you">%s اتصل بك</string>
+    <string name="MessageRecord_called_s">اتصلت ب%s</string>
+    <string name="MessageRecord_missed_call_from">لقد فاتتك مكالمة من %s</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">لقد قمت بتعطيل خاصية الرسائل المؤقتة.</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">عطّل %1$s خاصية إختفاء الرسائل التلقائي.</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">لقد عينت وقت اختفاء الرسالة اِلى %1$s</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s حدد وقت اختفاء الرسالة الى %2$s</string>
+    <string name="MessageRecord_s_took_a_screenshot">قام %1$s بتصوير الشاشة.</string>
+    <string name="MessageRecord_media_saved_by_s">قام %1$s بحفظ الوسائط.</string>
+    <!-- expiration -->
+    <string name="expiration_off">مغلق</string>
+    <!-- RecipientProvider -->
+</resources>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">Je hebt de groep verlaten.</string>
+    <string name="MessageRecord_you_created_a_new_group">Je hebt een nieuwe groep aangemaakt.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s heeft je aan de groep toegevoegd.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">Je hebt de groep hernoemd naar %1$s</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s heeft de groep hernoemd naar: %2$s</string>
+    <string name="MessageRecord_you_added_s_to_the_group">Je hebt %1$s toegevoegd aan de groep.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s voegde %2$s toe aan de groep.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">Je hebt %1$s verwijderd van de groep.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s verwijderde %2$s van de groep.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">Je bent verwijderd van de groep.</string>
+    <string name="MessageRecord_you">Jij</string>
+    <string name="MessageRecord_s_called_you">%s heeft je gebeld</string>
+    <string name="MessageRecord_called_s">%s bellen</string>
+    <string name="MessageRecord_missed_call_from">Gemiste oproep van %s</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">Je hebt wissende berichten uitgeschakeld.</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">%1$s heeft wissende berichten uitgeschakeld.</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">Je hebt de wissende berichten teller ingesteld op %1$s</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s heeft de wissende berichten teller ingesteld op %2$s</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$s heeft een schermafbeelding gemaakt.</string>
+    <string name="MessageRecord_media_saved_by_s">Media opgeslagen door %1$s.</string>
+    <!-- expiration -->
+    <string name="expiration_off">Uit</string>
+    <plurals name="expiration_seconds">
+        <item quantity="one">%d seconde</item>
+        <item quantity="other">%d seconden</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%ds</string>
+    <plurals name="expiration_minutes">
+        <item quantity="one">%d minuut</item>
+        <item quantity="other">%d minuten</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">%dm</string>
+    <plurals name="expiration_hours">
+        <item quantity="one">%d uur</item>
+        <item quantity="other">%d uur</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">%du</string>
+    <plurals name="expiration_days">
+        <item quantity="one">%d dag</item>
+        <item quantity="other">%d dagen</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">%dd</string>
+    <plurals name="expiration_weeks">
+        <item quantity="one">%d week</item>
+        <item quantity="other">%d weken</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">%dw</string>
+    <string name="ConversationItem_group_action_left">%1$s heeft de groep verlaten.</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">Groep zonder naam</string>
+</resources>

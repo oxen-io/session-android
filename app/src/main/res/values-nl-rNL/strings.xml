@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Sessie</string>
     <string name="yes">Ja</string>
     <string name="no">Nee</string>
     <string name="delete">Wissen</string>
     <string name="ban">Verbannen</string>
+    <string name="please_wait">Een ogenblik geduld…</string>
     <string name="save">Opslaan</string>
-    <string name="note_to_self">Notitie aan mezelf</string>
+    <string name="note_to_self">Notitie aan mijzelf</string>
     <string name="version_s">Versie %s</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">Nieuw bericht</string>
     <!-- AlbumThumbnailView -->
@@ -32,8 +57,8 @@
     <string name="DraftDatabase_Draft_quote_snippet">(reactie)</string>
     <!-- AttachmentManager -->
     <string name="AttachmentManager_cant_open_media_selection">Geen app gevonden om media te selecteren.</string>
-    <string name="AttachmentManager_signal_requires_the_external_storage_permission_in_order_to_attach_photos_videos_or_audio">Session heeft toegang nodig tot de externe opslagruimte om foto\'s, video\'s of audio te kunnen verzenden, maar deze toestemming is permanent geweigerd. Ga naar de instellingen, selecteer \"Toestemmingen\" en schakel \"Opslagruimte\" in.</string>
-    <string name="AttachmentManager_signal_requires_the_camera_permission_in_order_to_take_photos_but_it_has_been_permanently_denied">Session heeft toegang nodig tot de camera om foto\'s te kunnen maken, maar deze toegang is pertinent geweigerd. Ga naar de instellingen, selecteer ‘Toestemmingen’ en schakel ‘Camera’ in.</string>
+    <string name="AttachmentManager_signal_requires_the_external_storage_permission_in_order_to_attach_photos_videos_or_audio">Session heeft toegang nodig tot de opslagruimte om foto\'s, video\'s of audio te kunnen bijsluiten, maar deze toestemming is permanent geweigerd. Ga naar de instellingen, selecteer \"Toestemmingen\" en schakel \"Opslagruimte\" in.</string>
+    <string name="AttachmentManager_signal_requires_the_camera_permission_in_order_to_take_photos_but_it_has_been_permanently_denied">Session heeft toegang nodig tot de camera om foto\'s te kunnen maken, maar deze toegang is permanent geweigerd. Ga naar de instellingen, selecteer ‘Toestemmingen’ en schakel ‘Camera’ in.</string>
     <!-- AudioSlidePlayer -->
     <string name="AudioSlidePlayer_error_playing_audio">Fout bij afspelen van audio!</string>
     <!-- BucketedThreadMedia -->
@@ -51,9 +76,9 @@
     <string name="ConversationItem_click_to_approve_unencrypted">Verzenden is mislukt, tik om onbeveiligd te verzenden</string>
     <string name="ConversationItem_unable_to_open_media">Geen app gevonden waarmee dit bestand geopend kan openen.</string>
     <string name="ConversationItem_copied_text">%s gekopieerd</string>
-    <string name="ConversationItem_read_more">Kom meer te weten</string>
-    <string name="ConversationItem_download_more">  Download meer</string>
-    <string name="ConversationItem_pending">  In afwachting</string>
+    <string name="ConversationItem_read_more">Lees meer</string>
+    <string name="ConversationItem_download_more">&#160; Download meer</string>
+    <string name="ConversationItem_pending">&#160; In afwachting</string>
     <!-- ConversationActivity -->
     <string name="ConversationActivity_add_attachment">Bijlage toevoegen</string>
     <string name="ConversationActivity_select_contact_info">Selecteer contactinformatie</string>
@@ -63,6 +88,7 @@
     <string name="ConversationActivity_muted_until_date">Gedempt tot %1$s</string>
     <string name="ConversationActivity_muted_forever">Dempen</string>
     <string name="ConversationActivity_member_count">%1$d leden</string>
+    <string name="ConversationActivity_active_member_count">%1$d actieve leden</string>
     <string name="ConversationActivity_open_group_guidelines">Community Richtlijnen</string>
     <string name="ConversationActivity_invalid_recipient">Ongeldige ontvanger!</string>
     <string name="ConversationActivity_added_to_home_screen">Aan thuisscherm toegevoegd</string>
@@ -74,15 +100,17 @@
     <string name="ConversationActivity_unblock">Deblokkeren</string>
     <string name="ConversationActivity_attachment_exceeds_size_limits">Bijlage overschrijdt de maximale grootte voor het type bericht dat je wilt verzenden.</string>
     <string name="ConversationActivity_unable_to_record_audio">Kan audio niet opnemen!</string>
-    <string name="ConversationActivity_there_is_no_app_available_to_handle_this_link_on_your_device">Er is geen app beschikbaar op je apparaat om deze koppeling te openen.</string>
+    <string name="ConversationActivity_there_is_no_app_available_to_handle_this_link_on_your_device">Er is geen app beschikbaar om deze koppeling te openen.</string>
     <string name="ConversationActivity_invite_to_open_group">Leden toevoegen</string>
     <string name="ConversationActivity_to_send_audio_messages_allow_signal_access_to_your_microphone">Om audioberichten op te nemen, moet je Session toegang geven tot je microfoon.</string>
-    <string name="ConversationActivity_signal_requires_the_microphone_permission_in_order_to_send_audio_messages">Session heeft toegang nodig tot de microfoon om audioberichten te kunnen opnemen, maar deze is pertinent geweigerd. Ga naar de instellingen voor deze app, selecteer ‘Machtigingen’ en schakel ‘Microfoon’ in.</string>
+    <string name="ConversationActivity_signal_requires_the_microphone_permission_in_order_to_send_audio_messages">Session heeft toegang nodig tot de microfoon om audioberichten te kunnen opnemen, maar deze is permanent geweigerd. Ga naar de instellingen voor deze app, selecteer ‘Machtigingen’ en schakel ‘Microfoon’ in.</string>
     <string name="ConversationActivity_to_capture_photos_and_video_allow_signal_access_to_the_camera">Geef Session toegang tot de camera om foto\'s en video\'s te maken.</string>
     <string name="ConversationActivity_to_send_photos_and_video_allow_signal_access_to_storage">Sessie heeft toegang nodig tot de opslag om foto\'s en video\'s te kunnen versturen.</string>
-    <string name="ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video">Session heeft toegang nodig tot de camera om foto’s en video’s te kunnen opnemen, maar deze is pertinent geweigerd. Ga naar de instellingen voor deze app, selecteer ‘Machtigingen’ en schakel ‘Camera’ in.</string>
-    <string name="ConversationActivity_signal_needs_camera_permissions_to_take_photos_or_video">Session heeft toegang tot de camera nodig om foto’s en video’s te kunnen opnemen</string>
+    <string name="ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video">Session heeft toegang nodig tot de camera om foto’s en video’s te kunnen opnemen, maar deze is permanent geweigerd. Ga naar de instellingen voor deze app, selecteer ‘Machtigingen’ en schakel ‘Camera’ in.</string>
+    <string name="ConversationActivity_signal_needs_camera_permissions_to_take_photos_or_video">Session heeft toegang tot de camera nodig om foto’s en video’s te kunnen maken.</string>
     <string name="ConversationActivity_search_position">%1$d van %2$d</string>
+    <string name="ConversationActivity_call_title">Oproepmachtigingen vereist</string>
+    <string name="ConversationActivity_call_prompt">U kunt de machtiging \'Spraak- en video-oproepen\' inschakelen in de privacy-instellingen.</string>
     <!-- ConversationFragment -->
     <plurals name="ConversationFragment_delete_selected_messages">
         <item quantity="one">Geselecteerd bericht wissen?</item>
@@ -93,18 +121,22 @@
         <item quantity="other">Dit zal alle %1$d geselecteerde berichten onherroepelijk wissen.</item>
     </plurals>
     <string name="ConversationFragment_ban_selected_user">Deze gebruiker verbannen?</string>
-    <string name="ConversationFragment_save_to_sd_card">Opslaan naar SD-kaart?</string>
+    <string name="ConversationFragment_save_to_sd_card">Opslaan naar opslag?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">Als je dit bestand opslaat op de SD-kaart wordt het niet versleuteld opgeslagen en hebben alle andere apps op je apparaat toegang tot dit bestand.\n\nDoorgaan?</item>
-        <item quantity="other">Als je deze %1$d bestanden opslaat op de SD-kaart worden ze niet versleuteld opgeslagen en hebben alle andere apps op je apparaat ook toegang tot deze bestanden.\n\nDoorgaan?</item>
+        <item quantity="one">Als je dit bestand opslaat op de opslag hebben alle andere apps op je apparaat toegang tot dit bestand.\n\nDoorgaan?</item>
+        <item quantity="other">Als je deze %1$d bestanden opslaat op de opslag hebben alle andere apps op je apparaat ook toegang tot deze bestanden.\n\nDoorgaan?</item>
     </plurals>
     <plurals name="ConversationFragment_error_while_saving_attachments_to_sd_card">
-        <item quantity="one">Fout tijdens het opslaan van de bijlage op de SD-kaart!</item>
-        <item quantity="other">Fout tijdens het opslaan van de bijlage op de SD-kaart!</item>
+        <item quantity="one">Fout tijdens het opslaan van de bijlage op de opslag!</item>
+        <item quantity="other">Fout tijdens het opslaan van de bijlagen op de opslag!</item>
     </plurals>
     <plurals name="ConversationFragment_saving_n_attachments">
         <item quantity="one">Bijlage aan het opslaan</item>
         <item quantity="other">%1$d bijlagen aan het opslaan</item>
+    </plurals>
+    <plurals name="ConversationFragment_saving_n_attachments_to_sd_card">
+        <item quantity="one">Bijlage opslaan naar opslag…</item>
+        <item quantity="other">Opslaan van %1$d bijlagen naar opslag…</item>
     </plurals>
     <!-- CreateProfileActivity -->
     <string name="CreateProfileActivity_profile_photo">Profielfoto</string>
@@ -133,7 +165,7 @@
     <!-- LongMessageActivity -->
     <string name="LongMessageActivity_unable_to_find_message">Kan bericht niet vinden</string>
     <string name="LongMessageActivity_message_from_s">Bericht van %1$s</string>
-    <string name="LongMessageActivity_your_message">Je bericht</string>
+    <string name="LongMessageActivity_your_message">Jou bericht</string>
     <!-- MediaOverviewActivity -->
     <string name="MediaOverviewActivity_Media">Media</string>
     <plurals name="MediaOverviewActivity_Media_delete_confirm_title">
@@ -145,10 +177,10 @@
         <item quantity="other">Dit zal alle %1$d geselecteerde berichten onherroepelijk wissen.</item>
     </plurals>
     <string name="MediaOverviewActivity_Media_delete_progress_title">Aan het verwijderen</string>
-    <string name="MediaOverviewActivity_Media_delete_progress_message">Berichten aan het verwijderen…</string>
+    <string name="MediaOverviewActivity_Media_delete_progress_message">Berichten aan het verwijderen...</string>
     <string name="MediaOverviewActivity_Documents">Documenten</string>
     <string name="MediaOverviewActivity_Select_all">Alles selecteren</string>
-    <string name="MediaOverviewActivity_collecting_attachments">Bijlagen aan het verzamelen…</string>
+    <string name="MediaOverviewActivity_collecting_attachments">Bijlagen aan het verzamelen...</string>
     <!-- NotificationMmsMessageRecord -->
     <string name="NotificationMmsMessageRecord_multimedia_message">Multimediabericht</string>
     <string name="NotificationMmsMessageRecord_downloading_mms_message">Mms-bericht aan het downloaden</string>
@@ -156,8 +188,8 @@
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Verzenden naar %s</string>
     <!-- MediaSendActivity -->
-    <string name="MediaSendActivity_add_a_caption">Voeg een bijschrift toe…</string>
-    <string name="MediaSendActivity_an_item_was_removed_because_it_exceeded_the_size_limit">Een of meer bijlagen zijn niet toegevoegd omdat die de bestandsgroottelimiet overschrijden</string>
+    <string name="MediaSendActivity_add_a_caption">Voeg een bijschrift toe...</string>
+    <string name="MediaSendActivity_an_item_was_removed_because_it_exceeded_the_size_limit">Een bijlage is niet toegevoegd omdat die de bestandsgroottelimiet overschrijd</string>
     <string name="MediaSendActivity_camera_unavailable">Camera niet beschikbaar.</string>
     <string name="MediaSendActivity_message_to_s">Bericht aan %s</string>
     <plurals name="MediaSendActivity_cant_share_more_than_n_items">
@@ -169,12 +201,12 @@
     <!-- MessageRecord -->
     <string name="MessageRecord_message_encrypted_with_a_legacy_protocol_version_that_is_no_longer_supported">Dit bericht gebruikt verouderde versleuteling van een Session-versie die niet langer ondersteund wordt. Vraag de afzender om bij te werken naar de meest recente versie en het bericht opnieuw te verzenden.</string>
     <string name="MessageRecord_left_group">Je hebt de groep verlaten.</string>
-    <string name="MessageRecord_you_updated_group">Je hebt de groep aangepast.</string>
-    <string name="MessageRecord_s_updated_group">%s heeft de groep aangepast.</string>
+    <string name="MessageRecord_you_updated_group">Je hebt de groep bijgewerkt.</string>
+    <string name="MessageRecord_s_updated_group">%s heeft de groep bijgewerkt.</string>
     <!-- ExpirationDialog -->
     <string name="ExpirationDialog_disappearing_messages">Zelf-wissende berichten</string>
-    <string name="ExpirationDialog_your_messages_will_not_expire">Berichten zullen zichzelf niet wissen.</string>
-    <string name="ExpirationDialog_your_messages_will_disappear_s_after_they_have_been_seen">Nieuwe berichten die in dit gesprek verzonden en ontvangen worden zullen %s nadat ze gelezen zijn zichzelf wissen.</string>
+    <string name="ExpirationDialog_your_messages_will_not_expire">Je berichten zullen niet verlopen.</string>
+    <string name="ExpirationDialog_your_messages_will_disappear_s_after_they_have_been_seen">Berichten die in dit gesprek verzonden en ontvangen worden zullen %s nadat ze gelezen zijn zichzelf wissen.</string>
     <!-- PassphrasePromptActivity -->
     <string name="PassphrasePromptActivity_enter_passphrase">Voer wachtwoord in</string>
     <!-- RecipientPreferencesActivity -->
@@ -192,6 +224,8 @@
     <!-- SmsMessageRecord -->
     <string name="SmsMessageRecord_received_corrupted_key_exchange_message">Beschadigd sleuteluitwisselingsbericht
         ontvangen!
+    </string>
+    <string name="SmsMessageRecord_received_key_exchange_message_for_invalid_protocol_version">        Sleuteluitwisselingsbericht ontvangen voor een verkeerde protocolversie.
     </string>
     <string name="SmsMessageRecord_received_message_with_new_safety_number_tap_to_process">Er is een bericht met een nieuw veiligheidsnummer ontvangen. Tik om te verwerken en te tonen.</string>
     <string name="SmsMessageRecord_secure_session_reset">Je hebt de beveiligde sessie opnieuw ingesteld.</string>
@@ -236,7 +270,7 @@
     <string name="MediaPreviewActivity_you">Jij</string>
     <string name="MediaPreviewActivity_unssuported_media_type">Niet-ondersteund mediatype</string>
     <string name="MediaPreviewActivity_draft">Concept</string>
-    <string name="MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied">Session heeft toegang tot de camera nodig om een QR-code te scannen, maar deze is pertinent geweigerd. Ga naar de instellingen voor deze app, selecteer ‘Machtigingen’ en schakel ‘Camera’ in.</string>
+    <string name="MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied">Session heeft toegang tot de opslag nodig om naar de externe opslag op te slaan, maar deze is permanent geweigerd. Ga naar de instellingen voor deze app, selecteer ‘Machtigingen’ en schakel ‘Opslag’ in.</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Kan niet opslaan naar externe opslag zonder machtiging</string>
     <string name="MediaPreviewActivity_media_delete_confirmation_title">Bericht wissen?</string>
     <string name="MediaPreviewActivity_media_delete_confirmation_message">Dit bericht zal onherroepelijk gewist worden.</string>
@@ -251,7 +285,7 @@
     <string name="MessageNotifier_mark_read">Markeren als gelezen</string>
     <string name="MessageNotifier_reply">Reageren</string>
     <string name="MessageNotifier_pending_signal_messages">Session-berichten in wachtrij</string>
-    <string name="MessageNotifier_you_have_pending_signal_messages">Er staan Signal-berichten in de wachtrij, tik om Session te openen en om ze op te halen</string>
+    <string name="MessageNotifier_you_have_pending_signal_messages">Er staan Session-berichten in de wachtrij, tik om te openen en ze op te halen</string>
     <string name="MessageNotifier_contact_message">%1$s %2$s</string>
     <string name="MessageNotifier_unknown_contact_message">Contactpersoon</string>
     <!-- Notification Channels -->
@@ -260,8 +294,8 @@
     <string name="NotificationChannel_failures">Mislukkingen</string>
     <string name="NotificationChannel_backups">Back-ups</string>
     <string name="NotificationChannel_locked_status">Vergrendelingstoestand</string>
-    <string name="NotificationChannel_app_updates">Nieuwe versies van de app </string>
-    <string name="NotificationChannel_other">Anders</string>
+    <string name="NotificationChannel_app_updates">Nieuwe versies van de app</string>
+    <string name="NotificationChannel_other">Overige</string>
     <string name="NotificationChannel_group_messages">Berichten</string>
     <string name="NotificationChannel_missing_display_name">Onbekend</string>
     <!-- QuickResponseService -->
@@ -301,7 +335,7 @@
     <string name="attachment_type_selector__file">Bestand</string>
     <string name="attachment_type_selector__drawer_description">Bijlageoverzicht tonen/verbergen</string>
     <!-- contact_selection_group_activity -->
-    <string name="contact_selection_group_activity__finding_contacts">Contactpersonen laden…</string>
+    <string name="contact_selection_group_activity__finding_contacts">&#8230; contactpersonen laden</string>
     <!-- conversation_activity -->
     <string name="conversation_activity__send">Verzenden</string>
     <string name="conversation_activity__compose_description">Berichtsamenstelling</string>
@@ -310,7 +344,7 @@
     <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Camera overzicht tonen/verbergen</string>
     <string name="conversation_activity__quick_attachment_drawer_record_and_send_audio_description">Geluid opnemen en verzenden</string>
     <string name="conversation_activity__quick_attachment_drawer_lock_record_description">Vergrendel opnemen van audio</string>
-    <string name="conversation_activity__enable_signal_for_sms">Gebruik Session voor sms</string>
+    <string name="conversation_activity__enable_signal_for_sms">Session gebruiken voor SMS</string>
     <!-- conversation_input_panel -->
     <string name="conversation_input_panel__slide_to_cancel">Veeg om te annuleren</string>
     <string name="conversation_input_panel__cancel">Annuleren</string>
@@ -380,9 +414,9 @@
     <string name="arrays__settings_default">Gebruik systeem-standaard</string>
     <string name="arrays__enabled">Ingeschakeld</string>
     <string name="arrays__disabled">Uitgeschakeld</string>
-    <string name="arrays__name_and_message">Naam en bericht</string>
+    <string name="arrays__name_and_message">Naam en inhoud</string>
     <string name="arrays__name_only">Alleen naam</string>
-    <string name="arrays__no_name_or_message">Geen naam en geen bericht</string>
+    <string name="arrays__no_name_or_message">Geen naam of inhoud</string>
     <string name="arrays__images">Afbeeldingen</string>
     <string name="arrays__audio">Geluid</string>
     <string name="arrays__video">Video</string>
@@ -400,18 +434,24 @@
         <item quantity="other">%d uur</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__pref_enter_sends_title">Enter-toets verzendt</string>
-    <string name="preferences__send_link_previews">Voorbeeldweergaven verzenden</string>
-    <string name="preferences__previews_are_supported_for">Voorbeelden worden ondersteund voor koppelingen naar Imgur, Instagram, Pinterest, Reddit en YouTube</string>
+    <string name="preferences__pref_enter_sends_title">Verzenden met Enter toets</string>
+    <string name="preferences__pref_enter_sends_summary">Met de Enter Toets direct het bericht versturen in plaats van een nieuwe regel beginnen.</string>
+    <string name="preferences__send_link_previews">Verstuur Link-voorbeelden</string>
+    <string name="preferences__link_previews">Link-voorbeelden</string>
+    <string name="preferences__link_previews_summary">Genereer linkvoorbeelden voor ondersteunde URL\'s.</string>
+    <string name="preferences__pref_autoplay_audio_category">Audio berichten</string>
+    <string name="preferences__pref_autoplay_audio_title">Audio-berichten automatisch afspelen</string>
+    <string name="preferences__pref_autoplay_audio_summary">Automatisch achtereenvolgende audioberichten afspelen.</string>
     <string name="preferences__screen_security">Schermafdrukken blokkeren</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">Blokkeer het maken van schermafdrukken zowel in de app als in de lijst van recent gebruikte apps</string>
     <string name="preferences__notifications">Meldingen</string>
-    <string name="preferences__led_color">Notificatie-LED-kleur</string>
+    <string name="preferences__led_color">LED kleur</string>
     <string name="preferences__led_color_unknown">Onbekend</string>
-    <string name="preferences__pref_led_blink_title">Notificatie-LED-knipperpatroon</string>
+    <string name="preferences__pref_led_blink_title">LED knipperpatroon</string>
     <string name="preferences__sound">Geluid</string>
+    <string name="preferences__in_app_sounds">Geluid wanneer de app geopend is</string>
     <string name="preferences__silent">Stil</string>
-    <string name="preferences__repeat_alerts">Herhaal meldingen</string>
+    <string name="preferences__repeat_alerts">Herhaal waarschuwingen</string>
     <string name="preferences__never">Nooit</string>
     <string name="preferences__one_time">Een keer</string>
     <string name="preferences__two_times">Twee keer</string>
@@ -438,23 +478,32 @@
     <string name="preferences__default">Systeem-standaard</string>
     <string name="preferences__incognito_keyboard">Incognito toetsenbord</string>
     <string name="preferences__read_receipts">Leesbevestigingen</string>
+    <string name="preferences__read_receipts_summary">Verstuur leesbevestigingen in één-op-één chats.</string>
     <string name="preferences__typing_indicators">Typindicatoren</string>
-    <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Als typindicatoren zijn uitgeschakeld, kunnen anderen niet zien of je aan het typen bent, maar je kunt ook niet zien wanneer anderen aan het typen zijn.</string>
+    <string name="preferences__typing_indicators_summary">Bekijk en deel type-indicatoren in één-op-één chats.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Schakel gepersonaliseerd leren van toetsenbord uit</string>
     <string name="preferences__light_theme">Licht</string>
     <string name="preferences__dark_theme">Donker</string>
     <string name="preferences_chats__message_trimming">Beperk bewaartermijn</string>
+    <string name="preferences_chats__message_trimming_title">Reduceer communities</string>
+    <string name="preferences_chats__message_trimming_summary">Berichten ouder dan 6 maanden verwijderen uit Communities met meer dan 2000 berichten.</string>
     <string name="preferences_advanced__use_system_emoji">Gebruik systeem-emoji</string>
-    <string name="preferences_advanced__disable_signal_built_in_emoji_support">Schakel de ingebouwde emoji-ondersteuning van Session uit.</string>
+    <string name="preferences_advanced__disable_signal_built_in_emoji_support">Schakel de ingebouwde emoji-ondersteuning van Session uit</string>
+    <string name="preferences_app_protection__screen_security">Scherm beveiliging</string>
     <string name="preferences_chats__chats">Gesprekken</string>
     <string name="preferences_notifications__messages">Berichten</string>
     <string name="preferences_notifications__in_chat_sounds">Ook geluid als Session al geopend is</string>
-    <string name="preferences_notifications__priority">Belangrijkheid</string>
+    <string name="preferences_notifications__content">Notificatie inhoud</string>
+    <string name="preferences_notifications__content_message">Tonen:</string>
+    <string name="preferences_notifications__summary">De informatie die getoond wordt in meldingen.</string>
+    <string name="preferences_notifications__priority">Prioriteit</string>
+    <string name="preferences_app_protection__screenshot_notifications">Screenshot Notificaties</string>
+    <string name="preferences_app_protected__screenshot_notifications_summary">Ontvang een waarschuwing notificatie wanneer een contact een schermafbeelding maakt van een één-op-een-één chat.</string>
     <!-- **************************************** -->
     <!-- menus -->
     <!-- **************************************** -->
     <!-- contact_selection_list -->
-    <string name="contact_selection_list__unknown_contact">Nieuw bericht naar…</string>
+    <string name="contact_selection_list__unknown_contact">Nieuw bericht naar...</string>
     <!-- conversation_context -->
     <string name="conversation_context__menu_message_details">Berichtdetails</string>
     <string name="conversation_context__menu_copy_text">Tekst kopiëren</string>
@@ -462,7 +511,10 @@
     <string name="conversation_context__menu_ban_user">Verban gebruiker</string>
     <string name="conversation_context__menu_ban_and_delete_all">Blokkeer en verwijder alles</string>
     <string name="conversation_context__menu_resend_message">Bericht opnieuw verzenden</string>
+    <string name="conversation_context__menu_reply">Reageren</string>
     <string name="conversation_context__menu_reply_to_message">Reageren</string>
+    <string name="conversation_context__menu_call">Bellen</string>
+    <string name="conversation_context__menu_select">Selecteren</string>
     <!-- conversation_context_image -->
     <string name="conversation_context_image__save_attachment">Bijlage opslaan</string>
     <!-- conversation_expiring_off -->
@@ -474,14 +526,14 @@
     <!-- conversation_unmuted -->
     <string name="conversation_unmuted__mute_notifications">Demp meldingen</string>
     <!-- conversation -->
-    <string name="conversation__menu_edit_group">Groep aanpassen</string>
+    <string name="conversation__menu_edit_group">Groep bewerken</string>
     <string name="conversation__menu_leave_group">Groep verlaten</string>
     <string name="conversation__menu_view_all_media">Alle media</string>
     <string name="conversation__menu_add_shortcut">Aan thuisscherm toevoegen</string>
     <!-- conversation_popup -->
     <string name="conversation_popup__menu_expand_popup">Pop-up vergroten</string>
     <!-- conversation_group_options -->
-    <string name="conversation_group_options__delivery">Verzending</string>
+    <string name="conversation_group_options__delivery">Bezorging</string>
     <string name="conversation_group_options__conversation">Gesprek</string>
     <string name="conversation_group_options__broadcast">Uitzenden</string>
     <!-- media_preview -->
@@ -494,29 +546,29 @@
     <string name="media_preview_activity__media_content_description">Mediavoorbeeld</string>
     <!-- Trimmer -->
     <string name="trimmer__deleting">Aan het verwijderen</string>
-    <string name="trimmer__deleting_old_messages">Oude berichten aan het verwijderen…</string>
+    <string name="trimmer__deleting_old_messages">Oude berichten aan het verwijderen...</string>
     <string name="trimmer__old_messages_successfully_deleted">Oude berichten succesvol gewist</string>
     <!-- transport_selection_list_item -->
     <string name="Permissions_permission_required">Toestemming vereist</string>
     <string name="Permissions_continue">Doorgaan</string>
     <string name="Permissions_not_now">Niet nu</string>
-    <string name="backup_enable_dialog__backups_will_be_saved_to_external_storage_and_encrypted_with_the_passphrase_below_you_must_have_this_passphrase_in_order_to_restore_a_backup">Back-ups worden opgeslagen op het externe opslaggeheugen en versleuteld met het wachtwoord hieronder. Je hebt dit wachtwoord nodig om de back-up terug te zetten.</string>
+    <string name="backup_enable_dialog__backups_will_be_saved_to_external_storage_and_encrypted_with_the_passphrase_below_you_must_have_this_passphrase_in_order_to_restore_a_backup">Back-ups worden opgeslagen op de externe opslag en versleuteld met het wachtwoord hieronder. Je hebt dit wachtwoord nodig om de back-up terug te zetten.</string>
     <string name="backup_enable_dialog__i_have_written_down_this_passphrase">Ik heb dit wachtwoord opgeschreven. Zonder dit wachtwoord kan ik deze back-up niet terugzetten.</string>
     <string name="registration_activity__skip">Overslaan</string>
     <string name="RegistrationActivity_backup_failure_downgrade">Kan geen back-ups importeren uit nieuwere versies van Session</string>
-    <string name="RegistrationActivity_incorrect_backup_passphrase">Verkeerd back-upwachtwoord</string>
-    <string name="BackupDialog_enable_local_backups">Session back-ups laten maken?</string>
+    <string name="RegistrationActivity_incorrect_backup_passphrase">Verkeerd back-up wachtwoord</string>
+    <string name="BackupDialog_enable_local_backups">Lokale back-ups inschakelen?</string>
     <string name="BackupDialog_enable_backups">Back-ups inschakelen</string>
-    <string name="BackupDialog_please_acknowledge_your_understanding_by_marking_the_confirmation_check_box">Verklaar dat je het begrijpt door het selectievakje aan te vinken.</string>
-    <string name="BackupDialog_delete_backups">Alle back-ups wissen?</string>
-    <string name="BackupDialog_disable_and_delete_all_local_backups">Als je Signal niet langer back-ups wilt laten maken, dan zal Signal ook alle bestaande back-ups van /Session/Backups wissen, om er zeker van te zijn dat er geen oude gesprekken op je apparaat achterblijven.</string>
-    <string name="BackupDialog_delete_backups_statement">Back-ups wissen</string>
+    <string name="BackupDialog_please_acknowledge_your_understanding_by_marking_the_confirmation_check_box">Verklaar dat je het begrijpt door het selectievak aan te vinken.</string>
+    <string name="BackupDialog_delete_backups">Alle back-ups verwijderen?</string>
+    <string name="BackupDialog_disable_and_delete_all_local_backups">Uitschakelen en verwijderen van alle lokale back-ups?</string>
+    <string name="BackupDialog_delete_backups_statement">Back-ups verwijderen</string>
     <string name="BackupDialog_copied_to_clipboard">Gekopieerd naar klembord</string>
-    <string name="LocalBackupJob_creating_backup">Back-up aan het maken…</string>
+    <string name="LocalBackupJob_creating_backup">Back-up aan het maken...</string>
     <string name="ProgressPreference_d_messages_so_far">%d berichten tot nu toe</string>
     <string name="BackupUtil_never">Nooit</string>
-    <string name="preferences_app_protection__screen_lock">Schermvergrendeling</string>
-    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Vergrendel Session met de Android-schermvergrendeling of vingerafdruk.</string>
+    <string name="preferences_app_protection__screen_lock">Vergrendel Sessie</string>
+    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Vingerafdruk, PIN, patroon of wachtwoord vereisen om Sessie te ontgrendelen.</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">Inactiviteitsduur voor schermvergrendeling</string>
     <string name="AppProtectionPreferenceFragment_none">Geen</string>
     <!-- Conversation activity -->
@@ -524,119 +576,135 @@
     <!-- Session -->
     <string name="continue_2">Doorgaan</string>
     <string name="copy">Kopiëren</string>
+    <string name="close">Sluiten</string>
     <string name="invalid_url">Ongeldige URL</string>
     <string name="copied_to_clipboard">Gekopieerd naar klembord</string>
     <string name="next">Volgende</string>
     <string name="share">Delen</string>
-    <string name="invalid_session_id">Ongeldige Sessie-ID</string>
+    <string name="invalid_session_id">Ongeldige Sessie ID</string>
     <string name="cancel">Annuleren</string>
-    <string name="your_session_id">Uw Sessie-ID</string>
-    <string name="activity_landing_title_2">Uw sessie begint hier...</string>
-    <string name="activity_landing_register_button_title">Sessie-ID aanmaken</string>
-    <string name="activity_landing_restore_button_title">Doorgaan met uw sessie</string>
-    <string name="view_fake_chat_bubble_1">Wat is Sessie?</string>
-    <string name="view_fake_chat_bubble_2">Het is een gedecentraliseerde, versleutelde berichten-app</string>
-    <string name="view_fake_chat_bubble_3">Dus het verzamelt geen persoonlijke informatie of de metagegevens van mijn gesprek? Hoe werkt het?</string>
+    <string name="your_session_id">Jou Sessie ID</string>
+    <string name="activity_landing_title_2">Je sessie begint hier...</string>
+    <string name="activity_landing_register_button_title">Sessie ID aanmaken</string>
+    <string name="activity_landing_restore_button_title">Doorgaan met je sessie</string>
+    <string name="view_fake_chat_bubble_1">Wat is Session?</string>
+    <string name="view_fake_chat_bubble_2">Het is een gedecentraliseerde, versleutelde berichten app</string>
+    <string name="view_fake_chat_bubble_3">Dus het verzamelt geen persoonlijke informatie of metagegevens van mijn gesprek? Hoe werkt het?</string>
     <string name="view_fake_chat_bubble_4">Met behulp van een combinatie van geavanceerde anonieme routing en end-to-end encryptietechnologieën.</string>
-    <string name="view_fake_chat_bubble_5">Vrienden laten vrienden geen gecomprimeerde berichten apps gebruiken. Graag gedaan.</string>
-    <string name="activity_register_title">Zeg hallo tegen uw Sessie-ID</string>
-    <string name="activity_register_explanation">Uw Sessie-ID is het unieke adres dat mensen kunnen gebruiken om contact met u op te nemen via Sessie. Zonder verbinding met je echte identiteit, is je Sessie-ID volledig anoniem en privé.</string>
-    <string name="activity_restore_title">Uw account herstellen</string>
-    <string name="activity_restore_explanation">Voer de herstel zin in die u hebt gekregen toen u uwzelf hebt aangemeld om uw account te herstellen.</string>
-    <string name="activity_restore_seed_edit_text_hint">Voer uw herstel zin in</string>
+    <string name="view_fake_chat_bubble_5">Vrienden laten vrienden geen gecompromitteerde berichtenapps gebruiken. Graag gedaan.</string>
+    <string name="activity_register_title">Zeg hallo tegen je Sessie ID</string>
+    <string name="activity_register_explanation">Jou Sessie ID is het unieke adres dat mensen kunnen gebruiken om contact met je op te nemen via Session. Je Sessie ID is volledig anoniem en privé.</string>
+    <string name="activity_restore_title">Je account herstellen</string>
+    <string name="activity_restore_explanation">Voer de herstel zin in die je hebt gekregen toen je jezelf hebt aangemeld om je account te herstellen.</string>
+    <string name="activity_restore_seed_edit_text_hint">Voer je herstel zin in</string>
     <string name="activity_display_name_title_2">Kies je weergavenaam</string>
-    <string name="activity_display_name_explanation">Dit is je naam wanneer je Sessie gebruikt. Het kan je echte naam zijn, een alias, of wat je maar wilt.</string>
+    <string name="activity_display_name_explanation">Dit is je naam wanneer je Session gebruikt. Het kan je echte naam zijn, een alias, of wat je maar wil.</string>
     <string name="activity_display_name_edit_text_hint">Voer een weergavenaam in</string>
-    <string name="activity_display_name_display_name_missing_error">Kies a.u.b. een weergavenaam</string>
-    <string name="activity_display_name_display_name_too_long_error">Kies a.u.b. een kortere weergavenaam</string>
+    <string name="activity_display_name_display_name_missing_error">Kies alsjeblieft een weergavenaam</string>
+    <string name="activity_display_name_display_name_too_long_error">Kies alsjeblieft een kortere weergavenaam</string>
     <string name="activity_pn_mode_recommended_option_tag">Aanbevolen</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Gelieve een optie te selecteren</string>
-    <string name="activity_home_empty_state_message">U heeft nog geen contactpersonen</string>
+    <string name="activity_home_empty_state_message">Je hebt nog geen contactpersonen</string>
     <string name="activity_home_empty_state_button_title">Sessie starten</string>
-    <string name="activity_home_leave_group_dialog_message">Weet u zeker dat u deze groep wilt verlaten?</string>
+    <string name="activity_home_leave_group_dialog_message">Weet je zeker dat je deze groep wil verlaten?</string>
     <string name="activity_home_leaving_group_failed_message">"Kon de groep niet verlaten"</string>
-    <string name="activity_home_delete_conversation_dialog_message">Weet u zeker dat u deze groep wilt verlaten?</string>
+    <string name="activity_home_delete_conversation_dialog_message">Weet je zeker dat je dit gesprek wil verwijderen?</string>
     <string name="activity_home_conversation_deleted_message">Gesprek verwijderd</string>
-    <string name="activity_seed_title">Uw herstel zin</string>
-    <string name="activity_seed_title_2">Maak kennis met uw herstel zin</string>
-    <string name="activity_seed_explanation">Uw herstel zin is de hoofdsleutel van uw Sessie-ID - u kunt deze gebruiken om uw Sessie-ID te herstellen als u de toegang tot uw apparaat verliest. Sla uw herstel zin op op een veilige plaats op en geef het aan niemand anders.</string>
+    <string name="activity_seed_title">Je herstel zin</string>
+    <string name="activity_seed_title_2">Maak kennis met je herstel zin</string>
+    <string name="activity_seed_explanation">Je herstel zin is de hoofdsleutel van je Sessie ID - je kan deze gebruiken om je Sessie ID te herstellen als je de toegang tot je apparaat verliest. Sla je herstel zin op, op een veilige plaats en geef het aan niemand anders.</string>
     <string name="activity_seed_reveal_button_title">Ingedrukt houden om te onthullen</string>
     <string name="view_seed_reminder_title">Je bent bijna klaar! 80%</string>
-    <string name="view_seed_reminder_subtitle_1">Beveilig uw account door uw herstel zin op te slaan</string>
-    <string name="view_seed_reminder_subtitle_2">Hou de herschreven woorden ingedrukt om uw herstelzin te onthullen, en sla het vervolgens veilig op om uw Sessie-ID te beveiligen.</string>
-    <string name="view_seed_reminder_subtitle_3">Zorg ervoor dat u uw herstel zin op een veilige plek opslaat</string>
+    <string name="view_seed_reminder_subtitle_1">Beveilig je account door je herstel zin op te slaan</string>
+    <string name="view_seed_reminder_subtitle_2">Hou de herschreven woorden ingedrukt om je herstelzin te tonen, en sla het vervolgens veilig op om je Sessie ID te beveiligen.</string>
+    <string name="view_seed_reminder_subtitle_3">Zorg ervoor dat je je herstel zin op een veilige plek bewaard</string>
     <string name="activity_path_title">Locatie</string>
-    <string name="activity_path_explanation">Session verbergt uw IP door uw berichten te routeren via meerdere Service Nodes in het gedecentraliseerde netwerk van Sessie. Dit zijn de landen die uw verbinding momenteel doorvoert:</string>
-    <string name="activity_path_device_row_title">U</string>
+    <string name="activity_path_explanation">Session verbergt je IP door je berichten te routeren via meerdere Service Nodes in het gedecentraliseerde netwerk van Session. Dit zijn de landen die je verbinding momenteel doorvoeren:</string>
+    <string name="activity_path_device_row_title">Jij</string>
     <string name="activity_path_guard_node_row_title">Invoer node</string>
     <string name="activity_path_service_node_row_title">Service node</string>
     <string name="activity_path_destination_row_title">Bestemming</string>
     <string name="activity_path_learn_more_button_title">Kom meer te weten</string>
-    <string name="activity_path_resolving_progress">Bezig met verwerken...</string>
+    <string name="activity_path_resolving_progress">Bezig met verwerken…</string>
     <string name="activity_create_private_chat_title">Nieuwe sessie</string>
-    <string name="activity_create_private_chat_enter_session_id_tab_title">Uw Sessie-ID</string>
-    <string name="activity_create_private_chat_scan_qr_code_tab_title">Scan QR-code</string>
-    <string name="activity_create_private_chat_scan_qr_code_explanation">Scan de QR-code van een gebruiker om een sessie te starten. QR-codes kunnen worden gevonden door op het QR-icoon in de accountinstellingen te tikken.</string>
-    <string name="fragment_enter_public_key_edit_text_hint">Voer uw Session ID of ONS naam in</string>
-    <string name="fragment_enter_public_key_explanation">Gebruikers kunnen hun Session-ID delen door naar hun accountinstellingen te gaan en op \"Deel Session-ID\" te tikken, of door hun QR-code te delen.</string>
-    <string name="fragment_enter_public_key_error_message">Controleer de sessie-ID of ONS naam en probeer het opnieuw.</string>
-    <string name="fragment_scan_qr_code_camera_access_explanation">Sessie heeft cameratoegang nodig om QR-codes te scannen</string>
-    <string name="fragment_scan_qr_code_grant_camera_access_button_title">Toegang tot camera verlenen</string>
+    <string name="activity_create_private_chat_enter_session_id_tab_title">Je Sessie ID</string>
+    <string name="activity_create_private_chat_scan_qr_code_tab_title">Scan QR code</string>
+    <string name="activity_create_private_chat_scan_qr_code_explanation">Scan de QR code van een gebruiker om een sessie te starten. QR codes kunnen worden gevonden door op het QR icoon in de accountinstellingen te tikken.</string>
+    <string name="fragment_enter_public_key_edit_text_hint">Voer je Sessie ID of ONS naam in</string>
+    <string name="fragment_enter_public_key_explanation">Gebruikers kunnen hun Sessie ID delen door naar hun accountinstellingen te gaan en op \"Deel Sessie ID\" te tikken, of door hun QR code te delen.</string>
+    <string name="fragment_enter_public_key_error_message">Controleer de sessie ID of ONS naam en probeer het opnieuw.</string>
+    <string name="fragment_scan_qr_code_camera_access_explanation">Session heeft cameratoegang nodig om QR codes te scannen</string>
+    <string name="fragment_scan_qr_code_grant_camera_access_button_title">Camera toegang toestaan</string>
     <string name="activity_create_closed_group_title">Nieuwe gesloten groep</string>
     <string name="activity_create_closed_group_edit_text_hint">Vul een groepsnaam in</string>
-    <string name="activity_create_closed_group_empty_state_message">U heeft nog geen contactpersonen</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Sessie starten</string>
+    <string name="activity_create_closed_group_empty_state_message">Je hebt nog geen contactpersonen</string>
+    <string name="activity_create_closed_group_empty_state_button_title">Start een Sessie</string>
     <string name="activity_create_closed_group_group_name_missing_error">Vul een groepsnaam in</string>
-    <string name="activity_create_closed_group_group_name_too_long_error">Vul a.u.b. een kortere groepsnaam in</string>
+    <string name="activity_create_closed_group_group_name_too_long_error">Vul alstublieft een kortere groepsnaam in</string>
     <string name="activity_create_closed_group_not_enough_group_members_error">Kies ten minste één groepslid</string>
     <string name="activity_create_closed_group_too_many_group_members_error">Een gesloten groep kan niet meer dan 100 leden hebben</string>
     <string name="activity_join_public_chat_title">Deelnemen aan open groep</string>
     <string name="activity_join_public_chat_error">Kon niet deelnemen aan de groep</string>
     <string name="activity_join_public_chat_enter_group_url_tab_title">Groep-URL openen</string>
-    <string name="activity_join_public_chat_scan_qr_code_tab_title">Scan QR-code</string>
-    <string name="activity_join_public_chat_scan_qr_code_explanation">Scan de QR-code van de open groep waar u zich bij wilt aansluiten</string>
+    <string name="activity_join_public_chat_scan_qr_code_tab_title">Scan QR code</string>
+    <string name="activity_join_public_chat_scan_qr_code_explanation">Scan de QR code van de open groep waar je je bij wil aansluiten</string>
     <string name="fragment_enter_chat_url_edit_text_hint">Voer een open groep URL in</string>
     <string name="activity_settings_title">Instellingen</string>
     <string name="activity_settings_display_name_edit_text_hint">Voer een weergavenaam in</string>
-    <string name="activity_settings_display_name_missing_error">Kies a.u.b. een weergavenaam</string>
-    <string name="activity_settings_display_name_too_long_error">Kies a.u.b. een kortere weergavenaam</string>
+    <string name="activity_settings_display_name_missing_error">Kies alsjeblieft een weergavenaam</string>
+    <string name="activity_settings_display_name_too_long_error">Kies alsjeblieft een kortere weergavenaam</string>
     <string name="activity_settings_privacy_button_title">Privacy</string>
     <string name="activity_settings_notifications_button_title">Meldingen</string>
+    <string name="activity_settings_message_requests_button_title">Berichtverzoeken</string>
     <string name="activity_settings_chats_button_title">Gesprekken</string>
     <string name="activity_settings_devices_button_title">Apparaten</string>
     <string name="activity_settings_invite_button_title">Nodig een vriend uit</string>
     <string name="activity_settings_faq_button_title">Veelgestelde vragen (FAQ)</string>
     <string name="activity_settings_recovery_phrase_button_title">Herstel zin</string>
     <string name="activity_settings_clear_all_data_button_title">Gegevens wissen</string>
-    <string name="activity_settings_clear_all_data_and_network_button_title">Wis Data, Inclusief Netwerk</string>
-    <string name="activity_settings_help_translate_session">Help ons om Sessie the vertalen</string>
-    <string name="activity_notification_settings_title">Meldingen</string>
+    <string name="activity_settings_clear_all_data_and_network_button_title">Wis gegevens, inclusief netwerk</string>
+    <string name="activity_settings_help_translate_session">Help ons om Session te vertalen</string>
+    <string name="activity_notification_settings_title">Notificaties</string>
     <string name="activity_notification_settings_style_section_title">Notificatie stijl</string>
     <string name="activity_notification_settings_content_section_title">Notificatie inhoud</string>
     <string name="activity_privacy_settings_title">Privacy</string>
+    <string name="activity_conversations_settings_title">Gesprekken</string>
+    <string name="activity_help_settings_title">Hulp</string>
+    <string name="activity_help_settings__report_bug_title">Meld een bug</string>
+    <string name="activity_help_settings__report_bug_summary">Exporteer je logboek en upload het bestand via de Sessie-helpdesk.</string>
+    <string name="activity_help_settings__translate_session">Sessie vertalen</string>
+    <string name="activity_help_settings__feedback">We hechten veel waarde aan uw feedback</string>
+    <string name="activity_help_settings__faq">Veelgestelde vragen (FAQ)</string>
+    <string name="activity_help_settings__support">Ondersteuning</string>
+    <string name="activity_help_settings__export_logs">Exporteer logboek</string>
     <string name="preferences_notifications_strategy_category_title">Notificatie strategie</string>
     <string name="preferences_notifications_strategy_category_fast_mode_title">Gebruik snelle modus</string>
-    <string name="preferences_notifications_strategy_category_fast_mode_summary">U wordt op een op een betrouwbare manier direct op de hoogte gebracht van nieuwe berichten via de notificatieservers van Google.</string>
+    <string name="preferences_notifications_strategy_category_fast_mode_summary">Je wordt op een betrouwbare en directe manier op de hoogte gebracht van nieuwe berichten via Googles notificatieservers.</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">Naam wijzigen</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Apparaat ontkoppelen</string>
-    <string name="dialog_seed_title">Uw herstel zin</string>
-    <string name="dialog_seed_explanation">Dit is uw herstel zin, Hiermee kun je je Sessie-ID herstellen of migreren naar een nieuw apparaat.</string>
+    <string name="dialog_seed_title">Je herstel zin</string>
+    <string name="dialog_seed_explanation">Je kunt je herstel zin gebruiken om je account te herstellen of een apparaat te linken.</string>
     <string name="dialog_clear_all_data_title">Wis alle gegevens</string>
-    <string name="dialog_clear_all_data_explanation">Hiermee worden uw berichten, sessies en contacten permanent verwijderd.</string>
-    <string name="dialog_clear_all_data_network_explanation">Wilt u alleen de data op dit apparaat verwijderen, of wilt u uw hele account verwijderen?</string>
+    <string name="dialog_clear_all_data_explanation">Hiermee worden je berichten, sessies en contacten permanent verwijderd.</string>
+    <string name="dialog_clear_all_data_network_explanation">Wil je alleen de gegevens op dit apparaat verwijderen, of wil je je hele account verwijderen?</string>
+    <string name="dialog_clear_all_data_message">Dit zal je berichten, sessies en contacten permanent verwijderen. Wil je alleen dit apparaat verwijderen of je hele account verwijderen?</string>
+    <string name="dialog_clear_all_data_clear_device_only">Alleen het apparaat wissen</string>
+    <string name="dialog_clear_all_data_clear_device_and_network">Apparaat en netwerk wissen</string>
+    <string name="dialog_clear_all_data_clear_device_and_network_confirmation">Weet u zeker dat u uw gegevens uit het netwerk wilt verwijderen? Als je doorgaat, kun je je berichten of contacten niet meer herstellen.</string>
+    <string name="dialog_clear_all_data_clear">Wissen</string>
     <string name="dialog_clear_all_data_local_only">Verwijder alleen</string>
     <string name="dialog_clear_all_data_clear_network">Gehele account</string>
-    <string name="activity_qr_code_title">QR-code</string>
-    <string name="activity_qr_code_view_my_qr_code_tab_title">Bekijk mijn QR-code</string>
-    <string name="activity_qr_code_view_scan_qr_code_tab_title">Scan QR-code</string>
-    <string name="activity_qr_code_view_scan_qr_code_explanation">Scan iemands QR-code om een gesprek te beginnen</string>
+    <string name="activity_qr_code_title">Qr-code</string>
+    <string name="activity_qr_code_view_my_qr_code_tab_title">Bekijk mijn Qr-code</string>
+    <string name="activity_qr_code_view_scan_qr_code_tab_title">Scan Qr-code</string>
+    <string name="activity_qr_code_view_scan_qr_code_explanation">Scan iemands Qr-code om een gesprek te beginnen</string>
     <string name="fragment_view_my_qr_code_title">Scan mij</string>
-    <string name="fragment_view_my_qr_code_explanation">Dit is uw QR-code. Andere gebruikers kunnen deze scannen om een sessie met u te starten.</string>
-    <string name="fragment_view_my_qr_code_share_title">QR-code delen</string>
+    <string name="fragment_view_my_qr_code_explanation">Dit is je Qr-code. Andere gebruikers kunnen deze scannen om een sessie met je te starten.</string>
+    <string name="fragment_view_my_qr_code_share_title">Qr-code delen</string>
     <string name="fragment_contact_selection_contacts_title">Contacten</string>
     <string name="fragment_contact_selection_closed_groups_title">Gesloten groepen</string>
     <string name="fragment_contact_selection_open_groups_title">Open groepen</string>
-    <string name="fragment_contact_selection_empty_contacts">U heeft nog geen contactpersonen</string>
+    <string name="fragment_contact_selection_empty_contacts">Je hebt nog geen contactpersonen</string>
     <!-- Next round of translation -->
     <string name="menu_apply_button">Toepassen</string>
     <string name="menu_done_button">Klaar</string>
@@ -645,7 +713,7 @@
     <string name="activity_edit_closed_group_edit_members">Leden</string>
     <string name="activity_edit_closed_group_add_members">Leden toevoegen</string>
     <string name="activity_edit_closed_group_group_name_missing_error">De groepsnaam mag niet leeg zijn</string>
-    <string name="activity_edit_closed_group_group_name_too_long_error">Vul a.u.b. een kortere groepsnaam in</string>
+    <string name="activity_edit_closed_group_group_name_too_long_error">Vul alstublieft een kortere groepsnaam in</string>
     <string name="activity_edit_closed_group_not_enough_group_members_error">Groepen moeten ten minste één groepslid hebben</string>
     <string name="fragment_edit_group_bottom_sheet_remove">Gebruiker uit de groep verwijderen</string>
     <string name="activity_select_contacts_title">Contacten selecteren</string>
@@ -654,7 +722,7 @@
     <string name="dialog_ui_mode_option_day">Dag</string>
     <string name="dialog_ui_mode_option_night">Nacht</string>
     <string name="dialog_ui_mode_option_system_default">Systeemstandaard</string>
-    <string name="activity_conversation_menu_copy_session_id">Sessie-ID kopiëren</string>
+    <string name="activity_conversation_menu_copy_session_id">Sessie ID kopiëren</string>
     <string name="attachment">Bijlage</string>
     <string name="attachment_type_voice_message">Spraakbericht</string>
     <string name="details">Details</string>
@@ -663,43 +731,44 @@
     <string name="activity_backup_restore_select_file">Selecteer een bestand</string>
     <string name="activity_backup_restore_explanation_1">Selecteer een backup-bestand en voer de wachtwoordzin in waarmee het is gemaakt.</string>
     <string name="activity_backup_restore_passphrase">Wachtwoordzin met 30 tekens</string>
-    <string name="activity_link_device_skip_prompt">Dit duurt een tijdje, wilt u het overslaan?</string>
+    <string name="activity_link_device_skip_prompt">Dit duurt een tijdje, wil je het overslaan?</string>
     <string name="activity_link_device_link_device">Koppel een apparaat</string>
     <string name="activity_link_device_recovery_phrase">Herstel zin</string>
-    <string name="activity_link_device_scan_qr_code">QR-code scannen</string>
-    <string name="activity_link_device_qr_message">Navigeer naar Instellingen → Herstel zin op je andere apparaat om je QR-code te tonen.</string>
-    <string name="activity_join_public_chat_join_rooms">Of neem deel aan een van deze...</string>
+    <string name="activity_link_device_scan_qr_code">Qr-code scannen</string>
+    <string name="activity_link_device_qr_message">Navigeer naar instellingen → Herstel zin op je andere apparaat om je Qr-code te tonen.</string>
+    <string name="activity_join_public_chat_join_rooms">Of neem deel van een van deze…</string>
     <string name="activity_pn_mode_message_notifications">Berichtmeldingen</string>
-    <string name="activity_pn_mode_explanation">Er zijn twee manieren waarop de Sessie u op de hoogte kan stellen van nieuwe berichten.</string>
+    <string name="activity_pn_mode_explanation">Er zijn twee manieren waarop Session je op de hoogte kan stellen van nieuwe berichten.</string>
     <string name="activity_pn_mode_fast_mode">Snelle modus</string>
     <string name="activity_pn_mode_slow_mode">Langzame modus</string>
-    <string name="activity_pn_mode_fast_mode_explanation">U wordt op een betrouwbare en directe manier op de hoogte gebracht van nieuwe berichten via Googles notificatieservers.</string>
-    <string name="activity_pn_mode_slow_mode_explanation">Sessie controleert af en toe op nieuwe berichten op de achtergrond.</string>
+    <string name="activity_pn_mode_fast_mode_explanation">Je wordt op een betrouwbare en directe manier op de hoogte gebracht van nieuwe berichten via Googles notificatieservers.</string>
+    <string name="activity_pn_mode_slow_mode_explanation">Session controleert af en toe op nieuwe berichten op de achtergrond.</string>
     <string name="fragment_recovery_phrase_title">Herstel zin</string>
-    <string name="activity_prompt_passphrase_session_locked">Sessie is vergrendeld</string>
+    <string name="activity_prompt_passphrase_session_locked">Session is vergrendeld</string>
     <string name="activity_prompt_passphrase_tap_to_unlock">Tik om te ontgrendelen</string>
     <string name="fragment_user_details_bottom_sheet_edit_text_hint">Bijnaam invoeren</string>
     <string name="invalid_public_key">Ongeldige publieke sleutel</string>
     <string name="document">Document</string>
     <string name="dialog_blocked_title">Deblokkeer %s?</string>
-    <string name="dialog_blocked_explanation">Weet u zeker dat u %s wilt deblokkeren?</string>
-    <string name="dialog_join_open_group_title">Deelnemen %s?</string>
-    <string name="dialog_join_open_group_explanation">Weet u zeker dat u zich bij de %s open groep wilt aansluiten?</string>
+    <string name="dialog_blocked_explanation">Weet je zeker dat u %s wil deblokkeren?</string>
+    <string name="dialog_join_open_group_title">Deelnemen aan %s?</string>
+    <string name="dialog_join_open_group_explanation">Weet je zeker dat je je bij de %s open groep wil aansluiten?</string>
     <string name="dialog_open_url_title">URL openen?</string>
-    <string name="dialog_open_url_explanation">Weet u zeker dat u %s wilt openen?</string>
+    <string name="dialog_open_url_explanation">Weet je zeker dat je %s wil openen?</string>
     <string name="open">Open</string>
     <string name="copy_url">Kopieer URL</string>
     <string name="dialog_link_preview_title">Linkvoorbeeld inschakelen?</string>
-    <string name="dialog_link_preview_explanation">Link previews inschakelen zal previews tonen voor URLs die u verstuurt en ontvangt. Dit kan nuttig zijn, maar Session moet contact opnemen met gekoppelde websites om previews te genereren. U kunt links altijd uitschakelen in de Session’s-instellingen.</string>
+    <string name="dialog_link_preview_explanation">Linkvoorbeelden inschakelen zal voorbeelden tonen van URLs die je verstuurt en ontvangt. Dit kan nuttig zijn, maar Session moet contact opnemen met gekoppelde websites om voorbeelden te genereren. Je kan links altijd uitschakelen in de Session’s-instellingen.</string>
     <string name="dialog_link_preview_enable_button_title">Inschakelen</string>
     <string name="dialog_download_title">Vertrouw %s?</string>
-    <string name="dialog_download_explanation">Weet je zeker dat je deze media van %s wilt downloaden?</string>
+    <string name="dialog_download_explanation">Weet je zeker dat je media van %s wil downloaden?</string>
     <string name="dialog_download_button_title">Download</string>
     <string name="activity_conversation_blocked_banner_text">%s is geblokkeerd. Deblokkeer ze?</string>
+    <string name="activity_conversation_block_user">Blokkeer gebruiker</string>
     <string name="activity_conversation_attachment_prep_failed">Kon bijlage niet voorbereiden voor verzending.</string>
     <string name="media">Media</string>
-    <string name="UntrustedAttachmentView_download_attachment">Tik om te downloaden%s</string>
-    <string name="message_details_header__error">Error</string>
+    <string name="UntrustedAttachmentView_download_attachment">Tik om %s te downloaden</string>
+    <string name="message_details_header__error">Fout</string>
     <string name="dialog_send_seed_title">Waarschuwing</string>
     <string name="dialog_send_seed_explanation">Dit is je herstelzin. Als je het naar iemand stuurt hebben ze volledige toegang tot je account.</string>
     <string name="dialog_send_seed_send_button_title">Versturen</string>
@@ -715,4 +784,91 @@
     <string name="dialog_share_logs_explanation">Wil je je applicatie logboeken exporteren om te kunnen delen bij het oplossen van problemen?</string>
     <string name="conversation_pin">Vastzetten</string>
     <string name="conversation_unpin">Losmaken</string>
+    <string name="mark_all_as_read">Alles markeren als gelezen</string>
+    <string name="global_search_contacts_groups">Contactpersonen en groepen</string>
+    <string name="global_search_messages">Berichten</string>
+    <string name="activity_message_requests_title">Berichtverzoeken</string>
+    <string name="message_requests_send_notice">Een bericht versturen naar deze gebruiker accepteert automatisch hun berichtverzoek en toont daardoor je Session ID.</string>
+    <string name="accept">Accepteer</string>
+    <string name="decline">Afwijzen</string>
+    <string name="message_requests_clear_all">Alles wissen</string>
+    <string name="message_requests_decline_message">Weet je zeker dat je dit berichtverzoek wil afwijzen?</string>
+    <string name="message_requests_block_message">Weet je zeker dat je dit berichtverzoek wil blokkeren?</string>
+    <string name="message_requests_deleted">Berichtverzoek verwijderd</string>
+    <string name="message_requests_clear_all_message">Weet je zeker dat je alle berichtverzoeken wil wissen?</string>
+    <string name="message_requests_cleared">Berichtverzoeken verwijderd</string>
+    <string name="message_requests_accepted">Je berichtverzoek is geaccepteerd.</string>
+    <string name="message_requests_pending">Je berichtverzoek is in afwachting.</string>
+    <string name="message_request_empty_state_message">Geen afwachtenden berichtverzoeken</string>
+    <string name="NewConversationButton_SessionTooltip">Rechtstreeks bericht</string>
+    <string name="NewConversationButton_ClosedGroupTooltip">Gesloten groep</string>
+    <string name="NewConversationButton_OpenGroupTooltip">Open groep</string>
+    <string name="message_requests_notification">Je hebt geen nieuwe berichtverzoeken</string>
+    <string name="CallNotificationBuilder_connecting">Verbinden...</string>
+    <string name="NotificationBarManager__incoming_signal_call">Inkomend gesprek</string>
+    <string name="NotificationBarManager__deny_call">Gesprek weigeren</string>
+    <string name="NotificationBarManager__answer_call">Gesprek aannemen</string>
+    <string name="NotificationBarManager_call_in_progress">Gesprek gaande</string>
+    <string name="NotificationBarManager__cancel_call">Annuleer gesprek</string>
+    <string name="NotificationBarManager__establishing_signal_call">Tot stand komen gesprek</string>
+    <string name="NotificationBarManager__end_call">Beëindig gesprek</string>
+    <string name="accept_call">Accepteer gesprek</string>
+    <string name="decline_call">Gesprek afwijzen</string>
+    <string name="preferences__voice_video_calls">Spraak en Video gesprekken</string>
+    <string name="preferences__calls_beta">Gesprekken (Beta)</string>
+    <string name="preferences__allow_access_voice_video">Inschakelen van spraak en video gesprekken, van en naar andere gebruikers.</string>
+    <string name="dialog_voice_video_title">Spraak / video gesprekken</string>
+    <string name="dialog_voice_video_message">Je IP-adres is zichtbaar voor je gesprekspartner en een Oxen Foundation server terwijl je gebruik maakt van beta gesprekken. Weet je zeker dat je Spraak en Video gesprekken wil inschakelen?</string>
+    <string name="CallNotificationBuilder_first_call_title">Gemiste oproep</string>
+    <string name="CallNotificationBuilder_first_call_message">Je hebt een oproep gemist, omdat je de \'Spraak en Video gesprekken\' rechten in de privacy instellingen moet inschakelen.</string>
+    <string name="WebRtcCallActivity_Session_Call">Session gesprek</string>
+    <string name="WebRtcCallActivity_Reconnecting">Herverbinden...</string>
+    <string name="CallNotificationBuilder_system_notification_title">Notificaties</string>
+    <string name="CallNotificationBuilder_system_notification_message">Wanneer notificaties uitgeschakeld staan ontvang je geen oproepen, wil je naar de Session notificatie instellingen?</string>
+    <string name="dismiss">Afwijzen</string>
+    <string name="activity_settings_conversations_button_title">Conversaties</string>
+    <string name="activity_settings_message_appearance_button_title">Weergave</string>
+    <string name="activity_settings_help_button">Help</string>
+    <string name="activity_appearance_themes_category">Thema\'s</string>
+    <string name="ocean_dark_theme_name">Oceaan donker</string>
+    <string name="classic_dark_theme_name">Klassiek donker</string>
+    <string name="ocean_light_theme_name">Oceaan licht</string>
+    <string name="classic_light_theme_name">Klassiek licht</string>
+    <string name="activity_appearance_primary_color_category">Primaire kleur</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__this_message">Dit bericht</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__recently_used">Recent gebruikt</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__smileys_and_people">Smileys &amp; Mensen</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__nature" comment="Heading for an emoji list's category">Dieren &amp; Natuur</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__food" comment="Heading for an emoji list's category">Eten &amp; Drinken</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__activities">Activiteiten</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__places" comment="Heading for an emoji list's category">Reizen en locaties</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__objects">Objecten</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__symbols">Symbolen</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__flags">Vlaggen</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__emoticons">Emoticons</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__no_results_found">Geen resultaten gevonden</string>
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <string name="ReactionsBottomSheetDialogFragment_all">Alle &#183; %1$d</string>
+    <!-- ReactionsConversationView -->
+    <string name="ReactionsConversationView_plus">+%1$d</string>
+    <!-- ReactionsRecipientAdapter -->
+    <string name="ReactionsRecipientAdapter_you">Jij</string>
+    <string name="reaction_notification">%1$s heeft gereageerd op een bericht %2$s</string>
+    <string name="ReactionsConversationView_show_less">Minder tonen</string>
+    <string name="KeyboardPagerFragment_search_emoji">Zoeken naar emoji</string>
+    <string name="KeyboardPagerfragment_back_to_emoji">Teruggaan naar emoji</string>
+    <string name="KeyboardPagerfragment_clear_search_entry">Zoekopdracht wissen</string>
+    <string name="activity_appearance_follow_system_category">Automatische nachtmodus</string>
+    <string name="activity_appearance_follow_system_explanation">Systeeminstellingen volgen</string>
+    <string name="go_to_device_notification_settings">Ga naar de meldingsinstellingen van apparaat</string>
+    <string name="blocked_contacts_title">Geblokkeerde contacten</string>
+    <string name="blocked_contacts_empty_state">U heeft geen geblokkeerde contacten</string>
+    <string name="Unblock_dialog__title_single">Blokkering opheffen voor %s</string>
+    <string name="Unblock_dialog__title_multiple">Deblokkeer gebruikers</string>
+    <string name="Unblock_dialog__message">Weet je zeker dat u %s wil deblokkeren?</string>
+    <plurals name="Unblock_dialog__message_multiple_overflow">
+        <item quantity="one">en %d anderen</item>
+        <item quantity="other">en %d anderen</item>
+    </plurals>
+    <string name="delivery_status_failed">Verzend mislukt</string>
 </resources>

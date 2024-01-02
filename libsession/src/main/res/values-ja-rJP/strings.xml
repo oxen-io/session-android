@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">グループを離れました。</string>
+    <string name="MessageRecord_you_created_a_new_group">新しいグループを作成しました。</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$sがあなたをグループに追加しました。</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">グループの名前を%1$sに変更しました。</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$sはグループの名前を%2$sに変更しました。</string>
+    <string name="MessageRecord_you_added_s_to_the_group">グループに%1$sを追加しました。</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$sはグループに%2$sを追加しました。</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">グループから%1$sを削除しました。</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$sはグループから%2$sを削除しました。</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">あなたはグループから削除されました。</string>
+    <string name="MessageRecord_you">あなたは</string>
+    <string name="MessageRecord_s_called_you">%sから通話着信</string>
+    <string name="MessageRecord_called_s">%sに通話着信</string>
+    <string name="MessageRecord_missed_call_from">%sからの不在着信</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">消えるメッセージを無効にしました。</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">%1$sは消えるメッセージを無効にしました。</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">消えるメッセージの消去時間を%1$sに設定しました</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$sは消えるメッセージの消去時間を%2$sに設定しました</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$sがスクショを撮りました。</string>
+    <string name="MessageRecord_media_saved_by_s">メディアは%1$sによって保存されました。</string>
+    <!-- expiration -->
+    <string name="expiration_off">切る</string>
+    <plurals name="expiration_seconds">
+        <item quantity="other">%d秒</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%d秒</string>
+    <plurals name="expiration_minutes">
+        <item quantity="other">%d分</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">%d分</string>
+    <plurals name="expiration_hours">
+        <item quantity="other">%d時間</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">%d時間</string>
+    <plurals name="expiration_days">
+        <item quantity="other">%d日</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">%d日</string>
+    <plurals name="expiration_weeks">
+        <item quantity="other">%d週間</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">%d週間</string>
+    <string name="ConversationItem_group_action_left">%1$sがグループから退出しました。</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">名無しのグループ</string>
+</resources>

@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Session</string>
     <string name="yes">Evet</string>
     <string name="no">Hayır</string>
     <string name="delete">Sil</string>
     <string name="ban">Yasakla</string>
+    <string name="please_wait">Lütfen bekleyin…</string>
     <string name="save">Kaydet</string>
     <string name="note_to_self">Kendime Not</string>
     <string name="version_s">Sürüm %s</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">Yeni ileti</string>
     <!-- AlbumThumbnailView -->
@@ -63,6 +88,7 @@
     <string name="ConversationActivity_muted_until_date">%1$s\'e kadar sessiz</string>
     <string name="ConversationActivity_muted_forever">Sessize alındı</string>
     <string name="ConversationActivity_member_count">%1$d üye</string>
+    <string name="ConversationActivity_active_member_count">%1$d aktif üyeler</string>
     <string name="ConversationActivity_open_group_guidelines">Topluluk İlkeleri</string>
     <string name="ConversationActivity_invalid_recipient">Geçersiz alıcı!</string>
     <string name="ConversationActivity_added_to_home_screen">Ana ekrana eklendi</string>
@@ -83,6 +109,8 @@
     <string name="ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video">Session, fotoğraf veya video çekmek için Kamera iznine ihtiyaç duyar, fakat bu izin kalıcı olarak reddedilmiş. Lütfen uygulama ayarları menüsüne girip \"İzinler\" kısmını seçin, ve \"Kamera\"yı etkinleştirin.</string>
     <string name="ConversationActivity_signal_needs_camera_permissions_to_take_photos_or_video">Session fotoğraf veya video çekebilmek için kamera erişimine ihtiyaç duyar</string>
     <string name="ConversationActivity_search_position">%1$d / %2$d</string>
+    <string name="ConversationActivity_call_title">Arama izni gerekli</string>
+    <string name="ConversationActivity_call_prompt">Gizlilik Ayarlarından \'Sesli ve görüntülü arama\' iznini etkinleştirebilirsin.</string>
     <!-- ConversationFragment -->
     <plurals name="ConversationFragment_delete_selected_messages">
         <item quantity="one">Seçilen iletileri sil?</item>
@@ -105,6 +133,10 @@
     <plurals name="ConversationFragment_saving_n_attachments">
         <item quantity="one">Eklenti kaydediliyor</item>
         <item quantity="other">%1$d eklenti kaydediliyor</item>
+    </plurals>
+    <plurals name="ConversationFragment_saving_n_attachments_to_sd_card">
+        <item quantity="one">Eklenti hafızaya kaydediliyor…</item>
+        <item quantity="other">%1$d eklenti hafızaya kaydediliyor…</item>
     </plurals>
     <!-- CreateProfileActivity -->
     <string name="CreateProfileActivity_profile_photo">Profil fotoğrafı</string>
@@ -192,6 +224,7 @@
     <!-- SmsMessageRecord -->
     <string name="SmsMessageRecord_received_corrupted_key_exchange_message">Bozulmuş anahtar takas
 iletisi alındı!</string>
+    <string name="SmsMessageRecord_received_key_exchange_message_for_invalid_protocol_version">        Geçersiz protokol sürümü için anahtar değişim mesajı alındı.    </string>
     <string name="SmsMessageRecord_received_message_with_new_safety_number_tap_to_process">Yeni güvenlik numarası ile ileti alındı. İşlemek ve görüntülemek için dokunun.</string>
     <string name="SmsMessageRecord_secure_session_reset">Güvenli oturumu sıfırladınız.</string>
     <string name="SmsMessageRecord_secure_session_reset_s">%s güvenli oturumu sıfırladı.</string>
@@ -379,9 +412,9 @@ iletisi alındı!</string>
     <string name="arrays__settings_default">Varsayılan ayarlar</string>
     <string name="arrays__enabled">Etkin</string>
     <string name="arrays__disabled">Devre dışı</string>
-    <string name="arrays__name_and_message">İsim ve ileti</string>
-    <string name="arrays__name_only">Yalnızca isim</string>
-    <string name="arrays__no_name_or_message">İsim veya ileti yok</string>
+    <string name="arrays__name_and_message">Ad ve İçerik</string>
+    <string name="arrays__name_only">Sadece İsim</string>
+    <string name="arrays__no_name_or_message">İsim veya İçerik Yok</string>
     <string name="arrays__images">Görüntüler</string>
     <string name="arrays__audio">Ses</string>
     <string name="arrays__video">Video</string>
@@ -400,8 +433,13 @@ iletisi alındı!</string>
     </plurals>
     <!-- preferences.xml -->
     <string name="preferences__pref_enter_sends_title">Enter tuşu ile gönder</string>
-    <string name="preferences__send_link_previews">Bağlantı ön izlemelerini gönder</string>
-    <string name="preferences__previews_are_supported_for">Ön izlemeler Imgur, Instagram, Pinterest, Reddit, ve YouTube bağlantıları için desteklenmektedir</string>
+    <string name="preferences__pref_enter_sends_summary">Enter tuşuna basmak yeni bir satıra geçmek yerine mesaj gönderir.</string>
+    <string name="preferences__send_link_previews">Bağlantı Önizlemeleri Gönder</string>
+    <string name="preferences__link_previews">Bağlantı Önizlemeleri</string>
+    <string name="preferences__link_previews_summary">Desteklenen linkler için önizleme oluştur.</string>
+    <string name="preferences__pref_autoplay_audio_category">Sesli Mesajlar</string>
+    <string name="preferences__pref_autoplay_audio_title">Sesli Mesajları Otomatik Oynat</string>
+    <string name="preferences__pref_autoplay_audio_summary">Ardışık sesli mesajları otomatik oynat.</string>
     <string name="preferences__screen_security">Ekran güvenliği</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">Son uygulamalar görünümünde ve uygulama içinde ekran görüntüsü alınmasını engelle</string>
     <string name="preferences__notifications">Bildirimler</string>
@@ -409,6 +447,7 @@ iletisi alındı!</string>
     <string name="preferences__led_color_unknown">Bilinmeyen</string>
     <string name="preferences__pref_led_blink_title">LED yanıp sönme şekli</string>
     <string name="preferences__sound">Zil Sesi</string>
+    <string name="preferences__in_app_sounds">Uygulama Açıkken Ses</string>
     <string name="preferences__silent">Sessiz</string>
     <string name="preferences__repeat_alerts">Uyarıları tekrarla</string>
     <string name="preferences__never">Asla</string>
@@ -436,19 +475,28 @@ iletisi alındı!</string>
     <string name="preferences__scan_through_all_conversations_and_enforce_conversation_length_limits">Tüm sohbetleri tara ve sohbet uzunluğu limitlerini uygula</string>
     <string name="preferences__default">Varsayılan</string>
     <string name="preferences__incognito_keyboard">Gizli klavye</string>
-    <string name="preferences__read_receipts">Okundu bilgisi</string>
-    <string name="preferences__typing_indicators">\'Yazıyor\' göstergeleri</string>
-    <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">\'Yazıyor\' göstergeleri etkin değilse, başkalarının \'Yazıyor\' göstergelerini göremeyeceksiniz.</string>
+    <string name="preferences__read_receipts">Okundu Bilgileri</string>
+    <string name="preferences__read_receipts_summary">Bire bir konuşmalarda görünüm bilgisi gönder.</string>
+    <string name="preferences__typing_indicators">Yazım Belirtileri</string>
+    <string name="preferences__typing_indicators_summary">Bire bir konuşmalarda yazım belirtilerini göster ve gönder.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Klavyenin kişiselleştirilmiş öğrenmeyi devre dışı bırakmasını iste</string>
     <string name="preferences__light_theme">Açık</string>
     <string name="preferences__dark_theme">Koyu</string>
     <string name="preferences_chats__message_trimming">İleti kırpma</string>
+    <string name="preferences_chats__message_trimming_title">Toplulukları Kırp</string>
+    <string name="preferences_chats__message_trimming_summary">2000 mesajın üzerinde olan topluluklarda 6 aydan eski mesajları sil.</string>
     <string name="preferences_advanced__use_system_emoji">Sistem emojilerini kullan</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Session\'in dahili emoji desteğini devre dışı bırak</string>
+    <string name="preferences_app_protection__screen_security">Ekran Güvenliği</string>
     <string name="preferences_chats__chats">Sohbetler</string>
     <string name="preferences_notifications__messages">İletiler</string>
     <string name="preferences_notifications__in_chat_sounds">Sohbet içi sesler</string>
+    <string name="preferences_notifications__content">Bildirim İçeriği</string>
+    <string name="preferences_notifications__content_message">Göster:</string>
+    <string name="preferences_notifications__summary">Bildirimlerde görüntülenebilen bilgiler.</string>
     <string name="preferences_notifications__priority">Öncelik</string>
+    <string name="preferences_app_protection__screenshot_notifications">Ekran Görüntüsü Bildirimleri</string>
+    <string name="preferences_app_protected__screenshot_notifications_summary">Bir kişi bire bir sohbetin ekran görüntüsünü aldığında bildirim alın.</string>
     <!-- **************************************** -->
     <!-- menus -->
     <!-- **************************************** -->
@@ -461,7 +509,10 @@ iletisi alındı!</string>
     <string name="conversation_context__menu_ban_user">Kullanıcıyı engelle</string>
     <string name="conversation_context__menu_ban_and_delete_all">Tümünü yasakla ve sil</string>
     <string name="conversation_context__menu_resend_message">İletiyi tekrar gönder</string>
+    <string name="conversation_context__menu_reply">Yanıtla</string>
     <string name="conversation_context__menu_reply_to_message">İletiyi yanıtla</string>
+    <string name="conversation_context__menu_call">Ara</string>
+    <string name="conversation_context__menu_select">Seç</string>
     <!-- conversation_context_image -->
     <string name="conversation_context_image__save_attachment">Eklentiyi kaydet</string>
     <!-- conversation_expiring_off -->
@@ -514,8 +565,8 @@ iletisi alındı!</string>
     <string name="LocalBackupJob_creating_backup">Yedek oluşturuluyor...</string>
     <string name="ProgressPreference_d_messages_so_far">Şimdiye kadar %d ileti</string>
     <string name="BackupUtil_never">Asla</string>
-    <string name="preferences_app_protection__screen_lock">Ekran kilidi</string>
-    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Session erişimini Android kilit ekranı ile veya parmak izi ile kilitleyin</string>
+    <string name="preferences_app_protection__screen_lock">Session\'u Kilitle</string>
+    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Session kilidini açmak için parmak izi, PIN, desen veya şifre gerektir.</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">Ekran kilidi zaman aşımı</string>
     <string name="AppProtectionPreferenceFragment_none">Hiçbiri</string>
     <!-- Conversation activity -->
@@ -523,6 +574,7 @@ iletisi alındı!</string>
     <!-- Session -->
     <string name="continue_2">Devam Et</string>
     <string name="copy">Kopyala</string>
+    <string name="close">Kapat</string>
     <string name="invalid_url">Geçersiz URL</string>
     <string name="copied_to_clipboard">Panoya kopyalandı</string>
     <string name="next">İleri</string>
@@ -601,6 +653,7 @@ iletisi alındı!</string>
     <string name="activity_settings_display_name_too_long_error">Lütfen daha kısa bir görünen ad seçin</string>
     <string name="activity_settings_privacy_button_title">Gizlilik</string>
     <string name="activity_settings_notifications_button_title">Bildirimler</string>
+    <string name="activity_settings_message_requests_button_title">Mesaj İstekleri</string>
     <string name="activity_settings_chats_button_title">Sohbetler</string>
     <string name="activity_settings_devices_button_title">Cihazlar</string>
     <string name="activity_settings_invite_button_title">Bir arkadaş davet et</string>
@@ -613,16 +666,30 @@ iletisi alındı!</string>
     <string name="activity_notification_settings_style_section_title">Bildirim Stili</string>
     <string name="activity_notification_settings_content_section_title">Bildirim içeriği</string>
     <string name="activity_privacy_settings_title">Gizlilik</string>
+    <string name="activity_conversations_settings_title">Sohbetler</string>
+    <string name="activity_help_settings_title">Yardım</string>
+    <string name="activity_help_settings__report_bug_title">Bir Hata bildir</string>
+    <string name="activity_help_settings__report_bug_summary">Günlüklerinizi dışa aktarın, ardından dosyayı Session\'ın Yardım Masası üzerinden yükleyin.</string>
+    <string name="activity_help_settings__translate_session">Session\'u çevirin</string>
+    <string name="activity_help_settings__feedback">Görüşlerinizi almak isteriz</string>
+    <string name="activity_help_settings__faq">SSS</string>
+    <string name="activity_help_settings__support">Destek</string>
+    <string name="activity_help_settings__export_logs">Günlüğu Dışa Aktar</string>
     <string name="preferences_notifications_strategy_category_title">Bildirim Stili</string>
     <string name="preferences_notifications_strategy_category_fast_mode_title">Hızlı Modu Kullan</string>
     <string name="preferences_notifications_strategy_category_fast_mode_summary">Google\'ın bildirim sunucularını kullanarak yeni iletilerden güvenilir ve anında haberdar olacaksınız.</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">Adı değiştir</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Cihazın bağlantısını kaldır</string>
     <string name="dialog_seed_title">Kurtarma İfadeniz</string>
-    <string name="dialog_seed_explanation">Bu sizin kurtarma ifadenizdir. Bununla, Session Kimliğinizi yeni bir cihaza geri yükleyebilir veya taşıyabilirsiniz.</string>
+    <string name="dialog_seed_explanation">Hesabınızı geri yüklemek veya bir cihazı bağlamak için kurtarma ifadenizi kullanabilirsiniz.</string>
     <string name="dialog_clear_all_data_title">Tüm Verileri Temizle</string>
     <string name="dialog_clear_all_data_explanation">Bu, mesajlarınızı, oturumlarınızı ve kişilerinizi kalıcı olarak siler.</string>
     <string name="dialog_clear_all_data_network_explanation">Yalnızca bu cihazı mı silmek istiyorsunuz yoksa hesabınızın tamamını mı silmek istiyorsunuz?</string>
+    <string name="dialog_clear_all_data_message">Bu işlem mesajlarınızı, oturumlarınızı ve kişilerinizi kalıcı olarak silecektir. Sadece bu cihazı mı yoksa tüm hesabınızı mı silmek istersiniz?</string>
+    <string name="dialog_clear_all_data_clear_device_only">Sadece Cihazı Sıfırla</string>
+    <string name="dialog_clear_all_data_clear_device_and_network">Cihazı ve Ağı Sıfırla</string>
+    <string name="dialog_clear_all_data_clear_device_and_network_confirmation">Verilerinizi ağdan silmek istediğinizden emin misiniz? Devam ederseniz mesajlarınızı veya kişilerinizi geri yükleyemezsiniz.</string>
+    <string name="dialog_clear_all_data_clear">Sıfırla</string>
     <string name="dialog_clear_all_data_local_only">Sadece Sil</string>
     <string name="dialog_clear_all_data_clear_network">Tüm Hesap</string>
     <string name="activity_qr_code_title">QR kod</string>
@@ -695,6 +762,7 @@ iletisi alındı!</string>
     <string name="dialog_download_explanation">%s tarafından gönderilen medyayı indirmek istediğinizden emin misiniz?</string>
     <string name="dialog_download_button_title">İndir</string>
     <string name="activity_conversation_blocked_banner_text">%s engellendi. Engelleme kaldırılsın mı?</string>
+    <string name="activity_conversation_block_user">Kullanıcıyı Engelle</string>
     <string name="activity_conversation_attachment_prep_failed">Ek, gönderilmek üzere hazırlanamadı.</string>
     <string name="media">Medya</string>
     <string name="UntrustedAttachmentView_download_attachment">İndirmek için dokunun %s</string>
@@ -714,4 +782,114 @@ iletisi alındı!</string>
     <string name="dialog_share_logs_explanation">Sorun giderme amacıyla paylaşabilmek için uygulama kayıtlarını dışa aktarmak ister misiniz?</string>
     <string name="conversation_pin">Sabitle</string>
     <string name="conversation_unpin">Sabitlemeyi kaldır</string>
+    <string name="mark_all_as_read">Hepsini okundu olarak işaretle</string>
+    <string name="global_search_contacts_groups">Kişiler ve Gruplar</string>
+    <string name="global_search_messages">İletiler</string>
+    <string name="activity_message_requests_title">Mesaj İstekleri</string>
+    <string name="message_requests_send_notice">Bu kullanıcıya mesaj göndermek otomatik olarak mesaj isteğini kabul edecek ve Session ID\'nizi ortaya çıkaracaktır.</string>
+    <string name="accept">Kabul et</string>
+    <string name="decline">Reddet</string>
+    <string name="message_requests_clear_all">Tümünü Temizle</string>
+    <string name="message_requests_decline_message">Bu mesaj isteğini reddetmek istediğinizden emin misiniz?</string>
+    <string name="message_requests_block_message">Bu mesaj isteğini reddetmek istediğinizden emin misiniz?</string>
+    <string name="message_requests_deleted">Mesaj isteği silindi</string>
+    <string name="message_requests_clear_all_message">Tüm mesaj isteklerinizi silmek istediğinizden emin misiniz?</string>
+    <string name="message_requests_cleared">Mesaj istekleri silindi</string>
+    <string name="message_requests_accepted">Mesaj isteğiniz kabul edildi.</string>
+    <string name="message_requests_pending">Mesaj isteğiniz şu an bekletiliyor.</string>
+    <string name="message_request_empty_state_message">Bekleyen mesaj isteği yok</string>
+    <string name="NewConversationButton_SessionTooltip">Doğrudan mesaj</string>
+    <string name="NewConversationButton_ClosedGroupTooltip">Özel Grup</string>
+    <string name="NewConversationButton_OpenGroupTooltip">Genel Grup</string>
+    <string name="message_requests_notification">Yeni bir mesaj isteğiniz var</string>
+    <string name="CallNotificationBuilder_connecting">Bağlanılıyor…</string>
+    <string name="NotificationBarManager__incoming_signal_call">Gelen arama</string>
+    <string name="NotificationBarManager__deny_call">Aramayı reddet</string>
+    <string name="NotificationBarManager__answer_call">Aramayı cevapla</string>
+    <string name="NotificationBarManager_call_in_progress">Devam eden arama</string>
+    <string name="NotificationBarManager__cancel_call">Aramayı iptal et</string>
+    <string name="NotificationBarManager__establishing_signal_call">Arama Başlatılıyor</string>
+    <string name="NotificationBarManager__end_call">Aramayı Bitir</string>
+    <string name="accept_call">Aramayı kabul et</string>
+    <string name="decline_call">Aramayı reddet</string>
+    <string name="preferences__voice_video_calls">Sesli ve Görüntülü Aramalar</string>
+    <string name="preferences__calls_beta">Aramalar (Beta)</string>
+    <string name="preferences__allow_access_voice_video">Diğer kullanıcılara ve diğer kullanıcılardan sesli ve görüntülü arama yapılmasını sağlar.</string>
+    <string name="dialog_voice_video_title">Sesli / görüntülü aramalar</string>
+    <string name="dialog_voice_video_message">Beta çağrıları kullanırken IP adresiniz çağrı ortağınız ve Oxen Foundation sunucusu tarafından görülebilir. Sesli ve Görüntülü Aramaları etkinleştirmek istediğinizden emin misiniz?</string>
+    <string name="CallNotificationBuilder_first_call_title">Cevapsız arama</string>
+    <string name="CallNotificationBuilder_first_call_message">Bir aramayı kaçırdınız çünkü Gizlilik Ayarları\'nda \'Sesli ve görüntülü aramalar\' iznini etkinleştirmeniz gerekiyor.</string>
+    <string name="WebRtcCallActivity_Session_Call">Session Araması</string>
+    <string name="WebRtcCallActivity_Reconnecting">Yeniden bağlanıyor…</string>
+    <string name="CallNotificationBuilder_system_notification_title">Bildirimler</string>
+    <string name="CallNotificationBuilder_system_notification_message">Bildirimlerin devre dışı bırakılması çağrı almanızı engelleyecektir, Session bildirim ayarlarına gitmek ister misiniz?</string>
+    <string name="dismiss">Reddet</string>
+    <string name="activity_settings_conversations_button_title">Sohbetler</string>
+    <string name="activity_settings_message_appearance_button_title">Görünüm</string>
+    <string name="activity_settings_help_button">Yardım</string>
+    <string name="activity_appearance_themes_category">Temalar</string>
+    <string name="ocean_dark_theme_name">Okyanus Karası</string>
+    <string name="classic_dark_theme_name">Klasik koyu</string>
+    <string name="ocean_light_theme_name">Okyanus Açığı</string>
+    <string name="classic_light_theme_name">Klasik açık</string>
+    <string name="activity_appearance_primary_color_category">Ana renk</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__this_message">Bu Mesaj</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__recently_used">Son Kullanılan</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__smileys_and_people">Suratlar &amp; İnsanlar</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__nature" comment="Heading for an emoji list's category">Hayvanlar &amp; Doğa</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__food" comment="Heading for an emoji list's category">Yiyecek &amp; İçecek</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__activities">Etkinlikler</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__places" comment="Heading for an emoji list's category">Seyahat &amp; Yerler</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__objects">Nesneler</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__symbols">Semboller</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__flags">Bayraklar</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__emoticons">İfadeler</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__no_results_found">Hiçbir sonuç bulunamadı</string>
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <string name="ReactionsBottomSheetDialogFragment_all">Hepsi &#183; %1$d</string>
+    <!-- ReactionsConversationView -->
+    <string name="ReactionsConversationView_plus">+%1$d</string>
+    <!-- ReactionsRecipientAdapter -->
+    <string name="ReactionsRecipientAdapter_you">Sen</string>
+    <string name="reaction_notification">%1$s %2$s mesajına reaksiyon gönderdi</string>
+    <string name="ReactionsConversationView_show_less">Daha az göster</string>
+    <string name="KeyboardPagerFragment_search_emoji">İfade bul</string>
+    <string name="KeyboardPagerfragment_back_to_emoji">İfadeye geri dön</string>
+    <string name="KeyboardPagerfragment_clear_search_entry">Arama girişini temizle</string>
+    <string name="activity_appearance_follow_system_category">Otomatik karanlık-mod</string>
+    <string name="activity_appearance_follow_system_explanation">Sistem ayarlarına uy</string>
+    <string name="go_to_device_notification_settings">Sistem bildirim ayarlarına git</string>
+    <string name="blocked_contacts_title">Engellenen Kişiler</string>
+    <string name="blocked_contacts_empty_state">Engellenen bağlantınız yok</string>
+    <string name="Unblock_dialog__title_single">Engeli kaldır %s</string>
+    <string name="Unblock_dialog__title_multiple">Kullanıcıların Engelini Kaldırın</string>
+    <string name="Unblock_dialog__message">%s engelini kaldırmak istediğinize emin misiniz?</string>
+    <plurals name="Unblock_dialog__message_multiple_overflow">
+        <item quantity="one">ve %d diğer</item>
+        <item quantity="other">ve %d diğerleri</item>
+    </plurals>
+    <plurals name="ReactionsRecipientAdapter_other_reactors">
+        <item quantity="one">Ve %1$d diğeri bu mesaja %2$s tepki verdi</item>
+        <item quantity="other">Ve %1$d diğerleri bu mesaja %2$s tepki gösterdi</item>
+    </plurals>
+    <string name="dialog_new_conversation_title">Yeni Konuşma</string>
+    <string name="dialog_new_message_title">Yeni Mesaj</string>
+    <string name="activity_create_group_title">Grup Oluştur</string>
+    <string name="dialog_join_community_title">Topluluğa Katıl</string>
+    <string name="new_conversation_contacts_title">Kişiler</string>
+    <string name="new_conversation_unknown_contacts_section_title">Bilinmeyen</string>
+    <string name="fragment_enter_public_key_prompt">Birinin Oturum Kimliğini girerek yeni bir görüşme başlatın veya Oturum Kimliğinizi onlarla paylaşın.</string>
+    <string name="activity_create_group_create_button_title">Oluştur</string>
+    <string name="search_contacts_hint">Kişileri bul</string>
+    <string name="activity_join_public_chat_enter_community_url_tab_title">Topluluk URL\'si</string>
+    <string name="fragment_enter_community_url_edit_text_hint">Topluluk URL\'sini Girin</string>
+    <string name="fragment_enter_community_url_join_button_title">Katıl</string>
+    <string name="new_conversation_dialog_back_button_content_description">Geri dön</string>
+    <string name="new_conversation_dialog_close_button_content_description">İletişim Kutusunu Kapat</string>
+    <string name="ErrorNotifier_migration">Veritabanı yükseltme başarısız</string>
+    <string name="ErrorNotifier_migration_downgrade">Hatayı bildirmek için lütfen destek ekibiyle iletişime geçin.</string>
+    <string name="delivery_status_sending">Gönderiliyor</string>
+    <string name="delivery_status_read">Okundu</string>
+    <string name="delivery_status_sent">Gönderildi</string>
+    <string name="delivery_status_failed">Gönderilemedi</string>
 </resources>

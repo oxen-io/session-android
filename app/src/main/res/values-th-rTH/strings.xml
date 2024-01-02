@@ -4,6 +4,31 @@
     <string name="no">ไม่</string>
     <string name="delete">ลบ</string>
     <string name="save">บันทึก</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">ข้อความใหม่</string>
     <!-- AlbumThumbnailView -->
@@ -317,9 +342,6 @@
     <string name="arrays__settings_default">การตั้งค่าเริ่มต้น</string>
     <string name="arrays__enabled">เปิดใช้งานแล้ว</string>
     <string name="arrays__disabled">ปิดใช้งานแล้ว</string>
-    <string name="arrays__name_and_message">ชื่อและข้อความ</string>
-    <string name="arrays__name_only">ชื่อเท่านั้น</string>
-    <string name="arrays__no_name_or_message">ไม่มีชื่อหรือข้อความ</string>
     <string name="arrays__images">ภาพ</string>
     <string name="arrays__audio">เสียง</string>
     <string name="arrays__video">วิดีโอ</string>
@@ -336,7 +358,6 @@
         <item quantity="other">%d ชั่วโมง</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__pref_enter_sends_title">ป้อนคีย์เพื่อส่ง</string>
     <string name="preferences__screen_security">ความปลอดภัยหน้าจอ</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">ปิดกั้นการจับภาพหน้าจอในรายการล่าสุดและภายในแอป</string>
     <string name="preferences__notifications">การแจ้งเตือน</string>
@@ -371,7 +392,6 @@
     <string name="preferences__scan_through_all_conversations_and_enforce_conversation_length_limits">ไล่ดูการสนทนาทั้งหมดและบังคับใช้ขีดจำกัดความยาวของการสนทนา</string>
     <string name="preferences__default">ค่าเริ่มต้น</string>
     <string name="preferences__incognito_keyboard">แป้นพิมพ์แบบลับ</string>
-    <string name="preferences__read_receipts">ใบตอบรับเมื่ออ่าน</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">ร้องขอแป้นพิมพ์ให้ปิดใช้งานการเรียนรู้การแนะนำคำ</string>
     <string name="preferences__light_theme">สว่าง</string>
     <string name="preferences__dark_theme">มืด</string>
@@ -444,11 +464,12 @@
     <string name="LocalBackupJob_creating_backup">กำลังสร้างการสำรองข้อมูล...</string>
     <string name="ProgressPreference_d_messages_so_far">%d ข้อความจนถึงตอนนี้</string>
     <string name="BackupUtil_never">ไม่เลย</string>
-    <string name="preferences_app_protection__screen_lock">ล็อกหน้าจอ</string>
-    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">ล็อกการเข้าถึง Session ด้วยการล็อกหน้าจอของ Android หรือลายนิ้วมือ</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">ล็อกหน้าจอเมื่อไม่มีการใช้งานเกินเวลาที่กำหนด</string>
     <string name="AppProtectionPreferenceFragment_none">ไม่มี</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <!-- Next round of translation -->
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
 </resources>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">သင်အဖွဲ့မှ ထွက်သွားပါပြီ။</string>
+    <string name="MessageRecord_you_created_a_new_group">သင်သည် အဖွဲ့အသစ်တစ်ခုကို ဖန်တီးခဲ့သည်။</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s မှ သင့်အား အဖွဲ့သို့ထည့်ခဲ့သည်။</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">သင်သည် အဖွဲ့ကို %1$s ဟုအမည်ပြောင်းခဲ့သည်</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s သည် အဖွဲ့အား : %2$s ဟု အမည်ပြောင်းခဲ့သည်။</string>
+    <string name="MessageRecord_you_added_s_to_the_group">သင်သည် %1$s ကို အဖွဲ့သို့ ထည့်ခဲ့သည်။</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s သည် %2$s ကို အဖွဲ့ထဲသို့ ထည့်ခဲ့သည်။</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">သင်သည် %1$s ကို အဖွဲ့မှ ဖယ်ရှားခဲ့သည်။</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s သည် %2$s ကို အဖွဲ့မှ ဖယ်ရှားခဲ့သည်။</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">သင်သည် အဖွဲ့မှ ဖယ်ရှားခံလိုက်ရသည်။</string>
+    <string name="MessageRecord_you">သင်</string>
+    <string name="MessageRecord_s_called_you">%s မှ သင့်အား ခေါ်ဆိုခဲ့သည်။</string>
+    <string name="MessageRecord_called_s">%s အား ခေါ်ဆိုခဲ့သည်</string>
+    <string name="MessageRecord_missed_call_from">%s ထံမှ လွတ်သွားသော ခေါ်ဆိုမှု</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">ပျောက်သွားမည့် မက်ဆေ့ဂျ်များကို သင် ပိတ်ထားသည်။</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">%1$s မှ ပျောက်သွားမည့် မက်ဆေ့ဂျ်များကို ပိတ်ခဲ့သည်။</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">သင်သည် ပျောက်မည့် မက်ဆေ့ဂျ်အတွက် အချိန်မှတ်စက်ကို %1$ စက္ကန့်အဖြစ် သတ်မှတ်ထားသည်</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s သည် ပျောက်မည့် မက်ဆေ့ဂျ်အတွက် အချိန်မှတ်စက်ကို %2$ စက္ကန့်အဖြစ် သတ်မှတ်ထားသည်</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$s က မျက်နှာပြင်ဓာတ်ပုံကို ရိုက်ယူခဲ့သည်။</string>
+    <string name="MessageRecord_media_saved_by_s">မီဒီယာကို %1$s မှ ဆေ့ဖ်လုပ်သိမ်းခဲ့သည်။</string>
+    <!-- expiration -->
+    <string name="expiration_off">ပိတ်သည်</string>
+    <plurals name="expiration_seconds">
+        <item quantity="other">%d စက္ကန့်</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%ds</string>
+    <plurals name="expiration_minutes">
+        <item quantity="other">%d မိနစ်</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">%dm</string>
+    <plurals name="expiration_hours">
+        <item quantity="other">%d နာရီ</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">%dh</string>
+    <plurals name="expiration_days">
+        <item quantity="other">%d ရက်</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">%dd</string>
+    <plurals name="expiration_weeks">
+        <item quantity="other">%d ရက်သတ္တပတ်</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">%dw</string>
+    <string name="ConversationItem_group_action_left">%1$s သည် အဖွဲ့မှ ထွက်သွားပါပြီ။</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">အမည်မပေးရသေးသော အဖွဲ့</string>
+</resources>

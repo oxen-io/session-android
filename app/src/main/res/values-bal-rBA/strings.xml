@@ -5,6 +5,31 @@
     <string name="delete">Hapus</string>
     <string name="save">Simpan</string>
     <string name="note_to_self">Catatan Pribadi</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">Pesan baru</string>
     <!-- AlbumThumbnailView -->
@@ -292,9 +317,6 @@ memproses pertukaran kunci korupsi.</string>
     <string name="arrays__settings_default">Pengaturan bawaan</string>
     <string name="arrays__enabled">Aktif</string>
     <string name="arrays__disabled">Nonaktif</string>
-    <string name="arrays__name_and_message">Nama dan pesan</string>
-    <string name="arrays__name_only">Nama saja</string>
-    <string name="arrays__no_name_or_message">Tidak ada nama atau pesan</string>
     <string name="arrays__images">Gambar</string>
     <string name="arrays__documents">Dokumen</string>
     <string name="arrays__small">Kecil</string>
@@ -305,8 +327,6 @@ memproses pertukaran kunci korupsi.</string>
     <string name="arrays__max">Maks</string>
     <!-- plurals.xml -->
     <!-- preferences.xml -->
-    <string name="preferences__pref_enter_sends_title">Enter untuk mengirim</string>
-    <string name="preferences__send_link_previews">Kirim pratinjau tautan</string>
     <string name="preferences__screen_security">Keamanan Layar</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">Blokir tangkapan layar di daftar baru-baru saja dan di dalam aplikasi</string>
     <string name="preferences__notifications">Pemberitahuan</string>
@@ -338,9 +358,6 @@ memproses pertukaran kunci korupsi.</string>
     <string name="preferences__scan_through_all_conversations_and_enforce_conversation_length_limits">Pindai seluruh rangkaian percakapan dan terapkan batas panjang percakapan</string>
     <string name="preferences__default">Bawaan</string>
     <string name="preferences__incognito_keyboard">Papan ketik tersembunyi</string>
-    <string name="preferences__read_receipts">Pesan terbaca</string>
-    <string name="preferences__typing_indicators">Indikator penulisan</string>
-    <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Jika indikator penulisan di non-aktifkan, kamu tidak akan mampu melihat indikator penulisan dari anggota lainnya.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Permintaan papan ketik untuk non-aktif personalisasi</string>
     <string name="preferences__light_theme">Terang</string>
     <string name="preferences__dark_theme">Gelap</string>
@@ -414,8 +431,6 @@ memproses pertukaran kunci korupsi.</string>
     <string name="LocalBackupJob_creating_backup">Buat cadangan</string>
     <string name="ProgressPreference_d_messages_so_far">%d pesan sejauh ini...</string>
     <string name="BackupUtil_never">Tidak pernah</string>
-    <string name="preferences_app_protection__screen_lock">Layar terkunci</string>
-    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Kunci akses Session Anda dengan kunci layar Android atau sidik jari</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">Layar terkunci karena tidak beraktivitas habis</string>
     <string name="AppProtectionPreferenceFragment_none">Kosong</string>
     <!-- Conversation activity -->
@@ -506,7 +521,6 @@ memproses pertukaran kunci korupsi.</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">Ubah nama</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Putuskan koneksi dengan perangkat</string>
     <string name="dialog_seed_title">Kata pemulihan anda</string>
-    <string name="dialog_seed_explanation">Ini adalah kata pemulihan anda. Gunakan untuk mengembalikan atau memindahkan Session ID anda ke perangkat lain</string>
     <string name="dialog_clear_all_data_title">Hapus semua data</string>
     <string name="dialog_clear_all_data_explanation">Pesan, Session, dan kontak anda akan dihapus secara permanen</string>
     <string name="activity_qr_code_title">Kode QR</string>
@@ -519,4 +533,7 @@ memproses pertukaran kunci korupsi.</string>
     <string name="fragment_contact_selection_closed_groups_title">Grup tertutup</string>
     <string name="fragment_contact_selection_open_groups_title">Grup terbuka</string>
     <!-- Next round of translation -->
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
 </resources>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">Gruptan ayrıldınız.</string>
+    <string name="MessageRecord_you_created_a_new_group">Yeni bir grup oluşturdunuz.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s sizi gruba ekledi.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">Grubun adını %1$s olarak değiştirdiniz</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s, grubun adını %2$s olarak değiştirdi</string>
+    <string name="MessageRecord_you_added_s_to_the_group">Gruba %1$s kişisini eklediniz.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s, %2$s kişisini gruba ekledi.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">%1$s kişisini gruptan çıkardınız.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s, %2$s kişisini gruptan çıkardı.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">Gruptan atıldınız.</string>
+    <string name="MessageRecord_you">Siz</string>
+    <string name="MessageRecord_s_called_you">%s sizi aradı</string>
+    <string name="MessageRecord_called_s">%s arandı</string>
+    <string name="MessageRecord_missed_call_from">%s tarafından cevapsız çağrı</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">Kaybolan iletileri devre dışı bıraktınız.</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">%1$s kaybolan iletileri devre dışı bıraktı.</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">Kaybolan ileti zamanlayıcısını %1$s olarak ayarladınız</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s, kaybolan ileti zamanlayıcısını %2$s olarak ayarladı</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$s kişisi bir ekran görüntüsü aldı.</string>
+    <string name="MessageRecord_media_saved_by_s">Medya %1$s tarafından kaydedildi.</string>
+    <!-- expiration -->
+    <string name="expiration_off">Kapalı</string>
+    <plurals name="expiration_seconds">
+        <item quantity="one">%d saniye</item>
+        <item quantity="other">%d saniye</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%dsn</string>
+    <plurals name="expiration_minutes">
+        <item quantity="one">%d dakika</item>
+        <item quantity="other">%d dakika</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">%ddk</string>
+    <plurals name="expiration_hours">
+        <item quantity="one">%d saat</item>
+        <item quantity="other">%d saat</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">%dsa</string>
+    <plurals name="expiration_days">
+        <item quantity="one">%d gün</item>
+        <item quantity="other">%d gün</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">%d gün</string>
+    <plurals name="expiration_weeks">
+        <item quantity="one">%d hafta</item>
+        <item quantity="other">%d hafta</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">%d hft</string>
+    <string name="ConversationItem_group_action_left">%1$s kişisi gruptan ayrıldı.</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">İsimsiz grup</string>
+</resources>

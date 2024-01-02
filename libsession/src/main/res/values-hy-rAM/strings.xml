@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">Դուք լքել եք խումբը։</string>
+    <string name="MessageRecord_you_created_a_new_group">Դուք ստեղծել եք նոր խումբ:</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s֊ը ավելացրել է ձեզ խմբին:</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">Դուք խումբը վերանվանել եք %1$s</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s վերանվանել է խումբը։ %2$s</string>
+    <string name="MessageRecord_you_added_s_to_the_group">Դուք %1$s֊ին ավելացրել եք խմբին:</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s֊ը %2$s֊ին ավելացրել է խմբին:</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">Դուք %1$s֊ին հեռացրել եք խմբից:</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s֊ը %2$s֊ին հեռացրել է խմբից:</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">Դուք հեռացվել եք խմբից:</string>
+    <string name="MessageRecord_you">Դուք</string>
+    <string name="MessageRecord_s_called_you">%s-ը զանգել է ձեզ</string>
+    <string name="MessageRecord_called_s">Զանգ %s֊ին</string>
+    <string name="MessageRecord_missed_call_from">Բաց թողնված զանգ %s-ից</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">Դուք անջատել եք անհետացող հաղորդագրությունները:</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">%1$s֊ը անջատել է անհետացող հաղորդագրությունները:</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">Դուք անհետացող հաղորդագրության ժամաչափը դրեցիք %1$s</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s֊ը անհետացող հաղորդագրության ժամաչափը դրեց %2$s</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$s֊ը նկարեց էկրանը։</string>
+    <string name="MessageRecord_media_saved_by_s">%1$s֊ը պահպանել է մեդիա ֆայլը:</string>
+    <!-- expiration -->
+    <string name="expiration_off">Անջատված</string>
+    <plurals name="expiration_seconds">
+        <item quantity="one">%d վայրկյան</item>
+        <item quantity="other">%d վայրկյան</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%dվրկ</string>
+    <plurals name="expiration_minutes">
+        <item quantity="one">%d րոպե</item>
+        <item quantity="other">%d րոպե</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">%dր</string>
+    <plurals name="expiration_hours">
+        <item quantity="one">%d ժամ</item>
+        <item quantity="other">%d ժամ</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">%dժ</string>
+    <plurals name="expiration_days">
+        <item quantity="one">%d օր</item>
+        <item quantity="other">%d օր</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">%dօր</string>
+    <plurals name="expiration_weeks">
+        <item quantity="one">%d շաբաթ</item>
+        <item quantity="other">%d շաբաթ</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">%dշ</string>
+    <string name="ConversationItem_group_action_left">%1$s-ը լքել է խումբը:</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">Անանուն խումբ</string>
+</resources>

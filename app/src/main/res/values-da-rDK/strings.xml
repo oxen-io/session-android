@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Session</string>
     <string name="yes">Ja</string>
     <string name="no">Nej</string>
     <string name="delete">Slet</string>
     <string name="ban">Udeluk</string>
+    <string name="please_wait">Vent venligst…</string>
     <string name="save">Gem</string>
     <string name="note_to_self">Egen note</string>
     <string name="version_s">Version %s</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">Ny besked</string>
     <!-- AlbumThumbnailView -->
@@ -105,6 +130,10 @@
     <plurals name="ConversationFragment_saving_n_attachments">
         <item quantity="one">Gemmer vedhæftning</item>
         <item quantity="other">Gemmer %1$d vedhæftninger</item>
+    </plurals>
+    <plurals name="ConversationFragment_saving_n_attachments_to_sd_card">
+        <item quantity="one">Gemmer vedhæftet fil til lageret…</item>
+        <item quantity="other">Gemmer %1$d vedhæftelser til lager…</item>
     </plurals>
     <!-- CreateProfileActivity -->
     <string name="CreateProfileActivity_profile_photo">Profilbillede</string>
@@ -235,6 +264,7 @@ udveksel besked!</string>
     <string name="MediaPreviewActivity_you">Dig</string>
     <string name="MediaPreviewActivity_unssuported_media_type">Multimedie type ikke understøttet</string>
     <string name="MediaPreviewActivity_draft">Kladde</string>
+    <string name="MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied">Session har brug for adgang til lagerplads for at gemme ekstern lagerplads, men det er blevet permanent nægtet. Fortsæt venligst til app indstillinger, vælg \"Tilladelser\", og tænd for \"Lagerplads\".</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Ikke muligt at gemme til ekstern placering, uden tilladelse</string>
     <string name="MediaPreviewActivity_media_delete_confirmation_title">Slet besked?</string>
     <string name="MediaPreviewActivity_media_delete_confirmation_message">Dette sletter beskeden permanent</string>
@@ -378,9 +408,6 @@ udveksel besked!</string>
     <string name="arrays__settings_default">Standardindstillinger</string>
     <string name="arrays__enabled">Aktiveret</string>
     <string name="arrays__disabled">Deaktiverét</string>
-    <string name="arrays__name_and_message">Navn og besked</string>
-    <string name="arrays__name_only">Kun navn</string>
-    <string name="arrays__no_name_or_message">Hverken navn eller besked</string>
     <string name="arrays__images">Billeder</string>
     <string name="arrays__audio">Lyd</string>
     <string name="arrays__video">Video</string>
@@ -398,9 +425,6 @@ udveksel besked!</string>
         <item quantity="other">%d timer</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__pref_enter_sends_title">[Enter] sender besked</string>
-    <string name="preferences__send_link_previews">Send link eksempelvisning</string>
-    <string name="preferences__previews_are_supported_for">Eksempelvisning er understøttet for Imgur, Instagram, Pinterest, Reddit og YouTube links</string>
     <string name="preferences__screen_security">Skærmsikkerhed</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">Blokér skærmbilleder i listen \"Seneste apps\" og i Session</string>
     <string name="preferences__notifications">Notifikationer</string>
@@ -435,9 +459,6 @@ udveksel besked!</string>
     <string name="preferences__scan_through_all_conversations_and_enforce_conversation_length_limits">Skan alle samtaler og tilpas begrænsninger for samtalelængde</string>
     <string name="preferences__default">Standard</string>
     <string name="preferences__incognito_keyboard">Inkognito tastatur</string>
-    <string name="preferences__read_receipts">Læst af modtager</string>
-    <string name="preferences__typing_indicators">Skrive indikator</string>
-    <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Hvis skrive indikator er deaktiverét, er det ikke muligt at se når andre skriver</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Deaktivér personaliseret læring fra tastaturet</string>
     <string name="preferences__light_theme">Lyst</string>
     <string name="preferences__dark_theme">Mørkt</string>
@@ -513,8 +534,6 @@ udveksel besked!</string>
     <string name="LocalBackupJob_creating_backup">Opretter backup...</string>
     <string name="ProgressPreference_d_messages_so_far">%d beskeder ind til videre</string>
     <string name="BackupUtil_never">Aldrig</string>
-    <string name="preferences_app_protection__screen_lock">Skærmlås</string>
-    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Lås adgang til Session med Android skærmlås eller fingeraftryk</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">Timeout for inaktiv skærmlås</string>
     <string name="AppProtectionPreferenceFragment_none">Ingen</string>
     <!-- Conversation activity -->
@@ -548,6 +567,7 @@ udveksel besked!</string>
     <string name="activity_display_name_display_name_missing_error">Vælg venligst et display navn</string>
     <string name="activity_display_name_display_name_too_long_error">Vælg venligst et kortere display navn</string>
     <string name="activity_pn_mode_recommended_option_tag">Anbefalet</string>
+    <string name="activity_pn_mode_no_option_picked_dialog_title">Vælg Venligst en Mulighed</string>
     <string name="activity_home_empty_state_message">Du har ingen kontakter endnu</string>
     <string name="activity_home_empty_state_button_title">Start en Session</string>
     <string name="activity_home_leave_group_dialog_message">Er du sikker på, at du vil forlade denne gruppe?</string>
@@ -563,25 +583,40 @@ udveksel besked!</string>
     <string name="view_seed_reminder_subtitle_2">Tryk og hold de redigerede ord for at afsløre din gendannelsessætning, og gem det derefter et sikkert sted for at sikre dit Session ID.</string>
     <string name="view_seed_reminder_subtitle_3">Sørg for at gemme din gendannelsessætning et sikkert sted</string>
     <string name="activity_path_title">Sti</string>
+    <string name="activity_path_explanation">Session skjuler din IP ved at sende dine beskeder gennem flere Service Nodes i Session\'s decentraliserede netværk. Det her er de lande, som De i øjeblikket er ved at blive sendt igennem:</string>
     <string name="activity_path_device_row_title">Dig</string>
+    <string name="activity_path_guard_node_row_title">Indgangsknude</string>
+    <string name="activity_path_service_node_row_title">Tjenesteknude</string>
     <string name="activity_path_destination_row_title">Destination</string>
     <string name="activity_path_learn_more_button_title">Læs mere</string>
+    <string name="activity_path_resolving_progress">Løser…</string>
     <string name="activity_create_private_chat_title">Ny Session</string>
     <string name="activity_create_private_chat_enter_session_id_tab_title">Indtast Session ID</string>
     <string name="activity_create_private_chat_scan_qr_code_tab_title">Skan QR-kode</string>
+    <string name="activity_create_private_chat_scan_qr_code_explanation">Scan en brugers QR-kode for at starte en session. QR-koder kan findes ved at trykke på QR-kodeikonet i kontoindstillinger.</string>
     <string name="fragment_enter_public_key_edit_text_hint">Indtast Session ID eller ONS navn</string>
+    <string name="fragment_enter_public_key_explanation">Brugerne kan dele deres Session ID ved at gå ind på deres kontoindstillinger og trykke på \"Del Session ID\" eller ved at dele deres QR-kode.</string>
+    <string name="fragment_enter_public_key_error_message">Venligst tjek Session ID\'et eller ONS navnet og prøv igen.</string>
     <string name="fragment_scan_qr_code_camera_access_explanation">Session skal bruge kameraadgang for at scanne QR-koder</string>
     <string name="fragment_scan_qr_code_grant_camera_access_button_title">Tildel Adgang Til Kamera</string>
+    <string name="activity_create_closed_group_title">Ny Lukket Gruppe</string>
     <string name="activity_create_closed_group_edit_text_hint">Indtast et gruppenavn</string>
     <string name="activity_create_closed_group_empty_state_message">Du har ingen kontakter endnu</string>
     <string name="activity_create_closed_group_empty_state_button_title">Start en Session</string>
+    <string name="activity_create_closed_group_group_name_missing_error">Indtast et gruppenavn</string>
+    <string name="activity_create_closed_group_group_name_too_long_error">Vælg et kortere gruppenavn</string>
+    <string name="activity_create_closed_group_not_enough_group_members_error">Vælg mindst 1 gruppemedlem</string>
     <string name="activity_create_closed_group_too_many_group_members_error">En lukket gruppe kan ikke have over 100 medlemmer</string>
+    <string name="activity_join_public_chat_title">Deltag i åben gruppe</string>
     <string name="activity_join_public_chat_error">Kunne ikke joine gruppen</string>
     <string name="activity_join_public_chat_enter_group_url_tab_title">Åbn Gruppe URL</string>
     <string name="activity_join_public_chat_scan_qr_code_tab_title">Skan QR-kode</string>
     <string name="activity_join_public_chat_scan_qr_code_explanation">Scan QR-koden for den åbne gruppe, du gerne vil deltage i</string>
     <string name="fragment_enter_chat_url_edit_text_hint">Angiv en åben gruppe URL</string>
     <string name="activity_settings_title">Indstillinger</string>
+    <string name="activity_settings_display_name_edit_text_hint">Angiv et navn</string>
+    <string name="activity_settings_display_name_missing_error">Vælg venligst et navn</string>
+    <string name="activity_settings_display_name_too_long_error">Vælg venligst et kortere navn</string>
     <string name="activity_settings_privacy_button_title">Privatliv</string>
     <string name="activity_settings_notifications_button_title">Notifikationer</string>
     <string name="activity_settings_chats_button_title">Chats</string>
@@ -596,13 +631,16 @@ udveksel besked!</string>
     <string name="activity_notification_settings_style_section_title">Notifikationsstil</string>
     <string name="activity_notification_settings_content_section_title">Meddelelsesindhold</string>
     <string name="activity_privacy_settings_title">Privatliv</string>
+    <string name="preferences_notifications_strategy_category_title">Notifikations Strategi</string>
     <string name="preferences_notifications_strategy_category_fast_mode_title">Brug Hurtig Tilstand</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">Rediger navn</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Frakobl enhed</string>
+    <string name="dialog_seed_title">Din gendannelsessætning</string>
     <string name="dialog_clear_all_data_title">Ryd Alt Data</string>
     <string name="dialog_clear_all_data_explanation">Dette vil permanent slette dine beskeder, sessioner og kontakter.</string>
     <string name="dialog_clear_all_data_network_explanation">Vil du kun rydde denne enhed eller slette hele din konto?</string>
     <string name="dialog_clear_all_data_local_only">Slet Kun</string>
+    <string name="dialog_clear_all_data_clear_network">Hele kontoen</string>
     <string name="activity_qr_code_title">QR-kode</string>
     <string name="activity_qr_code_view_my_qr_code_tab_title">Se Min QR-kode</string>
     <string name="activity_qr_code_view_scan_qr_code_tab_title">Skan QR-kode</string>
@@ -632,39 +670,73 @@ udveksel besked!</string>
     <string name="dialog_ui_mode_option_night">Nat</string>
     <string name="dialog_ui_mode_option_system_default">Systemstandard</string>
     <string name="activity_conversation_menu_copy_session_id">Kopier Session ID</string>
+    <string name="attachment">Vedhæftet fil</string>
     <string name="attachment_type_voice_message">Talebesked</string>
     <string name="details">Detaljer</string>
     <string name="dialog_backup_activation_failed">Kunne ikke aktivere sikkerhedskopier. Prøv igen, eller kontakt support.</string>
     <string name="activity_backup_restore_title">Gendan sikkerhedskopi</string>
     <string name="activity_backup_restore_select_file">Vælg en fil</string>
+    <string name="activity_backup_restore_explanation_1">Vælg en sikkerhedskopi og indtast kodeordet den var lavet med.</string>
+    <string name="activity_backup_restore_passphrase">30-cifret adgangskode</string>
     <string name="activity_link_device_skip_prompt">Dette tager et stykke tid, vil du gerne springe over?</string>
     <string name="activity_link_device_link_device">Forbind en enhed</string>
     <string name="activity_link_device_recovery_phrase">Gendannelsessætning</string>
     <string name="activity_link_device_scan_qr_code">Skan QR-kode</string>
     <string name="activity_link_device_qr_message">Naviger til Indstillinger → Gendannelsessætning på din anden enhed, for at vise din QR-kode.</string>
     <string name="activity_join_public_chat_join_rooms">Eller deltag i en af disse…</string>
+    <string name="activity_pn_mode_message_notifications">Besked Notifikationer</string>
     <string name="activity_pn_mode_explanation">Der er to måder Session kan underrette dig om nye beskeder.</string>
+    <string name="activity_pn_mode_fast_mode">Hurtig metode</string>
+    <string name="activity_pn_mode_slow_mode">Langsom metode</string>
+    <string name="activity_pn_mode_fast_mode_explanation">Du får besked om nye meddelelser pålideligt og straks ved hjælp af Googles notifikationsservere.</string>
+    <string name="activity_pn_mode_slow_mode_explanation">Session vil lejlighedsvis tjekke for nye beskeder i baggrunden.</string>
+    <string name="fragment_recovery_phrase_title">Gendannelsessætning</string>
+    <string name="activity_prompt_passphrase_session_locked">Session er låst</string>
+    <string name="activity_prompt_passphrase_tap_to_unlock">Tryk for at låse op</string>
     <string name="fragment_user_details_bottom_sheet_edit_text_hint">Indtast et kaldenavn</string>
     <string name="invalid_public_key">Ugyldig public key</string>
     <string name="document">Dokument</string>
+    <string name="dialog_blocked_title">Vil du fjerne blokeringen af %s?</string>
+    <string name="dialog_blocked_explanation">Er du sikker på du vil fjerne blokeringen på %s?</string>
+    <string name="dialog_join_open_group_title">Tilslut %s?</string>
+    <string name="dialog_join_open_group_explanation">Er du sikker på at du gerne vil tilslutte den %s åbne gruppe?</string>
     <string name="dialog_open_url_title">Åben URL?</string>
     <string name="dialog_open_url_explanation">Er du sikker på, at du vil åbne %s?</string>
+    <string name="open">Åben</string>
     <string name="copy_url">Kopier URL</string>
     <string name="dialog_link_preview_title">Aktiver Forhåndsvisning Af Links?</string>
+    <string name="dialog_link_preview_explanation">Aktivering af link forhåndsvisninger vil vise forhåndsvisninger for webadresser, du sender og modtager. Dette kan være nyttigt, men Session bliver nødt til at kontakte linkede websteder for at generere forhåndsvisninger. Du kan altid deaktivere linkforhåndsvisninger i Session\'s indstillinger.</string>
     <string name="dialog_link_preview_enable_button_title">Aktivér</string>
+    <string name="dialog_download_title">Tillad %s?</string>
+    <string name="dialog_download_explanation">Er du sikker på at du vil downloade medier sent af %s?</string>
     <string name="dialog_download_button_title">Hent</string>
+    <string name="activity_conversation_blocked_banner_text">%s er blokeret. Vil du fjerne blokeringen?</string>
+    <string name="activity_conversation_attachment_prep_failed">Kunne ikke forberede den vedhæftede-fil til afsendelse.</string>
     <string name="media">Medie</string>
+    <string name="UntrustedAttachmentView_download_attachment">Tryk for at downloade %s</string>
     <string name="message_details_header__error">Fejl</string>
     <string name="dialog_send_seed_title">Advarsel</string>
+    <string name="dialog_send_seed_explanation">Det her er din gendannelsessætning. Hvis du sender den til nogen vil de have fuld adgang til din konto.</string>
     <string name="dialog_send_seed_send_button_title">Send</string>
     <string name="notify_type_all">Alle</string>
+    <string name="notify_type_mentions">Omtaler</string>
     <string name="deleted_message">Denne besked er blevet slettet</string>
     <string name="delete_message_for_me">Slet kun for mig</string>
     <string name="delete_message_for_everyone">Slet for alle</string>
     <string name="delete_message_for_me_and_recipient">Slet for mig og %s</string>
+    <string name="activity_settings_survey_feedback">Feedback/spørgeskema</string>
     <string name="activity_settings_support">Debug log</string>
     <string name="dialog_share_logs_title">Del Logfiler</string>
     <string name="dialog_share_logs_explanation">Ønsker du at eksportere dine applikationslogs for at kunne dele for fejlfinding?</string>
     <string name="conversation_pin">Fastgør</string>
     <string name="conversation_unpin">Frigør</string>
+    <string name="mark_all_as_read">Marker alt som læst</string>
+    <string name="global_search_contacts_groups">Kontakter og grupper</string>
+    <string name="global_search_messages">Beskeder</string>
+    <string name="NewConversationButton_SessionTooltip">Privatbesked</string>
+    <string name="NewConversationButton_ClosedGroupTooltip">Lukket gruppe</string>
+    <string name="NewConversationButton_OpenGroupTooltip">Åben gruppe</string>
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
 </resources>

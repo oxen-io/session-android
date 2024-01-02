@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">세션</string>
     <string name="yes">예</string>
     <string name="no">아니요</string>
     <string name="delete">삭제</string>
     <string name="ban">차단</string>
+    <string name="please_wait">잠시 기다려 주세요...</string>
     <string name="save">저장</string>
     <string name="note_to_self">개인용 메모</string>
     <string name="version_s">버전 %s</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">새 메시지</string>
     <!-- AlbumThumbnailView -->
@@ -31,6 +56,7 @@
     <!-- AttachmentManager -->
     <string name="AttachmentManager_cant_open_media_selection">미디어를 선택할 수 있는 앱이 없음</string>
     <string name="AttachmentManager_signal_requires_the_external_storage_permission_in_order_to_attach_photos_videos_or_audio">Session이 사진, 동영상, 그리고 소리를 첨부하기 위해 필요한 스토리지 권한이 영구적으로 차단되었습니다. 앱 설정 메뉴에서 \"권한\" 탭을 누르시고 \"저장 공간\" 권한을 허용해주세요.</string>
+    <string name="AttachmentManager_signal_requires_the_camera_permission_in_order_to_take_photos_but_it_has_been_permanently_denied">Session은 사진을 촬영하기 위해 카메라 권한이 필요하지만, 거부되어 있는 것 같습니다. 앱 설정으로 가서 \"권한\"을 선택, 카메라를 허용 해주세요.</string>
     <!-- AudioSlidePlayer -->
     <string name="AudioSlidePlayer_error_playing_audio">오디오 재생 오류 발생</string>
     <!-- BucketedThreadMedia -->
@@ -60,6 +86,7 @@
     <string name="ConversationActivity_muted_until_date">%1$s까지 알림 꺼짐</string>
     <string name="ConversationActivity_muted_forever">알림 꺼짐</string>
     <string name="ConversationActivity_member_count">%1$d명의 멤버</string>
+    <string name="ConversationActivity_active_member_count">%1$d인 온라인</string>
     <string name="ConversationActivity_open_group_guidelines">커뮤니티 가이드라인</string>
     <string name="ConversationActivity_invalid_recipient">수신자가 잘못됨</string>
     <string name="ConversationActivity_added_to_home_screen">홈 화면에 추가됨</string>
@@ -75,7 +102,13 @@
     <string name="ConversationActivity_invite_to_open_group">멤버 추가</string>
     <string name="ConversationActivity_to_send_audio_messages_allow_signal_access_to_your_microphone">음성 메시지를 보내기 위해서, 세션이 마이크에 접근할 수 있게 허용해주세요.</string>
     <string name="ConversationActivity_signal_requires_the_microphone_permission_in_order_to_send_audio_messages">Session이 음성 메시지를 보내기 위한 마이크 권한이 영구적으로 차단되었습니다. 앱 설정에서 \"권한\" 탭을 클릭하고, \"마이크\" 권한을 허용해주세요.</string>
+    <string name="ConversationActivity_to_capture_photos_and_video_allow_signal_access_to_the_camera">Session은 사진을 찍고 동영상을 녹화하기 위해 카메라 접근을 필요로 합니다.</string>
+    <string name="ConversationActivity_to_send_photos_and_video_allow_signal_access_to_storage">Session은 사진과 동영상을 전송하기 위해 저장공간 접근이 필요합니다.</string>
+    <string name="ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video">Session이 음성 메시지를 보내기 위한 마이크 권한이 영구적으로 차단되었습니다. 앱 설정에서 \"권한\" 탭을 클릭하고, \"마이크\" 권한을 허용해주세요.</string>
+    <string name="ConversationActivity_signal_needs_camera_permissions_to_take_photos_or_video">Session은 사진을 찍고 동영상을 녹화하는데 카메라 접근이 필요합니다.</string>
     <string name="ConversationActivity_search_position">%1$d / %2$d</string>
+    <string name="ConversationActivity_call_title">통화 권한이 필요합니다.</string>
+    <string name="ConversationActivity_call_prompt">개인정보 설정에서 \'음성 및 영상 통화\' 항목을 활성화할 수 있습니다.</string>
     <!-- ConversationFragment -->
     <plurals name="ConversationFragment_delete_selected_messages">
         <item quantity="other">선택된 메시지를 삭제하시겠습니까?</item>
@@ -93,6 +126,9 @@
     </plurals>
     <plurals name="ConversationFragment_saving_n_attachments">
         <item quantity="other">첨부파일 %1$d개 저장</item>
+    </plurals>
+    <plurals name="ConversationFragment_saving_n_attachments_to_sd_card">
+        <item quantity="other">첨부파일 %1$d개를 저장소에 저장 중…</item>
     </plurals>
     <!-- CreateProfileActivity -->
     <string name="CreateProfileActivity_profile_photo">프로필 사진</string>
@@ -142,6 +178,13 @@
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">%s에게 전송</string>
     <!-- MediaSendActivity -->
+    <string name="MediaSendActivity_add_a_caption">캡션 추가</string>
+    <string name="MediaSendActivity_an_item_was_removed_because_it_exceeded_the_size_limit">항목이 용량 제한을 초과하여 삭제되었습니다.</string>
+    <string name="MediaSendActivity_camera_unavailable">카메라 사용 불가</string>
+    <string name="MediaSendActivity_message_to_s">%s에게 메시지 보내기</string>
+    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
+        <item quantity="other">%d개 항목 보다 더 많이 공유할 수 없습니다.</item>
+    </plurals>
     <!-- MediaRepository -->
     <string name="MediaRepository_all_media">모든 미디어</string>
     <!-- MessageRecord -->
@@ -150,7 +193,7 @@
     <string name="MessageRecord_you_updated_group">그룹을 갱신하였습니다.</string>
     <string name="MessageRecord_s_updated_group">%s 이 그룹을 갱신했습니다.</string>
     <!-- ExpirationDialog -->
-    <string name="ExpirationDialog_disappearing_messages">사라지는 메시지들</string>
+    <string name="ExpirationDialog_disappearing_messages">메시지 자동 삭제</string>
     <string name="ExpirationDialog_your_messages_will_not_expire">당신의 메시지들은 시한만료되지 않을 것입니다.</string>
     <string name="ExpirationDialog_your_messages_will_disappear_s_after_they_have_been_seen">이 대화에서 보내고 받은 메시지들은 , 보여진 후 %s 후에  표시에서 사라질 것입니다.</string>
     <!-- PassphrasePromptActivity -->
@@ -169,6 +212,8 @@
     <string name="Slide_video">동영상</string>
     <!-- SmsMessageRecord -->
     <string name="SmsMessageRecord_received_corrupted_key_exchange_message">받은 키 교환 메시지가 손상되었습니다.</string>
+    <string name="SmsMessageRecord_received_key_exchange_message_for_invalid_protocol_version">        받은 키 교환 메시지의 프로토콜 버전이 잘못되었습니다.
+    </string>
     <string name="SmsMessageRecord_received_message_with_new_safety_number_tap_to_process">새 안전번호가 담긴 메시지를 수신했습니다. 두드려서 표시와 처리를 시작하십시오.</string>
     <string name="SmsMessageRecord_secure_session_reset">당신은 안전 세션을 초기화 했습니다.</string>
     <string name="SmsMessageRecord_secure_session_reset_s">%s 님이 안전 세션을 초기화 했습니다</string>
@@ -183,43 +228,82 @@
     <string name="ThreadRecord_missed_call">부재중 통화</string>
     <string name="ThreadRecord_media_message">미디어 메시지</string>
     <string name="ThreadRecord_s_is_on_signal">%s 이 Session 에 연결되어 있습니다.</string>
+    <string name="ThreadRecord_disappearing_messages_disabled">메시지 자동 삭제 비활성화됨</string>
+    <string name="ThreadRecord_disappearing_message_time_updated_to_s">메시지 자동 삭제 시간이 %s(으로)로 설정됨</string>
+    <string name="ThreadRecord_s_took_a_screenshot">%s님이 스크린샷을 찍었습니다.</string>
+    <string name="ThreadRecord_media_saved_by_s">%s님이 미디어를 저장하였습니다.</string>
+    <string name="ThreadRecord_safety_number_changed">안전 번호 바뀜</string>
     <string name="ThreadRecord_your_safety_number_with_s_has_changed">당신의  %s 와의 안전번호가 변경되었습니다.</string>
+    <string name="ThreadRecord_you_marked_verified">인증됨으로 표시함</string>
+    <string name="ThreadRecord_you_marked_unverified">인증되지 않음으로 표시함</string>
+    <string name="ThreadRecord_empty_message">이 메시지는 비어있습니다.</string>
+    <string name="ThreadRecord_open_group_invitation">오픈 그룹 초대</string>
     <!-- UpdateApkReadyListener -->
+    <string name="UpdateApkReadyListener_Signal_update">Session 업데이트</string>
+    <string name="UpdateApkReadyListener_a_new_version_of_signal_is_available_tap_to_update">새 버전의 Session이 사용 가능합니다. 눌러서 업데이트 하세요.</string>
     <!-- MessageDisplayHelper -->
+    <string name="MessageDisplayHelper_bad_encrypted_message">올바르지 않은 암호화된 메시지</string>
+    <string name="MessageDisplayHelper_message_encrypted_for_non_existing_session">존재하지 않는 세션의 암호화된 메시지</string>
     <!-- MmsMessageRecord -->
+    <string name="MmsMessageRecord_bad_encrypted_mms_message">올바르지 않은 암호화된 MMS 메시지</string>
+    <string name="MmsMessageRecord_mms_message_encrypted_for_non_existing_session">존재하지 않는 세션의 암호화된 MMS 메시지</string>
     <!-- MuteDialog -->
     <string name="MuteDialog_mute_notifications">대화 알림 끄기</string>
     <!-- KeyCachingService -->
     <string name="KeyCachingService_signal_passphrase_cached">열려면 터치하세요.</string>
     <string name="KeyCachingService_passphrase_cached">Session 잠금 해제 됨</string>
+    <string name="KeyCachingService_lock">Session 잠금</string>
     <!-- MediaPreviewActivity -->
     <string name="MediaPreviewActivity_you">나</string>
     <string name="MediaPreviewActivity_unssuported_media_type">지원되지 않는 미디어 형식</string>
+    <string name="MediaPreviewActivity_draft">초안</string>
+    <string name="MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied">Session이 음성 메시지를 보내기 위한 마이크 권한이 영구적으로 차단되었습니다. 앱 설정에서 \"권한\" 탭을 클릭하고, \"마이크\" 권한을 허용해주세요.</string>
+    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">사용 권한 없이 외부 스토리지에 저장할 수 없습니다</string>
+    <string name="MediaPreviewActivity_media_delete_confirmation_title">메시지를 삭제하시겠습니까?</string>
+    <string name="MediaPreviewActivity_media_delete_confirmation_message">이 메시지는 영구적으로 삭제됩니다.</string>
     <!-- MessageNotifier -->
     <string name="MessageNotifier_d_new_messages_in_d_conversations">대화 %2$d개에 새 메시지 %1$d개</string>
     <string name="MessageNotifier_most_recent_from_s">%1$s님에게서 최근 메시지</string>
+    <string name="MessageNotifier_locked_message">잠긴 메시지</string>
     <string name="MessageNotifier_message_delivery_failed">메시지 전송 실패</string>
     <string name="MessageNotifier_failed_to_deliver_message">메시지가 전송되지 않았습니다.</string>
     <string name="MessageNotifier_error_delivering_message">메시지 전송 오류 발생</string>
     <string name="MessageNotifier_mark_all_as_read">모두 읽음으로 표시</string>
     <string name="MessageNotifier_mark_read">읽음으로 표시</string>
     <string name="MessageNotifier_reply">답장</string>
+    <string name="MessageNotifier_pending_signal_messages">보류 중인 Session 메시지</string>
+    <string name="MessageNotifier_you_have_pending_signal_messages">보류 중인 세션 메시지가 있습니다. 열려면 탭하세요.</string>
+    <string name="MessageNotifier_contact_message">%1$s %2$s</string>
     <string name="MessageNotifier_unknown_contact_message">연락처</string>
     <!-- Notification Channels -->
     <string name="NotificationChannel_messages">기본</string>
+    <string name="NotificationChannel_calls">통화하다</string>
+    <string name="NotificationChannel_failures">실패</string>
+    <string name="NotificationChannel_backups">백업</string>
+    <string name="NotificationChannel_locked_status">잠금 상태</string>
+    <string name="NotificationChannel_app_updates">앱 업데이트</string>
+    <string name="NotificationChannel_other">기타</string>
     <string name="NotificationChannel_group_messages">메시지</string>
     <string name="NotificationChannel_missing_display_name">알 수 없음</string>
     <!-- QuickResponseService -->
     <string name="QuickResponseService_quick_response_unavailable_when_Signal_is_locked">Session 잠겨 있는 경우 빠른 응답 사용할 수 없음</string>
     <string name="QuickResponseService_problem_sending_message">메시지 보내지 못함</string>
     <!-- SaveAttachmentTask -->
+    <string name="SaveAttachmentTask_saved_to">%s에 저장했습니다.</string>
+    <string name="SaveAttachmentTask_saved">보존 완료</string>
     <!-- SearchToolbar -->
     <string name="SearchToolbar_search">검색</string>
     <!-- ShortcutLauncherActivity -->
+    <string name="ShortcutLauncherActivity_invalid_shortcut">잘못된 바로 가기</string>
     <!-- SingleRecipientNotificationBuilder -->
+    <string name="SingleRecipientNotificationBuilder_signal">Session</string>
     <string name="SingleRecipientNotificationBuilder_new_message">새 메시지</string>
     <!-- TransferControlView -->
+    <plurals name="TransferControlView_n_items">
+        <item quantity="other">%d 항목</item>
+    </plurals>
     <!-- VideoPlayer -->
+    <string name="VideoPlayer_error_playing_video">비디오 재생 오류 발생</string>
     <!-- attachment_type_selector -->
     <string name="attachment_type_selector__audio">오디오</string>
     <string name="attachment_type_selector__audio_description">오디오</string>
@@ -229,9 +313,13 @@
     <string name="attachment_type_selector__camera_description">카메라</string>
     <string name="attachment_type_selector__location">위치</string>
     <string name="attachment_type_selector__location_description">위치</string>
+    <string name="attachment_type_selector__gif">GIF</string>
+    <string name="attachment_type_selector__gif_description">Gif</string>
+    <string name="attachment_type_selector__gallery_description">이미지 또는 비디오</string>
     <string name="attachment_type_selector__file_description">파일</string>
     <string name="attachment_type_selector__gallery">갤러리</string>
     <string name="attachment_type_selector__file">파일</string>
+    <string name="attachment_type_selector__drawer_description">첨부 파일용 서랍으로 전환</string>
     <!-- contact_selection_group_activity -->
     <string name="contact_selection_group_activity__finding_contacts">주소록 로드 중…</string>
     <!-- conversation_activity -->
@@ -239,6 +327,10 @@
     <string name="conversation_activity__compose_description">메시지 작성</string>
     <string name="conversation_activity__emoji_toggle_description">이모티콘 키보드 전환</string>
     <string name="conversation_activity__attachment_thumbnail">첨부파일 미리보기 이미지</string>
+    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">빠른 카메라 첨부용 서랍으로 전환</string>
+    <string name="conversation_activity__quick_attachment_drawer_record_and_send_audio_description">녹음하여 오디오 첨부</string>
+    <string name="conversation_activity__quick_attachment_drawer_lock_record_description">첨부 음성 녹음 잠금</string>
+    <string name="conversation_activity__enable_signal_for_sms">세션의 SMS 기능 사용</string>
     <!-- conversation_input_panel -->
     <string name="conversation_input_panel__slide_to_cancel">취소하려면 슬라이드</string>
     <string name="conversation_input_panel__cancel">취소</string>
@@ -249,6 +341,7 @@
     <string name="conversation_item_sent__send_failed_indicator_description">보내기 실패</string>
     <string name="conversation_item_sent__pending_approval_description">승인 대기 중</string>
     <string name="conversation_item_sent__delivered_description">전송됨</string>
+    <string name="conversation_item_sent__message_read">읽은 메시지</string>
     <!-- conversation_item_received -->
     <string name="conversation_item_received__contact_photo_description">연락처 사진</string>
     <!-- audio_view -->
@@ -256,18 +349,26 @@
     <string name="audio_view__pause_accessibility_description">일시 정지</string>
     <string name="audio_view__download_accessibility_description">다운로드</string>
     <!-- open_group_invitation_view -->
+    <string name="open_group_invitation_view__join_accessibility_description">참가하기</string>
+    <string name="open_group_invitation_view__open_group_invitation">그룹 초대 받기</string>
+    <string name="open_group_guidelines_pinned_message">고정된 메시지</string>
+    <string name="open_group_guidelines_community_guidelines">커뮤니티 규정</string>
+    <string name="open_group_guidelines_read">읽기</string>
     <!-- QuoteView -->
     <string name="QuoteView_audio">오디오</string>
     <string name="QuoteView_video">동영상</string>
     <string name="QuoteView_photo">사진</string>
     <string name="QuoteView_you">나</string>
+    <string name="QuoteView_original_missing">원본 메시지를 찾을 수 없음</string>
     <!-- conversation_fragment -->
+    <string name="conversation_fragment__scroll_to_the_bottom_content_description">맨 아래로 스크롤</string>
     <!-- giphy_activity -->
     <string name="giphy_activity_toolbar__search_gifs_and_stickers">GIF 파일과 스티커 검색</string>
     <!-- giphy_fragment -->
     <string name="giphy_fragment__nothing_found">찾지 못하였습니다.</string>
     <!-- load_more_header -->
     <string name="load_more_header__see_full_conversation">대화 전체 보기</string>
+    <string name="load_more_header__loading">불러오는 중</string>
     <!-- media_overview_activity -->
     <string name="media_overview_activity__no_media">미디어 없음</string>
     <!-- message_recipients_list_item -->
@@ -278,6 +379,7 @@
     <string name="message_details_header__issues_need_your_attention">문제가 발생하여 확인이 필요합니다.</string>
     <string name="message_details_header__sent">보낸 시간:</string>
     <string name="message_details_header__received">받은 시간:</string>
+    <string name="message_details_header__disappears">사라지기</string>
     <string name="message_details_header__via">유형:</string>
     <string name="message_details_header__to">받는사람:</string>
     <string name="message_details_header__from">보낸사람:</string>
@@ -298,20 +400,33 @@
     <string name="arrays__settings_default">기본설정</string>
     <string name="arrays__enabled">사용</string>
     <string name="arrays__disabled">사용 안함</string>
-    <string name="arrays__name_and_message">이름과 메시지</string>
-    <string name="arrays__name_only">이름</string>
-    <string name="arrays__no_name_or_message">이름이나 메시지 표시하지 않음</string>
+    <string name="arrays__name_and_message">이름 및 내용</string>
+    <string name="arrays__name_only">이름만</string>
+    <string name="arrays__no_name_or_message">이름 또는 내용 없음</string>
     <string name="arrays__images">이미지</string>
     <string name="arrays__audio">오디오</string>
     <string name="arrays__video">동영상</string>
     <string name="arrays__documents">문서</string>
+    <string name="arrays__small">작게</string>
     <string name="arrays__normal">보통</string>
+    <string name="arrays__large">크게</string>
+    <string name="arrays__extra_large">매우 크게</string>
+    <string name="arrays__default">기본값</string>
+    <string name="arrays__high">높게</string>
+    <string name="arrays__max">최대</string>
     <!-- plurals.xml -->
     <plurals name="hours_ago">
         <item quantity="other">%d시간 전</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__pref_enter_sends_title">Enter키로 메시지 보내기</string>
+    <string name="preferences__pref_enter_sends_title">Enter 키를 사용하여 보내기</string>
+    <string name="preferences__pref_enter_sends_summary">엔터키를 눌러 줄바꿈 대신 메시지 전송.</string>
+    <string name="preferences__send_link_previews">링크 미리보기 보내기</string>
+    <string name="preferences__link_previews">링크 미리보기</string>
+    <string name="preferences__link_previews_summary">지원되는 URL에 대해 링크 미리보기 생성.</string>
+    <string name="preferences__pref_autoplay_audio_category">음성 메세지</string>
+    <string name="preferences__pref_autoplay_audio_title">음성 메시지 자동재생</string>
+    <string name="preferences__pref_autoplay_audio_summary">연속된 음성 메시지 자동재생.</string>
     <string name="preferences__screen_security">화면 보안</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">최근 사용 목록/개요 및 앱 안에서 스크린샷 차단</string>
     <string name="preferences__notifications">알림</string>
@@ -319,6 +434,7 @@
     <string name="preferences__led_color_unknown">알 수 없음</string>
     <string name="preferences__pref_led_blink_title">알림등 반복 패턴</string>
     <string name="preferences__sound">소리</string>
+    <string name="preferences__in_app_sounds">앱이 열리면 소리</string>
     <string name="preferences__silent">무음</string>
     <string name="preferences__repeat_alerts">알림 반복</string>
     <string name="preferences__never">안함</string>
@@ -345,13 +461,29 @@
     <string name="preferences__trim_all_conversations_now">모든 대화 줄이기</string>
     <string name="preferences__scan_through_all_conversations_and_enforce_conversation_length_limits">모든 대화에 메시지 저장한도 적용</string>
     <string name="preferences__default">기본</string>
+    <string name="preferences__incognito_keyboard">사생활 키보드</string>
+    <string name="preferences__read_receipts">읽음 표시</string>
+    <string name="preferences__read_receipts_summary">일대일 채팅에서 읽음 표시 전송.</string>
+    <string name="preferences__typing_indicators">입력 중 아이콘</string>
+    <string name="preferences__typing_indicators_summary">일대일 채팅에서 입력 중 아이콘 보고 공유.</string>
+    <string name="preferences__request_keyboard_to_disable_personalized_learning">키보드에 맞춤형 학습 비활성화를 요청</string>
     <string name="preferences__light_theme">밝게</string>
     <string name="preferences__dark_theme">어둡게</string>
     <string name="preferences_chats__message_trimming">대화 줄이기</string>
+    <string name="preferences_chats__message_trimming_title">커뮤니티 정돈</string>
+    <string name="preferences_chats__message_trimming_summary">2000개가 넘는 메시지가 있는 커뮤니티에서 6개월 이상이 지난 메시지 삭제.</string>
     <string name="preferences_advanced__use_system_emoji">시스템 이모티콘 사용</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Session 이모티콘 사용 중지</string>
+    <string name="preferences_app_protection__screen_security">화면 보안</string>
+    <string name="preferences_chats__chats">채팅</string>
     <string name="preferences_notifications__messages">메시지</string>
+    <string name="preferences_notifications__in_chat_sounds">대화 중 소리</string>
+    <string name="preferences_notifications__content">알림 내용</string>
+    <string name="preferences_notifications__content_message">보기:</string>
+    <string name="preferences_notifications__summary">알림에서 표시되는 정보</string>
     <string name="preferences_notifications__priority">우선순위</string>
+    <string name="preferences_app_protection__screenshot_notifications">스크린샷 알림</string>
+    <string name="preferences_app_protected__screenshot_notifications_summary">연락처가 일대일 채팅 스크린샷을 찍을 때 알림 받기.</string>
     <!-- **************************************** -->
     <!-- menus -->
     <!-- **************************************** -->
@@ -361,12 +493,19 @@
     <string name="conversation_context__menu_message_details">메시지 세부정보</string>
     <string name="conversation_context__menu_copy_text">텍스트 복사</string>
     <string name="conversation_context__menu_delete_message">메시지 삭제</string>
+    <string name="conversation_context__menu_ban_user">사용자 차단</string>
+    <string name="conversation_context__menu_ban_and_delete_all">차단 및 전부 삭제</string>
     <string name="conversation_context__menu_resend_message">메시지 다시 보내기</string>
+    <string name="conversation_context__menu_reply">답장</string>
+    <string name="conversation_context__menu_reply_to_message">메시지에 답장</string>
+    <string name="conversation_context__menu_call">통화하다</string>
+    <string name="conversation_context__menu_select">선택</string>
     <!-- conversation_context_image -->
     <string name="conversation_context_image__save_attachment">첨부파일 저장</string>
     <!-- conversation_expiring_off -->
-    <string name="conversation_expiring_off__disappearing_messages">사라지는 메시지들</string>
+    <string name="conversation_expiring_off__disappearing_messages">메시지 자동 삭제</string>
     <!-- conversation_expiring_on -->
+    <string name="menu_conversation_expiring_on__messages_expiring">메시지 유효기간</string>
     <!-- conversation_muted -->
     <string name="conversation_muted__unmute">알림 켜기</string>
     <!-- conversation_unmuted -->
@@ -384,6 +523,7 @@
     <string name="conversation_group_options__broadcast">방송</string>
     <!-- media_preview -->
     <string name="media_preview__save_title">저장</string>
+    <string name="media_preview__forward_title">전달</string>
     <string name="media_preview__all_media_title">모든 미디어</string>
     <!-- media_overview -->
     <string name="media_overview_documents_fragment__no_documents_found">문서 없음</string>
@@ -394,58 +534,347 @@
     <string name="trimmer__deleting_old_messages">이전 메시지를 삭제 중…</string>
     <string name="trimmer__old_messages_successfully_deleted">이전 메시지 삭제됨</string>
     <!-- transport_selection_list_item -->
+    <string name="Permissions_permission_required">권한 필요</string>
     <string name="Permissions_continue">확인</string>
     <string name="Permissions_not_now">나중에</string>
+    <string name="backup_enable_dialog__backups_will_be_saved_to_external_storage_and_encrypted_with_the_passphrase_below_you_must_have_this_passphrase_in_order_to_restore_a_backup">백업은 외부 저장소에 저장되며 아래의 암호로 암호화됩니다. 백업된 내용을 사용하기 위해서는 이 암호를 지니고 있어야 합니다.</string>
+    <string name="backup_enable_dialog__i_have_written_down_this_passphrase">암호를 적었습니다. 암호 없이는 백업된 내용을 사용할 수 없습니다.</string>
     <string name="registration_activity__skip">건너뛰기</string>
+    <string name="RegistrationActivity_backup_failure_downgrade">최신 버전의 세션에서 백업을 가져올 수 없습니다</string>
+    <string name="RegistrationActivity_incorrect_backup_passphrase">잘못된 백업 암호</string>
+    <string name="BackupDialog_enable_local_backups">로컬 백업을 활성화할까요?</string>
+    <string name="BackupDialog_enable_backups">백업 활성화</string>
+    <string name="BackupDialog_please_acknowledge_your_understanding_by_marking_the_confirmation_check_box">확인 체크박스에 표시하여 이해하였음을 알려주세요.</string>
+    <string name="BackupDialog_delete_backups">백업을 삭제할까요?</string>
+    <string name="BackupDialog_disable_and_delete_all_local_backups">모든 로컬 백업을 비활성화하고 삭제할까요?</string>
+    <string name="BackupDialog_delete_backups_statement">백업 삭제</string>
     <string name="BackupDialog_copied_to_clipboard">클립보드에 복사됨</string>
+    <string name="LocalBackupJob_creating_backup">백업 생성 중...</string>
+    <string name="ProgressPreference_d_messages_so_far">지금까지 %d개의 메시지</string>
     <string name="BackupUtil_never">안함</string>
+    <string name="preferences_app_protection__screen_lock">Session 잠금</string>
+    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Session의 잠금을 풀기 위해 지문 또는 PIN, 패턴, 비밀번호가 필요합니다.</string>
+    <string name="preferences_app_protection__screen_lock_inactivity_timeout">Session 잠금 타임아웃</string>
     <string name="AppProtectionPreferenceFragment_none">없음</string>
     <!-- Conversation activity -->
+    <string name="activity_conversation_copy_public_key_button_title">공개키 복사</string>
     <!-- Session -->
+    <string name="continue_2">계속</string>
     <string name="copy">복사</string>
+    <string name="close">닫기</string>
+    <string name="invalid_url">유효하지 않은 URL</string>
     <string name="copied_to_clipboard">클립보드에 복사됨</string>
+    <string name="next">다음</string>
     <string name="share">공유</string>
+    <string name="invalid_session_id">세션 ID가 유효하지 않습니다.</string>
     <string name="cancel">취소</string>
     <string name="your_session_id">당신의 세션 ID</string>
+    <string name="activity_landing_title_2">당신의 Session이 여기서 시작됩니다...</string>
+    <string name="activity_landing_register_button_title">Session ID 생성</string>
+    <string name="activity_landing_restore_button_title">Session을 계속합니다.</string>
+    <string name="view_fake_chat_bubble_1">Session은 무엇인가요?</string>
+    <string name="view_fake_chat_bubble_2">탈 중앙화 된 암호화 메시지 앱입니다.</string>
+    <string name="view_fake_chat_bubble_3">그러면 제 개인 정보나 대화 메타데이터를 수집하지 않나요? 어떻게 그게 가능한가요?</string>
+    <string name="view_fake_chat_bubble_4">향상된 익명 라우팅과 종단 간 암호화 기술을 조합하여 사용합니다.</string>
+    <string name="view_fake_chat_bubble_5">친구는 친구가 보안이 침해된 메신저를 사용하도록 하지 않습니다. 천만에요.</string>
+    <string name="activity_register_title">Session ID에게 인사하세요</string>
+    <string name="activity_register_explanation">당신의 세션 ID는 사람들이 세션에서 당신에게 연락하는 데 사용할 수 있는 고유한 주소입니다. 실제 신원과 관련없는 세션 ID는 완전히 익명이며 설계상 비공개입니다.</string>
+    <string name="activity_restore_title">계정 복구하기</string>
+    <string name="activity_restore_explanation">계정 복원을 위해 가입할 때 제공된 복구 문구를 입력하세요.</string>
+    <string name="activity_restore_seed_edit_text_hint">복구 구문을 입력하세요.</string>
+    <string name="activity_display_name_title_2">표시될 이름을 선택하세요</string>
+    <string name="activity_display_name_explanation">세션을 사용할 때 이름이 됩니다. 실명, 가명 또는 다른 원하는 이름을 사용할 수 있습니다.</string>
+    <string name="activity_display_name_edit_text_hint">표시될 이름을 입력하세요</string>
+    <string name="activity_display_name_display_name_missing_error">표시될 이름을 선택해주세요</string>
+    <string name="activity_display_name_display_name_too_long_error">짧게 표시될 이름을 선택하세요.</string>
+    <string name="activity_pn_mode_recommended_option_tag">권장</string>
+    <string name="activity_pn_mode_no_option_picked_dialog_title">옵션을 선택해 주세요</string>
     <string name="activity_home_empty_state_message">아직 연락처가 없습니다</string>
     <string name="activity_home_empty_state_button_title">세션 시작하기</string>
+    <string name="activity_home_leave_group_dialog_message">정말 이 그룹을 나가시겠습니까?</string>
+    <string name="activity_home_leaving_group_failed_message">"그룹을 탈퇴하지 못했습니다."</string>
+    <string name="activity_home_delete_conversation_dialog_message">이 대화를 삭제하시겠습니까?</string>
+    <string name="activity_home_conversation_deleted_message">대화를 삭제함</string>
     <string name="activity_seed_title">당신의 복구 코드</string>
+    <string name="activity_seed_title_2">복구 문구와 일치</string>
+    <string name="activity_seed_explanation">복구 문구는 당신의 Session ID의 마스터 키 입니다. 만약 당신이 기기의 연결 권한을 잃어버렸다면, 당신의 Session ID 를 복구하기 위해 복구 문구를 사용할수 있습니다. 복구 문구를 안전한 곳에 저장하고, 절대 남에게 알려주지 마세요.</string>
+    <string name="activity_seed_reveal_button_title">눌러서 표시</string>
+    <string name="view_seed_reminder_title">거의 끝났습니다! 80%!</string>
+    <string name="view_seed_reminder_subtitle_1">복구 문구를 저장하여 계정을 보호하세요.</string>
+    <string name="view_seed_reminder_subtitle_2">일부 수정된 단어를 길게 탭하여 복구 문구를 표시한 다음 안전하게 저장하여 세션 ID를 보호하십시오.</string>
+    <string name="view_seed_reminder_subtitle_3">복구 문구를 안전한 곳에 보관하십시오.</string>
+    <string name="activity_path_title">경로</string>
     <string name="activity_path_explanation">Session 분산 네트워크의 여러 서비스 노드를 통해 메시지를 분산해 IP를 숨깁니다. 이들이 현재 연결을 분산하는 국가입니다:</string>
     <string name="activity_path_device_row_title">당신</string>
+    <string name="activity_path_guard_node_row_title">출구 노드</string>
+    <string name="activity_path_service_node_row_title">서비스 통신망</string>
     <string name="activity_path_destination_row_title">목적지</string>
     <string name="activity_path_learn_more_button_title">더 알아보기</string>
+    <string name="activity_path_resolving_progress">해결 중...</string>
+    <string name="activity_create_private_chat_title">새 세션</string>
+    <string name="activity_create_private_chat_enter_session_id_tab_title">세션 ID 입력</string>
     <string name="activity_create_private_chat_scan_qr_code_tab_title">QR 코드 스캔</string>
+    <string name="activity_create_private_chat_scan_qr_code_explanation">세션을 시작하려면 사용자의 QR 코드를 스캔하세요. 계정 설정에서 QR 코드 아이콘을 탭하면 QR 코드를 찾을 수 있습니다.</string>
+    <string name="fragment_enter_public_key_edit_text_hint">세션 ID나 ONS 이름을 입력하세요.</string>
+    <string name="fragment_enter_public_key_explanation">사용자는 계정 설정으로 이동하여 \"세션 ID 공유\"를 누르거나 QR 코드를 공유하여 세션 ID를 공유할 수 있습니다.</string>
+    <string name="fragment_enter_public_key_error_message">Session ID나 ONS 이름을 확인하신 후 다시 시도해주세요.</string>
+    <string name="fragment_scan_qr_code_camera_access_explanation">세션에서 QR 코드를 스캔하려면 카메라 액세스 권한이 필요합니다.</string>
+    <string name="fragment_scan_qr_code_grant_camera_access_button_title">카메라 액세스 권한 부여</string>
+    <string name="activity_create_closed_group_title">새 비밀 그룹</string>
+    <string name="activity_create_closed_group_edit_text_hint">그룹 이름 입력</string>
     <string name="activity_create_closed_group_empty_state_message">아직 연락처가 없습니다</string>
+    <string name="activity_create_closed_group_empty_state_button_title">세션 시작하기</string>
+    <string name="activity_create_closed_group_group_name_missing_error">그룹 이름을 입력해주세요</string>
+    <string name="activity_create_closed_group_group_name_too_long_error">짧은 그룹 이름을 입력해주세요.</string>
+    <string name="activity_create_closed_group_not_enough_group_members_error">최소 1명의 멤버를 선택해주세요.</string>
+    <string name="activity_create_closed_group_too_many_group_members_error">비밀 그룹 참여자는 최대 100명입니다.</string>
+    <string name="activity_join_public_chat_title">오픈 그룹 참여</string>
+    <string name="activity_join_public_chat_error">그룹에 참여할 수 없습니다.</string>
+    <string name="activity_join_public_chat_enter_group_url_tab_title">그룹 URL 열기</string>
     <string name="activity_join_public_chat_scan_qr_code_tab_title">QR 코드 스캔</string>
+    <string name="activity_join_public_chat_scan_qr_code_explanation">가입하고 싶은 공개 그룹의 QR 코드를 스캔하세요.</string>
+    <string name="fragment_enter_chat_url_edit_text_hint">공개 그룹 URL을 입력하세요.</string>
     <string name="activity_settings_title">설정</string>
+    <string name="activity_settings_display_name_edit_text_hint">표시될 이름을 입력하세요</string>
+    <string name="activity_settings_display_name_missing_error">표시될 이름을 선택해주세요</string>
+    <string name="activity_settings_display_name_too_long_error">짧게 표시될 이름을 선택하세요.</string>
     <string name="activity_settings_privacy_button_title">개인정보</string>
     <string name="activity_settings_notifications_button_title">알림</string>
+    <string name="activity_settings_message_requests_button_title">메시지 요청</string>
+    <string name="activity_settings_chats_button_title">채팅</string>
+    <string name="activity_settings_devices_button_title">장치</string>
     <string name="activity_settings_invite_button_title">친구 초대</string>
     <string name="activity_settings_faq_button_title">자주 하는 질문</string>
     <string name="activity_settings_recovery_phrase_button_title">복구 코드</string>
     <string name="activity_settings_clear_all_data_button_title">데이터 지우기</string>
+    <string name="activity_settings_clear_all_data_and_network_button_title">네트워크를 포함한 데이터 지우기</string>
     <string name="activity_settings_help_translate_session">세션을 번역하는 데 기여하기</string>
     <string name="activity_notification_settings_title">알림</string>
+    <string name="activity_notification_settings_style_section_title">알림 스타일</string>
+    <string name="activity_notification_settings_content_section_title">알림 내용</string>
     <string name="activity_privacy_settings_title">개인정보</string>
+    <string name="activity_conversations_settings_title">대화</string>
+    <string name="activity_help_settings_title">도움</string>
+    <string name="activity_help_settings__report_bug_title">버그 신고</string>
+    <string name="activity_help_settings__report_bug_summary">로그를 내보내고 세션의 지원 데스크를 통하여 파일을 업로드하세요.</string>
+    <string name="activity_help_settings__translate_session">세션 번역</string>
+    <string name="activity_help_settings__feedback">여러분의 의견을 기다리고 있습니다</string>
+    <string name="activity_help_settings__faq">자주 하는 질문</string>
+    <string name="activity_help_settings__support">지원</string>
+    <string name="activity_help_settings__export_logs">로그 내보내기</string>
+    <string name="preferences_notifications_strategy_category_title">알림 전략</string>
+    <string name="preferences_notifications_strategy_category_fast_mode_title">Fast 모드 사용</string>
+    <string name="preferences_notifications_strategy_category_fast_mode_summary">Google의 알림 서버를 사용하여 새 메시지를 확실하고 즉각적으로 알려드립니다.</string>
+    <string name="fragment_device_list_bottom_sheet_change_name_button_title">이름 변경</string>
+    <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">기기 연결 해제</string>
     <string name="dialog_seed_title">당신의 복구 코드</string>
-    <string name="dialog_seed_explanation">이것은 당신의 복구 코드입니다. 이것으로 세션 ID를 새 장치로 복원하거나 이동할 수 있습니다.</string>
+    <string name="dialog_seed_explanation">복구 문구를 사용하여 계정을 복원하거나 장치를 연결할 수 있습니다.</string>
+    <string name="dialog_clear_all_data_title">모든 데이터 지우기</string>
     <string name="dialog_clear_all_data_explanation">메시지, 세션 및 연락처가 영구적으로 삭제됩니다.</string>
+    <string name="dialog_clear_all_data_network_explanation">이 장치만 삭제하거나, 계정 전체를 삭제할까요?</string>
+    <string name="dialog_clear_all_data_message">이렇게 하면 메시지, 세션 및 연락처가 영구적으로 삭제됩니다. 이 기기만 삭제하시겠습니까, 아니면 전체 계정을 삭제하시겠습니까?</string>
+    <string name="dialog_clear_all_data_clear_device_only">디바이스만 지우기</string>
+    <string name="dialog_clear_all_data_clear_device_and_network">디바이스와 네트워크 지우기</string>
+    <string name="dialog_clear_all_data_clear_device_and_network_confirmation">정말 네트워크에서 데이터를 삭제하시겠습니까? 계속하면 메시지나 연락처를 복원할 수 없습니다.</string>
+    <string name="dialog_clear_all_data_clear">지우기</string>
+    <string name="dialog_clear_all_data_local_only">지우기만</string>
+    <string name="dialog_clear_all_data_clear_network">계정 전체</string>
     <string name="activity_qr_code_title">QR 코드</string>
     <string name="activity_qr_code_view_my_qr_code_tab_title">내 QR 코드 보기</string>
     <string name="activity_qr_code_view_scan_qr_code_tab_title">QR 코드 스캔</string>
     <string name="activity_qr_code_view_scan_qr_code_explanation">QR 코드를 스캔해서 대화를 시작하세요</string>
     <string name="fragment_view_my_qr_code_title">스캔해주세요</string>
     <string name="fragment_view_my_qr_code_explanation">이것은 당신의 QR 코드입니다. 다른 사용자는 이를 스캔하여 당신과 세션을 시작할 수 있습니다.</string>
+    <string name="fragment_view_my_qr_code_share_title">QR 코드 공유</string>
+    <string name="fragment_contact_selection_contacts_title">연락처</string>
+    <string name="fragment_contact_selection_closed_groups_title">비공개 그룹</string>
+    <string name="fragment_contact_selection_open_groups_title">공개 그룹</string>
     <string name="fragment_contact_selection_empty_contacts">아직 연락처가 없습니다</string>
     <!-- Next round of translation -->
+    <string name="menu_apply_button">적용</string>
+    <string name="menu_done_button">완료</string>
+    <string name="activity_edit_closed_group_title">그룹 편집</string>
+    <string name="activity_edit_closed_group_edit_text_hint">새 그룹 이름 입력</string>
+    <string name="activity_edit_closed_group_edit_members">멤버</string>
     <string name="activity_edit_closed_group_add_members">멤버 추가</string>
+    <string name="activity_edit_closed_group_group_name_missing_error">그룹 이름은 비워둘 수 없습니다</string>
+    <string name="activity_edit_closed_group_group_name_too_long_error">짧은 그룹 이름을 입력해주세요.</string>
+    <string name="activity_edit_closed_group_not_enough_group_members_error">그룹은 최소 1명의 그룹 멤버가 있어야 합니다.</string>
+    <string name="fragment_edit_group_bottom_sheet_remove">그룹에서 사용자 삭제</string>
+    <string name="activity_select_contacts_title">연락처 선택</string>
+    <string name="view_reset_secure_session_done_message">암호화된 세션이 초기화되었습니다.</string>
+    <string name="dialog_ui_mode_title">테마</string>
+    <string name="dialog_ui_mode_option_day">Day</string>
+    <string name="dialog_ui_mode_option_night">Night</string>
+    <string name="dialog_ui_mode_option_system_default">시스템 기본값</string>
+    <string name="activity_conversation_menu_copy_session_id">세션 ID 복사</string>
+    <string name="attachment">첨부 파일</string>
+    <string name="attachment_type_voice_message">음성 메시지</string>
+    <string name="details">세부 사항</string>
+    <string name="dialog_backup_activation_failed">백업을 활성화하지 못 했습니다. 다시 시도하시거나 지원 부서에 문의하십시오.</string>
+    <string name="activity_backup_restore_title">백업 복원</string>
+    <string name="activity_backup_restore_select_file">파일 선택</string>
+    <string name="activity_backup_restore_explanation_1">백업 파일을 선택하고 같이 생성된 암호를 입력하세요</string>
+    <string name="activity_backup_restore_passphrase">30자리 암호</string>
+    <string name="activity_link_device_skip_prompt">시간이 오래 걸립니다. 건너뛰시겠습니까?</string>
+    <string name="activity_link_device_link_device">다른 장치와 연결</string>
     <string name="activity_link_device_recovery_phrase">복구 코드</string>
     <string name="activity_link_device_scan_qr_code">QR 코드 스캔</string>
+    <string name="activity_link_device_qr_message">QR 코드를 보려면 다른 장치에서 \"설정 → 복구 문구\"로 이동하십시오.</string>
+    <string name="activity_join_public_chat_join_rooms">또는 이 중에서 참여...</string>
+    <string name="activity_pn_mode_message_notifications">메시지 알림</string>
+    <string name="activity_pn_mode_explanation">세션이 새 메시지를 알릴 수 있는 두 가지 방법이 있습니다.</string>
+    <string name="activity_pn_mode_fast_mode">Fast 모드</string>
+    <string name="activity_pn_mode_slow_mode">Slow 모드</string>
+    <string name="activity_pn_mode_fast_mode_explanation">Google의 알림 서버를 사용하여 새 메시지를 확실하고 즉각적으로 알려드립니다.</string>
+    <string name="activity_pn_mode_slow_mode_explanation">세션은 때때로 백그라운드에서 새 메시지를 확인합니다.</string>
     <string name="fragment_recovery_phrase_title">복구 코드</string>
+    <string name="activity_prompt_passphrase_session_locked">세션이 잠금됨</string>
+    <string name="activity_prompt_passphrase_tap_to_unlock">탭하여 잠금 해제</string>
+    <string name="fragment_user_details_bottom_sheet_edit_text_hint">닉네임을 입력하세요.</string>
+    <string name="invalid_public_key">잘못된 공개 키</string>
+    <string name="document">문서</string>
+    <string name="dialog_blocked_title">%s(을)를 차단 해제할까요?</string>
+    <string name="dialog_blocked_explanation">%s의 차단을 해제할까요?</string>
+    <string name="dialog_join_open_group_title">%s에 가입할까요?</string>
+    <string name="dialog_join_open_group_explanation">%s 공개 그룹에 들어가시겠습니까?</string>
+    <string name="dialog_open_url_title">URL을 열까요?</string>
+    <string name="dialog_open_url_explanation">%s를(을) 열까요?</string>
+    <string name="open">열기</string>
+    <string name="copy_url">URL 복사</string>
+    <string name="dialog_link_preview_title">링크 미리보기를 사용하시겠습니까?</string>
+    <string name="dialog_link_preview_explanation">링크 미리보기를 켤 경우 송수신자에게 웹사이트의 미리보기를 제공합니다. 이는 유용한 기능이지만, Session은 미리보기를 만들기 위해 링크된 주소를 접근하게 됩니다. 사용자는 언제나 설정에서 링크 미리보기를 끌 수 있습니다.</string>
+    <string name="dialog_link_preview_enable_button_title">활성화</string>
+    <string name="dialog_download_title">%s님을 신뢰할까요?</string>
+    <string name="dialog_download_explanation">%s님이 전송한 미디어를 다운로드하시겠습니까?</string>
+    <string name="dialog_download_button_title">다운로드</string>
+    <string name="activity_conversation_blocked_banner_text">%s(은)는 차단되었습니다. 차단을 해제하시겠습니까?</string>
+    <string name="activity_conversation_block_user">사용자 차단</string>
+    <string name="activity_conversation_attachment_prep_failed">보낼 첨부 파일을 준비하지 못했습니다.</string>
+    <string name="media">미디어</string>
+    <string name="UntrustedAttachmentView_download_attachment">탭하여 %s 다운로드</string>
+    <string name="message_details_header__error">에러</string>
+    <string name="dialog_send_seed_title">주의</string>
+    <string name="dialog_send_seed_explanation">이것은 당신의 복구 문구입니다. 복구 문구를 가지고 있는 사용자는 누구든 당신의 세션계정의 접근할 수 있습니다.</string>
+    <string name="dialog_send_seed_send_button_title">전송</string>
     <string name="notify_type_all">모두</string>
     <string name="notify_type_mentions">멘션만</string>
+    <string name="deleted_message">삭제된 메세지 입니다.</string>
+    <string name="delete_message_for_me">나에게서만 삭제</string>
+    <string name="delete_message_for_everyone">모두에게서 삭제</string>
+    <string name="delete_message_for_me_and_recipient">나와 %s에게서만 삭제</string>
     <string name="activity_settings_survey_feedback">피드백/설문 조사</string>
     <string name="activity_settings_support">디버그 로그</string>
+    <string name="dialog_share_logs_title">로그 공유</string>
+    <string name="dialog_share_logs_explanation">문제 해결을 위해 공유할 수 있도록 애플리케이션 로그를 내보내시겠습니까?</string>
     <string name="conversation_pin">고정</string>
     <string name="conversation_unpin">고정 해제</string>
+    <string name="mark_all_as_read">모두 읽음으로 표시</string>
+    <string name="global_search_contacts_groups">연락처 및 그룹</string>
+    <string name="global_search_messages">메시지</string>
+    <string name="activity_message_requests_title">메시지 요청</string>
+    <string name="message_requests_send_notice">메시지를 보내면 상대방의 메시지 요청을 자동으로 수락하며 상대방이 당신의 세션 ID를 볼 수 있게 됩니다.</string>
+    <string name="accept">수락</string>
+    <string name="decline">거절</string>
+    <string name="message_requests_clear_all">모두 지우기</string>
+    <string name="message_requests_decline_message">정말 이 메시지 요청을 거부하시겠습니까?</string>
+    <string name="message_requests_block_message">정말 이 메시지 요청을 차단하시겠습니까?</string>
+    <string name="message_requests_deleted">메시지 요청 삭제됨</string>
+    <string name="message_requests_clear_all_message">모든 메세지 요청을 삭제하시겠습니까?</string>
+    <string name="message_requests_cleared">메시지 요청 삭제됨</string>
+    <string name="message_requests_accepted">당신의 메시지 요청이 수락되었습니다.</string>
+    <string name="message_requests_pending">당신의 메시지 요청이 현재 보류 중입니다.</string>
+    <string name="message_request_empty_state_message">보류중인 메세지 요청이 없습니다.</string>
+    <string name="NewConversationButton_SessionTooltip">다이렉트 메세지</string>
+    <string name="NewConversationButton_ClosedGroupTooltip">비공개 그룹</string>
+    <string name="NewConversationButton_OpenGroupTooltip">공개 그룹</string>
+    <string name="message_requests_notification">새로운 메시지 요청이 있습니다.</string>
+    <string name="CallNotificationBuilder_connecting">연결 중…</string>
+    <string name="NotificationBarManager__incoming_signal_call">수신 전화</string>
+    <string name="NotificationBarManager__deny_call">통화 거부</string>
+    <string name="NotificationBarManager__answer_call">통화 받기</string>
+    <string name="NotificationBarManager_call_in_progress">통화 중</string>
+    <string name="NotificationBarManager__cancel_call">통화 취소</string>
+    <string name="NotificationBarManager__establishing_signal_call">통화 시작 중</string>
+    <string name="NotificationBarManager__end_call">통화 종료</string>
+    <string name="accept_call">통화 수락</string>
+    <string name="decline_call">통화 거부</string>
+    <string name="preferences__voice_video_calls">음성 및 영상 통화</string>
+    <string name="preferences__calls_beta">통화 (베타)</string>
+    <string name="preferences__allow_access_voice_video">다른 사용자와 음성 및 영상 통화를 할 수 있습니다.</string>
+    <string name="dialog_voice_video_title">음성 / 영상 통화</string>
+    <string name="dialog_voice_video_message">당신의 IP 주소는 베타 통화를 사용하는 동안 당신의 통화 파트너와 Oxen Foundation 서버에 표시됩니다. 음성 및 영상 통화를 활성화하시겠습니까?</string>
+    <string name="CallNotificationBuilder_first_call_title">부재중 전화</string>
+    <string name="CallNotificationBuilder_first_call_message">개인 정보 설정에서 \'음성 및 영상 통화\' 권한이 활성화되지 않았기 때문에 전화를 받지 못했습니다.</string>
+    <string name="WebRtcCallActivity_Session_Call">세션 통화</string>
+    <string name="WebRtcCallActivity_Reconnecting">다시 연결 중…</string>
+    <string name="CallNotificationBuilder_system_notification_title">알림</string>
+    <string name="CallNotificationBuilder_system_notification_message">알림을 비활성화하면 전화를 받을 수 없습니다. 세션 알림 설정으로 이동하시겠습니까?</string>
+    <string name="dismiss">중지</string>
+    <string name="activity_settings_conversations_button_title">대화</string>
+    <string name="activity_settings_message_appearance_button_title">디자인</string>
+    <string name="activity_settings_help_button">도움</string>
+    <string name="activity_appearance_themes_category">테마</string>
+    <string name="ocean_dark_theme_name">오션 다크</string>
+    <string name="classic_dark_theme_name">클래식 다크</string>
+    <string name="ocean_light_theme_name">오션 라이트</string>
+    <string name="classic_light_theme_name">클래식 라이트</string>
+    <string name="activity_appearance_primary_color_category">기본 색</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__this_message">이 메시지</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__recently_used">최근 사용</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__smileys_and_people">스마일리 &amp; 사람들</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__nature" comment="Heading for an emoji list's category">동물 &amp; 자연</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__food" comment="Heading for an emoji list's category">음식 &amp; 음료</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__activities">활동</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__places" comment="Heading for an emoji list's category">여행 &amp; 장소</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__objects">오브젝트</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__symbols">기호</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__flags">깃발</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__emoticons">이모티콘</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__no_results_found">검색 결과가 없습니다.</string>
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <string name="ReactionsBottomSheetDialogFragment_all">전부 &#183; %1$d</string>
+    <!-- ReactionsConversationView -->
+    <string name="ReactionsConversationView_plus">+%1$d</string>
+    <!-- ReactionsRecipientAdapter -->
+    <string name="ReactionsRecipientAdapter_you">당신</string>
+    <string name="reaction_notification">%1$s이(가) %2$s 메시지에 응답</string>
+    <string name="ReactionsConversationView_show_less">간략히 보기</string>
+    <string name="KeyboardPagerFragment_search_emoji">이모지 검색</string>
+    <string name="KeyboardPagerfragment_back_to_emoji">이모지로 돌아가기</string>
+    <string name="KeyboardPagerfragment_clear_search_entry">검색 항목 지우기</string>
+    <string name="activity_appearance_follow_system_category">자동 다크 모드</string>
+    <string name="activity_appearance_follow_system_explanation">시스템 설정과 매치</string>
+    <string name="go_to_device_notification_settings">장치 알림 설정으로 가기</string>
+    <string name="blocked_contacts_title">차단된 연락처</string>
+    <string name="blocked_contacts_empty_state">차단된 연락처가 없습니다.</string>
+    <string name="Unblock_dialog__title_single">%s 차단 해제</string>
+    <string name="Unblock_dialog__title_multiple">사용자 차단 해제</string>
+    <string name="Unblock_dialog__message">정말 %s의 차단을 해제할까요?</string>
+    <plurals name="Unblock_dialog__message_multiple_overflow">
+        <item quantity="other">%d와 다른 사람들</item>
+    </plurals>
+    <plurals name="ReactionsRecipientAdapter_other_reactors">
+        <item quantity="other">%1$d님이 %2$s님이 이 메시지에 응답했습니다.</item>
+    </plurals>
+    <string name="dialog_new_conversation_title">새 대화</string>
+    <string name="dialog_new_message_title">새 메세지</string>
+    <string name="activity_create_group_title">그룹 만들기</string>
+    <string name="dialog_join_community_title">커뮤니티 가입</string>
+    <string name="new_conversation_contacts_title">연락처</string>
+    <string name="new_conversation_unknown_contacts_section_title">알 수 없음</string>
+    <string name="fragment_enter_public_key_prompt">다른 사람의 세션 ID를 입력하여 새 대화를 시작하거나 세션 ID를 공유하세요.</string>
+    <string name="activity_create_group_create_button_title">만들기</string>
+    <string name="search_contacts_hint">연락처 검색</string>
+    <string name="activity_join_public_chat_enter_community_url_tab_title">커뮤니티 URL</string>
+    <string name="fragment_enter_community_url_edit_text_hint">커뮤니티 URL 입력하기</string>
+    <string name="fragment_enter_community_url_join_button_title">가입</string>
+    <string name="new_conversation_dialog_back_button_content_description">뒤로 이동</string>
+    <string name="new_conversation_dialog_close_button_content_description">대화창 닫기</string>
+    <string name="ErrorNotifier_migration">데이터베이스 업그레이드 실패</string>
+    <string name="ErrorNotifier_migration_downgrade">오류를 보고하려면 지원팀에 문의하세요.</string>
+    <string name="delivery_status_sending">전송 중</string>
+    <string name="delivery_status_read">읽음</string>
+    <string name="delivery_status_sent">전송됨</string>
+    <string name="delivery_status_failed">전송 실패</string>
 </resources>

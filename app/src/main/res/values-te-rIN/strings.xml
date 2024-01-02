@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Sandarbham</string>
     <string name="yes">అవును</string>
     <string name="no">కాదు</string>
     <string name="delete">తొలగించండి</string>
@@ -8,6 +7,31 @@
     <string name="save">భద్రపరుచు</string>
     <string name="note_to_self">Sviya gamanika</string>
     <string name="version_s">Sanskarana %s</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">కొత్త సందేశం</string>
     <!-- AlbumThumbnailView -->
@@ -342,9 +366,6 @@
     <string name="arrays__settings_default">అప్రమేయ అమరికలు</string>
     <string name="arrays__enabled">చేతనం అయింది</string>
     <string name="arrays__disabled">అచేతనం అయింది</string>
-    <string name="arrays__name_and_message">పేరు మరియు సందేశం</string>
-    <string name="arrays__name_only">పేరు మాత్రమే </string>
-    <string name="arrays__no_name_or_message">పేరు లేదా సందేశం</string>
     <string name="arrays__images">చిత్రాలు</string>
     <string name="arrays__audio">ఆడియో</string>
     <string name="arrays__video">వీడియో</string>
@@ -362,7 +383,6 @@
         <item quantity="other">%d గంటలు</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__pref_enter_sends_title">ఎంటర్ కీ పంపుతుంది </string>
     <string name="preferences__screen_security">స్క్రీన్ భద్రత</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">  నిరోధించు స్క్రీన్షాట్లు లో ది ఇటీవలి జాబితా మరియు లోపల ది అనువర్తనం</string>
     <string name="preferences__notifications">ప్రకటనలు</string>
@@ -397,7 +417,6 @@
     <string name="preferences__scan_through_all_conversations_and_enforce_conversation_length_limits">అన్ని సంభాషణలు స్కాన్ చేసి తద్వారా సంభాషణ పొడవు పరిమితులు అమలుపరచు</string>
     <string name="preferences__default">అప్రమేయ</string>
     <string name="preferences__incognito_keyboard">అజ్ఞాత కీబోర్డ్</string>
-    <string name="preferences__read_receipts">చదివిన రసీదులు</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">వ్యక్తిగతీకరించిన అభ్యాసను ఆపివేయడానికి కీబోర్డ్ని అభ్యర్థించండి</string>
     <string name="preferences__light_theme">లైటు</string>
     <string name="preferences__dark_theme">గుప్తమైన</string>
@@ -471,11 +490,12 @@
     <string name="LocalBackupJob_creating_backup">బ్యాకప్ను సృష్టిస్తోంది ...</string>
     <string name="ProgressPreference_d_messages_so_far">ఇప్పటివరకు %d సందేశాలు</string>
     <string name="BackupUtil_never">ఎప్పుడూ</string>
-    <string name="preferences_app_protection__screen_lock">స్క్రీన్ తాళం</string>
-    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Android స్క్రీన్ లాక్ లేదా వేలిముద్రతో Session యాక్సెస్ను లాక్ చేయండి</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">స్క్రీన్ లాక్ నిష్క్రియ సమయం</string>
     <string name="AppProtectionPreferenceFragment_none">ఏదీ కాదు</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <!-- Next round of translation -->
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
 </resources>

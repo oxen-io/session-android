@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">Qrupu tərk etdiniz.</string>
+    <string name="MessageRecord_you_created_a_new_group">Yeni bir qrup yaratdınız.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s, sizi qrupa əlavə etdi.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">Qrupu %1$s olaraq yenidən adlandırdınız</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s, qrupu %2$s olaraq yenidən adlandırdı</string>
+    <string name="MessageRecord_you_added_s_to_the_group">%1$s əlaqəsini qrupa əlavə etdiniz.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s, %2$s əlaqəsini qrupa əlavə etdi.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">%1$s əlaqəsini qrupdan çıxartdınız.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s, %2$s əlaqəsini qrupdan çıxartdı.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">Qrupdan çıxarıldınız.</string>
+    <string name="MessageRecord_you">Siz</string>
+    <string name="MessageRecord_s_called_you">%s sizə zəng etdi</string>
+    <string name="MessageRecord_called_s">Zəng etdiniz: %s</string>
+    <string name="MessageRecord_missed_call_from">%s əlaqəsindən cavabsız zəng</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">Yox olan mesajları sıradan çıxartdınız.</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">%1$s, yox olan mesajları sıradan çıxartdı.</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">Yox olan mesaj taymerini %1$s olaraq tənzimlədiniz</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s, yox olan mesaj taymerini %2$s olaraq tənzimlədi</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$s ekran şəklini çəkdi.</string>
+    <string name="MessageRecord_media_saved_by_s">%1$s medianı yaddaşda saxladı.</string>
+    <!-- expiration -->
+    <string name="expiration_off">Bağlı</string>
+    <plurals name="expiration_seconds">
+        <item quantity="one">%d saniyə</item>
+        <item quantity="other">%d saniyə</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%d san</string>
+    <plurals name="expiration_minutes">
+        <item quantity="one">%d dəqiqə</item>
+        <item quantity="other">%d dəqiqə</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">%d dəq</string>
+    <plurals name="expiration_hours">
+        <item quantity="one">%d saat</item>
+        <item quantity="other">%d saat</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">%d sa</string>
+    <plurals name="expiration_days">
+        <item quantity="one">%d gün</item>
+        <item quantity="other">%d gün</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">%d gü</string>
+    <plurals name="expiration_weeks">
+        <item quantity="one">%d həftə</item>
+        <item quantity="other">%d həftə</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">%d həf</string>
+    <string name="ConversationItem_group_action_left">%1$s qrupu tərk etdi.</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">Adsız qrup</string>
+</resources>

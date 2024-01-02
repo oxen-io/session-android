@@ -5,6 +5,31 @@
     <string name="delete">Dileu</string>
     <string name="save">Cadw</string>
     <string name="note_to_self">Nodyn i Fi Fy Hun</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">Neges newydd</string>
     <!-- AlbumThumbnailView -->
@@ -391,9 +416,6 @@
     <string name="arrays__settings_default">Rhagosodiadau\'r gosodiadau</string>
     <string name="arrays__enabled">Galluogwyd</string>
     <string name="arrays__disabled">Analluogwyd</string>
-    <string name="arrays__name_and_message">Enw a neges</string>
-    <string name="arrays__name_only">Enw yn unig</string>
-    <string name="arrays__no_name_or_message">Dim enw na neges</string>
     <string name="arrays__images">Lluniau</string>
     <string name="arrays__audio">Sain</string>
     <string name="arrays__video">Fideo</string>
@@ -415,9 +437,6 @@
         <item quantity="other">%d awr</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__pref_enter_sends_title">Pwyso Enter i anfon</string>
-    <string name="preferences__send_link_previews">Anfon rhagolwg dolen</string>
-    <string name="preferences__previews_are_supported_for">Cefnogir rhagweld cynnwys trwy ddolenni Imgur, Instagram, Pinterest, Reddit a YouTube</string>
     <string name="preferences__screen_security">Diogelu\'r sgrin</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">Rhwystro sgrinluniau tu mewn i\'r rhaglen</string>
     <string name="preferences__notifications">Hysbysiadau</string>
@@ -451,9 +470,6 @@
     <string name="preferences__scan_through_all_conversations_and_enforce_conversation_length_limits">Sganio drwy\'r holl sgyrsiau a gorfodi terfynau hyd sgwrsio</string>
     <string name="preferences__default">Rhagosodiad</string>
     <string name="preferences__incognito_keyboard">Bysellfwrdd dirgel</string>
-    <string name="preferences__read_receipts">Derbynebau darllen</string>
-    <string name="preferences__typing_indicators">Dangosyddion Teipio</string>
-    <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Os yw dangosyddion teipio wedi eu hanalluogi, fyddwch chi ddim yn gweld dangosyddion teipio pobl eraill.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Gofyn i\'r bysellfwrdd analluogi dysgu personol</string>
     <string name="preferences__light_theme">Golau</string>
     <string name="preferences__dark_theme">Tywyll</string>
@@ -527,11 +543,12 @@
     <string name="LocalBackupJob_creating_backup">Creu copi wrth gefn ...</string>
     <string name="ProgressPreference_d_messages_so_far">%d neges hyd yn hyn</string>
     <string name="BackupUtil_never">Byth</string>
-    <string name="preferences_app_protection__screen_lock">Clo sgrin</string>
-    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Cloi mynediad i Session gyda chlo sgrin neu ôl bysedd Android</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">Amserlen segur clo sgrin</string>
     <string name="AppProtectionPreferenceFragment_none">Dim</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <!-- Next round of translation -->
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
 </resources>

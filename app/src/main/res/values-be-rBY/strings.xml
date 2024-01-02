@@ -1,102 +1,927 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Сэсія</string>
     <string name="yes">Так</string>
     <string name="no">Не</string>
     <string name="delete">Выдаліць</string>
-    <string name="ban">Заблакаваць</string>
+    <string name="ban">Заблакіраваць</string>
+    <string name="please_wait">Пачакайце, калі ласка…</string>
     <string name="save">Захаваць</string>
+    <string name="note_to_self">Захаванае</string>
+    <string name="version_s">Версія %s</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
-    <string name="AbstractNotificationBuilder_new_message">Новыя паведамленні</string>
+    <string name="AbstractNotificationBuilder_new_message">Новае паведамленне</string>
     <!-- AlbumThumbnailView -->
+    <string name="AlbumThumbnailView_plus">\+%d</string>
     <!-- ApplicationPreferencesActivity -->
+    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
+        <item quantity="one">%d паведамленне на гутарку</item>
+        <item quantity="few">%d паведамленні на гутарку</item>
+        <item quantity="many">%d паведамленняў на гутарку</item>
+        <item quantity="other">%d паведамленняў на гутарку</item>
+    </plurals>
+    <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Выдаліць усе старыя паведамленні зараз?</string>
+    <plurals name="ApplicationPreferencesActivity_this_will_immediately_trim_all_conversations_to_the_d_most_recent_messages">
+        <item quantity="one">Гэта неадкладна абрэжа ўсе гутаркі да апошняга паведамлення.</item>
+        <item quantity="few">Гэта неадкладна абрэжа ўсе гутаркі да %d апошніх паведамленняў.</item>
+        <item quantity="many">Гэта неадкладна абрэжа ўсе гутаркі да %d апошніх паведамленняў.</item>
+        <item quantity="other">Гэта неадкладна абрэжа ўсе гутаркі да %d апошніх паведамленняў.</item>
+    </plurals>
+    <string name="ApplicationPreferencesActivity_delete">Выдаліць</string>
+    <string name="ApplicationPreferencesActivity_On">Уключана</string>
+    <string name="ApplicationPreferencesActivity_Off">Адключана</string>
     <!-- DraftDatabase -->
+    <string name="DraftDatabase_Draft_image_snippet">(выява)</string>
+    <string name="DraftDatabase_Draft_audio_snippet">(аўдыя)</string>
+    <string name="DraftDatabase_Draft_video_snippet">(відэа)</string>
+    <string name="DraftDatabase_Draft_quote_snippet">(адказ)</string>
     <!-- AttachmentManager -->
+    <string name="AttachmentManager_cant_open_media_selection">Немагчыма знайсці праграму для выбару мультымедыя.</string>
+    <string name="AttachmentManager_signal_requires_the_external_storage_permission_in_order_to_attach_photos_videos_or_audio">Session патрабуе дазволу да сховішча каб далучыць фота, відэа або аўдыя, але зараз дазволу няма. Калі ласка, перайдзіце ў меню налад праграмы, абярыце \"Дазволы\" і ўключыце \"Сховішча\".</string>
+    <string name="AttachmentManager_signal_requires_the_camera_permission_in_order_to_take_photos_but_it_has_been_permanently_denied">Session патрабуе дазволу на камеру каб рабіць фота, але зараз дазволу няма. Калі ласка, перайдзіце ў меню налад праграмы, абярыце \"Дазволы\" і ўключыце \"Камера\".</string>
     <!-- AudioSlidePlayer -->
+    <string name="AudioSlidePlayer_error_playing_audio">Памылка прайгравання аўдыя!</string>
     <!-- BucketedThreadMedia -->
+    <string name="BucketedThreadMedia_Today">Сёння</string>
+    <string name="BucketedThreadMedia_Yesterday">Учора</string>
+    <string name="BucketedThreadMedia_This_week">На гэтым тыдні</string>
+    <string name="BucketedThreadMedia_This_month">У гэтым месяцы</string>
     <!-- CommunicationActions -->
+    <string name="CommunicationActions_no_browser_found">Вэб-браўзер не знойдзены.</string>
     <!-- ContactsCursorLoader -->
+    <string name="ContactsCursorLoader_groups">Групы</string>
     <!-- ConversationItem -->
+    <string name="ConversationItem_error_not_delivered">Не ўдалося даслаць, націсніце каб паглядзець дэталі</string>
+    <string name="ConversationItem_received_key_exchange_message_tap_to_process">Атрымана паведамленне абмену ключамі, націсніце каб працягнуць.</string>
+    <string name="ConversationItem_click_to_approve_unencrypted">Не ўдалося даслаць, націсніце для неабароненага запаснога варыянту</string>
+    <string name="ConversationItem_unable_to_open_media">Немагчыма знайсці праграму для адкрыцця гэтага медыя.</string>
+    <string name="ConversationItem_copied_text">Скапіявана: %s</string>
+    <string name="ConversationItem_read_more">Чытаць далей</string>
+    <string name="ConversationItem_download_more">&#160; Спампаваць больш</string>
+    <string name="ConversationItem_pending">&#160; Чаканне</string>
     <!-- ConversationActivity -->
+    <string name="ConversationActivity_add_attachment">Дадаць укладанне</string>
+    <string name="ConversationActivity_select_contact_info">Вылучыць кантактныя звесткі</string>
+    <string name="ConversationActivity_sorry_there_was_an_error_setting_your_attachment">Прабачце, здарылася памылка далучэння.</string>
+    <string name="ConversationActivity_message">Паведамленне</string>
+    <string name="ConversationActivity_compose">Напісаць</string>
+    <string name="ConversationActivity_muted_until_date">Заглушана да %1$s</string>
+    <string name="ConversationActivity_muted_forever">Заглушана</string>
+    <string name="ConversationActivity_member_count">%1$d удзельнікаў</string>
+    <string name="ConversationActivity_active_member_count">%1$d актыўных удзельнікаў</string>
+    <string name="ConversationActivity_open_group_guidelines">Кіруючыя прынцыпы супольнасці</string>
+    <string name="ConversationActivity_invalid_recipient">Няправільны атрымальнік!</string>
+    <string name="ConversationActivity_added_to_home_screen">Дадана на галоўны экран</string>
+    <string name="ConversationActivity_leave_group">Пакінуць групу?</string>
+    <string name="ConversationActivity_are_you_sure_you_want_to_leave_this_group">Вы ўпэўненыя, што жадаеце пакінуць гэтую групу?</string>
+    <string name="ConversationActivity_error_leaving_group">Памылка падчас выхаду з групы</string>
+    <string name="ConversationActivity_unblock_this_contact_question">Разблакіраваць гэты кантакт?</string>
+    <string name="ConversationActivity_you_will_once_again_be_able_to_receive_messages_and_calls_from_this_contact">Вы зноў зможаце атрымліваць паведамленні і выклікі ад гэтага кантакту.</string>
+    <string name="ConversationActivity_unblock">Разблакіраваць</string>
+    <string name="ConversationActivity_attachment_exceeds_size_limits">Далучэнне перавышае ліміты памеру для тыпу паведамлення, якое вы дасылаеце.</string>
+    <string name="ConversationActivity_unable_to_record_audio">Не ўдалося запісаць аўдыя!</string>
+    <string name="ConversationActivity_there_is_no_app_available_to_handle_this_link_on_your_device">На вашай прыладзе няма праграмы для працы з гэтай спасылкай.</string>
+    <string name="ConversationActivity_invite_to_open_group">Дадаць удзельнікаў</string>
+    <string name="ConversationActivity_to_send_audio_messages_allow_signal_access_to_your_microphone">Session патрабуе дазволу да мікрафона каб дасылаць аўдыяпаведамленні.</string>
+    <string name="ConversationActivity_signal_requires_the_microphone_permission_in_order_to_send_audio_messages">Session патрабуе дазволу да мікрафона каб дасылаць аўдыяпаведамленні, але зараз дазволу няма. Калі ласка, перайдзіце ў меню налад праграмы, абярыце \"Дазволы\" і ўключыце \"Мікрафон\".</string>
+    <string name="ConversationActivity_to_capture_photos_and_video_allow_signal_access_to_the_camera">Session патрабуе дазволу да камеры каб рабіць фота і відэа.</string>
+    <string name="ConversationActivity_to_send_photos_and_video_allow_signal_access_to_storage">Session патрабуе дазволу да сховішча каб дасылаць фота і відэа.</string>
+    <string name="ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video">Session патрабуе дазволу да камеры каб рабіць фота і відэа, але зараз дазволу няма. Калі ласка, перайдзіце ў меню налад праграмы, абярыце \"Дазволы\" і ўключыце \"Камера\".</string>
+    <string name="ConversationActivity_signal_needs_camera_permissions_to_take_photos_or_video">Session патрабуе дазволу да камеры каб рабіць фота ці відэа.</string>
+    <string name="ConversationActivity_search_position">%1$d з %2$d</string>
+    <string name="ConversationActivity_call_title">Неабходныя дазволы на выклік</string>
+    <string name="ConversationActivity_call_prompt">Вы можаце ўключыць дазвол «Галасавыя і відэазванкі» у наладах прыватнасці.</string>
     <!-- ConversationFragment -->
+    <plurals name="ConversationFragment_delete_selected_messages">
+        <item quantity="one">Выдаліць вылучанае паведамленне?</item>
+        <item quantity="few">Выдаліць вылучаныя паведамленні?</item>
+        <item quantity="many">Выдаліць вылучаныя паведамленні?</item>
+        <item quantity="other">Выдаліць вылучаныя паведамленні?</item>
+    </plurals>
+    <plurals name="ConversationFragment_this_will_permanently_delete_all_n_selected_messages">
+        <item quantity="one">Гэта назаўжды выдаліць вылучанае паведамленне.</item>
+        <item quantity="few">Гэта назаўжды выдаліць усе %1$d вылучаныя паведамленні.</item>
+        <item quantity="many">Гэта назаўжды выдаліць усе %1$d вылучаных паведамленняў.</item>
+        <item quantity="other">Гэта назаўжды выдаліць усе %1$d вылучаных паведамленняў.</item>
+    </plurals>
+    <string name="ConversationFragment_ban_selected_user">Заблакіраваць гэтага карыстальніка?</string>
+    <string name="ConversationFragment_save_to_sd_card">Захаваць у сховішча?</string>
+    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
+        <item quantity="one">Захаванне гэтага медыя ў сховішча дасць усім іншым праграмам на Вашай прыладзе доступ да яго.\n\nПрацягнуць?</item>
+        <item quantity="few">Захаванне гэтых %1$d медыяў у сховішча дасць усім іншым праграмам на Вашай прыладзе доступ да іх.\n\nПрацягнуць?</item>
+        <item quantity="many">Захаванне гэтых %1$d медыяў у сховішча дасць усім іншым праграмам на Вашай прыладзе доступ да іх.\n\nПрацягнуць?</item>
+        <item quantity="other">Захаванне гэтых %1$d медыяў у сховішча дасць усім іншым праграмам на Вашай прыладзе доступ да іх.\n\nПрацягнуць?</item>
+    </plurals>
+    <plurals name="ConversationFragment_error_while_saving_attachments_to_sd_card">
+        <item quantity="one">Памылка падчас захавання далучэння!</item>
+        <item quantity="few">Памылка падчас захавання далучэнняў!</item>
+        <item quantity="many">Памылка падчас захавання далучэнняў!</item>
+        <item quantity="other">Памылка падчас захавання далучэнняў!</item>
+    </plurals>
+    <plurals name="ConversationFragment_saving_n_attachments">
+        <item quantity="one">Захоўванне далучэння</item>
+        <item quantity="few">Захоўванне %1$d далучэнняў</item>
+        <item quantity="many">Захоўванне %1$d далучэнняў</item>
+        <item quantity="other">Захоўванне %1$d далучэнняў</item>
+    </plurals>
+    <plurals name="ConversationFragment_saving_n_attachments_to_sd_card">
+        <item quantity="one">Захаванне далучэння ў сховішча…</item>
+        <item quantity="few">Захаванне %1$d далучэнняў у сховішча…</item>
+        <item quantity="many">Захаванне %1$d далучэнняў у сховішча…</item>
+        <item quantity="other">Захаванне %1$d далучэнняў у сховішча…</item>
+    </plurals>
     <!-- CreateProfileActivity -->
+    <string name="CreateProfileActivity_profile_photo">Фота профілю</string>
     <!-- CustomDefaultPreference -->
+    <string name="CustomDefaultPreference_using_custom">Выкарыстанне ўласнага: %s</string>
+    <string name="CustomDefaultPreference_using_default">Выкарыстанне стандартнага: %s</string>
+    <string name="CustomDefaultPreference_none">Не</string>
     <!-- DateUtils -->
+    <string name="DateUtils_just_now">Зараз</string>
+    <string name="DateUtils_minutes_ago">%d хв</string>
+    <string name="DateUtils_today">Сёння</string>
+    <string name="DateUtils_yesterday">Учора</string>
     <!-- DeviceListItem -->
+    <string name="DeviceListItem_today">Сёння</string>
     <!-- DocumentView -->
+    <string name="DocumentView_unknown_file">Невядомы файл</string>
     <!-- GiphyActivity -->
+    <string name="GiphyActivity_error_while_retrieving_full_resolution_gif">Памылка атрымання GIF у поўным разрозненні</string>
     <!-- GiphyFragmentPageAdapter -->
+    <string name="GiphyFragmentPagerAdapter_gifs">GIF</string>
+    <string name="GiphyFragmentPagerAdapter_stickers">Стыкеры</string>
     <!-- CropImageActivity -->
+    <string name="CropImageActivity_profile_avatar">Фота</string>
     <!-- InputPanel -->
+    <string name="InputPanel_tap_and_hold_to_record_a_voice_message_release_to_send">Даткніцеся і трымайце для запісу галасавога паведамлення, адпусціце каб даслаць</string>
     <!-- LongMessageActivity -->
+    <string name="LongMessageActivity_unable_to_find_message">Не ўдалося знайсці паведамленне</string>
+    <string name="LongMessageActivity_message_from_s">Паведамленне ад %1$s</string>
+    <string name="LongMessageActivity_your_message">Ваша паведамленне</string>
     <!-- MediaOverviewActivity -->
+    <string name="MediaOverviewActivity_Media">Медыя</string>
+    <plurals name="MediaOverviewActivity_Media_delete_confirm_title">
+        <item quantity="one">Выдаліць вылучанае паведамленне?</item>
+        <item quantity="few">Выдаліць вылучаныя паведамленні?</item>
+        <item quantity="many">Выдаліць вылучаныя паведамленні?</item>
+        <item quantity="other">Выдаліць вылучаныя паведамленні?</item>
+    </plurals>
+    <plurals name="MediaOverviewActivity_Media_delete_confirm_message">
+        <item quantity="one">Гэта назаўжды выдаліць вылучанае паведамленне.</item>
+        <item quantity="few">Гэта назаўжды выдаліць усе %1$d вылучаныя паведамленні.</item>
+        <item quantity="many">Гэта назаўжды выдаліць усе %1$d вылучаных паведамленняў.</item>
+        <item quantity="other">Гэта назаўжды выдаліць усе %1$d вылучаных паведамленняў.</item>
+    </plurals>
+    <string name="MediaOverviewActivity_Media_delete_progress_title">Выдаленне</string>
+    <string name="MediaOverviewActivity_Media_delete_progress_message">Выдаленне паведамленняў...</string>
+    <string name="MediaOverviewActivity_Documents">Дакументы</string>
+    <string name="MediaOverviewActivity_Select_all">Вылучыць усё</string>
+    <string name="MediaOverviewActivity_collecting_attachments">Збіранне далучэнняў...</string>
     <!-- NotificationMmsMessageRecord -->
+    <string name="NotificationMmsMessageRecord_multimedia_message">Мультымедыйнае паведамленне</string>
+    <string name="NotificationMmsMessageRecord_downloading_mms_message">Захаванне MMS</string>
+    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Памылка захавання MMS, даткніцеся каб паспрабаваць зноў</string>
     <!-- MediaPickerActivity -->
+    <string name="MediaPickerActivity_send_to">Даслаць %s</string>
     <!-- MediaSendActivity -->
+    <string name="MediaSendActivity_add_a_caption">Дадаць подпіс...</string>
+    <string name="MediaSendActivity_an_item_was_removed_because_it_exceeded_the_size_limit">Файл быў выдалены праз перавышэнне ліміту на памер</string>
+    <string name="MediaSendActivity_camera_unavailable">Камера недаступная.</string>
+    <string name="MediaSendActivity_message_to_s">Паведамленне для %s</string>
+    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
+        <item quantity="one">Вы не можаце падзяліцца больш, чым %d элементам.</item>
+        <item quantity="few">Вы не можаце падзяліцца больш, чым %d элементамі.</item>
+        <item quantity="many">Вы не можаце падзяліцца больш, чым %d элементамі.</item>
+        <item quantity="other">Вы не можаце падзяліцца больш, чым %d элементамі.</item>
+    </plurals>
     <!-- MediaRepository -->
+    <string name="MediaRepository_all_media">Усе медыя</string>
     <!-- MessageRecord -->
+    <string name="MessageRecord_message_encrypted_with_a_legacy_protocol_version_that_is_no_longer_supported">Атрымана паведамленне, зашыфраванае старой версіяй Session, якая больш не падтрымліваецца. Калі ласка, папрасіце адпраўніка абнавіцца да найноўшай версіі і перадаслаць паведамленне.</string>
+    <string name="MessageRecord_left_group">Вы пакінулі групу.</string>
+    <string name="MessageRecord_you_updated_group">Вы абнавілі групу.</string>
+    <string name="MessageRecord_s_updated_group">%s абнавіў(ла) групу.</string>
     <!-- ExpirationDialog -->
+    <string name="ExpirationDialog_disappearing_messages">Знікальныя паведамленні</string>
+    <string name="ExpirationDialog_your_messages_will_not_expire">Вашыя паведамленні не знікнуць.</string>
+    <string name="ExpirationDialog_your_messages_will_disappear_s_after_they_have_been_seen">Паведамленні ў гэтай гутарцы знікнуць праз %s пасля прагляду.</string>
     <!-- PassphrasePromptActivity -->
+    <string name="PassphrasePromptActivity_enter_passphrase">Увядзіце сакрэтную фразу</string>
     <!-- RecipientPreferencesActivity -->
+    <string name="RecipientPreferenceActivity_block_this_contact_question">Заблакіраваць гэты кантакт?</string>
+    <string name="RecipientPreferenceActivity_you_will_no_longer_receive_messages_and_calls_from_this_contact">Вы больш не атрымліваеце паведамленні і выклікі ад гэтага кантакту.</string>
+    <string name="RecipientPreferenceActivity_block">Заблакіраваць</string>
+    <string name="RecipientPreferenceActivity_unblock_this_contact_question">Разблакіраваць гэты кантакт?</string>
+    <string name="RecipientPreferenceActivity_you_will_once_again_be_able_to_receive_messages_and_calls_from_this_contact">Вы зноў зможаце атрымліваць паведамленні і выклікі ад гэтага кантакту.</string>
+    <string name="RecipientPreferenceActivity_unblock">Разблакіраваць</string>
+    <string name="RecipientPreferenceActivity_notification_settings">Налады абвестак</string>
     <!-- Slide -->
+    <string name="Slide_image">Выява</string>
+    <string name="Slide_audio">Аўдыя</string>
+    <string name="Slide_video">Відэа</string>
     <!-- SmsMessageRecord -->
+    <string name="SmsMessageRecord_received_corrupted_key_exchange_message">Атрыманае пашкоджанае
+        паведамленне абмену ключамі!
+    </string>
+    <string name="SmsMessageRecord_received_key_exchange_message_for_invalid_protocol_version">        Атрымана паведамленне абмену ключамі для несапраўднай версіі пратаколу.
+    </string>
+    <string name="SmsMessageRecord_received_message_with_new_safety_number_tap_to_process">Атрымана паведамленне з новым нумарам бяспекі. Даткніцеся, каб апрацаваць і праглядзець яго.</string>
+    <string name="SmsMessageRecord_secure_session_reset">Вы скінулі бяспечную сесію.</string>
+    <string name="SmsMessageRecord_secure_session_reset_s">%s скінуў(ла) бяспечную сесію.</string>
+    <string name="SmsMessageRecord_duplicate_message">Паўторнае паведамленне.</string>
     <!-- ThreadRecord -->
+    <string name="ThreadRecord_group_updated">Група абноўлена</string>
+    <string name="ThreadRecord_left_the_group">Выйсці з групы</string>
+    <string name="ThreadRecord_secure_session_reset">Скіданне бяспечнай сесіі.</string>
+    <string name="ThreadRecord_draft">Чарнавік:</string>
+    <string name="ThreadRecord_called">Вы патэлефанавалі</string>
+    <string name="ThreadRecord_called_you">Вам тэлефанавалі</string>
+    <string name="ThreadRecord_missed_call">Прапушчаны выклік</string>
+    <string name="ThreadRecord_media_message">Медыя паведамленне</string>
+    <string name="ThreadRecord_s_is_on_signal">%s цяпер у Session!</string>
+    <string name="ThreadRecord_disappearing_messages_disabled">Знікальныя паведамленні адключаныя</string>
+    <string name="ThreadRecord_disappearing_message_time_updated_to_s">Час знікнення паведамленняў пастаўлены на %s</string>
+    <string name="ThreadRecord_s_took_a_screenshot">%s зрабіў(ла) скрыншот.</string>
+    <string name="ThreadRecord_media_saved_by_s">%s захаваў(ла) медыя.</string>
+    <string name="ThreadRecord_safety_number_changed">Нумар бяспекі зменены</string>
+    <string name="ThreadRecord_your_safety_number_with_s_has_changed">Ваш нумар бяспекі з %s змяніўся.</string>
+    <string name="ThreadRecord_you_marked_verified">Вы спраўдзілі</string>
+    <string name="ThreadRecord_you_marked_unverified">Вы пазначылі няспраўджаным</string>
+    <string name="ThreadRecord_empty_message">Гэтая гутарка пустая</string>
+    <string name="ThreadRecord_open_group_invitation">Запрашэнне да адкрытай групы</string>
     <!-- UpdateApkReadyListener -->
+    <string name="UpdateApkReadyListener_Signal_update">Абнаўленне Session</string>
+    <string name="UpdateApkReadyListener_a_new_version_of_signal_is_available_tap_to_update">Новая версія Session даступная, націсніце каб абнавіць</string>
     <!-- MessageDisplayHelper -->
+    <string name="MessageDisplayHelper_bad_encrypted_message">Кепска зашыфраванае паведамленне</string>
+    <string name="MessageDisplayHelper_message_encrypted_for_non_existing_session">Паведамленне зашыфравана для неіснуючай сесіі</string>
     <!-- MmsMessageRecord -->
+    <string name="MmsMessageRecord_bad_encrypted_mms_message">Кепска зашыфраванае MMS паведамленне</string>
+    <string name="MmsMessageRecord_mms_message_encrypted_for_non_existing_session">Паведамленне MMS зашыфравана для неіснуючага сеансу</string>
     <!-- MuteDialog -->
+    <string name="MuteDialog_mute_notifications">Заглушыць апавяшчэнні</string>
     <!-- KeyCachingService -->
+    <string name="KeyCachingService_signal_passphrase_cached">Націсніце каб адкрыць.</string>
+    <string name="KeyCachingService_passphrase_cached">Session разблакіраваны</string>
+    <string name="KeyCachingService_lock">Заблакіраваць Session</string>
     <!-- MediaPreviewActivity -->
+    <string name="MediaPreviewActivity_you">Вы</string>
+    <string name="MediaPreviewActivity_unssuported_media_type">Непадтрымальны тып медыя</string>
+    <string name="MediaPreviewActivity_draft">Чарнавік</string>
+    <string name="MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied">Session патрабуе дазволу да сховішча каб захоўваць файлы, але зараз дазволу няма. Калі ласка, перайдзіце ў меню налад праграмы, абярыце \"Дазволы\" і ўключыце \"Сховішча\".</string>
+    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Немагчыма захаваць файл у вонкавае сховішча без дазволаў</string>
+    <string name="MediaPreviewActivity_media_delete_confirmation_title">Выдаліць паведамленне?</string>
+    <string name="MediaPreviewActivity_media_delete_confirmation_message">Гэта выдаліць паведамленне назаўжды.</string>
     <!-- MessageNotifier -->
+    <string name="MessageNotifier_d_new_messages_in_d_conversations">%1$d новых паведамленняў у %2$d гутарках</string>
+    <string name="MessageNotifier_most_recent_from_s">Апошняе ад: %1$s</string>
+    <string name="MessageNotifier_locked_message">Замкнёнае паведамленне</string>
+    <string name="MessageNotifier_message_delivery_failed">Не ўдалося даставіць паведамленне.</string>
+    <string name="MessageNotifier_failed_to_deliver_message">Не ўдалося даставіць паведамленне.</string>
+    <string name="MessageNotifier_error_delivering_message">Памылка дастаўкі паведамлення.</string>
+    <string name="MessageNotifier_mark_all_as_read">Пазначыць усё як прачытанае</string>
+    <string name="MessageNotifier_mark_read">Пазначыць як прачытанае</string>
+    <string name="MessageNotifier_reply">Адказаць</string>
+    <string name="MessageNotifier_pending_signal_messages">Паведамленні Session у чаканні</string>
+    <string name="MessageNotifier_you_have_pending_signal_messages">Маеце непрынятыя паведамленні ў Session, даткніцеся каб іх праглядзець</string>
+    <string name="MessageNotifier_contact_message">%1$s %2$s</string>
+    <string name="MessageNotifier_unknown_contact_message">Кантакт</string>
     <!-- Notification Channels -->
+    <string name="NotificationChannel_messages">Стандартны</string>
+    <string name="NotificationChannel_calls">Выклікі</string>
+    <string name="NotificationChannel_failures">Памылкі</string>
+    <string name="NotificationChannel_backups">Рэзервовыя копіі</string>
+    <string name="NotificationChannel_locked_status">Стан блакавання</string>
+    <string name="NotificationChannel_app_updates">Абнаўленні праграмы</string>
+    <string name="NotificationChannel_other">Іншае</string>
+    <string name="NotificationChannel_group_messages">Паведамленні</string>
+    <string name="NotificationChannel_missing_display_name">Невядомае</string>
     <!-- QuickResponseService -->
+    <string name="QuickResponseService_quick_response_unavailable_when_Signal_is_locked">Хуткі адказ недаступны калі Session заблакіраваны!</string>
+    <string name="QuickResponseService_problem_sending_message">Праблема падчас адпраўкі паведамлення!</string>
     <!-- SaveAttachmentTask -->
+    <string name="SaveAttachmentTask_saved_to">Захавана ў %s</string>
+    <string name="SaveAttachmentTask_saved">Захавана</string>
     <!-- SearchToolbar -->
+    <string name="SearchToolbar_search">Пошук</string>
     <!-- ShortcutLauncherActivity -->
+    <string name="ShortcutLauncherActivity_invalid_shortcut">Памылковы цэтлік</string>
     <!-- SingleRecipientNotificationBuilder -->
+    <string name="SingleRecipientNotificationBuilder_signal">Session</string>
+    <string name="SingleRecipientNotificationBuilder_new_message">Новае паведамленне</string>
     <!-- TransferControlView -->
+    <plurals name="TransferControlView_n_items">
+        <item quantity="one">%d аб\'ект</item>
+        <item quantity="few">%d аб\'екты</item>
+        <item quantity="many">%d аб\'ектаў</item>
+        <item quantity="other">%d аб\'ектаў</item>
+    </plurals>
     <!-- VideoPlayer -->
+    <string name="VideoPlayer_error_playing_video">Памылка прайгравання відэа</string>
     <!-- attachment_type_selector -->
+    <string name="attachment_type_selector__audio">Аўдыя</string>
+    <string name="attachment_type_selector__audio_description">Аўдыя</string>
+    <string name="attachment_type_selector__contact">Кантакт</string>
+    <string name="attachment_type_selector__contact_description">Кантакт</string>
+    <string name="attachment_type_selector__camera">Камера</string>
+    <string name="attachment_type_selector__camera_description">Камера</string>
+    <string name="attachment_type_selector__location">Лакацыя</string>
+    <string name="attachment_type_selector__location_description">Лакацыя</string>
+    <string name="attachment_type_selector__gif">GIF</string>
+    <string name="attachment_type_selector__gif_description">Gif</string>
+    <string name="attachment_type_selector__gallery_description">Відарыс або відэа</string>
+    <string name="attachment_type_selector__file_description">Файл</string>
+    <string name="attachment_type_selector__gallery">Галерэя</string>
+    <string name="attachment_type_selector__file">Файл</string>
+    <string name="attachment_type_selector__drawer_description">Спіс далучэнняў</string>
     <!-- contact_selection_group_activity -->
+    <string name="contact_selection_group_activity__finding_contacts">Загрузка кантактаў&#8230;</string>
     <!-- conversation_activity -->
+    <string name="conversation_activity__send">Даслаць</string>
+    <string name="conversation_activity__compose_description">Напісанне паведамлення</string>
+    <string name="conversation_activity__emoji_toggle_description">Клавіятура эмодзі</string>
+    <string name="conversation_activity__attachment_thumbnail">Мініяцюра далучэння</string>
+    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Спіс далучэнняў камеры</string>
+    <string name="conversation_activity__quick_attachment_drawer_record_and_send_audio_description">Запісаць і даслаць аўдыя-далучэнне</string>
+    <string name="conversation_activity__quick_attachment_drawer_lock_record_description">Замкнуць запіс гукавога далучэння</string>
+    <string name="conversation_activity__enable_signal_for_sms">Уключыць Session для SMS</string>
     <!-- conversation_input_panel -->
+    <string name="conversation_input_panel__slide_to_cancel">Правядзіце каб скасаваць</string>
+    <string name="conversation_input_panel__cancel">Скасаваць</string>
     <!-- conversation_item -->
+    <string name="conversation_item__mms_image_description">Медыя паведамленне</string>
+    <string name="conversation_item__secure_message_description">Бяспечнае паведамленне</string>
     <!-- conversation_item_sent -->
+    <string name="conversation_item_sent__send_failed_indicator_description">Не ўдалося даслаць</string>
+    <string name="conversation_item_sent__pending_approval_description">Чакае падцверджання</string>
+    <string name="conversation_item_sent__delivered_description">Дастаўленае</string>
+    <string name="conversation_item_sent__message_read">Паведамленне прачытанае</string>
     <!-- conversation_item_received -->
+    <string name="conversation_item_received__contact_photo_description">Фота кантакту</string>
     <!-- audio_view -->
+    <string name="audio_view__play_accessibility_description">Прайграць</string>
+    <string name="audio_view__pause_accessibility_description">Паўза</string>
+    <string name="audio_view__download_accessibility_description">Спампаваць</string>
     <!-- open_group_invitation_view -->
+    <string name="open_group_invitation_view__join_accessibility_description">Далучыцца</string>
+    <string name="open_group_invitation_view__open_group_invitation">Запрашэнне да адкрытай групы</string>
+    <string name="open_group_guidelines_pinned_message">Замацаванае паведамленне</string>
+    <string name="open_group_guidelines_community_guidelines">Кіруючыя прынцыпы супольнасці</string>
+    <string name="open_group_guidelines_read">Прачытанае</string>
     <!-- QuoteView -->
+    <string name="QuoteView_audio">Аўдыя</string>
+    <string name="QuoteView_video">Відэа</string>
+    <string name="QuoteView_photo">Фота</string>
+    <string name="QuoteView_you">Вы</string>
+    <string name="QuoteView_original_missing">Не ўдалося знайсці арыгінальнае паведамленне</string>
     <!-- conversation_fragment -->
+    <string name="conversation_fragment__scroll_to_the_bottom_content_description">Пракруціць уніз</string>
     <!-- giphy_activity -->
+    <string name="giphy_activity_toolbar__search_gifs_and_stickers">Пошук GIF і стыкераў</string>
     <!-- giphy_fragment -->
+    <string name="giphy_fragment__nothing_found">Нічога не знойдзена</string>
     <!-- load_more_header -->
+    <string name="load_more_header__see_full_conversation">Паглядзець усю гутарку</string>
+    <string name="load_more_header__loading">Загрузка</string>
     <!-- media_overview_activity -->
+    <string name="media_overview_activity__no_media">Няма медыя</string>
     <!-- message_recipients_list_item -->
+    <string name="message_recipients_list_item__resend">ДАСЛАЦЬ ЗНОЎ</string>
     <!-- recipient_preferences -->
+    <string name="recipient_preferences__block">Заблакіраваць</string>
     <!-- message_details_header -->
+    <string name="message_details_header__issues_need_your_attention">Некаторыя пытанні патрабуюць Вашай увагі.</string>
+    <string name="message_details_header__sent">Даслана</string>
+    <string name="message_details_header__received">Атрымана</string>
+    <string name="message_details_header__disappears">Знікае</string>
+    <string name="message_details_header__via">Праз</string>
+    <string name="message_details_header__to">Каму:</string>
+    <string name="message_details_header__from">Ад:</string>
+    <string name="message_details_header__with">Разам з:</string>
     <!-- AndroidManifest.xml -->
+    <string name="AndroidManifest__create_passphrase">Стварыць сакрэтную фразу</string>
+    <string name="AndroidManifest__select_contacts">Вылучыць кантакты</string>
+    <string name="AndroidManifest__media_preview">Папярэдні прагляд медыя</string>
     <!-- arrays.xml -->
+    <string name="arrays__use_default">Выкарыстоўваць перадвызначаны</string>
+    <string name="arrays__use_custom">Выкарыстоваць уласны</string>
+    <string name="arrays__mute_for_one_hour">Заглушыць на 1 гадзіну</string>
+    <string name="arrays__mute_for_two_hours">Заглушыць на 2 гадзіны</string>
+    <string name="arrays__mute_for_one_day">Заглушыць на 1 дзень</string>
+    <string name="arrays__mute_for_seven_days">Заглушыць на 7 дзён</string>
+    <string name="arrays__mute_for_one_year">Заглушыць на 1 год</string>
+    <string name="arrays__mute_forever">Заглушыць назаўжды</string>
+    <string name="arrays__settings_default">Перадвызначаныя налады</string>
+    <string name="arrays__enabled">Уключана</string>
+    <string name="arrays__disabled">Адключана</string>
+    <string name="arrays__name_and_message">Імя і Змест</string>
+    <string name="arrays__name_only">Толькі імя</string>
+    <string name="arrays__no_name_or_message">Без імя або змесціва</string>
+    <string name="arrays__images">Выявы</string>
+    <string name="arrays__audio">Аўдыя</string>
+    <string name="arrays__video">Відэа</string>
+    <string name="arrays__documents">Дакументы</string>
+    <string name="arrays__small">Маленькі</string>
+    <string name="arrays__normal">Звычайны</string>
+    <string name="arrays__large">Вялікі</string>
+    <string name="arrays__extra_large">Велізарны</string>
+    <string name="arrays__default">Перадвызначаны</string>
+    <string name="arrays__high">Высокі</string>
+    <string name="arrays__max">Максімальны</string>
     <!-- plurals.xml -->
+    <plurals name="hours_ago">
+        <item quantity="one">%d гадзіна</item>
+        <item quantity="few">%d гадзіны</item>
+        <item quantity="many">%d гадзін</item>
+        <item quantity="other">%d гадзін</item>
+    </plurals>
     <!-- preferences.xml -->
+    <string name="preferences__pref_enter_sends_title">Адпраўце, націснуўшы клавішу Enter</string>
+    <string name="preferences__pref_enter_sends_summary">Націсканне Enter прывядзе да адпраўкі паведамлення замест пераходу на новы радок.</string>
+    <string name="preferences__send_link_previews">Адправіць папярэдні прагляд спасылкі</string>
+    <string name="preferences__link_previews">Папярэдні прагляд спасылак</string>
+    <string name="preferences__link_previews_summary">Генераваць прадпрагляд спасылак для падтрымліваемых URL.</string>
+    <string name="preferences__pref_autoplay_audio_category">Аўдыяпаведамлення</string>
+    <string name="preferences__pref_autoplay_audio_title">Аўтапрайграванне аўдыёпаведамленняў</string>
+    <string name="preferences__pref_autoplay_audio_summary">Аўтапрайграванне паслядоўных аўдыёпаведамленняў.</string>
+    <string name="preferences__screen_security">Бяспека экрану</string>
+    <string name="preferences__disable_screen_security_to_allow_screen_shots">Заблакіраваць скрыншоты ў спісе апошніх і ў праграме</string>
+    <string name="preferences__notifications">Апавяшчэнні</string>
+    <string name="preferences__led_color">Колер LED</string>
+    <string name="preferences__led_color_unknown">Невядома</string>
+    <string name="preferences__pref_led_blink_title">Шаблон мігцення LED</string>
+    <string name="preferences__sound">Гук</string>
+    <string name="preferences__in_app_sounds">Гук, калі праграма адкрыта</string>
+    <string name="preferences__silent">Без гуку</string>
+    <string name="preferences__repeat_alerts">Паўтараць папярэджанні</string>
+    <string name="preferences__never">Ніколі</string>
+    <string name="preferences__one_time">Адзін раз</string>
+    <string name="preferences__two_times">Два разы</string>
+    <string name="preferences__three_times">Тры разы</string>
+    <string name="preferences__five_times">Пяць разоў</string>
+    <string name="preferences__ten_times">Дзесяць разоў</string>
+    <string name="preferences__vibrate">Вібрацыя</string>
+    <string name="preferences__green">Зялёны</string>
+    <string name="preferences__red">Чырвоны</string>
+    <string name="preferences__blue">Блакітны</string>
+    <string name="preferences__orange">Аранжавы</string>
+    <string name="preferences__cyan">Бірузовы</string>
+    <string name="preferences__magenta">Пурпуровы</string>
+    <string name="preferences__white">Белы</string>
+    <string name="preferences__none">Ніякі</string>
+    <string name="preferences__fast">Хутка</string>
+    <string name="preferences__normal">Нармальна</string>
+    <string name="preferences__slow">Павольна</string>
+    <string name="preferences__automatically_delete_older_messages_once_a_conversation_exceeds_a_specified_length">Аўтаматычна выдаляць старыя паведамленні калі гутарка перавышае прызначаную даўжыню</string>
+    <string name="preferences__delete_old_messages">Выдаліць старыя паведамленні</string>
+    <string name="preferences__conversation_length_limit">Ліміт даўжыні гутаркі</string>
+    <string name="preferences__trim_all_conversations_now">Абрэзаць усе гутаркі зараз</string>
+    <string name="preferences__scan_through_all_conversations_and_enforce_conversation_length_limits">Перагледзець усе гутаркі і абрэзаць іх да пазначанай даўжыні</string>
+    <string name="preferences__default">Перадвызначана</string>
+    <string name="preferences__incognito_keyboard">Клавіятура інкогніта</string>
+    <string name="preferences__read_receipts">Прагляд справаздач</string>
+    <string name="preferences__read_receipts_summary">Дасылайце справаздачы пра чытанне ў асабістых размовах.</string>
+    <string name="preferences__typing_indicators">Індыкатары ўвода</string>
+    <string name="preferences__typing_indicators_summary">Глядзіце і перадавайце індыкатар набору ў асабістых размовах.</string>
+    <string name="preferences__request_keyboard_to_disable_personalized_learning">Запытаць клавіятуру адключыць персаналізаванае навучанне</string>
+    <string name="preferences__light_theme">Светлая</string>
+    <string name="preferences__dark_theme">Цёмная</string>
+    <string name="preferences_chats__message_trimming">Абрэзка паведамленняў</string>
+    <string name="preferences_chats__message_trimming_title">Абрэжце супольніцтва</string>
+    <string name="preferences_chats__message_trimming_summary">Выдаляць паведамленні старэйшыя за 6 месяцаў з супольнасцяў, у якіх больш за 2000 паведамленняў.</string>
+    <string name="preferences_advanced__use_system_emoji">Выкарыстоўваць сістэмныя эмодзі</string>
+    <string name="preferences_advanced__disable_signal_built_in_emoji_support">Адключыць убудаваную ў Session падтрымку эмодзі</string>
+    <string name="preferences_app_protection__screen_security">Бяспека экрану</string>
+    <string name="preferences_chats__chats">Чаты</string>
+    <string name="preferences_notifications__messages">Паведамленні</string>
+    <string name="preferences_notifications__in_chat_sounds">Гукі чату</string>
+    <string name="preferences_notifications__content">Змест апавяшчэння</string>
+    <string name="preferences_notifications__content_message">Паказваць:</string>
+    <string name="preferences_notifications__summary">Інфармацыя, якая адлюстроўваецца ў апавяшчэннях.</string>
+    <string name="preferences_notifications__priority">Прыярытэт</string>
+    <string name="preferences_app_protection__screenshot_notifications">Апавяшчэнні аб здымках экрана</string>
+    <string name="preferences_app_protected__screenshot_notifications_summary">Атрымлівайце апавяшчэнне, калі кантакт робіць скрыншот прыватнай размовы.</string>
     <!-- **************************************** -->
     <!-- menus -->
     <!-- **************************************** -->
     <!-- contact_selection_list -->
+    <string name="contact_selection_list__unknown_contact">Новае паведамленне для...</string>
     <!-- conversation_context -->
+    <string name="conversation_context__menu_message_details">Інфармацыя пра паведамленне</string>
+    <string name="conversation_context__menu_copy_text">Скапіяваць тэкст</string>
+    <string name="conversation_context__menu_delete_message">Выдаліць паведамленне</string>
+    <string name="conversation_context__menu_ban_user">Заблакіраваць карыстальніка</string>
+    <string name="conversation_context__menu_ban_and_delete_all">Заблакіраваць і выдаліць усё</string>
+    <string name="conversation_context__menu_resend_message">Даслаць паведамленне зноў</string>
+    <string name="conversation_context__menu_reply">Адказаць</string>
+    <string name="conversation_context__menu_reply_to_message">Адказаць на паведамленне</string>
+    <string name="conversation_context__menu_call">Выклік</string>
+    <string name="conversation_context__menu_select">Выбраць</string>
     <!-- conversation_context_image -->
+    <string name="conversation_context_image__save_attachment">Захаваць далучэнне</string>
     <!-- conversation_expiring_off -->
+    <string name="conversation_expiring_off__disappearing_messages">Знікальныя паведамленні</string>
     <!-- conversation_expiring_on -->
+    <string name="menu_conversation_expiring_on__messages_expiring">Тэрмін дзеяння паведамленняў мінае</string>
     <!-- conversation_muted -->
+    <string name="conversation_muted__unmute">Уключыць абвесткі</string>
     <!-- conversation_unmuted -->
+    <string name="conversation_unmuted__mute_notifications">Заглушыць апавяшчэнні</string>
     <!-- conversation -->
+    <string name="conversation__menu_edit_group">Рэдагаваць групу</string>
+    <string name="conversation__menu_leave_group">Пакінуць групу</string>
+    <string name="conversation__menu_view_all_media">Усе медыя</string>
+    <string name="conversation__menu_add_shortcut">Дадаць на галоўны экран</string>
     <!-- conversation_popup -->
+    <string name="conversation_popup__menu_expand_popup">Разгарнуць акно</string>
     <!-- conversation_group_options -->
+    <string name="conversation_group_options__delivery">Дастаўка</string>
+    <string name="conversation_group_options__conversation">Гутарка</string>
+    <string name="conversation_group_options__broadcast">Трансляцыя</string>
     <!-- media_preview -->
+    <string name="media_preview__save_title">Захаваць</string>
+    <string name="media_preview__forward_title">Пераслаць</string>
+    <string name="media_preview__all_media_title">Усе медыя</string>
     <!-- media_overview -->
+    <string name="media_overview_documents_fragment__no_documents_found">Няма дакументаў</string>
     <!-- media_preview_activity -->
+    <string name="media_preview_activity__media_content_description">Папярэдні прагляд медыя</string>
     <!-- Trimmer -->
+    <string name="trimmer__deleting">Выдаленне</string>
+    <string name="trimmer__deleting_old_messages">Выдаленне старых паведамленняў...</string>
+    <string name="trimmer__old_messages_successfully_deleted">Старыя паведамленні паспяхова выдаленыя</string>
     <!-- transport_selection_list_item -->
+    <string name="Permissions_permission_required">Патрабуецца дазвол</string>
+    <string name="Permissions_continue">Далей</string>
+    <string name="Permissions_not_now">Не зараз</string>
+    <string name="backup_enable_dialog__backups_will_be_saved_to_external_storage_and_encrypted_with_the_passphrase_below_you_must_have_this_passphrase_in_order_to_restore_a_backup">Рэзервовыя копіі захоўвацьмуцца ў знешнім сховішчы і шыфравацьмуцца сакрэтнай фразай ніжэй. Вы мусіце мець гэтую фразу каб аднавіць рэзервовую копію.</string>
+    <string name="backup_enable_dialog__i_have_written_down_this_passphrase">Я запісаў(ла) гэтую сакрэтную фразу. Без яе я не змагу аднавіць рэзервовую копію.</string>
+    <string name="registration_activity__skip">Прапусціць</string>
+    <string name="RegistrationActivity_backup_failure_downgrade">Немагчыма загрузіць рэзервовыя копіі з навейшых версій Session</string>
+    <string name="RegistrationActivity_incorrect_backup_passphrase">Няправільная парольная фраза</string>
+    <string name="BackupDialog_enable_local_backups">Уключыць лакальныя рэзервовыя копіі?</string>
+    <string name="BackupDialog_enable_backups">Уключыць рэзервовыя копіі</string>
+    <string name="BackupDialog_please_acknowledge_your_understanding_by_marking_the_confirmation_check_box">Калі ласка, пацвердзіце сваё разуменне, адзначыўшы поле.</string>
+    <string name="BackupDialog_delete_backups">Выдаліць резервовыя копіі?</string>
+    <string name="BackupDialog_disable_and_delete_all_local_backups">Адключыць і выдаліць усе лакальныя рэзервовыя копіі?</string>
+    <string name="BackupDialog_delete_backups_statement">Выдаліць рэзервовыя копіі</string>
+    <string name="BackupDialog_copied_to_clipboard">Скапіяванае ў буфер абмену</string>
+    <string name="LocalBackupJob_creating_backup">Стварэнне рэзервовай копіі...</string>
+    <string name="ProgressPreference_d_messages_so_far">Яшчэ %d паведамленняў</string>
+    <string name="BackupUtil_never">Ніколі</string>
+    <string name="preferences_app_protection__screen_lock">Заблакіраваць Session</string>
+    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Для разблакіроўкі Session патрабуецца адбітак пальца, PIN-код, малюнак ці пароль.</string>
+    <string name="preferences_app_protection__screen_lock_inactivity_timeout">Час бяздзейнасці для замыкання экрана</string>
+    <string name="AppProtectionPreferenceFragment_none">Нічога</string>
     <!-- Conversation activity -->
+    <string name="activity_conversation_copy_public_key_button_title">Скапіяваць публічны ключ</string>
     <!-- Session -->
+    <string name="continue_2">Далей</string>
+    <string name="copy">Капіяваць</string>
+    <string name="close">Закрыць</string>
+    <string name="invalid_url">Памылковы URL адрэс</string>
+    <string name="copied_to_clipboard">Скапіявана ў буфер абмену</string>
+    <string name="next">Далей</string>
+    <string name="share">Падзяліцца</string>
+    <string name="invalid_session_id">Памылковы Session ID</string>
+    <string name="cancel">Скасаваць</string>
+    <string name="your_session_id">Ваш Session ID</string>
+    <string name="activity_landing_title_2">Ваш Session пачынаецца тут...</string>
+    <string name="activity_landing_register_button_title">Стварыць Session ID</string>
+    <string name="activity_landing_restore_button_title">Працягнуць Вашу сэсію</string>
+    <string name="view_fake_chat_bubble_1">Што такое Session?</string>
+    <string name="view_fake_chat_bubble_2">Гэта дэцэнтралізаваны, шыфраваны мэсэнджар</string>
+    <string name="view_fake_chat_bubble_3">Выходзіць, ён не збірае мае асабістыя звесткі ці метаданыя размовы? Як гэта працуе?</string>
+    <string name="view_fake_chat_bubble_4">Ён выкарыстоўвае камбінацыю ананімнага маршрутызавання і скразнога шыфравання.</string>
+    <string name="view_fake_chat_bubble_5">Сябры не даюць сябрам карыстацца скампраметаванымі месенджарамі. На спажытак.</string>
+    <string name="activity_register_title">Прывітайцесь з Вашым Session ID</string>
+    <string name="activity_register_explanation">Ваш Session ID гэта ўнікальны адрас, які можа выкарыстоўвацца каб звязацца з Вамі ў Session. Без прывязкі да Вашай сапраўднай асобы, Session ID спраектаваны цалкам ананімным і прыватным.</string>
+    <string name="activity_restore_title">Аднавіць уліковы запіс</string>
+    <string name="activity_restore_explanation">Увядзіце фразу аднаўлення, якую Вы атрымалі падчас рэгістрацыі, каб аднавіць свой уліковы запіс.</string>
+    <string name="activity_restore_seed_edit_text_hint">Увядзіце сваю фразу аднаўлення</string>
+    <string name="activity_display_name_title_2">Выберыце імя для паказу</string>
+    <string name="activity_display_name_explanation">Гэта будзе Ваша імя ў Session. Вы можаце выкарыстаць сапраўднае імя, мянушку, або штосьці іншае.</string>
+    <string name="activity_display_name_edit_text_hint">Увядзіце імя для адлюстравання</string>
+    <string name="activity_display_name_display_name_missing_error">Калі ласка, абярыце імя для адлюстравання</string>
+    <string name="activity_display_name_display_name_too_long_error">Калі ласка, абярыце карацейшае імя для адлюстравання</string>
+    <string name="activity_pn_mode_recommended_option_tag">Рэкамендавана</string>
+    <string name="activity_pn_mode_no_option_picked_dialog_title">Калі ласка, абярыце варыянт</string>
+    <string name="activity_home_empty_state_message">Вы пакуль не маеце кантактаў</string>
+    <string name="activity_home_empty_state_button_title">Пачаць гутарку</string>
+    <string name="activity_home_leave_group_dialog_message">Вы ўпэўненыя, што жадаеце пакінуць гэтую групу?</string>
+    <string name="activity_home_leaving_group_failed_message">"Не ўдалося пакінуць групу"</string>
+    <string name="activity_home_delete_conversation_dialog_message">Вы ўпэўненыя што жадаеце выдаліць гэтую гутарку?</string>
+    <string name="activity_home_conversation_deleted_message">Гутарка выдалена</string>
+    <string name="activity_seed_title">Ваша фраза аднаўлення</string>
+    <string name="activity_seed_title_2">А вось і ваша сакрэтная фраза для аднаўлення</string>
+    <string name="activity_seed_explanation">Ваша фраза аднаўлення гэта галоўны ключ да вашага Session ID — Вы можаце выкарыстаць яе для аднаўлення Вашага Session ID, калі згубіце доступ да сваёй прылады. Захоўвайце сваю фразу аднаўлення ў бяспечным месцы і нікому не перадавайце.</string>
+    <string name="activity_seed_reveal_button_title">Націсніце, каб адкрыць</string>
+    <string name="view_seed_reminder_title">Амаль гатова! 80%</string>
+    <string name="view_seed_reminder_subtitle_1">Абараніце Ваш уліковы запіс, захаваўшы фразу аднаўлення</string>
+    <string name="view_seed_reminder_subtitle_2">Націсніце і ўтрымлівайце вылучаныя словы, каб адкрыць фразу аднаўлення, а затым захавайце яе для абароны Session ID.</string>
+    <string name="view_seed_reminder_subtitle_3">Пераканайцеся, што захавалі фразу аднаўлення ў бяспечным месцы</string>
+    <string name="activity_path_title">Шлях</string>
+    <string name="activity_path_explanation">Session хавае Ваш IP, перадаючы вашыя паведамленні праз некалькі сервісных вузлоў у дэцэнтралізаванай сетцы Session. Вось краіны, праз якія зараз перадаецца Ваша злучэнне:</string>
+    <string name="activity_path_device_row_title">Вы</string>
+    <string name="activity_path_guard_node_row_title">Уваходны вузел</string>
+    <string name="activity_path_service_node_row_title">Сэрвісны вузел</string>
+    <string name="activity_path_destination_row_title">Месца прызначэння</string>
+    <string name="activity_path_learn_more_button_title">Даведацца больш</string>
+    <string name="activity_path_resolving_progress">Ладаванне…</string>
+    <string name="activity_create_private_chat_title">Новая сесія</string>
+    <string name="activity_create_private_chat_enter_session_id_tab_title">Увядзіце Session ID</string>
+    <string name="activity_create_private_chat_scan_qr_code_tab_title">Сканаваць QR-код</string>
+    <string name="activity_create_private_chat_scan_qr_code_explanation">Праскануйце QR-код карыстальнікаў, каб пачаць гутарку. QR-коды можна знайсці, даткнуўшыся да значка QR-кода ў наладах уліковага запісу.</string>
+    <string name="fragment_enter_public_key_edit_text_hint">Увядзіце Session ID або імя ONS</string>
+    <string name="fragment_enter_public_key_explanation">Карыстальнікі могуць падзяліцца іхнім Session ID, перайшоўшы ў налады ўліковага запісу і даткнуўшыся \"Падзяліцца Session ID\", або падзяліўшыся сваім QR-кодам.</string>
+    <string name="fragment_enter_public_key_error_message">Калі ласка, праверце Session ID або ONS імя і паспрабуйце зноў.</string>
+    <string name="fragment_scan_qr_code_camera_access_explanation">Session патрэбен дазвол на камеру для сканавання QR-кодаў</string>
+    <string name="fragment_scan_qr_code_grant_camera_access_button_title">Дазволіць доступ да камеры</string>
+    <string name="activity_create_closed_group_title">Новая закрытая група</string>
+    <string name="activity_create_closed_group_edit_text_hint">Увядзіце назву групы</string>
+    <string name="activity_create_closed_group_empty_state_message">Вы пакуль не маеце кантактаў</string>
+    <string name="activity_create_closed_group_empty_state_button_title">Пачаць гутарку</string>
+    <string name="activity_create_closed_group_group_name_missing_error">Калі ласка, увядзіце назву групы</string>
+    <string name="activity_create_closed_group_group_name_too_long_error">Калі ласка, увядзіце карацейшую назву групы</string>
+    <string name="activity_create_closed_group_not_enough_group_members_error">Калі ласка абярыце прынамсі аднаго ўдзельніка групы</string>
+    <string name="activity_create_closed_group_too_many_group_members_error">Закрытая група не можа мець больш за 100 удзельнікаў</string>
+    <string name="activity_join_public_chat_title">Далучыцца да адкрытай групы</string>
+    <string name="activity_join_public_chat_error">Не ўдалося далучыцца да групы</string>
+    <string name="activity_join_public_chat_enter_group_url_tab_title">URL-спасылка адкрытай групы</string>
+    <string name="activity_join_public_chat_scan_qr_code_tab_title">Сканаваць QR-код</string>
+    <string name="activity_join_public_chat_scan_qr_code_explanation">Праскануйце QR-код адкрытай групы, да якой хацелі б далучыцца</string>
+    <string name="fragment_enter_chat_url_edit_text_hint">Увядзіце URL адкрытай групы</string>
+    <string name="activity_settings_title">Налады</string>
+    <string name="activity_settings_display_name_edit_text_hint">Увядзіце імя для адлюстравання</string>
+    <string name="activity_settings_display_name_missing_error">Калі ласка, абярыце імя для адлюстравання</string>
+    <string name="activity_settings_display_name_too_long_error">Калі ласка, абярыце карацейшае імя для адлюстравання</string>
+    <string name="activity_settings_privacy_button_title">Прыватнасць</string>
+    <string name="activity_settings_notifications_button_title">Апавяшчэнні</string>
+    <string name="activity_settings_message_requests_button_title">Запыты на паведамленні</string>
+    <string name="activity_settings_chats_button_title">Чаты</string>
+    <string name="activity_settings_devices_button_title">Прылады</string>
+    <string name="activity_settings_invite_button_title">Запрасіць сябра</string>
+    <string name="activity_settings_faq_button_title">Частыя пытанні</string>
+    <string name="activity_settings_recovery_phrase_button_title">Фраза аднаўлення</string>
+    <string name="activity_settings_clear_all_data_button_title">Ачысціць даныя</string>
+    <string name="activity_settings_clear_all_data_and_network_button_title">Выдаліць даныя, асабліва ў сетцы</string>
+    <string name="activity_settings_help_translate_session">Дапамажыце нам перакласці Session</string>
+    <string name="activity_notification_settings_title">Апавяшчэнні</string>
+    <string name="activity_notification_settings_style_section_title">Стыль апавяшчэнняў</string>
+    <string name="activity_notification_settings_content_section_title">Змест абвестак</string>
+    <string name="activity_privacy_settings_title">Прыватнасць</string>
+    <string name="activity_conversations_settings_title">Размовы</string>
+    <string name="activity_help_settings_title">Дапамога</string>
+    <string name="activity_help_settings__report_bug_title">Паведаміць пра хібу</string>
+    <string name="activity_help_settings__report_bug_summary">Экспартуйце свае часопісы, затым загрузіце файл у службу падтрымкі Session.</string>
+    <string name="activity_help_settings__translate_session">Перакласці Session</string>
+    <string name="activity_help_settings__feedback">Мы ўдзячны за ваш водгук</string>
+    <string name="activity_help_settings__faq">Частыя пытанні</string>
+    <string name="activity_help_settings__support">Падтрымка</string>
+    <string name="activity_help_settings__export_logs">Экспартаваць часопісы</string>
+    <string name="preferences_notifications_strategy_category_title">Стратэгія апавяшчэнняў</string>
+    <string name="preferences_notifications_strategy_category_fast_mode_title">Выкарыстоўваць хуткі рэжым</string>
+    <string name="preferences_notifications_strategy_category_fast_mode_summary">Вы будзеце атрымліваць апавяшчэнні аб новых паведамленнях надзейна і адразу ж з дапамогай сервераў апавяшчэнняў Google.</string>
+    <string name="fragment_device_list_bottom_sheet_change_name_button_title">Змяніць імя</string>
+    <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Адлучыць прыладу</string>
+    <string name="dialog_seed_title">Ваша фраза аднаўлення</string>
+    <string name="dialog_seed_explanation">Вы можаце выкарыстоўваць фразу для аднаўлення ўліковага запісу або спалучэння прылады.</string>
+    <string name="dialog_clear_all_data_title">Сцерці ўсе даныя</string>
+    <string name="dialog_clear_all_data_explanation">Гэта назаўжды выдаліць Вашыя паведамленні, сэсіі і кантакты.</string>
+    <string name="dialog_clear_all_data_network_explanation">Вы жадаеце пачысціць толькі гэтую прыладу, ці выдаліць уліковы запіс цалкам?</string>
+    <string name="dialog_clear_all_data_message">Гэта прывядзе да незваротнага выдалення вашых паведамленняў, сеансаў і кантактаў. Вы жадаеце ачысціць толькі гэту прыладу або выдаліць увесь уліковы запіс?</string>
+    <string name="dialog_clear_all_data_clear_device_only">Сцерці толькі на прыладзе</string>
+    <string name="dialog_clear_all_data_clear_device_and_network">Сцерці на прыладзе і ў сетцы</string>
+    <string name="dialog_clear_all_data_clear_device_and_network_confirmation">Вы ўпэўнены, што жадаеце сцерці даныя з сеткі? Калі вы працягнеце, вы не зможаце аднавіць свае паведамленні або кантакты.</string>
+    <string name="dialog_clear_all_data_clear">Ачысьціць</string>
+    <string name="dialog_clear_all_data_local_only">Выдаліць толькі</string>
+    <string name="dialog_clear_all_data_clear_network">Цалкам уліковы запіс</string>
+    <string name="activity_qr_code_title">QR-код</string>
+    <string name="activity_qr_code_view_my_qr_code_tab_title">Праглядзець мой QR-код</string>
+    <string name="activity_qr_code_view_scan_qr_code_tab_title">Сканаваць QR-код</string>
+    <string name="activity_qr_code_view_scan_qr_code_explanation">Праскануйце чыйсьці QR-код каб пачаць з імі гутарку</string>
+    <string name="fragment_view_my_qr_code_title">Праскануйце мяне</string>
+    <string name="fragment_view_my_qr_code_explanation">Гэта Ваш QR-код. Іншыя карыстальнікі могуць прасканаваць яго каб пачаць з Вамі гутарку.</string>
+    <string name="fragment_view_my_qr_code_share_title">Падзяліцца QR-кодам</string>
+    <string name="fragment_contact_selection_contacts_title">Кантакты</string>
+    <string name="fragment_contact_selection_closed_groups_title">Закрытыя групы</string>
+    <string name="fragment_contact_selection_open_groups_title">Адкрытыя групы</string>
+    <string name="fragment_contact_selection_empty_contacts">Вы пакуль не маеце кантактаў</string>
     <!-- Next round of translation -->
+    <string name="menu_apply_button">Ужыць</string>
+    <string name="menu_done_button">Гатова</string>
+    <string name="activity_edit_closed_group_title">Рэдагаваць групу</string>
+    <string name="activity_edit_closed_group_edit_text_hint">Увядзіце новую назву групы</string>
+    <string name="activity_edit_closed_group_edit_members">Удзельнікі</string>
+    <string name="activity_edit_closed_group_add_members">Дадаць удзельнікаў</string>
+    <string name="activity_edit_closed_group_group_name_missing_error">Назва групы не можа быць пустой</string>
+    <string name="activity_edit_closed_group_group_name_too_long_error">Калі ласка, увядзіце карацейшую назву групы</string>
+    <string name="activity_edit_closed_group_not_enough_group_members_error">Групы мусяць мець прынамсі аднаго ўдзельніка</string>
+    <string name="fragment_edit_group_bottom_sheet_remove">Прыбраць карыстальніка з групы</string>
+    <string name="activity_select_contacts_title">Вылучыць кантакты</string>
+    <string name="view_reset_secure_session_done_message">Скіданне бяспечнай сэсіі скончана</string>
+    <string name="dialog_ui_mode_title">Тэма</string>
+    <string name="dialog_ui_mode_option_day">Дзённая</string>
+    <string name="dialog_ui_mode_option_night">Начная</string>
+    <string name="dialog_ui_mode_option_system_default">Прадвызначэнні сістэмы</string>
+    <string name="activity_conversation_menu_copy_session_id">Скапіяваць Session ID</string>
+    <string name="attachment">Далучэнне</string>
+    <string name="attachment_type_voice_message">Галасавое паведамленне</string>
+    <string name="details">Падрабязнасці</string>
+    <string name="dialog_backup_activation_failed">Не ўдалося актываваць рэзервовую копію. Калі ласка, паспрабуйце зноў або звярніцеся да службы падтрымкі.</string>
+    <string name="activity_backup_restore_title">Аднавіць з рэзервовай копіі</string>
+    <string name="activity_backup_restore_select_file">Вылучыць файл</string>
+    <string name="activity_backup_restore_explanation_1">Вылучыце рэзервовы файл і ўвядзіце сакрэтную фразу, з якой ён быў створаны.</string>
+    <string name="activity_backup_restore_passphrase">30-сімвальная сакрэтная фраза</string>
+    <string name="activity_link_device_skip_prompt">Гэта займае які час, ці хочаце прапусціць?</string>
+    <string name="activity_link_device_link_device">Злучыць прыладу</string>
+    <string name="activity_link_device_recovery_phrase">Фраза аднаўлення</string>
+    <string name="activity_link_device_scan_qr_code">Сканаваць QR-код</string>
+    <string name="activity_link_device_qr_message">Перайдзіце да Налады → Фраза Аднаўлення на вашай іншай прыладзе, каб паказаць Ваш QR-код.</string>
+    <string name="activity_join_public_chat_join_rooms">Або далучыцеся да аднаго з гэтых…</string>
+    <string name="activity_pn_mode_message_notifications">Апавяшчэнні пра паведамленні</string>
+    <string name="activity_pn_mode_explanation">Існуюць два спосабы як Session можа абвяшчаць Вам пра новыя паведамленні.</string>
+    <string name="activity_pn_mode_fast_mode">Хуткі рэжым</string>
+    <string name="activity_pn_mode_slow_mode">Павольны рэжым</string>
+    <string name="activity_pn_mode_fast_mode_explanation">Вы будзеце атрымліваць апавяшчэнні аб новых паведамленнях надзейна і адразу ж з дапамогай сервераў апавяшчэнняў Google.</string>
+    <string name="activity_pn_mode_slow_mode_explanation">Session будзе перыядычна правяраць наяўнасць новых паведамленняў у фонавым рэжыме.</string>
+    <string name="fragment_recovery_phrase_title">Фраза аднаўлення</string>
+    <string name="activity_prompt_passphrase_session_locked">Session заблакіраваны</string>
+    <string name="activity_prompt_passphrase_tap_to_unlock">Даткніцеся каб адамкнуць</string>
+    <string name="fragment_user_details_bottom_sheet_edit_text_hint">Увядзіце псеўданім</string>
+    <string name="invalid_public_key">Памылковы публічны ключ</string>
+    <string name="document">Дакумент</string>
+    <string name="dialog_blocked_title">Разблакіраваць %s?</string>
+    <string name="dialog_blocked_explanation">Вы ўпэўненыя што жадаеце разблакіраваць %s?</string>
+    <string name="dialog_join_open_group_title">Далучыцца да %s?</string>
+    <string name="dialog_join_open_group_explanation">Вы ўпэўненыя, што жадаеце далучыцца да адкрытай групы %s?</string>
+    <string name="dialog_open_url_title">Адкрыць URL?</string>
+    <string name="dialog_open_url_explanation">Вы ўпэўненыя, што жадаеце адкрыць %s?</string>
+    <string name="open">Адкрыць</string>
+    <string name="copy_url">Скапіяваць URL</string>
+    <string name="dialog_link_preview_title">Уключыць перадпрагляды спасылак?</string>
+    <string name="dialog_link_preview_explanation">Уключэнне прадпрагляду спасылак пакажа прэв\'ю для спасылак, якія адпраўляюцца і атрымліваюцца. Гэта можа быць карысна, але Session трэба будзе злучыцца з сайтамі, звязанымі са спасылкамі, каб згенераваць перадпрагляд. Вы заўсёды можаце адключыць перадпрагляд спасылак у наладах Session.</string>
+    <string name="dialog_link_preview_enable_button_title">Уключыць</string>
+    <string name="dialog_download_title">Давяраць %s?</string>
+    <string name="dialog_download_explanation">Вы ўпэўненыя, што жадаеце загрузіць медыя, дасланае %s?</string>
+    <string name="dialog_download_button_title">Спампаваць</string>
+    <string name="activity_conversation_blocked_banner_text">%s заблакіраваны. Разблакіраваць?</string>
+    <string name="activity_conversation_block_user">Заблакіраваць карыстальніка</string>
+    <string name="activity_conversation_attachment_prep_failed">Не ўдалося падрыхтаваць далучэнне да адпраўкі.</string>
+    <string name="media">Медыя</string>
+    <string name="UntrustedAttachmentView_download_attachment">Даткніцеся каб загрузіць %s</string>
+    <string name="message_details_header__error">Памылка</string>
+    <string name="dialog_send_seed_title">Папярэджанне</string>
+    <string name="dialog_send_seed_explanation">Гэта Ваша фраза аднаўлення. Калі вы дашляце яе камусьці, яны мецьмуць поўны доступ да Вашага ўліковага запісу.</string>
+    <string name="dialog_send_seed_send_button_title">Даслаць</string>
+    <string name="notify_type_all">Усе</string>
+    <string name="notify_type_mentions">Згадкі</string>
+    <string name="deleted_message">Гэтае паведамленне было выдаленае</string>
+    <string name="delete_message_for_me">Выдаліць толькі для мяне</string>
+    <string name="delete_message_for_everyone">Выдаліць для ўсіх</string>
+    <string name="delete_message_for_me_and_recipient">Выдаліць для мяне і для %s</string>
+    <string name="activity_settings_survey_feedback">Водгукі/Апытанне</string>
+    <string name="activity_settings_support">Логі адладкі</string>
+    <string name="dialog_share_logs_title">Падзяліцца логамі</string>
+    <string name="dialog_share_logs_explanation">Ці хочаце Вы экспартаваць праграмныя логі каб падзяліцца імі для развязання праблем?</string>
+    <string name="conversation_pin">Замацаваць</string>
+    <string name="conversation_unpin">Адмацаваць</string>
+    <string name="mark_all_as_read">Пазначыць усё як прачытанае</string>
+    <string name="global_search_contacts_groups">Кантакты і групы</string>
+    <string name="global_search_messages">Паведамленні</string>
+    <string name="activity_message_requests_title">Запыты на паведамленні</string>
+    <string name="message_requests_send_notice">Адпраўка паведамлення гэтаму карыстальніку аўтаматычна прыме іх запыт на паведамленне і раскрые ваш Session ID.</string>
+    <string name="accept">Прыняць</string>
+    <string name="decline">Адхіліць</string>
+    <string name="message_requests_clear_all">Ачысціць усё</string>
+    <string name="message_requests_decline_message">Вы ўпэўнены, што жадаеце адхіліць гэты запыт на паведамленне?</string>
+    <string name="message_requests_block_message">Вы ўпэўнены, што жадаеце заблакіраваць гэты запыт на паведамленне?</string>
+    <string name="message_requests_deleted">Запыт выдалены</string>
+    <string name="message_requests_clear_all_message">Вы ўпэўнены, што жадаеце ачысціць усе запыты паведамленняў?</string>
+    <string name="message_requests_cleared">Запыт выдалены</string>
+    <string name="message_requests_accepted">Ваш запыт на паведамленне быў прыняты.</string>
+    <string name="message_requests_pending">Ваш запыт на паведамленне зараз чакае разгляду.</string>
+    <string name="message_request_empty_state_message">Няма чаканых запытаў паведамленняў</string>
+    <string name="NewConversationButton_SessionTooltip">Асабовае паведамленне</string>
+    <string name="NewConversationButton_ClosedGroupTooltip">Закрытая група</string>
+    <string name="NewConversationButton_OpenGroupTooltip">Адкрытая група</string>
+    <string name="message_requests_notification">У вас ёсць запыт на новае паведамленне</string>
+    <string name="CallNotificationBuilder_connecting">Злучэнне…</string>
+    <string name="NotificationBarManager__incoming_signal_call">Уваходны выклік</string>
+    <string name="NotificationBarManager__deny_call">Адхіліць выклік</string>
+    <string name="NotificationBarManager__answer_call">Адказваць на выклік</string>
+    <string name="NotificationBarManager_call_in_progress">Ідзе выклік</string>
+    <string name="NotificationBarManager__cancel_call">Скасаваць выклік</string>
+    <string name="NotificationBarManager__establishing_signal_call">Наладжванне выкліку</string>
+    <string name="NotificationBarManager__end_call">Завяршыць выклік</string>
+    <string name="accept_call">Прыняць выклік</string>
+    <string name="decline_call">Адхіліць выклік</string>
+    <string name="preferences__voice_video_calls">Галасавыя і відэазванкі</string>
+    <string name="preferences__calls_beta">Званкі (бэта)</string>
+    <string name="preferences__allow_access_voice_video">Дае магчымасць рабіць галасавыя і відэазванкі іншым карыстальнікам.</string>
+    <string name="dialog_voice_video_title">Галасавыя / відэа званкі</string>
+    <string name="dialog_voice_video_message">Ваш IP-адрас бачны суразмоўцу і серверу Oxen Foundation пры выкарыстанні бэта-званкоў. Вы ўпэўнены, што жадаеце ўключыць галасавыя і відэазванкі?</string>
+    <string name="CallNotificationBuilder_first_call_title">Выклік прапушчаны</string>
+    <string name="CallNotificationBuilder_first_call_message">Вы прапусцілі выклік, таму што вам трэба ўключыць дазвол на галасавыя і відэавыклікі ў наладах прыватнасці.</string>
+    <string name="WebRtcCallActivity_Session_Call">Выклік Session</string>
+    <string name="WebRtcCallActivity_Reconnecting">Паўторнае падключэнне…</string>
+    <string name="CallNotificationBuilder_system_notification_title">Апавяшчэнні</string>
+    <string name="CallNotificationBuilder_system_notification_message">Адключэнне апавяшчэнняў не дазволіць вам прымаць званкі, перайсці ў налады апавяшчэнняў session?</string>
+    <string name="dismiss">Адхіліць</string>
+    <string name="activity_settings_conversations_button_title">Размовы</string>
+    <string name="activity_settings_message_appearance_button_title">Знешні выгляд</string>
+    <string name="activity_settings_help_button">Дапамога</string>
+    <string name="activity_appearance_themes_category">Тэмы</string>
+    <string name="ocean_dark_theme_name">Ocean цёмная</string>
+    <string name="classic_dark_theme_name">Класічная цёмная</string>
+    <string name="ocean_light_theme_name">Ocean светлая</string>
+    <string name="classic_light_theme_name">Класічная светлая</string>
+    <string name="activity_appearance_primary_color_category">Асноўны колер</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__this_message">Гэта паведамленне</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__recently_used">Нядаўна выкарыстоўвалася</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__smileys_and_people">Усмешкі &amp; Людзі</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__nature" comment="Heading for an emoji list's category">Жывёлы &amp; Прырода</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__food" comment="Heading for an emoji list's category">Ежа &amp; Напоі</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__activities">Актыўнасці</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__places" comment="Heading for an emoji list's category">Падарожжы &amp; Месцы</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__objects">Аб\'екты</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__symbols">Сімвалы</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__flags">Сцягі</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__emoticons">Смайлы</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__no_results_found">Няма вынікаў</string>
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <string name="ReactionsBottomSheetDialogFragment_all">Усе &#183; %1$d</string>
+    <!-- ReactionsConversationView -->
+    <string name="ReactionsConversationView_plus">+%1$d</string>
+    <!-- ReactionsRecipientAdapter -->
+    <string name="ReactionsRecipientAdapter_you">Вы</string>
+    <string name="reaction_notification">%1$s адрэагаваў на паведамленне %2$s</string>
+    <string name="ReactionsConversationView_show_less">Згарнуць</string>
+    <string name="KeyboardPagerFragment_search_emoji">Пошук емодзі</string>
+    <string name="KeyboardPagerfragment_back_to_emoji">Назад да емодзі</string>
+    <string name="KeyboardPagerfragment_clear_search_entry">Ачысціць запіс пошуку</string>
+    <string name="activity_appearance_follow_system_category">Аўтаматычны цёмная тэма</string>
+    <string name="activity_appearance_follow_system_explanation">Выкарыстоўвайце налады сістэмны</string>
+    <string name="go_to_device_notification_settings">Перайсці ў сістэмныя налады апавяшчэнняў</string>
+    <string name="blocked_contacts_title">Блакіраваныя кантакты</string>
+    <string name="blocked_contacts_empty_state">У вас няма заблакіраваных кантактаў</string>
+    <string name="Unblock_dialog__title_single">Разблакіраваць %s</string>
+    <string name="Unblock_dialog__title_multiple">Разблакіраваць карыстальніка</string>
+    <string name="Unblock_dialog__message">Вы ўпэўненыя што жадаеце разблакіраваць %s?</string>
+    <plurals name="Unblock_dialog__message_multiple_overflow">
+        <item quantity="one">і %d іншага</item>
+        <item quantity="few">і %d іншых</item>
+        <item quantity="many">і %d іншых</item>
+        <item quantity="other">і %d іншых</item>
+    </plurals>
+    <plurals name="ReactionsRecipientAdapter_other_reactors">
+        <item quantity="one">І яшчэ %1$d адрэагаваў %2$s на гэта паведамленне</item>
+        <item quantity="few">І яшчэ %1$d адрэагавалі %2$s на гэта паведамленне</item>
+        <item quantity="many">І яшчэ %1$d адрэагавалі %2$s на гэта паведамленне</item>
+        <item quantity="other">І яшчэ %1$d адрэагавалі %2$s на гэта паведамленне</item>
+    </plurals>
+    <string name="dialog_new_conversation_title">Новая гутарка</string>
+    <string name="dialog_new_message_title">Новае паведамленне</string>
+    <string name="activity_create_group_title">Стварыць групу</string>
+    <string name="dialog_join_community_title">Далучайцеся да супольнасці</string>
+    <string name="new_conversation_contacts_title">Кантакты</string>
+    <string name="new_conversation_unknown_contacts_section_title">Невядома</string>
+    <string name="fragment_enter_public_key_prompt">Пачaць новую размову, увёўшы чыйсьці Session ID, або падзяліўшыся вашым Session ID.</string>
+    <string name="activity_create_group_create_button_title">Стварыць</string>
+    <string name="search_contacts_hint">Пошук кантактаў</string>
+    <string name="activity_join_public_chat_enter_community_url_tab_title">URL супольнасці</string>
+    <string name="fragment_enter_community_url_edit_text_hint">Увядзіце URL супольнасці</string>
+    <string name="fragment_enter_community_url_join_button_title">Далучыцца</string>
+    <string name="new_conversation_dialog_back_button_content_description">Перайсці назад</string>
+    <string name="new_conversation_dialog_close_button_content_description">Закрыйце дыялогавае акно</string>
+    <string name="ErrorNotifier_migration">Не атрымалася абнавіць базу даных</string>
+    <string name="ErrorNotifier_migration_downgrade">Каб паведаміць пра памылку, звярніцеся ў службу падтрымкі.</string>
+    <string name="delivery_status_sending">Адпраўка</string>
+    <string name="delivery_status_read">Прачытана</string>
+    <string name="delivery_status_sent">Даслана</string>
+    <string name="delivery_status_failed">Не атрымалася адправіць</string>
 </resources>

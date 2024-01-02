@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Session</string>
     <string name="yes">Po</string>
     <string name="no">Jo</string>
     <string name="delete">Fshije</string>
     <string name="ban">Dëbim</string>
+    <string name="please_wait">Ju lutem prisni…</string>
     <string name="save">Ruaje</string>
     <string name="note_to_self">Shënim për Veten</string>
     <string name="version_s">Versioni_%s</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">Mesazh i ri</string>
     <!-- AlbumThumbnailView -->
@@ -105,6 +130,10 @@
     <plurals name="ConversationFragment_saving_n_attachments">
         <item quantity="one">Po ruhet bashkëngjitja</item>
         <item quantity="other">Po ruhen %1$d bashkëngjitje</item>
+    </plurals>
+    <plurals name="ConversationFragment_saving_n_attachments_to_sd_card">
+        <item quantity="one">Po ruhet bashkëngjitja në depozitë…</item>
+        <item quantity="other">Po ruhet %1$d në depozitë…</item>
     </plurals>
     <!-- CreateProfileActivity -->
     <string name="CreateProfileActivity_profile_photo">Foto profili</string>
@@ -208,6 +237,7 @@
     <string name="ThreadRecord_s_is_on_signal">%s është në Session! </string>
     <string name="ThreadRecord_disappearing_messages_disabled">Zhdukja e mesazheve është e çaktivizuar</string>
     <string name="ThreadRecord_disappearing_message_time_updated_to_s">Koha për zhdukje mesazhesh është vënë %s</string>
+    <string name="ThreadRecord_s_took_a_screenshot">Bëri nje screenshot</string>
     <string name="ThreadRecord_media_saved_by_s">Media u kursye me %s</string>
     <string name="ThreadRecord_safety_number_changed">Numri i sigurisë ndryshoi</string>
     <string name="ThreadRecord_your_safety_number_with_s_has_changed">Numri juaj i sigurisë me %s është ndryshuar.</string>
@@ -378,9 +408,6 @@
     <string name="arrays__settings_default">Rregullime parazgjedhje</string>
     <string name="arrays__enabled">E aktivizuar</string>
     <string name="arrays__disabled">E çaktivizuar</string>
-    <string name="arrays__name_and_message">Emër dhe mesazh</string>
-    <string name="arrays__name_only">Vetëm emrin</string>
-    <string name="arrays__no_name_or_message">Pa emër ose mesazh</string>
     <string name="arrays__images">Figura</string>
     <string name="arrays__audio">Audio</string>
     <string name="arrays__video">Video</string>
@@ -398,9 +425,6 @@
         <item quantity="other">%d orë</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__pref_enter_sends_title">Tasti Enter dërgon</string>
-    <string name="preferences__send_link_previews">Dërgo paraparje lidhjesh</string>
-    <string name="preferences__previews_are_supported_for">Paraparjet mbulohen për lidhje Imgur, Instagram, Pinterest, Reddit, dhe YouTube.</string>
     <string name="preferences__screen_security">Siguri ekrani</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">Blloko foto ekrani te lista e të rejave dhe brenda aplikacionit.</string>
     <string name="preferences__notifications">Njoftime</string>
@@ -435,9 +459,6 @@
     <string name="preferences__scan_through_all_conversations_and_enforce_conversation_length_limits">Skano krejt bisedat dhe zbato detyrimisht kufij gjatësie bisedash.</string>
     <string name="preferences__default">Parazgjedhje</string>
     <string name="preferences__incognito_keyboard">Tastatur e fshehtë</string>
-    <string name="preferences__read_receipts">Dëftesa leximi</string>
-    <string name="preferences__typing_indicators">Tregues shtypjeje</string>
-    <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Nëse treguesit e shtypjeve janë të çaktivizuar, s\’do të jeni në gjendje të shihni tregues shtypjesh nga të tjerët</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Kërko për tastierët çaktivizim të të mësuarit të personalizuar</string>
     <string name="preferences__light_theme">E çelët</string>
     <string name="preferences__dark_theme">E errët</string>
@@ -513,8 +534,6 @@
     <string name="LocalBackupJob_creating_backup">Po krijohet kopjeruajtje…</string>
     <string name="ProgressPreference_d_messages_so_far">%d mesazhe deri këtu</string>
     <string name="BackupUtil_never">Kurrë</string>
-    <string name="preferences_app_protection__screen_lock">Kyçje ekrani</string>
-    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">kyçni hyrjen në Session përmes kyçje ekrani ose shenja gishtash Android</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">Kohë mbarimi plogështie për kyçje ekrani</string>
     <string name="AppProtectionPreferenceFragment_none">Asnjë</string>
     <!-- Conversation activity -->
@@ -535,9 +554,31 @@
     <string name="view_fake_chat_bubble_1">Si është Sessioni juaj?</string>
     <string name="view_fake_chat_bubble_2">Është një app për mesazhe të koduara dhe decentralizuara</string>
     <string name="view_fake_chat_bubble_3">I bije që të dhënat personale dhe informacionet e mesazheve nuk do të grumbullohen? Si funksionon kjo?</string>
+    <string name="view_fake_chat_bubble_4">Duke perdorur kombinimin e avancuar rrugetim-anonim dhe Fund-tek-Fund tekonolgjine e mbylljes.</string>
+    <string name="view_fake_chat_bubble_5">Miqte nuk i lejon miqet te perdorin mesengjer te kompromituar. Je i mireserardhur.</string>
     <string name="activity_register_title">Thuaj Tungjatjeta Session-it tuaj</string>
     <string name="activity_register_explanation">Session ID juaj është një adresë unike që mund t\'ju kontaktojnë përmes Session. Pa ndonjë ndërlidhje me identitetin tuaj real, Session ID juaj është totalisht anonim dhe privat.</string>
     <string name="activity_restore_title">Rikthe llogarinë tuaj</string>
     <string name="activity_restore_explanation">Shkruanj frazen e rikthimit qe iu është gjatë regjistrimit të llogarisë.</string>
+    <string name="activity_restore_seed_edit_text_hint">Vendosni frazen e rikthimit</string>
+    <string name="activity_display_name_title_2">Zgjedh emrin e paraqitjes</string>
+    <string name="activity_display_name_explanation">Ky do te jete emri juaj kur perdoni Session. Mund te jete emri juaj i vertete, nje pseudonim, apo dicka tjeter qe ju keni deshire.</string>
+    <string name="activity_display_name_edit_text_hint">Vendosni nje emer te paraqitjes</string>
+    <string name="activity_display_name_display_name_missing_error">Zgjedh nje emer te paraqitjes</string>
+    <string name="activity_display_name_display_name_too_long_error">Zgjedh nje emer me te shkurter te paraqitjes</string>
+    <string name="activity_pn_mode_recommended_option_tag">Rekomandohet</string>
+    <string name="activity_pn_mode_no_option_picked_dialog_title">Zgjedhni nje mundesi</string>
+    <string name="activity_home_empty_state_message">Ju nuk keni ende ndonje kontakt</string>
+    <string name="activity_home_empty_state_button_title">Fillo nje Session</string>
+    <string name="activity_home_leave_group_dialog_message">A jeni te sigurt qe doni ta lini kete grup?</string>
+    <string name="activity_home_leaving_group_failed_message">"Dalja nga grupi nuk ishte e mundur"</string>
+    <string name="activity_home_delete_conversation_dialog_message">A jeni te sigurt qe doni ta fshini kete bisede?</string>
+    <string name="activity_home_conversation_deleted_message">Biseda u fshi</string>
+    <string name="activity_seed_title">Fraza juaj e rikthimit</string>
+    <string name="activity_seed_title_2">Njoftohu me frazen tuaj te rikthimit</string>
+    <string name="activity_seed_reveal_button_title">Idj</string>
     <!-- Next round of translation -->
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
 </resources>

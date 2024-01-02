@@ -1,39 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="yes">Da</string>
+    <string name="no">Ne</string>
+    <string name="delete">Izbriši</string>
+    <string name="please_wait">Prosimo, počakajte …</string>
+    <string name="save">Shrani</string>
+    <string name="note_to_self">Osebna zabeležka</string>
+    <string name="version_s">Različica %s</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
+    <string name="AbstractNotificationBuilder_new_message">Novo sporočilo</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
+    <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Izbrišem stara sporočila sedaj?</string>
+    <string name="ApplicationPreferencesActivity_delete">Izbriši</string>
+    <string name="ApplicationPreferencesActivity_On">Vklop</string>
+    <string name="ApplicationPreferencesActivity_Off">Izklop</string>
     <!-- DraftDatabase -->
+    <string name="DraftDatabase_Draft_image_snippet">(slika)</string>
+    <string name="DraftDatabase_Draft_audio_snippet">(zvok)</string>
+    <string name="DraftDatabase_Draft_video_snippet">(video)</string>
+    <string name="DraftDatabase_Draft_quote_snippet">(odgovor)</string>
     <!-- AttachmentManager -->
     <!-- AudioSlidePlayer -->
     <!-- BucketedThreadMedia -->
+    <string name="BucketedThreadMedia_Today">Danes</string>
+    <string name="BucketedThreadMedia_Yesterday">Včeraj</string>
+    <string name="BucketedThreadMedia_This_week">Ta teden</string>
+    <string name="BucketedThreadMedia_This_month">Ta mesec</string>
     <!-- CommunicationActions -->
+    <string name="CommunicationActions_no_browser_found">Brskalnika ni bilo mogoče najti.</string>
     <!-- ContactsCursorLoader -->
+    <string name="ContactsCursorLoader_groups">Skupine</string>
     <!-- ConversationItem -->
+    <string name="ConversationItem_copied_text">Kopirano %s</string>
+    <string name="ConversationItem_read_more">Preveri več</string>
     <!-- ConversationActivity -->
+    <string name="ConversationActivity_add_attachment">Dodaj prilogo</string>
+    <string name="ConversationActivity_select_contact_info">Izberi kontaktne podatke</string>
+    <string name="ConversationActivity_sorry_there_was_an_error_setting_your_attachment">Oprostite, pri nastavljanju priponke je prišlo do napake.</string>
+    <string name="ConversationActivity_message">Sporočilo</string>
+    <string name="ConversationActivity_compose">Novo sporočilo</string>
+    <string name="ConversationActivity_muted_until_date">Utišano do %1$s</string>
+    <string name="ConversationActivity_muted_forever">Utišano</string>
+    <string name="ConversationActivity_member_count">%1$d članov</string>
+    <string name="ConversationActivity_invalid_recipient">Neveljaven prejemnik!</string>
+    <string name="ConversationActivity_added_to_home_screen">Dodano na domači zaslon</string>
+    <string name="ConversationActivity_leave_group">Zapusti skupino?</string>
+    <string name="ConversationActivity_are_you_sure_you_want_to_leave_this_group">Ali ste prepričani, da želite zapustiti to skupino?</string>
+    <string name="ConversationActivity_error_leaving_group">Napaka pri zapuščanju skupine</string>
+    <string name="ConversationActivity_unblock_this_contact_question">Odblokiram ta stik?</string>
+    <string name="ConversationActivity_unblock">Odblokiraj</string>
+    <string name="ConversationActivity_invite_to_open_group">Dodaj člane</string>
     <!-- ConversationFragment -->
+    <plurals name="ConversationFragment_delete_selected_messages">
+        <item quantity="one">Odstrani izbrano sporočilo?</item>
+        <item quantity="two">Odstrani izbrani sporočili?</item>
+        <item quantity="few">Odstrani izbrana sporočila?</item>
+        <item quantity="other">Odstrani izbrana sporočila?</item>
+    </plurals>
+    <string name="ConversationFragment_save_to_sd_card">Shrani v shrambo?</string>
     <!-- CreateProfileActivity -->
+    <string name="CreateProfileActivity_profile_photo">Fotografija profila</string>
     <!-- CustomDefaultPreference -->
+    <string name="CustomDefaultPreference_none">Brez</string>
     <!-- DateUtils -->
+    <string name="DateUtils_just_now">Zdaj</string>
+    <string name="DateUtils_minutes_ago">%d minut</string>
+    <string name="DateUtils_today">Danes</string>
+    <string name="DateUtils_yesterday">Včeraj</string>
     <!-- DeviceListItem -->
+    <string name="DeviceListItem_today">Danes</string>
     <!-- DocumentView -->
+    <string name="DocumentView_unknown_file">Neznana datoteka</string>
     <!-- GiphyActivity -->
     <!-- GiphyFragmentPageAdapter -->
+    <string name="GiphyFragmentPagerAdapter_gifs">GIF-i</string>
+    <string name="GiphyFragmentPagerAdapter_stickers">Nalepke</string>
     <!-- CropImageActivity -->
+    <string name="CropImageActivity_profile_avatar">Slika</string>
     <!-- InputPanel -->
     <!-- LongMessageActivity -->
+    <string name="LongMessageActivity_message_from_s">Sporočilo od %1$s</string>
+    <string name="LongMessageActivity_your_message">Vaše sporočilo</string>
     <!-- MediaOverviewActivity -->
+    <string name="MediaOverviewActivity_Documents">Dokumenti</string>
+    <string name="MediaOverviewActivity_Select_all">Izberi vse</string>
+    <string name="MediaOverviewActivity_collecting_attachments">Zbiram priponke...</string>
     <!-- NotificationMmsMessageRecord -->
+    <string name="NotificationMmsMessageRecord_multimedia_message">Večpredstavno sporočilo</string>
     <!-- MediaPickerActivity -->
+    <string name="MediaPickerActivity_send_to">Pošlji na %s</string>
     <!-- MediaSendActivity -->
+    <string name="MediaSendActivity_add_a_caption">Dodaj besedilo ...</string>
     <!-- MediaRepository -->
+    <string name="MediaRepository_all_media">Vsi mediji</string>
     <!-- MessageRecord -->
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->
+    <string name="RecipientPreferenceActivity_block">Blokiraj</string>
+    <string name="RecipientPreferenceActivity_unblock_this_contact_question">Odblokiram ta stik?</string>
+    <string name="RecipientPreferenceActivity_unblock">Odblokiraj</string>
+    <string name="RecipientPreferenceActivity_notification_settings">Nastavitve obvestil</string>
     <!-- Slide -->
+    <string name="Slide_image">Slika</string>
+    <string name="Slide_audio">Zvok</string>
+    <string name="Slide_video">Video</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
+    <string name="ThreadRecord_called">Klical si</string>
+    <string name="ThreadRecord_called_you">So te poklicali</string>
+    <string name="ThreadRecord_missed_call">Zgrešen klic</string>
+    <string name="ThreadRecord_media_message">Multimedijsko sporočilo</string>
     <!-- UpdateApkReadyListener -->
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
@@ -92,4 +195,7 @@
     <!-- Conversation activity -->
     <!-- Session -->
     <!-- Next round of translation -->
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
 </resources>

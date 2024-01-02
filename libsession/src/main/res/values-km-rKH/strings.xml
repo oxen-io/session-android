@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">អ្នកបានចាកចេញពីក្រុម។</string>
+    <string name="MessageRecord_you_created_a_new_group">អ្នកបានបង្កើតក្រុមថ្មី។</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s បានបញ្ចូលរូបអ្នកទៅក្នុងក្រុម។</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">​អ្នកបានប្តូរឈ្មោះក្រុមទៅជា%1$s</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s បានប្តូរឈ្មោះក្រុមទៅជា៖ %2$s វិញ</string>
+    <string name="MessageRecord_you_added_s_to_the_group">អ្នកបានបន្ថែម %1$s ទៅក្នុងក្រុម។</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s បានបន្ថែម %2$s ទៅកាន់ក្រុមនេះ។</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">អ្នកត្រូវបាន​ដកចេញ %1$s ពីក្រុមនេះ។</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s ត្រូវបានដកចេញ %2$s ពីចេញក្រុមនេះ។</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">អ្នកត្រូវបានដកចេញពីកិច្ចប្រជុំ។</string>
+    <string name="MessageRecord_you">អ្នក</string>
+    <string name="MessageRecord_s_called_you">%s បានហៅមកអ្នក</string>
+    <string name="MessageRecord_called_s">បានហៅ %s</string>
+    <string name="MessageRecord_missed_call_from">បាន​ខកខាន​ទទួល​ការ​ហៅ​ពី %s</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">អ្នកបានបិទមុខងារសារបាត់ទៅវិញ។</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">%1$s បានបិទមុខងារសារបាត់ទៅវិញ។</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">អ្នកកំណត់រយៈពេលបាត់សារទៅវិញជា %1$s</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s កំណត់រយៈពេលបាត់សារទៅវិញជា %2$s</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$s បានថតរូបថតអេក្រង់។</string>
+    <string name="MessageRecord_media_saved_by_s">មេឌៀបានរក្សាទុកដោយ %1$s។</string>
+    <!-- expiration -->
+    <string name="expiration_off">បិទ</string>
+    <plurals name="expiration_seconds">
+        <item quantity="other">%d វិនាទី</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%ds</string>
+    <plurals name="expiration_minutes">
+        <item quantity="other">%d នាទី</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">%dm</string>
+    <plurals name="expiration_hours">
+        <item quantity="other">%d ម៉ោង</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">%dh</string>
+    <plurals name="expiration_days">
+        <item quantity="other">%d ថ្ងៃ</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">%dd</string>
+    <plurals name="expiration_weeks">
+        <item quantity="other">%d សប្តាហ៍</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">%dw</string>
+    <string name="ConversationItem_group_action_left">%1$s បានចាកចេញពីក្រុមនេះ។</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">ក្រុមដែលគ្មានឈ្មោះ</string>
+</resources>

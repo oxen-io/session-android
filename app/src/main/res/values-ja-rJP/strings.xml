@@ -1,12 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Session</string>
     <string name="yes">はい</string>
     <string name="no">いいえ</string>
     <string name="delete">削除</string>
+    <string name="ban">禁止</string>
+    <string name="please_wait">お待ちください…</string>
     <string name="save">保存</string>
     <string name="note_to_self">自分用メモ</string>
     <string name="version_s">バージョン %s</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">新着メッセージ</string>
     <!-- AlbumThumbnailView -->
@@ -15,7 +41,7 @@
     <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
         <item quantity="other">会話ごとに%d件のメッセージ</item>
     </plurals>
-    <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">全ての古いメッセージを今、削除しますか？</string>
+    <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">古いメッセージをすべて削除しますか？</string>
     <plurals name="ApplicationPreferencesActivity_this_will_immediately_trim_all_conversations_to_the_d_most_recent_messages">
         <item quantity="other">最新の%d個のメッセージ以外を削除します</item>
     </plurals>
@@ -60,6 +86,7 @@
     <string name="ConversationActivity_muted_until_date">%1$sまでミュート</string>
     <string name="ConversationActivity_muted_forever">ミュート中</string>
     <string name="ConversationActivity_member_count">メンバー%1$d名</string>
+    <string name="ConversationActivity_active_member_count">%1$d 人のアクティブなメンバー</string>
     <string name="ConversationActivity_open_group_guidelines">コミュニティ規定</string>
     <string name="ConversationActivity_invalid_recipient">受信先が無効です。</string>
     <string name="ConversationActivity_added_to_home_screen">ホーム画面に追加しました</string>
@@ -80,6 +107,8 @@
     <string name="ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video">Sessionで写真や動画を撮るには、カメラへのアクセスを許可する必要がありますが、無効になっています。アプリ設定メニューから、『アプリの権限』を選び、『カメラ』へのアクセス許可を有効にしてください。</string>
     <string name="ConversationActivity_signal_needs_camera_permissions_to_take_photos_or_video">Sessionで写真や動画を撮るには、カメラへのアクセス許可が必要です。</string>
     <string name="ConversationActivity_search_position">%1$d / %2$d</string>
+    <string name="ConversationActivity_call_title">通話の権限が必要です</string>
+    <string name="ConversationActivity_call_prompt">プライバシー設定から音声とビデオ通話の許可を有効にできます。</string>
     <!-- ConversationFragment -->
     <plurals name="ConversationFragment_delete_selected_messages">
         <item quantity="other">選択中のメッセージを削除しますか？</item>
@@ -97,6 +126,9 @@
     </plurals>
     <plurals name="ConversationFragment_saving_n_attachments">
         <item quantity="other">%1$d個の添付ファイルを保存</item>
+    </plurals>
+    <plurals name="ConversationFragment_saving_n_attachments_to_sd_card">
+        <item quantity="other">%1$d個の添付ファイルを外部メモリに保存</item>
     </plurals>
     <!-- CreateProfileActivity -->
     <string name="CreateProfileActivity_profile_photo">プロフィール画像</string>
@@ -180,6 +212,7 @@
     <string name="Slide_video">動画</string>
     <!-- SmsMessageRecord -->
     <string name="SmsMessageRecord_received_corrupted_key_exchange_message">無効な鍵交換メッセージを受信しました</string>
+    <string name="SmsMessageRecord_received_key_exchange_message_for_invalid_protocol_version">        受信した鍵交換メッセージのプロトコルバージョンが無効です。    </string>
     <string name="SmsMessageRecord_received_message_with_new_safety_number_tap_to_process">新しい安全番号が付いたメッセージを受け取りました。処理や表示を行うにはタップしてください。</string>
     <string name="SmsMessageRecord_secure_session_reset">セキュアセッションを設定し直しました</string>
     <string name="SmsMessageRecord_secure_session_reset_s">%sがセキュアセッションを設定し直しました。</string>
@@ -203,6 +236,7 @@
     <string name="ThreadRecord_you_marked_verified">検証済みにしました</string>
     <string name="ThreadRecord_you_marked_unverified">未検証にしました</string>
     <string name="ThreadRecord_empty_message">ここに会話はありません。</string>
+    <string name="ThreadRecord_open_group_invitation">公開グループからの招待</string>
     <!-- UpdateApkReadyListener -->
     <string name="UpdateApkReadyListener_Signal_update">Sessionをアップデートする</string>
     <string name="UpdateApkReadyListener_a_new_version_of_signal_is_available_tap_to_update">Sessionの最新版が出ました。タップしてアップデートしてください。</string>
@@ -315,7 +349,7 @@
     <string name="audio_view__download_accessibility_description">ダウンロード</string>
     <!-- open_group_invitation_view -->
     <string name="open_group_invitation_view__join_accessibility_description">参加する</string>
-    <string name="open_group_invitation_view__open_group_invitation">グループへの招待を開く</string>
+    <string name="open_group_invitation_view__open_group_invitation">公開グループからの招待</string>
     <string name="open_group_guidelines_pinned_message">ピン留めされたメッセージ</string>
     <string name="open_group_guidelines_community_guidelines">コミュニティ規定</string>
     <string name="open_group_guidelines_read">読む</string>
@@ -367,7 +401,7 @@
     <string name="arrays__disabled">無効</string>
     <string name="arrays__name_and_message">名前とメッセージ</string>
     <string name="arrays__name_only">名前のみ</string>
-    <string name="arrays__no_name_or_message">名前もメッセージも非表示</string>
+    <string name="arrays__no_name_or_message">名前もメッセージも無し</string>
     <string name="arrays__images">画像</string>
     <string name="arrays__audio">音声</string>
     <string name="arrays__video">動画</string>
@@ -384,9 +418,14 @@
         <item quantity="other">%d時間</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__pref_enter_sends_title">エンターキーで送信</string>
+    <string name="preferences__pref_enter_sends_title">Enter キーで送信</string>
+    <string name="preferences__pref_enter_sends_summary">Enterキーをタップすると、改行ではなく、メッセージが送信されます。</string>
     <string name="preferences__send_link_previews">リンクプレビューを送る</string>
-    <string name="preferences__previews_are_supported_for">プレビューはImgur、Instagram、Pinterest、RedditおよびYouTubeリンクをサポートしています</string>
+    <string name="preferences__link_previews">リンクプレビュー</string>
+    <string name="preferences__link_previews_summary">サポートされている URL のリンクプレビューを表示します。</string>
+    <string name="preferences__pref_autoplay_audio_category">音声メッセージ</string>
+    <string name="preferences__pref_autoplay_audio_title">音声メッセージの自動再生</string>
+    <string name="preferences__pref_autoplay_audio_summary">音声メッセージを自動再生します</string>
     <string name="preferences__screen_security">画面セキュリティ</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">アプリ内や「最近使ったアプリ」でスクリーンショットを表示しない</string>
     <string name="preferences__notifications">通知</string>
@@ -394,6 +433,7 @@
     <string name="preferences__led_color_unknown">不明</string>
     <string name="preferences__pref_led_blink_title">LED点滅パターン</string>
     <string name="preferences__sound">着信音</string>
+    <string name="preferences__in_app_sounds">アプリが開いているときの音</string>
     <string name="preferences__silent">無音</string>
     <string name="preferences__repeat_alerts">アラートの繰り返し</string>
     <string name="preferences__never">なし</string>
@@ -422,18 +462,27 @@
     <string name="preferences__default">初期設定の言語</string>
     <string name="preferences__incognito_keyboard">プライバシーキーボード</string>
     <string name="preferences__read_receipts">既読通知</string>
+    <string name="preferences__read_receipts_summary">1対1のチャットで既読通知を送信します。</string>
     <string name="preferences__typing_indicators">入力中アイコン</string>
-    <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">入力中アイコンが無効の場合、相手の入力中アイコンも表示されません。</string>
+    <string name="preferences__typing_indicators_summary">入力中の表示を1対1のチャットで相手に表示します。</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">キーボード予測入力を無効化</string>
     <string name="preferences__light_theme">ライト</string>
     <string name="preferences__dark_theme">ダーク</string>
     <string name="preferences_chats__message_trimming">メッセージの削減</string>
+    <string name="preferences_chats__message_trimming_title">コミュニティをトリムする</string>
+    <string name="preferences_chats__message_trimming_summary">2,000件以上のメッセージを持つコミュニティから6ヶ月以上のメッセージを削除します。</string>
     <string name="preferences_advanced__use_system_emoji">システムの絵文字を使う</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Session独自の絵文字機能を無効にする</string>
+    <string name="preferences_app_protection__screen_security">スクリーン・セキュリティ</string>
     <string name="preferences_chats__chats">チャット</string>
     <string name="preferences_notifications__messages">メッセージ</string>
     <string name="preferences_notifications__in_chat_sounds">チャット中の着信音</string>
+    <string name="preferences_notifications__content">通知内容</string>
+    <string name="preferences_notifications__content_message">表示:</string>
+    <string name="preferences_notifications__summary">通知に表示される情報</string>
     <string name="preferences_notifications__priority">優先度</string>
+    <string name="preferences_app_protection__screenshot_notifications">スクリーンショット撮影時の通知</string>
+    <string name="preferences_app_protected__screenshot_notifications_summary">連絡先が1対1チャットのスクリーンショットを撮ったときに通知を受け取ります。</string>
     <!-- **************************************** -->
     <!-- menus -->
     <!-- **************************************** -->
@@ -446,7 +495,10 @@
     <string name="conversation_context__menu_ban_user">ユーザーをバンする</string>
     <string name="conversation_context__menu_ban_and_delete_all">バンして全て削除する</string>
     <string name="conversation_context__menu_resend_message">メッセージを再送信</string>
+    <string name="conversation_context__menu_reply">返信</string>
     <string name="conversation_context__menu_reply_to_message">メッセージに返信</string>
+    <string name="conversation_context__menu_call">通話</string>
+    <string name="conversation_context__menu_select">選択</string>
     <!-- conversation_context_image -->
     <string name="conversation_context_image__save_attachment">添付ファイルを保存</string>
     <!-- conversation_expiring_off -->
@@ -499,8 +551,8 @@
     <string name="LocalBackupJob_creating_backup">バックアップを作成しています...</string>
     <string name="ProgressPreference_d_messages_so_far">今、%d個メッセージ</string>
     <string name="BackupUtil_never">なし</string>
-    <string name="preferences_app_protection__screen_lock">画面ロック</string>
-    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Sessionを画面ロックや指紋認証でロックする</string>
+    <string name="preferences_app_protection__screen_lock">Sessionをロック</string>
+    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">セッションのロックを解除するには、指紋、PIN、パターン、またはパスワードが必要です。</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">画面ロックのタイムアウト</string>
     <string name="AppProtectionPreferenceFragment_none">なし</string>
     <!-- Conversation activity -->
@@ -508,6 +560,7 @@
     <!-- Session -->
     <string name="continue_2">続行する</string>
     <string name="copy">コピーする</string>
+    <string name="close">閉じる</string>
     <string name="invalid_url">URL が無効です</string>
     <string name="copied_to_clipboard">クリップボードにコピーされました</string>
     <string name="next">次</string>
@@ -586,6 +639,7 @@
     <string name="activity_settings_display_name_too_long_error">短い表示名を選択してください</string>
     <string name="activity_settings_privacy_button_title">プライバシー</string>
     <string name="activity_settings_notifications_button_title">お知らせ</string>
+    <string name="activity_settings_message_requests_button_title">メッセージリクエスト</string>
     <string name="activity_settings_chats_button_title">チャット</string>
     <string name="activity_settings_devices_button_title">デバイス</string>
     <string name="activity_settings_invite_button_title">友達を招待</string>
@@ -598,16 +652,30 @@
     <string name="activity_notification_settings_style_section_title">通知スタイル</string>
     <string name="activity_notification_settings_content_section_title">通知内容</string>
     <string name="activity_privacy_settings_title">プライバシー</string>
+    <string name="activity_conversations_settings_title">会話</string>
+    <string name="activity_help_settings_title">ヘルプ</string>
+    <string name="activity_help_settings__report_bug_title">バグを報告</string>
+    <string name="activity_help_settings__report_bug_summary">ログをエクスポートし、Sessionのヘルプデスクにてファイルをアップロードします。</string>
+    <string name="activity_help_settings__translate_session">セッションを翻訳</string>
+    <string name="activity_help_settings__feedback">ご意見をお聞かせください。</string>
+    <string name="activity_help_settings__faq">よくある質問</string>
+    <string name="activity_help_settings__support">サポート</string>
+    <string name="activity_help_settings__export_logs">ログのエクスポート</string>
     <string name="preferences_notifications_strategy_category_title">通知戦略</string>
     <string name="preferences_notifications_strategy_category_fast_mode_title">高速モードを使用する</string>
     <string name="preferences_notifications_strategy_category_fast_mode_summary">Googleの通知サーバーを使用して、新しいメッセージが確実かつ即座に通知されます。</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">名前を変更する</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">デバイスのリンクを解除する</string>
     <string name="dialog_seed_title">あなたのリカバリーフレーズ</string>
-    <string name="dialog_seed_explanation">これはあなたのリカバリーフレーズです。これにより、Session ID を新しいデバイスに復元または移行できます。</string>
+    <string name="dialog_seed_explanation">復元フレーズを使用してアカウントを復元したり、デバイスをリンクしたりできます。</string>
     <string name="dialog_clear_all_data_title">すべてのデータを消去する</string>
     <string name="dialog_clear_all_data_explanation">これにより、メッセージ、Session、連絡先が完全に削除されます。</string>
     <string name="dialog_clear_all_data_network_explanation">この端末のみを消去するか、アカウント全体を削除しますか？</string>
+    <string name="dialog_clear_all_data_message">これにより、メッセージ、セッション、連絡先が完全に削除されます。このデバイスのみを消去するか、アカウント全体を削除しますか？</string>
+    <string name="dialog_clear_all_data_clear_device_only">端末のみ消去</string>
+    <string name="dialog_clear_all_data_clear_device_and_network">端末とネットワークを消去</string>
+    <string name="dialog_clear_all_data_clear_device_and_network_confirmation">ネットワークからデータを削除してもよろしいですか？ 続行すると、メッセージや連絡先を復元することはできません。</string>
+    <string name="dialog_clear_all_data_clear">消去</string>
     <string name="dialog_clear_all_data_local_only">削除のみ</string>
     <string name="dialog_clear_all_data_clear_network">アカウント全体</string>
     <string name="activity_qr_code_title">QR コード</string>
@@ -646,6 +714,22 @@
     <string name="activity_backup_restore_title">バックアップを復元する</string>
     <string name="activity_backup_restore_select_file">ファイルを選択してください</string>
     <string name="activity_backup_restore_explanation_1">バックアップファイルを選択し、作成したパスフレーズを入力してください。</string>
+    <string name="activity_backup_restore_passphrase">30桁のパスフレーズ</string>
+    <string name="activity_link_device_skip_prompt">しばらく時間がかかりますが、スキップしますか?</string>
+    <string name="activity_link_device_link_device">デバイスをリンクする</string>
+    <string name="activity_link_device_recovery_phrase">リカバリーフレーズ</string>
+    <string name="activity_link_device_scan_qr_code">QR コードをスキャンする</string>
+    <string name="activity_link_device_qr_message">QRコードを表示するには、他のデバイスから「設定→リカバリーフレーズ」へ移動してください。</string>
+    <string name="activity_join_public_chat_join_rooms">または、以下のグループに参加する…</string>
+    <string name="activity_pn_mode_message_notifications">メッセージ通知</string>
+    <string name="activity_pn_mode_explanation">Sessionが新しいメッセージを通知する方法は2つあります。</string>
+    <string name="activity_pn_mode_fast_mode">高速モード</string>
+    <string name="activity_pn_mode_slow_mode">低速モード</string>
+    <string name="activity_pn_mode_fast_mode_explanation">Googleの通知サーバーを使用して、新しいメッセージが確実かつ即座に通知されます。</string>
+    <string name="activity_pn_mode_slow_mode_explanation">Sessionは時々バックグラウンドで新しいメッセージの受信をチェックします。</string>
+    <string name="fragment_recovery_phrase_title">リカバリーフレーズ</string>
+    <string name="activity_prompt_passphrase_session_locked">Sessionはロックされました</string>
+    <string name="activity_prompt_passphrase_tap_to_unlock">タッチしてロック解錠</string>
     <string name="fragment_user_details_bottom_sheet_edit_text_hint">ニックネームを入力してください。</string>
     <string name="invalid_public_key">無効な公開キー</string>
     <string name="document">文書</string>
@@ -656,8 +740,140 @@
     <string name="dialog_open_url_title">URLを開きますか？</string>
     <string name="dialog_open_url_explanation">%sを本当に開いてもよろしいですか？</string>
     <string name="open">開く</string>
+    <string name="copy_url">URLをコピー</string>
     <string name="dialog_link_preview_title">リンクのプレビューを有効にしますか？</string>
     <string name="dialog_link_preview_explanation">リンクのプレビューを有効すると、あなたが送受信するURLのプレビューが表示されます。これは便利ですが、プレビューを作成するのにSessionはそのウェブサイトに接続する必要があります。Sessionの設定から、リンクのプレビューをいつでも無効にできます。</string>
     <string name="dialog_link_preview_enable_button_title">有効にする</string>
     <string name="dialog_download_title">%s を信頼する</string>
+    <string name="dialog_download_explanation">%s が送信したメディアをダウンロードしてもよろしいですか？</string>
+    <string name="dialog_download_button_title">ダウンロード</string>
+    <string name="activity_conversation_blocked_banner_text">%s はブロックされています。ブロックを解除しますか？</string>
+    <string name="activity_conversation_block_user">ユーザーをブロック</string>
+    <string name="activity_conversation_attachment_prep_failed">添付ファイルの作成に失敗しました。</string>
+    <string name="media">メディア</string>
+    <string name="UntrustedAttachmentView_download_attachment">タップして%sをダウンロード</string>
+    <string name="message_details_header__error">エラー</string>
+    <string name="dialog_send_seed_title">警告</string>
+    <string name="dialog_send_seed_explanation">これはあなたの復元フレーズです。もし誰かに送信すると、あなたのアカウントにフルアクセスできます。</string>
+    <string name="dialog_send_seed_send_button_title">送信</string>
+    <string name="notify_type_all">すべて</string>
+    <string name="notify_type_mentions">あなた宛て</string>
+    <string name="deleted_message">このメッセージは削除されました</string>
+    <string name="delete_message_for_me">自分の分だけ削除</string>
+    <string name="delete_message_for_everyone">全員分を削除</string>
+    <string name="delete_message_for_me_and_recipient">自分と%sの分を削除</string>
+    <string name="activity_settings_survey_feedback">フィードバック/アンケート</string>
+    <string name="activity_settings_support">デバッグ ログ</string>
+    <string name="dialog_share_logs_title">ログを共有</string>
+    <string name="dialog_share_logs_explanation">アプリケーションログをエクスポートしてトラブルシューティングのために共有しますか？</string>
+    <string name="conversation_pin">ピン留め</string>
+    <string name="conversation_unpin">ピン留めを外す</string>
+    <string name="mark_all_as_read">すべて既読にする</string>
+    <string name="global_search_contacts_groups">連絡先とグループ</string>
+    <string name="global_search_messages">メッセージ</string>
+    <string name="activity_message_requests_title">メッセージリクエスト</string>
+    <string name="message_requests_send_notice">このユーザーにメッセージを送信すると、自動的にメッセージのリクエストが受け付けられ、あなたのセッションIDが公開されます。</string>
+    <string name="accept">許可</string>
+    <string name="decline">拒否</string>
+    <string name="message_requests_clear_all">すべて消去</string>
+    <string name="message_requests_decline_message">こちらの友達リクエストを本当に拒否しますか？</string>
+    <string name="message_requests_block_message">本当にこのリクエストを削除しますか？</string>
+    <string name="message_requests_deleted">メッセージリクエストが削除されました</string>
+    <string name="message_requests_clear_all_message">本当に全てのメッセージリクエストを消去しますか？</string>
+    <string name="message_requests_cleared">メッセージリクエストが削除されました</string>
+    <string name="message_requests_accepted">リクエストが承認されました</string>
+    <string name="message_requests_pending">メッセージ・リクエストは現在承認待ちです.</string>
+    <string name="message_request_empty_state_message">保留中のメッセージ・リクエストはありません</string>
+    <string name="NewConversationButton_SessionTooltip">直接メッセージ</string>
+    <string name="NewConversationButton_ClosedGroupTooltip">非公開グループ</string>
+    <string name="NewConversationButton_OpenGroupTooltip">公開グループ</string>
+    <string name="message_requests_notification">新しいリクエストがあります</string>
+    <string name="CallNotificationBuilder_connecting">接続しています...</string>
+    <string name="NotificationBarManager__incoming_signal_call">着信</string>
+    <string name="NotificationBarManager__deny_call">着信拒否</string>
+    <string name="NotificationBarManager__answer_call">応答</string>
+    <string name="NotificationBarManager_call_in_progress">通話中</string>
+    <string name="NotificationBarManager__cancel_call">通話をキャンセルする</string>
+    <string name="NotificationBarManager__establishing_signal_call">通話を開始しています</string>
+    <string name="NotificationBarManager__end_call">通話を終了</string>
+    <string name="accept_call">通話を許可</string>
+    <string name="decline_call">通話拒否</string>
+    <string name="preferences__voice_video_calls">音声とビデオ通話</string>
+    <string name="preferences__calls_beta">通話 (ベータ版)</string>
+    <string name="preferences__allow_access_voice_video">他のユーザーとの音声通話やビデオ通話を有効にします。</string>
+    <string name="dialog_voice_video_title">音声とビデオ通話</string>
+    <string name="dialog_voice_video_message">現在の音声/ビデオ通話の実装では、あなたのIPアドレスがOxen Foundationサーバー及び通話/着信先に表示されます。</string>
+    <string name="CallNotificationBuilder_first_call_title">不在着信</string>
+    <string name="CallNotificationBuilder_first_call_message">プライバシー設定で「音声通話とビデオ通話」を許可していないため、着信できませんでした。</string>
+    <string name="WebRtcCallActivity_Session_Call">Session通話</string>
+    <string name="WebRtcCallActivity_Reconnecting">再接続しています...</string>
+    <string name="CallNotificationBuilder_system_notification_title">通知</string>
+    <string name="CallNotificationBuilder_system_notification_message">通知を無効にすると、通話を受信できなくなります。セッションの通知設定に移動しますか？</string>
+    <string name="dismiss">中止</string>
+    <string name="activity_settings_conversations_button_title">会話</string>
+    <string name="activity_settings_message_appearance_button_title">デザイン設定</string>
+    <string name="activity_settings_help_button">ヘルプ</string>
+    <string name="activity_appearance_themes_category">テーマ</string>
+    <string name="ocean_dark_theme_name">オーシャンダーク</string>
+    <string name="classic_dark_theme_name">クラシック ダーク</string>
+    <string name="ocean_light_theme_name">オーシャンライト</string>
+    <string name="classic_light_theme_name">クラシック ライト</string>
+    <string name="activity_appearance_primary_color_category">プライマリーカラー</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__this_message">このメッセージ</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__recently_used">最近使用したもの</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__smileys_and_people">スマイル &amp; 人</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__nature" comment="Heading for an emoji list's category">自然</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__food" comment="Heading for an emoji list's category">食べ物</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__activities">アクティビティ</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__places" comment="Heading for an emoji list's category">場所</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__objects">オブジェクト</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__symbols">記号</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__flags">フラグ</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__emoticons">顔文字</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__no_results_found">検索結果がありません</string>
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <string name="ReactionsBottomSheetDialogFragment_all">すべて &#183; %1$d</string>
+    <!-- ReactionsConversationView -->
+    <string name="ReactionsConversationView_plus">+%1$d</string>
+    <!-- ReactionsRecipientAdapter -->
+    <string name="ReactionsRecipientAdapter_you">あなた</string>
+    <string name="reaction_notification">%1$s がメッセージ %2$s に反応</string>
+    <string name="ReactionsConversationView_show_less">最小化</string>
+    <string name="KeyboardPagerFragment_search_emoji">絵文字を検索</string>
+    <string name="KeyboardPagerfragment_back_to_emoji">絵文字へ戻る</string>
+    <string name="KeyboardPagerfragment_clear_search_entry">検索エントリをクリア</string>
+    <string name="activity_appearance_follow_system_category">オートダークモード</string>
+    <string name="activity_appearance_follow_system_explanation">システム設定に合わせる</string>
+    <string name="go_to_device_notification_settings">端末の通知設定に移動</string>
+    <string name="blocked_contacts_title">ブロックされた連絡先</string>
+    <string name="blocked_contacts_empty_state">ブロックされた連絡先がありません。</string>
+    <string name="Unblock_dialog__title_single">%sのブロックを解除</string>
+    <string name="Unblock_dialog__title_multiple">ユーザーのブロックを解除</string>
+    <string name="Unblock_dialog__message">本当に %s のブロックを解除しますか？</string>
+    <plurals name="Unblock_dialog__message_multiple_overflow">
+        <item quantity="other">%dとその他</item>
+    </plurals>
+    <plurals name="ReactionsRecipientAdapter_other_reactors">
+        <item quantity="other">%1$d が %2$s をこのメッセージに反応しました</item>
+    </plurals>
+    <string name="dialog_new_conversation_title">新しい会話</string>
+    <string name="dialog_new_message_title">新着メッセージ</string>
+    <string name="activity_create_group_title">グループを作成</string>
+    <string name="dialog_join_community_title">コミュニティに参加する</string>
+    <string name="new_conversation_contacts_title">連絡先</string>
+    <string name="new_conversation_unknown_contacts_section_title">不明</string>
+    <string name="fragment_enter_public_key_prompt">新しい会話を始めるには、セッションIDを入力するか、セッションIDを共有します。</string>
+    <string name="activity_create_group_create_button_title">作成する</string>
+    <string name="search_contacts_hint">連絡先を検索</string>
+    <string name="activity_join_public_chat_enter_community_url_tab_title">コミュニティ URL</string>
+    <string name="fragment_enter_community_url_edit_text_hint">コミュニティ URL を入力してください</string>
+    <string name="fragment_enter_community_url_join_button_title">参加</string>
+    <string name="new_conversation_dialog_back_button_content_description">戻る</string>
+    <string name="new_conversation_dialog_close_button_content_description">ダイアログを閉じる</string>
+    <string name="ErrorNotifier_migration">データベースの更新に失敗しました</string>
+    <string name="ErrorNotifier_migration_downgrade">エラーを報告するにはサポートに連絡してください。</string>
+    <string name="delivery_status_sending">送信中</string>
+    <string name="delivery_status_read">既読</string>
+    <string name="delivery_status_sent">送信しました</string>
+    <string name="delivery_status_failed">送信失敗しました</string>
 </resources>

@@ -1,16 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="yes">Da</string>
+    <string name="no">Ne</string>
+    <string name="delete">Obriši</string>
+    <string name="ban">Izbačaj</string>
+    <string name="please_wait">Molimo pričekajte…</string>
+    <string name="save">Spremi</string>
+    <string name="note_to_self">Bilješka </string>
+    <string name="version_s">Verzija %s</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
+    <string name="AbstractNotificationBuilder_new_message">Nova poruka</string>
     <!-- AlbumThumbnailView -->
+    <string name="AlbumThumbnailView_plus">\+%d</string>
     <!-- ApplicationPreferencesActivity -->
+    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
+        <item quantity="one">Broj poruka u razgovoru</item>
+        <item quantity="few">%1$d poruka u %2$s razgovora</item>
+        <item quantity="other">%1$d poruka u %2$s razgovora</item>
+    </plurals>
+    <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Pobrisati sve stare poruke?</string>
+    <string name="ApplicationPreferencesActivity_delete">Obriši</string>
+    <string name="ApplicationPreferencesActivity_On">Omogući</string>
+    <string name="ApplicationPreferencesActivity_Off">Onemogući</string>
     <!-- DraftDatabase -->
+    <string name="DraftDatabase_Draft_image_snippet">(slika)</string>
+    <string name="DraftDatabase_Draft_audio_snippet">(zvuk)</string>
+    <string name="DraftDatabase_Draft_video_snippet">(video)</string>
+    <string name="DraftDatabase_Draft_quote_snippet">(odgovori)</string>
     <!-- AttachmentManager -->
+    <string name="AttachmentManager_cant_open_media_selection">Ne mogu pronaći aplikaciju za odabrani medij.</string>
+    <string name="AttachmentManager_signal_requires_the_external_storage_permission_in_order_to_attach_photos_videos_or_audio">Aplikacija \"Session\" zahtijeva pristup memoriji da bi mogla priložiti slike, video uratke, zvučne zapise, no sada je ta opcija onemogućena. Molimo vas da u postavkama aplikacije odaberete \"Dopuštenja\" --> \"Pristup Memoriji\" i omogućite tu opciju.</string>
+    <string name="AttachmentManager_signal_requires_the_camera_permission_in_order_to_take_photos_but_it_has_been_permanently_denied">Aplikacija \"Session\" zahtijeva pristup kameri da bi mogla fotografirati, no to je sada onemogućeno.
+Molimo vas da u postavkama aplikacije odaberete \"Dopuštenja\" --> \"Fotoaparat\" i omogućite tu opciju.</string>
     <!-- AudioSlidePlayer -->
+    <string name="AudioSlidePlayer_error_playing_audio">Pogreška pri reprodukciji zvuka!</string>
     <!-- BucketedThreadMedia -->
+    <string name="BucketedThreadMedia_Today">Danas</string>
+    <string name="BucketedThreadMedia_Yesterday">Jučer</string>
+    <string name="BucketedThreadMedia_This_week">Ovog tjedna</string>
+    <string name="BucketedThreadMedia_This_month">Ovog mjeseca</string>
     <!-- CommunicationActions -->
+    <string name="CommunicationActions_no_browser_found">Web preglednik nije pronađen.</string>
     <!-- ContactsCursorLoader -->
+    <string name="ContactsCursorLoader_groups">Grupe</string>
     <!-- ConversationItem -->
+    <string name="ConversationItem_copied_text">Kopirano %s</string>
+    <string name="ConversationItem_read_more">Pročitaj više</string>
+    <string name="ConversationItem_download_more">&#160; Preuzmi više</string>
     <!-- ConversationActivity -->
+    <string name="ConversationActivity_add_attachment">Dodaj privitak</string>
+    <string name="ConversationActivity_message">Poruka</string>
+    <string name="ConversationActivity_member_count">%1$d članova</string>
+    <string name="ConversationActivity_invalid_recipient">Neispravan primatelj!</string>
+    <string name="ConversationActivity_added_to_home_screen">Dodano na početni zaslon</string>
+    <string name="ConversationActivity_leave_group">Napusti grupu?</string>
+    <string name="ConversationActivity_are_you_sure_you_want_to_leave_this_group">Jeste li sigurni da želite napustiti ovu grupu?</string>
+    <string name="ConversationActivity_error_leaving_group">Pogreška pri napuštanju grupe</string>
+    <string name="ConversationActivity_unblock_this_contact_question">Odblokiraj ovaj kontakt?</string>
+    <string name="ConversationActivity_unblock">Odblokiraj</string>
+    <string name="ConversationActivity_invite_to_open_group">Dodaj članove</string>
+    <string name="ConversationActivity_search_position">%1$d od %2$d</string>
     <!-- ConversationFragment -->
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
@@ -22,7 +96,9 @@
     <!-- CropImageActivity -->
     <!-- InputPanel -->
     <!-- LongMessageActivity -->
+    <string name="LongMessageActivity_your_message">Tvoja poruka</string>
     <!-- MediaOverviewActivity -->
+    <string name="MediaOverviewActivity_Media">Medija</string>
     <!-- NotificationMmsMessageRecord -->
     <!-- MediaPickerActivity -->
     <!-- MediaSendActivity -->
@@ -92,4 +168,7 @@
     <!-- Conversation activity -->
     <!-- Session -->
     <!-- Next round of translation -->
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
 </resources>

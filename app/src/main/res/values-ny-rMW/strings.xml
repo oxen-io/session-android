@@ -4,6 +4,31 @@
     <string name="no">Mana</string>
     <string name="delete">Pichana</string>
     <string name="save">Allichina</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">Mushuk chaski</string>
     <!-- AlbumThumbnailView -->
@@ -323,9 +348,6 @@ ranti pakalla yupaykunamanta</string>
     <string name="arrays__settings_default">Ña charishka configuración</string>
     <string name="arrays__enabled">Paskashka</string>
     <string name="arrays__disabled">Mana paskashka</string>
-    <string name="arrays__name_and_message">Shuti, chaskipash</string>
-    <string name="arrays__name_only">Shutilla</string>
-    <string name="arrays__no_name_or_message">Chaski, shutipash mana tiyanchu</string>
     <string name="arrays__images">Shuyukuna</string>
     <string name="arrays__audio">Uyariy</string>
     <string name="arrays__video">Shuyurikuchik</string>
@@ -343,7 +365,6 @@ ranti pakalla yupaykunamanta</string>
         <item quantity="other">%dpachakuna</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__pref_enter_sends_title">Yaykuna tecla hillaywan kachapay.</string>
     <string name="preferences__screen_security">Rikuripa pakallayachina</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">Antanikimanta shuyu llukchinakunata pakallayachina, chayralla aplicación hillaykunapi shinallata kay aplicación ukupipash.</string>
     <string name="preferences__notifications">Willachikuna</string>
@@ -378,7 +399,6 @@ ranti pakalla yupaykunamanta</string>
     <string name="preferences__scan_through_all_conversations_and_enforce_conversation_length_limits">Tukuy rimarikuna riksishpa chaykamanlla rimana.</string>
     <string name="preferences__default">Ña rurashka </string>
     <string name="preferences__incognito_keyboard">Killkana hillay pakallaku</string>
-    <string name="preferences__read_receipts">Killkakatinata willachik </string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Killkana antata mañay, paypaklla yachakuyta anchuchinkapak</string>
     <string name="preferences__light_theme">Punchalla</string>
     <string name="preferences__dark_theme">Yanalla</string>
@@ -451,11 +471,12 @@ ranti pakalla yupaykunamanta</string>
     <string name="LocalBackupJob_creating_backup">Chayshinalla wakaychishkakunata wiñachikun</string>
     <string name="ProgressPreference_d_messages_so_far">Kunankaman %d chaskikuna</string>
     <string name="BackupUtil_never">Nimamanta</string>
-    <string name="preferences_app_protection__screen_lock">Pakallayachina</string>
-    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Session ukuman ama yaykuchun wichapay Androidpa pakayachinawan, mana kashpaka maki ruka unanchawan.</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">Pakallayachinkapak pachata akllapay</string>
     <string name="AppProtectionPreferenceFragment_none">Nimaykan</string>
     <!-- Conversation activity -->
     <!-- Session -->
     <!-- Next round of translation -->
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
 </resources>

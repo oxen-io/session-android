@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">Taldea utzi duzu.</string>
+    <string name="MessageRecord_you_created_a_new_group">Talde berri bat sortu duzu.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s erabiltzaileak taldera gehitu zaitu.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">Taldearen izena %1$s(e)ra aldatu duzu</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s(e)k taldea %2$s(e)ra berrizendatu du.</string>
+    <string name="MessageRecord_you_added_s_to_the_group">%1$s taldera gehitu duzu.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s(e)k %2$s taldera gehitu du.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">%1$s taldetik bota duzu.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s(e)k %2$s taldetik bota du.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">Taldetik bota zaituzte.</string>
+    <string name="MessageRecord_you">Zuk</string>
+    <string name="MessageRecord_s_called_you">%s(e)k deitu zaitu</string>
+    <string name="MessageRecord_called_s">%s deitu duzu</string>
+    <string name="MessageRecord_missed_call_from">%s(r)en dei galdua</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">Mezu desagerkorrak desaktibatu dituzu.</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">%1$s(e)k mezu desagerkorrak desaktibatu ditu.</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">Mezu desagerkorren denboragailua %1$s(e)ra ezarri duzu.</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s(e)k mezu desagerkorren denboragailua %2$s-ra ezarri du</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$s(e)k bistaragailu argazki bat egin du.</string>
+    <string name="MessageRecord_media_saved_by_s">%1$s(e)k medja gorde du.</string>
+    <!-- expiration -->
+    <string name="expiration_off">Itzalita</string>
+    <plurals name="expiration_seconds">
+        <item quantity="one">segundu %d</item>
+        <item quantity="other">%d segundu</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%ds</string>
+    <plurals name="expiration_minutes">
+        <item quantity="one">minutu %d</item>
+        <item quantity="other">%d minutu</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">%dm</string>
+    <plurals name="expiration_hours">
+        <item quantity="one">ordu %d</item>
+        <item quantity="other">%d ordu</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">%dh</string>
+    <plurals name="expiration_days">
+        <item quantity="one">egun %d</item>
+        <item quantity="other">%d egun</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">%de</string>
+    <plurals name="expiration_weeks">
+        <item quantity="one">aste %d</item>
+        <item quantity="other">%d aste</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">%da</string>
+    <string name="ConversationItem_group_action_left">%1$s(e)k taldea utzi du.</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">Izenik gabeko taldea</string>
+</resources>

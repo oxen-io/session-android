@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">Вы выйшлі з групы.</string>
+    <string name="MessageRecord_you_created_a_new_group">Вы стварылі новую групу.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s дадаў(ла) Вас да групы.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">Вы перайменавалі групу на %1$s</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s перайменаваў(ла) групу на: %2$s</string>
+    <string name="MessageRecord_you_added_s_to_the_group">Вы дадалі %1$s да групы.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s дадаў(ла) %2$s да групы.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">Вы выдалілі %1$s з групы.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s выдаліў(ла) %2$s з групы.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">Вас выдалілі з групы.</string>
+    <string name="MessageRecord_you">Вы</string>
+    <string name="MessageRecord_s_called_you">%s тэлефанаваў(ла) Вам</string>
+    <string name="MessageRecord_called_s">Тэлефанавалі %s</string>
+    <string name="MessageRecord_missed_call_from">Прапушчаны выклік ад %s</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">Вы адключылі знікальныя паведамленні.</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">%1$s адключыў(ла) знікальныя паведамленні.</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">Вы паставілі таймер знікнення паведамлення на %1$s</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s паставіў(ла) таймер знікнення паведамлення на %2$s</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$s зрабіў(ла) здымак экрану.</string>
+    <string name="MessageRecord_media_saved_by_s">Медыя захавана %1$s.</string>
+    <!-- expiration -->
+    <string name="expiration_off">Адключыць</string>
+    <plurals name="expiration_seconds">
+        <item quantity="one">%d секунда</item>
+        <item quantity="few">%d секунды</item>
+        <item quantity="many">%d секундаў</item>
+        <item quantity="other">%d секундаў</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%d сек</string>
+    <plurals name="expiration_minutes">
+        <item quantity="one">%d хвіліна</item>
+        <item quantity="few">%d хвіліны</item>
+        <item quantity="many">%d хвілін</item>
+        <item quantity="other">%d хвілін</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">%d хв</string>
+    <plurals name="expiration_hours">
+        <item quantity="one">%d гадзіна</item>
+        <item quantity="few">%d гадзіны</item>
+        <item quantity="many">%d гадзін</item>
+        <item quantity="other">%d гадзін</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">%d г</string>
+    <plurals name="expiration_days">
+        <item quantity="one">%d дзень</item>
+        <item quantity="few">%d дні</item>
+        <item quantity="many">%d дзён</item>
+        <item quantity="other">%d дзён</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">%d д</string>
+    <plurals name="expiration_weeks">
+        <item quantity="one">%d тыдзень</item>
+        <item quantity="few">%d тыдні</item>
+        <item quantity="many">%d тыдняў</item>
+        <item quantity="other">%d тыдняў</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">%d т</string>
+    <string name="ConversationItem_group_action_left">%1$s пакінуў(ла) групу.</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">Група без назвы</string>
+</resources>

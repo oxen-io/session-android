@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">Sie haben diese Gruppe verlassen.</string>
+    <string name="MessageRecord_you_created_a_new_group">Sie haben eine neue Gruppe erstellt.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s fügte Sie dieser Gruppe hinzu.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">Sie haben die Gruppe in %1$s umbenannt</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s hat die Gruppe in %2$s umbenannt</string>
+    <string name="MessageRecord_you_added_s_to_the_group">Sie fügten %1$s dieser Gruppe hinzu.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s fügte %2$s dieser Gruppe hinzu.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">Sie entfernten %1$s aus dieser Gruppe.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s entfernte %2$s aus dieser Gruppe.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">Sie wurden aus dieser Gruppe entfernt.</string>
+    <string name="MessageRecord_you">Sie</string>
+    <string name="MessageRecord_s_called_you">%s hat angerufen</string>
+    <string name="MessageRecord_called_s">%s angerufen</string>
+    <string name="MessageRecord_missed_call_from">Verpasster Anruf von %s</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">Verschwindende Nachrichten wurden deaktiviert.</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">%1$s hat verschwindende Nachrichten deaktiviert.</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">Sie haben den verschwindenden Nachrichten-Timer auf %1$s gesetzt</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s hat den verschwindenden Nachrichten-Timer auf %2$s gesetzt</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$s hat einen Screenshot gemacht.</string>
+    <string name="MessageRecord_media_saved_by_s">Medien gespeichert von %1$s.</string>
+    <!-- expiration -->
+    <string name="expiration_off">Aus</string>
+    <plurals name="expiration_seconds">
+        <item quantity="one">%d Sekunde</item>
+        <item quantity="other">%d Sekunden</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%dSek.</string>
+    <plurals name="expiration_minutes">
+        <item quantity="one">%d Minute</item>
+        <item quantity="other">%d Minuten</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">%dMin.</string>
+    <plurals name="expiration_hours">
+        <item quantity="one">%d Stunde</item>
+        <item quantity="other">%d Stunden</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">%dStd.</string>
+    <plurals name="expiration_days">
+        <item quantity="one">%d Tag</item>
+        <item quantity="other">%d Tage</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">%dT.</string>
+    <plurals name="expiration_weeks">
+        <item quantity="one">%d Woche</item>
+        <item quantity="other">%d Wochen</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">%d Wo.</string>
+    <string name="ConversationItem_group_action_left">%1$s hat die Gruppe verlassen.</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">Unbenannte Gruppe</string>
+</resources>

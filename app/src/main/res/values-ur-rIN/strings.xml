@@ -1,16 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Session</string>
     <string name="yes">جی ہاں</string>
     <string name="no">نہیں</string>
     <string name="delete">حذف کریں</string>
     <string name="ban">پابندی</string>
+    <string name="please_wait">براہ کرم انتظار کریں…</string>
     <string name="save">محفوظ کریں</string>
     <string name="note_to_self">خود کو نوٹ کریں</string>
     <string name="version_s">ورژن %s</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">نیا پیغام</string>
     <!-- AlbumThumbnailView -->
+    <string name="AlbumThumbnailView_plus">\+%d</string>
     <!-- ApplicationPreferencesActivity -->
     <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">تمام پرانے پیغامات کو ابھی حذف کریں?</string>
     <string name="ApplicationPreferencesActivity_delete">حذف کریں</string>
@@ -56,6 +82,19 @@
     <string name="ConversationActivity_member_count">%1$d اراکین</string>
     <string name="ConversationActivity_open_group_guidelines">کمیونٹی ہدایات</string>
     <string name="ConversationActivity_invalid_recipient">غلط وصول کنندہ!</string>
+    <string name="ConversationActivity_added_to_home_screen">ہوم اسکرین میں شامل کر دیا گیا۔</string>
+    <string name="ConversationActivity_leave_group">گروپ چھوڑیں؟</string>
+    <string name="ConversationActivity_are_you_sure_you_want_to_leave_this_group">کیا آپ واقعی اس گروپ کو چھوڑنا چاہتے ہیں؟</string>
+    <string name="ConversationActivity_error_leaving_group">گروپ چھوڑنے میں خرابی</string>
+    <string name="ConversationActivity_unblock_this_contact_question">اس رابطے کو غیر مسدود کریں؟</string>
+    <string name="ConversationActivity_you_will_once_again_be_able_to_receive_messages_and_calls_from_this_contact">آپ ایک بار پھر اس رابطہ سے پیغامات اور کالز وصول کر سکیں گے۔</string>
+    <string name="ConversationActivity_unblock">ان بلاک</string>
+    <string name="ConversationActivity_attachment_exceeds_size_limits">آپ جس قسم کا پیغام بھیج رہے ہیں اس کے لیے منسلکہ سائز کی حد سے زیادہ ہے۔</string>
+    <string name="ConversationActivity_unable_to_record_audio">آڈیو ریکارڈ کرنے سے قاصر!</string>
+    <string name="ConversationActivity_there_is_no_app_available_to_handle_this_link_on_your_device">آپ کی دوائس پر اس لنک کو سنبھالنے کرنے کے لیے کوئی ایپ دستیاب نہیں ہے۔</string>
+    <string name="ConversationActivity_invite_to_open_group">ممبرز کو شامل کریں۔</string>
+    <string name="ConversationActivity_to_send_audio_messages_allow_signal_access_to_your_microphone">آڈیو پیغامات بھیجنے کے لیے سیشن کو مائیکروفون تک رسائی درکار ہے۔</string>
+    <string name="ConversationActivity_signal_requires_the_microphone_permission_in_order_to_send_audio_messages">سیشن کو آڈیو پیغامات بھیجنے کے لیے مائیکروفون تک رسائی درکار ہے، لیکن اسے مستقل طور پر مسترد کر دیا گیا ہے۔ براہ کرم ایپ کی سیٹنگ کو جاری رکھیں، \" پرمشنز\" کو منتخب کریں، اور \"مائیکروفون\" کو فعال کریں۔</string>
     <!-- ConversationFragment -->
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
@@ -157,4 +196,7 @@
     <!-- Conversation activity -->
     <!-- Session -->
     <!-- Next round of translation -->
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
 </resources>

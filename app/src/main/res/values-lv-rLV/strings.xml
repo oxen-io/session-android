@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Session</string>
     <string name="yes">Jā</string>
     <string name="no">Nē</string>
     <string name="delete">Dzēst</string>
@@ -8,6 +7,31 @@
     <string name="save">Saglabāt</string>
     <string name="note_to_self">Piezīme sev</string>
     <string name="version_s">Versija %s</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">Jauns ziņojums</string>
     <!-- AlbumThumbnailView -->
@@ -39,14 +63,24 @@
     <string name="BucketedThreadMedia_This_week">Šonedēļ</string>
     <string name="BucketedThreadMedia_This_month">Šomēnes</string>
     <!-- CommunicationActions -->
+    <string name="CommunicationActions_no_browser_found">Nav atrasta parlūkprogramma.</string>
     <!-- ContactsCursorLoader -->
     <string name="ContactsCursorLoader_groups">Grupas</string>
     <!-- ConversationItem -->
+    <string name="ConversationItem_error_not_delivered">Nosūtīt neizdevās, uzspiediet informācijai</string>
+    <string name="ConversationItem_received_key_exchange_message_tap_to_process">Saņemta atslēgu apmaiņas ziņa, uzspiediet, lai apstrādāt.</string>
+    <string name="ConversationItem_unable_to_open_media">Nevar atrast aplikāciju, kura atver šo failu.</string>
+    <string name="ConversationItem_copied_text">Nokopēts %s</string>
     <string name="ConversationItem_read_more">Rādīt vairāk</string>
+    <string name="ConversationItem_download_more">&#160; Nolādēt vairāk</string>
     <!-- ConversationActivity -->
     <string name="ConversationActivity_add_attachment">Pievienot pielikumu</string>
     <string name="ConversationActivity_select_contact_info">Izvēlieties kontaktinformāciju</string>
+    <string name="ConversationActivity_sorry_there_was_an_error_setting_your_attachment">Atvaino, ir problēma iestādot pielikumu.</string>
     <string name="ConversationActivity_message">Paziņojums</string>
+    <string name="ConversationActivity_compose">Rakstīt</string>
+    <string name="ConversationActivity_muted_until_date">Apklusināts līdz %1$s</string>
+    <string name="ConversationActivity_muted_forever">Apklusināts</string>
     <string name="ConversationActivity_member_count">%1$d biedri</string>
     <string name="ConversationActivity_open_group_guidelines">Kopienas vadlīnijas</string>
     <string name="ConversationActivity_invalid_recipient">Nederīgs adresāts!</string>
@@ -64,9 +98,11 @@
     <string name="ConversationActivity_to_send_audio_messages_allow_signal_access_to_your_microphone">Sesijai ir nepieciešama piekļuve mikrofonam, lai nosūtītu balss ziņas.</string>
     <string name="ConversationActivity_signal_requires_the_microphone_permission_in_order_to_send_audio_messages">Sesijai ir nepieciešama atļauja piekļūt mikrofonam, lai sūtītu balss ziņas, bet tā ir pastāvīgi aizliegta. Lūdzu, ejiet uz programmu iestatījumiem, izvēlieties “Atļaujas” un iespējojiet “Mikrofons”.</string>
     <string name="ConversationActivity_to_capture_photos_and_video_allow_signal_access_to_the_camera">Sesijai nepieciešama piekļuve kamerai, lai uzņemtu attēlus un video.</string>
+    <string name="ConversationActivity_to_send_photos_and_video_allow_signal_access_to_storage">Session vajag pieeju failiem, lai sūtītu atēlus un video.</string>
     <string name="ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video">Sesijai ir nepieciešama atļauja piekļūt kamerai, lai uzņemtu attēlus un video, bet tā ir pastāvīgi aizliegta. Lūdzu, ejiet uz programmu iestatījumiem, izvēlieties “Atļaujas” un iespējojiet “Kamera”.</string>
     <string name="ConversationActivity_signal_needs_camera_permissions_to_take_photos_or_video">Sesijai nepieciešama piekļuve kamerai, lai uzņemtu attēlus un video.</string>
     <string name="ConversationActivity_search_position">%1$d no %2$d</string>
+    <string name="ConversationActivity_call_title">Nepieciešama zvanu atļauja</string>
     <!-- ConversationFragment -->
     <plurals name="ConversationFragment_delete_selected_messages">
         <item quantity="zero">Dzēst izvēlēto ziņu?</item>
@@ -83,9 +119,12 @@
     <!-- CreateProfileActivity -->
     <string name="CreateProfileActivity_profile_photo">Profila bilde</string>
     <!-- CustomDefaultPreference -->
+    <string name="CustomDefaultPreference_using_custom">Lieto pielāgoto: %s</string>
+    <string name="CustomDefaultPreference_using_default">Lieto noklusējuma: %s</string>
     <string name="CustomDefaultPreference_none">Neviens</string>
     <!-- DateUtils -->
     <string name="DateUtils_just_now">Tagad</string>
+    <string name="DateUtils_minutes_ago">%d minūtes</string>
     <string name="DateUtils_today">Šodien</string>
     <string name="DateUtils_yesterday">Vakar</string>
     <!-- DeviceListItem -->
@@ -93,14 +132,18 @@
     <!-- DocumentView -->
     <string name="DocumentView_unknown_file">Nezināms fails</string>
     <!-- GiphyActivity -->
+    <string name="GiphyActivity_error_while_retrieving_full_resolution_gif">Kļuda iegūt pilna izmēra GIF</string>
     <!-- GiphyFragmentPageAdapter -->
     <string name="GiphyFragmentPagerAdapter_gifs">GIFi</string>
     <string name="GiphyFragmentPagerAdapter_stickers">Uzlīmes</string>
     <!-- CropImageActivity -->
     <string name="CropImageActivity_profile_avatar">Attēls</string>
     <!-- InputPanel -->
+    <string name="InputPanel_tap_and_hold_to_record_a_voice_message_release_to_send">Uzspiediet un turiet, lai ierakstītu balss ziņu, atlaidiet, lai nosūtītu</string>
     <!-- LongMessageActivity -->
+    <string name="LongMessageActivity_unable_to_find_message">Neizdevās atrast ziņu</string>
     <string name="LongMessageActivity_message_from_s">Īsziņa no %1$s</string>
+    <string name="LongMessageActivity_your_message">Jūsu ziņa</string>
     <!-- MediaOverviewActivity -->
     <string name="MediaOverviewActivity_Media">Multivide</string>
     <!-- NotificationMmsMessageRecord -->
@@ -251,4 +294,7 @@
     <string name="activity_settings_support">Atkļūdošanas žurnāls</string>
     <string name="conversation_pin">Piespraust</string>
     <string name="conversation_unpin">Atspraust</string>
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
 </resources>

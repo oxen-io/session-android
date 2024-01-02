@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">Vi forlasis la grupon.</string>
+    <string name="MessageRecord_you_created_a_new_group">Vi kreis novan grupon.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s aldonis vin al la grupo.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">Vi renomis la grupon al %1$s</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s renomis la grupon al: %2$s</string>
+    <string name="MessageRecord_you_added_s_to_the_group">Vi aldonis %1$s al la grupo.</string>
+    <!-- expiration -->
+    <!-- RecipientProvider -->
+</resources>

@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Sessie</string>
     <string name="yes">Ja</string>
     <string name="no">Nee</string>
     <string name="delete">Skrap</string>
     <string name="ban">Verbod</string>
+    <string name="please_wait">…</string>
     <string name="save">Stoor</string>
     <string name="note_to_self">Nota aan jouself</string>
     <string name="version_s">Weergawe %s</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">Nuwe boodskap</string>
     <!-- AlbumThumbnailView -->
@@ -133,4 +158,7 @@
     <string name="dialog_ui_mode_option_night">Nag</string>
     <string name="dialog_send_seed_title">Waarskuwing</string>
     <string name="dialog_send_seed_send_button_title">Stuur</string>
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
 </resources>

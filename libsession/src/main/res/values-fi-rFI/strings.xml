@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">Poistuit ryhmästä.</string>
+    <string name="MessageRecord_you_created_a_new_group">Loit uuden ryhmän.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s lisäsi sinut ryhmään.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">Vaihdoit ryhmän nimeksi \"%1$s\"</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s nimesi ryhmän uudelleen: %2$s</string>
+    <string name="MessageRecord_you_added_s_to_the_group">Lisäsit ryhmään käyttäjän %1$s.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s lisäsi ryhmään käyttäjän %2$s.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">Poistit ryhmästä käyttäjän %1$s.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s poisti ryhmästä käyttäjän %2$s.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">Sinut poistettiin ryhmästä.</string>
+    <string name="MessageRecord_you">Sinä</string>
+    <string name="MessageRecord_s_called_you">%s soitti sinulle</string>
+    <string name="MessageRecord_called_s">Soitit yhteystiedolle %s</string>
+    <string name="MessageRecord_missed_call_from">Vastaamaton puhelu yhteystiedolta %s</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">Poistit katoavat viestit käytöstä.</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">%1$s poisti katoavat viestit käytöstä.</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">Asetit viestien katoamisviiveeksi %1$s</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s asetti viestien katoamisviiveeksi %2$s</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$s otti kuvankaappauksen.</string>
+    <string name="MessageRecord_media_saved_by_s">%1$s tallensi median.</string>
+    <!-- expiration -->
+    <string name="expiration_off">Pois käytöstä</string>
+    <plurals name="expiration_seconds">
+        <item quantity="one">%d sekunti</item>
+        <item quantity="other">%d sekuntia</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%d s</string>
+    <plurals name="expiration_minutes">
+        <item quantity="one">%d minuutti</item>
+        <item quantity="other">%d minuuttia</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">%d m</string>
+    <plurals name="expiration_hours">
+        <item quantity="one">%d tunti</item>
+        <item quantity="other">%d tuntia</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">%d t</string>
+    <plurals name="expiration_days">
+        <item quantity="one">%d päivä</item>
+        <item quantity="other">%d päivää</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">%d pv</string>
+    <plurals name="expiration_weeks">
+        <item quantity="one">%d viikko</item>
+        <item quantity="other">%d viikkoa</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">%d vk</string>
+    <string name="ConversationItem_group_action_left">%1$s poistui ryhmästä.</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">Nimetön ryhmä</string>
+</resources>

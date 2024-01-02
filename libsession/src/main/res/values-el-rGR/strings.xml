@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">Αποχωρήσατε από την ομάδα.</string>
+    <string name="MessageRecord_you_created_a_new_group">Δημιουργήσατε μια νέα ομάδα.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s σας πρόσθεσε στην ομάδα.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">Μετονομάσατε την ομάδα σε %1$s</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s μετονόμασε την ομάδα σε: %2$s</string>
+    <string name="MessageRecord_you_added_s_to_the_group">Προσθέσατε %1$s στην ομάδα.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s πρόσθεσε %2$s στην ομάδα.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">Αφαιρέσατε %1$s από την ομάδα.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s αφαίρεσε %2$s από την ομάδα.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">Έχετε αφαιρεθεί από αυτή την ομάδα.</string>
+    <string name="MessageRecord_you">Εσείς</string>
+    <string name="MessageRecord_s_called_you">Είχατε κλήση από %s</string>
+    <string name="MessageRecord_called_s">Καλέσατε %s</string>
+    <string name="MessageRecord_missed_call_from">Αναπάντητη κλήση από %s</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">Απενεργοποιήσατε τα εξαφανιζόμενα μηνύματα.</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">Τα εξαφανιζόμενα μηνύματα απενεργοποιήθηκαν από %1$s.</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">Ορίσατε τον χρόνο των εξαφανιζόμενων μηνυμάτων σε %1$s</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">Ο χρόνος των εξαφανιζόμενων μηνυμάτων ορίστηκε σε %2$s από %1$s</string>
+    <string name="MessageRecord_s_took_a_screenshot">Λήφθηκε στιγμιότυπο οθόνης από %1$s.</string>
+    <string name="MessageRecord_media_saved_by_s">Τα πολυμέσα αποθηκεύτηκαν από %1$s.</string>
+    <!-- expiration -->
+    <string name="expiration_off">Απενεργοποιημένο</string>
+    <plurals name="expiration_seconds">
+        <item quantity="one">%d δευτερόλεπτο</item>
+        <item quantity="other">%d δευτερόλεπτα</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%dδ</string>
+    <plurals name="expiration_minutes">
+        <item quantity="one">%d λεπτό</item>
+        <item quantity="other">%d λεπτά</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">%dλ</string>
+    <plurals name="expiration_hours">
+        <item quantity="one">%d ώρα</item>
+        <item quantity="other">%d ώρες</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">%dώ</string>
+    <plurals name="expiration_days">
+        <item quantity="one">%d ημέρα</item>
+        <item quantity="other">%d ημέρες</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">%dημ</string>
+    <plurals name="expiration_weeks">
+        <item quantity="one">%d εβδομάδα</item>
+        <item quantity="other">%d εβδομάδες</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">%dεβδ</string>
+    <string name="ConversationItem_group_action_left">%1$s αποχώρησε από την ομάδα.</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">Ομάδα χωρίς Όνομα</string>
+</resources>

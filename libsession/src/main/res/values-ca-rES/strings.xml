@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">Heu abandonat el grup.</string>
+    <string name="MessageRecord_you_created_a_new_group">Heu creat un nou grup.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s us ha convidat al grup.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">Heu canviat el nom del grup a %1$s</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s ha canviat el nom del grup a: %2$s</string>
+    <string name="MessageRecord_you_added_s_to_the_group">Heu afegit %1$s al grup.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s ha afegit a %2$s al grup.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">Heu expulsat a %1$s del grup.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s ha expulsat a %2$s del grup.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">Heu estat expulsat del grup.</string>
+    <string name="MessageRecord_you">Tu</string>
+    <string name="MessageRecord_s_called_you">%s us ha telefonat</string>
+    <string name="MessageRecord_called_s">Heu telefonat a %s</string>
+    <string name="MessageRecord_missed_call_from">Telefonada perduda de %s</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">Heu desactivat els missatges efímers.</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">%1$s ha desactivat els missatges emífers.</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">Heu establert el temporitzador dels missatges efímers a %1$s</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s ha establert el temporitzador dels missatges efímers a %2$s</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$s ha fet una captura de pantalla.</string>
+    <string name="MessageRecord_media_saved_by_s">Suport desat per %1$s.</string>
+    <!-- expiration -->
+    <string name="expiration_off">Apagat</string>
+    <plurals name="expiration_seconds">
+        <item quantity="one">%d segon</item>
+        <item quantity="other">%d segons</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%ds</string>
+    <plurals name="expiration_minutes">
+        <item quantity="one">%d minut</item>
+        <item quantity="other">%d minuts</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">%d min</string>
+    <plurals name="expiration_hours">
+        <item quantity="one">%d hora</item>
+        <item quantity="other">%d hores</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">%dh</string>
+    <plurals name="expiration_days">
+        <item quantity="one">%d dia</item>
+        <item quantity="other">%d dies</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">%dd</string>
+    <plurals name="expiration_weeks">
+        <item quantity="one">%d setmana</item>
+        <item quantity="other">%d setmanes</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">%d definit</string>
+    <string name="ConversationItem_group_action_left">%1$s ha abandonat el grup.</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">Grup sense nom</string>
+</resources>

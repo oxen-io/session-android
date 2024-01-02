@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="yes">হ্যাঁ</string>
+    <string name="no">না</string>
+    <string name="delete">মুছে ফেলা</string>
+    <string name="ban">নিষিদ্ধ</string>
+    <string name="please_wait">অনুগ্রহ করে অপেক্ষা করুন…</string>
+    <string name="save">সংরক্ষণ করুন</string>
+    <string name="note_to_self">নিজেকে নোট করুন</string>
+    <string name="version_s">ভার্সন %s</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
+    <!-- AbstractNotificationBuilder -->
+    <string name="AbstractNotificationBuilder_new_message">নতুন মেসেজ</string>
+    <!-- AlbumThumbnailView -->
+    <string name="AlbumThumbnailView_plus">\+%d</string>
+    <!-- ApplicationPreferencesActivity -->
+    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
+        <item quantity="one">প্রতি কথোপকথনে %d টি বার্তা</item>
+        <item quantity="other">প্রতি কথোপকথনে %dটি বার্তা</item>
+    </plurals>
+    <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">আগের সব বার্তা মুছে ফেলবেন?</string>
+    <plurals name="ApplicationPreferencesActivity_this_will_immediately_trim_all_conversations_to_the_d_most_recent_messages">
+        <item quantity="one">এটি অবিলম্বে সাম্প্রতিক বার্তায় সমস্ত কথোপকথন ছাঁটাই করবে.</item>
+        <item quantity="other">এটি অবিলম্বে %dটি সাম্প্রতিক বার্তাগুলিতে সমস্ত কথোপকথনকে ছাঁটাই করবে.</item>
+    </plurals>
+    <string name="ApplicationPreferencesActivity_delete">মুছে ফেলুন</string>
+    <string name="ApplicationPreferencesActivity_On">চালু</string>
+    <string name="ApplicationPreferencesActivity_Off">বন্ধ</string>
+    <!-- DraftDatabase -->
+    <string name="DraftDatabase_Draft_image_snippet">(ছবি)</string>
+    <string name="DraftDatabase_Draft_audio_snippet">(শ্রুতি)</string>
+    <string name="DraftDatabase_Draft_video_snippet">(ভিডিও)</string>
+    <string name="DraftDatabase_Draft_quote_snippet">(উত্তর দিন)</string>
+    <!-- AttachmentManager -->
+    <string name="AttachmentManager_cant_open_media_selection">ফাইল নির্বাচনের জন্য কোনো আ্যাপ পাওয়া যায়নি ।</string>
+    <string name="AttachmentManager_signal_requires_the_external_storage_permission_in_order_to_attach_photos_videos_or_audio">ফটো, ভিডিও বা অডিও সংযুক্ত করার জন্য Session এর স্টোরেজের অনুমতি প্রয়োজন, কিন্তু এটি স্থায়ীভাবে অস্বীকার করা হয়েছে৷ অনুগ্রহ করে অ্যাপ সেটিংস মেনুতে চালিয়ে যান, \"অনুমতি নির্বাচন করুন\" এবং \"স্টোরেজ\" এনাবল করুন.</string>
+    <string name="AttachmentManager_signal_requires_the_camera_permission_in_order_to_take_photos_but_it_has_been_permanently_denied">ফটো তোলার জন্য Session এর ক্যামেরার অনুমতি প্রয়োজন, কিন্তু এটি স্থায়ীভাবে অস্বীকার করা হয়েছে৷ অনুগ্রহ করে অ্যাপ সেটিংস মেনুতে চালিয়ে যান, \"অনুমতি নির্বাচন করুন\" এবং \"ক্যামেরা\" এনাবল করুন.</string>
+    <!-- AudioSlidePlayer -->
+    <string name="AudioSlidePlayer_error_playing_audio">অডিও চলতে ব্যার্থ হয়েছে!</string>
+    <!-- BucketedThreadMedia -->
+    <string name="BucketedThreadMedia_Today">আজ</string>
+    <string name="BucketedThreadMedia_Yesterday">গতকাল</string>
+    <string name="BucketedThreadMedia_This_week">এই সপ্তাহ</string>
+    <string name="BucketedThreadMedia_This_month">এই মাস</string>
+    <!-- CommunicationActions -->
+    <string name="CommunicationActions_no_browser_found">কোনও ওয়েব ব্রাউজার খুঁজে পাওয়া যায়নি.</string>
+    <!-- ContactsCursorLoader -->
+    <string name="ContactsCursorLoader_groups">গ্রুপস</string>
+    <!-- ConversationItem -->
+    <string name="ConversationItem_error_not_delivered">পাঠাতে ব্যর্থ হয়েছে, বিস্তারিত জানতে আলতো চাপুন</string>
+    <string name="ConversationItem_received_key_exchange_message_tap_to_process">কি এক্সচেঞ্জ মেসেজ পেয়েছেন, এগিয়ে যেতে ট্যাপ করুন.</string>
+    <string name="ConversationItem_click_to_approve_unencrypted">পাঠাতে ব্যর্থ হয়েছে, অনিরাপদ ফলব্যাকের জন্য ট্যাপ করুন</string>
+    <string name="ConversationItem_unable_to_open_media">এমন কোন অ্যাপ পাওয়া যাচ্ছে না যেটি এই মিডিয়া ফাইলটি খুলতে পারে.</string>
+    <string name="ConversationItem_copied_text">%s কপি করা হয়েছে</string>
+    <string name="ConversationItem_read_more">আরও পড়ুন</string>
+    <string name="ConversationItem_download_more">&#160; আরো ডাউনলোড করুন</string>
+    <string name="ConversationItem_pending">&#160; পেন্ডিং</string>
+    <!-- ConversationActivity -->
+    <string name="ConversationActivity_add_attachment">অ্যাটাচমেন্ট যোগ করুন</string>
+    <string name="ConversationActivity_select_contact_info">কন্টাক্টের তথ্য সিলেক্ট করুন</string>
+    <string name="ConversationActivity_sorry_there_was_an_error_setting_your_attachment">দুঃখিত, আপনার অ্যাটাচমেন্ট সেট করার মধ্যে সমস্যা হয়েছে.</string>
+    <string name="ConversationActivity_message">বার্তা</string>
+    <string name="ConversationActivity_compose">কম্পোজ করুন</string>
+    <string name="ConversationActivity_muted_until_date">নিঃশব্দ করে রাখুন %1$s পর্যন্ত</string>
+    <string name="ConversationActivity_muted_forever">মিউট করে হয়েছে</string>
+    <string name="ConversationActivity_member_count">%1$d জন সদস্য</string>
+    <string name="ConversationActivity_active_member_count">%1$d anggota aktif420</string>
+    <string name="ConversationActivity_open_group_guidelines">সম্প্রদায় নির্দেশিকা</string>
+    <string name="ConversationActivity_invalid_recipient">ভূল প্রাপক!</string>
+    <string name="ConversationActivity_added_to_home_screen">হোম স্ক্রিনে যোগ করা হয়েছে</string>
+    <string name="ConversationActivity_leave_group">গ্রুপ পরিত্যাগ করুন?</string>
+    <string name="ConversationActivity_are_you_sure_you_want_to_leave_this_group">আপনি কি গ্রুপ ত্যাগ করতে চান?</string>
+    <string name="ConversationActivity_error_leaving_group">গ্রুপ ত্যাগ সম্পন্ন হয়নি</string>
+    <string name="ConversationActivity_unblock_this_contact_question">এই কন্টাক্টটি আনব্লক করবেন?</string>
+    <string name="ConversationActivity_you_will_once_again_be_able_to_receive_messages_and_calls_from_this_contact">আপনি আবারও এই কন্টাক্টটি থেকে মেসেজ এবং কল রিসিভ করতে পারবেন.</string>
+    <string name="ConversationActivity_unblock">আনব্লক করুন</string>
+    <string name="ConversationActivity_attachment_exceeds_size_limits">আপনি যেই মেসেজ পাঠাতে চাচ্ছেন তার অ্যাটাচমেন্ট সাইজ লিমিট অতিক্রম করেছে.</string>
+    <string name="ConversationActivity_unable_to_record_audio">অডিও রেকর্ড করা সম্ভব হয়নি!</string>
+    <string name="ConversationActivity_there_is_no_app_available_to_handle_this_link_on_your_device">এই লিংক হেন্ডেল করার মতো কোন অ্যাপ আপনার ডিভাইসে নেই.</string>
+    <string name="ConversationActivity_invite_to_open_group">সদস্য যোগ করুন</string>
+    <string name="ConversationActivity_to_send_audio_messages_allow_signal_access_to_your_microphone">অডিও মেসেজ পাঠানোর জন্য Session এর মাইক্রোফোন অ্যাকসেস প্রয়োজন.</string>
+    <string name="ConversationActivity_signal_requires_the_microphone_permission_in_order_to_send_audio_messages">অডিও মেসেজ পাঠানোর জন্য Session এর মাইক্রোফোন অ্যাকসেস প্রয়োজন, কিন্তু এইটি বাতিল করা হয়েছে. অনুগ্রহ করে অ্যাপ সেটিংস এ গিয়ে সিলেক্ট করুন \"পারমিশনস\", এবং \"মাইক্রোফোন\" অ্যাকসেস দিন.</string>
+    <string name="ConversationActivity_to_capture_photos_and_video_allow_signal_access_to_the_camera">ছবি ও ভিডিও করার জন্য Session এর ক্যামেরা অ্যাকসেস প্রয়োজন.</string>
+    <string name="ConversationActivity_to_send_photos_and_video_allow_signal_access_to_storage">ছবি ও ভিডিও করার জন্য Session এর স্টোরেজ অ্যাকসেস প্রয়োজন.</string>
+    <string name="ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video">অডিও মেসেজ পাঠানোর জন্য Session এর মাইক্রোফোন অ্যাকসেস প্রয়োজন, কিন্তু এইটি বাতিল করা হয়েছে. অনুগ্রহ করে অ্যাপ সেটিংস এ গিয়ে সিলেক্ট করুন \"পারমিশনস\", এবং \"ক্যামেরা\" অ্যাকসেস দিন.</string>
+    <string name="ConversationActivity_signal_needs_camera_permissions_to_take_photos_or_video">ছবি ও ভিডিও করার জন্য Session এর ক্যামেরা অ্যাকসেস প্রয়োজন.</string>
+    <string name="ConversationActivity_search_position">%2$d এর %1$d</string>
+    <string name="ConversationActivity_call_title">কল করার অনুমতি প্রয়োজন</string>
+    <string name="ConversationActivity_call_prompt">আপনি \'ভয়েস এবং ভিডিও কল\' এর পারমিশন প্রাইভেসি সেটিংস এ এনাবল করতে পারবেন.</string>
+    <!-- ConversationFragment -->
+    <string name="ConversationFragment_ban_selected_user">এই ইউজারকে ব্যান করবেন?</string>
+    <string name="ConversationFragment_save_to_sd_card">স্টোরেজে সেভ করবেন?</string>
+    <!-- CreateProfileActivity -->
+    <string name="CreateProfileActivity_profile_photo">প্রোফাইল ফটো</string>
+    <!-- CustomDefaultPreference -->
+    <string name="CustomDefaultPreference_none">কোনটি নয়</string>
+    <!-- DateUtils -->
+    <string name="DateUtils_just_now">এখন</string>
+    <string name="DateUtils_minutes_ago">%d মিনিট</string>
+    <string name="DateUtils_today">আজ</string>
+    <string name="DateUtils_yesterday">গতকাল</string>
+    <!-- DeviceListItem -->
+    <string name="DeviceListItem_today">আজ</string>
+    <!-- DocumentView -->
+    <string name="DocumentView_unknown_file">অজানা ফাইল</string>
+    <!-- GiphyActivity -->
+    <!-- GiphyFragmentPageAdapter -->
+    <!-- CropImageActivity -->
+    <!-- InputPanel -->
+    <!-- LongMessageActivity -->
+    <!-- MediaOverviewActivity -->
+    <!-- NotificationMmsMessageRecord -->
+    <!-- MediaPickerActivity -->
+    <!-- MediaSendActivity -->
+    <!-- MediaRepository -->
+    <!-- MessageRecord -->
+    <string name="MessageRecord_you_updated_group">আপনি গ্রুপ আপডেট করেছেন.</string>
+    <string name="MessageRecord_s_updated_group">%s গ্রুপ আপডেট করেছেন.</string>
+    <!-- ExpirationDialog -->
+    <string name="ExpirationDialog_disappearing_messages">অদৃশ্য বার্তা</string>
+    <string name="ExpirationDialog_your_messages_will_not_expire">আপনার মেসেজ এক্সপায়ার হবে না.</string>
+    <string name="ExpirationDialog_your_messages_will_disappear_s_after_they_have_been_seen">এই কথোপকনটিতে আসা এবং যাওয়া মেসেজগুলো %s পরে হারিয়ে যাবে.</string>
+    <!-- PassphrasePromptActivity -->
+    <string name="PassphrasePromptActivity_enter_passphrase">Passphrase টি দিন</string>
+    <!-- RecipientPreferencesActivity -->
+    <string name="RecipientPreferenceActivity_block_this_contact_question">এই কন্টাক্টটি ব্লক করবেন?</string>
+    <string name="RecipientPreferenceActivity_you_will_no_longer_receive_messages_and_calls_from_this_contact">আপনি এই কন্টাক্টটি থেকে আর মেসেজ এবং কল রিসিভ করবেন না.</string>
+    <string name="RecipientPreferenceActivity_block">ব্লক</string>
+    <string name="RecipientPreferenceActivity_unblock_this_contact_question">এই কন্টাক্টটি আনব্লক করবেন?</string>
+    <string name="RecipientPreferenceActivity_you_will_once_again_be_able_to_receive_messages_and_calls_from_this_contact">আপনি আবারও এই কন্টাক্টটি থেকে মেসেজ এবং কল রিসিভ করতে পারবেন.</string>
+    <string name="RecipientPreferenceActivity_unblock">আনব্লক</string>
+    <string name="RecipientPreferenceActivity_notification_settings">নোটিফিকেশনের সেটিংস</string>
+    <!-- Slide -->
+    <string name="Slide_image">ইমেজ</string>
+    <string name="Slide_audio">অডিও</string>
+    <string name="Slide_video">ভিডিও</string>
+    <!-- SmsMessageRecord -->
+    <!-- ThreadRecord -->
+    <!-- UpdateApkReadyListener -->
+    <!-- MessageDisplayHelper -->
+    <!-- MmsMessageRecord -->
+    <!-- MuteDialog -->
+    <!-- KeyCachingService -->
+    <!-- MediaPreviewActivity -->
+    <!-- MessageNotifier -->
+    <string name="MessageNotifier_reply">উত্তর দিন</string>
+    <string name="MessageNotifier_contact_message">%1$s %2$s</string>
+    <string name="MessageNotifier_unknown_contact_message">কন্টাক্ট</string>
+    <!-- Notification Channels -->
+    <string name="NotificationChannel_messages">পূর্ব-নির্ধারিত</string>
+    <string name="NotificationChannel_calls">কল সমূহ</string>
+    <string name="NotificationChannel_failures">ব্যর্থতা</string>
+    <string name="NotificationChannel_backups">ব্যাকআপ</string>
+    <string name="NotificationChannel_other">অন্যান্য</string>
+    <string name="NotificationChannel_group_messages">মেসেজ</string>
+    <string name="NotificationChannel_missing_display_name">অজানা</string>
+    <!-- QuickResponseService -->
+    <string name="QuickResponseService_problem_sending_message">মেসেজ পাঠাতে সমস্যা হচ্ছে!</string>
+    <!-- SaveAttachmentTask -->
+    <string name="SaveAttachmentTask_saved_to">%s এ সেভ করা হয়েছে</string>
+    <string name="SaveAttachmentTask_saved">সংরক্ষিত হয়েছে</string>
+    <!-- SearchToolbar -->
+    <string name="SearchToolbar_search">খুঁজুন</string>
+    <!-- ShortcutLauncherActivity -->
+    <!-- SingleRecipientNotificationBuilder -->
+    <string name="SingleRecipientNotificationBuilder_signal">সেশন</string>
+    <string name="SingleRecipientNotificationBuilder_new_message">নতুন মেসেজ</string>
+    <!-- TransferControlView -->
+    <!-- VideoPlayer -->
+    <string name="VideoPlayer_error_playing_video">ভিডিও চলতে ব্যার্থ হয়েছে</string>
+    <!-- attachment_type_selector -->
+    <string name="attachment_type_selector__audio">অডিও</string>
+    <string name="attachment_type_selector__audio_description">অডিও</string>
+    <string name="attachment_type_selector__contact">কন্টাক্ট</string>
+    <string name="attachment_type_selector__contact_description">কন্টাক্ট</string>
+    <string name="attachment_type_selector__camera">ক্যামেরা</string>
+    <string name="attachment_type_selector__camera_description">ক্যামেরা</string>
+    <string name="attachment_type_selector__location">ঠিকানা</string>
+    <string name="attachment_type_selector__location_description">ঠিকানা</string>
+    <string name="attachment_type_selector__gif">GIF</string>
+    <string name="attachment_type_selector__gif_description">Gif</string>
+    <string name="attachment_type_selector__gallery_description">ছবি অথবা ভিডিও</string>
+    <string name="attachment_type_selector__file_description">ফাইল</string>
+    <string name="attachment_type_selector__gallery">গ্যালারি</string>
+    <string name="attachment_type_selector__file">ফাইল</string>
+    <!-- contact_selection_group_activity -->
+    <string name="contact_selection_group_activity__finding_contacts">কন্টাক্ট সমূহ রেডি হচ্ছে&#8230;</string>
+    <!-- conversation_activity -->
+    <string name="conversation_activity__send">পাঠান</string>
+    <string name="conversation_activity__emoji_toggle_description">ইমোজি কিবোর্ড বদল</string>
+    <string name="conversation_activity__quick_attachment_drawer_record_and_send_audio_description">রেকর্ড এবং অডিও অ্যাটাচমেন্ট পাঠান</string>
+    <string name="conversation_activity__quick_attachment_drawer_lock_record_description">অডিও অ্যাটাচমেন্ট এর রেকর্ডিং লক করুন</string>
+    <!-- conversation_input_panel -->
+    <string name="conversation_input_panel__slide_to_cancel">বাতিল করার জন্য স্লাইড করুন</string>
+    <string name="conversation_input_panel__cancel">ক্যানসেল করুন</string>
+    <!-- conversation_item -->
+    <!-- conversation_item_sent -->
+    <!-- conversation_item_received -->
+    <!-- audio_view -->
+    <!-- open_group_invitation_view -->
+    <!-- QuoteView -->
+    <!-- conversation_fragment -->
+    <!-- giphy_activity -->
+    <!-- giphy_fragment -->
+    <!-- load_more_header -->
+    <!-- media_overview_activity -->
+    <!-- message_recipients_list_item -->
+    <!-- recipient_preferences -->
+    <!-- message_details_header -->
+    <!-- AndroidManifest.xml -->
+    <!-- arrays.xml -->
+    <string name="arrays__use_default">ডিফল্ট ব্যবহার করুন</string>
+    <string name="arrays__mute_for_one_hour">এক ঘন্টার জন্য নিঃশব্দ</string>
+    <string name="arrays__mute_for_two_hours">দুই ঘন্টার জন্য নিঃশব্দ</string>
+    <string name="arrays__mute_for_one_day">একদিনের জন্য নিঃশব্দ</string>
+    <string name="arrays__mute_for_seven_days">সাতদিনের জন্য নিঃশব্দ</string>
+    <string name="arrays__mute_for_one_year">এক বছরের জন্য নিঃশব্দ</string>
+    <!-- plurals.xml -->
+    <!-- preferences.xml -->
+    <!-- **************************************** -->
+    <!-- menus -->
+    <!-- **************************************** -->
+    <!-- contact_selection_list -->
+    <!-- conversation_context -->
+    <!-- conversation_context_image -->
+    <!-- conversation_expiring_off -->
+    <!-- conversation_expiring_on -->
+    <!-- conversation_muted -->
+    <!-- conversation_unmuted -->
+    <!-- conversation -->
+    <!-- conversation_popup -->
+    <!-- conversation_group_options -->
+    <!-- media_preview -->
+    <!-- media_overview -->
+    <!-- media_preview_activity -->
+    <!-- Trimmer -->
+    <!-- transport_selection_list_item -->
+    <!-- Conversation activity -->
+    <!-- Session -->
+    <!-- Next round of translation -->
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <!-- ReactionsConversationView -->
+    <!-- ReactionsRecipientAdapter -->
+</resources>

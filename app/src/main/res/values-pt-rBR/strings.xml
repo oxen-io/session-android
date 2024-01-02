@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Session</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
     <string name="delete">Excluir</string>
     <string name="ban">Banir</string>
+    <string name="please_wait">Por favor aguarde…</string>
     <string name="save">Salvar</string>
     <string name="note_to_self">Nota para Si</string>
     <string name="version_s">Versão %s</string>
+    <!--Accessibility ID's-->
+    <!-- Landing Page -->
+    <!-- Session ID Page-->
+    <!-- Recovery phrase input -->
+    <!--Restore by seed page-->
+    <!--Create Display Name    -->
+    <!--Message Notifications Options-->
+    <!--Recovery Phrase reminder-->
+    <!--Home Page-->
+    <!--Settings Page -->
+    <!--Message requests-->
+    <!--New conversation pop up-->
+    <!-- Join community pop up -->
+    <!--  Conversation options (three dots menu)-->
+    <!--  Conversation options for closed group-->
+    <!--  Conversation icons -->
+    <!--    Configuration messages -->
+    <!--New Session -->
+    <!--  New group -->
+    <!--Conversation screen -->
+    <!-- Conversation View-->
+    <!-- Delete message modal-->
+    <!--Settings Page-->
+    <!--    Recovery Phrase Dialog-->
+    <!--    Link preview Dialog-->
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">Nova mensagem</string>
     <!-- AlbumThumbnailView -->
@@ -19,7 +44,7 @@
     </plurals>
     <string name="ApplicationPreferencesActivity_delete_all_old_messages_now">Deletar todas as mensagens antigas agora?</string>
     <plurals name="ApplicationPreferencesActivity_this_will_immediately_trim_all_conversations_to_the_d_most_recent_messages">
-        <item quantity="one">Isto irá imediatamente reduzir todas as conversas para a mensagem mais recente.</item>
+        <item quantity="one">Isto irá imediatamente reduzir todas as conversas para as %d mensagens mais recentes.</item>
         <item quantity="other">Isto irá imediatamente reduzir todas as conversas para as %d mensagens mais recentes.</item>
     </plurals>
     <string name="ApplicationPreferencesActivity_delete">Deletar</string>
@@ -56,13 +81,14 @@
     <string name="ConversationItem_pending">  Pendente</string>
     <!-- ConversationActivity -->
     <string name="ConversationActivity_add_attachment">Adicionar anexo</string>
-    <string name="ConversationActivity_select_contact_info">Selecionar informação de contato</string>
+    <string name="ConversationActivity_select_contact_info">Selecionar informações de contato</string>
     <string name="ConversationActivity_sorry_there_was_an_error_setting_your_attachment">Desculpe, ocorreu um erro ao definir seu anexo.</string>
     <string name="ConversationActivity_message">Mensagem</string>
     <string name="ConversationActivity_compose">Compor</string>
     <string name="ConversationActivity_muted_until_date">Silenciado até %1$s</string>
     <string name="ConversationActivity_muted_forever">Silenciado</string>
     <string name="ConversationActivity_member_count">%1$d membros</string>
+    <string name="ConversationActivity_active_member_count">%1$d membros ativos</string>
     <string name="ConversationActivity_open_group_guidelines">Diretrizes da Comunidade</string>
     <string name="ConversationActivity_invalid_recipient">Destinatário inválido!</string>
     <string name="ConversationActivity_added_to_home_screen">Adicionada à tela inicial</string>
@@ -83,6 +109,8 @@
     <string name="ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video">Session precisa de acesso à câmera para tirar fotos e vídeos, mas ela foi permanentemente negada. Por favor continue para configurações de app, selecione \"Permissões\", e habilite \"Câmera\".</string>
     <string name="ConversationActivity_signal_needs_camera_permissions_to_take_photos_or_video">Session precisa de acesso à câmera para tirar fotos ou vídeos.</string>
     <string name="ConversationActivity_search_position">%1$d de %2$d</string>
+    <string name="ConversationActivity_call_title">Permissões de ligações necessárias</string>
+    <string name="ConversationActivity_call_prompt">Você pode habilitar a permissão de \'Voz e vídeo chamadas\' nas Configurações de Privacidade.</string>
     <!-- ConversationFragment -->
     <plurals name="ConversationFragment_delete_selected_messages">
         <item quantity="one">Deletar mensagem selecionada?</item>
@@ -105,6 +133,10 @@
     <plurals name="ConversationFragment_saving_n_attachments">
         <item quantity="one">Salvando anexo</item>
         <item quantity="other">Salvando %1$d anexos</item>
+    </plurals>
+    <plurals name="ConversationFragment_saving_n_attachments_to_sd_card">
+        <item quantity="one">Salvando anexo no armazenamento…</item>
+        <item quantity="other">Salvando %1$d anexos no armazenamento…</item>
     </plurals>
     <!-- CreateProfileActivity -->
     <string name="CreateProfileActivity_profile_photo">Foto de perfil</string>
@@ -193,6 +225,7 @@
     <string name="SmsMessageRecord_received_corrupted_key_exchange_message">Recebida mensagem de excâmbio
         de chave corrompida!
     </string>
+    <string name="SmsMessageRecord_received_key_exchange_message_for_invalid_protocol_version">        A mensagem de troca recebida é inválida para o protocolo da versão.    </string>
     <string name="SmsMessageRecord_received_message_with_new_safety_number_tap_to_process">Mensagem com novo número de segurança recebida. Toque para processar e exibir.</string>
     <string name="SmsMessageRecord_secure_session_reset">Você resetou a sessão segura.</string>
     <string name="SmsMessageRecord_secure_session_reset_s">%s resetou a sessão segura.</string>
@@ -380,9 +413,9 @@
     <string name="arrays__settings_default">Default de configurações</string>
     <string name="arrays__enabled">Habilitado</string>
     <string name="arrays__disabled">Desabilitado</string>
-    <string name="arrays__name_and_message">Nome e mensagem</string>
-    <string name="arrays__name_only">Nome somente</string>
-    <string name="arrays__no_name_or_message">Nenhum nome ou mensagem</string>
+    <string name="arrays__name_and_message">Nome e conteúdo</string>
+    <string name="arrays__name_only">Somente Nome</string>
+    <string name="arrays__no_name_or_message">Sem nome ou conteúdo</string>
     <string name="arrays__images">Imagens</string>
     <string name="arrays__audio">Áudio</string>
     <string name="arrays__video">Vídeo</string>
@@ -400,9 +433,14 @@
         <item quantity="other">%d horas</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__pref_enter_sends_title">Tecla Enter envia</string>
-    <string name="preferences__send_link_previews">Enviar previews de link</string>
-    <string name="preferences__previews_are_supported_for">Previews são suportadas para links de Imgur, Instagram, Pinterest, Reddit, e YouTube</string>
+    <string name="preferences__pref_enter_sends_title">Enviar com a tecla Enter</string>
+    <string name="preferences__pref_enter_sends_summary">Tocar na tecla Enter enviará uma mensagem em vez de iniciar uma nova linha.</string>
+    <string name="preferences__send_link_previews">Enviar Pré-Visualizações De Links</string>
+    <string name="preferences__link_previews">Pré-visualização de Link</string>
+    <string name="preferences__link_previews_summary">Gerar pré-visualizações de links para URLs suportadas.</string>
+    <string name="preferences__pref_autoplay_audio_category">Mensagens de áudio</string>
+    <string name="preferences__pref_autoplay_audio_title">Reproduzir mensagens de áudio automaticamente</string>
+    <string name="preferences__pref_autoplay_audio_summary">Reproduzir automaticamente mensagens de áudio consecutivas.</string>
     <string name="preferences__screen_security">Segurança de tela</string>
     <string name="preferences__disable_screen_security_to_allow_screen_shots">Bloquear screenshots na lista de recentes e dentro do app</string>
     <string name="preferences__notifications">Notificações</string>
@@ -410,6 +448,7 @@
     <string name="preferences__led_color_unknown">Desconhecida</string>
     <string name="preferences__pref_led_blink_title">Padrão de piscagem do LED</string>
     <string name="preferences__sound">Som</string>
+    <string name="preferences__in_app_sounds">Som quando o aplicativo estiver aberto</string>
     <string name="preferences__silent">Silencioso</string>
     <string name="preferences__repeat_alerts">Repetir alertas</string>
     <string name="preferences__never">Nunca</string>
@@ -437,19 +476,28 @@
     <string name="preferences__scan_through_all_conversations_and_enforce_conversation_length_limits">Scannear por todas as conversas e enforçar limites de comprimento de conversa</string>
     <string name="preferences__default">Default</string>
     <string name="preferences__incognito_keyboard">Teclado incógnito</string>
-    <string name="preferences__read_receipts">Recibos de leitura</string>
-    <string name="preferences__typing_indicators">Indicadores de digitação</string>
-    <string name="preferences__if_typing_indicators_are_disabled_you_wont_be_able_to_see_typing_indicators">Se indicadores de digitação estão desabilitados, você não vai conseguir ver indicadores de digitação de outros.</string>
+    <string name="preferences__read_receipts">Confirmações de Leitura</string>
+    <string name="preferences__read_receipts_summary">Enviar confirmações de leitura em conversas individuais.</string>
+    <string name="preferences__typing_indicators">Indicadores de Digitação</string>
+    <string name="preferences__typing_indicators_summary">Veja e compartilhe indicadores de digitação em conversas individuais.</string>
     <string name="preferences__request_keyboard_to_disable_personalized_learning">Solicitar ao teclado que desabilite aprendizado personalizado</string>
     <string name="preferences__light_theme">Claro</string>
     <string name="preferences__dark_theme">Escuro</string>
     <string name="preferences_chats__message_trimming">Aparamento de Mensagem</string>
+    <string name="preferences_chats__message_trimming_title">Cortar Comunidades</string>
+    <string name="preferences_chats__message_trimming_summary">Exclua mensagens com mais de 6 meses de comunidades que possuam mais de 2.000 mensagens.</string>
     <string name="preferences_advanced__use_system_emoji">Usar emoji do sistema</string>
     <string name="preferences_advanced__disable_signal_built_in_emoji_support">Desabilitar suporte de emoji embutido de Session</string>
+    <string name="preferences_app_protection__screen_security">Segurança de Tela</string>
     <string name="preferences_chats__chats">Chats</string>
     <string name="preferences_notifications__messages">Mensagens</string>
     <string name="preferences_notifications__in_chat_sounds">Sons em-chat</string>
+    <string name="preferences_notifications__content">Conteúdo de Notificação</string>
+    <string name="preferences_notifications__content_message">Exibir:</string>
+    <string name="preferences_notifications__summary">As informações exibidas nas notificações.</string>
     <string name="preferences_notifications__priority">Prioridade</string>
+    <string name="preferences_app_protection__screenshot_notifications">Notificações de captura de tela</string>
+    <string name="preferences_app_protected__screenshot_notifications_summary">Receber uma notificação quando um contato capturar uma tela de uma conversa individual.</string>
     <!-- **************************************** -->
     <!-- menus -->
     <!-- **************************************** -->
@@ -462,7 +510,10 @@
     <string name="conversation_context__menu_ban_user">Banir usuário</string>
     <string name="conversation_context__menu_ban_and_delete_all">Banir e excluír tudo</string>
     <string name="conversation_context__menu_resend_message">Reenviar mensagem</string>
+    <string name="conversation_context__menu_reply">Responder</string>
     <string name="conversation_context__menu_reply_to_message">Responder a mensagem</string>
+    <string name="conversation_context__menu_call">Ligar</string>
+    <string name="conversation_context__menu_select">Selecionar</string>
     <!-- conversation_context_image -->
     <string name="conversation_context_image__save_attachment">Salvar anexo</string>
     <!-- conversation_expiring_off -->
@@ -515,8 +566,8 @@
     <string name="LocalBackupJob_creating_backup">Criando backup...</string>
     <string name="ProgressPreference_d_messages_so_far">%d mensagens até agora</string>
     <string name="BackupUtil_never">Nunca</string>
-    <string name="preferences_app_protection__screen_lock">Bloqueio de tela</string>
-    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Proteger acesso ao Session com tela de bloqueio do Android ou impressão digital.</string>
+    <string name="preferences_app_protection__screen_lock">Trancar Session</string>
+    <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Exigir impressão digital, PIN, padrão ou senha para desbloquear o Session.</string>
     <string name="preferences_app_protection__screen_lock_inactivity_timeout">Tempo de espera para bloquear tela</string>
     <string name="AppProtectionPreferenceFragment_none">Nenhuma</string>
     <!-- Conversation activity -->
@@ -524,6 +575,7 @@
     <!-- Session -->
     <string name="continue_2">Continuar</string>
     <string name="copy">Copiar</string>
+    <string name="close">Fechar</string>
     <string name="invalid_url">URL inválido</string>
     <string name="copied_to_clipboard">Copiado para clipboard</string>
     <string name="next">Próximo</string>
@@ -602,6 +654,7 @@
     <string name="activity_settings_display_name_too_long_error">Por favor escolha um nome de display mais curto</string>
     <string name="activity_settings_privacy_button_title">Privacidade</string>
     <string name="activity_settings_notifications_button_title">Notificações</string>
+    <string name="activity_settings_message_requests_button_title">Pedidos de mensagem</string>
     <string name="activity_settings_chats_button_title">Chats</string>
     <string name="activity_settings_devices_button_title">Dispositivos</string>
     <string name="activity_settings_invite_button_title">Convide um amigo</string>
@@ -614,16 +667,30 @@
     <string name="activity_notification_settings_style_section_title">Estilo de Notificação</string>
     <string name="activity_notification_settings_content_section_title">Conteúdo de Notificação</string>
     <string name="activity_privacy_settings_title">Privacidade</string>
+    <string name="activity_conversations_settings_title">Conversas</string>
+    <string name="activity_help_settings_title">Ajuda</string>
+    <string name="activity_help_settings__report_bug_title">Reportar um erro</string>
+    <string name="activity_help_settings__report_bug_summary">Exporte seus logs, e envie o arquivo através do Help Desk do Session.</string>
+    <string name="activity_help_settings__translate_session">Traduzir o Session</string>
+    <string name="activity_help_settings__feedback">Nós adoraríamos seu feedback</string>
+    <string name="activity_help_settings__faq">Perguntas Frequentes</string>
+    <string name="activity_help_settings__support">Suporte</string>
+    <string name="activity_help_settings__export_logs">Exportar Logs</string>
     <string name="preferences_notifications_strategy_category_title">Estratégia de Notificação</string>
     <string name="preferences_notifications_strategy_category_fast_mode_title">Usar Modo Rápido</string>
     <string name="preferences_notifications_strategy_category_fast_mode_summary">Você será notificado de forma confiável e imediata sobre novas mensagens usando os servidores de notificação da Google.</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">Mudar nome</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Deslinkar dispositivo</string>
     <string name="dialog_seed_title">Sua Frase de Recuperação</string>
-    <string name="dialog_seed_explanation">Esta é sua frase de recuperação. Com ela, você pode restaurar ou migrar sua Session ID para um novo dispositivo.</string>
+    <string name="dialog_seed_explanation">Você pode usar a sua frase de recuperação para restaurar a sua conta ou vincular um dispositivo.</string>
     <string name="dialog_clear_all_data_title">Limpar Todos os Dados</string>
     <string name="dialog_clear_all_data_explanation">Isso excluirá permanentemente suas mensagens, sessões e contatos.</string>
     <string name="dialog_clear_all_data_network_explanation">Você gostaria de limpar apenas este dispositivo, ou excluir toda sua conta?</string>
+    <string name="dialog_clear_all_data_message">Isso excluirá permanentemente suas mensagens, sessões e contatos. Você gostaria de limpar apenas este dispositivo ou excluir sua conta toda?</string>
+    <string name="dialog_clear_all_data_clear_device_only">Limpar Somente o Dispositivo</string>
+    <string name="dialog_clear_all_data_clear_device_and_network">Limpar o Dispositivo e a Rede</string>
+    <string name="dialog_clear_all_data_clear_device_and_network_confirmation">Tem certeza que deseja excluir seus dados da rede? Se você continuar, não será capaz de restaurar suas mensagens ou contatos.</string>
+    <string name="dialog_clear_all_data_clear">Limpar</string>
     <string name="dialog_clear_all_data_local_only">Excluir apenas</string>
     <string name="dialog_clear_all_data_clear_network">Toda a conta</string>
     <string name="activity_qr_code_title">Código QR</string>
@@ -696,6 +763,7 @@
     <string name="dialog_download_explanation">Você tem certeza que deseja baixar a mídia enviada por %s?</string>
     <string name="dialog_download_button_title">Baixar</string>
     <string name="activity_conversation_blocked_banner_text">%s está bloqueado. Desbloqueiá-los?</string>
+    <string name="activity_conversation_block_user">Bloquear Usuário</string>
     <string name="activity_conversation_attachment_prep_failed">Falha ao preparar o anexo para envio.</string>
     <string name="media">Mídia</string>
     <string name="UntrustedAttachmentView_download_attachment">Toque para baixar %s</string>
@@ -715,4 +783,114 @@
     <string name="dialog_share_logs_explanation">Gostaria de exportar os logs da aplicação para poder compartilhar para solucionar problemas?</string>
     <string name="conversation_pin">Fixar</string>
     <string name="conversation_unpin">Desafixar</string>
+    <string name="mark_all_as_read">Marcar todas como lidas</string>
+    <string name="global_search_contacts_groups">Contatos e Grupos</string>
+    <string name="global_search_messages">Mensagens</string>
+    <string name="activity_message_requests_title">Pedidos de mensagem</string>
+    <string name="message_requests_send_notice">Ao mandar uma mensagem para esse usuário irá automaticamente aceitar o pedido de mensagem e revelará seu ID da Session.</string>
+    <string name="accept">Aceitar</string>
+    <string name="decline">Recusar</string>
+    <string name="message_requests_clear_all">Limpar tudo</string>
+    <string name="message_requests_decline_message">Tem certeza que deseja recusar este pedido de mensagem?</string>
+    <string name="message_requests_block_message">Tem certeza de que desejar bloquear este pedido de mensagem?</string>
+    <string name="message_requests_deleted">Pedido de mensagem deletado</string>
+    <string name="message_requests_clear_all_message">Você tem certeza que deseja excluir todas as solicitações de mensagem?</string>
+    <string name="message_requests_cleared">Pedidos de mensagens deletados</string>
+    <string name="message_requests_accepted">Sua solicitação de mensagem foi aceita.</string>
+    <string name="message_requests_pending">Sua solicitação de mensagem está pendente.</string>
+    <string name="message_request_empty_state_message">Nenhuma solicitação de mensagem pendente</string>
+    <string name="NewConversationButton_SessionTooltip">Mensagem direta</string>
+    <string name="NewConversationButton_ClosedGroupTooltip">Grupo fechado</string>
+    <string name="NewConversationButton_OpenGroupTooltip">Grupo Aberto</string>
+    <string name="message_requests_notification">Você tem uma nova solicitação de mensagem</string>
+    <string name="CallNotificationBuilder_connecting">Conectando…</string>
+    <string name="NotificationBarManager__incoming_signal_call">Recebendo chamada</string>
+    <string name="NotificationBarManager__deny_call">Negar chamada</string>
+    <string name="NotificationBarManager__answer_call">Atender ligação</string>
+    <string name="NotificationBarManager_call_in_progress">Chamada em andamento</string>
+    <string name="NotificationBarManager__cancel_call">Cancelar chamada</string>
+    <string name="NotificationBarManager__establishing_signal_call">Estabelecendo chamada</string>
+    <string name="NotificationBarManager__end_call">Terminar chamada</string>
+    <string name="accept_call">Aceitar ligação</string>
+    <string name="decline_call">Recusar chamada</string>
+    <string name="preferences__voice_video_calls">Chamadas de voz e vídeo</string>
+    <string name="preferences__calls_beta">Chamadas (Beta)</string>
+    <string name="preferences__allow_access_voice_video">Permite chamadas de voz e vídeo para e de outros usuários.</string>
+    <string name="dialog_voice_video_title">Chamadas de voz / vídeo</string>
+    <string name="dialog_voice_video_message">A implementação atual das chamadas de voz / vídeo irá expor seu endereço IP aos servidores da Oxen Foundation e ao usuário ligando / que ligou</string>
+    <string name="CallNotificationBuilder_first_call_title">Chamada perdida</string>
+    <string name="CallNotificationBuilder_first_call_message">Chamada perdida porque é necessário habilitar a permissão \'Voz e vídeo chamadas\' na Configuração de Privacidade.</string>
+    <string name="WebRtcCallActivity_Session_Call">Chamada Session</string>
+    <string name="WebRtcCallActivity_Reconnecting">Reconectando…</string>
+    <string name="CallNotificationBuilder_system_notification_title">Notificações</string>
+    <string name="CallNotificationBuilder_system_notification_message">O uso de notificações desabilitado impedirá você de receber chamadas, ir para as configurações de notificação de Session?</string>
+    <string name="dismiss">Dispensar</string>
+    <string name="activity_settings_conversations_button_title">Conversas</string>
+    <string name="activity_settings_message_appearance_button_title">Aparência</string>
+    <string name="activity_settings_help_button">Ajuda</string>
+    <string name="activity_appearance_themes_category">Temas</string>
+    <string name="ocean_dark_theme_name">Oceano Escuro</string>
+    <string name="classic_dark_theme_name">Clássico Escuro</string>
+    <string name="ocean_light_theme_name">Oceano Claro</string>
+    <string name="classic_light_theme_name">Clássico Claro</string>
+    <string name="activity_appearance_primary_color_category">Cor primária</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__this_message">Esta Mensagem</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__recently_used">Recentemente usado</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__smileys_and_people">Emojis &amp; Pessoas</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__nature" comment="Heading for an emoji list's category">Natureza</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__food" comment="Heading for an emoji list's category">Comida</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__activities">Atividades</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__places" comment="Heading for an emoji list's category">Lugares</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__objects">Objects</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__symbols">Symbols</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__flags">Bandeiras</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__emoticons">Emojis</string>
+    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__no_results_found">Nenhum resultado encontrado</string>
+    <!-- ReactionsBottomSheetDialogFragment -->
+    <string name="ReactionsBottomSheetDialogFragment_all">Todos &#183; %1$d</string>
+    <!-- ReactionsConversationView -->
+    <string name="ReactionsConversationView_plus">+%1$d</string>
+    <!-- ReactionsRecipientAdapter -->
+    <string name="ReactionsRecipientAdapter_you">Você</string>
+    <string name="reaction_notification">%1$s reagiu a uma mensagem %2$s</string>
+    <string name="ReactionsConversationView_show_less">Mostrar menos</string>
+    <string name="KeyboardPagerFragment_search_emoji">Buscar emoji</string>
+    <string name="KeyboardPagerfragment_back_to_emoji">Voltar para emojis</string>
+    <string name="KeyboardPagerfragment_clear_search_entry">Limpar registro de busca</string>
+    <string name="activity_appearance_follow_system_category">Modo escuro automático</string>
+    <string name="activity_appearance_follow_system_explanation">A mesma do sistema</string>
+    <string name="go_to_device_notification_settings">Ir para configurações de notificação do dispositivo</string>
+    <string name="blocked_contacts_title">Contatos Bloqueados</string>
+    <string name="blocked_contacts_empty_state">Nenhum contato bloqueado</string>
+    <string name="Unblock_dialog__title_single">Desbloquear %s</string>
+    <string name="Unblock_dialog__title_multiple">Desbloquear usuários</string>
+    <string name="Unblock_dialog__message">Você tem certeza que deseja desbloquear %s?</string>
+    <plurals name="Unblock_dialog__message_multiple_overflow">
+        <item quantity="one">e %d outro</item>
+        <item quantity="other">e %d outros</item>
+    </plurals>
+    <plurals name="ReactionsRecipientAdapter_other_reactors">
+        <item quantity="one">E %1$d outro reagiu %2$s a esta mensagem</item>
+        <item quantity="other">E %1$d outros reagiram %2$s a esta mensagem</item>
+    </plurals>
+    <string name="dialog_new_conversation_title">Nova Conversa</string>
+    <string name="dialog_new_message_title">Nova mensagem</string>
+    <string name="activity_create_group_title">Criar Grupo</string>
+    <string name="dialog_join_community_title">Entrar na Comunidade</string>
+    <string name="new_conversation_contacts_title">Contatos</string>
+    <string name="new_conversation_unknown_contacts_section_title">Desconhecida</string>
+    <string name="fragment_enter_public_key_prompt">Inicie uma nova conversa inserindo o ID Session de alguém ou compartilhando o seu ID Session com alguém.</string>
+    <string name="activity_create_group_create_button_title">Criar</string>
+    <string name="search_contacts_hint">Procurar contatos</string>
+    <string name="activity_join_public_chat_enter_community_url_tab_title">URL da comunidade</string>
+    <string name="fragment_enter_community_url_edit_text_hint">Insira URL da Comunidade</string>
+    <string name="fragment_enter_community_url_join_button_title">Entrar</string>
+    <string name="new_conversation_dialog_back_button_content_description">Retornar</string>
+    <string name="new_conversation_dialog_close_button_content_description">Fechar Diálogo</string>
+    <string name="ErrorNotifier_migration">Atualização do banco de dados falhou</string>
+    <string name="ErrorNotifier_migration_downgrade">Entre em contato com o suporte para relatar o erro.</string>
+    <string name="delivery_status_sending">Enviando</string>
+    <string name="delivery_status_read">Lida</string>
+    <string name="delivery_status_sent">Enviada</string>
+    <string name="delivery_status_failed">Falha ao enviar</string>
 </resources>

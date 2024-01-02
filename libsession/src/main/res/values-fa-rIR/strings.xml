@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MessageRecord -->
+    <string name="MessageRecord_left_group">شما گروه را ترک کردید.</string>
+    <string name="MessageRecord_you_created_a_new_group">شما یک گروه جدید ایجاد کردید.</string>
+    <string name="MessageRecord_s_added_you_to_the_group">%1$s شما را به گروه اضافه‌ کرد.</string>
+    <string name="MessageRecord_you_renamed_the_group_to_s">شما نام گروه را به %1$s تغییر دادید</string>
+    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s نام گروه را به %2$s تغییر داد</string>
+    <string name="MessageRecord_you_added_s_to_the_group">شما %1$s را به گروه اضافه کردید.</string>
+    <string name="MessageRecord_s_added_s_to_the_group">%1$s به گروه %2$s را اضافه‌ کرد.</string>
+    <string name="MessageRecord_you_removed_s_from_the_group">شما %1$s را از گروه حذف کردید.</string>
+    <string name="MessageRecord_s_removed_s_from_the_group">%1$s از گروه %2$s را حذف‌ کرد.</string>
+    <string name="MessageRecord_you_were_removed_from_the_group">شما از گروه حذف شدید.</string>
+    <string name="MessageRecord_you">شما‌</string>
+    <string name="MessageRecord_s_called_you">%s با شما تماس گرفت‌</string>
+    <string name="MessageRecord_called_s">با %s تماس گرفته شد</string>
+    <string name="MessageRecord_missed_call_from">تماس از دست رفته از %s</string>
+    <string name="MessageRecord_you_disabled_disappearing_messages">شما پیام‌های ناپدیدشونده را غیرفعال کردید.</string>
+    <string name="MessageRecord_s_disabled_disappearing_messages">%1$s پیام‌های ناپدیدشونده را غیرفعال کرد.</string>
+    <string name="MessageRecord_you_set_disappearing_message_time_to_s">شما زمان‌سنج پیام‌های ناپدید شونده را روی %1$s تنظیم کردید</string>
+    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s زمان‌سنج پیام‌های ناپدید شونده را روی %2$s تنظیم کرد</string>
+    <string name="MessageRecord_s_took_a_screenshot">%1$s یک عکس از صفحه گرفت.</string>
+    <string name="MessageRecord_media_saved_by_s">%1$s رسانه را ذخیره کرد.</string>
+    <!-- expiration -->
+    <string name="expiration_off">خاموش</string>
+    <plurals name="expiration_seconds">
+        <item quantity="one">%d ثانیه</item>
+        <item quantity="other">%d ثانیه</item>
+    </plurals>
+    <string name="expiration_seconds_abbreviated">%d ثانیه</string>
+    <plurals name="expiration_minutes">
+        <item quantity="one">%d دقیقه</item>
+        <item quantity="other">%d دقیقه</item>
+    </plurals>
+    <string name="expiration_minutes_abbreviated">%d دقیقه</string>
+    <plurals name="expiration_hours">
+        <item quantity="one">%d ساعت</item>
+        <item quantity="other">%d ساعت‌</item>
+    </plurals>
+    <string name="expiration_hours_abbreviated">%d ساعت</string>
+    <plurals name="expiration_days">
+        <item quantity="one">%d روز</item>
+        <item quantity="other">%d روز</item>
+    </plurals>
+    <string name="expiration_days_abbreviated">%d روز</string>
+    <plurals name="expiration_weeks">
+        <item quantity="one">%d هفته</item>
+        <item quantity="other">%d هفته‌</item>
+    </plurals>
+    <string name="expiration_weeks_abbreviated">%d هفته</string>
+    <string name="ConversationItem_group_action_left">%1$s گروه را ترک کرده است.</string>
+    <!-- RecipientProvider -->
+    <string name="RecipientProvider_unnamed_group">گروه بدون نام</string>
+</resources>
