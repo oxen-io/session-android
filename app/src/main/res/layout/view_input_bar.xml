@@ -12,8 +12,11 @@
         android:layout_height="1px"
         android:background="@color/separator" />
 
-    <FrameLayout
+    <!-- Additional content layout is a LinearLayout with a vertical split (i.e., it uses rows) to
+    allow multiple Views to exist, specifically both QuoteDraft and LinkPreviewDraft Views -->
+    <LinearLayout
         android:id="@+id/inputBarAdditionalContentContainer"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
