@@ -8,11 +8,13 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.text.SpannableString
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -730,16 +732,12 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 
     private fun hasWebRTCCallPermissions(callback: (Boolean) -> Unit) {
-        Permissions.with(this)
-            // TODO: REMOVE THE REQUEST AND JUST CHECK THE STATUS?
-            .request(Manifest.permission.RECORD_AUDIO)
-            .onAllGranted {
-                callback(true)
-            }
-            .onAnyDenied {
-                callback(false)
-            }
-            .execute()
+        val micPermission = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.RECORD_AUDIO
+        )
+
+        callback(micPermission == PackageManager.PERMISSION_GRANTED)
     }
 
     /**
