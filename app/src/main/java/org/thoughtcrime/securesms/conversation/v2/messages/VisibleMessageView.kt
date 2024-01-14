@@ -12,6 +12,9 @@ import android.view.Gravity
 import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.LinearInterpolator
+import android.view.animation.RotateAnimation
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.annotation.ColorInt
@@ -35,6 +38,7 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.ViewUtil
 import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsignal.utilities.IdPrefix
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
@@ -63,7 +67,6 @@ import kotlin.math.sqrt
 
 @AndroidEntryPoint
 class VisibleMessageView : LinearLayout {
-
     @Inject lateinit var threadDb: ThreadDatabase
     @Inject lateinit var lokiThreadDb: LokiThreadDatabase
     @Inject lateinit var lokiApiDb: LokiAPIDatabase
@@ -91,6 +94,9 @@ class VisibleMessageView : LinearLayout {
     var onSwipeToReply: (() -> Unit)? = null
     var onLongPress: (() -> Unit)? = null
     val messageContentView: VisibleMessageContentView by lazy { binding.messageContentView.root }
+
+    private var rotateAnimation: RotateAnimation? = null
+    private var rotationAnimationListener: DocumentView.RotationAnimationListener? = null
 
     companion object {
         const val swipeToReplyThreshold = 64.0f // dp
@@ -120,6 +126,8 @@ class VisibleMessageView : LinearLayout {
     }
     // endregion
 
+    var messagesWeHaveBound = mutableListOf<Long>()
+
     // region Updating
     fun bind(
         message: MessageRecord,
@@ -133,6 +141,16 @@ class VisibleMessageView : LinearLayout {
         delegate: VisibleMessageViewDelegate? = null,
         onAttachmentNeedsDownload: (Long, Long) -> Unit
     ) {
+        /*
+        // TODO: Why is this `bind()` call getting hit for each message TWICE IN A ROW?!?!
+        Log.d("[ACL]", "Hit VisibleMessageView.bind() on message with id: ${message.id}")
+        if (message.id in messagesWeHaveBound) {
+            Log.d("[ACL]", "Already bound message ${message.id} - bailing!")
+            return
+        }
+        messagesWeHaveBound.add(message.id)
+        */
+
         val threadID = message.threadId
         val thread = threadDb.getRecipientForThreadId(threadID) ?: return
         val isGroupThread = thread.isGroupRecipient
@@ -256,6 +274,38 @@ class VisibleMessageView : LinearLayout {
         }
         else {
             binding.emojiReactionsView.root.isVisible = false
+        }
+
+        // Make the icon for the file appear as sending if attachment download is not yet complete
+        // TODO: This seems to have a race-condition where other, previously downloaded attachments
+        // TODO: get the spinner icon (but do not spin) during download of the message we're
+        // TODO: actually downloading. Ask Harris what he thinks...
+        if (message.isMediaPending) { // && !message.isRead && !message.isDelivered) {
+            Log.d("[ACL]", "[VisibleMessageView] Message media is pending so applying spinner animation!")
+
+            // Create the animation
+            rotateAnimation = RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f).also {
+                it.interpolator = LinearInterpolator()
+                it.repeatCount = 999999 // Animation.INFINITE - Note: If we set the repeat count to INFINITE then the `onAnimationEnd` callback is never called so we'll use a big number for repeats instead!
+                it.duration = 1000 // Duration is in milliseconds, so 1000ms is 1 second
+            }
+
+            // Set a custom animation listener on our rotate animation so when it stops (which
+            // occurs when the attachment download has completed) we can change the icon back to the
+            // file icon.
+            // TODO" This animation listener never triggers! Awesome! Thanks!
+            rotationAnimationListener = DocumentView.RotationAnimationListener(
+                binding.messageContentView.documentView.documentViewIconImageView,
+                binding.messageContentView.documentView.documentViewIconImageView.drawable
+            ).also { rotateAnimation?.setAnimationListener(it) }
+
+
+            // Set the icon image and start the rotation to act like a spinner
+            // Note: SOMETHING triggers a refresh when the file attachment download completes. It's
+            // not our listener (above, now commented) because even if we try to use it we never hit
+            // the `onAnimationEnd` callback! GRRR!!!
+            binding.messageContentView.documentView.documentViewIconImageView.setImageResource(R.drawable.ic_message_details__refresh)
+            binding.messageContentView.documentView.documentViewIconImageView.startAnimation(rotateAnimation)
         }
 
         // Populate content view

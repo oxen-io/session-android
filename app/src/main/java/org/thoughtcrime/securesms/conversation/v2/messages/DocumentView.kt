@@ -33,6 +33,7 @@ class DocumentView : LinearLayout {
         binding.documentTitleTextView.setTextColor(textColor)
         binding.documentViewIconImageView.imageTintList = ColorStateList.valueOf(textColor)
 
+        /*
         // Make the icon for the file appear as sending if attachment download is not yet complete
         // Note: The `!message.isRead/isDelivered` clause stops previous messages from changing icon
         // when we/ receive a new message with a non-scheme attachment (like a zip etc.). I have no
@@ -41,7 +42,7 @@ class DocumentView : LinearLayout {
         // should be.
         // TODO: Is this due to a race condition? Ask Harris what he thinks...
         if (message.isMediaPending && !message.isRead && !message.isDelivered) {
-            Log.d("[ACL]", "[DocumentView] Setting `documentViewIconImageView` to look like status pending!")
+            Log.d("[ACL]", "[DocumentView] Setting `documentViewIconImageView` to look like status pending! 12345")
 
             // Create the animation
             var rotateAnimation = RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
@@ -60,23 +61,25 @@ class DocumentView : LinearLayout {
             binding.documentViewIconImageView.setImageResource(R.drawable.ic_message_details__refresh)
             binding.documentViewIconImageView.startAnimation(rotateAnimation)
         }
+        */
     }
     // endregion
 
     // Class to listen for the end of the download 'rotation' animation and set the document icon
     // back on the message's ImageView.
-    private class RotationAnimationListener(val documentViewIconImageView: ImageView, val originalDrawable: Drawable): AnimationListener {
+    class RotationAnimationListener(private val documentViewIconImageView: ImageView, private val originalDrawable: Drawable): AnimationListener {
         override fun onAnimationStart(animation: Animation?) { /* Do nothing */ }
 
         override fun onAnimationEnd(animation: Animation?) {
             Log.d("[ACL]", "Detected that animation ended - resetting document icon!")
             // Set the document icon back on the ImageView instead of the rotating icon
-            // TODO: Is there a way to get the correct document icon for the user's current theme?
-            //documentViewIconImageView.setImageResource(R.drawable.ic_document_large_light)
+            // Note: `setImageResource` operates on the UI thread which apparently can cause a
+            // "latency hiccup" so `setImageDrawable` is preferred.
+            //documentViewIconImageView.setImageResource(R.drawable.ic_document_large_light) // No!
             documentViewIconImageView.setImageDrawable(originalDrawable)
         }
 
-        override fun onAnimationRepeat(animation: Animation?) {/* Do nothing */ }
+        override fun onAnimationRepeat(animation: Animation?) { /* Do nothing */ }
     }
 
 }
