@@ -1948,6 +1948,14 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     override fun saveAttachment(messages: Set<MessageRecord>) {
         val message = messages.first() as MmsMessageRecord
+
+        // Do not allow the user to download a file attachment before it has finished downloading
+        // TODO: Localise the msg in this toast!
+        if (message.isMediaPending) {
+            Toast.makeText(this, resources.getString(R.string.conversation_activity__wait_until_attachment_has_finished_downloading), Toast.LENGTH_LONG).show()
+            return
+        }
+
         SaveAttachmentTask.showWarningDialog(this) {
             Permissions.with(this)
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
