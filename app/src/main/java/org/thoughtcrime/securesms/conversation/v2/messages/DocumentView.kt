@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import androidx.annotation.ColorInt
+import androidx.core.view.isVisible
 import network.loki.messenger.databinding.ViewDocumentBinding
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 
@@ -26,8 +27,8 @@ class DocumentView : LinearLayout {
 
         // Show the progress spinner if the attachment is downloading, otherwise show
         // the document icon (and always remove the other, whichever one that is)
-        binding.documentViewProgress.visibility      = if (message.isMediaPending) { VISIBLE } else { GONE    }
-        binding.documentViewIconImageView.visibility = if (message.isMediaPending) { GONE    } else { VISIBLE }
+        binding.documentViewProgress.isVisible = message.isMediaPending
+        binding.documentViewIconImageView.isVisible = !message.isMediaPending
     }
     // endregion
 
