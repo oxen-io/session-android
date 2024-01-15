@@ -119,8 +119,6 @@ class VisibleMessageView : LinearLayout {
     }
     // endregion
 
-    var messagesWeHaveBound = mutableListOf<Long>()
-
     // region Updating
     fun bind(
         message: MessageRecord,

@@ -132,9 +132,6 @@ class VisibleMessageContentView : ConstraintLayout {
         }
 
         if (message is MmsMessageRecord) {
-
-            //if (message.isMediaPending) displaySpinnerDuringAttachmentDownload()
-
             message.slideDeck.asAttachments().forEach { attach ->
                 val dbAttachment = attach as? DatabaseAttachment ?: return@forEach
                 val attachmentId = dbAttachment.attachmentId.rowId
@@ -182,12 +179,6 @@ class VisibleMessageContentView : ConstraintLayout {
                 hideBody = true
                 // Document attachment
                 if (contactIsTrusted || message.isOutgoing) {
-                    // Show the progress spinner if the attachment is downloading, otherwise show
-                    // the document icon (and always remove the other, whichever one that is)
-                    binding.documentView.documentViewProgress.visibility      = if (message.isMediaPending) { VISIBLE } else { GONE    }
-                    binding.documentView.documentViewIconImageView.visibility = if (message.isMediaPending) { GONE    } else { VISIBLE }
-                    binding.root.invalidate() // Force layout update
-
                     binding.documentView.root.bind(message, VisibleMessageContentView.getTextColor(context, message))
                 } else {
                     binding.untrustedView.root.bind(UntrustedAttachmentView.AttachmentType.DOCUMENT, VisibleMessageContentView.getTextColor(context,message))

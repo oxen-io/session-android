@@ -23,6 +23,11 @@ class DocumentView : LinearLayout {
         binding.documentTitleTextView.text = document.fileName.or("Untitled File")
         binding.documentTitleTextView.setTextColor(textColor)
         binding.documentViewIconImageView.imageTintList = ColorStateList.valueOf(textColor)
+
+        // Show the progress spinner if the attachment is downloading, otherwise show
+        // the document icon (and always remove the other, whichever one that is)
+        binding.documentViewProgress.visibility      = if (message.isMediaPending) { VISIBLE } else { GONE    }
+        binding.documentViewIconImageView.visibility = if (message.isMediaPending) { GONE    } else { VISIBLE }
     }
     // endregion
 
