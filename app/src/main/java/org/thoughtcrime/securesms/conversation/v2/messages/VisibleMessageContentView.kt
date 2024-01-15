@@ -55,9 +55,6 @@ class VisibleMessageContentView : ConstraintLayout {
     var delegate: VisibleMessageViewDelegate? = null
     var indexInAdapter: Int = -1
 
-    //var rotationAnimationListener: DocumentView.RotationAnimationListener? = null
-    //var rotateAnimation: RotateAnimation? = null
-
     // region Lifecycle
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
