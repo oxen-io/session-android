@@ -11,9 +11,6 @@ import android.text.util.Linkify
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import android.view.animation.Animation
-import android.view.animation.LinearInterpolator
-import android.view.animation.RotateAnimation
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +19,6 @@ import androidx.core.text.getSpans
 import androidx.core.text.toSpannable
 import androidx.core.view.children
 import androidx.core.view.isVisible
-import com.google.android.material.progressindicator.CircularProgressIndicator
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewVisibleMessageContentBinding
 import okhttp3.HttpUrl
@@ -32,7 +28,6 @@ import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAt
 import org.session.libsession.utilities.ThemeUtil
 import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsession.utilities.recipients.Recipient
-import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.ModalUrlBottomSheet
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities
@@ -188,7 +183,7 @@ class VisibleMessageContentView : ConstraintLayout {
                 // Document attachment
                 if (contactIsTrusted || message.isOutgoing) {
                     // Show the progress spinner if the attachment is downloading, otherwise show
-                    // the document icon (and always remove the other)
+                    // the document icon (and always remove the other, whichever one that is)
                     binding.documentView.documentViewProgress.visibility      = if (message.isMediaPending) { VISIBLE } else { GONE    }
                     binding.documentView.documentViewIconImageView.visibility = if (message.isMediaPending) { GONE    } else { VISIBLE }
                     binding.root.invalidate() // Force layout update
