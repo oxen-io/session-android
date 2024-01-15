@@ -22,6 +22,7 @@ import androidx.core.text.getSpans
 import androidx.core.text.toSpannable
 import androidx.core.view.children
 import androidx.core.view.isVisible
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewVisibleMessageContentBinding
 import okhttp3.HttpUrl
@@ -54,8 +55,8 @@ class VisibleMessageContentView : ConstraintLayout {
     var delegate: VisibleMessageViewDelegate? = null
     var indexInAdapter: Int = -1
 
-    var rotationAnimationListener: DocumentView.RotationAnimationListener? = null
-    var rotateAnimation: RotateAnimation? = null
+    //var rotationAnimationListener: DocumentView.RotationAnimationListener? = null
+    //var rotateAnimation: RotateAnimation? = null
 
     // region Lifecycle
     constructor(context: Context) : super(context)
@@ -147,35 +148,6 @@ class VisibleMessageContentView : ConstraintLayout {
                 val attachmentId = dbAttachment.attachmentId.rowId
                 if (attach.transferState == AttachmentTransferProgress.TRANSFER_PROGRESS_PENDING
                     && MessagingModuleConfiguration.shared.storage.getAttachmentUploadJob(attachmentId) == null) {
-
-
-
-
-                    /*
-                    Log.d("[ACL]", "Hit displaySpinnerDuringAttachmentDownload!")
-
-                    // Create the animation that will rotate the spinner image around its center
-                    var rotateAnimation = RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
-                    rotateAnimation.interpolator = LinearInterpolator()
-                    rotateAnimation.repeatCount = Animation.INFINITE
-                    rotateAnimation.duration = 1000 // Duration is in milliseconds, so 1000ms is 1 second
-
-                    // Set a custom animation listener on our rotate animation so when it stops (which
-                    // occurs when the attachment download has completed) we can change the icon back to the
-                    // file icon.
-                    rotationAnimationListener = DocumentView.RotationAnimationListener(
-                        binding.documentView.documentViewIconImageView,
-                        binding.documentView.documentViewIconImageView.drawable
-                    )
-                    rotateAnimation.setAnimationListener(rotationAnimationListener)
-
-                    // Set the icon image and start the rotation animation
-                    binding.documentView.documentViewIconImageView.setImageResource(R.drawable.ic_message_details__refresh)
-                    binding.documentView.documentViewIconImageView.startAnimation(rotateAnimation)
-                    */
-
-
-
                     onAttachmentNeedsDownload(attachmentId, dbAttachment.mmsId)
                 }
             }
@@ -218,6 +190,12 @@ class VisibleMessageContentView : ConstraintLayout {
                 hideBody = true
                 // Document attachment
                 if (contactIsTrusted || message.isOutgoing) {
+                    // Show the progress spinner if the attachment is downloading, otherwise show
+                    // the document icon (and always remove the other)
+                    binding.documentView.documentViewProgress.visibility      = if (message.isMediaPending) { VISIBLE } else { GONE    }
+                    binding.documentView.documentViewIconImageView.visibility = if (message.isMediaPending) { GONE    } else { VISIBLE }
+                    binding.root.invalidate() // Force layout update
+
                     binding.documentView.root.bind(message, VisibleMessageContentView.getTextColor(context, message))
                 } else {
                     binding.untrustedView.root.bind(UntrustedAttachmentView.AttachmentType.DOCUMENT, VisibleMessageContentView.getTextColor(context,message))
@@ -358,30 +336,4 @@ class VisibleMessageContentView : ConstraintLayout {
     }
     // endregion
 
-    // Function to make the icon for an file attachment that is being downloaded into a spinner for
-    // the duration of the download task.
-    private fun displaySpinnerDuringAttachmentDownload() {
-        Log.d("[ACL]", "Hit displaySpinnerDuringAttachmentDownload!")
-
-        // Create the animation that will rotate the spinner image around its center
-        rotateAnimation = RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f).also {
-            it.interpolator = LinearInterpolator()
-            it.repeatCount = Animation.INFINITE
-            it.duration = 1000 // Duration is in milliseconds, so 1000ms is 1 second
-        }
-
-
-        // Set a custom animation listener on our rotate animation so when it stops (which
-        // occurs when the attachment download has completed) we can change the icon back to the
-        // file icon.
-        rotationAnimationListener = DocumentView.RotationAnimationListener(
-            binding.documentView.documentViewIconImageView,
-            binding.documentView.documentViewIconImageView.drawable
-        )
-        rotateAnimation?.setAnimationListener(rotationAnimationListener)
-
-        // Set the icon image and start the rotation animation
-        binding.documentView.documentViewIconImageView.setImageResource(R.drawable.ic_message_details__refresh)
-        binding.documentView.documentViewIconImageView.startAnimation(rotateAnimation)
-    }
 }
