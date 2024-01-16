@@ -13,6 +13,7 @@ import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.StyleSpan
+import android.util.Base64
 import android.view.View
 import android.widget.Toast
 import com.goterl.lazysodium.utils.KeyPair
@@ -24,6 +25,7 @@ import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.database.LokiAPIDatabaseProtocol
 import org.session.libsignal.utilities.KeyHelper
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.hexEncodedPublicKey
 import org.thoughtcrime.securesms.BaseActionBarActivity
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities
@@ -34,6 +36,9 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class RegisterActivity : BaseActionBarActivity() {
+
+    private val TEMPORARY_SEED_KEY = "TEMPORARY_SEED_KEY"
+    private val TEMPORARY_SHARED_PREFS_NAME = "TEMPORARY_SHARED_PREFS"
 
     @Inject
     lateinit var configFactory: ConfigFactory
@@ -83,10 +88,45 @@ class RegisterActivity : BaseActionBarActivity() {
 
     // region Updating
     private fun updateKeyPair() {
-        val keyPairGenerationResult = KeyPairUtilities.generate()
+        // When we go to generate a new Session ID we'll temporarily store the seed value so that if
+        // the user was in the process of creating a new Session ID but then navigated away from
+        // the app and it was subsequently closed for whatever reason (by the user, by Android if
+        // resources were low, etc.) then we can resume the registration process with the same ID.
+        val temporarySeed = retrieveTemporarySeedFromSharedPrefs()
+        Log.d("[ACL]", "Found temporary key in shared prefs?: ${temporarySeed != null}")
+
+        val keyPairGenerationResult = if (temporarySeed == null) KeyPairUtilities.generate() else KeyPairUtilities.generate(temporarySeed)
         seed = keyPairGenerationResult.seed
         ed25519KeyPair = keyPairGenerationResult.ed25519KeyPair
         x25519KeyPair = keyPairGenerationResult.x25519KeyPair
+
+        // Save seed in case we need it again. Note: `seed` will either be the temporary seed that
+        // we retrieved or the new seed that was generated - either way it's always the correct one.
+        saveTemporarySeedToSharedPrefs(seed!!)
+    }
+
+    private fun saveTemporarySeedToSharedPrefs(temporarySeed: ByteArray) {
+        Log.d("[ACL]", "Saving temporary seed!")
+        val sharedPrefsEditor = getSharedPreferences(TEMPORARY_SHARED_PREFS_NAME, Context.MODE_PRIVATE).edit()
+        val temporarySeedString = Base64.encodeToString(temporarySeed, Base64.DEFAULT)
+        sharedPrefsEditor.putString(TEMPORARY_SEED_KEY, temporarySeedString)
+        sharedPrefsEditor.commit()
+    }
+
+    private fun retrieveTemporarySeedFromSharedPrefs(): ByteArray? {
+        Log.d("[ACL]", "Retrieving temporary seed!")
+        val sharedPrefs = getSharedPreferences(TEMPORARY_SHARED_PREFS_NAME, Context.MODE_PRIVATE)
+        val seedString = sharedPrefs.getString(TEMPORARY_SEED_KEY, null)
+
+        Log.d("[ACL]", "Retrieval successful?: ${seedString != null}")
+
+        return if (seedString != null) Base64.decode(seedString, Base64.DEFAULT) else null
+    }
+
+    private fun deleteTemporarySeedFromSharedPrefs() {
+        Log.d("[ACL]", "Deleting temporary seed!")
+        val sharedPrefsEditor = getSharedPreferences(TEMPORARY_SHARED_PREFS_NAME, Context.MODE_PRIVATE).edit()
+        sharedPrefsEditor.clear().commit()
     }
 
     private fun updatePublicKeyTextView() {
@@ -127,6 +167,11 @@ class RegisterActivity : BaseActionBarActivity() {
         database.clearReceivedMessageHashValues()
 
         KeyPairUtilities.store(this, seed!!, ed25519KeyPair!!, x25519KeyPair!!)
+
+        // Now that the user has proceeded and we've stored their Session ID details we can remove
+        // the temporary copy of the seed held in shared prefs.
+        deleteTemporarySeedFromSharedPrefs()
+
         configFactory.keyPairChanged()
         val userHexEncodedPublicKey = x25519KeyPair!!.hexEncodedPublicKey
         val registrationID = KeyHelper.generateRegistrationId(false)
