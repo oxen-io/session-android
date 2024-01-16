@@ -14,17 +14,11 @@ import org.thoughtcrime.securesms.util.setUpActionBarSessionLogo
 class LandingActivity : BaseActionBarActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d("[ACL]", "Hit LandingActivity.onCreate")
-
         super.onCreate(savedInstanceState)
 
-        // If we have an existing instance of Session running then close this activity so that we
-        // resume the previous activity
-        if (!isTaskRoot) {
-            Log.d("[ACL]", "LandingActivity thinks it IS NOT Task root - finishing this activity!")
-            finish()
-            return
-        } else { Log.d("[ACL]", "LandingActivity thinks it IS the Task root!") }
+        // We always hit this LandingActivity on launch - but if there is a previous instance of
+        // Session then close this activity to resume the last activity from the previous instance.
+        if (!isTaskRoot) { finish(); return }
 
         val binding = ActivityLandingBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -39,31 +33,6 @@ class LandingActivity : BaseActionBarActivity() {
         TextSecurePreferences.setPasswordDisabled(this, true)
         // AC: This is a temporary workaround to trick the old code that the screen is unlocked.
         KeyCachingService.setMasterSecret(applicationContext, Object())
-    }
-
-    override fun onResume() {
-        Log.d("[ACL]", "Hit LandingActivity.onResume!")
-        super.onResume()
-    }
-
-    override fun onStart() {
-        Log.d("[ACL]", "Hit LandingActivity.onStart!")
-        super.onStart()
-    }
-
-    override fun onPause() {
-        Log.d("[ACL]", "Hit LandingActivity.onPause!")
-        super.onPause()
-    }
-
-    override fun onStop() {
-        Log.d("[ACL]", "Hit LandingActivity.onStop!")
-        super.onStop()
-    }
-
-    override fun onDestroy() {
-        Log.d("[ACL]", "Hit LandingActivity.onDestroy!")
-        super.onDestroy()
     }
 
     private fun register() {

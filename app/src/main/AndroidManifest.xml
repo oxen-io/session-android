@@ -105,7 +105,6 @@
         <activity
             android:name="org.thoughtcrime.securesms.onboarding.RegisterActivity"
             android:screenOrientation="portrait"
-            android:alwaysRetainTaskState="true"
             android:theme="@style/Theme.Session.DayNight.FlatActionBar" />
         <activity
             android:name="org.thoughtcrime.securesms.onboarding.RecoveryPhraseRestoreActivity"
@@ -126,15 +125,10 @@
             android:name="org.thoughtcrime.securesms.onboarding.PNModeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Session.DayNight.FlatActionBar" />
-
-
-        <!-- ACL -->
-        <!-- android:launchMode="singleTop" -->
         <activity
             android:name="org.thoughtcrime.securesms.home.HomeActivity"
             android:screenOrientation="portrait"
-
-            android:alwaysRetainTaskState="true"
+            android:launchMode="singleTask"
             android:theme="@style/Theme.Session.DayNight.NoActionBar" />
         <activity
             android:name="org.thoughtcrime.securesms.messagerequests.MessageRequestsActivity"
@@ -321,8 +315,8 @@
             android:name="org.thoughtcrime.securesms.service.KeyCachingService"
             android:enabled="true"
             android:exported="false" android:foregroundServiceType="specialUse">
-<!--            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"-->
-<!--                android:value="@string/preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint"/>-->
+            <!--            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"-->
+            <!--                android:value="@string/preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint"/>-->
         </service>
         <service
             android:name="org.thoughtcrime.securesms.service.DirectShareService"

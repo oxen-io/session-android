@@ -49,8 +49,6 @@ class RegisterActivity : BaseActionBarActivity() {
 
     // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d("[ACL]", "Hit RegisterActivity.onCreate")
-
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -81,31 +79,6 @@ class RegisterActivity : BaseActionBarActivity() {
         binding.termsTextView.movementMethod = LinkMovementMethod.getInstance()
         binding.termsTextView.text = termsExplanation
         updateKeyPair()
-    }
-
-    override fun onResume() {
-        Log.d("[ACL]", "Hit RegisterActivity.onResume!")
-        super.onResume()
-    }
-
-    override fun onStart() {
-        Log.d("[ACL]", "Hit RegisterActivity.onStart!")
-        super.onStart()
-    }
-
-    override fun onPause() {
-        Log.d("[ACL]", "Hit RegisterActivity.onPause!")
-        super.onPause()
-    }
-
-    override fun onStop() {
-        Log.d("[ACL]", "Hit RegisterActivity.onStop!")
-        super.onStop()
-    }
-
-    override fun onDestroy() {
-        Log.d("[ACL]", "Hit RegisterActivity.onDestroy!")
-        super.onDestroy()
     }
     // endregion
 
