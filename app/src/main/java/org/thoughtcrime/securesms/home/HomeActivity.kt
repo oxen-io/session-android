@@ -162,6 +162,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
     // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {
+        Log.d("[ACL]", "Hit HomeActivity.onCreate")
+
         super.onCreate(savedInstanceState, isReady)
         // Set content view
         binding = ActivityHomeBinding.inflate(layoutInflater)

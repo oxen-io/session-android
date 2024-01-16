@@ -24,6 +24,7 @@ import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.database.LokiAPIDatabaseProtocol
 import org.session.libsignal.utilities.KeyHelper
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.hexEncodedPublicKey
 import org.thoughtcrime.securesms.BaseActionBarActivity
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities
@@ -48,6 +49,8 @@ class RegisterActivity : BaseActionBarActivity() {
 
     // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("[ACL]", "Hit RegisterActivity.onCreate")
+
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -78,6 +81,31 @@ class RegisterActivity : BaseActionBarActivity() {
         binding.termsTextView.movementMethod = LinkMovementMethod.getInstance()
         binding.termsTextView.text = termsExplanation
         updateKeyPair()
+    }
+
+    override fun onResume() {
+        Log.d("[ACL]", "Hit RegisterActivity.onResume!")
+        super.onResume()
+    }
+
+    override fun onStart() {
+        Log.d("[ACL]", "Hit RegisterActivity.onStart!")
+        super.onStart()
+    }
+
+    override fun onPause() {
+        Log.d("[ACL]", "Hit RegisterActivity.onPause!")
+        super.onPause()
+    }
+
+    override fun onStop() {
+        Log.d("[ACL]", "Hit RegisterActivity.onStop!")
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        Log.d("[ACL]", "Hit RegisterActivity.onDestroy!")
+        super.onDestroy()
     }
     // endregion
 

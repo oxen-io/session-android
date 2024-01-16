@@ -105,6 +105,7 @@
         <activity
             android:name="org.thoughtcrime.securesms.onboarding.RegisterActivity"
             android:screenOrientation="portrait"
+            android:alwaysRetainTaskState="true"
             android:theme="@style/Theme.Session.DayNight.FlatActionBar" />
         <activity
             android:name="org.thoughtcrime.securesms.onboarding.RecoveryPhraseRestoreActivity"
@@ -125,10 +126,15 @@
             android:name="org.thoughtcrime.securesms.onboarding.PNModeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Session.DayNight.FlatActionBar" />
+
+
+        <!-- ACL -->
+        <!-- android:launchMode="singleTop" -->
         <activity
             android:name="org.thoughtcrime.securesms.home.HomeActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTask"
+
+            android:alwaysRetainTaskState="true"
             android:theme="@style/Theme.Session.DayNight.NoActionBar" />
         <activity
             android:name="org.thoughtcrime.securesms.messagerequests.MessageRequestsActivity"
