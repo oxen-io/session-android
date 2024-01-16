@@ -315,8 +315,8 @@
             android:name="org.thoughtcrime.securesms.service.KeyCachingService"
             android:enabled="true"
             android:exported="false" android:foregroundServiceType="specialUse">
-            <!--            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"-->
-            <!--                android:value="@string/preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint"/>-->
+<!--            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"-->
+<!--                android:value="@string/preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint"/>-->
         </service>
         <service
             android:name="org.thoughtcrime.securesms.service.DirectShareService"

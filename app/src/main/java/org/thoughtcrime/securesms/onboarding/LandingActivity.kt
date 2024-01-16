@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import network.loki.messenger.databinding.ActivityLandingBinding
 import org.session.libsession.utilities.TextSecurePreferences
-import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.BaseActionBarActivity
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
 import org.thoughtcrime.securesms.service.KeyCachingService
