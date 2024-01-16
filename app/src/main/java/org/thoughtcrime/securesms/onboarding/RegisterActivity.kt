@@ -37,8 +37,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class RegisterActivity : BaseActionBarActivity() {
 
-    private val TEMPORARY_SEED_KEY = "TEMPORARY_SEED_KEY"
-    private val TEMPORARY_SHARED_PREFS_NAME = "TEMPORARY_SHARED_PREFS"
+    private val temporarySeedKey = "TEMPORARY_SEED_KEY"
 
     @Inject
     lateinit var configFactory: ConfigFactory
@@ -82,51 +81,23 @@ class RegisterActivity : BaseActionBarActivity() {
         }, 61, 75, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         binding.termsTextView.movementMethod = LinkMovementMethod.getInstance()
         binding.termsTextView.text = termsExplanation
-        updateKeyPair()
+        updateKeyPair(savedInstanceState?.getByteArray(temporarySeedKey))
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        seed?.let { tempSeed ->
+            outState.putByteArray(temporarySeedKey, tempSeed)
+        }
     }
     // endregion
 
     // region Updating
-    private fun updateKeyPair() {
-        // When we go to generate a new Session ID we'll temporarily store the seed value so that if
-        // the user was in the process of creating a new Session ID but then navigated away from
-        // the app and it was subsequently closed for whatever reason (by the user, by Android if
-        // resources were low, etc.) then we can resume the registration process with the same ID.
-        val temporarySeed = retrieveTemporarySeedFromSharedPrefs()
-        Log.d("[ACL]", "Found temporary key in shared prefs?: ${temporarySeed != null}")
-
-        val keyPairGenerationResult = if (temporarySeed == null) KeyPairUtilities.generate() else KeyPairUtilities.generate(temporarySeed)
-        seed = keyPairGenerationResult.seed
+    private fun updateKeyPair(temporaryKey: ByteArray?) {
+        val keyPairGenerationResult = temporaryKey?.let(KeyPairUtilities::generate) ?: KeyPairUtilities.generate()
+        seed           = keyPairGenerationResult.seed
         ed25519KeyPair = keyPairGenerationResult.ed25519KeyPair
-        x25519KeyPair = keyPairGenerationResult.x25519KeyPair
-
-        // Save seed in case we need it again. Note: `seed` will either be the temporary seed that
-        // we retrieved or the new seed that was generated - either way it's always the correct one.
-        saveTemporarySeedToSharedPrefs(seed!!)
-    }
-
-    private fun saveTemporarySeedToSharedPrefs(temporarySeed: ByteArray) {
-        Log.d("[ACL]", "Saving temporary seed!")
-        val sharedPrefsEditor = getSharedPreferences(TEMPORARY_SHARED_PREFS_NAME, Context.MODE_PRIVATE).edit()
-        val temporarySeedString = Base64.encodeToString(temporarySeed, Base64.DEFAULT)
-        sharedPrefsEditor.putString(TEMPORARY_SEED_KEY, temporarySeedString)
-        sharedPrefsEditor.commit()
-    }
-
-    private fun retrieveTemporarySeedFromSharedPrefs(): ByteArray? {
-        Log.d("[ACL]", "Retrieving temporary seed!")
-        val sharedPrefs = getSharedPreferences(TEMPORARY_SHARED_PREFS_NAME, Context.MODE_PRIVATE)
-        val seedString = sharedPrefs.getString(TEMPORARY_SEED_KEY, null)
-
-        Log.d("[ACL]", "Retrieval successful?: ${seedString != null}")
-
-        return if (seedString != null) Base64.decode(seedString, Base64.DEFAULT) else null
-    }
-
-    private fun deleteTemporarySeedFromSharedPrefs() {
-        Log.d("[ACL]", "Deleting temporary seed!")
-        val sharedPrefsEditor = getSharedPreferences(TEMPORARY_SHARED_PREFS_NAME, Context.MODE_PRIVATE).edit()
-        sharedPrefsEditor.clear().commit()
+        x25519KeyPair  = keyPairGenerationResult.x25519KeyPair
     }
 
     private fun updatePublicKeyTextView() {
@@ -165,13 +136,7 @@ class RegisterActivity : BaseActionBarActivity() {
         // which can result in an invalid database state
         database.clearAllLastMessageHashes()
         database.clearReceivedMessageHashValues()
-
         KeyPairUtilities.store(this, seed!!, ed25519KeyPair!!, x25519KeyPair!!)
-
-        // Now that the user has proceeded and we've stored their Session ID details we can remove
-        // the temporary copy of the seed held in shared prefs.
-        deleteTemporarySeedFromSharedPrefs()
-
         configFactory.keyPairChanged()
         val userHexEncodedPublicKey = x25519KeyPair!!.hexEncodedPublicKey
         val registrationID = KeyHelper.generateRegistrationId(false)
