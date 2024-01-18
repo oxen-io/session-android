@@ -20,7 +20,6 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.compose.ui.text.input.ImeAction
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.BuildConfig
@@ -38,7 +37,6 @@ import org.session.libsession.avatars.ProfileContactPhoto
 import org.session.libsession.utilities.*
 import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol
 import org.session.libsession.utilities.recipients.Recipient
-import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.avatar.AvatarSelection
 import org.thoughtcrime.securesms.components.ProfilePictureView
@@ -212,7 +210,8 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             binding.displayNameEditText.setOnEditorActionListener { v, actionId, event ->
                 when (actionId) {
                     // Note: IME_ACTION_DONE is how we've configured the soft keyboard to respond,
-                    // while IME_ACTION_UNSPECIFIED is what triggers when we hit enter on a keyboard.
+                    // while IME_ACTION_UNSPECIFIED is what triggers when we hit enter on a
+                    // physical keyboard.
                     EditorInfo.IME_ACTION_DONE, EditorInfo.IME_ACTION_UNSPECIFIED -> {
                         saveDisplayName()
                         displayNameEditActionMode?.finish()

@@ -44,13 +44,13 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:contentDescription="@string/AccessibilityId_username"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:visibility="invisible"
                     android:hint="@string/activity_settings_display_name_edit_text_hint"
                     android:imeOptions="actionDone"
                     android:inputType="textCapWords"
-                    android:maxLines="1"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
-                    android:visibility="invisible" />
+                    android:maxLines="1" />
 
                 <TextView
                     android:id="@+id/btnGroupNameDisplay"
@@ -491,32 +491,32 @@
                 android:alpha="0.6"
                 android:textSize="@dimen/very_small_font_size" />
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:animateLayoutChanges="true">
-
-                <RelativeLayout
-                    android:id="@+id/loader"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#A4000000"
-                    android:visibility="gone">
-
-                    <com.github.ybq.android.spinkit.SpinKitView
-                        style="@style/SpinKitView.Large.ThreeBounce"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:layout_marginTop="8dp"
-                        app:SpinKit_Color="@android:color/white" />
-
-                </RelativeLayout>
-
-            </FrameLayout>
-
         </LinearLayout>
 
     </ScrollView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
+
+        <RelativeLayout
+            android:id="@+id/loader"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#A4000000"
+            android:visibility="gone">
+
+            <com.github.ybq.android.spinkit.SpinKitView
+                style="@style/SpinKitView.Large.ThreeBounce"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="8dp"
+                app:SpinKit_Color="@android:color/white" />
+
+        </RelativeLayout>
+
+    </FrameLayout>
 
 </RelativeLayout>
