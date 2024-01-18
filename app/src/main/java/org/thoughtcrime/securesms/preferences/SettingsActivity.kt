@@ -76,8 +76,6 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             return TextSecurePreferences.getLocalNumber(this)!!
         }
 
-    //private val settingsBarActionMode
-
     companion object {
         const val updatedProfileResultCode = 1234
         private const val SCROLL_STATE = "SCROLL_STATE"
