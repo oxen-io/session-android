@@ -36,6 +36,7 @@ import org.session.libsession.avatars.ProfileContactPhoto
 import org.session.libsession.utilities.*
 import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.avatar.AvatarSelection
 import org.thoughtcrime.securesms.components.ProfilePictureView
@@ -396,6 +397,9 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
     private inner class DisplayNameEditActionModeCallback: ActionMode.Callback {
 
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+
+            Log.d("[ACL]", "SettingsActivity.onCreateActionMode: mode is: $mode.")
+
             mode.title = getString(R.string.activity_settings_display_name_edit_text_hint)
             mode.menuInflater.inflate(R.menu.menu_apply, menu)
             this@SettingsActivity.displayNameEditActionMode = mode
