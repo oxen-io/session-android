@@ -17,8 +17,10 @@ import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.compose.ui.text.input.ImeAction
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.BuildConfig
@@ -75,6 +77,8 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         get() {
             return TextSecurePreferences.getLocalNumber(this)!!
         }
+
+    //private val settingsBarActionMode
 
     companion object {
         const val updatedProfileResultCode = 1234
@@ -200,9 +204,35 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         if (isEditingDisplayName) {
             binding.displayNameEditText.setText(binding.btnGroupNameDisplay.text)
+
+
+            //binding.displayNameEditText.onEditorAction()
+
+
             binding.displayNameEditText.selectAll()
             binding.displayNameEditText.requestFocus()
             inputMethodManager.showSoftInput(binding.displayNameEditText, 0)
+
+            // Save the updated display name when the user presses enter on the soft keyboard
+            binding.displayNameEditText.setOnEditorActionListener { v, actionId, event ->
+
+                Log.d("[ACL]", "Hit setOnEditorActionListener with action id: $actionId")
+
+                when (actionId) {
+                    // Note: IME_ACTION_DONE is how we've configured the soft keyboard to respond,
+                    // while IME_ACTION_UNSPECIFIED is what triggers when we hit enter on a keyboard.
+                    EditorInfo.IME_ACTION_DONE, EditorInfo.IME_ACTION_UNSPECIFIED -> {
+                        Log.d("[ACL]", "Got IME_ACTION_DONE so savingDisplayName!")
+                        saveDisplayName()
+                        displayNameEditActionMode?.finish()
+                        true
+                    }
+                    else -> false
+                }
+            }
+
+
+
         } else {
             inputMethodManager.hideSoftInputFromWindow(binding.displayNameEditText.windowToken, 0)
         }
@@ -267,6 +297,9 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
      * @return true if the update was successful.
      */
     private fun saveDisplayName(): Boolean {
+
+        Log.d("[ACL]", "Hit saveDisplayName!")
+
         val displayName = binding.displayNameEditText.text.toString().trim()
         if (displayName.isEmpty()) {
             Toast.makeText(this, R.string.activity_settings_display_name_missing_error, Toast.LENGTH_SHORT).show()

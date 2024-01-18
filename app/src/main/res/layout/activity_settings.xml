@@ -45,7 +45,7 @@
                     android:layout_centerInParent="true"
                     android:contentDescription="@string/AccessibilityId_username"
                     android:hint="@string/activity_settings_display_name_edit_text_hint"
-                    android:imeOptions="aactionSend"
+                    android:imeOptions="actionDone"
                     android:inputType="textCapWords"
                     android:maxLines="1"
                     android:paddingTop="12dp"
