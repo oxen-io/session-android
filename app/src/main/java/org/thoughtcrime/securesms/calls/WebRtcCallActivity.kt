@@ -165,7 +165,6 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
                 .request(Manifest.permission.CAMERA)
                 .onAllGranted {
                     val intent = WebRtcCallService.cameraEnabled(this, !viewModel.videoEnabled)
-                    intent.flags
                     startService(intent)
                 }
                 .execute()
