@@ -165,6 +165,7 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
                 .request(Manifest.permission.CAMERA)
                 .onAllGranted {
                     val intent = WebRtcCallService.cameraEnabled(this, !viewModel.videoEnabled)
+                    intent.flags
                     startService(intent)
                 }
                 .execute()
@@ -334,6 +335,10 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
                     if (isEnabled) {
                         viewModel.localRenderer?.let { surfaceView ->
                             surfaceView.setZOrderOnTop(true)
+
+                            // Mirror the video preview of the person making the call to prevent disorienting them
+                            surfaceView.setMirror(true)
+
                             binding.localRenderer.addView(surfaceView)
                         }
                     }
