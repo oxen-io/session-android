@@ -35,6 +35,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class RegisterActivity : BaseActionBarActivity() {
 
+    private val temporarySeedKey = "TEMPORARY_SEED_KEY"
+
     @Inject
     lateinit var configFactory: ConfigFactory
 
@@ -77,16 +79,23 @@ class RegisterActivity : BaseActionBarActivity() {
         }, 61, 75, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         binding.termsTextView.movementMethod = LinkMovementMethod.getInstance()
         binding.termsTextView.text = termsExplanation
-        updateKeyPair()
+        updateKeyPair(savedInstanceState?.getByteArray(temporarySeedKey))
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        seed?.let { tempSeed ->
+            outState.putByteArray(temporarySeedKey, tempSeed)
+        }
     }
     // endregion
 
     // region Updating
-    private fun updateKeyPair() {
-        val keyPairGenerationResult = KeyPairUtilities.generate()
-        seed = keyPairGenerationResult.seed
+    private fun updateKeyPair(temporaryKey: ByteArray?) {
+        val keyPairGenerationResult = temporaryKey?.let(KeyPairUtilities::generate) ?: KeyPairUtilities.generate()
+        seed           = keyPairGenerationResult.seed
         ed25519KeyPair = keyPairGenerationResult.ed25519KeyPair
-        x25519KeyPair = keyPairGenerationResult.x25519KeyPair
+        x25519KeyPair  = keyPairGenerationResult.x25519KeyPair
     }
 
     private fun updatePublicKeyTextView() {
@@ -125,7 +134,6 @@ class RegisterActivity : BaseActionBarActivity() {
         // which can result in an invalid database state
         database.clearAllLastMessageHashes()
         database.clearReceivedMessageHashValues()
-
         KeyPairUtilities.store(this, seed!!, ed25519KeyPair!!, x25519KeyPair!!)
         configFactory.keyPairChanged()
         val userHexEncodedPublicKey = x25519KeyPair!!.hexEncodedPublicKey
