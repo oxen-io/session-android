@@ -28,7 +28,7 @@ import network.loki.messenger.R;
 public class RecentEmojiPageModel implements EmojiPageModel {
   private static final String TAG                  = RecentEmojiPageModel.class.getSimpleName();
   private static final String EMOJI_LRU_PREFERENCE = "pref_recent_emoji2";
-  private static final int    EMOJI_LRU_SIZE       = 50;
+  private static final int    EMOJI_LRU_SIZE       = 50; // ACL - I DON'T SEE THE POINT OF THIS BEING 50 - WE ONLY DISPLAY 6!
   public static final  String KEY                  = "Recents";
   public static final List<String> DEFAULT_REACTIONS_LIST =
           Arrays.asList("\ud83d\ude02", "\ud83e\udd70", "\ud83d\ude22", "\ud83d\ude21", "\ud83d\ude2e", "\ud83d\ude08");
@@ -42,11 +42,22 @@ public class RecentEmojiPageModel implements EmojiPageModel {
   }
 
   private LinkedHashSet<String> getPersistedCache() {
+
+    Log.d("[ACL]", "Hit getPersistedCache");
+
     String serialized = prefs.getString(EMOJI_LRU_PREFERENCE, "[]");
     try {
-      CollectionType collectionType = TypeFactory.defaultInstance()
-                                                 .constructCollectionType(LinkedHashSet.class, String.class);
-      return JsonUtil.getMapper().readValue(serialized, collectionType);
+      CollectionType collectionType = TypeFactory.defaultInstance().constructCollectionType(LinkedHashSet.class, String.class);
+
+      LinkedHashSet<String> emojiSet = JsonUtil.getMapper().readValue(serialized, collectionType);
+
+      int x = 0;
+      for (Iterator<String> iterator = emojiSet.iterator(); iterator.hasNext();) {
+        Log.d("[ACL]", "Emoji " + x + " is: " + iterator.next());
+      }
+
+      return emojiSet;
+      //return JsonUtil.getMapper().readValue(serialized, collectionType);
     } catch (IOException e) {
       Log.w(TAG, e);
       return new LinkedHashSet<>();
@@ -63,6 +74,9 @@ public class RecentEmojiPageModel implements EmojiPageModel {
   }
 
   @Override public List<String> getEmoji() {
+
+    Log.d("[ACL]", "Hit getEmoji!");
+
     List<String> recent = new ArrayList<>(recentlyUsed);
     List<String> out = new ArrayList<>(DEFAULT_REACTIONS_LIST.size());
 
@@ -96,12 +110,26 @@ public class RecentEmojiPageModel implements EmojiPageModel {
   }
 
   public void onCodePointSelected(String emoji) {
-    recentlyUsed.remove(emoji);
-    recentlyUsed.add(emoji);
 
+    Log.d("[ACL]", "Hit onCodePointSelected - we got: " + emoji + " - about to remove then add back to list (whyu?");
+
+    // ACL - I guess this puts the emoji at the front of the most recently used list (DOES IT?!) - but what it
+    // should really be doing is shuffling all recently used emojis to the right and the last one
+    // falls off
+    recentlyUsed.remove(emoji); // REMOVE IF EXISTS ANYWHERE IN LIST
+
+    // ACL - INSTEAD OF JUST ADDING TO FRONT WE SHOULD FIRST SHIFT EVERYTHING ACROSS ONE
+
+    recentlyUsed.add(emoji);    // PUT BACK AT FRONT OF LIST
+
+    // ACL - I don't understand why EMOJI_LRU_SIZE is 50 but we only ever show 6 recently used emojis
     if (recentlyUsed.size() > EMOJI_LRU_SIZE) {
+
+      Log.d("[ACL]", "recentlyUsed.size is greater than EMOJI_LRU_SIZE, i.e., " + recentlyUsed.size() + " > " + EMOJI_LRU_SIZE);
+
       Iterator<String> iterator = recentlyUsed.iterator();
-      iterator.next();
+      String aboutToRemoveThis = iterator.next();
+      Log.d("[ACL]", "About to remove this: " + aboutToRemoveThis);
       iterator.remove();
     }
 
