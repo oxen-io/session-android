@@ -54,12 +54,16 @@ class Camera(context: Context,
             Log.w(TAG, "Tried to flip camera without capturer or less than 2 cameras")
             return
         }
-        activeDirection = PENDING
+        Log.d("[ACL]", "Hit Camera.flip and setting active direction to PENDING!")
+        activeDirection = PENDING // ACL this is what's sticking!
         capturer.switchCamera(this)
     }
 
     override fun onCameraSwitchDone(isFrontFacing: Boolean) {
         activeDirection = if (isFrontFacing) FRONT else BACK
+
+        Log.d("[ACL]", "Hit onCameraSwitchDone - active direction is now: $activeDirection")
+
         cameraEventListener.onCameraSwitchCompleted(CameraState(activeDirection, cameraCount))
     }
 
