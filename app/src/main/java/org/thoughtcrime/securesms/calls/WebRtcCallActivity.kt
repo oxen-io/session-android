@@ -332,16 +332,6 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
                 viewModel.localVideoEnabledState.collect { isEnabled ->
                     binding.localRenderer.removeAllViews()
                     if (isEnabled) {
-
-                        //viewModel.localRenderer.setZOrderOnTop(true)
-                        //viewModel.localRenderer?.setMirror(true)
-
-                        // Mirror the video preview of the person making the call to prevent
-                        // disorienting them. Note: This must be called _outside_ the let statement
-                        // (which only executes the first time) so that when the user switches from
-                        // front to back cameras the front-preview is again mirrored correctly.
-                        //viewModel.localRenderer?.setMirror(true)
-
                         viewModel.localRenderer?.let { surfaceView ->
                             surfaceView.setZOrderOnTop(true)
 
