@@ -326,15 +326,6 @@ class PeerConnectionWrapper(private val context: Context,
     }
 
     override fun onCameraSwitchCompleted(newCameraState: CameraState) {
-
-        //localRenderer.
-
-        // mirror rotation offset
-        //rotationVideoSink.mirrored = newCameraState.activeDirection == CameraState.Direction.FRONT
-
-        Log.d("[ACL]", "Hit PeerConnectionWrapper.onCameraSwitchCompleted - video sink is mirrored: ${rotationVideoSink.mirrored}")
-
-
         cameraEventListener.onCameraSwitchCompleted(newCameraState)
     }
 

@@ -401,13 +401,11 @@ class CallManager(context: Context, audioManager: AudioManagerCompat, private va
     }
 
     override fun onCameraSwitchCompleted(newCameraState: CameraState) {
-        //Log.d("[ACL]", "Hit CallManager.onCameraSwitchCompleted - active direction is: ${localCameraState.activeDirection}")
         localCameraState = newCameraState
-        Log.d("[ACL]", "Hit CallManager.onCameraSwitchCompleted - active direction now: ${localCameraState.activeDirection}")
 
-        // If the camera we've switched to is the front one then mirror it
+        // If the camera we've switched to is the front one then mirror it to match what someone
+        // would see when looking in the mirror rather than the left<-->right flipped version.
         localRenderer?.setMirror(localCameraState.activeDirection == CameraState.Direction.FRONT)
-
     }
 
     fun onPreOffer(callId: UUID, recipient: Recipient, onSuccess: () -> Unit) {
@@ -638,18 +636,8 @@ class CallManager(context: Context, audioManager: AudioManagerCompat, private va
 
             // Note: We cannot set the mirrored state of the localRenderer here because
             // localCameraState.activeDirection is still PENDING (not FRONT or BACK) until the flip
-            // completes and we hit Camera.onCameraSwitchDone (we then hit
-            // PeerConnectionWrapper.onCameraSwitchCompleted followed by
-            // CallManager.onCameraSwitchCompleted).
-
-            //val shouldMirror = (localCameraState.activeDirection == CameraState.Direction.FRONT)
-            //Log.d("[ACL]", "Hit handleSetCameraFlip! Should mirror? $shouldMirror - Cam direction is ${localCameraState.activeDirection}")
-
-
-
-            //CameraState.Direction.
-
-            //localRenderer?.setMirror(localCameraState.activeDirection == CameraState.Direction.FRONT)
+            // completes and we hit Camera.onCameraSwitchDone (followed by PeerConnectionWrapper.onCameraSwitchCompleted
+            // and CallManager.onCameraSwitchCompleted).
         }
     }
 
