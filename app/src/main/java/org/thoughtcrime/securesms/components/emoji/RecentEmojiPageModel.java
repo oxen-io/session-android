@@ -85,6 +85,11 @@ public class RecentEmojiPageModel implements EmojiPageModel {
     // it gets placed as the first element in the list..
     recentlyUsed.addFirst(emoji);
 
+    // Ensure that we only ever store data for a maximum of 6 recently used emojis (this code will
+    // execute if if we did NOT remove any occurrence of a previously used emoji but then added the
+    // new emoji to the front of the list).
+    while (recentlyUsed.size() > 6) { recentlyUsed.removeLast(); }
+
     // ..which we then save to shared prefs.
     String recentlyUsedAsJsonString = JsonUtil.toJson(recentlyUsed);
     boolean writeSuccess = prefs.edit().putString(RECENT_EMOJIS_KEY, recentlyUsedAsJsonString).commit();
