@@ -17,58 +17,84 @@ import org.session.libsignal.utilities.JsonUtil;
 import org.session.libsignal.utilities.Log;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
+import kotlin.jvm.internal.TypeReference;
 import network.loki.messenger.R;
 
 public class RecentEmojiPageModel implements EmojiPageModel {
   private static final String TAG                  = RecentEmojiPageModel.class.getSimpleName();
   //private static final String EMOJI_LRU_PREFERENCE = "pref_recent_emoji2";
   private static final int    EMOJI_LRU_SIZE       = 50; // ACL - I DON'T SEE THE POINT OF THIS BEING 50 - WE ONLY DISPLAY 6!
-  public static final  String RECENT_EMOJIS_KEY    = "Recents";
+  public static final String RECENT_EMOJIS_KEY    = "Recents";
 
-  public static final LinkedList<String> DEFAULT_REACTIONS_LIST = new LinkedList<>(Arrays.asList("\ud83d\ude02",
-                                                                               "\ud83e\udd70",
-                                                                               "\ud83d\ude22",
-                                                                               "\ud83d\ude21",
-                                                                               "\ud83d\ude2e",
-                                                                               "\ud83d\ude08"));
+  public static final LinkedList<String> DEFAULT_REACTION_EMOJIS_LIST = new LinkedList<>(Arrays.asList(
+          "\ud83d\ude02",
+          "\ud83e\udd70",
+          "\ud83d\ude22",
+          "\ud83d\ude21",
+          "\ud83d\ude2e",
+          "\ud83d\ude08"));
 
-  /*
-  public static final LinkedList<String> DEFAULT_REACTIONS_LIST = Arrays.asList("\ud83d\ude02",
-                                                                          "\ud83e\udd70",
-                                                                          "\ud83d\ude22",
-                                                                          "\ud83d\ude21",
-                                                                          "\ud83d\ude2e",
-                                                                          "\ud83d\ude08");
-*/
+  public static final String DEFAULT_REACTION_EMOJIS_JSON_STRING = JsonUtil.toJson(new LinkedList<>(DEFAULT_REACTION_EMOJIS_LIST));
 
-
-  private final SharedPreferences     prefs;
-  private final LinkedList<String> recentlyUsed;
+  private final SharedPreferences prefs;
+  private static LinkedList<String> recentlyUsed; //= getPersistedRecentEmojisFromPrefs();
 
   public RecentEmojiPageModel(Context context) {
     this.prefs        = PreferenceManager.getDefaultSharedPreferences(context);
-    this.recentlyUsed = getPersistedRecentEmojisFromPrefs();
+
+    // We should not call methods from constructors in Java - `getEmoji` gets called half-way through our call to `getPersistedRecentEmojisFromPrefs`!!!
+    //recentlyUsed = getPersistedRecentEmojisFromPrefs();
   }
 
-  private LinkedList<String> getPersistedRecentEmojisFromPrefs() {
+  private void populateRecentEmojisFromPrefsIfRequired() {
 
+
+    if (recentlyUsed == null) {
+      Log.d("[ACL]", "recentlyUsed was null so attempting to populate from prefs.");
+      //HashSet<String> recentlyUsedEmojiSet = prefs.getStringSet(R)
+      //recentlyUsed = new LinkedList<>(prefs.getStringSet(RECENT_EMOJIS_KEY, DEFAULT_REACTION_EMOJIS_JSON_STRING));
+    }
+    Log.d("[ACL]", "recentlyUsed was not null - carrying on.");
+
+    /*
     Log.d("[ACL]", "Hit getPersistedCache");
 
     //String serialized = prefs.getString(EMOJI_LRU_PREFERENCE, "[]");
 
     // If we couldn't find the saved recently used emojis list then use the default list
-    String serialized = prefs.getString(RECENT_EMOJIS_KEY, Arrays.toString(DEFAULT_REACTIONS_LIST.toArray()));
+    //String serializedEmojisString = prefs.getString(RECENT_EMOJIS_KEY, Arrays.toString(DEFAULT_REACTIONS_LIST.toArray()));
+
+     //RETURN THIS
+    try {
+      HashSet<String> emojiStringSet = (HashSet<String>) prefs.getStringSet(RECENT_EMOJIS_KEY, DEFAULT_REACTIONS_EMOJI_SET);
+      Log.d("[ACL]", "Serialized linked hash set of emojis is: " + emojiStringSet.toString());
+      Log.d("[ACL]", "DEFAULTS are: " + DEFAULT_REACTIONS_EMOJI_SET);
+      //Log.d("[ACL]", "Converting this to actual emojis gives us: " + getDisplayEmoji());
+      return new LinkedList<>(emojiStringSet);
+    } catch (ClassCastException cce) {
+      Log.w(TAG, "Prference data for RECENT_EMOIJIS_KEY was not a Set as expected - returning default recently used set.");
+      return new LinkedList<>(DEFAULT_REACTIONS_EMOJI_SET);
+    }
+    */
+
+
+    /*
     try {
       CollectionType collectionType = TypeFactory.defaultInstance().constructCollectionType(LinkedList.class, String.class);
 
-      LinkedList<String> persistedRecentEmojis = JsonUtil.getMapper().readValue(serialized, collectionType);
+      LinkedList<String> persistedRecentEmojis = JsonUtil.getMapper().readValue(serializedEmojisString, collectionType);
+
+      Log.d("[ACL]", "Number of persistent recent emojis loaded: " + persistedRecentEmojis.size());
 
       int x = 0;
       for (Iterator<String> iterator = persistedRecentEmojis.iterator(); iterator.hasNext();) {
@@ -81,6 +107,7 @@ public class RecentEmojiPageModel implements EmojiPageModel {
       Log.w(TAG, e);
       return null;
     }
+    */
   }
 
   @Override
@@ -88,15 +115,69 @@ public class RecentEmojiPageModel implements EmojiPageModel {
 
   @Override public int getIconAttr() { return R.attr.emoji_category_recent; }
 
-  @Override public LinkedList<String> getEmoji() {
+  @Override public List<String> getEmoji() {
 
-    if (recentlyUsed != null && recentlyUsed.size() == DEFAULT_REACTIONS_LIST.size()) {
-      Log.d(TAG, "Returning recently used emojis in getEmoji()");
-      return recentlyUsed;
+    /*
+    prefs.edit().putStringSet(RECENT_EMOJIS_KEY, null).commit();
+
+    return new ArrayList<String>();
+
+     */
+    //if (recentlyUsed == null) { Log.d("[ACL]", "recentlyUsed is NULL - WTF!"); } else { Log.d("[ACL]", "recentlyUsed is NOT null!!"); }
+
+    //populateRecentEmojisFromPrefsIfRequired();
+
+    if (recentlyUsed == null) {
+      Log.d("[ACL]", "recentlyUsed was null so attempting to populate from prefs.");
+      //HashSet<String> recentlyUsedEmojiSet = prefs.getStringSet(R)
+      //String recentlyUsedEmojo
+      try {
+        String recentlyUsedEmjoiJsonString = prefs.getString(RECENT_EMOJIS_KEY, DEFAULT_REACTION_EMOJIS_JSON_STRING);
+
+        //Type listType = LinkedList<String>(); //new TypeToken<List<String>>() {}.getType();
+
+        recentlyUsed = JsonUtil.fromJson(recentlyUsedEmjoiJsonString, LinkedList.class); //new TypeToken(LinkedList.class);
+        Log.d("[ACL]", "!!!!recentlyused is: " + recentlyUsed.toString());
+
+
+
+        //recentlyUsed = JsonUtil.fromJson(recentlyUsedEmjoiJsonString, typeOf(LinkedList<String>)); //new LinkedList<>(Arrays.asList(JsonUtil.fromJson()));
+      } catch (Exception e) {
+        Log.w(TAG, e);
+        Log.d(TAG, "Default reaction emoji data was corrupt (likely via key re-use on upgrade) - rewriting fresh data.");
+        boolean writeSuccess = prefs.edit().putString(RECENT_EMOJIS_KEY, DEFAULT_REACTION_EMOJIS_JSON_STRING).commit();
+        if (!writeSuccess) { Log.w(TAG, "Failed to update recently used emojis in shared prefs."); }
+        recentlyUsed = DEFAULT_REACTION_EMOJIS_LIST;
+      }
     }
-    // Implied else
-    Log.d(TAG, "Couldn't get recent emojis for some reason - returning default list.");
-    return DEFAULT_REACTIONS_LIST;
+
+    return new ArrayList<>(recentlyUsed);
+
+
+
+    // RETURN THIS
+    /*
+    if (recentlyUsed != null) {// && recentlyUsed.size() == DEFAULT_REACTIONS_EMOJI_SET.size()) {
+      Log.d(TAG, "Returning recently used emojis in getEmoji()");
+      return new ArrayList<>(recentlyUsed); // Doing this to maintain `getEmoji()` returning a List rather than a LinkedHashSet (which is what `recentlyUsed` is)
+    }
+    */
+
+    /*
+    // Implied else that this is the first time we're asking for a recently used emoji
+    Log.d(TAG, "Recently used was null so we'll grab and write to prefs.");
+    recentlyUsed = getPersistedRecentEmojisFromPrefs();
+    recentlyUsed = new LinkedList<>(DEFAULT_REACTIONS_EMOJI_SET);
+    Boolean writeSuccess = prefs.edit().putStringSet(RECENT_EMOJIS_KEY, DEFAULT_REACTIONS_EMOJI_SET).commit();
+    if (!writeSuccess) {
+      Log.w(TAG, "Failed to write default reaction emojis to shared preferences!");
+    } else {
+      Log.d(TAG, "Wrote default reaction emojis to shared preferences successfully.");
+    }
+
+    return new ArrayList<>(recentlyUsed);
+    */
+
   }
     /*
     Log.d("[ACL]", "Hit getEmoji!");
@@ -117,8 +198,8 @@ public class RecentEmojiPageModel implements EmojiPageModel {
   //}
 
   @Override public List<Emoji> getDisplayEmoji() {
-    return Stream.of(recentlyUsed).map(Emoji::new).toList();
-    //return Stream.of(getEmoji()).map(Emoji::new).toList();
+    //return Stream.of(recentlyUsed).map(Emoji::new).toList();
+    return Stream.of(getEmoji()).map(Emoji::new).toList();
   }
 
   @Override public boolean hasSpriteMap() { return false; }
@@ -139,14 +220,26 @@ public class RecentEmojiPageModel implements EmojiPageModel {
     // If the emoji is already in the recently used list then move it to the front of the list
     if (recentlyUsed.contains(emoji)) {
       recentlyUsed.removeFirstOccurrence(emoji);
-    } else // If the emoji wasn't already in the list put it at the front (far left / index 0) and push everything else right 1 position
+    }
+
+    /*
+    else // If the emoji wasn't already in the list put it at the front (far left / index 0) and push everything else right 1 position
     {
       recentlyUsed.removeLast();
     }
+     */
+
+
+    //recentlyUsed.add()
 
     // Regardless of whether the emoji used was already in the recently used list or not it gets
-    // placed as the first element in the list.
+    // placed as the first element in the list and saved
     recentlyUsed.addFirst(emoji);
+
+    // Write the updated recently used emojis to shared prefs
+    String recentlyUsedAsJsonString = JsonUtil.toJson(recentlyUsed);
+    boolean writeSuccess = prefs.edit().putString(RECENT_EMOJIS_KEY, recentlyUsedAsJsonString).commit();
+    if (!writeSuccess) { Log.w(TAG, "Failed to update recently used emojis in shared prefs."); }
 
     //recentlyUsed.stream().findAny(emoji)
 
