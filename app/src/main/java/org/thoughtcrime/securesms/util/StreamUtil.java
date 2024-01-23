@@ -10,6 +10,8 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.Instant;
+import java.time.LocalDateTime;
 
 /**
  * Utility methods for input and output streams.
@@ -85,6 +87,43 @@ public final class StreamUtil {
         while ((read = in.read(buffer)) != -1) {
             out.write(buffer, 0, read);
             total += read;
+        }
+
+        in.close();
+        out.close();
+
+        return total;
+    }
+
+    private static long getCurrentTimestampSeconds() { return System.currentTimeMillis() / 1000; }
+
+    public static long copyWithProgressUpdates(InputStream in, OutputStream out, long secondsBetweenUpdates) throws IOException {
+        byte[] buffer = new byte[64 * 1024];
+        int read;
+        long total = 0;
+
+        float totalInMB;
+        float copyDurationSecs = 0f;
+        long lastReportTimestampSeconds = getCurrentTimestampSeconds();
+
+
+        while ((read = in.read(buffer)) != -1) {
+            out.write(buffer, 0, read);
+            total += read;
+
+
+
+            if (getCurrentTimestampSeconds() - lastReportTimestampSeconds > secondsBetweenUpdates) {
+
+                totalInMB = (float)total / 1024f;
+
+                // Invoke event here and send totalInMB if we wanna
+                Log.d("[ACL]", "Total copied: " +  String.format("%.2f", totalInMB));
+
+                lastReportTimestampSeconds = getCurrentTimestampSeconds();
+            }
+
+
         }
 
         in.close();
