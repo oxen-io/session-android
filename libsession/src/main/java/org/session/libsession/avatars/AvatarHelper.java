@@ -29,7 +29,8 @@ public class AvatarHelper {
       return new FileInputStream(getAvatarFile(context, address));
     }
     catch (FileNotFoundException fnfe) {
-      Log.e("Loki-Avatar", "Uploading avatar failed - file not found for: " + address);
+      // Catching this to prevent excessively verbose error output in LogCat
+      Log.e("Loki-Avatar", "Uploading avatar failed for ID (print this stack trace for the gory details): " + address);
     }
     return null;
   }

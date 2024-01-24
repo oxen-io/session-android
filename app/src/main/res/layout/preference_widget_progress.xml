@@ -16,15 +16,4 @@
         android:indeterminate="true"
         android:visibility="invisible" />
 
-    <!--
-    <TextView
-        android:id="@+id/export_progress_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="15dp"
-        android:paddingBottom="10dp"
-        android:text="456 messages so far" />
-    -->
-
 </LinearLayout>
