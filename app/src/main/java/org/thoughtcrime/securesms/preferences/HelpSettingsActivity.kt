@@ -5,9 +5,13 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.view.View.VISIBLE
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.preference.Preference
 import network.loki.messenger.R
+import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.permissions.Permissions
 

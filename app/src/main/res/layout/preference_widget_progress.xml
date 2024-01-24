@@ -13,14 +13,18 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:indeterminate="true" />
+        android:indeterminate="true"
+        android:visibility="invisible" />
 
+    <!--
     <TextView
         android:id="@+id/export_progress_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="15dp"
-        tools:text="123 messages so far" />
+        android:paddingBottom="10dp"
+        android:text="456 messages so far" />
+    -->
 
 </LinearLayout>

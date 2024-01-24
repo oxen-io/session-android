@@ -4,6 +4,7 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/export_logs_button"
         android:layout_gravity="center"
         style="@style/Widget.Session.Button.Common.Filled"
         android:textStyle="bold"

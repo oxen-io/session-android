@@ -8,7 +8,7 @@
             android:summary="@string/activity_help_settings__report_bug_summary"
             android:widgetLayout="@layout/export_logs_widget" />
 
-        <!-- Note: Having this as `android:layout` rather than `android:layoutWidget` allows it to fit the screen -->
+        <!-- Note: Having this as `android:layout` rather than `android:layoutWidget` allows it to fit the screen width -->
         <Preference android:layout="@layout/preference_widget_progress" />
     </PreferenceCategory>
 

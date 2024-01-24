@@ -8,9 +8,11 @@ import androidx.annotation.Nullable;
 import com.annimon.stream.Stream;
 
 import org.session.libsession.utilities.Address;
+import org.session.libsignal.utilities.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,9 +24,14 @@ public class AvatarHelper {
   private static final String AVATAR_DIRECTORY = "avatars";
 
   public static InputStream getInputStreamFor(@NonNull Context context, @NonNull Address address)
-      throws IOException
   {
-    return new FileInputStream(getAvatarFile(context, address));
+    try {
+      return new FileInputStream(getAvatarFile(context, address));
+    }
+    catch (FileNotFoundException fnfe) {
+      Log.e("Loki-Avatar", "Uploading avatar failed - file not found for: " + address);
+    }
+    return null;
   }
 
   public static List<File> getAvatarFiles(@NonNull Context context) {

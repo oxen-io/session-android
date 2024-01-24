@@ -10,23 +10,31 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.webkit.MimeTypeMap
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
 import network.loki.messenger.BuildConfig
 import network.loki.messenger.R
+
 import org.session.libsignal.utilities.ExternalStorageUtil
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.createSessionDialog
 import org.thoughtcrime.securesms.util.FileProviderUtil
 import org.thoughtcrime.securesms.util.StreamUtil
+
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -35,20 +43,49 @@ import java.util.concurrent.TimeUnit
 
 class ShareLogsDialog : DialogFragment() {
 
+    private val TAG = "ShareLogsDialog"
     private var shareJob: Job? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {
         title(R.string.dialog_share_logs_title)
         text(R.string.dialog_share_logs_explanation)
-        button(R.string.share, dismiss = false) { shareLogs() }
-        cancelButton { dismiss() }
+        button(R.string.share, dismiss = false) { runShareLogsJob() }
+        cancelButton { updateExportButtonAndProgressBarUI(false); dismiss() }
     }
 
-    private fun shareLogs() {
+    // If the share logs dialog loses focus the job gets cancelled so we'll update the UI state
+    override fun onPause() {
+        super.onPause()
+        updateExportButtonAndProgressBarUI(false)
+    }
+
+    private fun updateExportButtonAndProgressBarUI(exportJobRunning: Boolean) {
+        this.activity?.runOnUiThread(Runnable {
+            // Change export logs button text
+            val exportLogsButton = this.activity?.findViewById(R.id.export_logs_button) as TextView?
+            if (exportLogsButton == null) { Log.w("Loki", "Could not find export logs button view.") }
+            // TODO: Pick "Cancel" from R.string.
+            exportLogsButton?.text = if (exportJobRunning) "Cancel" else "Export Logs"
+
+            // Show progress bar
+            val exportProgressBar = this.activity?.findViewById(R.id.export_progress_bar) as ProgressBar?
+            // Note: Not using `isVisible` because options are VISIBLE or GONE and I want to
+            // keep taking the space as INVISIBLE to avoid layout change.
+            exportProgressBar?.visibility = if (exportJobRunning ) VISIBLE else INVISIBLE
+        })
+    }
+
+    private fun runShareLogsJob() {
+        // Cancel any existing share job that might already be running to start anew
         shareJob?.cancel()
+
+        updateExportButtonAndProgressBarUI(true)
+
         shareJob = lifecycleScope.launch(Dispatchers.IO) {
             val persistentLogger = ApplicationContext.getInstance(context).persistentLogger
             try {
+                Log.d(TAG, "Starting share logs job...")
+
                 val context = requireContext()
                 val outputUri: Uri = ExternalStorageUtil.getDownloadUri()
                 val mediaUri = getExternalFile()
@@ -60,6 +97,8 @@ class ShareLogsDialog : DialogFragment() {
 
                 val inputStream = persistentLogger.logs.get().byteInputStream()
                 val updateValues = ContentValues()
+
+                // Add details into the output or media files as appropriate
                 if (outputUri.scheme == ContentResolver.SCHEME_FILE) {
                     FileOutputStream(mediaUri.path).use { outputStream ->
                         StreamUtil.copy(inputStream, outputStream)
@@ -73,6 +112,7 @@ class ShareLogsDialog : DialogFragment() {
                         }
                     }
                 }
+
                 if (Build.VERSION.SDK_INT > 28) {
                     updateValues.put(MediaStore.MediaColumns.IS_PENDING, 0)
                 }
@@ -95,13 +135,37 @@ class ShareLogsDialog : DialogFragment() {
                     }
                     startActivity(Intent.createChooser(shareIntent, getString(R.string.share)))
                 }
-
-                dismiss()
             } catch (e: Exception) {
                 withContext(Main) {
                     Log.e("Loki", "Error saving logs", e)
                     Toast.makeText(context,"Error saving logs", Toast.LENGTH_LONG).show()
                 }
+                dismiss()
+            }
+        }.also { shareJob ->
+            shareJob.invokeOnCompletion { handler ->
+                // Regardless of the job's success it has now completed so update the UI
+                //updateExportButtonAndProgressBarUI(false)
+
+                // Note: Don't show Toasts here directly - use `withContext(Main)` or such if req'd
+                handler?.message.let { msg ->
+                    if (shareJob.isCancelled) {
+                        if (msg.isNullOrBlank()) {
+                            Log.w(TAG, "Share logs job was cancelled.")
+                        } else {
+                            Log.d(TAG, "Share logs job was cancelled. Reason: $msg")
+                        }
+
+                    }
+                    else if (shareJob.isCompleted) {
+                        Log.d(TAG, "Share logs job completed. Msg: $msg")
+                    }
+                    else {
+                        Log.w(TAG, "Share logs job finished while still Active. Msg: $msg")
+                    }
+                }
+
+                updateExportButtonAndProgressBarUI(false)
                 dismiss()
             }
         }
@@ -157,6 +221,5 @@ class ShareLogsDialog : DialogFragment() {
         }
         return context.contentResolver.insert(outputUri, contentValues)
     }
-
 
 }
