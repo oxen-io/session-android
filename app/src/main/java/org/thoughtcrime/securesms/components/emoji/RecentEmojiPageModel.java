@@ -32,14 +32,14 @@ public class RecentEmojiPageModel implements EmojiPageModel {
           "\ud83d\ude08"));
 
   public static final String DEFAULT_REACTION_EMOJIS_JSON_STRING = JsonUtil.toJson(new LinkedList<>(DEFAULT_REACTION_EMOJIS_LIST));
-  private final SharedPreferences prefs;
+  private static SharedPreferences prefs;
   private static LinkedList<String> recentlyUsed;
 
   public RecentEmojiPageModel(Context context) {
-    this.prefs        = PreferenceManager.getDefaultSharedPreferences(context);
+    prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
     // Note: Do NOT try to populate or update the persisted recent emojis in the constructor - the
-    // `getEmoji` methods ends up getting called half-way through in a race-condition manner.
+    // `getEmoji` method ends up getting called half-way through in a race-condition manner.
   }
 
   @Override
@@ -76,8 +76,7 @@ public class RecentEmojiPageModel implements EmojiPageModel {
 
   @Override public boolean isDynamic() { return true; }
 
-  public void onCodePointSelected(String emoji) {
-
+  public static void onCodePointSelected(String emoji) {
     // If the emoji is already in the recently used list then remove it..
     if (recentlyUsed.contains(emoji)) { recentlyUsed.removeFirstOccurrence(emoji); }
 
