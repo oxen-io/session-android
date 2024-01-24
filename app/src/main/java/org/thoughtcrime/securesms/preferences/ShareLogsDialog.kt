@@ -64,13 +64,12 @@ class ShareLogsDialog : DialogFragment() {
             // Change export logs button text
             val exportLogsButton = this.activity?.findViewById(R.id.export_logs_button) as TextView?
             if (exportLogsButton == null) { Log.w("Loki", "Could not find export logs button view.") }
-            // TODO: Pick "Cancel" from R.string.
-            exportLogsButton?.text = if (exportJobRunning) "Cancel" else "Export Logs"
+            exportLogsButton?.text = if (exportJobRunning) getString(R.string.cancel) else getString(R.string.activity_help_settings__export_logs)
 
             // Show progress bar
             val exportProgressBar = this.activity?.findViewById(R.id.export_progress_bar) as ProgressBar?
-            // Note: Not using `isVisible` because options are VISIBLE or GONE and I want to
-            // keep taking the space as INVISIBLE to avoid layout change.
+            // Note: I'm not using `isVisible` because those options are VISIBLE or GONE and I want
+            // to keep taking the space as INVISIBLE to avoid any layout change on show/hide.
             exportProgressBar?.visibility = if (exportJobRunning ) VISIBLE else INVISIBLE
         })
     }
