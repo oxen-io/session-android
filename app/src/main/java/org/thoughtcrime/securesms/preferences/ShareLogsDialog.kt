@@ -143,9 +143,6 @@ class ShareLogsDialog : DialogFragment() {
             }
         }.also { shareJob ->
             shareJob.invokeOnCompletion { handler ->
-                // Regardless of the job's success it has now completed so update the UI
-                //updateExportButtonAndProgressBarUI(false)
-
                 // Note: Don't show Toasts here directly - use `withContext(Main)` or such if req'd
                 handler?.message.let { msg ->
                     if (shareJob.isCancelled) {
@@ -164,7 +161,9 @@ class ShareLogsDialog : DialogFragment() {
                     }
                 }
 
+                // Regardless of the job's success it has now completed so update the UI
                 updateExportButtonAndProgressBarUI(false)
+                
                 dismiss()
             }
         }
