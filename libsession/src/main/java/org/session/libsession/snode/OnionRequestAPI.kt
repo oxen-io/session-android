@@ -1,5 +1,7 @@
 package org.session.libsession.snode
 
+import network.loki.messenger.libsession_util.OnionRequestBuilder
+import network.loki.messenger.libsession_util.OnionRequestEncryptionType
 import nl.komponents.kovenant.Deferred
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.all
@@ -97,15 +99,22 @@ object OnionRequestAPI {
         : HTTP.HTTPRequestFailedException(statusCode, json, "HTTP request failed at destination ($destination) with status code $statusCode.")
     class InsufficientSnodesException : Exception("Couldn't find enough snodes to build a path.")
 
-    private data class OnionBuildingResult(
+    private data class PreparedOnionRequest(
         val guardSnode: Snode,
-        val finalEncryptionResult: EncryptionResult,
-        val destinationSymmetricKey: ByteArray
+        val payload: ByteArray
     )
 
     internal sealed class Destination(val description: String) {
         class Snode(val snode: org.session.libsignal.utilities.Snode) : Destination("Service node ${snode.ip}:${snode.port}")
-        class Server(val host: String, val target: String, val x25519PublicKey: String, val scheme: String, val port: Int) : Destination("$host")
+        class Server(val host: String, val target: String, val x25519PublicKey: String, val scheme: String, val port: Int, val encType: OnionRequestEncryptionType) : Destination("$host")
+
+        val encryptionType: OnionRequestEncryptionType
+            get() {
+                when (this) {
+                    is Server -> return this.encType
+                    else -> return OnionRequestEncryptionType.AES_GCM
+                }
+            }
     }
 
     // region Private API
@@ -291,42 +300,38 @@ object OnionRequestAPI {
      * Builds an onion around `payload` and returns the result.
      */
     private fun buildOnionForDestination(
+        builder: OnionRequestBuilder,
         payload: ByteArray,
         destination: Destination,
         version: Version
-    ): Promise<OnionBuildingResult, Exception> {
-        lateinit var guardSnode: Snode
-        lateinit var destinationSymmetricKey: ByteArray // Needed by LokiAPI to decrypt the response sent back by the destination
-        lateinit var encryptionResult: EncryptionResult
+    ): Promise<PreparedOnionRequest, Exception> {
         val snodeToExclude = when (destination) {
             is Destination.Snode -> destination.snode
             is Destination.Server -> null
         }
-        return getPath(snodeToExclude).bind { path ->
-            guardSnode = path.first()
-            // Encrypt in reverse order, i.e. the destination first
-            OnionRequestEncryption.encryptPayloadForDestination(payload, destination, version).bind { r ->
-                destinationSymmetricKey = r.symmetricKey
-                // Recursively encrypt the layers of the onion (again in reverse order)
-                encryptionResult = r
-                @Suppress("NAME_SHADOWING") var path = path
-                var rhs = destination
-                fun addLayer(): Promise<EncryptionResult, Exception> {
-                    return if (path.isEmpty()) {
-                        Promise.of(encryptionResult)
-                    } else {
-                        val lhs = Destination.Snode(path.last())
-                        path = path.dropLast(1)
-                        OnionRequestEncryption.encryptHop(lhs, rhs, encryptionResult).bind { r ->
-                            encryptionResult = r
-                            rhs = lhs
-                            addLayer()
-                        }
-                    }
+        return getPath(snodeToExclude).map { path ->
+            when (destination) {
+                is Destination.Server -> builder.setServerDestination(
+                    destination.host,
+                    destination.target,
+                    destination.scheme,
+                    destination.port,
+                    destination.x25519PublicKey
+                )
+
+                is Destination.Snode -> {
+                    val keySet = destination.snode.publicKeySet ?: throw SnodeAPI.Error.PathEncryptionFailed
+                    builder.setSnodeDestination(keySet.ed25519Key, keySet.x25519Key)
                 }
-                addLayer()
             }
-        }.map { OnionBuildingResult(guardSnode, encryptionResult, destinationSymmetricKey) }
+
+            path.forEach {
+                val keySet = it.publicKeySet ?: throw SnodeAPI.Error.PathEncryptionFailed
+                builder.addHop(keySet.ed25519Key, keySet.x25519Key)
+            }
+
+            PreparedOnionRequest(path.first(), builder.build(payload))
+        }
     }
 
     /**
@@ -338,30 +343,17 @@ object OnionRequestAPI {
         version: Version
     ): Promise<OnionResponse, Exception> {
         val deferred = deferred<OnionResponse, Exception>()
+        val builder = OnionRequestBuilder.newInstance(destination.encryptionType)
         var guardSnode: Snode? = null
-        buildOnionForDestination(payload, destination, version).success { result ->
-            guardSnode = result.guardSnode
-            val nonNullGuardSnode = result.guardSnode
-            val url = "${nonNullGuardSnode.address}:${nonNullGuardSnode.port}/onion_req/v2"
-            val finalEncryptionResult = result.finalEncryptionResult
-            val onion = finalEncryptionResult.ciphertext
-            if (destination is Destination.Server && onion.count().toDouble() > 0.75 * FileServerApi.maxFileSize.toDouble()) {
-                Log.d("Loki", "Approaching request size limit: ~${onion.count()} bytes.")
-            }
-            @Suppress("NAME_SHADOWING") val parameters = mapOf(
-                "ephemeral_key" to finalEncryptionResult.ephemeralPublicKey.toHexString()
-            )
-            val body: ByteArray
-            try {
-                body = OnionRequestEncryption.encode(onion, parameters)
-            } catch (exception: Exception) {
-                return@success deferred.reject(exception)
-            }
-            val destinationSymmetricKey = result.destinationSymmetricKey
+
+        buildOnionForDestination(builder, payload, destination, version).success { preparedRequest ->
+            val url = "${preparedRequest.guardSnode.address}:${preparedRequest.guardSnode.port}/onion_req/v2"
+            guardSnode = preparedRequest.guardSnode
+
             ThreadUtils.queue {
                 try {
-                    val response = HTTP.execute(HTTP.Verb.POST, url, body)
-                    handleResponse(response, destinationSymmetricKey, destination, version, deferred)
+                    val response = HTTP.execute(HTTP.Verb.POST, url, preparedRequest.payload)
+                    handleResponse(response, builder, destination, version, deferred)
                 } catch (exception: Exception) {
                     deferred.reject(exception)
                 }
@@ -370,6 +362,7 @@ object OnionRequestAPI {
             deferred.reject(exception)
         }
         val promise = deferred.promise
+        promise.always { builder.free() }
         promise.fail { exception ->
             if (exception is HTTP.HTTPRequestFailedException && SnodeModule.isInitialized) {
                 val checkedGuardSnode = guardSnode
@@ -466,11 +459,12 @@ object OnionRequestAPI {
         request: Request,
         server: String,
         x25519PublicKey: String,
-        version: Version = Version.V4
+        version: Version = Version.V4,
+        encType: OnionRequestEncryptionType = OnionRequestEncryptionType.X_CHA_CHA_20
     ): Promise<OnionResponse, Exception> {
         val url = request.url()
         val payload = generatePayload(request, server, version)
-        val destination = Destination.Server(url.host(), version.value, x25519PublicKey, url.scheme(), url.port())
+        val destination = Destination.Server(url.host(), version.value, x25519PublicKey, url.scheme(), url.port(), encType)
         return sendOnionRequest(destination, payload, version).recover { exception ->
             Log.d("Loki", "Couldn't reach server: $url due to error: $exception.")
             throw exception
@@ -519,7 +513,7 @@ object OnionRequestAPI {
 
     private fun handleResponse(
         response: ByteArray,
-        destinationSymmetricKey: ByteArray,
+        builder: OnionRequestBuilder,
         destination: Destination,
         version: Version,
         deferred: Deferred<OnionResponse, Exception>
@@ -529,7 +523,7 @@ object OnionRequestAPI {
                 if (response.size <= AESGCM.ivSize) return deferred.reject(Exception("Invalid response"))
                 // The data will be in the form of `l123:jsone` or `l123:json456:bodye` so we need to break the data into
                 // parts to properly process it
-                val plaintext = AESGCM.decrypt(response, destinationSymmetricKey)
+                val plaintext = builder.decrypt(response)
                 if (!byteArrayOf(plaintext.first()).contentEquals("l".toByteArray())) return deferred.reject(Exception("Invalid response"))
                 val infoSepIdx = plaintext.indexOfFirst { byteArrayOf(it).contentEquals(":".toByteArray()) }
                 val infoLenSlice = plaintext.slice(1 until infoSepIdx)
@@ -584,7 +578,7 @@ object OnionRequestAPI {
             val base64EncodedIVAndCiphertext = json["result"] as? String ?: return deferred.reject(Exception("Invalid JSON"))
             val ivAndCiphertext = Base64.decode(base64EncodedIVAndCiphertext)
             try {
-                val plaintext = AESGCM.decrypt(ivAndCiphertext, destinationSymmetricKey)
+                val plaintext = builder.decrypt(ivAndCiphertext)
                 try {
                     @Suppress("NAME_SHADOWING") val json =
                         JsonUtil.fromJson(plaintext.toString(Charsets.UTF_8), Map::class.java)

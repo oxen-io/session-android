@@ -33,7 +33,8 @@ set(SOURCES
         util.cpp
         group_members.cpp
         group_keys.cpp
-        group_info.cpp)
+        group_info.cpp
+        onion_request_builder.cpp)
 
 add_library( # Sets the name of the library.
         session_util
@@ -63,6 +64,7 @@ target_link_libraries( # Specifies the target library.
         PUBLIC
         libsession::config
         libsession::crypto
+        libsession::onionreq
         libsodium::sodium-internal
         # Links the target library to the log library
         # included in the NDK.

@@ -1,6 +1,7 @@
 package org.session.libsession.messaging.sending_receiving.notifications
 
 import android.annotation.SuppressLint
+import network.loki.messenger.libsession_util.OnionRequestEncryptionType
 import nl.komponents.kovenant.Promise
 import okhttp3.MediaType
 import okhttp3.Request
@@ -136,6 +137,7 @@ object PushRegistryV1 {
         request,
         server.url,
         server.publicKey,
-        Version.V2
+        Version.V2,
+        OnionRequestEncryptionType.AES_GCM
     )
 }

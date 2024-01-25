@@ -102,6 +102,7 @@ object SnodeAPI {
         object DecryptionFailed : Error("Couldn't decrypt ONS name.")
         object HashingFailed : Error("Couldn't compute ONS name hash.")
         object ValidationFailed : Error("ONS name validation failed.")
+        object PathEncryptionFailed : Error("path encryption failed.")
     }
 
     // Batch
