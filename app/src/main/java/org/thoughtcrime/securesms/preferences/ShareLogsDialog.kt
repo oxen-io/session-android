@@ -10,12 +10,11 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.view.View.INVISIBLE
-import android.view.View.VISIBLE
 import android.webkit.MimeTypeMap
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isInvisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 
@@ -41,7 +40,8 @@ import java.io.IOException
 import java.util.Objects
 import java.util.concurrent.TimeUnit
 
-class ShareLogsDialog : DialogFragment() {
+
+class ShareLogsDialog(private val updateCallback: (Boolean)->Unit): DialogFragment() {
 
     private val TAG = "ShareLogsDialog"
     private var shareJob: Job? = null
@@ -50,35 +50,20 @@ class ShareLogsDialog : DialogFragment() {
         title(R.string.dialog_share_logs_title)
         text(R.string.dialog_share_logs_explanation)
         button(R.string.share, dismiss = false) { runShareLogsJob() }
-        cancelButton { updateExportButtonAndProgressBarUI(false); dismiss() }
+        cancelButton { updateCallback(false) }
     }
 
     // If the share logs dialog loses focus the job gets cancelled so we'll update the UI state
     override fun onPause() {
         super.onPause()
-        updateExportButtonAndProgressBarUI(false)
-    }
-
-    private fun updateExportButtonAndProgressBarUI(exportJobRunning: Boolean) {
-        this.activity?.runOnUiThread(Runnable {
-            // Change export logs button text
-            val exportLogsButton = this.activity?.findViewById(R.id.export_logs_button) as TextView?
-            if (exportLogsButton == null) { Log.w("Loki", "Could not find export logs button view.") }
-            exportLogsButton?.text = if (exportJobRunning) getString(R.string.cancel) else getString(R.string.activity_help_settings__export_logs)
-
-            // Show progress bar
-            val exportProgressBar = this.activity?.findViewById(R.id.export_progress_bar) as ProgressBar?
-            // Note: I'm not using `isVisible` because those options are VISIBLE or GONE and I want
-            // to keep taking the space as INVISIBLE to avoid any layout change on show/hide.
-            exportProgressBar?.visibility = if (exportJobRunning ) VISIBLE else INVISIBLE
-        })
+        updateCallback(false)
     }
 
     private fun runShareLogsJob() {
         // Cancel any existing share job that might already be running to start anew
         shareJob?.cancel()
 
-        updateExportButtonAndProgressBarUI(true)
+        updateCallback(true)
 
         shareJob = lifecycleScope.launch(Dispatchers.IO) {
             val persistentLogger = ApplicationContext.getInstance(context).persistentLogger
@@ -87,12 +72,7 @@ class ShareLogsDialog : DialogFragment() {
 
                 val context = requireContext()
                 val outputUri: Uri = ExternalStorageUtil.getDownloadUri()
-                val mediaUri = getExternalFile()
-                if (mediaUri == null) {
-                    // show toast saying media saved
-                    dismiss()
-                    return@launch
-                }
+                val mediaUri = getExternalFile() ?: return@launch
 
                 val inputStream = persistentLogger.logs.get().byteInputStream()
                 val updateValues = ContentValues()
@@ -139,7 +119,6 @@ class ShareLogsDialog : DialogFragment() {
                     Log.e("Loki", "Error saving logs", e)
                     Toast.makeText(context,"Error saving logs", Toast.LENGTH_LONG).show()
                 }
-                dismiss()
             }
         }.also { shareJob ->
             shareJob.invokeOnCompletion { handler ->
@@ -162,7 +141,7 @@ class ShareLogsDialog : DialogFragment() {
                 }
 
                 // Regardless of the job's success it has now completed so update the UI
-                updateExportButtonAndProgressBarUI(false)
+                updateCallback(false)
                 
                 dismiss()
             }
