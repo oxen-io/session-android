@@ -478,9 +478,8 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
                     Log.d("Loki-Avatar", "Uploading Avatar Finished");
                     return Unit.INSTANCE;
                 });
-            } catch (Exception exception) {
-                // Do nothing
-                Log.e("Loki-Avatar", "Uploading avatar failed", exception);
+            } catch (Exception e) {
+                Log.e("Loki-Avatar", "Uploading avatar failed.");
             }
         });
     }

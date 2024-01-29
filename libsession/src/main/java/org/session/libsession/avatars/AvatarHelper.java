@@ -24,15 +24,9 @@ public class AvatarHelper {
   private static final String AVATAR_DIRECTORY = "avatars";
 
   public static InputStream getInputStreamFor(@NonNull Context context, @NonNull Address address)
+          throws FileNotFoundException
   {
-    try {
       return new FileInputStream(getAvatarFile(context, address));
-    }
-    catch (FileNotFoundException fnfe) {
-      // Catching this to prevent excessively verbose error output in LogCat
-      Log.e("Loki-Avatar", "Avatar upload failed - file not found.");
-    }
-    return null;
   }
 
   public static List<File> getAvatarFiles(@NonNull Context context) {

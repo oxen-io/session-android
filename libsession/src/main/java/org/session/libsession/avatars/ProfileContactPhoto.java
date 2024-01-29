@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 
 import org.session.libsession.utilities.Address;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
@@ -24,7 +25,7 @@ public class ProfileContactPhoto implements ContactPhoto {
   }
 
   @Override
-  public InputStream openInputStream(Context context) throws IOException {
+  public InputStream openInputStream(Context context) throws FileNotFoundException {
     return AvatarHelper.getInputStreamFor(context, address);
   }
 
