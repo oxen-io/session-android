@@ -39,9 +39,15 @@ import androidx.activity.viewModels
 import androidx.annotation.DimenRes
 import androidx.core.text.set
 import androidx.core.text.toSpannable
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsCompat.Type.IME
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.core.view.marginBottom
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
@@ -276,6 +282,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private val isScrolledToBottom: Boolean
         get() = binding?.conversationRecyclerView?.isScrolledToBottom ?: true
 
+
+
+
     private val layoutManager: LinearLayoutManager?
         get() { return binding?.conversationRecyclerView?.layoutManager as LinearLayoutManager? }
 
@@ -347,6 +356,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private lateinit var reactionDelegate: ConversationReactionDelegate
     private val reactWithAnyEmojiStartPage = -1
 
+    private var currentWindowInsets: WindowInsetsCompat = WindowInsetsCompat.Builder().build()
+
     // region Settings
     companion object {
         // Extras
@@ -368,8 +379,19 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {
         super.onCreate(savedInstanceState, isReady)
+
+
+        // Set the decor to NOT take the system windows into account before initial inflation
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         binding = ActivityConversationV2Binding.inflate(layoutInflater)
         setContentView(binding!!.root)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, windowInsets ->
+            currentWindowInsets = windowInsets
+            applyInsets()
+        }
+
         // messageIdToScroll
         messageToScrollTimestamp.set(intent.getLongExtra(SCROLL_MESSAGE_ID, -1))
         messageToScrollAuthor.set(intent.getParcelableExtra(SCROLL_MESSAGE_AUTHOR))
@@ -783,6 +805,28 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     // endregion
 
     // region Animation & Updating
+
+    private fun updateMargins(left: Int, top: Int, right: Int, bottom: Int) {
+        Log.d("[ACL]", "Setting bottom margin to : $bottom")
+        binding.root.marginBottom = bottom
+    }
+
+    // Method to apply insets when the IME / soft keyboard is displayed
+    private fun applyInsets(): WindowInsetsCompat {
+        /*
+        val currentInsetTypeMask = currentInsetTypes.fold(0) { accumulator, type ->
+            accumulator or type
+        }
+        */
+        val insets = currentWindowInsets.getInsets(IME)
+        binding.root.updateLayoutParams {
+            updateMargins(insets.left, insets.top, insets.right, insets.bottom)
+        }
+        return WindowInsetsCompat.Builder()
+            .setInsets(IME, insets)
+            .build()
+    }
+
     override fun onModified(recipient: Recipient) {
         viewModel.updateRecipient()
 
