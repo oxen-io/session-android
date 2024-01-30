@@ -32,9 +32,11 @@ import org.session.libsession.messaging.contacts.Contact.ContactContext
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.ViewUtil
 import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsignal.utilities.IdPrefix
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
@@ -191,8 +193,7 @@ class VisibleMessageView : LinearLayout {
             }
         }
         binding.senderNameTextView.isVisible = !message.isOutgoing && (isStartOfMessageCluster && (isGroupThread || snIsSelected))
-        val contactContext =
-            if (thread.isOpenGroupRecipient) ContactContext.OPEN_GROUP else ContactContext.REGULAR
+        val contactContext = if (thread.isOpenGroupRecipient) ContactContext.OPEN_GROUP else ContactContext.REGULAR
         binding.senderNameTextView.text = contact?.displayName(contactContext) ?: senderSessionID
         // Unread marker
         binding.unreadMarkerContainer.isVisible = lastSeen != -1L && message.timestamp > lastSeen && (previous == null || previous.timestamp <= lastSeen) && !message.isOutgoing
@@ -200,44 +201,55 @@ class VisibleMessageView : LinearLayout {
         val showDateBreak = isStartOfMessageCluster || snIsSelected
         binding.dateBreakTextView.text = if (showDateBreak) DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), message.timestamp) else null
         binding.dateBreakTextView.isVisible = showDateBreak
+
         // Message status indicator
         if (message.isOutgoing) {
-            val (iconID, iconColor, textId, contentDescription) = getMessageStatusImage(message)
-            if (textId != null) {
-                binding.messageStatusTextView.setText(textId)
+            val (iconId, iconColor, textId, contentDescription) = getMessageStatusImage(message)
 
-                if (iconColor != null) {
-                    binding.messageStatusTextView.setTextColor(iconColor)
-                }
-            }
-            if (iconID != null) {
-                val drawable = ContextCompat.getDrawable(context, iconID)?.mutate()
-                if (iconColor != null) {
-                    drawable?.setTint(iconColor)
-                }
+            // Set details on the message status if we returned non-null values
+            if (textId    != null) { binding.messageStatusTextView.setText(textId)         }
+            if (iconColor != null) { binding.messageStatusTextView.setTextColor(iconColor) }
+            if (iconId    != null) {
+                val drawable = ContextCompat.getDrawable(context, iconId)?.mutate()
+                if (iconColor != null) { drawable?.setTint(iconColor) }
                 binding.messageStatusImageView.setImageDrawable(drawable)
             }
+
+            // The content description can be null if there is no content description provided
             binding.messageStatusImageView.contentDescription = contentDescription
 
-            val lastMessageID = mmsSmsDb.getLastMessageID(message.threadId)
-            binding.messageStatusTextView.isVisible = (
-                textId != null && (
-                    !message.isSent ||
-                    message.id == lastMessageID
-                )
-            )
-            binding.messageStatusImageView.isVisible = (
-                iconID != null && (
-                    !message.isSent ||
-                    message.id == lastMessageID
-                )
-            )
-        } else {
+            // Get the last message Id in the conversation (Note: This is not necessarily the last
+            // message that WE sent - it can be the last message received).
+            // ACL OG!
+            //val lastMessageID = mmsSmsDb.getLastMessageID(message.threadId)
+            val thisUserAddress: Address = Address.fromExternal(context, TextSecurePreferences.getLocalNumber(context)!!)
+            Log.d("[ACL]", "My session Id is: $thisUserAddress")
+
+            var lastSentMessageId = mmsSmsDb.getLastMessageFromSender(message.threadId, thisUserAddress)
+            if (lastSentMessageId == null) lastSentMessageId = -1L
+
+
+            Log.d("[ACL]", "My last sent message ID: $lastSentMessageId")
+
+
+            // ACL OG:
+            //val showSendingStatus = !message.isSent || message.id == lastMessageID
+
+            val showSendingStatus = !message.isSent || message.id == lastSentMessageId
+            Log.d("[ACL]", "Show sending status is: $showSendingStatus")
+
+
+            binding.messageStatusTextView.isVisible  = (textId != null && showSendingStatus)
+            binding.messageStatusImageView.isVisible = (iconId != null && showSendingStatus)
+        }
+        else { // Never show message status on non-outgoing messages
             binding.messageStatusTextView.isVisible = false
             binding.messageStatusImageView.isVisible = false
         }
+
         // Expiration timer
         updateExpirationTimer(message)
+
         // Emoji Reactions
         val emojiLayoutParams = binding.emojiReactionsView.root.layoutParams as ConstraintLayout.LayoutParams
         emojiLayoutParams.horizontalBias = if (message.isOutgoing) 1f else 0f

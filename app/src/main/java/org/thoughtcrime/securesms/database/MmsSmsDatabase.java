@@ -20,6 +20,7 @@ import static org.thoughtcrime.securesms.database.MmsDatabase.MESSAGE_BOX;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +31,7 @@ import net.zetetic.database.sqlcipher.SQLiteQueryBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.Util;
+import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.database.MessagingDatabase.SyncMessageId;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
@@ -95,14 +97,15 @@ public class MmsSmsDatabase extends Database {
     }
   }
 
+  // ACL check this
   public @Nullable MessageRecord getMessageFor(long timestamp, String serializedAuthor) {
 
     try (Cursor cursor = queryTables(PROJECTION, MmsSmsColumns.NORMALIZED_DATE_SENT + " = " + timestamp, null, null)) {
       MmsSmsDatabase.Reader reader = readerFor(cursor);
 
-      MessageRecord messageRecord;
       boolean isOwnNumber = Util.isOwnNumber(context, serializedAuthor);
 
+      MessageRecord messageRecord;
       while ((messageRecord = reader.getNext()) != null) {
         if ((isOwnNumber && messageRecord.isOutgoing()) ||
                 (!isOwnNumber && messageRecord.getIndividualRecipient().getAddress().serialize().equals(serializedAuthor)))
@@ -206,6 +209,32 @@ public class MmsSmsDatabase extends Database {
     try (Cursor cursor = queryTables(PROJECTION, selection, order, "1")) {
       cursor.moveToFirst();
       return cursor.getLong(cursor.getColumnIndexOrThrow(MmsSmsColumns.ID));
+    }
+  }
+
+  public long getLastOutgoingMessageID(long threadId) {
+    String order     = MmsSmsColumns.NORMALIZED_DATE_SENT + " DESC";
+    String selection = MmsSmsColumns.THREAD_ID + " = " + threadId + " AND " + MmsSmsColumns.Types.;
+
+    try (Cursor cursor = queryTables(PROJECTION, selection, order, "1")) {
+      cursor.moveToFirst();
+      return cursor.getLong(cursor.getColumnIndexOrThrow(MmsSmsColumns.ID));
+    }
+  }
+
+  public Long getLastMessageFromSender(long threadId, Address userAddress) {
+    String order     = MmsSmsColumns.NORMALIZED_DATE_SENT + " DESC";
+    String selection = MmsSmsColumns.THREAD_ID + " = " + threadId + " AND " + MmsSmsColumns.ADDRESS + " = '" + userAddress.serialize() + "'";
+
+    try (Cursor cursor = queryTables(PROJECTION, selection, order, "1")) {
+      cursor.moveToFirst();
+      try {
+        return cursor.getLong(cursor.getColumnIndexOrThrow(MmsSmsColumns.ID));
+      }
+      catch (CursorIndexOutOfBoundsException e) {
+        Log.d(TAG, "Cursor out of range: " + e);
+        return null;
+      }
     }
   }
 
