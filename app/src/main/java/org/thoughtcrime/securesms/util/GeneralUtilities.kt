@@ -41,7 +41,7 @@ val RecyclerView.isScrolledToBottom: Boolean
 // Extension property to determine if we should scroll down in the conversation view to show new
 // messages or not. Note: The 30dp value is taken from the JIRA issue at:
 // https://optf.atlassian.net/browse/SES-1145
-val RecyclerView.shouldScrollToShowNewMessages: Boolean
+val RecyclerView.shouldScrollToBottomMessages: Boolean
     get() = computeVerticalScrollOffset().coerceAtLeast(0) +
             computeVerticalScrollExtent() +
             toPx(30, resources) >= computeVerticalScrollRange()

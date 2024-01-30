@@ -374,27 +374,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {
         super.onCreate(savedInstanceState, isReady)
-
-        // [ACL]
-        // Set the decor to NOT take the system windows into account before initial inflation
-        // Note: Without further work with insets the direct result of this will be to nmake it so
-        // we cannot see the InputBar!
-        // But: If we do NOT set this then the window insets listener never gets called
-        //WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        //window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
         binding = ActivityConversationV2Binding.inflate(layoutInflater)
         setContentView(binding!!.root)
-
-        // [ACL]
-        /*
-        ViewCompat.setOnApplyWindowInsetsListener(binding!!.root) { _, windowInsets ->
-            Log.d("[ACL]", "Hit onApplyWindowInsetsListener - window insets are: $currentWindowInsets")
-            currentWindowInsets = windowInsets
-            applyInsets()
-        }
-        */
 
         // messageIdToScroll
         messageToScrollTimestamp.set(intent.getLongExtra(SCROLL_MESSAGE_ID, -1))
@@ -570,9 +551,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     // Properties for what message indices are visible previously & now, as well as the scroll state
-    private var previousLastVisibleRecyclerViewIndex: Int? = null
-    private var currentLastVisibleRecyclerViewIndex: Int? = null
-    private var recyclerScrollState: Int? = null
+    private var previousLastVisibleRecyclerViewIndex: Int = -1
+    private var currentLastVisibleRecyclerViewIndex: Int = -1
+    private var recyclerScrollState: Int = RecyclerView.SCROLL_STATE_IDLE
 
     // called from onCreate
     private fun setUpRecyclerView() {
@@ -584,79 +565,45 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         binding!!.conversationRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                Log.d("[ACL]", "Hit onScrolled listener - about to call handleRecyclerViewScrolled")
-                compensateForSoftKeyboardIfNecessary()
+                if (recyclerScrollState == RecyclerView.SCROLL_STATE_IDLE) {
+                    scrollToMostRecentMessageIfWeShould()
+                }
                 handleRecyclerViewScrolled()
             }
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-
-                /*
-                when (newState) {
-                    RecyclerView.SCROLL_STATE_SETTLING -> Log.d("[ACL]", "Scroll state is SETTLING!")
-                    RecyclerView.SCROLL_STATE_IDLE -> Log.d("[ACL]", "Scroll state is IDLE!")
-                    RecyclerView.SCROLL_STATE_DRAGGING -> Log.d("[ACL]", "Scroll state is DRAGGING!")
-                    else -> Log.d("[ACL]", "No idea what's going on w/ the scroll state: $newState")
-                }
-                */
-
-                //Log.d("[ACL]", "Scroll state is: $newState")
                 recyclerScrollState = newState
             }
         })
-
-        // Layout changes occur when the IME keyboard is shown, and when scrolling (when scrolling
-        // it gets called A LOT!)
-        // BUG: Sometimes this gets locked so that it's constantly being called!
-        binding!!.conversationRecyclerView.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-            //Log.d("[ACL]", "Hit recycler onLayoutChangeListener")
-
-            //doStuff()
-        }
     }
 
-    private fun compensateForSoftKeyboardIfNecessary() {
-        // If the user is not actively scrolling through the conversation..
-        if (recyclerScrollState != RecyclerView.SCROLL_STATE_DRAGGING) {
-
-            // ..grab an initial 'previous' last visible message..
-            if (previousLastVisibleRecyclerViewIndex == null) {
-                previousLastVisibleRecyclerViewIndex = layoutManager?.findLastVisibleItemPosition()
-            }
-
-            // ..and grab the 'current' last visible message.
-            currentLastVisibleRecyclerViewIndex = layoutManager?.findLastVisibleItemPosition()
-            Log.d("[ACL]","Hit onLayoutChangeListener - current last visible view: $currentLastVisibleRecyclerViewIndex - previous: $previousLastVisibleRecyclerViewIndex - item count: ${adapter.itemCount} - scrolled to bottom: $isScrolledToBottom")
-
-            // If the current last visible message index is less than the previous one (i.e. we've
-            // lost visibility of one or more messages due to showing the IME keyboard) AND we're
-            // at the bottom of the message feed..
-            val atBottomAndTrueLastNoLongerVisible = currentLastVisibleRecyclerViewIndex!! <= previousLastVisibleRecyclerViewIndex!! && !binding?.scrollToBottomButton?.isVisible!!
-            val receivedNewMessage = currentLastVisibleRecyclerViewIndex == (adapter.itemCount - 1)
-            if (atBottomAndTrueLastNoLongerVisible || receivedNewMessage)
-            {
-
-                //if (isScrolledToBottom) {
-                Log.d("[ACL]", "HIT INNER - scrolling to: ${adapter.itemCount}")
-                //binding!!.conversationRecyclerView.scrollToPosition(currentLastVisibleRecyclerViewIndex!!)
-                //layoutManager.scrollToPosition(currentLastVisibleRecyclerViewIndex!!)
-
-                //binding!!.conversationRecyclerView.post {
-                //layoutManager?.scrollToPosition(currentLastVisibleRecyclerViewIndex!!)
-                //}
-
-                // ..then scroll to the last message.
-                // Note: We cannot just call scroll/smoothScroll - we have to POST it or nothing happens!
-                binding?.conversationRecyclerView?.post {
-                    binding?.conversationRecyclerView?.smoothScrollToPosition(adapter.itemCount)
-                }
-            }
-
-            // Update our previous last visible view index to the current one
-            previousLastVisibleRecyclerViewIndex = currentLastVisibleRecyclerViewIndex
-
-            //showScrollToBottomButtonIfApplicable()
+    private fun scrollToMostRecentMessageIfWeShould() {
+        // Grab an initial 'previous' last visible message..
+        if (previousLastVisibleRecyclerViewIndex == -1) {
+            previousLastVisibleRecyclerViewIndex = layoutManager?.findLastVisibleItemPosition()!!
         }
+
+        // ..and grab the 'current' last visible message.
+        currentLastVisibleRecyclerViewIndex = layoutManager?.findLastVisibleItemPosition()!!
+
+        // If the current last visible message index is less than the previous one (i.e. we've
+        // lost visibility of one or more messages due to showing the IME keyboard) AND we're
+        // at the bottom of the message feed..
+        val atBottomAndTrueLastNoLongerVisible = currentLastVisibleRecyclerViewIndex!! <= previousLastVisibleRecyclerViewIndex!! && !binding?.scrollToBottomButton?.isVisible!!
+
+        // ..OR we're at the last message or have received a new message..
+        val atLastOrReceivedNewMessage = currentLastVisibleRecyclerViewIndex == (adapter.itemCount - 1)
+
+        // ..then scroll the recycler view to the last message on resize. Note: We cannot just call
+        // scroll/smoothScroll - we have to `post` it or nothing happens!
+        if (atBottomAndTrueLastNoLongerVisible || atLastOrReceivedNewMessage) {
+            binding?.conversationRecyclerView?.post {
+                binding?.conversationRecyclerView?.smoothScrollToPosition(adapter.itemCount)
+            }
+        }
+
+        // Update our previous last visible view index to the current one
+        previousLastVisibleRecyclerViewIndex = currentLastVisibleRecyclerViewIndex
     }
 
     // called from onCreate
@@ -836,16 +783,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // of the first unread message in the middle of the screen
         if (isFirstLoad && !reverseMessageList) {
             layoutManager?.scrollToPositionWithOffset(lastSeenItemPosition, ((layoutManager?.height ?: 0) / 2))
-
             if (shouldHighlight) { highlightViewAtPosition(lastSeenItemPosition) }
-
             return lastSeenItemPosition
         }
 
-        if (lastSeenItemPosition <= 3) {
-            Log.d("[ACL]", "About to bail from scrollToFirstUnreadMessageIfNeeded because last seen item position is <= 3")
-            return lastSeenItemPosition
-        }
+        if (lastSeenItemPosition <= 3) { return lastSeenItemPosition }
 
         binding?.conversationRecyclerView?.scrollToPosition(lastSeenItemPosition)
         return lastSeenItemPosition
@@ -881,46 +823,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     // endregion
 
     // region Animation & Updating
-
-
-    private fun updateMargins(left: Int, top: Int, right: Int, bottom: Int) {
-        Log.d("[ACL]", "Hit updateMargins - setting conversation recycler bottom padding to : $bottom")
-
-        binding?.contentView?.setPadding(left, top, right, bottom)
-
-        //binding?.conversationRecyclerView?.setPadding(left, top, right, bottom)
-
-        //binding.root.updateLayoutParams {
-            //marg
-        //} //.marginBottom = bottom
-    }
-
-    // [ACL]
-    // Method to apply insets when the IME / soft keyboard is displayed
-    private fun applyInsets(): WindowInsetsCompat {
-        Log.d("[ACL]", "Hit applyInsets!")
-
-
-        //val currentInsetTypeMask = currentInsetTypes.fold(0) { accumulator, type -> accumulator or type }
-
-
-        // Extract the IME insets from the Window insets..
-        val currentImeInsets = currentWindowInsets.getInsets(WindowInsetsCompat.Type.ime())
-
-        // ..and apply them to the root layout.
-        updateMargins(currentImeInsets.left, currentImeInsets.top, currentImeInsets.right, currentImeInsets.bottom)
-
-
-        Log.d("[ACL]", "Current Ime insets: $currentImeInsets")
-
-        return WindowInsetsCompat.Builder().setInsets(WindowInsetsCompat.Type.ime(), currentImeInsets).build()
-    }
-
-    // Note: This gets hit at least 3 times on receiving a message, which doesn't seem right
     override fun onModified(recipient: Recipient) {
-
-        Log.d("[ACL]", "Hit onModified")
-
         viewModel.updateRecipient()
 
         runOnUiThread {
@@ -939,9 +842,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 threadRecipient.isLocalNumber -> getString(R.string.note_to_self)
                 else -> threadRecipient.toShortString()
             }
-
-            //Log.d("[ACL]", "About to call scrollToFirstUnreadMessageIfNeeded")
-            //scrollToFirstUnreadMessageIfNeeded()
         }
     }
 
@@ -949,36 +849,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         binding?.textSendAfterApproval?.isVisible = viewModel.showSendAfterApprovalText
     }
 
-    /*
-    // If we're 30px or less from the bottom and this method is triggered due to a new message
-            // then scroll to the bottom so the user can see it while they're typing a reply
-            if (binding?.conversationRecyclerView?.shouldScrollToShowNewMessages == true) {
-                Log.d("[ACL]", "Hit the part where we should scroll to show new messages")
-                val lastItemIndex = adapter.itemCount - 1
-                Log.d("[ACL]", "Adapter thinks size is: $lastItemIndex")
-
-                val rvSize = binding?.conversationRecyclerView?.size
-                Log.d("[ACL]", "Recycler view thinks size is: $rvSize")
-
-                moveToMessagePosition(lastItemIndex, false, null)
-
-                //layoutManager?.scrollToPosition(lastItemIndex)
-
-                //binding?.conversationRecyclerView?.smoothScrollToPosition(lastItemIndex)
-            }
-     */
-
     private fun showOrHideInputIfNeeded() {
         val recipient = viewModel.recipient
         if (recipient != null && recipient.isClosedGroupRecipient) {
             val group = groupDb.getGroup(recipient.address.toGroupString()).orNull()
             val isActive = (group?.isActive == true)
-
-            Log.d("[ACL]", "Setting showInput to: $isActive")
-
             binding?.inputBar?.showInput = isActive
         } else {
-            Log.d("[ACL]", "Setting showInput to: TRUE (else path)")
             binding?.inputBar?.showInput = true
         }
     }
@@ -1257,14 +1134,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
-    // This method is called when the activity layout changes, such as when receiving a message or
-    // showing the soft (IME - Input Method Editor) keyboard, or scrolling (and when scrolling it
-    // gets called A LOT!)
     private fun showScrollToBottomButtonIfApplicable() {
-        val willShow = !emojiPickerVisible && !isScrolledToBottom && adapter.itemCount > 0
-        //Log.d("[ACL]", "Hit showScrollToBottomButtonIfApplicable - will show?: $willShow")
-
-        binding?.scrollToBottomButton?.isVisible = willShow //!emojiPickerVisible && !isScrolledToBottom && adapter.itemCount > 0
+        binding?.scrollToBottomButton?.isVisible = !emojiPickerVisible && !isScrolledToBottom && adapter.itemCount > 0
     }
 
     private fun updateUnreadCountIndicator() {
