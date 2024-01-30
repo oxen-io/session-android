@@ -39,7 +39,6 @@ import androidx.activity.viewModels
 import androidx.annotation.DimenRes
 import androidx.core.text.set
 import androidx.core.text.toSpannable
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -351,7 +350,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private lateinit var reactionDelegate: ConversationReactionDelegate
     private val reactWithAnyEmojiStartPage = -1
 
-    private var currentWindowInsets: WindowInsetsCompat = WindowInsetsCompat.Builder().build()
+    // Properties for what message indices are visible previously & now, as well as the scroll state
+    private var previousLastVisibleRecyclerViewIndex: Int = -1
+    private var currentLastVisibleRecyclerViewIndex: Int = -1
+    private var recyclerScrollState: Int = RecyclerView.SCROLL_STATE_IDLE
 
     // region Settings
     companion object {
@@ -423,8 +425,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         setUpBlockedBanner()
         binding!!.searchBottomBar.setEventListener(this)
         updateSendAfterApprovalText()
-        //showOrHideInputIfNeeded() Not required in onCreate we'll never hit this w/ the keyboard visible and never need to immediately display it
         setUpMessageRequestsBar()
+
+        // Note: Do not `showOrHideInputIfNeeded` here - we'll never start this activity w/ the
+        // keyboard visible and have no need to immediately display it.
 
         val weakActivity = WeakReference(this)
 
@@ -549,11 +553,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     override fun onLoaderReset(cursor: Loader<Cursor>) {
         adapter.changeCursor(null)
     }
-
-    // Properties for what message indices are visible previously & now, as well as the scroll state
-    private var previousLastVisibleRecyclerViewIndex: Int = -1
-    private var currentLastVisibleRecyclerViewIndex: Int = -1
-    private var recyclerScrollState: Int = RecyclerView.SCROLL_STATE_IDLE
 
     // called from onCreate
     private fun setUpRecyclerView() {

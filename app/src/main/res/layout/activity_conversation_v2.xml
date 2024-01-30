@@ -22,7 +22,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <!--
-    Add this to the below recycler view if you need to debug adjustSize issues:
+    Add this to the below recycler view if you need to debug activity `adjustResize` issues:
     android:background="@drawable/cross"
     -->
     <org.thoughtcrime.securesms.conversation.v2.ConversationRecyclerView
