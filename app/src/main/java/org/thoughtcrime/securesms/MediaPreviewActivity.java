@@ -157,7 +157,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
       previewIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
               .setDataAndType(slide.getUri(), slide.getContentType())
               .putExtra(ADDRESS_EXTRA, threadRecipient.getAddress())
-              .putExtra(OUTGOING_EXTRA, mms.isOutgoing())
+              .putExtra(OUTGOING_EXTRA, mms.isOutgoingMessageType())
               .putExtra(DATE_EXTRA, mms.getTimestamp())
               .putExtra(SIZE_EXTRA, slide.asAttachment().getSize())
               .putExtra(CAPTION_EXTRA, slide.getCaption().orNull())

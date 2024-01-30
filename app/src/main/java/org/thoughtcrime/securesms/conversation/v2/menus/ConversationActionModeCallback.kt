@@ -41,15 +41,15 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
         val blindedPublicKey = openGroup?.publicKey?.let { SodiumUtilities.blindedKeyPair(it, edKeyPair)?.publicKey?.asBytes }
             ?.let { SessionId(IdPrefix.BLINDED, it) }?.hexString
         fun userCanDeleteSelectedItems(): Boolean {
-            val allSentByCurrentUser = selectedItems.all { it.isOutgoing }
-            val allReceivedByCurrentUser = selectedItems.all { !it.isOutgoing }
+            val allSentByCurrentUser = selectedItems.all { it.isOutgoingMessageType }
+            val allReceivedByCurrentUser = selectedItems.all { !it.isOutgoingMessageType }
             if (openGroup == null) { return allSentByCurrentUser || allReceivedByCurrentUser }
             if (allSentByCurrentUser) { return true }
             return OpenGroupManager.isUserModerator(context, openGroup.groupId, userPublicKey, blindedPublicKey)
         }
         fun userCanBanSelectedUsers(): Boolean {
             if (openGroup == null) { return false }
-            val anySentByCurrentUser = selectedItems.any { it.isOutgoing }
+            val anySentByCurrentUser = selectedItems.any { it.isOutgoingMessageType }
             if (anySentByCurrentUser) { return false } // Users can't ban themselves
             val selectedUsers = selectedItems.map { it.recipient.address.toString() }.toSet()
             if (selectedUsers.size > 1) { return false }

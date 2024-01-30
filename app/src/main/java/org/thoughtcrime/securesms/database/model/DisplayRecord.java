@@ -106,7 +106,7 @@ public abstract class DisplayRecord {
 
   public boolean isRead() { return readReceiptCount > 0; }
 
-  public boolean isOutgoing() {
+  public boolean isOutgoingMessageType() {
     return MmsSmsColumns.Types.isOutgoingMessageType(type);
   }
   public boolean isGroupUpdateMessage() {

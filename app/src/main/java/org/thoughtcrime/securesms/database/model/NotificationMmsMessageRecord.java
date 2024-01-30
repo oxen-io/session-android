@@ -81,7 +81,7 @@ public class NotificationMmsMessageRecord extends MmsMessageRecord {
   }
 
   @Override
-  public boolean isOutgoing() {
+  public boolean isOutgoingMessageType() {
     return false;
   }
 

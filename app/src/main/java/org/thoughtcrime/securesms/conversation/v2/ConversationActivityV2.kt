@@ -1291,7 +1291,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             topLeft[0].toFloat(),
             topLeft[1].toFloat(),
             visibleMessageView.messageContentView.width,
-            message.isOutgoing,
+            message.isOutgoingMessageType,
             visibleMessageView.messageContentView
         )
         reactionDelegate.show(this, message, selectedConversationModel, viewModel.blindedPublicKey)
@@ -1329,7 +1329,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             dateReceived = emojiTimestamp
         )
         reactionDb.addReaction(MessageId(originalMessage.id, originalMessage.isMms), reaction, false)
-        val originalAuthor = if (originalMessage.isOutgoing) {
+        val originalAuthor = if (originalMessage.isOutgoingMessageType) {
             fromSerialized(viewModel.blindedPublicKey ?: textSecurePreferences.getLocalNumber()!!)
         } else originalMessage.individualRecipient.address
         // Send it
@@ -1353,7 +1353,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val author = textSecurePreferences.getLocalNumber()!!
         reactionDb.deleteReaction(emoji, MessageId(originalMessage.id, originalMessage.isMms), author, false)
 
-        val originalAuthor = if (originalMessage.isOutgoing) {
+        val originalAuthor = if (originalMessage.isOutgoingMessageType) {
             fromSerialized(viewModel.blindedPublicKey ?: textSecurePreferences.getLocalNumber()!!)
         } else originalMessage.individualRecipient.address
 
@@ -1620,14 +1620,14 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         message.text = body
         val quote = quotedMessage?.let {
             val quotedAttachments = (it as? MmsMessageRecord)?.slideDeck?.asAttachments() ?: listOf()
-            val sender = if (it.isOutgoing) {
+            val sender = if (it.isOutgoingMessageType) {
                 fromSerialized(viewModel.blindedPublicKey ?: textSecurePreferences.getLocalNumber()!!)
             } else it.individualRecipient.address
             QuoteModel(it.dateSent, sender, it.body, false, quotedAttachments)
         }
         val localQuote = quotedMessage?.let {
             val sender =
-                if (it.isOutgoing) fromSerialized(textSecurePreferences.getLocalNumber()!!)
+                if (it.isOutgoingMessageType) fromSerialized(textSecurePreferences.getLocalNumber()!!)
                 else it.individualRecipient.address
             quote?.copy(author = sender)
         }
@@ -1814,7 +1814,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     override fun deleteMessages(messages: Set<MessageRecord>) {
         val recipient = viewModel.recipient ?: return
-        val allSentByCurrentUser = messages.all { it.isOutgoing }
+        val allSentByCurrentUser = messages.all { it.isOutgoingMessageType }
         val allHasHash = messages.all { lokiMessageDb.getMessageServerHash(it.id) != null }
         if (recipient.isOpenGroupRecipient) {
             val messageCount = 1
@@ -1974,7 +1974,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     if (attachments.isNotEmpty()) {
                         val saveTask = SaveAttachmentTask(this)
                         saveTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, *attachments.toTypedArray())
-                        if (!message.isOutgoing) {
+                        if (!message.isOutgoingMessageType) {
                             sendMediaSavedNotification()
                         }
                         return@onAllGranted

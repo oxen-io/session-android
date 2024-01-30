@@ -110,7 +110,7 @@ public class ConversationItemFooter extends LinearLayout {
         if (messageRecord.getExpireStarted() + messageRecord.getExpiresIn() <= SnodeAPI.getNowWithOffset()) {
           ApplicationContext.getInstance(getContext()).getExpiringMessageManager().checkSchedule();
         }
-      } else if (!messageRecord.isOutgoing() && !messageRecord.isMediaPending()) {
+      } else if (!messageRecord.isOutgoingMessageType() && !messageRecord.isMediaPending()) {
         new AsyncTask<Void, Void, Void>() {
           @Override
           protected Void doInBackground(Void... params) {
@@ -137,7 +137,7 @@ public class ConversationItemFooter extends LinearLayout {
 
   private void presentDeliveryStatus(@NonNull MessageRecord messageRecord) {
     if (!messageRecord.isFailed()) {
-      if      (!messageRecord.isOutgoing())  deliveryStatusView.setNone();
+      if      (!messageRecord.isOutgoingMessageType())  deliveryStatusView.setNone();
       else if (messageRecord.isPending())    deliveryStatusView.setPending();
       else if (messageRecord.isRead())       deliveryStatusView.setRead();
       else if (messageRecord.isDelivered())  deliveryStatusView.setDelivered();

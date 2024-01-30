@@ -133,7 +133,7 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
         val mmsDb = DatabaseComponent.get(context).mmsDatabase()
         return mmsDb.getMessage(mmsMessageId).use { cursor ->
             mmsDb.readerFor(cursor).next
-        }?.isOutgoing ?: false
+        }?.isOutgoingMessageType ?: false
     }
 
     override fun isOutgoingMessage(timestamp: Long): Boolean {
@@ -205,7 +205,7 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
         val messagingDatabase: MessagingDatabase = if (message.isMms)  DatabaseComponent.get(context).mmsDatabase()
                                                    else DatabaseComponent.get(context).smsDatabase()
         messagingDatabase.markAsDeleted(message.id, message.isRead, message.hasMention)
-        if (message.isOutgoing) {
+        if (message.isOutgoingMessageType) {
             messagingDatabase.deleteMessage(message.id)
         }
 

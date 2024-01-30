@@ -28,8 +28,8 @@ class OpenGroupInvitationView : LinearLayout {
         val umd = UpdateMessageData.fromJSON(message.body)!!
         val data = umd.kind as UpdateMessageData.Kind.OpenGroupInvitation
         this.data = data
-        val iconID = if (message.isOutgoing) R.drawable.ic_globe else R.drawable.ic_plus
-        val backgroundColor = if (!message.isOutgoing) context.getAccentColor()
+        val iconID = if (message.isOutgoingMessageType) R.drawable.ic_globe else R.drawable.ic_plus
+        val backgroundColor = if (!message.isOutgoingMessageType) context.getAccentColor()
         else ContextCompat.getColor(context, R.color.transparent_black_6)
         with(binding){
             openGroupInvitationIconImageView.setImageResource(iconID)

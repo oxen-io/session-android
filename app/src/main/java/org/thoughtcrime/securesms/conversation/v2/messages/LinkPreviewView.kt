@@ -46,7 +46,7 @@ class LinkPreviewView : LinearLayout {
         }
         // Title
         binding.titleTextView.text = linkPreview.title
-        val textColorID = if (message.isOutgoing) {
+        val textColorID = if (message.isOutgoingMessageType) {
             R.attr.message_sent_text_color
         } else {
             R.attr.message_received_text_color
@@ -54,7 +54,7 @@ class LinkPreviewView : LinearLayout {
         binding.titleTextView.setTextColor(context.getColorFromAttr(textColorID))
         // Body
         // Corner radii
-        val cornerRadii = MessageBubbleUtilities.calculateRadii(context, isStartOfMessageCluster, isEndOfMessageCluster, message.isOutgoing)
+        val cornerRadii = MessageBubbleUtilities.calculateRadii(context, isStartOfMessageCluster, isEndOfMessageCluster, message.isOutgoingMessageType)
         cornerMask.setTopLeftRadius(cornerRadii[0])
         cornerMask.setTopRightRadius(cornerRadii[1])
 

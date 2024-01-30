@@ -142,7 +142,7 @@ class VisibleMessageView : LinearLayout {
         // Show profile picture and sender name if this is a group thread AND the message is incoming
         binding.moderatorIconImageView.isVisible = false
         binding.profilePictureView.visibility = when {
-            thread.isGroupRecipient && !message.isOutgoing && isEndOfMessageCluster -> View.VISIBLE
+            thread.isGroupRecipient && !message.isOutgoingMessageType && isEndOfMessageCluster -> View.VISIBLE
             thread.isGroupRecipient -> View.INVISIBLE
             else -> View.GONE
         }
@@ -160,7 +160,7 @@ class VisibleMessageView : LinearLayout {
             binding.profilePictureView.layoutParams = avatarLayoutParams
         }
 
-        if (isGroupThread && !message.isOutgoing) {
+        if (isGroupThread && !message.isOutgoingMessageType) {
             if (isEndOfMessageCluster) {
                 binding.profilePictureView.publicKey = senderSessionID
                 binding.profilePictureView.update(message.individualRecipient)
@@ -188,22 +188,22 @@ class VisibleMessageView : LinearLayout {
                         standardPublicKey = senderSessionID
                     }
                     val isModerator = OpenGroupManager.isUserModerator(context, openGroup.groupId, standardPublicKey, blindedPublicKey)
-                    binding.moderatorIconImageView.isVisible = !message.isOutgoing && isModerator
+                    binding.moderatorIconImageView.isVisible = !message.isOutgoingMessageType && isModerator
                 }
             }
         }
-        binding.senderNameTextView.isVisible = !message.isOutgoing && (isStartOfMessageCluster && (isGroupThread || snIsSelected))
+        binding.senderNameTextView.isVisible = !message.isOutgoingMessageType && (isStartOfMessageCluster && (isGroupThread || snIsSelected))
         val contactContext = if (thread.isOpenGroupRecipient) ContactContext.OPEN_GROUP else ContactContext.REGULAR
         binding.senderNameTextView.text = contact?.displayName(contactContext) ?: senderSessionID
         // Unread marker
-        binding.unreadMarkerContainer.isVisible = lastSeen != -1L && message.timestamp > lastSeen && (previous == null || previous.timestamp <= lastSeen) && !message.isOutgoing
+        binding.unreadMarkerContainer.isVisible = lastSeen != -1L && message.timestamp > lastSeen && (previous == null || previous.timestamp <= lastSeen) && !message.isOutgoingMessageType
         // Date break
         val showDateBreak = isStartOfMessageCluster || snIsSelected
         binding.dateBreakTextView.text = if (showDateBreak) DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), message.timestamp) else null
         binding.dateBreakTextView.isVisible = showDateBreak
 
         // Message status indicator
-        if (message.isOutgoing) {
+        if (message.isOutgoingMessageType) {
             val (iconId, iconColor, textId, contentDescription) = getMessageStatusImage(message)
 
             // Set details on the message status if we returned non-null values
@@ -215,18 +215,19 @@ class VisibleMessageView : LinearLayout {
                 binding.messageStatusImageView.setImageDrawable(drawable)
             }
 
-            // The content description can be null if there is no content description provided
+            // It's okay if the content description is null if there was none provided
             binding.messageStatusImageView.contentDescription = contentDescription
 
-            // Get the last message Id in the conversation (Note: This is not necessarily the last
-            // message that WE sent - it can be the last message received).
-            // ACL OG!
-            //val lastMessageID = mmsSmsDb.getLastMessageID(message.threadId)
-            val thisUserAddress: Address = Address.fromExternal(context, TextSecurePreferences.getLocalNumber(context)!!)
-            Log.d("[ACL]", "My session Id is: $thisUserAddress")
+            // Get our Session ID
+            val author = Address.fromExternal(context, TextSecurePreferences.getLocalNumber(context)!!)
+            Log.d("[ACL]", "My session Id is: $author")
 
-            var lastSentMessageId = mmsSmsDb.getLastMessageFromSender(message.threadId, thisUserAddress)
-            if (lastSentMessageId == null) lastSentMessageId = -1L
+            //var lastSentMessageId = mmsSmsDb.getLastMessageFromSender(message.threadId, thisUserAddress)
+
+            var lastSentMessageId = mmsSmsDb.getLastSentMessageID(message.threadId, author.serialize())
+
+            //getLastOutgoingMessageID
+            //if (lastSentMessageId == null) lastSentMessageId = -1L
 
 
             Log.d("[ACL]", "My last sent message ID: $lastSentMessageId")
@@ -235,6 +236,8 @@ class VisibleMessageView : LinearLayout {
             // ACL OG:
             //val showSendingStatus = !message.isSent || message.id == lastMessageID
 
+            // Show the sending status if the message has not yet been sent OR it has been sent and
+            // we are the originating author of the sent message
             val showSendingStatus = !message.isSent || message.id == lastSentMessageId
             Log.d("[ACL]", "Show sending status is: $showSendingStatus")
 
@@ -252,13 +255,13 @@ class VisibleMessageView : LinearLayout {
 
         // Emoji Reactions
         val emojiLayoutParams = binding.emojiReactionsView.root.layoutParams as ConstraintLayout.LayoutParams
-        emojiLayoutParams.horizontalBias = if (message.isOutgoing) 1f else 0f
+        emojiLayoutParams.horizontalBias = if (message.isOutgoingMessageType) 1f else 0f
         binding.emojiReactionsView.root.layoutParams = emojiLayoutParams
 
         if (message.reactions.isNotEmpty()) {
             val capabilities = lokiThreadDb.getOpenGroupChat(threadID)?.server?.let { lokiApiDb.getServerCapabilities(it) }
             if (capabilities.isNullOrEmpty() || capabilities.contains(OpenGroupApi.Capability.REACTIONS.name.lowercase())) {
-                binding.emojiReactionsView.root.setReactions(message.id, message.reactions, message.isOutgoing, delegate)
+                binding.emojiReactionsView.root.setReactions(message.id, message.reactions, message.isOutgoingMessageType, delegate)
                 binding.emojiReactionsView.root.isVisible = true
             } else {
                 binding.emojiReactionsView.root.isVisible = false
@@ -277,7 +280,7 @@ class VisibleMessageView : LinearLayout {
             glide,
             thread,
             searchQuery,
-            message.isOutgoing || isGroupThread || (contact?.isTrusted ?: false),
+            message.isOutgoingMessageType || isGroupThread || (contact?.isTrusted ?: false),
             onAttachmentNeedsDownload
         )
         binding.messageContentView.root.delegate = delegate
@@ -290,7 +293,7 @@ class VisibleMessageView : LinearLayout {
                 || current.recipient.address != previous.recipient.address
         } else {
             previous == null || previous.isUpdate || !DateUtils.isSameHour(current.timestamp, previous.timestamp)
-                || current.isOutgoing != previous.isOutgoing
+                || current.isOutgoingMessageType != previous.isOutgoingMessageType
         }
     }
 
@@ -300,7 +303,7 @@ class VisibleMessageView : LinearLayout {
                 || current.recipient.address != next.recipient.address
         } else {
             next == null || next.isUpdate || !DateUtils.isSameHour(current.timestamp, next.timestamp)
-                || current.isOutgoing != next.isOutgoing
+                || current.isOutgoingMessageType != next.isOutgoingMessageType
         }
     }
 
@@ -355,14 +358,14 @@ class VisibleMessageView : LinearLayout {
         val container = binding.messageInnerContainer
         val layout = binding.messageInnerLayout
 
-        if (message.isOutgoing) binding.messageContentView.root.bringToFront()
+        if (message.isOutgoingMessageType) binding.messageContentView.root.bringToFront()
         else binding.expirationTimerView.bringToFront()
 
         layout.layoutParams = layout.layoutParams.let { it as FrameLayout.LayoutParams }
-            .apply { gravity = if (message.isOutgoing) Gravity.END else Gravity.START }
+            .apply { gravity = if (message.isOutgoingMessageType) Gravity.END else Gravity.START }
 
         val containerParams = container.layoutParams as ConstraintLayout.LayoutParams
-        containerParams.horizontalBias = if (message.isOutgoing) 1f else 0f
+        containerParams.horizontalBias = if (message.isOutgoingMessageType) 1f else 0f
         container.layoutParams = containerParams
         if (message.expiresIn > 0 && !message.isPending) {
             binding.expirationTimerView.setColorFilter(context.getColorFromAttr(android.R.attr.textColorPrimary))
