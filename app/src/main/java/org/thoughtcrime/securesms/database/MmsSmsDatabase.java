@@ -31,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.Util;
 import org.session.libsignal.utilities.Log;
+
 import org.thoughtcrime.securesms.database.MessagingDatabase.SyncMessageId;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
@@ -95,8 +96,7 @@ public class MmsSmsDatabase extends Database {
       return reader.getNext();
     }
   }
-
-  // ACL check this
+  
   public @Nullable MessageRecord getMessageFor(long timestamp, String serializedAuthor) {
 
     try (Cursor cursor = queryTables(PROJECTION, MmsSmsColumns.NORMALIZED_DATE_SENT + " = " + timestamp, null, null)) {
