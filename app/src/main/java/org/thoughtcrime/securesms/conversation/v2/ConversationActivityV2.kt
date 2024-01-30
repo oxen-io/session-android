@@ -351,8 +351,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private val reactWithAnyEmojiStartPage = -1
 
     // Properties for what message indices are visible previously & now, as well as the scroll state
-    private var previousLastVisibleRecyclerViewIndex: Int = -1
-    private var currentLastVisibleRecyclerViewIndex: Int = -1
+    private var previousLastVisibleRecyclerViewIndex: Int = RecyclerView.NO_POSITION
+    private var currentLastVisibleRecyclerViewIndex:  Int = RecyclerView.NO_POSITION
     private var recyclerScrollState: Int = RecyclerView.SCROLL_STATE_IDLE
 
     // region Settings
@@ -578,7 +578,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private fun scrollToMostRecentMessageIfWeShould() {
         // Grab an initial 'previous' last visible message..
-        if (previousLastVisibleRecyclerViewIndex == -1) {
+        if (previousLastVisibleRecyclerViewIndex == RecyclerView.NO_POSITION) {
             previousLastVisibleRecyclerViewIndex = layoutManager?.findLastVisibleItemPosition()!!
         }
 
