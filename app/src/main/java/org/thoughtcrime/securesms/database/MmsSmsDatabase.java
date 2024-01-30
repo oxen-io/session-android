@@ -217,89 +217,18 @@ public class MmsSmsDatabase extends Database {
 
     boolean isOwnNumber = Util.isOwnNumber(context, serializedAuthor);
 
+    // Try everything with resources so that they auto-close on end of scope
     try (Cursor cursor = queryTables(PROJECTION, selection, order, null)) {
       try (MmsSmsDatabase.Reader reader = readerFor(cursor)) {
         MessageRecord messageRecord;
         while ((messageRecord = reader.getNext()) != null) {
-          Log.d("[ACL]", "Looking at message record: " + messageRecord.toString());
-          if (isOwnNumber && messageRecord.isOutgoingMessageType()) //|| (!isOwnNumber && messageRecord.getIndividualRecipient().getAddress().serialize().equals(serializedAuthor)))
-          {
-            Log.d("[ACL]", "Found a message from us which is outgoing!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            return messageRecord.id;
-          }
+          if (isOwnNumber && messageRecord.isOutgoingMessageType()) { return messageRecord.id; }
         }
       }
     }
     Log.w(TAG, "Could not find a last outgoing message from specified author.");
     return -1;
   }
-
-    /*
-    if (cursor == null || cursor.getCount() == 0) {
-      Log.w(TAG, "Could not find a message in MmsSms database from given author.");
-      return -1L;
-    }
-
-     */
-
-
-
-
-
-    /*
-    try (Cursor cursor = queryTables(PROJECTION, selection, order, null)) {
-      cursor.moveToFirst();
-      return cursor.getLong(cursor.getColumnIndexOrThrow(MmsSmsColumns.ID));
-    }
-    */
-
-  //}
-
-  /*
-  public long getLastOutgoingMessageInThread(long threadId) {
-    String order     = MmsSmsColumns.NORMALIZED_DATE_SENT + " DESC";
-    String selection = MmsSmsColumns.THREAD_ID + " = " + threadId; // + ";// AND type IN " + MmsSmsColumns.Types.OUTGOING_MESSAGE_TYPES;
-
-
-    MmsSmsDatabase.Reader reader = readerFor(cursor);
-
-    boolean isOwnNumber = Util.isOwnNumber(context, serializedAuthor);
-
-    MessageRecord messageRecord;
-    while ((messageRecord = reader.getNext()) != null) {
-      if ((isOwnNumber && messageRecord.isOutgoing()) ||
-              (!isOwnNumber && messageRecord.getIndividualRecipient().getAddress().serialize().equals(serializedAuthor)))
-      {
-        return messageRecord;
-      }
-    }
-  }
-
-    try (Cursor cursor = queryTables(PROJECTION, selection, order, null) {
-      cursor.moveToFirst();
-
-      Log.d("[ACL]", "Got record: " + DatabaseUtils.dumpCursorToString(cursor));
-
-      return cursor.getLong(cursor.getColumnIndexOrThrow(MmsSmsColumns.ID));
-    }
-  }
-
-  public Long getLastMessageFromSender(long threadId, Address userAddress) {
-    String order     = MmsSmsColumns.NORMALIZED_DATE_SENT + " DESC";
-    String selection = MmsSmsColumns.THREAD_ID + " = " + threadId + " AND " + MmsSmsColumns.ADDRESS + " = '" + userAddress.serialize() + "'";
-
-    try (Cursor cursor = queryTables(PROJECTION, selection, order, "1")) {
-      cursor.moveToFirst();
-      try {
-        return cursor.getLong(cursor.getColumnIndexOrThrow(MmsSmsColumns.ID));
-      }
-      catch (CursorIndexOutOfBoundsException e) {
-        Log.d(TAG, "Cursor out of range: " + e);
-        return null;
-      }
-    }
-  }
-  */
 
   public Cursor getUnread() {
     String order           = MmsSmsColumns.NORMALIZED_DATE_SENT + " ASC";

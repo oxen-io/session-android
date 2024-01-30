@@ -218,32 +218,19 @@ class VisibleMessageView : LinearLayout {
             // It's okay if the content description is null if there was none provided
             binding.messageStatusImageView.contentDescription = contentDescription
 
-            // Get our Session ID
+            // Get our own Session ID and use it to find the last message we sent
             val author = Address.fromExternal(context, TextSecurePreferences.getLocalNumber(context)!!)
-            Log.d("[ACL]", "My session Id is: $author")
+            val lastSentMessageId: Long = mmsSmsDb.getLastSentMessageID(message.threadId, author.serialize())
 
-            //var lastSentMessageId = mmsSmsDb.getLastMessageFromSender(message.threadId, thisUserAddress)
-
-            var lastSentMessageId = mmsSmsDb.getLastSentMessageID(message.threadId, author.serialize())
-
-            //getLastOutgoingMessageID
-            //if (lastSentMessageId == null) lastSentMessageId = -1L
-
-
-            Log.d("[ACL]", "My last sent message ID: $lastSentMessageId")
-
-
-            // ACL OG:
-            //val showSendingStatus = !message.isSent || message.id == lastMessageID
-
-            // Show the sending status if the message has not yet been sent OR it has been sent and
-            // we are the originating author of the sent message
-            val showSendingStatus = !message.isSent || message.id == lastSentMessageId
-            Log.d("[ACL]", "Show sending status is: $showSendingStatus")
-
-
-            binding.messageStatusTextView.isVisible  = (textId != null && showSendingStatus)
-            binding.messageStatusImageView.isVisible = (iconId != null && showSendingStatus)
+            // If we managed to find one (and we won't if we've never sent a message in this
+            // conversation or group/community)..
+            if (lastSentMessageId != -1L) {
+                // ..then show the sending status if the message has not yet been sent, or if it HAS
+                // been sent and we are the originating author of the sent message.
+                val showSendingStatus = !message.isSent || message.id == lastSentMessageId
+                binding.messageStatusTextView.isVisible  = (textId != null && showSendingStatus)
+                binding.messageStatusImageView.isVisible = (iconId != null && showSendingStatus)
+            }
         }
         else { // Never show message status on non-outgoing messages
             binding.messageStatusTextView.isVisible = false
