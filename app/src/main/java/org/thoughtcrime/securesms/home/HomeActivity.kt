@@ -710,11 +710,10 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
      * Check RECORD_AUDIO permission in order for audio to work properly for
      * Voice and Video Calls.
      * If permission permanently denied (Don't allow), disable the calls.
-     * If temporary permission expired (Only this time), ask again.
+     * If temporary permission expired (Only this time), do nothing.
      * If permission permanently granted (While using the app), do nothing.
      *
      * @see hasWebRTCCallPermissions
-     * @see onRequestPermissionsResult
      */
     private fun checkVoiceCallStatus() {
         if (textSecurePreferences.isCallNotificationsEnabled()) {
@@ -738,20 +737,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         )
 
         callback(micPermission == PackageManager.PERMISSION_GRANTED)
-    }
-
-    /**
-     * Passes the [grantResults] back into [Permissions].
-     *
-     * @see hasWebRTCCallPermissions
-     */
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        Permissions.onRequestPermissionsResult(this, requestCode, permissions, grantResults)
     }
 
     // endregion
