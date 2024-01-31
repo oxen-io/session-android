@@ -745,6 +745,7 @@ class WebRtcCallService : LifecycleService(), CallManager.WebRtcListener {
             Log.e(TAG, "Failed to setCallInProgressNotification as a foreground service for type: ${type}, trying to update instead")
         }
 
+        // ACL: Is it right that this is `notifications are *DISABLED* and type is TYPE_INCOMING_PRE_OFFER`?
         if (!CallNotificationBuilder.areNotificationsEnabled(this) && type == TYPE_INCOMING_PRE_OFFER) {
             // start an intent for the fullscreen
             val foregroundIntent = Intent(this, WebRtcCallActivity::class.java)
