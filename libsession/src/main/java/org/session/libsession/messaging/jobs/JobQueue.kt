@@ -165,7 +165,9 @@ class JobQueue : JobDelegate {
 
     fun add(job: Job) {
         addWithoutExecuting(job)
-        queue.trySend(job) // offer always called on unlimited capacity
+        var wang = queue.trySend(job) // offer always called on unlimited capacity
+
+        Log.d("[ACL]", "Channel result of adding job to queue is: $wang")
     }
 
     private fun addWithoutExecuting(job: Job) {
