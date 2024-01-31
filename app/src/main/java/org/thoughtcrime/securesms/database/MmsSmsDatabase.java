@@ -106,7 +106,7 @@ public class MmsSmsDatabase extends Database {
 
       MessageRecord messageRecord;
       while ((messageRecord = reader.getNext()) != null) {
-        if ((isOwnNumber && messageRecord.isOutgoingMessageType()) ||
+        if ((isOwnNumber && messageRecord.isOutgoing()) ||
                 (!isOwnNumber && messageRecord.getIndividualRecipient().getAddress().serialize().equals(serializedAuthor)))
         {
           return messageRecord;
@@ -222,7 +222,7 @@ public class MmsSmsDatabase extends Database {
       try (MmsSmsDatabase.Reader reader = readerFor(cursor)) {
         MessageRecord messageRecord;
         while ((messageRecord = reader.getNext()) != null) {
-          if (isOwnNumber && messageRecord.isOutgoingMessageType()) { return messageRecord.id; }
+          if (isOwnNumber && messageRecord.isOutgoing()) { return messageRecord.id; }
         }
       }
     }

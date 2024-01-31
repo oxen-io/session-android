@@ -87,7 +87,7 @@ class AlbumThumbnailView : RelativeLayout {
             // this should never be encountered because it's checked by parent
             return
         }
-        calculateRadius(isStart, isEnd, message.isOutgoingMessageType)
+        calculateRadius(isStart, isEnd, message.isOutgoing)
 
         // recreate cell views if different size to what we have already (for recycling)
         if (slides.size != this.slideSize) {

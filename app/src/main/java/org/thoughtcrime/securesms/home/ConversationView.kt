@@ -114,7 +114,7 @@ class ConversationView : LinearLayout {
         binding.typingIndicatorView.root.visibility = if (isTyping) View.VISIBLE else View.GONE
         binding.statusIndicatorImageView.visibility = View.VISIBLE
         when {
-            !thread.isOutgoingMessageType -> binding.statusIndicatorImageView.visibility = View.GONE
+            !thread.isOutgoing -> binding.statusIndicatorImageView.visibility = View.GONE
             thread.isFailed -> {
                 val drawable = ContextCompat.getDrawable(context, R.drawable.ic_error)?.mutate()
                 drawable?.setTint(ContextCompat.getColor(context, R.color.destructive))

@@ -90,7 +90,7 @@ public abstract class MessagingDatabase extends Database implements MmsSmsColumn
         values.put(REACTIONS_UNREAD, 0);
       }
 
-      if (message.isOutgoingMessageType() && hasReactions) {
+      if (message.isOutgoing() && hasReactions) {
         values.put(NOTIFIED, 0);
       }
 

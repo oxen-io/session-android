@@ -192,7 +192,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
   }
 
   private void updateConversationTimestamp(MessageRecord message) {
-    if (message.isOutgoingMessageType()) conversationBubble.bringToFront();
+    if (message.isOutgoing()) conversationBubble.bringToFront();
     else conversationTimestamp.bringToFront();
   }
 

@@ -69,7 +69,7 @@ class VisibleMessageContentView : ConstraintLayout {
         suppressThumbnails: Boolean = false
     ) {
         // Background
-        val color = if (message.isOutgoingMessageType) context.getAccentColor()
+        val color = if (message.isOutgoing) context.getAccentColor()
         else context.getColorFromAttr(R.attr.message_received_background_color)
         binding.contentParent.mainColor = color
         binding.contentParent.cornerRadius = resources.getDimension(R.dimen.message_corner_radius)
@@ -120,7 +120,7 @@ class VisibleMessageContentView : ConstraintLayout {
                 quote.text
             }
             binding.quoteView.root.bind(quote.author.toString(), quoteText, quote.attachment, thread,
-                message.isOutgoingMessageType, message.isOpenGroupInvitation, message.threadId,
+                message.isOutgoing, message.isOpenGroupInvitation, message.threadId,
                 quote.isOriginalMissing, glide)
             onContentClick.add { event ->
                 val r = Rect()
@@ -161,7 +161,7 @@ class VisibleMessageContentView : ConstraintLayout {
             message is MmsMessageRecord && message.slideDeck.audioSlide != null -> {
                 hideBody = true
                 // Audio attachment
-                if (contactIsTrusted || message.isOutgoingMessageType) {
+                if (contactIsTrusted || message.isOutgoing) {
                     binding.voiceMessageView.root.indexInAdapter = indexInAdapter
                     binding.voiceMessageView.root.delegate = context as? ConversationActivityV2
                     binding.voiceMessageView.root.bind(message, isStartOfMessageCluster, isEndOfMessageCluster)
@@ -178,7 +178,7 @@ class VisibleMessageContentView : ConstraintLayout {
             message is MmsMessageRecord && message.slideDeck.documentSlide != null -> {
                 hideBody = true
                 // Document attachment
-                if (contactIsTrusted || message.isOutgoingMessageType) {
+                if (contactIsTrusted || message.isOutgoing) {
                     binding.documentView.root.bind(message, VisibleMessageContentView.getTextColor(context, message))
                 } else {
                     binding.untrustedView.root.bind(UntrustedAttachmentView.AttachmentType.DOCUMENT, VisibleMessageContentView.getTextColor(context,message))
@@ -189,7 +189,7 @@ class VisibleMessageContentView : ConstraintLayout {
                 /*
                  *    Images / Video attachment
                  */
-                if (contactIsTrusted || message.isOutgoingMessageType) {
+                if (contactIsTrusted || message.isOutgoing) {
                     // isStart and isEnd of cluster needed for calculating the mask for full bubble image groups
                     // bind after add view because views are inflated and calculated during bind
                     binding.albumThumbnailView.root.bind(
@@ -199,7 +199,7 @@ class VisibleMessageContentView : ConstraintLayout {
                         isEnd = isEndOfMessageCluster
                     )
                     val layoutParams = binding.albumThumbnailView.root.layoutParams as ConstraintLayout.LayoutParams
-                    layoutParams.horizontalBias = if (message.isOutgoingMessageType) 1f else 0f
+                    layoutParams.horizontalBias = if (message.isOutgoing) 1f else 0f
                     binding.albumThumbnailView.root.layoutParams = layoutParams
                     onContentClick.add { event ->
                         binding.albumThumbnailView.root.calculateHitObject(event, message, thread, onAttachmentNeedsDownload)
@@ -234,7 +234,7 @@ class VisibleMessageContentView : ConstraintLayout {
             }
         }
         val layoutParams = binding.contentParent.layoutParams as ConstraintLayout.LayoutParams
-        layoutParams.horizontalBias = if (message.isOutgoingMessageType) 1f else 0f
+        layoutParams.horizontalBias = if (message.isOutgoing) 1f else 0f
         binding.contentParent.layoutParams = layoutParams
     }
 
@@ -281,7 +281,7 @@ class VisibleMessageContentView : ConstraintLayout {
         fun getBodySpans(context: Context, message: MessageRecord, searchQuery: String?): Spannable {
             var body = message.body.toSpannable()
 
-            body = MentionUtilities.highlightMentions(body, message.isOutgoingMessageType, message.threadId, context)
+            body = MentionUtilities.highlightMentions(body, message.isOutgoing, message.threadId, context)
             body = SearchUtil.getHighlightedSpan(Locale.getDefault(),
                 { BackgroundColorSpan(Color.WHITE) }, body, searchQuery)
             body = SearchUtil.getHighlightedSpan(Locale.getDefault(),
@@ -307,7 +307,7 @@ class VisibleMessageContentView : ConstraintLayout {
 
         @ColorInt
         fun getTextColor(context: Context, message: MessageRecord): Int {
-            val colorAttribute = if (message.isOutgoingMessageType) {
+            val colorAttribute = if (message.isOutgoing) {
                 // sent
                 R.attr.message_sent_text_color
             } else {

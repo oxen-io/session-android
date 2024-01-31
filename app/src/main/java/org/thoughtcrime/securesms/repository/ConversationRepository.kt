@@ -213,7 +213,7 @@ class DefaultConversationRepository @Inject constructor(
         if (recipient.isOpenGroupRecipient) return null
         messageDataProvider.getServerHashForMessage(message.id) ?: return null
         val unsendRequest = UnsendRequest()
-        if (message.isOutgoingMessageType) {
+        if (message.isOutgoing) {
             unsendRequest.author = textSecurePreferences.getLocalNumber()
         } else {
             unsendRequest.author = message.individualRecipient.address.contactIdentifier()
@@ -325,7 +325,7 @@ class DefaultConversationRepository @Inject constructor(
         val cursor = mmsSmsDb.getConversation(threadId, true)
         mmsSmsDb.readerFor(cursor).use { reader ->
             while (reader.next != null) {
-                if (!reader.current.isOutgoingMessageType) {
+                if (!reader.current.isOutgoing) {
                     return true
                 }
             }

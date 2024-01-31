@@ -154,7 +154,7 @@ class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, Li
             it.delegate = this
             binding.inputBarAdditionalContentContainer.addView(layout)
             val attachments = (message as? MmsMessageRecord)?.slideDeck
-            val sender = if (message.isOutgoingMessageType) TextSecurePreferences.getLocalNumber(context)!! else message.individualRecipient.address.serialize()
+            val sender = if (message.isOutgoing) TextSecurePreferences.getLocalNumber(context)!! else message.individualRecipient.address.serialize()
             it.bind(sender, message.body, attachments, thread, true, message.isOpenGroupInvitation, message.threadId, false, glide)
         }
 

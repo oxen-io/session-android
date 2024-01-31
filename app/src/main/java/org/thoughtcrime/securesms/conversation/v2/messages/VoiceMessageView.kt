@@ -56,7 +56,7 @@ class VoiceMessageView : RelativeLayout, AudioSlidePlayer.Listener {
     fun bind(message: MmsMessageRecord, isStartOfMessageCluster: Boolean, isEndOfMessageCluster: Boolean) {
         val audio = message.slideDeck.audioSlide!!
         binding.voiceMessageViewLoader.isVisible = audio.isInProgress
-        val cornerRadii = MessageBubbleUtilities.calculateRadii(context, isStartOfMessageCluster, isEndOfMessageCluster, message.isOutgoingMessageType)
+        val cornerRadii = MessageBubbleUtilities.calculateRadii(context, isStartOfMessageCluster, isEndOfMessageCluster, message.isOutgoing)
         cornerMask.setTopLeftRadius(cornerRadii[0])
         cornerMask.setTopRightRadius(cornerRadii[1])
         cornerMask.setBottomRightRadius(cornerRadii[2])
