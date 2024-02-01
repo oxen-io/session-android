@@ -1599,9 +1599,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         mentions.clear()
         // Put the message in the database
         message.id = smsDb.insertMessageOutbox(viewModel.threadId, outgoingTextMessage, false, message.sentTimestamp!!, null, true)
-
-
-
         // Send it
         MessageSender.send(message, recipient.address)
         // Send a typing stopped message
