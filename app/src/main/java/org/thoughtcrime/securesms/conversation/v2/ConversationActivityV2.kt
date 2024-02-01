@@ -778,7 +778,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         tearDownRecipientObserver()
         super.onDestroy()
         binding = null
-//        actionBarBinding = null
+        VisibleMessageView.lastSentMessageId = -1L // Reset highest sent message Id
     }
     // endregion
 
@@ -1543,7 +1543,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             return
         }
         val binding = binding ?: return
-        val sentMessageInfo = if (binding.inputBar.linkPreview != null || binding.inputBar.quote != null) {
+        val sentMessageInfo: Pair<Address, Long>? = if (binding.inputBar.linkPreview != null ||
+                                                        binding.inputBar.quote != null) {
             sendAttachments(listOf(), getMessageBody(), binding.inputBar.quote, binding.inputBar.linkPreview)
         } else {
             sendTextOnlyMessage()
@@ -1598,6 +1599,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         mentions.clear()
         // Put the message in the database
         message.id = smsDb.insertMessageOutbox(viewModel.threadId, outgoingTextMessage, false, message.sentTimestamp!!, null, true)
+
+
+
         // Send it
         MessageSender.send(message, recipient.address)
         // Send a typing stopped message

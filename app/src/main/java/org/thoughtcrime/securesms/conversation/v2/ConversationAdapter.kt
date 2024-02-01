@@ -79,7 +79,6 @@ class ConversationAdapter(
         object Control : ViewType(1)
 
         companion object {
-
             val allValues: Map<Int, ViewType> get() = mapOf(
                 Visible.rawValue to Visible,
                 Control.rawValue to Control

@@ -36,7 +36,8 @@ import org.session.libsession.messaging.contacts.Contact.ContactContext
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
-import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsignal.utilities.Log
+
 import org.session.libsession.utilities.ViewUtil
 import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsignal.utilities.IdPrefix
@@ -103,6 +104,8 @@ class VisibleMessageView : LinearLayout {
         const val longPressMovementThreshold = 10.0f // dp
         const val longPressDurationThreshold = 250L // ms
         const val maxDoubleTapInterval = 200L
+
+        var lastSentMessageId = -1L
     }
 
     // region Lifecycle
@@ -223,19 +226,15 @@ class VisibleMessageView : LinearLayout {
             // It's okay if the content description is null if there was none provided
             binding.messageStatusImageView.contentDescription = contentDescription
 
-            // Get our own Session ID and use it to find the last message we sent
-            val author = Address.fromExternal(context, TextSecurePreferences.getLocalNumber(context)!!)
-            val lastSentMessageId: Long = mmsSmsDb.getLastSentMessageID(message.threadId, author.serialize())
+            // Figure out if this is the last sent message.
+            // Note: The check must be `>=` because we hit this multiple times.
+            var thisIsTheLastSentMessage = false
+            if (message.id >= lastSentMessageId) { thisIsTheLastSentMessage= isLastSentMessage(message.id) }
 
-            // If we managed to find one (and we won't if we've never sent a message in this
-            // conversation or group/community)..
-            if (lastSentMessageId != -1L) {
-                // ..then show the sending status if the message has not yet been sent, or if it HAS
-                // been sent and we are the originating author of the sent message.
-                val showSendingStatus = !message.isSent || message.id == lastSentMessageId
-                binding.messageStatusTextView.isVisible  = (textId != null && showSendingStatus)
-                binding.messageStatusImageView.isVisible = (iconId != null && showSendingStatus)
-            }
+            // Note: If we wanted to display the delivery status of ALL outgoing messages then
+            // setting isVisible to just `textId != null` and `iconId != null` will do it.
+            binding.messageStatusTextView.isVisible  = textId != null && thisIsTheLastSentMessage
+            binding.messageStatusImageView.isVisible = iconId != null && thisIsTheLastSentMessage
         }
         else { // Never show message status on non-outgoing messages
             binding.messageStatusTextView.isVisible = false
@@ -277,6 +276,22 @@ class VisibleMessageView : LinearLayout {
         )
         binding.messageContentView.root.delegate = delegate
         onDoubleTap = { binding.messageContentView.root.onContentDoubleTap?.invoke() }
+    }
+
+    private fun isLastSentMessage(thisMessageId: Long): Boolean {
+        val conversationAdapter = messageContentView.parent as LinearLayout
+        val childCount = conversationAdapter.childCount
+        for (index in 0..childCount) {
+            Log.d("[ACL]", "In loop with index: $index")
+            val childView = conversationAdapter.getChildAt(index)
+            if (childView != null && childView is VisibleMessageContentView) {
+                lastSentMessageId = thisMessageId
+                // Note: This works to find our sending / sent messages because this method is only
+                // called if the message `isOutgoing`.
+                return true
+            }
+        }
+        return false
     }
 
     private fun isStartOfMessageCluster(current: MessageRecord, previous: MessageRecord?, isGroupThread: Boolean): Boolean {
