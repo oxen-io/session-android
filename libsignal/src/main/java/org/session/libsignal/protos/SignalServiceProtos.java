@@ -3,6 +3,8 @@
 
 package org.session.libsignal.protos;
 
+import org.session.libsignal.utilities.Log;
+
 public final class SignalServiceProtos {
   private SignalServiceProtos() {}
   public static void registerAllExtensions(
@@ -297,6 +299,16 @@ public final class SignalServiceProtos {
         this.value = value;
       }
 
+      public static boolean isMessageType(Type t) {
+        switch (t) {
+          case SESSION_MESSAGE:
+          case CLOSED_GROUP_MESSAGE:
+            return true;
+          default:
+            return false;
+        }
+      }
+
       // @@protoc_insertion_point(enum_scope:signalservice.Envelope.Type)
     }
 
@@ -338,17 +350,29 @@ public final class SignalServiceProtos {
      * <code>optional string source = 2;</code>
      */
     public java.lang.String getSource() {
+      // Note: `source_` is an Object
       java.lang.Object ref = source_;
+
+      // If ref / _source ia already an instance of String then return it..
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
+      }
+      else
+      {
+        // ..otherwise it's likely a ByteString so decode and return it if we can
+        com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString)ref;
+
         if (bs.isValidUtf8()) {
+          java.lang.String s = bs.toStringUtf8();
           source_ = s;
+          return s;
         }
-        return s;
+        else // Invalid UTF-8 - best we can do is raise a warning and return whatever we have
+        {
+          Log.w("SignalServiceProtos", "`source_` was not a String nor valid UTF-8 - returning empty string as source.");
+          return "";
+        }
+
       }
     }
     /**

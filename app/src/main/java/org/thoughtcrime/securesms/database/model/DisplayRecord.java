@@ -135,6 +135,8 @@ public abstract class DisplayRecord {
   public boolean isDeleted() { return  MmsSmsColumns.Types.isDeletedMessage(type); }
   public boolean isMessageRequestResponse() { return  MmsSmsColumns.Types.isMessageRequestResponse(type); }
 
+  public boolean isMessageRequest() { return  MmsSmsColumns.Types.isMessageRequestResponse(type); }
+
   public boolean isControlMessage() {
     return isGroupUpdateMessage() || isExpirationTimerUpdate() || isDataExtractionNotification()
             || isMessageRequestResponse() || isCallLog();

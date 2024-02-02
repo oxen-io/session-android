@@ -40,6 +40,11 @@ class MessageReceiveJob(val data: ByteArray, val serverHash: String? = null, val
             val currentClosedGroups = storage.getAllActiveClosedGroupPublicKeys()
             val (message, proto) = MessageReceiver.parse(this.data, this.openGroupMessageServerID, openGroupPublicKey = serverPublicKey, currentClosedGroups = currentClosedGroups)
             val threadId = Message.getThreadId(message, this.openGroupID, storage, false)
+
+
+            Log.d("[ACL]", "Message was sent from ${message.sender}")
+
+
             message.serverHash = serverHash
             MessageReceiver.handle(message, proto, threadId ?: -1, this.openGroupID)
             this.handleSuccess(dispatcherName)

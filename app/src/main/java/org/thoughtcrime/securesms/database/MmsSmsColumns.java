@@ -132,10 +132,8 @@ public interface MmsSmsColumns {
 
     public static boolean isOutgoingMessageType(long type) {
       for (long outgoingType : OUTGOING_MESSAGE_TYPES) {
-        if ((type & BASE_TYPE_MASK) == outgoingType)
-          return true;
+        if ((type & BASE_TYPE_MASK) == outgoingType) return true;
       }
-
       return false;
     }
 

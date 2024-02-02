@@ -92,6 +92,8 @@ class BatchMessageReceiveJob(
     }
 
     override suspend fun execute(dispatcherName: String) {
+        Log.d("[ACL]", "About to execute BatchMessageReceiveJob!")
+
         executeAsync(dispatcherName).get()
     }
 
@@ -110,6 +112,9 @@ class BatchMessageReceiveJob(
                 try {
                     val (message, proto) = MessageReceiver.parse(data, openGroupMessageServerID, openGroupPublicKey = serverPublicKey, currentClosedGroups = currentClosedGroups)
                     message.serverHash = serverHash
+
+                    Log.w("[ACL]", "Received msg from ${message.sender}") // THIS IS IT! MOO
+
                     val parsedParams = ParsedMessage(messageParameters, message, proto)
                     val threadID = Message.getThreadId(message, openGroupID, storage, shouldCreateThread(parsedParams)) ?: NO_THREAD_MAPPING
                     if (!threadMap.containsKey(threadID)) {
@@ -151,22 +156,15 @@ class BatchMessageReceiveJob(
                         try {
                             when (message) {
                                 is VisibleMessage -> {
-                                    val isUserBlindedSender =
-                                        message.sender == serverPublicKey?.let {
-                                            SodiumUtilities.blindedKeyPair(
-                                                it,
-                                                MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!
-                                            )
-                                        }?.let {
-                                            SessionId(
-                                                IdPrefix.BLINDED, it.publicKey.asBytes
-                                            ).hexString
-                                        }
+                                    val isUserBlindedSender = message.sender == serverPublicKey?.let {
+                                        SodiumUtilities.blindedKeyPair(it, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!)
+                                    }?.let {
+                                        SessionId(IdPrefix.BLINDED, it.publicKey.asBytes).hexString
+                                    }
                                     val sentTimestamp = message.sentTimestamp!!
                                     if (message.sender == localUserPublicKey || isUserBlindedSender) {
                                         if (sentTimestamp > newLastSeen) {
-                                            newLastSeen =
-                                                sentTimestamp // use sent timestamp here since that is technically the last one we have
+                                            newLastSeen = sentTimestamp // use sent timestamp here since that is technically the last one we have
                                         }
                                     }
                                     val messageId = MessageReceiver.handleVisibleMessage(

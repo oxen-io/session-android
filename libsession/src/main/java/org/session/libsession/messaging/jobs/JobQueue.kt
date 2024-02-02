@@ -125,21 +125,22 @@ class JobQueue : JobDelegate {
                     is NotifyPNServerJob, is AttachmentUploadJob, is MessageSendJob, is ConfigurationSyncJob -> {
                         txQueue.send(job)
                     }
-                    is RetrieveProfileAvatarJob,
-                    is AttachmentDownloadJob -> {
+
+                    is RetrieveProfileAvatarJob, is AttachmentDownloadJob -> {
                         mediaQueue.send(job)
                     }
-                    is GroupAvatarDownloadJob,
-                    is BackgroundGroupAddJob,
-                    is OpenGroupDeleteJob -> {
+
+                    is GroupAvatarDownloadJob, is BackgroundGroupAddJob, is OpenGroupDeleteJob -> {
                         openGroupQueue.send(job)
                     }
-                    is MessageReceiveJob, is TrimThreadJob,
-                    is BatchMessageReceiveJob -> {
-                        if ((job is BatchMessageReceiveJob && !job.openGroupID.isNullOrEmpty())
-                            || (job is TrimThreadJob && !job.openGroupId.isNullOrEmpty())) {
+
+                    is MessageReceiveJob, is TrimThreadJob, is BatchMessageReceiveJob -> {
+                        if ((job is BatchMessageReceiveJob && !job.openGroupID.isNullOrEmpty()) ||
+                            (job is TrimThreadJob          && !job.openGroupId.isNullOrEmpty())) {
                             openGroupQueue.send(job)
                         } else {
+                            // Job is a MessageReceiveJob
+                            Log.d("[ACL]", "Got a message receive job!")
                             rxQueue.send(job)
                         }
                     }
@@ -165,9 +166,7 @@ class JobQueue : JobDelegate {
 
     fun add(job: Job) {
         addWithoutExecuting(job)
-        var wang = queue.trySend(job) // offer always called on unlimited capacity
-
-        Log.d("[ACL]", "Channel result of adding job to queue is: $wang")
+        queue.trySend(job) // offer always called on unlimited capacity
     }
 
     private fun addWithoutExecuting(job: Job) {

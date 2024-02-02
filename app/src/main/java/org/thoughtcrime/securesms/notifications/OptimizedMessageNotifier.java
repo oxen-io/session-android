@@ -10,6 +10,7 @@ import org.session.libsession.messaging.sending_receiving.notifications.MessageN
 import org.session.libsession.messaging.sending_receiving.pollers.Poller;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsession.utilities.Debouncer;
+import org.session.libsignal.utilities.Log;
 import org.session.libsignal.utilities.ThreadUtils;
 import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.groups.OpenGroupManager;
@@ -98,6 +99,8 @@ public class OptimizedMessageNotifier implements MessageNotifier {
 
   @Override
   public void updateNotification(@androidx.annotation.NonNull Context context, boolean signal, int reminderCount) {
+    Log.d("[ACL]", "Hit OptimizedMessageNotifier.updateNotification");
+
     Poller lokiPoller = ApplicationContext.getInstance(context).poller;
     boolean isCaughtUp = true;
     if (lokiPoller != null) {

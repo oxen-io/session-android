@@ -301,8 +301,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         EventBus.getDefault().register(this@HomeActivity)
         if (intent.hasExtra(FROM_ONBOARDING)
             && intent.getBooleanExtra(FROM_ONBOARDING, false)) {
-            if (Build.VERSION.SDK_INT >= 33 &&
-                (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).areNotificationsEnabled().not()) {
+            if (Build.VERSION.SDK_INT >= 33 && (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).areNotificationsEnabled().not()) {
                 Permissions.with(this)
                     .request(Manifest.permission.POST_NOTIFICATIONS)
                     .execute()
