@@ -1,10 +1,7 @@
 package org.thoughtcrime.securesms.notifications
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
 
-import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 
