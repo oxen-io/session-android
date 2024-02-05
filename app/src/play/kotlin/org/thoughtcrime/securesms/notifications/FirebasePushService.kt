@@ -25,8 +25,7 @@ class FirebasePushService : FirebaseMessagingService() {
         Log.d(TAG, "Received a push notification.")
         var nmc = NotificationManagerCompat.from(this)
         val notificationsEnabled = nmc.areNotificationsEnabled()
-        //if (notificationsEnabled) pushReceiver.onPush(message.data)
-        pushReceiver.onPush(message.data)
+        if (notificationsEnabled) pushReceiver.onPush(message.data)
     }
 
     override fun onDeletedMessages() {
