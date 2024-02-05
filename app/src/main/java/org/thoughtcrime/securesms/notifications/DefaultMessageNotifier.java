@@ -270,7 +270,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
           StatusBarNotification[] activeNotifications = notifications.getActiveNotifications();
           return activeNotifications.length > 0;
     } catch (Exception e) {
-      Log.e(TAG, e); // Things that fail silently are nightmare fuel, so not.
+      Log.e(TAG, e);
       return false;
     }
   }
@@ -498,11 +498,10 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
         messageRequest = threadRecipients != null && !threadRecipients.isGroupRecipient() &&  !threadRecipients.isApproved() && !threadDatabase.getLastSeenAndHasSent(threadId).second();
         Log.d("[ACL]", "Is this a message request: " + messageRequest);
-
-        if (messageRequest && (threadDatabase.getMessageCount(threadId) > 1 || !TextSecurePreferences.hasHiddenMessageRequests(context))) {
-          Log.d("[ACL]", "Continuing because either this is a message request and we already have one OR we do NOT have hidden message requests...");
-          continue;
-        }
+        
+        // Only show a message request notification for the first message request from someone to
+        // avoid the user being spammed with message request notifications
+        if (messageRequest && threadDatabase.getMessageCount(threadId) > 1) continue;
       }
       if (messageRequest) {
         Log.d("[ACL]", "Creating message request span!");
@@ -587,8 +586,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
       if (count == 0) ShortcutBadger.removeCount(context);
       else            ShortcutBadger.applyCount(context, count);
     } catch (Throwable t) {
-      // NOTE :: I don't totally trust this thing, so I'm catching
-      // everything.
+      // NOTE :: I don't totally trust this thing, so I'm catching everything.
       Log.w("MessageNotifier", t);
     }
   }
