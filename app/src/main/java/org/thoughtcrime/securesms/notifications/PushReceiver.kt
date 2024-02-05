@@ -2,20 +2,19 @@ package org.thoughtcrime.securesms.notifications
 
 import android.Manifest
 import android.content.Context
-import android.content.Context.NOTIFICATION_SERVICE
 import android.content.pm.PackageManager
+
 import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.google.protobuf.Descriptors.Descriptor
+
 import com.goterl.lazysodium.LazySodiumAndroid
 import com.goterl.lazysodium.SodiumAndroid
 import com.goterl.lazysodium.interfaces.AEAD
 import com.goterl.lazysodium.utils.Key
+
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
+
 import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageReceiveParameters
@@ -25,15 +24,18 @@ import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.bencode.Bencode
 import org.session.libsession.utilities.bencode.BencodeList
 import org.session.libsession.utilities.bencode.BencodeString
-import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.protos.SignalServiceProtos.Envelope
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.prettifiedDescription
+
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
+
 import javax.inject.Inject
+
 import kotlin.random.Random
 
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 private const val TAG = "PushHandler"
 
@@ -60,7 +62,6 @@ class PushReceiver @Inject constructor(@ApplicationContext val context: Context)
         try {
             val envelope: Envelope = MessageWrapper.unwrap(decryptedData)
             val envelopeAsData = envelope.toByteArray()
-            val msgType = envelope.type
             val job = BatchMessageReceiveJob(listOf(MessageReceiveParameters(envelopeAsData)), null)
             JobQueue.shared.add(job)
         } catch (e: Exception) {
@@ -118,20 +119,6 @@ class PushReceiver @Inject constructor(@ApplicationContext val context: Context)
     }
 
     private fun raiseGenericMessageReceivedNotification(customMsg: String? = null) {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "ASK FOR PERMISSIONS TO NOTIFY HERE!")
-
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return
-        }
-
-        // Otherwise build and raise the notification
         val builder = NotificationCompat.Builder(context, NotificationChannels.OTHER)
             .setSmallIcon(network.loki.messenger.R.drawable.ic_notification)
             .setColor(context.getColor(network.loki.messenger.R.color.textsecure_primary))

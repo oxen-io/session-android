@@ -42,7 +42,7 @@ def abiPostFix = ['armeabi-v7a' : 1,
                   'universal'   : 5]
 
 android {
-    compileSdk 34
+    compileSdkVersion androidCompileSdkVersion
     namespace 'network.loki.messenger'
     useLibrary 'org.apache.http.legacy'
 
@@ -187,7 +187,6 @@ android {
     }
 
     def huaweiEnabled = project.properties['huawei'] != null
-    buildToolsVersion '34.0.0'
 
     applicationVariants.configureEach { variant ->
         if (variant.flavorName == 'huawei') {

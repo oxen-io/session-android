@@ -320,7 +320,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
                                             @NonNull  NotificationState notificationState,
                                             boolean signal, boolean bundled)
   {
-    Log.i(TAG, "Hit sendSingleThreadNotification()  signal: " + signal + "  bundled: " + bundled);
+    Log.i(TAG, "sendSingleThreadNotification()  signal: " + signal + "  bundled: " + bundled);
 
     if (notificationState.getNotifications().isEmpty()) {
       if (!bundled) cancelActiveNotifications(context);
