@@ -166,7 +166,6 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
     try {
       StatusBarNotification[] activeNotifications = notifications.getActiveNotifications();
-
       for (StatusBarNotification activeNotification : activeNotifications) {
         notifications.cancel(activeNotification.getId());
       }
@@ -211,10 +210,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
   @Override
   public void updateNotification(@NonNull Context context) {
-    if (!TextSecurePreferences.isNotificationsEnabled(context)) {
-      return;
-    }
-
+    if (!TextSecurePreferences.isNotificationsEnabled(context)) { return; }
     updateNotification(context, false, 0);
   }
 
@@ -228,7 +224,6 @@ public class DefaultMessageNotifier implements MessageNotifier {
       updateNotification(context, threadId, true);
     }
   }
-
 
   private boolean hasExistingNotifications(Context context) {
     NotificationManager notifications = ServiceUtil.getNotificationManager(context);
@@ -248,33 +243,22 @@ public class DefaultMessageNotifier implements MessageNotifier {
     ThreadDatabase threads = DatabaseComponent.get(context).threadDatabase();
     Recipient recipient = threads.getRecipientForThreadId(threadId);
 
-    // If (the recipient is NOT a group..
-    // ..AND there is precisely 1 message from them (THIS SOUNDS DODGY!)..
-    // ..AND we have not already approved the recipient)..
-    // ..OR `getLastSeenAndHasSent` for the given thread ID is true...
-    // Ask Harris about this -ACL
-    if (recipient != null && !recipient.isGroupRecipient() && threads.getMessageCount(threadId) == 1 &&
-            !(recipient.isApproved() || threads.getLastSeenAndHasSent(threadId).second())) {
-
-      Log.d("[ACL]", "Removing hidden message requests.");
-      TextSecurePreferences.removeHasHiddenMessageRequests(context);
+    if (recipient != null && !recipient.isGroupRecipient() &&
+        threads.getMessageCount(threadId) == 1 && !(recipient.isApproved() ||
+        threads.getLastSeenAndHasSent(threadId).second())) {
+          TextSecurePreferences.removeHasHiddenMessageRequests(context);
     }
-    else { Log.d("[ACL]", "NOT removing hidden message requests"); }
 
     // If notifications aren't enabled OR the recipient is someone we've muted then bail before showing a notification
-    if (!TextSecurePreferences.isNotificationsEnabled(context) ||
-        (recipient != null && recipient.isMuted()))
+    if (!TextSecurePreferences.isNotificationsEnabled(context) || (recipient != null && recipient.isMuted()))
     {
-      Log.d("[ACL]", "Either notifications are disabled or the recipient is muted so bailing before creating a notification.");
       return;
     }
-
 
     // If the user is not looking at the thread and the home screen is not visible, OR there are
     // existing notifications then update
     if ((!isThreadVisible && !homeScreenVisible) || hasExistingNotifications(context)) {
       Log.d("[ACL]", "Calling updateNotification - is thread visible: " + isThreadVisible + ", is home screen visible? " + homeScreenVisible + ", has existing notifications? " + hasExistingNotifications(context));
-
       updateNotification(context, signal, 0);
     }
     else
@@ -287,24 +271,17 @@ public class DefaultMessageNotifier implements MessageNotifier {
   @Override
   public void updateNotification(@NonNull Context context, boolean signal, int reminderCount)
   {
-    Log.d("[ACL]", "Hit updateNotification(context, signal, reminderCount)");
-
     Cursor telcoCursor = null;
-    Cursor pushCursor  = null;
-
     try {
       telcoCursor = DatabaseComponent.get(context).mmsSmsDatabase().getUnread(); // TODO: add a notification specific lighter query here
 
       if ((telcoCursor == null || telcoCursor.isAfterLast()) || !TextSecurePreferences.hasSeenWelcomeScreen(context))
       {
-        Log.d("[ACL]", "About to update badge, cancel active notifications and clear reminder");
         updateBadge(context, 0);
-        cancelActiveNotifications(context);
         clearReminder(context);
         return;
       }
 
-      Log.d("[ACL]", "About to construct notification state");
       NotificationState notificationState = constructNotificationState(context, telcoCursor);
 
       if (signal && (System.currentTimeMillis() - lastAudibleNotification) < MIN_AUDIBLE_PERIOD_MILLIS) {
@@ -319,20 +296,21 @@ public class DefaultMessageNotifier implements MessageNotifier {
             sendSingleThreadNotification(context, new NotificationState(notificationState.getNotificationsForThread(threadId)), false, true);
           }
           sendMultipleThreadNotification(context, notificationState, signal);
-        } else if (notificationState.getMessageCount() > 0) {
+        }
+        // Only display a single message request from an unknown contact to prevent message request
+        // spamming - and then ONLY if we are not looking at the home screen (as the message request
+        // will be displayed in the `Message Requests` bar)
+        else if (notificationState.getMessageCount() == 1 && !homeScreenVisible) {
           sendSingleThreadNotification(context, notificationState, signal, false);
-        } else {
-          cancelActiveNotifications(context);
         }
       } catch (Exception e) {
         Log.e(TAG, "Error creating notification", e);
       }
+
       cancelOrphanedNotifications(context, notificationState);
       updateBadge(context, notificationState.getMessageCount());
 
-      if (signal) {
-        scheduleReminder(context, reminderCount);
-      }
+      if (signal) { scheduleReminder(context, reminderCount); }
     } finally {
       if (telcoCursor != null) telcoCursor.close();
     }
@@ -342,7 +320,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
                                             @NonNull  NotificationState notificationState,
                                             boolean signal, boolean bundled)
   {
-    Log.i(TAG, "Hit DefaultMessageNotifier.sendSingleThreadNotification()  signal: " + signal + "  bundled: " + bundled);
+    Log.i(TAG, "Hit sendSingleThreadNotification()  signal: " + signal + "  bundled: " + bundled);
 
     if (notificationState.getNotifications().isEmpty()) {
       if (!bundled) cancelActiveNotifications(context);
@@ -405,7 +383,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
     ListIterator<NotificationItem> iterator = notifications.listIterator(notifications.size());
 
-    while(iterator.hasPrevious()) {
+    while (iterator.hasPrevious()) {
       NotificationItem item = iterator.previous();
       builder.addMessageBody(item.getRecipient(), item.getIndividualRecipient(), item.getText());
     }
@@ -481,8 +459,6 @@ public class DefaultMessageNotifier implements MessageNotifier {
   private NotificationState constructNotificationState(@NonNull  Context context,
                                                        @NonNull  Cursor cursor)
   {
-    Log.d("[ACL]", "Hit constructNotificationState!");
-
     NotificationState     notificationState = new NotificationState();
     MmsSmsDatabase.Reader reader            = DatabaseComponent.get(context).mmsSmsDatabase().readerFor(cursor);
     ThreadDatabase        threadDatabase    = DatabaseComponent.get(context).threadDatabase();
@@ -500,20 +476,15 @@ public class DefaultMessageNotifier implements MessageNotifier {
       Recipient    threadRecipients      = null;
       SlideDeck    slideDeck             = null;
       long         timestamp             = record.getTimestamp();
-      boolean      messageRequest        = false; // This gets updated shortly if threadId != -1
+      boolean      messageRequest        = false; // Initially we'll assume this is not a message request (but we'll check next)
 
+      // Figure out whether this is a new message request or not
       if (threadId != -1) {
         threadRecipients = threadDatabase.getRecipientForThreadId(threadId);
-
-        // Figure out whether this is a new message request or not
         messageRequest = threadRecipients != null && !threadRecipients.isGroupRecipient() &&  !threadRecipients.isApproved() && !threadDatabase.getLastSeenAndHasSent(threadId).second();
-
-        // Only show a message request notification for the first message request from someone to
-        // avoid the user being spammed with message request notifications.
-        if (messageRequest && threadDatabase.getMessageCount(threadId) > 1) continue;
       }
+
       if (messageRequest) {
-        Log.d("[ACL]", "Creating message request span!");
         body = SpanUtil.italic(context.getString(R.string.message_requests_notification));
       } else if (KeyCachingService.isLocked(context)) {
         body = SpanUtil.italic(context.getString(R.string.MessageNotifier_locked_message));

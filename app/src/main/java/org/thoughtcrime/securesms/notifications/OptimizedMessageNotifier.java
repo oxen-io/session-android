@@ -99,13 +99,9 @@ public class OptimizedMessageNotifier implements MessageNotifier {
 
   @Override
   public void updateNotification(@androidx.annotation.NonNull Context context, boolean signal, int reminderCount) {
-    Log.d("[ACL]", "Hit OptimizedMessageNotifier.updateNotification");
-
     Poller lokiPoller = ApplicationContext.getInstance(context).poller;
     boolean isCaughtUp = true;
-    if (lokiPoller != null) {
-      isCaughtUp = isCaughtUp && lokiPoller.isCaughtUp();
-    }
+    if (lokiPoller != null) { isCaughtUp = lokiPoller.isCaughtUp(); }
 
     isCaughtUp = isCaughtUp && OpenGroupManager.INSTANCE.isAllCaughtUp();
 

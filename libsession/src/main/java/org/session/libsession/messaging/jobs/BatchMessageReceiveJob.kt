@@ -91,11 +91,7 @@ class BatchMessageReceiveJob(
         }
     }
 
-    override suspend fun execute(dispatcherName: String) {
-        Log.d("[ACL]", "About to execute BatchMessageReceiveJob!")
-
-        executeAsync(dispatcherName).get()
-    }
+    override suspend fun execute(dispatcherName: String) { executeAsync(dispatcherName).get() }
 
     fun executeAsync(dispatcherName: String): Promise<Unit, Exception> {
         return task {
@@ -112,9 +108,6 @@ class BatchMessageReceiveJob(
                 try {
                     val (message, proto) = MessageReceiver.parse(data, openGroupMessageServerID, openGroupPublicKey = serverPublicKey, currentClosedGroups = currentClosedGroups)
                     message.serverHash = serverHash
-
-                    Log.w("[ACL]", "Received msg from ${message.sender}") // THIS IS IT! MOO
-
                     val parsedParams = ParsedMessage(messageParameters, message, proto)
                     val threadID = Message.getThreadId(message, openGroupID, storage, shouldCreateThread(parsedParams)) ?: NO_THREAD_MAPPING
                     if (!threadMap.containsKey(threadID)) {

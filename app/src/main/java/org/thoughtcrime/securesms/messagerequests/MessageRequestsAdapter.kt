@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.messagerequests
 import android.content.Context
 import android.content.res.ColorStateList
 import android.database.Cursor
+import android.os.Build
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.ContextThemeWrapper
@@ -61,11 +62,21 @@ class MessageRequestsAdapter(
             val item = popupMenu.menu.getItem(i)
             val s = SpannableString(item.title)
             s.setSpan(ForegroundColorSpan(context.getColor(R.color.destructive)), 0, s.length, 0)
-            item.iconTintList = ColorStateList.valueOf(context.getColor(R.color.destructive))
+
+            // TODO: `iconTintList` requires API 26 but our minimum is 23 - fix it!
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                item.iconTintList = ColorStateList.valueOf(context.getColor(R.color.destructive))
+            }
+
             item.title = s
         }
-        popupMenu.setForceShowIcon(true)
-        popupMenu.show()
+
+        // TODO: `setForceShowIcon` require API 29 but our minimum is 23 - fix it!
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            popupMenu.setForceShowIcon(true)  // Crashed here after long-press on blocked contact on API 28
+            popupMenu.show()
+        }
+
     }
 
     private fun getThread(cursor: Cursor): ThreadRecord? {
