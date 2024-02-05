@@ -140,7 +140,6 @@ class JobQueue : JobDelegate {
                             openGroupQueue.send(job)
                         } else {
                             // Job is a MessageReceiveJob
-                            Log.d("[ACL]", "Got a message receive job!")
                             rxQueue.send(job)
                         }
                     }

@@ -279,10 +279,14 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         Log.i(TAG, "App is no longer visible.");
         KeyCachingService.onAppBackgrounded(this);
         messageNotifier.setVisibleThread(-1);
-        if (poller != null) {
+
+        // If we aren't using notifications then we can stop polling for messages - otherwise we
+        // should continue polling.
+        boolean notificationsEnabled = TextSecurePreferences.isNotificationsEnabled(this);
+        if (!notificationsEnabled && poller != null) {
             poller.stopIfNeeded();
+            ClosedGroupPollerV2.getShared().stopAll();
         }
-        ClosedGroupPollerV2.getShared().stopAll();
     }
 
     @Override
