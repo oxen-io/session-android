@@ -480,7 +480,10 @@ public class DefaultMessageNotifier implements MessageNotifier {
         threadRecipients = threadDatabase.getRecipientForThreadId(threadId);
         messageRequest = threadRecipients != null && !threadRecipients.isGroupRecipient() &&
                 !threadRecipients.isApproved() && !threadDatabase.getLastSeenAndHasSent(threadId).second();
-        if (messageRequest && (threadDatabase.getMessageCount(threadId) > 1 || !TextSecurePreferences.hasHiddenMessageRequests(context))) {
+
+        // Only provide a single notification regarding any given thread
+        if (messageRequest && notificationState.getThreads().contains(threadId) &&
+           (threadDatabase.getMessageCount(threadId) > 1 || TextSecurePreferences.hasHiddenMessageRequests(context))) {
           continue;
         }
       }
