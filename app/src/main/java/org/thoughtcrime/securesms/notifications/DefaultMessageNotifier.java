@@ -297,7 +297,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
         } else {
           // With `cancelActiveNotifications` called below then when a second message on a message
           // request comes in ALL notifications are removed - so not doing that.
-          //Log.d("[ACL]", "Cancelling active notifications from BETA!");
+          Log.d("[ACL]", "WE WOULD BE Cancelling active notifications from BETA - but this removes ALL NOTIFICATIONS from being visible - but we still have 'at least one notification regarding thread' so no further notifications show up, so not doing that!!");
           //cancelActiveNotifications(context);
         }
       } catch (Exception e) {
@@ -493,14 +493,16 @@ public class DefaultMessageNotifier implements MessageNotifier {
         Log.d("[ACL]", "Already have at least one notification regarding thread: " + alreadyHaveAtLeastOneNotificationRegardingThread);
         Log.d("[ACL]", "Has hidden message requests: " + hasHiddenMessageRequests);
 
-        if (messageRequest && (notificationStateInvolvesThread || alreadyHaveAtLeastOneNotificationRegardingThread || hasHiddenMessageRequests)) {
-          Log.d("[ACL]", "Skipping this notification!");
-          continue;
-        } else {
-          Log.d("[ACL]", "NOT skipping this notification!");
+        if (messageRequest) {
+          if (notificationStateInvolvesThread || alreadyHaveAtLeastOneNotificationRegardingThread || hasHiddenMessageRequests) {
+            Log.d("[ACL]", "Skipping this notification!");
+            continue;
+          } else {
+            Log.d("[ACL]", "NOT skipping this notification!");
+          }
         }
-
       }
+
       if (messageRequest) {
         body = SpanUtil.italic(context.getString(R.string.message_requests_notification));
       } else if (KeyCachingService.isLocked(context)) {
@@ -583,8 +585,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
       if (count == 0) ShortcutBadger.removeCount(context);
       else            ShortcutBadger.applyCount(context, count);
     } catch (Throwable t) {
-      // NOTE :: I don't totally trust this thing, so I'm catching
-      // everything.
+      // NOTE :: I don't totally trust this thing, so I'm catching everything.
       Log.w("MessageNotifier", t);
     }
   }
