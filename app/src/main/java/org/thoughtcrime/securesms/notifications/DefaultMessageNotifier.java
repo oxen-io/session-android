@@ -427,6 +427,9 @@ public class DefaultMessageNotifier implements MessageNotifier {
     if (!skipNotificationOfMsgRequest) {
       Notification notification = builder.build();
       NotificationManagerCompat.from(context).notify(notificationId, notification);
+
+      // UPDATE THE COUNTER ON THE HOME SCREEN HERE
+
       Log.i(TAG, "Posted notification. " + notification.toString());
     }
   }
