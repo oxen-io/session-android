@@ -112,6 +112,8 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
   private volatile static       long               visibleThread                = -1;
   private volatile static       boolean            homeScreenVisible            = false;
+  private volatile static       boolean            lastMsgWasMessageRequest     = false;
+  private volatile static       boolean            skipNotificationOfMsgRequest = false;
   private volatile static       long               lastDesktopActivityTimestamp = -1;
   private volatile static       long               lastAudibleNotification      = -1;
   private          static final CancelableExecutor executor                     = new CancelableExecutor();
@@ -150,6 +152,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
       return;
     }
 
+    Log.d("[ACL]", "Doing notification from BETA");
     PendingMessageNotificationBuilder builder = new PendingMessageNotificationBuilder(context, TextSecurePreferences.getNotificationPrivacy(context));
     ServiceUtil.getNotificationManager(context).notify(PENDING_MESSAGES_ID, builder.build());
   }
@@ -211,20 +214,23 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
   @Override
   public void updateNotification(@NonNull Context context) {
+    Log.d("[ACL]", "Hit initial updateNotification(context)");
     if (!TextSecurePreferences.isNotificationsEnabled(context)) {
       return;
     }
-
+    Log.d("[ACL]", "Passing through to updateNotification(context, signal, reminderCounter)");
     updateNotification(context, false, 0);
   }
 
   @Override
   public void updateNotification(@NonNull Context context, long threadId)
   {
+    Log.d("[ACL]", "Hit updateNotification(context, threadId)");
     if (System.currentTimeMillis() - lastDesktopActivityTimestamp < DESKTOP_ACTIVITY_PERIOD) {
       Log.i(TAG, "Scheduling delayed notification...");
       executor.execute(new DelayedNotification(context, threadId));
     } else {
+      Log.d("[ACL]", "Passing through to updateNotification(context, signal, reminderCounter)");
       updateNotification(context, threadId, true);
     }
   }
@@ -232,24 +238,32 @@ public class DefaultMessageNotifier implements MessageNotifier {
   @Override
   public void updateNotification(@NonNull Context context, long threadId, boolean signal)
   {
-    boolean    isVisible  = visibleThread == threadId;
+    Log.d("[ACL]", "Hit updateNotification(context, threadId, signal)");
 
+    boolean        isVisible  = visibleThread == threadId;
     ThreadDatabase threads    = DatabaseComponent.get(context).threadDatabase();
-    Recipient      recipient = threads.getRecipientForThreadId(threadId);
+    Recipient      recipient  = threads.getRecipientForThreadId(threadId);
 
-    if (recipient != null && !recipient.isGroupRecipient() && threads.getMessageCount(threadId) == 1 &&
-            !(recipient.isApproved() || threads.getLastSeenAndHasSent(threadId).second())) {
+    if (recipient != null &&
+        !recipient.isGroupRecipient() &&
+        threads.getMessageCount(threadId) == 1 &&
+        !(recipient.isApproved() || threads.getLastSeenAndHasSent(threadId).second())) {
       TextSecurePreferences.removeHasHiddenMessageRequests(context);
     }
 
     if (!TextSecurePreferences.isNotificationsEnabled(context) ||
         (recipient != null && recipient.isMuted()))
     {
+      Log.d("[ACL]", "Bailing because notifications are disabled, or recipient is null or muted");
       return;
     }
 
+    Log.d("[ACL]", "isVisible is: " + isVisible + ", homeScreenVisible is: " + homeScreenVisible + ", hasExistingNotifications is: " + hasExistingNotifications(context));
     if ((!isVisible && !homeScreenVisible) || hasExistingNotifications(context)) {
+      Log.d("[ACL]", "Passing through to updateNotification(context, signal, reminderCounter)");
       updateNotification(context, signal, 0);
+    } else {
+      Log.d("[ACL]", "DID NOT pass through to updateNotification(context, signal, reminderCounter)");
     }
   }
 
@@ -266,6 +280,8 @@ public class DefaultMessageNotifier implements MessageNotifier {
   @Override
   public void updateNotification(@NonNull Context context, boolean signal, int reminderCount)
   {
+    Log.d("[ACL]", "Hit updateNotification(context, signal, reminderCount)");
+
     Cursor telcoCursor = null;
     Cursor pushCursor  = null;
 
@@ -274,6 +290,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
       if ((telcoCursor == null || telcoCursor.isAfterLast()) || !TextSecurePreferences.hasSeenWelcomeScreen(context))
       {
+        Log.d("[ACL]", "Cancelling active notifications and bailing.");
         updateBadge(context, 0);
         cancelActiveNotifications(context);
         clearReminder(context);
@@ -290,13 +307,21 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
       try {
         if (notificationState.hasMultipleThreads()) {
+          Log.d("[ACL]", "Sending multiple thread notifications");
           for (long threadId : notificationState.getThreads()) {
             sendSingleThreadNotification(context, new NotificationState(notificationState.getNotificationsForThread(threadId)), false, true);
           }
           sendMultipleThreadNotification(context, notificationState, signal);
         } else if (notificationState.getMessageCount() > 0) {
+          Log.d("[ACL]", "Sending single thread notification");
           sendSingleThreadNotification(context, notificationState, signal, false);
+        } else if (lastMsgWasMessageRequest) {
+          Log.d("[ACL]", "NOT clearing active notifications because we have a message request notification.");
+          // Do nothing - in particular, do NOT clear the active notifications because the last one was a message request
         } else {
+          // WITHOUT THE ABOVE THIS TRIGGERS AND REMOVES EXISTING MESSAGE REQUESTS IF WE SEND A SECOND MESSAGE REQUEST
+
+          Log.d("[ACL]", "Cancelling active notifications");
           cancelActiveNotifications(context);
         }
       } catch (Exception e) {
@@ -317,7 +342,8 @@ public class DefaultMessageNotifier implements MessageNotifier {
                                             @NonNull  NotificationState notificationState,
                                             boolean signal, boolean bundled)
   {
-    Log.i(TAG, "sendSingleThreadNotification()  signal: " + signal + "  bundled: " + bundled);
+    Log.i("[ACL]", "Hit sendSingleThreadNotification()  signal: " + signal + "  bundled: " + bundled);
+    //Log.i(TAG, "sendSingleThreadNotification()  signal: " + signal + "  bundled: " + bundled);
 
     if (notificationState.getNotifications().isEmpty()) {
       if (!bundled) cancelActiveNotifications(context);
@@ -335,6 +361,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
     for (StatusBarNotification notification: notificationManager.getActiveNotifications()) {
       if ( (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && notification.isAppGroup() == bundled)
               && messageIdTag.equals(notification.getNotification().extras.getString(LATEST_MESSAGE_ID_TAG))) {
+        Log.d("[ACL]", "Bailing from sendSingleThreadNotification");
         return;
       }
     }
@@ -396,9 +423,12 @@ public class DefaultMessageNotifier implements MessageNotifier {
       builder.setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY);
     }
 
-    Notification notification = builder.build();
-    NotificationManagerCompat.from(context).notify(notificationId, notification);
-    Log.i(TAG, "Posted notification. " + notification.toString());
+    Log.d("[ACL]", "Doing notification from ALPHA");
+    if (skipNotificationOfMsgRequest) {
+      Notification notification = builder.build();
+      NotificationManagerCompat.from(context).notify(notificationId, notification);
+      Log.i(TAG, "Posted notification. " + notification.toString());
+    }
   }
 
   private void sendMultipleThreadNotification(@NonNull  Context context,
@@ -449,6 +479,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
     builder.putStringExtra(LATEST_MESSAGE_ID_TAG, messageIdTag);
 
+    Log.d("[ACL]", "Doing notification from CHARLIE");
     Notification notification = builder.build();
     NotificationManagerCompat.from(context).notify(SUMMARY_NOTIFICATION_ID, notification);
     Log.i(TAG, "Posted notification. " + notification);
@@ -464,6 +495,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
     MessageRecord record;
     Map<Long, String> cache = new HashMap<Long, String>();
 
+    int loopIndex = 0;
     while ((record = reader.getNext()) != null) {
       long         id                    = record.getId();
       boolean      mms                   = record.isMms() || record.isMmsNotification();
@@ -474,17 +506,40 @@ public class DefaultMessageNotifier implements MessageNotifier {
       Recipient    threadRecipients      = null;
       SlideDeck    slideDeck             = null;
       long         timestamp             = record.getTimestamp();
-      boolean      messageRequest        = false;
+
 
       if (threadId != -1) {
         threadRecipients = threadDatabase.getRecipientForThreadId(threadId);
-        messageRequest = threadRecipients != null && !threadRecipients.isGroupRecipient() &&
+        lastMsgWasMessageRequest = threadRecipients != null && !threadRecipients.isGroupRecipient() &&
                 !threadRecipients.isApproved() && !threadDatabase.getLastSeenAndHasSent(threadId).second();
-        if (messageRequest && (threadDatabase.getMessageCount(threadId) > 1 || !TextSecurePreferences.hasHiddenMessageRequests(context))) {
-          continue;
+
+        Log.d("[ACL]", "Is this a message request?: " + lastMsgWasMessageRequest);
+
+        // If this is a message request AND (we've received more than a single message from this person OR we do NOT have hidden message requests) then skip without raising a message request notification
+        if (lastMsgWasMessageRequest) {
+          Log.d("[ACL]", "Loop index is: " + loopIndex);
+
+          if (threadDatabase.getMessageCount(threadId) >= 1) {
+            Log.d("[ACL]", "Skipping message request notification because we already have 1 or more message requests from this unapproved contact.");
+            skipNotificationOfMsgRequest = true;
+            continue;
+          } else {
+            Log.d("[ACL]", "We have NOT received more than 1 message from the contact. Carrying on...");
+          }
+
+          if (TextSecurePreferences.hasHiddenMessageRequests(context)) {
+            Log.d("[ACL]", "Skipping message request notification because user has elected to hide message request notifications.");
+            skipNotificationOfMsgRequest = true;
+            continue;
+          } else {
+            Log.d("[ACL]", "We have NOT been asked to hide message request notifications. Carrying on...");
+          }
+
+          Log.d("[ACL]", "NOT skipping notifying about this message request...");
         }
       }
-      if (messageRequest) {
+
+      if (lastMsgWasMessageRequest) {
         body = SpanUtil.italic(context.getString(R.string.message_requests_notification));
       } else if (KeyCachingService.isLocked(context)) {
         body = SpanUtil.italic(context.getString(R.string.MessageNotifier_locked_message));
@@ -542,6 +597,8 @@ public class DefaultMessageNotifier implements MessageNotifier {
           }
         }
       }
+
+      ++loopIndex;
     }
 
     reader.close();
@@ -566,8 +623,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
       if (count == 0) ShortcutBadger.removeCount(context);
       else            ShortcutBadger.applyCount(context, count);
     } catch (Throwable t) {
-      // NOTE :: I don't totally trust this thing, so I'm catching
-      // everything.
+      // NOTE :: I don't totally trust this thing, so I'm catching everything.
       Log.w("MessageNotifier", t);
     }
   }
