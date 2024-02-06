@@ -263,7 +263,6 @@ public interface MmsSmsColumns {
       return (type & BASE_TYPE_MASK) == FIRST_MISSED_CALL_TYPE;
     }
 
-
     public static boolean isGroupUpdate(long type) {
       return (type & GROUP_UPDATE_BIT) != 0;
     }
