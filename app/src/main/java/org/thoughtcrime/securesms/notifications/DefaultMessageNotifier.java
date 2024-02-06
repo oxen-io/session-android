@@ -424,7 +424,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
     }
 
     Log.d("[ACL]", "Doing notification from ALPHA");
-    if (skipNotificationOfMsgRequest) {
+    if (!skipNotificationOfMsgRequest) {
       Notification notification = builder.build();
       NotificationManagerCompat.from(context).notify(notificationId, notification);
       Log.i(TAG, "Posted notification. " + notification.toString());
@@ -497,6 +497,9 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
     int loopIndex = 0;
     while ((record = reader.getNext()) != null) {
+
+      Log.d("[ACL]", "Loop index is: " + loopIndex);
+
       long         id                    = record.getId();
       boolean      mms                   = record.isMms() || record.isMmsNotification();
       Recipient    recipient             = record.getIndividualRecipient();
@@ -517,7 +520,9 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
         // If this is a message request AND (we've received more than a single message from this person OR we do NOT have hidden message requests) then skip without raising a message request notification
         if (lastMsgWasMessageRequest) {
-          Log.d("[ACL]", "Loop index is: " + loopIndex);
+          // Initially we'll assume that we do NOT want to skip notification of this message request
+          skipNotificationOfMsgRequest = false;
+
 
           if (threadDatabase.getMessageCount(threadId) >= 1) {
             Log.d("[ACL]", "Skipping message request notification because we already have 1 or more message requests from this unapproved contact.");
