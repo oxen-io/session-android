@@ -211,10 +211,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
   @Override
   public void updateNotification(@NonNull Context context) {
-    if (!TextSecurePreferences.isNotificationsEnabled(context)) {
-      return;
-    }
-
+    if (!TextSecurePreferences.isNotificationsEnabled(context)) { return; }
     updateNotification(context, false, 0);
   }
 
@@ -275,6 +272,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
       if ((telcoCursor == null || telcoCursor.isAfterLast()) || !TextSecurePreferences.hasSeenWelcomeScreen(context))
       {
         updateBadge(context, 0);
+        Log.d("[ACL]", "Cancelling active notifications from ALPHA!");
         cancelActiveNotifications(context);
         clearReminder(context);
         return;
@@ -297,7 +295,10 @@ public class DefaultMessageNotifier implements MessageNotifier {
         } else if (notificationState.getMessageCount() > 0) {
           sendSingleThreadNotification(context, notificationState, signal, false);
         } else {
-          cancelActiveNotifications(context);
+          // With `cancelActiveNotifications` called below then when a second message on a message
+          // request comes in ALL notifications are removed - so not doing that.
+          //Log.d("[ACL]", "Cancelling active notifications from BETA!");
+          //cancelActiveNotifications(context);
         }
       } catch (Exception e) {
         Log.e(TAG, "Error creating notification", e);
@@ -464,6 +465,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
     MessageRecord record;
     Map<Long, String> cache = new HashMap<Long, String>();
 
+    int index = 0;
     while ((record = reader.getNext()) != null) {
       long         id                    = record.getId();
       boolean      mms                   = record.isMms() || record.isMmsNotification();
@@ -482,10 +484,22 @@ public class DefaultMessageNotifier implements MessageNotifier {
                 !threadRecipients.isApproved() && !threadDatabase.getLastSeenAndHasSent(threadId).second();
 
         // Only provide a single notification regarding any given thread
-        if (messageRequest && notificationState.getThreads().contains(threadId) &&
-           (threadDatabase.getMessageCount(threadId) > 1 || TextSecurePreferences.hasHiddenMessageRequests(context))) {
+        boolean notificationStateInvolvesThread = notificationState.getThreads().contains(threadId);
+        boolean alreadyHaveAtLeastOneNotificationRegardingThread = threadDatabase.getMessageCount(threadId) >= 1;
+        boolean hasHiddenMessageRequests = TextSecurePreferences.hasHiddenMessageRequests(context);
+
+        Log.d("[ACL]", "========== " + (index++) + " ==========");
+        Log.d("[ACL]", "Notification state already involves thread: " + notificationStateInvolvesThread);
+        Log.d("[ACL]", "Already have at least one notification regarding thread: " + alreadyHaveAtLeastOneNotificationRegardingThread);
+        Log.d("[ACL]", "Has hidden message requests: " + hasHiddenMessageRequests);
+
+        if (messageRequest && (notificationStateInvolvesThread || alreadyHaveAtLeastOneNotificationRegardingThread || hasHiddenMessageRequests)) {
+          Log.d("[ACL]", "Skipping this notification!");
           continue;
+        } else {
+          Log.d("[ACL]", "NOT skipping this notification!");
         }
+
       }
       if (messageRequest) {
         body = SpanUtil.italic(context.getString(R.string.message_requests_notification));
