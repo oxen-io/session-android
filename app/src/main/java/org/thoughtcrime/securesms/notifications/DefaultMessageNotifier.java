@@ -221,6 +221,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
       Log.i(TAG, "Scheduling delayed notification...");
       executor.execute(new DelayedNotification(context, threadId));
     } else {
+      Log.d("[ACL]", "Passing through `updateNotification(context, threadId)`");
       updateNotification(context, threadId, true);
     }
   }
@@ -239,6 +240,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
   @Override
   public void updateNotification(@NonNull Context context, long threadId, boolean signal)
   {
+    Log.d("[ACL]", "Hit `updateNotification(context, threadId, signal)`");
     boolean isThreadVisible = (visibleThread == threadId);
     ThreadDatabase threads = DatabaseComponent.get(context).threadDatabase();
     Recipient recipient = threads.getRecipientForThreadId(threadId);
@@ -267,7 +269,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
     }
   }
 
-
+  // THIS IS GETTING HIT FOR MESSAGES AS WELL AS MESSAGE REQUESTS!
   @Override
   public void updateNotification(@NonNull Context context, boolean signal, int reminderCount)
   {
@@ -289,7 +291,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
       } else if (signal) {
         lastAudibleNotification = System.currentTimeMillis();
       }
-
+      
       try {
         if (notificationState.hasMultipleThreads()) {
           for (long threadId : notificationState.getThreads()) {
@@ -300,7 +302,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
         // Only display a single message request from an unknown contact to prevent message request
         // spamming - and then ONLY if we are not looking at the home screen (as the message request
         // will be displayed in the `Message Requests` bar)
-        else if (notificationState.getMessageCount() == 1 && !homeScreenVisible) {
+        else if (notificationState.getMessageCount() == 1 && !homeScreenVisible && ) {
           sendSingleThreadNotification(context, notificationState, signal, false);
         }
       } catch (Exception e) {
