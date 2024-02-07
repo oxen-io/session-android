@@ -459,7 +459,8 @@ public class DefaultMessageNotifier implements MessageNotifier {
                                                        @NonNull  Cursor cursor)
   {
     NotificationState     notificationState = new NotificationState();
-    MmsSmsDatabase.Reader reader            = DatabaseComponent.get(context).mmsSmsDatabase().readerFor(cursor);
+    MmsSmsDatabase mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase();
+    MmsSmsDatabase.Reader reader            = mmsSmsDatabase.readerFor(cursor);
     ThreadDatabase        threadDatabase    = DatabaseComponent.get(context).threadDatabase();
 
     MessageRecord record;
@@ -485,7 +486,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
         // Only provide a single notification regarding any given thread
         boolean notificationStateInvolvesThread = notificationState.getThreads().contains(threadId);
-        boolean alreadyHaveAtLeastOneNotificationRegardingThread = threadDatabase.getMessageCount(threadId) >= 1;
+        boolean alreadyHaveAtLeastOneNotificationRegardingThread = mmsSmsDatabase.getNotifiedCount(threadId) >= 1;
         boolean hasHiddenMessageRequests = TextSecurePreferences.hasHiddenMessageRequests(context);
 
         Log.d("[ACL]", "========== " + (index++) + " ==========");

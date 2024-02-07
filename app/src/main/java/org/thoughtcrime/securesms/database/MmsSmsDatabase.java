@@ -227,6 +227,13 @@ public class MmsSmsDatabase extends Database {
     }
   }
 
+  public int getNotifiedCount(long threadId) {
+    String selection = MmsSmsColumns.NOTIFIED + " = 1 AND " + MmsSmsColumns.THREAD_ID + " = " + threadId;
+    try(Cursor cursor = queryTables(PROJECTION, selection, null, null)) {
+      return cursor != null ? cursor.getCount() : 0;
+    }
+  }
+
   public long getConversationCount(long threadId) {
     long count = DatabaseComponent.get(context).smsDatabase().getMessageCountForThread(threadId);
     count    += DatabaseComponent.get(context).mmsDatabase().getMessageCountForThread(threadId);
