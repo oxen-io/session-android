@@ -212,6 +212,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
   @Override
   public void updateNotification(@NonNull Context context) {
     if (!TextSecurePreferences.isNotificationsEnabled(context)) { return; }
+    Log.d("[ACL]", "Calling updateNotification from line 215");
     updateNotification(context, false, 0);
   }
 
@@ -222,7 +223,19 @@ public class DefaultMessageNotifier implements MessageNotifier {
       Log.i(TAG, "Scheduling delayed notification...");
       executor.execute(new DelayedNotification(context, threadId));
     } else {
-      updateNotification(context, threadId, true);
+      //Log.d("[ACL]", "Calling DefaultMessageNotifier.updateNotification from ~line 226");
+
+      // We hit this `updateNotification` and then `BatchMessageReceiveJob` hits it AGAIN - so only
+      // update the notification if we haven't already been notified
+      MmsSmsDatabase mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase();
+      int dbNotifiedCount = mmsSmsDatabase.getNotifiedCount(threadId);
+      Log.d("[ACL]", "in DefaultMessageNotifier.updateNotification(context, threadId) DB notified count is: " + dbNotifiedCount);
+      if (dbNotifiedCount == 0) {
+        Log.d("[ACL]", "Database says we haven't been notified about thread: " + threadId + " so calling updateNotification(context, threadId, signal)");
+        updateNotification(context, threadId, true);
+      } else {
+        Log.d("[ACL]", "Database says we HAVE been notified about thread: " + threadId + " so NOT calling updateNotification(context, threadId, signal)");
+      }
     }
   }
 
@@ -486,16 +499,20 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
         // Only provide a single notification regarding any given thread
         boolean notificationStateInvolvesThread = notificationState.getThreads().contains(threadId);
-        boolean alreadyHaveAtLeastOneNotificationRegardingThread = mmsSmsDatabase.getNotifiedCount(threadId) >= 1;
+        boolean threadDatabaseContainsMessageAboutThread = threadDatabase.getMessageCount(threadId) >= 1;
+        boolean alreadyHaveAtLeastOneNotificationRegardingThreadInDb = mmsSmsDatabase.getNotifiedCount(threadId) >= 1;
         boolean hasHiddenMessageRequests = TextSecurePreferences.hasHiddenMessageRequests(context);
 
         Log.d("[ACL]", "========== " + (index++) + " ==========");
         Log.d("[ACL]", "Notification state already involves thread: " + notificationStateInvolvesThread);
-        Log.d("[ACL]", "Already have at least one notification regarding thread: " + alreadyHaveAtLeastOneNotificationRegardingThread);
+        Log.d("[ACL]", "Already have at least one notification regarding thread: " + alreadyHaveAtLeastOneNotificationRegardingThreadInDb);
         Log.d("[ACL]", "Has hidden message requests: " + hasHiddenMessageRequests);
 
         if (messageRequest) {
-          if (notificationStateInvolvesThread || alreadyHaveAtLeastOneNotificationRegardingThread || hasHiddenMessageRequests) {
+          if (notificationStateInvolvesThread ||
+              alreadyHaveAtLeastOneNotificationRegardingThreadInDb ||
+              threadDatabaseContainsMessageAboutThread || // This prevents multiple message request notifications from same sender
+              hasHiddenMessageRequests) {
             Log.d("[ACL]", "Skipping this notification!");
             continue;
           } else {
@@ -625,6 +642,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
         @Override
         protected Void doInBackground(Void... params) {
           int reminderCount = intent.getIntExtra("reminder_count", 0);
+          Log.d("[ACL]", "Calling updateNotification from line 630");
           ApplicationContext.getInstance(context).messageNotifier.updateNotification(context, true, reminderCount + 1);
 
           return null;

@@ -10,6 +10,7 @@ import org.session.libsession.messaging.sending_receiving.notifications.MessageN
 import org.session.libsession.messaging.sending_receiving.pollers.Poller;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsession.utilities.Debouncer;
+import org.session.libsignal.utilities.Log;
 import org.session.libsignal.utilities.ThreadUtils;
 import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.groups.OpenGroupManager;
@@ -107,8 +108,10 @@ public class OptimizedMessageNotifier implements MessageNotifier {
     isCaughtUp = isCaughtUp && OpenGroupManager.INSTANCE.isAllCaughtUp();
 
     if (isCaughtUp) {
+      Log.d("[ACL]", "Calling updateNotification because `isCaughtUp`");
       performOnBackgroundThreadIfNeeded(() -> wrapped.updateNotification(context, signal, reminderCount));
     } else {
+      Log.d("[ACL]", "Calling updateNotification because !`isCaughtUp`");
       debouncer.publish(() -> performOnBackgroundThreadIfNeeded(() -> wrapped.updateNotification(context, signal, reminderCount)));
     }
   }
