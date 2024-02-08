@@ -49,6 +49,7 @@ import org.session.libsignal.utilities.IdPrefix;
 import org.session.libsignal.utilities.Log;
 import org.session.libsignal.utilities.Pair;
 import org.session.libsignal.utilities.guava.Optional;
+
 import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.contacts.ContactUtil;
 import org.thoughtcrime.securesms.database.MessagingDatabase.MarkedMessageInfo;

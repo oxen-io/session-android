@@ -225,9 +225,6 @@ class BatchMessageReceiveJob(
                         storage.markConversationAsRead(threadId, newLastSeen, force = true)
                     }
                     storage.updateThread(threadId, true)
-
-                    Log.d("[ACL]", "About to call updateNotification from BatchMessageReceiveJob line 227")
-
                     SSKEnvironment.shared.notificationManager.updateNotification(context, threadId)
                 }
 
