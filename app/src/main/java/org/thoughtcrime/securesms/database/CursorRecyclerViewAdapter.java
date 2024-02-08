@@ -27,6 +27,8 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.session.libsignal.utilities.Log;
+
 /**
  * RecyclerView.Adapter that manages a Cursor, comparable to the CursorAdapter usable in ListView/GridView.
  */
@@ -50,6 +52,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
     }
   }
 
+  // Constructor
   protected CursorRecyclerViewAdapter(Context context, Cursor cursor) {
     this.context = context;
     this.cursor = cursor;
@@ -143,7 +146,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
     switch (viewType) {
     case HEADER_TYPE: return new HeaderFooterViewHolder(header);
     case FOOTER_TYPE: return new HeaderFooterViewHolder(footer);
-    default:          return onCreateItemViewHolder(parent, viewType);
+    default:          return onCreateItemViewHolder(parent, viewType); // ACL This is passing back a ViewHolder!
     }
   }
 
@@ -160,9 +163,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
 
   public abstract void onBindItemViewHolder(VH viewHolder, @NonNull Cursor cursor);
 
-  protected void onBindFastAccessItemViewHolder(VH viewHolder, int position) {
-
-  }
+  protected void onBindFastAccessItemViewHolder(VH viewHolder, int position) { }
 
   @Override
   public final int getItemViewType(int position) {
@@ -241,6 +242,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
     public void onChanged() {
       super.onChanged();
       valid = true;
+      notifyDataSetChanged(); // ACL try without this
     }
 
     @Override

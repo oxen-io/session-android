@@ -4,7 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.VelocityTracker
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.toPx
 import kotlin.math.abs
@@ -18,9 +20,7 @@ class ConversationRecyclerView : RecyclerView {
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) { initialize() }
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) { initialize() }
 
-    private fun initialize() {
-        disableClipping()
-    }
+    private fun initialize() { disableClipping() }
 
     override fun onInterceptTouchEvent(e: MotionEvent): Boolean {
         val velocityTracker = velocityTracker ?: return super.onInterceptTouchEvent(e)

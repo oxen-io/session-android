@@ -33,6 +33,7 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.Toast
+
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -52,8 +53,12 @@ import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
+
 import com.annimon.stream.Stream
+
 import dagger.hilt.android.AndroidEntryPoint
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
@@ -62,10 +67,13 @@ import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityConversationV2Binding
 import network.loki.messenger.databinding.ViewVisibleMessageBinding
+
 import nl.komponents.kovenant.ui.successUi
+
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.AttachmentDownloadJob
@@ -100,6 +108,7 @@ import org.session.libsignal.utilities.ListenableFuture
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.hexEncodedPrivateKey
+
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.attachments.ScreenshotObserver
@@ -175,19 +184,25 @@ import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.SaveAttachmentTask
 import org.thoughtcrime.securesms.util.SimpleTextWatcher
 import org.thoughtcrime.securesms.util.isScrolledToBottom
+import org.thoughtcrime.securesms.util.isScrolledToWithin30dpOfBottom
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.toPx
+
 import java.lang.ref.WeakReference
 import java.util.Locale
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
+
 import javax.inject.Inject
+
 import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
+
+
 
 // Some things that seemingly belong to the input bar (e.g. the voice message recording UI) are actually
 // part of the conversation activity layout. This is just because it makes the layout a lot simpler. The
@@ -331,6 +346,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             lifecycleCoroutineScope = lifecycleScope
         )
         adapter.visibleMessageViewDelegate = this
+
+        // Register an AdapterDataObserver to scroll us to the bottom of the RecyclerView if we're
+        // already near the the bottom and the data changes.
+        adapter.registerAdapterDataObserver(ConversationAdapterDataObserver(binding?.conversationRecyclerView!!, adapter))
+
         adapter
     }
 
@@ -554,9 +574,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     // called from onCreate
     private fun setUpRecyclerView() {
-
-        Log.d("[ACL]", "Hit setUpRecyclerView")
-
         binding!!.conversationRecyclerView.adapter = adapter
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, reverseMessageList)
         binding!!.conversationRecyclerView.layoutManager = layoutManager
@@ -565,9 +582,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         binding!!.conversationRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (recyclerScrollState == RecyclerView.SCROLL_STATE_IDLE) {
-                    scrollToMostRecentMessageIfWeShould()
-                }
                 handleRecyclerViewScrolled()
             }
 
@@ -578,6 +592,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun scrollToMostRecentMessageIfWeShould(justAddedAttachment: Boolean = false) {
+        /*
 
         Log.d("[ACL]", "Hit scrollToMostRecentMessageIfWeShould")
 
@@ -634,6 +649,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         Log.d("[ACL]", "Leaving with previousIndex: $previousLastVisibleRecyclerViewIndex")
 
         firstRun = false
+        */
     }
 
     // called from onCreate
@@ -2277,6 +2293,17 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 ConversationReactionOverlay.Action.BAN_AND_DELETE_ALL -> banAndDeleteAll(selectedItems)
                 ConversationReactionOverlay.Action.BAN_USER -> banUser(selectedItems)
                 ConversationReactionOverlay.Action.COPY_SESSION_ID -> copySessionID(selectedItems)
+            }
+        }
+    }
+
+    // AdapterDataObserver implementation to scroll us to the bottom of the ConversationRecyclerView
+    // when we're already near the bottom and we send or receive a message.
+    inner class ConversationAdapterDataObserver(val recyclerView: ConversationRecyclerView, val adapter: ConversationAdapter) : AdapterDataObserver() {
+        override fun onChanged() {
+            super.onChanged()
+            if (recyclerView.isScrolledToWithin30dpOfBottom) {
+                recyclerView.scrollToPosition(adapter.itemCount-1)
             }
         }
     }

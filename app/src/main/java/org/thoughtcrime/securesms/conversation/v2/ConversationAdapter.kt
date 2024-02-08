@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewVisibleMessageBinding
 import org.session.libsession.messaging.contacts.Contact
+import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.conversation.v2.messages.ControlMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageViewDelegate
@@ -100,13 +101,16 @@ class ConversationAdapter(
         @Suppress("NAME_SHADOWING")
         val viewType = ViewType.allValues[viewType]
         return when (viewType) {
-            ViewType.Visible -> VisibleMessageViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_visible_message, parent, false))
+            ViewType.Visible -> VisibleMessageViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_visible_message, parent, false)) // ACL This is where new messages you send get inflated
             ViewType.Control -> ControlMessageViewHolder(ControlMessageView(context))
             else -> throw IllegalStateException("Unexpected view type: $viewType.")
         }
     }
 
     override fun onBindItemViewHolder(viewHolder: ViewHolder, cursor: Cursor) {
+
+        Log.d("[ACL]", "Hit onBindItemViewHolder!")
+
         val message = getMessage(cursor)!!
         val position = viewHolder.adapterPosition
         val messageBefore = getMessageBefore(position, cursor)
@@ -207,6 +211,9 @@ class ConversationAdapter(
 
     override fun changeCursor(cursor: Cursor?) {
         super.changeCursor(cursor)
+
+        Log.d("[ACL]", "Hit change cursor - new cursor position: ${cursor?.position}")
+
         val toRemove = mutableSetOf<MessageRecord>()
         val toDeselect = mutableSetOf<Pair<Int, MessageRecord>>()
         for (selected in selectedItems) {
