@@ -199,9 +199,6 @@ class BatchMessageReceiveJob(
                                         messageIds.remove(deletedMessageId)
                                     }
                                 }
-
-
-
                                 else -> MessageReceiver.handle(message, proto, threadId, openGroupID)
                             }
                         } catch (e: Exception) {
