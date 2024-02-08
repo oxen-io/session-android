@@ -320,8 +320,10 @@ public class DefaultMessageNotifier implements MessageNotifier {
         } else {
           // With `cancelActiveNotifications` called below then when a second message on a message
           // request comes in ALL notifications are removed - so not doing that.
-          Log.d("[ACL]", "WE WOULD BE Cancelling active notifications from point BETA - but this removes ALL NOTIFICATIONS from being visible - but we still have 'at least one notification regarding thread' so no further notifications show up, so not doing that!!");
-          //cancelActiveNotifications(context);
+          //Log.d("[ACL]", "WE WOULD BE Cancelling active notifications from point BETA - but this removes ALL NOTIFICATIONS from being visible - " +
+                 // "but we still have 'at least one notification regarding thread' so no further notifications show up, so not doing that!!");
+          Log.d("[ACL]", "DOING cancel active");
+          cancelActiveNotifications(context);
         }
       } catch (Exception e) {
         Log.e(TAG, "Error creating notification", e);
@@ -519,13 +521,14 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
         Log.d("[ACL]", "========== " + (index++) + " ==========");
         Log.d("[ACL]", "Notification state already involves thread: " + notificationStateInvolvesThread);
+        Log.d("[ACL]", "Thread database contains a message about this thread: " + threadDatabaseContainsMessageAboutThread);
         Log.d("[ACL]", "Already have at least one notification regarding thread: " + alreadyHaveAtLeastOneNotificationRegardingThreadInDb);
         Log.d("[ACL]", "Has hidden message requests: " + hasHiddenMessageRequests);
 
         if (messageRequest) {
           if (notificationStateInvolvesThread ||
               alreadyHaveAtLeastOneNotificationRegardingThreadInDb ||
-              threadDatabaseContainsMessageAboutThread || // This prevents multiple message request notifications from same sender
+              // threadDatabaseContainsMessageAboutThread || // This prevents multiple message request notifications from same sender
               hasHiddenMessageRequests) {
             Log.d("[ACL]", "Skipping this notification!");
             continue;
