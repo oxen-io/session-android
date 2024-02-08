@@ -24,4 +24,17 @@ object ThreadUtils {
         executor.allowCoreThreadTimeOut(true)
         return executor
     }
+
+    // Helper method to just print the current stack trace so you can see where things are being
+    // called from without throwing then catching an exception and printing its details. For example
+    // if there are multiple ways to get to a given method and you don't know which code path was
+    // taken you can call `ThreadUtils.logCurrentThreadStackTrace` from inside the method being
+    // called to see how you got there.
+    @JvmStatic
+    fun logCurrentThreadStackTrace(tag: String = "ThreadUtils") {
+        val stackTrace = Thread.currentThread().stackTrace
+        for (element in stackTrace) {
+            Log.d(tag, element.className + "." + element.methodName + "(" + element.fileName + ":" + element.lineNumber + ")")
+        }
+    }
 }

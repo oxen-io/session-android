@@ -367,10 +367,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private lateinit var reactionDelegate: ConversationReactionDelegate
     private val reactWithAnyEmojiStartPage = -1
 
-    // Properties for what message indices are visible previously & now, as well as the scroll state
-    private var previousLastVisibleRecyclerViewIndex: Int = RecyclerView.NO_POSITION
-    private var currentLastVisibleRecyclerViewIndex:  Int = RecyclerView.NO_POSITION
-    private var firstRun = true
     private var recyclerScrollState: Int = RecyclerView.SCROLL_STATE_IDLE
 
     // region Settings
@@ -591,67 +587,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         })
     }
 
-    private fun scrollToMostRecentMessageIfWeShould(justAddedAttachment: Boolean = false) {
-        /*
-
-        Log.d("[ACL]", "Hit scrollToMostRecentMessageIfWeShould")
-
-        // Grab an initial 'previous' last visible message..
-        if (previousLastVisibleRecyclerViewIndex == RecyclerView.NO_POSITION) {
-            previousLastVisibleRecyclerViewIndex = layoutManager?.findLastVisibleItemPosition()!!
-        }
-
-        // ..and grab the 'current' last visible message.
-        currentLastVisibleRecyclerViewIndex = layoutManager?.findLastVisibleItemPosition()!!
-
-        /*
-        if (firstRun && (previousLastVisibleRecyclerViewIndex == currentLastVisibleRecyclerViewIndex))
-            Log.d("[ACL]", "Bailing because fuck you.")
-            return
-         */
-
-        // If the current last visible message index is less than the previous one (i.e. we've
-        // lost visibility of one or more messages due to showing the IME keyboard) AND we're
-        // at the bottom of the message feed..
-        val atBottomAndTrueLastNoLongerVisible = currentLastVisibleRecyclerViewIndex!! <= previousLastVisibleRecyclerViewIndex!! && !binding?.scrollToBottomButton?.isVisible!!
-
-        // ..OR we're at the last message or have received a new message..
-        val atLastOrReceivedNewMessage = currentLastVisibleRecyclerViewIndex == (adapter.itemCount - 1)
-
-        Log.d("[ACL]", "atBottomAndTrueLastNoLongerVisible: $atBottomAndTrueLastNoLongerVisible - atLastOrReceivedNewMessage: $atLastOrReceivedNewMessage")
-
-        // ..then scroll the recycler view to the last message on resize. Note: We cannot just call
-        // scroll/smoothScroll - we have to `post` it or nothing happens!
-        if (atBottomAndTrueLastNoLongerVisible || atLastOrReceivedNewMessage) {
-
-            Log.d("[ACL]", "Previous last visible: $previousLastVisibleRecyclerViewIndex - current last visible: $currentLastVisibleRecyclerViewIndex - item count: ${adapter.itemCount}")
-
-            val childCount = binding?.conversationRecyclerView?.childCount
-            Log.d("[ACL]", "Child count: $childCount")
-
-            Log.d("[ACL]", "Doing scroll!")
-            val addedToQueue = binding?.conversationRecyclerView?.post {
-                binding?.conversationRecyclerView?.smoothScrollToPosition(adapter.itemCount-1)
-            }
-            if (addedToQueue == false) { Log.w("ConversationActivity", "Failed to add conversation recycler scroll operation to queue.") }
-        }
-
-        // BOTH of these tend to be true when we add picture
-        if (atBottomAndTrueLastNoLongerVisible && atLastOrReceivedNewMessage) {
-            binding?.conversationRecyclerView?.post {
-                binding?.conversationRecyclerView?.scrollBy(0,2)
-            }
-        }
-
-        // Update our previous last visible view index to the current one
-        previousLastVisibleRecyclerViewIndex = currentLastVisibleRecyclerViewIndex
-
-        Log.d("[ACL]", "Leaving with previousIndex: $previousLastVisibleRecyclerViewIndex")
-
-        firstRun = false
-        */
-    }
-
     // called from onCreate
     private fun setUpToolBar() {
         val binding = binding ?: return
@@ -718,16 +653,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 prepMediaForSending(mediaURI, mediaType).addListener(object : ListenableFuture.Listener<Boolean> {
 
                     override fun onSuccess(result: Boolean?) {
-
-                        Log.d("[ACL]", "Hit prepMediaForSending onSuccess")
-
                         sendAttachments(attachmentManager.buildSlideDeck().asAttachments(), null)
-
-                        //DELMEval sentMessageInfo =
-
-                        // Jump to the newly sent message once it gets added
-                        //scrollToMostRecentMessageIfWeShould()
-                        //scrollToSentMessageIfWeShould(sentMessageInfo)
                     }
 
                     override fun onFailure(e: ExecutionException?) {
@@ -1655,37 +1581,21 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     // Note: If we send a message with an image then we do NOT enter through this method and go to
     // `sendAttachments`, instead our entry point is via prepMediaForSending.onSuccess.
     override fun sendMessage() {
-        Log.d("[ACL]", "Hit sendMessage")
-
         val recipient = viewModel.recipient ?: return
         if (recipient.isContactRecipient && recipient.isBlocked) {
             BlockedDialog(recipient, this).show(supportFragmentManager, "Blocked Dialog")
             return
         }
         val binding = binding ?: return
-        var sendingAttachments = false
         val sentMessageInfo = if (binding.inputBar.linkPreview != null || binding.inputBar.quote != null) {
-            Log.d("[ACL]", "About to call sendAttachments")
-            sendingAttachments = true
             sendAttachments(listOf(), getMessageBody(), binding.inputBar.quote, binding.inputBar.linkPreview)
         } else {
-            Log.d("[ACL]", "About to call sendTextOnlyMessage")
             sendTextOnlyMessage()
         }
 
-        //scrollToMostRecentMessageIfWeShould()
-
-        // Jump to the newly sent message once it gets added
-        //scrollToSentMessageIfWeShould(sentMessageInfo)
-
-        if (sendingAttachments) {
-            if (sentMessageInfo != null) {
-                Log.d("[ACL]", "sendMessageInfo was NOT null - attempting OG scroll")
-                messageToScrollAuthor.set(sentMessageInfo.first)
-                messageToScrollTimestamp.set(sentMessageInfo.second)
-            } else {
-                Log.d("[ACL]", "sendMessageInfo was NULL!!!!!")
-            }
+        if (sentMessageInfo != null) {
+            messageToScrollAuthor.set(sentMessageInfo.first)
+            messageToScrollTimestamp.set(sentMessageInfo.second)
         }
     }
 
@@ -1738,13 +1648,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         return Pair(recipient.address, sentTimestamp)
     }
 
-    private fun logCurrentThreadStackTrace(tag: String = "") {
-        val stackTrace = Thread.currentThread().stackTrace
-        for (element in stackTrace) {
-            Log.d(tag, element.className + "." + element.methodName + "(" + element.fileName + ":" + element.lineNumber + ")")
-        }
 
-    }
 
     private fun sendAttachments(
         attachments: List<Attachment>,
@@ -1752,11 +1656,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         quotedMessage: MessageRecord? = binding?.inputBar?.quote,
         linkPreview: LinkPreview? = null
     ): Pair<Address, Long>? {
-
-
-        Log.d("[ACL]", "Hit sendAttachments")
-        logCurrentThreadStackTrace()
-
 
         val recipient = viewModel.recipient ?: return null
         val sentTimestamp = SnodeAPI.nowWithOffset
@@ -1797,11 +1696,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         MessageSender.send(message, recipient.address, attachments, quote, linkPreview)
         // Send a typing stopped message
         ApplicationContext.getInstance(this).typingStatusSender.onTypingStopped(viewModel.threadId)
-
-
-
-        scrollToMostRecentMessageIfWeShould()
-
         return Pair(recipient.address, sentTimestamp)
     }
 
@@ -1853,22 +1747,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val mediaPreppedListener = object : ListenableFuture.Listener<Boolean> {
 
             override fun onSuccess(result: Boolean?) {
-
                 val sentMessageInfo = sendAttachments(attachmentManager.buildSlideDeck().asAttachments(), null)
                 if (sentMessageInfo != null) {
-                    Log.d("[ACL]", "sentMessageInfo was NOT null - attempting OG scroll")
                     messageToScrollAuthor.set(sentMessageInfo.first)
                     messageToScrollTimestamp.set(sentMessageInfo.second)
-                    //binding?.conversationRecyclerView?.scrollToPosition(adapter.itemCount - 1)
-
-
                     scrollToMessageIfPossible(sentMessageInfo.second)
-
-                } else {
-                    Log.d("[ACL]", "sentMessageInfo was NULL!!!!!")
                 }
-
-                //scrollToMostRecentMessageIfWeShould()
             }
 
             override fun onFailure(e: ExecutionException?) {
@@ -1912,14 +1796,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 }
                 val sentMessageInfo = sendAttachments(slideDeck.asAttachments(), body)
                 if (sentMessageInfo != null) {
-                    Log.d("[ACL]", "ATTEMPTING TO SCROLL TO SENT IMAGE OR PHOTO!")
-                    //messageToScrollAuthor.set(sentMessageInfo.first)
-                    //messageToScrollTimestamp.set(sentMessageInfo.second)
-
-                    // GO FROM HERE - The ConversationRecyclerView has not finished adding the new thing when we ask it to scroll so it's still got the pre-added-new-thing data
-
-                    scrollToMostRecentMessageIfWeShould()
-                } else { Log.d("[ACL]", "Sending image or photo sentMessageInfo was null!") }
+                    messageToScrollAuthor.set(sentMessageInfo.first)
+                    messageToScrollTimestamp.set(sentMessageInfo.second)
+                }
             }
             INVITE_CONTACTS -> {
                 if (viewModel.recipient?.isOpenGroupRecipient != true) { return }
@@ -1969,7 +1848,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 val slideDeck = SlideDeck()
                 slideDeck.addSlide(audioSlide)
                 sendAttachments(slideDeck.asAttachments(), null)
-                scrollToMostRecentMessageIfWeShould()
             }
 
             override fun onFailure(e: ExecutionException) {

@@ -146,7 +146,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
     switch (viewType) {
     case HEADER_TYPE: return new HeaderFooterViewHolder(header);
     case FOOTER_TYPE: return new HeaderFooterViewHolder(footer);
-    default:          return onCreateItemViewHolder(parent, viewType); // ACL This is passing back a ViewHolder!
+    default:          return onCreateItemViewHolder(parent, viewType);
     }
   }
 
