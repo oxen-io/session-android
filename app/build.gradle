@@ -124,6 +124,7 @@ android {
         debug {
             isDefault true
             minifyEnabled false
+            enableUnitTestCoverage true
         }
     }
 
@@ -200,6 +201,27 @@ android {
                 }
             }
         }
+    }
+
+    task testPlayDebugUnitTestCoverageReport(type: JacocoReport, dependsOn: "testPlayDebugUnitTest") {
+        reports {
+            xml.enabled = true
+        }
+
+        // Add files that should not be listed in the report (e.g. generated Files from dagger)
+        def fileFilter = []
+        def mainSrc = "$projectDir/src/main/java"
+        def kotlinDebugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/playDebug", excludes: fileFilter)
+
+        // Compiled Kotlin class files are written into build-variant-specific subdirectories of 'build/tmp/kotlin-classes'.
+        classDirectories.from = files([kotlinDebugTree])
+
+        // To produce an accurate report, the bytecode is mapped back to the original source code.
+        sourceDirectories.from = files([mainSrc])
+
+        // Execution data generated when running the tests against classes instrumented by the JaCoCo agent.
+        // This is enabled with 'enableUnitTestCoverage' in the 'debug' build type.
+        executionData.from = "${project.buildDir}/outputs/unit_test_code_coverage/playDebugUnitTest/testPlayDebugUnitTest.exec"
     }
 }
 
