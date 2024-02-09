@@ -37,3 +37,8 @@ val RecyclerView.isScrolledToBottom: Boolean
     get() = computeVerticalScrollOffset().coerceAtLeast(0) +
             computeVerticalScrollExtent() +
             toPx(50, resources) >= computeVerticalScrollRange()
+
+val RecyclerView.isScrolledToWithin30dpOfBottom: Boolean
+    get() = computeVerticalScrollOffset().coerceAtLeast(0) +
+            computeVerticalScrollExtent() +
+            toPx(30, resources) >= computeVerticalScrollRange()

@@ -175,6 +175,7 @@ import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.SaveAttachmentTask
 import org.thoughtcrime.securesms.util.SimpleTextWatcher
 import org.thoughtcrime.securesms.util.isScrolledToBottom
+import org.thoughtcrime.securesms.util.isScrolledToWithin30dpOfBottom
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.toPx
 import java.lang.ref.WeakReference
@@ -276,8 +277,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private val isScrolledToBottom: Boolean
         get() = binding?.conversationRecyclerView?.isScrolledToBottom ?: true
 
-
-
+    private val isScrolledToWithin30dpOfBottom: Boolean
+        get() = binding?.conversationRecyclerView?.isScrolledToWithin30dpOfBottom ?: true
 
     private val layoutManager: LinearLayoutManager?
         get() { return binding?.conversationRecyclerView?.layoutManager as LinearLayoutManager? }
@@ -334,6 +335,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             lifecycleCoroutineScope = lifecycleScope
         )
         adapter.visibleMessageViewDelegate = this
+
+        // Register an AdapterDataObserver to scroll us to the bottom of the RecyclerView if we're
+        // already near the the bottom and the data changes.
+        adapter.registerAdapterDataObserver(ConversationAdapterDataObserver(binding?.conversationRecyclerView!!, adapter))
+
         adapter
     }
 
@@ -2159,6 +2165,17 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 ConversationReactionOverlay.Action.BAN_AND_DELETE_ALL -> banAndDeleteAll(selectedItems)
                 ConversationReactionOverlay.Action.BAN_USER -> banUser(selectedItems)
                 ConversationReactionOverlay.Action.COPY_SESSION_ID -> copySessionID(selectedItems)
+            }
+        }
+    }
+
+    // AdapterDataObserver implementation to scroll us to the bottom of the ConversationRecyclerView
+    // when we're already near the bottom and we send or receive a message.
+    inner class ConversationAdapterDataObserver(val recyclerView: ConversationRecyclerView, val adapter: ConversationAdapter) : RecyclerView.AdapterDataObserver() {
+        override fun onChanged() {
+            super.onChanged()
+            if (recyclerView.isScrolledToWithin30dpOfBottom) {
+                recyclerView.scrollToPosition(adapter.itemCount-1)
             }
         }
     }
