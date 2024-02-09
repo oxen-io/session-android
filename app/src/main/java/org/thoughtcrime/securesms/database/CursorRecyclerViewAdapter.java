@@ -242,7 +242,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
     public void onChanged() {
       super.onChanged();
       valid = true;
-      notifyDataSetChanged(); // ACL try without this
+      //notifyDataSetChanged(); // ACL try without this
     }
 
     @Override
