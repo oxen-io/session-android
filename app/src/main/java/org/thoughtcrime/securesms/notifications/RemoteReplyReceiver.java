@@ -102,7 +102,7 @@ public class RemoteReplyReceiver extends BroadcastReceiver {
 
           List<MarkedMessageInfo> messageIds = threadDatabase.setRead(threadId, true);
 
-          ApplicationContext.getInstance(context).messageNotifier.updateNotification(context);
+          ApplicationContext.getInstance(context).messageNotifier.updateNotificationWithoutSignalingAndResetReminderCount(context);
           MarkReadReceiver.process(context, messageIds);
 
           return null;

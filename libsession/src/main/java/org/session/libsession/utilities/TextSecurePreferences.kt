@@ -710,8 +710,13 @@ interface TextSecurePreferences {
         }
 
         @JvmStatic
-        fun isNotificationsEnabled(context: Context): Boolean {
+        fun areNotificationsEnabled(context: Context): Boolean {
             return getBooleanPreference(context, NOTIFICATION_PREF, true)
+        }
+
+        @JvmStatic
+        fun areNotificationsDisabled(context: Context): Boolean {
+            return !getBooleanPreference(context, NOTIFICATION_PREF, true)
         }
 
         @JvmStatic

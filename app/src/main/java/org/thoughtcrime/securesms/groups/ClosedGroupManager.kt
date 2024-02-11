@@ -28,7 +28,7 @@ object ClosedGroupManager {
         // Stop polling
         ClosedGroupPollerV2.shared.stopPolling(groupPublicKey)
         storage.cancelPendingMessageSendJobs(threadId)
-        ApplicationContext.getInstance(context).messageNotifier.updateNotification(context)
+        ApplicationContext.getInstance(context).messageNotifier.updateNotificationWithoutSignalingAndResetReminderCount(context)
         if (delete) {
             storage.deleteConversation(threadId)
         }

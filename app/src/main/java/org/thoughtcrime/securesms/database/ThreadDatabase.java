@@ -824,7 +824,7 @@ public class ThreadDatabase extends Database {
     } else {
       MarkReadReceiver.process(context, messages);
     }
-    ApplicationContext.getInstance(context).messageNotifier.updateNotification(context, threadId);
+    ApplicationContext.getInstance(context).messageNotifier.scheduleDelayedNotificationOrPassThroughToSpecificThreadAndSignal(context, threadId);
     return setLastSeen(threadId, lastSeenTime);
   }
 

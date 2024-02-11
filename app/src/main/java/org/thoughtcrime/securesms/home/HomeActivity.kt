@@ -662,7 +662,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                         }
                     }
                     // Update the badge count
-                    ApplicationContext.getInstance(context).messageNotifier.updateNotification(context)
+                    ApplicationContext.getInstance(context).messageNotifier.updateNotificationWithoutSignalingAndResetReminderCount(context)
                     // Notify the user
                     val toastMessage = if (recipient.isGroupRecipient) R.string.MessageRecord_left_group else R.string.activity_home_conversation_deleted_message
                     Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show()

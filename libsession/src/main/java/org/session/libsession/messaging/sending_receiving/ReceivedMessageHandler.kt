@@ -239,7 +239,7 @@ fun MessageReceiver.handleUnsendRequest(message: UnsendRequest): Long? {
     }
     val deletedMessageId = messageDataProvider.updateMessageAsDeleted(timestamp, author)
     if (!messageDataProvider.isOutgoingMessage(messageIdToDelete)) {
-        SSKEnvironment.shared.notificationManager.updateNotification(context)
+        SSKEnvironment.shared.notificationManager.updateNotificationWithoutSignalingAndResetReminderCount(context)
     }
 
     return deletedMessageId

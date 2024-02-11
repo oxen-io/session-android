@@ -146,7 +146,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
   }
 
   public void notifyMessagesPending(Context context) {
-    if (!TextSecurePreferences.isNotificationsEnabled(context)) {
+    if (!TextSecurePreferences.areNotificationsEnabled(context)) {
       return;
     }
 
@@ -210,28 +210,33 @@ public class DefaultMessageNotifier implements MessageNotifier {
   }
 
   @Override
-  public void updateNotification(@NonNull Context context) {
-    if (!TextSecurePreferences.isNotificationsEnabled(context)) { return; }
+  public void updateNotificationWithoutSignalingAndResetReminderCount(@NonNull Context context) {
+    if (TextSecurePreferences.areNotificationsDisabled(context)) { return; }
     updateNotification(context, false, 0);
   }
 
   @Override
-  public void updateNotification(@NonNull Context context, long threadId)
+  public void scheduleDelayedNotificationOrPassThroughToSpecificThreadAndSignal(@NonNull Context context, long threadId)
   {
     if (System.currentTimeMillis() - lastDesktopActivityTimestamp < DESKTOP_ACTIVITY_PERIOD) {
       Log.i(TAG, "Scheduling delayed notification...");
       executor.execute(new DelayedNotification(context, threadId));
-    } else {
+    }
+    else {
       // We hit this `updateNotification` and then `BatchMessageReceiveJob` hits it AGAIN - so only
       // update the notification if we haven't already been notified
       MmsSmsDatabase mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase();
       int dbNotifiedCount = mmsSmsDatabase.getNotifiedCount(threadId);
-      if (dbNotifiedCount == 0) { updateNotification(context, threadId, true); }
+      if (dbNotifiedCount == 0) {
+        updateNotificationForSpecificThread(context, threadId, true);
+      } else {
+        Log.d("[ACL]", "NOT CALLIN THROUGH!!!");
+      }
     }
   }
 
   @Override
-  public void updateNotification(@NonNull Context context, long threadId, boolean signal)
+  public void updateNotificationForSpecificThread(@NonNull Context context, long threadId, boolean signal)
   {
     boolean       isVisible  = visibleThread == threadId;
     ThreadDatabase threads   = DatabaseComponent.get(context).threadDatabase();
@@ -242,7 +247,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
       TextSecurePreferences.removeHasHiddenMessageRequests(context);
     }
 
-    if (!TextSecurePreferences.isNotificationsEnabled(context) || (recipient != null && recipient.isMuted()))
+    if (!TextSecurePreferences.areNotificationsEnabled(context) || (recipient != null && recipient.isMuted()))
     {
       return;
     }
@@ -262,16 +267,40 @@ public class DefaultMessageNotifier implements MessageNotifier {
     }
   }
 
+  // ACL PICK IT UP HERE
+  private boolean hasExistingNotificationsFromNonApprovedContact(Context context) {
+    NotificationManager notifications = ServiceUtil.getNotificationManager(context);
+
+    boolean hasExistingNotification = false;
+
+    try {
+      StatusBarNotification[] activeNotifications = notifications.getActiveNotifications();
+
+      for (StatusBarNotification activeNotification : activeNotifications) {
+        a
+        // HOW DO I CHECK IF IT'S A NON APPROVED USER HERE?!?!?!?
+
+      }
+
+      return activeNotifications.length > 0;
+    } catch (Exception e) {
+      return false;
+    }
+    return hasExistingNotification;
+  }
+
   @Override
-  public void updateNotification(@NonNull Context context, boolean signal, int reminderCount)
+  public void updateNotification(@NonNull Context context, boolean shouldSignal, int reminderCount)
   {
     Cursor telcoCursor = null;
 
     try {
       telcoCursor = DatabaseComponent.get(context).mmsSmsDatabase().getUnread(); // TODO: add a notification specific lighter query here
 
+      // Don't show notifications if the user hasn't seen the welcome screen yet
       if ((telcoCursor == null || telcoCursor.isAfterLast()) || !TextSecurePreferences.hasSeenWelcomeScreen(context))
       {
+        Log.d("[ACL]", "Can this even be executed if we try?!"); // ACL - TEST THIS!
         updateBadge(context, 0);
         cancelActiveNotifications(context);
         clearReminder(context);
@@ -280,21 +309,28 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
       NotificationState notificationState = constructNotificationState(context, telcoCursor);
 
-      if (signal && (System.currentTimeMillis() - lastAudibleNotification) < MIN_AUDIBLE_PERIOD_MILLIS) {
-        signal = false;
-      } else if (signal) {
+      // If we should signal but the minimum audible period hasn't elapsed then flip our flag
+      if (shouldSignal && (System.currentTimeMillis() - lastAudibleNotification) < MIN_AUDIBLE_PERIOD_MILLIS) {
+        shouldSignal = false;
+      }
+
+      // If we're going to signal then update the last audible notification time to now
+      if (shouldSignal) {
         lastAudibleNotification = System.currentTimeMillis();
       }
 
       try {
         if (notificationState.hasMultipleThreads()) {
+          Log.d("[ACL]", "Notification state has mutliple threads so sending a single notification for each THEN hitting `sendMultipleThreadNotification`");
           for (long threadId : notificationState.getThreads()) {
             sendSingleThreadNotification(context, new NotificationState(notificationState.getNotificationsForThread(threadId)), false, true);
           }
-          sendMultipleThreadNotification(context, notificationState, signal);
+          sendMultipleThreadNotification(context, notificationState, shouldSignal);
         } else if (notificationState.getMessageCount() > 0) {
-          sendSingleThreadNotification(context, notificationState, signal, false);
+          Log.d("[ACL]", "The notification state does NOT contain multiple threads - but we DO have a message count > 0");
+          sendSingleThreadNotification(context, notificationState, shouldSignal, false);
         } else {
+          Log.d("[ACL]", "Cancelling active notifications because the notification state does not have multiple threads AND we have at least 1 message.");
           cancelActiveNotifications(context);
         }
       } catch (Exception e) {
@@ -303,9 +339,12 @@ public class DefaultMessageNotifier implements MessageNotifier {
       cancelOrphanedNotifications(context, notificationState);
       updateBadge(context, notificationState.getMessageCount());
 
-      if (signal) {
+      // ACL: Why are we scheduling a reminder if we should signal?!? Ask Harris.
+      if (shouldSignal) {
+        Log.d("[ACL]", "Scheduling a reminder because we should signal the user... yeah.");
         scheduleReminder(context, reminderCount);
       }
+
     } finally {
       if (telcoCursor != null) telcoCursor.close();
     }
@@ -656,7 +695,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
       if (!canceled.get()) {
         Log.i(TAG, "Not canceled, notifying...");
-        ApplicationContext.getInstance(context).messageNotifier.updateNotification(context, threadId, true);
+        ApplicationContext.getInstance(context).messageNotifier.updateNotificationForSpecificThread(context, threadId, true);
         ApplicationContext.getInstance(context).messageNotifier.cancelDelayedNotifications();
       } else {
         Log.w(TAG, "Canceled, not notifying...");
