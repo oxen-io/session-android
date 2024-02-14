@@ -61,6 +61,8 @@
                     android:contentDescription="@string/AccessibilityId_username"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="@dimen/very_large_font_size"
+                    android:maxLength="@integer/max_user_nickname_length_chars"
+                    android:maxLines="1"
                     android:textStyle="bold" />
 
             </RelativeLayout>
