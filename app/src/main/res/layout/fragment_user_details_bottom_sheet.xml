@@ -91,7 +91,8 @@
                 android:textAlignment="center"
                 android:paddingVertical="12dp"
                 android:inputType="text"
-                android:singleLine="true"
+                android:maxLength="@integer/max_user_nickname_length_chars"
+                android:maxLines="1"
                 android:imeOptions="actionDone"
                 android:textColorHint="?android:textColorSecondary"
                 android:hint="@string/fragment_user_details_bottom_sheet_edit_text_hint" />
