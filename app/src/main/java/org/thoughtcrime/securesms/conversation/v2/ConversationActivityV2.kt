@@ -792,6 +792,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             return lastSeenItemPosition
         }
 
+        if (lastSeenItemPosition <= 3) { return lastSeenItemPosition }
+
         binding?.conversationRecyclerView?.scrollToPosition(lastSeenItemPosition)
         return lastSeenItemPosition
     }
