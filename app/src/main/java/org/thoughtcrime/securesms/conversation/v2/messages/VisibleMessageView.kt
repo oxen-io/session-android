@@ -32,6 +32,7 @@ import org.session.libsession.messaging.contacts.Contact.ContactContext
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.ViewUtil
 import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsignal.utilities.IdPrefix
@@ -219,25 +220,20 @@ class VisibleMessageView : LinearLayout {
             }
             binding.messageStatusImageView.contentDescription = contentDescription
 
-            val lastMessageID = mmsSmsDb.getLastMessageID(message.threadId)
-            binding.messageStatusTextView.isVisible = (
-                textId != null && (
-                    !message.isSent ||
-                    message.id == lastMessageID
-                )
-            )
-            binding.messageStatusImageView.isVisible = (
-                iconID != null && (
-                    !message.isSent ||
-                    message.id == lastMessageID
-                )
-            )
+            // Always show the delivery status of the last sent message
+            val thisUsersSessionId = TextSecurePreferences.getLocalNumber(context)
+            val lastSentMessageId = mmsSmsDb.getLastSentMessageFromSender(message.threadId, thisUsersSessionId)
+            val thisIsTheLastSentMessage = message.id == lastSentMessageId
+            binding.messageStatusTextView.isVisible  = textId != null && thisIsTheLastSentMessage
+            binding.messageStatusImageView.isVisible = iconID != null && thisIsTheLastSentMessage
         } else {
             binding.messageStatusTextView.isVisible = false
             binding.messageStatusImageView.isVisible = false
         }
+
         // Expiration timer
         updateExpirationTimer(message)
+
         // Emoji Reactions
         val emojiLayoutParams = binding.emojiReactionsView.root.layoutParams as ConstraintLayout.LayoutParams
         emojiLayoutParams.horizontalBias = if (message.isOutgoing) 1f else 0f
