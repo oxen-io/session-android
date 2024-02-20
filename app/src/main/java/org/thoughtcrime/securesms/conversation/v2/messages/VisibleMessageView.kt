@@ -18,6 +18,7 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.node.getOrAddAdapter
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -39,6 +40,7 @@ import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.ThreadUtils
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
+import org.thoughtcrime.securesms.conversation.v2.ConversationAdapter
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
 import org.thoughtcrime.securesms.database.LokiThreadDatabase
 import org.thoughtcrime.securesms.database.MmsDatabase
@@ -220,10 +222,10 @@ class VisibleMessageView : LinearLayout {
             }
             binding.messageStatusImageView.contentDescription = contentDescription
 
-            // Always show the delivery status of the last sent message
-            val thisUsersSessionId = TextSecurePreferences.getLocalNumber(context)
-            val lastSentMessageId = mmsSmsDb.getLastSentMessageFromSender(message.threadId, thisUsersSessionId)
-            val thisIsTheLastSentMessage = message.id == lastSentMessageId
+            // Always show the delivery status of the last sent message.
+            // Note: The last sent message ID is updated in ConversationAdapter.changeCursor only
+            // for efficiency reasons.
+            val thisIsTheLastSentMessage = message.id == ConversationAdapter.lastSentMessageId
             binding.messageStatusTextView.isVisible  = textId != null && thisIsTheLastSentMessage
             binding.messageStatusImageView.isVisible = iconID != null && thisIsTheLastSentMessage
         } else {
