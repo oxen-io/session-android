@@ -23,7 +23,6 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewVisibleMessageBinding
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.TextSecurePreferences
-import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.conversation.v2.messages.ControlMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageViewDelegate
@@ -59,8 +58,6 @@ class ConversationAdapter(
     private val contactCache = SparseArray<Contact>(100)
     private val contactLoadedCache = SparseBooleanArray(100)
     private val lastSeen = AtomicLong(originalLastSeen)
-
-    //public var lastSentMessageId = -1L
 
     init {
         lifecycleCoroutineScope.launch(IO) {
@@ -237,7 +234,7 @@ class ConversationAdapter(
         }
 
         // If we don't move to first (or at least step backwards) we're off the end of the cursor
-        // and any query will return "Index = -1"
+        // and any query will return an "Index = -1" error.
         cursor?.moveToFirst()
         val thisThreadId = cursor?.getLong(4) // Column index 4 is "thread_id"
         if (thisThreadId != null && thisThreadId != -1L) {
