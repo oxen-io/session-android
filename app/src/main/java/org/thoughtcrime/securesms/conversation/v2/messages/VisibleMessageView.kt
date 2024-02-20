@@ -131,7 +131,8 @@ class VisibleMessageView : LinearLayout {
         senderSessionID: String,
         lastSeen: Long,
         delegate: VisibleMessageViewDelegate? = null,
-        onAttachmentNeedsDownload: (Long, Long) -> Unit
+        onAttachmentNeedsDownload: (Long, Long) -> Unit,
+        lastSentMessageId: Long
     ) {
         val threadID = message.threadId
         val thread = threadDb.getRecipientForThreadId(threadID) ?: return
@@ -223,7 +224,7 @@ class VisibleMessageView : LinearLayout {
             // Always show the delivery status of the last sent message.
             // Note: The last sent message ID is updated in ConversationAdapter.changeCursor only
             // for efficiency reasons.
-            val thisIsTheLastSentMessage = message.id == ConversationAdapter.lastSentMessageId
+            val thisIsTheLastSentMessage = message.id == lastSentMessageId
             binding.messageStatusTextView.isVisible  = textId != null && thisIsTheLastSentMessage
             binding.messageStatusImageView.isVisible = iconID != null && thisIsTheLastSentMessage
         } else {

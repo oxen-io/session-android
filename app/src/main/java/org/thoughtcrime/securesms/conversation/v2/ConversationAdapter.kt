@@ -70,12 +70,6 @@ class ConversationAdapter(
         }
     }
 
-    // Static last sent message ID that's only updated when a message is sent or received (in
-    // `changeCursor`).
-    companion object {
-        var lastSentMessageId = -1L
-    }
-
     @WorkerThread
     private fun getSenderInfo(sender: String): Contact? {
         return contactDB.getContactWithSessionID(sender)
@@ -133,6 +127,8 @@ class ConversationAdapter(
                 }
                 val contact = contactCache[senderIdHash]
 
+                val lastSentMessageId = getLastSentMessageId(cursor)
+
                 visibleMessageView.bind(
                         message,
                         messageBefore,
@@ -143,7 +139,8 @@ class ConversationAdapter(
                         senderId,
                         lastSeen.get(),
                         visibleMessageViewDelegate,
-                        onAttachmentNeedsDownload
+                        onAttachmentNeedsDownload,
+                        lastSentMessageId
                 )
 
                 if (!message.isDeleted) {
@@ -212,6 +209,18 @@ class ConversationAdapter(
         return messageDB.readerFor(cursor).current
     }
 
+    private fun getLastSentMessageId(cursor: Cursor): Long {
+        // If we don't move to first (or at least step backwards) we can step off the end of the
+        // cursor and any query will return an "Index = -1" error.
+        cursor?.moveToFirst()
+        val thisThreadId = cursor?.getLong(4) // Column index 4 is "thread_id"
+        if (thisThreadId != null && thisThreadId != -1L) {
+            val thisUsersSessionId = TextSecurePreferences.getLocalNumber(context)
+            return messageDB.getLastSentMessageFromSender(thisThreadId!!, thisUsersSessionId)
+        }
+        return -1L
+    }
+
     override fun changeCursor(cursor: Cursor?) {
         super.changeCursor(cursor)
 
@@ -231,15 +240,6 @@ class ConversationAdapter(
         selectedItems -= toRemove
         toDeselect.iterator().forEach { (pos, record) ->
             onDeselect(record, pos)
-        }
-
-        // If we don't move to first (or at least step backwards) we're off the end of the cursor
-        // and any query will return an "Index = -1" error.
-        cursor?.moveToFirst()
-        val thisThreadId = cursor?.getLong(4) // Column index 4 is "thread_id"
-        if (thisThreadId != null && thisThreadId != -1L) {
-            val thisUsersSessionId = TextSecurePreferences.getLocalNumber(context)
-            lastSentMessageId = messageDB.getLastSentMessageFromSender(thisThreadId!!, thisUsersSessionId)
         }
     }
 
