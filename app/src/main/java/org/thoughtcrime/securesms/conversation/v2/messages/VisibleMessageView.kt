@@ -222,8 +222,6 @@ class VisibleMessageView : LinearLayout {
             binding.messageStatusImageView.contentDescription = contentDescription
 
             // Always show the delivery status of the last sent message.
-            // Note: The last sent message ID is updated in ConversationAdapter.changeCursor only
-            // for efficiency reasons.
             val thisIsTheLastSentMessage = message.id == lastSentMessageId
             binding.messageStatusTextView.isVisible  = textId != null && thisIsTheLastSentMessage
             binding.messageStatusImageView.isVisible = iconID != null && thisIsTheLastSentMessage
