@@ -230,7 +230,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
       if (dbNotifiedCount == 0) {
         updateNotificationForSpecificThread(context, threadId, true);
       } else {
-        Log.d("[ACL]", "NOT CALLIN THROUGH!!!");
+        Log.d(TAG, "Previous notification for thread " + threadId+ " - not re-notifying.");
       }
     }
   }
@@ -267,31 +267,6 @@ public class DefaultMessageNotifier implements MessageNotifier {
     }
   }
 
-  /*
-  // ACL PICK IT UP HERE
-  private boolean hasExistingNotificationsFromNonApprovedContact(Context context) {
-    NotificationManager notifications = ServiceUtil.getNotificationManager(context);
-
-    boolean hasExistingNotification = false;
-
-    try {
-      StatusBarNotification[] activeNotifications = notifications.getActiveNotifications();
-
-      for (StatusBarNotification activeNotification : activeNotifications) {
-        // ACL GO FROM HERE
-        // HOW DO I CHECK IF IT'S A NON APPROVED USER HERE?!?!?!?
-
-      }
-
-      return activeNotifications.length > 0;
-    } catch (Exception e) {
-      return false;
-    }
-    return hasExistingNotification;
-  }
-
-   */
-
   @Override
   public void updateNotification(@NonNull Context context, boolean shouldSignal, int reminderCount)
   {
@@ -303,7 +278,6 @@ public class DefaultMessageNotifier implements MessageNotifier {
       // Don't show notifications if the user hasn't seen the welcome screen yet
       if ((telcoCursor == null || telcoCursor.isAfterLast()) || !TextSecurePreferences.hasSeenWelcomeScreen(context))
       {
-        Log.d("[ACL]", "Can this even be executed if we try?!"); // ACL - TEST THIS!
         updateBadge(context, 0);
         cancelActiveNotifications(context);
         clearReminder(context);
@@ -323,20 +297,17 @@ public class DefaultMessageNotifier implements MessageNotifier {
         lastAudibleNotification = System.currentTimeMillis();
       }
 
-      Log.d("[ACL]", "Multiple threads? " + notificationState.hasMultipleThreads() + ", thread count: " + notificationState.getThreadCount() + ", msg count: " + notificationState.getMessageCount());
-
       try {
         if (notificationState.hasMultipleThreads()) {
-          Log.d("[ACL]", "Notification state has multiple threads so sending a single notification for each THEN hitting `sendMultipleThreadNotification`");
           for (long threadId : notificationState.getThreads()) {
             sendSingleThreadNotification(context, new NotificationState(notificationState.getNotificationsForThread(threadId)), false, true);
           }
           sendMultipleThreadNotification(context, notificationState, shouldSignal);
         } else if (notificationState.getMessageCount() > 0) {
-          Log.d("[ACL]", "The notification state does NOT contain multiple threads - but we DO have a message count > 0");
+          // If we do NOT have multiple threads and have at least one message then notify
           sendSingleThreadNotification(context, notificationState, shouldSignal, false);
         } else {
-          Log.d("[ACL]", "Cancelling active notifications because the notification state does not have multiple threads AND we have at least 1 message.");
+          // If we do NOT have multiple threads and do NOT have at least one message
           cancelActiveNotifications(context);
         }
       } catch (Exception e) {
@@ -345,11 +316,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
       cancelOrphanedNotifications(context, notificationState);
       updateBadge(context, notificationState.getMessageCount());
 
-      // ACL: Why are we scheduling a reminder if we should signal?!? Ask Harris.
-      if (shouldSignal) {
-        Log.d("[ACL]", "Scheduling a reminder because we should signal the user... yeah.");
-        scheduleReminder(context, reminderCount);
-      }
+      if (shouldSignal) { scheduleReminder(context, reminderCount); }
 
     } finally {
       if (telcoCursor != null) telcoCursor.close();
