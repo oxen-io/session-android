@@ -475,7 +475,6 @@ public class DefaultMessageNotifier implements MessageNotifier {
     MessageRecord record;
     Map<Long, String> cache = new HashMap<Long, String>();
 
-    int index = 0;
     while ((record = reader.getNext()) != null) {
       long         id                    = record.getId();
       boolean      mms                   = record.isMms() || record.isMmsNotification();
