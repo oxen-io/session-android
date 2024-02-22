@@ -267,6 +267,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
     }
   }
 
+  /*
   // ACL PICK IT UP HERE
   private boolean hasExistingNotificationsFromNonApprovedContact(Context context) {
     NotificationManager notifications = ServiceUtil.getNotificationManager(context);
@@ -277,7 +278,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
       StatusBarNotification[] activeNotifications = notifications.getActiveNotifications();
 
       for (StatusBarNotification activeNotification : activeNotifications) {
-        a
+        // ACL GO FROM HERE
         // HOW DO I CHECK IF IT'S A NON APPROVED USER HERE?!?!?!?
 
       }
@@ -288,6 +289,8 @@ public class DefaultMessageNotifier implements MessageNotifier {
     }
     return hasExistingNotification;
   }
+
+   */
 
   @Override
   public void updateNotification(@NonNull Context context, boolean shouldSignal, int reminderCount)
@@ -309,7 +312,8 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
       NotificationState notificationState = constructNotificationState(context, telcoCursor);
 
-      // If we should signal but the minimum audible period hasn't elapsed then flip our flag
+      // If we were asked to audibly signal but the minimum audible period hasn't elapsed then flip
+      // our flag so that we don't make a sound
       if (shouldSignal && (System.currentTimeMillis() - lastAudibleNotification) < MIN_AUDIBLE_PERIOD_MILLIS) {
         shouldSignal = false;
       }
@@ -319,9 +323,11 @@ public class DefaultMessageNotifier implements MessageNotifier {
         lastAudibleNotification = System.currentTimeMillis();
       }
 
+      Log.d("[ACL]", "Multiple threads? " + notificationState.hasMultipleThreads() + ", thread count: " + notificationState.getThreadCount() + ", msg count: " + notificationState.getMessageCount());
+
       try {
         if (notificationState.hasMultipleThreads()) {
-          Log.d("[ACL]", "Notification state has mutliple threads so sending a single notification for each THEN hitting `sendMultipleThreadNotification`");
+          Log.d("[ACL]", "Notification state has multiple threads so sending a single notification for each THEN hitting `sendMultipleThreadNotification`");
           for (long threadId : notificationState.getThreads()) {
             sendSingleThreadNotification(context, new NotificationState(notificationState.getNotificationsForThread(threadId)), false, true);
           }
