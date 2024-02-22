@@ -1,5 +1,7 @@
 package org.thoughtcrime.securesms.conversation.v2
 
+import android.app.Application
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -19,6 +21,7 @@ import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
+import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.repository.ConversationRepository
@@ -87,6 +90,8 @@ class ConversationViewModel(
                     }
                 }
         }
+
+        val context = Application.
     }
 
     fun saveDraft(text: String) {
@@ -163,6 +168,9 @@ class ConversationViewModel(
     }
 
     fun banAndDeleteAll(recipient: Recipient) = viewModelScope.launch {
+
+        Toast.makeText(, "Hit banAndDeleteAll", Toast.LENGTH_LONG).
+
         repository.banAndDeleteAll(threadId, recipient)
             .onSuccess {
                 showMessage("Successfully banned user and deleted all their messages")
