@@ -1865,6 +1865,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun banAndDeleteAll(messages: Set<MessageRecord>) {
+
+        Log.d("[ACL]", "Hit ConversationActivityV2.banAndDeleteAll - num messages in set: ${messages.count()}")
+
+        for (message in messages) {
+            Log.d("[ACL]", "The messages we got are: ${message.id} from ${message.recipient} - is outgoing?: ${message.isOutgoing}")
+        }
+
         showSessionDialog {
             title(R.string.ConversationFragment_ban_selected_user)
             text("This will ban the selected user from this room and delete all messages sent by them. It won't ban them from other rooms or delete the messages they sent there.")

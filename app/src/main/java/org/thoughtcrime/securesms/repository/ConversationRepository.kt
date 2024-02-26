@@ -20,6 +20,7 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.database.DatabaseContentProviders
 import org.thoughtcrime.securesms.database.DraftDatabase
@@ -269,6 +270,9 @@ class DefaultConversationRepository @Inject constructor(
 
     override suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): ResultOf<Unit> =
         suspendCoroutine { continuation ->
+
+            Log.d("[ACL]", "Hit DefaultConversationRepository.banAndDeleteAll")
+
             val sessionID = recipient.address.toString()
             val openGroup = lokiThreadDb.getOpenGroupChat(threadId)!!
             OpenGroupApi.banAndDeleteAll(sessionID, openGroup.room, openGroup.server)

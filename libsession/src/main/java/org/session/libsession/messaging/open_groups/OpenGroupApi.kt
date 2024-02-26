@@ -659,7 +659,11 @@ object OpenGroupApi {
     }
 
     fun banAndDeleteAll(publicKey: String, room: String, server: String): Promise<Unit, Exception> {
+
+        Log.d("[ACL]", "Hit OpenGroupApi.banAndDeleteAll")
+
         val requests = mutableListOf<BatchRequestInfo<*>>(
+            // Ban request
             BatchRequestInfo(
                 request = BatchRequest(
                     method = POST,
@@ -669,6 +673,7 @@ object OpenGroupApi {
                 endpoint = Endpoint.UserBan(publicKey),
                 responseType = object: TypeReference<Any>(){}
             ),
+            // Delete request
             BatchRequestInfo(
                 request = BatchRequest(DELETE, "/room/$room/all/$publicKey"),
                 endpoint = Endpoint.RoomDeleteMessages(room, publicKey),
@@ -676,6 +681,10 @@ object OpenGroupApi {
             )
         )
         return sequentialBatch(server, requests).map {
+
+            Log.d("[ACL]", "Banned user: $publicKey from: $server.$room.")
+
+
             Log.d("Loki", "Banned user: $publicKey from: $server.$room.")
         }
     }

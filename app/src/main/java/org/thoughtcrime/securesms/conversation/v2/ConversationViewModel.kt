@@ -90,8 +90,6 @@ class ConversationViewModel(
                     }
                 }
         }
-
-        val context = Application.
     }
 
     fun saveDraft(text: String) {
@@ -169,7 +167,7 @@ class ConversationViewModel(
 
     fun banAndDeleteAll(recipient: Recipient) = viewModelScope.launch {
 
-        Toast.makeText(, "Hit banAndDeleteAll", Toast.LENGTH_LONG).
+        Log.d("[ACL]", "Hit ConversationViewModel.banAndDeleteAll")
 
         repository.banAndDeleteAll(threadId, recipient)
             .onSuccess {
