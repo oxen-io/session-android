@@ -165,13 +165,22 @@ class ConversationViewModel(
             }
     }
 
-    fun banAndDeleteAll(recipient: Recipient) = viewModelScope.launch {
+    fun banAndDeleteAll(activityV2: ConversationActivityV2, messageRecord: MessageRecord) = viewModelScope.launch {
 
         Log.d("[ACL]", "Hit ConversationViewModel.banAndDeleteAll")
 
-        repository.banAndDeleteAll(threadId, recipient)
+
+
+        repository.banAndDeleteAll(threadId, messageRecord.individualRecipient)
             .onSuccess {
+                // At this point the server side messages have been successfully deleted..
                 showMessage("Successfully banned user and deleted all their messages")
+
+                Log.d("[ACL]", "About to call `performLocalDeleteFollowingBanForSenderOfMessage` - thread ID is: ${messageRecord.threadId}, - sender is: ${messageRecord.individualRecipient.address}")
+
+
+                //..so we can now remove our local copies and message views.
+                activityV2.performLocalDeleteFollowingBanForSenderOfMessage(messageRecord)
             }
             .onFailure {
                 showMessage("Couldn't execute request due to error: $it")

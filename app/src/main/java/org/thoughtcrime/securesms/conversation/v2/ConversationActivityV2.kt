@@ -1812,10 +1812,24 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         handleLongPress(messages.first(), 0) //TODO: begin selection mode
     }
 
+    // Note: This is NOT called during a ban & delete operation from a community or closed group -
+    // it is called when you go to delete a message directly
     override fun deleteMessages(messages: Set<MessageRecord>) {
-        val recipient = viewModel.recipient ?: return
+
+        Log.d("[ACL]", "Hit ConversationActivity.deleteMessages")
+
+        val hasRecipient = (viewModel.recipient == null)
+        if (!hasRecipient) {
+            Log.w("ConversationActivity", "We do not have recipient - cannot delete messages & bailing.")
+            return
+        }
+
+        Log.d("[ACL]", "We DO have a recipient, their address is:  ${viewModel.recipient!!.address}")
+
+        val recipient = viewModel.recipient!!
         val allSentByCurrentUser = messages.all { it.isOutgoing }
         val allHasHash = messages.all { lokiMessageDb.getMessageServerHash(it.id) != null }
+
         if (recipient.isOpenGroupRecipient) {
             val messageCount = 1
 
@@ -1864,20 +1878,36 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
+    // Note: We only get a single message in this `messages` set, but it's from the user being banned.
+    // When this is passed through to `viewModel.bandAndDeleteAll` the messages on the server are
+    // deleted correctly - but we need to intervene to remove all the messages from our local
+    // SmsMmsDatabase and from the ConversationRecyclerView.
+    // so we can use it to find and delete all messages in this thread.
     override fun banAndDeleteAll(messages: Set<MessageRecord>) {
 
         Log.d("[ACL]", "Hit ConversationActivityV2.banAndDeleteAll - num messages in set: ${messages.count()}")
 
         for (message in messages) {
-            Log.d("[ACL]", "The messages we got are: ${message.id} from ${message.recipient} - is outgoing?: ${message.isOutgoing}")
+            Log.d("[ACL]", "The messages we got are: ${message.id} from ${message.recipient.address} - is outgoing?: ${message.isOutgoing}")
         }
 
+        val thisActivity = this
         showSessionDialog {
             title(R.string.ConversationFragment_ban_selected_user)
             text("This will ban the selected user from this room and delete all messages sent by them. It won't ban them from other rooms or delete the messages they sent there.")
-            button(R.string.ban) { viewModel.banAndDeleteAll(messages.first().individualRecipient); endActionMode() }
+            button(R.string.ban) { viewModel.banAndDeleteAll(thisActivity, messages.first()); endActionMode() }
             cancelButton(::endActionMode)
         }
+    }
+
+    fun performLocalDeleteFollowingBanForSenderOfMessage(message: MessageRecord) {
+        val threadId = message.threadId
+        val senderId = message.recipient.address
+
+        Log.d("[ACL]", "message.individualRecipient.address is: ${message.individualRecipient.address}")
+        Log.d("[ACL]", "message.recipient.address is: ${message.recipient.address}")
+
+        Log.d("[ACL]", "About to delete all messages in thread: $threadId from user $senderId")
     }
 
     override fun copyMessages(messages: Set<MessageRecord>) {

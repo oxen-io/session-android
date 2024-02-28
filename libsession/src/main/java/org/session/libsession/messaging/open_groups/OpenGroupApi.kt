@@ -681,11 +681,12 @@ object OpenGroupApi {
             )
         )
         return sequentialBatch(server, requests).map {
+            Log.d("Loki", "Banned user: $publicKey from: $server.$room.")
 
             Log.d("[ACL]", "Banned user: $publicKey from: $server.$room.")
 
 
-            Log.d("Loki", "Banned user: $publicKey from: $server.$room.")
+
         }
     }
 

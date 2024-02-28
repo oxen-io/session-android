@@ -271,16 +271,24 @@ class DefaultConversationRepository @Inject constructor(
     override suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): ResultOf<Unit> =
         suspendCoroutine { continuation ->
 
-            Log.d("[ACL]", "Hit DefaultConversationRepository.banAndDeleteAll")
 
+            // Note: This sessionId could be the blinded Id and in such a case we can't
             val sessionID = recipient.address.toString()
             val openGroup = lokiThreadDb.getOpenGroupChat(threadId)!!
-            OpenGroupApi.banAndDeleteAll(sessionID, openGroup.room, openGroup.server)
+
+            Log.d("[ACL]", "Hit ConversationRepository.banAndDeleteAll - attempting to ban user w/ session ID: $sessionID + from room ${openGroup.room} on server ${openGroup.server}")
+
+            var foo = OpenGroupApi.banAndDeleteAll(sessionID, openGroup.room, openGroup.server)
                 .success {
+                    Log.d("[ACL]", "Got success!")
                     continuation.resume(ResultOf.Success(Unit))
                 }.fail { error ->
+                    Log.d("[ACL]", "Got fail!")
                     continuation.resumeWithException(error)
                 }
+
+            //val stuff = foo.context.multipleCompletion
+            //stuff.
         }
 
     override suspend fun deleteThread(threadId: Long): ResultOf<Unit> {
