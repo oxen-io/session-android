@@ -141,7 +141,11 @@ class ConversationViewModel(
     }
 
     fun deleteForEveryone(message: MessageRecord) = viewModelScope.launch {
-        val recipient = recipient ?: return@launch
+        val recipient = recipient
+        if (recipient == null) {
+            Log.w("Loki", "Recipient was null for delete for everyone - aborting delete operation.")
+            return@launch
+        }
         repository.deleteForEveryone(threadId, recipient, message)
             .onFailure {
                 showMessage("Couldn't delete message due to error: $it")

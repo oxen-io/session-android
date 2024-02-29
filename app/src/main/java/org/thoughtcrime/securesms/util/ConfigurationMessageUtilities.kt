@@ -193,7 +193,7 @@ object ConfigurationMessageUtilities {
             while (current != null) {
                 val recipient = current.recipient
                 val contact = when {
-                    recipient.isOpenGroupRecipient -> {
+                    recipient.isCommunityRecipient -> {
                         val openGroup = storage.getOpenGroup(current.threadId) ?: continue
                         val (base, room, pubKey) = BaseCommunityInfo.parseFullUrl(openGroup.joinURL) ?: continue
                         convoConfig.getOrConstructCommunity(base, room, pubKey)
@@ -279,7 +279,7 @@ object ConfigurationMessageUtilities {
 
     @JvmField
     val DELETE_INACTIVE_ONE_TO_ONES: String = """
-        DELETE FROM ${ThreadDatabase.TABLE_NAME} WHERE ${ThreadDatabase.MESSAGE_COUNT} <= 0 AND ${ThreadDatabase.ADDRESS} NOT LIKE '${GroupUtil.CLOSED_GROUP_PREFIX}%' AND ${ThreadDatabase.ADDRESS} NOT LIKE '${GroupUtil.OPEN_GROUP_PREFIX}%' AND ${ThreadDatabase.ADDRESS} NOT LIKE '${GroupUtil.OPEN_GROUP_INBOX_PREFIX}%';
+        DELETE FROM ${ThreadDatabase.TABLE_NAME} WHERE ${ThreadDatabase.MESSAGE_COUNT} <= 0 AND ${ThreadDatabase.ADDRESS} NOT LIKE '${GroupUtil.CLOSED_GROUP_PREFIX}%' AND ${ThreadDatabase.ADDRESS} NOT LIKE '${GroupUtil.COMMUNITY_PREFIX}%' AND ${ThreadDatabase.ADDRESS} NOT LIKE '${GroupUtil.COMMUNITY_INBOX_PREFIX}%';
     """.trimIndent()
 
 }

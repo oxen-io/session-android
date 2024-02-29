@@ -211,7 +211,7 @@ class DefaultConversationRepository @Inject constructor(
     }
 
     override fun buildUnsendRequest(recipient: Recipient, message: MessageRecord): UnsendRequest? {
-        if (recipient.isOpenGroupRecipient) return null
+        if (recipient.isCommunityRecipient) return null
         messageDataProvider.getServerHashForMessage(message.id) ?: return null
         val unsendRequest = UnsendRequest()
         if (message.isOutgoing) {

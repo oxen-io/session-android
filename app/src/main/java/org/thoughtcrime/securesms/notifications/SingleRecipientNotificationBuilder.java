@@ -125,7 +125,7 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
     SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
 
     if (privacy.isDisplayContact() && threadRecipient.isGroupRecipient()) {
-      String displayName = getGroupDisplayName(individualRecipient, threadRecipient.isOpenGroupRecipient());
+      String displayName = getGroupDisplayName(individualRecipient, threadRecipient.isCommunityRecipient());
       stringBuilder.append(Util.getBoldedString(displayName + ": "));
     }
 
@@ -215,7 +215,7 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
     SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
 
     if (privacy.isDisplayContact() && threadRecipient.isGroupRecipient()) {
-      String displayName = getGroupDisplayName(individualRecipient, threadRecipient.isOpenGroupRecipient());
+      String displayName = getGroupDisplayName(individualRecipient, threadRecipient.isCommunityRecipient());
       stringBuilder.append(Util.getBoldedString(displayName + ": "));
     }
 

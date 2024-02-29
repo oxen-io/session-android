@@ -11,7 +11,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.databinding.FragmentConversationBottomSheetBinding
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
-import org.thoughtcrime.securesms.util.UiModeUtilities
 import org.thoughtcrime.securesms.util.getConversationUnread
 import javax.inject.Inject
 
@@ -75,7 +74,7 @@ class ConversationOptionsBottomSheet(private val parentContext: Context) : Botto
         }
         binding.copyConversationId.visibility = if (!recipient.isGroupRecipient && !recipient.isLocalNumber) View.VISIBLE else View.GONE
         binding.copyConversationId.setOnClickListener(this)
-        binding.copyCommunityUrl.visibility = if (recipient.isOpenGroupRecipient) View.VISIBLE else View.GONE
+        binding.copyCommunityUrl.visibility = if (recipient.isCommunityRecipient) View.VISIBLE else View.GONE
         binding.copyCommunityUrl.setOnClickListener(this)
         binding.unMuteNotificationsTextView.isVisible = recipient.isMuted && !recipient.isLocalNumber
         binding.muteNotificationsTextView.isVisible = !recipient.isMuted && !recipient.isLocalNumber

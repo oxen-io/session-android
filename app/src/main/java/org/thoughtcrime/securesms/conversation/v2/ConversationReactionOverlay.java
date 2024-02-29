@@ -673,7 +673,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
       items.add(new ActionItem(R.attr.menu_copy_icon, getContext().getResources().getString(R.string.copy), () -> handleActionItemClicked(Action.COPY_MESSAGE)));
     }
     // Copy Session ID
-    if (recipient.isGroupRecipient() && !recipient.isOpenGroupRecipient() && !message.getRecipient().getAddress().toString().equals(userPublicKey)) {
+    if (recipient.isGroupRecipient() && !recipient.isCommunityRecipient() && !message.getRecipient().getAddress().toString().equals(userPublicKey)) {
       items.add(new ActionItem(
               R.attr.menu_copy_icon, getContext().getResources().getString(R.string.activity_conversation_menu_copy_session_id), () -> handleActionItemClicked(Action.COPY_SESSION_ID))
       );

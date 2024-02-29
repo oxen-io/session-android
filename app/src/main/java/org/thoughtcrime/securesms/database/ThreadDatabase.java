@@ -18,7 +18,7 @@
 package org.thoughtcrime.securesms.database;
 
 import static org.session.libsession.utilities.GroupUtil.CLOSED_GROUP_PREFIX;
-import static org.session.libsession.utilities.GroupUtil.OPEN_GROUP_PREFIX;
+import static org.session.libsession.utilities.GroupUtil.COMMUNITY_PREFIX;
 import static org.thoughtcrime.securesms.database.GroupDatabase.GROUP_ID;
 
 import android.content.ContentValues;
@@ -492,7 +492,7 @@ public class ThreadDatabase extends Database {
   }
 
   public Cursor getConversationList() {
-    String where  = "(" + MESSAGE_COUNT + " != 0 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') " +
+    String where  = "(" + MESSAGE_COUNT + " != 0 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + COMMUNITY_PREFIX + "%') " +
             "AND " + ARCHIVED + " = 0 ";
     return getConversationList(where);
   }
@@ -503,7 +503,7 @@ public class ThreadDatabase extends Database {
   }
 
   public Cursor getApprovedConversationList() {
-    String where  = "((" + HAS_SENT + " = 1 OR " + RecipientDatabase.APPROVED + " = 1 OR "+ GroupDatabase.TABLE_NAME +"."+GROUP_ID+" LIKE '"+CLOSED_GROUP_PREFIX+"%') OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') " +
+    String where  = "((" + HAS_SENT + " = 1 OR " + RecipientDatabase.APPROVED + " = 1 OR "+ GroupDatabase.TABLE_NAME +"."+GROUP_ID+" LIKE '"+CLOSED_GROUP_PREFIX+"%') OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + COMMUNITY_PREFIX + "%') " +
             "AND " + ARCHIVED + " = 0 ";
     return getConversationList(where);
   }
@@ -517,7 +517,7 @@ public class ThreadDatabase extends Database {
   }
 
   public Cursor getArchivedConversationList() {
-    String where  = "(" + MESSAGE_COUNT + " != 0 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') " +
+    String where  = "(" + MESSAGE_COUNT + " != 0 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + COMMUNITY_PREFIX + "%') " +
             "AND " + ARCHIVED + " = 1 ";
     return getConversationList(where);
   }
@@ -548,7 +548,7 @@ public class ThreadDatabase extends Database {
     // edge case where we set the last seen time for a conversation before it loads messages (joining community for example)
     MmsSmsDatabase mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase();
     Recipient forThreadId = getRecipientForThreadId(threadId);
-    if (mmsSmsDatabase.getConversationCount(threadId) <= 0 && forThreadId != null && forThreadId.isOpenGroupRecipient()) return false;
+    if (mmsSmsDatabase.getConversationCount(threadId) <= 0 && forThreadId != null && forThreadId.isCommunityRecipient()) return false;
 
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
@@ -829,7 +829,7 @@ public class ThreadDatabase extends Database {
 
   private boolean deleteThreadOnEmpty(long threadId) {
     Recipient threadRecipient = getRecipientForThreadId(threadId);
-    return threadRecipient != null && !threadRecipient.isOpenGroupRecipient();
+    return threadRecipient != null && !threadRecipient.isCommunityRecipient();
   }
 
   private @NonNull String getFormattedBodyFor(@NonNull MessageRecord messageRecord) {

@@ -30,6 +30,7 @@ import net.zetetic.database.sqlcipher.SQLiteQueryBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.Util;
+import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.database.MessagingDatabase.SyncMessageId;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
@@ -207,6 +208,34 @@ public class MmsSmsDatabase extends Database {
       cursor.moveToFirst();
       return cursor.getLong(cursor.getColumnIndexOrThrow(MmsSmsColumns.ID));
     }
+  }
+
+  // Builds up and returns a list of all all the messages sent by this user in the given thread.
+  // Used to do a pass through our local database to remove records when a user has "Ban & Delete"
+  // called on them in a Community.
+  public Set<Long> getAllMessageIdsFromSenderInThread(long threadId, String serializedAuthor) {
+    //String order = MmsSmsColumns.NORMALIZED_DATE_SENT + " DESC";
+    String selection = MmsSmsColumns.THREAD_ID + " = " + threadId + " AND " + MmsSmsColumns.ADDRESS + " = \"" + serializedAuthor + "\"";
+
+    //return queryTables(PROJECTION, selection, null, null);
+
+    //boolean isOwnNumber = Util.isOwnNumber(context, serializedAuthor);
+
+    Set<Long> identifiedMessages = new HashSet<Long>();
+
+    // Try everything with resources so that they auto-close on end of scope
+    try (Cursor cursor = queryTables(PROJECTION, selection, null, null)) {
+      try (MmsSmsDatabase.Reader reader = readerFor(cursor)) {
+        MessageRecord messageRecord;
+        while ((messageRecord = reader.getNext()) != null) {
+          //if (isOwnNumber && messageRecord.isOutgoing()) { return messageRecord.id; }
+          identifiedMessages.add(messageRecord.id);
+          Log.d("[ACL]", "Identified a message from: " + serializedAuthor + " with id: " + messageRecord.id);
+        }
+      }
+    }
+    Log.d("[ACL]", "Returning a set of: " + identifiedMessages.size() + " messages");
+    return identifiedMessages;
   }
 
   public Cursor getUnread() {

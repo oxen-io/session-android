@@ -112,7 +112,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                     )
                     volatile.set(newVolatileParams)
                 }
-            } else if (address.isOpenGroup) {
+            } else if (address.isCommunity) {
                 // these should be added on the group join / group info fetch
                 Log.w("Loki", "Thread created called for open group address, not adding any extra information")
             }
@@ -143,7 +143,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                 val sessionId = GroupUtil.doubleDecodeGroupId(address.serialize())
                 volatile.eraseLegacyClosedGroup(sessionId)
                 groups.eraseLegacyGroup(sessionId)
-            } else if (address.isOpenGroup) {
+            } else if (address.isCommunity) {
                 // these should be removed in the group leave / handling new configs
                 Log.w("Loki", "Thread delete called for open group address, expecting to be handled elsewhere")
             }
@@ -248,7 +248,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                     // recipient closed group
                     recipient.isClosedGroupRecipient -> config.getOrConstructLegacyGroup(GroupUtil.doubleDecodeGroupId(recipient.address.serialize()))
                     // recipient is open group
-                    recipient.isOpenGroupRecipient -> {
+                    recipient.isCommunityRecipient -> {
                         val openGroupJoinUrl = getOpenGroup(threadId)?.joinURL ?: return
                         BaseCommunityInfo.parseFullUrl(openGroupJoinUrl)?.let { (base, room, pubKey) ->
                             config.getOrConstructCommunity(base, room, pubKey)
@@ -318,7 +318,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                 setRecipientApprovedMe(targetRecipient, true)
             }
         }
-        if (message.threadID == null && !targetRecipient.isOpenGroupRecipient) {
+        if (message.threadID == null && !targetRecipient.isCommunityRecipient) {
             // open group recipients should explicitly create threads
             message.threadID = getOrCreateThreadIdFor(targetAddress)
         }
@@ -1271,7 +1271,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                     priority = if (isPinned) PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE
                 )
                 groups.set(newGroupInfo)
-            } else if (threadRecipient.isOpenGroupRecipient) {
+            } else if (threadRecipient.isCommunityRecipient) {
                 val openGroup = getOpenGroup(threadID) ?: return
                 val (baseUrl, room, pubKeyHex) = BaseCommunityInfo.parseFullUrl(openGroup.joinURL) ?: return
                 val newGroupInfo = groups.getOrConstructCommunityInfo(baseUrl, room, Hex.toStringCondensed(pubKeyHex)).copy (

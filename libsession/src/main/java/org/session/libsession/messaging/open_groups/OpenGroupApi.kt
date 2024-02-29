@@ -662,6 +662,8 @@ object OpenGroupApi {
 
         Log.d("[ACL]", "Hit OpenGroupApi.banAndDeleteAll")
 
+        // ACL I CAN USE THIS PUBLIC KEY TO GENERATE A BLINDED ID ALONG WITH THE USER'S SESSION ID - but I think I want the other way around? Session ID from blinded ID?
+
         val requests = mutableListOf<BatchRequestInfo<*>>(
             // Ban request
             BatchRequestInfo(
