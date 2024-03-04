@@ -2163,8 +2163,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             super.onChanged()
             if (recyclerView.isScrolledToWithin30dpOfBottom) {
                 // Note: The adapter itemCount is zero based - so calling this with the itemCount in
-                // a non-zero based manner scrolls us to the bottom of the (presumedly long) message
-                // as required by Jira SES-789 / GitHub 1364.
+                // a non-zero based manner scrolls us to the bottom of the last message (including
+                // to the bottom of long messages as required by Jira SES-789 / GitHub 1364).
                 recyclerView.scrollToPosition(adapter.itemCount)
             }
         }
