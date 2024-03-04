@@ -69,6 +69,10 @@
         <item name="android:textColor">@color/emoji_tab_text_color</item>
     </style>
 
+    <style name="TextAppearance.Session.ToolbarSubtitle" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">11dp</item>
+    </style>
+
     <!--  TODO These button styles require proper background selectors for up/down visual state.  -->
     <style name="Widget.Session.Button.Common" parent="">
         <item name="android:gravity">center</item>
@@ -187,6 +191,17 @@
         <item name="android:textCursorDrawable">@drawable/session_edit_text_cursor</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="CallMessage">
+        <item name="android:background">@drawable/call_message_background</item>
+        <item name="android:textColor">?message_received_text_color</item>
+        <item name="android:paddingLeft">@dimen/medium_spacing</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingRight">@dimen/medium_spacing</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
     <style name="FakeChatViewMessageBubble">

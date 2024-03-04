@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.conversation.v2.messages
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
@@ -8,6 +9,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
+import android.util.Log
 import android.view.Gravity
 import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
@@ -21,7 +23,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.core.view.isInvisible
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.view.marginBottom
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,6 +36,7 @@ import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.ViewUtil
 import org.session.libsession.utilities.getColorFromAttr
+import org.session.libsession.utilities.modifyLayoutParams
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.ThreadUtils
 import org.thoughtcrime.securesms.ApplicationContext
@@ -60,6 +63,8 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
+
+private const val TAG = "VisibleMessageView"
 
 @AndroidEntryPoint
 class VisibleMessageView : LinearLayout {
@@ -201,43 +206,7 @@ class VisibleMessageView : LinearLayout {
         binding.dateBreakTextView.text = if (showDateBreak) DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), message.timestamp) else null
         binding.dateBreakTextView.isVisible = showDateBreak
         // Message status indicator
-        if (message.isOutgoing) {
-            val (iconID, iconColor, textId, contentDescription) = getMessageStatusImage(message)
-            if (textId != null) {
-                binding.messageStatusTextView.setText(textId)
-
-                if (iconColor != null) {
-                    binding.messageStatusTextView.setTextColor(iconColor)
-                }
-            }
-            if (iconID != null) {
-                val drawable = ContextCompat.getDrawable(context, iconID)?.mutate()
-                if (iconColor != null) {
-                    drawable?.setTint(iconColor)
-                }
-                binding.messageStatusImageView.setImageDrawable(drawable)
-            }
-            binding.messageStatusImageView.contentDescription = contentDescription
-
-            val lastMessageID = mmsSmsDb.getLastMessageID(message.threadId)
-            binding.messageStatusTextView.isVisible = (
-                textId != null && (
-                    !message.isSent ||
-                    message.id == lastMessageID
-                )
-            )
-            binding.messageStatusImageView.isVisible = (
-                iconID != null && (
-                    !message.isSent ||
-                    message.id == lastMessageID
-                )
-            )
-        } else {
-            binding.messageStatusTextView.isVisible = false
-            binding.messageStatusImageView.isVisible = false
-        }
-        // Expiration timer
-        updateExpirationTimer(message)
+        showStatusMessage(message)
         // Emoji Reactions
         val emojiLayoutParams = binding.emojiReactionsView.root.layoutParams as ConstraintLayout.LayoutParams
         emojiLayoutParams.horizontalBias = if (message.isOutgoing) 1f else 0f
@@ -272,122 +241,106 @@ class VisibleMessageView : LinearLayout {
         onDoubleTap = { binding.messageContentView.root.onContentDoubleTap?.invoke() }
     }
 
-    private fun isStartOfMessageCluster(current: MessageRecord, previous: MessageRecord?, isGroupThread: Boolean): Boolean {
-        return if (isGroupThread) {
-            previous == null || previous.isUpdate || !DateUtils.isSameHour(current.timestamp, previous.timestamp)
-                || current.recipient.address != previous.recipient.address
+    private fun showStatusMessage(message: MessageRecord) {
+        val disappearing = message.expiresIn > 0
+
+        binding.messageInnerLayout.modifyLayoutParams<FrameLayout.LayoutParams> {
+            gravity = if (message.isOutgoing) Gravity.END else Gravity.START
+        }
+
+        binding.statusContainer.modifyLayoutParams<ConstraintLayout.LayoutParams> {
+            horizontalBias = if (message.isOutgoing) 1f else 0f
+        }
+
+        binding.expirationTimerView.isGone = true
+
+        if (message.isOutgoing || disappearing) {
+            val (iconID, iconColor, textId) = getMessageStatusImage(message)
+            textId?.let(binding.messageStatusTextView::setText)
+            iconColor?.let(binding.messageStatusTextView::setTextColor)
+            iconID?.let { ContextCompat.getDrawable(context, it) }
+                ?.run { iconColor?.let { mutate().apply { setTint(it) } } ?: this }
+                ?.let(binding.messageStatusImageView::setImageDrawable)
+            
+            val lastMessageID = mmsSmsDb.getLastMessageID(message.threadId)
+            val isLastMessage = message.id == lastMessageID
+            binding.messageStatusTextView.isVisible =
+                textId != null && (!message.isSent || isLastMessage || disappearing)
+            val showTimer = disappearing && !message.isPending
+            binding.messageStatusImageView.isVisible =
+                iconID != null && !showTimer && (!message.isSent || isLastMessage)
+
+            binding.messageStatusImageView.bringToFront()
+            binding.expirationTimerView.bringToFront()
+            binding.expirationTimerView.isVisible = showTimer
+            if (showTimer) updateExpirationTimer(message)
         } else {
-            previous == null || previous.isUpdate || !DateUtils.isSameHour(current.timestamp, previous.timestamp)
-                || current.isOutgoing != previous.isOutgoing
+            binding.messageStatusTextView.isVisible = false
+            binding.messageStatusImageView.isVisible = false
         }
     }
 
-    private fun isEndOfMessageCluster(current: MessageRecord, next: MessageRecord?, isGroupThread: Boolean): Boolean {
-        return if (isGroupThread) {
-            next == null || next.isUpdate || !DateUtils.isSameHour(current.timestamp, next.timestamp)
-                || current.recipient.address != next.recipient.address
+    private fun isStartOfMessageCluster(current: MessageRecord, previous: MessageRecord?, isGroupThread: Boolean): Boolean =
+        previous == null || previous.isUpdate || !DateUtils.isSameHour(current.timestamp, previous.timestamp) || if (isGroupThread) {
+            current.recipient.address != previous.recipient.address
         } else {
-            next == null || next.isUpdate || !DateUtils.isSameHour(current.timestamp, next.timestamp)
-                || current.isOutgoing != next.isOutgoing
+            current.isOutgoing != previous.isOutgoing
         }
-    }
+
+    private fun isEndOfMessageCluster(current: MessageRecord, next: MessageRecord?, isGroupThread: Boolean): Boolean =
+        next == null || next.isUpdate || !DateUtils.isSameHour(current.timestamp, next.timestamp) || if (isGroupThread) {
+            current.recipient.address != next.recipient.address
+        } else {
+            current.isOutgoing != next.isOutgoing
+        }
 
     data class MessageStatusInfo(@DrawableRes val iconId: Int?,
                                  @ColorInt val iconTint: Int?,
-                                 @StringRes val messageText: Int?,
-                                 val contentDescription: String?)
+                                 @StringRes val messageText: Int?)
 
     private fun getMessageStatusImage(message: MessageRecord): MessageStatusInfo = when {
         message.isFailed ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_failed,
                 resources.getColor(R.color.destructive, context.theme),
-                R.string.delivery_status_failed,
-                null
+                R.string.delivery_status_failed
             )
         message.isSyncFailed ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_failed,
                 context.getColor(R.color.accent_orange),
-                R.string.delivery_status_sync_failed,
-                null
+                R.string.delivery_status_sync_failed
             )
         message.isPending ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sending,
-                context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_sending,
-                context.getString(R.string.AccessibilityId_message_sent_status_pending)
+                context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_sending
             )
         message.isResyncing ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sending,
-                context.getColor(R.color.accent_orange), R.string.delivery_status_syncing,
-                context.getString(R.string.AccessibilityId_message_sent_status_syncing)
+                context.getColor(R.color.accent_orange), R.string.delivery_status_syncing
             )
-        message.isRead ->
+        message.isRead || !message.isOutgoing ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_read,
-                context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_read,
-                null
+                context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_read
             )
         else ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sent,
                 context.getColorFromAttr(R.attr.message_status_color),
-                R.string.delivery_status_sent,
-                context.getString(R.string.AccessibilityId_message_sent_status_tick)
+                R.string.delivery_status_sent
             )
     }
 
     private fun updateExpirationTimer(message: MessageRecord) {
-        val container = binding.messageInnerContainer
-        val layout = binding.messageInnerLayout
-
-        if (message.isOutgoing) binding.messageContentView.root.bringToFront()
-        else binding.expirationTimerView.bringToFront()
-
-        layout.layoutParams = layout.layoutParams.let { it as FrameLayout.LayoutParams }
-            .apply { gravity = if (message.isOutgoing) Gravity.END else Gravity.START }
-
-        val containerParams = container.layoutParams as ConstraintLayout.LayoutParams
-        containerParams.horizontalBias = if (message.isOutgoing) 1f else 0f
-        container.layoutParams = containerParams
-        if (message.expiresIn > 0 && !message.isPending) {
-            binding.expirationTimerView.setColorFilter(context.getColorFromAttr(android.R.attr.textColorPrimary))
-            binding.expirationTimerView.isInvisible = false
-            binding.expirationTimerView.setPercentComplete(0.0f)
-            if (message.expireStarted > 0) {
-                binding.expirationTimerView.setExpirationTime(message.expireStarted, message.expiresIn)
-                binding.expirationTimerView.startAnimation()
-                if (message.expireStarted + message.expiresIn <= SnodeAPI.nowWithOffset) {
-                    ApplicationContext.getInstance(context).expiringMessageManager.checkSchedule()
-                }
-            } else if (!message.isMediaPending) {
-                binding.expirationTimerView.setPercentComplete(0.0f)
-                binding.expirationTimerView.stopAnimation()
-                ThreadUtils.queue {
-                    val expirationManager = ApplicationContext.getInstance(context).expiringMessageManager
-                    val id = message.getId()
-                    val mms = message.isMms
-                    if (mms) mmsDb.markExpireStarted(id) else smsDb.markExpireStarted(id)
-                    expirationManager.scheduleDeletion(id, mms, message.expiresIn)
-                }
-            } else {
-                binding.expirationTimerView.stopAnimation()
-                binding.expirationTimerView.setPercentComplete(0.0f)
-            }
-        } else {
-            binding.expirationTimerView.isInvisible = true
-        }
-        container.requestLayout()
+        if (!message.isOutgoing) binding.messageStatusTextView.bringToFront()
+        binding.expirationTimerView.setExpirationTime(message.expireStarted, message.expiresIn)
     }
 
     private fun handleIsSelectedChanged() {
-        background = if (snIsSelected) {
-            ColorDrawable(context.getColorFromAttr(R.attr.message_selected))
-        } else {
-            null
-        }
+        background = if (snIsSelected) ColorDrawable(context.getColorFromAttr(R.attr.message_selected)) else null
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -424,6 +377,7 @@ class VisibleMessageView : LinearLayout {
     // endregion
 
     // region Interaction
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (onPress == null || onSwipeToReply == null || onLongPress == null) { return false }
         when (event.action) {
@@ -524,14 +478,13 @@ class VisibleMessageView : LinearLayout {
     }
 
     private fun maybeShowUserDetails(publicKey: String, threadID: Long) {
-        val userDetailsBottomSheet = UserDetailsBottomSheet()
-        val bundle = bundleOf(
+        UserDetailsBottomSheet().apply {
+            arguments = bundleOf(
                 UserDetailsBottomSheet.ARGUMENT_PUBLIC_KEY to publicKey,
                 UserDetailsBottomSheet.ARGUMENT_THREAD_ID to threadID
-        )
-        userDetailsBottomSheet.arguments = bundle
-        val activity = context as AppCompatActivity
-        userDetailsBottomSheet.show(activity.supportFragmentManager, userDetailsBottomSheet.tag)
+            )
+            show((context as AppCompatActivity).supportFragmentManager, tag)
+        }
     }
 
     fun playVoiceMessage() {

@@ -186,7 +186,7 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
                                                    else DatabaseComponent.get(context).mmsDatabase()
         messagingDatabase.deleteMessage(messageID)
         DatabaseComponent.get(context).lokiMessageDatabase().deleteMessage(messageID, isSms)
-        DatabaseComponent.get(context).lokiMessageDatabase().deleteMessageServerHash(messageID)
+        DatabaseComponent.get(context).lokiMessageDatabase().deleteMessageServerHash(messageID, mms = !isSms)
     }
 
     override fun deleteMessages(messageIDs: List<Long>, threadId: Long, isSms: Boolean) {
@@ -195,7 +195,7 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
 
         messagingDatabase.deleteMessages(messageIDs.toLongArray(), threadId)
         DatabaseComponent.get(context).lokiMessageDatabase().deleteMessages(messageIDs)
-        DatabaseComponent.get(context).lokiMessageDatabase().deleteMessageServerHashes(messageIDs)
+        DatabaseComponent.get(context).lokiMessageDatabase().deleteMessageServerHashes(messageIDs, mms = !isSms)
     }
 
     override fun updateMessageAsDeleted(timestamp: Long, author: String): Long? {
@@ -212,15 +212,12 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
         return message.id
     }
 
-    override fun getServerHashForMessage(messageID: Long): String? {
-        val messageDB = DatabaseComponent.get(context).lokiMessageDatabase()
-        return messageDB.getMessageServerHash(messageID)
-    }
+    override fun getServerHashForMessage(messageID: Long, mms: Boolean): String? =
+        DatabaseComponent.get(context).lokiMessageDatabase().getMessageServerHash(messageID, mms)
 
-    override fun getDatabaseAttachment(attachmentId: Long): DatabaseAttachment? {
-        val attachmentDatabase = DatabaseComponent.get(context).attachmentDatabase()
-        return attachmentDatabase.getAttachment(AttachmentId(attachmentId, 0))
-    }
+    override fun getDatabaseAttachment(attachmentId: Long): DatabaseAttachment? =
+        DatabaseComponent.get(context).attachmentDatabase()
+            .getAttachment(AttachmentId(attachmentId, 0))
 
     private fun scaleAndStripExif(attachmentDatabase: AttachmentDatabase, constraints: MediaConstraints, attachment: Attachment): Attachment? {
         return try {

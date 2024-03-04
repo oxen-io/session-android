@@ -29,6 +29,7 @@ class ScanQRCodeWrapperFragment : Fragment(), ScanQRCodePlaceholderFragmentDeleg
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         enabled = isVisibleToUser

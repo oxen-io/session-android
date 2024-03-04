@@ -38,11 +38,13 @@ object MessageReceiver {
         object NoGroupThread: Error("No thread exists for this group.")
         object NoGroupKeyPair: Error("Missing group key pair.")
         object NoUserED25519KeyPair : Error("Couldn't find user ED25519 key pair.")
+        object ExpiredMessage: Error("Message has already expired, prevent adding")
 
         internal val isRetryable: Boolean = when (this) {
             is DuplicateMessage, is InvalidMessage, is UnknownMessage,
             is UnknownEnvelopeType, is InvalidSignature, is NoData,
-            is SenderBlocked, is SelfSend, is NoGroupThread -> false
+            is SenderBlocked, is SelfSend,
+            is ExpiredMessage, is NoGroupThread -> false
             else -> true
         }
     }
@@ -143,15 +145,14 @@ object MessageReceiver {
             MessageRequestResponse.fromProto(proto) ?:
             CallMessage.fromProto(proto) ?:
             SharedConfigurationMessage.fromProto(proto) ?:
-            VisibleMessage.fromProto(proto) ?: run {
-            throw Error.UnknownMessage
-        }
+            VisibleMessage.fromProto(proto) ?: throw Error.UnknownMessage
+
         val isUserBlindedSender = sender == openGroupPublicKey?.let { SodiumUtilities.blindedKeyPair(it, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!) }?.let { SessionId(IdPrefix.BLINDED, it.publicKey.asBytes).hexString }
-        // Ignore self send if needed
-        if (!message.isSelfSendValid && (sender == userPublicKey || isUserBlindedSender)) {
-            throw Error.SelfSend
-        }
-        if (sender == userPublicKey || isUserBlindedSender) {
+        val isUserSender = sender == userPublicKey
+
+        if (isUserSender || isUserBlindedSender) {
+            // Ignore self send if needed
+            if (!message.isSelfSendValid) throw Error.SelfSend
             message.isSenderSelf = true
         }
         // Guard against control messages in open groups
@@ -191,4 +192,5 @@ object MessageReceiver {
         // Return
         return Pair(message, proto)
     }
+
 }

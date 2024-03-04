@@ -611,7 +611,7 @@ object OnionRequestAPI {
                             }
                             if (body["t"] != null) {
                                 val timestamp = body["t"] as Long
-                                val offset = timestamp - Date().time
+                                val offset = timestamp - System.currentTimeMillis()
                                 SnodeAPI.clockOffset = offset
                             }
                             if (body.containsKey("hf")) {

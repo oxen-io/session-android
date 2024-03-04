@@ -10,6 +10,7 @@ import org.session.libsession.messaging.jobs.AttachmentUploadJob
 import org.session.libsession.messaging.jobs.Job
 import org.session.libsession.messaging.jobs.MessageSendJob
 import org.session.libsession.messaging.messages.Destination
+import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
@@ -113,7 +114,7 @@ interface StorageProtocol {
      */
     fun persistAttachments(messageID: Long, attachments: List<Attachment>): List<Long>
     fun getAttachmentsForMessage(messageID: Long): List<DatabaseAttachment>
-    fun getMessageIdInDatabase(timestamp: Long, author: String): Long? // TODO: This is a weird name
+    fun getMessageIdInDatabase(timestamp: Long, author: String): Pair<Long, Boolean>? // TODO: This is a weird name
     fun updateSentTimestamp(messageID: Long, isMms: Boolean, openGroupSentTimestamp: Long, threadId: Long)
     fun markAsResyncing(timestamp: Long, author: String)
     fun markAsSyncing(timestamp: Long, author: String)
@@ -123,12 +124,12 @@ interface StorageProtocol {
     fun markAsSyncFailed(timestamp: Long, author: String, error: Exception)
     fun markAsSentFailed(timestamp: Long, author: String, error: Exception)
     fun clearErrorMessage(messageID: Long)
-    fun setMessageServerHash(messageID: Long, serverHash: String)
+    fun setMessageServerHash(messageID: Long, mms: Boolean, serverHash: String)
 
     // Closed Groups
     fun getGroup(groupID: String): GroupRecord?
     fun createGroup(groupID: String, title: String?, members: List<Address>, avatar: SignalServiceAttachmentPointer?, relay: String?, admins: List<Address>, formationTimestamp: Long)
-    fun createInitialConfigGroup(groupPublicKey: String, name: String, members: Map<String, Boolean>, formationTimestamp: Long, encryptionKeyPair: ECKeyPair)
+    fun createInitialConfigGroup(groupPublicKey: String, name: String, members: Map<String, Boolean>, formationTimestamp: Long, encryptionKeyPair: ECKeyPair, expirationTimer: Int)
     fun updateGroupConfig(groupPublicKey: String)
     fun isGroupActive(groupPublicKey: String): Boolean
     fun setActive(groupID: String, value: Boolean)
@@ -151,14 +152,12 @@ interface StorageProtocol {
     fun getLatestClosedGroupEncryptionKeyPair(groupPublicKey: String): ECKeyPair?
     fun updateFormationTimestamp(groupID: String, formationTimestamp: Long)
     fun updateTimestampUpdated(groupID: String, updatedTimestamp: Long)
-    fun setExpirationTimer(address: String, duration: Int)
 
     // Groups
     fun getAllGroups(includeInactive: Boolean): List<GroupRecord>
 
     // Settings
     fun setProfileSharing(address: Address, value: Boolean)
-
 
     // Thread
     fun getOrCreateThreadIdFor(address: Address): Long
@@ -176,6 +175,8 @@ interface StorageProtocol {
     fun isPinned(threadID: Long): Boolean
     fun deleteConversation(threadID: Long)
     fun setThreadDate(threadId: Long, newDate: Long)
+    fun getLastLegacyRecipient(threadRecipient: String): String?
+    fun setLastLegacyRecipient(threadRecipient: String, senderRecipient: String?)
 
     // Contacts
     fun getContactWithSessionID(sessionID: String): Contact?
@@ -183,7 +184,7 @@ interface StorageProtocol {
     fun setContact(contact: Contact)
     fun getRecipientForThread(threadId: Long): Recipient?
     fun getRecipientSettings(address: Address): RecipientSettings?
-    fun addLibSessionContacts(contacts: List<LibSessionContact>)
+    fun addLibSessionContacts(contacts: List<LibSessionContact>, timestamp: Long)
     fun addContacts(contacts: List<ConfigurationMessage.Contact>)
 
     // Attachments
@@ -224,9 +225,17 @@ interface StorageProtocol {
     fun setBlocked(recipients: Iterable<Recipient>, isBlocked: Boolean, fromConfigUpdate: Boolean = false)
     fun setRecipientHash(recipient: Recipient, recipientHash: String?)
     fun blockedContacts(): List<Recipient>
+    fun getExpirationConfiguration(threadId: Long): ExpirationConfiguration?
+    fun setExpirationConfiguration(config: ExpirationConfiguration)
+    fun getExpiringMessages(messageIds: List<Long> = emptyList()): List<Pair<Long, Long>>
+    fun updateDisappearingState(
+        messageSender: String,
+        threadID: Long,
+        disappearingState: Recipient.DisappearingState
+    )
 
     // Shared configs
-    fun notifyConfigUpdates(forConfigObject: ConfigBase)
+    fun notifyConfigUpdates(forConfigObject: ConfigBase, messageTimestamp: Long)
     fun conversationInConfig(publicKey: String?, groupPublicKey: String?, openGroupId: String?, visibleOnly: Boolean): Boolean
     fun canPerformConfigChange(variant: String, publicKey: String, changeTimestampMs: Long): Boolean
     fun isCheckingCommunityRequests(): Boolean
