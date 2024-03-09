@@ -211,11 +211,13 @@ class ConversationAdapter(
     private fun getLastSentMessageId(cursor: Cursor): Long {
         // If we don't move to first (or at least step backwards) we can step off the end of the
         // cursor and any query will return an "Index = -1" error.
-        cursor.moveToFirst()
-        val thisThreadId = cursor.getLong(4) // Column index 4 is "thread_id"
-        if (thisThreadId != -1L) {
-            val thisUsersSessionId = TextSecurePreferences.getLocalNumber(context)
-            return messageDB.getLastSentMessageFromSender(thisThreadId, thisUsersSessionId)
+        val cursorHasContent = cursor.moveToFirst()
+        if (cursorHasContent) {
+            val thisThreadId = cursor.getLong(4) // Column index 4 is "thread_id"
+            if (thisThreadId != -1L) {
+                val thisUsersSessionId = TextSecurePreferences.getLocalNumber(context)
+                return messageDB.getLastSentMessageFromSender(thisThreadId, thisUsersSessionId)
+            }
         }
         return -1L
     }
@@ -243,6 +245,7 @@ class ConversationAdapter(
 
         // This value gets updated here ONLY when the cursor changes, and the value is then passed
         // through to `VisibleMessageView.bind` each time we bind via `onBindItemViewHolder`, above.
+        // If there are no messages then lastSentMessageId is assigned the value -1L.
         if (cursor != null) { lastSentMessageId = getLastSentMessageId(cursor) }
     }
 
