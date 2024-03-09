@@ -18,13 +18,28 @@
         android:layout_height="24dp"
         tools:src="@drawable/ic_message"/>
 
-    <TextView
-        android:id="@+id/context_menu_item_title"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_marginStart="16dp"
-        tools:text="Archive" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/context_menu_item_title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            tools:text="Archive" />
+
+        <TextView
+            android:id="@+id/context_menu_item_subtitle"
+            android:textSize="@dimen/tiny_font_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            tools:text="subtitle" />
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -18,6 +18,7 @@
 
     <EditText
         android:id="@+id/communityUrlEditText"
+        android:contentDescription="@string/AccessibilityId_community_input_box"
         style="@style/SmallSessionEditText"
         android:layout_width="match_parent"
         android:layout_height="64dp"
@@ -25,7 +26,6 @@
         android:layout_marginTop="@dimen/large_spacing"
         android:gravity="center_vertical"
         android:hint="@string/fragment_enter_community_url_edit_text_hint"
-        android:contentDescription="@string/AccessibilityId_community_input_box"
         android:inputType="textUri"
         android:maxLines="3"
         android:paddingTop="0dp"

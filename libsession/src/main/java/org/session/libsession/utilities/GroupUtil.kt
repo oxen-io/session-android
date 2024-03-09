@@ -108,22 +108,23 @@ object GroupUtil {
 
     @JvmStatic
     @Throws(IOException::class)
-    fun doubleDecodeGroupId(groupID: String): String {
-        return Hex.toStringCondensed(getDecodedGroupIDAsData(getDecodedGroupID(groupID)))
-    }
+    fun doubleDecodeGroupId(groupID: String): String =
+        Hex.toStringCondensed(getDecodedGroupIDAsData(getDecodedGroupID(groupID)))
+
+    @JvmStatic
+    fun addressToGroupSessionId(address: Address): String =
+        doubleDecodeGroupId(address.toGroupString())
 
     fun createConfigMemberMap(
         members: Collection<String>,
         admins: Collection<String>
     ): Map<String, Boolean> {
         // Start with admins
-        val memberMap = admins.associate {
-            it to true
-        }.toMutableMap()
+        val memberMap = admins.associateWith { true }.toMutableMap()
 
         // Add the remaining members (there may be duplicates, so only add ones that aren't already in there from admins)
         for (member in members) {
-            if (!memberMap.contains(member)) {
+            if (member !in memberMap) {
                 memberMap[member] = false
             }
         }

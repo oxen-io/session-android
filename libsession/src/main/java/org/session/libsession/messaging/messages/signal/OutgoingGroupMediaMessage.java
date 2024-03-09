@@ -24,6 +24,7 @@ public class OutgoingGroupMediaMessage extends OutgoingSecureMediaMessage {
                                    @Nullable final Attachment avatar,
                                    long sentTime,
                                    long expireIn,
+                                   long expireStartedAt,
                                    boolean updateMessage,
                                    @Nullable QuoteModel quote,
                                    @NonNull List<Contact> contacts,
@@ -32,7 +33,7 @@ public class OutgoingGroupMediaMessage extends OutgoingSecureMediaMessage {
     super(recipient, body,
           new LinkedList<Attachment>() {{if (avatar != null) add(avatar);}},
           sentTime,
-          DistributionTypes.CONVERSATION, expireIn, quote, contacts, previews);
+          DistributionTypes.CONVERSATION, expireIn, expireStartedAt, quote, contacts, previews);
 
     this.groupID = groupId;
     this.isUpdateMessage = updateMessage;

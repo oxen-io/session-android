@@ -152,14 +152,18 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                     Log.w("Loki", "shared config message handled in configs wasn't SharedConfigurationMessage but was ${message.javaClass.simpleName}")
                     return@forEach
                 }
-                forConfigObject.merge(hash!! to message.data)
-                latestMessageTimestamp = if ((message.sentTimestamp ?: 0L) > (latestMessageTimestamp ?: 0L)) { message.sentTimestamp } else { latestMessageTimestamp }
+                val merged = forConfigObject.merge(hash!! to message.data).firstOrNull { it == hash }
+                if (merged != null) {
+                    // We successfully merged the hash, we can now update the timestamp
+                    latestMessageTimestamp = if ((message.sentTimestamp ?: 0L) > (latestMessageTimestamp ?: 0L)) { message.sentTimestamp } else { latestMessageTimestamp }
+                }
             } catch (e: Exception) {
                 Log.e("Loki", e)
             }
         }
         // process new results
-        if (forConfigObject.needsDump()) {
+        // latestMessageTimestamp should always be non-null if the config object needs dump
+        if (forConfigObject.needsDump() && latestMessageTimestamp != null) {
             configFactory.persist(forConfigObject, latestMessageTimestamp ?: SnodeAPI.nowWithOffset)
         }
     }
@@ -210,7 +214,6 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                         val responseList = (rawResponses["results"] as List<RawResponse>)
                         // in case we had null configs, the array won't be fully populated
                         // index of the sparse array key iterator should be the request index, with the key being the namespace
-                        // TODO: add in specific ordering of config namespaces for processing
                         listOfNotNull(
                             configFactory.user?.configNamespace(),
                             configFactory.contacts?.configNamespace(),

@@ -66,6 +66,7 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
         this.contextReference = WeakReference(context)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun doInBackground(vararg attachments: Attachment?): Pair<Int, String?> {
         if (attachments.isEmpty()) {
             throw IllegalArgumentException("Must pass in at least one attachment")
@@ -227,6 +228,7 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
         return File(fileName).name
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onPostExecute(result: Pair<Int, String?>) {
         super.onPostExecute(result)
         val context = contextReference.get() ?: return

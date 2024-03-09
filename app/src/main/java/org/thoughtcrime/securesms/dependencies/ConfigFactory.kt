@@ -187,7 +187,7 @@ class ConfigFactory(
     override fun persist(forConfigObject: ConfigBase, timestamp: Long) {
         try {
             listeners.forEach { listener ->
-                listener.notifyUpdates(forConfigObject)
+                listener.notifyUpdates(forConfigObject, timestamp)
             }
             when (forConfigObject) {
                 is UserProfile -> persistUserConfigDump(timestamp)
