@@ -189,8 +189,6 @@ class ConversationViewModel(
 
                 //..so we can now remove our local copies and message views.
                 activityV2.performLocalDeleteFollowingBanForSenderOfMessage(messageRecord)
-
-
             }
             .onFailure {
                 showMessage("Couldn't execute request due to error: $it")
