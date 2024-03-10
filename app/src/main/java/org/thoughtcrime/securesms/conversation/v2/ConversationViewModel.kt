@@ -1,30 +1,37 @@
 package org.thoughtcrime.securesms.conversation.v2
 
-import android.app.Application
-import android.widget.Toast
+import android.content.Context
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+
 import com.goterl.lazysodium.utils.KeyPair
+
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+
+import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
+import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
-import org.thoughtcrime.securesms.ApplicationContext
+
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.repository.ConversationRepository
+
 import java.util.UUID
 
 class ConversationViewModel(
@@ -43,6 +50,9 @@ class ConversationViewModel(
     private var _recipient: RetrieveOnce<Recipient> = RetrieveOnce {
         repository.maybeGetRecipientForThreadId(threadId)
     }
+    val expirationConfiguration: ExpirationConfiguration?
+        get() = storage.getExpirationConfiguration(threadId)
+
     val recipient: Recipient?
         get() = _recipient.value
 
@@ -143,10 +153,12 @@ class ConversationViewModel(
     fun deleteForEveryone(message: MessageRecord) = viewModelScope.launch {
         val recipient = recipient
         if (recipient == null) {
+            Log.w("[ACL]", "Recipient was null for delete for everyone - aborting delete operation.")
             Log.w("Loki", "Recipient was null for delete for everyone - aborting delete operation.")
             return@launch
         }
         repository.deleteForEveryone(threadId, recipient, message)
+            .onSuccess { Log.d("ACL]", "Deleted message ${message.id} ") }
             .onFailure {
                 showMessage("Couldn't delete message due to error: $it")
             }
@@ -234,8 +246,11 @@ class ConversationViewModel(
     }
 
     fun hidesInputBar(): Boolean = openGroup?.canWrite != true &&
-                blindedRecipient?.blocksCommunityMessageRequests == true
+        blindedRecipient?.blocksCommunityMessageRequests == true
 
+    fun legacyBannerRecipient(context: Context): Recipient? = recipient?.run {
+        storage.getLastLegacyRecipient(address.serialize())?.let { Recipient.from(context, Address.fromSerialized(it), false) }
+    }
 
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {

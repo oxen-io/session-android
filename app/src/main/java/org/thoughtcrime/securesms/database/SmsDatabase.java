@@ -52,6 +52,7 @@ import org.thoughtcrime.securesms.database.model.ReactionRecord;
 import org.thoughtcrime.securesms.database.model.SmsMessageRecord;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Arrays;
@@ -90,6 +91,7 @@ public class SmsDatabase extends MessagingDatabase {
     EXPIRES_IN + " INTEGER DEFAULT 0, " + EXPIRE_STARTED + " INTEGER DEFAULT 0, " + NOTIFIED + " DEFAULT 0, " +
     READ_RECEIPT_COUNT + " INTEGER DEFAULT 0, " + UNIDENTIFIED + " INTEGER DEFAULT 0);";
 
+
   public static final String[] CREATE_INDEXS = {
     "CREATE INDEX IF NOT EXISTS sms_thread_id_index ON " + TABLE_NAME + " (" + THREAD_ID + ");",
     "CREATE INDEX IF NOT EXISTS sms_read_index ON " + TABLE_NAME + " (" + READ + ");",
@@ -126,6 +128,18 @@ public class SmsDatabase extends MessagingDatabase {
 
   public static String CREATE_HAS_MENTION_COMMAND = "ALTER TABLE "+ TABLE_NAME + " " +
           "ADD COLUMN " + HAS_MENTION + " INTEGER DEFAULT 0;";
+
+  private static String COMMA_SEPARATED_COLUMNS = ID + ", " + THREAD_ID + ", " + ADDRESS + ", " + ADDRESS_DEVICE_ID + ", " + PERSON + ", " + DATE_RECEIVED + ", " + DATE_SENT + ", " + PROTOCOL + ", " + READ + ", " + STATUS + ", " + TYPE + ", " + REPLY_PATH_PRESENT + ", " + DELIVERY_RECEIPT_COUNT + ", " + SUBJECT + ", " + BODY + ", " + MISMATCHED_IDENTITIES + ", " + SERVICE_CENTER + ", " + SUBSCRIPTION_ID + ", " + EXPIRES_IN + ", " + EXPIRE_STARTED + ", " + NOTIFIED + ", " + READ_RECEIPT_COUNT + ", " + UNIDENTIFIED + ", " + REACTIONS_UNREAD + ", " + HAS_MENTION;
+  private static String TEMP_TABLE_NAME = "TEMP_TABLE_NAME";
+
+  public static final String[] ADD_AUTOINCREMENT = new String[]{
+          "ALTER TABLE " + TABLE_NAME + " RENAME TO " + TEMP_TABLE_NAME,
+          CREATE_TABLE,
+          CREATE_REACTIONS_UNREAD_COMMAND,
+          CREATE_HAS_MENTION_COMMAND,
+          "INSERT INTO " + TABLE_NAME + " (" + COMMA_SEPARATED_COLUMNS + ") SELECT " + COMMA_SEPARATED_COLUMNS + " FROM " + TEMP_TABLE_NAME,
+          "DROP TABLE " + TEMP_TABLE_NAME
+  };
 
   private static final EarlyReceiptCache earlyDeliveryReceiptCache = new EarlyReceiptCache();
   private static final EarlyReceiptCache earlyReadReceiptCache     = new EarlyReceiptCache();
@@ -235,11 +249,6 @@ public class SmsDatabase extends MessagingDatabase {
     contentValues.put(HAS_MENTION, 0);
     database.update(TABLE_NAME, contentValues, ID_WHERE, new String[] {String.valueOf(messageId)});
     updateTypeBitmask(messageId, Types.BASE_TYPE_MASK, Types.BASE_DELETED_TYPE);
-  }
-
-  @Override
-  public void markExpireStarted(long id) {
-    markExpireStarted(id, SnodeAPI.getNowWithOffset());
   }
 
   @Override
@@ -354,12 +363,11 @@ public class SmsDatabase extends MessagingDatabase {
       cursor = database.query(TABLE_NAME, new String[] {ID, ADDRESS, DATE_SENT, TYPE, EXPIRES_IN, EXPIRE_STARTED}, where, arguments, null, null, null);
 
       while (cursor != null && cursor.moveToNext()) {
-        if (Types.isSecureType(cursor.getLong(3))) {
-          SyncMessageId  syncMessageId  = new SyncMessageId(Address.fromSerialized(cursor.getString(1)), cursor.getLong(2));
-          ExpirationInfo expirationInfo = new ExpirationInfo(cursor.getLong(0), cursor.getLong(4), cursor.getLong(5), false);
+        long timestamp = cursor.getLong(2);
+        SyncMessageId  syncMessageId  = new SyncMessageId(Address.fromSerialized(cursor.getString(1)), timestamp);
+        ExpirationInfo expirationInfo = new ExpirationInfo(cursor.getLong(0), timestamp, cursor.getLong(4), cursor.getLong(5), false);
 
-          results.add(new MarkedMessageInfo(syncMessageId, expirationInfo));
-        }
+        results.add(new MarkedMessageInfo(syncMessageId, expirationInfo));
       }
 
       ContentValues contentValues = new ContentValues();
@@ -407,6 +415,24 @@ public class SmsDatabase extends MessagingDatabase {
   }
 
   protected Optional<InsertResult> insertMessageInbox(IncomingTextMessage message, long type, long serverTimestamp, boolean runThreadUpdate) {
+    Recipient recipient = Recipient.from(context, message.getSender(), true);
+
+    Recipient groupRecipient;
+
+    if (message.getGroupId() == null) {
+      groupRecipient = null;
+    } else {
+      groupRecipient = Recipient.from(context, message.getGroupId(), true);
+    }
+
+    boolean    unread     = (Util.isDefaultSmsProvider(context) ||
+            message.isSecureMessage() || message.isGroup() || message.isCallInfo());
+
+    long       threadId;
+
+    if (groupRecipient == null) threadId = DatabaseComponent.get(context).threadDatabase().getOrCreateThreadIdFor(recipient);
+    else                        threadId = DatabaseComponent.get(context).threadDatabase().getOrCreateThreadIdFor(groupRecipient);
+
     if (message.isSecureMessage()) {
       type |= Types.SECURE_MESSAGE_BIT;
     } else if (message.isGroup()) {
@@ -420,39 +446,8 @@ public class SmsDatabase extends MessagingDatabase {
 
     CallMessageType callMessageType = message.getCallType();
     if (callMessageType != null) {
-      switch (callMessageType) {
-        case CALL_OUTGOING:
-          type |= Types.OUTGOING_CALL_TYPE;
-          break;
-        case CALL_INCOMING:
-          type |= Types.INCOMING_CALL_TYPE;
-          break;
-        case CALL_MISSED:
-          type |= Types.MISSED_CALL_TYPE;
-          break;
-        case CALL_FIRST_MISSED:
-          type |= Types.FIRST_MISSED_CALL_TYPE;
-          break;
-      }
+      type |= getCallMessageTypeMask(callMessageType);
     }
-
-    Recipient recipient = Recipient.from(context, message.getSender(), true);
-
-    Recipient groupRecipient;
-
-    if (message.getGroupId() == null) {
-      groupRecipient = null;
-    } else {
-      groupRecipient = Recipient.from(context, message.getGroupId(), true);
-    }
-
-    boolean    unread     = (Util.isDefaultSmsProvider(context) ||
-                            message.isSecureMessage() || message.isGroup() || message.isCallInfo());
-
-    long       threadId;
-
-    if (groupRecipient == null) threadId = DatabaseComponent.get(context).threadDatabase().getOrCreateThreadIdFor(recipient);
-    else                        threadId = DatabaseComponent.get(context).threadDatabase().getOrCreateThreadIdFor(groupRecipient);
 
     ContentValues values = new ContentValues(6);
     values.put(ADDRESS, message.getSender().serialize());
@@ -466,6 +461,7 @@ public class SmsDatabase extends MessagingDatabase {
     values.put(READ, unread ? 0 : 1);
     values.put(SUBSCRIPTION_ID, message.getSubscriptionId());
     values.put(EXPIRES_IN, message.getExpiresIn());
+    values.put(EXPIRE_STARTED, message.getExpireStartedAt());
     values.put(UNIDENTIFIED, message.isUnidentified());
     values.put(HAS_MENTION, message.hasMention());
 
@@ -496,6 +492,21 @@ public class SmsDatabase extends MessagingDatabase {
       notifyConversationListeners(threadId);
 
       return Optional.of(new InsertResult(messageId, threadId));
+    }
+  }
+
+  private long getCallMessageTypeMask(CallMessageType callMessageType) {
+    switch (callMessageType) {
+      case CALL_OUTGOING:
+        return Types.OUTGOING_CALL_TYPE;
+      case CALL_INCOMING:
+        return Types.INCOMING_CALL_TYPE;
+      case CALL_MISSED:
+        return Types.MISSED_CALL_TYPE;
+      case CALL_FIRST_MISSED:
+        return Types.FIRST_MISSED_CALL_TYPE;
+      default:
+        return 0;
     }
   }
 
@@ -547,6 +558,7 @@ public class SmsDatabase extends MessagingDatabase {
     contentValues.put(TYPE, type);
     contentValues.put(SUBSCRIPTION_ID, message.getSubscriptionId());
     contentValues.put(EXPIRES_IN, message.getExpiresIn());
+    contentValues.put(EXPIRE_STARTED, message.getExpireStartedAt());
     contentValues.put(DELIVERY_RECEIPT_COUNT, Stream.of(earlyDeliveryReceipts.values()).mapToLong(Long::longValue).sum());
     contentValues.put(READ_RECEIPT_COUNT, Stream.of(earlyReadReceipts.values()).mapToLong(Long::longValue).sum());
 
@@ -590,6 +602,11 @@ public class SmsDatabase extends MessagingDatabase {
     return rawQuery(where, null);
   }
 
+  public Cursor getExpirationNotStartedMessages() {
+    String         where = EXPIRES_IN + " > 0 AND " + EXPIRE_STARTED + " = 0";
+    return rawQuery(where, null);
+  }
+
   public SmsMessageRecord getMessage(long messageId) throws NoSuchMessageException {
     Cursor         cursor = rawQuery(ID_WHERE, new String[]{messageId + ""});
     Reader         reader = new Reader(cursor);
@@ -615,7 +632,6 @@ public class SmsDatabase extends MessagingDatabase {
     long threadId = getThreadIdForMessage(messageId);
     db.delete(TABLE_NAME, ID_WHERE, new String[] {messageId+""});
     boolean threadDeleted = DatabaseComponent.get(context).threadDatabase().update(threadId, false, true);
-    notifyConversationListeners(threadId);
     return threadDeleted;
   }
 
@@ -787,7 +803,7 @@ public class SmsDatabase extends MessagingDatabase {
     }
   }
 
-  public class Reader {
+  public class Reader implements Closeable {
 
     private final Cursor cursor;
 
@@ -853,8 +869,11 @@ public class SmsDatabase extends MessagingDatabase {
       return new LinkedList<>();
     }
 
+    @Override
     public void close() {
-      cursor.close();
+      if (cursor != null) {
+        cursor.close();
+      }
     }
   }
 

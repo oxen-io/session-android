@@ -51,7 +51,6 @@ import org.session.libsignal.utilities.Pair;
 import org.session.libsignal.utilities.guava.Optional;
 import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.contacts.ContactUtil;
-import org.thoughtcrime.securesms.database.MessagingDatabase.MarkedMessageInfo;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
@@ -816,13 +815,7 @@ public class ThreadDatabase extends Database {
     MmsSmsDatabase mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase();
     if (mmsSmsDatabase.getConversationCount(threadId) <= 0 && !force) return false;
     List<MarkedMessageInfo> messages = setRead(threadId, lastSeenTime);
-    if (isGroupRecipient) {
-      for (MarkedMessageInfo message: messages) {
-        MarkReadReceiver.scheduleDeletion(context, message.getExpirationInfo());
-      }
-    } else {
-      MarkReadReceiver.process(context, messages);
-    }
+    MarkReadReceiver.process(context, messages);
     ApplicationContext.getInstance(context).messageNotifier.updateNotification(context, threadId);
     return setLastSeen(threadId, lastSeenTime);
   }

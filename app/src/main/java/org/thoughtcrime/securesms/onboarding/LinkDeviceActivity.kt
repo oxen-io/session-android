@@ -54,6 +54,7 @@ class LinkDeviceActivity : BaseActionBarActivity(), ScanQRCodeWrapperFragmentDel
     private val adapter = LinkDeviceActivityAdapter(this)
     private var restoreJob: Job? = null
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (restoreJob?.isActive == true) return // Don't allow going back with a pending job
         super.onBackPressed()

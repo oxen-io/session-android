@@ -238,6 +238,26 @@ public class MmsSmsDatabase extends Database {
     return identifiedMessages;
   }
 
+  public Set<MessageRecord> getAllMessageRecordsFromSenderInThread(long threadId, String serializedAuthor) {
+    //String order = MmsSmsColumns.NORMALIZED_DATE_SENT + " DESC";
+    String selection = MmsSmsColumns.THREAD_ID + " = " + threadId + " AND " + MmsSmsColumns.ADDRESS + " = \"" + serializedAuthor + "\"";
+    Set<MessageRecord> identifiedMessages = new HashSet<MessageRecord>();
+
+    // Try everything with resources so that they auto-close on end of scope
+    try (Cursor cursor = queryTables(PROJECTION, selection, null, null)) {
+      try (MmsSmsDatabase.Reader reader = readerFor(cursor)) {
+        MessageRecord messageRecord;
+        while ((messageRecord = reader.getNext()) != null) {
+          //if (isOwnNumber && messageRecord.isOutgoing()) { return messageRecord.id; }
+          identifiedMessages.add(messageRecord);
+          Log.d("[ACL]", "Identified a message record from: " + serializedAuthor + " with id: " + messageRecord.id);
+        }
+      }
+    }
+    Log.d("[ACL]", "Returning a set of: " + identifiedMessages.size() + " message records");
+    return identifiedMessages;
+  }
+
   public Cursor getUnread() {
     String order           = MmsSmsColumns.NORMALIZED_DATE_SENT + " ASC";
     String selection       = "(" + MmsSmsColumns.READ + " = 0 OR " + MmsSmsColumns.REACTIONS_UNREAD + " = 1) AND " + MmsSmsColumns.NOTIFIED + " = 0";

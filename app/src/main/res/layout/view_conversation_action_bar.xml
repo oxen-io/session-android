@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+
+    <org.thoughtcrime.securesms.components.ProfilePictureView
+        android:id="@+id/profilePictureView"
+        android:layout_width="@dimen/medium_profile_picture_size"
+        android:layout_height="@dimen/medium_profile_picture_size"
+        android:layout_marginTop="@dimen/medium_spacing"
+        android:layout_marginStart="@dimen/medium_spacing"
+        android:layout_marginBottom="@dimen/medium_spacing" />
+
+    <LinearLayout
+        android:id="@+id/conversationTitleContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/conversationTitleView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/AccessibilityId_conversation_header_name"
+            tools:text="@tools:sample/full_names"
+            android:textColor="?android:textColorPrimary"
+            android:textStyle="bold"
+            android:textSize="@dimen/large_font_size"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/settings_pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/very_small_spacing"/>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/settings_tab_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/very_small_spacing"
+            app:tabBackground="@drawable/tab_indicator_dot"
+            app:tabGravity="center"
+            app:tabIndicator="@null"
+            app:tabPaddingStart="@dimen/very_small_spacing"
+            app:tabPaddingEnd="@dimen/very_small_spacing"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -14,6 +14,7 @@ import network.loki.messenger.libsession_util.util.Conversation
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import network.loki.messenger.libsession_util.util.GroupInfo
 import network.loki.messenger.libsession_util.util.UserPic
+import network.loki.messenger.libsession_util.util.afterSend
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.BlindedIdMapping
@@ -29,6 +30,7 @@ import org.session.libsession.messaging.jobs.MessageReceiveJob
 import org.session.libsession.messaging.jobs.MessageSendJob
 import org.session.libsession.messaging.jobs.RetrieveProfileAvatarJob
 import org.session.libsession.messaging.messages.Destination
+import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
@@ -66,6 +68,7 @@ import org.session.libsession.utilities.ProfileKeyUtil
 import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsession.utilities.recipients.Recipient.DisappearingState
 import org.session.libsignal.crypto.ecc.DjbECPrivateKey
 import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.session.libsignal.crypto.ecc.ECKeyPair
@@ -89,10 +92,16 @@ import org.thoughtcrime.securesms.mms.PartAuthority
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.SessionMetaProtocol
 import java.security.MessageDigest
+import kotlin.time.Duration.Companion.days
 import network.loki.messenger.libsession_util.util.Contact as LibSessionContact
 
-open class Storage(context: Context, helper: SQLCipherOpenHelper, private val configFactory: ConfigFactory) : Database(context, helper), StorageProtocol,
-    ThreadDatabase.ConversationThreadUpdateListener {
+private const val TAG = "Storage"
+
+open class Storage(
+    context: Context,
+    helper: SQLCipherOpenHelper,
+    private val configFactory: ConfigFactory
+) : Database(context, helper), StorageProtocol, ThreadDatabase.ConversationThreadUpdateListener {
 
     override fun threadCreated(address: Address, threadId: Long) {
         val localUserAddress = getUserPublicKey() ?: return
@@ -322,19 +331,30 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
             // open group recipients should explicitly create threads
             message.threadID = getOrCreateThreadIdFor(targetAddress)
         }
+        val expiryMode = message.expiryMode
+        val expiresInMillis = expiryMode.expiryMillis
+        val expireStartedAt = if (expiryMode is ExpiryMode.AfterSend) message.sentTimestamp!! else 0
         if (message.isMediaMessage() || attachments.isNotEmpty()) {
             val quote: Optional<QuoteModel> = if (quotes != null) Optional.of(quotes) else Optional.absent()
             val linkPreviews: Optional<List<LinkPreview>> = if (linkPreview.isEmpty()) Optional.absent() else Optional.of(linkPreview.mapNotNull { it!! })
             val mmsDatabase = DatabaseComponent.get(context).mmsDatabase()
             val insertResult = if (isUserSender || isUserBlindedSender) {
-                val mediaMessage = OutgoingMediaMessage.from(message, targetRecipient, pointers, quote.orNull(), linkPreviews.orNull()?.firstOrNull())
+                val mediaMessage = OutgoingMediaMessage.from(
+                    message,
+                    targetRecipient,
+                    pointers,
+                    quote.orNull(),
+                    linkPreviews.orNull()?.firstOrNull(),
+                    expiresInMillis,
+                    expireStartedAt
+                )
                 mmsDatabase.insertSecureDecryptedMessageOutbox(mediaMessage, message.threadID ?: -1, message.sentTimestamp!!, runThreadUpdate)
             } else {
                 // It seems like we have replaced SignalServiceAttachment with SessionServiceAttachment
                 val signalServiceAttachments = attachments.mapNotNull {
                     it.toSignalPointer()
                 }
-                val mediaMessage = IncomingMediaMessage.from(message, senderAddress, targetRecipient.expireMessages * 1000L, group, signalServiceAttachments, quote, linkPreviews)
+                val mediaMessage = IncomingMediaMessage.from(message, senderAddress, expiresInMillis, expireStartedAt, group, signalServiceAttachments, quote, linkPreviews)
                 mmsDatabase.insertSecureDecryptedMessageInbox(mediaMessage, message.threadID!!, message.receivedTimestamp ?: 0, runThreadUpdate)
             }
             if (insertResult.isPresent) {
@@ -345,12 +365,12 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
             val isOpenGroupInvitation = (message.openGroupInvitation != null)
 
             val insertResult = if (isUserSender || isUserBlindedSender) {
-                val textMessage = if (isOpenGroupInvitation) OutgoingTextMessage.fromOpenGroupInvitation(message.openGroupInvitation, targetRecipient, message.sentTimestamp)
-                else OutgoingTextMessage.from(message, targetRecipient)
+                val textMessage = if (isOpenGroupInvitation) OutgoingTextMessage.fromOpenGroupInvitation(message.openGroupInvitation, targetRecipient, message.sentTimestamp, expiresInMillis, expireStartedAt)
+                else OutgoingTextMessage.from(message, targetRecipient, expiresInMillis, expireStartedAt)
                 smsDatabase.insertMessageOutbox(message.threadID ?: -1, textMessage, message.sentTimestamp!!, runThreadUpdate)
             } else {
-                val textMessage = if (isOpenGroupInvitation) IncomingTextMessage.fromOpenGroupInvitation(message.openGroupInvitation, senderAddress, message.sentTimestamp)
-                else IncomingTextMessage.from(message, senderAddress, group, targetRecipient.expireMessages * 1000L)
+                val textMessage = if (isOpenGroupInvitation) IncomingTextMessage.fromOpenGroupInvitation(message.openGroupInvitation, senderAddress, message.sentTimestamp, expiresInMillis, expireStartedAt)
+                else IncomingTextMessage.from(message, senderAddress, group, expiresInMillis, expireStartedAt)
                 val encrypted = IncomingEncryptedMessage(textMessage, textMessage.messageBody)
                 smsDatabase.insertMessageInbox(encrypted, message.receivedTimestamp ?: 0, runThreadUpdate)
             }
@@ -360,7 +380,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         }
         message.serverHash?.let { serverHash ->
             messageID?.let { id ->
-                DatabaseComponent.get(context).lokiMessageDatabase().setMessageServerHash(id, serverHash)
+                DatabaseComponent.get(context).lokiMessageDatabase().setMessageServerHash(id, message.isMediaMessage(), serverHash)
             }
         }
         return messageID
@@ -423,8 +443,8 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         return DatabaseComponent.get(context).lokiAPIDatabase().getAuthToken(id)
     }
 
-    override fun notifyConfigUpdates(forConfigObject: ConfigBase) {
-        notifyUpdates(forConfigObject)
+    override fun notifyConfigUpdates(forConfigObject: ConfigBase, messageTimestamp: Long) {
+        notifyUpdates(forConfigObject, messageTimestamp)
     }
 
     override fun conversationInConfig(publicKey: String?, groupPublicKey: String?, openGroupId: String?, visibleOnly: Boolean): Boolean {
@@ -439,16 +459,16 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         return configFactory.user?.getCommunityMessageRequests() == true
     }
 
-    fun notifyUpdates(forConfigObject: ConfigBase) {
+    private fun notifyUpdates(forConfigObject: ConfigBase, messageTimestamp: Long) {
         when (forConfigObject) {
-            is UserProfile -> updateUser(forConfigObject)
-            is Contacts -> updateContacts(forConfigObject)
-            is ConversationVolatileConfig -> updateConvoVolatile(forConfigObject)
-            is UserGroupsConfig -> updateUserGroups(forConfigObject)
+            is UserProfile -> updateUser(forConfigObject, messageTimestamp)
+            is Contacts -> updateContacts(forConfigObject, messageTimestamp)
+            is ConversationVolatileConfig -> updateConvoVolatile(forConfigObject, messageTimestamp)
+            is UserGroupsConfig -> updateUserGroups(forConfigObject, messageTimestamp)
         }
     }
 
-    private fun updateUser(userProfile: UserProfile) {
+    private fun updateUser(userProfile: UserProfile, messageTimestamp: Long) {
         val userPublicKey = getUserPublicKey() ?: return
         // would love to get rid of recipient and context from this
         val recipient = Recipient.from(context, fromSerialized(userPublicKey), false)
@@ -474,16 +494,25 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
             deleteConversation(ourThread)
         } else {
             // create note to self thread if needed (?)
-            val ourThread = getOrCreateThreadIdFor(recipient.address)
+            val address = recipient.address
+            val ourThread = getThreadId(address) ?: getOrCreateThreadIdFor(address).also {
+                setThreadDate(it, 0)
+            }
             DatabaseComponent.get(context).threadDatabase().setHasSent(ourThread, true)
             setPinned(ourThread, userProfile.getNtsPriority() > 0)
         }
 
+        // Set or reset the shared library to use latest expiration config
+        getThreadId(recipient)?.let {
+            setExpirationConfiguration(
+                getExpirationConfiguration(it)?.takeIf { it.updatedTimestampMs > messageTimestamp } ?: ExpirationConfiguration(it, userProfile.getNtsExpiry(), messageTimestamp)
+            )
+        }
     }
 
-    private fun updateContacts(contacts: Contacts) {
+    private fun updateContacts(contacts: Contacts, messageTimestamp: Long) {
         val extracted = contacts.all().toList()
-        addLibSessionContacts(extracted)
+        addLibSessionContacts(extracted, messageTimestamp)
     }
 
     override fun clearUserPic() {
@@ -503,7 +532,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
     }
 
-    private fun updateConvoVolatile(convos: ConversationVolatileConfig) {
+    private fun updateConvoVolatile(convos: ConversationVolatileConfig, messageTimestamp: Long) {
         val extracted = convos.all()
         for (conversation in extracted) {
             val threadId = when (conversation) {
@@ -520,7 +549,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         }
     }
 
-    private fun updateUserGroups(userGroups: UserGroupsConfig) {
+    private fun updateUserGroups(userGroups: UserGroupsConfig, messageTimestamp: Long) {
         val threadDb = DatabaseComponent.get(context).threadDatabase()
         val localUserPublicKey = getUserPublicKey() ?: return Log.w(
             "Loki",
@@ -572,6 +601,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         }
 
         for (group in lgc) {
+            val groupId = GroupUtil.doubleEncodeGroupID(group.sessionId)
             val existingGroup = existingClosedGroups.firstOrNull { GroupUtil.doubleDecodeGroupId(it.encodedId) == group.sessionId }
             val existingThread = existingGroup?.let { getThreadId(existingGroup.encodedId) }
             if (existingGroup != null) {
@@ -586,7 +616,6 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
             } else {
                 val members = group.members.keys.map { Address.fromSerialized(it) }
                 val admins = group.members.filter { it.value /*admin = true*/ }.keys.map { Address.fromSerialized(it) }
-                val groupId = GroupUtil.doubleEncodeGroupID(group.sessionId)
                 val title = group.name
                 val formationTimestamp = (group.joinedAt * 1000L)
                 createGroup(groupId, title, admins + members, null, null, admins, formationTimestamp)
@@ -596,9 +625,6 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                 // Store the encryption key pair
                 val keyPair = ECKeyPair(DjbECPublicKey(group.encPubKey), DjbECPrivateKey(group.encSecKey))
                 addClosedGroupEncryptionKeyPair(keyPair, group.sessionId, SnodeAPI.nowWithOffset)
-                // Set expiration timer
-                val expireTimer = group.disappearingTimer
-                setExpirationTimer(groupId, expireTimer.toInt())
                 // Notify the PN server
                 PushRegistryV1.subscribeGroup(group.sessionId, publicKey = localUserPublicKey)
                 // Notify the user
@@ -608,6 +634,12 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                 // Don't create config group here, it's from a config update
                 // Start polling
                 ClosedGroupPollerV2.shared.startPolling(group.sessionId)
+            }
+            getThreadId(Address.fromSerialized(groupId))?.let {
+                setExpirationConfiguration(
+                    getExpirationConfiguration(it)?.takeIf { it.updatedTimestampMs > messageTimestamp }
+                        ?: ExpirationConfiguration(it, afterSend(group.disappearingTimer), messageTimestamp)
+                )
             }
         }
     }
@@ -712,10 +744,10 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         SessionMetaProtocol.removeTimestamps(timestamps)
     }
 
-    override fun getMessageIdInDatabase(timestamp: Long, author: String): Long? {
+    override fun getMessageIdInDatabase(timestamp: Long, author: String): Pair<Long, Boolean>? {
         val database = DatabaseComponent.get(context).mmsSmsDatabase()
         val address = fromSerialized(author)
-        return database.getMessageFor(timestamp, address)?.getId()
+        return database.getMessageFor(timestamp, address)?.run { getId() to isMms }
     }
 
     override fun updateSentTimestamp(
@@ -834,8 +866,8 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         db.clearErrorMessage(messageID)
     }
 
-    override fun setMessageServerHash(messageID: Long, serverHash: String) {
-        DatabaseComponent.get(context).lokiMessageDatabase().setMessageServerHash(messageID, serverHash)
+    override fun setMessageServerHash(messageID: Long, mms: Boolean, serverHash: String) {
+        DatabaseComponent.get(context).lokiMessageDatabase().setMessageServerHash(messageID, mms, serverHash)
     }
 
     override fun getGroup(groupID: String): GroupRecord? {
@@ -847,9 +879,10 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         DatabaseComponent.get(context).groupDatabase().create(groupId, title, members, avatar, relay, admins, formationTimestamp)
     }
 
-    override fun createInitialConfigGroup(groupPublicKey: String, name: String, members: Map<String, Boolean>, formationTimestamp: Long, encryptionKeyPair: ECKeyPair) {
+    override fun createInitialConfigGroup(groupPublicKey: String, name: String, members: Map<String, Boolean>, formationTimestamp: Long, encryptionKeyPair: ECKeyPair, expirationTimer: Int) {
         val volatiles = configFactory.convoVolatile ?: return
         val userGroups = configFactory.userGroups ?: return
+        if (volatiles.getLegacyClosedGroup(groupPublicKey) != null && userGroups.getLegacyGroupInfo(groupPublicKey) != null) return
         val groupVolatileConfig = volatiles.getOrConstructLegacyGroup(groupPublicKey)
         groupVolatileConfig.lastRead = formationTimestamp
         volatiles.set(groupVolatileConfig)
@@ -860,7 +893,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
             priority = ConfigBase.PRIORITY_VISIBLE,
             encPubKey = (encryptionKeyPair.publicKey as DjbECPublicKey).publicKey,  // 'serialize()' inserts an extra byte
             encSecKey = encryptionKeyPair.privateKey.serialize(),
-            disappearingTimer = 0L,
+            disappearingTimer = expirationTimer.toLong(),
             joinedAt = (formationTimestamp / 1000L)
         )
         // shouldn't exist, don't use getOrConstruct + copy
@@ -871,8 +904,6 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     override fun updateGroupConfig(groupPublicKey: String) {
         val groupID = GroupUtil.doubleEncodeGroupID(groupPublicKey)
         val groupAddress = fromSerialized(groupID)
-        // TODO: probably add a check in here for isActive?
-        // TODO: also check if local user is a member / maybe run delete otherwise?
         val existingGroup = getGroup(groupID)
             ?: return Log.w("Loki-DBG", "No existing group for ${groupPublicKey.take(4)}} when updating group config")
         val userGroups = configFactory.userGroups ?: return
@@ -886,7 +917,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         val membersMap = GroupUtil.createConfigMemberMap(admins = admins, members = members)
         val latestKeyPair = getLatestClosedGroupEncryptionKeyPair(groupPublicKey)
             ?: return Log.w("Loki-DBG", "No latest closed group encryption key pair for ${groupPublicKey.take(4)}} when updating group config")
-        val recipientSettings = getRecipientSettings(groupAddress) ?: return
+
         val threadID = getThreadId(groupAddress) ?: return
         val groupInfo = userGroups.getOrConstructLegacyGroupInfo(groupPublicKey).copy(
             name = name,
@@ -894,7 +925,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
             encPubKey = (latestKeyPair.publicKey as DjbECPublicKey).publicKey,  // 'serialize()' inserts an extra byte
             encSecKey = latestKeyPair.privateKey.serialize(),
             priority = if (isPinned(threadID)) PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE,
-            disappearingTimer = recipientSettings.expireMessages.toLong(),
+            disappearingTimer = getExpirationConfiguration(threadID)?.expiryMode?.expirySeconds ?: 0L,
             joinedAt = (existingGroup.formationTimestamp / 1000L)
         )
         userGroups.set(groupInfo)
@@ -926,7 +957,7 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
 
     override fun insertIncomingInfoMessage(context: Context, senderPublicKey: String, groupID: String, type: SignalServiceGroup.Type, name: String, members: Collection<String>, admins: Collection<String>, sentTimestamp: Long) {
         val group = SignalServiceGroup(type, GroupUtil.getDecodedGroupIDAsData(groupID), SignalServiceGroup.GroupType.SIGNAL, name, members.toList(), null, admins.toList())
-        val m = IncomingTextMessage(fromSerialized(senderPublicKey), 1, sentTimestamp, "", Optional.of(group), 0, true, false)
+        val m = IncomingTextMessage(fromSerialized(senderPublicKey), 1, sentTimestamp, "", Optional.of(group), 0, 0, true, false)
         val updateData = UpdateMessageData.buildGroupUpdate(type, name, members)?.toJSON()
         val infoMessage = IncomingGroupMessage(m, groupID, updateData, true)
         val smsDB = DatabaseComponent.get(context).smsDatabase()
@@ -934,11 +965,10 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     }
 
     override fun insertOutgoingInfoMessage(context: Context, groupID: String, type: SignalServiceGroup.Type, name: String, members: Collection<String>, admins: Collection<String>, threadID: Long, sentTimestamp: Long) {
-        val userPublicKey = getUserPublicKey()
+        val userPublicKey = getUserPublicKey()!!
         val recipient = Recipient.from(context, fromSerialized(groupID), false)
-
         val updateData = UpdateMessageData.buildGroupUpdate(type, name, members)?.toJSON() ?: ""
-        val infoMessage = OutgoingGroupMediaMessage(recipient, updateData, groupID, null, sentTimestamp, 0, true, null, listOf(), listOf())
+        val infoMessage = OutgoingGroupMediaMessage(recipient, updateData, groupID, null, sentTimestamp, 0, 0, true, null, listOf(), listOf())
         val mmsDB = DatabaseComponent.get(context).mmsDatabase()
         val mmsSmsDB = DatabaseComponent.get(context).mmsSmsDatabase()
         if (mmsSmsDB.getMessageFor(sentTimestamp, userPublicKey) != null) return
@@ -994,23 +1024,6 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     override fun updateTimestampUpdated(groupID: String, updatedTimestamp: Long) {
         DatabaseComponent.get(context).groupDatabase()
             .updateTimestampUpdated(groupID, updatedTimestamp)
-    }
-
-    override fun setExpirationTimer(address: String, duration: Int) {
-        val recipient = Recipient.from(context, fromSerialized(address), false)
-        DatabaseComponent.get(context).recipientDatabase().setExpireMessages(recipient, duration)
-        if (recipient.isContactRecipient && !recipient.isLocalNumber) {
-            configFactory.contacts?.upsertContact(address) {
-                this.expiryMode = if (duration != 0) {
-                    ExpiryMode.AfterRead(duration.toLong())
-                } else { // = 0 / delete
-                    ExpiryMode.NONE
-                }
-            }
-            if (configFactory.contacts?.needsPush() == true) {
-                ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
-            }
-        }
     }
 
     override fun setServerCapabilities(server: String, capabilities: List<String>) {
@@ -1135,11 +1148,10 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     }
 
     override fun getRecipientSettings(address: Address): Recipient.RecipientSettings? {
-        val recipientSettings = DatabaseComponent.get(context).recipientDatabase().getRecipientSettings(address)
-        return if (recipientSettings.isPresent) { recipientSettings.get() } else null
+        return DatabaseComponent.get(context).recipientDatabase().getRecipientSettings(address).orNull()
     }
 
-    override fun addLibSessionContacts(contacts: List<LibSessionContact>) {
+    override fun addLibSessionContacts(contacts: List<LibSessionContact>, timestamp: Long) {
         val mappingDb = DatabaseComponent.get(context).blindedIdMappingDatabase()
         val moreContacts = contacts.filter { contact ->
             val id = SessionId(contact.id)
@@ -1172,13 +1184,19 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
                 profileManager.setProfilePicture(context, recipient, null, null)
             }
             if (contact.priority == PRIORITY_HIDDEN) {
-                getThreadId(fromSerialized(contact.id))?.let { conversationThreadId ->
-                    deleteConversation(conversationThreadId)
-                }
+                getThreadId(fromSerialized(contact.id))?.let(::deleteConversation)
             } else {
-                getThreadId(fromSerialized(contact.id))?.let { conversationThreadId ->
-                    setPinned(conversationThreadId, contact.priority == PRIORITY_PINNED)
-                }
+                (
+                    getThreadId(address) ?: getOrCreateThreadIdFor(address).also {
+                        setThreadDate(it, 0)
+                    }
+                ).also { setPinned(it, contact.priority == PRIORITY_PINNED) }
+            }
+            getThreadId(recipient)?.let {
+                setExpirationConfiguration(
+                    getExpirationConfiguration(it)?.takeIf { it.updatedTimestampMs > timestamp }
+                        ?: ExpirationConfiguration(it, contact.expiryMode, timestamp)
+                )
             }
             setRecipientHash(recipient, contact.hashCode().toString())
         }
@@ -1293,20 +1311,26 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         threadDb.setDate(threadId, newDate)
     }
 
+    override fun getLastLegacyRecipient(threadRecipient: String): String? =
+        DatabaseComponent.get(context).lokiAPIDatabase().getLastLegacySenderAddress(threadRecipient)
+
+    override fun setLastLegacyRecipient(threadRecipient: String, senderRecipient: String?) {
+        DatabaseComponent.get(context).lokiAPIDatabase().setLastLegacySenderAddress(threadRecipient, senderRecipient)
+    }
+
     override fun deleteConversation(threadID: Long) {
-        val recipient = getRecipientForThread(threadID)
         val threadDB = DatabaseComponent.get(context).threadDatabase()
         val groupDB = DatabaseComponent.get(context).groupDatabase()
         threadDB.deleteConversation(threadID)
-        if (recipient != null) {
-            if (recipient.isContactRecipient) {
+        val recipient = getRecipientForThread(threadID) ?: return
+        when {
+            recipient.isContactRecipient -> {
                 if (recipient.isLocalNumber) return
                 val contacts = configFactory.contacts ?: return
-                contacts.upsertContact(recipient.address.serialize()) {
-                    this.priority = PRIORITY_HIDDEN
-                }
+                contacts.upsertContact(recipient.address.serialize()) { priority = PRIORITY_HIDDEN }
                 ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
-            } else if (recipient.isClosedGroupRecipient) {
+            }
+            recipient.isClosedGroupRecipient -> {
                 // TODO: handle closed group
                 val volatile = configFactory.convoVolatile ?: return
                 val groups = configFactory.userGroups ?: return
@@ -1338,14 +1362,17 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         val recipient = Recipient.from(context, address, false)
 
         if (recipient.isBlocked) return
-
         val threadId = getThreadId(recipient) ?: return
-
+        val expirationConfig = getExpirationConfiguration(threadId)
+        val expiryMode = expirationConfig?.expiryMode ?: ExpiryMode.NONE
+        val expiresInMillis = expiryMode.expiryMillis
+        val expireStartedAt = if (expiryMode is ExpiryMode.AfterSend) sentTimestamp else 0
         val mediaMessage = IncomingMediaMessage(
             address,
             sentTimestamp,
             -1,
-            0,
+            expiresInMillis,
+            expireStartedAt,
             false,
             false,
             false,
@@ -1360,6 +1387,8 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
         )
 
         database.insertSecureDecryptedMessageInbox(mediaMessage, threadId, runThreadUpdate = true)
+
+        SSKEnvironment.shared.messageExpirationManager.maybeStartExpiration(sentTimestamp, senderPublicKey, expiryMode)
     }
 
     override fun insertMessageRequestResponse(response: MessageRequestResponse) {
@@ -1440,11 +1469,11 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
             }
             recipientDb.setApproved(sender, true)
             recipientDb.setApprovedMe(sender, true)
-
             val message = IncomingMediaMessage(
                 sender.address,
                 response.sentTimestamp!!,
                 -1,
+                0,
                 0,
                 false,
                 false,
@@ -1485,8 +1514,15 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     override fun insertCallMessage(senderPublicKey: String, callMessageType: CallMessageType, sentTimestamp: Long) {
         val database = DatabaseComponent.get(context).smsDatabase()
         val address = fromSerialized(senderPublicKey)
-        val callMessage = IncomingTextMessage.fromCallInfo(callMessageType, address, Optional.absent(), sentTimestamp)
+        val recipient = Recipient.from(context, address, false)
+        val threadId = DatabaseComponent.get(context).threadDatabase().getOrCreateThreadIdFor(recipient)
+        val expirationConfig = getExpirationConfiguration(threadId)
+        val expiryMode = expirationConfig?.expiryMode?.coerceSendToRead() ?: ExpiryMode.NONE
+        val expiresInMillis = expiryMode.expiryMillis
+        val expireStartedAt = if (expiryMode is ExpiryMode.AfterSend) sentTimestamp else 0
+        val callMessage = IncomingTextMessage.fromCallInfo(callMessageType, address, Optional.absent(), sentTimestamp, expiresInMillis, expireStartedAt)
         database.insertCallMessage(callMessage)
+        SSKEnvironment.shared.messageExpirationManager.maybeStartExpiration(sentTimestamp, senderPublicKey, expiryMode)
     }
 
     override fun conversationHasOutgoing(userPublicKey: String): Boolean {
@@ -1622,5 +1658,101 @@ open class Storage(context: Context, helper: SQLCipherOpenHelper, private val co
     override fun blockedContacts(): List<Recipient> {
         val recipientDb = DatabaseComponent.get(context).recipientDatabase()
         return recipientDb.blockedContacts
+    }
+
+    override fun getExpirationConfiguration(threadId: Long): ExpirationConfiguration? {
+        val recipient = getRecipientForThread(threadId) ?: return null
+        val dbExpirationMetadata = DatabaseComponent.get(context).expirationConfigurationDatabase().getExpirationConfiguration(threadId) ?: return null
+        return when {
+            recipient.isLocalNumber -> configFactory.user?.getNtsExpiry()
+            recipient.isContactRecipient -> {
+                // read it from contacts config if exists
+                recipient.address.serialize().takeIf { it.startsWith(IdPrefix.STANDARD.value) }
+                    ?.let { configFactory.contacts?.get(it)?.expiryMode }
+            }
+            recipient.isClosedGroupRecipient -> {
+                // read it from group config if exists
+                GroupUtil.doubleDecodeGroupId(recipient.address.serialize())
+                    .let { configFactory.userGroups?.getLegacyGroupInfo(it) }
+                    ?.run { disappearingTimer.takeIf { it != 0L }?.let(ExpiryMode::AfterSend) ?: ExpiryMode.NONE }
+            }
+            else -> null
+        }?.let { ExpirationConfiguration(threadId, it, dbExpirationMetadata.updatedTimestampMs) }
+    }
+
+    override fun setExpirationConfiguration(config: ExpirationConfiguration) {
+        val recipient = getRecipientForThread(config.threadId) ?: return
+
+        val expirationDb = DatabaseComponent.get(context).expirationConfigurationDatabase()
+        val currentConfig = expirationDb.getExpirationConfiguration(config.threadId)
+        if (currentConfig != null && currentConfig.updatedTimestampMs >= config.updatedTimestampMs) return
+        val expiryMode = config.expiryMode
+
+        if (expiryMode == ExpiryMode.NONE) {
+            // Clear the legacy recipients on updating config to be none
+            DatabaseComponent.get(context).lokiAPIDatabase().setLastLegacySenderAddress(recipient.address.serialize(), null)
+        }
+
+        if (recipient.isClosedGroupRecipient) {
+            val userGroups = configFactory.userGroups ?: return
+            val groupPublicKey = GroupUtil.addressToGroupSessionId(recipient.address)
+            val groupInfo = userGroups.getLegacyGroupInfo(groupPublicKey)
+                ?.copy(disappearingTimer = expiryMode.expirySeconds) ?: return
+            userGroups.set(groupInfo)
+        } else if (recipient.isLocalNumber) {
+            val user = configFactory.user ?: return
+            user.setNtsExpiry(expiryMode)
+        } else if (recipient.isContactRecipient) {
+            val contacts = configFactory.contacts ?: return
+
+            val contact = contacts.get(recipient.address.serialize())?.copy(expiryMode = expiryMode) ?: return
+            contacts.set(contact)
+        }
+        expirationDb.setExpirationConfiguration(
+            config.run { copy(expiryMode = expiryMode) }
+        )
+    }
+
+    override fun getExpiringMessages(messageIds: List<Long>): List<Pair<Long, Long>> {
+        val expiringMessages = mutableListOf<Pair<Long, Long>>()
+        val smsDb = DatabaseComponent.get(context).smsDatabase()
+        smsDb.readerFor(smsDb.expirationNotStartedMessages).use { reader ->
+            while (reader.next != null) {
+                if (messageIds.isEmpty() || reader.current.id in messageIds) {
+                    expiringMessages.add(reader.current.id to reader.current.expiresIn)
+                }
+            }
+        }
+        val mmsDb = DatabaseComponent.get(context).mmsDatabase()
+        mmsDb.expireNotStartedMessages.use { reader ->
+            while (reader.next != null) {
+                if (messageIds.isEmpty() || reader.current.id in messageIds) {
+                    expiringMessages.add(reader.current.id to reader.current.expiresIn)
+                }
+            }
+        }
+        return expiringMessages
+    }
+
+    override fun updateDisappearingState(
+        messageSender: String,
+        threadID: Long,
+        disappearingState: Recipient.DisappearingState
+    ) {
+        val threadDb = DatabaseComponent.get(context).threadDatabase()
+        val lokiDb = DatabaseComponent.get(context).lokiAPIDatabase()
+        val recipient = threadDb.getRecipientForThreadId(threadID) ?: return
+        val recipientAddress = recipient.address.serialize()
+        DatabaseComponent.get(context).recipientDatabase()
+            .setDisappearingState(recipient, disappearingState);
+        val currentLegacyRecipient = lokiDb.getLastLegacySenderAddress(recipientAddress)
+        val currentExpiry = getExpirationConfiguration(threadID)
+        if (disappearingState == DisappearingState.LEGACY
+            && currentExpiry?.isEnabled == true
+            && ExpirationConfiguration.isNewConfigEnabled) { // only set "this person is legacy" if new config enabled
+            lokiDb.setLastLegacySenderAddress(recipientAddress, messageSender)
+        } else if (messageSender == currentLegacyRecipient) {
+            lokiDb.setLastLegacySenderAddress(recipientAddress, null)
+        }
     }
 }

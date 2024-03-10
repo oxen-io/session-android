@@ -533,14 +533,10 @@ object SnodeAPI {
 
     fun getExpiries(messageHashes: List<String>, publicKey: String) : RawResponsePromise {
         val userEd25519KeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair() ?: return Promise.ofFail(NullPointerException("No user key pair"))
+        val hashes = messageHashes.takeIf { it.size != 1 } ?: (messageHashes + "///////////////////////////////////////////") // TODO remove this when bug is fixed on nodes.
         return retryIfNeeded(maxRetryCount) {
             val timestamp = System.currentTimeMillis() + clockOffset
-            val params = mutableMapOf(
-                "pubkey" to publicKey,
-                "messages" to messageHashes,
-                "timestamp" to timestamp
-            )
-            val signData = "${Snode.Method.GetExpiries.rawValue}$timestamp${messageHashes.joinToString(separator = "")}".toByteArray()
+            val signData = "${Snode.Method.GetExpiries.rawValue}$timestamp${hashes.joinToString(separator = "")}".toByteArray()
 
             val ed25519PublicKey = userEd25519KeyPair.publicKey.asHexString
             val signature = ByteArray(Sign.BYTES)
@@ -555,9 +551,14 @@ object SnodeAPI {
                 Log.e("Loki", "Signing data failed with user secret key", e)
                 return@retryIfNeeded Promise.ofFail(e)
             }
-            params["pubkey_ed25519"] = ed25519PublicKey
-            params["signature"] = Base64.encodeBytes(signature)
-            getSingleTargetSnode(publicKey).bind { snode ->
+            val params = mapOf(
+                "pubkey" to publicKey,
+                "messages" to hashes,
+                "timestamp" to timestamp,
+                "pubkey_ed25519" to ed25519PublicKey,
+                "signature" to Base64.encodeBytes(signature)
+            )
+            getSingleTargetSnode(publicKey) bind { snode ->
                 invoke(Snode.Method.GetExpiries, snode, params, publicKey)
             }
         }
@@ -755,6 +756,62 @@ object SnodeAPI {
                         }.fail { e ->
                             Log.e("Loki", "Failed to clear data", e)
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    fun updateExpiry(updatedExpiryMs: Long, serverHashes: List<String>): Promise<Map<String, Pair<List<String>, Long>>, Exception> {
+        return retryIfNeeded(maxRetryCount) {
+            val module = MessagingModuleConfiguration.shared
+            val userED25519KeyPair = module.getUserED25519KeyPair() ?: return@retryIfNeeded Promise.ofFail(Error.NoKeyPair)
+            val userPublicKey = module.storage.getUserPublicKey() ?: return@retryIfNeeded Promise.ofFail(Error.NoKeyPair)
+            val updatedExpiryMsWithNetworkOffset = updatedExpiryMs + clockOffset
+            getSingleTargetSnode(userPublicKey).bind { snode ->
+                retryIfNeeded(maxRetryCount) {
+                    // "expire" || expiry || messages[0] || ... || messages[N]
+                    val verificationData =
+                        (Snode.Method.Expire.rawValue + updatedExpiryMsWithNetworkOffset + serverHashes.fold("") { a, v -> a + v }).toByteArray()
+                    val signature = ByteArray(Sign.BYTES)
+                    sodium.cryptoSignDetached(
+                        signature,
+                        verificationData,
+                        verificationData.size.toLong(),
+                        userED25519KeyPair.secretKey.asBytes
+                    )
+                    val params = mapOf(
+                        "pubkey" to userPublicKey,
+                        "pubkey_ed25519" to userED25519KeyPair.publicKey.asHexString,
+                        "expiry" to updatedExpiryMs,
+                        "messages" to serverHashes,
+                        "signature" to Base64.encodeBytes(signature)
+                    )
+                    invoke(Snode.Method.Expire, snode, params, userPublicKey).map { rawResponse ->
+                        val swarms = rawResponse["swarm"] as? Map<String, Any> ?: return@map mapOf()
+                        val result = swarms.mapNotNull { (hexSnodePublicKey, rawJSON) ->
+                            val json = rawJSON as? Map<String, Any> ?: return@mapNotNull null
+                            val isFailed = json["failed"] as? Boolean ?: false
+                            val statusCode = json["code"] as? String
+                            val reason = json["reason"] as? String
+                            hexSnodePublicKey to if (isFailed) {
+                                Log.e("Loki", "Failed to update expiry for: $hexSnodePublicKey due to error: $reason ($statusCode).")
+                                listOf<String>() to 0L
+                            } else {
+                                val hashes = json["updated"] as List<String>
+                                val expiryApplied = json["expiry"] as Long
+                                val signature = json["signature"] as String
+                                val snodePublicKey = Key.fromHexString(hexSnodePublicKey)
+                                // The signature looks like ( PUBKEY_HEX || RMSG[0] || ... || RMSG[N] || DMSG[0] || ... || DMSG[M] )
+                                val message = (userPublicKey + serverHashes.fold("") { a, v -> a + v } + hashes.fold("") { a, v -> a + v }).toByteArray()
+                                if (sodium.cryptoSignVerifyDetached(Base64.decode(signature), message, message.size, snodePublicKey.asBytes)) {
+                                    hashes to expiryApplied
+                                } else listOf<String>() to 0L
+                            }
+                        }
+                        return@map result.toMap()
+                    }.fail { e ->
+                        Log.e("Loki", "Failed to update expiry", e)
                     }
                 }
             }

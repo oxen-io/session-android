@@ -10,12 +10,10 @@ class SharedConfigurationMessage(val kind: SharedConfigMessage.Kind, val data: B
     override val isSelfSendValid: Boolean = true
 
     companion object {
-        fun fromProto(proto: SignalServiceProtos.Content): SharedConfigurationMessage? {
-            if (!proto.hasSharedConfigMessage()) return null
-            val sharedConfig = proto.sharedConfigMessage
-            if (!sharedConfig.hasKind() || !sharedConfig.hasData()) return null
-            return SharedConfigurationMessage(sharedConfig.kind, sharedConfig.data.toByteArray(), sharedConfig.seqno)
-        }
+        fun fromProto(proto: SignalServiceProtos.Content): SharedConfigurationMessage? =
+            proto.takeIf { it.hasSharedConfigMessage() }?.sharedConfigMessage
+                ?.takeIf { it.hasKind() && it.hasData() }
+                ?.run { SharedConfigurationMessage(kind, data.toByteArray(), seqno) }
     }
 
     override fun isValid(): Boolean {

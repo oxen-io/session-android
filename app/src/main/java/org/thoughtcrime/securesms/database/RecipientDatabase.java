@@ -46,7 +46,8 @@ public class RecipientDatabase extends Database {
   private static final String COLOR                    = "color";
   private static final String SEEN_INVITE_REMINDER     = "seen_invite_reminder";
   private static final String DEFAULT_SUBSCRIPTION_ID  = "default_subscription_id";
-  private static final String EXPIRE_MESSAGES          = "expire_messages";
+          static final String EXPIRE_MESSAGES          = "expire_messages";
+  private static final String DISAPPEARING_STATE       = "disappearing_state";
   private static final String REGISTERED               = "registered";
   private static final String PROFILE_KEY              = "profile_key";
   private static final String SYSTEM_DISPLAY_NAME      = "system_display_name";
@@ -70,7 +71,7 @@ public class RecipientDatabase extends Database {
       PROFILE_KEY, SYSTEM_DISPLAY_NAME, SYSTEM_PHOTO_URI, SYSTEM_PHONE_LABEL, SYSTEM_CONTACT_URI,
       SIGNAL_PROFILE_NAME, SIGNAL_PROFILE_AVATAR, PROFILE_SHARING, NOTIFICATION_CHANNEL,
       UNIDENTIFIED_ACCESS_MODE,
-      FORCE_SMS_SELECTION, NOTIFY_TYPE, WRAPPER_HASH, BLOCKS_COMMUNITY_MESSAGE_REQUESTS
+      FORCE_SMS_SELECTION, NOTIFY_TYPE, DISAPPEARING_STATE, WRAPPER_HASH, BLOCKS_COMMUNITY_MESSAGE_REQUESTS
   };
 
   static final List<String> TYPED_RECIPIENT_PROJECTION = Stream.of(RECIPIENT_PROJECTION)
@@ -138,6 +139,11 @@ public class RecipientDatabase extends Database {
             "OR "+ADDRESS+" IN (SELECT "+GroupDatabase.TABLE_NAME+"."+GroupDatabase.ADMINS+" FROM "+GroupDatabase.TABLE_NAME+")))";
   }
 
+  public static String getCreateDisappearingStateCommand() {
+    return "ALTER TABLE "+ TABLE_NAME + " " +
+            "ADD COLUMN " + DISAPPEARING_STATE + " INTEGER DEFAULT 0;";
+  }
+
   public static String getAddWrapperHash() {
     return "ALTER TABLE "+TABLE_NAME+" "+
             "ADD COLUMN "+WRAPPER_HASH+" TEXT DEFAULT NULL;";
@@ -183,6 +189,7 @@ public class RecipientDatabase extends Database {
     boolean approvedMe             = cursor.getInt(cursor.getColumnIndexOrThrow(APPROVED_ME))          == 1;
     String  messageRingtone        = cursor.getString(cursor.getColumnIndexOrThrow(NOTIFICATION));
     String  callRingtone           = cursor.getString(cursor.getColumnIndexOrThrow(CALL_RINGTONE));
+    int     disappearingState      = cursor.getInt(cursor.getColumnIndexOrThrow(DISAPPEARING_STATE));
     int     messageVibrateState    = cursor.getInt(cursor.getColumnIndexOrThrow(VIBRATE));
     int     callVibrateState       = cursor.getInt(cursor.getColumnIndexOrThrow(CALL_VIBRATE));
     long    muteUntil              = cursor.getLong(cursor.getColumnIndexOrThrow(MUTE_UNTIL));
@@ -226,6 +233,7 @@ public class RecipientDatabase extends Database {
 
     return Optional.of(new RecipientSettings(blocked, approved, approvedMe, muteUntil,
                                              notifyType,
+                                             Recipient.DisappearingState.fromId(disappearingState),
                                              Recipient.VibrateState.fromId(messageVibrateState),
                                              Recipient.VibrateState.fromId(callVibrateState),
                                              Util.uri(messageRingtone), Util.uri(callRingtone),
@@ -335,16 +343,6 @@ public class RecipientDatabase extends Database {
     notifyRecipientListeners();
   }
 
-  public void setExpireMessages(@NonNull Recipient recipient, int expiration) {
-    recipient.setExpireMessages(expiration);
-
-    ContentValues values = new ContentValues(1);
-    values.put(EXPIRE_MESSAGES, expiration);
-    updateOrInsert(recipient.getAddress(), values);
-    recipient.resolve().setExpireMessages(expiration);
-    notifyRecipientListeners();
-  }
-
   public void setUnidentifiedAccessMode(@NonNull Recipient recipient, @NonNull UnidentifiedAccessMode unidentifiedAccessMode) {
     ContentValues values = new ContentValues(1);
     values.put(UNIDENTIFIED_ACCESS_MODE, unidentifiedAccessMode.getMode());
@@ -441,6 +439,14 @@ public class RecipientDatabase extends Database {
     }
     reader.close();
     return returnList;
+  }
+
+  public void setDisappearingState(@NonNull Recipient recipient, @NonNull Recipient.DisappearingState disappearingState) {
+    ContentValues values = new ContentValues();
+    values.put(DISAPPEARING_STATE, disappearingState.getId());
+    updateOrInsert(recipient.getAddress(), values);
+    recipient.resolve().setDisappearingState(disappearingState);
+    notifyRecipientListeners();
   }
 
   public static class RecipientReader implements Closeable {
