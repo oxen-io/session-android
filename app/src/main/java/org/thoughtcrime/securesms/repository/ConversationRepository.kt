@@ -1,13 +1,22 @@
 package org.thoughtcrime.securesms.repository
 
 import network.loki.messenger.libsession_util.util.ExpiryMode
+
 import android.content.ContentResolver
 import android.content.Context
+
 import app.cash.copper.Query
 import app.cash.copper.flow.observeQuery
+
 import dagger.hilt.android.qualifiers.ApplicationContext
+
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
+
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+
 import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
@@ -22,8 +31,9 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
-import org.session.libsignal.utilities.Log
+
 import org.session.libsignal.utilities.toHexString
+
 import org.thoughtcrime.securesms.database.DatabaseContentProviders
 import org.thoughtcrime.securesms.database.DraftDatabase
 import org.thoughtcrime.securesms.database.ExpirationConfigurationDatabase
@@ -40,10 +50,8 @@ import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
+
 import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 interface ConversationRepository {
     fun maybeGetRecipientForThreadId(threadId: Long): Recipient?
@@ -57,36 +65,17 @@ interface ConversationRepository {
     fun setBlocked(recipient: Recipient, blocked: Boolean)
     fun deleteLocally(recipient: Recipient, message: MessageRecord)
     fun setApproved(recipient: Recipient, isApproved: Boolean)
-
-    suspend fun deleteForEveryone(
-        threadId: Long,
-        recipient: Recipient,
-        message: MessageRecord
-    ): ResultOf<Unit>
-
+    suspend fun deleteForEveryone(threadId: Long, recipient: Recipient, message: MessageRecord): ResultOf<Unit>
     fun buildUnsendRequest(recipient: Recipient, message: MessageRecord): UnsendRequest?
-
-    suspend fun deleteMessageWithoutUnsendRequest(
-        threadId: Long,
-        messages: Set<MessageRecord>
-    ): ResultOf<Unit>
-
+    suspend fun deleteMessageWithoutUnsendRequest(threadId: Long, messages: Set<MessageRecord>): ResultOf<Unit>
     suspend fun banUser(threadId: Long, recipient: Recipient): ResultOf<Unit>
-
     suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): ResultOf<Unit>
-
     suspend fun deleteThread(threadId: Long): ResultOf<Unit>
-
     suspend fun deleteMessageRequest(thread: ThreadRecord): ResultOf<Unit>
-
     suspend fun clearAllMessageRequests(block: Boolean): ResultOf<Unit>
-
     suspend fun acceptMessageRequest(threadId: Long, recipient: Recipient): ResultOf<Unit>
-
     fun declineMessageRequest(threadId: Long)
-
     fun hasReceived(threadId: Long): Boolean
-
 }
 
 class DefaultConversationRepository @Inject constructor(
@@ -234,32 +223,6 @@ class DefaultConversationRepository @Inject constructor(
         )
     }
 
-/*
-
-    override fun buildUnsendRequest(recipient: Recipient, message: MessageRecord): UnsendRequest? {
-<<<<<<< HEAD - THIS IS ME
-        if (recipient.isCommunityRecipient) return null
-        messageDataProvider.getServerHashForMessage(message.id) ?: return null
-        val unsendRequest = UnsendRequest()
-        if (message.isOutgoing) {
-            unsendRequest.author = textSecurePreferences.getLocalNumber()
-        } else {
-            unsendRequest.author = message.individualRecipient.address.contactIdentifier()
-        }
-        unsendRequest.timestamp = message.timestamp
-
-        return unsendRequest
-=======
-        if (recipient.isOpenGroupRecipient) return null
-        messageDataProvider.getServerHashForMessage(message.id, message.isMms) ?: return null
-        return UnsendRequest(
-            author = message.takeUnless { it.isOutgoing }?.run { individualRecipient.address.contactIdentifier() } ?: textSecurePreferences.getLocalNumber(),
-            timestamp = message.timestamp
-        )
->>>>>>> dev THIS IS LATEST DEV!
-    }
-    */
-
     override suspend fun deleteMessageWithoutUnsendRequest(
         threadId: Long,
         messages: Set<MessageRecord>
@@ -306,25 +269,16 @@ class DefaultConversationRepository @Inject constructor(
 
     override suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): ResultOf<Unit> =
         suspendCoroutine { continuation ->
-
-
             // Note: This sessionId could be the blinded Id
             val sessionID = recipient.address.toString()
             val openGroup = lokiThreadDb.getOpenGroupChat(threadId)!!
 
-            Log.d("[ACL]", "Hit ConversationRepository.banAndDeleteAll - attempting to ban user w/ session ID: $sessionID + from room ${openGroup.room} on server ${openGroup.server}")
-
-            var foo = OpenGroupApi.banAndDeleteAll(sessionID, openGroup.room, openGroup.server)
+            OpenGroupApi.banAndDeleteAll(sessionID, openGroup.room, openGroup.server)
                 .success {
-                    Log.d("[ACL]", "Got success!")
                     continuation.resume(ResultOf.Success(Unit))
                 }.fail { error ->
-                    Log.d("[ACL]", "Got fail!")
                     continuation.resumeWithException(error)
                 }
-
-            //val stuff = foo.context.multipleCompletion
-            //stuff.
         }
 
     override suspend fun deleteThread(threadId: Long): ResultOf<Unit> {

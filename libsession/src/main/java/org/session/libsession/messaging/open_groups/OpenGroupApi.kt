@@ -659,11 +659,6 @@ object OpenGroupApi {
     }
 
     fun banAndDeleteAll(publicKey: String, room: String, server: String): Promise<Unit, Exception> {
-
-        Log.d("[ACL]", "Hit OpenGroupApi.banAndDeleteAll")
-
-        // ACL I CAN USE THIS PUBLIC KEY TO GENERATE A BLINDED ID ALONG WITH THE USER'S SESSION ID - but I think I want the other way around? Session ID from blinded ID?
-
         val requests = mutableListOf<BatchRequestInfo<*>>(
             // Ban request
             BatchRequestInfo(
@@ -684,11 +679,6 @@ object OpenGroupApi {
         )
         return sequentialBatch(server, requests).map {
             Log.d("Loki", "Banned user: $publicKey from: $server.$room.")
-
-            Log.d("[ACL]", "Banned user: $publicKey from: $server.$room.")
-
-
-
         }
     }
 

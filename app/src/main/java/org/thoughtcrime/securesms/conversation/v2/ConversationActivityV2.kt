@@ -1840,25 +1840,19 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
-
-    // Delete all selected messages, whether locally or both local & remote.
-    // Note: This is NOT called during a ban & delete operation from a community or closed group -
-    // it is called when you go to delete a message directly.
-    // Also: Different conversation views have different delete options:
-    //  - 1-on-1 conversations have the options "Delete just for me" & "Delete for me and <OTHER>",
-    //  - Closed groups ONLY have the option "Delete just for me", and
-    //  - Communities ONLY have the option "Delete selected messages" which appears as a dialog
-    //  rather than a bottom-fragment shave an option to "Delete just for me" or "Delete for
-    //  everyone" and results in a "Delete for everyone" operation occurring.
-    // Finally: We also need to take into account whether the set of messages (1 or more, depending
-    // on how many are selected before the user tries to delete) are all our sent messages, or all
-    // other people's messages, or a mix!
+    // Note: The messages in the provided set may be a single message, or multiple if there is a
+    // group of selected messages.
     override fun deleteMessages(messages: Set<MessageRecord>) {
-        val recipient = viewModel.recipient ?: return
+        val recipient = viewModel.recipient
+        if (recipient == null) {
+            Log.w("ConversationActivityV2", "Asked to delete messages but could not obtain viewModel recipient - aborting.")
+            return
+        }
+
         val allSentByCurrentUser = messages.all { it.isOutgoing }
         val allHasHash = messages.all { lokiMessageDb.getMessageServerHash(it.id, it.isMms) != null }
         if (recipient.isCommunityRecipient) {
-            val messageCount = 1
+            val messageCount = 1 // Only used for plurals string
 
             showSessionDialog {
                 title(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
@@ -1886,7 +1880,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)
         } else {
             val messageCount = 1
-
             showSessionDialog {
                 title(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
                 text(resources.getQuantityString(R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages, messageCount, messageCount))
@@ -1895,102 +1888,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             }
         }
     }
-
-
-//    override fun deleteMessages(messages: Set<MessageRecord>) {
-//
-//        Log.d("[ACL]", "Hit ConversationActivity.deleteMessages - count of messages in the set: ${messages.count()}")
-//
-//
-//        // If we have a view model recipient..
-//        val viewModelRecipient = viewModel.recipient
-//
-//        val allSentByCurrentUser = messages.all { it.isOutgoing }
-////<<<<<<< HEAD
-////        val allHasHash = messages.all { lokiMessageDb.getMessageServerHash(it.id) != null }
-////=======
-//        val allHasHash = messages.all { lokiMessageDb.getMessageServerHash(it.id, it.isMms) != null }
-//
-//        if
-//
-//        if (viewModelRecipient.isCommunityRecipient) {
-//            val messageCount = 1
-////>>>>>>> dev
-//
-//
-//        }
-//
-//
-//        Log.d("[ACL]", "The viewModelRecipient of the message to delete is: ${viewModelRecipient?.address} - community recipient?: ${viewModelRecipient?.isCommunityRecipient}")
-//
-
-//        if (viewModelRecipient != null) {
-//
-//            // ..and the recipient is a community then we can attempt to delete for everyone
-//            if (viewModelRecipient.isCommunityRecipient) {
-//                val messageCount = 1
-//                showSessionDialog {
-//                    title(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
-//                    text(resources.getQuantityString(R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages, messageCount, messageCount))
-//                    button(R.string.delete) { messages.forEach(viewModel::deleteForEveryone); endActionMode() }
-//                    cancelButton { endActionMode() }
-//                }
-//            } else if (viewModelRecipient.isClosedGroupRecipient) {
-//
-//            }
-//        }
-//
-//        var firstMsg = messages.first()
-//        val firstMsgRecipient = firstMsg.recipient
-//        Log.d("[ACL]", "First msg recipient address is: ${firstMsgRecipient.address}")
-//
-//
-//        val hasMsgRecipient   = (firstMsg.recipient == null)
-//        if (!hasGroupRecipient && !hasMsgRecipient) {
-//            Log.w(this::class.simpleName, "We have neither a group nor msg recipient to delete this message.. but we'll try to delete it anyway.")
-//        }
-//
-//        Log.d("[ACL]", "We DO have a recipient, their address is:  ${viewModel.recipient!!.address}")
-//
-//        if (hasGroupRecipient && viewModel.recipient.isGroupRecipient) { deleteMessagesForCommunity(messages) }
-//        else if (hasMsgRecipient)
-
-//        val recipient = viewModel.recipient!!
-//
-//
-//
-//
-//
-//        if (recipient.isCommunityRecipient) {
-//            Log.d("[ACL]", "In a community and about to show delete for everyone UI")
-//            showDeleteForEveryoneUI(messages)
-//        } else if (allSentByCurrentUser && allHasHash) {
-//            val bottomSheet = DeleteOptionsBottomSheet()
-//            bottomSheet.recipient = recipient
-//            bottomSheet.onDeleteForMeTapped = {
-//                messages.forEach(viewModel::deleteLocally)
-//                bottomSheet.dismiss()
-//                endActionMode()
-//            }
-//            bottomSheet.onDeleteForEveryoneTapped = {
-//                messages.forEach(viewModel::deleteForEveryone)
-//                bottomSheet.dismiss()
-//                endActionMode()
-//            }
-//            bottomSheet.onCancelTapped = {
-//                bottomSheet.dismiss()
-//                endActionMode()
-//            }
-//            bottomSheet.show(supportFragmentManager, bottomSheet.tag)
-//            Log.d("[ACL]", "All messages are ours & we have hashes & not a community so about to show deleteOrDeleteForEveryone UI")
-//            showDeleteOrDeleteForEveryoneInCommunityUI(messages)
-//        }
-//        else // This is NOT a community and NOT all messages are ours
-//        {
-//            Log.d("[ACL]", "This delete op. is NOT on a community and NOT all messages are ours so about to show local delete UI")
-//            showDeleteLocallyUI(messages)
-//        }
-//    }
 
     override fun banUser(messages: Set<MessageRecord>) {
         showSessionDialog {
@@ -2001,18 +1898,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
-    // Note: We only get a single message in this `messages` set, but it's from the user being banned.
-    // When this is passed through to `viewModel.bandAndDeleteAll` the messages on the server are
-    // deleted correctly - but we need to intervene to remove all the messages from our local
-    // SmsMmsDatabase and from the ConversationRecyclerView.
     override fun banAndDeleteAll(messages: Set<MessageRecord>) {
-
-        Log.d("[ACL]", "Hit ConversationActivityV2.banAndDeleteAll - num messages in set is: ${messages.count()}")
-
-        for (message in messages) {
-            Log.d("[ACL]", "The messages we got are: ${message.id} from ${message.recipient.address} - is outgoing?: ${message.isOutgoing}")
-        }
-
         val thisActivity = this
         showSessionDialog {
             title(R.string.ConversationFragment_ban_selected_user)
@@ -2022,43 +1908,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
-    //
+    // Note: The message provided is used to extract the sender Id so we know whose messages to delete
     fun performLocalDeleteFollowingBanForSenderOfMessage(message: MessageRecord) {
         val threadId = message.threadId
         val senderId = message.recipient.address.contactIdentifier()
-
-        Log.d("[ACL]", "performLocalDelete: message.individualRecipient.address is: ${message.individualRecipient.address}")
-        Log.d("[ACL]", "performLocalDelete: message.individualRecipient.address.contactIdentifier is: ${message.individualRecipient.address.contactIdentifier()}")
-
-        Log.d("[ACL]", "performLocalDelete: message.recipient.address is: ${message.recipient.address}")
-
-        Log.d("[ACL]", "About to delete all messages in thread: $threadId from user $senderId")
-
-        //val messagesToRemoveFromLocalStorage = mmsSmsDb.getAllMessageIdsFromSenderInThread(threadId, senderId)
-
         val messageRecordsToRemoveFromLocalStorage = mmsSmsDb.getAllMessageRecordsFromSenderInThread(threadId, senderId)
         messageRecordsToRemoveFromLocalStorage.forEach(viewModel::deleteLocally)
-
-        /*
-        val recyclerViewCursor = adapter.cursor ?: return
-        val rowsExists = recyclerViewCursor.moveToFirst()
-        if (!rowsExists) return
-
-        var tempView: View
-        while (recyclerViewCursor.moveToNext())
-        {
-
-            messagesToRemoveFromLocalStorage.forEach(viewModel::deleteLocally);
-
-        }
-
-
-
-        for (messageId in messagesToRemoveFromLocalStorage) {
-            val recyclerViewPosition = mmsSmsDb.
-        }
-        */
-
     }
 
     override fun copyMessages(messages: Set<MessageRecord>) {
