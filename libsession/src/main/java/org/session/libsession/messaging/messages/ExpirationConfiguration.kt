@@ -1,6 +1,7 @@
 package org.session.libsession.messaging.messages
 
 import network.loki.messenger.libsession_util.util.ExpiryMode
+import org.session.libsession.snode.SnodeAPI
 
 data class ExpirationConfiguration(
     val threadId: Long = -1,
@@ -10,7 +11,7 @@ data class ExpirationConfiguration(
     val isEnabled = expiryMode.expirySeconds > 0
 
     companion object {
-        val isNewConfigEnabled = true /* TODO: System.currentTimeMillis() > 1_676_851_200_000 // 13/02/2023 */
+        val isNewConfigEnabled = SnodeAPI.nowWithOffset >= 1710284400000
     }
 }
 
