@@ -1843,6 +1843,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     // Note: The messages in the provided set may be a single message, or multiple if there is a
     // group of selected messages.
     override fun deleteMessages(messages: Set<MessageRecord>) {
+        Log.d("[ACL]", "Hit ConversationActivityV2.deleteMessages")
         val recipient = viewModel.recipient
         if (recipient == null) {
             Log.w("ConversationActivityV2", "Asked to delete messages but could not obtain viewModel recipient - aborting.")
@@ -1851,13 +1852,19 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
         val allSentByCurrentUser = messages.all { it.isOutgoing }
         val allHasHash = messages.all { lokiMessageDb.getMessageServerHash(it.id, it.isMms) != null }
+
+        Log.d("[ACL]", "All sent by current? $allSentByCurrentUser - allHaveHash?: $allHasHash")
+
         if (recipient.isCommunityRecipient) {
             val messageCount = 1 // Only used for plurals string
 
             showSessionDialog {
                 title(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
                 text(resources.getQuantityString(R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages, messageCount, messageCount))
-                button(R.string.delete) { messages.forEach(viewModel::deleteForEveryone); endActionMode() }
+                button(R.string.delete) {
+                    Log.d("[ACL]", "About to call through to viewModel.deleteForEveryone for each msg")
+                    messages.forEach(viewModel::deleteForEveryone); endActionMode()
+                }
                 cancelButton { endActionMode() }
             }
         } else if (allSentByCurrentUser && allHasHash) {
@@ -1879,11 +1886,16 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             }
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)
         } else {
+            Log.d("[ACL]", "Fell through to final block......")
+
             val messageCount = 1
             showSessionDialog {
                 title(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
                 text(resources.getQuantityString(R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages, messageCount, messageCount))
-                button(R.string.delete) { messages.forEach(viewModel::deleteLocally); endActionMode() }
+                button(R.string.delete) {
+                    Log.d("[ACL]", "About to call through to viewModel.deleteLocally for each msg")
+                    messages.forEach(viewModel::deleteLocally); endActionMode()
+                }
                 cancelButton(::endActionMode)
             }
         }
@@ -1899,21 +1911,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun banAndDeleteAll(messages: Set<MessageRecord>) {
-        val thisActivity = this
         showSessionDialog {
             title(R.string.ConversationFragment_ban_selected_user)
             text("This will ban the selected user from this room and delete all messages sent by them. It won't ban them from other rooms or delete the messages they sent there.")
-            button(R.string.ban) { viewModel.banAndDeleteAll(thisActivity, messages.first()); endActionMode() }
+            button(R.string.ban) { viewModel.banAndDeleteAll(mmsSmsDb, messages.first()); endActionMode() }
             cancelButton(::endActionMode)
         }
-    }
-
-    // Note: The message provided is used to extract the sender Id so we know whose messages to delete
-    fun performLocalDeleteFollowingBanForSenderOfMessage(message: MessageRecord) {
-        val threadId = message.threadId
-        val senderId = message.recipient.address.contactIdentifier()
-        val messageRecordsToRemoveFromLocalStorage = mmsSmsDb.getAllMessageRecordsFromSenderInThread(threadId, senderId)
-        messageRecordsToRemoveFromLocalStorage.forEach(viewModel::deleteLocally)
     }
 
     override fun copyMessages(messages: Set<MessageRecord>) {

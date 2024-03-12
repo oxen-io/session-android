@@ -67,6 +67,7 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
     }
 
     fun deleteMessage(messageID: Long, isSms: Boolean) {
+        Log.d("[ACL]", "Hit ConversationRepository.deleteMessage")
         val database = databaseHelper.writableDatabase
 
         val serverID = database.get(messageIDTable,
@@ -77,6 +78,7 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
 
         if (serverID == null) {
             Log.w(this::class.simpleName, "Could not get server ID to delete message with ID: $messageID")
+            Log.w("[ACL]", "Could not get server ID to delete message with ID: $messageID")
             return
         }
 

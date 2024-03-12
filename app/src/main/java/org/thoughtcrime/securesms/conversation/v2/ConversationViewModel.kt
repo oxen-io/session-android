@@ -27,6 +27,7 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
+import org.thoughtcrime.securesms.database.MmsSmsDatabase
 
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.model.MessageRecord
@@ -141,7 +142,10 @@ class ConversationViewModel(
     }
 
     fun deleteLocally(message: MessageRecord) {
+        Log.d("[ACL]", "Hit viewModel.deleteLocally - do we have a recipient?: ${recipient == null}")
         val recipient = recipient ?: return Log.w("Loki", "Recipient was null for delete locally action")
+
+        Log.d("[ACL]", "About to call through to repository.deleteLocally")
         repository.deleteLocally(recipient, message)
     }
 
@@ -151,14 +155,21 @@ class ConversationViewModel(
     }
 
     fun deleteForEveryone(message: MessageRecord) = viewModelScope.launch {
-        val recipient = recipient
+        Log.d("[ACL]", "Hit ConversationViewModel.deleteForEveryone with message id: ${message.id}")
+        //val recipient = recipient
         if (recipient == null) {
+            Log.w("[ACL]", "Recipient was null for delete for everyone - aborting delete operation.")
             Log.w("Loki", "Recipient was null for delete for everyone - aborting delete operation.")
             return@launch
         }
-        repository.deleteForEveryone(threadId, recipient, message)
-            .onSuccess { Log.d("ACL]", "Deleted message ${message.id} ") }
+        Log.d("[ACL]", "About to call repository.deleteForEveryone")
+        repository.deleteForEveryone(threadId, recipient!!, message)
+            .onSuccess {
+                Log.d("[ACL]", "Deleted message ${message.id} ")
+                Log.d("Loki", "Deleted message ${message.id} ")
+            }
             .onFailure {
+                Log.d("[ACL]", "FAILED TO delete message ${message.id} ")
                 showMessage("Couldn't delete message due to error: $it")
             }
     }
@@ -180,7 +191,7 @@ class ConversationViewModel(
             }
     }
 
-    fun banAndDeleteAll(activityV2: ConversationActivityV2, messageRecord: MessageRecord) = viewModelScope.launch {
+    fun banAndDeleteAll(mmsSmsDb: MmsSmsDatabase, messageRecord: MessageRecord) = viewModelScope.launch {
 
         repository.banAndDeleteAll(threadId, messageRecord.individualRecipient)
             .onSuccess {
@@ -188,7 +199,10 @@ class ConversationViewModel(
                 showMessage("Successfully banned user and deleted all their messages")
 
                 //..so we can now remove our local copies and message views.
-                activityV2.performLocalDeleteFollowingBanForSenderOfMessage(messageRecord)
+                val threadId = messageRecord.threadId
+                val senderId = messageRecord.recipient.address.contactIdentifier()
+                val messageRecordsToRemoveFromLocalStorage = mmsSmsDb.getAllMessageRecordsFromSenderInThread(threadId, senderId)
+                for (message in messageRecordsToRemoveFromLocalStorage) { deleteLocally(message) }
             }
             .onFailure {
                 showMessage("Couldn't execute request due to error: $it")

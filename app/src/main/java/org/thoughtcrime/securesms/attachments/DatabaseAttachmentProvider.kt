@@ -182,8 +182,10 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
     }
 
     override fun deleteMessage(messageID: Long, isSms: Boolean) {
+        Log.d("[ACL]", "Hit DatabaseAttachmentProvider.deleteMessage")
         val messagingDatabase: MessagingDatabase = if (isSms)  DatabaseComponent.get(context).smsDatabase()
                                                    else DatabaseComponent.get(context).mmsDatabase()
+
         messagingDatabase.deleteMessage(messageID)
         DatabaseComponent.get(context).lokiMessageDatabase().deleteMessage(messageID, isSms)
         DatabaseComponent.get(context).lokiMessageDatabase().deleteMessageServerHash(messageID, mms = !isSms)

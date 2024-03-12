@@ -20,6 +20,9 @@ class OpenGroupDeleteJob(private val messageServerIds: LongArray, private val th
     override val maxFailureCount: Int = 1
 
     override suspend fun execute(dispatcherName: String) {
+
+        Log.d("[ACL]", "Hit OpenGroupDeleteJob.execute") // THIS DOES NOT HIT WHEN DELETING A SINGLE MSG
+
         val dataProvider = MessagingModuleConfiguration.shared.messageDataProvider
         val numberToDelete = messageServerIds.size
         Log.d(TAG, "Deleting $numberToDelete messages")

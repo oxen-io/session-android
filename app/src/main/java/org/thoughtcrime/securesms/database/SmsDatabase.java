@@ -625,6 +625,9 @@ public class SmsDatabase extends MessagingDatabase {
     return cursor;
   }
 
+  // Caution: This method is stupid AF and returns whether it deleted a thread if the message was
+  // successfully deleted and then that resulted in an empty thread which it then deleted rather
+  // than "Did the message get deleted successfully?"
   @Override
   public boolean deleteMessage(long messageId) {
     Log.i("MessageDatabase", "Deleting: " + messageId);
