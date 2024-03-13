@@ -1843,7 +1843,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     // Note: The messages in the provided set may be a single message, or multiple if there is a
     // group of selected messages.
     override fun deleteMessages(messages: Set<MessageRecord>) {
-        Log.d("[ACL]", "Hit ConversationActivityV2.deleteMessages")
+        Log.w("[ACL]", "Hit ConversationActivityV2.deleteMessages")
         val recipient = viewModel.recipient
         if (recipient == null) {
             Log.w("ConversationActivityV2", "Asked to delete messages but could not obtain viewModel recipient - aborting.")
@@ -1853,7 +1853,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val allSentByCurrentUser = messages.all { it.isOutgoing }
         val allHasHash = messages.all { lokiMessageDb.getMessageServerHash(it.id, it.isMms) != null }
 
-        Log.d("[ACL]", "All sent by current? $allSentByCurrentUser - allHaveHash?: $allHasHash")
+        Log.w("[ACL]", "All sent by current? $allSentByCurrentUser - allHaveHash?: $allHasHash")
 
         if (recipient.isCommunityRecipient) {
             val messageCount = 1 // Only used for plurals string
@@ -1862,7 +1862,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 title(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
                 text(resources.getQuantityString(R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages, messageCount, messageCount))
                 button(R.string.delete) {
-                    Log.d("[ACL]", "About to call through to viewModel.deleteForEveryone for each msg")
+                    Log.w("[ACL]", "About to call through to viewModel.deleteForEveryone for each msg")
                     messages.forEach(viewModel::deleteForEveryone); endActionMode()
                 }
                 cancelButton { endActionMode() }
@@ -1886,14 +1886,14 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             }
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)
         } else {
-            Log.d("[ACL]", "Fell through to final block......")
+            Log.w("[ACL]", "Fell through to final block......")
 
             val messageCount = 1
             showSessionDialog {
                 title(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
                 text(resources.getQuantityString(R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages, messageCount, messageCount))
                 button(R.string.delete) {
-                    Log.d("[ACL]", "About to call through to viewModel.deleteLocally for each msg")
+                    Log.w("[ACL]", "About to call through to viewModel.deleteLocally for each msg")
                     messages.forEach(viewModel::deleteLocally); endActionMode()
                 }
                 cancelButton(::endActionMode)

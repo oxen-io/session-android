@@ -182,7 +182,7 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
     }
 
     override fun deleteMessage(messageID: Long, isSms: Boolean) {
-        Log.d("[ACL]", "Hit DatabaseAttachmentProvider.deleteMessage")
+        Log.w("[ACL]", "Hit DatabaseAttachmentProvider.deleteMessage")
         val messagingDatabase: MessagingDatabase = if (isSms)  DatabaseComponent.get(context).smsDatabase()
                                                    else DatabaseComponent.get(context).mmsDatabase()
 
@@ -192,10 +192,16 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
     }
 
     override fun deleteMessages(messageIDs: List<Long>, threadId: Long, isSms: Boolean) {
+
+        Log.w("[ACL]", "Hit DatabaseAttachmentProvider.deleteMessages with ${messageIDs.size} messages - SMS? $isSms")
+
         val messagingDatabase: MessagingDatabase = if (isSms)  DatabaseComponent.get(context).smsDatabase()
                                                    else DatabaseComponent.get(context).mmsDatabase()
 
+        // Perform local delete
         messagingDatabase.deleteMessages(messageIDs.toLongArray(), threadId)
+
+        // Perform online delete
         DatabaseComponent.get(context).lokiMessageDatabase().deleteMessages(messageIDs)
         DatabaseComponent.get(context).lokiMessageDatabase().deleteMessageServerHashes(messageIDs, mms = !isSms)
     }

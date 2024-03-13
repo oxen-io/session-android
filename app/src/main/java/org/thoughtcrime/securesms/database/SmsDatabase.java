@@ -621,7 +621,7 @@ public class SmsDatabase extends MessagingDatabase {
   public Cursor getMessageCursor(long messageId) {
     SQLiteDatabase db = databaseHelper.getReadableDatabase();
     Cursor cursor = db.query(TABLE_NAME, MESSAGE_PROJECTION, ID_WHERE, new String[] {messageId + ""}, null, null, null);
-    setNotifyConverationListeners(cursor, getThreadIdForMessage(messageId));
+    setNotifyConversationListeners(cursor, getThreadIdForMessage(messageId));
     return cursor;
   }
 
@@ -640,6 +640,9 @@ public class SmsDatabase extends MessagingDatabase {
 
   @Override
   public boolean deleteMessages(long[] messageIds, long threadId) {
+
+    Log.w("[ACL]", "Hit SmsDatabase.deleteMessages - about to delete " + messageIds.length + " messages in thread: " + threadId);
+
     String[] argsArray = new String[messageIds.length];
     String[] argValues = new String[messageIds.length];
     Arrays.fill(argsArray, "?");

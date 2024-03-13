@@ -19,7 +19,6 @@ package org.thoughtcrime.securesms.database
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.provider.ContactsContract.CommonDataKinds.BaseTypes
 import com.annimon.stream.Stream
 import com.google.android.mms.pdu_alt.PduHeaders
 import org.json.JSONArray
@@ -214,7 +213,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
 
     fun getMessage(messageId: Long): Cursor {
         val cursor = rawQuery(RAW_ID_WHERE, arrayOf(messageId.toString()))
-        setNotifyConverationListeners(cursor, getThreadIdForMessage(messageId))
+        setNotifyConversationListeners(cursor, getThreadIdForMessage(messageId))
         return cursor
     }
 
@@ -858,9 +857,14 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
      * @param messageIds a String array representation of regularly Long types representing message IDs
      */
     private fun deleteMessages(messageIds: Array<String?>) {
+
+        Log.w("[ACL]","Hit SmsDatabase.deleteMessages - about to delete ${messageIds.size} messages in thread:  + threadId")
+
         if (messageIds.isEmpty()) {
+            Log.w("[ACL]", "No message Ids provided to MmsDatabase.deleteMessages - aborting delete operation!")
             return
         }
+
         // don't need thread IDs
         val queryBuilder = StringBuilder()
         for (i in messageIds.indices) {
@@ -884,6 +888,10 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
     }
 
     override fun deleteMessage(messageId: Long): Boolean {
+
+        Log.w("[ACL]", "Hit MmsDatabase.deleteMessages - about to delete message with id: $messageId")
+
+
         val threadId = getThreadIdForMessage(messageId)
         val attachmentDatabase = get(context).attachmentDatabase()
         queue(Runnable { attachmentDatabase.deleteAttachmentsForMessage(messageId) })
