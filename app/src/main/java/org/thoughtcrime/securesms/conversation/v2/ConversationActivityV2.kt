@@ -1902,7 +1902,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         showSessionDialog {
             title(R.string.ConversationFragment_ban_selected_user)
             text("This will ban the selected user from this room and delete all messages sent by them. It won't ban them from other rooms or delete the messages they sent there.")
-            button(R.string.ban) { viewModel.banAndDeleteAll(mmsSmsDb, messages.first()); endActionMode() }
+            button(R.string.ban) { viewModel.banAndDeleteAll(messages.first()); endActionMode() }
             cancelButton(::endActionMode)
         }
     }

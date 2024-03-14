@@ -152,12 +152,9 @@ class ConversationViewModel(
     }
 
     fun deleteForEveryone(message: MessageRecord) = viewModelScope.launch {
-        if (recipient == null) {
-            Log.w("Loki", "Recipient was null for delete for everyone - aborting delete operation.")
-            return@launch
-        }
+        val recipient = recipient ?: return@launch Log.w("Loki", "Recipient was null for delete for everyone - aborting delete operation.")
 
-        repository.deleteForEveryone(threadId, recipient!!, message)
+        repository.deleteForEveryone(threadId, recipient, message)
             .onSuccess {
                 Log.d("Loki", "Deleted message ${message.id} ")
             }
@@ -184,7 +181,7 @@ class ConversationViewModel(
             }
     }
 
-    fun banAndDeleteAll(mmsSmsDb: MmsSmsDatabase, messageRecord: MessageRecord) = viewModelScope.launch {
+    fun banAndDeleteAll(messageRecord: MessageRecord) = viewModelScope.launch {
 
         repository.banAndDeleteAll(threadId, messageRecord.individualRecipient)
             .onSuccess {
