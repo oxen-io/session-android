@@ -49,6 +49,8 @@ class OpenGroupDeleteJob(private val messageServerIds: LongArray, private val th
             delegate?.handleJobSucceeded(this, dispatcherName)
         }
         catch (e: Exception) {
+            Log.w("[ACL]", "OpenGroupDeleteJob FAILED!")
+
             delegate?.handleJobFailed(this, dispatcherName, e)
         }
     }

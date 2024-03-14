@@ -65,6 +65,7 @@ interface ConversationRepository {
     fun inviteContacts(threadId: Long, contacts: List<Recipient>)
     fun setBlocked(recipient: Recipient, blocked: Boolean)
     fun deleteLocally(recipient: Recipient, message: MessageRecord)
+    fun deleteAllLocalMessagesInThreadFromSenderOfMessage(messageRecord: MessageRecord)
     fun setApproved(recipient: Recipient, isApproved: Boolean)
     suspend fun deleteForEveryone(threadId: Long, recipient: Recipient, message: MessageRecord): ResultOf<Unit>
     fun buildUnsendRequest(recipient: Recipient, message: MessageRecord): UnsendRequest?
@@ -173,6 +174,15 @@ class DefaultConversationRepository @Inject constructor(
             }
         }
         messageDataProvider.deleteMessage(message.id, !message.isMms)
+    }
+
+    override fun deleteAllLocalMessagesInThreadFromSenderOfMessage(messageRecord: MessageRecord) {
+        val threadId = messageRecord.threadId
+        val senderId = messageRecord.recipient.address.contactIdentifier()
+        val messageRecordsToRemoveFromLocalStorage = mmsSmsDb.getAllMessageRecordsFromSenderInThread(threadId, senderId)
+        for (message in messageRecordsToRemoveFromLocalStorage) {
+            messageDataProvider.deleteMessage(message.id, !message.isMms)
+        }
     }
 
     override fun setApproved(recipient: Recipient, isApproved: Boolean) {

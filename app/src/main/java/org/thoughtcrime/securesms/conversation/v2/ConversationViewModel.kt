@@ -201,13 +201,19 @@ class ConversationViewModel(
                 showMessage("Successfully banned user and deleted all their messages")
 
                 //..so we can now remove our local copies and message views.
-                Log.w("[ACL]", "NOT CLEANING UP LOCAL MESSAGES DURING ROOT CAUSE ANALYSIS!")
-                /*
-                val threadId = messageRecord.threadId
-                val senderId = messageRecord.recipient.address.contactIdentifier()
-                val messageRecordsToRemoveFromLocalStorage = mmsSmsDb.getAllMessageRecordsFromSenderInThread(threadId, senderId)
-                for (message in messageRecordsToRemoveFromLocalStorage) { deleteLocally(message) }
-                */
+                //Log.w("[ACL]", "NOT CLEANING UP LOCAL MESSAGES DURING ROOT CAUSE ANALYSIS!")
+
+                // Refactor to create a repository.deleteAllLocalForUser
+
+                repository.deleteAllLocalMessagesInThreadFromSenderOfMessage(messageRecord)
+
+                //repository.deleteAllLocalMessagesInThreadFromSenderOfMessage(messageRecord)
+
+//                val threadId = messageRecord.threadId
+//                val senderId = messageRecord.recipient.address.contactIdentifier()
+//                val messageRecordsToRemoveFromLocalStorage = mmsSmsDb.getAllMessageRecordsFromSenderInThread(threadId, senderId)
+//                for (message in messageRecordsToRemoveFromLocalStorage) { deleteLocally(message) }
+
             }
             .onFailure {
                 showMessage("Couldn't execute request due to error: $it")

@@ -21,6 +21,7 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityPathBinding
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.utilities.getColorFromAttr
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Snode
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.util.GlowViewUtilities
@@ -158,6 +159,10 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
     private fun getPathRow(snode: Snode, location: LineView.Location, dotAnimationStartDelay: Long, dotAnimationRepeatInterval: Long, isGuardSnode: Boolean): LinearLayout {
         val title = if (isGuardSnode) resources.getString(R.string.activity_path_guard_node_row_title) else resources.getString(R.string.activity_path_service_node_row_title)
         val subtitle = if (IP2Country.isInitialized) {
+
+            val details = IP2Country.shared.countryNamesCache[snode.ip] ?: resources.getString(R.string.activity_path_resolving_progress)
+            Log.w("[ACL]", "$details - public key set ed25519: ${snode.publicKeySet?.ed25519Key} and x25519: ${snode.publicKeySet?.x25519Key}")
+
             IP2Country.shared.countryNamesCache[snode.ip] ?: resources.getString(R.string.activity_path_resolving_progress)
         } else {
             resources.getString(R.string.activity_path_resolving_progress)
