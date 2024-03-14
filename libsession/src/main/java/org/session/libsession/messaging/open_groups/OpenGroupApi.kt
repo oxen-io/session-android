@@ -602,11 +602,8 @@ object OpenGroupApi {
     // region Message Deletion
     @JvmStatic
     fun deleteMessage(serverID: Long, room: String, server: String): Promise<Unit, Exception> {
-        Log.w("[ACL]", "Hit OpenGroupApi.deleteMessage...")
-        val request =
-            Request(verb = DELETE, room = room, server = server, endpoint = Endpoint.RoomMessageIndividual(room, serverID))
+        val request = Request(verb = DELETE, room = room, server = server, endpoint = Endpoint.RoomMessageIndividual(room, serverID))
         return send(request).map {
-            Log.w("[ACL]", "OpenGroupApi.deleteMessage thinks the message deletion was successful.")
             Log.d("Loki", "Message deletion successful.")
         }
     }
@@ -662,8 +659,6 @@ object OpenGroupApi {
 
     fun banAndDeleteAll(publicKey: String, room: String, server: String): Promise<Unit, Exception> {
 
-        Log.w("[ACL]", "Hit OpenGroupApi.banAndDeleteAll...")
-
         val requests = mutableListOf<BatchRequestInfo<*>>(
             // Ban request
             BatchRequestInfo(
@@ -683,7 +678,6 @@ object OpenGroupApi {
             )
         )
         return sequentialBatch(server, requests).map {
-            Log.w("[ACL]", "Banned user: $publicKey from: $server.$room.")
             Log.d("Loki", "Banned user: $publicKey from: $server.$room.")
         }
     }

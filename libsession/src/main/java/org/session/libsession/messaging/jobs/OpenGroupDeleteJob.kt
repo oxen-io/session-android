@@ -20,20 +20,13 @@ class OpenGroupDeleteJob(private val messageServerIds: LongArray, private val th
     override val maxFailureCount: Int = 1
 
     override suspend fun execute(dispatcherName: String) {
-
-        Log.w("[ACL]", "Hit OpenGroupDeleteJob.execute") // THIS DOES NOT HIT WHEN DELETING A SINGLE MSG
-
         val dataProvider = MessagingModuleConfiguration.shared.messageDataProvider
         val numberToDelete = messageServerIds.size
-        Log.d(TAG, "About to attempt to deleting $numberToDelete messages")
-
-        Log.w("[ACL]", "Deleting $numberToDelete messages")
+        Log.d(TAG, "About to attempt to delete $numberToDelete messages")
 
         // FIXME: This entire process should probably run in a transaction (with the attachment deletion happening only if it succeeded)
         try {
             val messageIds = dataProvider.getMessageIDs(messageServerIds.toList(), threadId)
-
-            Log.w("[ACL]", "Got this many message Ids - SMS: ${messageIds.first.size}, MMS: ${messageIds.second.size}")
 
             // Delete the SMS messages
             if (messageIds.first.isNotEmpty()) {
@@ -49,8 +42,7 @@ class OpenGroupDeleteJob(private val messageServerIds: LongArray, private val th
             delegate?.handleJobSucceeded(this, dispatcherName)
         }
         catch (e: Exception) {
-            Log.w("[ACL]", "OpenGroupDeleteJob FAILED!")
-
+            Log.w(TAG, "OpenGroupDeleteJob failed: $e")
             delegate?.handleJobFailed(this, dispatcherName, e)
         }
     }

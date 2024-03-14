@@ -857,11 +857,8 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
      * @param messageIds a String array representation of regularly Long types representing message IDs
      */
     private fun deleteMessages(messageIds: Array<String?>) {
-
-        Log.w("[ACL]","Hit SmsDatabase.deleteMessages - about to delete ${messageIds.size} messages in thread:  + threadId")
-
         if (messageIds.isEmpty()) {
-            Log.w("[ACL]", "No message Ids provided to MmsDatabase.deleteMessages - aborting delete operation!")
+            Log.w(TAG, "No message Ids provided to MmsDatabase.deleteMessages - aborting delete operation!")
             return
         }
 
@@ -887,11 +884,9 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         notifyStickerPackListeners()
     }
 
+    // Caution: The bool returned from `deleteMessage` is NOT "Was the message successfully deleted?"
+    // - it is "Was the thread deleted because removing that message resulted in an empty thread"!
     override fun deleteMessage(messageId: Long): Boolean {
-
-        Log.w("[ACL]", "Hit MmsDatabase.deleteMessages - about to delete message with id: $messageId")
-
-
         val threadId = getThreadIdForMessage(messageId)
         val attachmentDatabase = get(context).attachmentDatabase()
         queue(Runnable { attachmentDatabase.deleteAttachmentsForMessage(messageId) })

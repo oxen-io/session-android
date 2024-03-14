@@ -625,9 +625,8 @@ public class SmsDatabase extends MessagingDatabase {
     return cursor;
   }
 
-  // Caution: This method is stupid AF and returns whether it deleted a thread if the message was
-  // successfully deleted and then that resulted in an empty thread which it then deleted rather
-  // than "Did the message get deleted successfully?"
+  // Caution: The bool returned from `deleteMessage` is NOT "Was the message successfully deleted?"
+  // - it is "Was the thread deleted because removing that message resulted in an empty thread"!
   @Override
   public boolean deleteMessage(long messageId) {
     Log.i("MessageDatabase", "Deleting: " + messageId);
@@ -640,9 +639,6 @@ public class SmsDatabase extends MessagingDatabase {
 
   @Override
   public boolean deleteMessages(long[] messageIds, long threadId) {
-
-    Log.w("[ACL]", "Hit SmsDatabase.deleteMessages - about to delete " + messageIds.length + " messages in thread: " + threadId);
-
     String[] argsArray = new String[messageIds.length];
     String[] argValues = new String[messageIds.length];
     Arrays.fill(argsArray, "?");

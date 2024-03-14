@@ -58,8 +58,6 @@ public abstract class Database {
   }
 
   protected void notifyConversationListeners(long threadId) {
-    Log.w("[ACL]", "Hit Database.notifyConversationListeners regarding thread: " + threadId);
-    //foo
     ConversationNotificationDebouncer.Companion.get(context).notify(threadId);
   }
 

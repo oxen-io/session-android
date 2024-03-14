@@ -199,32 +199,27 @@ class DefaultConversationRepository @Inject constructor(
         }
 
         val openGroup = lokiThreadDb.getOpenGroupChat(threadId)
-        Log.w("[ACL]", "Hit ConversationRepository.deleteForEveryone - openGroup is null? ${openGroup == null}")
         if (openGroup != null) {
             val serverId = lokiMessageDb.getServerID(message.id, !message.isMms)?.let { messageServerID ->
                 OpenGroupApi.deleteMessage(messageServerID, openGroup.room, openGroup.server)
                     .success {
-                        Log.w("[ACL]", "Call to OpenGroupApi.deleteMessage SUCCEEDED!")
                         messageDataProvider.deleteMessage(message.id, !message.isMms)
                         continuation.resume(ResultOf.Success(Unit))
                     }.fail { error ->
-                        Log.w("[ACL]", "Call to OpenGroupApi.deleteMessage FAILED!")
+                        Log.w("TAG", "Call to OpenGroupApi.deleteForEveryone failed - attempting to resume..")
                         continuation.resumeWithException(error)
                     }
             }
 
-            Log.w("[ACL]", "serverId is null? ${serverId == null}")
             // If the server ID is null then this message is stuck in limbo (it has likely been
             // deleted remotely but that deletion did not occur locally) - so we'll delete the
             // message locally to clean up.
             if (serverId == null) {
-                Log.w("[ACL]", "Found community message without a server ID - deleting locally.") // KEEP THE ONE BELOW WHEN CLEANING UP!
-                Log.w("ConversationRepository","Found community message without a server ID - deleting locally."
-                )
+                Log.w("ConversationRepository","Found community message without a server ID - deleting locally.")
 
                 // Caution: The bool returned from `deleteMessage` is NOT "Was the message
-                // successfully deleted?" - it is "Did I delete the thread because removing that
-                // message resulted in an empty thread".
+                // successfully deleted?" - it is "Was the thread itself also deleted because
+                // removing that message resulted in an empty thread?".
                 if (message.isMms) {
                     mmsDb.deleteMessage(message.id)
                 } else {
@@ -234,7 +229,6 @@ class DefaultConversationRepository @Inject constructor(
         }
         else // If this thread is NOT in a Community
         {
-            Log.w("[ACL]", "We don't think this thread is in a community.")
             messageDataProvider.deleteMessage(message.id, !message.isMms)
             messageDataProvider.getServerHashForMessage(message.id, message.isMms)?.let { serverHash ->
                 var publicKey = recipient.address.serialize()
@@ -243,10 +237,9 @@ class DefaultConversationRepository @Inject constructor(
                 }
                 SnodeAPI.deleteMessage(publicKey, listOf(serverHash))
                     .success {
-                        Log.w("[ACL]", "SnodeAPI.deleteMessage SUCCEEDED!")
                         continuation.resume(ResultOf.Success(Unit))
                     }.fail { error ->
-                        Log.w("[ACL]", "SnodeAPI.deleteMessage FAILED!")
+                        Log.w("[onversationRepository", "Call to SnodeAPI.deleteMessage failed - attempting to resume..")
                         continuation.resumeWithException(error)
                     }
             }

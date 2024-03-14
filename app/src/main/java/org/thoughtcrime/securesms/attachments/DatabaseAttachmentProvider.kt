@@ -182,7 +182,6 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
     }
 
     override fun deleteMessage(messageID: Long, isSms: Boolean) {
-        Log.w("[ACL]", "Hit DatabaseAttachmentProvider.deleteMessage")
         val messagingDatabase: MessagingDatabase = if (isSms)  DatabaseComponent.get(context).smsDatabase()
                                                    else DatabaseComponent.get(context).mmsDatabase()
 
@@ -192,8 +191,6 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
     }
 
     override fun deleteMessages(messageIDs: List<Long>, threadId: Long, isSms: Boolean) {
-
-        Log.w("[ACL]", "Hit DatabaseAttachmentProvider.deleteMessages with ${messageIDs.size} messages - SMS? $isSms")
 
         val messagingDatabase: MessagingDatabase = if (isSms)  DatabaseComponent.get(context).smsDatabase()
                                                    else DatabaseComponent.get(context).mmsDatabase()
