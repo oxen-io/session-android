@@ -647,9 +647,6 @@ public class SmsDatabase extends MessagingDatabase {
       argValues[i] = (messageIds[i] + "");
     }
 
-    String combinedMessageIdArgss = StringUtils.join(messageIds, ',');
-    String combinedMessageIds = StringUtils.join(messageIds, ',');
-    Log.i("MessageDatabase", "Deleting: " + combinedMessageIds);
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
     db.delete(
       TABLE_NAME,

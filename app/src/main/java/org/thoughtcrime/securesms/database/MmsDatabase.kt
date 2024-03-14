@@ -21,6 +21,7 @@ import android.content.Context
 import android.database.Cursor
 import com.annimon.stream.Stream
 import com.google.android.mms.pdu_alt.PduHeaders
+import org.apache.commons.lang3.StringUtils
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -902,14 +903,15 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
     }
 
     override fun deleteMessages(messageIds: LongArray, threadId: Long): Boolean {
-        val attachmentDatabase = get(context).attachmentDatabase()
-        val groupReceiptDatabase = get(context).groupReceiptDatabase()
+        val argsArray = messageIds.map { "?" }
+        val argValues = messageIds.map { it.toString() }.toTypedArray()
 
-        queue(Runnable { attachmentDatabase.deleteAttachmentsForMessages(messageIds) })
-        groupReceiptDatabase.deleteRowsForMessages(messageIds)
-
-        val database = databaseHelper.writableDatabase
-        database!!.delete(TABLE_NAME, ID_IN, arrayOf(messageIds.joinToString(",")))
+        val db = databaseHelper.writableDatabase
+        db.delete(
+            TABLE_NAME,
+            ID + " IN (" + StringUtils.join(argsArray, ',') + ")",
+            argValues
+        )
 
         val threadDeleted = get(context).threadDatabase().update(threadId, false, true)
         notifyConversationListeners(threadId)
