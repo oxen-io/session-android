@@ -7,6 +7,7 @@ import dagger.hilt.components.SingletonComponent
 import org.session.libsession.database.MessageDataProvider
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.database.*
+import org.thoughtcrime.securesms.database.MmsSmsDatabase
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 
 @EntryPoint
@@ -45,5 +46,6 @@ interface DatabaseComponent {
     fun attachmentProvider(): MessageDataProvider
     fun blindedIdMappingDatabase(): BlindedIdMappingDatabase
     fun groupMemberDatabase(): GroupMemberDatabase
+    fun expirationConfigurationDatabase(): ExpirationConfigurationDatabase
     fun configDatabase(): ConfigDatabase
 }

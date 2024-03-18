@@ -29,6 +29,16 @@
         tools:src="@drawable/ic_timer"
         tools:visibility="visible"/>
 
+    <org.thoughtcrime.securesms.conversation.v2.components.ExpirationTimerView
+        android:id="@+id/expirationTimerView"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginBottom="@dimen/small_spacing"
+        android:visibility="gone"
+        app:tint="?android:textColorPrimary"
+        tools:src="@drawable/ic_timer"
+        tools:visibility="visible"/>
+
     <TextView
         android:id="@+id/textView"
         android:contentDescription="@string/AccessibilityId_control_message"
@@ -39,5 +49,36 @@
         android:textSize="@dimen/very_small_font_size"
         android:textStyle="bold"
         tools:text="@string/MessageRecord_you_disabled_disappearing_messages" />
+
+    <FrameLayout
+        android:id="@+id/call_view"
+        style="@style/CallMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/call_text_view"
+            android:textColor="?message_received_text_color"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            tools:text="You missed a call"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:drawableTint="?message_received_text_color"
+            app:drawableStartCompat="@drawable/ic_missed_call" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/followSetting"
+        style="@style/Widget.Session.Button.Common.Borderless"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/accent_green"
+        android:textSize="@dimen/very_small_font_size"
+        android:text="@string/MessageRecord_follow_setting"
+        android:contentDescription="@string/AccessibilityId_follow_setting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

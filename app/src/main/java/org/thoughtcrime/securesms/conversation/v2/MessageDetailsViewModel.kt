@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
@@ -26,6 +28,7 @@ import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.mms.ImageSlide
 import org.thoughtcrime.securesms.mms.Slide
+import org.thoughtcrime.securesms.repository.ConversationRepository
 import org.thoughtcrime.securesms.ui.GetString
 import org.thoughtcrime.securesms.ui.TitledText
 import java.util.Date
@@ -38,7 +41,10 @@ class MessageDetailsViewModel @Inject constructor(
     private val lokiMessageDatabase: LokiMessageDatabase,
     private val mmsSmsDatabase: MmsSmsDatabase,
     private val threadDb: ThreadDatabase,
+    private val repository: ConversationRepository,
 ) : ViewModel() {
+
+    private var job: Job? = null
 
     private val state = MutableStateFlow(MessageDetailsState())
     val stateFlow = state.asStateFlow()
@@ -48,6 +54,8 @@ class MessageDetailsViewModel @Inject constructor(
 
     var timestamp: Long = 0L
         set(value) {
+            job?.cancel()
+
             field = value
             val record = mmsSmsDatabase.getMessageForTimestamp(timestamp)
 
@@ -57,6 +65,12 @@ class MessageDetailsViewModel @Inject constructor(
             }
 
             val mmsRecord = record as? MmsMessageRecord
+
+            job = viewModelScope.launch {
+                repository.changes(record.threadId)
+                    .filter { mmsSmsDatabase.getMessageForTimestamp(value) == null }
+                    .collect { event.send(Event.Finish) }
+            }
 
             state.value = record.run {
                 val slides = mmsRecord?.slideDeck?.slides ?: emptyList()

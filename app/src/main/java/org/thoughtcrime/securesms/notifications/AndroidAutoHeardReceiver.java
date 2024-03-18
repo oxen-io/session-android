@@ -27,7 +27,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.ApplicationContext;
-import org.thoughtcrime.securesms.database.MessagingDatabase.MarkedMessageInfo;
+import org.thoughtcrime.securesms.database.MarkedMessageInfo;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 
 import java.util.LinkedList;

@@ -11,9 +11,9 @@ public class OutgoingExpirationUpdateMessage extends OutgoingSecureMediaMessage 
 
   private final String groupId;
 
-  public OutgoingExpirationUpdateMessage(Recipient recipient,  long sentTimeMillis, long expiresIn, String groupId) {
+  public OutgoingExpirationUpdateMessage(Recipient recipient,  long sentTimeMillis, long expiresIn, long expireStartedAt, String groupId) {
     super(recipient, "", new LinkedList<Attachment>(), sentTimeMillis,
-          DistributionTypes.CONVERSATION, expiresIn, null, Collections.emptyList(),
+          DistributionTypes.CONVERSATION, expiresIn, expireStartedAt, null, Collections.emptyList(),
           Collections.emptyList());
     this.groupId = groupId;
   }

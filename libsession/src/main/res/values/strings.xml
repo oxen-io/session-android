@@ -15,12 +15,26 @@
     <string name="MessageRecord_s_called_you">%s called you</string>
     <string name="MessageRecord_called_s">Called %s</string>
     <string name="MessageRecord_missed_call_from">Missed call from %s</string>
+    <string name="MessageRecord_follow_setting">Follow Setting</string>
+    <string name="AccessibilityId_follow_setting">Follow setting</string>
     <string name="MessageRecord_you_disabled_disappearing_messages">You disabled disappearing messages.</string>
+    <string name="MessageRecord_you_turned_off_disappearing_messages">You have turned off disappearing messages.</string>
+    <string name="MessageRecord_you_turned_off_disappearing_messages_1_on_1">You turned off disappearing messages. Messages you send will no longer disappear.</string>
     <string name="MessageRecord_s_disabled_disappearing_messages">%1$s disabled disappearing messages.</string>
+    <string name="MessageRecord_s_turned_off_disappearing_messages">%1$s turned off disappearing messages.</string>
+    <string name="MessageRecord_s_turned_off_disappearing_messages_1_on_1">%1$s has turned off disappearing messages. Messages they send will no longer disappear.</string>
     <string name="MessageRecord_you_set_disappearing_message_time_to_s">You set the disappearing message timer to %1$s</string>
+    <string name="MessageRecord_you_set_messages_to_disappear_s_after_s">You have set messages to disappear %1$s after they have been %2$s</string>
+    <string name="MessageRecord_you_set_messages_to_disappear_s_after_s_1_on_1">You set your messages to disappear %1$s after they have been %2$s.</string>
+    <string name="MessageRecord_you_changed_messages_to_disappear_s_after_s">You have changed messages to disappear %1$s after they have been %2$s</string>
     <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s set the disappearing message timer to %2$s</string>
+    <string name="MessageRecord_s_set_messages_to_disappear_s_after_s">%1$s has set messages to disappear %2$s after they have been %3$s</string>
+    <string name="MessageRecord_s_set_messages_to_disappear_s_after_s_1_on_1">%1$s has set their messages to disappear %2$s after they have been %3$s.</string>
+    <string name="MessageRecord_s_changed_messages_to_disappear_s_after_s">%1$s has changed messages to disappear %2$s after they have been %3$s</string>
     <string name="MessageRecord_s_took_a_screenshot">%1$s took a screenshot.</string>
     <string name="MessageRecord_media_saved_by_s">Media saved by %1$s.</string>
+    <string name="MessageRecord_state_read">read</string>
+    <string name="MessageRecord_state_sent">sent</string>
 
     <!-- expiration -->
     <string name="expiration_off">Off</string>

@@ -43,6 +43,12 @@ message UnsendRequest {
 }
 
 message Content {
+  enum ExpirationType {
+    UNKNOWN = 0;
+    DELETE_AFTER_READ = 1;
+    DELETE_AFTER_SEND = 2;
+  }
+
   optional DataMessage                dataMessage                = 1;
   optional CallMessage                callMessage                = 3;
   optional ReceiptMessage             receiptMessage             = 5;
@@ -52,6 +58,9 @@ message Content {
   optional UnsendRequest              unsendRequest              = 9;
   optional MessageRequestResponse     messageRequestResponse     = 10;
   optional SharedConfigMessage        sharedConfigMessage        = 11;
+  optional ExpirationType             expirationType             = 12;
+  optional uint32                     expirationTimer            = 13;
+  optional uint64         lastDisappearingMessageChangeTimestamp = 14;
 }
 
 message KeyPair {

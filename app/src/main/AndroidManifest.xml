@@ -178,6 +178,9 @@
             android:screenOrientation="portrait" />
         <activity android:name="org.thoughtcrime.securesms.preferences.appearance.AppearanceSettingsActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name="org.thoughtcrime.securesms.conversation.disappearingmessages.DisappearingMessagesActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Session.DayNight.NoActionBar" />
 
         <activity
             android:exported="true"

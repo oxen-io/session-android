@@ -19,6 +19,7 @@ class HangUpRtcOnPstnCallAnsweredListener(private val hangupListener: ()->Unit):
         private val TAG = Log.tag(HangUpRtcOnPstnCallAnsweredListener::class.java)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCallStateChanged(state: Int, phoneNumber: String?) {
         super.onCallStateChanged(state, phoneNumber)
         if (state == TelephonyManager.CALL_STATE_OFFHOOK) {

@@ -3,10 +3,8 @@ package org.session.libsession.messaging.messages.visible
 import com.goterl.lazysodium.BuildConfig
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.Message
+import org.session.libsession.messaging.messages.copyExpiration
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
-import org.session.libsession.utilities.Address
-import org.session.libsession.utilities.GroupUtil
-import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Log
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment as SignalAttachment
@@ -16,7 +14,7 @@ import org.session.libsession.messaging.sending_receiving.attachments.Attachment
  *
  * **Note:** `nil` if this isn't a sync message.
  */
-class VisibleMessage(
+data class VisibleMessage(
     var syncTarget: String? = null,
     var text: String? = null,
     val attachmentIDs: MutableList<Long> = mutableListOf(),
@@ -46,52 +44,26 @@ class VisibleMessage(
     companion object {
         const val TAG = "VisibleMessage"
 
-        fun fromProto(proto: SignalServiceProtos.Content): VisibleMessage? {
-            val dataMessage = proto.dataMessage ?: return null
-            val result = VisibleMessage()
-            if (dataMessage.hasSyncTarget()) { result.syncTarget = dataMessage.syncTarget }
-            result.text = dataMessage.body
-            // Attachments are handled in MessageReceiver
-            val quoteProto = if (dataMessage.hasQuote()) dataMessage.quote else null
-            if (quoteProto != null) {
-                val quote = Quote.fromProto(quoteProto)
-                result.quote = quote
-            }
-            val linkPreviewProto = dataMessage.previewList.firstOrNull()
-            if (linkPreviewProto != null) {
-                val linkPreview = LinkPreview.fromProto(linkPreviewProto)
-                result.linkPreview = linkPreview
-            }
-            val openGroupInvitationProto = if (dataMessage.hasOpenGroupInvitation()) dataMessage.openGroupInvitation else null
-            if (openGroupInvitationProto != null) {
-                val openGroupInvitation = OpenGroupInvitation.fromProto(openGroupInvitationProto)
-                result.openGroupInvitation = openGroupInvitation
-            }
-            // TODO Contact
-            val profile = Profile.fromProto(dataMessage)
-            if (profile != null) { result.profile = profile }
-            val reactionProto = if (dataMessage.hasReaction()) dataMessage.reaction else null
-            if (reactionProto != null) {
-                val reaction = Reaction.fromProto(reactionProto)
-                result.reaction = reaction
-            }
-
-            result.blocksMessageRequests = with (dataMessage) { hasBlocksCommunityMessageRequests() && blocksCommunityMessageRequests }
-
-            return result
+        fun fromProto(proto: SignalServiceProtos.Content): VisibleMessage? =
+            proto.dataMessage?.let { VisibleMessage().apply {
+                if (it.hasSyncTarget()) syncTarget = it.syncTarget
+                text = it.body
+                // Attachments are handled in MessageReceiver
+                if (it.hasQuote()) quote = Quote.fromProto(it.quote)
+                linkPreview = it.previewList.firstOrNull()?.let(LinkPreview::fromProto)
+                if (it.hasOpenGroupInvitation()) openGroupInvitation = it.openGroupInvitation?.let(OpenGroupInvitation::fromProto)
+                // TODO Contact
+                profile = Profile.fromProto(it)
+                if (it.hasReaction()) reaction = it.reaction?.let(Reaction::fromProto)
+                blocksMessageRequests = it.hasBlocksCommunityMessageRequests() && it.blocksCommunityMessageRequests
+            }.copyExpiration(proto)
         }
     }
 
     override fun toProto(): SignalServiceProtos.Content? {
         val proto = SignalServiceProtos.Content.newBuilder()
-        val dataMessage: SignalServiceProtos.DataMessage.Builder
         // Profile
-        val profileProto = profile?.toProto()
-        dataMessage = if (profileProto != null) {
-            profileProto.toBuilder()
-        } else {
-            SignalServiceProtos.DataMessage.newBuilder()
-        }
+        val dataMessage = profile?.toProto()?.toBuilder() ?: SignalServiceProtos.DataMessage.newBuilder()
         // Text
         if (text != null) { dataMessage.body = text }
         // Quote
@@ -126,20 +98,12 @@ class VisibleMessage(
         dataMessage.addAllAttachments(pointers)
         // TODO: Contact
         // Expiration timer
-        // TODO: We * want * expiration timer updates to be explicit. But currently Android will disable the expiration timer for a conversation
-        //       if it receives a message without the current expiration timer value attached to it...
-        val storage = MessagingModuleConfiguration.shared.storage
-        val context = MessagingModuleConfiguration.shared.context
-        val expiration = if (storage.isClosedGroup(recipient!!)) {
-            Recipient.from(context, Address.fromSerialized(GroupUtil.doubleEncodeGroupID(recipient!!)), false).expireMessages
-        } else {
-            Recipient.from(context, Address.fromSerialized(recipient!!), false).expireMessages
-        }
-        dataMessage.expireTimer = expiration
+        proto.applyExpiryMode()
         // Group context
+        val storage = MessagingModuleConfiguration.shared.storage
         if (storage.isClosedGroup(recipient!!)) {
             try {
-                setGroupContext(dataMessage)
+                dataMessage.setGroupContext()
             } catch (e: Exception) {
                 Log.w(TAG, "Couldn't construct visible message proto from: $this")
                 return null

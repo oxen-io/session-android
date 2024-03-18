@@ -4,8 +4,7 @@
 
     <item
         android:title="@string/conversation_expiring_off__disappearing_messages"
-        android:contentDescription="@string/AccessibilityId_disappearing_messages"
-        android:id="@+id/menu_expiring_messages_off"
-        android:icon="@drawable/ic_baseline_timer_off_24" />
+        android:id="@+id/menu_expiring_messages"
+        android:contentDescription="@string/AccessibilityId_disappearing_messages" />
 
 </menu>

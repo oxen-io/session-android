@@ -252,11 +252,6 @@
         <attr name="doc_downloadButtonTint" format="color" />
     </declare-styleable>
 
-    <declare-styleable name="ConversationItemFooter">
-        <attr name="footer_text_color" format="color" />
-        <attr name="footer_icon_color" format="color" />
-    </declare-styleable>
-
     <declare-styleable name="ConversationItemThumbnail">
         <attr name="conversationThumbnail_minWidth" format="dimension" />
         <attr name="conversationThumbnail_maxWidth" format="dimension" />

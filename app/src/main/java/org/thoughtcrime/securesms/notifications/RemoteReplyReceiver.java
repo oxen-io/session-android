@@ -26,31 +26,50 @@ import android.os.Bundle;
 
 import androidx.core.app.RemoteInput;
 
+import org.session.libsession.messaging.messages.ExpirationConfiguration;
 import org.session.libsession.messaging.messages.signal.OutgoingMediaMessage;
 import org.session.libsession.messaging.messages.signal.OutgoingTextMessage;
 import org.session.libsession.messaging.messages.visible.VisibleMessage;
 import org.session.libsession.messaging.sending_receiving.MessageSender;
+import org.session.libsession.snode.SnodeAPI;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.ApplicationContext;
-import org.thoughtcrime.securesms.database.MessagingDatabase.MarkedMessageInfo;
+import org.thoughtcrime.securesms.database.MarkedMessageInfo;
+import org.thoughtcrime.securesms.database.MmsDatabase;
+import org.thoughtcrime.securesms.database.SmsDatabase;
+import org.thoughtcrime.securesms.database.Storage;
 import org.thoughtcrime.securesms.database.ThreadDatabase;
-import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import org.thoughtcrime.securesms.mms.MmsException;
 
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+import network.loki.messenger.libsession_util.util.ExpiryMode;
+
 /**
  * Get the response text from the Wearable Device and sends an message as a reply
  */
+@AndroidEntryPoint
 public class RemoteReplyReceiver extends BroadcastReceiver {
 
   public static final String TAG           = RemoteReplyReceiver.class.getSimpleName();
   public static final String REPLY_ACTION  = "network.loki.securesms.notifications.WEAR_REPLY";
   public static final String ADDRESS_EXTRA = "address";
   public static final String REPLY_METHOD  = "reply_method";
+
+  @Inject
+  ThreadDatabase threadDatabase;
+  @Inject
+  MmsDatabase mmsDatabase;
+  @Inject
+  SmsDatabase smsDatabase;
+  @Inject
+  Storage storage;
 
   @SuppressLint("StaticFieldLeak")
   @Override
@@ -73,17 +92,20 @@ public class RemoteReplyReceiver extends BroadcastReceiver {
         @Override
         protected Void doInBackground(Void... params) {
           Recipient recipient = Recipient.from(context, address, false);
-          ThreadDatabase threadDatabase = DatabaseComponent.get(context).threadDatabase();
           long threadId = threadDatabase.getOrCreateThreadIdFor(recipient);
           VisibleMessage message = new VisibleMessage();
-          message.setSentTimestamp(System.currentTimeMillis());
+          message.setSentTimestamp(SnodeAPI.getNowWithOffset());
           message.setText(responseText.toString());
+          ExpirationConfiguration config = storage.getExpirationConfiguration(threadId);
+          ExpiryMode expiryMode = config == null ? null : config.getExpiryMode();
 
+          long expiresInMillis = expiryMode == null ? 0 : expiryMode.getExpiryMillis();
+          long expireStartedAt = expiryMode instanceof ExpiryMode.AfterSend ? message.getSentTimestamp() : 0L;
           switch (replyMethod) {
             case GroupMessage: {
-              OutgoingMediaMessage reply = OutgoingMediaMessage.from(message, recipient, Collections.emptyList(), null, null);
+              OutgoingMediaMessage reply = OutgoingMediaMessage.from(message, recipient, Collections.emptyList(), null, null, expiresInMillis, 0);
               try {
-                DatabaseComponent.get(context).mmsDatabase().insertMessageOutbox(reply, threadId, false, null, true);
+                mmsDatabase.insertMessageOutbox(reply, threadId, false, null, true);
                 MessageSender.send(message, address);
               } catch (MmsException e) {
                 Log.w(TAG, e);
@@ -91,8 +113,8 @@ public class RemoteReplyReceiver extends BroadcastReceiver {
               break;
             }
             case SecureMessage: {
-              OutgoingTextMessage reply = OutgoingTextMessage.from(message, recipient);
-              DatabaseComponent.get(context).smsDatabase().insertMessageOutbox(threadId, reply, false, System.currentTimeMillis(), null, true);
+              OutgoingTextMessage reply = OutgoingTextMessage.from(message, recipient, expiresInMillis, expireStartedAt);
+              smsDatabase.insertMessageOutbox(threadId, reply, false, System.currentTimeMillis(), null, true);
               MessageSender.send(message, address);
               break;
             }

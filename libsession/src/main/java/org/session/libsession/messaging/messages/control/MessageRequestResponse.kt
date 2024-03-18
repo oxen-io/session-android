@@ -1,6 +1,7 @@
 package org.session.libsession.messaging.messages.control
 
 import com.google.protobuf.ByteString
+import org.session.libsession.messaging.messages.copyExpiration
 import org.session.libsession.messaging.messages.visible.Profile
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Log
@@ -19,6 +20,7 @@ class MessageRequestResponse(val isApproved: Boolean, var profile: Profile? = nu
         profile?.profileKey?.let { messageRequestResponseProto.profileKey = ByteString.copyFrom(it) }
         return try {
             SignalServiceProtos.Content.newBuilder()
+                .applyExpiryMode()
                 .setMessageRequestResponse(messageRequestResponseProto.build())
                 .build()
         } catch (e: Exception) {
@@ -40,7 +42,7 @@ class MessageRequestResponse(val isApproved: Boolean, var profile: Profile? = nu
                 profilePictureURL = profileProto.profilePicture
             }
             return MessageRequestResponse(isApproved, profile)
+                    .copyExpiration(proto)
         }
     }
-
 }
