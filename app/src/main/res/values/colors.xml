@@ -165,4 +165,6 @@
     <color name="danger_dark">#FF3A3A</color>
     <color name="danger_light">#E12D19</color>
 
+    <color name="outdated_client_banner_background_color">#00F782</color>
+
 </resources>

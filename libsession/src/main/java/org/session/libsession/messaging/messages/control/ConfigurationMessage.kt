@@ -2,28 +2,28 @@ package org.session.libsession.messaging.messages.control
 
 import com.google.protobuf.ByteString
 import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.messages.copyExpiration
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
-import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.ProfileKeyUtil
-import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.crypto.ecc.DjbECPrivateKey
 import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.protos.SignalServiceProtos
+import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.removingIdPrefixIfNeeded
 import org.session.libsignal.utilities.toHexString
-import org.session.libsignal.utilities.Hex
 
 class ConfigurationMessage(var closedGroups: List<ClosedGroup>, var openGroups: List<String>, var contacts: List<Contact>,
     var displayName: String, var profilePicture: String?, var profileKey: ByteArray) : ControlMessage() {
 
     override val isSelfSendValid: Boolean = true
 
-    class ClosedGroup(var publicKey: String, var name: String, var encryptionKeyPair: ECKeyPair?, var members: List<String>, var admins: List<String>, var expirationTimer: Int) {
+    class ClosedGroup(var publicKey: String, var name: String, var encryptionKeyPair: ECKeyPair?, var members: List<String>, var admins: List<String>) {
         val isValid: Boolean get() = members.isNotEmpty() && admins.isNotEmpty()
 
-        internal constructor() : this("", "", null, listOf(), listOf(), 0)
+        internal constructor() : this("", "", null, listOf(), listOf())
 
         override fun toString(): String {
             return name
@@ -40,8 +40,7 @@ class ConfigurationMessage(var closedGroups: List<ClosedGroup>, var openGroups: 
                     DjbECPrivateKey(encryptionKeyPairAsProto.privateKey.toByteArray()))
                 val members = proto.membersList.map { it.toByteArray().toHexString() }
                 val admins = proto.adminsList.map { it.toByteArray().toHexString() }
-                val expirationTimer = proto.expirationTimer
-                return ClosedGroup(publicKey, name, encryptionKeyPair, members, admins, expirationTimer)
+                return ClosedGroup(publicKey, name, encryptionKeyPair, members, admins)
             }
         }
 
@@ -55,7 +54,6 @@ class ConfigurationMessage(var closedGroups: List<ClosedGroup>, var openGroups: 
             result.encryptionKeyPair = encryptionKeyPairAsProto.build()
             result.addAllMembers(members.map { ByteString.copyFrom(Hex.fromStringCondensed(it)) })
             result.addAllAdmins(admins.map { ByteString.copyFrom(Hex.fromStringCondensed(it)) })
-            result.expirationTimer = expirationTimer
             return result.build()
         }
     }
@@ -128,8 +126,13 @@ class ConfigurationMessage(var closedGroups: List<ClosedGroup>, var openGroups: 
                     if (!group.members.contains(Address.fromSerialized(storage.getUserPublicKey()!!))) continue
                     val groupPublicKey = GroupUtil.doubleDecodeGroupID(group.encodedId).toHexString()
                     val encryptionKeyPair = storage.getLatestClosedGroupEncryptionKeyPair(groupPublicKey) ?: continue
-                    val recipient = Recipient.from(context, Address.fromSerialized(group.encodedId), false)
-                    val closedGroup = ClosedGroup(groupPublicKey, group.title, encryptionKeyPair, group.members.map { it.serialize() }, group.admins.map { it.serialize() }, recipient.expireMessages)
+                    val closedGroup = ClosedGroup(
+                        groupPublicKey,
+                        group.title,
+                        encryptionKeyPair,
+                        group.members.map { it.serialize() },
+                        group.admins.map { it.serialize() }
+                    )
                     closedGroups.add(closedGroup)
                 }
                 if (group.isOpenGroup) {
@@ -152,6 +155,7 @@ class ConfigurationMessage(var closedGroups: List<ClosedGroup>, var openGroups: 
             val profileKey = configurationProto.profileKey
             val contacts = configurationProto.contactsList.mapNotNull { Contact.fromProto(it) }
             return ConfigurationMessage(closedGroups, openGroups, contacts, displayName, profilePicture, profileKey.toByteArray())
+                    .copyExpiration(proto)
         }
     }
 

@@ -144,10 +144,11 @@ Java_network_loki_messenger_libsession_1util_UserGroupsConfig_erase__Lnetwork_lo
     auto conf = ptrToUserGroups(env, thiz);
     auto communityInfo = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$CommunityGroupInfo");
     auto legacyInfo = env->FindClass("network/loki/messenger/libsession_util/util/GroupInfo$LegacyGroupInfo");
-    if (env->GetObjectClass(group_info) == communityInfo) {
+    auto group_object = env->GetObjectClass(group_info);
+    if (env->IsSameObject(group_object, communityInfo)) {
         auto deserialized = deserialize_community_info(env, group_info, conf);
         conf->erase(deserialized);
-    } else if (env->GetObjectClass(group_info) == legacyInfo) {
+    } else if (env->IsSameObject(group_object, legacyInfo)) {
         auto deserialized = deserialize_legacy_group_info(env, group_info, conf);
         conf->erase(deserialized);
     }
