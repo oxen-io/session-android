@@ -1,5 +1,6 @@
 package org.session.libsession.messaging.messages.control
 
+import org.session.libsession.messaging.messages.copyExpiration
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Log
 
@@ -22,10 +23,11 @@ class ReadReceipt() : ControlMessage() {
             val timestamps = receiptProto.timestampList
             if (timestamps.isEmpty()) return null
             return ReadReceipt(timestamps = timestamps)
+                    .copyExpiration(proto)
         }
     }
 
-    internal constructor(timestamps: List<Long>?) : this() {
+    constructor(timestamps: List<Long>?) : this() {
         this.timestamps = timestamps
     }
 
@@ -35,16 +37,18 @@ class ReadReceipt() : ControlMessage() {
             Log.w(TAG, "Couldn't construct read receipt proto from: $this")
             return null
         }
-        val receiptProto = SignalServiceProtos.ReceiptMessage.newBuilder()
-        receiptProto.type = SignalServiceProtos.ReceiptMessage.Type.READ
-        receiptProto.addAllTimestamp(timestamps.asIterable())
-        val contentProto = SignalServiceProtos.Content.newBuilder()
-        try {
-            contentProto.receiptMessage = receiptProto.build()
-            return contentProto.build()
+
+        return try {
+            SignalServiceProtos.Content.newBuilder()
+                .setReceiptMessage(
+                    SignalServiceProtos.ReceiptMessage.newBuilder()
+                        .setType(SignalServiceProtos.ReceiptMessage.Type.READ)
+                        .addAllTimestamp(timestamps.asIterable()).build()
+                ).applyExpiryMode()
+                .build()
         } catch (e: Exception) {
             Log.w(TAG, "Couldn't construct read receipt proto from: $this")
-            return null
+            null
         }
     }
 }

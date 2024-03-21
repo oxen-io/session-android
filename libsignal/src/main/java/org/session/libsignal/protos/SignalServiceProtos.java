@@ -2482,6 +2482,36 @@ public final class SignalServiceProtos {
      * <code>optional .signalservice.SharedConfigMessage sharedConfigMessage = 11;</code>
      */
     org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessageOrBuilder getSharedConfigMessageOrBuilder();
+
+    // optional .signalservice.Content.ExpirationType expirationType = 12;
+    /**
+     * <code>optional .signalservice.Content.ExpirationType expirationType = 12;</code>
+     */
+    boolean hasExpirationType();
+    /**
+     * <code>optional .signalservice.Content.ExpirationType expirationType = 12;</code>
+     */
+    org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType getExpirationType();
+
+    // optional uint32 expirationTimer = 13;
+    /**
+     * <code>optional uint32 expirationTimer = 13;</code>
+     */
+    boolean hasExpirationTimer();
+    /**
+     * <code>optional uint32 expirationTimer = 13;</code>
+     */
+    int getExpirationTimer();
+
+    // optional uint64 lastDisappearingMessageChangeTimestamp = 14;
+    /**
+     * <code>optional uint64 lastDisappearingMessageChangeTimestamp = 14;</code>
+     */
+    boolean hasLastDisappearingMessageChangeTimestamp();
+    /**
+     * <code>optional uint64 lastDisappearingMessageChangeTimestamp = 14;</code>
+     */
+    long getLastDisappearingMessageChangeTimestamp();
   }
   /**
    * Protobuf type {@code signalservice.Content}
@@ -2651,6 +2681,27 @@ public final class SignalServiceProtos {
               bitField0_ |= 0x00000100;
               break;
             }
+            case 96: {
+              int rawValue = input.readEnum();
+              org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType value = org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(12, rawValue);
+              } else {
+                bitField0_ |= 0x00000200;
+                expirationType_ = value;
+              }
+              break;
+            }
+            case 104: {
+              bitField0_ |= 0x00000400;
+              expirationTimer_ = input.readUInt32();
+              break;
+            }
+            case 112: {
+              bitField0_ |= 0x00000800;
+              lastDisappearingMessageChangeTimestamp_ = input.readUInt64();
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -2688,6 +2739,97 @@ public final class SignalServiceProtos {
     @java.lang.Override
     public com.google.protobuf.Parser<Content> getParserForType() {
       return PARSER;
+    }
+
+    /**
+     * Protobuf enum {@code signalservice.Content.ExpirationType}
+     */
+    public enum ExpirationType
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      UNKNOWN(0, 0),
+      /**
+       * <code>DELETE_AFTER_READ = 1;</code>
+       */
+      DELETE_AFTER_READ(1, 1),
+      /**
+       * <code>DELETE_AFTER_SEND = 2;</code>
+       */
+      DELETE_AFTER_SEND(2, 2),
+      ;
+
+      /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      public static final int UNKNOWN_VALUE = 0;
+      /**
+       * <code>DELETE_AFTER_READ = 1;</code>
+       */
+      public static final int DELETE_AFTER_READ_VALUE = 1;
+      /**
+       * <code>DELETE_AFTER_SEND = 2;</code>
+       */
+      public static final int DELETE_AFTER_SEND_VALUE = 2;
+
+
+      public final int getNumber() { return value; }
+
+      public static ExpirationType valueOf(int value) {
+        switch (value) {
+          case 0: return UNKNOWN;
+          case 1: return DELETE_AFTER_READ;
+          case 2: return DELETE_AFTER_SEND;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<ExpirationType>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static com.google.protobuf.Internal.EnumLiteMap<ExpirationType>
+          internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<ExpirationType>() {
+              public ExpirationType findValueByNumber(int number) {
+                return ExpirationType.valueOf(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(index);
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return org.session.libsignal.protos.SignalServiceProtos.Content.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final ExpirationType[] VALUES = values();
+
+      public static ExpirationType valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int index;
+      private final int value;
+
+      private ExpirationType(int index, int value) {
+        this.index = index;
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:signalservice.Content.ExpirationType)
     }
 
     private int bitField0_;
@@ -2889,6 +3031,54 @@ public final class SignalServiceProtos {
       return sharedConfigMessage_;
     }
 
+    // optional .signalservice.Content.ExpirationType expirationType = 12;
+    public static final int EXPIRATIONTYPE_FIELD_NUMBER = 12;
+    private org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType expirationType_;
+    /**
+     * <code>optional .signalservice.Content.ExpirationType expirationType = 12;</code>
+     */
+    public boolean hasExpirationType() {
+      return ((bitField0_ & 0x00000200) == 0x00000200);
+    }
+    /**
+     * <code>optional .signalservice.Content.ExpirationType expirationType = 12;</code>
+     */
+    public org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType getExpirationType() {
+      return expirationType_;
+    }
+
+    // optional uint32 expirationTimer = 13;
+    public static final int EXPIRATIONTIMER_FIELD_NUMBER = 13;
+    private int expirationTimer_;
+    /**
+     * <code>optional uint32 expirationTimer = 13;</code>
+     */
+    public boolean hasExpirationTimer() {
+      return ((bitField0_ & 0x00000400) == 0x00000400);
+    }
+    /**
+     * <code>optional uint32 expirationTimer = 13;</code>
+     */
+    public int getExpirationTimer() {
+      return expirationTimer_;
+    }
+
+    // optional uint64 lastDisappearingMessageChangeTimestamp = 14;
+    public static final int LASTDISAPPEARINGMESSAGECHANGETIMESTAMP_FIELD_NUMBER = 14;
+    private long lastDisappearingMessageChangeTimestamp_;
+    /**
+     * <code>optional uint64 lastDisappearingMessageChangeTimestamp = 14;</code>
+     */
+    public boolean hasLastDisappearingMessageChangeTimestamp() {
+      return ((bitField0_ & 0x00000800) == 0x00000800);
+    }
+    /**
+     * <code>optional uint64 lastDisappearingMessageChangeTimestamp = 14;</code>
+     */
+    public long getLastDisappearingMessageChangeTimestamp() {
+      return lastDisappearingMessageChangeTimestamp_;
+    }
+
     private void initFields() {
       dataMessage_ = org.session.libsignal.protos.SignalServiceProtos.DataMessage.getDefaultInstance();
       callMessage_ = org.session.libsignal.protos.SignalServiceProtos.CallMessage.getDefaultInstance();
@@ -2899,6 +3089,9 @@ public final class SignalServiceProtos {
       unsendRequest_ = org.session.libsignal.protos.SignalServiceProtos.UnsendRequest.getDefaultInstance();
       messageRequestResponse_ = org.session.libsignal.protos.SignalServiceProtos.MessageRequestResponse.getDefaultInstance();
       sharedConfigMessage_ = org.session.libsignal.protos.SignalServiceProtos.SharedConfigMessage.getDefaultInstance();
+      expirationType_ = org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType.UNKNOWN;
+      expirationTimer_ = 0;
+      lastDisappearingMessageChangeTimestamp_ = 0L;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -2993,6 +3186,15 @@ public final class SignalServiceProtos {
       if (((bitField0_ & 0x00000100) == 0x00000100)) {
         output.writeMessage(11, sharedConfigMessage_);
       }
+      if (((bitField0_ & 0x00000200) == 0x00000200)) {
+        output.writeEnum(12, expirationType_.getNumber());
+      }
+      if (((bitField0_ & 0x00000400) == 0x00000400)) {
+        output.writeUInt32(13, expirationTimer_);
+      }
+      if (((bitField0_ & 0x00000800) == 0x00000800)) {
+        output.writeUInt64(14, lastDisappearingMessageChangeTimestamp_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -3037,6 +3239,18 @@ public final class SignalServiceProtos {
       if (((bitField0_ & 0x00000100) == 0x00000100)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(11, sharedConfigMessage_);
+      }
+      if (((bitField0_ & 0x00000200) == 0x00000200)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(12, expirationType_.getNumber());
+      }
+      if (((bitField0_ & 0x00000400) == 0x00000400)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(13, expirationTimer_);
+      }
+      if (((bitField0_ & 0x00000800) == 0x00000800)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt64Size(14, lastDisappearingMessageChangeTimestamp_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -3217,6 +3431,12 @@ public final class SignalServiceProtos {
           sharedConfigMessageBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000100);
+        expirationType_ = org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType.UNKNOWN;
+        bitField0_ = (bitField0_ & ~0x00000200);
+        expirationTimer_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000400);
+        lastDisappearingMessageChangeTimestamp_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000800);
         return this;
       }
 
@@ -3317,6 +3537,18 @@ public final class SignalServiceProtos {
         } else {
           result.sharedConfigMessage_ = sharedConfigMessageBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
+          to_bitField0_ |= 0x00000200;
+        }
+        result.expirationType_ = expirationType_;
+        if (((from_bitField0_ & 0x00000400) == 0x00000400)) {
+          to_bitField0_ |= 0x00000400;
+        }
+        result.expirationTimer_ = expirationTimer_;
+        if (((from_bitField0_ & 0x00000800) == 0x00000800)) {
+          to_bitField0_ |= 0x00000800;
+        }
+        result.lastDisappearingMessageChangeTimestamp_ = lastDisappearingMessageChangeTimestamp_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -3359,6 +3591,15 @@ public final class SignalServiceProtos {
         }
         if (other.hasSharedConfigMessage()) {
           mergeSharedConfigMessage(other.getSharedConfigMessage());
+        }
+        if (other.hasExpirationType()) {
+          setExpirationType(other.getExpirationType());
+        }
+        if (other.hasExpirationTimer()) {
+          setExpirationTimer(other.getExpirationTimer());
+        }
+        if (other.hasLastDisappearingMessageChangeTimestamp()) {
+          setLastDisappearingMessageChangeTimestamp(other.getLastDisappearingMessageChangeTimestamp());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -4492,6 +4733,108 @@ public final class SignalServiceProtos {
           sharedConfigMessage_ = null;
         }
         return sharedConfigMessageBuilder_;
+      }
+
+      // optional .signalservice.Content.ExpirationType expirationType = 12;
+      private org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType expirationType_ = org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType.UNKNOWN;
+      /**
+       * <code>optional .signalservice.Content.ExpirationType expirationType = 12;</code>
+       */
+      public boolean hasExpirationType() {
+        return ((bitField0_ & 0x00000200) == 0x00000200);
+      }
+      /**
+       * <code>optional .signalservice.Content.ExpirationType expirationType = 12;</code>
+       */
+      public org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType getExpirationType() {
+        return expirationType_;
+      }
+      /**
+       * <code>optional .signalservice.Content.ExpirationType expirationType = 12;</code>
+       */
+      public Builder setExpirationType(org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000200;
+        expirationType_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional .signalservice.Content.ExpirationType expirationType = 12;</code>
+       */
+      public Builder clearExpirationType() {
+        bitField0_ = (bitField0_ & ~0x00000200);
+        expirationType_ = org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType.UNKNOWN;
+        onChanged();
+        return this;
+      }
+
+      // optional uint32 expirationTimer = 13;
+      private int expirationTimer_ ;
+      /**
+       * <code>optional uint32 expirationTimer = 13;</code>
+       */
+      public boolean hasExpirationTimer() {
+        return ((bitField0_ & 0x00000400) == 0x00000400);
+      }
+      /**
+       * <code>optional uint32 expirationTimer = 13;</code>
+       */
+      public int getExpirationTimer() {
+        return expirationTimer_;
+      }
+      /**
+       * <code>optional uint32 expirationTimer = 13;</code>
+       */
+      public Builder setExpirationTimer(int value) {
+        bitField0_ |= 0x00000400;
+        expirationTimer_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional uint32 expirationTimer = 13;</code>
+       */
+      public Builder clearExpirationTimer() {
+        bitField0_ = (bitField0_ & ~0x00000400);
+        expirationTimer_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // optional uint64 lastDisappearingMessageChangeTimestamp = 14;
+      private long lastDisappearingMessageChangeTimestamp_ ;
+      /**
+       * <code>optional uint64 lastDisappearingMessageChangeTimestamp = 14;</code>
+       */
+      public boolean hasLastDisappearingMessageChangeTimestamp() {
+        return ((bitField0_ & 0x00000800) == 0x00000800);
+      }
+      /**
+       * <code>optional uint64 lastDisappearingMessageChangeTimestamp = 14;</code>
+       */
+      public long getLastDisappearingMessageChangeTimestamp() {
+        return lastDisappearingMessageChangeTimestamp_;
+      }
+      /**
+       * <code>optional uint64 lastDisappearingMessageChangeTimestamp = 14;</code>
+       */
+      public Builder setLastDisappearingMessageChangeTimestamp(long value) {
+        bitField0_ |= 0x00000800;
+        lastDisappearingMessageChangeTimestamp_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional uint64 lastDisappearingMessageChangeTimestamp = 14;</code>
+       */
+      public Builder clearLastDisappearingMessageChangeTimestamp() {
+        bitField0_ = (bitField0_ & ~0x00000800);
+        lastDisappearingMessageChangeTimestamp_ = 0L;
+        onChanged();
+        return this;
       }
 
       // @@protoc_insertion_point(builder_scope:signalservice.Content)
@@ -27222,7 +27565,7 @@ public final class SignalServiceProtos {
       "\002(\004\0223\n\006action\030\002 \002(\0162#.signalservice.Typi" +
       "ngMessage.Action\"\"\n\006Action\022\013\n\007STARTED\020\000\022" +
       "\013\n\007STOPPED\020\001\"2\n\rUnsendRequest\022\021\n\ttimesta",
-      "mp\030\001 \002(\004\022\016\n\006author\030\002 \002(\t\"\246\004\n\007Content\022/\n\013" +
+      "mp\030\001 \002(\004\022\016\n\006author\030\002 \002(\t\"\373\005\n\007Content\022/\n\013" +
       "dataMessage\030\001 \001(\0132\032.signalservice.DataMe" +
       "ssage\022/\n\013callMessage\030\003 \001(\0132\032.signalservi" +
       "ce.CallMessage\0225\n\016receiptMessage\030\005 \001(\0132\035" +
@@ -27236,103 +27579,108 @@ public final class SignalServiceProtos {
       "t\022E\n\026messageRequestResponse\030\n \001(\0132%.sign" +
       "alservice.MessageRequestResponse\022?\n\023shar" +
       "edConfigMessage\030\013 \001(\0132\".signalservice.Sh" +
-      "aredConfigMessage\"0\n\007KeyPair\022\021\n\tpublicKe" +
-      "y\030\001 \002(\014\022\022\n\nprivateKey\030\002 \002(\014\"\226\001\n\032DataExtr" +
-      "actionNotification\022<\n\004type\030\001 \002(\0162..signa" +
-      "lservice.DataExtractionNotification.Type" +
-      "\022\021\n\ttimestamp\030\002 \001(\004\"\'\n\004Type\022\016\n\nSCREENSHO" +
-      "T\020\001\022\017\n\013MEDIA_SAVED\020\002\"\231\016\n\013DataMessage\022\014\n\004",
-      "body\030\001 \001(\t\0225\n\013attachments\030\002 \003(\0132 .signal" +
-      "service.AttachmentPointer\022*\n\005group\030\003 \001(\013" +
-      "2\033.signalservice.GroupContext\022\r\n\005flags\030\004" +
-      " \001(\r\022\023\n\013expireTimer\030\005 \001(\r\022\022\n\nprofileKey\030" +
-      "\006 \001(\014\022\021\n\ttimestamp\030\007 \001(\004\022/\n\005quote\030\010 \001(\0132" +
-      " .signalservice.DataMessage.Quote\0223\n\007pre" +
-      "view\030\n \003(\0132\".signalservice.DataMessage.P" +
-      "review\0225\n\010reaction\030\013 \001(\0132#.signalservice" +
-      ".DataMessage.Reaction\0227\n\007profile\030e \001(\0132&" +
-      ".signalservice.DataMessage.LokiProfile\022K",
-      "\n\023openGroupInvitation\030f \001(\0132..signalserv" +
-      "ice.DataMessage.OpenGroupInvitation\022W\n\031c" +
-      "losedGroupControlMessage\030h \001(\01324.signals" +
-      "ervice.DataMessage.ClosedGroupControlMes" +
-      "sage\022\022\n\nsyncTarget\030i \001(\t\022&\n\036blocksCommun" +
-      "ityMessageRequests\030j \001(\010\032\225\002\n\005Quote\022\n\n\002id" +
-      "\030\001 \002(\004\022\016\n\006author\030\002 \002(\t\022\014\n\004text\030\003 \001(\t\022F\n\013" +
-      "attachments\030\004 \003(\01321.signalservice.DataMe" +
-      "ssage.Quote.QuotedAttachment\032\231\001\n\020QuotedA" +
-      "ttachment\022\023\n\013contentType\030\001 \001(\t\022\020\n\010fileNa",
-      "me\030\002 \001(\t\0223\n\tthumbnail\030\003 \001(\0132 .signalserv" +
-      "ice.AttachmentPointer\022\r\n\005flags\030\004 \001(\r\"\032\n\005" +
-      "Flags\022\021\n\rVOICE_MESSAGE\020\001\032V\n\007Preview\022\013\n\003u" +
-      "rl\030\001 \002(\t\022\r\n\005title\030\002 \001(\t\022/\n\005image\030\003 \001(\0132 " +
-      ".signalservice.AttachmentPointer\032:\n\013Loki" +
-      "Profile\022\023\n\013displayName\030\001 \001(\t\022\026\n\016profileP" +
-      "icture\030\002 \001(\t\0320\n\023OpenGroupInvitation\022\013\n\003u" +
-      "rl\030\001 \002(\t\022\014\n\004name\030\003 \002(\t\032\374\003\n\031ClosedGroupCo" +
-      "ntrolMessage\022G\n\004type\030\001 \002(\01629.signalservi" +
-      "ce.DataMessage.ClosedGroupControlMessage",
-      ".Type\022\021\n\tpublicKey\030\002 \001(\014\022\014\n\004name\030\003 \001(\t\0221" +
-      "\n\021encryptionKeyPair\030\004 \001(\0132\026.signalservic" +
-      "e.KeyPair\022\017\n\007members\030\005 \003(\014\022\016\n\006admins\030\006 \003" +
-      "(\014\022U\n\010wrappers\030\007 \003(\0132C.signalservice.Dat" +
-      "aMessage.ClosedGroupControlMessage.KeyPa" +
-      "irWrapper\022\027\n\017expirationTimer\030\010 \001(\r\032=\n\016Ke" +
-      "yPairWrapper\022\021\n\tpublicKey\030\001 \002(\014\022\030\n\020encry" +
-      "ptedKeyPair\030\002 \002(\014\"r\n\004Type\022\007\n\003NEW\020\001\022\027\n\023EN" +
-      "CRYPTION_KEY_PAIR\020\003\022\017\n\013NAME_CHANGE\020\004\022\021\n\r" +
-      "MEMBERS_ADDED\020\005\022\023\n\017MEMBERS_REMOVED\020\006\022\017\n\013",
-      "MEMBER_LEFT\020\007\032\222\001\n\010Reaction\022\n\n\002id\030\001 \002(\004\022\016" +
-      "\n\006author\030\002 \002(\t\022\r\n\005emoji\030\003 \001(\t\022:\n\006action\030" +
-      "\004 \002(\0162*.signalservice.DataMessage.Reacti" +
-      "on.Action\"\037\n\006Action\022\t\n\005REACT\020\000\022\n\n\006REMOVE" +
-      "\020\001\"$\n\005Flags\022\033\n\027EXPIRATION_TIMER_UPDATE\020\002" +
-      "\"\352\001\n\013CallMessage\022-\n\004type\030\001 \002(\0162\037.signals" +
-      "ervice.CallMessage.Type\022\014\n\004sdps\030\002 \003(\t\022\027\n" +
-      "\017sdpMLineIndexes\030\003 \003(\r\022\017\n\007sdpMids\030\004 \003(\t\022" +
-      "\014\n\004uuid\030\005 \002(\t\"f\n\004Type\022\r\n\tPRE_OFFER\020\006\022\t\n\005" +
-      "OFFER\020\001\022\n\n\006ANSWER\020\002\022\026\n\022PROVISIONAL_ANSWE",
-      "R\020\003\022\022\n\016ICE_CANDIDATES\020\004\022\014\n\010END_CALL\020\005\"\245\004" +
-      "\n\024ConfigurationMessage\022E\n\014closedGroups\030\001" +
-      " \003(\0132/.signalservice.ConfigurationMessag" +
-      "e.ClosedGroup\022\022\n\nopenGroups\030\002 \003(\t\022\023\n\013dis" +
-      "playName\030\003 \001(\t\022\026\n\016profilePicture\030\004 \001(\t\022\022" +
-      "\n\nprofileKey\030\005 \001(\014\022=\n\010contacts\030\006 \003(\0132+.s" +
-      "ignalservice.ConfigurationMessage.Contac" +
-      "t\032\233\001\n\013ClosedGroup\022\021\n\tpublicKey\030\001 \001(\014\022\014\n\004" +
-      "name\030\002 \001(\t\0221\n\021encryptionKeyPair\030\003 \001(\0132\026." +
-      "signalservice.KeyPair\022\017\n\007members\030\004 \003(\014\022\016",
-      "\n\006admins\030\005 \003(\014\022\027\n\017expirationTimer\030\006 \001(\r\032" +
-      "\223\001\n\007Contact\022\021\n\tpublicKey\030\001 \002(\014\022\014\n\004name\030\002" +
-      " \002(\t\022\026\n\016profilePicture\030\003 \001(\t\022\022\n\nprofileK" +
-      "ey\030\004 \001(\014\022\022\n\nisApproved\030\005 \001(\010\022\021\n\tisBlocke" +
-      "d\030\006 \001(\010\022\024\n\014didApproveMe\030\007 \001(\010\"y\n\026Message" +
-      "RequestResponse\022\022\n\nisApproved\030\001 \002(\010\022\022\n\np" +
-      "rofileKey\030\002 \001(\014\0227\n\007profile\030\003 \001(\0132&.signa" +
-      "lservice.DataMessage.LokiProfile\"\375\001\n\023Sha" +
-      "redConfigMessage\0225\n\004kind\030\001 \002(\0162\'.signals" +
-      "ervice.SharedConfigMessage.Kind\022\r\n\005seqno",
-      "\030\002 \002(\003\022\014\n\004data\030\003 \002(\014\"\221\001\n\004Kind\022\020\n\014USER_PR" +
-      "OFILE\020\001\022\014\n\010CONTACTS\020\002\022\027\n\023CONVO_INFO_VOLA" +
-      "TILE\020\003\022\n\n\006GROUPS\020\004\022\025\n\021CLOSED_GROUP_INFO\020" +
-      "\005\022\030\n\024CLOSED_GROUP_MEMBERS\020\006\022\023\n\017ENCRYPTIO" +
-      "N_KEYS\020\007\"u\n\016ReceiptMessage\0220\n\004type\030\001 \002(\016" +
-      "2\".signalservice.ReceiptMessage.Type\022\021\n\t" +
-      "timestamp\030\002 \003(\004\"\036\n\004Type\022\014\n\010DELIVERY\020\000\022\010\n" +
-      "\004READ\020\001\"\354\001\n\021AttachmentPointer\022\n\n\002id\030\001 \002(" +
-      "\006\022\023\n\013contentType\030\002 \001(\t\022\013\n\003key\030\003 \001(\014\022\014\n\004s" +
-      "ize\030\004 \001(\r\022\021\n\tthumbnail\030\005 \001(\014\022\016\n\006digest\030\006",
-      " \001(\014\022\020\n\010fileName\030\007 \001(\t\022\r\n\005flags\030\010 \001(\r\022\r\n" +
-      "\005width\030\t \001(\r\022\016\n\006height\030\n \001(\r\022\017\n\007caption\030" +
-      "\013 \001(\t\022\013\n\003url\030e \001(\t\"\032\n\005Flags\022\021\n\rVOICE_MES" +
-      "SAGE\020\001\"\365\001\n\014GroupContext\022\n\n\002id\030\001 \001(\014\022.\n\004t" +
-      "ype\030\002 \001(\0162 .signalservice.GroupContext.T" +
-      "ype\022\014\n\004name\030\003 \001(\t\022\017\n\007members\030\004 \003(\t\0220\n\006av" +
-      "atar\030\005 \001(\0132 .signalservice.AttachmentPoi" +
-      "nter\022\016\n\006admins\030\006 \003(\t\"H\n\004Type\022\013\n\007UNKNOWN\020" +
-      "\000\022\n\n\006UPDATE\020\001\022\013\n\007DELIVER\020\002\022\010\n\004QUIT\020\003\022\020\n\014" +
-      "REQUEST_INFO\020\004B3\n\034org.session.libsignal.",
-      "protosB\023SignalServiceProtos"
+      "aredConfigMessage\022=\n\016expirationType\030\014 \001(" +
+      "\0162%.signalservice.Content.ExpirationType" +
+      "\022\027\n\017expirationTimer\030\r \001(\r\022.\n&lastDisappe" +
+      "aringMessageChangeTimestamp\030\016 \001(\004\"K\n\016Exp" +
+      "irationType\022\013\n\007UNKNOWN\020\000\022\025\n\021DELETE_AFTER" +
+      "_READ\020\001\022\025\n\021DELETE_AFTER_SEND\020\002\"0\n\007KeyPai",
+      "r\022\021\n\tpublicKey\030\001 \002(\014\022\022\n\nprivateKey\030\002 \002(\014" +
+      "\"\226\001\n\032DataExtractionNotification\022<\n\004type\030" +
+      "\001 \002(\0162..signalservice.DataExtractionNoti" +
+      "fication.Type\022\021\n\ttimestamp\030\002 \001(\004\"\'\n\004Type" +
+      "\022\016\n\nSCREENSHOT\020\001\022\017\n\013MEDIA_SAVED\020\002\"\231\016\n\013Da" +
+      "taMessage\022\014\n\004body\030\001 \001(\t\0225\n\013attachments\030\002" +
+      " \003(\0132 .signalservice.AttachmentPointer\022*" +
+      "\n\005group\030\003 \001(\0132\033.signalservice.GroupConte" +
+      "xt\022\r\n\005flags\030\004 \001(\r\022\023\n\013expireTimer\030\005 \001(\r\022\022" +
+      "\n\nprofileKey\030\006 \001(\014\022\021\n\ttimestamp\030\007 \001(\004\022/\n",
+      "\005quote\030\010 \001(\0132 .signalservice.DataMessage" +
+      ".Quote\0223\n\007preview\030\n \003(\0132\".signalservice." +
+      "DataMessage.Preview\0225\n\010reaction\030\013 \001(\0132#." +
+      "signalservice.DataMessage.Reaction\0227\n\007pr" +
+      "ofile\030e \001(\0132&.signalservice.DataMessage." +
+      "LokiProfile\022K\n\023openGroupInvitation\030f \001(\013" +
+      "2..signalservice.DataMessage.OpenGroupIn" +
+      "vitation\022W\n\031closedGroupControlMessage\030h " +
+      "\001(\01324.signalservice.DataMessage.ClosedGr" +
+      "oupControlMessage\022\022\n\nsyncTarget\030i \001(\t\022&\n",
+      "\036blocksCommunityMessageRequests\030j \001(\010\032\225\002" +
+      "\n\005Quote\022\n\n\002id\030\001 \002(\004\022\016\n\006author\030\002 \002(\t\022\014\n\004t" +
+      "ext\030\003 \001(\t\022F\n\013attachments\030\004 \003(\01321.signals" +
+      "ervice.DataMessage.Quote.QuotedAttachmen" +
+      "t\032\231\001\n\020QuotedAttachment\022\023\n\013contentType\030\001 " +
+      "\001(\t\022\020\n\010fileName\030\002 \001(\t\0223\n\tthumbnail\030\003 \001(\013" +
+      "2 .signalservice.AttachmentPointer\022\r\n\005fl" +
+      "ags\030\004 \001(\r\"\032\n\005Flags\022\021\n\rVOICE_MESSAGE\020\001\032V\n" +
+      "\007Preview\022\013\n\003url\030\001 \002(\t\022\r\n\005title\030\002 \001(\t\022/\n\005" +
+      "image\030\003 \001(\0132 .signalservice.AttachmentPo",
+      "inter\032:\n\013LokiProfile\022\023\n\013displayName\030\001 \001(" +
+      "\t\022\026\n\016profilePicture\030\002 \001(\t\0320\n\023OpenGroupIn" +
+      "vitation\022\013\n\003url\030\001 \002(\t\022\014\n\004name\030\003 \002(\t\032\374\003\n\031" +
+      "ClosedGroupControlMessage\022G\n\004type\030\001 \002(\0162" +
+      "9.signalservice.DataMessage.ClosedGroupC" +
+      "ontrolMessage.Type\022\021\n\tpublicKey\030\002 \001(\014\022\014\n" +
+      "\004name\030\003 \001(\t\0221\n\021encryptionKeyPair\030\004 \001(\0132\026" +
+      ".signalservice.KeyPair\022\017\n\007members\030\005 \003(\014\022" +
+      "\016\n\006admins\030\006 \003(\014\022U\n\010wrappers\030\007 \003(\0132C.sign" +
+      "alservice.DataMessage.ClosedGroupControl",
+      "Message.KeyPairWrapper\022\027\n\017expirationTime" +
+      "r\030\010 \001(\r\032=\n\016KeyPairWrapper\022\021\n\tpublicKey\030\001" +
+      " \002(\014\022\030\n\020encryptedKeyPair\030\002 \002(\014\"r\n\004Type\022\007" +
+      "\n\003NEW\020\001\022\027\n\023ENCRYPTION_KEY_PAIR\020\003\022\017\n\013NAME" +
+      "_CHANGE\020\004\022\021\n\rMEMBERS_ADDED\020\005\022\023\n\017MEMBERS_" +
+      "REMOVED\020\006\022\017\n\013MEMBER_LEFT\020\007\032\222\001\n\010Reaction\022" +
+      "\n\n\002id\030\001 \002(\004\022\016\n\006author\030\002 \002(\t\022\r\n\005emoji\030\003 \001" +
+      "(\t\022:\n\006action\030\004 \002(\0162*.signalservice.DataM" +
+      "essage.Reaction.Action\"\037\n\006Action\022\t\n\005REAC" +
+      "T\020\000\022\n\n\006REMOVE\020\001\"$\n\005Flags\022\033\n\027EXPIRATION_T",
+      "IMER_UPDATE\020\002\"\352\001\n\013CallMessage\022-\n\004type\030\001 " +
+      "\002(\0162\037.signalservice.CallMessage.Type\022\014\n\004" +
+      "sdps\030\002 \003(\t\022\027\n\017sdpMLineIndexes\030\003 \003(\r\022\017\n\007s" +
+      "dpMids\030\004 \003(\t\022\014\n\004uuid\030\005 \002(\t\"f\n\004Type\022\r\n\tPR" +
+      "E_OFFER\020\006\022\t\n\005OFFER\020\001\022\n\n\006ANSWER\020\002\022\026\n\022PROV" +
+      "ISIONAL_ANSWER\020\003\022\022\n\016ICE_CANDIDATES\020\004\022\014\n\010" +
+      "END_CALL\020\005\"\245\004\n\024ConfigurationMessage\022E\n\014c" +
+      "losedGroups\030\001 \003(\0132/.signalservice.Config" +
+      "urationMessage.ClosedGroup\022\022\n\nopenGroups" +
+      "\030\002 \003(\t\022\023\n\013displayName\030\003 \001(\t\022\026\n\016profilePi",
+      "cture\030\004 \001(\t\022\022\n\nprofileKey\030\005 \001(\014\022=\n\010conta" +
+      "cts\030\006 \003(\0132+.signalservice.ConfigurationM" +
+      "essage.Contact\032\233\001\n\013ClosedGroup\022\021\n\tpublic" +
+      "Key\030\001 \001(\014\022\014\n\004name\030\002 \001(\t\0221\n\021encryptionKey" +
+      "Pair\030\003 \001(\0132\026.signalservice.KeyPair\022\017\n\007me" +
+      "mbers\030\004 \003(\014\022\016\n\006admins\030\005 \003(\014\022\027\n\017expiratio" +
+      "nTimer\030\006 \001(\r\032\223\001\n\007Contact\022\021\n\tpublicKey\030\001 " +
+      "\002(\014\022\014\n\004name\030\002 \002(\t\022\026\n\016profilePicture\030\003 \001(" +
+      "\t\022\022\n\nprofileKey\030\004 \001(\014\022\022\n\nisApproved\030\005 \001(" +
+      "\010\022\021\n\tisBlocked\030\006 \001(\010\022\024\n\014didApproveMe\030\007 \001",
+      "(\010\"y\n\026MessageRequestResponse\022\022\n\nisApprov" +
+      "ed\030\001 \002(\010\022\022\n\nprofileKey\030\002 \001(\014\0227\n\007profile\030" +
+      "\003 \001(\0132&.signalservice.DataMessage.LokiPr" +
+      "ofile\"\375\001\n\023SharedConfigMessage\0225\n\004kind\030\001 " +
+      "\002(\0162\'.signalservice.SharedConfigMessage." +
+      "Kind\022\r\n\005seqno\030\002 \002(\003\022\014\n\004data\030\003 \002(\014\"\221\001\n\004Ki" +
+      "nd\022\020\n\014USER_PROFILE\020\001\022\014\n\010CONTACTS\020\002\022\027\n\023CO" +
+      "NVO_INFO_VOLATILE\020\003\022\n\n\006GROUPS\020\004\022\025\n\021CLOSE" +
+      "D_GROUP_INFO\020\005\022\030\n\024CLOSED_GROUP_MEMBERS\020\006" +
+      "\022\023\n\017ENCRYPTION_KEYS\020\007\"u\n\016ReceiptMessage\022",
+      "0\n\004type\030\001 \002(\0162\".signalservice.ReceiptMes" +
+      "sage.Type\022\021\n\ttimestamp\030\002 \003(\004\"\036\n\004Type\022\014\n\010" +
+      "DELIVERY\020\000\022\010\n\004READ\020\001\"\354\001\n\021AttachmentPoint" +
+      "er\022\n\n\002id\030\001 \002(\006\022\023\n\013contentType\030\002 \001(\t\022\013\n\003k" +
+      "ey\030\003 \001(\014\022\014\n\004size\030\004 \001(\r\022\021\n\tthumbnail\030\005 \001(" +
+      "\014\022\016\n\006digest\030\006 \001(\014\022\020\n\010fileName\030\007 \001(\t\022\r\n\005f" +
+      "lags\030\010 \001(\r\022\r\n\005width\030\t \001(\r\022\016\n\006height\030\n \001(" +
+      "\r\022\017\n\007caption\030\013 \001(\t\022\013\n\003url\030e \001(\t\"\032\n\005Flags" +
+      "\022\021\n\rVOICE_MESSAGE\020\001\"\365\001\n\014GroupContext\022\n\n\002" +
+      "id\030\001 \001(\014\022.\n\004type\030\002 \001(\0162 .signalservice.G",
+      "roupContext.Type\022\014\n\004name\030\003 \001(\t\022\017\n\007member" +
+      "s\030\004 \003(\t\0220\n\006avatar\030\005 \001(\0132 .signalservice." +
+      "AttachmentPointer\022\016\n\006admins\030\006 \003(\t\"H\n\004Typ" +
+      "e\022\013\n\007UNKNOWN\020\000\022\n\n\006UPDATE\020\001\022\013\n\007DELIVER\020\002\022" +
+      "\010\n\004QUIT\020\003\022\020\n\014REQUEST_INFO\020\004B3\n\034org.sessi" +
+      "on.libsignal.protosB\023SignalServiceProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -27362,7 +27710,7 @@ public final class SignalServiceProtos {
           internal_static_signalservice_Content_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_signalservice_Content_descriptor,
-              new java.lang.String[] { "DataMessage", "CallMessage", "ReceiptMessage", "TypingMessage", "ConfigurationMessage", "DataExtractionNotification", "UnsendRequest", "MessageRequestResponse", "SharedConfigMessage", });
+              new java.lang.String[] { "DataMessage", "CallMessage", "ReceiptMessage", "TypingMessage", "ConfigurationMessage", "DataExtractionNotification", "UnsendRequest", "MessageRequestResponse", "SharedConfigMessage", "ExpirationType", "ExpirationTimer", "LastDisappearingMessageChangeTimestamp", });
           internal_static_signalservice_KeyPair_descriptor =
             getDescriptor().getMessageTypes().get(4);
           internal_static_signalservice_KeyPair_fieldAccessorTable = new

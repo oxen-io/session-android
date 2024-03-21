@@ -61,6 +61,7 @@ target_link_libraries( # Specifies the target library.
         PUBLIC
         libsession::config
         libsession::crypto
+        libsodium::sodium-internal
         # Links the target library to the log library
         # included in the NDK.
         ${log-lib})

@@ -17,3 +17,6 @@ ffpr
 pkcs11.password
 app/play
 app/huawei
+
+!/scripts/drone-static-upload.sh
+!/scripts/drone-upload-exists.sh

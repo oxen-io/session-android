@@ -96,12 +96,23 @@ namespace util {
 
         jclass object_class = env->GetObjectClass(expiry_mode);
 
-        if (object_class == after_read) {
+        if (env->IsSameObject(object_class, after_read)) {
             return std::pair(session::config::expiration_mode::after_read, env->GetLongField(expiry_mode, duration_seconds));
-        } else if (object_class == after_send) {
+        } else if (env->IsSameObject(object_class, after_send)) {
             return std::pair(session::config::expiration_mode::after_send, env->GetLongField(expiry_mode, duration_seconds));
         }
         return std::pair(session::config::expiration_mode::none, 0);
+    }
+
+    jobject build_string_stack(JNIEnv* env, std::vector<std::string> to_add) {
+        jclass stack_class = env->FindClass("java/util/Stack");
+        jmethodID constructor = env->GetMethodID(stack_class,"<init>", "()V");
+        jmethodID add = env->GetMethodID(stack_class, "push", "(Ljava/lang/Object;)Ljava/lang/Object;");
+        jobject our_stack = env->NewObject(stack_class, constructor);
+        for (std::basic_string_view<char> string: to_add) {
+            env->CallObjectMethod(our_stack, add, env->NewStringUTF(string.data()));
+        }
+        return our_stack;
     }
 
 }
