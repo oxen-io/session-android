@@ -22,7 +22,10 @@ import android.text.SpannableString;
 import androidx.annotation.NonNull;
 
 import org.session.libsession.utilities.recipients.Recipient;
+import org.session.libsignal.utilities.Log;
+import org.thoughtcrime.securesms.database.MmsDatabase;
 import org.thoughtcrime.securesms.database.MmsSmsColumns;
+import org.thoughtcrime.securesms.database.MmsSmsDatabase;
 import org.thoughtcrime.securesms.database.SmsDatabase;
 
 /**
@@ -48,6 +51,9 @@ public abstract class DisplayRecord {
     long dateReceived, long threadId, int deliveryStatus, int deliveryReceiptCount,
     long type, int readReceiptCount)
   {
+    // TODO: This gets hit very, very often and it likely shouldn't - place a Log.d statement in it to see.
+    //Log.d("[ACL]", "Creating a display record with delivery status of: " + deliveryStatus);
+
     this.threadId             = threadId;
     this.recipient            = recipient;
     this.dateSent             = dateSent;
@@ -57,6 +63,11 @@ public abstract class DisplayRecord {
     this.deliveryReceiptCount = deliveryReceiptCount;
     this.readReceiptCount     = readReceiptCount;
     this.deliveryStatus       = deliveryStatus;
+
+    // ACL - will this also be fine for mms?
+    if (deliveryStatus == SmsDatabase.Status.STATUS_COMPLETE) {
+
+    }
   }
 
   public @NonNull String getBody() {
@@ -77,7 +88,13 @@ public abstract class DisplayRecord {
   }
 
   public boolean isSent() {
-    return !isFailed() && !isPending();
+    boolean ogSent = !isFailed() && !isPending(); // OG
+    boolean sent = MmsSmsColumns.Types.isSentType(type);
+
+
+    Log.d("[ACL]", "Asking if a message has been sent... We think failed is: " + isFailed() + ", pending is: " + isPending() + ", therefore sent is: " + ogSent + ", while isSentType says: " + sent);
+    //return !isFailed() && !isPending();
+    return sent;
   }
 
   public boolean isSyncing() {
@@ -99,9 +116,15 @@ public abstract class DisplayRecord {
   }
 
   public boolean isPending() {
-    return MmsSmsColumns.Types.isPendingMessageType(type)
-      && !MmsSmsColumns.Types.isIdentityVerified(type)
-      && !MmsSmsColumns.Types.isIdentityDefault(type);
+
+
+
+    boolean isPending = MmsSmsColumns.Types.isPendingMessageType(type) &&
+                        !MmsSmsColumns.Types.isIdentityVerified(type) &&
+                        !MmsSmsColumns.Types.isIdentityDefault(type);
+
+    Log.d("[ACL]", "Check is pending, we think pending is: " + MmsSmsColumns.Types.isPendingMessageType(type) + ", identify verified is: " + MmsSmsColumns.Types.isIdentityVerified(type) + ", and identity default is: " + MmsSmsColumns.Types.isIdentityDefault(type) + ", therefore returning: " + isPending);
+    return isPending;
   }
 
   public boolean isRead() { return readReceiptCount > 0; }

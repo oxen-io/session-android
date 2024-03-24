@@ -971,7 +971,10 @@ open class Storage(
         val infoMessage = OutgoingGroupMediaMessage(recipient, updateData, groupID, null, sentTimestamp, 0, 0, true, null, listOf(), listOf())
         val mmsDB = DatabaseComponent.get(context).mmsDatabase()
         val mmsSmsDB = DatabaseComponent.get(context).mmsSmsDatabase()
-        if (mmsSmsDB.getMessageFor(sentTimestamp, userPublicKey) != null) return
+        if (mmsSmsDB.getMessageFor(sentTimestamp, userPublicKey) != null) {
+            Log.w("[ACL]", "Bailing from insertOutgoingInfoMessage because we believe the message has already been sent!")
+            return
+        }
         val infoMessageID = mmsDB.insertMessageOutbox(infoMessage, threadID, false, null, runThreadUpdate = true)
         mmsDB.markAsSent(infoMessageID, true)
     }

@@ -36,6 +36,7 @@ import org.session.libsession.utilities.ViewUtil
 import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsession.utilities.modifyLayoutParams
 import org.session.libsignal.utilities.IdPrefix
+import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
 import org.thoughtcrime.securesms.database.LokiThreadDatabase
@@ -294,40 +295,46 @@ class VisibleMessageView : LinearLayout {
                                  @ColorInt val iconTint: Int?,
                                  @StringRes val messageText: Int?)
 
-    private fun getMessageStatusImage(message: MessageRecord): MessageStatusInfo = when {
-        message.isFailed ->
-            MessageStatusInfo(
-                R.drawable.ic_delivery_status_failed,
-                resources.getColor(R.color.destructive, context.theme),
-                R.string.delivery_status_failed
-            )
-        message.isSyncFailed ->
-            MessageStatusInfo(
-                R.drawable.ic_delivery_status_failed,
-                context.getColor(R.color.accent_orange),
-                R.string.delivery_status_sync_failed
-            )
-        message.isPending ->
-            MessageStatusInfo(
-                R.drawable.ic_delivery_status_sending,
-                context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_sending
-            )
-        message.isResyncing ->
-            MessageStatusInfo(
-                R.drawable.ic_delivery_status_sending,
-                context.getColor(R.color.accent_orange), R.string.delivery_status_syncing
-            )
-        message.isRead || !message.isOutgoing ->
-            MessageStatusInfo(
-                R.drawable.ic_delivery_status_read,
-                context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_read
-            )
-        else ->
-            MessageStatusInfo(
-                R.drawable.ic_delivery_status_sent,
-                context.getColorFromAttr(R.attr.message_status_color),
-                R.string.delivery_status_sent
-            )
+    //private fun getMessageStatusImage(message: MessageRecord): MessageStatusInfo = when {
+    private fun getMessageStatusImage(message: MessageRecord): MessageStatusInfo {
+
+        Log.d("[ACL]", "Hit getMessageStatusImage - delivery status is: ${message.deliveryStatus}")
+
+        when {
+            message.isFailed ->
+                return MessageStatusInfo(
+                    R.drawable.ic_delivery_status_failed,
+                    resources.getColor(R.color.destructive, context.theme),
+                    R.string.delivery_status_failed
+                )
+            message.isSyncFailed ->
+                return MessageStatusInfo(
+                    R.drawable.ic_delivery_status_failed,
+                    context.getColor(R.color.accent_orange),
+                    R.string.delivery_status_sync_failed
+                )
+            message.isPending ->
+                return MessageStatusInfo(
+                    R.drawable.ic_delivery_status_sending,
+                    context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_sending
+                )
+            message.isResyncing ->
+                return MessageStatusInfo(
+                    R.drawable.ic_delivery_status_sending,
+                    context.getColor(R.color.accent_orange), R.string.delivery_status_syncing
+                )
+            message.isRead || !message.isOutgoing ->
+                return MessageStatusInfo(
+                    R.drawable.ic_delivery_status_read,
+                    context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_read
+                )
+            else ->
+                return MessageStatusInfo(
+                    R.drawable.ic_delivery_status_sent,
+                    context.getColorFromAttr(R.attr.message_status_color),
+                    R.string.delivery_status_sent
+                )
+        }
     }
 
     private fun updateExpirationTimer(message: MessageRecord) {
