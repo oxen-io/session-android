@@ -32,12 +32,12 @@ import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.contacts.Contact.ContactContext
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.ViewUtil
 import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsession.utilities.modifyLayoutParams
 import org.session.libsignal.utilities.IdPrefix
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
-import org.thoughtcrime.securesms.conversation.v2.ConversationAdapter
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
 import org.thoughtcrime.securesms.database.LokiThreadDatabase
 import org.thoughtcrime.securesms.database.MmsDatabase
@@ -244,7 +244,8 @@ class VisibleMessageView : LinearLayout {
     }
 
     private fun showStatusMessage(message: MessageRecord) {
-        val disappearing = message.expiresIn > 0
+
+        val scheduledToDisappear = message.expiresIn > 0
 
         binding.messageInnerLayout.modifyLayoutParams<FrameLayout.LayoutParams> {
             gravity = if (message.isOutgoing) Gravity.END else Gravity.START
@@ -256,21 +257,22 @@ class VisibleMessageView : LinearLayout {
 
         binding.expirationTimerView.isGone = true
 
-        if (message.isOutgoing || disappearing) {
+        if (message.isOutgoing || scheduledToDisappear) {
             val (iconID, iconColor, textId) = getMessageStatusImage(message)
             textId?.let(binding.messageStatusTextView::setText)
             iconColor?.let(binding.messageStatusTextView::setTextColor)
             iconID?.let { ContextCompat.getDrawable(context, it) }
                 ?.run { iconColor?.let { mutate().apply { setTint(it) } } ?: this }
                 ?.let(binding.messageStatusImageView::setImageDrawable)
-            
-            val lastMessageID = mmsSmsDb.getLastMessageID(message.threadId)
-            val isLastMessage = message.id == lastMessageID
-            binding.messageStatusTextView.isVisible =
-                textId != null && (!message.isSent || isLastMessage || disappearing)
-            val showTimer = disappearing && !message.isPending
-            binding.messageStatusImageView.isVisible =
-                iconID != null && !showTimer && (!message.isSent || isLastMessage)
+
+            // Always show the delivery status of the last sent message
+            val thisUsersSessionId = TextSecurePreferences.getLocalNumber(context)
+            val lastSentMessageId = mmsSmsDb.getLastSentMessageFromSender(message.threadId, thisUsersSessionId)
+            val isLastSentMessage = lastSentMessageId == message.id
+
+            binding.messageStatusTextView.isVisible = textId != null && (isLastSentMessage || scheduledToDisappear)
+            val showTimer = scheduledToDisappear && !message.isPending
+            binding.messageStatusImageView.isVisible = iconID != null && !showTimer && (!message.isSent || isLastSentMessage)
 
             binding.messageStatusImageView.bringToFront()
             binding.expirationTimerView.bringToFront()
