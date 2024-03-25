@@ -3,9 +3,7 @@ package org.session.libsession.messaging.jobs
 import okhttp3.HttpUrl
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroup
-import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.utilities.Data
-import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.OpenGroupUrlParser
 import org.session.libsignal.utilities.Log
 
@@ -29,7 +27,7 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
         return "$server.$room"
     }
 
-    override fun execute(dispatcherName: String) {
+    override suspend fun execute(dispatcherName: String) {
         try {
             val openGroup = OpenGroupUrlParser.parseUrl(joinUrl)
             val storage = MessagingModuleConfiguration.shared.storage
@@ -40,8 +38,7 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
                 return
             }
             storage.addOpenGroup(openGroup.joinUrl())
-            Log.d(KEY, "onOpenGroupAdded(${openGroup.server})")
-            storage.onOpenGroupAdded(openGroup.server)
+            storage.onOpenGroupAdded(openGroup.server, openGroup.room)
         } catch (e: Exception) {
             Log.e("OpenGroupDispatcher", "Failed to add group because",e)
             delegate?.handleJobFailed(this, dispatcherName, e)

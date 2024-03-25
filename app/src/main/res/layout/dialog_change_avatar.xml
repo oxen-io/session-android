@@ -45,7 +45,7 @@
 
     </FrameLayout>
 
-    <include layout="@layout/view_profile_picture"
+    <org.thoughtcrime.securesms.components.ProfilePictureView
         android:layout_margin="30dp"
         android:id="@+id/profile_picture_view"
         android:layout_gravity="center"

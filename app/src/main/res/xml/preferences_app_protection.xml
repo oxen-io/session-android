@@ -12,13 +12,18 @@
             android:title="@string/preferences_app_protection__screen_lock"
             android:summary="@string/preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint" />
 
-        <!-- TODO: check figure out what is needed for this -->
         <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
-            android:defaultValue="true"
+            android:defaultValue="@bool/screen_security_default"
             android:key="pref_screen_security"
             android:title="@string/preferences__screen_security"
             android:summary="@string/preferences__disable_screen_security_to_allow_screen_shots" />
 
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/preferences__message_requests_category"
+        android:key="@string/preferences__message_requests_category"
+        android:persistent="false">
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/preferences__read_receipts">

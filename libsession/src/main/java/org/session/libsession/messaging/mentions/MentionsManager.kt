@@ -2,6 +2,7 @@ package org.session.libsession.messaging.mentions
 
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
+import java.util.*
 
 object MentionsManager {
     var userPublicKeyCache = mutableMapOf<Long, Set<String>>() // Thread ID to set of user hex encoded public keys
@@ -32,9 +33,9 @@ object MentionsManager {
         candidates.sortedBy { it.displayName }
         if (query.length >= 2) {
             // Filter out any non-matching candidates
-            candidates = candidates.filter { it.displayName.toLowerCase().contains(query.toLowerCase()) }
+            candidates = candidates.filter { it.displayName.lowercase(Locale.getDefault()).contains(query.lowercase(Locale.getDefault())) }
             // Sort based on where in the candidate the query occurs
-            candidates.sortedBy { it.displayName.toLowerCase().indexOf(query.toLowerCase()) }
+            candidates.sortedBy { it.displayName.lowercase(Locale.getDefault()).indexOf(query.lowercase(Locale.getDefault())) }
         }
         // Return
         return candidates

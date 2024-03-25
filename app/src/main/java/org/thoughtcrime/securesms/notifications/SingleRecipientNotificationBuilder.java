@@ -99,7 +99,7 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
                   .get();
           setLargeIcon(iconBitmap);
         } catch (InterruptedException | ExecutionException e) {
-          Log.w(TAG, e);
+          Log.w(TAG, "get iconBitmap in getThread failed", e);
           setLargeIcon(getPlaceholderDrawable(context, recipient));
         }
       } else {
@@ -298,7 +298,7 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
                      .submit(64, 64)
                      .get();
     } catch (InterruptedException | ExecutionException e) {
-      Log.w(TAG, e);
+      Log.w(TAG, "getBigPicture failed", e);
       return Bitmap.createBitmap(64, 64, Bitmap.Config.RGB_565);
     }
   }

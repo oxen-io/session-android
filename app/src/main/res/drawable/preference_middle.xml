@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?colorControlHighlight">
     <item android:left="@dimen/medium_spacing"
         android:right="@dimen/medium_spacing">
         <shape android:shape="rectangle">
@@ -14,4 +15,4 @@
             <solid android:color="@color/transparent_white_15"/>
         </shape>
     </item>
-</layer-list>
+</ripple>

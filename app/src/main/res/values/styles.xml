@@ -69,8 +69,13 @@
         <item name="android:textColor">@color/emoji_tab_text_color</item>
     </style>
 
+    <style name="TextAppearance.Session.ToolbarSubtitle" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">11dp</item>
+    </style>
+
     <!--  TODO These button styles require proper background selectors for up/down visual state.  -->
     <style name="Widget.Session.Button.Common" parent="">
+        <item name="android:gravity">center</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">@dimen/medium_font_size</item>
         <item name="android:fontFamily">sans-serif-medium</item>
@@ -82,41 +87,35 @@
     <style name="Widget.Session.Button.Common.ProminentFilled">
         <item name="android:background">@drawable/prominent_filled_button_medium_background</item>
         <item name="android:textColor">@color/black</item>
-        <item name="android:drawableTint">?android:textColorPrimary</item>
+    </style>
+
+    <style name="Widget.Session.Button.Common.Filled">
+        <item name="android:background">@drawable/filled_button_medium_background</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
     </style>
 
     <style name="Widget.Session.Button.Common.ProminentOutline">
         <item name="android:background">@drawable/prominent_outline_button_medium_background</item>
-        <item name="android:textColor">?attr/prominentButtonColor</item>
-        <item name="android:drawableTint">?attr/prominentButtonColor</item>
-    </style>
-
-    <style name="Widget.Session.Button.Common.UnimportantFilled">
-        <item name="android:background">@drawable/unimportant_filled_button_medium_background</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:drawableTint">?android:textColorPrimary</item>
+        <item name="android:textColor">@color/prominent_button_color</item>
     </style>
 
     <style name="Widget.Session.Button.Common.UnimportantOutline">
         <item name="android:background">@drawable/unimportant_outline_button_medium_background</item>
         <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:drawableTint">?android:textColorPrimary</item>
     </style>
 
-    <style name="Widget.Session.Button.Common.UnimportantDestructive">
-        <item name="android:background">@drawable/unimportant_outline_button_medium_background</item>
+    <style name="Widget.Session.Button.Common.Borderless">
+        <item name="android:background">@drawable/borderless_button_medium_background</item>
         <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:backgroundTint">@color/destructive</item>
-        <item name="android:drawableTint">@color/destructive</item>
     </style>
 
     <style name="Widget.Session.Button.Common.DestructiveOutline">
         <item name="android:background">@drawable/destructive_outline_button_medium_background</item>
         <item name="android:textColor">@color/button_destructive</item>
-        <item name="android:drawableTint">?android:textColorPrimary</item>
     </style>
 
     <style name="Widget.Session.Button.Dialog" parent="">
+        <item name="android:gravity">center</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">@dimen/small_font_size</item>
         <item name="android:textColor">?android:textColorPrimary</item>
@@ -194,6 +193,17 @@
         <item name="android:maxLines">1</item>
     </style>
 
+    <style name="CallMessage">
+        <item name="android:background">@drawable/call_message_background</item>
+        <item name="android:textColor">?message_received_text_color</item>
+        <item name="android:paddingLeft">@dimen/medium_spacing</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingRight">@dimen/medium_spacing</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
     <style name="FakeChatViewMessageBubble">
         <item name="android:paddingLeft">@dimen/medium_spacing</item>
         <item name="android:paddingTop">12dp</item>
@@ -269,7 +279,7 @@
         <item name="android:padding">@dimen/normal_padding</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:selectable">true</item>
-        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
     </style>
 
     <style name="PopupMenu.ConversationItem" parent="@style/Widget.AppCompat.PopupMenu">

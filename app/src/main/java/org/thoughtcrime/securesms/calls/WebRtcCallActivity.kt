@@ -249,17 +249,12 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
                 viewModel.callState.collect { state ->
                     Log.d("Loki", "Consuming view model state $state")
                     when (state) {
-                        CALL_RINGING -> {
-                            if (wantsToAnswer) {
-                                answerCall()
-                                wantsToAnswer = false
-                            }
-                        }
-                        CALL_OUTGOING -> {
-                        }
-                        CALL_CONNECTED -> {
+                        CALL_RINGING -> if (wantsToAnswer) {
+                            answerCall()
                             wantsToAnswer = false
                         }
+                        CALL_CONNECTED -> wantsToAnswer = false
+                        else -> {}
                     }
                     updateControls(state)
                 }

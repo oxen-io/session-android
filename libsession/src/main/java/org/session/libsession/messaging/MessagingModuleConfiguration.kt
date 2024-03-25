@@ -4,12 +4,16 @@ import android.content.Context
 import com.goterl.lazysodium.utils.KeyPair
 import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.database.StorageProtocol
+import org.session.libsession.utilities.ConfigFactoryProtocol
+import org.session.libsession.utilities.Device
 
 class MessagingModuleConfiguration(
     val context: Context,
     val storage: StorageProtocol,
+    val device: Device,
     val messageDataProvider: MessageDataProvider,
-    val getUserED25519KeyPair: ()-> KeyPair?
+    val getUserED25519KeyPair: () -> KeyPair?,
+    val configFactory: ConfigFactoryProtocol
 ) {
 
     companion object {

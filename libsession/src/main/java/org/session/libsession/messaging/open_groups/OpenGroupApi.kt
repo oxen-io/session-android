@@ -753,7 +753,8 @@ object OpenGroupApi {
             )
         }
         val serverCapabilities = storage.getServerCapabilities(server)
-        if (serverCapabilities.contains(Capability.BLIND.name.lowercase())) {
+        val isAcceptingCommunityRequests = storage.isCheckingCommunityRequests()
+        if (serverCapabilities.contains(Capability.BLIND.name.lowercase()) && isAcceptingCommunityRequests) {
             requests.add(
                 if (lastInboxMessageId == null) {
                     BatchRequestInfo(
@@ -969,6 +970,18 @@ object OpenGroupApi {
         )
         return getResponseBody(request).map { response ->
             JsonUtil.fromJson(response, DirectMessage::class.java)
+        }
+    }
+
+    fun deleteAllInboxMessages(server: String): Promise<Map<*, *>, java.lang.Exception> {
+        val request = Request(
+            verb = DELETE,
+            room = null,
+            server = server,
+            endpoint = Endpoint.Inbox
+        )
+        return getResponseBody(request).map { response ->
+            JsonUtil.fromJson(response, Map::class.java)
         }
     }
 

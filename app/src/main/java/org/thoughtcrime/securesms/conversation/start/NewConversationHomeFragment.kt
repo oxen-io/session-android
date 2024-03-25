@@ -55,7 +55,7 @@ class NewConversationHomeFragment : Fragment() {
             val displayName = contact?.displayName(Contact.ContactContext.REGULAR) ?: sessionId
             ContactListItem.Contact(it, displayName)
         }.sortedBy { it.displayName }
-            .groupBy { if (PublicKeyValidation.isValid(it.displayName)) unknownSectionTitle else it.displayName.first().uppercase() }
+            .groupBy { if (PublicKeyValidation.isValid(it.displayName)) unknownSectionTitle else it.displayName.firstOrNull()?.uppercase() ?: unknownSectionTitle }
             .toMutableMap()
         contactGroups.remove(unknownSectionTitle)?.let { contactGroups.put(unknownSectionTitle, it) }
         adapter.items = contactGroups.flatMap { entry -> listOf(ContactListItem.Header(entry.key)) + entry.value }

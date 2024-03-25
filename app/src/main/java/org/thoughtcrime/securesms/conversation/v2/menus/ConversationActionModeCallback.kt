@@ -67,7 +67,7 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
         menu.findItem(R.id.menu_context_copy_public_key).isVisible =
              (thread.isGroupRecipient && !thread.isOpenGroupRecipient && selectedItems.size == 1 && firstMessage.individualRecipient.address.toString() != userPublicKey)
         // Message detail
-        menu.findItem(R.id.menu_message_details).isVisible = (selectedItems.size == 1 && firstMessage.isOutgoing)
+        menu.findItem(R.id.menu_message_details).isVisible = selectedItems.size == 1
         // Resend
         menu.findItem(R.id.menu_context_resend).isVisible = (selectedItems.size == 1 && firstMessage.isFailed)
         // Resync

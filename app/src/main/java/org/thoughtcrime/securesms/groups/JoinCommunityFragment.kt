@@ -55,7 +55,7 @@ class JoinCommunityFragment : Fragment() {
         fun hideLoader() {
             binding.loader.animate().setDuration(150).alpha(0.0f).setListener(object : AnimatorListenerAdapter() {
 
-                override fun onAnimationEnd(animation: Animator?) {
+                override fun onAnimationEnd(animation: Animator) {
                     super.onAnimationEnd(animation)
                     binding.loader.visibility = View.GONE
                 }
@@ -79,7 +79,7 @@ class JoinCommunityFragment : Fragment() {
                     val openGroupID = "$sanitizedServer.${openGroup.room}"
                     OpenGroupManager.add(sanitizedServer, openGroup.room, openGroup.serverPublicKey, requireContext())
                     val storage = MessagingModuleConfiguration.shared.storage
-                    storage.onOpenGroupAdded(sanitizedServer)
+                    storage.onOpenGroupAdded(sanitizedServer, openGroup.room)
                     val threadID = GroupManager.getOpenGroupThreadID(openGroupID, requireContext())
                     val groupID = GroupUtil.getEncodedOpenGroupID(openGroupID.toByteArray())
 

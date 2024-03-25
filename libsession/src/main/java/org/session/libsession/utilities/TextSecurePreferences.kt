@@ -12,7 +12,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import org.session.libsession.BuildConfig
 import org.session.libsession.R
 import org.session.libsession.utilities.TextSecurePreferences.Companion.AUTOPLAY_AUDIO_MESSAGES
 import org.session.libsession.utilities.TextSecurePreferences.Companion.CALL_NOTIFICATIONS_ENABLED
@@ -38,12 +37,12 @@ interface TextSecurePreferences {
     fun setLastConfigurationSyncTime(value: Long)
     fun getConfigurationMessageSynced(): Boolean
     fun setConfigurationMessageSynced(value: Boolean)
-    fun isUsingFCM(): Boolean
-    fun setIsUsingFCM(value: Boolean)
-    fun getFCMToken(): String?
-    fun setFCMToken(value: String)
-    fun getLastFCMUploadTime(): Long
-    fun setLastFCMUploadTime(value: Long)
+    fun isPushEnabled(): Boolean
+    fun setPushEnabled(value: Boolean)
+    fun getPushToken(): String?
+    fun setPushToken(value: String)
+    fun getPushRegisterTime(): Long
+    fun setPushRegisterTime(value: Long)
     fun isScreenLockEnabled(): Boolean
     fun setScreenLockEnabled(value: Boolean)
     fun getScreenLockTimeout(): Long
@@ -103,6 +102,8 @@ interface TextSecurePreferences {
     fun setUpdateApkDigest(value: String?)
     fun getUpdateApkDigest(): String?
     fun getLocalNumber(): String?
+    fun getHasLegacyConfig(): Boolean
+    fun setHasLegacyConfig(newValue: Boolean)
     fun setLocalNumber(localNumber: String)
     fun removeLocalNumber()
     fun isEnterSendsEnabled(): Boolean
@@ -178,6 +179,7 @@ interface TextSecurePreferences {
     fun setThemeStyle(themeStyle: String)
     fun setFollowSystemSettings(followSystemSettings: Boolean)
     fun autoplayAudioMessages(): Boolean
+    fun hasForcedNewConfig(): Boolean
     fun hasPreference(key: String): Boolean
     fun clearAll()
 
@@ -186,6 +188,9 @@ interface TextSecurePreferences {
 
         internal val _events = MutableSharedFlow<String>(0, 64, BufferOverflow.DROP_OLDEST)
         val events get() = _events.asSharedFlow()
+
+        @JvmStatic
+        var pushSuffix = ""
 
         const val DISABLE_PASSPHRASE_PREF = "pref_disable_passphrase"
         const val LANGUAGE_PREF = "pref_language"
@@ -249,9 +254,9 @@ interface TextSecurePreferences {
         const val LINK_PREVIEWS = "pref_link_previews"
         const val GIF_METADATA_WARNING = "has_seen_gif_metadata_warning"
         const val GIF_GRID_LAYOUT = "pref_gif_grid_layout"
-        const val IS_USING_FCM = "pref_is_using_fcm"
-        const val FCM_TOKEN = "pref_fcm_token"
-        const val LAST_FCM_TOKEN_UPLOAD_TIME = "pref_last_fcm_token_upload_time_2"
+        val IS_PUSH_ENABLED get() = "pref_is_using_fcm$pushSuffix"
+        val PUSH_TOKEN get() = "pref_fcm_token_2$pushSuffix"
+        val PUSH_REGISTER_TIME get() = "pref_last_fcm_token_upload_time_2$pushSuffix"
         const val LAST_CONFIGURATION_SYNC_TIME = "pref_last_configuration_sync_time"
         const val CONFIGURATION_SYNCED = "pref_configuration_synced"
         const val LAST_PROFILE_UPDATE_TIME = "pref_last_profile_update_time"
@@ -264,6 +269,10 @@ interface TextSecurePreferences {
         const val AUTOPLAY_AUDIO_MESSAGES = "pref_autoplay_audio"
         const val FINGERPRINT_KEY_GENERATED = "fingerprint_key_generated"
         const val SELECTED_ACCENT_COLOR = "selected_accent_color"
+
+        const val HAS_RECEIVED_LEGACY_CONFIG = "has_received_legacy_config"
+        const val HAS_FORCED_NEW_CONFIG = "has_forced_new_config"
+
         const val GREEN_ACCENT = "accent_green"
         const val BLUE_ACCENT = "accent_blue"
         const val PURPLE_ACCENT = "accent_purple"
@@ -280,6 +289,8 @@ interface TextSecurePreferences {
         const val CLASSIC_LIGHT = "classic.light"
         const val OCEAN_DARK = "ocean.dark"
         const val OCEAN_LIGHT = "ocean.light"
+
+        const val ALLOW_MESSAGE_REQUESTS = "libsession.ALLOW_MESSAGE_REQUESTS"
 
         @JvmStatic
         fun getLastConfigurationSyncTime(context: Context): Long {
@@ -303,31 +314,31 @@ interface TextSecurePreferences {
         }
 
         @JvmStatic
-        fun isUsingFCM(context: Context): Boolean {
-            return getBooleanPreference(context, IS_USING_FCM, false)
+        fun isPushEnabled(context: Context): Boolean {
+            return getBooleanPreference(context, IS_PUSH_ENABLED, false)
         }
 
         @JvmStatic
-        fun setIsUsingFCM(context: Context, value: Boolean) {
-            setBooleanPreference(context, IS_USING_FCM, value)
+        fun setPushEnabled(context: Context, value: Boolean) {
+            setBooleanPreference(context, IS_PUSH_ENABLED, value)
         }
 
         @JvmStatic
-        fun getFCMToken(context: Context): String? {
-            return getStringPreference(context, FCM_TOKEN, "")
+        fun getPushToken(context: Context): String? {
+            return getStringPreference(context, PUSH_TOKEN, "")
         }
 
         @JvmStatic
-        fun setFCMToken(context: Context, value: String) {
-            setStringPreference(context, FCM_TOKEN, value)
+        fun setPushToken(context: Context, value: String?) {
+            setStringPreference(context, PUSH_TOKEN, value)
         }
 
-        fun getLastFCMUploadTime(context: Context): Long {
-            return getLongPreference(context, LAST_FCM_TOKEN_UPLOAD_TIME, 0)
+        fun getPushRegisterTime(context: Context): Long {
+            return getLongPreference(context, PUSH_REGISTER_TIME, 0)
         }
 
-        fun setLastFCMUploadTime(context: Context, value: Long) {
-            setLongPreference(context, LAST_FCM_TOKEN_UPLOAD_TIME, value)
+        fun setPushRegisterTime(context: Context, value: Long) {
+            setLongPreference(context, PUSH_REGISTER_TIME, value)
         }
 
         // endregion
@@ -625,6 +636,17 @@ interface TextSecurePreferences {
             return getStringPreference(context, LOCAL_NUMBER_PREF, null)
         }
 
+        @JvmStatic
+        fun getHasLegacyConfig(context: Context): Boolean {
+            return getBooleanPreference(context, HAS_RECEIVED_LEGACY_CONFIG, false)
+        }
+
+        @JvmStatic
+        fun setHasLegacyConfig(context: Context, newValue: Boolean) {
+            setBooleanPreference(context, HAS_RECEIVED_LEGACY_CONFIG, newValue)
+            _events.tryEmit(HAS_RECEIVED_LEGACY_CONFIG)
+        }
+
         fun setLocalNumber(context: Context, localNumber: String) {
             setStringPreference(context, LOCAL_NUMBER_PREF, localNumber.toLowerCase())
         }
@@ -649,7 +671,7 @@ interface TextSecurePreferences {
 
         @JvmStatic
         fun isScreenSecurityEnabled(context: Context): Boolean {
-            return getBooleanPreference(context, SCREEN_SECURITY_PREF, !BuildConfig.DEBUG)
+            return getBooleanPreference(context, SCREEN_SECURITY_PREF, context.resources.getBoolean(R.bool.screen_security_default))
         }
 
         fun getLastVersionCode(context: Context): Int {
@@ -793,6 +815,11 @@ interface TextSecurePreferences {
         @JvmStatic
         fun setNotificationMessagesChannelVersion(context: Context, version: Int) {
             setIntegerPreference(context, NOTIFICATION_MESSAGES_CHANNEL_VERSION, version)
+        }
+
+        @JvmStatic
+        fun hasForcedNewConfig(context: Context): Boolean {
+            return getBooleanPreference(context, HAS_FORCED_NEW_CONFIG, false)
         }
 
         @JvmStatic
@@ -986,7 +1013,6 @@ interface TextSecurePreferences {
         fun clearAll(context: Context) {
             getDefaultSharedPreferences(context).edit().clear().commit()
         }
-
     }
 }
 
@@ -1011,28 +1037,28 @@ class AppTextSecurePreferences @Inject constructor(
         TextSecurePreferences._events.tryEmit(TextSecurePreferences.CONFIGURATION_SYNCED)
     }
 
-    override fun isUsingFCM(): Boolean {
-        return getBooleanPreference(TextSecurePreferences.IS_USING_FCM, false)
+    override fun isPushEnabled(): Boolean {
+        return getBooleanPreference(TextSecurePreferences.IS_PUSH_ENABLED, false)
     }
 
-    override fun setIsUsingFCM(value: Boolean) {
-        setBooleanPreference(TextSecurePreferences.IS_USING_FCM, value)
+    override fun setPushEnabled(value: Boolean) {
+        setBooleanPreference(TextSecurePreferences.IS_PUSH_ENABLED, value)
     }
 
-    override fun getFCMToken(): String? {
-        return getStringPreference(TextSecurePreferences.FCM_TOKEN, "")
+    override fun getPushToken(): String? {
+        return getStringPreference(TextSecurePreferences.PUSH_TOKEN, "")
     }
 
-    override fun setFCMToken(value: String) {
-        setStringPreference(TextSecurePreferences.FCM_TOKEN, value)
+    override fun setPushToken(value: String) {
+        setStringPreference(TextSecurePreferences.PUSH_TOKEN, value)
     }
 
-    override fun getLastFCMUploadTime(): Long {
-        return getLongPreference(TextSecurePreferences.LAST_FCM_TOKEN_UPLOAD_TIME, 0)
+    override fun getPushRegisterTime(): Long {
+        return getLongPreference(TextSecurePreferences.PUSH_REGISTER_TIME, 0)
     }
 
-    override fun setLastFCMUploadTime(value: Long) {
-        setLongPreference(TextSecurePreferences.LAST_FCM_TOKEN_UPLOAD_TIME, value)
+    override fun setPushRegisterTime(value: Long) {
+        setLongPreference(TextSecurePreferences.PUSH_REGISTER_TIME, value)
     }
 
     override fun isScreenLockEnabled(): Boolean {
@@ -1279,6 +1305,15 @@ class AppTextSecurePreferences @Inject constructor(
         return getStringPreference(TextSecurePreferences.LOCAL_NUMBER_PREF, null)
     }
 
+    override fun getHasLegacyConfig(): Boolean {
+        return getBooleanPreference(TextSecurePreferences.HAS_RECEIVED_LEGACY_CONFIG, false)
+    }
+
+    override fun setHasLegacyConfig(newValue: Boolean) {
+        setBooleanPreference(TextSecurePreferences.HAS_RECEIVED_LEGACY_CONFIG, newValue)
+        TextSecurePreferences._events.tryEmit(TextSecurePreferences.HAS_RECEIVED_LEGACY_CONFIG)
+    }
+
     override fun setLocalNumber(localNumber: String) {
         setStringPreference(TextSecurePreferences.LOCAL_NUMBER_PREF, localNumber.toLowerCase())
     }
@@ -1421,6 +1456,9 @@ class AppTextSecurePreferences @Inject constructor(
     override fun setNotificationMessagesChannelVersion(version: Int) {
         setIntegerPreference(TextSecurePreferences.NOTIFICATION_MESSAGES_CHANNEL_VERSION, version)
     }
+
+    override fun hasForcedNewConfig(): Boolean =
+        getBooleanPreference(TextSecurePreferences.HAS_FORCED_NEW_CONFIG, false)
 
     override fun getBooleanPreference(key: String?, defaultValue: Boolean): Boolean {
         return getDefaultSharedPreferences(context).getBoolean(key, defaultValue)

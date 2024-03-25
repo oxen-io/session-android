@@ -5,9 +5,7 @@
     android:layout_height="match_parent">
     <TextView
         android:layout_gravity="center"
-        android:background="@drawable/rounded_rectangle"
-        android:backgroundTint="?colorDividerBackground"
-        android:textColor="?android:textColorPrimary"
+        style="@style/Widget.Session.Button.Common.Filled"
         android:textStyle="bold"
         android:text="@string/activity_help_settings__export_logs"
         android:paddingHorizontal="@dimen/medium_spacing"

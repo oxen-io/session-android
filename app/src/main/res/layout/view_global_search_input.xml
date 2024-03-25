@@ -39,13 +39,15 @@
             android:layout_height="wrap_content"/>
         <ImageView
             android:id="@+id/search_clear"
+            android:background="?selectableItemBackgroundBorderless"
             android:src="@drawable/ic_close_white_18dp"
             android:layout_gravity="center_vertical"
             android:layout_width="16dp"
             android:layout_height="16dp"
             app:tint="?searchIconColor" />
     </LinearLayout>
-    <TextView
+    <Button
+        style="@style/Widget.Session.Button.Common.Borderless"
         android:layout_marginStart="@dimen/small_spacing"
         android:layout_centerVertical="true"
         android:text="@string/cancel"

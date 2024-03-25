@@ -25,6 +25,6 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     implementation "nl.komponents.kovenant:kovenant:$kovenantVersion"
     testImplementation "junit:junit:$junitVersion"
-    testImplementation "org.assertj:assertj-core:1.7.1"
+    testImplementation "org.assertj:assertj-core:3.11.1"
     testImplementation "org.conscrypt:conscrypt-openjdk-uber:2.0.0"
 }

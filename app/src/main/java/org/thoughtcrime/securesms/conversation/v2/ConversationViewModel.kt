@@ -3,7 +3,6 @@ package org.thoughtcrime.securesms.conversation.v2
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.goterl.lazysodium.utils.KeyPair
 import dagger.assisted.Assisted
@@ -14,17 +13,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
+import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.repository.ConversationRepository
-import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import java.util.UUID
 
 class ConversationViewModel(
@@ -37,14 +37,26 @@ class ConversationViewModel(
     val showSendAfterApprovalText: Boolean
         get() = recipient?.run { isContactRecipient && !isLocalNumber && !hasApprovedMe() } ?: false
 
-    private val _uiState = MutableStateFlow(ConversationUiState())
+    private val _uiState = MutableStateFlow(ConversationUiState(conversationExists = true))
     val uiState: StateFlow<ConversationUiState> = _uiState
 
     private var _recipient: RetrieveOnce<Recipient> = RetrieveOnce {
         repository.maybeGetRecipientForThreadId(threadId)
     }
+    val expirationConfiguration: ExpirationConfiguration?
+        get() = storage.getExpirationConfiguration(threadId)
+
     val recipient: Recipient?
         get() = _recipient.value
+
+    val blindedRecipient: Recipient?
+        get() = _recipient.value?.let { recipient ->
+            when {
+                recipient.isOpenGroupOutboxRecipient -> recipient
+                recipient.isOpenGroupInboxRecipient -> repository.maybeGetBlindedRecipient(recipient)
+                else -> null
+            }
+        }
 
     private var _openGroup: RetrieveOnce<OpenGroup> = RetrieveOnce {
         storage.getOpenGroup(threadId)
@@ -60,6 +72,28 @@ class ConversationViewModel(
             SodiumUtilities.blindedKeyPair(openGroup!!.publicKey, edKeyPair)?.publicKey?.asBytes
                 ?.let { SessionId(IdPrefix.BLINDED, it) }?.hexString
         }
+
+    val isMessageRequestThread : Boolean
+        get() {
+            val recipient = recipient ?: return false
+            return !recipient.isLocalNumber && !recipient.isGroupRecipient && !recipient.isApproved
+        }
+
+    val canReactToMessages: Boolean
+        // allow reactions if the open group is null (normal conversations) or the open group's capabilities include reactions
+        get() = (openGroup == null || OpenGroupApi.Capability.REACTIONS.name.lowercase() in serverCapabilities)
+
+
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.recipientUpdateFlow(threadId)
+                .collect { recipient ->
+                    if (recipient == null && _uiState.value.conversationExists) {
+                        _uiState.update { it.copy(conversationExists = false) }
+                    }
+                }
+        }
+    }
 
     fun saveDraft(text: String) {
         GlobalScope.launch(Dispatchers.IO) {
@@ -81,27 +115,17 @@ class ConversationViewModel(
         repository.inviteContacts(threadId, contacts)
     }
 
-    fun block(context: Context) {
+    fun block() {
         val recipient = recipient ?: return Log.w("Loki", "Recipient was null for block action")
         if (recipient.isContactRecipient) {
             repository.setBlocked(recipient, true)
-
-            // TODO: Remove in UserConfig branch
-            GlobalScope.launch(Dispatchers.IO) {
-                ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
-            }
         }
     }
 
-    fun unblock(context: Context) {
+    fun unblock() {
         val recipient = recipient ?: return Log.w("Loki", "Recipient was null for unblock action")
         if (recipient.isContactRecipient) {
             repository.setBlocked(recipient, false)
-
-            // TODO: Remove in UserConfig branch
-            GlobalScope.launch(Dispatchers.IO) {
-                ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
-            }
         }
     }
 
@@ -196,6 +220,13 @@ class ConversationViewModel(
         _recipient.updateTo(repository.maybeGetRecipientForThreadId(threadId))
     }
 
+    fun hidesInputBar(): Boolean = openGroup?.canWrite != true &&
+        blindedRecipient?.blocksCommunityMessageRequests == true
+
+    fun legacyBannerRecipient(context: Context): Recipient? = recipient?.run {
+        storage.getLastLegacyRecipient(address.serialize())?.let { Recipient.from(context, Address.fromSerialized(it), false) }
+    }
+
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {
         fun create(threadId: Long, edKeyPair: KeyPair?): Factory
@@ -219,7 +250,8 @@ data class UiMessage(val id: Long, val message: String)
 
 data class ConversationUiState(
     val uiMessages: List<UiMessage> = emptyList(),
-    val isMessageRequestAccepted: Boolean? = null
+    val isMessageRequestAccepted: Boolean? = null,
+    val conversationExists: Boolean
 )
 
 data class RetrieveOnce<T>(val retrieval: () -> T?) {

@@ -4,7 +4,9 @@ import okhttp3.HttpUrl
 import org.session.libsession.messaging.file_server.FileServerApi
 import org.session.libsignal.utilities.HTTP
 import org.session.libsignal.utilities.Log
-import java.io.*
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
 
 object DownloadUtilities {
 
@@ -14,7 +16,7 @@ object DownloadUtilities {
     @JvmStatic
     fun downloadFile(destination: File, url: String) {
         val outputStream = FileOutputStream(destination) // Throws
-        var remainingAttempts = 4
+        var remainingAttempts = 2
         var exception: Exception? = null
         while (remainingAttempts > 0) {
             remainingAttempts -= 1

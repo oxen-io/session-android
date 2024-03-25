@@ -10,10 +10,17 @@
     android:gravity="center"
     android:contentDescription="@string/AccessibilityId_document">
 
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/documentViewProgress"
+        style="@style/Widget.Material3.CircularProgressIndicator.Small"
+        android:indeterminate="true"
+        android:layout_width="36dp"
+        android:layout_height="36dp"/>
+
     <ImageView
         android:id="@+id/documentViewIconImageView"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:src="@drawable/ic_document_large_light"
         app:tint="?android:textColorPrimary" />
 

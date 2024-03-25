@@ -10,7 +10,6 @@ import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.utilities.Data
-import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsignal.utilities.HTTP
 import org.session.libsignal.utilities.Log
 
@@ -33,7 +32,7 @@ class MessageSendJob(val message: Message, val destination: Destination) : Job {
         private val DESTINATION_KEY = "destination"
     }
 
-    override fun execute(dispatcherName: String) {
+    override suspend fun execute(dispatcherName: String) {
         val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
         val message = message as? VisibleMessage
         val storage = MessagingModuleConfiguration.shared.storage
@@ -65,7 +64,8 @@ class MessageSendJob(val message: Message, val destination: Destination) : Job {
                 return
             } // Wait for all attachments to upload before continuing
         }
-        val promise = MessageSender.send(this.message, this.destination).success {
+        val isSync = destination is Destination.Contact && destination.publicKey == sender
+        val promise = MessageSender.send(this.message, this.destination, isSync).success {
             this.handleSuccess(dispatcherName)
         }.fail { exception ->
             var logStacktrace = true

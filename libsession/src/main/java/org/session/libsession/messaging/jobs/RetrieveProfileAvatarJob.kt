@@ -1,16 +1,14 @@
 package org.session.libsession.messaging.jobs
 
-import android.text.TextUtils
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.utilities.Data
+import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.DownloadUtilities.downloadFile
 import org.session.libsession.utilities.TextSecurePreferences.Companion.setProfileAvatarId
+import org.session.libsession.utilities.TextSecurePreferences.Companion.setProfilePictureURL
 import org.session.libsession.utilities.Util.copy
 import org.session.libsession.utilities.Util.equals
-import org.session.libsession.utilities.Address
-import org.session.libsession.utilities.TextSecurePreferences
-import org.session.libsession.utilities.TextSecurePreferences.Companion.setProfilePictureURL
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.streams.ProfileCipherInputStream
 import org.session.libsignal.utilities.Log
@@ -19,12 +17,13 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.security.SecureRandom
+import java.util.concurrent.ConcurrentSkipListSet
 
-class RetrieveProfileAvatarJob(private val profileAvatar: String?, private val recipientAddress: Address): Job {
+class RetrieveProfileAvatarJob(private val profileAvatar: String?, val recipientAddress: Address): Job {
     override var delegate: JobDelegate? = null
     override var id: String? = null
     override var failureCount: Int = 0
-    override val maxFailureCount: Int = 0
+    override val maxFailureCount: Int = 3
 
     companion object {
         val TAG = RetrieveProfileAvatarJob::class.simpleName
@@ -33,20 +32,30 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, private val r
         // Keys used for database storage
         private const val PROFILE_AVATAR_KEY = "profileAvatar"
         private const val RECEIPIENT_ADDRESS_KEY = "recipient"
+
+        val errorUrls = ConcurrentSkipListSet<String>()
+
     }
 
-    override fun execute(dispatcherName: String) {
+    override suspend fun execute(dispatcherName: String) {
+        val delegate = delegate ?: return
+        if (profileAvatar in errorUrls) return delegate.handleJobFailed(this, dispatcherName, Exception("Profile URL 404'd this app instance"))
         val context = MessagingModuleConfiguration.shared.context
         val storage = MessagingModuleConfiguration.shared.storage
         val recipient = Recipient.from(context, recipientAddress, true)
         val profileKey = recipient.resolve().profileKey
 
         if (profileKey == null || (profileKey.size != 32 && profileKey.size != 16)) {
-            Log.w(TAG, "Recipient profile key is gone!")
-            return
+            return delegate.handleJobFailedPermanently(this, dispatcherName, Exception("Recipient profile key is gone!"))
         }
 
-        if (AvatarHelper.avatarFileExists(context, recipient.resolve().address) && equals(profileAvatar, recipient.resolve().profileAvatar)) {
+        // Commit '78d1e9d' (fix: open group threads and avatar downloads) had this commented out so
+        // it's now limited to just the current user case
+        if (
+                recipient.isLocalNumber &&
+                AvatarHelper.avatarFileExists(context, recipient.resolve().address) &&
+                equals(profileAvatar, recipient.resolve().profileAvatar)
+        ) {
             Log.w(TAG, "Already retrieved profile avatar: $profileAvatar")
             return
         }
@@ -72,16 +81,23 @@ class RetrieveProfileAvatarJob(private val profileAvatar: String?, private val r
             val decryptDestination = File.createTempFile("avatar", ".jpg", context.cacheDir)
             copy(avatarStream, FileOutputStream(decryptDestination))
             decryptDestination.renameTo(AvatarHelper.getAvatarFile(context, recipient.address))
+
+            if (recipient.isLocalNumber) {
+                setProfileAvatarId(context, SecureRandom().nextInt())
+                setProfilePictureURL(context, profileAvatar)
+            }
+
+            storage.setProfileAvatar(recipient, profileAvatar)
+        } catch (e: Exception) {
+            Log.e("Loki", "Failed to download profile avatar", e)
+            if (failureCount + 1 >= maxFailureCount) {
+                errorUrls += profileAvatar
+            }
+            return delegate.handleJobFailed(this, dispatcherName, e)
         } finally {
             downloadDestination.delete()
         }
-
-        if (recipient.isLocalNumber) {
-            setProfileAvatarId(context, SecureRandom().nextInt())
-            setProfilePictureURL(context, profileAvatar)
-        }
-
-        storage.setProfileAvatar(recipient, profileAvatar)
+        return delegate.handleJobSucceeded(this, dispatcherName)
     }
 
     override fun serialize(): Data {

@@ -3,6 +3,7 @@ package org.session.libsession.messaging.jobs
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.deferred
 import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.sending_receiving.MessageReceiver
 import org.session.libsession.messaging.sending_receiving.handle
 import org.session.libsession.messaging.utilities.Data
@@ -25,20 +26,22 @@ class MessageReceiveJob(val data: ByteArray, val serverHash: String? = null, val
         private val OPEN_GROUP_ID_KEY = "open_group_id"
     }
 
-    override fun execute(dispatcherName: String) {
+    override suspend fun execute(dispatcherName: String) {
         executeAsync(dispatcherName).get()
     }
 
     fun executeAsync(dispatcherName: String): Promise<Unit, Exception> {
         val deferred = deferred<Unit, Exception>()
         try {
-            val isRetry: Boolean = failureCount != 0
+            val storage = MessagingModuleConfiguration.shared.storage
             val serverPublicKey = openGroupID?.let {
-                MessagingModuleConfiguration.shared.storage.getOpenGroupPublicKey(it.split(".").dropLast(1).joinToString("."))
+                storage.getOpenGroupPublicKey(it.split(".").dropLast(1).joinToString("."))
             }
-            val (message, proto) = MessageReceiver.parse(this.data, this.openGroupMessageServerID, openGroupPublicKey = serverPublicKey)
+            val currentClosedGroups = storage.getAllActiveClosedGroupPublicKeys()
+            val (message, proto) = MessageReceiver.parse(this.data, this.openGroupMessageServerID, openGroupPublicKey = serverPublicKey, currentClosedGroups = currentClosedGroups)
+            val threadId = Message.getThreadId(message, this.openGroupID, storage, false)
             message.serverHash = serverHash
-            MessageReceiver.handle(message, proto, this.openGroupID)
+            MessageReceiver.handle(message, proto, threadId ?: -1, this.openGroupID)
             this.handleSuccess(dispatcherName)
             deferred.resolve(Unit)
         } catch (e: Exception) {

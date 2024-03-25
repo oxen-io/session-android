@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="52dp">
 
-    <include layout="@layout/view_profile_picture"
+    <org.thoughtcrime.securesms.components.ProfilePictureView
         android:id="@+id/reactions_bottom_view_avatar"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -1,6 +1,5 @@
 package org.thoughtcrime.securesms.messagerequests
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
@@ -20,6 +19,7 @@ import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.mms.GlideRequests
+import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.push
 import javax.inject.Inject
@@ -49,7 +49,7 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
         adapter.glide = glide
         binding.recyclerView.adapter = adapter
 
-        binding.clearAllMessageRequestsButton.setOnClickListener { deleteAllAndBlock() }
+        binding.clearAllMessageRequestsButton.setOnClickListener { deleteAll() }
     }
 
     override fun onResume() {
@@ -77,34 +77,34 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
     }
 
     override fun onBlockConversationClick(thread: ThreadRecord) {
-        val dialog = AlertDialog.Builder(this)
-        dialog.setTitle(R.string.RecipientPreferenceActivity_block_this_contact_question)
-            .setMessage(R.string.message_requests_block_message)
-            .setPositiveButton(R.string.recipient_preferences__block) { _, _ ->
-                viewModel.blockMessageRequest(thread)
-                LoaderManager.getInstance(this).restartLoader(0, null, this)
-            }
-            .setNegativeButton(R.string.no) { _, _ ->
-                // Do nothing
-            }
-        dialog.create().show()
+        fun doBlock() {
+            viewModel.blockMessageRequest(thread)
+            LoaderManager.getInstance(this).restartLoader(0, null, this)
+        }
+
+        showSessionDialog {
+            title(R.string.RecipientPreferenceActivity_block_this_contact_question)
+                text(R.string.message_requests_block_message)
+                button(R.string.recipient_preferences__block) { doBlock() }
+                button(R.string.no)
+        }
     }
 
     override fun onDeleteConversationClick(thread: ThreadRecord) {
-        val dialog = AlertDialog.Builder(this)
-        dialog.setTitle(R.string.decline)
-            .setMessage(resources.getString(R.string.message_requests_decline_message))
-            .setPositiveButton(R.string.decline) { _,_ ->
-                viewModel.deleteMessageRequest(thread)
-                LoaderManager.getInstance(this).restartLoader(0, null, this)
-                lifecycleScope.launch(Dispatchers.IO) {
-                    ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@MessageRequestsActivity)
-                }
+        fun doDecline() {
+            viewModel.deleteMessageRequest(thread)
+            LoaderManager.getInstance(this).restartLoader(0, null, this)
+            lifecycleScope.launch(Dispatchers.IO) {
+                ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@MessageRequestsActivity)
             }
-            .setNegativeButton(R.string.no) { _, _ ->
-                // Do nothing
-            }
-        dialog.create().show()
+        }
+
+        showSessionDialog {
+            title(R.string.decline)
+            text(resources.getString(R.string.message_requests_decline_message))
+            button(R.string.decline) { doDecline() }
+            button(R.string.no)
+        }
     }
 
     private fun updateEmptyState() {
@@ -113,19 +113,19 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
         binding.clearAllMessageRequestsButton.isVisible = threadCount != 0
     }
 
-    private fun deleteAllAndBlock() {
-        val dialog = AlertDialog.Builder(this)
-        dialog.setMessage(resources.getString(R.string.message_requests_clear_all_message))
-        dialog.setPositiveButton(R.string.yes) { _, _ ->
-            viewModel.clearAllMessageRequests()
+    private fun deleteAll() {
+        fun doDeleteAllAndBlock() {
+            viewModel.clearAllMessageRequests(false)
             LoaderManager.getInstance(this).restartLoader(0, null, this)
             lifecycleScope.launch(Dispatchers.IO) {
                 ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@MessageRequestsActivity)
             }
         }
-        dialog.setNegativeButton(R.string.no) { _, _ ->
-            // Do nothing
+
+        showSessionDialog {
+            text(resources.getString(R.string.message_requests_clear_all_message))
+            button(R.string.yes) { doDeleteAllAndBlock() }
+            button(R.string.no)
         }
-        dialog.create().show()
     }
 }

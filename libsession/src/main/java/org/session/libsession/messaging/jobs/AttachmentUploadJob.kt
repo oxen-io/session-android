@@ -16,7 +16,11 @@ import org.session.libsession.utilities.DecodedAudio
 import org.session.libsession.utilities.InputStreamMediaDataSource
 import org.session.libsession.utilities.UploadResult
 import org.session.libsignal.messages.SignalServiceAttachmentStream
-import org.session.libsignal.streams.*
+import org.session.libsignal.streams.AttachmentCipherOutputStream
+import org.session.libsignal.streams.AttachmentCipherOutputStreamFactory
+import org.session.libsignal.streams.DigestingRequestBody
+import org.session.libsignal.streams.PaddingInputStream
+import org.session.libsignal.streams.PlaintextOutputStreamFactory
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.PushAttachmentData
 import org.session.libsignal.utilities.Util
@@ -45,7 +49,7 @@ class AttachmentUploadJob(val attachmentID: Long, val threadID: String, val mess
         private val MESSAGE_SEND_JOB_ID_KEY = "message_send_job_id"
     }
 
-    override fun execute(dispatcherName: String) {
+    override suspend fun execute(dispatcherName: String) {
         try {
             val storage = MessagingModuleConfiguration.shared.storage
             val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider

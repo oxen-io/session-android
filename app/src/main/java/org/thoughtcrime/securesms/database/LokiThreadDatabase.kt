@@ -4,11 +4,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import org.session.libsession.messaging.open_groups.OpenGroup
-import org.session.libsession.utilities.Address
-import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.JsonUtil
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
-import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 
 class LokiThreadDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(context, helper) {
 
@@ -22,12 +19,6 @@ class LokiThreadDatabase(context: Context, helper: SQLCipherOpenHelper) : Databa
         val createSessionResetTableCommand = "CREATE TABLE $sessionResetTable ($threadID INTEGER PRIMARY KEY, $sessionResetStatus INTEGER DEFAULT 0);"
         @JvmStatic
         val createPublicChatTableCommand = "CREATE TABLE $publicChatTable ($threadID INTEGER PRIMARY KEY, $publicChat TEXT);"
-    }
-
-    fun getThreadID(hexEncodedPublicKey: String): Long {
-        val address = Address.fromSerialized(hexEncodedPublicKey)
-        val recipient = Recipient.from(context, address, false)
-        return DatabaseComponent.get(context).threadDatabase().getOrCreateThreadIdFor(recipient)
     }
 
     fun getAllOpenGroups(): Map<Long, OpenGroup> {
@@ -58,6 +49,13 @@ class LokiThreadDatabase(context: Context, helper: SQLCipherOpenHelper) : Databa
         return database.get(publicChatTable, "${Companion.threadID} = ?", arrayOf(threadID.toString())) { cursor ->
             val json = cursor.getString(publicChat)
             OpenGroup.fromJSON(json)
+        }
+    }
+
+    fun getThreadId(openGroup: OpenGroup): Long? {
+        val database = databaseHelper.readableDatabase
+        return database.get(publicChatTable, "$publicChat = ?", arrayOf(JsonUtil.toJson(openGroup.toJson()))) { cursor ->
+            cursor.getLong(threadID)
         }
     }
 

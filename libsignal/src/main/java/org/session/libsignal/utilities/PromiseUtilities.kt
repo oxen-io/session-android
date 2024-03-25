@@ -3,7 +3,12 @@ package org.session.libsignal.utilities
 
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.deferred
+import nl.komponents.kovenant.functional.map
+import nl.komponents.kovenant.task
 import java.util.concurrent.TimeoutException
+
+fun emptyPromise() = EMPTY_PROMISE
+private val EMPTY_PROMISE: Promise<*, java.lang.Exception> = task {}
 
 fun <V, E : Throwable> Promise<V, E>.get(defaultValue: V): V {
     return try {
@@ -54,4 +59,11 @@ fun <V> Promise<V, Exception>.timeout(millis: Long): Promise<V, Exception> {
         if (!deferred.promise.isDone()) { deferred.reject(it) }
     }
     return deferred.promise
+}
+
+infix fun <V, E: Exception> Promise<V, E>.sideEffect(
+    callback: (value: V) -> Unit
+) = map {
+    callback(it)
+    it
 }

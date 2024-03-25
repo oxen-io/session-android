@@ -25,9 +25,7 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.IdPrefix
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.database.ThreadDatabase
-import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideApp
-import org.thoughtcrime.securesms.util.UiModeUtilities
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -55,12 +53,12 @@ class UserDetailsBottomSheet: BottomSheetDialogFragment() {
         val recipient = Recipient.from(requireContext(), Address.fromSerialized(publicKey), false)
         val threadRecipient = threadDb.getRecipientForThreadId(threadID) ?: return dismiss()
         with(binding) {
-            profilePictureView.root.publicKey = publicKey
-            profilePictureView.root.glide = GlideApp.with(this@UserDetailsBottomSheet)
-            profilePictureView.root.isLarge = true
-            profilePictureView.root.update(recipient)
+            profilePictureView.publicKey = publicKey
+            profilePictureView.isLarge = true
+            profilePictureView.update(recipient)
             nameTextViewContainer.visibility = View.VISIBLE
             nameTextViewContainer.setOnClickListener {
+                if (recipient.isOpenGroupInboxRecipient || recipient.isOpenGroupOutboxRecipient) return@setOnClickListener
                 nameTextViewContainer.visibility = View.INVISIBLE
                 nameEditTextContainer.visibility = View.VISIBLE
                 nicknameEditText.text = null
@@ -87,8 +85,14 @@ class UserDetailsBottomSheet: BottomSheetDialogFragment() {
             }
             nameTextView.text = recipient.name ?: publicKey // Uses the Contact API internally
 
-            publicKeyTextView.isVisible = !threadRecipient.isOpenGroupRecipient && !threadRecipient.isOpenGroupInboxRecipient
-            messageButton.isVisible = !threadRecipient.isOpenGroupRecipient || IdPrefix.fromValue(publicKey) == IdPrefix.BLINDED
+            nameEditIcon.isVisible = threadRecipient.isContactRecipient
+                    && !threadRecipient.isOpenGroupInboxRecipient
+                    && !threadRecipient.isOpenGroupOutboxRecipient
+
+            publicKeyTextView.isVisible = !threadRecipient.isOpenGroupRecipient
+                    && !threadRecipient.isOpenGroupInboxRecipient
+                    && !threadRecipient.isOpenGroupOutboxRecipient
+            messageButton.isVisible = !threadRecipient.isOpenGroupRecipient || IdPrefix.fromValue(publicKey)?.isBlinded() == true
             publicKeyTextView.text = publicKey
             publicKeyTextView.setOnLongClickListener {
                 val clipboard =
@@ -130,10 +134,10 @@ class UserDetailsBottomSheet: BottomSheetDialogFragment() {
             newNickName = nicknameEditText.text.toString()
         }
         val publicKey = recipient.address.serialize()
-        val contactDB = DatabaseComponent.get(requireContext()).sessionContactDatabase()
-        val contact = contactDB.getContactWithSessionID(publicKey) ?: Contact(publicKey)
+        val storage = MessagingModuleConfiguration.shared.storage
+        val contact = storage.getContactWithSessionID(publicKey) ?: Contact(publicKey)
         contact.nickname = newNickName
-        contactDB.setContact(contact)
+        storage.setContact(contact)
         nameTextView.text = recipient.name ?: publicKey // Uses the Contact API internally
     }
 

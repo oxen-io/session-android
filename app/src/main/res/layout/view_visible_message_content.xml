@@ -7,7 +7,7 @@
     android:id="@+id/mainContainerConstraint"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <org.thoughtcrime.securesms.util.MessageBubbleView
         android:id="@+id/contentParent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -35,15 +35,6 @@
             android:id="@+id/untrustedView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-
-        <include layout="@layout/view_voice_message"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:visibility="gone"
-            android:id="@+id/voiceMessageView"
-            android:layout_width="160dp"
-            android:layout_height="36dp"/>
 
         <include layout="@layout/view_open_group_invitation"
             tools:visibility="gone"
@@ -74,6 +65,15 @@
             android:id="@+id/quoteView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
+        <include layout="@layout/view_voice_message"
+            app:layout_constraintTop_toBottomOf="@id/quoteView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="gone"
+            android:id="@+id/voiceMessageView"
+            android:layout_width="160dp"
+            android:layout_height="36dp"/>
 
         <include layout="@layout/view_link_preview"
             app:layout_constraintTop_toBottomOf="@+id/quoteView"
@@ -111,7 +111,7 @@
             android:id="@+id/bodyTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </org.thoughtcrime.securesms.util.MessageBubbleView>
 
     <include layout="@layout/album_thumbnail_view"
         android:visibility="gone"

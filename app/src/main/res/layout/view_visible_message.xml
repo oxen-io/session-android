@@ -8,6 +8,46 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/unreadMarkerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/small_spacing"
+        android:visibility="gone"
+        tools:visibility="visible">
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/medium_spacing"
+            android:layout_marginEnd="@dimen/small_spacing"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/unreadMarker"
+            android:background="?android:colorAccent" />
+        <TextView
+            android:id="@+id/unreadMarker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/unread_marker"
+            android:gravity="center"
+            android:textColor="?android:colorAccent"
+            android:textSize="@dimen/small_font_size"
+            android:textStyle="bold" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/small_spacing"
+            android:layout_marginEnd="@dimen/medium_spacing"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/unreadMarker"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="?android:colorAccent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <TextView
         android:id="@+id/dateBreakTextView"
         android:layout_width="match_parent"
@@ -27,9 +67,8 @@
         android:gravity="bottom"
         android:paddingBottom="@dimen/small_spacing">
 
-        <include
+        <org.thoughtcrime.securesms.components.ProfilePictureView
             android:id="@+id/profilePictureView"
-            layout="@layout/view_profile_picture"
             android:layout_marginBottom="@dimen/small_spacing"
             android:layout_marginEnd="@dimen/small_spacing"
             android:layout_width="@dimen/very_small_profile_picture_size"
@@ -67,35 +106,28 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@tools:sample/full_names" />
 
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/messageInnerContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="@+id/profilePictureView"
             app:layout_constraintStart_toEndOf="@+id/profilePictureView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/senderNameTextView">
 
-            <include layout="@layout/view_visible_message_content"
-                android:id="@+id/messageContentView"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:id="@+id/messageInnerLayout"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:orientation="horizontal">
 
-            <org.thoughtcrime.securesms.conversation.v2.components.ExpirationTimerView
-                android:id="@+id/expirationTimerView"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginHorizontal="@dimen/small_spacing"
-                android:contentDescription="@string/AccessibilityId_timer_icon"
-                android:visibility="invisible"
-                tools:visibility="visible"
-                tools:src="@drawable/timer60"
-                tools:tint="@color/black"/>
+                <include layout="@layout/view_visible_message_content"
+                    android:id="@+id/messageContentView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
-        </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
 
         <include layout="@layout/view_emoji_reactions"
             android:id="@+id/emojiReactionsView"
@@ -106,28 +138,41 @@
             app:layout_constraintStart_toStartOf="@+id/messageInnerContainer"
             app:layout_constraintTop_toBottomOf="@id/messageInnerContainer" />
 
-        <TextView
-            android:id="@+id/messageStatusTextView"
+        <LinearLayout
+            android:id="@+id/statusContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="2dp"
-            android:layout_marginBottom="1dp"
-            app:layout_constraintTop_toTopOf="@id/messageStatusImageView"
-            app:layout_constraintBottom_toBottomOf="@id/messageStatusImageView"
-            app:layout_constraintEnd_toStartOf="@id/messageStatusImageView"
-            android:textSize="@dimen/very_small_font_size"
-            android:textColor="@color/classic_dark_1"
-            tools:text="Sent" />
-
-        <ImageView
-            android:id="@+id/messageStatusImageView"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_marginTop="5dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:baselineAligned="true"
             app:layout_constraintTop_toBottomOf="@+id/emojiReactionsView"
-            tools:tint="@color/classic_dark_1"
-            android:src="@drawable/ic_delivery_status_sent" />
+            app:layout_constraintStart_toStartOf="@id/messageInnerContainer"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                android:id="@+id/messageStatusTextView"
+                android:contentDescription="@string/AccessibilityId_message_sent_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="2dp"
+                android:layout_gravity="center"
+                android:textSize="@dimen/very_small_font_size"
+                tools:text="Sent" />
+
+            <ImageView
+                android:id="@+id/messageStatusImageView"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_delivery_status_sent" />
+
+            <org.thoughtcrime.securesms.conversation.v2.components.ExpirationTimerView
+                android:id="@+id/expirationTimerView"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="center"
+                android:tint="?message_status_color" />
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

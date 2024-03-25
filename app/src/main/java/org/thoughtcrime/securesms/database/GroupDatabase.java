@@ -36,9 +36,9 @@ public class GroupDatabase extends Database implements LokiOpenGroupDatabaseProt
   @SuppressWarnings("unused")
   private static final String TAG = GroupDatabase.class.getSimpleName();
 
-          static final String TABLE_NAME          = "groups";
+  public  static final String TABLE_NAME          = "groups";
   private static final String ID                  = "_id";
-          static final String GROUP_ID            = "group_id";
+  public  static final String GROUP_ID            = "group_id";
   private static final String TITLE               = "title";
   private static final String MEMBERS             = "members";
   private static final String ZOMBIE_MEMBERS      = "zombie_members";
@@ -133,12 +133,12 @@ public class GroupDatabase extends Database implements LokiOpenGroupDatabaseProt
     return new Reader(cursor);
   }
 
-  public List<GroupRecord> getAllGroups() {
+  public List<GroupRecord> getAllGroups(boolean includeInactive) {
     Reader reader = getGroups();
     GroupRecord record;
     List<GroupRecord> groups = new LinkedList<>();
     while ((record = reader.getNext()) != null) {
-      if (record.isActive()) { groups.add(record); }
+      if (record.isActive() || includeInactive) { groups.add(record); }
     }
     reader.close();
     return groups;

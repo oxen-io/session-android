@@ -16,6 +16,8 @@
  */
 package org.thoughtcrime.securesms.database;
 
+import static org.thoughtcrime.securesms.database.MmsDatabase.MESSAGE_BOX;
+
 import android.content.Context;
 import android.database.Cursor;
 
@@ -25,6 +27,7 @@ import androidx.annotation.Nullable;
 import net.zetetic.database.sqlcipher.SQLiteDatabase;
 import net.zetetic.database.sqlcipher.SQLiteQueryBuilder;
 
+import org.jetbrains.annotations.NotNull;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.Util;
 import org.thoughtcrime.securesms.database.MessagingDatabase.SyncMessageId;
@@ -35,6 +38,8 @@ import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import java.io.Closeable;
 import java.util.HashSet;
 import java.util.Set;
+
+import kotlin.Pair;
 
 public class MmsSmsDatabase extends Database {
 
@@ -259,8 +264,8 @@ public class MmsSmsDatabase extends Database {
     return -1;
   }
 
-  public int getMessagePositionInConversation(long threadId, long sentTimestamp, @NonNull Address address) {
-    String order     = MmsSmsColumns.NORMALIZED_DATE_SENT + " DESC";
+  public int getMessagePositionInConversation(long threadId, long sentTimestamp, @NonNull Address address, boolean reverse) {
+    String order     = MmsSmsColumns.NORMALIZED_DATE_SENT + (reverse ? " DESC" : " ASC");
     String selection = MmsSmsColumns.THREAD_ID + " = " + threadId;
 
     try (Cursor cursor = queryTables(new String[]{ MmsSmsColumns.NORMALIZED_DATE_SENT, MmsSmsColumns.ADDRESS }, selection, order, null)) {
@@ -510,6 +515,23 @@ public class MmsSmsDatabase extends Database {
 
   public Reader readerFor(@NonNull Cursor cursor) {
     return new Reader(cursor);
+  }
+
+  @NotNull
+  public Pair<Boolean, Long> timestampAndDirectionForCurrent(@NotNull Cursor cursor) {
+    int sentColumn = cursor.getColumnIndex(MmsSmsColumns.NORMALIZED_DATE_SENT);
+    String msgType = cursor.getString(cursor.getColumnIndexOrThrow(TRANSPORT));
+    long sentTime = cursor.getLong(sentColumn);
+    long type = 0;
+    if (MmsSmsDatabase.MMS_TRANSPORT.equals(msgType)) {
+      int typeIndex = cursor.getColumnIndex(MESSAGE_BOX);
+      type = cursor.getLong(typeIndex);
+    } else if (MmsSmsDatabase.SMS_TRANSPORT.equals(msgType)) {
+      int typeIndex = cursor.getColumnIndex(SmsDatabase.TYPE);
+      type = cursor.getLong(typeIndex);
+    }
+
+    return new Pair<Boolean, Long>(MmsSmsColumns.Types.isOutgoingMessageType(type), sentTime);
   }
 
   public class Reader implements Closeable {

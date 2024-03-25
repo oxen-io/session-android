@@ -76,6 +76,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import kotlin.Unit;
 import network.loki.messenger.R;
 
 /**
@@ -318,9 +319,9 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
     @SuppressWarnings("CodeBlock2Expr")
     @SuppressLint({"InlinedApi", "StaticFieldLeak"})
     private void handleSaveMedia(@NonNull Collection<MediaDatabase.MediaRecord> mediaRecords) {
-      final Context context = getContext();
+      final Context context = requireContext();
 
-      SaveAttachmentTask.showWarningDialog(context, (dialogInterface, which) -> {
+      SaveAttachmentTask.showWarningDialog(context, mediaRecords.size(), () -> {
         Permissions.with(this)
                 .request(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .maxSdkVersion(Build.VERSION_CODES.P)
@@ -362,7 +363,8 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
                   }.execute();
                 })
                 .execute();
-      }, mediaRecords.size());
+        return Unit.INSTANCE;
+      });
     }
 
     private void sendMediaSavedNotificationIfNeeded() {
@@ -374,41 +376,26 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
     @SuppressLint("StaticFieldLeak")
     private void handleDeleteMedia(@NonNull Collection<MediaDatabase.MediaRecord> mediaRecords) {
       int recordCount       = mediaRecords.size();
-      Resources res         = getContext().getResources();
-      String confirmTitle   = res.getQuantityString(R.plurals.MediaOverviewActivity_Media_delete_confirm_title,
-                                                    recordCount,
-                                                    recordCount);
-      String confirmMessage = res.getQuantityString(R.plurals.MediaOverviewActivity_Media_delete_confirm_message,
-                                                    recordCount,
-                                                    recordCount);
 
-      AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-      builder.setIconAttribute(R.attr.dialog_alert_icon);
-      builder.setTitle(confirmTitle);
-      builder.setMessage(confirmMessage);
-      builder.setCancelable(true);
-
-      builder.setPositiveButton(R.string.delete, (dialogInterface, i) -> {
-        new ProgressDialogAsyncTask<MediaDatabase.MediaRecord, Void, Void>(getContext(),
-                                                                           R.string.MediaOverviewActivity_Media_delete_progress_title,
-                                                                           R.string.MediaOverviewActivity_Media_delete_progress_message)
-        {
-          @Override
-          protected Void doInBackground(MediaDatabase.MediaRecord... records) {
-            if (records == null || records.length == 0) {
-              return null;
-            }
-
-            for (MediaDatabase.MediaRecord record : records) {
-              AttachmentUtil.deleteAttachment(getContext(), record.getAttachment());
-            }
+      DeleteMediaDialog.show(
+              requireContext(),
+              recordCount,
+              () -> new ProgressDialogAsyncTask<MediaDatabase.MediaRecord, Void, Void>(
+                requireContext(),
+                R.string.MediaOverviewActivity_Media_delete_progress_title,
+                R.string.MediaOverviewActivity_Media_delete_progress_message) {
+        @Override
+        protected Void doInBackground(MediaDatabase.MediaRecord... records) {
+          if (records == null || records.length == 0) {
             return null;
           }
 
-        }.execute(mediaRecords.toArray(new MediaDatabase.MediaRecord[mediaRecords.size()]));
-      });
-      builder.setNegativeButton(android.R.string.cancel, null);
-      builder.show();
+          for (MediaDatabase.MediaRecord record : records) {
+            AttachmentUtil.deleteAttachment(getContext(), record.getAttachment());
+          }
+          return null;
+        }
+      }.execute(mediaRecords.toArray(new MediaDatabase.MediaRecord[mediaRecords.size()])));
     }
 
     private void handleSelectAllMedia() {

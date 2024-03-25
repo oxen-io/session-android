@@ -7,7 +7,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.view.children
@@ -41,7 +40,7 @@ class AlbumThumbnailView : RelativeLayout {
     private var slides: List<Slide> = listOf()
     private var slideSize: Int = 0
 
-    override fun dispatchDraw(canvas: Canvas?) {
+    override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
         cornerMask.mask(canvas)
     }

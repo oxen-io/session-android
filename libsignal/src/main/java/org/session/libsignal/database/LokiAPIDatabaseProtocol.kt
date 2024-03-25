@@ -38,4 +38,7 @@ interface LokiAPIDatabaseProtocol {
     fun getForkInfo(): ForkInfo
     fun setForkInfo(forkInfo: ForkInfo)
     fun migrateLegacyOpenGroup(legacyServerId: String, newServerId: String)
+    fun getLastLegacySenderAddress(threadRecipientAddress: String): String?
+    fun setLastLegacySenderAddress(threadRecipientAddress: String, senderRecipientAddress: String?)
+
 }

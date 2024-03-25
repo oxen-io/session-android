@@ -37,7 +37,7 @@ import org.thoughtcrime.securesms.components.emoji.EmojiEventListener;
 import org.thoughtcrime.securesms.components.emoji.EmojiKeyboardProvider;
 import org.thoughtcrime.securesms.components.emoji.EmojiToggle;
 import org.thoughtcrime.securesms.components.emoji.MediaKeyboard;
-import org.thoughtcrime.securesms.contactshare.SimpleTextWatcher;
+import org.thoughtcrime.securesms.util.SimpleTextWatcher;
 import org.thoughtcrime.securesms.imageeditor.model.EditorModel;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.mediapreview.MediaRailAdapter;

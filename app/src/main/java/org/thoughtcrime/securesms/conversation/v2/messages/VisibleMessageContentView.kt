@@ -3,7 +3,6 @@ package org.thoughtcrime.securesms.conversation.v2.messages
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
-import android.graphics.drawable.Drawable
 import android.text.Spannable
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
@@ -15,9 +14,7 @@ import android.view.View
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.BlendModeColorFilterCompat
-import androidx.core.graphics.BlendModeCompat
+import androidx.core.graphics.ColorUtils
 import androidx.core.text.getSpans
 import androidx.core.text.toSpannable
 import androidx.core.view.children
@@ -28,7 +25,9 @@ import okhttp3.HttpUrl
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
+import org.session.libsession.utilities.ThemeUtil
 import org.session.libsession.utilities.getColorFromAttr
+import org.session.libsession.utilities.modifyLayoutParams
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.ModalUrlBottomSheet
@@ -38,15 +37,16 @@ import org.thoughtcrime.securesms.conversation.v2.utilities.TextUtilities.getInt
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.database.model.SmsMessageRecord
+import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.mms.GlideRequests
+import org.thoughtcrime.securesms.util.GlowViewUtilities
 import org.thoughtcrime.securesms.util.SearchUtil
 import org.thoughtcrime.securesms.util.getAccentColor
-import java.util.*
+import java.util.Locale
 import kotlin.math.roundToInt
 
 class VisibleMessageContentView : ConstraintLayout {
     private val binding: ViewVisibleMessageContentBinding by lazy { ViewVisibleMessageContentBinding.bind(this) }
-    var onContentClick: MutableList<((event: MotionEvent) -> Unit)> = mutableListOf()
     var onContentDoubleTap: (() -> Unit)? = null
     var delegate: VisibleMessageViewDelegate? = null
     var indexInAdapter: Int = -1
@@ -60,21 +60,20 @@ class VisibleMessageContentView : ConstraintLayout {
     // region Updating
     fun bind(
         message: MessageRecord,
-        isStartOfMessageCluster: Boolean,
-        isEndOfMessageCluster: Boolean,
-        glide: GlideRequests,
+        isStartOfMessageCluster: Boolean = true,
+        isEndOfMessageCluster: Boolean = true,
+        glide: GlideRequests = GlideApp.with(this),
         thread: Recipient,
-        searchQuery: String?,
-        contactIsTrusted: Boolean,
-        onAttachmentNeedsDownload: (Long, Long) -> Unit
+        searchQuery: String? = null,
+        contactIsTrusted: Boolean = true,
+        onAttachmentNeedsDownload: (Long, Long) -> Unit,
+        suppressThumbnails: Boolean = false
     ) {
         // Background
-        val background = getBackground(message.isOutgoing)
         val color = if (message.isOutgoing) context.getAccentColor()
         else context.getColorFromAttr(R.attr.message_received_background_color)
-        val filter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(color, BlendModeCompat.SRC_IN)
-        background.colorFilter = filter
-        binding.contentParent.background = background
+        binding.contentParent.mainColor = color
+        binding.contentParent.cornerRadius = resources.getDimension(R.dimen.message_corner_radius)
 
         val onlyBodyMessage = message is SmsMessageRecord
         val mediaThumbnailMessage = contactIsTrusted && message is MmsMessageRecord && message.slideDeck.thumbnailSlide != null
@@ -131,7 +130,6 @@ class VisibleMessageContentView : ConstraintLayout {
                     delegate?.scrollToMessageIfPossible(quote.id)
                 }
             }
-            val hasMedia = message.slideDeck.asAttachments().isNotEmpty()
         }
 
         if (message is MmsMessageRecord) {
@@ -188,7 +186,7 @@ class VisibleMessageContentView : ConstraintLayout {
                     onContentClick.add { binding.untrustedView.root.showTrustDialog(message.individualRecipient) }
                 }
             }
-            message is MmsMessageRecord && message.slideDeck.asAttachments().isNotEmpty() -> {
+            message is MmsMessageRecord && !suppressThumbnails && message.slideDeck.asAttachments().isNotEmpty() -> {
                 /*
                  *    Images / Video attachment
                  */
@@ -201,9 +199,9 @@ class VisibleMessageContentView : ConstraintLayout {
                         isStart = isStartOfMessageCluster,
                         isEnd = isEndOfMessageCluster
                     )
-                    val layoutParams = binding.albumThumbnailView.root.layoutParams as ConstraintLayout.LayoutParams
-                    layoutParams.horizontalBias = if (message.isOutgoing) 1f else 0f
-                    binding.albumThumbnailView.root.layoutParams = layoutParams
+                    binding.albumThumbnailView.root.modifyLayoutParams<ConstraintLayout.LayoutParams> {
+                        horizontalBias = if (message.isOutgoing) 1f else 0f
+                    }
                     onContentClick.add { event ->
                         binding.albumThumbnailView.root.calculateHitObject(event, message, thread, onAttachmentNeedsDownload)
                     }
@@ -236,18 +234,19 @@ class VisibleMessageContentView : ConstraintLayout {
                 }
             }
         }
-        val layoutParams = binding.contentParent.layoutParams as ConstraintLayout.LayoutParams
-        layoutParams.horizontalBias = if (message.isOutgoing) 1f else 0f
-        binding.contentParent.layoutParams = layoutParams
+        binding.contentParent.modifyLayoutParams<ConstraintLayout.LayoutParams> {
+            horizontalBias = if (message.isOutgoing) 1f else 0f
+        }
+    }
+
+    private val onContentClick: MutableList<((event: MotionEvent) -> Unit)> = mutableListOf()
+
+    fun onContentClick(event: MotionEvent) {
+        onContentClick.forEach { clickHandler -> clickHandler.invoke(event) }
     }
 
     private fun ViewVisibleMessageContentBinding.barrierViewsGone(): Boolean =
         listOf<View>(albumThumbnailView.root, linkPreviewView.root, voiceMessageView.root, quoteView.root).none { it.isVisible }
-
-    private fun getBackground(isOutgoing: Boolean): Drawable {
-        val backgroundID = if (isOutgoing) R.drawable.message_bubble_background_sent_alone else R.drawable.message_bubble_background_received_alone
-        return ResourcesCompat.getDrawable(resources, backgroundID, context.theme)!!
-    }
 
     fun recycle() {
         arrayOf(
@@ -265,6 +264,15 @@ class VisibleMessageContentView : ConstraintLayout {
 
     fun playVoiceMessage() {
         binding.voiceMessageView.root.togglePlayback()
+    }
+
+    fun playHighlight() {
+        // Show the highlight colour immediately then slowly fade out
+        val targetColor = if (ThemeUtil.isDarkTheme(context)) context.getAccentColor() else resources.getColor(R.color.black, context.theme)
+        val clearTargetColor = ColorUtils.setAlphaComponent(targetColor, 0)
+        binding.contentParent.numShadowRenders = if (ThemeUtil.isDarkTheme(context)) 3 else 1
+        binding.contentParent.sessionShadowColor = targetColor
+        GlowViewUtilities.animateShadowColorChange(binding.contentParent, targetColor, clearTargetColor, 1600)
     }
     // endregion
 
@@ -299,16 +307,9 @@ class VisibleMessageContentView : ConstraintLayout {
         }
 
         @ColorInt
-        fun getTextColor(context: Context, message: MessageRecord): Int {
-            val colorAttribute = if (message.isOutgoing) {
-                // sent
-                R.attr.message_sent_text_color
-            } else {
-                // received
-                R.attr.message_received_text_color
-            }
-            return context.getColorFromAttr(colorAttribute)
-        }
+        fun getTextColor(context: Context, message: MessageRecord): Int = context.getColorFromAttr(
+            if (message.isOutgoing) R.attr.message_sent_text_color else R.attr.message_received_text_color
+        )
     }
     // endregion
 }

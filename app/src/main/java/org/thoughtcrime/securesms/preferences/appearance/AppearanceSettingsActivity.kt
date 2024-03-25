@@ -78,8 +78,6 @@ class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.On
                     viewModel.setNewAccent(R.style.PrimaryGreen)
                 }
             }
-        } else if (v == binding.systemSettingsSwitch) {
-            viewModel.setNewFollowSystemSettings((v as SwitchCompat).isChecked)
         }
     }
 
@@ -115,12 +113,8 @@ class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.On
         super.onCreate(savedInstanceState, ready)
         binding = ActivityAppearanceSettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        savedInstanceState?.let { bundle ->
-            val scrollStateParcel = bundle.getSparseParcelableArray<Parcelable>(SCROLL_PARCEL)
-            if (scrollStateParcel != null) {
-                binding.scrollView.restoreHierarchyState(scrollStateParcel)
-            }
-        }
+        savedInstanceState?.getSparseParcelableArray<Parcelable>(SCROLL_PARCEL)
+            ?.let(binding.scrollView::restoreHierarchyState)
         supportActionBar!!.title = getString(R.string.activity_settings_message_appearance_button_title)
         with (binding) {
             // accent toggles
@@ -132,7 +126,8 @@ class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.On
                 it.setOnClickListener(this@AppearanceSettingsActivity)
             }
             // system settings toggle
-            systemSettingsSwitch.setOnClickListener(this@AppearanceSettingsActivity)
+            systemSettingsSwitch.setOnCheckedChangeListener { _, isChecked -> viewModel.setNewFollowSystemSettings(isChecked) }
+            systemSettingsSwitchHolder.setOnClickListener { systemSettingsSwitch.toggle() }
         }
 
         lifecycleScope.launchWhenResumed {
@@ -148,6 +143,5 @@ class AppearanceSettingsActivity: PassphraseRequiredActionBarActivity(), View.On
                 }
             }
         }
-
     }
 }

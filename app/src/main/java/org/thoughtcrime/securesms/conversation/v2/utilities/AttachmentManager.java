@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -244,12 +245,17 @@ public class AttachmentManager {
   }
 
   public static void selectGallery(Activity activity, int requestCode, @NonNull Recipient recipient, @NonNull String body) {
-    Permissions.with(activity)
-        .request(Manifest.permission.READ_EXTERNAL_STORAGE)
-        .withPermanentDenialDialog(activity.getString(R.string.AttachmentManager_signal_requires_the_external_storage_permission_in_order_to_attach_photos_videos_or_audio))
-        .withRationaleDialog(activity.getString(R.string.ConversationActivity_to_send_photos_and_video_allow_signal_access_to_storage), R.drawable.ic_baseline_photo_library_24)
-        .onAllGranted(() -> activity.startActivityForResult(MediaSendActivity.buildGalleryIntent(activity, recipient, body), requestCode))
-        .execute();
+    Permissions.PermissionsBuilder builder = Permissions.with(activity);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      builder = builder.request(Manifest.permission.READ_MEDIA_VIDEO)
+              .request(Manifest.permission.READ_MEDIA_IMAGES);
+    } else {
+      builder = builder.request(Manifest.permission.READ_EXTERNAL_STORAGE);
+    }
+    builder.withPermanentDenialDialog(activity.getString(R.string.AttachmentManager_signal_requires_the_external_storage_permission_in_order_to_attach_photos_videos_or_audio))
+      .withRationaleDialog(activity.getString(R.string.ConversationActivity_to_send_photos_and_video_allow_signal_access_to_storage), R.drawable.ic_baseline_photo_library_24)
+      .onAllGranted(() -> activity.startActivityForResult(MediaSendActivity.buildGalleryIntent(activity, recipient, body), requestCode))
+      .execute();
   }
 
   public static void selectAudio(Activity activity, int requestCode) {

@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.LinearLayout
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewUserBinding
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionManagerUtilities
@@ -47,15 +48,14 @@ class UserView : LinearLayout {
 
     // region Updating
     fun bind(user: Recipient, glide: GlideRequests, actionIndicator: ActionIndicator, isSelected: Boolean = false) {
+        val isLocalUser = user.isLocalNumber
         fun getUserDisplayName(publicKey: String): String {
+            if (isLocalUser) return context.getString(R.string.MessageRecord_you)
             val contact = DatabaseComponent.get(context).sessionContactDatabase().getContactWithSessionID(publicKey)
             return contact?.displayName(Contact.ContactContext.REGULAR) ?: publicKey
         }
-        val threadID = DatabaseComponent.get(context).threadDatabase().getOrCreateThreadIdFor(user)
-        MentionManagerUtilities.populateUserPublicKeyCacheIfNeeded(threadID, context) // FIXME: This is a bad place to do this
         val address = user.address.serialize()
-        binding.profilePictureView.root.glide = glide
-        binding.profilePictureView.root.update(user)
+        binding.profilePictureView.update(user)
         binding.actionIndicatorImageView.setImageResource(R.drawable.ic_baseline_edit_24)
         binding.nameTextView.text = if (user.isGroupRecipient) user.name else getUserDisplayName(address)
         when (actionIndicator) {
@@ -87,7 +87,7 @@ class UserView : LinearLayout {
     }
 
     fun unbind() {
-        binding.profilePictureView.root.recycle()
+        binding.profilePictureView.recycle()
     }
     // endregion
 }

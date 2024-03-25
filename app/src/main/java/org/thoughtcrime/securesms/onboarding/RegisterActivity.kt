@@ -16,6 +16,7 @@ import android.text.style.StyleSpan
 import android.view.View
 import android.widget.Toast
 import com.goterl.lazysodium.utils.KeyPair
+import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityRegisterBinding
 import org.session.libsession.snode.SnodeModule
@@ -26,10 +27,19 @@ import org.session.libsignal.utilities.KeyHelper
 import org.session.libsignal.utilities.hexEncodedPublicKey
 import org.thoughtcrime.securesms.BaseActionBarActivity
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities
+import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.setUpActionBarSessionLogo
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class RegisterActivity : BaseActionBarActivity() {
+
+    private val temporarySeedKey = "TEMPORARY_SEED_KEY"
+
+    @Inject
+    lateinit var configFactory: ConfigFactory
+
     private lateinit var binding: ActivityRegisterBinding
     internal val database: LokiAPIDatabaseProtocol
         get() = SnodeModule.shared.storage
@@ -69,16 +79,23 @@ class RegisterActivity : BaseActionBarActivity() {
         }, 61, 75, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         binding.termsTextView.movementMethod = LinkMovementMethod.getInstance()
         binding.termsTextView.text = termsExplanation
-        updateKeyPair()
+        updateKeyPair(savedInstanceState?.getByteArray(temporarySeedKey))
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        seed?.let { tempSeed ->
+            outState.putByteArray(temporarySeedKey, tempSeed)
+        }
     }
     // endregion
 
     // region Updating
-    private fun updateKeyPair() {
-        val keyPairGenerationResult = KeyPairUtilities.generate()
-        seed = keyPairGenerationResult.seed
+    private fun updateKeyPair(temporaryKey: ByteArray?) {
+        val keyPairGenerationResult = temporaryKey?.let(KeyPairUtilities::generate) ?: KeyPairUtilities.generate()
+        seed           = keyPairGenerationResult.seed
         ed25519KeyPair = keyPairGenerationResult.ed25519KeyPair
-        x25519KeyPair = keyPairGenerationResult.x25519KeyPair
+        x25519KeyPair  = keyPairGenerationResult.x25519KeyPair
     }
 
     private fun updatePublicKeyTextView() {
@@ -117,8 +134,8 @@ class RegisterActivity : BaseActionBarActivity() {
         // which can result in an invalid database state
         database.clearAllLastMessageHashes()
         database.clearReceivedMessageHashValues()
-
         KeyPairUtilities.store(this, seed!!, ed25519KeyPair!!, x25519KeyPair!!)
+        configFactory.keyPairChanged()
         val userHexEncodedPublicKey = x25519KeyPair!!.hexEncodedPublicKey
         val registrationID = KeyHelper.generateRegistrationId(false)
         TextSecurePreferences.setLocalRegistrationId(this, registrationID)

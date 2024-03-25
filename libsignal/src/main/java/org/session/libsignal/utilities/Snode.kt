@@ -5,12 +5,16 @@ class Snode(val address: String, val port: Int, val publicKeySet: KeySet?) {
 
     public enum class Method(val rawValue: String) {
         GetSwarm("get_snodes_for_pubkey"),
-        GetMessages("retrieve"),
+        Retrieve("retrieve"),
         SendMessage("store"),
         DeleteMessage("delete"),
         OxenDaemonRPCCall("oxend_request"),
         Info("info"),
-        DeleteAll("delete_all")
+        DeleteAll("delete_all"),
+        Batch("batch"),
+        Sequence("sequence"),
+        Expire("expire"),
+        GetExpiries("get_expiries")
     }
 
     data class KeySet(val ed25519Key: String, val x25519Key: String)

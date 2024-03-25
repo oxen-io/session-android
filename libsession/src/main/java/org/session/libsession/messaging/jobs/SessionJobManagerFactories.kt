@@ -16,6 +16,7 @@ class SessionJobManagerFactories {
                 GroupAvatarDownloadJob.KEY to GroupAvatarDownloadJob.Factory(),
                 BackgroundGroupAddJob.KEY to BackgroundGroupAddJob.Factory(),
                 OpenGroupDeleteJob.KEY to OpenGroupDeleteJob.Factory(),
+                ConfigurationSyncJob.KEY to ConfigurationSyncJob.Factory()
             )
         }
     }

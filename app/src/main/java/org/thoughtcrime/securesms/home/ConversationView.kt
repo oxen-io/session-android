@@ -6,12 +6,12 @@ import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.util.AttributeSet
 import android.util.TypedValue
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewConversationBinding
 import org.session.libsession.utilities.recipients.Recipient
@@ -19,12 +19,19 @@ import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities.hig
 import org.thoughtcrime.securesms.database.RecipientDatabase.NOTIFY_TYPE_ALL
 import org.thoughtcrime.securesms.database.RecipientDatabase.NOTIFY_TYPE_NONE
 import org.thoughtcrime.securesms.database.model.ThreadRecord
+import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.getAccentColor
+import org.thoughtcrime.securesms.util.getConversationUnread
 import java.util.Locale
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ConversationView : LinearLayout {
+
+    @Inject lateinit var configFactory: ConfigFactory
+
     private val binding: ViewConversationBinding by lazy { ViewConversationBinding.bind(this) }
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels
     var thread: ThreadRecord? = null
@@ -58,7 +65,6 @@ class ConversationView : LinearLayout {
         } else {
             ContextCompat.getDrawable(context, R.drawable.conversation_view_background)
         }
-        binding.profilePictureView.root.glide = glide
         val unreadCount = thread.unreadCount
         if (thread.recipient.isBlocked) {
             binding.accentView.setBackgroundResource(R.color.destructive)
@@ -71,7 +77,7 @@ class ConversationView : LinearLayout {
             // This would also not trigger the disappearing message timer which may or may not be desirable
             binding.accentView.visibility = if (unreadCount > 0 && !thread.isRead) View.VISIBLE else View.INVISIBLE
         }
-        val formattedUnreadCount = if (thread.isRead) {
+        val formattedUnreadCount = if (unreadCount == 0) {
             null
         } else {
             if (unreadCount < 10000) unreadCount.toString() else "9999+"
@@ -80,12 +86,13 @@ class ConversationView : LinearLayout {
         val textSize = if (unreadCount < 1000) 12.0f else 10.0f
         binding.unreadCountTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize)
         binding.unreadCountIndicator.isVisible = (unreadCount != 0 && !thread.isRead)
+                || (configFactory.convoVolatile?.getConversationUnread(thread) == true)
         binding.unreadMentionTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize)
         binding.unreadMentionIndicator.isVisible = (thread.unreadMentionCount != 0 && thread.recipient.address.isGroup)
         val senderDisplayName = getUserDisplayName(thread.recipient)
                 ?: thread.recipient.address.toString()
         binding.conversationViewDisplayNameTextView.text = senderDisplayName
-        binding.timestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), thread.date)
+        binding.timestampTextView.text = thread.date.takeIf { it != 0L }?.let { DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), it) }
         val recipient = thread.recipient
         binding.muteIndicatorImageView.isVisible = recipient.isMuted || recipient.notifyType != NOTIFY_TYPE_ALL
         val drawableRes = if (recipient.isMuted || recipient.notifyType == NOTIFY_TYPE_NONE) {
@@ -117,18 +124,18 @@ class ConversationView : LinearLayout {
             thread.isRead -> binding.statusIndicatorImageView.setImageResource(R.drawable.ic_filled_circle_check)
             else -> binding.statusIndicatorImageView.setImageResource(R.drawable.ic_circle_check)
         }
-        binding.profilePictureView.root.update(thread.recipient)
+        binding.profilePictureView.update(thread.recipient)
     }
 
     fun recycle() {
-        binding.profilePictureView.root.recycle()
+        binding.profilePictureView.recycle()
     }
 
     private fun getUserDisplayName(recipient: Recipient): String? {
         return if (recipient.isLocalNumber) {
             context.getString(R.string.note_to_self)
         } else {
-            recipient.name // Internally uses the Contact API
+            recipient.toShortString() // Internally uses the Contact API
         }
     }
     // endregion

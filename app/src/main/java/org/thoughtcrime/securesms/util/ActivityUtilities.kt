@@ -7,10 +7,10 @@ import android.view.View
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.DialogFragment
 import network.loki.messenger.R
 import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.BaseActionBarActivity
-import org.thoughtcrime.securesms.conversation.v2.utilities.BaseDialog
 
 fun BaseActionBarActivity.setUpActionBarSessionLogo(hideBackButton: Boolean = false) {
     val actionbar = supportActionBar!!
@@ -66,7 +66,7 @@ interface ActivityDispatcher {
         fun get(context: Context) = context.getSystemService(SERVICE) as? ActivityDispatcher
     }
     fun dispatchIntent(body: (Context)->Intent?)
-    fun showDialog(baseDialog: BaseDialog, tag: String? = null)
+    fun showDialog(dialogFragment: DialogFragment, tag: String? = null)
 }
 
 fun TextSecurePreferences.themeState(): ThemeState {

@@ -12,6 +12,7 @@ import org.session.libsession.messaging.jobs.MessageReceiveJob
 import org.session.libsession.messaging.jobs.MessageReceiveParameters
 import org.session.libsession.messaging.jobs.OpenGroupDeleteJob
 import org.session.libsession.messaging.jobs.TrimThreadJob
+import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.open_groups.Endpoint
@@ -169,6 +170,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                     is Endpoint.Outbox, is Endpoint.OutboxSince -> {
                         handleDirectMessages(server, true, response.body as List<OpenGroupApi.DirectMessage>)
                     }
+                    else -> { /* We don't care about the result of any other calls (won't be polled for) */}
                 }
                 if (secondToLastJob == null && !isCaughtUp) {
                     isCaughtUp = true
@@ -205,7 +207,7 @@ class OpenGroupPoller(private val server: String, private val executorService: S
         val storage = MessagingModuleConfiguration.shared.storage
         storage.setServerCapabilities(server, capabilities.capabilities)
     }
-
+    
     private fun handleMessages(
         server: String,
         roomToken: String,
@@ -260,7 +262,8 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                     null,
                     fromOutbox,
                     if (fromOutbox) it.recipient else it.sender,
-                    serverPublicKey
+                    serverPublicKey,
+                    emptySet() // this shouldn't be necessary as we are polling open groups here
                 )
                 if (fromOutbox) {
                     val mapping = mappingCache[it.recipient] ?: storage.getOrCreateBlindedIdMapping(
@@ -277,7 +280,8 @@ class OpenGroupPoller(private val server: String, private val executorService: S
                     }
                     mappingCache[it.recipient] = mapping
                 }
-                MessageReceiver.handle(message, proto, null)
+                val threadId = Message.getThreadId(message, null, MessagingModuleConfiguration.shared.storage, false)
+                MessageReceiver.handle(message, proto, threadId ?: -1, null)
             } catch (e: Exception) {
                 Log.e("Loki", "Couldn't handle direct message", e)
             }

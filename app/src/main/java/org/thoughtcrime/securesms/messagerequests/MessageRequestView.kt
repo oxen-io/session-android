@@ -34,7 +34,6 @@ class MessageRequestView : LinearLayout {
     // region Updating
     fun bind(thread: ThreadRecord, glide: GlideRequests) {
         this.thread = thread
-        binding.profilePictureView.root.glide = glide
         val senderDisplayName = getUserDisplayName(thread.recipient)
             ?: thread.recipient.address.toString()
         binding.displayNameTextView.text = senderDisplayName
@@ -44,12 +43,12 @@ class MessageRequestView : LinearLayout {
         binding.snippetTextView.text = snippet
 
         post {
-            binding.profilePictureView.root.update(thread.recipient)
+            binding.profilePictureView.update(thread.recipient)
         }
     }
 
     fun recycle() {
-        binding.profilePictureView.root.recycle()
+        binding.profilePictureView.recycle()
     }
 
     private fun getUserDisplayName(recipient: Recipient): String? {

@@ -1,6 +1,5 @@
 package org.thoughtcrime.securesms.preferences
 
-import android.app.AlertDialog
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
@@ -8,6 +7,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityBlockedContactsBinding
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
+import org.thoughtcrime.securesms.showSessionDialog
 
 @AndroidEntryPoint
 class BlockedContactsActivity: PassphraseRequiredActionBarActivity() {
@@ -19,17 +19,12 @@ class BlockedContactsActivity: PassphraseRequiredActionBarActivity() {
     val adapter: BlockedContactsAdapter by lazy { BlockedContactsAdapter(viewModel) }
 
     fun unblock() {
-        // show dialog
-        val title = viewModel.getTitle(this)
-
-        val message = viewModel.getMessage(this)
-
-        AlertDialog.Builder(this)
-            .setTitle(title)
-            .setMessage(message)
-            .setPositiveButton(R.string.continue_2) { _, _ -> viewModel.unblock(this@BlockedContactsActivity) }
-            .setNegativeButton(R.string.cancel) { _, _ -> }
-            .show()
+        showSessionDialog {
+            title(viewModel.getTitle(this@BlockedContactsActivity))
+            text(viewModel.getMessage(this@BlockedContactsActivity))
+            button(R.string.continue_2) { viewModel.unblock() }
+            cancelButton()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?, ready: Boolean) {
@@ -51,4 +46,3 @@ class BlockedContactsActivity: PassphraseRequiredActionBarActivity() {
 
     }
 }
-    

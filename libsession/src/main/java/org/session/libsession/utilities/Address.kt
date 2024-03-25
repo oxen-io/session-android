@@ -5,11 +5,11 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.util.Pair
 import androidx.annotation.VisibleForTesting
-import org.session.libsession.utilities.DelimiterUtil
-import org.session.libsession.utilities.GroupUtil
-import org.session.libsignal.utilities.guava.Optional
+import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Util
-import java.util.*
+import org.session.libsignal.utilities.guava.Optional
+import java.util.Collections
+import java.util.LinkedList
 import java.util.concurrent.atomic.AtomicReference
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -27,6 +27,8 @@ class Address private constructor(address: String) : Parcelable, Comparable<Addr
         get() = GroupUtil.isOpenGroup(address)
     val isOpenGroupInbox: Boolean
         get() = GroupUtil.isOpenGroupInbox(address)
+    val isOpenGroupOutbox: Boolean
+        get() = address.startsWith(IdPrefix.BLINDED.value) || address.startsWith(IdPrefix.BLINDEDV2.value)
     val isContact: Boolean
         get() = !(isGroup || isOpenGroupInbox)
 

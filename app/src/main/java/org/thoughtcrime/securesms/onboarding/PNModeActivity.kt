@@ -2,7 +2,6 @@ package org.thoughtcrime.securesms.onboarding
 
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
-import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.drawable.TransitionDrawable
 import android.net.Uri
@@ -13,6 +12,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityPnModeBinding
 import org.session.libsession.utilities.TextSecurePreferences
@@ -20,6 +20,9 @@ import org.session.libsession.utilities.ThemeUtil
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.BaseActionBarActivity
 import org.thoughtcrime.securesms.home.HomeActivity
+import org.thoughtcrime.securesms.notifications.PushManager
+import org.thoughtcrime.securesms.notifications.PushRegistry
+import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.GlowViewUtilities
 import org.thoughtcrime.securesms.util.PNModeView
 import org.thoughtcrime.securesms.util.disableClipping
@@ -27,8 +30,13 @@ import org.thoughtcrime.securesms.util.getAccentColor
 import org.thoughtcrime.securesms.util.getColorWithID
 import org.thoughtcrime.securesms.util.setUpActionBarSessionLogo
 import org.thoughtcrime.securesms.util.show
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class PNModeActivity : BaseActionBarActivity() {
+
+    @Inject lateinit var pushRegistry: PushRegistry
+
     private lateinit var binding: ActivityPnModeBinding
     private var selectedOptionView: PNModeView? = null
 
@@ -151,18 +159,20 @@ class PNModeActivity : BaseActionBarActivity() {
 
     private fun register() {
         if (selectedOptionView == null) {
-            val dialog = AlertDialog.Builder(this)
-            dialog.setTitle(R.string.activity_pn_mode_no_option_picked_dialog_title)
-            dialog.setPositiveButton(R.string.ok) { _, _ -> }
-            dialog.create().show()
+            showSessionDialog {
+                title(R.string.activity_pn_mode_no_option_picked_dialog_title)
+                button(R.string.ok)
+            }
             return
         }
-        TextSecurePreferences.setIsUsingFCM(this, (selectedOptionView == binding.fcmOptionView))
+
+        TextSecurePreferences.setPushEnabled(this, (selectedOptionView == binding.fcmOptionView))
         val application = ApplicationContext.getInstance(this)
         application.startPollingIfNeeded()
-        application.registerForFCMIfNeeded(true)
+        pushRegistry.refresh(true)
         val intent = Intent(this, HomeActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        intent.putExtra(HomeActivity.FROM_ONBOARDING, true)
         show(intent)
     }
     // endregion

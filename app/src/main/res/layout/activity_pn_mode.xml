@@ -42,7 +42,7 @@
             android:layout_marginRight="@dimen/very_large_spacing"
             android:padding="12dp"
             android:orientation="vertical"
-            android:background="@drawable/pn_option_background">
+            android:background="@color/pn_option_border">
 
             <TextView
                 android:layout_width="match_parent"

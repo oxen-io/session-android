@@ -11,6 +11,7 @@ import android.text.style.ClickableSpan
 import android.text.style.StyleSpan
 import android.view.View
 import android.widget.Toast
+import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityRecoveryPhraseRestoreBinding
 import org.session.libsession.snode.SnodeModule
@@ -23,10 +24,17 @@ import org.session.libsignal.utilities.hexEncodedPublicKey
 import org.thoughtcrime.securesms.BaseActionBarActivity
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities
 import org.thoughtcrime.securesms.crypto.MnemonicUtilities
+import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.setUpActionBarSessionLogo
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class RecoveryPhraseRestoreActivity : BaseActionBarActivity() {
+
+    @Inject
+    lateinit var configFactory: ConfigFactory
+
     private lateinit var binding: ActivityRecoveryPhraseRestoreBinding
     internal val database: LokiAPIDatabaseProtocol
         get() = SnodeModule.shared.storage
@@ -81,6 +89,7 @@ class RecoveryPhraseRestoreActivity : BaseActionBarActivity() {
             val keyPairGenerationResult = KeyPairUtilities.generate(seed)
             val x25519KeyPair = keyPairGenerationResult.x25519KeyPair
             KeyPairUtilities.store(this, seed, keyPairGenerationResult.ed25519KeyPair, x25519KeyPair)
+            configFactory.keyPairChanged()
             val userHexEncodedPublicKey = x25519KeyPair.hexEncodedPublicKey
             val registrationID = KeyHelper.generateRegistrationId(false)
             TextSecurePreferences.setLocalRegistrationId(this, registrationID)

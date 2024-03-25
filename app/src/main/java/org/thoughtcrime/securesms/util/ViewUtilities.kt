@@ -58,7 +58,7 @@ fun View.fadeIn(duration: Long = 150) {
 
 fun View.fadeOut(duration: Long = 150) {
     animate().setDuration(duration).alpha(0.0f).setListener(object : AnimatorListenerAdapter() {
-        override fun onAnimationEnd(animation: Animator?) {
+        override fun onAnimationEnd(animation: Animator) {
             super.onAnimationEnd(animation)
             visibility = View.GONE
         }

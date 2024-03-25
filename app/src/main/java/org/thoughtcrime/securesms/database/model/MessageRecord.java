@@ -54,6 +54,10 @@ public abstract class MessageRecord extends DisplayRecord {
   private final List<ReactionRecord>      reactions;
   private final boolean                   hasMention;
 
+  public final boolean isNotDisappearAfterRead() {
+    return expireStarted == getTimestamp();
+  }
+
   public abstract boolean isMms();
   public abstract boolean isMmsNotification();
 
@@ -116,7 +120,7 @@ public abstract class MessageRecord extends DisplayRecord {
       return new SpannableString(UpdateMessageBuilder.INSTANCE.buildGroupUpdateMessage(context, updateMessageData, getIndividualRecipient().getAddress().serialize(), isOutgoing()));
     } else if (isExpirationTimerUpdate()) {
       int seconds = (int) (getExpiresIn() / 1000);
-      return new SpannableString(UpdateMessageBuilder.INSTANCE.buildExpirationTimerMessage(context, seconds, getIndividualRecipient().getAddress().serialize(), isOutgoing()));
+      return new SpannableString(UpdateMessageBuilder.INSTANCE.buildExpirationTimerMessage(context, seconds, getRecipient(), getIndividualRecipient().getAddress().serialize(), isOutgoing(), getTimestamp(), expireStarted));
     } else if (isDataExtractionNotification()) {
       if (isScreenshotNotification()) return new SpannableString((UpdateMessageBuilder.INSTANCE.buildDataExtractionMessage(context, DataExtractionNotificationInfoMessage.Kind.SCREENSHOT, getIndividualRecipient().getAddress().serialize())));
       else if (isMediaSavedNotification()) return new SpannableString((UpdateMessageBuilder.INSTANCE.buildDataExtractionMessage(context, DataExtractionNotificationInfoMessage.Kind.MEDIA_SAVED, getIndividualRecipient().getAddress().serialize())));

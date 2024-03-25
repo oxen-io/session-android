@@ -220,18 +220,6 @@
         <attr name="emoji_maxLength" format="integer" />
     </declare-styleable>
 
-    <declare-styleable name="ColorPickerPreference">
-        <attr name="currentColor" format="reference" />
-        <attr name="colors" format="reference" />
-        <attr name="sortColors" format="boolean|reference" />
-        <attr name="colorDescriptions" format="reference" />
-        <attr name="columns" format="integer|reference" />
-        <attr name="colorSize" format="enum|reference">
-            <enum name="large" value="1" />
-            <enum name="small" value="2" />
-        </attr>
-    </declare-styleable>
-
     <declare-styleable name="VerificationCodeView">
         <attr name="vcv_spacing" format="dimension"/>
         <attr name="vcv_inputWidth" format="dimension"/>
@@ -262,11 +250,6 @@
         <attr name="doc_titleColor" format="color" />
         <attr name="doc_captionColor" format="color" />
         <attr name="doc_downloadButtonTint" format="color" />
-    </declare-styleable>
-
-    <declare-styleable name="ConversationItemFooter">
-        <attr name="footer_text_color" format="color" />
-        <attr name="footer_icon_color" format="color" />
     </declare-styleable>
 
     <declare-styleable name="ConversationItemThumbnail">

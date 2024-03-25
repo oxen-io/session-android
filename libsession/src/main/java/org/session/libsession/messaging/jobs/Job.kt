@@ -17,7 +17,7 @@ interface Job {
         internal const val MAX_BUFFER_SIZE = 1_000_000 // bytes
     }
 
-    fun execute(dispatcherName: String)
+    suspend fun execute(dispatcherName: String)
 
     fun serialize(): Data
 

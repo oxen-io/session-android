@@ -63,13 +63,9 @@ class BlockedContactsViewModel @Inject constructor(private val storage: Storage)
         return _state
     }
 
-    fun unblock(context: Context) {
-        storage.unblock(state.selectedItems)
+    fun unblock() {
+        storage.setBlocked(state.selectedItems, false)
         _state.value = state.copy(selectedItems = emptySet())
-        // TODO: Remove in UserConfig branch
-        GlobalScope.launch(Dispatchers.IO) {
-            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
-        }
     }
 
     fun select(selectedItem: Recipient, isSelected: Boolean) {

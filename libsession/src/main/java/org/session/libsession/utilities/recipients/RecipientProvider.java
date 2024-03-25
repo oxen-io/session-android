@@ -31,6 +31,7 @@ import org.session.libsession.utilities.ListenableFutureTask;
 import org.session.libsession.utilities.MaterialColor;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.Util;
+import org.session.libsession.utilities.recipients.Recipient.DisappearingState;
 import org.session.libsession.utilities.recipients.Recipient.RecipientSettings;
 import org.session.libsession.utilities.recipients.Recipient.RegisteredState;
 import org.session.libsession.utilities.recipients.Recipient.UnidentifiedAccessMode;
@@ -159,6 +160,7 @@ class RecipientProvider {
     @Nullable final Uri                    callRingtone;
               final long                   mutedUntil;
               final int                    notifyType;
+    @Nullable final DisappearingState      disappearingState;
     @Nullable final VibrateState           messageVibrateState;
     @Nullable final VibrateState           callVibrateState;
               final boolean                blocked;
@@ -177,6 +179,8 @@ class RecipientProvider {
     @Nullable final String                 notificationChannel;
     @NonNull  final UnidentifiedAccessMode unidentifiedAccessMode;
               final boolean                forceSmsSelection;
+              final String                 wrapperHash;
+              final boolean                blocksCommunityMessageRequests;
 
     RecipientDetails(@Nullable String name, @Nullable Long groupAvatarId,
                      boolean systemContact, boolean isLocalNumber, @Nullable RecipientSettings settings,
@@ -191,6 +195,7 @@ class RecipientProvider {
       this.callRingtone                    = settings     != null ? settings.getCallRingtone() : null;
       this.mutedUntil                      = settings     != null ? settings.getMuteUntil() : 0;
       this.notifyType                      = settings     != null ? settings.getNotifyType() : 0;
+      this.disappearingState               = settings     != null ? settings.getDisappearingState() : null;
       this.messageVibrateState             = settings     != null ? settings.getMessageVibrateState() : null;
       this.callVibrateState                = settings     != null ? settings.getCallVibrateState() : null;
       this.blocked                         = settings     != null && settings.isBlocked();
@@ -209,6 +214,8 @@ class RecipientProvider {
       this.notificationChannel             = settings     != null ? settings.getNotificationChannel() : null;
       this.unidentifiedAccessMode          = settings     != null ? settings.getUnidentifiedAccessMode() : UnidentifiedAccessMode.DISABLED;
       this.forceSmsSelection               = settings     != null && settings.isForceSmsSelection();
+      this.wrapperHash                     = settings     != null ? settings.getWrapperHash() : null;
+      this.blocksCommunityMessageRequests  = settings     != null && settings.getBlocksCommunityMessageRequests();
 
       if (name == null && settings != null) this.name = settings.getSystemDisplayName();
       else                                  this.name = name;

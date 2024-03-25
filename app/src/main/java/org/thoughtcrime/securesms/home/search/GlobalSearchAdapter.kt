@@ -83,22 +83,20 @@ class GlobalSearchAdapter (private val modelCallback: (Model)->Unit): RecyclerVi
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         if (holder is ContentView) {
-            holder.binding.searchResultProfilePicture.root.recycle()
+            holder.binding.searchResultProfilePicture.recycle()
         }
     }
 
     class ContentView(view: View, private val modelCallback: (Model) -> Unit) : RecyclerView.ViewHolder(view) {
 
-        val binding = ViewGlobalSearchResultBinding.bind(view).apply {
-            searchResultProfilePicture.root.glide = GlideApp.with(root)
-        }
+        val binding = ViewGlobalSearchResultBinding.bind(view)
 
         fun bindPayload(newQuery: String, model: Model) {
             bindQuery(newQuery, model)
         }
 
         fun bind(query: String, model: Model) {
-            binding.searchResultProfilePicture.root.recycle()
+            binding.searchResultProfilePicture.recycle()
             when (model) {
                 is Model.GroupConversation -> bindModel(query, model)
                 is Model.Contact -> bindModel(query, model)
