@@ -97,6 +97,16 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         public val groupPublicKey = "group_public_key"
         @JvmStatic
         val createClosedGroupPublicKeysTable = "CREATE TABLE $closedGroupPublicKeysTable ($groupPublicKey STRING PRIMARY KEY)"
+
+        private const val LAST_LEGACY_MESSAGE_TABLE = "last_legacy_messages"
+        // The overall "thread recipient
+        private const val LAST_LEGACY_THREAD_RECIPIENT = "last_legacy_thread_recipient"
+        // The individual 'last' person who sent the message with legacy expiration attached
+        private const val LAST_LEGACY_SENDER_RECIPIENT = "last_legacy_sender_recipient"
+        private const val LEGACY_THREAD_RECIPIENT_QUERY = "$LAST_LEGACY_THREAD_RECIPIENT = ?"
+
+        const val CREATE_LAST_LEGACY_MESSAGE_TABLE = "CREATE TABLE $LAST_LEGACY_MESSAGE_TABLE ($LAST_LEGACY_THREAD_RECIPIENT STRING PRIMARY KEY, $LAST_LEGACY_SENDER_RECIPIENT STRING NOT NULL);"
+
         // Hard fork service node info
         const val FORK_INFO_TABLE = "fork_info"
         const val DUMMY_KEY = "dummy_key"
@@ -413,6 +423,31 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
             "$server = ?", wrap(legacyServerId)
         )
         database.endTransaction()
+    }
+
+    override fun getLastLegacySenderAddress(threadRecipientAddress: String): String? =
+        databaseHelper.readableDatabase.get(LAST_LEGACY_MESSAGE_TABLE, LEGACY_THREAD_RECIPIENT_QUERY, wrap(threadRecipientAddress)) { cursor ->
+            cursor.getString(LAST_LEGACY_SENDER_RECIPIENT)
+        }
+
+    override fun setLastLegacySenderAddress(
+        threadRecipientAddress: String,
+        senderRecipientAddress: String?
+    ) {
+        val database = databaseHelper.writableDatabase
+        if (senderRecipientAddress == null) {
+            // delete
+            database.delete(LAST_LEGACY_MESSAGE_TABLE, LEGACY_THREAD_RECIPIENT_QUERY, wrap(threadRecipientAddress))
+        } else {
+            // just update the value to a new one
+            val values = wrap(
+                mapOf(
+                    LAST_LEGACY_THREAD_RECIPIENT to threadRecipientAddress,
+                    LAST_LEGACY_SENDER_RECIPIENT to senderRecipientAddress
+                )
+            )
+            database.insertOrUpdate(LAST_LEGACY_MESSAGE_TABLE, values, LEGACY_THREAD_RECIPIENT_QUERY, wrap(threadRecipientAddress))
+        }
     }
 
     fun getUserCount(room: String, server: String): Int? {

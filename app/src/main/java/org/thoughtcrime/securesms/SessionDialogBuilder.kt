@@ -105,7 +105,7 @@ class SessionDialogBuilder(val context: Context) {
 
     fun destructiveButton(
         @StringRes text: Int,
-        @StringRes contentDescription: Int,
+        @StringRes contentDescription: Int = text,
         listener: () -> Unit = {}
     ) = button(
         text,

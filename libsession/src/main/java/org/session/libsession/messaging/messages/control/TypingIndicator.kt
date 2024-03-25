@@ -1,12 +1,13 @@
 package org.session.libsession.messaging.messages.control
 
+import org.session.libsession.messaging.messages.copyExpiration
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Log
 
 class TypingIndicator() : ControlMessage() {
     var kind: Kind? = null
 
-    override val ttl: Long = 20 * 1000
+    override val defaultTtl: Long = 20 * 1000
 
     override fun isValid(): Boolean {
         if (!super.isValid()) return false
@@ -20,6 +21,7 @@ class TypingIndicator() : ControlMessage() {
             val typingIndicatorProto = if (proto.hasTypingMessage()) proto.typingMessage else return null
             val kind = Kind.fromProto(typingIndicatorProto.action)
             return TypingIndicator(kind = kind)
+                    .copyExpiration(proto)
         }
     }
 
@@ -54,16 +56,14 @@ class TypingIndicator() : ControlMessage() {
             Log.w(TAG, "Couldn't construct typing indicator proto from: $this")
             return null
         }
-        val typingIndicatorProto = SignalServiceProtos.TypingMessage.newBuilder()
-        typingIndicatorProto.timestamp = timestamp
-        typingIndicatorProto.action = kind.toProto()
-        val contentProto = SignalServiceProtos.Content.newBuilder()
-        try {
-            contentProto.typingMessage = typingIndicatorProto.build()
-            return contentProto.build()
+        return try {
+            SignalServiceProtos.Content.newBuilder()
+                .setTypingMessage(SignalServiceProtos.TypingMessage.newBuilder().setTimestamp(timestamp).setAction(kind.toProto()).build())
+                .applyExpiryMode()
+                .build()
         } catch (e: Exception) {
             Log.w(TAG, "Couldn't construct typing indicator proto from: $this")
-            return null
+            null
         }
     }
 }
