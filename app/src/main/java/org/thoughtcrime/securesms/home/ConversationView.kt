@@ -92,7 +92,7 @@ class ConversationView : LinearLayout {
         val senderDisplayName = getUserDisplayName(thread.recipient)
                 ?: thread.recipient.address.toString()
         binding.conversationViewDisplayNameTextView.text = senderDisplayName
-        binding.timestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), thread.date)
+        binding.timestampTextView.text = thread.date.takeIf { it != 0L }?.let { DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), it) }
         val recipient = thread.recipient
         binding.muteIndicatorImageView.isVisible = recipient.isMuted || recipient.notifyType != NOTIFY_TYPE_ALL
         val drawableRes = if (recipient.isMuted || recipient.notifyType == NOTIFY_TYPE_NONE) {

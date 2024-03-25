@@ -29,8 +29,7 @@ inline jobject serialize_contact(JNIEnv *env, session::config::contact_info info
     return returnObj;
 }
 
-inline session::config::contact_info
-deserialize_contact(JNIEnv *env, jobject info, session::config::Contacts *conf) {
+inline session::config::contact_info deserialize_contact(JNIEnv *env, jobject info, session::config::Contacts *conf) {
     jclass contactClass = env->FindClass("network/loki/messenger/libsession_util/util/Contact");
 
     jfieldID getId, getName, getNick, getApproved, getApprovedMe, getBlocked, getUserPic, getPriority, getExpiry, getHidden;

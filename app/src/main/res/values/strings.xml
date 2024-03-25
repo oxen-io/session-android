@@ -56,7 +56,7 @@
     <string name="AccessibilityId_new_conversation_button">New conversation button</string>
     <string name="AccessibilityId_new_direct_message">New direct message</string>
     <string name="AccessibilityId_create_group">Create group</string>
-    <string name="AccessibilityId_join_community">Join community</string>
+    <string name="AccessibilityId_join_community">Join community button</string>
     <!-- Join community pop up -->
     <string name="AccessibilityId_community_input_box">Community input</string>
     <string name="AccessibilityId_join_community_button">Join community button</string>
@@ -85,7 +85,7 @@
     <!--  Conversation icons -->
     <string name="AccessibilityId_call_button">Call button</string>
     <string name="AccessibilityId_settings">Settings</string>
-    <string name="AccessibilityId_disappearing_messages_timer">Disappearing messages timer</string>
+    <string name="AccessibilityId_confirm">Confirm</string>
     <string name="AccessibilityId_disappearing_messages_time_picker">Time selector</string>
     <string name="AccessibilityId_accept_message_request_button">Accept message request</string>
     <string name="AccessibilityId_decline_message_request_button">Decline message request</string>
@@ -117,9 +117,7 @@
     <string name="AccessibilityId_download_media">Download media</string>
     <string name="AccessibilityId_dont_download_media">Don\'t download media</string>
     <!-- Conversation View-->
-    <string name="AccessibilityId_message_sent_status_tick">Message sent status: Sent</string>
-    <string name="AccessibilityId_message_sent_status_pending">Message sent status pending</string>
-    <string name="AccessibilityId_message_sent_status_syncing">Message sent status syncing</string>
+    <string name="AccessibilityId_message_sent_status">Message sent status: Sent</string>
     <string name="AccessibilityId_message_request_config_message">Message request has been accepted</string>
     <string name="AccessibilityId_message_body">Message body</string>
     <string name="AccessibilityId_voice_message">Voice message</string>
@@ -156,6 +154,17 @@
     <!--    Link preview Dialog-->
     <string name="AccessibilityId_enable_link_preview_button">Enable</string>
     <string name="AccessibilityId_cancel_link_preview_button">Cancel</string>
+
+    <!-- Disappearing messages -->
+    <string name="AccessibilityId_disappear_after_read_option">Disappear after read option</string>
+    <string name="AccessibilityId_disappear_after_send_option">Disappear after send option</string>
+    <string name="AccessibilityId_disappearing_messages_timer">Disappearing messages timer</string>
+    <string name="AccessibilityId_set_button">Set button</string>
+    <string name="AccessibilityId_time_option">Time option</string>
+    <string name="AccessibilityId_disable_disappearing_messages">Disable disappearing messages</string>
+    <string name="AccessibilityId_configuration_message">Configuration message</string>
+    <string name="AccessibilityId_disappearing_messages_type_and_time">Disappearing messages type and time</string>
+    <string name="AccessibilityId_conversation_header_name">Conversation header name</string>
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">New message</string>
     <!-- AlbumThumbnailView -->
@@ -560,6 +569,12 @@
     <string name="arrays__default">Default</string>
     <string name="arrays__high">High</string>
     <string name="arrays__max">Max</string>
+    <string name="arrays__five_minutes">5 Minutes</string>
+    <string name="arrays__one_hour">1 Hour</string>
+    <string name="arrays__twelve_hours">12 Hours</string>
+    <string name="arrays__one_day">1 Day</string>
+    <string name="arrays__one_week">1 Week</string>
+    <string name="arrays__two_weeks">2 Weeks</string>
     <!-- plurals.xml -->
     <plurals name="hours_ago">
         <item quantity="one">%d hour</item>
@@ -894,6 +909,11 @@
     <string name="dialog_join_open_group_explanation">Are you sure you want to join the %s open group?</string>
     <string name="dialog_open_url_title">Open URL?</string>
     <string name="dialog_open_url_explanation">Are you sure you want to open %s?</string>
+    <string name="dialog_disappearing_messages_follow_setting_title">Follow Setting</string>
+    <string name="dialog_disappearing_messages_follow_setting_off_body">Messages you send will no longer disappear. Are you sure you want to turn off disappearing messages?</string>
+    <string name="dialog_disappearing_messages_follow_setting_on_body">Set your messages to disappear %1$s after they have been %2$s?</string>
+    <string name="dialog_disappearing_messages_follow_setting_set">Set</string>
+    <string name="dialog_disappearing_messages_follow_setting_confirm">Confirm</string>
     <string name="open">Open</string>
     <string name="copy_url">Copy URL</string>
     <string name="dialog_link_preview_title">Enable Link Previews?</string>
@@ -1027,6 +1047,21 @@
     <string name="fragment_enter_community_url_join_button_title">Join</string>
     <string name="new_conversation_dialog_back_button_content_description">Navigate Back</string>
     <string name="new_conversation_dialog_close_button_content_description">Close Dialog</string>
+    <string name="activity_disappearing_messages_title">Disappearing Messages</string>
+    <string name="activity_disappearing_messages_subtitle">This setting applies to messages you send in this conversation.</string>
+    <string name="expiration_type_disappear_legacy_description">Original version of disappearing messages.</string>
+    <string name="expiration_type_disappear_legacy">Legacy</string>
+    <string name="activity_disappearing_messages_subtitle_sent">Messages disappear after they have been sent.</string>
+    <string name="expiration_type_disappear_after_read">Disappear After Read</string>
+    <string name="expiration_type_disappear_after_read_description">Messages delete after they have been read.</string>
+    <string name="expiration_type_disappear_after_send">Disappear After Send</string>
+    <string name="expiration_type_disappear_after_send_description">Messages delete after they have been sent.</string>
+    <string name="disappearing_messages_set_button_title">Set</string>
+    <string name="activity_disappearing_messages_delete_type">Delete Type</string>
+    <string name="activity_disappearing_messages_timer">Timer</string>
+    <string name="activity_disappearing_messages_group_footer">This setting applies to everyone in this conversation.\nOnly group admins can change this setting.</string>
+    <string name="activity_conversation_outdated_client_banner_text">%s is using an outdated client. Disappearing messages may not work as expected.</string>
+    <string name="DisappearingMessagesActivity_settings_not_updated">Settings not updated and please try again</string>
     <string name="ErrorNotifier_migration">Database Upgrade Failed</string>
     <string name="ErrorNotifier_migration_downgrade">Please contact support to report the error.</string>
     <string name="delivery_status_syncing">Syncing</string>
@@ -1045,5 +1080,6 @@
     <string name="activity_conversation_empty_state_default">You have no messages from <b>%s</b>.\nSend a message to start the conversation!</string>
 
     <string name="unread_marker">Unread Messages</string>
+    <string name="auto_deletes_in">Auto-deletes in %1$s</string>
 
 </resources>

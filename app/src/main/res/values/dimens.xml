@@ -2,6 +2,7 @@
 <resources>
 
     <!-- Font Sizes -->
+    <dimen name="tiny_font_size">9sp</dimen>
     <dimen name="very_small_font_size">12sp</dimen>
     <dimen name="small_font_size">15sp</dimen>
     <dimen name="medium_font_size">17sp</dimen>

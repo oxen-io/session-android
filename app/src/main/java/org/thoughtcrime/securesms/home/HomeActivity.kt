@@ -455,6 +455,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     // endregion
 
     // region Interaction
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (binding.globalSearchRecycler.isVisible) {
             binding.globalSearchInputLayout.clearSearch(true)

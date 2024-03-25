@@ -973,5 +973,17 @@ object OpenGroupApi {
         }
     }
 
+    fun deleteAllInboxMessages(server: String): Promise<Map<*, *>, java.lang.Exception> {
+        val request = Request(
+            verb = DELETE,
+            room = null,
+            server = server,
+            endpoint = Endpoint.Inbox
+        )
+        return getResponseBody(request).map { response ->
+            JsonUtil.fromJson(response, Map::class.java)
+        }
+    }
+
     // endregion
 }
