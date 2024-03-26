@@ -78,7 +78,7 @@ class CreateGroupFragment : Fragment() {
             if (name.isEmpty()) {
                 return@setOnClickListener Toast.makeText(context, R.string.activity_create_closed_group_group_name_missing_error, Toast.LENGTH_LONG).show()
             }
-            if (name.length >= 30) {
+            if (name.length > resources.getInteger(R.integer.max_group_and_community_name_length_chars)) {
                 return@setOnClickListener Toast.makeText(context, R.string.activity_create_closed_group_group_name_too_long_error, Toast.LENGTH_LONG).show()
             }
             val selectedMembers = adapter.selectedMembers

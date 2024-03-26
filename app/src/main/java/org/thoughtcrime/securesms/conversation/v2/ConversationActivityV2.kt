@@ -175,6 +175,7 @@ import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.SaveAttachmentTask
 import org.thoughtcrime.securesms.util.SimpleTextWatcher
 import org.thoughtcrime.securesms.util.isScrolledToBottom
+import org.thoughtcrime.securesms.util.isScrolledToWithin30dpOfBottom
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
 import org.thoughtcrime.securesms.util.toPx
@@ -281,6 +282,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private val isScrolledToBottom: Boolean
         get() = binding?.conversationRecyclerView?.isScrolledToBottom ?: true
 
+    private val isScrolledToWithin30dpOfBottom: Boolean
+        get() = binding?.conversationRecyclerView?.isScrolledToWithin30dpOfBottom ?: true
+
     private val layoutManager: LinearLayoutManager?
         get() { return binding?.conversationRecyclerView?.layoutManager as LinearLayoutManager? }
 
@@ -336,6 +340,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             lifecycleCoroutineScope = lifecycleScope
         )
         adapter.visibleMessageViewDelegate = this
+
+        // Register an AdapterDataObserver to scroll us to the bottom of the RecyclerView if we're
+        // already near the the bottom and the data changes.
+        adapter.registerAdapterDataObserver(ConversationAdapterDataObserver(binding?.conversationRecyclerView!!, adapter))
+
         adapter
     }
 
@@ -351,6 +360,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private lateinit var reactionDelegate: ConversationReactionDelegate
     private val reactWithAnyEmojiStartPage = -1
+
+    // Properties for what message indices are visible previously & now, as well as the scroll state
+    private var previousLastVisibleRecyclerViewIndex: Int = RecyclerView.NO_POSITION
+    private var currentLastVisibleRecyclerViewIndex:  Int = RecyclerView.NO_POSITION
+    private var recyclerScrollState: Int = RecyclerView.SCROLL_STATE_IDLE
 
     // region Settings
     companion object {
@@ -375,6 +389,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         super.onCreate(savedInstanceState, isReady)
         binding = ActivityConversationV2Binding.inflate(layoutInflater)
         setContentView(binding!!.root)
+
         // messageIdToScroll
         messageToScrollTimestamp.set(intent.getLongExtra(SCROLL_MESSAGE_ID, -1))
         messageToScrollAuthor.set(intent.getParcelableExtra(SCROLL_MESSAGE_AUTHOR))
@@ -390,6 +405,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         setUpLinkPreviewObserver()
         restoreDraftIfNeeded()
         setUpUiStateObserver()
+
         binding!!.scrollToBottomButton.setOnClickListener {
             val layoutManager = (binding?.conversationRecyclerView?.layoutManager as? LinearLayoutManager) ?: return@setOnClickListener
             val targetPosition = if (reverseMessageList) 0 else adapter.itemCount
@@ -419,8 +435,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         setUpBlockedBanner()
         binding!!.searchBottomBar.setEventListener(this)
         updateSendAfterApprovalText()
-        showOrHideInputIfNeeded()
         setUpMessageRequestsBar()
+
+        // Note: Do not `showOrHideInputIfNeeded` here - we'll never start this activity w/ the
+        // keyboard visible and have no need to immediately display it.
 
         val weakActivity = WeakReference(this)
 
@@ -563,17 +581,45 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         binding!!.conversationRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (recyclerScrollState == RecyclerView.SCROLL_STATE_IDLE) {
+                    scrollToMostRecentMessageIfWeShould()
+                }
                 handleRecyclerViewScrolled()
             }
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-
+                recyclerScrollState = newState
             }
         })
+    }
 
-        binding!!.conversationRecyclerView.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-            showScrollToBottomButtonIfApplicable()
+    private fun scrollToMostRecentMessageIfWeShould() {
+        // Grab an initial 'previous' last visible message..
+        if (previousLastVisibleRecyclerViewIndex == RecyclerView.NO_POSITION) {
+            previousLastVisibleRecyclerViewIndex = layoutManager?.findLastVisibleItemPosition()!!
         }
+
+        // ..and grab the 'current' last visible message.
+        currentLastVisibleRecyclerViewIndex = layoutManager?.findLastVisibleItemPosition()!!
+
+        // If the current last visible message index is less than the previous one (i.e. we've
+        // lost visibility of one or more messages due to showing the IME keyboard) AND we're
+        // at the bottom of the message feed..
+        val atBottomAndTrueLastNoLongerVisible = currentLastVisibleRecyclerViewIndex!! <= previousLastVisibleRecyclerViewIndex!! && !binding?.scrollToBottomButton?.isVisible!!
+
+        // ..OR we're at the last message or have received a new message..
+        val atLastOrReceivedNewMessage = currentLastVisibleRecyclerViewIndex == (adapter.itemCount - 1)
+
+        // ..then scroll the recycler view to the last message on resize. Note: We cannot just call
+        // scroll/smoothScroll - we have to `post` it or nothing happens!
+        if (atBottomAndTrueLastNoLongerVisible || atLastOrReceivedNewMessage) {
+            binding?.conversationRecyclerView?.post {
+                binding?.conversationRecyclerView?.smoothScrollToPosition(adapter.itemCount)
+            }
+        }
+
+        // Update our previous last visible view index to the current one
+        previousLastVisibleRecyclerViewIndex = currentLastVisibleRecyclerViewIndex
     }
 
     // called from onCreate
@@ -760,13 +806,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // of the first unread message in the middle of the screen
         if (isFirstLoad && !reverseMessageList) {
             layoutManager?.scrollToPositionWithOffset(lastSeenItemPosition, ((layoutManager?.height ?: 0) / 2))
-
             if (shouldHighlight) { highlightViewAtPosition(lastSeenItemPosition) }
-
             return lastSeenItemPosition
         }
 
         if (lastSeenItemPosition <= 3) { return lastSeenItemPosition }
+
         binding?.conversationRecyclerView?.scrollToPosition(lastSeenItemPosition)
         return lastSeenItemPosition
     }
@@ -1040,8 +1085,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private fun handleRecyclerViewScrolled() {
         val binding = binding ?: return
+
+        // Note: The typing indicate is whether the other person / other people are typing - it has
+        // nothing to do with the IME keyboard state.
         val wasTypingIndicatorVisibleBefore = binding.typingIndicatorViewContainer.isVisible
         binding.typingIndicatorViewContainer.isVisible = wasTypingIndicatorVisibleBefore && isScrolledToBottom
+
         showScrollToBottomButtonIfApplicable()
         val maybeTargetVisiblePosition = if (reverseMessageList) layoutManager?.findFirstVisibleItemPosition() else layoutManager?.findLastVisibleItemPosition()
         val targetVisiblePosition = maybeTargetVisiblePosition ?: RecyclerView.NO_POSITION
@@ -2150,6 +2199,20 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 ConversationReactionOverlay.Action.BAN_AND_DELETE_ALL -> banAndDeleteAll(selectedItems)
                 ConversationReactionOverlay.Action.BAN_USER -> banUser(selectedItems)
                 ConversationReactionOverlay.Action.COPY_SESSION_ID -> copySessionID(selectedItems)
+            }
+        }
+    }
+
+    // AdapterDataObserver implementation to scroll us to the bottom of the ConversationRecyclerView
+    // when we're already near the bottom and we send or receive a message.
+    inner class ConversationAdapterDataObserver(val recyclerView: ConversationRecyclerView, val adapter: ConversationAdapter) : RecyclerView.AdapterDataObserver() {
+        override fun onChanged() {
+            super.onChanged()
+            if (recyclerView.isScrolledToWithin30dpOfBottom) {
+                // Note: The adapter itemCount is zero based - so calling this with the itemCount in
+                // a non-zero based manner scrolls us to the bottom of the last message (including
+                // to the bottom of long messages as required by Jira SES-789 / GitHub 1364).
+                recyclerView.scrollToPosition(adapter.itemCount)
             }
         }
     }
