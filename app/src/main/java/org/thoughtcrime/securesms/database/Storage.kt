@@ -766,8 +766,16 @@ open class Storage(
     }
 
     override fun markAsSent(timestamp: Long, author: String) {
+        Log.w("[ACL]", "Hit Storage.markAsSent!")
         val database = DatabaseComponent.get(context).mmsSmsDatabase()
-        val messageRecord = database.getMessageFor(timestamp, author) ?: return
+        //val messageRecord = database.getMessageFor(timestamp, author)
+        val messageRecord = database.getSentMessageFor(timestamp, author)
+        if (messageRecord == null) {
+            Log.e("[ACL]", "In Storage.markAsSent we couldn't get the message record so are bailing before setting anything as sent!")
+            return
+        } else {
+            Log.e("[ACL]", "SUCCESSFULLY found messageRecord after call to getMessageFor(timestamp, author)!")
+        }
         if (messageRecord.isMms) {
             val mmsDatabase = DatabaseComponent.get(context).mmsDatabase()
             mmsDatabase.markAsSent(messageRecord.getId(), true)
@@ -778,6 +786,7 @@ open class Storage(
     }
 
     override fun markAsSyncing(timestamp: Long, author: String) {
+        Log.w("[ACL]", "Hit Storage.markAsSyncing!")
         DatabaseComponent.get(context).mmsSmsDatabase()
             .getMessageFor(timestamp, author)
             ?.run { getMmsDatabaseElseSms(isMms).markAsSyncing(id) }
@@ -788,12 +797,14 @@ open class Storage(
         else DatabaseComponent.get(context).smsDatabase()
 
     override fun markAsResyncing(timestamp: Long, author: String) {
+        Log.w("[ACL]", "Hit Storage.markAsResyncing!")
         DatabaseComponent.get(context).mmsSmsDatabase()
             .getMessageFor(timestamp, author)
             ?.run { getMmsDatabaseElseSms(isMms).markAsResyncing(id) }
     }
 
     override fun markAsSending(timestamp: Long, author: String) {
+        Log.w("[ACL]", "Hit Storage.markAsSending!")
         val database = DatabaseComponent.get(context).mmsSmsDatabase()
         val messageRecord = database.getMessageFor(timestamp, author) ?: return
         if (messageRecord.isMms) {

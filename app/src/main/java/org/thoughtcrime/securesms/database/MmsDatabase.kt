@@ -630,6 +630,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         if (retrieved.isExpirationUpdate) deleteExpirationTimerMessages(threadId, true.takeUnless { retrieved.isGroup })
         val messageId = insertMessageOutbox(retrieved, threadId, false, null, serverTimestamp, runThreadUpdate)
         if (messageId == -1L) {
+            Log.w(TAG, "insertSecureDecryptedMessageOutbox believes the MmsDatabase insertion failed.")
             return Optional.absent()
         }
         markAsSent(messageId, true)

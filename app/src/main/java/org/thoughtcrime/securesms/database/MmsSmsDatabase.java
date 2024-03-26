@@ -30,6 +30,7 @@ import net.zetetic.database.sqlcipher.SQLiteQueryBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.Util;
+import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.database.MessagingDatabase.SyncMessageId;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
@@ -112,6 +113,25 @@ public class MmsSmsDatabase extends Database {
       }
     }
 
+    return null;
+  }
+
+  public @Nullable MessageRecord getSentMessageFor(long timestamp, String serializedAuthor) {
+
+    try (Cursor cursor = queryTables(PROJECTION, MmsSmsColumns.NORMALIZED_DATE_SENT + " = " + timestamp, null, null)) {
+      MmsSmsDatabase.Reader reader = readerFor(cursor);
+
+      MessageRecord messageRecord;
+      boolean isOwnNumber = Util.isOwnNumber(context, serializedAuthor);
+
+      while ((messageRecord = reader.getNext()) != null) {
+        if (isOwnNumber && messageRecord.isOutgoing())
+        {
+          return messageRecord;
+        }
+      }
+    }
+    Log.w(TAG, "Could not find any message sent from us at timestamp: " + timestamp + " - returning null.");
     return null;
   }
 

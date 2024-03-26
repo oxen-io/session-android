@@ -39,6 +39,7 @@ import org.session.libsignal.crypto.PushTransportDetails
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.IdPrefix
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Namespace
 import org.session.libsignal.utilities.defaultRequiresAuth
 import org.session.libsignal.utilities.hasNamespaces
@@ -371,6 +372,9 @@ object MessageSender {
 
     // Result Handling
     fun handleSuccessfulMessageSend(message: Message, destination: Destination, isSyncMessage: Boolean = false, openGroupSentTimestamp: Long = -1) {
+
+        Log.w("[ACL]", "Hit handleSuccessfulMessageSend")
+
         val storage = MessagingModuleConfiguration.shared.storage
         val userPublicKey = storage.getUserPublicKey()!!
         val timestamp = message.sentTimestamp!!
@@ -394,6 +398,7 @@ object MessageSender {
             storage.clearErrorMessage(messageID)
             // Track the open group server message ID
             if (message.openGroupServerMessageID != null && (destination is Destination.LegacyOpenGroup || destination is Destination.OpenGroup)) {
+                Log.d("[ACL]", "Inside openGroupServerMessageId block...")
                 val server: String
                 val room: String
                 when (destination) {
@@ -416,6 +421,7 @@ object MessageSender {
                 }
             }
             // Mark the message as sent
+            Log.d("[ACL]", "About to call storage.markAsSent!")
             storage.markAsSent(timestamp, userPublicKey)
             storage.markUnidentified(timestamp, userPublicKey)
             // Start the disappearing messages timer if needed
@@ -431,6 +437,7 @@ object MessageSender {
             if (message is VisibleMessage) message.syncTarget = destination.publicKey
             if (message is ExpirationTimerUpdate) message.syncTarget = destination.publicKey
 
+            Log.w("[ACL]", "About to call storage.markAsSyncing!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             storage.markAsSyncing(timestamp, userPublicKey)
             sendToSnodeDestination(Destination.Contact(userPublicKey), message, true)
         }

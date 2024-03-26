@@ -123,7 +123,7 @@ public abstract class DisplayRecord {
                         !MmsSmsColumns.Types.isIdentityVerified(type) &&
                         !MmsSmsColumns.Types.isIdentityDefault(type);
 
-    Log.d("[ACL]", "Check is pending, we think pending is: " + MmsSmsColumns.Types.isPendingMessageType(type) + ", identify verified is: " + MmsSmsColumns.Types.isIdentityVerified(type) + ", and identity default is: " + MmsSmsColumns.Types.isIdentityDefault(type) + ", therefore returning: " + isPending);
+    //Log.d("[ACL]", "Check is pending, we think pending is: " + MmsSmsColumns.Types.isPendingMessageType(type) + ", identify verified is: " + MmsSmsColumns.Types.isIdentityVerified(type) + ", and identity default is: " + MmsSmsColumns.Types.isIdentityDefault(type) + ", therefore returning: " + isPending);
     return isPending;
   }
 

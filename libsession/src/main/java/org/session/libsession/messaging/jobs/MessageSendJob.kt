@@ -96,6 +96,7 @@ class MessageSendJob(val message: Message, val destination: Destination) : Job {
     }
 
     private fun handleSuccess(dispatcherName: String) {
+        Log.w("[ACL]", "Hit MessageSendJob.handleSuccess!")
         delegate?.handleJobSucceeded(this, dispatcherName)
     }
 
@@ -104,6 +105,8 @@ class MessageSendJob(val message: Message, val destination: Destination) : Job {
     }
 
     private fun handleFailure(dispatcherName: String, error: Exception) {
+        Log.w("[ACL]", "Failed to send $message::class.simpleName.")
+
         Log.w(TAG, "Failed to send $message::class.simpleName.")
         val message = message as? VisibleMessage
         if (message != null) {

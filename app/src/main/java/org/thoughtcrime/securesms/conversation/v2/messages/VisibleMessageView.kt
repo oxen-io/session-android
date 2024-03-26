@@ -294,10 +294,9 @@ class VisibleMessageView : LinearLayout {
                                  @ColorInt val iconTint: Int?,
                                  @StringRes val messageText: Int?)
 
-    //private fun getMessageStatusImage(message: MessageRecord): MessageStatusInfo = when {
     private fun getMessageStatusImage(message: MessageRecord): MessageStatusInfo {
 
-        Log.d("[ACL]", "Hit getMessageStatusImage - delivery status is: ${message.deliveryStatus}")
+        //Log.d("[ACL]", "Hit getMessageStatusImage - delivery status is: ${message.deliveryStatus}")
 
         when {
             message.isFailed ->
