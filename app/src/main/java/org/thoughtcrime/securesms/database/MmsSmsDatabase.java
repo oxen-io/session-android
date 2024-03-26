@@ -245,6 +245,7 @@ public class MmsSmsDatabase extends Database {
       }
     }
     return identifiedMessages;
+  }
 
   public long getLastSentMessageFromSender(long threadId, String serializedAuthor) {
     String order = MmsSmsColumns.NORMALIZED_DATE_SENT + " DESC";
