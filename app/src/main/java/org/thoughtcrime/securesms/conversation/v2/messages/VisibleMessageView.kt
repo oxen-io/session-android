@@ -239,7 +239,7 @@ class VisibleMessageView : LinearLayout {
     }
 
     private fun showStatusMessage(message: MessageRecord) {
-        val disappearing = message.expiresIn > 0
+        val messagedScheduledToDisappear = message.expiresIn > 0
 
         binding.messageInnerLayout.modifyLayoutParams<FrameLayout.LayoutParams> {
             gravity = if (message.isOutgoing) Gravity.END else Gravity.START
@@ -251,7 +251,7 @@ class VisibleMessageView : LinearLayout {
 
         binding.expirationTimerView.isGone = true
 
-        if (message.isOutgoing || disappearing) {
+        if (message.isOutgoing || messagedScheduledToDisappear) {
             val (iconID, iconColor, textId) = getMessageStatusImage(message)
             textId?.let(binding.messageStatusTextView::setText)
             iconColor?.let(binding.messageStatusTextView::setTextColor)
@@ -261,11 +261,10 @@ class VisibleMessageView : LinearLayout {
             
             val lastMessageID = mmsSmsDb.getLastMessageID(message.threadId)
             val isLastMessage = message.id == lastMessageID
-            binding.messageStatusTextView.isVisible =
-                textId != null && (!message.isSent || isLastMessage || disappearing)
-            val showTimer = disappearing && !message.isPending
-            binding.messageStatusImageView.isVisible =
-                iconID != null && !showTimer && (!message.isSent || isLastMessage)
+
+            binding.messageStatusTextView.isVisible = textId != null && (!message.isSent || isLastMessage || messagedScheduledToDisappear)
+            val showTimer = messagedScheduledToDisappear && !message.isPending
+            binding.messageStatusImageView.isVisible = iconID != null && !showTimer && (!message.isSent || isLastMessage)
 
             binding.messageStatusImageView.bringToFront()
             binding.expirationTimerView.bringToFront()
