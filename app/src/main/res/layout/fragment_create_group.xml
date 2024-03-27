@@ -62,10 +62,14 @@
         android:layout_marginBottom="@dimen/medium_spacing"
         android:contentDescription="@string/AccessibilityId_group_name_input"
         android:hint="@string/activity_create_closed_group_edit_text_hint"
-        android:maxLength="30"
+        android:imeOptions="actionDone"
+        android:inputType="textCapWords"
+        android:maxLength="@integer/max_group_and_community_name_length_chars"
+        android:maxLines="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleText" />
+        app:layout_constraintTop_toBottomOf="@id/titleText"
+        tools:ignore="ContentDescription" />
 
     <org.thoughtcrime.securesms.keyboard.emoji.KeyboardPageSearchView
         android:id="@+id/contactSearch"

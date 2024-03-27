@@ -23,6 +23,10 @@
 
     </androidx.appcompat.widget.Toolbar>
 
+    <!--
+    Add this to the below recycler view if you need to debug activity `adjustResize` issues:
+    android:background="@drawable/cross"
+    -->
     <org.thoughtcrime.securesms.conversation.v2.ConversationRecyclerView
         android:focusable="false"
         android:id="@+id/conversationRecyclerView"
@@ -30,6 +34,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/typingIndicatorViewContainer"
         android:layout_below="@id/toolbar" />
+
 
     <org.thoughtcrime.securesms.conversation.v2.components.TypingIndicatorViewContainer
         android:focusable="false"

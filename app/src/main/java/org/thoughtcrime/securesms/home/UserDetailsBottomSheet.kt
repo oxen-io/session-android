@@ -25,7 +25,6 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.IdPrefix
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.database.ThreadDatabase
-import org.thoughtcrime.securesms.mms.GlideApp
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -34,6 +33,9 @@ class UserDetailsBottomSheet: BottomSheetDialogFragment() {
     @Inject lateinit var threadDb: ThreadDatabase
 
     private lateinit var binding: FragmentUserDetailsBottomSheetBinding
+
+    private var previousContactNickname: String = ""
+
     companion object {
         const val ARGUMENT_PUBLIC_KEY = "publicKey"
         const val ARGUMENT_THREAD_ID = "threadId"
@@ -130,9 +132,10 @@ class UserDetailsBottomSheet: BottomSheetDialogFragment() {
         nameTextViewContainer.visibility = View.VISIBLE
         nameEditTextContainer.visibility = View.INVISIBLE
         var newNickName: String? = null
-        if (nicknameEditText.text.isNotEmpty()) {
+        if (nicknameEditText.text.isNotEmpty() && nicknameEditText.text.trim().length != 0) {
             newNickName = nicknameEditText.text.toString()
         }
+        else { newNickName = previousContactNickname }
         val publicKey = recipient.address.serialize()
         val storage = MessagingModuleConfiguration.shared.storage
         val contact = storage.getContactWithSessionID(publicKey) ?: Contact(publicKey)
@@ -145,6 +148,9 @@ class UserDetailsBottomSheet: BottomSheetDialogFragment() {
     fun showSoftKeyboard() {
         val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         imm?.showSoftInput(binding.nicknameEditText, 0)
+
+        // Keep track of the original nickname to re-use if an empty / blank nickname is entered
+        previousContactNickname = binding.nameTextView.text.toString()
     }
 
     fun hideSoftKeyboard() {

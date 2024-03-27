@@ -22,10 +22,12 @@ import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewVisibleMessageBinding
 import org.session.libsession.messaging.contacts.Contact
+import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.conversation.v2.messages.ControlMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageViewDelegate
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter
+import org.thoughtcrime.securesms.database.MmsSmsColumns
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
@@ -57,6 +59,7 @@ class ConversationAdapter(
     private val contactCache = SparseArray<Contact>(100)
     private val contactLoadedCache = SparseBooleanArray(100)
     private val lastSeen = AtomicLong(originalLastSeen)
+    private var lastSentMessageId: Long = -1L
 
     init {
         lifecycleCoroutineScope.launch(IO) {
@@ -136,7 +139,8 @@ class ConversationAdapter(
                         senderId,
                         lastSeen.get(),
                         visibleMessageViewDelegate,
-                        onAttachmentNeedsDownload
+                        onAttachmentNeedsDownload,
+                        lastSentMessageId
                 )
 
                 if (!message.isDeleted) {
@@ -205,8 +209,23 @@ class ConversationAdapter(
         return messageDB.readerFor(cursor).current
     }
 
+    private fun getLastSentMessageId(cursor: Cursor): Long {
+        // If we don't move to first (or at least step backwards) we can step off the end of the
+        // cursor and any query will return an "Index = -1" error.
+        val cursorHasContent = cursor.moveToFirst()
+        if (cursorHasContent) {
+            val thisThreadId = cursor.getLong(4) // Column index 4 is "thread_id"
+            if (thisThreadId != -1L) {
+                val thisUsersSessionId = TextSecurePreferences.getLocalNumber(context)
+                return messageDB.getLastSentMessageFromSender(thisThreadId, thisUsersSessionId)
+            }
+        }
+        return -1L
+    }
+
     override fun changeCursor(cursor: Cursor?) {
         super.changeCursor(cursor)
+
         val toRemove = mutableSetOf<MessageRecord>()
         val toDeselect = mutableSetOf<Pair<Int, MessageRecord>>()
         for (selected in selectedItems) {
@@ -224,6 +243,11 @@ class ConversationAdapter(
         toDeselect.iterator().forEach { (pos, record) ->
             onDeselect(record, pos)
         }
+
+        // This value gets updated here ONLY when the cursor changes, and the value is then passed
+        // through to `VisibleMessageView.bind` each time we bind via `onBindItemViewHolder`, above.
+        // If there are no messages then lastSentMessageId is assigned the value -1L.
+        if (cursor != null) { lastSentMessageId = getLastSentMessageId(cursor) }
     }
 
     fun findLastSeenItemPosition(lastSeenTimestamp: Long): Int? {

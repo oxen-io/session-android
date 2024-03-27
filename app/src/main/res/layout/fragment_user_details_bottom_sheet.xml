@@ -29,6 +29,8 @@
             android:id="@+id/nameTextViewContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingStart="@dimen/medium_spacing"
+            android:paddingEnd="@dimen/medium_spacing"
             android:gravity="center"
             android:orientation="horizontal"
             android:layout_centerInParent="true"
@@ -42,6 +44,7 @@
                 android:id="@+id/nameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/small_spacing"
                 android:layout_marginEnd="@dimen/small_spacing"
@@ -57,6 +60,7 @@
                 android:layout_height="22dp"
                 android:contentDescription="@string/AccessibilityId_edit_user_nickname"
                 android:paddingTop="2dp"
+                android:layout_marginEnd="20dp"
                 android:src="@drawable/ic_baseline_edit_24" />
 
         </LinearLayout>
@@ -73,6 +77,7 @@
                 android:id="@+id/cancelNicknameEditingButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:layout_marginLeft="@dimen/large_spacing"
                 android:contentDescription="@string/AccessibilityId_cancel"
                 android:src="@drawable/ic_baseline_clear_24" />
 
@@ -82,12 +87,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginHorizontal="@dimen/small_spacing"
                 android:contentDescription="@string/AccessibilityId_username"
                 android:textAlignment="center"
                 android:paddingVertical="12dp"
                 android:inputType="text"
-                android:singleLine="true"
+                android:maxLength="@integer/max_user_nickname_length_chars"
+                android:maxLines="1"
                 android:imeOptions="actionDone"
                 android:textColorHint="?android:textColorSecondary"
                 android:hint="@string/fragment_user_details_bottom_sheet_edit_text_hint" />
@@ -96,6 +101,7 @@
                 android:id="@+id/saveNicknameButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:layout_marginRight="@dimen/large_spacing"
                 android:contentDescription="@string/AccessibilityId_apply"
                 android:src="@drawable/ic_baseline_done_24" />
 

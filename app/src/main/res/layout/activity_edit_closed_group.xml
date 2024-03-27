@@ -32,6 +32,7 @@
                     android:id="@+id/btnCancelGroupNameEdit"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:layout_marginLeft="@dimen/medium_spacing"
                     android:contentDescription="@string/AccessibilityId_cancel_name_change"
                     android:src="@drawable/ic_baseline_clear_24"/>
 
@@ -49,6 +50,7 @@
                     android:inputType="text"
                     android:singleLine="true"
                     android:imeOptions="actionDone"
+                    android:maxLength="@integer/max_group_and_community_name_length_chars"
                     android:contentDescription="@string/AccessibilityId_group_name"
                     android:hint="@string/activity_edit_closed_group_edit_text_hint" />
 
@@ -57,6 +59,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
+                    android:layout_marginRight="@dimen/medium_spacing"
                     android:contentDescription="@string/AccessibilityId_accept_name_change"
                     android:src="@drawable/ic_baseline_done_24"/>
 

@@ -25,6 +25,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/medium_spacing"
+            android:maxLength="@integer/max_user_nickname_length_chars"
             android:maxLines="1"
             android:textAlignment="viewStart"
             android:ellipsize="end"
