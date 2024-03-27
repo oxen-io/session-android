@@ -396,8 +396,10 @@ object MessageSender {
 
             // in case any errors from previous sends
             storage.clearErrorMessage(messageID)
+
             // Track the open group server message ID
-            if (message.openGroupServerMessageID != null && (destination is Destination.LegacyOpenGroup || destination is Destination.OpenGroup)) {
+            val messageIsAddressedToCommunity = message.openGroupServerMessageID != null && (destination is Destination.LegacyOpenGroup || destination is Destination.OpenGroup)
+            if (messageIsAddressedToCommunity) {
                 Log.d("[ACL]", "Inside openGroupServerMessageId block...")
                 val server: String
                 val room: String
@@ -420,10 +422,31 @@ object MessageSender {
                     storage.setOpenGroupServerMessageID(messageID, message.openGroupServerMessageID!!, threadID, !(message as VisibleMessage).isMediaMessage())
                 }
             }
-            // Mark the message as sent
-            Log.d("[ACL]", "About to call storage.markAsSent!")
-            storage.markAsSent(timestamp, userPublicKey)
-            storage.markUnidentified(timestamp, userPublicKey)
+
+            // Mark the message as sent.
+            // Note: When sending a message to a community the server modifies the message timestamp
+            // so when we go to look up the message in the local database by timestamp it fails and
+            // we are left with the message delivery status as "Sending" forever! As such, we use a
+            // pair of modified "markAsSentToCommunity" and "markUnidentifiedInCommunity" methods
+            // to retrieve the local message by thread & message ID rather than timestamp when
+            // handling community messages only.
+            if (messageIsAddressedToCommunity)
+            {
+                storage.markAsSentToCommunity(message.threadID!!, message.id!!)
+                storage.markUnidentifiedInCommunity(message.threadID!!, message.id!!)
+            }
+            else
+            {
+                Log.d("[ACL]", "About to call storage.markAsSent!")
+                storage.markAsSent(timestamp, userPublicKey)
+                storage.markUnidentified(timestamp, userPublicKey)
+            }
+
+
+
+
+
+
             // Start the disappearing messages timer if needed
             SSKEnvironment.shared.messageExpirationManager.maybeStartExpiration(message, startDisappearAfterRead = true)
         } ?: run {

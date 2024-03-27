@@ -82,6 +82,7 @@ import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.guava.Optional
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 import org.thoughtcrime.securesms.database.model.MessageId
+import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
@@ -768,7 +769,6 @@ open class Storage(
     override fun markAsSent(timestamp: Long, author: String) {
         Log.w("[ACL]", "Hit Storage.markAsSent!")
         val database = DatabaseComponent.get(context).mmsSmsDatabase()
-        //val messageRecord = database.getMessageFor(timestamp, author)
         val messageRecord = database.getSentMessageFor(timestamp, author)
         if (messageRecord == null) {
             Log.e("[ACL]", "In Storage.markAsSent we couldn't get the message record so are bailing before setting anything as sent!")
@@ -782,6 +782,28 @@ open class Storage(
         } else {
             val smsDatabase = DatabaseComponent.get(context).smsDatabase()
             smsDatabase.markAsSent(messageRecord.getId(), true)
+        }
+    }
+
+    // Method that marks a message as sent in Communities (only!) - where the server modifies the
+    // message timestamp and as such we cannot use that to identify the local message.
+    override fun markAsSentToCommunity(threadId: Long, messageID: Long) {
+        val database = DatabaseComponent.get(context).mmsSmsDatabase()
+        val message = database.getLastSentMessageRecordFromSender(threadId, TextSecurePreferences.getLocalNumber(context))
+
+        // Ensure we can find the local message..
+        if (message == null) {
+            Log.e("[ACL]", "In Storage.markAsSentToCommunity we received a null MessageRecord - bailing.")
+            return
+        } else {
+            Log.e("[ACL]", "SUCCESSFULLY found messageRecord after call to getLastSentMessageRecordFromSender!")
+        }
+
+        // ..and if we successfully found it then mark it as sent.
+        if (message.isMms) {
+            DatabaseComponent.get(context).mmsDatabase().markAsSent(message.getId(), true)
+        } else {
+            DatabaseComponent.get(context).smsDatabase().markAsSent(message.getId(), true)
         }
     }
 
@@ -819,13 +841,37 @@ open class Storage(
 
     override fun markUnidentified(timestamp: Long, author: String) {
         val database = DatabaseComponent.get(context).mmsSmsDatabase()
-        val messageRecord = database.getMessageFor(timestamp, author) ?: return
+        val messageRecord = database.getMessageFor(timestamp, author)
+        if (messageRecord == null) {
+            Log.w(TAG, "Could not identify message with timestamp: $timestamp from author: $author")
+            return
+        }
         if (messageRecord.isMms) {
             val mmsDatabase = DatabaseComponent.get(context).mmsDatabase()
             mmsDatabase.markUnidentified(messageRecord.getId(), true)
         } else {
             val smsDatabase = DatabaseComponent.get(context).smsDatabase()
             smsDatabase.markUnidentified(messageRecord.getId(), true)
+        }
+    }
+
+    // Method that marks a message as unidentified in Communities (only!) - where the server
+    // modifies the message timestamp and as such we cannot use that to identify the local message.
+    override fun markUnidentifiedInCommunity(threadId: Long, messageId: Long) {
+        val database = DatabaseComponent.get(context).mmsSmsDatabase()
+        val message = database.getLastSentMessageRecordFromSender(threadId, TextSecurePreferences.getLocalNumber(context))
+
+        // Check to ensure the message exists
+        if (message == null) {
+            Log.w(TAG, "Storage.markUnidentifiedInCommunity received a null MessageRecord - bailing.")
+            return
+        }
+
+        // Mark it as unidentified if we found the message successfully
+        if (message.isMms) {
+            DatabaseComponent.get(context).mmsDatabase().markUnidentified(message.getId(), true)
+        } else {
+            DatabaseComponent.get(context).smsDatabase().markUnidentified(message.getId(), true)
         }
     }
 

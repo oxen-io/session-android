@@ -135,6 +135,101 @@ public class MmsSmsDatabase extends Database {
     return null;
   }
 
+  // Builds up and returns a list of all all the messages sent by this user in the given thread.
+  // Used to do a pass through our local database to remove records when a user has "Ban & Delete"
+  // called on them in a Community.
+  public Set<MessageRecord> getAllMessageRecordsFromSenderInThread(long threadId, String serializedAuthor) {
+    String selection = MmsSmsColumns.THREAD_ID + " = " + threadId + " AND " + MmsSmsColumns.ADDRESS + " = \"" + serializedAuthor + "\"";
+    Set<MessageRecord> identifiedMessages = new HashSet<MessageRecord>();
+
+    // Try everything with resources so that they auto-close on end of scope
+    try (Cursor cursor = queryTables(PROJECTION, selection, null, null)) {
+      try (MmsSmsDatabase.Reader reader = readerFor(cursor)) {
+        MessageRecord messageRecord;
+        while ((messageRecord = reader.getNext()) != null) {
+          identifiedMessages.add(messageRecord);
+        }
+      }
+    }
+    return identifiedMessages;
+  }
+
+  // Version of the above `getAllMessageRecordsFromSenderInThread` method that returns the message
+  // Ids rather than the set of MessageRecords - currently unused by potentially useful in the future.
+  public Set<Long> getAllMessageIdsFromSenderInThread(long threadId, String serializedAuthor) {
+    String selection = MmsSmsColumns.THREAD_ID + " = " + threadId + " AND " + MmsSmsColumns.ADDRESS + " = \"" + serializedAuthor + "\"";
+
+    Set<Long> identifiedMessages = new HashSet<Long>();
+
+    // Try everything with resources so that they auto-close on end of scope
+    try (Cursor cursor = queryTables(PROJECTION, selection, null, null)) {
+      try (MmsSmsDatabase.Reader reader = readerFor(cursor)) {
+        MessageRecord messageRecord;
+        while ((messageRecord = reader.getNext()) != null) {
+          identifiedMessages.add(messageRecord.id);
+        }
+      }
+    }
+    return identifiedMessages;
+  }
+
+  public long getLastSentMessageFromSender(long threadId, String serializedAuthor) {
+    String order = MmsSmsColumns.NORMALIZED_DATE_SENT + " DESC";
+    String selection = MmsSmsColumns.THREAD_ID + " = " + threadId;
+
+    boolean isOwnNumber = Util.isOwnNumber(context, serializedAuthor);
+
+    // Try everything with resources so that they auto-close on end of scope
+    try (Cursor cursor = queryTables(PROJECTION, selection, order, null)) {
+      try (MmsSmsDatabase.Reader reader = readerFor(cursor)) {
+        MessageRecord messageRecord;
+        while ((messageRecord = reader.getNext()) != null) {
+          if (isOwnNumber && messageRecord.isOutgoing()) { return messageRecord.id; }
+        }
+      }
+    }
+    return -1;
+  }
+
+  public MessageRecord getLastSentMessageRecordFromSender(long threadId, String serializedAuthor) {
+    String order = MmsSmsColumns.NORMALIZED_DATE_SENT + " DESC";
+    String selection = MmsSmsColumns.THREAD_ID + " = " + threadId;
+
+    boolean isOwnNumber = Util.isOwnNumber(context, serializedAuthor);
+
+    // Try everything with resources so that they auto-close on end of scope
+    try (Cursor cursor = queryTables(PROJECTION, selection, order, null)) {
+      try (MmsSmsDatabase.Reader reader = readerFor(cursor)) {
+        MessageRecord messageRecord;
+        while ((messageRecord = reader.getNext()) != null) {
+          if (isOwnNumber && messageRecord.isOutgoing()) { return messageRecord; }
+        }
+      }
+    }
+    return null;
+  }
+
+  // ACL
+  /*
+  public long getSpecificMessage(long threadId, long messageId) {
+    String order = MmsSmsColumns.NORMALIZED_DATE_SENT + " DESC";
+    String selection = MmsSmsColumns.THREAD_ID + " = " + threadId;
+
+    boolean isOwnNumber = Util.isOwnNumber(context, serializedAuthor);
+
+    // Try everything with resources so that they auto-close on end of scope
+    try (Cursor cursor = queryTables(PROJECTION, selection, order, null)) {
+      try (MmsSmsDatabase.Reader reader = readerFor(cursor)) {
+        MessageRecord messageRecord;
+        while ((messageRecord = reader.getNext()) != null) {
+          if (isOwnNumber && messageRecord.isOutgoing()) { return messageRecord.id; }
+        }
+      }
+    }
+    return -1;
+  }
+  */
+
   public @Nullable MessageRecord getMessageFor(long timestamp, Address author) {
     return getMessageFor(timestamp, author.serialize());
   }
