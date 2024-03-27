@@ -6,14 +6,15 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import net.sqlcipher.database.SQLiteDatabase
 import org.session.libsession.database.MessageDataProvider
+import org.session.libsession.utilities.SSKEnvironment
 import org.thoughtcrime.securesms.attachments.DatabaseAttachmentProvider
 import org.thoughtcrime.securesms.crypto.AttachmentSecret
 import org.thoughtcrime.securesms.crypto.AttachmentSecretProvider
 import org.thoughtcrime.securesms.crypto.DatabaseSecretProvider
 import org.thoughtcrime.securesms.database.*
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
+import org.thoughtcrime.securesms.service.ExpiringMessageManager
 import javax.inject.Singleton
 
 @Module
@@ -22,8 +23,12 @@ object DatabaseModule {
 
     @JvmStatic
     fun init(context: Context) {
-        SQLiteDatabase.loadLibs(context)
+        System.loadLibrary("sqlcipher")
     }
+
+    @Provides
+    @Singleton
+    fun provideMessageExpirationManagerProtocol(@ApplicationContext context: Context): SSKEnvironment.MessageExpirationManagerProtocol = ExpiringMessageManager(context)
 
     @Provides
     @Singleton
@@ -33,6 +38,7 @@ object DatabaseModule {
     @Singleton
     fun provideOpenHelper(@ApplicationContext context: Context): SQLCipherOpenHelper {
         val dbSecret = DatabaseSecretProvider(context).orCreateDatabaseSecret
+        SQLCipherOpenHelper.migrateSqlCipher3To4IfNeeded(context, dbSecret)
         return SQLCipherOpenHelper(context, dbSecret)
     }
 
@@ -87,10 +93,6 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideJobDatabase(@ApplicationContext context: Context, openHelper: SQLCipherOpenHelper) = JobDatabase(context, openHelper)
-
-    @Provides
-    @Singleton
     fun provideLokiApiDatabase(@ApplicationContext context: Context, openHelper: SQLCipherOpenHelper) = LokiAPIDatabase(context,openHelper)
 
     @Provides
@@ -135,10 +137,22 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideStorage(@ApplicationContext context: Context, openHelper: SQLCipherOpenHelper) = Storage(context,openHelper)
+    fun provideExpirationConfigurationDatabase(@ApplicationContext context: Context, openHelper: SQLCipherOpenHelper) = ExpirationConfigurationDatabase(context, openHelper)
+
+    @Provides
+    @Singleton
+    fun provideStorage(@ApplicationContext context: Context, openHelper: SQLCipherOpenHelper, configFactory: ConfigFactory, threadDatabase: ThreadDatabase): Storage {
+        val storage = Storage(context,openHelper, configFactory)
+        threadDatabase.setUpdateListener(storage)
+        return storage
+    }
 
     @Provides
     @Singleton
     fun provideAttachmentProvider(@ApplicationContext context: Context, openHelper: SQLCipherOpenHelper): MessageDataProvider = DatabaseAttachmentProvider(context, openHelper)
+
+    @Provides
+    @Singleton
+    fun provideConfigDatabase(@ApplicationContext context: Context, openHelper: SQLCipherOpenHelper): ConfigDatabase = ConfigDatabase(context, openHelper)
 
 }

@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filter
@@ -22,8 +23,10 @@ import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityLinkDeviceBinding
 import network.loki.messenger.databinding.FragmentRecoveryPhraseBinding
+import org.session.libsession.snode.SnodeModule
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.crypto.MnemonicCodec
+import org.session.libsignal.database.LokiAPIDatabaseProtocol
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.KeyHelper
 import org.session.libsignal.utilities.Log
@@ -32,16 +35,26 @@ import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.BaseActionBarActivity
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities
 import org.thoughtcrime.securesms.crypto.MnemonicUtilities
+import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.util.ScanQRCodeWrapperFragment
 import org.thoughtcrime.securesms.util.ScanQRCodeWrapperFragmentDelegate
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.setUpActionBarSessionLogo
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LinkDeviceActivity : BaseActionBarActivity(), ScanQRCodeWrapperFragmentDelegate {
+
+    @Inject
+    lateinit var configFactory: ConfigFactory
+
     private lateinit var binding: ActivityLinkDeviceBinding
+    internal val database: LokiAPIDatabaseProtocol
+        get() = SnodeModule.shared.storage
     private val adapter = LinkDeviceActivityAdapter(this)
     private var restoreJob: Job? = null
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (restoreJob?.isActive == true) return // Don't allow going back with a pending job
         super.onBackPressed()
@@ -99,10 +112,16 @@ class LinkDeviceActivity : BaseActionBarActivity(), ScanQRCodeWrapperFragmentDel
         if (restoreJob?.isActive == true) return
 
         restoreJob = lifecycleScope.launch {
+            // This is here to resolve a case where the app restarts before a user completes onboarding
+            // which can result in an invalid database state
+            database.clearAllLastMessageHashes()
+            database.clearReceivedMessageHashValues()
+
             // RestoreActivity handles seed this way
             val keyPairGenerationResult = KeyPairUtilities.generate(seed)
             val x25519KeyPair = keyPairGenerationResult.x25519KeyPair
             KeyPairUtilities.store(this@LinkDeviceActivity, seed, keyPairGenerationResult.ed25519KeyPair, x25519KeyPair)
+            configFactory.keyPairChanged()
             val userHexEncodedPublicKey = x25519KeyPair.hexEncodedPublicKey
             val registrationID = KeyHelper.generateRegistrationId(false)
             TextSecurePreferences.setLocalRegistrationId(this@LinkDeviceActivity, registrationID)
@@ -115,9 +134,8 @@ class LinkDeviceActivity : BaseActionBarActivity(), ScanQRCodeWrapperFragmentDel
                     .setAction(R.string.registration_activity__skip) { register(true) }
 
             val skipJob = launch {
-                delay(30_000L)
+                delay(15_000L)
                 snackBar.show()
-                // show a dialog or something saying do you want to skip this bit?
             }
             // start polling and wait for updated message
             ApplicationContext.getInstance(this@LinkDeviceActivity).apply {

@@ -4,18 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 import android.os.AsyncTask
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.ColorInt
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.content.pm.ShortcutInfoCompat
@@ -24,14 +19,12 @@ import androidx.core.graphics.drawable.IconCompat
 import network.loki.messenger.R
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.leave
-import org.session.libsession.utilities.ExpirationUtil
 import org.session.libsession.utilities.GroupUtil.doubleDecodeGroupID
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.MediaOverviewActivity
-import org.thoughtcrime.securesms.MuteDialog
 import org.thoughtcrime.securesms.ShortcutLauncherActivity
 import org.thoughtcrime.securesms.calls.WebRtcCallActivity
 import org.thoughtcrime.securesms.contacts.SelectContactsActivity
@@ -42,8 +35,9 @@ import org.thoughtcrime.securesms.groups.EditClosedGroupActivity
 import org.thoughtcrime.securesms.groups.EditClosedGroupActivity.Companion.groupIDKey
 import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
 import org.thoughtcrime.securesms.service.WebRtcCallService
+import org.thoughtcrime.securesms.showMuteDialog
+import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.BitmapUtil
-import org.thoughtcrime.securesms.util.getColorWithID
 import java.io.IOException
 
 object ConversationMenuHelper {
@@ -52,9 +46,7 @@ object ConversationMenuHelper {
         menu: Menu,
         inflater: MenuInflater,
         thread: Recipient,
-        threadId: Long,
-        context: Context,
-        onOptionsItemSelected: (MenuItem) -> Unit
+        context: Context
     ) {
         // Prepare
         menu.clear()
@@ -62,26 +54,18 @@ object ConversationMenuHelper {
         // Base menu (options that should always be present)
         inflater.inflate(R.menu.menu_conversation, menu)
         // Expiring messages
-        if (!isOpenGroup && (thread.hasApprovedMe() || thread.isClosedGroupRecipient)) {
-            if (thread.expireMessages > 0) {
-                inflater.inflate(R.menu.menu_conversation_expiration_on, menu)
-                val item = menu.findItem(R.id.menu_expiring_messages)
-                val actionView = item.actionView
-                val iconView = actionView.findViewById<ImageView>(R.id.menu_badge_icon)
-                val badgeView = actionView.findViewById<TextView>(R.id.expiration_badge)
-                @ColorInt val color = context.resources.getColorWithID(R.color.text, context.theme)
-                iconView.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.MULTIPLY)
-                badgeView.text = ExpirationUtil.getExpirationAbbreviatedDisplayValue(context, thread.expireMessages)
-                actionView.setOnClickListener { onOptionsItemSelected(item) }
-            } else {
-                inflater.inflate(R.menu.menu_conversation_expiration_off, menu)
-            }
+        if (!isOpenGroup && (thread.hasApprovedMe() || thread.isClosedGroupRecipient || thread.isLocalNumber)) {
+            inflater.inflate(R.menu.menu_conversation_expiration, menu)
+        }
+        // One-on-one chat menu allows copying the session id
+        if (thread.isContactRecipient) {
+            inflater.inflate(R.menu.menu_conversation_copy_session_id, menu)
         }
         // One-on-one chat menu (options that should only be present for one-on-one chats)
         if (thread.isContactRecipient) {
             if (thread.isBlocked) {
                 inflater.inflate(R.menu.menu_conversation_unblock, menu)
-            } else {
+            } else if (!thread.isLocalNumber) {
                 inflater.inflate(R.menu.menu_conversation_block, menu)
             }
         }
@@ -104,7 +88,7 @@ object ConversationMenuHelper {
             inflater.inflate(R.menu.menu_conversation_notification_settings, menu)
         }
 
-        if (!thread.isGroupRecipient && thread.hasApprovedMe()) {
+        if (thread.showCallMenu()) {
             inflater.inflate(R.menu.menu_conversation_call, menu)
         }
 
@@ -147,12 +131,12 @@ object ConversationMenuHelper {
             R.id.menu_view_all_media -> { showAllMedia(context, thread) }
             R.id.menu_search -> { search(context) }
             R.id.menu_add_shortcut -> { addShortcut(context, thread) }
-            R.id.menu_expiring_messages -> { showExpiringMessagesDialog(context, thread) }
-            R.id.menu_expiring_messages_off -> { showExpiringMessagesDialog(context, thread) }
+            R.id.menu_expiring_messages -> { showDisappearingMessages(context, thread) }
             R.id.menu_unblock -> { unblock(context, thread) }
             R.id.menu_block -> { block(context, thread, deleteThread = false) }
             R.id.menu_block_delete -> { blockAndDelete(context, thread) }
             R.id.menu_copy_session_id -> { copySessionID(context, thread) }
+            R.id.menu_copy_open_group_url -> { copyOpenGroupUrl(context, thread) }
             R.id.menu_edit_group -> { editClosedGroup(context, thread) }
             R.id.menu_leave_group -> { leaveClosedGroup(context, thread) }
             R.id.menu_invite_to_open_group -> { inviteContacts(context, thread) }
@@ -179,26 +163,23 @@ object ConversationMenuHelper {
     private fun call(context: Context, thread: Recipient) {
 
         if (!TextSecurePreferences.isCallNotificationsEnabled(context)) {
-            AlertDialog.Builder(context)
-                .setTitle(R.string.ConversationActivity_call_title)
-                .setMessage(R.string.ConversationActivity_call_prompt)
-                .setPositiveButton(R.string.activity_settings_title) { _, _ ->
-                    val intent = Intent(context, PrivacySettingsActivity::class.java)
-                    context.startActivity(intent)
+            context.showSessionDialog {
+                title(R.string.ConversationActivity_call_title)
+                text(R.string.ConversationActivity_call_prompt)
+                button(R.string.activity_settings_title, R.string.AccessibilityId_settings) {
+                    Intent(context, PrivacySettingsActivity::class.java).let(context::startActivity)
                 }
-                .setNeutralButton(R.string.cancel) { d, _ ->
-                    d.dismiss()
-                }.show()
+                cancelButton()
+            }
             return
         }
 
-        val service = WebRtcCallService.createCall(context, thread)
-        context.startService(service)
+        WebRtcCallService.createCall(context, thread)
+            .let(context::startService)
 
-        val activity = Intent(context, WebRtcCallActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-        context.startActivity(activity)
+        Intent(context, WebRtcCallActivity::class.java)
+            .apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
+            .let(context::startActivity)
 
     }
 
@@ -206,6 +187,7 @@ object ConversationMenuHelper {
     private fun addShortcut(context: Context, thread: Recipient) {
         object : AsyncTask<Void?, Void?, IconCompat?>() {
 
+            @Deprecated("Deprecated in Java")
             override fun doInBackground(vararg params: Void?): IconCompat? {
                 var icon: IconCompat? = null
                 val contactPhoto = thread.contactPhoto
@@ -224,6 +206,7 @@ object ConversationMenuHelper {
                 return icon
             }
 
+            @Deprecated("Deprecated in Java")
             override fun onPostExecute(icon: IconCompat?) {
                 val name = Optional.fromNullable<String>(thread.name)
                     .or(Optional.fromNullable<String>(thread.profileName))
@@ -240,9 +223,9 @@ object ConversationMenuHelper {
         }.execute()
     }
 
-    private fun showExpiringMessagesDialog(context: Context, thread: Recipient) {
+    private fun showDisappearingMessages(context: Context, thread: Recipient) {
         val listener = context as? ConversationMenuListener ?: return
-        listener.showExpiringMessagesDialog(thread)
+        listener.showDisappearingMessages(thread)
     }
 
     private fun unblock(context: Context, thread: Recipient) {
@@ -269,6 +252,12 @@ object ConversationMenuHelper {
         listener.copySessionID(thread.address.toString())
     }
 
+    private fun copyOpenGroupUrl(context: Context, thread: Recipient) {
+        if (!thread.isOpenGroupRecipient) { return }
+        val listener = context as? ConversationMenuListener ?: return
+        listener.copyOpenGroupUrl(thread)
+    }
+
     private fun editClosedGroup(context: Context, thread: Recipient) {
         if (!thread.isClosedGroupRecipient) { return }
         val intent = Intent(context, EditClosedGroupActivity::class.java)
@@ -279,9 +268,7 @@ object ConversationMenuHelper {
 
     private fun leaveClosedGroup(context: Context, thread: Recipient) {
         if (!thread.isClosedGroupRecipient) { return }
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle(context.resources.getString(R.string.ConversationActivity_leave_group))
-        builder.setCancelable(true)
+
         val group = DatabaseComponent.get(context).groupDatabase().getGroup(thread.address.toGroupString()).orNull()
         val admins = group.admins
         val sessionID = TextSecurePreferences.getLocalNumber(context)
@@ -291,29 +278,25 @@ object ConversationMenuHelper {
         } else {
             context.resources.getString(R.string.ConversationActivity_are_you_sure_you_want_to_leave_this_group)
         }
-        builder.setMessage(message)
-        builder.setPositiveButton(R.string.yes) { _, _ ->
-            var groupPublicKey: String?
-            var isClosedGroup: Boolean
-            try {
-                groupPublicKey = doubleDecodeGroupID(thread.address.toString()).toHexString()
-                isClosedGroup = DatabaseComponent.get(context).lokiAPIDatabase().isClosedGroup(groupPublicKey)
-            } catch (e: IOException) {
-                groupPublicKey = null
-                isClosedGroup = false
-            }
-            try {
-                if (isClosedGroup) {
-                    MessageSender.leave(groupPublicKey!!, true)
-                } else {
-                    Toast.makeText(context, R.string.ConversationActivity_error_leaving_group, Toast.LENGTH_LONG).show()
+
+        fun onLeaveFailed() = Toast.makeText(context, R.string.ConversationActivity_error_leaving_group, Toast.LENGTH_LONG).show()
+
+        context.showSessionDialog {
+            title(R.string.ConversationActivity_leave_group)
+            text(message)
+            button(R.string.yes) {
+                try {
+                    val groupPublicKey = doubleDecodeGroupID(thread.address.toString()).toHexString()
+                    val isClosedGroup = DatabaseComponent.get(context).lokiAPIDatabase().isClosedGroup(groupPublicKey)
+
+                    if (isClosedGroup) MessageSender.leave(groupPublicKey, notifyUser = false)
+                    else onLeaveFailed()
+                } catch (e: Exception) {
+                    onLeaveFailed()
                 }
-            } catch (e: Exception) {
-                Toast.makeText(context, R.string.ConversationActivity_error_leaving_group, Toast.LENGTH_LONG).show()
             }
+            button(R.string.no)
         }
-        builder.setNegativeButton(R.string.no, null)
-        builder.show()
     }
 
     private fun inviteContacts(context: Context, thread: Recipient) {
@@ -328,7 +311,7 @@ object ConversationMenuHelper {
     }
 
     private fun mute(context: Context, thread: Recipient) {
-        MuteDialog.show(context) { until: Long ->
+        showMuteDialog(ContextThemeWrapper(context, context.theme)) { until ->
             DatabaseComponent.get(context).recipientDatabase().setMuted(thread, until)
         }
     }
@@ -343,7 +326,8 @@ object ConversationMenuHelper {
         fun block(deleteThread: Boolean = false)
         fun unblock()
         fun copySessionID(sessionId: String)
-        fun showExpiringMessagesDialog(thread: Recipient)
+        fun copyOpenGroupUrl(thread: Recipient)
+        fun showDisappearingMessages(thread: Recipient)
     }
 
 }

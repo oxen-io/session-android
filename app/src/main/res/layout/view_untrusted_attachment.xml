@@ -2,9 +2,10 @@
 <org.thoughtcrime.securesms.conversation.v2.messages.UntrustedAttachmentView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:contentDescription="@string/AccessibilityId_untrusted_attachment_message"
     android:orientation="horizontal"
     android:padding="@dimen/medium_spacing"
     android:gravity="center">
@@ -14,7 +15,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:src="@drawable/ic_document_large_light"
-        app:tint="@color/text" />
+        app:tint="?android:textColorPrimary" />
 
     <TextView
         android:id="@+id/untrustedAttachmentTitle"
@@ -22,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:textSize="@dimen/small_font_size"
-        android:textColor="@color/text"
+        android:textColor="?android:textColorPrimary"
         tools:text="I'm a very long document title. Did you know that?"
         android:maxLines="2"
         android:ellipsize="end" />

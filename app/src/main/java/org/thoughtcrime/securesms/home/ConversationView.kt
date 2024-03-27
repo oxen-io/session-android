@@ -3,14 +3,15 @@ package org.thoughtcrime.securesms.home
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
 import android.util.AttributeSet
 import android.util.TypedValue
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewConversationBinding
 import org.session.libsession.utilities.recipients.Recipient
@@ -18,22 +19,30 @@ import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities.hig
 import org.thoughtcrime.securesms.database.RecipientDatabase.NOTIFY_TYPE_ALL
 import org.thoughtcrime.securesms.database.RecipientDatabase.NOTIFY_TYPE_NONE
 import org.thoughtcrime.securesms.database.model.ThreadRecord
+import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.DateUtils
+import org.thoughtcrime.securesms.util.getAccentColor
+import org.thoughtcrime.securesms.util.getConversationUnread
 import java.util.Locale
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ConversationView : LinearLayout {
-    private lateinit var binding: ViewConversationBinding
+
+    @Inject lateinit var configFactory: ConfigFactory
+
+    private val binding: ViewConversationBinding by lazy { ViewConversationBinding.bind(this) }
     private val screenWidth = Resources.getSystem().displayMetrics.widthPixels
     var thread: ThreadRecord? = null
 
     // region Lifecycle
-    constructor(context: Context) : super(context) { initialize() }
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) { initialize() }
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) { initialize() }
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    private fun initialize() {
-        binding = ViewConversationBinding.inflate(LayoutInflater.from(context), this, true)
+    override fun onFinishInflate() {
+        super.onFinishInflate()
         layoutParams = RecyclerView.LayoutParams(screenWidth, RecyclerView.LayoutParams.WRAP_CONTENT)
     }
     // endregion
@@ -41,38 +50,49 @@ class ConversationView : LinearLayout {
     // region Updating
     fun bind(thread: ThreadRecord, isTyping: Boolean, glide: GlideRequests) {
         this.thread = thread
-        background = if (thread.isPinned) {
-            binding.conversationViewDisplayNameTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_pin, 0)
-            ContextCompat.getDrawable(context, R.drawable.conversation_pinned_background)
+        if (thread.isPinned) {
+            binding.conversationViewDisplayNameTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                0,
+                0,
+                R.drawable.ic_pin,
+                0
+            )
         } else {
             binding.conversationViewDisplayNameTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
+        }
+        binding.root.background = if (thread.unreadCount > 0) {
+            ContextCompat.getDrawable(context, R.drawable.conversation_unread_background)
+        } else {
             ContextCompat.getDrawable(context, R.drawable.conversation_view_background)
         }
-        binding.profilePictureView.root.glide = glide
         val unreadCount = thread.unreadCount
         if (thread.recipient.isBlocked) {
             binding.accentView.setBackgroundResource(R.color.destructive)
             binding.accentView.visibility = View.VISIBLE
         } else {
-            binding.accentView.setBackgroundResource(R.color.accent)
+            val accentColor = context.getAccentColor()
+            val background = ColorDrawable(accentColor)
+            binding.accentView.background = background
             // Using thread.isRead we can determine if the last message was our own, and display it as 'read' even though previous messages may not be
             // This would also not trigger the disappearing message timer which may or may not be desirable
             binding.accentView.visibility = if (unreadCount > 0 && !thread.isRead) View.VISIBLE else View.INVISIBLE
         }
-        val formattedUnreadCount = if (thread.isRead) {
+        val formattedUnreadCount = if (unreadCount == 0) {
             null
         } else {
             if (unreadCount < 10000) unreadCount.toString() else "9999+"
         }
         binding.unreadCountTextView.text = formattedUnreadCount
-        val textSize = if (unreadCount < 10000) 12.0f else 9.0f
+        val textSize = if (unreadCount < 1000) 12.0f else 10.0f
         binding.unreadCountTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize)
-        binding.unreadCountTextView.setTypeface(Typeface.DEFAULT, if (unreadCount < 100) Typeface.BOLD else Typeface.NORMAL)
         binding.unreadCountIndicator.isVisible = (unreadCount != 0 && !thread.isRead)
+                || (configFactory.convoVolatile?.getConversationUnread(thread) == true)
+        binding.unreadMentionTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize)
+        binding.unreadMentionIndicator.isVisible = (thread.unreadMentionCount != 0 && thread.recipient.address.isGroup)
         val senderDisplayName = getUserDisplayName(thread.recipient)
                 ?: thread.recipient.address.toString()
         binding.conversationViewDisplayNameTextView.text = senderDisplayName
-        binding.timestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), thread.date)
+        binding.timestampTextView.text = thread.date.takeIf { it != 0L }?.let { DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), it) }
         val recipient = thread.recipient
         binding.muteIndicatorImageView.isVisible = recipient.isMuted || recipient.notifyType != NOTIFY_TYPE_ALL
         val drawableRes = if (recipient.isMuted || recipient.notifyType == NOTIFY_TYPE_NONE) {
@@ -87,11 +107,11 @@ class ConversationView : LinearLayout {
         binding.snippetTextView.typeface = if (unreadCount > 0 && !thread.isRead) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
         binding.snippetTextView.visibility = if (isTyping) View.GONE else View.VISIBLE
         if (isTyping) {
-            binding.typingIndicatorView.startAnimation()
+            binding.typingIndicatorView.root.startAnimation()
         } else {
-            binding.typingIndicatorView.stopAnimation()
+            binding.typingIndicatorView.root.stopAnimation()
         }
-        binding.typingIndicatorView.visibility = if (isTyping) View.VISIBLE else View.GONE
+        binding.typingIndicatorView.root.visibility = if (isTyping) View.VISIBLE else View.GONE
         binding.statusIndicatorImageView.visibility = View.VISIBLE
         when {
             !thread.isOutgoing -> binding.statusIndicatorImageView.visibility = View.GONE
@@ -104,18 +124,18 @@ class ConversationView : LinearLayout {
             thread.isRead -> binding.statusIndicatorImageView.setImageResource(R.drawable.ic_filled_circle_check)
             else -> binding.statusIndicatorImageView.setImageResource(R.drawable.ic_circle_check)
         }
-        binding.profilePictureView.root.update(thread.recipient)
+        binding.profilePictureView.update(thread.recipient)
     }
 
     fun recycle() {
-        binding.profilePictureView.root.recycle()
+        binding.profilePictureView.recycle()
     }
 
     private fun getUserDisplayName(recipient: Recipient): String? {
         return if (recipient.isLocalNumber) {
             context.getString(R.string.note_to_self)
         } else {
-            recipient.name // Internally uses the Contact API
+            recipient.toShortString() // Internally uses the Contact API
         }
     }
     // endregion

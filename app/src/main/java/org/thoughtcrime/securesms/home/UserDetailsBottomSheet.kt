@@ -6,6 +6,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,24 +25,26 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.IdPrefix
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.database.ThreadDatabase
-import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.mms.GlideApp
-import org.thoughtcrime.securesms.util.UiModeUtilities
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class UserDetailsBottomSheet : BottomSheetDialogFragment() {
+class UserDetailsBottomSheet: BottomSheetDialogFragment() {
 
     @Inject lateinit var threadDb: ThreadDatabase
 
     private lateinit var binding: FragmentUserDetailsBottomSheetBinding
+
+    private var previousContactNickname: String = ""
+
     companion object {
         const val ARGUMENT_PUBLIC_KEY = "publicKey"
         const val ARGUMENT_THREAD_ID = "threadId"
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentUserDetailsBottomSheetBinding.inflate(inflater, container, false)
+        val wrappedContext = ContextThemeWrapper(requireActivity(), requireActivity().theme)
+        val themedInflater = inflater.cloneInContext(wrappedContext)
+        binding = FragmentUserDetailsBottomSheetBinding.inflate(themedInflater, container, false)
         return binding.root
     }
 
@@ -52,12 +55,12 @@ class UserDetailsBottomSheet : BottomSheetDialogFragment() {
         val recipient = Recipient.from(requireContext(), Address.fromSerialized(publicKey), false)
         val threadRecipient = threadDb.getRecipientForThreadId(threadID) ?: return dismiss()
         with(binding) {
-            profilePictureView.root.publicKey = publicKey
-            profilePictureView.root.glide = GlideApp.with(this@UserDetailsBottomSheet)
-            profilePictureView.root.isLarge = true
-            profilePictureView.root.update(recipient)
+            profilePictureView.publicKey = publicKey
+            profilePictureView.isLarge = true
+            profilePictureView.update(recipient)
             nameTextViewContainer.visibility = View.VISIBLE
             nameTextViewContainer.setOnClickListener {
+                if (recipient.isOpenGroupInboxRecipient || recipient.isOpenGroupOutboxRecipient) return@setOnClickListener
                 nameTextViewContainer.visibility = View.INVISIBLE
                 nameEditTextContainer.visibility = View.VISIBLE
                 nicknameEditText.text = null
@@ -84,8 +87,14 @@ class UserDetailsBottomSheet : BottomSheetDialogFragment() {
             }
             nameTextView.text = recipient.name ?: publicKey // Uses the Contact API internally
 
-            publicKeyTextView.isVisible = !threadRecipient.isOpenGroupRecipient && !threadRecipient.isOpenGroupInboxRecipient
-            messageButton.isVisible = !threadRecipient.isOpenGroupRecipient || IdPrefix.fromValue(publicKey) == IdPrefix.BLINDED
+            nameEditIcon.isVisible = threadRecipient.isContactRecipient
+                    && !threadRecipient.isOpenGroupInboxRecipient
+                    && !threadRecipient.isOpenGroupOutboxRecipient
+
+            publicKeyTextView.isVisible = !threadRecipient.isOpenGroupRecipient
+                    && !threadRecipient.isOpenGroupInboxRecipient
+                    && !threadRecipient.isOpenGroupOutboxRecipient
+            messageButton.isVisible = !threadRecipient.isOpenGroupRecipient || IdPrefix.fromValue(publicKey)?.isBlinded() == true
             publicKeyTextView.text = publicKey
             publicKeyTextView.setOnLongClickListener {
                 val clipboard =
@@ -114,8 +123,7 @@ class UserDetailsBottomSheet : BottomSheetDialogFragment() {
     override fun onStart() {
         super.onStart()
         val window = dialog?.window ?: return
-        val isLightMode = UiModeUtilities.isDayUiMode(requireContext())
-        window.setDimAmount(if (isLightMode) 0.1f else 0.75f)
+        window.setDimAmount(0.6f)
     }
 
     fun saveNickName(recipient: Recipient) = with(binding) {
@@ -124,14 +132,15 @@ class UserDetailsBottomSheet : BottomSheetDialogFragment() {
         nameTextViewContainer.visibility = View.VISIBLE
         nameEditTextContainer.visibility = View.INVISIBLE
         var newNickName: String? = null
-        if (nicknameEditText.text.isNotEmpty()) {
+        if (nicknameEditText.text.isNotEmpty() && nicknameEditText.text.trim().length != 0) {
             newNickName = nicknameEditText.text.toString()
         }
+        else { newNickName = previousContactNickname }
         val publicKey = recipient.address.serialize()
-        val contactDB = DatabaseComponent.get(requireContext()).sessionContactDatabase()
-        val contact = contactDB.getContactWithSessionID(publicKey) ?: Contact(publicKey)
+        val storage = MessagingModuleConfiguration.shared.storage
+        val contact = storage.getContactWithSessionID(publicKey) ?: Contact(publicKey)
         contact.nickname = newNickName
-        contactDB.setContact(contact)
+        storage.setContact(contact)
         nameTextView.text = recipient.name ?: publicKey // Uses the Contact API internally
     }
 
@@ -139,6 +148,9 @@ class UserDetailsBottomSheet : BottomSheetDialogFragment() {
     fun showSoftKeyboard() {
         val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         imm?.showSoftInput(binding.nicknameEditText, 0)
+
+        // Keep track of the original nickname to re-use if an empty / blank nickname is entered
+        previousContactNickname = binding.nameTextView.text.toString()
     }
 
     fun hideSoftKeyboard() {

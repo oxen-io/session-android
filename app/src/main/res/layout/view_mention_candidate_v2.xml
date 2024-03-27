@@ -17,7 +17,7 @@
             android:layout_width="26dp"
             android:layout_height="32dp">
 
-            <include layout="@layout/view_profile_picture"
+            <org.thoughtcrime.securesms.components.ProfilePictureView
                 android:id="@+id/profilePictureView"
                 android:layout_width="@dimen/very_small_profile_picture_size"
                 android:layout_height="@dimen/very_small_profile_picture_size"
@@ -29,7 +29,8 @@
                 android:layout_height="16dp"
                 android:src="@drawable/ic_crown"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true" />
+                android:layout_alignParentBottom="true"
+                android:contentDescription="@string/AccessibilityId_contact_mentions"/>
 
         </RelativeLayout>
 
@@ -39,8 +40,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/medium_spacing"
             android:textSize="@dimen/small_font_size"
-            android:textColor="@color/text"
+            android:textColor="?android:textColorPrimary"
             android:maxLines="1"
+            android:contentDescription="@string/AccessibilityId_contact_mentions"
             android:ellipsize="end" />
 
     </LinearLayout>

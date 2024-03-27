@@ -6,12 +6,17 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Canvas
 import android.graphics.Paint
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.ColorInt
+import androidx.lifecycle.coroutineScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import org.session.libsession.snode.OnionRequestAPI
+import org.thoughtcrime.securesms.conversation.v2.ViewUtil
 import org.thoughtcrime.securesms.util.getColorWithID
 import org.thoughtcrime.securesms.util.toPx
 
@@ -28,6 +33,8 @@ class PathStatusView : View {
         result.isAntiAlias = true
         result
     }
+
+    private var updateJob: Job? = null
 
     constructor(context: Context) : super(context) {
         initialize()
@@ -46,7 +53,9 @@ class PathStatusView : View {
     }
 
     private fun initialize() {
-        update()
+        if (!isInEditMode) {
+            update()
+        }
         setWillNotDraw(false)
     }
 
@@ -85,14 +94,21 @@ class PathStatusView : View {
     private fun handlePathsBuiltEvent() { update() }
 
     private fun update() {
-        if (OnionRequestAPI.paths.isNotEmpty()) {
-            setBackgroundResource(R.drawable.accent_dot)
-            mainColor = resources.getColorWithID(R.color.accent, context.theme)
-            sessionShadowColor = resources.getColorWithID(R.color.accent, context.theme)
-        } else {
-            setBackgroundResource(R.drawable.paths_building_dot)
-            mainColor = resources.getColorWithID(R.color.paths_building, context.theme)
-            sessionShadowColor = resources.getColorWithID(R.color.paths_building, context.theme)
+        if (updateJob?.isActive != true) { // false or null
+            updateJob = ViewUtil.getActivityLifecycle(this)?.coroutineScope?.launchWhenStarted {
+                val paths = withContext(Dispatchers.IO) { OnionRequestAPI.paths }
+                if (paths.isNotEmpty()) {
+                    setBackgroundResource(R.drawable.accent_dot)
+                    val hasPathsColor = context.getColor(R.color.accent_green)
+                    mainColor = hasPathsColor
+                    sessionShadowColor = hasPathsColor
+                } else {
+                    setBackgroundResource(R.drawable.paths_building_dot)
+                    val pathsBuildingColor = resources.getColorWithID(R.color.paths_building, context.theme)
+                    mainColor = pathsBuildingColor
+                    sessionShadowColor = pathsBuildingColor
+                }
+            }
         }
     }
 

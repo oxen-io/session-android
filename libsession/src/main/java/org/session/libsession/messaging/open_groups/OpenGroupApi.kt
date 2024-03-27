@@ -23,6 +23,7 @@ import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.snode.OnionResponse
+import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.Base64.decode
 import org.session.libsignal.utilities.Base64.encodeBytes
@@ -91,7 +92,7 @@ object OpenGroupApi {
         val created: Long = 0,
         val activeUsers: Int = 0,
         val activeUsersCutoff: Int = 0,
-        val imageId: Long? = null,
+        val imageId: String? = null,
         val pinnedMessages: List<PinnedMessage> = emptyList(),
         val admin: Boolean = false,
         val globalAdmin: Boolean = false,
@@ -108,7 +109,24 @@ object OpenGroupApi {
         val defaultWrite: Boolean = false,
         val upload: Boolean = false,
         val defaultUpload: Boolean = false,
-    )
+    ) {
+        fun toPollInfo() = RoomPollInfo(
+            token = token,
+            activeUsers = activeUsers,
+            admin = admin,
+            globalAdmin = globalAdmin,
+            moderator = moderator,
+            globalModerator = globalModerator,
+            read = read,
+            defaultRead = defaultRead,
+            defaultAccessible = defaultAccessible,
+            write = write,
+            defaultWrite = defaultWrite,
+            upload = upload,
+            defaultUpload = defaultUpload,
+            details = this
+        )
+    }
 
     @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
     data class PinnedMessage(
@@ -148,7 +166,7 @@ object OpenGroupApi {
     )
 
     enum class Capability {
-        BLIND, REACTIONS
+        SOGS, BLIND, REACTIONS
     }
 
     @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
@@ -303,7 +321,7 @@ object OpenGroupApi {
             val headers = request.headers.toMutableMap()
             if (request.isAuthRequired) {
                 val nonce = sodium.nonce(16)
-                val timestamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())
+                val timestamp = TimeUnit.MILLISECONDS.toSeconds(SnodeAPI.nowWithOffset)
                 var pubKey = ""
                 var signature = ByteArray(Sign.BYTES)
                 var bodyHash = ByteArray(0)
@@ -337,7 +355,7 @@ object OpenGroupApi {
                     .plus(request.verb.rawValue.toByteArray())
                     .plus("/${request.endpoint.value}".toByteArray())
                     .plus(bodyHash)
-                if (serverCapabilities.contains(Capability.BLIND.name.lowercase())) {
+                if (serverCapabilities.isEmpty() || serverCapabilities.contains(Capability.BLIND.name.lowercase())) {
                     SodiumUtilities.blindedKeyPair(publicKey, ed25519KeyPair)?.let { keyPair ->
                         pubKey = SessionId(
                             IdPrefix.BLINDED,
@@ -383,7 +401,11 @@ object OpenGroupApi {
             }
             return if (request.useOnionRouting) {
                 OnionRequestAPI.sendOnionRequest(requestBuilder.build(), request.server, publicKey).fail { e ->
-                    Log.e("SOGS", "Failed onion request", e)
+                    when (e) {
+                        // No need for the stack trace for HTTP errors
+                        is HTTP.HTTPRequestFailedException -> Log.e("SOGS", "Failed onion request: ${e.message}")
+                        else -> Log.e("SOGS", "Failed onion request", e)
+                    }
                 }
             } else {
                 Promise.ofFail(IllegalStateException("It's currently not allowed to send non onion routed requests."))
@@ -395,13 +417,13 @@ object OpenGroupApi {
     fun downloadOpenGroupProfilePicture(
         server: String,
         roomID: String,
-        imageId: Long
+        imageId: String
     ): Promise<ByteArray, Exception> {
         val request = Request(
             verb = GET,
             room = roomID,
             server = server,
-            endpoint = Endpoint.RoomFileIndividual(roomID, imageId.toString())
+            endpoint = Endpoint.RoomFileIndividual(roomID, imageId)
         )
         return getResponseBody(request)
     }
@@ -731,7 +753,8 @@ object OpenGroupApi {
             )
         }
         val serverCapabilities = storage.getServerCapabilities(server)
-        if (serverCapabilities.contains(Capability.BLIND.name.lowercase())) {
+        val isAcceptingCommunityRequests = storage.isCheckingCommunityRequests()
+        if (serverCapabilities.contains(Capability.BLIND.name.lowercase()) && isAcceptingCommunityRequests) {
             requests.add(
                 if (lastInboxMessageId == null) {
                     BatchRequestInfo(
@@ -794,16 +817,14 @@ object OpenGroupApi {
 
     private fun sequentialBatch(
         server: String,
-        requests: MutableList<BatchRequestInfo<*>>,
-        authRequired: Boolean = true
+        requests: MutableList<BatchRequestInfo<*>>
     ): Promise<List<BatchResponse<*>>, Exception> {
         val request = Request(
             verb = POST,
             room = null,
             server = server,
             endpoint = Endpoint.Sequence,
-            parameters = requests.map { it.request },
-            isAuthRequired = authRequired
+            parameters = requests.map { it.request }
         )
         return getBatchResponseJson(request, requests)
     }
@@ -912,8 +933,7 @@ object OpenGroupApi {
 
     fun getCapabilitiesAndRoomInfo(
         room: String,
-        server: String,
-        authRequired: Boolean = true
+        server: String
     ): Promise<Pair<Capabilities, RoomInfo>, Exception> {
         val requests = mutableListOf<BatchRequestInfo<*>>(
             BatchRequestInfo(
@@ -933,7 +953,7 @@ object OpenGroupApi {
                 responseType = object : TypeReference<RoomInfo>(){}
             )
         )
-        return sequentialBatch(server, requests, authRequired).map {
+        return sequentialBatch(server, requests).map {
             val capabilities = it.firstOrNull()?.body as? Capabilities ?: throw Error.ParsingFailed
             val roomInfo = it.lastOrNull()?.body as? RoomInfo ?: throw Error.ParsingFailed
             capabilities to roomInfo
@@ -950,6 +970,18 @@ object OpenGroupApi {
         )
         return getResponseBody(request).map { response ->
             JsonUtil.fromJson(response, DirectMessage::class.java)
+        }
+    }
+
+    fun deleteAllInboxMessages(server: String): Promise<Map<*, *>, java.lang.Exception> {
+        val request = Request(
+            verb = DELETE,
+            room = null,
+            server = server,
+            endpoint = Endpoint.Inbox
+        )
+        return getResponseBody(request).map { response ->
+            JsonUtil.fromJson(response, Map::class.java)
         }
     }
 

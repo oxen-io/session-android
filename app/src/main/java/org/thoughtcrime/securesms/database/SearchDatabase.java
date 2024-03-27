@@ -1,13 +1,13 @@
 package org.thoughtcrime.securesms.database;
 
 import android.content.Context;
+import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 
 import com.annimon.stream.Stream;
 
-import net.sqlcipher.Cursor;
-import net.sqlcipher.database.SQLiteDatabase;
+import net.zetetic.database.sqlcipher.SQLiteDatabase;
 
 import org.session.libsession.utilities.Util;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
@@ -63,7 +63,7 @@ public class SearchDatabase extends Database {
         ThreadDatabase.TABLE_NAME + "." + ThreadDatabase.ADDRESS + " AS " + CONVERSATION_ADDRESS + ", " +
         MmsSmsColumns.ADDRESS + " AS " + MESSAGE_ADDRESS + ", " +
         "snippet(" + SMS_FTS_TABLE_NAME + ", -1, '', '', '...', 7) AS " + SNIPPET + ", " +
-        SmsDatabase.TABLE_NAME + "." + SmsDatabase.DATE_RECEIVED + " AS " + MmsSmsColumns.NORMALIZED_DATE_RECEIVED + ", " +
+        SmsDatabase.TABLE_NAME + "." + SmsDatabase.DATE_SENT + " AS " + MmsSmsColumns.NORMALIZED_DATE_SENT + ", " +
         SMS_FTS_TABLE_NAME + "."  + THREAD_ID + " " +
       "FROM " + SmsDatabase.TABLE_NAME + " " +
       "INNER JOIN " + SMS_FTS_TABLE_NAME + " ON " + SMS_FTS_TABLE_NAME + "." + ID + " = " + SmsDatabase.TABLE_NAME + "." + SmsDatabase.ID + " " +
@@ -74,13 +74,13 @@ public class SearchDatabase extends Database {
         ThreadDatabase.TABLE_NAME + "." + ThreadDatabase.ADDRESS + " AS " + CONVERSATION_ADDRESS + ", " +
         MmsSmsColumns.ADDRESS + " AS " + MESSAGE_ADDRESS + ", " +
         "snippet(" + MMS_FTS_TABLE_NAME + ", -1, '', '', '...', 7) AS " + SNIPPET + ", " +
-        MmsDatabase.TABLE_NAME + "." + MmsDatabase.DATE_RECEIVED + " AS " + MmsSmsColumns.NORMALIZED_DATE_RECEIVED + ", " +
+        MmsDatabase.TABLE_NAME + "." + MmsDatabase.DATE_SENT + " AS " + MmsSmsColumns.NORMALIZED_DATE_SENT + ", " +
         MMS_FTS_TABLE_NAME + "." + THREAD_ID + " " +
       "FROM " + MmsDatabase.TABLE_NAME + " " +
       "INNER JOIN " + MMS_FTS_TABLE_NAME + " ON " + MMS_FTS_TABLE_NAME + "." + ID + " = " + MmsDatabase.TABLE_NAME + "." + MmsDatabase.ID + " " +
       "INNER JOIN " + ThreadDatabase.TABLE_NAME + " ON " + MMS_FTS_TABLE_NAME + "." + THREAD_ID + " = " + ThreadDatabase.TABLE_NAME + "." + ThreadDatabase.ID + " " +
       "WHERE " + MMS_FTS_TABLE_NAME + " MATCH ? " +
-      "ORDER BY " + MmsSmsColumns.NORMALIZED_DATE_RECEIVED + " DESC " +
+      "ORDER BY " + MmsSmsColumns.NORMALIZED_DATE_SENT + " DESC " +
       "LIMIT ?";
 
   private static final String MESSAGES_FOR_THREAD_QUERY =
@@ -88,7 +88,7 @@ public class SearchDatabase extends Database {
           ThreadDatabase.TABLE_NAME + "." + ThreadDatabase.ADDRESS + " AS " + CONVERSATION_ADDRESS + ", " +
           MmsSmsColumns.ADDRESS + " AS " + MESSAGE_ADDRESS + ", " +
           "snippet(" + SMS_FTS_TABLE_NAME + ", -1, '', '', '...', 7) AS " + SNIPPET + ", " +
-          SmsDatabase.TABLE_NAME + "." + SmsDatabase.DATE_RECEIVED + " AS " + MmsSmsColumns.NORMALIZED_DATE_RECEIVED + ", " +
+          SmsDatabase.TABLE_NAME + "." + SmsDatabase.DATE_SENT + " AS " + MmsSmsColumns.NORMALIZED_DATE_SENT + ", " +
           SMS_FTS_TABLE_NAME + "." + THREAD_ID + " " +
         "FROM " + SmsDatabase.TABLE_NAME + " " +
         "INNER JOIN " + SMS_FTS_TABLE_NAME + " ON " + SMS_FTS_TABLE_NAME + "." + ID + " = " + SmsDatabase.TABLE_NAME + "." + SmsDatabase.ID + " " +
@@ -99,13 +99,13 @@ public class SearchDatabase extends Database {
           ThreadDatabase.TABLE_NAME + "." + ThreadDatabase.ADDRESS + " AS " + CONVERSATION_ADDRESS + ", " +
           MmsSmsColumns.ADDRESS + " AS " + MESSAGE_ADDRESS + ", " +
           "snippet(" + MMS_FTS_TABLE_NAME + ", -1, '', '', '...', 7) AS " + SNIPPET + ", " +
-          MmsDatabase.TABLE_NAME + "." + MmsDatabase.DATE_RECEIVED + " AS " + MmsSmsColumns.NORMALIZED_DATE_RECEIVED + ", " +
+          MmsDatabase.TABLE_NAME + "." + MmsDatabase.DATE_SENT + " AS " + MmsSmsColumns.NORMALIZED_DATE_SENT + ", " +
           MMS_FTS_TABLE_NAME + "." + THREAD_ID + " " +
         "FROM " + MmsDatabase.TABLE_NAME + " " +
         "INNER JOIN " + MMS_FTS_TABLE_NAME + " ON " + MMS_FTS_TABLE_NAME + "." + ID + " = " + MmsDatabase.TABLE_NAME + "." + MmsDatabase.ID + " " +
         "INNER JOIN " + ThreadDatabase.TABLE_NAME + " ON " + MMS_FTS_TABLE_NAME + "." + THREAD_ID + " = " + ThreadDatabase.TABLE_NAME + "." + ThreadDatabase.ID + " " +
         "WHERE " + MMS_FTS_TABLE_NAME + " MATCH ? AND " + MmsDatabase.TABLE_NAME + "." + MmsSmsColumns.THREAD_ID + " = ? " +
-        "ORDER BY " + MmsSmsColumns.NORMALIZED_DATE_RECEIVED + " DESC " +
+        "ORDER BY " + MmsSmsColumns.NORMALIZED_DATE_SENT + " DESC " +
         "LIMIT 500";
 
   public SearchDatabase(@NonNull Context context, @NonNull SQLCipherOpenHelper databaseHelper) {

@@ -1,5 +1,6 @@
 package network.loki.messenger
 
+import android.Manifest
 import android.app.Instrumentation
 import android.content.ClipboardManager
 import android.content.Context
@@ -21,8 +22,8 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
+import com.adevinta.android.barista.interaction.PermissionGranter
 import network.loki.messenger.util.InputBarButtonDrawableMatcher.Companion.inputButtonWithDrawable
-import network.loki.messenger.util.NewConversationButtonDrawableMatcher.Companion.newConversationButtonWithDrawable
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
@@ -38,7 +39,6 @@ import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBar
 import org.thoughtcrime.securesms.home.HomeActivity
 import org.thoughtcrime.securesms.mms.GlideApp
-
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -87,11 +87,13 @@ class HomeActivityTests {
         }
         onView(withId(R.id.backgroundPollingOptionView)).perform(ViewActions.click())
         onView(withId(R.id.registerButton)).perform(ViewActions.click())
+        // allow notification permission
+        PermissionGranter.allowPermissionsIfNeeded(Manifest.permission.POST_NOTIFICATIONS)
     }
 
     private fun goToMyChat() {
-        onView(newConversationButtonWithDrawable(R.drawable.ic_plus)).perform(ViewActions.click())
-        onView(newConversationButtonWithDrawable(R.drawable.ic_message)).perform(ViewActions.click())
+        onView(withId(R.id.newConversationButton)).perform(ViewActions.click())
+        onView(withId(R.id.createPrivateChatButton)).perform(ViewActions.click())
         // new chat
         onView(withId(R.id.publicKeyEditText)).perform(ViewActions.closeSoftKeyboard())
         onView(withId(R.id.copyButton)).perform(ViewActions.click())
@@ -102,6 +104,7 @@ class HomeActivityTests {
             copied = clipboardManager.primaryClip!!.getItemAt(0).text.toString()
         }
         onView(withId(R.id.publicKeyEditText)).perform(ViewActions.typeText(copied))
+        onView(withId(R.id.publicKeyEditText)).perform(ViewActions.closeSoftKeyboard())
         onView(withId(R.id.createPrivateChatButton)).perform(ViewActions.click())
     }
 
@@ -155,6 +158,7 @@ class HomeActivityTests {
 
         val dialogPromptText = InstrumentationRegistry.getInstrumentation().targetContext.getString(R.string.dialog_open_url_explanation, amazonPuny)
 
+        onView(isRoot()).perform(waitFor(1000)) // no other way for this to work apparently
         onView(withText(dialogPromptText)).check(matches(isDisplayed()))
     }
 

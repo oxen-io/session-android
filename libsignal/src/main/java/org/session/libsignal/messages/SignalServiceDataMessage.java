@@ -319,8 +319,8 @@ public class SignalServiceDataMessage {
       return this;
     }
 
-    public SignalServiceDataMessage build() {
-      if (timestamp == 0) timestamp = System.currentTimeMillis();
+    public SignalServiceDataMessage build(long fallbackTimestamp) {
+      if (timestamp == 0) timestamp = fallbackTimestamp;
       // closedGroupUpdate is always null because we don't use SignalServiceDataMessage to send them (we use ClosedGroupUpdateMessageSendJob)
       return new SignalServiceDataMessage(timestamp, group, attachments, body, expiresInSeconds, expirationUpdate, profileKey, quote, sharedContacts, previews,
                                           null, syncTarget);

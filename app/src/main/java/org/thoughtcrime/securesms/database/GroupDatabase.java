@@ -1,6 +1,5 @@
 package org.thoughtcrime.securesms.database;
 
-
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,7 +11,7 @@ import androidx.annotation.Nullable;
 
 import com.annimon.stream.Stream;
 
-import net.sqlcipher.database.SQLiteDatabase;
+import net.zetetic.database.sqlcipher.SQLiteDatabase;
 
 import org.jetbrains.annotations.NotNull;
 import org.session.libsession.utilities.Address;
@@ -37,9 +36,9 @@ public class GroupDatabase extends Database implements LokiOpenGroupDatabaseProt
   @SuppressWarnings("unused")
   private static final String TAG = GroupDatabase.class.getSimpleName();
 
-          static final String TABLE_NAME          = "groups";
+  public  static final String TABLE_NAME          = "groups";
   private static final String ID                  = "_id";
-          static final String GROUP_ID            = "group_id";
+  public  static final String GROUP_ID            = "group_id";
   private static final String TITLE               = "title";
   private static final String MEMBERS             = "members";
   private static final String ZOMBIE_MEMBERS      = "zombie_members";
@@ -134,12 +133,12 @@ public class GroupDatabase extends Database implements LokiOpenGroupDatabaseProt
     return new Reader(cursor);
   }
 
-  public List<GroupRecord> getAllGroups() {
+  public List<GroupRecord> getAllGroups(boolean includeInactive) {
     Reader reader = getGroups();
     GroupRecord record;
     List<GroupRecord> groups = new LinkedList<>();
     while ((record = reader.getNext()) != null) {
-      if (record.isActive()) { groups.add(record); }
+      if (record.isActive() || includeInactive) { groups.add(record); }
     }
     reader.close();
     return groups;
@@ -317,6 +316,38 @@ public class GroupDatabase extends Database implements LokiOpenGroupDatabaseProt
 
     Recipient.applyCached(Address.fromSerialized(groupID), recipient -> recipient.setGroupAvatarId(avatarId == 0 ? null : avatarId));
     notifyConversationListListeners();
+  }
+
+  @Override
+  public void removeProfilePicture(String groupID) {
+    databaseHelper.getWritableDatabase()
+            .execSQL("UPDATE " + TABLE_NAME +
+                    " SET " + AVATAR + " = NULL, " +
+                    AVATAR_ID + " = NULL, " +
+                    AVATAR_KEY + " = NULL, " +
+                    AVATAR_CONTENT_TYPE + " = NULL, " +
+                    AVATAR_RELAY + " = NULL, " +
+                    AVATAR_DIGEST + " = NULL, " +
+                    AVATAR_URL + " = NULL" +
+                    " WHERE " +
+                    GROUP_ID + " = ?",
+            new String[] {groupID});
+
+    Recipient.applyCached(Address.fromSerialized(groupID), recipient -> recipient.setGroupAvatarId(null));
+    notifyConversationListListeners();
+  }
+
+  public boolean hasDownloadedProfilePicture(String groupId) {
+    try (Cursor cursor = databaseHelper.getReadableDatabase().query(TABLE_NAME, new String[]{AVATAR}, GROUP_ID + " = ?",
+            new String[] {groupId},
+            null, null, null))
+    {
+      if (cursor != null && cursor.moveToNext()) {
+        return !cursor.isNull(0);
+      }
+
+      return false;
+    }
   }
 
   public void updateMembers(String groupId, List<Address> members) {

@@ -17,6 +17,7 @@ import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.util.UiModeUtilities
+import org.thoughtcrime.securesms.util.getAccentColor
 import java.util.regex.Pattern
 
 object MentionUtilities {
@@ -62,23 +63,16 @@ object MentionUtilities {
         }
         val result = SpannableString(text)
         val isLightMode = UiModeUtilities.isDayUiMode(context)
+        val color = if (isYou(mention.second, userPublicKey, openGroup)) {
+            backgroundColorID = R.color.accent
+            foregroundColorID = R.color.black
+        } else if (isOutgoingMessage) {
+            ResourcesCompat.getColor(context.resources, if (isLightMode) R.color.white else R.color.black, context.theme)
+        } else {
+            context.getAccentColor()
+        }
         for (mention in mentions) {
-            var backgroundColorID = R.color.transparent
-            val foregroundColorID: Int
-            if (isYou(mention.second, userPublicKey, openGroup)) {
-                backgroundColorID = R.color.accent
-                foregroundColorID = R.color.black
-            } else {
-                foregroundColorID = if (isOutgoingMessage) {
-                    if (isLightMode) R.color.white else R.color.black
-                } else {
-                    if (isLightMode) R.color.black else R.color.accent
-                }
-            }
-            val backgroundColor = ResourcesCompat.getColor(context.resources, backgroundColorID, context.theme)
-            result.setSpan(BackgroundColorSpan(backgroundColor), mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            val foregroundColor = ResourcesCompat.getColor(context.resources, foregroundColorID, context.theme)
-            result.setSpan(ForegroundColorSpan(foregroundColor), mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            result.setSpan(ForegroundColorSpan(color), mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             result.setSpan(StyleSpan(Typeface.BOLD), mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
         return result

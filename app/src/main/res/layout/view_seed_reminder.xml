@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/cell_background"
+    android:background="?colorPrimary"
     android:orientation="vertical">
 
     <ProgressBar
@@ -13,13 +13,13 @@
         android:layout_height="@dimen/accent_line_thickness"
         android:paddingLeft="-2dp"
         android:paddingRight="-2dp"
-        android:progressTint="@color/accent"
-        android:progressBackgroundTint="@color/progress_bar_background"
+        android:progressTint="?colorAccent"
         android:progress="80" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/AccessibilityId_recovery_phrase_reminder"
         android:gravity="center_vertical"
         android:padding="@dimen/medium_spacing"
         android:orientation="horizontal">
@@ -33,7 +33,7 @@
                 android:id="@+id/titleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text"
+                android:textColor="?android:textColorPrimary"
                 android:textSize="@dimen/small_font_size"
                 android:textStyle="bold"
                 android:text="@string/view_seed_reminder_title" />
@@ -43,7 +43,7 @@
                 android:layout_width="224dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textColor="@color/text"
+                android:textColor="?android:textColorPrimary"
                 android:textSize="@dimen/very_small_font_size"
                 android:lines="2"
                 android:alpha="0.6"
@@ -59,6 +59,7 @@
 
         <Button
             style="@style/Widget.Session.Button.Common.ProminentOutline"
+            android:contentDescription="@string/AccessibilityId_continue"
             android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="28dp"

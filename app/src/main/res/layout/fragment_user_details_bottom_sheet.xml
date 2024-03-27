@@ -13,7 +13,7 @@
     app:behavior_hideable="true"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    <include layout="@layout/view_profile_picture"
+    <org.thoughtcrime.securesms.components.ProfilePictureView
         android:id="@+id/profilePictureView"
         android:layout_width="@dimen/large_profile_picture_size"
         android:layout_height="@dimen/large_profile_picture_size"
@@ -29,6 +29,8 @@
             android:id="@+id/nameTextViewContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingStart="@dimen/medium_spacing"
+            android:paddingEnd="@dimen/medium_spacing"
             android:gravity="center"
             android:orientation="horizontal"
             android:layout_centerInParent="true"
@@ -42,19 +44,23 @@
                 android:id="@+id/nameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/small_spacing"
                 android:layout_marginEnd="@dimen/small_spacing"
                 android:textSize="@dimen/large_font_size"
                 android:textStyle="bold"
-                android:textColor="@color/text"
+                android:textColor="?android:textColorPrimary"
                 android:textAlignment="center"
                 android:text="Spiderman" />
 
             <ImageView
+                android:id="@+id/nameEditIcon"
                 android:layout_width="20dp"
                 android:layout_height="22dp"
+                android:contentDescription="@string/AccessibilityId_edit_user_nickname"
                 android:paddingTop="2dp"
+                android:layout_marginEnd="20dp"
                 android:src="@drawable/ic_baseline_edit_24" />
 
         </LinearLayout>
@@ -71,6 +77,8 @@
                 android:id="@+id/cancelNicknameEditingButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:layout_marginLeft="@dimen/large_spacing"
+                android:contentDescription="@string/AccessibilityId_cancel"
                 android:src="@drawable/ic_baseline_clear_24" />
 
             <EditText
@@ -79,20 +87,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="@dimen/small_spacing"
-                android:layout_marginEnd="@dimen/small_spacing"
+                android:contentDescription="@string/AccessibilityId_username"
                 android:textAlignment="center"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
+                android:paddingVertical="12dp"
                 android:inputType="text"
-                android:singleLine="true"
+                android:maxLength="@integer/max_user_nickname_length_chars"
+                android:maxLines="1"
                 android:imeOptions="actionDone"
+                android:textColorHint="?android:textColorSecondary"
                 android:hint="@string/fragment_user_details_bottom_sheet_edit_text_hint" />
 
             <ImageView
                 android:id="@+id/saveNicknameButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:layout_marginRight="@dimen/large_spacing"
+                android:contentDescription="@string/AccessibilityId_apply"
                 android:src="@drawable/ic_baseline_done_24" />
 
         </LinearLayout>
@@ -105,6 +115,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/medium_spacing"
+        android:contentDescription="@string/AccessibilityId_session_id"
         android:textSize="@dimen/medium_font_size"
         android:textIsSelectable="true"
         tools:text="05987d601943c267879be41830888066c6a024cbdc9a548d06813924bf3372ea78" />
@@ -115,8 +126,8 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/medium_button_height"
         android:layout_marginTop="@dimen/medium_spacing"
-        android:paddingLeft="@dimen/large_spacing"
-        android:paddingRight="@dimen/large_spacing"
+        android:contentDescription="@string/AccessibilityId_message_user"
+        android:paddingHorizontal="@dimen/large_spacing"
         android:text="@string/ConversationActivity_message" />
 
 </LinearLayout>

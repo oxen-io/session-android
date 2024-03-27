@@ -23,7 +23,7 @@
         android:layout_marginRight="@dimen/very_large_spacing"
         android:textSize="19sp"
         android:textStyle="bold"
-        android:textColor="@color/text"
+        android:textColor="?android:textColorPrimary"
         android:text="@string/activity_seed_title_2" />
 
     <TextView
@@ -33,11 +33,12 @@
         android:layout_marginTop="4dp"
         android:layout_marginRight="@dimen/very_large_spacing"
         android:textSize="14sp"
-        android:textColor="@color/text"
+        android:textColor="?android:textColorPrimary"
         android:text="@string/activity_seed_explanation" />
 
     <TextView
         style="@style/SessionIDTextView"
+        android:contentDescription="@string/AccessibilityId_recovery_phrase"
         android:id="@+id/seedTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -49,16 +50,16 @@
         android:textAlignment="center"
         tools:text="nautical novelty populate onion awkward bent etiquette plant submarine itches vipers september axis maximum populate" />
 
-    <TextView
+    <Button
         android:id="@+id/revealButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
+        android:layout_width="196dp"
+        android:layout_height="@dimen/onboarding_button_bottom_offset"
+        android:layout_marginHorizontal="@dimen/massive_spacing"
         android:textAlignment="center"
         android:textSize="14sp"
-        android:textColor="@color/text"
         android:alpha="0.6"
         android:visibility="gone"
+        style="@style/Widget.Session.Button.Common.Borderless"
         android:text="@string/activity_seed_reveal_button_title" />
 
     <View
@@ -68,6 +69,7 @@
 
     <Button
         style="@style/Widget.Session.Button.Common.ProminentOutline"
+        android:contentDescription="@string/AccessibilityId_copy_recovery_phrase"
         android:id="@+id/copyButton"
         android:layout_width="196dp"
         android:layout_height="@dimen/medium_button_height"

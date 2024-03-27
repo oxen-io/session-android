@@ -13,7 +13,7 @@
     app:behavior_hideable="true"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    <include layout="@layout/view_profile_picture"
+    <org.thoughtcrime.securesms.components.ProfilePictureView
         android:id="@+id/profilePictureView"
         android:layout_width="@dimen/large_profile_picture_size"
         android:layout_height="@dimen/large_profile_picture_size"
@@ -34,7 +34,7 @@
             android:layout_marginEnd="@dimen/small_spacing"
             android:textSize="@dimen/large_font_size"
             android:textStyle="bold"
-            android:textColor="@color/text"
+            android:textColor="?android:textColorPrimary"
             android:textAlignment="center"
             tools:text="Incoming call from... big name here of a user" />
 

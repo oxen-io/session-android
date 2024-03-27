@@ -35,14 +35,14 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
     override val maxFailureCount: Int = 2
 
     companion object {
-        val KEY: String = "AttachmentDownloadJob"
+        const val KEY: String = "AttachmentDownloadJob"
 
         // Keys used for database storage
         private val ATTACHMENT_ID_KEY = "attachment_id"
         private val TS_INCOMING_MESSAGE_ID_KEY = "tsIncoming_message_id"
     }
 
-    override fun execute() {
+    override suspend fun execute(dispatcherName: String) {
         val storage = MessagingModuleConfiguration.shared.storage
         val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
         val threadID = storage.getThreadIdForMms(databaseMessageID)
@@ -59,7 +59,7 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
                     Log.d("AttachmentDownloadJob", "Setting attachment state = failed, don't have attachment")
                     messageDataProvider.setAttachmentState(AttachmentState.FAILED, AttachmentId(attachmentID,0), databaseMessageID)
                 }
-                this.handlePermanentFailure(exception)
+                this.handlePermanentFailure(dispatcherName, exception)
             } else if (exception == Error.DuplicateData) {
                 attachment?.let { id ->
                     Log.d("AttachmentDownloadJob", "Setting attachment state = done from duplicate data")
@@ -68,7 +68,7 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
                     Log.d("AttachmentDownloadJob", "Setting attachment state = done from duplicate data")
                     messageDataProvider.setAttachmentState(AttachmentState.DONE, AttachmentId(attachmentID,0), databaseMessageID)
                 }
-                this.handleSuccess()
+                this.handleSuccess(dispatcherName)
             } else {
                 if (failureCount + 1 >= maxFailureCount) {
                     attachment?.let { id ->
@@ -79,7 +79,7 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
                         messageDataProvider.setAttachmentState(AttachmentState.FAILED, AttachmentId(attachmentID,0), databaseMessageID)
                     }
                 }
-                this.handleFailure(exception)
+                this.handleFailure(dispatcherName, exception)
             }
         }
 
@@ -89,19 +89,21 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
         }
 
         val threadRecipient = storage.getRecipientForThread(threadID)
-        val sender = if (messageDataProvider.isMmsOutgoing(databaseMessageID)) {
+        val selfSend = messageDataProvider.isMmsOutgoing(databaseMessageID)
+        val sender = if (selfSend) {
             storage.getUserPublicKey()
         } else {
             messageDataProvider.getIndividualRecipientForMms(databaseMessageID)?.address?.serialize()
         }
         val contact = sender?.let { storage.getContactWithSessionID(it) }
-        if (threadRecipient == null || sender == null || contact == null) {
+        if (threadRecipient == null || sender == null || (contact == null && !selfSend)) {
             handleFailure(Error.NoSender, null)
             return
         }
-        if (!threadRecipient.isGroupRecipient && (!contact.isTrusted && storage.getUserPublicKey() != sender)) {
+        if (!threadRecipient.isGroupRecipient && contact?.isTrusted != true && storage.getUserPublicKey() != sender) {
             // if we aren't receiving a group message, a message from ourselves (self-send) and the contact sending is not trusted:
             // do not continue, but do not fail
+            handleFailure(Error.NoSender, null)
             return
         }
 
@@ -150,7 +152,7 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
             Log.d("AttachmentDownloadJob", "deleting tempfile")
             tempFile.delete()
             Log.d("AttachmentDownloadJob", "succeeding job")
-            handleSuccess()
+            handleSuccess(dispatcherName)
         } catch (e: Exception) {
             Log.e("AttachmentDownloadJob", "Error processing attachment download", e)
             tempFile?.delete()
@@ -169,17 +171,17 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
         }
     }
 
-    private fun handleSuccess() {
+    private fun handleSuccess(dispatcherName: String) {
         Log.w("AttachmentDownloadJob", "Attachment downloaded successfully.")
-        delegate?.handleJobSucceeded(this)
+        delegate?.handleJobSucceeded(this, dispatcherName)
     }
 
-    private fun handlePermanentFailure(e: Exception) {
-        delegate?.handleJobFailedPermanently(this, e)
+    private fun handlePermanentFailure(dispatcherName: String, e: Exception) {
+        delegate?.handleJobFailedPermanently(this, dispatcherName, e)
     }
 
-    private fun handleFailure(e: Exception) {
-        delegate?.handleJobFailed(this, e)
+    private fun handleFailure(dispatcherName: String, e: Exception) {
+        delegate?.handleJobFailed(this, dispatcherName, e)
     }
 
     private fun createTempFile(): File {

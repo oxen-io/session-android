@@ -33,8 +33,9 @@ import androidx.annotation.VisibleForTesting;
 
 import com.bumptech.glide.Glide;
 
-import net.sqlcipher.database.SQLiteDatabase;
+import net.zetetic.database.sqlcipher.SQLiteDatabase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment;
@@ -315,6 +316,28 @@ public class AttachmentDatabase extends Database {
     }
 
     database.delete(TABLE_NAME, MMS_ID + " = ?", new String[] {mmsId + ""});
+    notifyAttachmentListeners();
+  }
+
+  @SuppressWarnings("ResultOfMethodCallIgnored")
+  void deleteAttachmentsForMessages(long[] mmsIds) {
+    SQLiteDatabase database = databaseHelper.getWritableDatabase();
+    Cursor cursor           = null;
+    String mmsIdString = StringUtils.join(mmsIds, ',');
+
+    try {
+      cursor = database.query(TABLE_NAME, new String[] {DATA, THUMBNAIL, CONTENT_TYPE}, MMS_ID + " IN (?)",
+              new String[] {mmsIdString}, null, null, null);
+
+      while (cursor != null && cursor.moveToNext()) {
+        deleteAttachmentOnDisk(cursor.getString(0), cursor.getString(1), cursor.getString(2));
+      }
+    } finally {
+      if (cursor != null)
+        cursor.close();
+    }
+
+    database.delete(TABLE_NAME, MMS_ID + " IN (?)", new String[] {mmsIdString});
     notifyAttachmentListeners();
   }
 

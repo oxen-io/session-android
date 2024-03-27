@@ -1,16 +1,22 @@
+
 buildscript {
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath "com.android.tools.build:gradle:$gradlePluginVersion"
         classpath files('libs/gradle-witness.jar')
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
-        classpath "com.google.gms:google-services:4.3.10"
+        classpath "com.google.gms:google-services:$googleServicesVersion"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$daggerVersion"
     }
+}
+
+plugins {
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
 }
 
 apply plugin: 'com.android.application'
@@ -18,7 +24,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'witness'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
-apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlinx-serialization'
 apply plugin: 'dagger.hilt.android.plugin'
 
@@ -26,31 +31,232 @@ configurations.all {
     exclude module: "commons-logging"
 }
 
+def canonicalVersionCode = 369
+def canonicalVersionName = "1.18.1"
+
+def postFixSize = 10
+def abiPostFix = ['armeabi-v7a' : 1,
+                  'arm64-v8a'   : 2,
+                  'x86'         : 3,
+                  'x86_64'      : 4,
+                  'universal'   : 5]
+
+android {
+    compileSdkVersion androidCompileSdkVersion
+    namespace 'network.loki.messenger'
+    useLibrary 'org.apache.http.legacy'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'LICENSE'
+        exclude 'NOTICE'
+        exclude 'asm-license.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/proguard/androidx-annotations.pro'
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+            universalApk true
+        }
+    }
+
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.4.7'
+    }
+
+    defaultConfig {
+        versionCode canonicalVersionCode * postFixSize
+        versionName canonicalVersionName
+
+        minSdkVersion androidMinimumSdkVersion
+        targetSdkVersion androidTargetSdkVersion
+
+        multiDexEnabled = true
+
+        vectorDrawables.useSupportLibrary = true
+        project.ext.set("archivesBaseName", "session")
+
+        buildConfigField "long", "BUILD_TIMESTAMP", getLastCommitTimestamp() + "L"
+        buildConfigField "String", "CONTENT_PROXY_HOST", "\"contentproxy.signal.org\""
+        buildConfigField "int", "CONTENT_PROXY_PORT", "443"
+        buildConfigField "String", "USER_AGENT", "\"OWA\""
+        buildConfigField "String[]", "LANGUAGES", "new String[]{\"" + autoResConfig().collect { s -> s.replace('-r', '_') }.join('", "') + '"}'
+        buildConfigField "int", "CANONICAL_VERSION_CODE", "$canonicalVersionCode"
+
+        resConfigs autoResConfig()
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // The following argument makes the Android Test Orchestrator run its
+        // "pm clear" command after each test invocation. This command ensures
+        // that the app's state is completely cleared between tests.
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+        testOptions {
+            execution 'ANDROIDX_TEST_ORCHESTRATOR'
+        }
+    }
+
+    sourceSets {
+        String sharedTestDir = 'src/sharedTest/java'
+        test.java.srcDirs += sharedTestDir
+        androidTest.java.srcDirs += sharedTestDir
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+        debug {
+            isDefault true
+            minifyEnabled false
+            enableUnitTestCoverage true
+        }
+    }
+
+    flavorDimensions "distribution"
+    productFlavors {
+        play {
+            isDefault true
+            dimension "distribution"
+            apply plugin: 'com.google.gms.google-services'
+            ext.websiteUpdateUrl = "null"
+            buildConfigField "boolean", "PLAY_STORE_DISABLED", "false"
+            buildConfigField "org.session.libsession.utilities.Device", "DEVICE", "org.session.libsession.utilities.Device.ANDROID"
+            buildConfigField "String", "NOPLAY_UPDATE_URL", "$ext.websiteUpdateUrl"
+            buildConfigField 'String', 'PUSH_KEY_SUFFIX', '\"\"'
+        }
+
+        huawei {
+            dimension "distribution"
+            ext.websiteUpdateUrl = "null"
+            buildConfigField "boolean", "PLAY_STORE_DISABLED", "true"
+            buildConfigField "org.session.libsession.utilities.Device", "DEVICE", "org.session.libsession.utilities.Device.HUAWEI"
+            buildConfigField "String", "NOPLAY_UPDATE_URL", "$ext.websiteUpdateUrl"
+            buildConfigField 'String', 'PUSH_KEY_SUFFIX', '\"_HUAWEI\"'
+        }
+
+        website {
+            dimension "distribution"
+            ext.websiteUpdateUrl = "https://github.com/oxen-io/session-android/releases"
+            buildConfigField "boolean", "PLAY_STORE_DISABLED", "true"
+            buildConfigField "org.session.libsession.utilities.Device", "DEVICE", "org.session.libsession.utilities.Device.ANDROID"
+            buildConfigField "String", "NOPLAY_UPDATE_URL", "\"$ext.websiteUpdateUrl\""
+            buildConfigField 'String', 'PUSH_KEY_SUFFIX', '\"\"'
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def abiName = output.getFilter("ABI") ?: 'universal'
+            def postFix = abiPostFix.get(abiName, 0)
+
+            if (postFix >= postFixSize) throw new AssertionError("postFix is too large")
+            output.outputFileName = output.outputFileName = "session-${variant.versionName}-${abiName}.apk"
+            output.versionCodeOverride = canonicalVersionCode * postFixSize + postFix
+        }
+    }
+
+    lintOptions {
+        abortOnError true
+        baseline file("lint-baseline.xml")
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+
+    buildFeatures {
+        dataBinding true
+        viewBinding true
+    }
+
+    def huaweiEnabled = project.properties['huawei'] != null
+
+    applicationVariants.configureEach { variant ->
+        if (variant.flavorName == 'huawei') {
+            variant.getPreBuildProvider().configure { task ->
+                task.doFirst {
+                    if (!huaweiEnabled) {
+                        def message = 'Huawei is not enabled. Please add -Phuawei command line arg. See BUILDING.md'
+                        logger.error(message)
+                        throw new GradleException(message)
+                    }
+                }
+            }
+        }
+    }
+
+    task testPlayDebugUnitTestCoverageReport(type: JacocoReport, dependsOn: "testPlayDebugUnitTest") {
+        reports {
+            xml.enabled = true
+        }
+
+        // Add files that should not be listed in the report (e.g. generated Files from dagger)
+        def fileFilter = []
+        def mainSrc = "$projectDir/src/main/java"
+        def kotlinDebugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/playDebug", excludes: fileFilter)
+
+        // Compiled Kotlin class files are written into build-variant-specific subdirectories of 'build/tmp/kotlin-classes'.
+        classDirectories.from = files([kotlinDebugTree])
+
+        // To produce an accurate report, the bytecode is mapped back to the original source code.
+        sourceDirectories.from = files([mainSrc])
+
+        // Execution data generated when running the tests against classes instrumented by the JaCoCo agent.
+        // This is enabled with 'enableUnitTestCoverage' in the 'debug' build type.
+        executionData.from = "${project.buildDir}/outputs/unit_test_code_coverage/playDebugUnitTest/testPlayDebugUnitTest.exec"
+    }
+}
+
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'com.google.android.material:material:1.2.1'
+
+    implementation("com.google.dagger:hilt-android:2.46.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
+
+    implementation "androidx.appcompat:appcompat:$appcompatVersion"
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation "com.google.android.material:material:$materialVersion"
+    implementation 'com.google.android:flexbox:2.0.1'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.preference:preference-ktx:1.1.1'
+    implementation "androidx.preference:preference-ktx:$preferenceVersion"
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
-    implementation 'androidx.exifinterface:exifinterface:1.3.3'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'androidx.exifinterface:exifinterface:1.3.4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-process:$lifecycleVersion"
-    implementation 'androidx.activity:activity-ktx:1.2.2'
-    implementation 'androidx.fragment:fragment-ktx:1.3.2'
-    implementation "androidx.core:core-ktx:1.3.2"
-    implementation "androidx.work:work-runtime-ktx:2.4.0"
-    implementation ("com.google.firebase:firebase-messaging:18.0.0") {
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+    implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"
+    implementation 'androidx.activity:activity-ktx:1.5.1'
+    implementation 'androidx.fragment:fragment-ktx:1.5.3'
+    implementation "androidx.core:core-ktx:$coreVersion"
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
+    playImplementation ("com.google.firebase:firebase-messaging:18.0.0") {
         exclude group: 'com.google.firebase', module: 'firebase-core'
         exclude group: 'com.google.firebase', module: 'firebase-analytics'
         exclude group: 'com.google.firebase', module: 'firebase-measurement-connector'
     }
+    if (project.hasProperty('huawei')) huaweiImplementation 'com.huawei.hms:push:6.7.0.300'
     implementation 'com.google.android.exoplayer:exoplayer-core:2.9.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.9.1'
     implementation 'org.conscrypt:conscrypt-android:2.0.0'
@@ -90,20 +296,17 @@ dependencies {
         exclude group: 'com.squareup.okhttp', module: 'okhttp-urlconnection'
     }
     implementation 'com.annimon:stream:1.1.8'
-    implementation 'com.takisoft.fix:colorpicker:1.0.1'
     implementation 'com.codewaves.stickyheadergrid:stickyheadergrid:0.9.4'
     implementation 'com.github.dmytrodanylyk.circular-progress-button:library:1.1.3-S2'
-    implementation 'org.signal:android-database-sqlcipher:3.5.9-S3'
-    implementation ('com.googlecode.ez-vcard:ez-vcard:0.9.11') {
-        exclude group: 'com.fasterxml.jackson.core'
-        exclude group: 'org.freemarker'
-    }
+    implementation 'androidx.sqlite:sqlite-ktx:2.3.1'
+    implementation 'net.zetetic:sqlcipher-android:4.5.4@aar'
     implementation project(":libsignal")
     implementation project(":libsession")
+    implementation project(":libsession-util")
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxJsonVersion"
     implementation "com.github.oxen-io.session-android-curve-25519:curve25519-java:$curve25519Version"
     implementation project(":liblazysodium")
-    implementation "net.java.dev.jna:jna:5.8.0@aar"
+    implementation "net.java.dev.jna:jna:5.12.1@aar"
     implementation "com.google.protobuf:protobuf-java:$protobufVersion"
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
@@ -112,183 +315,59 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     implementation "nl.komponents.kovenant:kovenant:$kovenantVersion"
     implementation "nl.komponents.kovenant:kovenant-android:$kovenantVersion"
-    implementation "com.github.lelloman:android-identicons:v11"
-    implementation "com.prof.rssparser:rssparser:2.0.4"
     implementation "com.jakewharton.rxbinding3:rxbinding:3.1.0"
     implementation "com.github.tbruyelle:rxpermissions:0.10.2"
     implementation "com.github.ybq:Android-SpinKit:1.4.0"
     implementation "com.opencsv:opencsv:4.6"
-    testImplementation 'junit:junit:4.12'
+    testImplementation "junit:junit:$junitVersion"
     testImplementation 'org.assertj:assertj-core:3.11.1'
-    testImplementation "org.mockito:mockito-inline:4.0.0"
+    testImplementation "org.mockito:mockito-inline:4.11.0"
     testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
-    testImplementation 'org.powermock:powermock-api-mockito:1.6.1'
-    testImplementation 'org.powermock:powermock-module-junit4:1.6.1'
-    testImplementation 'org.powermock:powermock-module-junit4-rule:1.6.1'
-    testImplementation 'org.powermock:powermock-classloading-xstream:1.6.1'
-    testImplementation 'androidx.test:core:1.3.0'
-    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    androidTestImplementation "org.mockito:mockito-android:4.11.0"
+    androidTestImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
+    testImplementation "androidx.test:core:$testCoreVersion"
+    testImplementation "androidx.arch.core:core-testing:2.2.0"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
     // Core library
-    androidTestImplementation 'androidx.test:core:1.4.0'
+    androidTestImplementation "androidx.test:core:$testCoreVersion"
+
+    androidTestImplementation('com.adevinta.android:barista:4.2.0') {
+        exclude group: 'org.jetbrains.kotlin'
+    }
 
     // AndroidJUnitRunner and JUnit Rules
-    androidTestImplementation 'androidx.test:runner:1.4.0'
-    androidTestImplementation 'androidx.test:rules:1.4.0'
+    androidTestImplementation 'androidx.test:runner:1.5.2'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
 
     // Assertions
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.ext:truth:1.4.0'
-    androidTestImplementation 'com.google.truth:truth:1.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.ext:truth:1.5.0'
+    testImplementation 'com.google.truth:truth:1.1.3'
+    androidTestImplementation 'com.google.truth:truth:1.1.3'
 
     // Espresso dependencies
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.4.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.4.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.4.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-web:3.4.0'
-    androidTestImplementation 'androidx.test.espresso.idling:idling-concurrent:3.4.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-idling-resource:3.4.0'
-    androidTestUtil 'androidx.test:orchestrator:1.4.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.5.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.5.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.5.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-web:3.5.1'
+    androidTestImplementation 'androidx.test.espresso.idling:idling-concurrent:3.5.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-idling-resource:3.5.1'
+    androidTestUtil 'androidx.test:orchestrator:1.4.2'
 
     testImplementation 'org.robolectric:robolectric:4.4'
     testImplementation 'org.robolectric:shadows-multidex:4.4'
-}
 
-def canonicalVersionCode = 299
-def canonicalVersionName = "1.15.3"
+    implementation 'com.github.bumptech.glide:compose:1.0.0-alpha.5'
+    implementation 'androidx.compose.ui:ui:1.5.2'
+    implementation 'androidx.compose.ui:ui-tooling:1.5.2'
+    implementation "com.google.accompanist:accompanist-themeadapter-appcompat:0.33.1-alpha"
+    implementation "com.google.accompanist:accompanist-pager-indicators:0.33.1-alpha"
+    implementation "androidx.compose.runtime:runtime-livedata:1.5.2"
 
-def postFixSize = 10
-def abiPostFix = ['armeabi-v7a' : 1,
-                  'arm64-v8a'   : 2,
-                  'x86'         : 3,
-                  'x86_64'      : 4,
-                  'universal'   : 5]
-
-android {
-    compileSdkVersion androidCompileSdkVersion
-    buildToolsVersion '29.0.3'
-    useLibrary 'org.apache.http.legacy'
-
-    dexOptions {
-        javaMaxHeapSize "4g"
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-
-    packagingOptions {
-        exclude 'LICENSE.txt'
-        exclude 'LICENSE'
-        exclude 'NOTICE'
-        exclude 'asm-license.txt'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/proguard/androidx-annotations.pro'
-    }
-
-    splits {
-        abi {
-            enable true
-            reset()
-            include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
-            universalApk true
-        }
-    }
-
-    defaultConfig {
-        versionCode canonicalVersionCode * postFixSize
-        versionName canonicalVersionName
-
-        minSdkVersion androidMinimumSdkVersion
-        targetSdkVersion androidCompileSdkVersion
-
-        multiDexEnabled = true
-
-        vectorDrawables.useSupportLibrary = true
-        project.ext.set("archivesBaseName", "session")
-
-        buildConfigField "long", "BUILD_TIMESTAMP", getLastCommitTimestamp() + "L"
-        buildConfigField "String", "CONTENT_PROXY_HOST", "\"contentproxy.signal.org\""
-        buildConfigField "int", "CONTENT_PROXY_PORT", "443"
-        buildConfigField "String", "USER_AGENT", "\"OWA\""
-        buildConfigField "String[]", "LANGUAGES", "new String[]{\"" + autoResConfig().collect { s -> s.replace('-r', '_') }.join('", "') + '"}'
-        buildConfigField "int", "CANONICAL_VERSION_CODE", "$canonicalVersionCode"
-
-        resConfigs autoResConfig()
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        // The following argument makes the Android Test Orchestrator run its
-        // "pm clear" command after each test invocation. This command ensures
-        // that the app's state is completely cleared between tests.
-        testInstrumentationRunnerArguments clearPackageData: 'true'
-        testOptions {
-            execution 'ANDROIDX_TEST_ORCHESTRATOR'
-        }
-    }
-
-    sourceSets {
-        String sharedTestDir = 'src/sharedTest/java'
-        test.java.srcDirs += sharedTestDir
-        androidTest.java.srcDirs += sharedTestDir
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-        }
-        debug {
-            minifyEnabled false
-        }
-    }
-
-    flavorDimensions "distribution"
-    productFlavors {
-        play {
-            ext.websiteUpdateUrl = "null"
-            buildConfigField "boolean", "PLAY_STORE_DISABLED", "false"
-            buildConfigField "String", "NOPLAY_UPDATE_URL", "$ext.websiteUpdateUrl"
-        }
-
-        website {
-            ext.websiteUpdateUrl = "https://github.com/oxen-io/session-android/releases"
-            buildConfigField "boolean", "PLAY_STORE_DISABLED", "true"
-            buildConfigField "String", "NOPLAY_UPDATE_URL", "\"$ext.websiteUpdateUrl\""
-        }
-    }
-
-    applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            def abiName = output.getFilter("ABI") ?: 'universal'
-            def postFix = abiPostFix.get(abiName, 0)
-
-            if (postFix >= postFixSize) throw new AssertionError("postFix is too large")
-            output.outputFileName = output.outputFileName = "session-${variant.versionName}-${abiName}.apk"
-            output.versionCodeOverride = canonicalVersionCode * postFixSize + postFix
-        }
-    }
-
-    lintOptions {
-        abortOnError true
-        baseline file("lint-baseline.xml")
-    }
-
-    testOptions {
-        unitTests {
-            includeAndroidResources = true
-        }
-    }
-
-    buildFeatures {
-        dataBinding true
-        viewBinding true
-    }
+    implementation 'androidx.compose.foundation:foundation-layout:1.5.2'
+    implementation 'androidx.compose.material:material:1.5.2'
 }
 
 static def getLastCommitTimestamp() {
@@ -308,4 +387,9 @@ def autoResConfig() {
          .findAll { matcher -> matcher.find() }
          .collect { matcher -> matcher.group(1) }
          .sort()
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="preferences_notifications_strategy_category_fast_mode_summary">You\'ll be notified of new messages reliably and immediately using Huawei’s notification servers.</string>
+    <string name="activity_pn_mode_fast_mode_explanation">You\'ll be notified of new messages reliably and immediately using Huawei’s notification servers.</string>
+</resources>

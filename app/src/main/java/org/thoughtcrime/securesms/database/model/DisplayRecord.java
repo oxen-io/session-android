@@ -80,6 +80,18 @@ public abstract class DisplayRecord {
     return !isFailed() && !isPending();
   }
 
+  public boolean isSyncing() {
+    return MmsSmsColumns.Types.isSyncingType(type);
+  }
+
+  public boolean isResyncing() {
+    return MmsSmsColumns.Types.isResyncingType(type);
+  }
+
+  public boolean isSyncFailed() {
+    return MmsSmsColumns.Types.isSyncFailedMessageType(type);
+  }
+
   public boolean isFailed() {
     return MmsSmsColumns.Types.isFailedMessageType(type)
       || MmsSmsColumns.Types.isPendingSecureSmsFallbackType(type)

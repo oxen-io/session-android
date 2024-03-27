@@ -17,7 +17,7 @@
         android:layout_marginRight="@dimen/very_large_spacing"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@color/text"
+        android:textColor="?android:textColorPrimary"
         android:text="@string/activity_display_name_title_2" />
 
     <TextView
@@ -27,11 +27,12 @@
         android:layout_marginTop="4dp"
         android:layout_marginRight="@dimen/very_large_spacing"
         android:textSize="@dimen/small_font_size"
-        android:textColor="@color/text"
+        android:textColor="?android:textColorPrimary"
         android:text="@string/activity_display_name_explanation" />
 
     <EditText
         style="@style/SmallSessionEditText"
+        android:contentDescription="@string/AccessibilityId_enter_display_name"
         android:id="@+id/displayNameEditText"
         android:layout_width="match_parent"
         android:layout_height="64dp"
@@ -42,6 +43,8 @@
         android:paddingBottom="0dp"
         android:gravity="center_vertical"
         android:inputType="textCapWords"
+        android:maxLength="@integer/max_user_nickname_length_chars"
+        android:maxLines="1"
         android:hint="@string/activity_display_name_edit_text_hint" />
 
     <View
@@ -51,6 +54,7 @@
 
     <Button
         style="@style/Widget.Session.Button.Common.ProminentFilled"
+        android:contentDescription="@string/AccessibilityId_continue"
         android:id="@+id/registerButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/medium_button_height"

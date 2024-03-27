@@ -23,7 +23,7 @@
         android:layout_marginRight="@dimen/very_large_spacing"
         android:textSize="26sp"
         android:textStyle="bold"
-        android:textColor="@color/text"
+        android:textColor="?android:textColorPrimary"
         android:text="@string/activity_seed_title_2" />
 
     <TextView
@@ -33,12 +33,13 @@
         android:layout_marginTop="8dp"
         android:layout_marginRight="@dimen/very_large_spacing"
         android:textSize="16sp"
-        android:textColor="@color/text"
+        android:textColor="?android:textColorPrimary"
         android:text="@string/activity_seed_explanation" />
 
     <TextView
         style="@style/SessionIDTextView"
         android:id="@+id/seedTextView"
+        android:contentDescription="@string/AccessibilityId_recovery_phrase"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/very_large_spacing"
@@ -49,15 +50,14 @@
         android:textAlignment="center"
         tools:text="nautical novelty populate onion awkward bent etiquette plant submarine itches vipers september axis maximum populate" />
 
-    <TextView
+    <Button
         android:id="@+id/revealButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_width="196dp"
+        android:layout_height="@dimen/onboarding_button_bottom_offset"
         android:textAlignment="center"
         android:textSize="16sp"
-        android:textColor="@color/text"
         android:alpha="0.6"
+        style="@style/Widget.Session.Button.Common.Borderless"
         android:text="@string/activity_seed_reveal_button_title" />
 
     <View
@@ -67,6 +67,7 @@
 
     <Button
         style="@style/Widget.Session.Button.Common.ProminentOutline"
+        android:contentDescription="@string/AccessibilityId_copy_recovery_phrase"
         android:id="@+id/copyButton"
         android:layout_width="196dp"
         android:layout_height="@dimen/medium_button_height"

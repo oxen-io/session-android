@@ -50,7 +50,7 @@ class PeerConnectionWrapper(private val context: Context,
 
     private fun initPeerConnection() {
         val random = SecureRandom().asKotlinRandom()
-        val iceServers = listOf("freyr","fenrir","frigg","angus","hereford","holstein", "brahman").shuffled(random).take(2).map { sub ->
+        val iceServers = listOf("freyr","angus","hereford","holstein", "brahman").shuffled(random).take(2).map { sub ->
             PeerConnection.IceServer.builder("turn:$sub.getsession.org")
                 .setUsername("session202111")
                 .setPassword("053c268164bc7bd7")
@@ -326,8 +326,6 @@ class PeerConnectionWrapper(private val context: Context,
     }
 
     override fun onCameraSwitchCompleted(newCameraState: CameraState) {
-        // mirror rotation offset
-        rotationVideoSink.mirrored = newCameraState.activeDirection == CameraState.Direction.FRONT
         cameraEventListener.onCameraSwitchCompleted(newCameraState)
     }
 

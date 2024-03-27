@@ -1,22 +1,29 @@
 package org.thoughtcrime.securesms.preferences
 
+import android.app.Dialog
+import android.os.Bundle
 import android.view.LayoutInflater
-import androidx.appcompat.app.AlertDialog
+import android.view.View
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import network.loki.messenger.databinding.DialogClearAllDataBinding
+import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.ApplicationContext
+import org.thoughtcrime.securesms.createSessionDialog
+import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
-import org.thoughtcrime.securesms.conversation.v2.utilities.BaseDialog
 
-class ClearAllDataDialog : BaseDialog() {
+class ClearAllDataDialog : DialogFragment() {
     private lateinit var binding: DialogClearAllDataBinding
 
     enum class Steps {
@@ -26,9 +33,6 @@ class ClearAllDataDialog : BaseDialog() {
     }
 
     var clearJob: Job? = null
-        set(value) {
-            field = value
-        }
 
     var step = Steps.INFO_PROMPT
         set(value) {
@@ -36,26 +40,38 @@ class ClearAllDataDialog : BaseDialog() {
             updateUI()
         }
 
-    override fun setContentView(builder: AlertDialog.Builder) {
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {
+        view(createView())
+    }
+
+    private fun createView(): View {
         binding = DialogClearAllDataBinding.inflate(LayoutInflater.from(requireContext()))
+        val device = radioOption("deviceOnly", R.string.dialog_clear_all_data_clear_device_only)
+        val network = radioOption("deviceAndNetwork", R.string.dialog_clear_all_data_clear_device_and_network)
+        var selectedOption: RadioOption<String> = device
+        val optionAdapter = RadioOptionAdapter { selectedOption = it }
+        binding.recyclerView.apply {
+            itemAnimator = null
+            adapter = optionAdapter
+            addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+            setHasFixedSize(true)
+        }
+        optionAdapter.submitList(listOf(device, network))
         binding.cancelButton.setOnClickListener {
-            if (step == Steps.NETWORK_PROMPT) {
-                clearAllData(false)
-            } else if (step != Steps.DELETING) {
-                dismiss()
-            }
+            dismiss()
         }
         binding.clearAllDataButton.setOnClickListener {
             when(step) {
-                Steps.INFO_PROMPT -> step = Steps.NETWORK_PROMPT
-                Steps.NETWORK_PROMPT -> {
-                    clearAllData(true)
+                Steps.INFO_PROMPT -> if (selectedOption == network) {
+                    step = Steps.NETWORK_PROMPT
+                } else {
+                    clearAllData(false)
                 }
+                Steps.NETWORK_PROMPT -> clearAllData(true)
                 Steps.DELETING -> { /* do nothing intentionally */ }
             }
         }
-        builder.setView(binding.root)
-        builder.setCancelable(false)
+        return binding.root
     }
 
     private fun updateUI() {
@@ -64,17 +80,14 @@ class ClearAllDataDialog : BaseDialog() {
 
             when (step) {
                 Steps.INFO_PROMPT -> {
-                    binding.dialogDescriptionText.setText(R.string.dialog_clear_all_data_explanation)
-                    binding.cancelButton.setText(R.string.cancel)
-                    binding.clearAllDataButton.setText(R.string.delete)
+                    binding.dialogDescriptionText.setText(R.string.dialog_clear_all_data_message)
                 }
-                else -> {
-                    binding.dialogDescriptionText.setText(R.string.dialog_clear_all_data_network_explanation)
-                    binding.cancelButton.setText(R.string.dialog_clear_all_data_local_only)
-                    binding.clearAllDataButton.setText(R.string.dialog_clear_all_data_clear_network)
+                Steps.NETWORK_PROMPT -> {
+                    binding.dialogDescriptionText.setText(R.string.dialog_clear_all_data_clear_device_and_network_confirmation)
                 }
+                Steps.DELETING -> { /* do nothing intentionally */ }
             }
-
+            binding.recyclerView.isGone = step == Steps.NETWORK_PROMPT
             binding.cancelButton.isVisible = !isLoading
             binding.clearAllDataButton.isVisible = !isLoading
             binding.progressBar.isVisible = isLoading
@@ -104,6 +117,10 @@ class ClearAllDataDialog : BaseDialog() {
             } else {
                 // finish
                 val result = try {
+                    val openGroups = DatabaseComponent.get(requireContext()).lokiThreadDatabase().getAllOpenGroups()
+                    openGroups.map { it.value.server }.toSet().forEach { server ->
+                        OpenGroupApi.deleteAllInboxMessages(server).get()
+                    }
                     SnodeAPI.deleteAllMessages().get()
                 } catch (e: Exception) {
                     null

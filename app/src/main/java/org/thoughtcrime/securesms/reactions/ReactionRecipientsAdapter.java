@@ -144,7 +144,6 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
       super(itemView);
       this.callback = callback;
       avatar = itemView.findViewById(R.id.reactions_bottom_view_avatar);
-      avatar.glide = GlideApp.with(itemView);
       recipient = itemView.findViewById(R.id.reactions_bottom_view_recipient_name);
       remove = itemView.findViewById(R.id.reactions_bottom_view_recipient_remove);
     }

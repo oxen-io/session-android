@@ -249,17 +249,12 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
                 viewModel.callState.collect { state ->
                     Log.d("Loki", "Consuming view model state $state")
                     when (state) {
-                        CALL_RINGING -> {
-                            if (wantsToAnswer) {
-                                answerCall()
-                                wantsToAnswer = false
-                            }
-                        }
-                        CALL_OUTGOING -> {
-                        }
-                        CALL_CONNECTED -> {
+                        CALL_RINGING -> if (wantsToAnswer) {
+                            answerCall()
                             wantsToAnswer = false
                         }
+                        CALL_CONNECTED -> wantsToAnswer = false
+                        else -> {}
                     }
                     updateControls(state)
                 }
@@ -339,6 +334,10 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
                     if (isEnabled) {
                         viewModel.localRenderer?.let { surfaceView ->
                             surfaceView.setZOrderOnTop(true)
+
+                            // Mirror the video preview of the person making the call to prevent disorienting them
+                            surfaceView.setMirror(true)
+
                             binding.localRenderer.addView(surfaceView)
                         }
                     }

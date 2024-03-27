@@ -9,11 +9,13 @@ import org.session.libsession.messaging.messages.control.DataExtractionNotificat
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.control.ReadReceipt
+import org.session.libsession.messaging.messages.control.SharedConfigurationMessage
 import org.session.libsession.messaging.messages.control.TypingIndicator
 import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
+import org.session.libsession.snode.SnodeAPI
 import org.session.libsignal.crypto.PushTransportDetails
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.IdPrefix
@@ -33,13 +35,16 @@ object MessageReceiver {
         object NoThread: Error("Couldn't find thread for message.")
         object SelfSend: Error("Message addressed at self.")
         object InvalidGroupPublicKey: Error("Invalid group public key.")
+        object NoGroupThread: Error("No thread exists for this group.")
         object NoGroupKeyPair: Error("Missing group key pair.")
         object NoUserED25519KeyPair : Error("Couldn't find user ED25519 key pair.")
+        object ExpiredMessage: Error("Message has already expired, prevent adding")
 
         internal val isRetryable: Boolean = when (this) {
             is DuplicateMessage, is InvalidMessage, is UnknownMessage,
             is UnknownEnvelopeType, is InvalidSignature, is NoData,
-            is SenderBlocked, is SelfSend -> false
+            is SenderBlocked, is SelfSend,
+            is ExpiredMessage, is NoGroupThread -> false
             else -> true
         }
     }
@@ -50,6 +55,7 @@ object MessageReceiver {
         isOutgoing: Boolean? = null,
         otherBlindedPublicKey: String? = null,
         openGroupPublicKey: String? = null,
+        currentClosedGroups: Set<String>?
     ): Pair<Message, SignalServiceProtos.Content> {
         val storage = MessagingModuleConfiguration.shared.storage
         val userPublicKey = storage.getUserPublicKey()
@@ -69,7 +75,7 @@ object MessageReceiver {
         } else {
             when (envelope.type) {
                 SignalServiceProtos.Envelope.Type.SESSION_MESSAGE -> {
-                    if (IdPrefix.fromValue(envelope.source) == IdPrefix.BLINDED) {
+                    if (IdPrefix.fromValue(envelope.source)?.isBlinded() == true) {
                         openGroupPublicKey ?: throw Error.InvalidGroupPublicKey
                         otherBlindedPublicKey ?: throw Error.DecryptionFailed
                         val decryptionResult = MessageDecrypter.decryptBlinded(
@@ -138,13 +144,16 @@ object MessageReceiver {
             UnsendRequest.fromProto(proto) ?:
             MessageRequestResponse.fromProto(proto) ?:
             CallMessage.fromProto(proto) ?:
-            VisibleMessage.fromProto(proto) ?: run {
-            throw Error.UnknownMessage
-        }
+            SharedConfigurationMessage.fromProto(proto) ?:
+            VisibleMessage.fromProto(proto) ?: throw Error.UnknownMessage
+
         val isUserBlindedSender = sender == openGroupPublicKey?.let { SodiumUtilities.blindedKeyPair(it, MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!) }?.let { SessionId(IdPrefix.BLINDED, it.publicKey.asBytes).hexString }
-        // Ignore self send if needed
-        if (!message.isSelfSendValid && (sender == userPublicKey || isUserBlindedSender)) {
-            throw Error.SelfSend
+        val isUserSender = sender == userPublicKey
+
+        if (isUserSender || isUserBlindedSender) {
+            // Ignore self send if needed
+            if (!message.isSelfSendValid) throw Error.SelfSend
+            message.isSenderSelf = true
         }
         // Guard against control messages in open groups
         if (isOpenGroupMessage && message !is VisibleMessage) {
@@ -154,7 +163,7 @@ object MessageReceiver {
         message.sender = sender
         message.recipient = userPublicKey
         message.sentTimestamp = envelope.timestamp
-        message.receivedTimestamp = if (envelope.hasServerTimestamp()) envelope.serverTimestamp else System.currentTimeMillis()
+        message.receivedTimestamp = if (envelope.hasServerTimestamp()) envelope.serverTimestamp else SnodeAPI.nowWithOffset
         message.groupPublicKey = groupPublicKey
         message.openGroupServerMessageID = openGroupServerID
         // Validate
@@ -166,12 +175,16 @@ object MessageReceiver {
         // If the message failed to process the first time around we retry it later (if the error is retryable). In this case the timestamp
         // will already be in the database but we don't want to treat the message as a duplicate. The isRetry flag is a simple workaround
         // for this issue.
-        if (message is ClosedGroupControlMessage && message.kind is ClosedGroupControlMessage.Kind.New) {
+        if (groupPublicKey != null && groupPublicKey !in (currentClosedGroups ?: emptySet())) {
+            throw Error.NoGroupThread
+        }
+        if ((message is ClosedGroupControlMessage && message.kind is ClosedGroupControlMessage.Kind.New) || message is SharedConfigurationMessage) {
             // Allow duplicates in this case to avoid the following situation:
             // • The app performed a background poll or received a push notification
             // • This method was invoked and the received message timestamps table was updated
             // • Processing wasn't finished
             // • The user doesn't see the new closed group
+            // also allow shared configuration messages to be duplicates since we track hashes separately use seqno for conflict resolution
         } else {
             if (storage.isDuplicateMessage(envelope.timestamp)) { throw Error.DuplicateMessage }
             storage.addReceivedMessageTimestamp(envelope.timestamp)
@@ -179,4 +192,5 @@ object MessageReceiver {
         // Return
         return Pair(message, proto)
     }
+
 }

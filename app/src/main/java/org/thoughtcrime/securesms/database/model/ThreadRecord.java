@@ -45,27 +45,31 @@ public class ThreadRecord extends DisplayRecord {
   private @Nullable final Uri     snippetUri;
   private           final long    count;
   private           final int     unreadCount;
+  private           final int     unreadMentionCount;
   private           final int     distributionType;
   private           final boolean archived;
   private           final long    expiresIn;
   private           final long    lastSeen;
   private           final boolean pinned;
+  private           final int initialRecipientHash;
 
   public ThreadRecord(@NonNull String body, @Nullable Uri snippetUri,
                       @NonNull Recipient recipient, long date, long count, int unreadCount,
-                      long threadId, int deliveryReceiptCount, int status, long snippetType,
-                      int distributionType, boolean archived, long expiresIn, long lastSeen,
-                      int readReceiptCount, boolean pinned)
+                      int unreadMentionCount, long threadId, int deliveryReceiptCount, int status,
+                      long snippetType,  int distributionType, boolean archived, long expiresIn,
+                      long lastSeen, int readReceiptCount, boolean pinned)
   {
     super(body, recipient, date, date, threadId, status, deliveryReceiptCount, snippetType, readReceiptCount);
-    this.snippetUri       = snippetUri;
-    this.count            = count;
-    this.unreadCount      = unreadCount;
-    this.distributionType = distributionType;
-    this.archived         = archived;
-    this.expiresIn        = expiresIn;
-    this.lastSeen         = lastSeen;
-    this.pinned         = pinned;
+    this.snippetUri         = snippetUri;
+    this.count              = count;
+    this.unreadCount        = unreadCount;
+    this.unreadMentionCount = unreadMentionCount;
+    this.distributionType   = distributionType;
+    this.archived           = archived;
+    this.expiresIn          = expiresIn;
+    this.lastSeen           = lastSeen;
+    this.pinned             = pinned;
+    this.initialRecipientHash = recipient.hashCode();
   }
 
   public @Nullable Uri getSnippetUri() {
@@ -147,6 +151,10 @@ public class ThreadRecord extends DisplayRecord {
     return unreadCount;
   }
 
+  public int getUnreadMentionCount() {
+    return unreadMentionCount;
+  }
+
   public long getDate() {
     return getDateReceived();
   }
@@ -169,5 +177,9 @@ public class ThreadRecord extends DisplayRecord {
 
   public boolean isPinned() {
     return pinned;
+  }
+
+  public int getInitialRecipientHash() {
+    return initialRecipientHash;
   }
 }

@@ -34,7 +34,7 @@ public class MultipleRecipientNotificationBuilder extends AbstractNotificationBu
     setColor(context.getResources().getColor(R.color.textsecure_primary));
     setSmallIcon(R.drawable.ic_notification);
     setContentTitle(context.getString(R.string.app_name));
-    setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, HomeActivity.class), 0));
+    setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, HomeActivity.class), PendingIntent.FLAG_IMMUTABLE));
     setCategory(NotificationCompat.CATEGORY_MESSAGE);
     setGroupSummary(true);
 
@@ -52,8 +52,8 @@ public class MultipleRecipientNotificationBuilder extends AbstractNotificationBu
 
   public void setMostRecentSender(Recipient recipient, Recipient threadRecipient) {
     String displayName = recipient.toShortString();
-    if (threadRecipient.isOpenGroupRecipient()) {
-      displayName = getOpenGroupDisplayName(recipient);
+    if (threadRecipient.isGroupRecipient()) {
+      displayName = getGroupDisplayName(recipient, threadRecipient.isOpenGroupRecipient());
     }
     if (privacy.isDisplayContact()) {
       setContentText(context.getString(R.string.MessageNotifier_most_recent_from_s, displayName));
@@ -78,8 +78,8 @@ public class MultipleRecipientNotificationBuilder extends AbstractNotificationBu
 
   public void addMessageBody(@NonNull Recipient sender, Recipient threadRecipient, @Nullable CharSequence body) {
     String displayName = sender.toShortString();
-    if (threadRecipient.isOpenGroupRecipient()) {
-      displayName = getOpenGroupDisplayName(sender);
+    if (threadRecipient.isGroupRecipient()) {
+      displayName = getGroupDisplayName(sender, threadRecipient.isOpenGroupRecipient());
     }
     if (privacy.isDisplayMessage()) {
       SpannableStringBuilder builder = new SpannableStringBuilder();
@@ -113,14 +113,15 @@ public class MultipleRecipientNotificationBuilder extends AbstractNotificationBu
   }
 
   /**
-   * @param recipient the * individual * recipient for which to get the open group display name.
+   * @param recipient          the * individual * recipient for which to get the display name.
+   * @param openGroupRecipient whether in an open group context
    */
-  private String getOpenGroupDisplayName(Recipient recipient) {
+  private String getGroupDisplayName(Recipient recipient, boolean openGroupRecipient) {
     SessionContactDatabase contactDB = DatabaseComponent.get(context).sessionContactDatabase();
     String sessionID = recipient.getAddress().serialize();
     Contact contact = contactDB.getContactWithSessionID(sessionID);
     if (contact == null) { return sessionID; }
-    String displayName = contact.displayName(Contact.ContactContext.OPEN_GROUP);
+    String displayName = contact.displayName(openGroupRecipient ? Contact.ContactContext.OPEN_GROUP : Contact.ContactContext.REGULAR);
     if (displayName == null) { return sessionID; }
     return displayName;
   }

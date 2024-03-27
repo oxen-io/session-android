@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import network.loki.messenger.databinding.ContactSelectionListFragmentBinding
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
@@ -58,7 +57,6 @@ class ContactSelectionListFragment : Fragment(), LoaderManager.LoaderCallbacks<L
         super.onViewCreated(view, savedInstanceState)
         binding.recyclerView.layoutManager = LinearLayoutManager(activity)
         binding.recyclerView.adapter = listAdapter
-        binding.swipeRefreshLayout.isEnabled = requireActivity().intent.getBooleanExtra(REFRESHABLE, true)
     }
 
     override fun onStop() {
@@ -73,15 +71,6 @@ class ContactSelectionListFragment : Fragment(), LoaderManager.LoaderCallbacks<L
 
     fun resetQueryFilter() {
         setQueryFilter(null)
-        binding.swipeRefreshLayout.isRefreshing = false
-    }
-
-    fun setRefreshing(refreshing: Boolean) {
-        binding.swipeRefreshLayout.isRefreshing = refreshing
-    }
-
-    fun setOnRefreshListener(onRefreshListener: OnRefreshListener?) {
-        binding.swipeRefreshLayout.setOnRefreshListener(onRefreshListener)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ContactSelectionListItem>> {
@@ -106,7 +95,7 @@ class ContactSelectionListFragment : Fragment(), LoaderManager.LoaderCallbacks<L
             return
         }
         listAdapter.items = items
-        binding.mainContentContainer.visibility = if (items.isEmpty()) View.GONE else View.VISIBLE
+        binding.recyclerView.visibility = if (items.isEmpty()) View.GONE else View.VISIBLE
         binding.emptyStateContainer.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
     }
 

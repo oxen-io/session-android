@@ -17,7 +17,7 @@ public class ExpirationListener extends BroadcastReceiver {
 
   public static void setAlarm(Context context, long waitTimeMillis) {
     Intent        intent        = new Intent(context, ExpirationListener.class);
-    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
     AlarmManager  alarmManager  = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 
     alarmManager.cancel(pendingIntent);

@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
 import org.session.libsignal.utilities.Log;
 
 public abstract class PersistentAlarmManagerListener extends BroadcastReceiver {
@@ -21,7 +22,7 @@ public abstract class PersistentAlarmManagerListener extends BroadcastReceiver {
     long          scheduledTime = getNextScheduledExecutionTime(context);
     AlarmManager  alarmManager  = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     Intent        alarmIntent   = new Intent(context, getClass());
-    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
+    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_IMMUTABLE);
 
     if (System.currentTimeMillis() >= scheduledTime) {
       scheduledTime = onAlarm(context, scheduledTime);

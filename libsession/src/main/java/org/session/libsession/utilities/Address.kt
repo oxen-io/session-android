@@ -5,11 +5,10 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.util.Pair
 import androidx.annotation.VisibleForTesting
-import org.session.libsession.utilities.DelimiterUtil
-import org.session.libsession.utilities.GroupUtil
-import org.session.libsignal.utilities.guava.Optional
+import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Util
-import java.util.*
+import org.session.libsignal.utilities.guava.Optional
+import java.util.LinkedList
 import java.util.concurrent.atomic.AtomicReference
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -27,6 +26,8 @@ class Address private constructor(address: String) : Parcelable, Comparable<Addr
         get() = GroupUtil.isOpenGroup(address)
     val isOpenGroupInbox: Boolean
         get() = GroupUtil.isOpenGroupInbox(address)
+    val isOpenGroupOutbox: Boolean
+        get() = address.startsWith(IdPrefix.BLINDED.value) || address.startsWith(IdPrefix.BLINDEDV2.value)
     val isContact: Boolean
         get() = !(isGroup || isOpenGroupInbox)
 
@@ -166,8 +167,9 @@ class Address private constructor(address: String) : Parcelable, Comparable<Addr
         @JvmStatic
         fun fromSerializedList(serialized: String, delimiter: Char): List<Address> {
             val escapedAddresses = DelimiterUtil.split(serialized, delimiter)
+            val set = escapedAddresses.toSet().sorted()
             val addresses: MutableList<Address> = LinkedList()
-            for (escapedAddress in escapedAddresses) {
+            for (escapedAddress in set) {
                 addresses.add(fromSerialized(DelimiterUtil.unescape(escapedAddress, delimiter)))
             }
             return addresses
@@ -175,9 +177,9 @@ class Address private constructor(address: String) : Parcelable, Comparable<Addr
 
         @JvmStatic
         fun toSerializedList(addresses: List<Address>, delimiter: Char): String {
-            Collections.sort(addresses)
+            val set = addresses.toSet().sorted()
             val escapedAddresses: MutableList<String> = LinkedList()
-            for (address in addresses) {
+            for (address in set) {
                 escapedAddresses.add(DelimiterUtil.escape(address.serialize(), delimiter))
             }
             return Util.join(escapedAddresses, delimiter.toString() + "")

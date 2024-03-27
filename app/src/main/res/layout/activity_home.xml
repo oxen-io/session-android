@@ -27,34 +27,37 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp">
 
-                <include layout="@layout/view_profile_picture"
+                <org.thoughtcrime.securesms.components.ProfilePictureView
                     android:id="@+id/profileButton"
                     android:layout_width="@dimen/small_profile_picture_size"
                     android:layout_height="@dimen/small_profile_picture_size"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="9dp" />
+                    android:layout_marginLeft="9dp"
+                    android:contentDescription="@string/AccessibilityId_user_settings" />
 
                 <org.thoughtcrime.securesms.home.PathStatusView
                     android:id="@+id/pathStatusView"
-                    android:layout_alignBottom="@+id/profileButton"
-                    android:layout_alignEnd="@+id/profileButton"
                     android:layout_width="@dimen/path_status_view_size"
-                    android:layout_height="@dimen/path_status_view_size"/>
+                    android:layout_height="@dimen/path_status_view_size"
+                    android:layout_alignEnd="@+id/profileButton"
+                    android:layout_alignBottom="@+id/profileButton" />
 
                 <ImageView
                     android:id="@+id/sessionHeaderImage"
                     android:layout_width="0dp"
                     android:layout_height="16dp"
                     android:layout_centerInParent="true"
-                    android:layout_toStartOf="@+id/searchViewContainer"
-                    android:layout_toEndOf="@+id/profileButton"
+                    android:layout_toLeftOf="@+id/searchViewContainer"
+                    android:layout_toRightOf="@+id/profileButton"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_session"
-                    app:tint="@color/black" />
+                    app:tint="?sessionLogoTint" />
 
                 <RelativeLayout
                     android:id="@+id/searchViewContainer"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/AccessibilityId_search_icon"
                     android:layout_width="@dimen/small_profile_picture_size"
                     android:layout_height="@dimen/small_profile_picture_size"
                     android:layout_alignParentRight="true"
@@ -65,23 +68,24 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:src="@drawable/ic_baseline_search_24"
-                        app:tint="@color/text" />
+                        app:tint="?sessionLogoTint" />
 
                 </RelativeLayout>
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:visibility="gone"
                 android:id="@+id/search_toolbar"
-                android:layout_marginHorizontal="@dimen/medium_spacing"
                 android:layout_width="match_parent"
-                android:layout_height="?actionBarSize">
+                android:layout_height="?actionBarSize"
+                android:layout_marginHorizontal="@dimen/medium_spacing"
+                android:visibility="gone">
+
                 <org.thoughtcrime.securesms.home.search.GlobalSearchInputLayout
-                    android:layout_centerVertical="true"
                     android:id="@+id/globalSearchInputLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true" />
             </RelativeLayout>
 
             <View
@@ -91,9 +95,38 @@
                 android:elevation="1dp" />
 
             <org.thoughtcrime.securesms.onboarding.SeedReminderView
+                tools:visibility="gone"
                 android:id="@+id/seedReminderView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+            <FrameLayout
+                tools:visibility="visible"
+                android:visibility="gone"
+                android:id="@+id/configOutdatedView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_gravity="center"
+                    android:textColor="?message_sent_text_color"
+                    android:background="?colorAccent"
+                    android:textSize="11sp"
+                    android:paddingVertical="4dp"
+                    android:paddingHorizontal="64dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_home_outdated_client_config"
+                    />
+                <ImageView
+                    android:layout_margin="@dimen/small_spacing"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_x"
+                    app:tint="@color/black" />
+            </FrameLayout>
 
         </LinearLayout>
 
@@ -102,33 +135,28 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipChildren="false">
+        android:clipChildren="false"
+        android:focusable="false">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="172dp"
             android:clipToPadding="false"
+            android:paddingBottom="172dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="6"
             tools:listitem="@layout/view_conversation" />
 
-        <View
-            android:id="@+id/gradientView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/home_activity_gradient" />
-
         <androidx.recyclerview.widget.RecyclerView
-            android:visibility="gone"
-            android:scrollbars="vertical"
             android:id="@+id/globalSearchRecycler"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/view_global_search_result"
             tools:itemCount="6"
-            android:layout_height="match_parent"/>
+            tools:listitem="@layout/view_global_search_result" />
 
         <LinearLayout
             android:id="@+id/emptyStateContainer"
@@ -144,7 +172,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/activity_home_empty_state_message"
-                android:textColor="@color/text"
+                android:textColor="?android:textColorPrimary"
                 android:textSize="@dimen/medium_font_size" />
 
             <Button
@@ -157,12 +185,17 @@
 
         </LinearLayout>
 
-        <org.thoughtcrime.securesms.home.NewConversationButtonSetView
-            android:id="@+id/newConversationButtonSet"
-            android:layout_width="276dp"
-            android:layout_height="236dp"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/newConversationButton"
+            android:contentDescription="@string/AccessibilityId_new_conversation_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/new_conversation_button_background"
+            android:layout_marginBottom="@dimen/new_conversation_button_bottom_offset"
+            android:src="@drawable/ic_plus"
+            app:tint="@color/white" />
 
     </RelativeLayout>
 

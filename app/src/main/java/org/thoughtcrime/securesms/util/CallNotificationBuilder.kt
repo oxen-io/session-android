@@ -1,12 +1,10 @@
 package org.thoughtcrime.securesms.util
 
 import android.app.Notification
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.os.Build
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
@@ -32,15 +30,7 @@ class CallNotificationBuilder {
         @JvmStatic
         fun areNotificationsEnabled(context: Context): Boolean {
             val notificationManager = NotificationManagerCompat.from(context)
-            return when {
-                !notificationManager.areNotificationsEnabled() -> false
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
-                    notificationManager.notificationChannels.firstOrNull { channel ->
-                        channel.importance == NotificationManager.IMPORTANCE_NONE
-                    } == null
-                }
-                else -> true
-            }
+            return notificationManager.areNotificationsEnabled()
         }
 
         @JvmStatic

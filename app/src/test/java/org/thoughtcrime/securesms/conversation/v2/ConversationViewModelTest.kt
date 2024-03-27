@@ -1,33 +1,36 @@
 package org.thoughtcrime.securesms.conversation.v2
 
 import com.goterl.lazysodium.utils.KeyPair
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import org.hamcrest.CoreMatchers.endsWith
 import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.notNullValue
+import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mockito
 import org.mockito.Mockito.anyLong
 import org.mockito.Mockito.anySet
-import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.BaseViewModelTest
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.repository.ConversationRepository
 import org.thoughtcrime.securesms.repository.ResultOf
-import org.mockito.Mockito.`when` as whenever
 
 class ConversationViewModelTest: BaseViewModelTest() {
 
-    private val repository = mock(ConversationRepository::class.java)
-    private val storage = mock(Storage::class.java)
+    private val repository = mock<ConversationRepository>()
+    private val storage = mock<Storage>()
 
     private val threadId = 123L
-    private val edKeyPair = mock(KeyPair::class.java)
+    private val edKeyPair = mock<KeyPair>()
     private lateinit var recipient: Recipient
 
     private val viewModel: ConversationViewModel by lazy {
@@ -36,14 +39,9 @@ class ConversationViewModelTest: BaseViewModelTest() {
 
     @Before
     fun setUp() {
-        recipient = mock(Recipient::class.java)
-        whenever(repository.isOxenHostedOpenGroup(anyLong())).thenReturn(true)
+        recipient = mock()
         whenever(repository.maybeGetRecipientForThreadId(anyLong())).thenReturn(recipient)
-    }
-
-    @Test
-    fun `should emit group type on init`() = runBlockingTest {
-        assertTrue(viewModel.uiState.first().isOxenHostedOpenGroup)
+        whenever(repository.recipientUpdateFlow(anyLong())).thenReturn(emptyFlow())
     }
 
     @Test
@@ -52,7 +50,8 @@ class ConversationViewModelTest: BaseViewModelTest() {
 
         viewModel.saveDraft(draft)
 
-        verify(repository).saveDraft(threadId, draft)
+        // The above is an async process to wait 100ms to give it a chance to complete
+        verify(repository, Mockito.timeout(100).times(1)).saveDraft(threadId, draft)
     }
 
     @Test
@@ -86,7 +85,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
 
     @Test
     fun `should delete locally`() {
-        val message = mock(MessageRecord::class.java)
+        val message = mock<MessageRecord>()
 
         viewModel.deleteLocally(message)
 
@@ -95,7 +94,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
 
     @Test
     fun `should emit error message on failure to delete a message for everyone`() = runBlockingTest {
-        val message = mock(MessageRecord::class.java)
+        val message = mock<MessageRecord>()
         val error = Throwable()
         whenever(repository.deleteForEveryone(anyLong(), any(), any()))
             .thenReturn(ResultOf.Failure(error))
@@ -108,7 +107,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
     @Test
     fun `should emit error message on failure to delete messages without unsend request`() =
         runBlockingTest {
-            val message = mock(MessageRecord::class.java)
+            val message = mock<MessageRecord>()
             val error = Throwable()
             whenever(repository.deleteMessageWithoutUnsendRequest(anyLong(), anySet()))
                 .thenReturn(ResultOf.Failure(error))
@@ -186,6 +185,32 @@ class ConversationViewModelTest: BaseViewModelTest() {
         viewModel.messageShown(viewModel.uiState.first().uiMessages.first().id)
         // Then it should be removed
         assertThat(viewModel.uiState.value.uiMessages.size, equalTo(0))
+    }
+
+    @Test
+    fun `open group recipient should have no blinded recipient`() {
+        whenever(recipient.isOpenGroupRecipient).thenReturn(true)
+        whenever(recipient.isOpenGroupOutboxRecipient).thenReturn(false)
+        whenever(recipient.isOpenGroupInboxRecipient).thenReturn(false)
+        assertThat(viewModel.blindedRecipient, nullValue())
+    }
+
+    @Test
+    fun `local recipient should have input and no blinded recipient`() {
+        whenever(recipient.isLocalNumber).thenReturn(true)
+        assertThat(viewModel.hidesInputBar(), equalTo(false))
+        assertThat(viewModel.blindedRecipient, nullValue())
+    }
+
+    @Test
+    fun `contact recipient should hide input bar if not accepting requests`() {
+        whenever(recipient.isOpenGroupInboxRecipient).thenReturn(true)
+        val blinded = mock<Recipient> {
+            whenever(it.blocksCommunityMessageRequests).thenReturn(true)
+        }
+        whenever(repository.maybeGetBlindedRecipient(recipient)).thenReturn(blinded)
+        assertThat(viewModel.blindedRecipient, notNullValue())
+        assertThat(viewModel.hidesInputBar(), equalTo(true))
     }
 
 }

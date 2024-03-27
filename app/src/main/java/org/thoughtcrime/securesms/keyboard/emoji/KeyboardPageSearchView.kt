@@ -95,7 +95,6 @@ class KeyboardPageSearchView @JvmOverloads constructor(
       val iconTint = typedArray.getColorStateList(R.styleable.KeyboardPageSearchView_search_icon_tint) ?: ContextCompat.getColorStateList(context, R.color.signal_icon_tint_tab_selected)
       ImageViewCompat.setImageTintList(navButton, iconTint)
       ImageViewCompat.setImageTintList(clearButton, iconTint)
-      input.setHintTextColor(iconTint)
 
       val clickOnly: Boolean = typedArray.getBoolean(R.styleable.KeyboardPageSearchView_click_only, false)
       if (clickOnly) {
@@ -155,7 +154,7 @@ class KeyboardPageSearchView @JvmOverloads constructor(
         .setDuration(REVEAL_DURATION)
         .alpha(0f)
         .setListener(object : AnimationCompleteListener() {
-          override fun onAnimationEnd(animation: Animator?) {
+          override fun onAnimationEnd(animation: Animator) {
             visibility = INVISIBLE
           }
         })

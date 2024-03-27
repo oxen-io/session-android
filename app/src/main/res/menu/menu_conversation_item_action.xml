@@ -27,15 +27,15 @@
         app:showAsAction="never" />
 
     <item
-        android:title="@string/conversation_context__menu_message_details"
-        android:id="@+id/menu_context_select_message"
-        app:showAsAction="never" />
-
-    <item
         android:title="@string/conversation_context__menu_copy_text"
         android:id="@+id/menu_context_copy"
         android:icon="?menu_copy_icon"
         app:showAsAction="always" />
+
+    <item
+        android:title="@string/conversation_context__menu_resync_message"
+        android:id="@+id/menu_context_resync"
+        app:showAsAction="never" />
 
     <item
         android:title="@string/conversation_context__menu_resend_message"

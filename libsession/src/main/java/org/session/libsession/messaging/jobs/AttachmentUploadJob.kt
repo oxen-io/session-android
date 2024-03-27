@@ -16,7 +16,11 @@ import org.session.libsession.utilities.DecodedAudio
 import org.session.libsession.utilities.InputStreamMediaDataSource
 import org.session.libsession.utilities.UploadResult
 import org.session.libsignal.messages.SignalServiceAttachmentStream
-import org.session.libsignal.streams.*
+import org.session.libsignal.streams.AttachmentCipherOutputStream
+import org.session.libsignal.streams.AttachmentCipherOutputStreamFactory
+import org.session.libsignal.streams.DigestingRequestBody
+import org.session.libsignal.streams.PaddingInputStream
+import org.session.libsignal.streams.PlaintextOutputStreamFactory
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.PushAttachmentData
 import org.session.libsignal.utilities.Util
@@ -45,29 +49,29 @@ class AttachmentUploadJob(val attachmentID: Long, val threadID: String, val mess
         private val MESSAGE_SEND_JOB_ID_KEY = "message_send_job_id"
     }
 
-    override fun execute() {
+    override suspend fun execute(dispatcherName: String) {
         try {
             val storage = MessagingModuleConfiguration.shared.storage
             val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
             val attachment = messageDataProvider.getScaledSignalAttachmentStream(attachmentID)
-                ?: return handleFailure(Error.NoAttachment)
+                ?: return handleFailure(dispatcherName, Error.NoAttachment)
             val openGroup = storage.getOpenGroup(threadID.toLong())
             if (openGroup != null) {
                 val keyAndResult = upload(attachment, openGroup.server, false) {
                     OpenGroupApi.upload(it, openGroup.room, openGroup.server)
                 }
-                handleSuccess(attachment, keyAndResult.first, keyAndResult.second)
+                handleSuccess(dispatcherName, attachment, keyAndResult.first, keyAndResult.second)
             } else {
                 val keyAndResult = upload(attachment, FileServerApi.server, true) {
                     FileServerApi.upload(it)
                 }
-                handleSuccess(attachment, keyAndResult.first, keyAndResult.second)
+                handleSuccess(dispatcherName, attachment, keyAndResult.first, keyAndResult.second)
             }
         } catch (e: java.lang.Exception) {
             if (e == Error.NoAttachment) {
-                this.handlePermanentFailure(e)
+                this.handlePermanentFailure(dispatcherName, e)
             } else {
-                this.handleFailure(e)
+                this.handleFailure(dispatcherName, e)
             }
         }
     }
@@ -104,9 +108,9 @@ class AttachmentUploadJob(val attachmentID: Long, val threadID: String, val mess
         return Pair(key, UploadResult(id, "${server}/file/$id", digest))
     }
 
-    private fun handleSuccess(attachment: SignalServiceAttachmentStream, attachmentKey: ByteArray, uploadResult: UploadResult) {
+    private fun handleSuccess(dispatcherName: String, attachment: SignalServiceAttachmentStream, attachmentKey: ByteArray, uploadResult: UploadResult) {
         Log.d(TAG, "Attachment uploaded successfully.")
-        delegate?.handleJobSucceeded(this)
+        delegate?.handleJobSucceeded(this, dispatcherName)
         val messageDataProvider = MessagingModuleConfiguration.shared.messageDataProvider
         messageDataProvider.handleSuccessfulAttachmentUpload(attachmentID, attachment, attachmentKey, uploadResult)
         if (attachment.contentType.startsWith("audio/")) {
@@ -144,16 +148,16 @@ class AttachmentUploadJob(val attachmentID: Long, val threadID: String, val mess
         storage.resumeMessageSendJobIfNeeded(messageSendJobID)
     }
 
-    private fun handlePermanentFailure(e: Exception) {
+    private fun handlePermanentFailure(dispatcherName: String, e: Exception) {
         Log.w(TAG, "Attachment upload failed permanently due to error: $this.")
-        delegate?.handleJobFailedPermanently(this, e)
+        delegate?.handleJobFailedPermanently(this, dispatcherName, e)
         MessagingModuleConfiguration.shared.messageDataProvider.handleFailedAttachmentUpload(attachmentID)
         failAssociatedMessageSendJob(e)
     }
 
-    private fun handleFailure(e: Exception) {
+    private fun handleFailure(dispatcherName: String, e: Exception) {
         Log.w(TAG, "Attachment upload failed due to error: $this.")
-        delegate?.handleJobFailed(this, e)
+        delegate?.handleJobFailed(this, dispatcherName, e)
         if (failureCount + 1 >= maxFailureCount) {
             failAssociatedMessageSendJob(e)
         }

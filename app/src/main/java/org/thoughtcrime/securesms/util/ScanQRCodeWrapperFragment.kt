@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import com.tbruyelle.rxpermissions2.RxPermissions
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.qr.ScanListener
-import org.thoughtcrime.securesms.util.ScanQRCodeFragment
 
 class ScanQRCodeWrapperFragment : Fragment(), ScanQRCodePlaceholderFragmentDelegate, ScanListener {
 
@@ -30,6 +29,7 @@ class ScanQRCodeWrapperFragment : Fragment(), ScanQRCodePlaceholderFragmentDeleg
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         enabled = isVisibleToUser
@@ -80,14 +80,14 @@ class ScanQRCodeWrapperFragment : Fragment(), ScanQRCodePlaceholderFragmentDeleg
         }
     }
 
-    override fun onQrDataFound(string: String) {
+    override fun onQrDataFound(data: String) {
         activity?.runOnUiThread {
-            delegate?.handleQRCodeScanned(string)
+            delegate?.handleQRCodeScanned(data)
         }
     }
 }
 
-interface ScanQRCodeWrapperFragmentDelegate {
+fun interface ScanQRCodeWrapperFragmentDelegate {
 
     fun handleQRCodeScanned(string: String)
 }

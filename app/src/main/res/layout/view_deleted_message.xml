@@ -15,16 +15,17 @@
         android:layout_height="16dp"
         android:layout_marginStart="@dimen/small_spacing"
         android:src="?menu_trash_icon"
-        app:tint="@color/text" />
+        app:tint="?android:textColorPrimary" />
 
     <TextView
         android:id="@+id/deleteTitleTextView"
+        android:contentDescription="@string/AccessibilityId_deleted_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="@dimen/small_spacing"
         android:textSize="@dimen/very_small_font_size"
-        android:textColor="@color/text"
+        android:textColor="?android:textColorPrimary"
         tools:text="This message has been deleted"
         android:maxLines="2"
         android:ellipsize="end" />

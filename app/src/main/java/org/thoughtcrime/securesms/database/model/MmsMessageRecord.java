@@ -2,13 +2,15 @@ package org.thoughtcrime.securesms.database.model;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import org.session.libsession.utilities.Contact;
+
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview;
-import org.session.libsession.utilities.recipients.Recipient;
+import org.session.libsession.utilities.Contact;
 import org.session.libsession.utilities.IdentityKeyMismatch;
 import org.session.libsession.utilities.NetworkFailure;
+import org.session.libsession.utilities.recipients.Recipient;
 import org.thoughtcrime.securesms.mms.Slide;
 import org.thoughtcrime.securesms.mms.SlideDeck;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,9 +27,9 @@ public abstract class MmsMessageRecord extends MessageRecord {
     List<NetworkFailure> networkFailures, long expiresIn,
     long expireStarted, @NonNull SlideDeck slideDeck, int readReceiptCount,
     @Nullable Quote quote, @NonNull List<Contact> contacts,
-    @NonNull List<LinkPreview> linkPreviews, boolean unidentified, List<ReactionRecord> reactions)
+    @NonNull List<LinkPreview> linkPreviews, boolean unidentified, List<ReactionRecord> reactions, boolean hasMention)
   {
-    super(id, body, conversationRecipient, individualRecipient, dateSent, dateReceived, threadId, deliveryStatus, deliveryReceiptCount, type, mismatches, networkFailures, expiresIn, expireStarted, readReceiptCount, unidentified, reactions);
+    super(id, body, conversationRecipient, individualRecipient, dateSent, dateReceived, threadId, deliveryStatus, deliveryReceiptCount, type, mismatches, networkFailures, expiresIn, expireStarted, readReceiptCount, unidentified, reactions, hasMention);
     this.slideDeck = slideDeck;
     this.quote     = quote;
     this.contacts.addAll(contacts);

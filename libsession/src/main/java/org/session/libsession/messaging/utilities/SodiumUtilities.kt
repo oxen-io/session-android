@@ -205,7 +205,7 @@ object SodiumUtilities {
     }
 
     fun decrypt(ciphertext: ByteArray, decryptionKey: ByteArray, nonce: ByteArray): ByteArray? {
-        val plaintextSize = ciphertext.size - AEAD.CHACHA20POLY1305_ABYTES
+        val plaintextSize = ciphertext.size - AEAD.XCHACHA20POLY1305_IETF_ABYTES
         val plaintext = ByteArray(plaintextSize)
         return if (sodium.cryptoAeadXChaCha20Poly1305IetfDecrypt(
                 plaintext,

@@ -4,12 +4,13 @@ package org.thoughtcrime.securesms.notifications;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+
 import androidx.core.app.NotificationCompat;
 
-import org.session.libsession.utilities.recipients.Recipient;
-import org.thoughtcrime.securesms.home.HomeActivity;
 import org.session.libsession.utilities.NotificationPrivacyPreference;
 import org.session.libsession.utilities.TextSecurePreferences;
+import org.session.libsession.utilities.recipients.Recipient;
+import org.thoughtcrime.securesms.home.HomeActivity;
 
 import network.loki.messenger.R;
 
@@ -28,7 +29,7 @@ public class PendingMessageNotificationBuilder extends AbstractNotificationBuild
     setContentText(context.getString(R.string.MessageNotifier_you_have_pending_signal_messages));
     setTicker(context.getString(R.string.MessageNotifier_you_have_pending_signal_messages));
 
-    setContentIntent(PendingIntent.getActivity(context, 0, intent, 0));
+    setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE));
     setAutoCancel(true);
     setAlarms(null, Recipient.VibrateState.DEFAULT);
 

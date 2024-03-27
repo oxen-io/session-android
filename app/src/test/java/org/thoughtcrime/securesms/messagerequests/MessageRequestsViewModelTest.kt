@@ -26,9 +26,9 @@ class MessageRequestsViewModelTest : BaseViewModelTest() {
 
     @Test
     fun `should clear all message requests`() = runBlockingTest {
-        viewModel.clearAllMessageRequests()
+        viewModel.clearAllMessageRequests(block = false)
 
-        verify(repository).clearAllMessageRequests()
+        verify(repository).clearAllMessageRequests(block = false)
     }
 
 }

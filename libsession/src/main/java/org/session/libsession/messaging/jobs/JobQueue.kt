@@ -26,7 +26,7 @@ class JobQueue : JobDelegate {
     private val jobTimestampMap = ConcurrentHashMap<Long, AtomicInteger>()
     private val rxDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
     private val rxMediaDispatcher = Executors.newFixedThreadPool(4).asCoroutineDispatcher()
-    private val openGroupDispatcher = Executors.newCachedThreadPool().asCoroutineDispatcher()
+    private val openGroupDispatcher = Executors.newFixedThreadPool(8).asCoroutineDispatcher()
     private val txDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
     private val scope = CoroutineScope(Dispatchers.Default) + SupervisorJob()
     private val queue = Channel<Job>(UNLIMITED)
@@ -53,10 +53,10 @@ class JobQueue : JobDelegate {
             }
             if (openGroupId.isNullOrEmpty()) {
                 Log.e("OpenGroupDispatcher", "Open Group ID was null on ${job.javaClass.simpleName}")
-                handleJobFailedPermanently(job, NullPointerException("Open Group ID was null"))
+                handleJobFailedPermanently(job, name, NullPointerException("Open Group ID was null"))
             } else {
                 val groupChannel = if (!openGroupChannels.containsKey(openGroupId)) {
-                    Log.d("OpenGroupDispatcher", "Creating $openGroupId channel")
+                    Log.d("OpenGroupDispatcher", "Creating ${openGroupId.hashCode()} channel")
                     val newGroupChannel = Channel<Job>(UNLIMITED)
                     launch(dispatcher) {
                         for (groupJob in newGroupChannel) {
@@ -94,10 +94,17 @@ class JobQueue : JobDelegate {
         }
     }
 
-    private fun Job.process(dispatcherName: String) {
-        Log.d(dispatcherName,"processJob: ${javaClass.simpleName}")
+    private suspend fun Job.process(dispatcherName: String) {
+        Log.d(dispatcherName,"processJob: ${javaClass.simpleName} (id: $id)")
         delegate = this@JobQueue
-        execute()
+
+        try {
+            execute(dispatcherName)
+        }
+        catch (e: Exception) {
+            Log.d(dispatcherName, "unhandledJobException: ${javaClass.simpleName} (id: $id)")
+            this@JobQueue.handleJobFailed(this, dispatcherName, e)
+        }
     }
 
     init {
@@ -115,9 +122,10 @@ class JobQueue : JobDelegate {
 
             while (isActive) {
                 when (val job = queue.receive()) {
-                    is NotifyPNServerJob, is AttachmentUploadJob, is MessageSendJob -> {
+                    is NotifyPNServerJob, is AttachmentUploadJob, is MessageSendJob, is ConfigurationSyncJob -> {
                         txQueue.send(job)
                     }
+                    is RetrieveProfileAvatarJob,
                     is AttachmentDownloadJob -> {
                         mediaQueue.send(job)
                     }
@@ -136,7 +144,7 @@ class JobQueue : JobDelegate {
                         }
                     }
                     else -> {
-                        throw IllegalStateException("Unexpected job type.")
+                        throw IllegalStateException("Unexpected job type: ${job.getFactoryKey()}")
                     }
                 }
             }
@@ -177,7 +185,7 @@ class JobQueue : JobDelegate {
             return
         }
         if (!pendingJobIds.add(id)) {
-            Log.e("Loki","tried to re-queue pending/in-progress job")
+            Log.e("Loki","tried to re-queue pending/in-progress job (id: $id)")
             return
         }
         queue.trySend(job)
@@ -196,7 +204,7 @@ class JobQueue : JobDelegate {
             }
         }
         pendingJobs.sortedBy { it.id }.forEach { job ->
-            Log.i("Loki", "Resuming pending job of type: ${job::class.simpleName}.")
+            Log.i("Loki", "Resuming pending job of type: ${job::class.simpleName} (id: ${job.id}).")
             queue.trySend(job) // Offer always called on unlimited capacity
         }
     }
@@ -217,27 +225,29 @@ class JobQueue : JobDelegate {
             GroupAvatarDownloadJob.KEY,
             BackgroundGroupAddJob.KEY,
             OpenGroupDeleteJob.KEY,
+            RetrieveProfileAvatarJob.KEY,
+            ConfigurationSyncJob.KEY,
         )
         allJobTypes.forEach { type ->
             resumePendingJobs(type)
         }
     }
 
-    override fun handleJobSucceeded(job: Job) {
+    override fun handleJobSucceeded(job: Job, dispatcherName: String) {
         val jobId = job.id ?: return
         MessagingModuleConfiguration.shared.storage.markJobAsSucceeded(jobId)
         pendingJobIds.remove(jobId)
     }
 
-    override fun handleJobFailed(job: Job, error: Exception) {
+    override fun handleJobFailed(job: Job, dispatcherName: String, error: Exception) {
         // Canceled
         val storage = MessagingModuleConfiguration.shared.storage
         if (storage.isJobCanceled(job)) {
-            return Log.i("Loki", "${job::class.simpleName} canceled.")
+            return Log.i("Loki", "${job::class.simpleName} canceled (id: ${job.id}).")
         }
         // Message send jobs waiting for the attachment to upload
         if (job is MessageSendJob && error is MessageSendJob.AwaitingAttachmentUploadException) {
-            Log.i("Loki", "Message send job waiting for attachment upload to finish.")
+            Log.i("Loki", "Message send job waiting for attachment upload to finish (id: ${job.id}).")
             return
         }
 
@@ -255,21 +265,22 @@ class JobQueue : JobDelegate {
         job.failureCount += 1
 
         if (job.failureCount >= job.maxFailureCount) {
-            handleJobFailedPermanently(job, error)
+            handleJobFailedPermanently(job, dispatcherName, error)
         } else {
             storage.persistJob(job)
             val retryInterval = getRetryInterval(job)
-            Log.i("Loki", "${job::class.simpleName} failed; scheduling retry (failure count is ${job.failureCount}).")
+            Log.i("Loki", "${job::class.simpleName} failed (id: ${job.id}); scheduling retry (failure count is ${job.failureCount}).")
             timer.schedule(delay = retryInterval) {
-                Log.i("Loki", "Retrying ${job::class.simpleName}.")
+                Log.i("Loki", "Retrying ${job::class.simpleName} (id: ${job.id}).")
                 queue.trySend(job)
             }
         }
     }
 
-    override fun handleJobFailedPermanently(job: Job, error: Exception) {
+    override fun handleJobFailedPermanently(job: Job, dispatcherName: String, error: Exception) {
         val jobId = job.id ?: return
         handleJobFailedPermanently(jobId)
+        Log.d(dispatcherName, "permanentlyFailedJob: ${javaClass.simpleName} (id: ${job.id})")
     }
 
     private fun handleJobFailedPermanently(jobId: String) {

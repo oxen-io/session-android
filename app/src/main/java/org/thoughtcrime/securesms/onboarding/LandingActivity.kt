@@ -14,6 +14,11 @@ class LandingActivity : BaseActionBarActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // We always hit this LandingActivity on launch - but if there is a previous instance of
+        // Session then close this activity to resume the last activity from the previous instance.
+        if (!isTaskRoot) { finish(); return }
+
         val binding = ActivityLandingBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setUpActionBarSessionLogo(true)

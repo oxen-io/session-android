@@ -12,6 +12,7 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.X509TrustManager
 
 object HTTP {
+    var isConnectedToNetwork: (() -> Boolean) = { false }
 
     private val seedNodeConnection by lazy {
         OkHttpClient().newBuilder()
@@ -64,8 +65,12 @@ object HTTP {
 
     private const val timeout: Long = 120
 
-    class HTTPRequestFailedException(val statusCode: Int, val json: Map<*, *>?)
-        : kotlin.Exception("HTTP request failed with status code $statusCode.")
+    open class HTTPRequestFailedException(
+        val statusCode: Int,
+        val json: Map<*, *>?,
+        message: String = "HTTP request failed with status code $statusCode"
+    ) : kotlin.Exception(message)
+    class HTTPNoNetworkException : HTTPRequestFailedException(0, null, "No network connection")
 
     enum class Verb(val rawValue: String) {
         GET("GET"), PUT("PUT"), POST("POST"), DELETE("DELETE")
@@ -120,8 +125,11 @@ object HTTP {
             response = connection.newCall(request.build()).execute()
         } catch (exception: Exception) {
             Log.d("Loki", "${verb.rawValue} request to $url failed due to error: ${exception.localizedMessage}.")
+
+            if (!isConnectedToNetwork()) { throw HTTPNoNetworkException() }
+
             // Override the actual error so that we can correctly catch failed requests in OnionRequestAPI
-            throw HTTPRequestFailedException(0, null)
+            throw HTTPRequestFailedException(0, null, "HTTP request failed due to: ${exception.message}")
         }
         return when (val statusCode = response.code()) {
             200 -> {

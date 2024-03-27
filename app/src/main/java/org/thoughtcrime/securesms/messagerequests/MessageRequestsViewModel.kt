@@ -25,8 +25,8 @@ class MessageRequestsViewModel @Inject constructor(
         repository.deleteMessageRequest(thread)
     }
 
-    fun clearAllMessageRequests() = viewModelScope.launch {
-        repository.clearAllMessageRequests()
+    fun clearAllMessageRequests(block: Boolean) = viewModelScope.launch {
+        repository.clearAllMessageRequests(block)
     }
 
 }

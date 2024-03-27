@@ -12,7 +12,6 @@
         android:layout_height="match_parent" >
 
         <com.google.android.material.tabs.TabLayout
-            style="@style/Widget.Session.TabLayout"
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/tab_bar_height" />
@@ -20,9 +19,9 @@
     </androidx.viewpager.widget.ViewPager>
 
     <FrameLayout
-        android:animateLayoutChanges="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
 
         <RelativeLayout
             android:id="@+id/loader"
@@ -35,8 +34,8 @@
                 style="@style/SpinKitView.Large.ThreeBounce"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_centerInParent="true"
+                android:layout_marginTop="8dp"
                 app:SpinKit_Color="@android:color/white" />
 
         </RelativeLayout>

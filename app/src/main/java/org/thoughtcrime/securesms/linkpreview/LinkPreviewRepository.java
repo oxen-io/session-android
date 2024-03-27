@@ -1,5 +1,7 @@
 package org.thoughtcrime.securesms.linkpreview;
 
+import static org.session.libsession.utilities.Util.readFully;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,8 +9,6 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.google.android.gms.common.util.IOUtils;
 
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment;
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress;
@@ -148,7 +148,7 @@ public class LinkPreviewRepository {
         InputStream bodyStream = response.body().byteStream();
         controller.setStream(bodyStream);
 
-        byte[]               data      = IOUtils.readInputStreamFully(bodyStream);
+        byte[]               data      = readFully(bodyStream);
         Bitmap               bitmap    = BitmapFactory.decodeByteArray(data, 0, data.length);
         Optional<Attachment> thumbnail = bitmapToAttachment(bitmap, Bitmap.CompressFormat.JPEG, MediaTypes.IMAGE_JPEG);
 

@@ -20,7 +20,7 @@ class TrimThreadJob(val threadId: Long, val openGroupId: String?) : Job {
         const val THREAD_LENGTH_TRIGGER_SIZE = 2000
     }
 
-    override fun execute() {
+    override suspend fun execute(dispatcherName: String) {
         val context = MessagingModuleConfiguration.shared.context
         val trimmingEnabled = TextSecurePreferences.isThreadLengthTrimmingEnabled(context)
         val storage = MessagingModuleConfiguration.shared.storage
@@ -29,7 +29,7 @@ class TrimThreadJob(val threadId: Long, val openGroupId: String?) : Job {
             val oldestMessageTime = System.currentTimeMillis() - TRIM_TIME_LIMIT
             storage.trimThreadBefore(threadId, oldestMessageTime)
         }
-        delegate?.handleJobSucceeded(this)
+        delegate?.handleJobSucceeded(this, dispatcherName)
     }
 
     override fun serialize(): Data {

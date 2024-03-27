@@ -25,22 +25,25 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.ServiceInfo;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import org.session.libsession.utilities.ServiceUtil;
+import org.session.libsession.utilities.TextSecurePreferences;
+import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.DatabaseUpgradeActivity;
 import org.thoughtcrime.securesms.DummyActivity;
-import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.home.HomeActivity;
 import org.thoughtcrime.securesms.notifications.NotificationChannels;
-import org.session.libsession.utilities.ServiceUtil;
-import org.session.libsession.utilities.TextSecurePreferences;
 
 import java.util.concurrent.TimeUnit;
 
@@ -249,24 +252,28 @@ public class KeyCachingService extends Service {
     builder.setContentIntent(buildLaunchIntent());
 
     stopForeground(true);
-    startForeground(SERVICE_RUNNING_ID, builder.build());
+    if (Build.VERSION.SDK_INT >= 34) {
+      startForeground(SERVICE_RUNNING_ID, builder.build(), ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
+    } else {
+      startForeground(SERVICE_RUNNING_ID, builder.build());
+    }
   }
 
   private PendingIntent buildLockIntent() {
     Intent intent = new Intent(this, KeyCachingService.class);
     intent.setAction(PASSPHRASE_EXPIRED_EVENT);
-    return PendingIntent.getService(getApplicationContext(), 0, intent, 0);
+    return PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
   }
 
   private PendingIntent buildLaunchIntent() {
     Intent intent              = new Intent(this, HomeActivity.class);
     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-    return PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
+    return PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
   }
 
   private static PendingIntent buildExpirationPendingIntent(@NonNull Context context) {
     Intent expirationIntent = new Intent(PASSPHRASE_EXPIRED_EVENT, null, context, KeyCachingService.class);
-    return PendingIntent.getService(context, 0, expirationIntent, 0);
+    return PendingIntent.getService(context, 0, expirationIntent, PendingIntent.FLAG_IMMUTABLE);
   }
 
   @Override

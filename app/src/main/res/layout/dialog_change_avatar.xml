@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+
+    <FrameLayout
+        android:layout_gravity="center"
+        android:id="@+id/ic_pictures"
+        android:background="@drawable/circle_tintable"
+        android:backgroundTint="@color/classic_dark_3"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:layout_width="@dimen/large_profile_picture_size"
+        android:layout_height="@dimen/large_profile_picture_size">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:src="@drawable/ic_pictures"/>
+
+        <!-- TODO: Add this back when we build the custom modal which allows tapping on the image to select a replacement-->
+<!--        <LinearLayout-->
+<!--            android:layout_gravity="bottom|end"-->
+<!--            android:gravity="center"-->
+<!--            android:background="@drawable/circle_tintable"-->
+<!--            android:backgroundTint="?attr/accentColor"-->
+<!--            android:paddingTop="1dp"-->
+<!--            android:paddingLeft="1dp"-->
+<!--            android:layout_width="24dp"-->
+<!--            android:layout_height="24dp"-->
+<!--            tools:backgroundTint="@color/accent_green">-->
+<!--            <View-->
+<!--                android:background="@drawable/ic_plus"-->
+<!--                android:backgroundTint="@color/black"-->
+<!--                android:layout_width="12dp"-->
+<!--                android:layout_height="12dp"-->
+<!--                />-->
+<!--        </LinearLayout>-->
+
+
+    </FrameLayout>
+
+    <org.thoughtcrime.securesms.components.ProfilePictureView
+        android:layout_margin="30dp"
+        android:id="@+id/profile_picture_view"
+        android:layout_gravity="center"
+        android:layout_width="@dimen/large_profile_picture_size"
+        android:layout_height="@dimen/large_profile_picture_size"
+        android:layout_marginTop="@dimen/medium_spacing"
+        android:contentDescription="@string/AccessibilityId_profile_picture"
+        tools:visibility="gone"/>
+
+</FrameLayout>

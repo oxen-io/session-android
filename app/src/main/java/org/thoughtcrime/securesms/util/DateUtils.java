@@ -67,7 +67,8 @@ public class DateUtils extends android.text.format.DateUtils {
   }
 
   public static String getDisplayFormattedTimeSpanString(final Context c, final Locale locale, final long timestamp) {
-    if (isWithin(timestamp, 1, TimeUnit.MINUTES)) {
+    // If the timestamp is invalid (ie. 0) then assume we're waiting on data and just use the 'Now' copy
+    if (timestamp == 0 || isWithin(timestamp, 1, TimeUnit.MINUTES)) {
       return c.getString(R.string.DateUtils_just_now);
     } else if (isToday(timestamp)) {
       return getFormattedDateTime(timestamp, getHourFormat(c), locale);

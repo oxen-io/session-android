@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.text.TextUtils;
 
-import net.sqlcipher.database.SQLiteDatabase;
+import net.zetetic.database.sqlcipher.SQLiteDatabase;
 
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.Document;
@@ -14,6 +14,7 @@ import org.session.libsession.utilities.IdentityKeyMismatchList;
 import org.session.libsignal.crypto.IdentityKey;
 import org.session.libsignal.utilities.JsonUtil;
 import org.session.libsignal.utilities.Log;
+import org.thoughtcrime.securesms.conversation.disappearingmessages.ExpiryType;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.util.SqlUtil;
@@ -33,15 +34,22 @@ public abstract class MessagingDatabase extends Database implements MmsSmsColumn
 
   protected abstract String getTableName();
 
-  public abstract void markExpireStarted(long messageId);
   public abstract void markExpireStarted(long messageId, long startTime);
 
   public abstract void markAsSent(long messageId, boolean secure);
+
+  public abstract void markAsSyncing(long id);
+
+  public abstract void markAsResyncing(long id);
+
+  public abstract void markAsSyncFailed(long id);
+
   public abstract void markUnidentified(long messageId, boolean unidentified);
 
-  public abstract void markAsDeleted(long messageId, boolean read);
+  public abstract void markAsDeleted(long messageId, boolean read, boolean hasMention);
 
   public abstract boolean deleteMessage(long messageId);
+  public abstract boolean deleteMessages(long[] messageId, long threadId);
 
   public abstract void updateThreadId(long fromId, long toId);
 
@@ -198,7 +206,6 @@ public abstract class MessagingDatabase extends Database implements MmsSmsColumn
     contentValues.put(THREAD_ID, newThreadId);
     db.update(getTableName(), contentValues, where, args);
   }
-
   public static class SyncMessageId {
 
     private final Address address;
@@ -215,56 +222,6 @@ public abstract class MessagingDatabase extends Database implements MmsSmsColumn
 
     public long getTimetamp() {
       return timetamp;
-    }
-  }
-
-  public static class ExpirationInfo {
-
-    private final long    id;
-    private final long    expiresIn;
-    private final long    expireStarted;
-    private final boolean mms;
-
-    public ExpirationInfo(long id, long expiresIn, long expireStarted, boolean mms) {
-      this.id            = id;
-      this.expiresIn     = expiresIn;
-      this.expireStarted = expireStarted;
-      this.mms           = mms;
-    }
-
-    public long getId() {
-      return id;
-    }
-
-    public long getExpiresIn() {
-      return expiresIn;
-    }
-
-    public long getExpireStarted() {
-      return expireStarted;
-    }
-
-    public boolean isMms() {
-      return mms;
-    }
-  }
-
-  public static class MarkedMessageInfo {
-
-    private final SyncMessageId  syncMessageId;
-    private final ExpirationInfo expirationInfo;
-
-    public MarkedMessageInfo(SyncMessageId syncMessageId, ExpirationInfo expirationInfo) {
-      this.syncMessageId  = syncMessageId;
-      this.expirationInfo = expirationInfo;
-    }
-
-    public SyncMessageId getSyncMessageId() {
-      return syncMessageId;
-    }
-
-    public ExpirationInfo getExpirationInfo() {
-      return expirationInfo;
     }
   }
 

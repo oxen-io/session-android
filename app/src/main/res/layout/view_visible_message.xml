@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView xmlns:android="http://schemas.android.com/apk/res/android"
+<org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/visibleMessageView"
@@ -7,33 +8,67 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/unreadMarkerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/small_spacing"
+        android:visibility="gone"
+        tools:visibility="visible">
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/medium_spacing"
+            android:layout_marginEnd="@dimen/small_spacing"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/unreadMarker"
+            android:background="?android:colorAccent" />
+        <TextView
+            android:id="@+id/unreadMarker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/unread_marker"
+            android:gravity="center"
+            android:textColor="?android:colorAccent"
+            android:textSize="@dimen/small_font_size"
+            android:textStyle="bold" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/small_spacing"
+            android:layout_marginEnd="@dimen/medium_spacing"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/unreadMarker"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="?android:colorAccent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <TextView
         android:id="@+id/dateBreakTextView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/large_spacing"
+        tools:text="@tools:sample/date/hhmmss"
         android:gravity="center"
-        android:textColor="@color/text"
+        android:textColor="?android:textColorPrimary"
         android:textSize="@dimen/very_small_font_size"
-        android:textStyle="bold"
-        tools:text="@tools:sample/date/hhmmss" />
+        android:textStyle="bold" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mainContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/small_spacing"
+        android:layout_marginEnd="@dimen/small_spacing"
         android:gravity="bottom"
         android:paddingBottom="@dimen/small_spacing">
 
-        <View
-            android:id="@+id/startSpacing"
-            android:layout_width="8dp"
-            android:layout_height="1dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <include
+        <org.thoughtcrime.securesms.components.ProfilePictureView
             android:id="@+id/profilePictureView"
-            layout="@layout/view_profile_picture"
             android:layout_marginBottom="@dimen/small_spacing"
             android:layout_marginEnd="@dimen/small_spacing"
             android:layout_width="@dimen/very_small_profile_picture_size"
@@ -41,7 +76,7 @@
             android:layout_gravity="center"
             app:layout_constraintEnd_toStartOf="@+id/messageInnerContainer"
             app:layout_constraintBottom_toBottomOf="@id/messageInnerContainer"
-            app:layout_constraintStart_toEndOf="@+id/startSpacing"
+            app:layout_constraintStart_toStartOf="parent"
             tools:visibility="visible" />
 
         <ImageView
@@ -64,72 +99,80 @@
             android:layout_marginEnd="12dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:textColor="?android:textColorPrimary"
             android:paddingBottom="4dp"
-            android:textColor="@color/text"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/messageInnerContainer"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="@tools:sample/full_names" />
 
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/messageInnerContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="@+id/profilePictureView"
-            app:layout_constraintEnd_toStartOf="@+id/messageTimestampContainer"
             app:layout_constraintStart_toEndOf="@+id/profilePictureView"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/senderNameTextView">
 
-            <org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageContentView
-                android:id="@+id/messageContentView"
+            <LinearLayout
+                android:id="@+id/messageInnerLayout"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <include layout="@layout/view_visible_message_content"
+                    android:id="@+id/messageContentView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+        </FrameLayout>
+
+        <include layout="@layout/view_emoji_reactions"
+            android:id="@+id/emojiReactionsView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/messageInnerContainer"
+            app:layout_constraintTop_toBottomOf="@id/messageInnerContainer" />
+
+        <LinearLayout
+            android:id="@+id/statusContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:baselineAligned="true"
+            app:layout_constraintTop_toBottomOf="@+id/emojiReactionsView"
+            app:layout_constraintStart_toStartOf="@id/messageInnerContainer"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                android:id="@+id/messageStatusTextView"
+                android:contentDescription="@string/AccessibilityId_message_sent_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="2dp"
+                android:layout_gravity="center"
+                android:textSize="@dimen/very_small_font_size"
+                tools:text="Sent" />
+
+            <ImageView
+                android:id="@+id/messageStatusImageView"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_delivery_status_sent" />
 
             <org.thoughtcrime.securesms.conversation.v2.components.ExpirationTimerView
                 android:id="@+id/expirationTimerView"
                 android:layout_width="12dp"
                 android:layout_height="12dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginHorizontal="@dimen/small_spacing"
-                android:visibility="invisible"
-                tools:visibility="visible" />
-
-            <View
-                android:id="@+id/messageContentSpacing"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:minWidth="@dimen/very_large_spacing" />
+                android:layout_gravity="center"
+                android:tint="?message_status_color" />
 
         </LinearLayout>
-
-        <org.thoughtcrime.securesms.conversation.v2.messages.EmojiReactionsView
-            android:id="@+id/emojiReactionsView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintEnd_toStartOf="@+id/messageTimestampContainer"
-            app:layout_constraintStart_toStartOf="@+id/messageInnerContainer"
-            app:layout_constraintTop_toBottomOf="@id/messageInnerContainer" />
-
-        <RelativeLayout
-            android:id="@+id/messageTimestampContainer"
-            android:layout_width="@dimen/medium_spacing"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@+id/messageInnerContainer">
-
-            <ImageView
-                android:id="@+id/messageStatusImageView"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:padding="2dp"
-                android:src="@drawable/ic_delivery_status_sent" />
-
-        </RelativeLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -22,6 +22,7 @@ import androidx.annotation.StringRes;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationCompat.Action;
 import androidx.core.app.RemoteInput;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
@@ -63,9 +64,8 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
   {
     super(context, privacy);
 
-
     setSmallIcon(R.drawable.ic_notification);
-    setColor(context.getResources().getColor(R.color.textsecure_primary));
+    setColor(ContextCompat.getColor(context, R.color.accent_green));
     setCategory(NotificationCompat.CATEGORY_MESSAGE);
 
     if (!NotificationChannels.supported()) {
@@ -99,7 +99,7 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
                   .get();
           setLargeIcon(iconBitmap);
         } catch (InterruptedException | ExecutionException e) {
-          Log.w(TAG, e);
+          Log.w(TAG, "get iconBitmap in getThread failed", e);
           setLargeIcon(getPlaceholderDrawable(context, recipient));
         }
       } else {
@@ -117,15 +117,15 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
     setNumber(messageCount);
   }
 
-  public void setPrimaryMessageBody(@NonNull  Recipient threadRecipients,
+  public void setPrimaryMessageBody(@NonNull  Recipient threadRecipient,
                                     @NonNull  Recipient individualRecipient,
                                     @NonNull  CharSequence message,
                                     @Nullable SlideDeck slideDeck)
   {
     SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
 
-    if (privacy.isDisplayContact() && threadRecipients.isOpenGroupRecipient()) {
-      String displayName = getOpenGroupDisplayName(individualRecipient);
+    if (privacy.isDisplayContact() && threadRecipient.isGroupRecipient()) {
+      String displayName = getGroupDisplayName(individualRecipient, threadRecipient.isOpenGroupRecipient());
       stringBuilder.append(Util.getBoldedString(displayName + ": "));
     }
 
@@ -214,8 +214,8 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
   {
     SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
 
-    if (privacy.isDisplayContact() && threadRecipient.isOpenGroupRecipient()) {
-      String displayName = getOpenGroupDisplayName(individualRecipient);
+    if (privacy.isDisplayContact() && threadRecipient.isGroupRecipient()) {
+      String displayName = getGroupDisplayName(individualRecipient, threadRecipient.isOpenGroupRecipient());
       stringBuilder.append(Util.getBoldedString(displayName + ": "));
     }
 
@@ -298,7 +298,7 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
                      .submit(64, 64)
                      .get();
     } catch (InterruptedException | ExecutionException e) {
-      Log.w(TAG, e);
+      Log.w(TAG, "getBigPicture failed", e);
       return Bitmap.createBitmap(64, 64, Bitmap.Config.RGB_565);
     }
   }
@@ -334,14 +334,15 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
   }
 
   /**
-   * @param recipient the * individual * recipient for which to get the open group display name.
+   * @param recipient          the * individual * recipient for which to get the display name.
+   * @param openGroupRecipient whether in an open group context
    */
-  private String getOpenGroupDisplayName(Recipient recipient) {
+  private String getGroupDisplayName(Recipient recipient, boolean openGroupRecipient) {
     SessionContactDatabase contactDB = DatabaseComponent.get(context).sessionContactDatabase();
     String sessionID = recipient.getAddress().serialize();
     Contact contact = contactDB.getContactWithSessionID(sessionID);
     if (contact == null) { return sessionID; }
-    String displayName = contact.displayName(Contact.ContactContext.OPEN_GROUP);
+    String displayName = contact.displayName(openGroupRecipient ? Contact.ContactContext.OPEN_GROUP : Contact.ContactContext.REGULAR);
     if (displayName == null) { return sessionID; }
     return displayName;
   }

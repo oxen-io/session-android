@@ -54,6 +54,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.session.libsession.messaging.messages.control.DataExtractionNotification;
 import org.session.libsession.messaging.sending_receiving.MessageSender;
+import org.session.libsession.snode.SnodeAPI;
 import org.session.libsession.utilities.Address;
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter;
 import org.thoughtcrime.securesms.database.MediaDatabase;
@@ -75,6 +76,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import kotlin.Unit;
 import network.loki.messenger.R;
 
 /**
@@ -317,9 +319,9 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
     @SuppressWarnings("CodeBlock2Expr")
     @SuppressLint({"InlinedApi", "StaticFieldLeak"})
     private void handleSaveMedia(@NonNull Collection<MediaDatabase.MediaRecord> mediaRecords) {
-      final Context context = getContext();
+      final Context context = requireContext();
 
-      SaveAttachmentTask.showWarningDialog(context, (dialogInterface, which) -> {
+      SaveAttachmentTask.showWarningDialog(context, mediaRecords.size(), () -> {
         Permissions.with(this)
                 .request(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .maxSdkVersion(Build.VERSION_CODES.P)
@@ -361,53 +363,39 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
                   }.execute();
                 })
                 .execute();
-      }, mediaRecords.size());
+        return Unit.INSTANCE;
+      });
     }
 
     private void sendMediaSavedNotificationIfNeeded() {
       if (recipient.isGroupRecipient()) return;
-      DataExtractionNotification message = new DataExtractionNotification(new DataExtractionNotification.Kind.MediaSaved(System.currentTimeMillis()));
+      DataExtractionNotification message = new DataExtractionNotification(new DataExtractionNotification.Kind.MediaSaved(SnodeAPI.getNowWithOffset()));
       MessageSender.send(message, recipient.getAddress());
     }
 
     @SuppressLint("StaticFieldLeak")
     private void handleDeleteMedia(@NonNull Collection<MediaDatabase.MediaRecord> mediaRecords) {
       int recordCount       = mediaRecords.size();
-      Resources res         = getContext().getResources();
-      String confirmTitle   = res.getQuantityString(R.plurals.MediaOverviewActivity_Media_delete_confirm_title,
-                                                    recordCount,
-                                                    recordCount);
-      String confirmMessage = res.getQuantityString(R.plurals.MediaOverviewActivity_Media_delete_confirm_message,
-                                                    recordCount,
-                                                    recordCount);
 
-      AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-      builder.setIconAttribute(R.attr.dialog_alert_icon);
-      builder.setTitle(confirmTitle);
-      builder.setMessage(confirmMessage);
-      builder.setCancelable(true);
-
-      builder.setPositiveButton(R.string.delete, (dialogInterface, i) -> {
-        new ProgressDialogAsyncTask<MediaDatabase.MediaRecord, Void, Void>(getContext(),
-                                                                           R.string.MediaOverviewActivity_Media_delete_progress_title,
-                                                                           R.string.MediaOverviewActivity_Media_delete_progress_message)
-        {
-          @Override
-          protected Void doInBackground(MediaDatabase.MediaRecord... records) {
-            if (records == null || records.length == 0) {
-              return null;
-            }
-
-            for (MediaDatabase.MediaRecord record : records) {
-              AttachmentUtil.deleteAttachment(getContext(), record.getAttachment());
-            }
+      DeleteMediaDialog.show(
+              requireContext(),
+              recordCount,
+              () -> new ProgressDialogAsyncTask<MediaDatabase.MediaRecord, Void, Void>(
+                requireContext(),
+                R.string.MediaOverviewActivity_Media_delete_progress_title,
+                R.string.MediaOverviewActivity_Media_delete_progress_message) {
+        @Override
+        protected Void doInBackground(MediaDatabase.MediaRecord... records) {
+          if (records == null || records.length == 0) {
             return null;
           }
 
-        }.execute(mediaRecords.toArray(new MediaDatabase.MediaRecord[mediaRecords.size()]));
-      });
-      builder.setNegativeButton(android.R.string.cancel, null);
-      builder.show();
+          for (MediaDatabase.MediaRecord record : records) {
+            AttachmentUtil.deleteAttachment(getContext(), record.getAttachment());
+          }
+          return null;
+        }
+      }.execute(mediaRecords.toArray(new MediaDatabase.MediaRecord[mediaRecords.size()])));
     }
 
     private void handleSelectAllMedia() {

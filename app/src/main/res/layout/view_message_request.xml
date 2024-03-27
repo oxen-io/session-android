@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:contentDescription="@string/AccessibilityId_message_request"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
-    <include layout="@layout/view_profile_picture"
+    <org.thoughtcrime.securesms.components.ProfilePictureView
         android:id="@+id/profilePictureView"
         android:layout_width="@dimen/medium_profile_picture_size"
         android:layout_height="@dimen/medium_profile_picture_size"
@@ -41,7 +42,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:textAlignment="viewStart"
-                    android:textColor="@color/text"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="@dimen/medium_font_size"
                     android:textStyle="bold"
                     tools:text="I'm a very long display name. What are you going to do about it?" />
@@ -54,7 +55,7 @@
                     android:alpha="0.4"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="@color/text"
+                    android:textColor="?android:textColorPrimary"
                     android:textSize="@dimen/small_font_size"
                     tools:text="9:41 AM" />
 
@@ -66,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/text"
+                android:textColor="?android:textColorPrimary"
                 android:textSize="@dimen/medium_font_size"
                 tools:text="Sorry, gotta go fight crime again" />
 

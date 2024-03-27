@@ -1,16 +1,22 @@
 package org.thoughtcrime.securesms.home
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.databinding.FragmentConversationBottomSheetBinding
 import org.thoughtcrime.securesms.database.model.ThreadRecord
+import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.util.UiModeUtilities
+import org.thoughtcrime.securesms.util.getConversationUnread
+import javax.inject.Inject
 
-class ConversationOptionsBottomSheet : BottomSheetDialogFragment(), View.OnClickListener {
+@AndroidEntryPoint
+class ConversationOptionsBottomSheet(private val parentContext: Context) : BottomSheetDialogFragment(), View.OnClickListener {
     private lateinit var binding: FragmentConversationBottomSheetBinding
     //FIXME AC: Supplying a threadRecord directly into the field from an activity
     // is not the best idea. It doesn't survive configuration change.
@@ -18,7 +24,10 @@ class ConversationOptionsBottomSheet : BottomSheetDialogFragment(), View.OnClick
     // if we want to use dialog fragments properly.
     lateinit var thread: ThreadRecord
 
+    @Inject lateinit var configFactory: ConfigFactory
+
     var onViewDetailsTapped: (() -> Unit?)? = null
+    var onCopyConversationId: (() -> Unit?)? = null
     var onPinTapped: (() -> Unit)? = null
     var onUnpinTapped: (() -> Unit)? = null
     var onBlockTapped: (() -> Unit)? = null
@@ -28,14 +37,16 @@ class ConversationOptionsBottomSheet : BottomSheetDialogFragment(), View.OnClick
     var onNotificationTapped: (() -> Unit)? = null
     var onSetMuteTapped: ((Boolean) -> Unit)? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentConversationBottomSheetBinding.inflate(inflater, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentConversationBottomSheetBinding.inflate(LayoutInflater.from(parentContext), container, false)
         return binding.root
     }
 
     override fun onClick(v: View?) {
         when (v) {
             binding.detailsTextView -> onViewDetailsTapped?.invoke()
+            binding.copyConversationId -> onCopyConversationId?.invoke()
+            binding.copyCommunityUrl -> onCopyConversationId?.invoke()
             binding.pinTextView -> onPinTapped?.invoke()
             binding.unpinTextView -> onUnpinTapped?.invoke()
             binding.blockTextView -> onBlockTapped?.invoke()
@@ -62,6 +73,10 @@ class ConversationOptionsBottomSheet : BottomSheetDialogFragment(), View.OnClick
         } else {
             binding.detailsTextView.visibility = View.GONE
         }
+        binding.copyConversationId.visibility = if (!recipient.isGroupRecipient && !recipient.isLocalNumber) View.VISIBLE else View.GONE
+        binding.copyConversationId.setOnClickListener(this)
+        binding.copyCommunityUrl.visibility = if (recipient.isOpenGroupRecipient) View.VISIBLE else View.GONE
+        binding.copyCommunityUrl.setOnClickListener(this)
         binding.unMuteNotificationsTextView.isVisible = recipient.isMuted && !recipient.isLocalNumber
         binding.muteNotificationsTextView.isVisible = !recipient.isMuted && !recipient.isLocalNumber
         binding.unMuteNotificationsTextView.setOnClickListener(this)
@@ -69,7 +84,7 @@ class ConversationOptionsBottomSheet : BottomSheetDialogFragment(), View.OnClick
         binding.notificationsTextView.isVisible = recipient.isGroupRecipient && !recipient.isMuted
         binding.notificationsTextView.setOnClickListener(this)
         binding.deleteTextView.setOnClickListener(this)
-        binding.markAllAsReadTextView.isVisible = thread.unreadCount > 0
+        binding.markAllAsReadTextView.isVisible = thread.unreadCount > 0 || configFactory.convoVolatile?.getConversationUnread(thread) == true
         binding.markAllAsReadTextView.setOnClickListener(this)
         binding.pinTextView.isVisible = !thread.isPinned
         binding.unpinTextView.isVisible = thread.isPinned
@@ -80,7 +95,6 @@ class ConversationOptionsBottomSheet : BottomSheetDialogFragment(), View.OnClick
     override fun onStart() {
         super.onStart()
         val window = dialog?.window ?: return
-        val isLightMode = UiModeUtilities.isDayUiMode(requireContext())
-        window.setDimAmount(if (isLightMode) 0.1f else 0.75f)
+        window.setDimAmount(0.6f)
     }
 }

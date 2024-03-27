@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainVoiceMessageViewContainer"
+    android:contentDescription="@string/AccessibilityId_voice_message"
     android:layout_width="160dp"
     android:layout_height="36dp">
 
@@ -11,8 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:background="@color/black"
-        android:alpha="0.2" />
+        android:background="@color/transparent_black_30" />
 
     <View
         android:layout_width="84dp"

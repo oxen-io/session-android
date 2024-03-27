@@ -1,6 +1,7 @@
 package org.session.libsession.utilities
 
 import androidx.annotation.WorkerThread
+import org.session.libsignal.crypto.CipherUtil.CIPHER_LOCK
 import org.session.libsignal.utilities.ByteUtil
 import org.session.libsignal.utilities.Util
 import org.session.libsignal.utilities.Hex
@@ -27,9 +28,11 @@ internal object AESGCM {
     internal fun decrypt(ivAndCiphertext: ByteArray, symmetricKey: ByteArray): ByteArray {
         val iv = ivAndCiphertext.sliceArray(0 until ivSize)
         val ciphertext = ivAndCiphertext.sliceArray(ivSize until ivAndCiphertext.count())
-        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
-        cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(symmetricKey, "AES"), GCMParameterSpec(gcmTagSize, iv))
-        return cipher.doFinal(ciphertext)
+        synchronized(CIPHER_LOCK) {
+            val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+            cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(symmetricKey, "AES"), GCMParameterSpec(gcmTagSize, iv))
+            return cipher.doFinal(ciphertext)
+        }
     }
 
     /**
@@ -47,9 +50,11 @@ internal object AESGCM {
      */
     internal fun encrypt(plaintext: ByteArray, symmetricKey: ByteArray): ByteArray {
         val iv = Util.getSecretBytes(ivSize)
-        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
-        cipher.init(Cipher.ENCRYPT_MODE, SecretKeySpec(symmetricKey, "AES"), GCMParameterSpec(gcmTagSize, iv))
-        return ByteUtil.combine(iv, cipher.doFinal(plaintext))
+        synchronized(CIPHER_LOCK) {
+            val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+            cipher.init(Cipher.ENCRYPT_MODE, SecretKeySpec(symmetricKey, "AES"), GCMParameterSpec(gcmTagSize, iv))
+            return ByteUtil.combine(iv, cipher.doFinal(plaintext))
+        }
     }
 
     /**

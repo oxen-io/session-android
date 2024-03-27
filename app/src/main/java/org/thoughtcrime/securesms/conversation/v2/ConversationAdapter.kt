@@ -1,6 +1,5 @@
 package org.thoughtcrime.securesms.conversation.v2
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
@@ -23,26 +22,33 @@ import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewVisibleMessageBinding
 import org.session.libsession.messaging.contacts.Contact
+import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.conversation.v2.messages.ControlMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageViewDelegate
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter
+import org.thoughtcrime.securesms.database.MmsSmsColumns
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
+import org.thoughtcrime.securesms.showSessionDialog
+import java.util.concurrent.atomic.AtomicLong
+import kotlin.math.min
 
 class ConversationAdapter(
     context: Context,
     cursor: Cursor,
+    originalLastSeen: Long,
+    private val isReversed: Boolean,
     private val onItemPress: (MessageRecord, Int, VisibleMessageView, MotionEvent) -> Unit,
     private val onItemSwipeToReply: (MessageRecord, Int) -> Unit,
     private val onItemLongPress: (MessageRecord, Int, VisibleMessageView) -> Unit,
     private val onDeselect: (MessageRecord, Int) -> Unit,
+    private val onAttachmentNeedsDownload: (Long, Long) -> Unit,
     private val glide: GlideRequests,
     lifecycleCoroutineScope: LifecycleCoroutineScope
-)
-    : CursorRecyclerViewAdapter<ViewHolder>(context, cursor) {
+) : CursorRecyclerViewAdapter<ViewHolder>(context, cursor) {
     private val messageDB by lazy { DatabaseComponent.get(context).mmsSmsDatabase() }
     private val contactDB by lazy { DatabaseComponent.get(context).sessionContactDatabase() }
     var selectedItems = mutableSetOf<MessageRecord>()
@@ -52,6 +58,9 @@ class ConversationAdapter(
     private val updateQueue = Channel<String>(1024, onBufferOverflow = BufferOverflow.DROP_OLDEST)
     private val contactCache = SparseArray<Contact>(100)
     private val contactLoadedCache = SparseBooleanArray(100)
+    private val lastSeen = AtomicLong(originalLastSeen)
+    private var lastSentMessageId: Long = -1L
+
     init {
         lifecycleCoroutineScope.launch(IO) {
             while (isActive) {
@@ -120,7 +129,20 @@ class ConversationAdapter(
                 }
                 val contact = contactCache[senderIdHash]
 
-                visibleMessageView.bind(message, messageBefore, getMessageAfter(position, cursor), glide, searchQuery, contact, senderId, visibleMessageViewDelegate)
+                visibleMessageView.bind(
+                        message,
+                        messageBefore,
+                        getMessageAfter(position, cursor),
+                        glide,
+                        searchQuery,
+                        contact,
+                        senderId,
+                        lastSeen.get(),
+                        visibleMessageViewDelegate,
+                        onAttachmentNeedsDownload,
+                        lastSentMessageId
+                )
+
                 if (!message.isDeleted) {
                     visibleMessageView.onPress = { event -> onItemPress(message, viewHolder.adapterPosition, visibleMessageView, event) }
                     visibleMessageView.onSwipeToReply = { onItemSwipeToReply(message, viewHolder.adapterPosition) }
@@ -135,17 +157,15 @@ class ConversationAdapter(
                 viewHolder.view.bind(message, messageBefore)
                 if (message.isCallLog && message.isFirstMissedCall) {
                     viewHolder.view.setOnClickListener {
-                        AlertDialog.Builder(context)
-                            .setTitle(R.string.CallNotificationBuilder_first_call_title)
-                            .setMessage(R.string.CallNotificationBuilder_first_call_message)
-                            .setPositiveButton(R.string.activity_settings_title) { _, _ ->
-                                val intent = Intent(context, PrivacySettingsActivity::class.java)
-                                context.startActivity(intent)
+                        context.showSessionDialog {
+                            title(R.string.CallNotificationBuilder_first_call_title)
+                            text(R.string.CallNotificationBuilder_first_call_message)
+                            button(R.string.activity_settings_title) {
+                                Intent(context, PrivacySettingsActivity::class.java)
+                                    .let(context::startActivity)
                             }
-                            .setNeutralButton(R.string.cancel) { d, _ ->
-                                d.dismiss()
-                            }
-                            .show()
+                            cancelButton()
+                        }
                     }
                 } else {
                     viewHolder.view.setOnClickListener(null)
@@ -174,19 +194,38 @@ class ConversationAdapter(
     private fun getMessageBefore(position: Int, cursor: Cursor): MessageRecord? {
         // The message that's visually before the current one is actually after the current
         // one for the cursor because the layout is reversed
-        if (!cursor.moveToPosition(position + 1)) { return null }
+        if (isReversed && !cursor.moveToPosition(position + 1)) { return null }
+        if (!isReversed && !cursor.moveToPosition(position - 1)) { return null }
+
         return messageDB.readerFor(cursor).current
     }
 
     private fun getMessageAfter(position: Int, cursor: Cursor): MessageRecord? {
         // The message that's visually after the current one is actually before the current
         // one for the cursor because the layout is reversed
-        if (!cursor.moveToPosition(position - 1)) { return null }
+        if (isReversed && !cursor.moveToPosition(position - 1)) { return null }
+        if (!isReversed && !cursor.moveToPosition(position + 1)) { return null }
+
         return messageDB.readerFor(cursor).current
+    }
+
+    private fun getLastSentMessageId(cursor: Cursor): Long {
+        // If we don't move to first (or at least step backwards) we can step off the end of the
+        // cursor and any query will return an "Index = -1" error.
+        val cursorHasContent = cursor.moveToFirst()
+        if (cursorHasContent) {
+            val thisThreadId = cursor.getLong(4) // Column index 4 is "thread_id"
+            if (thisThreadId != -1L) {
+                val thisUsersSessionId = TextSecurePreferences.getLocalNumber(context)
+                return messageDB.getLastSentMessageFromSender(thisThreadId, thisUsersSessionId)
+            }
+        }
+        return -1L
     }
 
     override fun changeCursor(cursor: Cursor?) {
         super.changeCursor(cursor)
+
         val toRemove = mutableSetOf<MessageRecord>()
         val toDeselect = mutableSetOf<Pair<Int, MessageRecord>>()
         for (selected in selectedItems) {
@@ -204,15 +243,39 @@ class ConversationAdapter(
         toDeselect.iterator().forEach { (pos, record) ->
             onDeselect(record, pos)
         }
+
+        // This value gets updated here ONLY when the cursor changes, and the value is then passed
+        // through to `VisibleMessageView.bind` each time we bind via `onBindItemViewHolder`, above.
+        // If there are no messages then lastSentMessageId is assigned the value -1L.
+        if (cursor != null) { lastSentMessageId = getLastSentMessageId(cursor) }
     }
 
     fun findLastSeenItemPosition(lastSeenTimestamp: Long): Int? {
         val cursor = this.cursor
-        if (lastSeenTimestamp <= 0L || cursor == null || !isActiveCursor) return null
+        if (cursor == null || !isActiveCursor) return null
+        if (lastSeenTimestamp == 0L) {
+            if (isReversed && cursor.moveToLast()) { return cursor.position }
+            if (!isReversed && cursor.moveToFirst()) { return cursor.position }
+        }
+
+        // Loop from the newest message to the oldest until we find one older (or equal to)
+        // the lastSeenTimestamp, then return that message index
         for (i in 0 until itemCount) {
-            cursor.moveToPosition(i)
-            val message = messageDB.readerFor(cursor).current
-            if (message.isOutgoing || message.dateReceived <= lastSeenTimestamp) { return i }
+            if (isReversed) {
+                cursor.moveToPosition(i)
+                val (outgoing, dateSent) = messageDB.timestampAndDirectionForCurrent(cursor)
+                if (outgoing || dateSent <= lastSeenTimestamp) {
+                    return i
+                }
+            }
+            else {
+                val index = ((itemCount - 1) - i)
+                cursor.moveToPosition(index)
+                val (outgoing, dateSent) = messageDB.timestampAndDirectionForCurrent(cursor)
+                if (outgoing || dateSent <= lastSeenTimestamp) {
+                    return min(itemCount - 1, (index + 1))
+                }
+            }
         }
         return null
     }
@@ -222,8 +285,8 @@ class ConversationAdapter(
         if (timestamp <= 0L || cursor == null || !isActiveCursor) return null
         for (i in 0 until itemCount) {
             cursor.moveToPosition(i)
-            val message = messageDB.readerFor(cursor).current
-            if (message.dateSent == timestamp) { return i }
+            val (_, dateSent) = messageDB.timestampAndDirectionForCurrent(cursor)
+            if (dateSent == timestamp) { return i }
         }
         return null
     }
@@ -231,5 +294,12 @@ class ConversationAdapter(
     fun onSearchQueryUpdated(query: String?) {
         this.searchQuery = query
         notifyDataSetChanged()
+    }
+
+    fun getTimestampForItemAt(firstVisiblePosition: Int): Long? {
+        val cursor = this.cursor ?: return null
+        if (!cursor.moveToPosition(firstVisiblePosition)) return null
+        val message = messageDB.readerFor(cursor).current ?: return null
+        return message.timestamp
     }
 }

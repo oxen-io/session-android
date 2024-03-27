@@ -8,6 +8,8 @@ import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel;
 import org.session.libsession.utilities.Address;
 import org.thoughtcrime.securesms.mms.SlideDeck;
 
+import java.util.Objects;
+
 public class Quote {
 
   private final long      id;
@@ -46,5 +48,18 @@ public class Quote {
 
   public QuoteModel getQuoteModel() {
     return new QuoteModel(id, author, text, missing, attachment.asAttachments());
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Quote quote = (Quote) o;
+    return id == quote.id && missing == quote.missing && Objects.equals(author, quote.author) && Objects.equals(text, quote.text) && Objects.equals(attachment, quote.attachment);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, author, text, missing, attachment);
   }
 }

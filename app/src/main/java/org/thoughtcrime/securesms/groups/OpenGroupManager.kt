@@ -9,13 +9,13 @@ import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPoller
 import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.ThreadUtils
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
+import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import java.util.concurrent.Executors
 
 object OpenGroupManager {
     private val executorService = Executors.newScheduledThreadPool(4)
-    private var pollers = mutableMapOf<String, OpenGroupPoller>() // One for each server
+    private val pollers = mutableMapOf<String, OpenGroupPoller>() // One for each server
     private var isPolling = false
     private val pollUpdaterLock = Any()
 
@@ -40,12 +40,18 @@ object OpenGroupManager {
         if (isPolling) { return }
         isPolling = true
         val storage = MessagingModuleConfiguration.shared.storage
-        val servers = storage.getAllOpenGroups().values.map { it.server }.toSet()
-        servers.forEach { server ->
-            pollers[server]?.stop() // Shouldn't be necessary
-            val poller = OpenGroupPoller(server, executorService)
-            poller.startIfNeeded()
-            pollers[server] = poller
+        val (serverGroups, toDelete) = storage.getAllOpenGroups().values.partition { storage.getThreadId(it) != null }
+        toDelete.forEach { openGroup ->
+            Log.w("Loki", "Need to delete a group")
+            delete(openGroup.server, openGroup.room, MessagingModuleConfiguration.shared.context)
+        }
+
+        val servers = serverGroups.map { it.server }.toSet()
+        synchronized(pollUpdaterLock) {
+            servers.forEach { server ->
+                pollers[server]?.stop() // Shouldn't be necessary
+                pollers[server] = OpenGroupPoller(server, executorService).apply { startIfNeeded() }
+            }
         }
     }
 
@@ -58,14 +64,14 @@ object OpenGroupManager {
     }
 
     @WorkerThread
-    fun add(server: String, room: String, publicKey: String, context: Context) {
+    fun add(server: String, room: String, publicKey: String, context: Context): Pair<Long,OpenGroupApi.RoomInfo?> {
         val openGroupID = "$server.$room"
-        var threadID = GroupManager.getOpenGroupThreadID(openGroupID, context)
+        val threadID = GroupManager.getOpenGroupThreadID(openGroupID, context)
         val storage = MessagingModuleConfiguration.shared.storage
         val threadDB = DatabaseComponent.get(context).lokiThreadDatabase()
         // Check it it's added already
         val existingOpenGroup = threadDB.getOpenGroupChat(threadID)
-        if (existingOpenGroup != null) { return }
+        if (existingOpenGroup != null) { return threadID to null }
         // Clear any existing data if needed
         storage.removeLastDeletionServerID(room, server)
         storage.removeLastMessageServerID(room, server)
@@ -73,18 +79,20 @@ object OpenGroupManager {
         storage.removeLastOutboxMessageId(server)
         // Store the public key
         storage.setOpenGroupPublicKey(server, publicKey)
-        // Get capabilities
-        val capabilities = OpenGroupApi.getCapabilities(server).get()
+        // Get capabilities & room info
+        val (capabilities, info) = OpenGroupApi.getCapabilitiesAndRoomInfo(room, server).get()
         storage.setServerCapabilities(server, capabilities.capabilities)
-        // Get room info
-        val info = OpenGroupApi.getRoomInfo(room, server).get()
-        storage.setUserCount(room, server, info.activeUsers)
         // Create the group locally if not available already
         if (threadID < 0) {
-            threadID = GroupManager.createOpenGroup(openGroupID, context, null, info.name).threadId
+            GroupManager.createOpenGroup(openGroupID, context, null, info.name)
         }
-        val openGroup = OpenGroup(server, room, info.name, info.infoUpdates, publicKey)
-        threadDB.setOpenGroupChat(openGroup, threadID)
+        OpenGroupPoller.handleRoomPollInfo(
+            server = server,
+            roomToken = room,
+            pollInfo = info.toPollInfo(),
+            createGroupIfMissingWithPublicKey = publicKey
+        )
+        return threadID to info
     }
 
     fun restartPollerForServer(server: String) {
@@ -100,23 +108,27 @@ object OpenGroupManager {
         }
     }
 
+    @WorkerThread
     fun delete(server: String, room: String, context: Context) {
         val storage = MessagingModuleConfiguration.shared.storage
+        val configFactory = MessagingModuleConfiguration.shared.configFactory
         val threadDB = DatabaseComponent.get(context).threadDatabase()
-        val openGroupID = "$server.$room"
+        val openGroupID = "${server.removeSuffix("/")}.$room"
         val threadID = GroupManager.getOpenGroupThreadID(openGroupID, context)
         val recipient = threadDB.getRecipientForThreadId(threadID) ?: return
         threadDB.setThreadArchived(threadID)
         val groupID = recipient.address.serialize()
         // Stop the poller if needed
         val openGroups = storage.getAllOpenGroups().filter { it.value.server == server }
-        if (openGroups.count() == 1) {
+        if (openGroups.isNotEmpty()) {
             synchronized(pollUpdaterLock) {
                 val poller = pollers[server]
                 poller?.stop()
                 pollers.remove(server)
             }
         }
+        configFactory.userGroups?.eraseCommunity(server, room)
+        configFactory.convoVolatile?.eraseCommunity(server, room)
         // Delete
         storage.removeLastDeletionServerID(room, server)
         storage.removeLastMessageServerID(room, server)
@@ -124,18 +136,19 @@ object OpenGroupManager {
         storage.removeLastOutboxMessageId(server)
         val lokiThreadDB = DatabaseComponent.get(context).lokiThreadDatabase()
         lokiThreadDB.removeOpenGroupChat(threadID)
-        ThreadUtils.queue {
-            threadDB.deleteConversation(threadID) // Must be invoked on a background thread
-            GroupManager.deleteGroup(groupID, context) // Must be invoked on a background thread
-        }
+        storage.deleteConversation(threadID) // Must be invoked on a background thread
+        GroupManager.deleteGroup(groupID, context) // Must be invoked on a background thread
+        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
     }
 
-    fun addOpenGroup(urlAsString: String, context: Context) {
-        val url = HttpUrl.parse(urlAsString) ?: return
+    @WorkerThread
+    fun addOpenGroup(urlAsString: String, context: Context): OpenGroupApi.RoomInfo? {
+        val url = HttpUrl.parse(urlAsString) ?: return null
         val server = OpenGroup.getServer(urlAsString)
-        val room = url.pathSegments().firstOrNull() ?: return
-        val publicKey = url.queryParameter("public_key") ?: return
-        add(server.toString().removeSuffix("/"), room, publicKey, context) // assume migrated from calling function
+        val room = url.pathSegments().firstOrNull() ?: return null
+        val publicKey = url.queryParameter("public_key") ?: return null
+
+        return add(server.toString().removeSuffix("/"), room, publicKey, context).second // assume migrated from calling function
     }
 
     fun updateOpenGroup(openGroup: OpenGroup, context: Context) {

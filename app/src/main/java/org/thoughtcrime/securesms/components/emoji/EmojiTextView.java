@@ -24,7 +24,7 @@ public class EmojiTextView extends AppCompatTextView {
   private static final char ELLIPSIS = '…';
 
   private CharSequence previousText;
-  private BufferType   previousBufferType;
+  private BufferType   previousBufferType = BufferType.NORMAL;
   private float        originalFontSize;
   private boolean      useSystemEmoji;
   private boolean      sizeChangeInProgress;
@@ -49,6 +49,15 @@ public class EmojiTextView extends AppCompatTextView {
   }
 
   @Override public void setText(@Nullable CharSequence text, BufferType type) {
+    // No need to do anything special if the text is null or empty
+    if (text == null || text.length() == 0) {
+      previousText         = text;
+      previousOverflowText = overflowText;
+      previousBufferType   = type;
+      super.setText(text, type);
+      return;
+    }
+
     EmojiParser.CandidateList candidates = EmojiProvider.getCandidates(text);
 
     if (scaleEmojis && candidates != null && candidates.allEmojis) {
@@ -149,10 +158,15 @@ public class EmojiTextView extends AppCompatTextView {
   }
 
   private boolean unchanged(CharSequence text, CharSequence overflowText, BufferType bufferType) {
-    return Util.equals(previousText, text)                 &&
-           Util.equals(previousOverflowText, overflowText) &&
-           Util.equals(previousBufferType, bufferType)     &&
-           useSystemEmoji == useSystemEmoji()              &&
+    CharSequence finalPrevText = (previousText == null || previousText.length() == 0 ? "" : previousText);
+    CharSequence finalText = (text == null || text.length() == 0 ? "" : text);
+    CharSequence finalPrevOverflowText = (previousOverflowText == null || previousOverflowText.length() == 0 ? "" : previousOverflowText);
+    CharSequence finalOverflowText = (overflowText == null || overflowText.length() == 0 ? "" : overflowText);
+
+    return Util.equals(finalPrevText, finalText)                 &&
+           Util.equals(finalPrevOverflowText, finalOverflowText) &&
+           Util.equals(previousBufferType, bufferType)           &&
+           useSystemEmoji == useSystemEmoji()                    &&
            !sizeChangeInProgress;
   }
 

@@ -6,6 +6,8 @@
 
 package org.session.libsignal.streams;
 
+import static org.session.libsignal.crypto.CipherUtil.CIPHER_LOCK;
+
 import org.session.libsignal.exceptions.InvalidMacException;
 import org.session.libsignal.exceptions.InvalidMessageException;
 import org.session.libsignal.utilities.Util;
@@ -92,19 +94,15 @@ public class AttachmentCipherInputStream extends FilterInputStream {
       byte[] iv = new byte[BLOCK_SIZE];
       readFully(iv);
 
-      this.cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-      this.cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(cipherKey, "AES"), new IvParameterSpec(iv));
+      synchronized (CIPHER_LOCK) {
+        this.cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        this.cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(cipherKey, "AES"), new IvParameterSpec(iv));
+      }
 
       this.done          = false;
       this.totalRead     = 0;
       this.totalDataSize = totalDataSize;
-    } catch (NoSuchAlgorithmException e) {
-      throw new AssertionError(e);
-    } catch (InvalidKeyException e) {
-      throw new AssertionError(e);
-    } catch (NoSuchPaddingException e) {
-      throw new AssertionError(e);
-    } catch (InvalidAlgorithmParameterException e) {
+    } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | InvalidAlgorithmParameterException e) {
       throw new AssertionError(e);
     }
   }
@@ -141,15 +139,12 @@ public class AttachmentCipherInputStream extends FilterInputStream {
 
   private int readFinal(byte[] buffer, int offset, int length) throws IOException {
     try {
-      int flourish = cipher.doFinal(buffer, offset);
-
-      done = true;
-      return flourish;
-    } catch (IllegalBlockSizeException e) {
-      throw new IOException(e);
-    } catch (BadPaddingException e) {
-      throw new IOException(e);
-    } catch (ShortBufferException e) {
+      synchronized (CIPHER_LOCK) {
+        int flourish = cipher.doFinal(buffer, offset);
+        done = true;
+        return flourish;
+      }
+    } catch (IllegalBlockSizeException | ShortBufferException | BadPaddingException e) {
       throw new IOException(e);
     }
   }
@@ -234,9 +229,7 @@ public class AttachmentCipherInputStream extends FilterInputStream {
         throw new InvalidMacException("Digest doesn't match!");
       }
 
-    } catch (IOException e) {
-      throw new InvalidMacException(e);
-    } catch (ArithmeticException e) {
+    } catch (IOException | ArithmeticException e) {
       throw new InvalidMacException(e);
     } catch (NoSuchAlgorithmException e) {
       throw new AssertionError(e);

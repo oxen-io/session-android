@@ -2,10 +2,12 @@ package org.thoughtcrime.securesms.database
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import androidx.core.database.getStringOrNull
-import net.sqlcipher.Cursor
 import org.session.libsession.messaging.contacts.Contact
+import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsignal.utilities.Base64
+import org.session.libsignal.utilities.IdPrefix
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 
 class SessionContactDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(context, helper) {
@@ -43,6 +45,9 @@ class SessionContactDatabase(context: Context, helper: SQLCipherOpenHelper) : Da
         val database = databaseHelper.readableDatabase
         return database.getAll(sessionContactTable, null, null) { cursor ->
             contactFromCursor(cursor)
+        }.filter { contact ->
+            val sessionId = SessionId(contact.sessionID)
+            sessionId.prefix == IdPrefix.STANDARD
         }.toSet()
     }
 
@@ -75,21 +80,6 @@ class SessionContactDatabase(context: Context, helper: SQLCipherOpenHelper) : Da
     }
 
     fun contactFromCursor(cursor: Cursor): Contact {
-        val sessionID = cursor.getString(sessionID)
-        val contact = Contact(sessionID)
-        contact.name = cursor.getStringOrNull(name)
-        contact.nickname = cursor.getStringOrNull(nickname)
-        contact.profilePictureURL = cursor.getStringOrNull(profilePictureURL)
-        contact.profilePictureFileName = cursor.getStringOrNull(profilePictureFileName)
-        cursor.getStringOrNull(profilePictureEncryptionKey)?.let {
-            contact.profilePictureEncryptionKey = Base64.decode(it)
-        }
-        contact.threadID = cursor.getLong(threadID)
-        contact.isTrusted = cursor.getInt(isTrusted) != 0
-        return contact
-    }
-
-    fun contactFromCursor(cursor: android.database.Cursor): Contact {
         val sessionID = cursor.getString(cursor.getColumnIndexOrThrow(sessionID))
         val contact = Contact(sessionID)
         contact.name = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(name))

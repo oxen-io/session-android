@@ -23,7 +23,7 @@ import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 
-import net.sqlcipher.database.SQLiteDatabase;
+import net.zetetic.database.sqlcipher.SQLiteDatabase;
 
 import org.session.libsession.utilities.WindowDebouncer;
 import org.thoughtcrime.securesms.ApplicationContext;
@@ -70,6 +70,11 @@ public abstract class Database {
 
   protected void notifyStickerPackListeners() {
     context.getContentResolver().notifyChange(DatabaseContentProviders.StickerPack.CONTENT_URI, null);
+  }
+
+  protected void notifyRecipientListeners() {
+    context.getContentResolver().notifyChange(DatabaseContentProviders.Recipient.CONTENT_URI, null);
+    notifyConversationListListeners();
   }
 
   protected void setNotifyConverationListeners(Cursor cursor, long threadId) {

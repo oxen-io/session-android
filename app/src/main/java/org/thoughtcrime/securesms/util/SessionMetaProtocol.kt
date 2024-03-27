@@ -49,11 +49,11 @@ object SessionMetaProtocol {
 
     @JvmStatic
     fun shouldSendReadReceipt(recipient: Recipient): Boolean {
-        return !recipient.isGroupRecipient && recipient.isApproved
+        return !recipient.isGroupRecipient && recipient.isApproved && !recipient.isBlocked
     }
 
     @JvmStatic
     fun shouldSendTypingIndicator(recipient: Recipient): Boolean {
-        return !recipient.isGroupRecipient && recipient.isApproved
+        return !recipient.isGroupRecipient && recipient.isApproved && !recipient.isBlocked
     }
 }
