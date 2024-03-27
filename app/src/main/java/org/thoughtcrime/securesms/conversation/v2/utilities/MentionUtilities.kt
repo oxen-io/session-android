@@ -63,16 +63,23 @@ object MentionUtilities {
         }
         val result = SpannableString(text)
         val isLightMode = UiModeUtilities.isDayUiMode(context)
-        val color = if (isYou(mention.second, userPublicKey, openGroup)) {
-            backgroundColorID = R.color.accent
-            foregroundColorID = R.color.black
-        } else if (isOutgoingMessage) {
-            ResourcesCompat.getColor(context.resources, if (isLightMode) R.color.white else R.color.black, context.theme)
-        } else {
-            context.getAccentColor()
-        }
         for (mention in mentions) {
-            result.setSpan(ForegroundColorSpan(color), mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            val backgroundColor: Int?
+            val foregroundColor: Int
+            if (isYou(mention.second, userPublicKey, openGroup)) {
+                backgroundColor = ResourcesCompat.getColor(context.resources, R.color.accent, context.theme)
+                foregroundColor = ResourcesCompat.getColor(context.resources, R.color.black, context.theme)
+            } else if (isOutgoingMessage) {
+                backgroundColor = null
+                foregroundColor = ResourcesCompat.getColor(context.resources, if (isLightMode) R.color.white else R.color.black, context.theme)
+            } else {
+                backgroundColor = null
+                foregroundColor = context.getAccentColor()
+            }
+            backgroundColor?.let { background ->
+                result.setSpan(BackgroundColorSpan(background), mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            result.setSpan(ForegroundColorSpan(foregroundColor), mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             result.setSpan(StyleSpan(Typeface.BOLD), mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
         return result
