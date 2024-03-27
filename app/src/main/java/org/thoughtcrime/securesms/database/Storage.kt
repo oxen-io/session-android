@@ -767,21 +767,17 @@ open class Storage(
     }
 
     override fun markAsSent(timestamp: Long, author: String) {
-        Log.w("[ACL]", "Hit Storage.markAsSent!")
         val database = DatabaseComponent.get(context).mmsSmsDatabase()
         val messageRecord = database.getSentMessageFor(timestamp, author)
         if (messageRecord == null) {
-            Log.e("[ACL]", "In Storage.markAsSent we couldn't get the message record so are bailing before setting anything as sent!")
+            Log.w(TAG, "Failed to retrieve local message record in Storage.markAsSent - aborting.")
             return
-        } else {
-            Log.e("[ACL]", "SUCCESSFULLY found messageRecord after call to getMessageFor(timestamp, author)!")
         }
+
         if (messageRecord.isMms) {
-            val mmsDatabase = DatabaseComponent.get(context).mmsDatabase()
-            mmsDatabase.markAsSent(messageRecord.getId(), true)
+            DatabaseComponent.get(context).mmsDatabase().markAsSent(messageRecord.getId(), true)
         } else {
-            val smsDatabase = DatabaseComponent.get(context).smsDatabase()
-            smsDatabase.markAsSent(messageRecord.getId(), true)
+            DatabaseComponent.get(context).smsDatabase().markAsSent(messageRecord.getId(), true)
         }
     }
 
@@ -793,13 +789,11 @@ open class Storage(
 
         // Ensure we can find the local message..
         if (message == null) {
-            Log.e("[ACL]", "In Storage.markAsSentToCommunity we received a null MessageRecord - bailing.")
+            Log.w(TAG, "Could not find local message in Storage.markAsSentToCommunity - aborting.")
             return
-        } else {
-            Log.e("[ACL]", "SUCCESSFULLY found messageRecord after call to getLastSentMessageRecordFromSender!")
         }
 
-        // ..and if we successfully found it then mark it as sent.
+        // ..and mark as sent if found.
         if (message.isMms) {
             DatabaseComponent.get(context).mmsDatabase().markAsSent(message.getId(), true)
         } else {
@@ -808,7 +802,6 @@ open class Storage(
     }
 
     override fun markAsSyncing(timestamp: Long, author: String) {
-        Log.w("[ACL]", "Hit Storage.markAsSyncing!")
         DatabaseComponent.get(context).mmsSmsDatabase()
             .getMessageFor(timestamp, author)
             ?.run { getMmsDatabaseElseSms(isMms).markAsSyncing(id) }
@@ -819,14 +812,12 @@ open class Storage(
         else DatabaseComponent.get(context).smsDatabase()
 
     override fun markAsResyncing(timestamp: Long, author: String) {
-        Log.w("[ACL]", "Hit Storage.markAsResyncing!")
         DatabaseComponent.get(context).mmsSmsDatabase()
             .getMessageFor(timestamp, author)
             ?.run { getMmsDatabaseElseSms(isMms).markAsResyncing(id) }
     }
 
     override fun markAsSending(timestamp: Long, author: String) {
-        Log.w("[ACL]", "Hit Storage.markAsSending!")
         val database = DatabaseComponent.get(context).mmsSmsDatabase()
         val messageRecord = database.getMessageFor(timestamp, author) ?: return
         if (messageRecord.isMms) {
@@ -863,7 +854,7 @@ open class Storage(
 
         // Check to ensure the message exists
         if (message == null) {
-            Log.w(TAG, "Storage.markUnidentifiedInCommunity received a null MessageRecord - bailing.")
+            Log.w(TAG, "Could not find local message in Storage.markUnidentifiedInCommunity - aborting.")
             return
         }
 
@@ -1029,7 +1020,7 @@ open class Storage(
         val mmsDB = DatabaseComponent.get(context).mmsDatabase()
         val mmsSmsDB = DatabaseComponent.get(context).mmsSmsDatabase()
         if (mmsSmsDB.getMessageFor(sentTimestamp, userPublicKey) != null) {
-            Log.w("[ACL]", "Bailing from insertOutgoingInfoMessage because we believe the message has already been sent!")
+            Log.w(TAG, "Bailing from insertOutgoingInfoMessage because we believe the message has already been sent!")
             return
         }
         val infoMessageID = mmsDB.insertMessageOutbox(infoMessage, threadID, false, null, runThreadUpdate = true)

@@ -209,12 +209,10 @@ public class SmsDatabase extends MessagingDatabase {
 
   @Override
   public void markAsSent(long id, boolean isSecure) {
-    Log.w("[ACL]", "Hit SmsDatabase.markAsSent...");
     updateTypeBitmask(id, Types.BASE_TYPE_MASK, Types.BASE_SENT_TYPE | (isSecure ? Types.PUSH_MESSAGE_BIT | Types.SECURE_MESSAGE_BIT : 0));
   }
 
   public void markAsSending(long id) {
-    Log.w("[ACL]", "Hit markAsSending...");
     updateTypeBitmask(id, Types.BASE_TYPE_MASK, Types.BASE_SENDING_TYPE);
   }
 

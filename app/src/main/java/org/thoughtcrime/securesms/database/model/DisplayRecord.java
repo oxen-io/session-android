@@ -87,15 +87,7 @@ public abstract class DisplayRecord {
       && deliveryStatus < SmsDatabase.Status.STATUS_PENDING) || deliveryReceiptCount > 0;
   }
 
-  public boolean isSent() {
-    boolean ogSent = !isFailed() && !isPending(); // OG
-    boolean sent = MmsSmsColumns.Types.isSentType(type);
-
-
-    Log.d("[ACL]", "Asking if a message has been sent... We think failed is: " + isFailed() + ", pending is: " + isPending() + ", therefore sent is: " + ogSent + ", while isSentType says: " + sent);
-    //return !isFailed() && !isPending();
-    return sent;
-  }
+  public boolean isSent() { return MmsSmsColumns.Types.isSentType(type); }
 
   public boolean isSyncing() {
     return MmsSmsColumns.Types.isSyncingType(type);
@@ -116,14 +108,9 @@ public abstract class DisplayRecord {
   }
 
   public boolean isPending() {
-
-
-
     boolean isPending = MmsSmsColumns.Types.isPendingMessageType(type) &&
-                        !MmsSmsColumns.Types.isIdentityVerified(type) &&
+                        !MmsSmsColumns.Types.isIdentityVerified(type)  &&
                         !MmsSmsColumns.Types.isIdentityDefault(type);
-
-    //Log.d("[ACL]", "Check is pending, we think pending is: " + MmsSmsColumns.Types.isPendingMessageType(type) + ", identify verified is: " + MmsSmsColumns.Types.isIdentityVerified(type) + ", and identity default is: " + MmsSmsColumns.Types.isIdentityDefault(type) + ", therefore returning: " + isPending);
     return isPending;
   }
 

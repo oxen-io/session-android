@@ -371,10 +371,7 @@ object MessageSender {
     }
 
     // Result Handling
-    fun handleSuccessfulMessageSend(message: Message, destination: Destination, isSyncMessage: Boolean = false, openGroupSentTimestamp: Long = -1) {
-
-        Log.w("[ACL]", "Hit handleSuccessfulMessageSend")
-
+    private fun handleSuccessfulMessageSend(message: Message, destination: Destination, isSyncMessage: Boolean = false, openGroupSentTimestamp: Long = -1) {
         val storage = MessagingModuleConfiguration.shared.storage
         val userPublicKey = storage.getUserPublicKey()!!
         val timestamp = message.sentTimestamp!!
@@ -400,7 +397,6 @@ object MessageSender {
             // Track the open group server message ID
             val messageIsAddressedToCommunity = message.openGroupServerMessageID != null && (destination is Destination.LegacyOpenGroup || destination is Destination.OpenGroup)
             if (messageIsAddressedToCommunity) {
-                Log.d("[ACL]", "Inside openGroupServerMessageId block...")
                 val server: String
                 val room: String
                 when (destination) {
@@ -426,10 +422,11 @@ object MessageSender {
             // Mark the message as sent.
             // Note: When sending a message to a community the server modifies the message timestamp
             // so when we go to look up the message in the local database by timestamp it fails and
-            // we are left with the message delivery status as "Sending" forever! As such, we use a
+            // we're left with the message delivery status as "Sending" forever! As such, we use a
             // pair of modified "markAsSentToCommunity" and "markUnidentifiedInCommunity" methods
             // to retrieve the local message by thread & message ID rather than timestamp when
-            // handling community messages only.
+            // handling community messages only so we can tick the delivery status over to 'Sent'.
+            // Fixed in: https://optf.atlassian.net/browse/SES-1567
             if (messageIsAddressedToCommunity)
             {
                 storage.markAsSentToCommunity(message.threadID!!, message.id!!)
@@ -437,15 +434,9 @@ object MessageSender {
             }
             else
             {
-                Log.d("[ACL]", "About to call storage.markAsSent!")
                 storage.markAsSent(timestamp, userPublicKey)
                 storage.markUnidentified(timestamp, userPublicKey)
             }
-
-
-
-
-
 
             // Start the disappearing messages timer if needed
             SSKEnvironment.shared.messageExpirationManager.maybeStartExpiration(message, startDisappearAfterRead = true)
@@ -460,7 +451,6 @@ object MessageSender {
             if (message is VisibleMessage) message.syncTarget = destination.publicKey
             if (message is ExpirationTimerUpdate) message.syncTarget = destination.publicKey
 
-            Log.w("[ACL]", "About to call storage.markAsSyncing!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             storage.markAsSyncing(timestamp, userPublicKey)
             sendToSnodeDestination(Destination.Contact(userPublicKey), message, true)
         }
