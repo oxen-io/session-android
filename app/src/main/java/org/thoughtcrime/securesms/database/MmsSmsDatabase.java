@@ -209,27 +209,6 @@ public class MmsSmsDatabase extends Database {
     return null;
   }
 
-  // ACL
-  /*
-  public long getSpecificMessage(long threadId, long messageId) {
-    String order = MmsSmsColumns.NORMALIZED_DATE_SENT + " DESC";
-    String selection = MmsSmsColumns.THREAD_ID + " = " + threadId;
-
-    boolean isOwnNumber = Util.isOwnNumber(context, serializedAuthor);
-
-    // Try everything with resources so that they auto-close on end of scope
-    try (Cursor cursor = queryTables(PROJECTION, selection, order, null)) {
-      try (MmsSmsDatabase.Reader reader = readerFor(cursor)) {
-        MessageRecord messageRecord;
-        while ((messageRecord = reader.getNext()) != null) {
-          if (isOwnNumber && messageRecord.isOutgoing()) { return messageRecord.id; }
-        }
-      }
-    }
-    return -1;
-  }
-  */
-
   public @Nullable MessageRecord getMessageFor(long timestamp, Address author) {
     return getMessageFor(timestamp, author.serialize());
   }

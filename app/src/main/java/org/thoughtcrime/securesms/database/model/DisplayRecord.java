@@ -63,11 +63,6 @@ public abstract class DisplayRecord {
     this.deliveryReceiptCount = deliveryReceiptCount;
     this.readReceiptCount     = readReceiptCount;
     this.deliveryStatus       = deliveryStatus;
-
-    // ACL - will this also be fine for mms?
-    if (deliveryStatus == SmsDatabase.Status.STATUS_COMPLETE) {
-
-    }
   }
 
   public @NonNull String getBody() {
