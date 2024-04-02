@@ -8,7 +8,6 @@ import androidx.annotation.VisibleForTesting
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Util
 import org.session.libsignal.utilities.guava.Optional
-import java.util.Collections
 import java.util.LinkedList
 import java.util.concurrent.atomic.AtomicReference
 import java.util.regex.Matcher
@@ -168,8 +167,9 @@ class Address private constructor(address: String) : Parcelable, Comparable<Addr
         @JvmStatic
         fun fromSerializedList(serialized: String, delimiter: Char): List<Address> {
             val escapedAddresses = DelimiterUtil.split(serialized, delimiter)
+            val set = escapedAddresses.toSet().sorted()
             val addresses: MutableList<Address> = LinkedList()
-            for (escapedAddress in escapedAddresses) {
+            for (escapedAddress in set) {
                 addresses.add(fromSerialized(DelimiterUtil.unescape(escapedAddress, delimiter)))
             }
             return addresses
@@ -177,9 +177,9 @@ class Address private constructor(address: String) : Parcelable, Comparable<Addr
 
         @JvmStatic
         fun toSerializedList(addresses: List<Address>, delimiter: Char): String {
-            Collections.sort(addresses)
+            val set = addresses.toSet().sorted()
             val escapedAddresses: MutableList<String> = LinkedList()
-            for (address in addresses) {
+            for (address in set) {
                 escapedAddresses.add(DelimiterUtil.escape(address.serialize(), delimiter))
             }
             return Util.join(escapedAddresses, delimiter.toString() + "")
