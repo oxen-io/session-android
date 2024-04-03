@@ -26,6 +26,7 @@ import android.os.Bundle;
 
 import androidx.core.app.RemoteInput;
 
+import org.session.libsession.messaging.messages.ExpirationConfiguration;
 import org.session.libsession.messaging.messages.signal.OutgoingMediaMessage;
 import org.session.libsession.messaging.messages.signal.OutgoingTextMessage;
 import org.session.libsession.messaging.messages.visible.VisibleMessage;
@@ -35,12 +36,14 @@ import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.ApplicationContext;
-import org.thoughtcrime.securesms.database.MessagingDatabase.MarkedMessageInfo;
+import org.thoughtcrime.securesms.database.MarkedMessageInfo;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
 import org.thoughtcrime.securesms.mms.MmsException;
 
 import java.util.Collections;
 import java.util.List;
+
+import network.loki.messenger.libsession_util.util.ExpiryMode;
 
 /**
  * Get the response text from the Android Auto and sends an message as a reply
@@ -85,10 +88,14 @@ public class AndroidAutoReplyReceiver extends BroadcastReceiver {
           message.setText(responseText.toString());
           message.setSentTimestamp(SnodeAPI.getNowWithOffset());
           MessageSender.send(message, recipient.getAddress());
+          ExpirationConfiguration config = DatabaseComponent.get(context).storage().getExpirationConfiguration(threadId);
+          ExpiryMode expiryMode = config == null ? null : config.getExpiryMode();
+          long expiresInMillis = expiryMode == null ? 0 : expiryMode.getExpiryMillis();
+          long expireStartedAt = expiryMode instanceof ExpiryMode.AfterSend ? message.getSentTimestamp() : 0L;
 
           if (recipient.isGroupRecipient()) {
             Log.w("AndroidAutoReplyReceiver", "GroupRecipient, Sending media message");
-            OutgoingMediaMessage reply = OutgoingMediaMessage.from(message, recipient, Collections.emptyList(), null, null);
+            OutgoingMediaMessage reply = OutgoingMediaMessage.from(message, recipient, Collections.emptyList(), null, null, expiresInMillis, 0);
             try {
               DatabaseComponent.get(context).mmsDatabase().insertMessageOutbox(reply, replyThreadId, false, null, true);
             } catch (MmsException e) {
@@ -96,7 +103,7 @@ public class AndroidAutoReplyReceiver extends BroadcastReceiver {
             }
           } else {
             Log.w("AndroidAutoReplyReceiver", "Sending regular message ");
-            OutgoingTextMessage reply = OutgoingTextMessage.from(message, recipient);
+            OutgoingTextMessage reply = OutgoingTextMessage.from(message, recipient, expiresInMillis, expireStartedAt);
             DatabaseComponent.get(context).smsDatabase().insertMessageOutbox(replyThreadId, reply, false, SnodeAPI.getNowWithOffset(), null, true);
           }
 

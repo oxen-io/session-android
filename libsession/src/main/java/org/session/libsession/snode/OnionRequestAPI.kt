@@ -611,7 +611,7 @@ object OnionRequestAPI {
                             }
                             if (body["t"] != null) {
                                 val timestamp = body["t"] as Long
-                                val offset = timestamp - Date().time
+                                val offset = timestamp - System.currentTimeMillis()
                                 SnodeAPI.clockOffset = offset
                             }
                             if (body.containsKey("hf")) {
@@ -686,4 +686,7 @@ enum class Version(val value: String) {
 data class OnionResponse(
     val info: Map<*, *>,
     val body: ByteArray? = null
-)
+) {
+    val code: Int? get() = info["code"] as? Int
+    val message: String? get() = info["message"] as? String
+}

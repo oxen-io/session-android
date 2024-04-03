@@ -10,7 +10,6 @@ import androidx.annotation.DimenRes
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewProfilePictureBinding
-import network.loki.messenger.databinding.ViewUserBinding
 import org.session.libsession.avatars.ContactColors
 import org.session.libsession.avatars.PlaceholderAvatarPhoto
 import org.session.libsession.avatars.ProfileContactPhoto
@@ -74,7 +73,7 @@ class ProfilePictureView @JvmOverloads constructor(
                 additionalDisplayName = getUserDisplayName(apk)
             }
         } else if(recipient.isOpenGroupInboxRecipient) {
-            val publicKey = GroupUtil.getDecodedOpenGroupInbox(recipient.address.serialize())
+            val publicKey = GroupUtil.getDecodedOpenGroupInboxSessionId(recipient.address.serialize())
             this.publicKey = publicKey
             displayName = getUserDisplayName(publicKey)
             additionalPublicKey = null

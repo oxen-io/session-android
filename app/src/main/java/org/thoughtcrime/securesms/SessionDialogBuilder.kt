@@ -105,22 +105,22 @@ class SessionDialogBuilder(val context: Context) {
 
     fun destructiveButton(
         @StringRes text: Int,
-        @StringRes contentDescription: Int,
+        @StringRes contentDescription: Int = text,
         listener: () -> Unit = {}
     ) = button(
         text,
         contentDescription,
         R.style.Widget_Session_Button_Dialog_DestructiveText,
-        listener
-    )
+    ) { listener() }
 
-    fun okButton(listener: (() -> Unit) = {}) = button(android.R.string.ok, listener = listener)
-    fun cancelButton(listener: (() -> Unit) = {}) = button(android.R.string.cancel, R.string.AccessibilityId_cancel_button, listener = listener)
+    fun okButton(listener: (() -> Unit) = {}) = button(android.R.string.ok) { listener() }
+    fun cancelButton(listener: (() -> Unit) = {}) = button(android.R.string.cancel, R.string.AccessibilityId_cancel_button) { listener() }
 
     fun button(
         @StringRes text: Int,
         @StringRes contentDescriptionRes: Int = text,
         @StyleRes style: Int = R.style.Widget_Session_Button_Dialog_UnimportantText,
+        dismiss: Boolean = true,
         listener: (() -> Unit) = {}
     ) = Button(context, null, 0, style).apply {
             setText(text)
@@ -129,7 +129,7 @@ class SessionDialogBuilder(val context: Context) {
                 .apply { setMargins(toPx(20, resources)) }
             setOnClickListener {
                 listener.invoke()
-                dismiss()
+                if (dismiss) dismiss()
             }
         }.let(buttonLayout::addView)
 

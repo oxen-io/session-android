@@ -158,6 +158,7 @@ class HomeActivityTests {
 
         val dialogPromptText = InstrumentationRegistry.getInstrumentation().targetContext.getString(R.string.dialog_open_url_explanation, amazonPuny)
 
+        onView(isRoot()).perform(waitFor(1000)) // no other way for this to work apparently
         onView(withText(dialogPromptText)).check(matches(isDisplayed()))
     }
 

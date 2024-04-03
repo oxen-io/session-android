@@ -37,6 +37,7 @@ class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, Li
     private val vMargin by lazy { toDp(4, resources) }
     private val minHeight by lazy { toPx(56, resources) }
     private var linkPreviewDraftView: LinkPreviewDraftView? = null
+    private var quoteView: QuoteView? = null
     var delegate: InputBarDelegate? = null
     var additionalContentHeight = 0
     var quote: MessageRecord? = null
@@ -98,7 +99,7 @@ class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, Li
             binding.inputBarEditText.imeOptions = EditorInfo.IME_ACTION_NONE
             binding.inputBarEditText.inputType =
                 binding.inputBarEditText.inputType or
-                InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+                        InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
         }
         val incognitoFlag = if (TextSecurePreferences.isIncognitoKeyboardEnabled(context)) 16777216 else 0
         binding.inputBarEditText.imeOptions = binding.inputBarEditText.imeOptions or incognitoFlag // Always use incognito keyboard if setting enabled
@@ -138,53 +139,64 @@ class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, Li
         delegate?.startRecordingVoiceMessage()
     }
 
-    // Drafting quotes and drafting link previews is mutually exclusive, i.e. you can't draft
-    // a quote and a link preview at the same time.
-
     fun draftQuote(thread: Recipient, message: MessageRecord, glide: GlideRequests) {
         quote = message
-        linkPreview = null
-        linkPreviewDraftView = null
-        binding.inputBarAdditionalContentContainer.removeAllViews()
 
-        // inflate quoteview with typed array here
+        // If we already have a link preview View then clear the 'additional content' layout so that
+        // our quote View is always the first element (i.e., at the top of the reply).
+        if (linkPreview != null && linkPreviewDraftView != null) {
+            binding.inputBarAdditionalContentContainer.removeAllViews()
+        }
+
+        // Inflate quote View with typed array here
         val layout = LayoutInflater.from(context).inflate(R.layout.view_quote_draft, binding.inputBarAdditionalContentContainer, false)
-        val quoteView = layout.findViewById<QuoteView>(R.id.mainQuoteViewContainer)
-        quoteView.delegate = this
-        binding.inputBarAdditionalContentContainer.addView(layout)
-        val attachments = (message as? MmsMessageRecord)?.slideDeck
-        val sender = if (message.isOutgoing) TextSecurePreferences.getLocalNumber(context)!! else message.individualRecipient.address.serialize()
-        quoteView.bind(sender, message.body, attachments,
-            thread, true, message.isOpenGroupInvitation, message.threadId, false, glide)
+        quoteView = layout.findViewById<QuoteView>(R.id.mainQuoteViewContainer).also {
+            it.delegate = this
+            binding.inputBarAdditionalContentContainer.addView(layout)
+            val attachments = (message as? MmsMessageRecord)?.slideDeck
+            val sender = if (message.isOutgoing) TextSecurePreferences.getLocalNumber(context)!! else message.individualRecipient.address.serialize()
+            it.bind(sender, message.body, attachments, thread, true, message.isOpenGroupInvitation, message.threadId, false, glide)
+        }
+
+        // Before we request a layout update we'll add back any LinkPreviewDraftView that might
+        // exist - as this goes into the LinearLayout second it will be below the quote View.
+        if (linkPreview != null && linkPreviewDraftView != null) {
+            binding.inputBarAdditionalContentContainer.addView(linkPreviewDraftView)
+        }
         requestLayout()
     }
 
     override fun cancelQuoteDraft() {
+        binding.inputBarAdditionalContentContainer.removeView(quoteView)
         quote = null
-        binding.inputBarAdditionalContentContainer.removeAllViews()
+        quoteView = null
         requestLayout()
     }
 
     fun draftLinkPreview() {
-        quote = null
-        binding.inputBarAdditionalContentContainer.removeAllViews()
-        val linkPreviewDraftView = LinkPreviewDraftView(context)
-        linkPreviewDraftView.delegate = this
-        this.linkPreviewDraftView = linkPreviewDraftView
+        // As `draftLinkPreview` is called before `updateLinkPreview` when we modify a URI in a
+        // message we'll bail early if a link preview View already exists and just let
+        // `updateLinkPreview` get called to update the existing View.
+        if (linkPreview != null && linkPreviewDraftView != null) return
+
+        linkPreviewDraftView = LinkPreviewDraftView(context).also { it.delegate = this }
+
+        // Add the link preview View. Note: If there's already a quote View in the 'additional
+        // content' container then this preview View will be added after / below it - which is fine.
         binding.inputBarAdditionalContentContainer.addView(linkPreviewDraftView)
         requestLayout()
     }
 
-    fun updateLinkPreviewDraft(glide: GlideRequests, linkPreview: LinkPreview) {
-        this.linkPreview = linkPreview
-        val linkPreviewDraftView = this.linkPreviewDraftView ?: return
-        linkPreviewDraftView.update(glide, linkPreview)
+    fun updateLinkPreviewDraft(glide: GlideRequests, updatedLinkPreview: LinkPreview) {
+        // Update our `linkPreview` property with the new (provided as an argument to this function)
+        // then update the View from that.
+        linkPreview = updatedLinkPreview.also { linkPreviewDraftView?.update(glide, it) }
     }
 
     override fun cancelLinkPreviewDraft() {
-        if (quote != null) { return }
+        binding.inputBarAdditionalContentContainer.removeView(linkPreviewDraftView)
         linkPreview = null
-        binding.inputBarAdditionalContentContainer.removeAllViews()
+        linkPreviewDraftView = null
         requestLayout()
     }
 

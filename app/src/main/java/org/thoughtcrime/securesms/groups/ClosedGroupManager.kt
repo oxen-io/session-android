@@ -3,12 +3,11 @@ package org.thoughtcrime.securesms.groups
 import android.content.Context
 import network.loki.messenger.libsession_util.ConfigBase
 import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.messaging.sending_receiving.notifications.PushNotificationAPI
+import org.session.libsession.messaging.sending_receiving.notifications.PushRegistryV1
 import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPollerV2
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupRecord
 import org.session.libsession.utilities.GroupUtil
-import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
@@ -24,7 +23,7 @@ object ClosedGroupManager {
         storage.removeAllClosedGroupEncryptionKeyPairs(groupPublicKey)
         storage.removeMember(groupID, Address.fromSerialized(userPublicKey))
         // Notify the PN server
-        PushNotificationAPI.performOperation(PushNotificationAPI.ClosedGroupOperation.Unsubscribe, groupPublicKey, userPublicKey)
+        PushRegistryV1.unsubscribeGroup(closedGroupPublicKey = groupPublicKey, publicKey = userPublicKey)
         // Stop polling
         ClosedGroupPollerV2.shared.stopPolling(groupPublicKey)
         storage.cancelPendingMessageSendJobs(threadId)
@@ -41,7 +40,7 @@ object ClosedGroupManager {
         return groups.eraseLegacyGroup(groupPublicKey)
     }
 
-    fun ConfigFactory.updateLegacyGroup(groupRecipientSettings: Recipient.RecipientSettings, group: GroupRecord) {
+    fun ConfigFactory.updateLegacyGroup(group: GroupRecord) {
         val groups = userGroups ?: return
         if (!group.isClosedGroup) return
         val storage = MessagingModuleConfiguration.shared.storage
@@ -53,7 +52,6 @@ object ClosedGroupManager {
         val toSet = legacyInfo.copy(
             members = latestMemberMap,
             name = group.title,
-            disappearingTimer = groupRecipientSettings.expireMessages.toLong(),
             priority = if (storage.isPinned(threadId)) ConfigBase.PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE,
             encPubKey = (latestKeyPair.publicKey as DjbECPublicKey).publicKey,  // 'serialize()' inserts an extra byte
             encSecKey = latestKeyPair.privateKey.serialize()

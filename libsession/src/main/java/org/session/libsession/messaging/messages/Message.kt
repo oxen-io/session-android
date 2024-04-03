@@ -1,11 +1,14 @@
 package org.session.libsession.messaging.messages
 
 import com.google.protobuf.ByteString
+import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.session.libsession.database.StorageProtocol
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
 import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsignal.protos.SignalServiceProtos
+import org.session.libsignal.protos.SignalServiceProtos.Content.ExpirationType
 
 abstract class Message {
     var id: Long? = null
@@ -18,8 +21,14 @@ abstract class Message {
     var groupPublicKey: String? = null
     var openGroupServerMessageID: Long? = null
     var serverHash: String? = null
+    var specifiedTtl: Long? = null
 
-    open val ttl: Long = 14 * 24 * 60 * 60 * 1000
+    var expiryMode: ExpiryMode = ExpiryMode.NONE
+
+    open val coerceDisappearAfterSendToRead = false
+
+    open val defaultTtl: Long = 14 * 24 * 60 * 60 * 1000
+    open val ttl: Long get() = specifiedTtl ?: defaultTtl
     open val isSelfSendValid: Boolean = false
 
     companion object {
@@ -33,22 +42,54 @@ abstract class Message {
         }
     }
 
-    open fun isValid(): Boolean {
-        val sentTimestamp = sentTimestamp
-        if (sentTimestamp != null && sentTimestamp <= 0) { return false }
-        val receivedTimestamp = receivedTimestamp
-        if (receivedTimestamp != null && receivedTimestamp <= 0) { return false }
-        return sender != null && recipient != null
-    }
+    open fun isValid(): Boolean =
+        sentTimestamp?.let { it > 0 } != false
+            && receivedTimestamp?.let { it > 0 } != false
+            && sender != null
+            && recipient != null
 
     abstract fun toProto(): SignalServiceProtos.Content?
 
-    fun setGroupContext(dataMessage: SignalServiceProtos.DataMessage.Builder) {
-        val groupProto = SignalServiceProtos.GroupContext.newBuilder()
-        val groupID = GroupUtil.doubleEncodeGroupID(recipient!!)
-        groupProto.id = ByteString.copyFrom(GroupUtil.getDecodedGroupIDAsData(groupID))
-        groupProto.type = SignalServiceProtos.GroupContext.Type.DELIVER
-        dataMessage.group = groupProto.build()
+    fun SignalServiceProtos.DataMessage.Builder.setGroupContext() {
+        group = SignalServiceProtos.GroupContext.newBuilder().apply {
+            id = GroupUtil.doubleEncodeGroupID(recipient!!).let(GroupUtil::getDecodedGroupIDAsData).let(ByteString::copyFrom)
+            type = SignalServiceProtos.GroupContext.Type.DELIVER
+        }.build()
     }
 
+    fun SignalServiceProtos.Content.Builder.applyExpiryMode() = apply {
+        expirationTimer = expiryMode.expirySeconds.toInt()
+        expirationType = when (expiryMode) {
+            is ExpiryMode.AfterSend -> ExpirationType.DELETE_AFTER_SEND
+            is ExpiryMode.AfterRead -> ExpirationType.DELETE_AFTER_READ
+            else -> ExpirationType.UNKNOWN
+        }
+    }
+}
+
+inline fun <reified M: Message> M.copyExpiration(proto: SignalServiceProtos.Content): M = apply {
+    (proto.takeIf { it.hasExpirationTimer() }?.expirationTimer ?: proto.dataMessage?.expireTimer)?.let { duration ->
+        expiryMode = when (proto.expirationType.takeIf { duration > 0 }) {
+            ExpirationType.DELETE_AFTER_SEND -> ExpiryMode.AfterSend(duration.toLong())
+            ExpirationType.DELETE_AFTER_READ -> ExpiryMode.AfterRead(duration.toLong())
+            else -> ExpiryMode.NONE
+        }
+    }
+}
+
+fun SignalServiceProtos.Content.expiryMode(): ExpiryMode =
+    (takeIf { it.hasExpirationTimer() }?.expirationTimer ?: dataMessage?.expireTimer)?.let { duration ->
+        when (expirationType.takeIf { duration > 0 }) {
+            ExpirationType.DELETE_AFTER_SEND -> ExpiryMode.AfterSend(duration.toLong())
+            ExpirationType.DELETE_AFTER_READ -> ExpiryMode.AfterRead(duration.toLong())
+            else -> ExpiryMode.NONE
+        }
+    } ?: ExpiryMode.NONE
+
+/**
+ * Apply ExpiryMode from the current setting.
+ */
+inline fun <reified M: Message> M.applyExpiryMode(thread: Long): M = apply {
+    val storage = MessagingModuleConfiguration.shared.storage
+    expiryMode = storage.getExpirationConfiguration(thread)?.expiryMode?.coerceSendToRead(coerceDisappearAfterSendToRead) ?: ExpiryMode.NONE
 }

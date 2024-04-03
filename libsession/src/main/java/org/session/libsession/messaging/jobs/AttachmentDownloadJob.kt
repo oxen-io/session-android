@@ -35,7 +35,7 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
     override val maxFailureCount: Int = 2
 
     companion object {
-        val KEY: String = "AttachmentDownloadJob"
+        const val KEY: String = "AttachmentDownloadJob"
 
         // Keys used for database storage
         private val ATTACHMENT_ID_KEY = "attachment_id"
@@ -89,19 +89,21 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
         }
 
         val threadRecipient = storage.getRecipientForThread(threadID)
-        val sender = if (messageDataProvider.isMmsOutgoing(databaseMessageID)) {
+        val selfSend = messageDataProvider.isMmsOutgoing(databaseMessageID)
+        val sender = if (selfSend) {
             storage.getUserPublicKey()
         } else {
             messageDataProvider.getIndividualRecipientForMms(databaseMessageID)?.address?.serialize()
         }
         val contact = sender?.let { storage.getContactWithSessionID(it) }
-        if (threadRecipient == null || sender == null || contact == null) {
+        if (threadRecipient == null || sender == null || (contact == null && !selfSend)) {
             handleFailure(Error.NoSender, null)
             return
         }
-        if (!threadRecipient.isGroupRecipient && (!contact.isTrusted && storage.getUserPublicKey() != sender)) {
+        if (!threadRecipient.isGroupRecipient && contact?.isTrusted != true && storage.getUserPublicKey() != sender) {
             // if we aren't receiving a group message, a message from ourselves (self-send) and the contact sending is not trusted:
             // do not continue, but do not fail
+            handleFailure(Error.NoSender, null)
             return
         }
 

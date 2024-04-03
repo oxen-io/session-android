@@ -8,6 +8,9 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.preference.Preference
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceDataStore
+import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.BuildConfig
 import network.loki.messenger.R
 import org.session.libsession.utilities.TextSecurePreferences
@@ -15,13 +18,19 @@ import org.session.libsession.utilities.TextSecurePreferences.Companion.isPasswo
 import org.session.libsession.utilities.TextSecurePreferences.Companion.setScreenLockEnabled
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.service.KeyCachingService
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.CallNotificationBuilder.Companion.areNotificationsEnabled
 import org.thoughtcrime.securesms.util.IntentUtils
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
+
+    @Inject lateinit var configFactory: ConfigFactory
+
     override fun onCreate(paramBundle: Bundle?) {
         super.onCreate(paramBundle)
         findPreference<Preference>(TextSecurePreferences.SCREEN_LOCK)!!
@@ -30,6 +39,33 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
             .onPreferenceChangeListener = TypingIndicatorsToggleListener()
         findPreference<Preference>(TextSecurePreferences.CALL_NOTIFICATIONS_ENABLED)!!
             .onPreferenceChangeListener = CallToggleListener(this) { setCall(it) }
+        findPreference<PreferenceCategory>(getString(R.string.preferences__message_requests_category))?.let { category ->
+            when (val user = configFactory.user) {
+                null -> category.isVisible = false
+                else -> SwitchPreferenceCompat(requireContext()).apply {
+                    key = TextSecurePreferences.ALLOW_MESSAGE_REQUESTS
+                    preferenceDataStore = object : PreferenceDataStore() {
+
+                        override fun getBoolean(key: String?, defValue: Boolean): Boolean {
+                            if (key == TextSecurePreferences.ALLOW_MESSAGE_REQUESTS) {
+                                return user.getCommunityMessageRequests()
+                            }
+                            return super.getBoolean(key, defValue)
+                        }
+
+                        override fun putBoolean(key: String?, value: Boolean) {
+                            if (key == TextSecurePreferences.ALLOW_MESSAGE_REQUESTS) {
+                                user.setCommunityMessageRequests(value)
+                                return
+                            }
+                            super.putBoolean(key, value)
+                        }
+                    }
+                    title = getString(R.string.preferences__message_requests_title)
+                    summary = getString(R.string.preferences__message_requests_summary)
+                }.let(category::addPreference)
+            }
+        }
         initializeVisibility()
     }
 
@@ -59,6 +95,7 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,

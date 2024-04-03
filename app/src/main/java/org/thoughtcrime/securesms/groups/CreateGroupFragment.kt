@@ -21,6 +21,7 @@ import nl.komponents.kovenant.ui.successUi
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.groupSizeLimit
 import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.Device
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.contacts.SelectContactsAdapter
@@ -31,9 +32,13 @@ import org.thoughtcrime.securesms.keyboard.emoji.KeyboardPageSearchView
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.util.fadeIn
 import org.thoughtcrime.securesms.util.fadeOut
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CreateGroupFragment : Fragment() {
+
+    @Inject
+    lateinit var device: Device
 
     private lateinit var binding: FragmentCreateGroupBinding
     private val viewModel: CreateGroupViewModel by viewModels()
@@ -86,7 +91,7 @@ class CreateGroupFragment : Fragment() {
             val userPublicKey = TextSecurePreferences.getLocalNumber(requireContext())!!
             isLoading = true
             binding.loaderContainer.fadeIn()
-            MessageSender.createClosedGroup(name.toString(), selectedMembers + setOf( userPublicKey )).successUi { groupID ->
+            MessageSender.createClosedGroup(device, name.toString(), selectedMembers + setOf( userPublicKey )).successUi { groupID ->
                 binding.loaderContainer.fadeOut()
                 isLoading = false
                 val threadID = DatabaseComponent.get(requireContext()).threadDatabase().getOrCreateThreadIdFor(Recipient.from(requireContext(), Address.fromSerialized(groupID), false))

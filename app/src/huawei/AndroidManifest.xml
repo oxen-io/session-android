@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application tools:node="merge">
+        <meta-data
+            android:name="com.huawei.hms.client.appid"
+            android:value="appid=107205081">
+        </meta-data>
+
+        <meta-data
+            android:name="com.huawei.hms.client.cpid"
+            android:value="cpid=30061000024605000">
+        </meta-data>
+
+        <service
+            android:name="org.thoughtcrime.securesms.notifications.HuaweiPushService"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.huawei.push.action.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>

@@ -96,3 +96,57 @@ Java_network_loki_messenger_libsession_1util_UserProfile_getNtsPriority(JNIEnv *
     auto profile = ptrToProfile(env, thiz);
     return profile->get_nts_priority();
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_network_loki_messenger_libsession_1util_UserProfile_setNtsExpiry(JNIEnv *env, jobject thiz,
+                                                                      jobject expiry_mode) {
+    std::lock_guard lock{util::util_mutex_};
+    auto profile = ptrToProfile(env, thiz);
+    auto expiry = util::deserialize_expiry(env, expiry_mode);
+    profile->set_nts_expiry(std::chrono::seconds (expiry.second));
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_network_loki_messenger_libsession_1util_UserProfile_getNtsExpiry(JNIEnv *env, jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
+    auto profile = ptrToProfile(env, thiz);
+    auto nts_expiry = profile->get_nts_expiry();
+    if (nts_expiry == std::nullopt) {
+        auto expiry = util::serialize_expiry(env, session::config::expiration_mode::none, std::chrono::seconds(0));
+        return expiry;
+    }
+    auto expiry = util::serialize_expiry(env, session::config::expiration_mode::after_send, std::chrono::seconds(*nts_expiry));
+    return expiry;
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_network_loki_messenger_libsession_1util_UserProfile_getCommunityMessageRequests(
+        JNIEnv *env, jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
+    auto profile = ptrToProfile(env, thiz);
+    auto blinded_msg_requests = profile->get_blinded_msgreqs();
+    if (blinded_msg_requests.has_value()) {
+        return *blinded_msg_requests;
+    }
+    return true;
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_network_loki_messenger_libsession_1util_UserProfile_setCommunityMessageRequests(
+        JNIEnv *env, jobject thiz, jboolean blocks) {
+    std::lock_guard lock{util::util_mutex_};
+    auto profile = ptrToProfile(env, thiz);
+    profile->set_blinded_msgreqs(std::optional{(bool)blocks});
+}
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_network_loki_messenger_libsession_1util_UserProfile_isBlockCommunityMessageRequestsSet(
+        JNIEnv *env, jobject thiz) {
+    std::lock_guard lock{util::util_mutex_};
+    auto profile = ptrToProfile(env, thiz);
+    return profile->get_blinded_msgreqs().has_value();
+}

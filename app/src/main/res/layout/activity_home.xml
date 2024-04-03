@@ -110,7 +110,7 @@
                     android:layout_gravity="center"
                     android:textColor="?message_sent_text_color"
                     android:background="?colorAccent"
-                    android:textSize="9sp"
+                    android:textSize="11sp"
                     android:paddingVertical="4dp"
                     android:paddingHorizontal="64dp"
                     android:gravity="center"

@@ -34,6 +34,12 @@ Setting up a development environment and building from Android Studio
 6. Project initialization and building should proceed.
 7. Clone submodules with `git submodule update --init --recursive`
 
+If you would like to build the Huawei Flavor with Huawei HMS push notifications you will need to pass 'huawei' as a command line arg to include the required dependencies.
+
+e.g. `./gradlew assembleHuaweiDebug -Phuawei`
+
+If you are building in Android Studio then add `-Phuawei` to `Preferences > Build, Execution, Deployment > Gradle-Android Compiler > Command-line Options`
+
 Contributing code
 -----------------
 

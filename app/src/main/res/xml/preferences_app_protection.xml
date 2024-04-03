@@ -20,6 +20,12 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="@string/preferences__message_requests_category"
+        android:key="@string/preferences__message_requests_category"
+        android:persistent="false">
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/preferences__read_receipts">
         <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
             android:defaultValue="false"

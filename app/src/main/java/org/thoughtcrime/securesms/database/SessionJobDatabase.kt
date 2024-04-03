@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.database
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import org.session.libsession.messaging.jobs.AttachmentDownloadJob
 import org.session.libsession.messaging.jobs.AttachmentUploadJob
 import org.session.libsession.messaging.jobs.BackgroundGroupAddJob
 import org.session.libsession.messaging.jobs.GroupAvatarDownloadJob
@@ -26,6 +27,9 @@ class SessionJobDatabase(context: Context, helper: SQLCipherOpenHelper) : Databa
         const val serializedData = "serialized_data"
         @JvmStatic val createSessionJobTableCommand
             = "CREATE TABLE $sessionJobTable ($jobID INTEGER PRIMARY KEY, $jobType STRING, $failureCount INTEGER DEFAULT 0, $serializedData TEXT);"
+
+        const val dropAttachmentDownloadJobs =
+                "DELETE FROM $sessionJobTable WHERE $jobType = '${AttachmentDownloadJob.KEY}';"
     }
 
     fun persistJob(job: Job) {

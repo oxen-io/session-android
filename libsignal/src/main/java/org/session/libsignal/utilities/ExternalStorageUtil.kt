@@ -15,7 +15,7 @@ object ExternalStorageUtil {
     @Throws(NoExternalStorageException::class)
     fun getDir(context: Context, type: String?): File {
         return context.getExternalFilesDir(type)
-                ?: throw NoExternalStorageException("External storage dir is currently unavailable: $type")
+            ?: throw NoExternalStorageException("External storage dir is currently unavailable: $type")
     }
 
     @Throws(NoExternalStorageException::class)
@@ -73,10 +73,7 @@ object ExternalStorageUtil {
     }
 
     @JvmStatic
-    fun getCleanFileName(fileName: String?): String? {
-        var fileName = fileName ?: return null
-        fileName = fileName.replace('\u202D', '\uFFFD')
-        fileName = fileName.replace('\u202E', '\uFFFD')
-        return fileName
-    }
+    fun getCleanFileName(fileName: String?): String? =
+        fileName?.replace('\u202D', '\uFFFD')
+            ?.replace('\u202E', '\uFFFD')
 }

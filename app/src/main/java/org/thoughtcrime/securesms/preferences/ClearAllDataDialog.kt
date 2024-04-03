@@ -15,10 +15,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import network.loki.messenger.databinding.DialogClearAllDataBinding
+import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.createSessionDialog
+import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 
 class ClearAllDataDialog : DialogFragment() {
@@ -44,9 +46,9 @@ class ClearAllDataDialog : DialogFragment() {
 
     private fun createView(): View {
         binding = DialogClearAllDataBinding.inflate(LayoutInflater.from(requireContext()))
-        val device = RadioOption("deviceOnly", requireContext().getString(R.string.dialog_clear_all_data_clear_device_only))
-        val network = RadioOption("deviceAndNetwork", requireContext().getString(R.string.dialog_clear_all_data_clear_device_and_network))
-        var selectedOption = device
+        val device = radioOption("deviceOnly", R.string.dialog_clear_all_data_clear_device_only)
+        val network = radioOption("deviceAndNetwork", R.string.dialog_clear_all_data_clear_device_and_network)
+        var selectedOption: RadioOption<String> = device
         val optionAdapter = RadioOptionAdapter { selectedOption = it }
         binding.recyclerView.apply {
             itemAnimator = null
@@ -115,6 +117,10 @@ class ClearAllDataDialog : DialogFragment() {
             } else {
                 // finish
                 val result = try {
+                    val openGroups = DatabaseComponent.get(requireContext()).lokiThreadDatabase().getAllOpenGroups()
+                    openGroups.map { it.value.server }.toSet().forEach { server ->
+                        OpenGroupApi.deleteAllInboxMessages(server).get()
+                    }
                     SnodeAPI.deleteAllMessages().get()
                 } catch (e: Exception) {
                     null

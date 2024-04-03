@@ -41,6 +41,7 @@ import org.session.libsession.messaging.sending_receiving.pollers.Poller;
 import org.session.libsession.snode.SnodeModule;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.ConfigFactoryUpdateListener;
+import org.session.libsession.utilities.Device;
 import org.session.libsession.utilities.ProfilePictureUtilities;
 import org.session.libsession.utilities.SSKEnvironment;
 import org.session.libsession.utilities.TextSecurePreferences;
@@ -73,10 +74,9 @@ import org.thoughtcrime.securesms.logging.PersistentLogger;
 import org.thoughtcrime.securesms.logging.UncaughtExceptionLogger;
 import org.thoughtcrime.securesms.notifications.BackgroundPollWorker;
 import org.thoughtcrime.securesms.notifications.DefaultMessageNotifier;
-import org.thoughtcrime.securesms.notifications.FcmUtils;
-import org.thoughtcrime.securesms.notifications.LokiPushNotificationManager;
 import org.thoughtcrime.securesms.notifications.NotificationChannels;
 import org.thoughtcrime.securesms.notifications.OptimizedMessageNotifier;
+import org.thoughtcrime.securesms.notifications.PushRegistry;
 import org.thoughtcrime.securesms.providers.BlobProvider;
 import org.thoughtcrime.securesms.service.ExpiringMessageManager;
 import org.thoughtcrime.securesms.service.KeyCachingService;
@@ -109,6 +109,7 @@ import dagger.hilt.EntryPoints;
 import dagger.hilt.android.HiltAndroidApp;
 import kotlin.Unit;
 import kotlinx.coroutines.Job;
+import network.loki.messenger.BuildConfig;
 import network.loki.messenger.libsession_util.ConfigBase;
 import network.loki.messenger.libsession_util.UserProfile;
 
@@ -143,8 +144,10 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
 
     @Inject LokiAPIDatabase lokiAPIDatabase;
     @Inject public Storage storage;
+    @Inject Device device;
     @Inject MessageDataProvider messageDataProvider;
     @Inject TextSecurePreferences textSecurePreferences;
+    @Inject PushRegistry pushRegistry;
     @Inject ConfigFactory configFactory;
     CallMessageProcessor callMessageProcessor;
     MessagingModuleConfiguration messagingModuleConfiguration;
@@ -194,21 +197,25 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     }
 
     @Override
-    public void notifyUpdates(@NonNull ConfigBase forConfigObject) {
+    public void notifyUpdates(@NonNull ConfigBase forConfigObject, long messageTimestamp) {
         // forward to the config factory / storage ig
         if (forConfigObject instanceof UserProfile && !textSecurePreferences.getConfigurationMessageSynced()) {
             textSecurePreferences.setConfigurationMessageSynced(true);
         }
-        storage.notifyConfigUpdates(forConfigObject);
+        storage.notifyConfigUpdates(forConfigObject, messageTimestamp);
     }
 
     @Override
     public void onCreate() {
+        TextSecurePreferences.setPushSuffix(BuildConfig.PUSH_KEY_SUFFIX);
+
         DatabaseModule.init(this);
         MessagingModuleConfiguration.configure(this);
         super.onCreate();
-        messagingModuleConfiguration = new MessagingModuleConfiguration(this,
+        messagingModuleConfiguration = new MessagingModuleConfiguration(
+                this,
                 storage,
+                device,
                 messageDataProvider,
                 ()-> KeyPairUtilities.INSTANCE.getUserED25519KeyPair(this),
                 configFactory
@@ -226,10 +233,6 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         broadcaster = new Broadcaster(this);
         LokiAPIDatabase apiDB = getDatabaseComponent().lokiAPIDatabase();
         SnodeModule.Companion.configure(apiDB, broadcaster);
-        String userPublicKey = TextSecurePreferences.getLocalNumber(this);
-        if (userPublicKey != null) {
-            registerForFCMIfNeeded(false);
-        }
         initializeExpiringMessageManager();
         initializeTypingStatusRepository();
         initializeTypingStatusSender();
@@ -427,33 +430,6 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     }
 
     private static class ProviderInitializationException extends RuntimeException { }
-
-    public void registerForFCMIfNeeded(final Boolean force) {
-        if (firebaseInstanceIdJob != null && firebaseInstanceIdJob.isActive() && !force) return;
-        if (force && firebaseInstanceIdJob != null) {
-            firebaseInstanceIdJob.cancel(null);
-        }
-        firebaseInstanceIdJob = FcmUtils.getFcmInstanceId(task->{
-            if (!task.isSuccessful()) {
-                Log.w("Loki", "FirebaseInstanceId.getInstance().getInstanceId() failed." + task.getException());
-                return Unit.INSTANCE;
-            }
-            String token = task.getResult().getToken();
-            String userPublicKey = TextSecurePreferences.getLocalNumber(this);
-            if (userPublicKey == null) return Unit.INSTANCE;
-
-            AsyncTask.THREAD_POOL_EXECUTOR.execute(() -> {
-                if (TextSecurePreferences.isUsingFCM(this)) {
-                    LokiPushNotificationManager.register(token, userPublicKey, this, force);
-                } else {
-                    LokiPushNotificationManager.unregister(token, this);
-                }
-            });
-
-            return Unit.INSTANCE;
-        });
-    }
-
     private void setUpPollingIfNeeded() {
         String userPublicKey = TextSecurePreferences.getLocalNumber(this);
         if (userPublicKey == null) return;
@@ -524,18 +500,14 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     }
 
     public void clearAllData(boolean isMigratingToV2KeyPair) {
-        String token = TextSecurePreferences.getFCMToken(this);
-        if (token != null && !token.isEmpty()) {
-            LokiPushNotificationManager.unregister(token, this);
-        }
         if (firebaseInstanceIdJob != null && firebaseInstanceIdJob.isActive()) {
             firebaseInstanceIdJob.cancel(null);
         }
         String displayName = TextSecurePreferences.getProfileName(this);
-        boolean isUsingFCM = TextSecurePreferences.isUsingFCM(this);
+        boolean isUsingFCM = TextSecurePreferences.isPushEnabled(this);
         TextSecurePreferences.clearAll(this);
         if (isMigratingToV2KeyPair) {
-            TextSecurePreferences.setIsUsingFCM(this, isUsingFCM);
+            TextSecurePreferences.setPushEnabled(this, isUsingFCM);
             TextSecurePreferences.setProfileName(this, displayName);
         }
         getSharedPreferences(PREFERENCES_NAME, 0).edit().clear().commit();

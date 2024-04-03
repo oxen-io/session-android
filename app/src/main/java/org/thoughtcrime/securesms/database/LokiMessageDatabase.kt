@@ -13,6 +13,8 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         private val messageThreadMappingTable = "loki_message_thread_mapping_database"
         private val errorMessageTable = "loki_error_message_database"
         private val messageHashTable = "loki_message_hash_database"
+        private val smsHashTable = "loki_sms_hash_database"
+        private val mmsHashTable = "loki_mms_hash_database"
         private val messageID = "message_id"
         private val serverID = "server_id"
         private val friendRequestStatus = "friend_request_status"
@@ -32,6 +34,10 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         val updateMessageMappingTable = "ALTER TABLE $messageThreadMappingTable ADD COLUMN $serverID INTEGER DEFAULT 0; ALTER TABLE $messageThreadMappingTable ADD CONSTRAINT PK_$messageThreadMappingTable PRIMARY KEY ($messageID, $serverID);"
         @JvmStatic
         val createMessageHashTableCommand = "CREATE TABLE IF NOT EXISTS $messageHashTable ($messageID INTEGER PRIMARY KEY, $serverHash STRING);"
+        @JvmStatic
+        val createMmsHashTableCommand = "CREATE TABLE IF NOT EXISTS $mmsHashTable ($messageID INTEGER PRIMARY KEY, $serverHash STRING);"
+        @JvmStatic
+        val createSmsHashTableCommand = "CREATE TABLE IF NOT EXISTS $smsHashTable ($messageID INTEGER PRIMARY KEY, $serverHash STRING);"
 
         const val SMS_TYPE = 0
         const val MMS_TYPE = 1
@@ -201,52 +207,52 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
                     messages.add(cursor.getLong(messageID) to cursor.getLong(serverID))
                 }
             }
-            var deletedCount = 0L
             database.beginTransaction()
             messages.forEach { (messageId, serverId) ->
-                deletedCount += database.delete(messageIDTable, "$messageID = ? AND $serverID = ?", arrayOf(messageId.toString(), serverId.toString()))
+                database.delete(messageIDTable, "$messageID = ? AND $serverID = ?", arrayOf(messageId.toString(), serverId.toString()))
             }
-            val mappingDeleted = database.delete(messageThreadMappingTable, "$threadID = ?", arrayOf(threadId.toString()))
+            database.delete(messageThreadMappingTable, "$threadID = ?", arrayOf(threadId.toString()))
             database.setTransactionSuccessful()
         } finally {
             database.endTransaction()
         }
     }
 
-    fun getMessageServerHash(messageID: Long): String? {
-        val database = databaseHelper.readableDatabase
-        return database.get(messageHashTable, "${Companion.messageID} = ?", arrayOf(messageID.toString())) { cursor ->
+    fun getMessageServerHash(messageID: Long, mms: Boolean): String? = getMessageTables(mms).firstNotNullOfOrNull {
+        databaseHelper.readableDatabase.get(it, "${Companion.messageID} = ?", arrayOf(messageID.toString())) { cursor ->
             cursor.getString(serverHash)
         }
     }
 
-    fun setMessageServerHash(messageID: Long, serverHash: String) {
-        val database = databaseHelper.writableDatabase
-        val contentValues = ContentValues(2)
-        contentValues.put(Companion.messageID, messageID)
-        contentValues.put(Companion.serverHash, serverHash)
-        database.insertOrUpdate(messageHashTable, contentValues, "${Companion.messageID} = ?", arrayOf(messageID.toString()))
+    fun setMessageServerHash(messageID: Long, mms: Boolean, serverHash: String) {
+        val contentValues = ContentValues(2).apply {
+            put(Companion.messageID, messageID)
+            put(Companion.serverHash, serverHash)
+        }
+
+        databaseHelper.writableDatabase.apply {
+            insertOrUpdate(getMessageTable(mms), contentValues, "${Companion.messageID} = ?", arrayOf(messageID.toString()))
+        }
     }
 
-    fun deleteMessageServerHash(messageID: Long) {
-        val database = databaseHelper.writableDatabase
-        database.delete(messageHashTable, "${Companion.messageID} = ?", arrayOf(messageID.toString()))
+    fun deleteMessageServerHash(messageID: Long, mms: Boolean) {
+        getMessageTables(mms).firstOrNull {
+            databaseHelper.writableDatabase.delete(it, "${Companion.messageID} = ?", arrayOf(messageID.toString())) > 0
+        }
     }
 
-    fun deleteMessageServerHashes(messageIDs: List<Long>) {
-        val database = databaseHelper.writableDatabase
-        database.delete(
-            messageHashTable,
-            "${Companion.messageID} IN (${messageIDs.map { "?" }.joinToString(",")})",
+    fun deleteMessageServerHashes(messageIDs: List<Long>, mms: Boolean) {
+        databaseHelper.writableDatabase.delete(
+            getMessageTable(mms),
+            "${Companion.messageID} IN (${messageIDs.joinToString(",") { "?" }})",
             messageIDs.map { "$it" }.toTypedArray()
         )
     }
 
-    fun migrateThreadId(legacyThreadId: Long, newThreadId: Long) {
-        val database = databaseHelper.writableDatabase
-        val contentValues = ContentValues(1)
-        contentValues.put(threadID, newThreadId)
-        database.update(messageThreadMappingTable, contentValues, "$threadID = ?", arrayOf(legacyThreadId.toString()))
-    }
+    private fun getMessageTables(mms: Boolean) = sequenceOf(
+        getMessageTable(mms),
+        messageHashTable
+    )
 
+    private fun getMessageTable(mms: Boolean) = if (mms) mmsHashTable else smsHashTable
 }

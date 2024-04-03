@@ -1,6 +1,7 @@
 package org.session.libsession.utilities
 
-import network.loki.messenger.libsession_util.util.GroupInfo
+import org.session.libsession.messaging.open_groups.OpenGroup
+import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsignal.messages.SignalServiceGroup
 import org.session.libsignal.utilities.Hex
 import java.io.IOException
@@ -16,8 +17,15 @@ object GroupUtil {
     }
 
     @JvmStatic
-    fun getEncodedOpenGroupInboxID(groupInboxID: ByteArray): String {
-        return OPEN_GROUP_INBOX_PREFIX + Hex.toStringCondensed(groupInboxID)
+    fun getEncodedOpenGroupInboxID(openGroup: OpenGroup, sessionId: SessionId): Address {
+        val openGroupInboxId =
+            "${openGroup.server}!${openGroup.publicKey}!${sessionId.hexString}".toByteArray()
+        return getEncodedOpenGroupInboxID(openGroupInboxId)
+    }
+
+    @JvmStatic
+    fun getEncodedOpenGroupInboxID(groupInboxID: ByteArray): Address {
+        return Address.fromSerialized(OPEN_GROUP_INBOX_PREFIX + Hex.toStringCondensed(groupInboxID))
     }
 
     @JvmStatic
@@ -52,7 +60,7 @@ object GroupUtil {
     }
 
     @JvmStatic
-    fun getDecodedOpenGroupInbox(groupID: String): String {
+    fun getDecodedOpenGroupInboxSessionId(groupID: String): String {
         val decodedGroupId = getDecodedGroupID(groupID)
         if (decodedGroupId.split("!").count() > 2) {
             return decodedGroupId.split("!", limit = 3)[2]
@@ -100,22 +108,23 @@ object GroupUtil {
 
     @JvmStatic
     @Throws(IOException::class)
-    fun doubleDecodeGroupId(groupID: String): String {
-        return Hex.toStringCondensed(getDecodedGroupIDAsData(getDecodedGroupID(groupID)))
-    }
+    fun doubleDecodeGroupId(groupID: String): String =
+        Hex.toStringCondensed(getDecodedGroupIDAsData(getDecodedGroupID(groupID)))
+
+    @JvmStatic
+    fun addressToGroupSessionId(address: Address): String =
+        doubleDecodeGroupId(address.toGroupString())
 
     fun createConfigMemberMap(
         members: Collection<String>,
         admins: Collection<String>
     ): Map<String, Boolean> {
         // Start with admins
-        val memberMap = admins.associate {
-            it to true
-        }.toMutableMap()
+        val memberMap = admins.associateWith { true }.toMutableMap()
 
         // Add the remaining members (there may be duplicates, so only add ones that aren't already in there from admins)
         for (member in members) {
-            if (!memberMap.contains(member)) {
+            if (member !in memberMap) {
                 memberMap[member] = false
             }
         }

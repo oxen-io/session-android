@@ -144,7 +144,7 @@ class JobQueue : JobDelegate {
                         }
                     }
                     else -> {
-                        throw IllegalStateException("Unexpected job type.")
+                        throw IllegalStateException("Unexpected job type: ${job.getFactoryKey()}")
                     }
                 }
             }

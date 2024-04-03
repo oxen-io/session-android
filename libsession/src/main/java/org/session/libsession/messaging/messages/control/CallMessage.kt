@@ -1,5 +1,7 @@
 package org.session.libsession.messaging.messages.control
 
+import org.session.libsession.messaging.messages.applyExpiryMode
+import org.session.libsession.messaging.messages.copyExpiration
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.protos.SignalServiceProtos.CallMessage.Type.*
 import org.session.libsignal.utilities.Log
@@ -12,12 +14,13 @@ class CallMessage(): ControlMessage() {
     var sdpMids: List<String> = listOf()
     var callId: UUID? = null
 
+    override val coerceDisappearAfterSendToRead = true
     override val isSelfSendValid: Boolean get() = type in arrayOf(ANSWER, END_CALL)
 
-    override val ttl: Long = 300000L // 5m
+    override val defaultTtl: Long = 300000L // 5m
 
     override fun isValid(): Boolean = super.isValid() && type != null && callId != null
-            && (!sdps.isNullOrEmpty() || type in listOf(END_CALL, PRE_OFFER))
+            && (sdps.isNotEmpty() || type in listOf(END_CALL, PRE_OFFER))
 
     constructor(type: SignalServiceProtos.CallMessage.Type,
                 sdps: List<String>,
@@ -64,7 +67,8 @@ class CallMessage(): ControlMessage() {
             val sdpMLineIndexes = callMessageProto.sdpMLineIndexesList
             val sdpMids = callMessageProto.sdpMidsList
             val callId = UUID.fromString(callMessageProto.uuid)
-            return CallMessage(type,sdps, sdpMLineIndexes, sdpMids, callId)
+            return CallMessage(type, sdps, sdpMLineIndexes, sdpMids, callId)
+                    .copyExpiration(proto)
         }
     }
 
@@ -82,9 +86,8 @@ class CallMessage(): ControlMessage() {
             .setUuid(callId!!.toString())
 
         return SignalServiceProtos.Content.newBuilder()
-            .setCallMessage(
-                callMessage
-            )
+            .applyExpiryMode()
+            .setCallMessage(callMessage)
             .build()
     }
 

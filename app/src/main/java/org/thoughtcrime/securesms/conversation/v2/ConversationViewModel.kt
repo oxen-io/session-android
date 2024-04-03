@@ -1,10 +1,9 @@
 package org.thoughtcrime.securesms.conversation.v2
 
-import android.content.ContentResolver
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import app.cash.copper.flow.observeQuery
 import com.goterl.lazysodium.utils.KeyPair
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -14,14 +13,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
+import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
-import org.thoughtcrime.securesms.database.DatabaseContentProviders
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.repository.ConversationRepository
@@ -30,7 +30,6 @@ import java.util.UUID
 class ConversationViewModel(
     val threadId: Long,
     val edKeyPair: KeyPair?,
-    private val contentResolver: ContentResolver,
     private val repository: ConversationRepository,
     private val storage: Storage
 ) : ViewModel() {
@@ -44,8 +43,20 @@ class ConversationViewModel(
     private var _recipient: RetrieveOnce<Recipient> = RetrieveOnce {
         repository.maybeGetRecipientForThreadId(threadId)
     }
+    val expirationConfiguration: ExpirationConfiguration?
+        get() = storage.getExpirationConfiguration(threadId)
+
     val recipient: Recipient?
         get() = _recipient.value
+
+    val blindedRecipient: Recipient?
+        get() = _recipient.value?.let { recipient ->
+            when {
+                recipient.isOpenGroupOutboxRecipient -> recipient
+                recipient.isOpenGroupInboxRecipient -> repository.maybeGetBlindedRecipient(recipient)
+                else -> null
+            }
+        }
 
     private var _openGroup: RetrieveOnce<OpenGroup> = RetrieveOnce {
         storage.getOpenGroup(threadId)
@@ -62,12 +73,22 @@ class ConversationViewModel(
                 ?.let { SessionId(IdPrefix.BLINDED, it) }?.hexString
         }
 
+    val isMessageRequestThread : Boolean
+        get() {
+            val recipient = recipient ?: return false
+            return !recipient.isLocalNumber && !recipient.isGroupRecipient && !recipient.isApproved
+        }
+
+    val canReactToMessages: Boolean
+        // allow reactions if the open group is null (normal conversations) or the open group's capabilities include reactions
+        get() = (openGroup == null || OpenGroupApi.Capability.REACTIONS.name.lowercase() in serverCapabilities)
+
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            contentResolver.observeQuery(DatabaseContentProviders.Conversation.getUriForThread(threadId))
-                .collect {
-                    val recipientExists = storage.getRecipientForThread(threadId) != null
-                    if (!recipientExists && _uiState.value.conversationExists) {
+            repository.recipientUpdateFlow(threadId)
+                .collect { recipient ->
+                    if (recipient == null && _uiState.value.conversationExists) {
                         _uiState.update { it.copy(conversationExists = false) }
                     }
                 }
@@ -199,22 +220,28 @@ class ConversationViewModel(
         _recipient.updateTo(repository.maybeGetRecipientForThreadId(threadId))
     }
 
+    fun hidesInputBar(): Boolean = openGroup?.canWrite != true &&
+        blindedRecipient?.blocksCommunityMessageRequests == true
+
+    fun legacyBannerRecipient(context: Context): Recipient? = recipient?.run {
+        storage.getLastLegacyRecipient(address.serialize())?.let { Recipient.from(context, Address.fromSerialized(it), false) }
+    }
+
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {
-        fun create(threadId: Long, edKeyPair: KeyPair?, contentResolver: ContentResolver): Factory
+        fun create(threadId: Long, edKeyPair: KeyPair?): Factory
     }
 
     @Suppress("UNCHECKED_CAST")
     class Factory @AssistedInject constructor(
         @Assisted private val threadId: Long,
         @Assisted private val edKeyPair: KeyPair?,
-        @Assisted private val contentResolver: ContentResolver,
         private val repository: ConversationRepository,
         private val storage: Storage
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return ConversationViewModel(threadId, edKeyPair, contentResolver, repository, storage) as T
+            return ConversationViewModel(threadId, edKeyPair, repository, storage) as T
         }
     }
 }
