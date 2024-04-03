@@ -43,6 +43,8 @@
         android:paddingBottom="0dp"
         android:gravity="center_vertical"
         android:inputType="textCapWords"
+        android:maxLength="@integer/max_user_nickname_length_chars"
+        android:maxLines="1"
         android:hint="@string/activity_display_name_edit_text_hint" />
 
     <View

@@ -182,7 +182,7 @@ open class Storage(
     }
 
     override fun getUserProfile(): Profile {
-        val displayName = TextSecurePreferences.getProfileName(context)!!
+        val displayName = TextSecurePreferences.getProfileName(context)
         val profileKey = ProfileKeyUtil.getProfileKey(context)
         val profilePictureUrl = TextSecurePreferences.getProfilePictureURL(context)
         return Profile(displayName, profileKey, profilePictureUrl)

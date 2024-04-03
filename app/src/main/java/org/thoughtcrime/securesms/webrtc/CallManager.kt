@@ -408,6 +408,10 @@ class CallManager(
 
     override fun onCameraSwitchCompleted(newCameraState: CameraState) {
         localCameraState = newCameraState
+
+        // If the camera we've switched to is the front one then mirror it to match what someone
+        // would see when looking in the mirror rather than the left<-->right flipped version.
+        localRenderer?.setMirror(localCameraState.activeDirection == CameraState.Direction.FRONT)
     }
 
     fun onPreOffer(callId: UUID, recipient: Recipient, onSuccess: () -> Unit) {
@@ -639,7 +643,11 @@ class CallManager(
         peerConnection?.let { connection ->
             connection.flipCamera()
             localCameraState = connection.getCameraState()
-            localRenderer?.setMirror(localCameraState.activeDirection == CameraState.Direction.FRONT)
+
+            // Note: We cannot set the mirrored state of the localRenderer here because
+            // localCameraState.activeDirection is still PENDING (not FRONT or BACK) until the flip
+            // completes and we hit Camera.onCameraSwitchDone (followed by PeerConnectionWrapper.onCameraSwitchCompleted
+            // and CallManager.onCameraSwitchCompleted).
         }
     }
 
