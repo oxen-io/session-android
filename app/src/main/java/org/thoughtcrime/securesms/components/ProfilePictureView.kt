@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
-import androidx.annotation.DimenRes
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewProfilePictureBinding
@@ -33,12 +32,11 @@ class ProfilePictureView @JvmOverloads constructor(
     var additionalDisplayName: String? = null
     var isLarge = false
 
-    private val profilePicturesCache = mutableMapOf<String, String?>()
+    private val profilePicturesCache = mutableMapOf<View, Recipient>()
     private val unknownRecipientDrawable by lazy { ResourceContactPhoto(R.drawable.ic_profile_default)
         .asDrawable(context, ContactColors.UNKNOWN_COLOR.toConversationColor(context), false) }
     private val unknownOpenGroupDrawable by lazy { ResourceContactPhoto(R.drawable.ic_notification)
         .asDrawable(context, ContactColors.UNKNOWN_COLOR.toConversationColor(context), false) }
-
 
     // endregion
 
@@ -90,8 +88,8 @@ class ProfilePictureView @JvmOverloads constructor(
         val publicKey = publicKey ?: return
         val additionalPublicKey = additionalPublicKey
         if (additionalPublicKey != null) {
-            setProfilePictureIfNeeded(binding.doubleModeImageView1, publicKey, displayName, R.dimen.small_profile_picture_size)
-            setProfilePictureIfNeeded(binding.doubleModeImageView2, additionalPublicKey, additionalDisplayName, R.dimen.small_profile_picture_size)
+            setProfilePictureIfNeeded(binding.doubleModeImageView1, publicKey, displayName)
+            setProfilePictureIfNeeded(binding.doubleModeImageView2, additionalPublicKey, additionalDisplayName)
             binding.doubleModeImageViewContainer.visibility = View.VISIBLE
         } else {
             glide.clear(binding.doubleModeImageView1)
@@ -99,14 +97,14 @@ class ProfilePictureView @JvmOverloads constructor(
             binding.doubleModeImageViewContainer.visibility = View.INVISIBLE
         }
         if (additionalPublicKey == null && !isLarge) {
-            setProfilePictureIfNeeded(binding.singleModeImageView, publicKey, displayName, R.dimen.medium_profile_picture_size)
+            setProfilePictureIfNeeded(binding.singleModeImageView, publicKey, displayName)
             binding.singleModeImageView.visibility = View.VISIBLE
         } else {
             glide.clear(binding.singleModeImageView)
             binding.singleModeImageView.visibility = View.INVISIBLE
         }
         if (additionalPublicKey == null && isLarge) {
-            setProfilePictureIfNeeded(binding.largeSingleModeImageView, publicKey, displayName, R.dimen.large_profile_picture_size)
+            setProfilePictureIfNeeded(binding.largeSingleModeImageView, publicKey, displayName)
             binding.largeSingleModeImageView.visibility = View.VISIBLE
         } else {
             glide.clear(binding.largeSingleModeImageView)
@@ -114,17 +112,19 @@ class ProfilePictureView @JvmOverloads constructor(
         }
     }
 
-    private fun setProfilePictureIfNeeded(imageView: ImageView, publicKey: String, displayName: String?, @DimenRes sizeResId: Int) {
+    private fun setProfilePictureIfNeeded(imageView: ImageView, publicKey: String, displayName: String?) {
         if (publicKey.isNotEmpty()) {
             val recipient = Recipient.from(context, Address.fromSerialized(publicKey), false)
-            if (profilePicturesCache.containsKey(publicKey) && profilePicturesCache[publicKey] == recipient.profileAvatar) return
+            if (profilePicturesCache[imageView] == recipient) return
+            profilePicturesCache[imageView] = recipient
             val signalProfilePicture = recipient.contactPhoto
             val avatar = (signalProfilePicture as? ProfileContactPhoto)?.avatarObject
+
+            glide.clear(imageView)
 
             val placeholder = PlaceholderAvatarPhoto(context, publicKey, displayName ?: "${publicKey.take(4)}...${publicKey.takeLast(4)}")
 
             if (signalProfilePicture != null && avatar != "0" && avatar != "") {
-                glide.clear(imageView)
                 glide.load(signalProfilePicture)
                     .placeholder(unknownRecipientDrawable)
                     .centerCrop()
@@ -139,14 +139,12 @@ class ProfilePictureView @JvmOverloads constructor(
                     .circleCrop()
                     .into(imageView)
             } else {
-                glide.clear(imageView)
                 glide.load(placeholder)
                     .placeholder(unknownRecipientDrawable)
                     .centerCrop()
                     .circleCrop()
                     .diskCacheStrategy(DiskCacheStrategy.NONE).circleCrop().into(imageView)
             }
-            profilePicturesCache[publicKey] = recipient.profileAvatar
         } else {
             glide.load(unknownRecipientDrawable)
                 .centerCrop()

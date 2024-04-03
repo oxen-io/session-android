@@ -184,16 +184,21 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
     override fun deleteMessage(messageID: Long, isSms: Boolean) {
         val messagingDatabase: MessagingDatabase = if (isSms)  DatabaseComponent.get(context).smsDatabase()
                                                    else DatabaseComponent.get(context).mmsDatabase()
+
         messagingDatabase.deleteMessage(messageID)
         DatabaseComponent.get(context).lokiMessageDatabase().deleteMessage(messageID, isSms)
         DatabaseComponent.get(context).lokiMessageDatabase().deleteMessageServerHash(messageID, mms = !isSms)
     }
 
     override fun deleteMessages(messageIDs: List<Long>, threadId: Long, isSms: Boolean) {
+
         val messagingDatabase: MessagingDatabase = if (isSms)  DatabaseComponent.get(context).smsDatabase()
                                                    else DatabaseComponent.get(context).mmsDatabase()
 
+        // Perform local delete
         messagingDatabase.deleteMessages(messageIDs.toLongArray(), threadId)
+
+        // Perform online delete
         DatabaseComponent.get(context).lokiMessageDatabase().deleteMessages(messageIDs)
         DatabaseComponent.get(context).lokiMessageDatabase().deleteMessageServerHashes(messageIDs, mms = !isSms)
     }

@@ -21,6 +21,7 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityPathBinding
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.utilities.getColorFromAttr
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Snode
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.util.GlowViewUtilities

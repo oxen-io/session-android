@@ -18,7 +18,7 @@
 package org.thoughtcrime.securesms.database;
 
 import static org.session.libsession.utilities.GroupUtil.CLOSED_GROUP_PREFIX;
-import static org.session.libsession.utilities.GroupUtil.OPEN_GROUP_PREFIX;
+import static org.session.libsession.utilities.GroupUtil.COMMUNITY_PREFIX;
 import static org.thoughtcrime.securesms.database.GroupDatabase.GROUP_ID;
 
 import android.content.ContentValues;
@@ -427,7 +427,7 @@ public class ThreadDatabase extends Database {
     }
 
     Cursor cursor = cursors.size() > 1 ? new MergeCursor(cursors.toArray(new Cursor[cursors.size()])) : cursors.get(0);
-    setNotifyConverationListListeners(cursor);
+    setNotifyConversationListListeners(cursor);
     return cursor;
   }
 
@@ -491,7 +491,7 @@ public class ThreadDatabase extends Database {
   }
 
   public Cursor getConversationList() {
-    String where  = "(" + MESSAGE_COUNT + " != 0 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') " +
+    String where  = "(" + MESSAGE_COUNT + " != 0 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + COMMUNITY_PREFIX + "%') " +
             "AND " + ARCHIVED + " = 0 ";
     return getConversationList(where);
   }
@@ -502,7 +502,7 @@ public class ThreadDatabase extends Database {
   }
 
   public Cursor getApprovedConversationList() {
-    String where  = "((" + HAS_SENT + " = 1 OR " + RecipientDatabase.APPROVED + " = 1 OR "+ GroupDatabase.TABLE_NAME +"."+GROUP_ID+" LIKE '"+CLOSED_GROUP_PREFIX+"%') OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') " +
+    String where  = "((" + HAS_SENT + " = 1 OR " + RecipientDatabase.APPROVED + " = 1 OR "+ GroupDatabase.TABLE_NAME +"."+GROUP_ID+" LIKE '"+CLOSED_GROUP_PREFIX+"%') OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + COMMUNITY_PREFIX + "%') " +
             "AND " + ARCHIVED + " = 0 ";
     return getConversationList(where);
   }
@@ -516,7 +516,7 @@ public class ThreadDatabase extends Database {
   }
 
   public Cursor getArchivedConversationList() {
-    String where  = "(" + MESSAGE_COUNT + " != 0 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + OPEN_GROUP_PREFIX + "%') " +
+    String where  = "(" + MESSAGE_COUNT + " != 0 OR " + GroupDatabase.TABLE_NAME + "." + GROUP_ID + " LIKE '" + COMMUNITY_PREFIX + "%') " +
             "AND " + ARCHIVED + " = 1 ";
     return getConversationList(where);
   }
@@ -526,7 +526,7 @@ public class ThreadDatabase extends Database {
     String         query  = createQuery(where, 0);
     Cursor         cursor = db.rawQuery(query, null);
 
-    setNotifyConverationListListeners(cursor);
+    setNotifyConversationListListeners(cursor);
 
     return cursor;
   }

@@ -6,8 +6,8 @@ import android.database.Cursor
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.messages.ExpirationDatabaseMetadata
 import org.session.libsession.utilities.GroupUtil.CLOSED_GROUP_PREFIX
-import org.session.libsession.utilities.GroupUtil.OPEN_GROUP_INBOX_PREFIX
-import org.session.libsession.utilities.GroupUtil.OPEN_GROUP_PREFIX
+import org.session.libsession.utilities.GroupUtil.COMMUNITY_INBOX_PREFIX
+import org.session.libsession.utilities.GroupUtil.COMMUNITY_PREFIX
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 
 class ExpirationConfigurationDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(context, helper) {
@@ -38,8 +38,8 @@ class ExpirationConfigurationDatabase(context: Context, helper: SQLCipherOpenHel
             INSERT INTO $TABLE_NAME ($THREAD_ID) SELECT ${ThreadDatabase.TABLE_NAME}.${ThreadDatabase.ID}
             FROM ${ThreadDatabase.TABLE_NAME}, ${RecipientDatabase.TABLE_NAME}
             WHERE ${ThreadDatabase.TABLE_NAME}.${ThreadDatabase.ADDRESS} NOT LIKE '$CLOSED_GROUP_PREFIX%'
-            AND ${ThreadDatabase.TABLE_NAME}.${ThreadDatabase.ADDRESS} NOT LIKE '$OPEN_GROUP_PREFIX%'
-            AND ${ThreadDatabase.TABLE_NAME}.${ThreadDatabase.ADDRESS} NOT LIKE '$OPEN_GROUP_INBOX_PREFIX%'
+            AND ${ThreadDatabase.TABLE_NAME}.${ThreadDatabase.ADDRESS} NOT LIKE '$COMMUNITY_PREFIX%'
+            AND ${ThreadDatabase.TABLE_NAME}.${ThreadDatabase.ADDRESS} NOT LIKE '$COMMUNITY_INBOX_PREFIX%'
             AND EXISTS (SELECT ${RecipientDatabase.EXPIRE_MESSAGES} FROM ${RecipientDatabase.TABLE_NAME} WHERE ${ThreadDatabase.TABLE_NAME}.${ThreadDatabase.ADDRESS} = ${RecipientDatabase.TABLE_NAME}.${RecipientDatabase.ADDRESS} AND ${RecipientDatabase.EXPIRE_MESSAGES} > 0)
         """.trimIndent()
 

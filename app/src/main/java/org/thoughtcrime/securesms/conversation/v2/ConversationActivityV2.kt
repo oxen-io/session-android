@@ -103,6 +103,7 @@ import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.attachments.ScreenshotObserver
 import org.thoughtcrime.securesms.audio.AudioRecorder
+import org.thoughtcrime.securesms.components.emoji.RecentEmojiPageModel
 import org.thoughtcrime.securesms.contacts.SelectContactsActivity.Companion.selectedContactsKey
 import org.thoughtcrime.securesms.conversation.ConversationActionBarDelegate
 import org.thoughtcrime.securesms.conversation.disappearingmessages.DisappearingMessagesActivity
@@ -1328,6 +1329,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             sendEmojiRemoval(emoji, messageRecord)
         } else {
             sendEmojiReaction(emoji, messageRecord)
+            RecentEmojiPageModel.onCodePointSelected(emoji) // Save to recently used reaction emojis
         }
     }
 
@@ -1841,19 +1843,61 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         handleLongPress(messages.first(), 0) //TODO: begin selection mode
     }
 
+    // The option to "Delete just for me" or "Delete for everyone"
+    private fun showDeleteOrDeleteForEveryoneInCommunityUI(messages: Set<MessageRecord>) {
+        val bottomSheet = DeleteOptionsBottomSheet()
+        bottomSheet.recipient = viewModel.recipient!!
+        bottomSheet.onDeleteForMeTapped = {
+            messages.forEach(viewModel::deleteLocally)
+            bottomSheet.dismiss()
+            endActionMode()
+        }
+        bottomSheet.onDeleteForEveryoneTapped = {
+            messages.forEach(viewModel::deleteForEveryone)
+            bottomSheet.dismiss()
+            endActionMode()
+        }
+        bottomSheet.onCancelTapped = {
+            bottomSheet.dismiss()
+            endActionMode()
+        }
+        bottomSheet.show(supportFragmentManager, bottomSheet.tag)
+    }
+
+    private fun showDeleteLocallyUI(messages: Set<MessageRecord>) {
+        val messageCount = 1
+        showSessionDialog {
+            title(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
+            text(resources.getQuantityString(R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages, messageCount, messageCount))
+            button(R.string.delete) { messages.forEach(viewModel::deleteLocally); endActionMode() }
+            cancelButton(::endActionMode)
+        }
+    }
+
+    // Note: The messages in the provided set may be a single message, or multiple if there are a
+    // group of selected messages.
     override fun deleteMessages(messages: Set<MessageRecord>) {
-        val recipient = viewModel.recipient ?: return
+        val recipient = viewModel.recipient
+        if (recipient == null) {
+            Log.w("ConversationActivityV2", "Asked to delete messages but could not obtain viewModel recipient - aborting.")
+            return
+        }
+
         val allSentByCurrentUser = messages.all { it.isOutgoing }
         val allHasHash = messages.all { lokiMessageDb.getMessageServerHash(it.id, it.isMms) != null }
-        if (recipient.isCommunityRecipient) {
-            val messageCount = 1
 
+        // If the recipient is a community then we delete the message for everyone
+        if (recipient.isCommunityRecipient) {
+            val messageCount = 1 // Only used for plurals string
             showSessionDialog {
                 title(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
                 text(resources.getQuantityString(R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages, messageCount, messageCount))
-                button(R.string.delete) { messages.forEach(viewModel::deleteForEveryone); endActionMode() }
+                button(R.string.delete) {
+                    messages.forEach(viewModel::deleteForEveryone); endActionMode()
+                }
                 cancelButton { endActionMode() }
             }
+        // Otherwise if this is a 1-on-1 conversation we may decided to delete just for ourselves or delete for everyone
         } else if (allSentByCurrentUser && allHasHash) {
             val bottomSheet = DeleteOptionsBottomSheet()
             bottomSheet.recipient = recipient
@@ -1872,13 +1916,17 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 endActionMode()
             }
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)
-        } else {
+        }
+        else // Finally, if this is a closed group and you are deleting someone else's message(s)
+        // then we can only delete locally.
+        {
             val messageCount = 1
-
             showSessionDialog {
                 title(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
                 text(resources.getQuantityString(R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages, messageCount, messageCount))
-                button(R.string.delete) { messages.forEach(viewModel::deleteLocally); endActionMode() }
+                button(R.string.delete) {
+                    messages.forEach(viewModel::deleteLocally); endActionMode()
+                }
                 cancelButton(::endActionMode)
             }
         }
@@ -1897,7 +1945,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         showSessionDialog {
             title(R.string.ConversationFragment_ban_selected_user)
             text("This will ban the selected user from this room and delete all messages sent by them. It won't ban them from other rooms or delete the messages they sent there.")
-            button(R.string.ban) { viewModel.banAndDeleteAll(messages.first().individualRecipient); endActionMode() }
+            button(R.string.ban) { viewModel.banAndDeleteAll(messages.first()); endActionMode() }
             cancelButton(::endActionMode)
         }
     }

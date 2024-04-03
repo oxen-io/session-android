@@ -120,7 +120,7 @@ open class Storage(
                     )
                     volatile.set(newVolatileParams)
                 }
-            } else if (address.isOpenGroup) {
+            } else if (address.isCommunity) {
                 // these should be added on the group join / group info fetch
                 Log.w("Loki", "Thread created called for open group address, not adding any extra information")
             }
@@ -151,7 +151,7 @@ open class Storage(
                 val sessionId = GroupUtil.doubleDecodeGroupId(address.serialize())
                 volatile.eraseLegacyClosedGroup(sessionId)
                 groups.eraseLegacyGroup(sessionId)
-            } else if (address.isOpenGroup) {
+            } else if (address.isCommunity) {
                 // these should be removed in the group leave / handling new configs
                 Log.w("Loki", "Thread delete called for open group address, expecting to be handled elsewhere")
             }

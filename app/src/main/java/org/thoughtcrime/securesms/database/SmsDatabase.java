@@ -621,10 +621,12 @@ public class SmsDatabase extends MessagingDatabase {
   public Cursor getMessageCursor(long messageId) {
     SQLiteDatabase db = databaseHelper.getReadableDatabase();
     Cursor cursor = db.query(TABLE_NAME, MESSAGE_PROJECTION, ID_WHERE, new String[] {messageId + ""}, null, null, null);
-    setNotifyConverationListeners(cursor, getThreadIdForMessage(messageId));
+    setNotifyConversationListeners(cursor, getThreadIdForMessage(messageId));
     return cursor;
   }
 
+  // Caution: The bool returned from `deleteMessage` is NOT "Was the message successfully deleted?"
+  // - it is "Was the thread deleted because removing that message resulted in an empty thread"!
   @Override
   public boolean deleteMessage(long messageId) {
     Log.i("MessageDatabase", "Deleting: " + messageId);
@@ -645,9 +647,6 @@ public class SmsDatabase extends MessagingDatabase {
       argValues[i] = (messageIds[i] + "");
     }
 
-    String combinedMessageIdArgss = StringUtils.join(messageIds, ',');
-    String combinedMessageIds = StringUtils.join(messageIds, ',');
-    Log.i("MessageDatabase", "Deleting: " + combinedMessageIds);
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
     db.delete(
       TABLE_NAME,

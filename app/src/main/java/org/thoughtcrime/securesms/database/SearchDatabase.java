@@ -119,7 +119,7 @@ public class SearchDatabase extends Database {
     int queryLimit = Math.min(query.length()*50,500);
 
     Cursor cursor = db.rawQuery(MESSAGES_QUERY, new String[] { prefixQuery, prefixQuery, String.valueOf(queryLimit) });
-    setNotifyConverationListListeners(cursor);
+    setNotifyConversationListListeners(cursor);
     return cursor;
   }
 
@@ -128,7 +128,7 @@ public class SearchDatabase extends Database {
     String         prefixQuery = adjustQuery(query);
 
     Cursor cursor = db.rawQuery(MESSAGES_FOR_THREAD_QUERY, new String[] { prefixQuery, String.valueOf(threadId), prefixQuery, String.valueOf(threadId) });
-    setNotifyConverationListListeners(cursor);
+    setNotifyConversationListListeners(cursor);
     return cursor;
 
   }

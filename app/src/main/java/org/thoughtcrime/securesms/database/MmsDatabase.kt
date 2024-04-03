@@ -19,9 +19,9 @@ package org.thoughtcrime.securesms.database
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.provider.ContactsContract.CommonDataKinds.BaseTypes
 import com.annimon.stream.Stream
 import com.google.android.mms.pdu_alt.PduHeaders
+import org.apache.commons.lang3.StringUtils
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -214,7 +214,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
 
     fun getMessage(messageId: Long): Cursor {
         val cursor = rawQuery(RAW_ID_WHERE, arrayOf(messageId.toString()))
-        setNotifyConverationListeners(cursor, getThreadIdForMessage(messageId))
+        setNotifyConversationListeners(cursor, getThreadIdForMessage(messageId))
         return cursor
     }
 
@@ -860,8 +860,10 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
      */
     private fun deleteMessages(messageIds: Array<String?>) {
         if (messageIds.isEmpty()) {
+            Log.w(TAG, "No message Ids provided to MmsDatabase.deleteMessages - aborting delete operation!")
             return
         }
+
         // don't need thread IDs
         val queryBuilder = StringBuilder()
         for (i in messageIds.indices) {
@@ -884,6 +886,8 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         notifyStickerPackListeners()
     }
 
+    // Caution: The bool returned from `deleteMessage` is NOT "Was the message successfully deleted?"
+    // - it is "Was the thread deleted because removing that message resulted in an empty thread"!
     override fun deleteMessage(messageId: Long): Boolean {
         val threadId = getThreadIdForMessage(messageId)
         val attachmentDatabase = get(context).attachmentDatabase()
@@ -900,14 +904,15 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
     }
 
     override fun deleteMessages(messageIds: LongArray, threadId: Long): Boolean {
-        val attachmentDatabase = get(context).attachmentDatabase()
-        val groupReceiptDatabase = get(context).groupReceiptDatabase()
+        val argsArray = messageIds.map { "?" }
+        val argValues = messageIds.map { it.toString() }.toTypedArray()
 
-        queue(Runnable { attachmentDatabase.deleteAttachmentsForMessages(messageIds) })
-        groupReceiptDatabase.deleteRowsForMessages(messageIds)
-
-        val database = databaseHelper.writableDatabase
-        database!!.delete(TABLE_NAME, ID_IN, arrayOf(messageIds.joinToString(",")))
+        val db = databaseHelper.writableDatabase
+        db.delete(
+            TABLE_NAME,
+            ID + " IN (" + StringUtils.join(argsArray, ',') + ")",
+            argValues
+        )
 
         val threadDeleted = get(context).threadDatabase().update(threadId, false, true)
         notifyConversationListeners(threadId)
