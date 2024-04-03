@@ -46,7 +46,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -57,8 +56,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -180,8 +177,6 @@ import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
 import org.thoughtcrime.securesms.util.toPx
 import java.lang.ref.WeakReference
-import java.time.Instant
-import java.util.Date
 import java.util.Locale
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.atomic.AtomicBoolean
@@ -192,8 +187,6 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.milliseconds
 
 private const val TAG = "ConversationActivityV2"
 
@@ -395,7 +388,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         messageToScrollAuthor.set(intent.getParcelableExtra(SCROLL_MESSAGE_AUTHOR))
         val recipient = viewModel.recipient
         val openGroup = recipient.let { viewModel.openGroup }
-        if (recipient == null || (recipient.isOpenGroupRecipient && openGroup == null)) {
+        if (recipient == null || (recipient.isCommunityRecipient && openGroup == null)) {
             Toast.makeText(this, "This thread has been deleted.", Toast.LENGTH_LONG).show()
             return finish()
         }
@@ -976,11 +969,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             view.glide = glide
             view.onCandidateSelected = { handleMentionSelected(it) }
             additionalContentContainer.addView(view)
-            val candidates = MentionsManager.getMentionCandidates(query, viewModel.threadId, recipient.isOpenGroupRecipient)
+            val candidates = MentionsManager.getMentionCandidates(query, viewModel.threadId, recipient.isCommunityRecipient)
             this.mentionCandidatesView = view
             view.show(candidates, viewModel.threadId)
         } else {
-            val candidates = MentionsManager.getMentionCandidates(query, viewModel.threadId, recipient.isOpenGroupRecipient)
+            val candidates = MentionsManager.getMentionCandidates(query, viewModel.threadId, recipient.isCommunityRecipient)
             this.mentionCandidatesView!!.setMentionCandidates(candidates)
         }
         isShowingMentionCandidatesView = true
@@ -1197,7 +1190,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun copyOpenGroupUrl(thread: Recipient) {
-        if (!thread.isOpenGroupRecipient) { return }
+        if (!thread.isCommunityRecipient) { return }
 
         val threadId = threadDb.getThreadIdIfExistsFor(thread) ?: return
         val openGroup = lokiThreadDb.getOpenGroupChat(threadId) ?: return
@@ -1361,7 +1354,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         } else originalMessage.individualRecipient.address
         // Send it
         reactionMessage.reaction = Reaction.from(originalMessage.timestamp, originalAuthor.serialize(), emoji, true)
-        if (recipient.isOpenGroupRecipient) {
+        if (recipient.isCommunityRecipient) {
             val messageServerId = lokiMessageDb.getServerID(originalMessage.id, !originalMessage.isMms) ?: return
             viewModel.openGroup?.let {
                 OpenGroupApi.addReaction(it.room, it.server, messageServerId, emoji)
@@ -1385,7 +1378,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         } else originalMessage.individualRecipient.address
 
         message.reaction = Reaction.from(originalMessage.timestamp, originalAuthor.serialize(), emoji, false)
-        if (recipient.isOpenGroupRecipient) {
+        if (recipient.isCommunityRecipient) {
             val messageServerId = lokiMessageDb.getServerID(originalMessage.id, !originalMessage.isMms) ?: return
             viewModel.openGroup?.let {
                 OpenGroupApi.deleteReaction(it.room, it.server, messageServerId, emoji)
@@ -1782,7 +1775,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 sendAttachments(slideDeck.asAttachments(), body)
             }
             INVITE_CONTACTS -> {
-                if (viewModel.recipient?.isOpenGroupRecipient != true) { return }
+                if (viewModel.recipient?.isCommunityRecipient != true) { return }
                 val extras = intent?.extras ?: return
                 if (!intent.hasExtra(selectedContactsKey)) { return }
                 val selectedContacts = extras.getStringArray(selectedContactsKey)!!
@@ -1852,7 +1845,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val recipient = viewModel.recipient ?: return
         val allSentByCurrentUser = messages.all { it.isOutgoing }
         val allHasHash = messages.all { lokiMessageDb.getMessageServerHash(it.id, it.isMms) != null }
-        if (recipient.isOpenGroupRecipient) {
+        if (recipient.isCommunityRecipient) {
             val messageCount = 1
 
             showSessionDialog {

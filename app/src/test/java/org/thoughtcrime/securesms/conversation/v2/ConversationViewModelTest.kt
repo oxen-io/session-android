@@ -189,7 +189,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
 
     @Test
     fun `open group recipient should have no blinded recipient`() {
-        whenever(recipient.isOpenGroupRecipient).thenReturn(true)
+        whenever(recipient.isCommunityRecipient).thenReturn(true)
         whenever(recipient.isOpenGroupOutboxRecipient).thenReturn(false)
         whenever(recipient.isOpenGroupInboxRecipient).thenReturn(false)
         assertThat(viewModel.blindedRecipient, nullValue())

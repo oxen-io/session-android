@@ -193,7 +193,7 @@ object ConfigurationMessageUtilities {
             while (current != null) {
                 val recipient = current.recipient
                 val contact = when {
-                    recipient.isOpenGroupRecipient -> {
+                    recipient.isCommunityRecipient -> {
                         val openGroup = storage.getOpenGroup(current.threadId) ?: continue
                         val (base, room, pubKey) = BaseCommunityInfo.parseFullUrl(openGroup.joinURL) ?: continue
                         convoConfig.getOrConstructCommunity(base, room, pubKey)

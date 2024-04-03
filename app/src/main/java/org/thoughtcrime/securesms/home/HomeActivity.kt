@@ -496,7 +496,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 manager.setPrimaryClip(clip)
                 Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
             }
-            else if (thread.recipient.isOpenGroupRecipient) {
+            else if (thread.recipient.isCommunityRecipient) {
                 val threadId = threadDb.getThreadIdIfExistsFor(thread.recipient) ?: return@onCopyConversationId Unit
                 val openGroup = DatabaseComponent.get(this@HomeActivity).lokiThreadDatabase().getOpenGroupChat(threadId) ?: return@onCopyConversationId Unit
 

@@ -65,7 +65,7 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
         menu.findItem(R.id.menu_context_copy).isVisible = !containsControlMessage && hasText
         // Copy Session ID
         menu.findItem(R.id.menu_context_copy_public_key).isVisible =
-             (thread.isGroupRecipient && !thread.isOpenGroupRecipient && selectedItems.size == 1 && firstMessage.individualRecipient.address.toString() != userPublicKey)
+             (thread.isGroupRecipient && !thread.isCommunityRecipient && selectedItems.size == 1 && firstMessage.individualRecipient.address.toString() != userPublicKey)
         // Message detail
         menu.findItem(R.id.menu_message_details).isVisible = selectedItems.size == 1
         // Resend

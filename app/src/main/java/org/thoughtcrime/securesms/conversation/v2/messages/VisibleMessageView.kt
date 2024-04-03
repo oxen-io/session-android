@@ -37,7 +37,6 @@ import org.session.libsession.utilities.ViewUtil
 import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsession.utilities.modifyLayoutParams
 import org.session.libsignal.utilities.IdPrefix
-import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
 import org.thoughtcrime.securesms.database.LokiThreadDatabase
@@ -167,7 +166,7 @@ class VisibleMessageView : LinearLayout {
                 binding.profilePictureView.publicKey = senderSessionID
                 binding.profilePictureView.update(message.individualRecipient)
                 binding.profilePictureView.setOnClickListener {
-                    if (thread.isOpenGroupRecipient) {
+                    if (thread.isCommunityRecipient) {
                         val openGroup = lokiThreadDb.getOpenGroupChat(threadID)
                         if (IdPrefix.fromValue(senderSessionID) == IdPrefix.BLINDED && openGroup?.canWrite == true) {
                             // TODO: support v2 soon
@@ -180,7 +179,7 @@ class VisibleMessageView : LinearLayout {
                         maybeShowUserDetails(senderSessionID, threadID)
                     }
                 }
-                if (thread.isOpenGroupRecipient) {
+                if (thread.isCommunityRecipient) {
                     val openGroup = lokiThreadDb.getOpenGroupChat(threadID) ?: return
                     var standardPublicKey = ""
                     var blindedPublicKey: String? = null
@@ -196,7 +195,7 @@ class VisibleMessageView : LinearLayout {
         }
         binding.senderNameTextView.isVisible = !message.isOutgoing && (isStartOfMessageCluster && (isGroupThread || snIsSelected))
         val contactContext =
-            if (thread.isOpenGroupRecipient) ContactContext.OPEN_GROUP else ContactContext.REGULAR
+            if (thread.isCommunityRecipient) ContactContext.OPEN_GROUP else ContactContext.REGULAR
         binding.senderNameTextView.text = contact?.displayName(contactContext) ?: senderSessionID
 
         // Unread marker
@@ -245,6 +244,7 @@ class VisibleMessageView : LinearLayout {
     }
 
     private fun showStatusMessage(message: MessageRecord) {
+
         val scheduledToDisappear = message.expiresIn > 0
 
         binding.messageInnerLayout.modifyLayoutParams<FrameLayout.LayoutParams> {
@@ -265,7 +265,6 @@ class VisibleMessageView : LinearLayout {
                 ?.run { iconColor?.let { mutate().apply { setTint(it) } } ?: this }
                 ?.let(binding.messageStatusImageView::setImageDrawable)
 
-
             // Always show the delivery status of the last sent message
             val thisUsersSessionId = TextSecurePreferences.getLocalNumber(context)
             val lastSentMessageId = mmsSmsDb.getLastSentMessageFromSender(message.threadId, thisUsersSessionId)
@@ -274,7 +273,6 @@ class VisibleMessageView : LinearLayout {
             binding.messageStatusTextView.isVisible = textId != null && (isLastSentMessage || scheduledToDisappear)
             val showTimer = scheduledToDisappear && !message.isPending
             binding.messageStatusImageView.isVisible = iconID != null && !showTimer && (!message.isSent || isLastSentMessage)
-
 
             binding.messageStatusImageView.bringToFront()
             binding.expirationTimerView.bringToFront()
@@ -304,42 +302,40 @@ class VisibleMessageView : LinearLayout {
                                  @ColorInt val iconTint: Int?,
                                  @StringRes val messageText: Int?)
 
-    private fun getMessageStatusImage(message: MessageRecord): MessageStatusInfo {
-        when {
-            message.isFailed ->
-                return MessageStatusInfo(
-                    R.drawable.ic_delivery_status_failed,
-                    resources.getColor(R.color.destructive, context.theme),
-                    R.string.delivery_status_failed
-                )
-            message.isSyncFailed ->
-                return MessageStatusInfo(
-                    R.drawable.ic_delivery_status_failed,
-                    context.getColor(R.color.accent_orange),
-                    R.string.delivery_status_sync_failed
-                )
-            message.isPending ->
-                return MessageStatusInfo(
-                    R.drawable.ic_delivery_status_sending,
-                    context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_sending
-                )
-            message.isResyncing ->
-                return MessageStatusInfo(
-                    R.drawable.ic_delivery_status_sending,
-                    context.getColor(R.color.accent_orange), R.string.delivery_status_syncing
-                )
-            message.isRead || !message.isOutgoing ->
-                return MessageStatusInfo(
-                    R.drawable.ic_delivery_status_read,
-                    context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_read
-                )
-            else ->
-                return MessageStatusInfo(
-                    R.drawable.ic_delivery_status_sent,
-                    context.getColorFromAttr(R.attr.message_status_color),
-                    R.string.delivery_status_sent
-                )
-        }
+    private fun getMessageStatusImage(message: MessageRecord): MessageStatusInfo = when {
+        message.isFailed ->
+            MessageStatusInfo(
+                R.drawable.ic_delivery_status_failed,
+                resources.getColor(R.color.destructive, context.theme),
+                R.string.delivery_status_failed
+            )
+        message.isSyncFailed ->
+            MessageStatusInfo(
+                R.drawable.ic_delivery_status_failed,
+                context.getColor(R.color.accent_orange),
+                R.string.delivery_status_sync_failed
+            )
+        message.isPending ->
+            MessageStatusInfo(
+                R.drawable.ic_delivery_status_sending,
+                context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_sending
+            )
+        message.isResyncing ->
+            MessageStatusInfo(
+                R.drawable.ic_delivery_status_sending,
+                context.getColor(R.color.accent_orange), R.string.delivery_status_syncing
+            )
+        message.isRead || !message.isOutgoing ->
+            MessageStatusInfo(
+                R.drawable.ic_delivery_status_read,
+                context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_read
+            )
+        else ->
+            MessageStatusInfo(
+                R.drawable.ic_delivery_status_sent,
+                context.getColorFromAttr(R.attr.message_status_color),
+                R.string.delivery_status_sent
+            )
     }
 
     private fun updateExpirationTimer(message: MessageRecord) {

@@ -132,7 +132,7 @@ class ProfilePictureView @JvmOverloads constructor(
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .circleCrop()
                     .into(imageView)
-            } else if (recipient.isOpenGroupRecipient && recipient.groupAvatarId == null) {
+            } else if (recipient.isCommunityRecipient && recipient.groupAvatarId == null) {
                 glide.clear(imageView)
                 glide.load(unknownOpenGroupDrawable)
                     .centerCrop()

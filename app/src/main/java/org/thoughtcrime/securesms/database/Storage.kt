@@ -82,7 +82,6 @@ import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.guava.Optional
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 import org.thoughtcrime.securesms.database.model.MessageId
-import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
@@ -93,7 +92,6 @@ import org.thoughtcrime.securesms.mms.PartAuthority
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.SessionMetaProtocol
 import java.security.MessageDigest
-import kotlin.time.Duration.Companion.days
 import network.loki.messenger.libsession_util.util.Contact as LibSessionContact
 
 private const val TAG = "Storage"
@@ -258,7 +256,7 @@ open class Storage(
                     // recipient closed group
                     recipient.isClosedGroupRecipient -> config.getOrConstructLegacyGroup(GroupUtil.doubleDecodeGroupId(recipient.address.serialize()))
                     // recipient is open group
-                    recipient.isOpenGroupRecipient -> {
+                    recipient.isCommunityRecipient -> {
                         val openGroupJoinUrl = getOpenGroup(threadId)?.joinURL ?: return
                         BaseCommunityInfo.parseFullUrl(openGroupJoinUrl)?.let { (base, room, pubKey) ->
                             config.getOrConstructCommunity(base, room, pubKey)
@@ -328,7 +326,7 @@ open class Storage(
                 setRecipientApprovedMe(targetRecipient, true)
             }
         }
-        if (message.threadID == null && !targetRecipient.isOpenGroupRecipient) {
+        if (message.threadID == null && !targetRecipient.isCommunityRecipient) {
             // open group recipients should explicitly create threads
             message.threadID = getOrCreateThreadIdFor(targetAddress)
         }
@@ -1340,7 +1338,7 @@ open class Storage(
                     priority = if (isPinned) PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE
                 )
                 groups.set(newGroupInfo)
-            } else if (threadRecipient.isOpenGroupRecipient) {
+            } else if (threadRecipient.isCommunityRecipient) {
                 val openGroup = getOpenGroup(threadID) ?: return
                 val (baseUrl, room, pubKeyHex) = BaseCommunityInfo.parseFullUrl(openGroup.joinURL) ?: return
                 val newGroupInfo = groups.getOrConstructCommunityInfo(baseUrl, room, Hex.toStringCondensed(pubKeyHex)).copy (

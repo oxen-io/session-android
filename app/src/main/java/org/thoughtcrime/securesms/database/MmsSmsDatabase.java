@@ -117,21 +117,25 @@ public class MmsSmsDatabase extends Database {
   }
 
   public @Nullable MessageRecord getSentMessageFor(long timestamp, String serializedAuthor) {
+    // Early exit if the author is not us
+    boolean isOwnNumber = Util.isOwnNumber(context, serializedAuthor);
+    if (!isOwnNumber) {
+      Log.i(TAG, "Asked to find sent messages but provided author is not us - returning null.");
+      return null;
+    }
 
     try (Cursor cursor = queryTables(PROJECTION, MmsSmsColumns.NORMALIZED_DATE_SENT + " = " + timestamp, null, null)) {
       MmsSmsDatabase.Reader reader = readerFor(cursor);
 
       MessageRecord messageRecord;
-      boolean isOwnNumber = Util.isOwnNumber(context, serializedAuthor);
-
       while ((messageRecord = reader.getNext()) != null) {
-        if (isOwnNumber && messageRecord.isOutgoing())
+        if (messageRecord.isOutgoing())
         {
           return messageRecord;
         }
       }
     }
-    Log.w(TAG, "Could not find any message sent from us at timestamp: " + timestamp + " - returning null.");
+    Log.i(TAG, "Could not find any message sent from us at provided timestamp - returning null.");
     return null;
   }
 
@@ -174,20 +178,26 @@ public class MmsSmsDatabase extends Database {
   }
 
   public MessageRecord getLastSentMessageRecordFromSender(long threadId, String serializedAuthor) {
+    // Early exit if the author is not us
+    boolean isOwnNumber = Util.isOwnNumber(context, serializedAuthor);
+    if (!isOwnNumber) {
+      Log.i(TAG, "Asked to find last sent message but provided author is not us - returning null.");
+      return null;
+    }
+
     String order = MmsSmsColumns.NORMALIZED_DATE_SENT + " DESC";
     String selection = MmsSmsColumns.THREAD_ID + " = " + threadId;
-
-    boolean isOwnNumber = Util.isOwnNumber(context, serializedAuthor);
 
     // Try everything with resources so that they auto-close on end of scope
     try (Cursor cursor = queryTables(PROJECTION, selection, order, null)) {
       try (MmsSmsDatabase.Reader reader = readerFor(cursor)) {
         MessageRecord messageRecord;
         while ((messageRecord = reader.getNext()) != null) {
-          if (isOwnNumber && messageRecord.isOutgoing()) { return messageRecord; }
+          if (messageRecord.isOutgoing()) { return messageRecord; }
         }
       }
     }
+    Log.i(TAG, "Could not find last sent message from us in given thread - returning null.");
     return null;
   }
 

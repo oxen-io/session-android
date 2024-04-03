@@ -459,7 +459,7 @@ public class Recipient implements RecipientModifiedListener {
   }
   public boolean is1on1() { return address.isContact() && !isLocalNumber; }
 
-  public boolean isOpenGroupRecipient() {
+  public boolean isCommunityRecipient() {
     return address.isOpenGroup();
   }
 
