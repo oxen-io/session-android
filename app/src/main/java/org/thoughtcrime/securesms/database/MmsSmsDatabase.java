@@ -30,6 +30,7 @@ import net.zetetic.database.sqlcipher.SQLiteQueryBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.Util;
+import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.database.MessagingDatabase.SyncMessageId;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
@@ -247,8 +248,18 @@ public class MmsSmsDatabase extends Database {
 
   public int getNotifiedCount(long threadId) {
     String selection = MmsSmsColumns.NOTIFIED + " = 1 AND " + MmsSmsColumns.THREAD_ID + " = " + threadId;
-    try(Cursor cursor = queryTables(PROJECTION, selection, null, null)) {
-      return cursor != null ? cursor.getCount() : 0;
+    try (Cursor cursor = queryTables(PROJECTION, selection, null, null)) {
+
+      //return cursor != null ? cursor.getCount() : 0;
+
+      if (cursor == null) {
+        Log.w("[ACL]", "Cursor is null in MmsSmsDB.getNotifiedCount - returning 0.");
+        return 0;
+      }
+      else {
+        Log.w("[ACL]", "Cursor `getNotifiedCount` is: " + cursor.getCount());
+        return cursor.getCount();
+      }
     }
   }
 

@@ -345,7 +345,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                     threadDb.latestUnapprovedConversationTimestamp
                 )
                 root.setOnClickListener { showMessageRequests() }
-                root.setOnLongClickListener { hideMessageRequests(); true }
+                root.setOnLongClickListener { displayShowHideMessageRequestsDialog(); true }
                 root.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
                 val hadHeader = homeAdapter.hasHeaderView()
                 homeAdapter.header = root
@@ -683,7 +683,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         push(intent)
     }
 
-    private fun hideMessageRequests() {
+    private fun displayShowHideMessageRequestsDialog() {
         showSessionDialog {
             text("Hide message requests?")
             button(R.string.yes) {
@@ -691,7 +691,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 setupMessageRequestsBanner()
                 homeViewModel.tryUpdateChannel()
             }
-            button(R.string.no)
+            button(R.string.no) // Do nothing
         }
     }
 

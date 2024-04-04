@@ -945,10 +945,12 @@ interface TextSecurePreferences {
             return getBooleanPreference(context, HAS_HIDDEN_MESSAGE_REQUESTS, false)
         }
 
+        /*
         @JvmStatic
         fun removeHasHiddenMessageRequests(context: Context) {
             removePreference(context, HAS_HIDDEN_MESSAGE_REQUESTS)
         }
+        */
 
         @JvmStatic
         fun isCallNotificationsEnabled(context: Context): Boolean {
