@@ -47,12 +47,12 @@ android {
     useLibrary 'org.apache.http.legacy'
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
 
     packagingOptions {
@@ -205,7 +205,8 @@ android {
 
     task testPlayDebugUnitTestCoverageReport(type: JacocoReport, dependsOn: "testPlayDebugUnitTest") {
         reports {
-            xml.enabled = true
+            //xml.enabled = true
+            xml.setRequired(true)
         }
 
         // Add files that should not be listed in the report (e.g. generated Files from dagger)
@@ -223,6 +224,7 @@ android {
         // This is enabled with 'enableUnitTestCoverage' in the 'debug' build type.
         executionData.from = "${project.buildDir}/outputs/unit_test_code_coverage/playDebugUnitTest/testPlayDebugUnitTest.exec"
     }
+    testNamespace 'network.loki.messenger.test'
 }
 
 dependencies {

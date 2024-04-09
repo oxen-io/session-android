@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
+    namespace 'org.session.libsignal'
     compileSdkVersion androidCompileSdkVersion
 
     defaultConfig {
@@ -9,13 +10,13 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 }
 
 dependencies {
-    implementation "androidx.annotation:annotation:1.5.0"
+    implementation "androidx.annotation:annotation:1.7.1"
     implementation "com.google.protobuf:protobuf-java:$protobufVersion"
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
     implementation "com.github.oxen-io.session-android-curve-25519:curve25519-java:$curve25519Version"

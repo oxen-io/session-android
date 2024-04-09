@@ -1,7 +1,7 @@
 package org.session.libsession.messaging.utilities
 
 import android.content.Context
-import android.util.Log
+
 import org.session.libsession.R
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.calls.CallMessageType
