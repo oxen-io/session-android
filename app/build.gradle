@@ -251,7 +251,7 @@ dependencies {
     implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"
     implementation 'androidx.activity:activity-ktx:1.5.1'
     implementation 'androidx.fragment:fragment-ktx:1.5.3'
-    implementation "androidx.core:core-ktx:$coreVersion"
+    implementation "androidx.core:core-ktx:$androidxCoreVersion"
     implementation "androidx.work:work-runtime-ktx:2.7.1"
     playImplementation ("com.google.firebase:firebase-messaging:18.0.0") {
         exclude group: 'com.google.firebase', module: 'firebase-core'
@@ -314,7 +314,7 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
     implementation 'app.cash.copper:copper-flow:1.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesVersion"
     implementation "nl.komponents.kovenant:kovenant:$kovenantVersion"
     implementation "nl.komponents.kovenant:kovenant-android:$kovenantVersion"
     implementation "com.jakewharton.rxbinding3:rxbinding:3.1.0"
@@ -329,8 +329,8 @@ dependencies {
     androidTestImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
     testImplementation "androidx.test:core:$testCoreVersion"
     testImplementation "androidx.arch.core:core-testing:2.2.0"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
-    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesVersion"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesVersion"
     // Core library
     androidTestImplementation "androidx.test:core:$testCoreVersion"
 

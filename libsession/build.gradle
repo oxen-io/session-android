@@ -25,7 +25,7 @@ dependencies {
     implementation project(":liblazysodium")
     implementation "net.java.dev.jna:jna:5.12.1@aar"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    implementation "androidx.core:core-ktx:$coreVersion"
+    implementation "androidx.core:core-ktx:$androidxCoreVersion"
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation "androidx.preference:preference-ktx:$preferenceVersion"
     implementation "com.google.android.material:material:$materialVersion"
@@ -43,7 +43,7 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxJsonVersion"
     implementation "nl.komponents.kovenant:kovenant:$kovenantVersion"
     testImplementation "junit:junit:$junitVersion"
@@ -52,7 +52,7 @@ dependencies {
     testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
     testImplementation "androidx.test:core:$testCoreVersion"
     testImplementation "androidx.arch.core:core-testing:2.1.0"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesVersion"
     testImplementation "org.conscrypt:conscrypt-openjdk-uber:2.0.0"
     implementation 'org.greenrobot:eventbus:3.0.0'
 }
