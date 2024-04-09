@@ -21,7 +21,21 @@ plugins {
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'witness'
+
+//apply plugin: 'witness'
+// Note: `witness` hasn't been updated in 10 years as of 2024-04-09 - see: https://github.com/signalapp/gradle-witness
+// Also: We don't use it specify SHA checksums of any libs such as via:
+//      dependencyVerification {
+//          verify = [
+//              'com.android.support:support-v4:a4268abd6370c3fd3f94d2a7f9e6e755f5ddd62450cf8bbc62ba789e1274d585',b6',
+//          ]
+//      }
+// etc.
+// And: F-Droid supports sha checking of libs natively now.
+// See: https://forum.f-droid.org/t/gradle-has-built-in-verification-time-to-remove-gradle-witness/10410
+// And more importantly: https://docs.gradle.org/current/userguide/dependency_verification.html
+// Hence: Removing it because the jar is `Unsupported class file major version 66` after upgrading packages. -ACL 2024-04-09
+
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlinx-serialization'
@@ -229,8 +243,10 @@ android {
 
 dependencies {
 
-    implementation("com.google.dagger:hilt-android:2.46.1")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    // ACL TODO: Every single hard-coded string version in this file must be a var! Grrrr!
+
+    implementation("com.google.dagger:hilt-android:$daggerVersion")
+    kapt("com.google.dagger:hilt-android-compiler:$daggerVersion")
 
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation 'androidx.recyclerview:recyclerview:1.2.1'

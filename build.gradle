@@ -10,6 +10,7 @@ buildscript {
         }
     }
 
+    // ACL TODO: Make sure all version numbers are $versions not hard-coded!
     dependencies {
         classpath "com.android.tools.build:gradle:$gradlePluginVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
@@ -22,37 +23,56 @@ buildscript {
 }
 
 plugins{
-    id("com.google.dagger.hilt.android") version "2.44" apply false
+    // ACL TODO: Fixed to use $daggerVersion rather that 2.44.1, but why is `apply false` - what's the goal here?
+    id ("com.google.dagger.hilt.android") version "$daggerVersion" apply false
 }
 
 allprojects {
     repositories {
         google()
         mavenCentral()
+
+        // ACL: Nope!
+        /*
         maven {
             url "https://raw.github.com/signalapp/maven/master/photoview/releases/"
             content {
+                // ACL TODO: Are we pulling in anything that matches a regex? Sketchy!
+                // ACL TODO: This repo doesn't even exist! See: https://mvnrepository.com/artifact/com.github.chrisbanes/PhotoView
+                // ACL TODO: Also see: https://github.com/signalapp/Signal-Android/issues/7629 (circa 2018-04-04)
                 includeGroupByRegex "com\\.github\\.chrisbanes.*"
             }
         }
         maven {
             url "https://raw.github.com/signalapp/maven/master/shortcutbadger/releases/"
+            // ACL TODO: Are we pulling in anything that matches a regex? Sketchy!
+            // ACL TODO: Also: `leolin.me` doesn't even exist - did we want this: https://github.com/leolin310148/ShortcutBadger ?!?
             content {
                 includeGroupByRegex "me\\.leolin.*"
             }
         }
+        */
+
+        // ACL TODO: Exists as of 2024-04-09 & required! But again pulled in via regex. Unsafe!
+        // See: https://github.com/dmytrodanylyk/circular-progress-button
+        // Also: We should be pulling in v1.4 - see: https://github.com/dmytrodanylyk/circular-progress-button/releases
         maven {
             url "https://raw.github.com/signalapp/maven/master/circular-progress-button/releases/"
             content {
                 includeGroupByRegex "com\\.github\\.dmytrodanylyk\\.circular-progress-button\\.*"
             }
         }
+
+        // ACL: Does not exist as of 2024-04-09 - also sketchy regex!
+        /*
         maven {
             url "https://raw.github.com/signalapp/maven/master/sqlcipher/release/"
             content {
                 includeGroupByRegex "org\\.signal.*"
             }
         }
+        */
+
         jcenter()
         maven { url "https://jitpack.io" }
         if (project.hasProperty('huawei')) maven {
