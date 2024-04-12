@@ -62,12 +62,8 @@ object MentionUtilities {
         val result = SpannableString(text)
         val isLightMode = UiModeUtilities.isDayUiMode(context)
         val color = if (isOutgoingMessage) {
-
-            val mentionTextColourAttributeId = getMessageTextColourAttr(isOutgoingMessage)
+            val mentionTextColourAttributeId = getMessageTextColourAttr(true)
             val mentionTextColourResourceId  = getColorResourceIdFromAttr(context, mentionTextColourAttributeId)
-            //context.theme.get
-
-            ResourcesCompat.getColor(context.resources, if (isLightMode) R.color.white else R.color.black, context.theme)
             ResourcesCompat.getColor(context.resources, mentionTextColourResourceId, context.theme)
         } else {
             context.getAccentColor()
