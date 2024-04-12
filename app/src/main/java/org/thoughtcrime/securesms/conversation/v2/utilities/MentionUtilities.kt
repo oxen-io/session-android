@@ -13,11 +13,10 @@ import nl.komponents.kovenant.combine.Tuple2
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.TextSecurePreferences
-import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageContentView.Companion.getColorResourceIdFromAttr
-import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageContentView.Companion.getMessageTextColourAttr
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.util.UiModeUtilities
 import org.thoughtcrime.securesms.util.getAccentColor
+import org.thoughtcrime.securesms.util.getColorResourceIdFromAttr
+import org.thoughtcrime.securesms.util.getMessageTextColourAttr
 import java.util.regex.Pattern
 
 object MentionUtilities {
@@ -60,7 +59,8 @@ object MentionUtilities {
             }
         }
         val result = SpannableString(text)
-        val isLightMode = UiModeUtilities.isDayUiMode(context)
+
+        // Specify colour of mention text
         val color = if (isOutgoingMessage) {
             val mentionTextColourAttributeId = getMessageTextColourAttr(true)
             val mentionTextColourResourceId  = getColorResourceIdFromAttr(context, mentionTextColourAttributeId)
@@ -68,6 +68,7 @@ object MentionUtilities {
         } else {
             context.getAccentColor()
         }
+
         for (mention in mentions) {
             result.setSpan(ForegroundColorSpan(color), mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             result.setSpan(StyleSpan(Typeface.BOLD), mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
