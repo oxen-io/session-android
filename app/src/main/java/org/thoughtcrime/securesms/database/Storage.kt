@@ -773,8 +773,10 @@ open class Storage(
         }
 
         if (messageRecord.isMms) {
+            Log.w("[ACL]", "About to call markAsSent from Storage.markAsSent (MMS)")
             DatabaseComponent.get(context).mmsDatabase().markAsSent(messageRecord.getId(), true)
         } else {
+            Log.w("[ACL]", "About to call markAsSent from Storage.markAsSent (SMS)")
             DatabaseComponent.get(context).smsDatabase().markAsSent(messageRecord.getId(), true)
         }
     }
@@ -793,13 +795,16 @@ open class Storage(
 
         // ..and mark as sent if found.
         if (message.isMms) {
+            Log.w("[ACL]", "About to call markAsSent from Storage.markAsSentToCommunity (MMS)")
             DatabaseComponent.get(context).mmsDatabase().markAsSent(message.getId(), true)
         } else {
+            Log.w("[ACL]", "About to call markAsSent from Storage.markAsSentToCommunity (SMS)")
             DatabaseComponent.get(context).smsDatabase().markAsSent(message.getId(), true)
         }
     }
 
     override fun markAsSyncing(timestamp: Long, author: String) {
+        Log.w("[ACL]", "About to call markAsSyncing from Storage.markAsSyncing (MMS/SMS)")
         DatabaseComponent.get(context).mmsSmsDatabase()
             .getMessageFor(timestamp, author)
             ?.run { getMmsDatabaseElseSms(isMms).markAsSyncing(id) }
@@ -1022,6 +1027,7 @@ open class Storage(
             return
         }
         val infoMessageID = mmsDB.insertMessageOutbox(infoMessage, threadID, false, null, runThreadUpdate = true)
+        Log.w("[ACL]", "About to call markAsSent from insertOutgoingInfoMessage")
         mmsDB.markAsSent(infoMessageID, true)
     }
 

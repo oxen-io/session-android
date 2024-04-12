@@ -633,6 +633,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             Log.w(TAG, "insertSecureDecryptedMessageOutbox believes the MmsDatabase insertion failed.")
             return Optional.absent()
         }
+        Log.w("[ACL]", "About to call markAsSent from insertSecureDecryptedMessageOutbox")
         markAsSent(messageId, true)
         return Optional.fromNullable(InsertResult(messageId, threadId))
     }

@@ -278,7 +278,9 @@ class VisibleMessageView : LinearLayout {
             binding.expirationTimerView.bringToFront()
             binding.expirationTimerView.isVisible = showTimer
             if (showTimer) updateExpirationTimer(message)
-        } else {
+        }
+        else // If the message is NOT outgoing or it is NOT scheduled to disappear then hide the delivery status
+        {
             binding.messageStatusTextView.isVisible = false
             binding.messageStatusImageView.isVisible = false
         }
