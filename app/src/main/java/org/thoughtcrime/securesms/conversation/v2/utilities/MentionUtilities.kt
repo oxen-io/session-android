@@ -13,6 +13,8 @@ import nl.komponents.kovenant.combine.Tuple2
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.TextSecurePreferences
+import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageContentView.Companion.getColorResourceIdFromAttr
+import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageContentView.Companion.getMessageTextColourAttr
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.util.UiModeUtilities
 import org.thoughtcrime.securesms.util.getAccentColor
@@ -60,7 +62,13 @@ object MentionUtilities {
         val result = SpannableString(text)
         val isLightMode = UiModeUtilities.isDayUiMode(context)
         val color = if (isOutgoingMessage) {
+
+            val mentionTextColourAttributeId = getMessageTextColourAttr(isOutgoingMessage)
+            val mentionTextColourResourceId  = getColorResourceIdFromAttr(context, mentionTextColourAttributeId)
+            //context.theme.get
+
             ResourcesCompat.getColor(context.resources, if (isLightMode) R.color.white else R.color.black, context.theme)
+            ResourcesCompat.getColor(context.resources, mentionTextColourResourceId, context.theme)
         } else {
             context.getAccentColor()
         }

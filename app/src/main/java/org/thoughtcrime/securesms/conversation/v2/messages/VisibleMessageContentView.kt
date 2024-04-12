@@ -1,6 +1,7 @@
 package org.thoughtcrime.securesms.conversation.v2.messages
 
 import android.content.Context
+import android.content.res.TypedArray
 import android.graphics.Color
 import android.graphics.Rect
 import android.text.Spannable
@@ -9,6 +10,7 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.URLSpan
 import android.text.util.Linkify
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.ColorInt
@@ -44,6 +46,7 @@ import org.thoughtcrime.securesms.util.SearchUtil
 import org.thoughtcrime.securesms.util.getAccentColor
 import java.util.Locale
 import kotlin.math.roundToInt
+
 
 class VisibleMessageContentView : ConstraintLayout {
     private val binding: ViewVisibleMessageContentBinding by lazy { ViewVisibleMessageContentBinding.bind(this) }
@@ -310,6 +313,18 @@ class VisibleMessageContentView : ConstraintLayout {
         fun getTextColor(context: Context, message: MessageRecord): Int = context.getColorFromAttr(
             if (message.isOutgoing) R.attr.message_sent_text_color else R.attr.message_received_text_color
         )
+
+        // Method to grab the appropriate attribute for a message colour.
+        // Note: This is an attribute, NOT a resource Id - see `getColorResourceIdFromAttr` for that.
+        fun getMessageTextColourAttr(messageIsOutgoing: Boolean): Int =
+            if (messageIsOutgoing) R.attr.message_sent_text_color else R.attr.message_received_text_color
+
+        // Method to get an actual R.id.<SOME_COLOUR> resource Id from an attribute such as R.attr.message_sent_text_color etc.
+        fun getColorResourceIdFromAttr(context: Context, attr: Int): Int {
+            val typedValue = TypedValue()
+            context.theme.resolveAttribute(attr, typedValue, true)
+            return typedValue.resourceId
+        }
     }
     // endregion
 }

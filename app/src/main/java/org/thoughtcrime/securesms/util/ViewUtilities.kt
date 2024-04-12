@@ -70,7 +70,6 @@ fun View.hideKeyboard() {
     imm.hideSoftInputFromWindow(this.windowToken, 0)
 }
 
-
 fun View.drawToBitmap(config: Bitmap.Config = Bitmap.Config.ARGB_8888, longestWidth: Int = 2000): Bitmap {
     val size = Size(measuredWidth, measuredHeight).coerceAtMost(longestWidth)
     val scale = size.width / measuredWidth.toFloat()
