@@ -109,8 +109,8 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             seedButton.setOnClickListener { showSeed() }
             clearAllDataButton.setOnClickListener { clearAllData() }
 
-            val gitCommitFirstSix = getString(R.string.git_hash).take(6)
-            versionTextView.text = String.format(getString(R.string.version_s), "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE} - $gitCommitFirstSix)")
+            val gitCommitFirstSixChars = BuildConfig.GIT_HASH.take(6)
+            versionTextView.text = String.format(getString(R.string.version_s), "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE} - $gitCommitFirstSixChars)")
         }
     }
 

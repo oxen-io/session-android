@@ -105,6 +105,7 @@ android {
         project.ext.set("archivesBaseName", "session")
 
         buildConfigField "long", "BUILD_TIMESTAMP", getLastCommitTimestamp() + "L"
+        buildConfigField "String", "GIT_HASH", "\"$getGitHash\""
         buildConfigField "String", "CONTENT_PROXY_HOST", "\"contentproxy.signal.org\""
         buildConfigField "int", "CONTENT_PROXY_PORT", "443"
         buildConfigField "String", "USER_AGENT", "\"OWA\""
@@ -131,13 +132,11 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            resValue("string", "git_hash", getGitHash())
         }
         debug {
             isDefault true
             minifyEnabled false
             enableUnitTestCoverage true
-            resValue("string", "git_hash", getGitHash())
         }
     }
 
