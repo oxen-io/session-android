@@ -27,6 +27,10 @@ public class ThemeUtil {
     return getAttributeText(context, R.attr.theme_type, "light").equals("dark");
   }
 
+  public static boolean isLightTheme(@NonNull Context context) {
+    return getAttributeText(context, R.attr.theme_type, "light").equals("light");
+  }
+
   public static boolean getThemedBoolean(@NonNull Context context, @AttrRes int attr) {
     TypedValue      typedValue = new TypedValue();
     Resources.Theme theme      = context.getTheme();
