@@ -41,6 +41,17 @@ def abiPostFix = ['armeabi-v7a' : 1,
                   'x86_64'      : 4,
                   'universal'   : 5]
 
+// Function to get the current git commit hash so we can embed it along w/ the build version.
+// Note: This is visible in the SettingsActivity, right at the bottom (R.id.versionTextView).
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine "git", "rev-parse", "--short", "HEAD"
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
 android {
     compileSdkVersion androidCompileSdkVersion
     namespace 'network.loki.messenger'
@@ -120,11 +131,13 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            resValue("string", "git_hash", getGitHash())
         }
         debug {
             isDefault true
             minifyEnabled false
             enableUnitTestCoverage true
+            resValue("string", "git_hash", getGitHash())
         }
     }
 
