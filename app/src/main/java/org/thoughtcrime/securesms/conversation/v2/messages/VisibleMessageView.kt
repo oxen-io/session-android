@@ -248,7 +248,7 @@ class VisibleMessageView : LinearLayout {
     // Note: Although most commonly used to display the delivery status of a message, we also use the
     // message status area to display the disappearing messages state - so in this latter case we'll
     // be displaying the "Sent" and the animating clock icon for outgoing messages or "Read" and the
-    // clock icon for incoming messages.
+    // animated clock icon for incoming messages.
     private fun showStatusMessage(message: MessageRecord) {
 
         binding.messageInnerLayout.modifyLayoutParams<FrameLayout.LayoutParams> {
