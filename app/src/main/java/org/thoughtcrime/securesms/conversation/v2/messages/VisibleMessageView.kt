@@ -250,6 +250,14 @@ class VisibleMessageView : LinearLayout {
     // animated clock icon for incoming messages.
     private fun showStatusMessage(message: MessageRecord) {
 
+        // Get details regarding how we should display the message (it's delivery icon, icon tint colour, and
+        // the resource string for what text to display (R.string.delivery_status_sent etc.).
+        val (iconID, iconColor, textId) = getMessageStatusInfo(message)
+
+        // If we get any nulls then a message isn't one with a state that we care about (i.e., control messages
+        // etc.) - so bail. See: `DisplayRecord.is<WHATEVER>` for the full suite of message state methods.
+        if (textId == null) return
+
         binding.messageInnerLayout.modifyLayoutParams<FrameLayout.LayoutParams> {
             gravity = if (message.isOutgoing) Gravity.END else Gravity.START
         }
@@ -270,14 +278,6 @@ class VisibleMessageView : LinearLayout {
         }
 
         // --- If we got here then the message is either outgoing or scheduled to disappear (or both) ---
-
-        // Get details regarding how we should display the message (it's delivery icon, icon tint colour, and
-        // the resource string for what text to display (R.string.delivery_status_sent etc.).
-        val (iconID, iconColor, textId) = getMessageStatusInfo(message)
-
-        // If we get any nulls then a message isn't one with a state that we care about (i.e., control messages
-        // etc.) - so bail. See: `DisplayRecord.is<WHATEVER>` for the full suite of message state methods.
-        if (textId == null) return
 
         // ..otherwise set the text & icons as appropriate for the message state. Note: Possible message
         // states we care about are: isFailed, isSyncFailed, isPending, isResyncing, isRead, and isSent.
