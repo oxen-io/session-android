@@ -279,8 +279,8 @@ class VisibleMessageView : LinearLayout {
 
         // --- If we got here then the message is either outgoing or scheduled to disappear (or both) ---
 
-        // ..otherwise set the text & icons as appropriate for the message state. Note: Possible message
-        // states we care about are: isFailed, isSyncFailed, isPending, isResyncing, isRead, and isSent.
+        // She text & icons as appropriate for the message state. Note: Possible message states we care
+        // about are: isFailed, isSyncFailed, isPending, isSyncing, isResyncing, isRead, and isSent.
         textId.let(binding.messageStatusTextView::setText)
         iconColor?.let(binding.messageStatusTextView::setTextColor)
         iconID?.let { ContextCompat.getDrawable(context, it) }
@@ -293,12 +293,11 @@ class VisibleMessageView : LinearLayout {
         //   ii.) outgoing but NOT scheduled to disappear, or
         //   iii.) outgoing AND scheduled to disappear.
 
-        // ----- Case i..) In the case of incoming messages which are scheduled to disappear -----
+        // ----- Case i..) Message is incoming and scheduled to disappear -----
         if (message.isIncoming && scheduledToDisappear) {
             binding.messageStatusTextView.isVisible  = true  // Display the status ('Read')..
-            binding.messageStatusImageView.isVisible = false // ..but let's NOT display the status image..
+            binding.messageStatusImageView.isVisible = false // ..but don't display the status image..
             binding.expirationTimerView.isVisible    = true  // ..and instead show the timer.
-            binding.messageStatusImageView.bringToFront()
             binding.expirationTimerView.bringToFront()
             updateExpirationTimer(message)
             return
@@ -361,7 +360,7 @@ class VisibleMessageView : LinearLayout {
             {
                 binding.expirationTimerView.isVisible = false
 
-                // ..but we ALWAYS want to display the status message and image (because send in progress or has failed).
+                // ..but we ALWAYS want to display the status message and image (because send is in progress or has failed).
                 binding.messageStatusTextView.isVisible = true
                 binding.messageStatusImageView.isVisible = true
                 binding.messageStatusImageView.bringToFront()
