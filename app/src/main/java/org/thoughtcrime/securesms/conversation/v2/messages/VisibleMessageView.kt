@@ -277,9 +277,7 @@ class VisibleMessageView : LinearLayout {
             return
         }
 
-        // --- If we got here then the message is either outgoing or scheduled to disappear (or both) ---
-
-        // She text & icons as appropriate for the message state. Note: Possible message states we care
+        // Set text & icons as appropriate for the message state. Note: Possible message states we care
         // about are: isFailed, isSyncFailed, isPending, isSyncing, isResyncing, isRead, and isSent.
         textId.let(binding.messageStatusTextView::setText)
         iconColor?.let(binding.messageStatusTextView::setTextColor)
@@ -287,8 +285,7 @@ class VisibleMessageView : LinearLayout {
             ?.run { iconColor?.let { mutate().apply { setTint(it) } } ?: this }
             ?.let(binding.messageStatusImageView::setImageDrawable)
 
-        // At this point we need to do various things based on whether the message is specifically outgoing or not.
-        // Potential options for this point are that the message is:
+        // Potential options at this point are that the message is:
         //   i.) incoming AND scheduled to disappear.
         //   ii.) outgoing but NOT scheduled to disappear, or
         //   iii.) outgoing AND scheduled to disappear.
