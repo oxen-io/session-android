@@ -209,36 +209,30 @@ public class SmsDatabase extends MessagingDatabase {
 
   @Override
   public void markAsSent(long id, boolean isSecure) {
-    Log.w("[ACL]", "Hit smsDB.markAsSent for msg id: " + id + " - is secure?: " + isSecure);
     updateTypeBitmask(id, Types.BASE_TYPE_MASK, Types.BASE_SENT_TYPE | (isSecure ? Types.PUSH_MESSAGE_BIT | Types.SECURE_MESSAGE_BIT : 0));
   }
 
   public void markAsSending(long id) {
-    Log.w("[ACL]", "Hit smsDB.markAsSending for msg id: " + id);
     updateTypeBitmask(id, Types.BASE_TYPE_MASK, Types.BASE_SENDING_TYPE);
   }
 
   @Override
   public void markAsSyncing(long id) {
-    Log.w("[ACL]", "Hit smsDB.markAsSyncing for msg id: " + id);
     updateTypeBitmask(id, Types.BASE_TYPE_MASK, Types.BASE_SYNCING_TYPE);
   }
 
   @Override
   public void markAsResyncing(long id) {
-    Log.w("[ACL]", "Hit smsDB.markAsResyncing for msg id: " + id);
     updateTypeBitmask(id, Types.BASE_TYPE_MASK, Types.BASE_RESYNCING_TYPE);
   }
 
   @Override
   public void markAsSyncFailed(long id) {
-    Log.w("[ACL]", "Hit smsDB.markAsSyncFailed for msg id: $id");
     updateTypeBitmask(id, Types.BASE_TYPE_MASK, Types.BASE_SYNC_FAILED_TYPE);
   }
 
   @Override
   public void markUnidentified(long id, boolean unidentified) {
-    Log.w("[ACL]", "Hit smsDB.markAsUnidentified for msg id: " + id + " - IS unidentified?: " + unidentified);
     ContentValues contentValues = new ContentValues(1);
     contentValues.put(UNIDENTIFIED, unidentified ? 1 : 0);
 
@@ -248,7 +242,6 @@ public class SmsDatabase extends MessagingDatabase {
 
   @Override
   public void markAsDeleted(long messageId, boolean read, boolean hasMention) {
-    Log.w("[ACL]", "Hit smsDB.markAsDeleted for msg id: " + messageId + " - has been read?: " + read + " - has mention?: " + hasMention);
     SQLiteDatabase database     = databaseHelper.getWritableDatabase();
     ContentValues contentValues = new ContentValues();
     contentValues.put(READ, 1);
@@ -260,7 +253,6 @@ public class SmsDatabase extends MessagingDatabase {
 
   @Override
   public void markExpireStarted(long id, long startedAtTimestamp) {
-    Log.w("[ACL]", "Hit smsDB.markAsExpireStarted for msg id: " + id);
     ContentValues contentValues = new ContentValues();
     contentValues.put(EXPIRE_STARTED, startedAtTimestamp);
 
@@ -274,12 +266,10 @@ public class SmsDatabase extends MessagingDatabase {
   }
 
   public void markAsSentFailed(long id) {
-    Log.w("[ACL]", "Hit smsDB.markAsSentFailed for msg id: " + id);
     updateTypeBitmask(id, Types.BASE_TYPE_MASK, Types.BASE_SENT_FAILED_TYPE);
   }
 
   public void markAsNotified(long id) {
-    Log.w("[ACL]", "Hit smsDB.markAsNotified for msg id: " + id);
     SQLiteDatabase database      = databaseHelper.getWritableDatabase();
     ContentValues  contentValues = new ContentValues();
 
@@ -540,7 +530,6 @@ public class SmsDatabase extends MessagingDatabase {
     if (messageId == -1) {
       return Optional.absent();
     }
-    Log.w("[ACL]", "About to call markAsSent from insertMessageOutbox");
     markAsSent(messageId, true);
     return Optional.fromNullable(new InsertResult(messageId, threadId));
   }
