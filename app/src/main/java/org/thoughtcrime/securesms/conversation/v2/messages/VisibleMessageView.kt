@@ -37,6 +37,7 @@ import org.session.libsession.utilities.ViewUtil
 import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsession.utilities.modifyLayoutParams
 import org.session.libsignal.utilities.IdPrefix
+import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
 import org.thoughtcrime.securesms.database.LokiThreadDatabase
@@ -243,46 +244,129 @@ class VisibleMessageView : LinearLayout {
         onDoubleTap = { binding.messageContentView.root.onContentDoubleTap?.invoke() }
     }
 
+    // Method to display or hide the status of a message.
+    // Note: Although most commonly used to display the delivery status of a message, we also use the
+    // message status area to display the disappearing messages state - so in this latter case we'll
+    // be displaying the "Sent" and the animating clock icon for outgoing messages or "Read" and the
+    // clock icon for incoming messages.
     private fun showStatusMessage(message: MessageRecord) {
-
-        val scheduledToDisappear = message.expiresIn > 0
 
         binding.messageInnerLayout.modifyLayoutParams<FrameLayout.LayoutParams> {
             gravity = if (message.isOutgoing) Gravity.END else Gravity.START
         }
-
         binding.statusContainer.modifyLayoutParams<ConstraintLayout.LayoutParams> {
             horizontalBias = if (message.isOutgoing) 1f else 0f
         }
-
         binding.expirationTimerView.isGone = true
 
-        if (message.isOutgoing || scheduledToDisappear) {
-            val (iconID, iconColor, textId) = getMessageStatusImage(message)
-            textId?.let(binding.messageStatusTextView::setText)
-            iconColor?.let(binding.messageStatusTextView::setTextColor)
-            iconID?.let { ContextCompat.getDrawable(context, it) }
-                ?.run { iconColor?.let { mutate().apply { setTint(it) } } ?: this }
-                ?.let(binding.messageStatusImageView::setImageDrawable)
+        // If the message is incoming AND it is not scheduled to disappear then don't show any status or timer details.
+        // Note: If we set `isVisible` to false then it's not invisible it's gone (i.e., removed & not taking up any space).
+        val scheduledToDisappear = message.expiresIn > 0
+        if (message.isIncoming && !scheduledToDisappear)
+        {
+            binding.messageStatusTextView.isVisible  = false
+            binding.messageStatusImageView.isVisible = false
+            binding.expirationTimerView.isVisible    = false
+            return
+        }
 
-            // Always show the delivery status of the last sent message
-            val thisUsersSessionId = TextSecurePreferences.getLocalNumber(context)
-            val lastSentMessageId = mmsSmsDb.getLastSentMessageFromSender(message.threadId, thisUsersSessionId)
-            val isLastSentMessage = lastSentMessageId == message.id
+        // --- If we got here then the message is either outgoing or scheduled to disappear (or both) ---
 
-            binding.messageStatusTextView.isVisible = textId != null && (isLastSentMessage || scheduledToDisappear)
-            val showTimer = scheduledToDisappear && !message.isPending
-            binding.messageStatusImageView.isVisible = iconID != null && !showTimer && (!message.isSent || isLastSentMessage)
+        // Get details regarding how we should display the message (it's delivery icon, icon tint colour, and
+        // the resource string for what text to display (R.string.delivery_status_sent etc.).
+        val (iconID, iconColor, textId) = getMessageStatusInfo(message)
 
+        // If we get any nulls then a message isn't one with a state that we care about (i.e., control messages
+        // etc.) - so bail. See: `DisplayRecord.is<WHATEVER>` for the full suite of message state methods.
+        if (textId == null) return
+
+        // ..otherwise set the text & icons as appropriate for the message state. Note: Possible message
+        // states we care about are: isFailed, isSyncFailed, isPending, isResyncing, isRead, and isSent.
+        textId.let(binding.messageStatusTextView::setText)
+        iconColor?.let(binding.messageStatusTextView::setTextColor)
+        iconID?.let { ContextCompat.getDrawable(context, it) }
+            ?.run { iconColor?.let { mutate().apply { setTint(it) } } ?: this }
+            ?.let(binding.messageStatusImageView::setImageDrawable)
+
+        // At this point we need to do various things based on whether the message is specifically outgoing or not.
+        // Potential options for this point are that the message is:
+        //   i.) incoming AND scheduled to disappear.
+        //   ii.) outgoing but NOT scheduled to disappear, or
+        //   iii.) outgoing AND scheduled to disappear.
+
+        // ----- Case i..) In the case of incoming messages which are scheduled to disappear -----
+        if (message.isIncoming && scheduledToDisappear) {
+            binding.messageStatusTextView.isVisible  = true  // Display the status ('Read')..
+            binding.messageStatusImageView.isVisible = false // ..but let's NOT display the status image..
+            binding.expirationTimerView.isVisible    = true  // ..and instead show the timer.
             binding.messageStatusImageView.bringToFront()
             binding.expirationTimerView.bringToFront()
-            binding.expirationTimerView.isVisible = showTimer
-            if (showTimer) updateExpirationTimer(message)
+            updateExpirationTimer(message)
+            return
         }
-        else // If the message is NOT outgoing or it is NOT scheduled to disappear then hide the delivery status
+
+        // --- If we got here then we know the message is outgoing ---
+
+        val thisUsersSessionId = TextSecurePreferences.getLocalNumber(context)
+        val lastSentMessageId = mmsSmsDb.getLastSentMessageFromSender(message.threadId, thisUsersSessionId)
+        val isLastSentMessage = lastSentMessageId == message.id
+
+        // ----- Case ii.) Message is outgoing but NOT scheduled to disappear -----
+        if (!scheduledToDisappear) {
+            // If this isn't a disappearing message then we never show the timer
+            binding.expirationTimerView.isVisible = false
+
+            // If the message has NOT been successfully sent then always show the delivery status text and image..
+            val neitherSentNorRead = !(message.isSent || message.isRead)
+            if (neitherSentNorRead) {
+                binding.messageStatusTextView.isVisible = true
+                binding.messageStatusImageView.isVisible = true
+            }
+            else // ..but if the message HAS been successfully sent or read..
+            {
+                // ..then we'll only display the delivery status text and image if this is the last sent message..
+                if (isLastSentMessage) {
+                    binding.messageStatusTextView.isVisible = true
+                    binding.messageStatusImageView.isVisible = true
+                    binding.messageStatusImageView.bringToFront()
+                }
+                else // ..while hiding it on all other messages.
+                {
+                    binding.messageStatusTextView.isVisible = false
+                    binding.messageStatusImageView.isVisible = false
+                }
+            }
+        }
+        else // ----- Case iii.) Message is outgoing AND scheduled to disappear -----
         {
-            binding.messageStatusTextView.isVisible = false
-            binding.messageStatusImageView.isVisible = false
+            // If the message is sent or has been read..
+            val sentOrRead = message.isSent || message.isRead
+            if (sentOrRead) {
+                // ..then ALWAYS display the timer for this disappearing message.
+                binding.expirationTimerView.isVisible = true
+                binding.expirationTimerView.bringToFront()
+                updateExpirationTimer(message)
+
+                // And if this is the last sent message then also display the status text (but not the image)..
+                if (isLastSentMessage) {
+                    binding.messageStatusTextView.isVisible = true
+                    binding.messageStatusImageView.isVisible = false
+                }
+                else // ..otherwise if this isn't the last sent message then hide both the status text and status image.
+                {
+                    binding.messageStatusTextView.isVisible = false
+                    binding.messageStatusImageView.isVisible = false
+                }
+            }
+            else // If the message has NOT been sent or read (or it has failed) then we do not want to show the timer (because it hasn't started)..
+            {
+                binding.expirationTimerView.isVisible = false
+
+                // ..but we ALWAYS want to display the status message and image (because send in progress or has failed).
+                binding.messageStatusTextView.isVisible = true
+                binding.messageStatusImageView.isVisible = true
+                binding.messageStatusImageView.bringToFront()
+            }
         }
     }
 
@@ -304,10 +388,9 @@ class VisibleMessageView : LinearLayout {
                                  @ColorInt val iconTint: Int?,
                                  @StringRes val messageText: Int?)
 
-    private fun getMessageStatusImage(message: MessageRecord): MessageStatusInfo = when {
+    private fun getMessageStatusInfo(message: MessageRecord): MessageStatusInfo = when {
         message.isFailed ->
-            MessageStatusInfo(
-                R.drawable.ic_delivery_status_failed,
+            MessageStatusInfo(R.drawable.ic_delivery_status_failed,
                 resources.getColor(R.color.destructive, context.theme),
                 R.string.delivery_status_failed
             )
@@ -320,24 +403,32 @@ class VisibleMessageView : LinearLayout {
         message.isPending ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sending,
-                context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_sending
+                context.getColorFromAttr(R.attr.message_status_color),
+                R.string.delivery_status_sending
             )
-        message.isResyncing ->
+        message.isSyncing || message.isResyncing ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sending,
-                context.getColor(R.color.accent_orange), R.string.delivery_status_syncing
+                context.getColorFromAttr(R.attr.message_status_color),
+                R.string.delivery_status_sending // We COULD tell the user that we're `syncing` (R.string.delivery_status_syncing) but it will likely make more sense to them if we say "Sending"
             )
-        message.isRead || !message.isOutgoing ->
+        message.isRead || message.isIncoming ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_read,
-                context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_read
+                context.getColorFromAttr(R.attr.message_status_color),
+                R.string.delivery_status_read
             )
-        else ->
+        message.isSent ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sent,
                 context.getColorFromAttr(R.attr.message_status_color),
                 R.string.delivery_status_sent
             )
+        else -> {
+            // The message isn't one we care about for message statuses we display to the user (i.e.,
+            // control messages etc. - see the  `DisplayRecord.is<WHATEVER>` suite of methods for options).
+            MessageStatusInfo(null, null, null)
+        }
     }
 
     private fun updateExpirationTimer(message: MessageRecord) {

@@ -114,6 +114,11 @@ public abstract class DisplayRecord {
   public boolean isOutgoing() {
     return MmsSmsColumns.Types.isOutgoingMessageType(type);
   }
+
+  public boolean isIncoming() {
+    return !MmsSmsColumns.Types.isOutgoingMessageType(type);
+  }
+
   public boolean isGroupUpdateMessage() {
     return SmsDatabase.Types.isGroupUpdateMessage(type);
   }
