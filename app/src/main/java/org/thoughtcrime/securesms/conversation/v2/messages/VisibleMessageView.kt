@@ -207,7 +207,7 @@ class VisibleMessageView : LinearLayout {
         binding.dateBreakTextView.text = if (showDateBreak) DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), message.timestamp) else null
         binding.dateBreakTextView.isVisible = showDateBreak
 
-        // Message status indicator
+        // Update message status indicator
         showStatusMessage(message)
 
         // Emoji Reactions
@@ -250,16 +250,20 @@ class VisibleMessageView : LinearLayout {
     // be displaying the "Sent" and the animating clock icon for outgoing messages or "Read" and the
     // animated clock icon for incoming messages.
     private fun showStatusMessage(message: MessageRecord) {
-
         // Get details regarding how we should display the message (it's delivery icon, icon tint colour, and
         // the resource string for what text to display (R.string.delivery_status_sent etc.).
         val (iconID, iconColor, textId) = getMessageStatusInfo(message)
 
         // If we get any nulls then a message isn't one with a state that we care about (i.e., control messages
         // etc.) - so bail. See: `DisplayRecord.is<WHATEVER>` for the full suite of message state methods.
-        if (textId == null) return
-
-        Log.w("[ACL]", "showStatusMessage is looking at message: ${message.id}")
+        // Also: We set all delivery status elements visibility to false just to make sure we don't display any
+        // stale data.
+        if (textId == null) {
+            binding.messageStatusTextView.isVisible  = false
+            binding.messageStatusImageView.isVisible = false
+            binding.expirationTimerView.isVisible    = false
+            return
+        }
 
         binding.messageInnerLayout.modifyLayoutParams<FrameLayout.LayoutParams> {
             gravity = if (message.isOutgoing) Gravity.END else Gravity.START
