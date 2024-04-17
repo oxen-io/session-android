@@ -250,6 +250,11 @@ class VisibleMessageView : LinearLayout {
     // be displaying the "Sent" and the animating clock icon for outgoing messages or "Read" and the
     // animated clock icon for incoming messages.
     private fun showStatusMessage(message: MessageRecord) {
+        // We'll start by hiding everything and then only make visible what we need
+        binding.messageStatusTextView.isVisible  = false
+        binding.messageStatusImageView.isVisible = false
+        binding.expirationTimerView.isVisible    = false
+
         // Get details regarding how we should display the message (it's delivery icon, icon tint colour, and
         // the resource string for what text to display (R.string.delivery_status_sent etc.).
         val (iconID, iconColor, textId) = getMessageStatusInfo(message)
@@ -258,12 +263,7 @@ class VisibleMessageView : LinearLayout {
         // etc.) - so bail. See: `DisplayRecord.is<WHATEVER>` for the full suite of message state methods.
         // Also: We set all delivery status elements visibility to false just to make sure we don't display any
         // stale data.
-        if (textId == null) {
-            binding.messageStatusTextView.isVisible  = false
-            binding.messageStatusImageView.isVisible = false
-            binding.expirationTimerView.isVisible    = false
-            return
-        }
+        if (textId == null) return
 
         binding.messageInnerLayout.modifyLayoutParams<FrameLayout.LayoutParams> {
             gravity = if (message.isOutgoing) Gravity.END else Gravity.START
@@ -271,16 +271,10 @@ class VisibleMessageView : LinearLayout {
         binding.statusContainer.modifyLayoutParams<ConstraintLayout.LayoutParams> {
             horizontalBias = if (message.isOutgoing) 1f else 0f
         }
-        binding.expirationTimerView.isGone = true
 
         // If the message is incoming AND it is not scheduled to disappear then don't show any status or timer details
         val scheduledToDisappear = message.expiresIn > 0
-        if (message.isIncoming && !scheduledToDisappear) {
-            binding.messageStatusTextView.isVisible  = false
-            binding.messageStatusImageView.isVisible = false
-            binding.expirationTimerView.isVisible    = false
-            return
-        }
+        if (message.isIncoming && !scheduledToDisappear) return
 
         // Set text & icons as appropriate for the message state. Note: Possible message states we care
         // about are: isFailed, isSyncFailed, isPending, isSyncing, isResyncing, isRead, and isSent.
@@ -297,9 +291,9 @@ class VisibleMessageView : LinearLayout {
 
         // ----- Case i..) Message is incoming and scheduled to disappear -----
         if (message.isIncoming && scheduledToDisappear) {
-            binding.messageStatusTextView.isVisible  = true  // Display the status ('Read')..
-            binding.messageStatusImageView.isVisible = false // ..but don't display the status image..
-            binding.expirationTimerView.isVisible    = true  // ..and instead show the timer.
+            // Display the status ('Read') and the show the timer only (no delivery icon)
+            binding.messageStatusTextView.isVisible  = true
+            binding.expirationTimerView.isVisible    = true
             binding.expirationTimerView.bringToFront()
             updateExpirationTimer(message)
             return
@@ -314,9 +308,8 @@ class VisibleMessageView : LinearLayout {
         // ----- Case ii.) Message is outgoing but NOT scheduled to disappear -----
         if (!scheduledToDisappear) {
             // If this isn't a disappearing message then we never show the timer
-            binding.expirationTimerView.isVisible = false
 
-            // If the message has NOT been successfully sent then always show the delivery status text and image..
+            // If the message has NOT been successfully sent then always show the delivery status text and icon..
             val neitherSentNorRead = !(message.isSent || message.isRead)
             if (neitherSentNorRead) {
                 binding.messageStatusTextView.isVisible = true
@@ -337,16 +330,14 @@ class VisibleMessageView : LinearLayout {
             // If the message is sent or has been read..
             val sentOrRead = message.isSent || message.isRead
             if (sentOrRead) {
-                // ..then display the timer icon for this disappearing message and hide the message status icon
+                // ..then display the timer icon for this disappearing message (but keep the message status icon hidden)
                 binding.expirationTimerView.isVisible = true
                 binding.expirationTimerView.bringToFront()
                 updateExpirationTimer(message)
-                binding.messageStatusImageView.isVisible = false
             } else {
                 // If the message has NOT been sent or read (or it has failed) then show the delivery status icon rather than the timer icon
                 binding.messageStatusImageView.isVisible = true
                 binding.messageStatusImageView.bringToFront()
-                binding.expirationTimerView.isVisible = false
             }
         }
     }
