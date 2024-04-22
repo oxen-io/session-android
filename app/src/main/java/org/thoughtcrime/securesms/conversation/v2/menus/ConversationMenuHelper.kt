@@ -1,8 +1,11 @@
 package org.thoughtcrime.securesms.conversation.v2.menus
 
+import android.Manifest.permission.RECORD_AUDIO
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.BitmapFactory
 import android.os.AsyncTask
 import android.view.Menu
@@ -13,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
+import androidx.core.content.ContextCompat
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
@@ -33,7 +37,9 @@ import org.thoughtcrime.securesms.conversation.v2.utilities.NotificationUtils
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.groups.EditClosedGroupActivity
 import org.thoughtcrime.securesms.groups.EditClosedGroupActivity.Companion.groupIDKey
+import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
+import org.thoughtcrime.securesms.preferences.requestMicrophonePermission
 import org.thoughtcrime.securesms.service.WebRtcCallService
 import org.thoughtcrime.securesms.showMuteDialog
 import org.thoughtcrime.securesms.showSessionDialog
@@ -126,7 +132,7 @@ object ConversationMenuHelper {
         })
     }
 
-    fun onOptionItemSelected(context: Context, item: MenuItem, thread: Recipient): Boolean {
+    fun onOptionItemSelected(context: Activity, item: MenuItem, thread: Recipient): Boolean {
         when (item.itemId) {
             R.id.menu_view_all_media -> { showAllMedia(context, thread) }
             R.id.menu_search -> { search(context) }
@@ -160,10 +166,10 @@ object ConversationMenuHelper {
         searchViewModel.onSearchOpened()
     }
 
-    private fun call(context: Context, thread: Recipient) {
+    private fun call(activity: Activity, thread: Recipient) {
 
-        if (!TextSecurePreferences.isCallNotificationsEnabled(context)) {
-            context.showSessionDialog {
+        if (!TextSecurePreferences.isCallNotificationsEnabled(activity)) {
+            activity.showSessionDialog {
                 title(R.string.ConversationActivity_call_title)
                 text(R.string.ConversationActivity_call_prompt)
                 button(R.string.activity_settings_title, R.string.AccessibilityId_settings) {
@@ -174,12 +180,17 @@ object ConversationMenuHelper {
             return
         }
 
-        WebRtcCallService.createCall(context, thread)
-            .let(context::startService)
+        if (ContextCompat.checkSelfPermission(activity, RECORD_AUDIO) != PERMISSION_GRANTED) {
+            activity.requestMicrophonePermission { if (it) call(activity, thread) }
+            return
+        }
 
-        Intent(context, WebRtcCallActivity::class.java)
+        WebRtcCallService.createCall(activity, thread)
+            .let(activity::startService)
+
+        Intent(activity, WebRtcCallActivity::class.java)
             .apply { flags = Intent.FLAG_ACTIVITY_NEW_TASK }
-            .let(context::startActivity)
+            .let(activity::startActivity)
 
     }
 
