@@ -1,9 +1,7 @@
 package org.thoughtcrime.securesms.permissions;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -11,9 +9,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.view.Display;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -32,8 +28,6 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import network.loki.messenger.R;
 
 public class Permissions {
 

@@ -9,6 +9,7 @@ import network.loki.messenger.R
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.TextSecurePreferences.Companion.setBooleanPreference
 import org.thoughtcrime.securesms.permissions.Permissions
+import org.thoughtcrime.securesms.permissions.requestMicrophonePermission
 import org.thoughtcrime.securesms.showSessionDialog
 
 internal class CallToggleListener(
@@ -29,30 +30,4 @@ internal class CallToggleListener(
 
         return false
     }
-}
-
-fun Fragment.requestMicrophonePermission(callback: (Boolean) -> Unit) {
-    requireContext().requestMicrophonePermission(Permissions.with(this), callback)
-}
-
-fun Activity.requestMicrophonePermission(callback: (Boolean) -> Unit) {
-    requestMicrophonePermission(Permissions.with(this), callback)
-}
-
-fun Context.requestMicrophonePermission(
-    permissions: Permissions.PermissionsBuilder,
-    callback: (Boolean) -> Unit
-) {
-    permissions
-        .request(Manifest.permission.RECORD_AUDIO)
-        .onAllGranted {
-            setBooleanPreference(
-                this,
-                TextSecurePreferences.CALL_NOTIFICATIONS_ENABLED,
-                true
-            )
-            callback(true)
-        }
-        .onAnyDenied { callback(false) }
-        .execute()
 }

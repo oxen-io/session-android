@@ -37,9 +37,8 @@ import org.thoughtcrime.securesms.conversation.v2.utilities.NotificationUtils
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.groups.EditClosedGroupActivity
 import org.thoughtcrime.securesms.groups.EditClosedGroupActivity.Companion.groupIDKey
-import org.thoughtcrime.securesms.permissions.Permissions
+import org.thoughtcrime.securesms.permissions.requestMicrophonePermission
 import org.thoughtcrime.securesms.preferences.PrivacySettingsActivity
-import org.thoughtcrime.securesms.preferences.requestMicrophonePermission
 import org.thoughtcrime.securesms.service.WebRtcCallService
 import org.thoughtcrime.securesms.showMuteDialog
 import org.thoughtcrime.securesms.showSessionDialog
