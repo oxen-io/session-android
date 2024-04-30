@@ -349,11 +349,17 @@ public class DefaultMessageNotifier implements MessageNotifier {
     builder.setThread(notifications.get(0).getRecipient());
     builder.setMessageCount(notificationState.getMessageCount());
     MentionManagerUtilities.INSTANCE.populateUserPublicKeyCacheIfNeeded(notifications.get(0).getThreadId(),context);
+
+    // TODO: Removing highlighting mentions in the notification because this context is the libsession one which
+    // TODO: doesn't have access to the `R.attr.message_sent_text_color` and `R.attr.message_received_text_color`
+    // TODO: attributes to perform the colour lookup. Also, it makes little sense to highlight the mentions using
+    // TODO: the app theme as it may result in insufficient contrast with the notification background which will
+    // TODO: be using the SYSTEM theme.
     builder.setPrimaryMessageBody(recipient, notifications.get(0).getIndividualRecipient(),
-                                  MentionUtilities.highlightMentions(text == null ? "" : text,
-                                          notifications.get(0).getThreadId(),
-                                          context),
+                                  //MentionUtilities.highlightMentions(text == null ? "" : text, notifications.get(0).getThreadId(), context), // Removing hightlighting mentions -ACL
+                                  text == null ? "" : text,
                                   notifications.get(0).getSlideDeck());
+
     builder.setContentIntent(notifications.get(0).getPendingIntent(context));
     builder.setDeleteIntent(notificationState.getDeleteIntent(context));
     builder.setOnlyAlertOnce(!signal);
