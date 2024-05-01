@@ -49,6 +49,7 @@ fun getColorResourceIdFromAttr(context: Context, attr: Int): Int {
     val outTypedValue = TypedValue()
     val successfullyFoundAttribute = context.theme.resolveAttribute(attr, outTypedValue, true)
     if (successfullyFoundAttribute) { return outTypedValue.resourceId }
+
     Log.w("ViewUtils", "Could not find colour attribute $attr in theme - using grey as a safe fallback")
     return R.color.gray50
 }
