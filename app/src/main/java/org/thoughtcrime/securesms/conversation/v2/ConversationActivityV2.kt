@@ -252,7 +252,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         viewModelFactory.create(threadId, MessagingModuleConfiguration.shared.getUserED25519KeyPair())
     }
     private var actionMode: ActionMode? = null
-    private var unreadCount = 0
+    private var unreadCount = Int.MAX_VALUE
     // Attachments
     private val audioRecorder = AudioRecorder(this)
     private val stopAudioHandler = Handler(Looper.getMainLooper())
@@ -572,10 +572,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         binding!!.conversationRecyclerView.layoutManager = layoutManager
         // Workaround for the fact that CursorRecyclerViewAdapter doesn't auto-update automatically (even though it says it will)
         LoaderManager.getInstance(this).restartLoader(0, null, this)
-        binding!!.conversationRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding!!.conversationRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() { 
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (recyclerScrollState == RecyclerView.SCROLL_STATE_IDLE) {
+                // The unreadCount check is to prevent us scrolling to the bottom when we first enter a conversation
+                if (recyclerScrollState == RecyclerView.SCROLL_STATE_IDLE && unreadCount != Int.MAX_VALUE) {
                     scrollToMostRecentMessageIfWeShould()
                 }
                 handleRecyclerViewScrolled()
