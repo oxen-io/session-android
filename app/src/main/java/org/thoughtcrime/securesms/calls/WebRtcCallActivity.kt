@@ -93,6 +93,7 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
         super.onNewIntent(intent)
         if (intent?.action == ACTION_ANSWER) {
             val answerIntent = WebRtcCallService.acceptCallIntent(this)
+            answerIntent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             ContextCompat.startForegroundService(this, answerIntent)
         }
     }
@@ -106,6 +107,7 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
             setShowWhenLocked(true)
             setTurnScreenOn(true)
         }
+
         window.addFlags(
             WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                     or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
