@@ -36,7 +36,7 @@ class ContactListAdapter(
             binding.nameTextView.text = contact.displayName
             binding.root.setOnClickListener { listener(contact.recipient) }
 
-            // TODO: When we implement deleting contacts (hide might be safest) then probably set a long-click listener here w/ something like:
+            // TODO: When we implement deleting contacts (hide might be safest for now) then probably set a long-click listener here w/ something like:
             /*
             binding.root.setOnLongClickListener {
                 Log.w("[ACL]", "Long clicked on contact ${contact.recipient.name}")
