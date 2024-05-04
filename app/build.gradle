@@ -71,6 +71,8 @@ android {
     useLibrary 'org.apache.http.legacy'
 
     compileOptions {
+        // Note: Modules such as libsession, libsignal etc. use VERSION_17, so to update to a more recent
+        // language spec like VERSION_20 we need to update all modules at the same time. -ACL 2024-05-04
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
@@ -210,6 +212,7 @@ android {
     buildFeatures {
         dataBinding true
         viewBinding true
+        buildConfig true
     }
 
     def huaweiEnabled = project.properties['huawei'] != null
