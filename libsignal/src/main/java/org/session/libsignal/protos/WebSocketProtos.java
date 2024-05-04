@@ -172,7 +172,7 @@ public final class WebSocketProtos {
           headers_ = new com.google.protobuf.UnmodifiableLazyStringList(headers_);
         }
         this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
+        //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -1144,7 +1144,7 @@ public final class WebSocketProtos {
           headers_ = new com.google.protobuf.UnmodifiableLazyStringList(headers_);
         }
         this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
+        //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -2025,7 +2025,7 @@ public final class WebSocketProtos {
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
+        //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -2835,7 +2835,7 @@ public final class WebSocketProtos {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-        }, assigner);
+        });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

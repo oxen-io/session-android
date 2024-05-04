@@ -188,7 +188,7 @@ public final class SignalServiceProtos {
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
+        //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -1173,7 +1173,7 @@ public final class SignalServiceProtos {
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
+        //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -1824,7 +1824,7 @@ public final class SignalServiceProtos {
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
+        //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -2711,7 +2711,7 @@ public final class SignalServiceProtos {
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
+        //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -4957,7 +4957,7 @@ public final class SignalServiceProtos {
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
+        //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -5518,7 +5518,7 @@ public final class SignalServiceProtos {
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
+        //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -6439,7 +6439,7 @@ public final class SignalServiceProtos {
           preview_ = java.util.Collections.unmodifiableList(preview_);
         }
         this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
+        //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -6716,7 +6716,7 @@ public final class SignalServiceProtos {
             attachments_ = java.util.Collections.unmodifiableList(attachments_);
           }
           this.unknownFields = unknownFields.build();
-          makeExtensionsImmutable();
+          //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
         }
       }
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -6891,7 +6891,7 @@ public final class SignalServiceProtos {
                 e.getMessage()).setUnfinishedMessage(this);
           } finally {
             this.unknownFields = unknownFields.build();
-            makeExtensionsImmutable();
+            //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
           }
         }
         public static final com.google.protobuf.Descriptors.Descriptor
@@ -8847,7 +8847,7 @@ public final class SignalServiceProtos {
               e.getMessage()).setUnfinishedMessage(this);
         } finally {
           this.unknownFields = unknownFields.build();
-          makeExtensionsImmutable();
+          //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
         }
       }
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -9695,7 +9695,7 @@ public final class SignalServiceProtos {
               e.getMessage()).setUnfinishedMessage(this);
         } finally {
           this.unknownFields = unknownFields.build();
-          makeExtensionsImmutable();
+          //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
         }
       }
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -10346,7 +10346,7 @@ public final class SignalServiceProtos {
               e.getMessage()).setUnfinishedMessage(this);
         } finally {
           this.unknownFields = unknownFields.build();
-          makeExtensionsImmutable();
+          //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
         }
       }
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -11213,7 +11213,7 @@ public final class SignalServiceProtos {
             wrappers_ = java.util.Collections.unmodifiableList(wrappers_);
           }
           this.unknownFields = unknownFields.build();
-          makeExtensionsImmutable();
+          //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
         }
       }
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -11510,7 +11510,7 @@ public final class SignalServiceProtos {
                 e.getMessage()).setUnfinishedMessage(this);
           } finally {
             this.unknownFields = unknownFields.build();
-            makeExtensionsImmutable();
+            //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
           }
         }
         public static final com.google.protobuf.Descriptors.Descriptor
@@ -13490,7 +13490,7 @@ public final class SignalServiceProtos {
               e.getMessage()).setUnfinishedMessage(this);
         } finally {
           this.unknownFields = unknownFields.build();
-          makeExtensionsImmutable();
+          //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
         }
       }
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -17116,7 +17116,7 @@ public final class SignalServiceProtos {
           sdpMids_ = new com.google.protobuf.UnmodifiableLazyStringList(sdpMids_);
         }
         this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
+        //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -18415,7 +18415,7 @@ public final class SignalServiceProtos {
           contacts_ = java.util.Collections.unmodifiableList(contacts_);
         }
         this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
+        //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -18635,7 +18635,7 @@ public final class SignalServiceProtos {
             admins_ = java.util.Collections.unmodifiableList(admins_);
           }
           this.unknownFields = unknownFields.build();
-          makeExtensionsImmutable();
+          //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
         }
       }
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -19783,7 +19783,7 @@ public final class SignalServiceProtos {
               e.getMessage()).setUnfinishedMessage(this);
         } finally {
           this.unknownFields = unknownFields.build();
-          makeExtensionsImmutable();
+          //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
         }
       }
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -22240,7 +22240,7 @@ public final class SignalServiceProtos {
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
+        //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -22962,7 +22962,7 @@ public final class SignalServiceProtos {
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
+        //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -23771,7 +23771,7 @@ public final class SignalServiceProtos {
           timestamp_ = java.util.Collections.unmodifiableList(timestamp_);
         }
         this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
+        //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -24596,7 +24596,7 @@ public final class SignalServiceProtos {
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
+        //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -26258,7 +26258,7 @@ public final class SignalServiceProtos {
           admins_ = new com.google.protobuf.UnmodifiableLazyStringList(admins_);
         }
         this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
+        //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -27837,7 +27837,7 @@ public final class SignalServiceProtos {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-        }, assigner);
+        });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -101,7 +101,7 @@ public final class SignalProtos {
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
+        //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -224,7 +224,7 @@ public final class SignalProtos {
               e.getMessage()).setUnfinishedMessage(this);
         } finally {
           this.unknownFields = unknownFields.build();
-          makeExtensionsImmutable();
+          //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
         }
       }
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -1069,7 +1069,7 @@ public final class SignalProtos {
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
+        //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -1631,7 +1631,7 @@ public final class SignalProtos {
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
+        //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -1787,7 +1787,7 @@ public final class SignalProtos {
               e.getMessage()).setUnfinishedMessage(this);
         } finally {
           this.unknownFields = unknownFields.build();
-          makeExtensionsImmutable();
+          //makeExtensionsImmutable(); // ACL - no longer available after protobuf-java update?!
         }
       }
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -2952,7 +2952,7 @@ public final class SignalProtos {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-        }, assigner);
+        });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
