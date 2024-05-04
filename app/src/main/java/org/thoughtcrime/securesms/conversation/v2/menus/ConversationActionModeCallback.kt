@@ -77,7 +77,7 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
             && firstMessage.isMms && (firstMessage as MediaMmsMessageRecord).containsMediaSlide())
         // Reply
         menu.findItem(R.id.menu_context_reply).isVisible =
-            (selectedItems.size == 1 && !firstMessage.isPending && !firstMessage.isFailed)
+            (selectedItems.size == 1 && !firstMessage.isPending && !firstMessage.isFailed && !firstMessage.isOpenGroupInvitation)
     }
 
     override fun onPrepareActionMode(mode: ActionMode?, menu: Menu): Boolean {

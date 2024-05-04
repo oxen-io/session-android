@@ -123,7 +123,7 @@ class MessageDetailActivity : PassphraseRequiredActionBarActivity() {
         AppTheme {
             MessageDetails(
                 state = state,
-                onReply = { setResultAndFinish(ON_REPLY) },
+                onReply = if (state.canReply) { { setResultAndFinish(ON_REPLY) } } else null,
                 onResend = state.error?.let { { setResultAndFinish(ON_RESEND) } },
                 onDelete = { setResultAndFinish(ON_DELETE) },
                 onClickImage = { viewModel.onClickImage(it) },
@@ -145,7 +145,7 @@ class MessageDetailActivity : PassphraseRequiredActionBarActivity() {
 @Composable
 fun MessageDetails(
     state: MessageDetailsState,
-    onReply: () -> Unit = {},
+    onReply: (() -> Unit)? = null,
     onResend: (() -> Unit)? = null,
     onDelete: () -> Unit = {},
     onClickImage: (Int) -> Unit = {},
@@ -214,18 +214,20 @@ fun CellMetadata(
 
 @Composable
 fun CellButtons(
-    onReply: () -> Unit = {},
+    onReply: (() -> Unit)? = null,
     onResend: (() -> Unit)? = null,
     onDelete: () -> Unit = {},
 ) {
     Cell {
         Column {
-            ItemButton(
-                stringResource(R.string.reply),
-                R.drawable.ic_message_details__reply,
-                onClick = onReply
-            )
-            Divider()
+            onReply?.let {
+                ItemButton(
+                    stringResource(R.string.reply),
+                    R.drawable.ic_message_details__reply,
+                    onClick = it
+                )
+                Divider()
+            }
             onResend?.let {
                 ItemButton(
                     stringResource(R.string.resend),

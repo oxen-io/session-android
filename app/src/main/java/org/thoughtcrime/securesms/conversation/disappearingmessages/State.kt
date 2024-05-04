@@ -68,7 +68,7 @@ enum class ExpiryType(
     AFTER_SEND(
         ExpiryMode::AfterSend,
         R.string.expiration_type_disappear_after_send,
-        R.string.expiration_type_disappear_after_read_description,
+        R.string.expiration_type_disappear_after_send_description,
         R.string.AccessibilityId_disappear_after_send_option
     );
 

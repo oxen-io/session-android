@@ -39,15 +39,20 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
   public int getDesiredTheme() {
     ThemeState themeState = ActivityUtilitiesKt.themeState(getPreferences());
     int userSelectedTheme = themeState.getTheme();
+
+    // If the user has configured Session to follow the system light/dark theme mode then do so..
     if (themeState.getFollowSystem()) {
-      // do light or dark based on the selected theme
+
+      // Use light or dark versions of the user's theme based on light-mode / dark-mode settings
       boolean isDayUi = UiModeUtilities.isDayUiMode(this);
       if (userSelectedTheme == R.style.Ocean_Dark || userSelectedTheme == R.style.Ocean_Light) {
         return isDayUi ? R.style.Ocean_Light : R.style.Ocean_Dark;
       } else {
         return isDayUi ? R.style.Classic_Light : R.style.Classic_Dark;
       }
-    } else {
+    }
+    else // ..otherwise just return their selected theme.
+    {
       return userSelectedTheme;
     }
   }

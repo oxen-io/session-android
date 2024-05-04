@@ -15,10 +15,6 @@
     <string name="MessageRecord_s_called_you">%s vous a appelé·e</string>
     <string name="MessageRecord_called_s">Vous avez appelé %s</string>
     <string name="MessageRecord_missed_call_from">Appel manqué de %s</string>
-    <string name="MessageRecord_you_disabled_disappearing_messages">Vous avez désactivé les messages éphémères.</string>
-    <string name="MessageRecord_s_disabled_disappearing_messages">%1$s a désactivé les messages éphémères.</string>
-    <string name="MessageRecord_you_set_disappearing_message_time_to_s">Vous avez défini l’expiration des messages éphémères à %1$s</string>
-    <string name="MessageRecord_s_set_disappearing_message_time_to_s">%1$s a défini l’expiration des messages éphémères à %2$s</string>
     <string name="MessageRecord_s_took_a_screenshot">%1$s a pris une capture d\'écran.</string>
     <string name="MessageRecord_media_saved_by_s">%1$s a enregistré le média.</string>
     <!-- expiration -->

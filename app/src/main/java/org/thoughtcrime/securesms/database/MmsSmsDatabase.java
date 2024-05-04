@@ -320,6 +320,19 @@ public class MmsSmsDatabase extends Database {
     return -1;
   }
 
+  public long getLastMessageTimestamp(long threadId) {
+    String order     = MmsSmsColumns.NORMALIZED_DATE_SENT + " DESC";
+    String selection = MmsSmsColumns.THREAD_ID + " = " + threadId;
+
+    try (Cursor cursor = queryTables(PROJECTION, selection, order, "1")) {
+      if (cursor.moveToFirst()) {
+        return cursor.getLong(cursor.getColumnIndexOrThrow(MmsSmsColumns.NORMALIZED_DATE_SENT));
+      }
+    }
+
+    return -1;
+  }
+
   public Cursor getUnread() {
     String order           = MmsSmsColumns.NORMALIZED_DATE_SENT + " ASC";
     String selection       = "(" + MmsSmsColumns.READ + " = 0 OR " + MmsSmsColumns.REACTIONS_UNREAD + " = 1) AND " + MmsSmsColumns.NOTIFIED + " = 0";

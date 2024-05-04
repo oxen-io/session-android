@@ -4,19 +4,14 @@ import network.loki.messenger.libsession_util.util.ExpiryMode
 
 import android.content.ContentResolver
 import android.content.Context
-
 import app.cash.copper.Query
 import app.cash.copper.flow.observeQuery
-
 import dagger.hilt.android.qualifiers.ApplicationContext
-
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
-
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-
 import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
@@ -32,9 +27,7 @@ import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
-
 import org.session.libsignal.utilities.toHexString
-
 import org.thoughtcrime.securesms.database.DatabaseContentProviders
 import org.thoughtcrime.securesms.database.DraftDatabase
 import org.thoughtcrime.securesms.database.ExpirationConfigurationDatabase
@@ -51,7 +44,6 @@ import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-
 import javax.inject.Inject
 
 interface ConversationRepository {
@@ -239,7 +231,7 @@ class DefaultConversationRepository @Inject constructor(
                     .success {
                         continuation.resume(ResultOf.Success(Unit))
                     }.fail { error ->
-                        Log.w("[onversationRepository", "Call to SnodeAPI.deleteMessage failed - attempting to resume..")
+                        Log.w("ConversationRepository", "Call to SnodeAPI.deleteMessage failed - attempting to resume..")
                         continuation.resumeWithException(error)
                     }
             }
@@ -330,9 +322,7 @@ class DefaultConversationRepository @Inject constructor(
             while (reader.next != null) {
                 deleteMessageRequest(reader.current)
                 val recipient = reader.current.recipient
-                if (block) {
-                    setBlocked(recipient, true)
-                }
+                if (block) { setBlocked(recipient, true) }
             }
         }
         return ResultOf.Success(Unit)
@@ -359,9 +349,7 @@ class DefaultConversationRepository @Inject constructor(
         val cursor = mmsSmsDb.getConversation(threadId, true)
         mmsSmsDb.readerFor(cursor).use { reader ->
             while (reader.next != null) {
-                if (!reader.current.isOutgoing) {
-                    return true
-                }
+                if (!reader.current.isOutgoing) { return true }
             }
         }
         return false

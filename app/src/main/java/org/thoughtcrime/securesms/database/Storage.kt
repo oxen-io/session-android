@@ -99,7 +99,7 @@ private const val TAG = "Storage"
 open class Storage(
     context: Context,
     helper: SQLCipherOpenHelper,
-    private val configFactory: ConfigFactory
+    val configFactory: ConfigFactory
 ) : Database(context, helper), StorageProtocol, ThreadDatabase.ConversationThreadUpdateListener {
 
     override fun threadCreated(address: Address, threadId: Long) {
@@ -1371,29 +1371,29 @@ open class Storage(
         val threadDB = DatabaseComponent.get(context).threadDatabase()
         val groupDB = DatabaseComponent.get(context).groupDatabase()
         threadDB.deleteConversation(threadID)
-        val recipient = getRecipientForThread(threadID) ?: return
-        when {
-            recipient.isContactRecipient -> {
-                if (recipient.isLocalNumber) return
-                val contacts = configFactory.contacts ?: return
-                contacts.upsertContact(recipient.address.serialize()) { priority = PRIORITY_HIDDEN }
-                ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
-            }
-            recipient.isClosedGroupRecipient -> {
-                // TODO: handle closed group
-                val volatile = configFactory.convoVolatile ?: return
-                val groups = configFactory.userGroups ?: return
-                val groupID = recipient.address.toGroupString()
-                val closedGroup = getGroup(groupID)
-                val groupPublicKey = GroupUtil.doubleDecodeGroupId(recipient.address.serialize())
-                if (closedGroup != null) {
-                    groupDB.delete(groupID) // TODO: Should we delete the group? (seems odd to leave it)
-                    volatile.eraseLegacyClosedGroup(groupPublicKey)
-                    groups.eraseLegacyGroup(groupPublicKey)
-                } else {
-                    Log.w("Loki-DBG", "Failed to find a closed group for ${groupPublicKey.take(4)}")
-                }
-            }
+
+        val recipient = getRecipientForThread(threadID)
+        if (recipient == null) {
+            Log.w(TAG, "Got null recipient when deleting conversation - aborting.");
+            return
+        }
+
+        // There is nothing further we need to do if this is a 1-on-1 conversation, and it's not
+        // possible to delete communities in this manner so bail.
+        if (recipient.isContactRecipient || recipient.isCommunityRecipient) return
+
+        // If we get here then this is a closed group conversation (i.e., recipient.isClosedGroupRecipient)
+        val volatile = configFactory.convoVolatile ?: return
+        val groups = configFactory.userGroups ?: return
+        val groupID = recipient.address.toGroupString()
+        val closedGroup = getGroup(groupID)
+        val groupPublicKey = GroupUtil.doubleDecodeGroupId(recipient.address.serialize())
+        if (closedGroup != null) {
+            groupDB.delete(groupID)
+            volatile.eraseLegacyClosedGroup(groupPublicKey)
+            groups.eraseLegacyGroup(groupPublicKey)
+        } else {
+            Log.w("Loki-DBG", "Failed to find a closed group for ${groupPublicKey.take(4)}")
         }
     }
 

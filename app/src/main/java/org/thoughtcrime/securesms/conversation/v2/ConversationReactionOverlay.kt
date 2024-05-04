@@ -532,7 +532,7 @@ class ConversationReactionOverlay : FrameLayout {
         items += ActionItem(R.attr.menu_select_icon, R.string.conversation_context__menu_select, { handleActionItemClicked(Action.SELECT) }, R.string.AccessibilityId_select)
         // Reply
         val canWrite = openGroup == null || openGroup.canWrite
-        if (canWrite && !message.isPending && !message.isFailed) {
+        if (canWrite && !message.isPending && !message.isFailed && !message.isOpenGroupInvitation) {
             items += ActionItem(R.attr.menu_reply_icon, R.string.conversation_context__menu_reply, { handleActionItemClicked(Action.REPLY) }, R.string.AccessibilityId_reply_message)
         }
         // Copy message text

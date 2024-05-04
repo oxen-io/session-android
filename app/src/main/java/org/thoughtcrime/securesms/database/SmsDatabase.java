@@ -22,15 +22,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.text.TextUtils;
 import android.util.Pair;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.annimon.stream.Stream;
-
 import net.zetetic.database.sqlcipher.SQLiteDatabase;
 import net.zetetic.database.sqlcipher.SQLiteStatement;
-
 import org.apache.commons.lang3.StringUtils;
 import org.session.libsession.messaging.calls.CallMessageType;
 import org.session.libsession.messaging.messages.signal.IncomingGroupMessage;
@@ -51,7 +47,6 @@ import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.database.model.ReactionRecord;
 import org.thoughtcrime.securesms.database.model.SmsMessageRecord;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.security.SecureRandom;
@@ -634,7 +629,7 @@ public class SmsDatabase extends MessagingDatabase {
     long threadId = getThreadIdForMessage(messageId);
     db.delete(TABLE_NAME, ID_WHERE, new String[] {messageId+""});
     notifyConversationListeners(threadId);
-    boolean threadDeleted = DatabaseComponent.get(context).threadDatabase().update(threadId, false, true);
+    boolean threadDeleted = DatabaseComponent.get(context).threadDatabase().update(threadId, false, false);
     return threadDeleted;
   }
 
@@ -701,12 +696,7 @@ public class SmsDatabase extends MessagingDatabase {
     }
   }
 
-  /*package */void deleteThread(long threadId) {
-    SQLiteDatabase db = databaseHelper.getWritableDatabase();
-    db.delete(TABLE_NAME, THREAD_ID + " = ?", new String[] {threadId+""});
-  }
-
-  /*package*/void deleteMessagesInThreadBeforeDate(long threadId, long date) {
+  void deleteMessagesInThreadBeforeDate(long threadId, long date) {
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
     String where      = THREAD_ID + " = ? AND (CASE " + TYPE;
 
@@ -719,7 +709,12 @@ public class SmsDatabase extends MessagingDatabase {
     db.delete(TABLE_NAME, where, new String[] {threadId + ""});
   }
 
-  /*package*/ void deleteThreads(Set<Long> threadIds) {
+  void deleteThread(long threadId) {
+    SQLiteDatabase db = databaseHelper.getWritableDatabase();
+    db.delete(TABLE_NAME, THREAD_ID + " = ?", new String[] {threadId+""});
+  }
+
+  void deleteThreads(Set<Long> threadIds) {
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
     String where      = "";
 
@@ -727,23 +722,23 @@ public class SmsDatabase extends MessagingDatabase {
       where += THREAD_ID + " = '" + threadId + "' OR ";
     }
 
-    where = where.substring(0, where.length() - 4);
+    where = where.substring(0, where.length() - 4); // Remove the final: "' OR "
 
     db.delete(TABLE_NAME, where, null);
   }
 
-  /*package */ void deleteAllThreads() {
+  void deleteAllThreads() {
     SQLiteDatabase db = databaseHelper.getWritableDatabase();
     db.delete(TABLE_NAME, null, null);
   }
 
-  /*package*/ SQLiteDatabase beginTransaction() {
+  SQLiteDatabase beginTransaction() {
     SQLiteDatabase database = databaseHelper.getWritableDatabase();
     database.beginTransaction();
     return database;
   }
 
-  /*package*/ void endTransaction(SQLiteDatabase database) {
+  void endTransaction(SQLiteDatabase database) {
     database.setTransactionSuccessful();
     database.endTransaction();
   }
