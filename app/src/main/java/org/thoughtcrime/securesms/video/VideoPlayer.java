@@ -20,6 +20,8 @@ import android.content.Context;
 import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.Window;
@@ -64,9 +66,9 @@ public class VideoPlayer extends FrameLayout {
   private static final String TAG = VideoPlayer.class.getSimpleName();
 
   @Nullable private final VideoView           videoView;
-  @Nullable private final PlayerView          exoView;
+  @Nullable private final PlayerView exoView;
 
-  @Nullable private       SimpleExoPlayer     exoPlayer;
+  @Nullable private SimpleExoPlayer exoPlayer;
   @Nullable private       PlayerControlView   exoControls;
   @Nullable private       AttachmentServer    attachmentServer;
   @Nullable private       Window              window;
@@ -97,7 +99,7 @@ public class VideoPlayer extends FrameLayout {
   }
 
   public void setVideoSource(@NonNull VideoSlide videoSource, boolean autoplay)
-      throws IOException
+          throws IOException
   {
     if (Build.VERSION.SDK_INT >= 16) setExoViewSource(videoSource, autoplay);
     else                             setVideoViewSource(videoSource, autoplay);
@@ -139,7 +141,7 @@ public class VideoPlayer extends FrameLayout {
   }
 
   private void setExoViewSource(@NonNull VideoSlide videoSource, boolean autoplay)
-      throws IOException
+          throws IOException
   {
     BandwidthMeter         bandwidthMeter             = new DefaultBandwidthMeter();
     TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
@@ -164,7 +166,7 @@ public class VideoPlayer extends FrameLayout {
   }
 
   private void setVideoViewSource(@NonNull VideoSlide videoSource, boolean autoplay)
-    throws IOException
+          throws IOException
   {
     if (this.attachmentServer != null) {
       this.attachmentServer.stop();
