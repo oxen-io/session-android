@@ -7,7 +7,10 @@ buildscript {
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$gradlePluginVersion"
-        classpath files('libs/gradle-witness.jar')
+
+        // TODO: Confirm we can remove this - we don't use it. -ACL 2024/05/04
+        //classpath files('libs/gradle-witness.jar')
+
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         classpath "com.google.gms:google-services:$googleServicesVersion"
@@ -328,7 +331,8 @@ dependencies {
 
     implementation "com.github.dmytrodanylyk:circular-progress-button:$circularProgressButtonVersion"
 
-    implementation 'androidx.sqlite:sqlite-ktx:2.3.1'
+    implementation "androidx.sqlite:sqlite-ktx:$sqLiteVersion"
+
     implementation 'net.zetetic:sqlcipher-android:4.5.4@aar'
     implementation project(":libsignal")
     implementation project(":libsession")
