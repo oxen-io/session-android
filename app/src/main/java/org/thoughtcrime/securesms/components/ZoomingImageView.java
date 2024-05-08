@@ -89,7 +89,9 @@ public class ZoomingImageView extends FrameLayout {
         if (dimensions == null || (dimensions.first <= maxTextureSize && dimensions.second <= maxTextureSize)) {
           Log.i(TAG, "Loading in standard image view...");
           setImageViewUri(glideRequests, uri);
-        } else {
+        }
+        else // If we have image dimensions greater than our allowed max texture size..
+        {
           Log.i(TAG, "Loading in subsampling image view...");
           setSubsamplingImageViewUri(uri);
         }
