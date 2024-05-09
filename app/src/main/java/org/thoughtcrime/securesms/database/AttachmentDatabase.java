@@ -745,7 +745,7 @@ public class AttachmentDatabase extends Database {
       else // If the 'attachment json alias' IS precisely -1...
       {
         // Note: Added all this separation to try to identify where a crash is occurring & prevent.
-        // See: https://optf.atlassian.net/browse/SES-1889
+        // See ticket: SES-1889
         AtomicReference<Boolean> errorOccurredRef = new AtomicReference<Boolean>(false);
         int rowIndex                = wrappedGetColumnIndex(cursor, ROW_ID, errorOccurredRef);
         int uniqueIdIndex           = wrappedGetColumnIndex(cursor, UNIQUE_ID, errorOccurredRef);
