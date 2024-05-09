@@ -128,37 +128,22 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                 null
             )
             while (cursor.moveToNext()) {
-                if (MmsSmsColumns.Types.isOutgoingMessageType(
-                        cursor.getLong(
-                            cursor.getColumnIndexOrThrow(
-                                MESSAGE_BOX
-                            )
-                        )
-                    )
-                ) {
-                    val theirAddress = fromSerialized(
-                        cursor.getString(
-                            cursor.getColumnIndexOrThrow(
-                                ADDRESS
-                            )
-                        )
-                    )
-                    val ourAddress = messageId.address
-                    val columnName =
-                        if (deliveryReceipt) DELIVERY_RECEIPT_COUNT else READ_RECEIPT_COUNT
+                val messageBox = cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_BOX))
+                if (MmsSmsColumns.Types.isOutgoingMessageType(messageBox)) {
+                    val theirAddress = fromSerialized(cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS)))
+                    val ourAddress   = messageId.address
+                    val columnName   = if (deliveryReceipt) DELIVERY_RECEIPT_COUNT else READ_RECEIPT_COUNT
                     if (ourAddress.equals(theirAddress) || theirAddress.isGroup) {
                         val id = cursor.getLong(cursor.getColumnIndexOrThrow(ID))
                         val threadId = cursor.getLong(cursor.getColumnIndexOrThrow(THREAD_ID))
-                        val status =
-                            if (deliveryReceipt) GroupReceiptDatabase.STATUS_DELIVERED else GroupReceiptDatabase.STATUS_READ
+                        val status   = if (deliveryReceipt) GroupReceiptDatabase.STATUS_DELIVERED else GroupReceiptDatabase.STATUS_READ
                         found = true
                         database.execSQL(
                             "UPDATE " + TABLE_NAME + " SET " +
                                     columnName + " = " + columnName + " + 1 WHERE " + ID + " = ?",
                             arrayOf(id.toString())
                         )
-                        get(context).groupReceiptDatabase()
-                            .update(ourAddress, id, status, timestamp)
+                        get(context).groupReceiptDatabase().update(ourAddress, id, status, timestamp)
                         get(context).threadDatabase().update(threadId, false, true)
                         notifyConversationListeners(threadId)
                     }
@@ -383,34 +368,26 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             cursor = rawQuery(RAW_ID_WHERE, arrayOf(messageId.toString()))
             if (cursor.moveToNext()) {
                 val associatedAttachments = attachmentDatabase.getAttachmentsForMessage(messageId)
-                val outboxType = cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_BOX))
-                val body = cursor.getString(cursor.getColumnIndexOrThrow(BODY))
-                val timestamp = cursor.getLong(cursor.getColumnIndexOrThrow(NORMALIZED_DATE_SENT))
-                val subscriptionId = cursor.getInt(cursor.getColumnIndexOrThrow(SUBSCRIPTION_ID))
-                val expiresIn = cursor.getLong(cursor.getColumnIndexOrThrow(EXPIRES_IN))
-                val expireStartedAt = cursor.getLong(cursor.getColumnIndexOrThrow(EXPIRE_STARTED))
-                val address = cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS))
-                val threadId = cursor.getLong(cursor.getColumnIndexOrThrow(THREAD_ID))
-                val distributionType = get(context).threadDatabase().getDistributionType(threadId)
-                val mismatchDocument = cursor.getString(
-                    cursor.getColumnIndexOrThrow(
-                        MISMATCHED_IDENTITIES
-                    )
-                )
-                val networkDocument = cursor.getString(
-                    cursor.getColumnIndexOrThrow(
-                        NETWORK_FAILURE
-                    )
-                )
-                val quoteId = cursor.getLong(cursor.getColumnIndexOrThrow(QUOTE_ID))
-                val quoteAuthor = cursor.getString(cursor.getColumnIndexOrThrow(QUOTE_AUTHOR))
-                val quoteText = cursor.getString(cursor.getColumnIndexOrThrow(QUOTE_BODY)) // TODO: this should be the referenced quote
-                val quoteMissing = cursor.getInt(cursor.getColumnIndexOrThrow(QUOTE_MISSING)) == 1
-                val quoteAttachments = associatedAttachments
-                    .filter { obj: DatabaseAttachment -> obj.isQuote }
-                val contacts = getSharedContacts(cursor, associatedAttachments)
-                val contactAttachments: Set<Attachment> =
-                    contacts.mapNotNull { obj: Contact -> obj.avatarAttachment }.toSet()
+                val outboxType            = cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_BOX))
+                val body                  = cursor.getString(cursor.getColumnIndexOrThrow(BODY))
+                val timestamp             = cursor.getLong(cursor.getColumnIndexOrThrow(NORMALIZED_DATE_SENT))
+                val subscriptionId        = cursor.getInt(cursor.getColumnIndexOrThrow(SUBSCRIPTION_ID))
+                val expiresIn             = cursor.getLong(cursor.getColumnIndexOrThrow(EXPIRES_IN))
+                val expireStartedAt       = cursor.getLong(cursor.getColumnIndexOrThrow(EXPIRE_STARTED))
+                val address               = cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS))
+                val threadId              = cursor.getLong(cursor.getColumnIndexOrThrow(THREAD_ID))
+                val distributionType      = get(context).threadDatabase().getDistributionType(threadId)
+                val mismatchDocument      = cursor.getString(cursor.getColumnIndexOrThrow(MISMATCHED_IDENTITIES))
+                val networkDocument       = cursor.getString(cursor.getColumnIndexOrThrow(NETWORK_FAILURE))
+                val quoteId               = cursor.getLong(cursor.getColumnIndexOrThrow(QUOTE_ID))
+                val quoteAuthor           = cursor.getString(cursor.getColumnIndexOrThrow(QUOTE_AUTHOR))
+                val quoteText             = cursor.getString(cursor.getColumnIndexOrThrow(QUOTE_BODY)) // TODO: this should be the referenced quote
+                val quoteMissing          = cursor.getInt(cursor.getColumnIndexOrThrow(QUOTE_MISSING)) == 1
+                val quoteAttachments      = associatedAttachments.filter { obj: DatabaseAttachment -> obj.isQuote }
+                val contacts              = getSharedContacts(cursor, associatedAttachments)
+
+                val contactAttachments: Set<Attachment> =  contacts.mapNotNull { obj: Contact -> obj.avatarAttachment }.toSet()
+
                 val previews = getLinkPreviews(cursor, associatedAttachments)
                 val previewAttachments =
                     previews.filter { lp: LinkPreview -> lp.getThumbnail().isPresent }
@@ -513,18 +490,11 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         return emptyList()
     }
 
-    private fun getLinkPreviews(
-        cursor: Cursor,
-        attachments: List<DatabaseAttachment>
-    ): List<LinkPreview> {
+    private fun getLinkPreviews(cursor: Cursor, attachments: List<DatabaseAttachment>): List<LinkPreview> {
         val serializedPreviews = cursor.getString(cursor.getColumnIndexOrThrow(LINK_PREVIEWS))
-        if (serializedPreviews.isNullOrEmpty()) {
-            return emptyList()
-        }
+        if (serializedPreviews.isNullOrEmpty()) { return emptyList() }
         val attachmentIdMap: MutableMap<AttachmentId?, DatabaseAttachment> = HashMap()
-        for (attachment in attachments) {
-            attachmentIdMap[attachment.attachmentId] = attachment
-        }
+        for (attachment in attachments) { attachmentIdMap[attachment.attachmentId] = attachment }
         try {
             val previews: MutableList<LinkPreview> = LinkedList()
             val jsonPreviews = JSONArray(serializedPreviews)
@@ -540,11 +510,9 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                 }
             }
             return previews
-        } catch (e: JSONException) {
-            Log.w(TAG, "Failed to parse shared contacts.", e)
-        } catch (e: IOException) {
-            Log.w(TAG, "Failed to parse shared contacts.", e)
         }
+        catch (e: JSONException) { Log.w(TAG, "Failed to parse shared contacts.", e) }
+        catch (e: IOException)   { Log.w(TAG, "Failed to parse shared contacts.", e) }
         return emptyList()
     }
 
@@ -701,14 +669,16 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         contentValues.put(EXPIRES_IN, message.expiresIn)
         contentValues.put(EXPIRE_STARTED, message.expireStartedAt)
         contentValues.put(ADDRESS, message.recipient.address.serialize())
-        contentValues.put(
-            DELIVERY_RECEIPT_COUNT,
+
+        contentValues.put(DELIVERY_RECEIPT_COUNT,
             Stream.of(earlyDeliveryReceipts.values).mapToLong { obj: Long -> obj }
                 .sum())
+
         contentValues.put(
             READ_RECEIPT_COUNT,
             Stream.of(earlyReadReceipts.values).mapToLong { obj: Long -> obj }
                 .sum())
+
         val quoteAttachments: MutableList<Attachment?> = LinkedList()
         if (message.outgoingQuote != null) {
             contentValues.put(QUOTE_ID, message.outgoingQuote!!.id)
@@ -752,13 +722,9 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         }
         with (get(context).threadDatabase()) {
             val lastSeen = getLastSeenAndHasSent(threadId).first()
-            if (lastSeen < message.sentTimeMillis) {
-                setLastSeen(threadId, message.sentTimeMillis)
-            }
+            if (lastSeen < message.sentTimeMillis) { setLastSeen(threadId, message.sentTimeMillis) }
             setHasSent(threadId, true)
-            if (runThreadUpdate) {
-                update(threadId, true, true)
-            }
+            if (runThreadUpdate) { update(threadId, true, true) }
         }
         return messageId
     }
@@ -824,9 +790,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                     "$ID = ?",
                     arrayOf(messageId.toString())
                 )
-                if (rows <= 0) {
-                    Log.w(TAG, "Failed to update message with link preview data.")
-                }
+                if (rows <= 0) { Log.w(TAG, "Failed to update message with link preview data.") }
             }
             db.setTransactionSuccessful()
             messageId
@@ -842,9 +806,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         val queryBuilder = StringBuilder()
         for (i in toDeleteRecords.indices) {
             queryBuilder.append("$QUOTE_ID = ").append(toDeleteRecords[i].getId())
-            if (i + 1 < toDeleteRecords.size) {
-                queryBuilder.append(" OR ")
-            }
+            if (i + 1 < toDeleteRecords.size) { queryBuilder.append(" OR ") }
         }
         val query = queryBuilder.toString()
         val db = databaseHelper.writableDatabase
@@ -870,9 +832,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             queryBuilder.append("$TABLE_NAME.$ID").append(" = ").append(
                 messageIds[i]
             )
-            if (i + 1 < messageIds.size) {
-                queryBuilder.append(" OR ")
-            }
+            if (i + 1 < messageIds.size) { queryBuilder.append(" OR ") }
         }
         val idsAsString = queryBuilder.toString()
         val attachmentDatabase = get(context).attachmentDatabase()
@@ -938,9 +898,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         }
     }
 
-    fun deleteThread(threadId: Long) {
-        deleteThreads(setOf(threadId))
-    }
+    fun deleteThread(threadId: Long) { deleteThreads(setOf(threadId)) }
 
     private fun getSerializedSharedContacts(
         insertedAttachmentIds: Map<Attachment?, AttachmentId?>,
@@ -1059,6 +1017,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             null,
             "1"
         )
+
         return try {
             cursor != null && cursor.moveToFirst()
         } finally {
@@ -1142,14 +1101,10 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
                 Log.i("MmsDatabase", "Trimming: " + cursor.getLong(0))
                 deleteMessage(cursor.getLong(0))
             }
-        } finally {
-            cursor?.close()
-        }
+        } finally { cursor?.close() }
     }
 
-    fun readerFor(cursor: Cursor?): Reader {
-        return Reader(cursor)
-    }
+    fun readerFor(cursor: Cursor?): Reader { return Reader(cursor) }
 
     fun readerFor(message: OutgoingMediaMessage?, threadId: Long): OutgoingMessageReader {
         return OutgoingMessageReader(message, threadId)
@@ -1182,9 +1137,9 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
     }
 
     object Status {
-        const val DOWNLOAD_INITIALIZED = 1
+        const val DOWNLOAD_INITIALIZED     = 1
         const val DOWNLOAD_NO_CONNECTIVITY = 2
-        const val DOWNLOAD_CONNECTING = 3
+        const val DOWNLOAD_CONNECTING      = 3
     }
 
     inner class OutgoingMessageReader(private val message: OutgoingMediaMessage?,
@@ -1231,42 +1186,31 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             }
 
         private fun getNotificationMmsMessageRecord(cursor: Cursor): NotificationMmsMessageRecord {
-            val id = cursor.getLong(cursor.getColumnIndexOrThrow(ID))
-            val dateSent = cursor.getLong(cursor.getColumnIndexOrThrow(NORMALIZED_DATE_SENT))
-            val dateReceived = cursor.getLong(
-                cursor.getColumnIndexOrThrow(
-                    NORMALIZED_DATE_RECEIVED
-                )
-            )
-            val threadId = cursor.getLong(cursor.getColumnIndexOrThrow(THREAD_ID))
-            val mailbox = cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_BOX))
-            val address = cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS))
-            val addressDeviceId = cursor.getInt(cursor.getColumnIndexOrThrow(ADDRESS_DEVICE_ID))
-            val recipient = getRecipientFor(address)
-            val contentLocation = cursor.getString(cursor.getColumnIndexOrThrow(CONTENT_LOCATION))
-            val transactionId = cursor.getString(cursor.getColumnIndexOrThrow(TRANSACTION_ID))
-            val messageSize = cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_SIZE))
-            val expiry = cursor.getLong(cursor.getColumnIndexOrThrow(EXPIRY))
-            val status = cursor.getInt(cursor.getColumnIndexOrThrow(STATUS))
-            val deliveryReceiptCount = cursor.getInt(
-                cursor.getColumnIndexOrThrow(
-                    DELIVERY_RECEIPT_COUNT
-                )
-            )
-            var readReceiptCount = cursor.getInt(cursor.getColumnIndexOrThrow(READ_RECEIPT_COUNT))
-            val subscriptionId = cursor.getInt(cursor.getColumnIndexOrThrow(SUBSCRIPTION_ID))
-            val hasMention = (cursor.getInt(cursor.getColumnIndexOrThrow(HAS_MENTION)) == 1)
-            if (!isReadReceiptsEnabled(context)) {
-                readReceiptCount = 0
-            }
+            val id                   = cursor.getLong(cursor.getColumnIndexOrThrow(ID))
+            val dateSent             = cursor.getLong(cursor.getColumnIndexOrThrow(NORMALIZED_DATE_SENT))
+            val dateReceived         = cursor.getLong(cursor.getColumnIndexOrThrow(NORMALIZED_DATE_RECEIVED))
+            val threadId             = cursor.getLong(cursor.getColumnIndexOrThrow(THREAD_ID))
+            val mailbox              = cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_BOX))
+            val address              = cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS))
+            //val addressDeviceId    = cursor.getInt(cursor.getColumnIndexOrThrow(ADDRESS_DEVICE_ID)) // Unused so commented out
+            val recipient            = getRecipientFor(address)
+            val contentLocation      = cursor.getString(cursor.getColumnIndexOrThrow(CONTENT_LOCATION))
+            val transactionId        = cursor.getString(cursor.getColumnIndexOrThrow(TRANSACTION_ID))
+            val messageSize          = cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_SIZE))
+            val expiry               = cursor.getLong(cursor.getColumnIndexOrThrow(EXPIRY))
+            val status               = cursor.getInt(cursor.getColumnIndexOrThrow(STATUS))
+            val deliveryReceiptCount = cursor.getInt(cursor.getColumnIndexOrThrow(DELIVERY_RECEIPT_COUNT))
+            var readReceiptCount     = cursor.getInt(cursor.getColumnIndexOrThrow(READ_RECEIPT_COUNT))
+            //val subscriptionId     = cursor.getInt(cursor.getColumnIndexOrThrow(SUBSCRIPTION_ID)) // Unused so commented out
+            val hasMention           = (cursor.getInt(cursor.getColumnIndexOrThrow(HAS_MENTION)) == 1)
+
+            if (!isReadReceiptsEnabled(context)) { readReceiptCount = 0 }
+
             var contentLocationBytes: ByteArray? = null
             var transactionIdBytes: ByteArray? = null
-            if (!contentLocation.isNullOrEmpty()) contentLocationBytes = toIsoBytes(
-                contentLocation
-            )
-            if (!transactionId.isNullOrEmpty()) transactionIdBytes = toIsoBytes(
-                transactionId
-            )
+            if (!contentLocation.isNullOrEmpty()) { contentLocationBytes = toIsoBytes(contentLocation) }
+            if (!transactionId.isNullOrEmpty())   { transactionIdBytes = toIsoBytes(transactionId)     }
+
             val slideDeck = SlideDeck(context, MmsNotificationAttachment(status, messageSize))
             return NotificationMmsMessageRecord(
                 id, recipient, recipient,
@@ -1278,58 +1222,47 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         }
 
         private fun getMediaMmsMessageRecord(cursor: Cursor): MediaMmsMessageRecord {
-            val id = cursor.getLong(cursor.getColumnIndexOrThrow(ID))
-            val dateSent = cursor.getLong(cursor.getColumnIndexOrThrow(NORMALIZED_DATE_SENT))
-            val dateReceived = cursor.getLong(
-                cursor.getColumnIndexOrThrow(
-                    NORMALIZED_DATE_RECEIVED
-                )
-            )
-            val box = cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_BOX))
-            val threadId = cursor.getLong(cursor.getColumnIndexOrThrow(THREAD_ID))
-            val address = cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS))
-            val addressDeviceId = cursor.getInt(cursor.getColumnIndexOrThrow(ADDRESS_DEVICE_ID))
-            val deliveryReceiptCount = cursor.getInt(
-                cursor.getColumnIndexOrThrow(
-                    DELIVERY_RECEIPT_COUNT
-                )
-            )
-            var readReceiptCount = cursor.getInt(cursor.getColumnIndexOrThrow(READ_RECEIPT_COUNT))
-            val body = cursor.getString(cursor.getColumnIndexOrThrow(BODY))
-            val partCount = cursor.getInt(cursor.getColumnIndexOrThrow(PART_COUNT))
-            val mismatchDocument = cursor.getString(
-                cursor.getColumnIndexOrThrow(
-                    MISMATCHED_IDENTITIES
-                )
-            )
-            val networkDocument = cursor.getString(cursor.getColumnIndexOrThrow(NETWORK_FAILURE))
-            val subscriptionId = cursor.getInt(cursor.getColumnIndexOrThrow(SUBSCRIPTION_ID))
-            val expiresIn = cursor.getLong(cursor.getColumnIndexOrThrow(EXPIRES_IN))
-            val expireStarted = cursor.getLong(cursor.getColumnIndexOrThrow(EXPIRE_STARTED))
-            val unidentified = cursor.getInt(cursor.getColumnIndexOrThrow(UNIDENTIFIED)) == 1
-            val hasMention = cursor.getInt(cursor.getColumnIndexOrThrow(HAS_MENTION)) == 1
-            if (!isReadReceiptsEnabled(context)) {
-                readReceiptCount = 0
-            }
-            val recipient = getRecipientFor(address)
-            val mismatches = getMismatchedIdentities(mismatchDocument)
+
+            val id                   = cursor.getLong(cursor.getColumnIndexOrThrow(ID))
+            val dateSent             = cursor.getLong(cursor.getColumnIndexOrThrow(NORMALIZED_DATE_SENT))
+            val dateReceived         = cursor.getLong(cursor.getColumnIndexOrThrow(NORMALIZED_DATE_RECEIVED))
+            val box                  = cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_BOX))
+            val threadId             = cursor.getLong(cursor.getColumnIndexOrThrow(THREAD_ID))
+            val address              = cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS))
+            val addressDeviceId      = cursor.getInt(cursor.getColumnIndexOrThrow(ADDRESS_DEVICE_ID))
+            val deliveryReceiptCount = cursor.getInt(cursor.getColumnIndexOrThrow(DELIVERY_RECEIPT_COUNT))
+            var readReceiptCount     = cursor.getInt(cursor.getColumnIndexOrThrow(READ_RECEIPT_COUNT))
+            val body                 = cursor.getString(cursor.getColumnIndexOrThrow(BODY))
+            val partCount            = cursor.getInt(cursor.getColumnIndexOrThrow(PART_COUNT))
+            val mismatchDocument     = cursor.getString(cursor.getColumnIndexOrThrow(MISMATCHED_IDENTITIES))
+            val networkDocument      = cursor.getString(cursor.getColumnIndexOrThrow(NETWORK_FAILURE))
+            val subscriptionId       = cursor.getInt(cursor.getColumnIndexOrThrow(SUBSCRIPTION_ID))
+            val expiresIn            = cursor.getLong(cursor.getColumnIndexOrThrow(EXPIRES_IN))
+            val expireStarted        = cursor.getLong(cursor.getColumnIndexOrThrow(EXPIRE_STARTED))
+            val unidentified         = cursor.getInt(cursor.getColumnIndexOrThrow(UNIDENTIFIED)) == 1
+            val hasMention           = cursor.getInt(cursor.getColumnIndexOrThrow(HAS_MENTION)) == 1
+
+            if (!isReadReceiptsEnabled(context)) { readReceiptCount = 0 }
+
+            val recipient       = getRecipientFor(address)
+            val mismatches      = getMismatchedIdentities(mismatchDocument)
             val networkFailures = getFailures(networkDocument)
-            val attachments = get(context).attachmentDatabase().getAttachment(
-                cursor
-            )
-            val contacts: List<Contact?> = getSharedContacts(cursor, attachments)
-            val contactAttachments: Set<Attachment?> =
-                contacts.mapNotNull { it?.avatarAttachment }.toSet()
-            val previews: List<LinkPreview?> = getLinkPreviews(cursor, attachments)
-            val previewAttachments: Set<Attachment?> =
-                previews.mapNotNull { it?.getThumbnail()?.orNull() }.toSet()
+            val attachments     = get(context).attachmentDatabase().getAttachment(cursor)
+
+            val contacts: List<Contact?>             = getSharedContacts(cursor, attachments)
+            val contactAttachments: Set<Attachment?> = contacts.mapNotNull { it?.avatarAttachment }.toSet()
+            val previews: List<LinkPreview?>         = getLinkPreviews(cursor, attachments)
+            val previewAttachments: Set<Attachment?> = previews.mapNotNull { it?.getThumbnail()?.orNull() }.toSet()
+
             val slideDeck = getSlideDeck(
                 attachments
                     .filterNot { o: DatabaseAttachment? -> o in contactAttachments }
                     .filterNot { o: DatabaseAttachment? -> o in previewAttachments }
             )
+
             val quote = getQuote(cursor)
             val reactions = get(context).reactionDatabase().getReactions(cursor)
+
             return MediaMmsMessageRecord(
                 id, recipient, recipient,
                 addressDeviceId, dateSent, dateReceived, deliveryReceiptCount,
@@ -1400,9 +1333,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             )
         }
 
-        override fun close() {
-            cursor?.close()
-        }
+        override fun close() { cursor?.close() }
     }
 
     companion object {

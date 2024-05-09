@@ -80,6 +80,7 @@ import java.util.TreeSet;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicReference;
 
 import kotlin.jvm.Synchronized;
 
@@ -685,11 +686,22 @@ public class AttachmentDatabase extends Database {
     try {
       Pair<byte[], OutputStream> out    = ModernEncryptingPartOutputStream.createFor(attachmentSecret, destination, false);
       long                       length = Util.copy(in, out.second);
-
       return new DataInfo(destination, length, out.first);
     } catch (IOException e) {
       throw new MmsException(e);
     }
+  }
+
+  // Method to attempt to get the column index of a given column name. Prints an error & flips the
+  // flag ref if something bad happens. We pass in the error occurred flag as a ref to modify the
+  // exact thing passed in rather than some pass-by-value copy.
+  private int wrappedGetColumnIndex(Cursor cursor, String columnName, AtomicReference<Boolean> errorOccurredRef) {
+      try { return cursor.getColumnIndexOrThrow(columnName); }
+      catch (IllegalArgumentException e) {
+        Log.e(TAG, "Failed to get index of column named: " + columnName);
+        errorOccurredRef.set(true);
+        return -1;
+      }
   }
 
   public List<DatabaseAttachment> getAttachment(@NonNull Cursor cursor) {
@@ -729,32 +741,89 @@ public class AttachmentDatabase extends Database {
         }
 
         return new ArrayList<>(result);
-      } else {
-        int urlIndex = cursor.getColumnIndex(URL);
-        return Collections.singletonList(new DatabaseAttachment(new AttachmentId(cursor.getLong(cursor.getColumnIndexOrThrow(ROW_ID)),
-                                                                                 cursor.getLong(cursor.getColumnIndexOrThrow(UNIQUE_ID))),
-                                                                cursor.getLong(cursor.getColumnIndexOrThrow(MMS_ID)),
-                                                                !cursor.isNull(cursor.getColumnIndexOrThrow(DATA)),
-                                                                !cursor.isNull(cursor.getColumnIndexOrThrow(THUMBNAIL)),
-                                                                cursor.getString(cursor.getColumnIndexOrThrow(CONTENT_TYPE)),
-                                                                cursor.getInt(cursor.getColumnIndexOrThrow(TRANSFER_STATE)),
-                                                                cursor.getLong(cursor.getColumnIndexOrThrow(SIZE)),
-                                                                cursor.getString(cursor.getColumnIndexOrThrow(FILE_NAME)),
-                                                                cursor.getString(cursor.getColumnIndexOrThrow(CONTENT_LOCATION)),
-                                                                cursor.getString(cursor.getColumnIndexOrThrow(CONTENT_DISPOSITION)),
-                                                                cursor.getString(cursor.getColumnIndexOrThrow(NAME)),
-                                                                cursor.getBlob(cursor.getColumnIndexOrThrow(DIGEST)),
-                                                                cursor.getString(cursor.getColumnIndexOrThrow(FAST_PREFLIGHT_ID)),
-                                                                cursor.getInt(cursor.getColumnIndexOrThrow(VOICE_NOTE)) == 1,
-                                                                cursor.getInt(cursor.getColumnIndexOrThrow(WIDTH)),
-                                                                cursor.getInt(cursor.getColumnIndexOrThrow(HEIGHT)),
-                                                                cursor.getInt(cursor.getColumnIndexOrThrow(QUOTE)) == 1,
-                                                                cursor.getString(cursor.getColumnIndexOrThrow(CAPTION)),
-                                                                urlIndex > 0 ? cursor.getString(urlIndex) : ""));
       }
-    } catch (JSONException e) {
-      throw new AssertionError(e);
-    }
+      else // If the 'attachment json alias' IS precisely -1...
+      {
+        // Note: Added all this separation to try to identify where a crash is occurring & prevent.
+        // See: https://optf.atlassian.net/browse/SES-1889
+        AtomicReference<Boolean> errorOccurredRef = new AtomicReference<Boolean>(false);
+        int rowIndex                = wrappedGetColumnIndex(cursor, ROW_ID, errorOccurredRef);
+        int uniqueIdIndex           = wrappedGetColumnIndex(cursor, UNIQUE_ID, errorOccurredRef);
+        int mmsIdIndex              = wrappedGetColumnIndex(cursor, MMS_ID, errorOccurredRef);
+        int dataIndex               = wrappedGetColumnIndex(cursor, DATA, errorOccurredRef);
+        int thumbnailIndex          = wrappedGetColumnIndex(cursor, THUMBNAIL, errorOccurredRef);
+        int contentTypeIndex        = wrappedGetColumnIndex(cursor, CONTENT_TYPE, errorOccurredRef);
+        int transferStateIndex      = wrappedGetColumnIndex(cursor, TRANSFER_STATE, errorOccurredRef);
+        int sizeIndex               = wrappedGetColumnIndex(cursor, SIZE, errorOccurredRef);
+        int filenameIndex           = wrappedGetColumnIndex(cursor, FILE_NAME, errorOccurredRef);
+        int contentLocationIndex    = wrappedGetColumnIndex(cursor, CONTENT_LOCATION, errorOccurredRef);
+        int contentDispositionIndex = wrappedGetColumnIndex(cursor, CONTENT_DISPOSITION, errorOccurredRef);
+        int nameIndex               = wrappedGetColumnIndex(cursor, NAME, errorOccurredRef);
+        int digestIndex             = wrappedGetColumnIndex(cursor, DIGEST, errorOccurredRef);
+        int fastPreflightIdIndex    = wrappedGetColumnIndex(cursor, FAST_PREFLIGHT_ID, errorOccurredRef);
+        int voiceNoteIndex          = wrappedGetColumnIndex(cursor, VOICE_NOTE, errorOccurredRef);
+        int widthIndex              = wrappedGetColumnIndex(cursor, WIDTH, errorOccurredRef);
+        int heightIndex             = wrappedGetColumnIndex(cursor, HEIGHT, errorOccurredRef);
+        int quoteIndex              = wrappedGetColumnIndex(cursor, QUOTE, errorOccurredRef);
+        int captionIndex            = wrappedGetColumnIndex(cursor, CAPTION, errorOccurredRef);
+        int urlIndex                = wrappedGetColumnIndex(cursor, URL, errorOccurredRef);
+
+        // If the error occurred ref got tripped by anything in the above we'll moan & bail
+        if (errorOccurredRef.get()) {
+          Log.e(TAG, "Cannot continue with getAttachment (bad column index) - returning null!");
+          return null;
+        }
+
+        // Construct our AttachmentId (which will go into the DatabaseAttachment)
+        long rowId = cursor.getLong(rowIndex);
+        long uniqueId = cursor.getLong(uniqueIdIndex);
+        AttachmentId attachmentId = new AttachmentId(rowId, uniqueId);
+
+        // Grab all the other required data..
+        long    mmsId           = cursor.getLong(mmsIdIndex);
+        boolean haveData        = !cursor.isNull(dataIndex);
+        boolean haveThumb       = !cursor.isNull(thumbnailIndex);
+        String  contentType     = cursor.getString(contentTypeIndex);
+        int     transferState   = cursor.getInt(transferStateIndex);
+        long    size            = cursor.getLong(sizeIndex);
+        String  filename        = cursor.getString(filenameIndex);
+        String  location        = cursor.getString(contentLocationIndex);
+        String  disposition     = cursor.getString(contentDispositionIndex);
+        String  name            = cursor.getString(nameIndex);
+        byte[]  blob            = cursor.getBlob(digestIndex);
+        String  fastPreflightId = cursor.getString(fastPreflightIdIndex);
+        boolean isVoiceNote     = cursor.getInt(voiceNoteIndex) == 1;
+        int     width           = cursor.getInt(widthIndex);
+        int     height          = cursor.getInt(heightIndex);
+        boolean isQuote         = cursor.getInt(quoteIndex) == 1;
+        String  caption         = cursor.getString(captionIndex);
+        String  url             = urlIndex > 0 ? cursor.getString(urlIndex) : "";
+
+        // ..then build the database attachment using this convenient and fool-proof constructor..
+        DatabaseAttachment attachment = new DatabaseAttachment(attachmentId,
+                                                               mmsId,
+                                                               haveData,
+                                                               haveThumb,
+                                                               contentType,
+                                                               transferState,
+                                                               size,
+                                                               filename,
+                                                               location,
+                                                               disposition,
+                                                               name,
+                                                               blob,
+                                                               fastPreflightId,
+                                                               isVoiceNote,
+                                                               width,
+                                                               height,
+                                                               isQuote,
+                                                               caption,
+                                                               url);
+
+        // ..and then return it as a list of precisely one object, because why not.
+        return Collections.singletonList(attachment);
+      }
+    } catch (JSONException e) { throw new AssertionError(e); }
   }
 
 
