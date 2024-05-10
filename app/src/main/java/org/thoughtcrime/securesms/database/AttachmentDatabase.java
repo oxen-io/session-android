@@ -20,6 +20,7 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -754,6 +755,9 @@ public class AttachmentDatabase extends Database {
       }
     } catch (JSONException e) {
       throw new AssertionError(e);
+    } catch (CursorIndexOutOfBoundsException e) {
+      Log.e(TAG, "Failed to retrieve attachment", e);
+      return Collections.emptyList();
     }
   }
 
