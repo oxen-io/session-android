@@ -297,6 +297,10 @@ dependencies {
         exclude group: 'com.google.firebase', module: 'firebase-analytics'
         exclude group: 'com.google.firebase', module: 'firebase-measurement-connector'
     }
+
+    // Required for FirebaseTokenFetcher async await()
+    playImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$kotlinxCoroutinesVersion"
+
     if (project.hasProperty('huawei')) huaweiImplementation 'com.huawei.hms:push:6.7.0.300'
 
     // Cannot upgrade ExoPlayer atm - needs upgrade to modern `Media3` versions - see the exoPlayer vars for details.
