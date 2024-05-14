@@ -15,6 +15,8 @@ class LandingActivity : BaseActionBarActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        TextSecurePreferences.setHasSeenWelcomeScreen(this, true)
+
         // We always hit this LandingActivity on launch - but if there is a previous instance of
         // Session then close this activity to resume the last activity from the previous instance.
         if (!isTaskRoot) { finish(); return }
