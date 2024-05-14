@@ -24,6 +24,7 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityLinkDeviceBinding
 import network.loki.messenger.databinding.FragmentRecoveryPhraseBinding
 import org.session.libsession.snode.SnodeModule
+import org.session.libsession.utilities.Device
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.crypto.MnemonicCodec
 import org.session.libsignal.database.LokiAPIDatabaseProtocol
@@ -36,6 +37,8 @@ import org.thoughtcrime.securesms.BaseActionBarActivity
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities
 import org.thoughtcrime.securesms.crypto.MnemonicUtilities
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
+import org.thoughtcrime.securesms.home.HomeActivity
+import org.thoughtcrime.securesms.home.showHomeActivity
 import org.thoughtcrime.securesms.util.ScanQRCodeWrapperFragment
 import org.thoughtcrime.securesms.util.ScanQRCodeWrapperFragmentDelegate
 import org.thoughtcrime.securesms.util.push
@@ -47,6 +50,8 @@ class LinkDeviceActivity : BaseActionBarActivity(), ScanQRCodeWrapperFragmentDel
 
     @Inject
     lateinit var configFactory: ConfigFactory
+    @Inject
+    lateinit var device: Device
 
     private lateinit var binding: ActivityLinkDeviceBinding
     internal val database: LokiAPIDatabaseProtocol
@@ -156,7 +161,14 @@ class LinkDeviceActivity : BaseActionBarActivity(), ScanQRCodeWrapperFragmentDel
         restoreJob?.cancel()
         binding.loader.isVisible = false
         TextSecurePreferences.setLastConfigurationSyncTime(this, System.currentTimeMillis())
-        val intent = Intent(this@LinkDeviceActivity, if (skipped) DisplayNameActivity::class.java else PNModeActivity::class.java)
+        val intent = Intent(
+            this@LinkDeviceActivity,
+            when {
+                skipped -> DisplayNameActivity::class.java
+                device.pushAvailable -> PNModeActivity::class.java
+                else -> { showHomeActivity(); return }
+            }
+        )
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         push(intent)
     }

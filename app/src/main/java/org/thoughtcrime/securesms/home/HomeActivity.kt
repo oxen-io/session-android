@@ -1,6 +1,7 @@
 package org.thoughtcrime.securesms.home
 
 import android.Manifest
+import android.app.Activity
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.ClipData
@@ -72,6 +73,7 @@ import org.thoughtcrime.securesms.notifications.PushRegistry
 import org.thoughtcrime.securesms.onboarding.SeedActivity
 import org.thoughtcrime.securesms.onboarding.SeedReminderViewDelegate
 import org.thoughtcrime.securesms.permissions.Permissions
+import org.thoughtcrime.securesms.permissions.RationaleDialog.show
 import org.thoughtcrime.securesms.preferences.SettingsActivity
 import org.thoughtcrime.securesms.showMuteDialog
 import org.thoughtcrime.securesms.showSessionDialog
@@ -699,4 +701,14 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 
     // endregion
+}
+
+fun Activity.showHomeActivity() {
+    val application = ApplicationContext.getInstance(this)
+    application.startPollingIfNeeded()
+
+    val intent = Intent(this, HomeActivity::class.java)
+    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    intent.putExtra(HomeActivity.FROM_ONBOARDING, true)
+    show(intent)
 }
