@@ -14,7 +14,7 @@ import org.whispersystems.curve25519.Curve25519
 import kotlin.experimental.xor
 
 object SodiumUtilities {
-    private val sodium by lazy { LazySodiumAndroid(SodiumAndroid()) }
+    val sodium by lazy { LazySodiumAndroid(SodiumAndroid()) }
     private val curve by lazy { Curve25519.getInstance(Curve25519.BEST) }
 
     private const val SCALAR_LENGTH: Int = 32 // crypto_core_ed25519_scalarbytes

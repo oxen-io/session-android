@@ -17,6 +17,7 @@ import org.session.libsession.messaging.jobs.MessageReceiveParameters
 import org.session.libsession.messaging.sending_receiving.notifications.PushNotificationMetadata
 import org.session.libsession.messaging.utilities.MessageWrapper
 import org.session.libsession.messaging.utilities.SodiumUtilities
+import org.session.libsession.messaging.utilities.SodiumUtilities.sodium
 import org.session.libsession.utilities.bencode.Bencode
 import org.session.libsession.utilities.bencode.BencodeList
 import org.session.libsession.utilities.bencode.BencodeString
@@ -28,7 +29,6 @@ import javax.inject.Inject
 private const val TAG = "PushHandler"
 
 class PushReceiver @Inject constructor(@ApplicationContext val context: Context) {
-    private val sodium = LazySodiumAndroid(SodiumAndroid())
     private val json = Json { ignoreUnknownKeys = true }
 
     fun onPush(dataMap: Map<String, String>?) {

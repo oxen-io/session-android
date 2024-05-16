@@ -21,6 +21,7 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPoller.Companion.maxInactivityPeriod
 import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
+import org.session.libsession.messaging.utilities.SodiumUtilities.sodium
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.snode.OnionResponse
 import org.session.libsession.snode.SnodeAPI
@@ -48,7 +49,6 @@ object OpenGroupApi {
     val defaultRooms = MutableSharedFlow<List<DefaultGroup>>(replay = 1)
     private val hasPerformedInitialPoll = mutableMapOf<String, Boolean>()
     private var hasUpdatedLastOpenDate = false
-    private val sodium by lazy { LazySodiumAndroid(SodiumAndroid()) }
     private val timeSinceLastOpen by lazy {
         val context = MessagingModuleConfiguration.shared.context
         val lastOpenDate = TextSecurePreferences.getLastOpenTimeDate(context)
