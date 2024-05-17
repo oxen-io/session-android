@@ -210,7 +210,7 @@ class VisibleMessageView : LinearLayout {
         binding.dateBreakTextView.isVisible = showDateBreak
 
         // Update message status indicator
-        showStatusMessage(message)
+        showStatusMessage(message, lastSentMessageId)
 
         // Emoji Reactions
         val emojiLayoutParams = binding.emojiReactionsView.root.layoutParams as ConstraintLayout.LayoutParams
@@ -251,7 +251,7 @@ class VisibleMessageView : LinearLayout {
     // message status area to display the disappearing messages state - so in this latter case we'll
     // be displaying the "Sent" and the animating clock icon for outgoing messages or "Read" and the
     // animated clock icon for incoming messages.
-    private fun showStatusMessage(message: MessageRecord) {
+    private fun showStatusMessage(message: MessageRecord, lastSentMessageId: Long) {
         // We'll start by hiding everything and then only make visible what we need
         binding.messageStatusTextView.isVisible  = false
         binding.messageStatusImageView.isVisible = false
@@ -303,8 +303,6 @@ class VisibleMessageView : LinearLayout {
 
         // --- If we got here then we know the message is outgoing ---
 
-        val thisUsersSessionId = TextSecurePreferences.getLocalNumber(context)
-        val lastSentMessageId = mmsSmsDb.getLastSentMessageFromSender(message.threadId, thisUsersSessionId)
         val isLastSentMessage = lastSentMessageId == message.id
 
         // ----- Case ii.) Message is outgoing but NOT scheduled to disappear -----
