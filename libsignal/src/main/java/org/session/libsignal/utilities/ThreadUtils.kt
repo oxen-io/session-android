@@ -15,7 +15,7 @@ object ThreadUtils {
             executorPool.execute(target)
         }
         catch (e: Exception) {
-            Log.e("ThreadUtils", "Exception returned from queue job: ${e.message}")
+            Log.e("ThreadUtils", "Exception returned from queue job: ${e.message}") 
         }
     }
 
