@@ -11,11 +11,21 @@ object ThreadUtils {
 
     @JvmStatic
     fun queue(target: Runnable) {
-        executorPool.execute(target)
+        try {
+            executorPool.execute(target)
+        }
+        catch (e: Exception) {
+            Log.e("ThreadUtils", "Exception returned from queue job: ${e.message}")
+        }
     }
 
     fun queue(target: () -> Unit) {
-        executorPool.execute(target)
+        try {
+            executorPool.execute(target)
+        }
+        catch (e: Exception) {
+            Log.e("ThreadUtils", "Exception returned from queue job: ${e.message}")
+        }
     }
 
     @JvmStatic
