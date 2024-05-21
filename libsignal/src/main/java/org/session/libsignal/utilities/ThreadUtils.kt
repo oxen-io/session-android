@@ -9,6 +9,8 @@ import java.util.concurrent.TimeUnit
 
 object ThreadUtils {
 
+    const val TAG = "ThreadUtils"
+
     const val PRIORITY_IMPORTANT_BACKGROUND_THREAD = Process.THREAD_PRIORITY_DEFAULT + Process.THREAD_PRIORITY_LESS_FAVORABLE
 
     // Paraphrased from: https://www.baeldung.com/kotlin/create-thread-pool
@@ -37,7 +39,7 @@ object ThreadUtils {
             try {
                 target.run()
             } catch (e: Exception) {
-                Log.e("ThreadUtils", e)
+                Log.e(TAG, e)
             }
         }
     }
@@ -47,7 +49,7 @@ object ThreadUtils {
             try {
                 target()
             } catch (e: Exception) {
-                Log.e("ThreadUtils", e)
+                Log.e(TAG, e)
             }
         }
     }
