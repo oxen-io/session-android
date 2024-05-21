@@ -1,15 +1,11 @@
 package org.session.libsignal.utilities
 
 import android.os.Process
-import java.io.File
-import java.lang.Thread.getAllStackTraces
 import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.SynchronousQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
-import java.util.regex.Pattern
 
 object ThreadUtils {
 
@@ -25,13 +21,14 @@ object ThreadUtils {
     // very sharp tool that doesn't include any backpressure mechanism - and a sudden peak in load
     // can bring the system down with an OutOfMemory error. We can achieve a similar effect but with
     // better control by creating a ThreadPoolExecutor manually."
-    private val corePoolSize      = getCPUCoreCount()  // Minimum number of threads in the pool is our CPU core count
-    private val maxPoolSize       = corePoolSize * 4   // Allow a maximum pool size of up to 4 threads per core
-    private val keepAliveTimeSecs = 100L               // How long to keep idle threads in the pool before they are terminated
+
+    private val corePoolSize      = Runtime.getRuntime().availableProcessors() // Default thread pool size is our CPU core count
+    private val maxPoolSize       = corePoolSize * 4                           // Allow a maximum pool size of up to 4 threads per core
+    private val keepAliveTimeSecs = 100L                                       // How long to keep idle threads in the pool before they are terminated
     private val workQueue         = SynchronousQueue<Runnable>()
     val executorPool: ExecutorService = ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTimeSecs, TimeUnit.SECONDS, workQueue)
 
-    // Note: To see how many threads are running in our app at any given time we can use the following:
+    // Note: To see how many threads are running in our app at any given time we can use:
     // val threadCount = getAllStackTraces().size
 
     @JvmStatic
@@ -61,16 +58,5 @@ object ThreadUtils {
         val executor = ThreadPoolExecutor(1, 1, 60, TimeUnit.SECONDS, LinkedBlockingQueue())
         executor.allowCoreThreadTimeOut(true)
         return executor
-    }
-
-    private fun getCPUCoreCount(): Int {
-        val pattern = Pattern.compile("cpu[0-9]+")
-        return Math.max(
-            File("/sys/devices/system/cpu/")
-                .walk()
-                .maxDepth(1)
-                .count { pattern.matcher(it.name).matches() },
-            Runtime.getRuntime().availableProcessors()
-        )
     }
 }
