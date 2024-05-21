@@ -38,6 +38,7 @@ object ThreadUtils {
                 target.run()
             } catch (e: Exception) {
                 Log.e("ThreadUtils", "Error in thread: ${e.message}")
+                e.printStackTrace()
             }
         }
     }
@@ -48,6 +49,7 @@ object ThreadUtils {
                 target()
             } catch (e: Exception) {
                 Log.e("ThreadUtils", "Error in thread: ${e.message}")
+                e.printStackTrace()
             }
         }
     }
