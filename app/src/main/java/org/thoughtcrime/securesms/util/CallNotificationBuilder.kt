@@ -39,14 +39,14 @@ class CallNotificationBuilder {
 
             val pendingIntent = PendingIntent.getActivity(context, 0, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
-            val text = context.getString(R.string.CallNotificationBuilder_first_call_message)
+            val text = context.getString(R.string.callsYouMissedCallPermissions)
 
             val builder = NotificationCompat.Builder(context, NotificationChannels.CALLS)
                     .setSound(null)
                     .setSmallIcon(R.drawable.ic_baseline_call_24)
                     .setContentIntent(pendingIntent)
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setContentTitle(context.getString(R.string.CallNotificationBuilder_first_call_title))
+                    .setContentTitle(context.getString(R.string.callsMissedCallFrom))
                     .setContentText(text)
                     .setStyle(NotificationCompat.BigTextStyle().bigText(text))
                     .setAutoCancel(true)
@@ -74,18 +74,18 @@ class CallNotificationBuilder {
 
             when (type) {
                 TYPE_INCOMING_CONNECTING -> {
-                    builder.setContentText(context.getString(R.string.CallNotificationBuilder_connecting))
+                    builder.setContentText(context.getString(R.string.callsConnecting))
                             .setNotificationSilent()
                 }
                 TYPE_INCOMING_PRE_OFFER,
                 TYPE_INCOMING_RINGING -> {
-                    builder.setContentText(context.getString(R.string.NotificationBarManager__incoming_signal_call))
+                    builder.setContentText(context.getString(R.string.callsIncoming))
                             .setCategory(NotificationCompat.CATEGORY_CALL)
                     builder.addAction(getServiceNotificationAction(
                             context,
                             WebRtcCallService.ACTION_DENY_CALL,
                             R.drawable.ic_close_grey600_32dp,
-                            R.string.NotificationBarManager__deny_call
+                            R.string.decline
                     ))
                     // if notifications aren't enabled, we will trigger the intent from WebRtcCallService
                     builder.setFullScreenIntent(getFullScreenPendingIntent(
@@ -95,26 +95,26 @@ class CallNotificationBuilder {
                             context,
                             if (type == TYPE_INCOMING_PRE_OFFER) WebRtcCallActivity.ACTION_PRE_OFFER else WebRtcCallActivity.ACTION_ANSWER,
                             R.drawable.ic_phone_grey600_32dp,
-                            R.string.NotificationBarManager__answer_call
+                            R.string.accept
                     ))
                     builder.priority = NotificationCompat.PRIORITY_MAX
                 }
                 TYPE_OUTGOING_RINGING -> {
-                    builder.setContentText(context.getString(R.string.NotificationBarManager__establishing_signal_call))
+                    builder.setContentText(context.getString(R.string.callsConnecting))
                     builder.addAction(getServiceNotificationAction(
                             context,
                             WebRtcCallService.ACTION_LOCAL_HANGUP,
                             R.drawable.ic_call_end_grey600_32dp,
-                            R.string.NotificationBarManager__cancel_call
+                            R.string.cancel
                     ))
                 }
                 else -> {
-                    builder.setContentText(context.getString(R.string.NotificationBarManager_call_in_progress))
+                    builder.setContentText(context.getString(R.string.callsInProgress))
                     builder.addAction(getServiceNotificationAction(
                             context,
                             WebRtcCallService.ACTION_LOCAL_HANGUP,
                             R.drawable.ic_call_end_grey600_32dp,
-                            R.string.NotificationBarManager__end_call
+                            R.string.callsEnd
                     )).setUsesChronometer(true)
                 }
             }

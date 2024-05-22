@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayoutMediator
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewConversationActionBarBinding
@@ -25,6 +26,7 @@ import org.thoughtcrime.securesms.conversation.v2.utilities.MentionManagerUtilit
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
 import org.thoughtcrime.securesms.util.DateUtils
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.COUNT_KEY
 import java.util.Locale
 import javax.inject.Inject
 
@@ -84,7 +86,7 @@ class ConversationActionBarView @JvmOverloads constructor(
 
     fun update(recipient: Recipient, openGroup: OpenGroup? = null, config: ExpirationConfiguration? = null) {
         binding.profilePictureView.update(recipient)
-        binding.conversationTitleView.text = recipient.takeUnless { it.isLocalNumber }?.toShortString() ?: context.getString(R.string.note_to_self)
+        binding.conversationTitleView.text = recipient.takeUnless { it.isLocalNumber }?.toShortString() ?: context.getString(R.string.noteToSelf)
         updateSubtitle(recipient, openGroup, config)
 
         binding.conversationTitleContainer.modifyLayoutParams<MarginLayoutParams> {
@@ -109,8 +111,9 @@ class ConversationActionBarView @JvmOverloads constructor(
         if (recipient.isMuted) {
             settings += ConversationSetting(
                 recipient.mutedUntil.takeUnless { it == Long.MAX_VALUE }
+                    // ACL TODO - need to deal with this R.string.ConversationActivity_muted_until_date thing
                     ?.let { context.getString(R.string.ConversationActivity_muted_until_date, DateUtils.getFormattedDateTime(it, "EEE, MMM d, yyyy HH:mm", Locale.getDefault())) }
-                    ?: context.getString(R.string.ConversationActivity_muted_forever),
+                    ?: context.getString(R.string.notificationsMuted),
                 ConversationSettingType.NOTIFICATION,
                 R.drawable.ic_outline_notifications_off_24
             )
@@ -121,7 +124,7 @@ class ConversationActionBarView @JvmOverloads constructor(
                 context.getString(R.string.ConversationActivity_active_member_count, userCount)
             } else {
                 val userCount = groupDb.getGroupMemberAddresses(recipient.address.toGroupString(), true).size
-                context.getString(R.string.ConversationActivity_member_count, userCount)
+                Phrase.from(context.getString(R.string.members)).put(COUNT_KEY, userCount).toString()
             }
             settings += ConversationSetting(title, ConversationSettingType.MEMBER_COUNT)
         }

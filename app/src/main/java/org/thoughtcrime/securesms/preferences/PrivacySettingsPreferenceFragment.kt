@@ -61,8 +61,8 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
                             super.putBoolean(key, value)
                         }
                     }
-                    title = getString(R.string.preferences__message_requests_title)
-                    summary = getString(R.string.preferences__message_requests_summary)
+                    title = getString(R.string.messageRequestsCommunities)
+                    summary = getString(R.string.messageRequestsCommunitiesDescription)
                 }.let(category::addPreference)
             }
         }
@@ -75,9 +75,9 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
         if (isEnabled && !areNotificationsEnabled(requireActivity())) {
             // show a dialog saying that calls won't work properly if you don't have notifications on at a system level
             showSessionDialog {
-                title(R.string.CallNotificationBuilder_system_notification_title)
-                text(R.string.CallNotificationBuilder_system_notification_message)
-                button(R.string.activity_notification_settings_title) {
+                title(R.string.sessionNotifications)
+                text(R.string.callsNotificationsRequired)
+                button(R.string.sessionNotifications) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
                             .putExtra(Settings.EXTRA_APP_PACKAGE, BuildConfig.APPLICATION_ID)

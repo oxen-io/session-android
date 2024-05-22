@@ -95,7 +95,7 @@
     <string name="ConversationActivity_muted_until_date">Muted until %1$s</string>
     <string name="ConversationFragment_save_to_sd_card">Save to storage?</string>
     <string name="ConversationItem_error_not_delivered">Send failed, tap for details</string>
-    <string name="NotificationBarManager__end_call">End call</string>
+    <string name="callsEnd">End call</string>
 
     <string name="NotificationMmsMessageRecord_multimedia_message">Multimedia message</string>
     <string name="NotificationMmsMessageRecord_downloading_mms_message">Downloading MMS message</string>

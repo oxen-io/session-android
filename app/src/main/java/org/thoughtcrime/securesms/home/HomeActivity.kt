@@ -21,6 +21,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -78,6 +79,8 @@ import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.IP2Country
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.GROUP_NAME_KEY
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.NAME_KEY
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
@@ -272,7 +275,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                     }
 
                     if (contactResults.isNotEmpty()) {
-                        contactResults.add(0, GlobalSearchAdapter.Model.Header(R.string.global_search_contacts_groups))
+                        contactResults.add(0, GlobalSearchAdapter.Model.Header(R.string.sessionConversations))
                     }
 
                     val unreadThreadMap = result.messages
@@ -289,7 +292,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                             }.toMutableList()
 
                     if (messageResults.isNotEmpty()) {
-                        messageResults.add(0, GlobalSearchAdapter.Model.Header(R.string.global_search_messages))
+                        messageResults.add(0, GlobalSearchAdapter.Model.Header(R.string.messages))
                     }
 
                     val newData = contactResults + messageResults
@@ -493,7 +496,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 val clip = ClipData.newPlainText("Session ID", thread.recipient.address.toString())
                 val manager = getSystemService(PassphraseRequiredActionBarActivity.CLIPBOARD_SERVICE) as ClipboardManager
                 manager.setPrimaryClip(clip)
-                Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
             }
             else if (thread.recipient.isCommunityRecipient) {
                 val threadId = threadDb.getThreadIdIfExistsFor(thread.recipient) ?: return@onCopyConversationId Unit
@@ -502,7 +505,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 val clip = ClipData.newPlainText("Community URL", openGroup.joinURL)
                 val manager = getSystemService(PassphraseRequiredActionBarActivity.CLIPBOARD_SERVICE) as ClipboardManager
                 manager.setPrimaryClip(clip)
-                Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
             }
         }
         bottomSheet.onBlockTapped = {
@@ -548,9 +551,9 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
     private fun blockConversation(thread: ThreadRecord) {
         showSessionDialog {
-            title(R.string.RecipientPreferenceActivity_block_this_contact_question)
-            text(R.string.RecipientPreferenceActivity_you_will_no_longer_receive_messages_and_calls_from_this_contact)
-            button(R.string.RecipientPreferenceActivity_block) {
+            title(R.string.block)
+            text(R.string.blockDescription)
+            button(R.string.block) {
                 lifecycleScope.launch(Dispatchers.IO) {
                     storage.setBlocked(listOf(thread.recipient), true)
 
@@ -565,9 +568,13 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
     private fun unblockConversation(thread: ThreadRecord) {
         showSessionDialog {
-            title(R.string.RecipientPreferenceActivity_unblock_this_contact_question)
-            text(R.string.RecipientPreferenceActivity_you_will_once_again_be_able_to_receive_messages_and_calls_from_this_contact)
-            button(R.string.RecipientPreferenceActivity_unblock) {
+            title(R.string.blockUnblock)
+
+            // ACL - There's no new string for this - it was:
+            // R.string.RecipientPreferenceActivity_you_will_once_again_be_able_to_receive_messages_and_calls_from_this_contact
+            text("You will once again be able to receive messages and calls from this contact.")
+
+            button(R.string.blockUnblock) {
                 lifecycleScope.launch(Dispatchers.IO) {
                     storage.setBlocked(listOf(thread.recipient), false)
 
@@ -630,10 +637,14 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             if (group != null && group.admins.map { it.toString() }.contains(textSecurePreferences.getLocalNumber())) {
                 "Because you are the creator of this group it will be deleted for everyone. This cannot be undone."
             } else {
-                resources.getString(R.string.activity_home_leave_group_dialog_message)
+                Phrase.from(this.applicationContext, R.string.groupLeaveDescription)
+                    .put(GROUP_NAME_KEY, group.title)
+                    .format()
             }
         } else {
-            resources.getString(R.string.activity_home_delete_conversation_dialog_message)
+            Phrase.from(this.applicationContext, R.string.conversationsDeleteDescription)
+                .put(NAME_KEY, recipient.name)
+                .format()
         }
 
         showSessionDialog {
@@ -664,7 +675,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                     // Update the badge count
                     ApplicationContext.getInstance(context).messageNotifier.updateNotification(context)
                     // Notify the user
-                    val toastMessage = if (recipient.isGroupRecipient) R.string.MessageRecord_left_group else R.string.activity_home_conversation_deleted_message
+                    val toastMessage = if (recipient.isGroupRecipient) R.string.groupMemberYouLeft else R.string.conversationsDeleted
                     Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show()
                 }
             }

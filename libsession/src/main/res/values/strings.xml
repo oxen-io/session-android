@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- MessageRecord -->
-    <string name="MessageRecord_left_group">You have left the group.</string>
+    <string name="groupMemberYouLeft"><b>You</b> left the group.</string>
+
+    <!-- ACL - All of the below below need to be updated to match the new serialised string names -->
     <string name="MessageRecord_you_created_a_new_group">You created a new group.</string>
     <string name="MessageRecord_s_added_you_to_the_group">%1$s added you to the group.</string>
     <string name="MessageRecord_you_renamed_the_group_to_s">You renamed the group to %1$s</string>
@@ -11,6 +13,7 @@
     <string name="MessageRecord_you_removed_s_from_the_group">You removed %1$s from the group.</string>
     <string name="MessageRecord_s_removed_s_from_the_group">%1$s removed %2$s from the group.</string>
     <string name="MessageRecord_you_were_removed_from_the_group">You were removed from the group.</string>
+
     <string name="MessageRecord_you">You</string>
     <string name="MessageRecord_s_called_you">%s called you</string>
     <string name="MessageRecord_called_s">Called %s</string>

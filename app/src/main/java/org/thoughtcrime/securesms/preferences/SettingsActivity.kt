@@ -21,6 +21,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.isVisible
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.BuildConfig
 import network.loki.messenger.R
@@ -110,7 +111,8 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             clearAllDataButton.setOnClickListener { clearAllData() }
 
             val gitCommitFirstSixChars = BuildConfig.GIT_HASH.take(6)
-            versionTextView.text = String.format(getString(R.string.version_s), "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE} - $gitCommitFirstSixChars)")
+            val versionString = getString(R.string.updateVersion) + "  ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE} - $gitCommitFirstSixChars)"
+            versionTextView.text = versionString
         }
     }
 
@@ -168,7 +170,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                 if (inputFile == null && tempFile != null) {
                     inputFile = Uri.fromFile(tempFile)
                 }
-                AvatarSelection.circularCropImage(this, inputFile, outputFile, R.string.CropImageActivity_profile_avatar)
+                AvatarSelection.circularCropImage(this, inputFile, outputFile, R.string.photo)
             }
             AvatarSelection.REQUEST_CODE_CROP_IMAGE -> {
                 if (resultCode != Activity.RESULT_OK) {
@@ -288,11 +290,11 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
     private fun saveDisplayName(): Boolean {
         val displayName = binding.displayNameEditText.text.toString().trim()
         if (displayName.isEmpty()) {
-            Toast.makeText(this, R.string.activity_settings_display_name_missing_error, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.displayNameErrorDescription, Toast.LENGTH_SHORT).show()
             return false
         }
         if (displayName.toByteArray().size > ProfileManagerProtocol.Companion.NAME_PADDED_LENGTH) {
-            Toast.makeText(this, R.string.activity_settings_display_name_too_long_error, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.displayNameErrorDescriptionShorter, Toast.LENGTH_SHORT).show()
             return false
         }
         updateProfile(false, displayName = displayName)

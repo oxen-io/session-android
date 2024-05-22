@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- MessageRecord -->
-    <string name="MessageRecord_left_group">Vous avez quitté le groupe.</string>
     <string name="MessageRecord_you_created_a_new_group">Vous avez créé un nouveau groupe.</string>
     <string name="MessageRecord_s_added_you_to_the_group">%1$s vous a ajouté·e dans le groupe.</string>
     <string name="MessageRecord_you_renamed_the_group_to_s">Vous avez renommé le groupe en %1$s</string>

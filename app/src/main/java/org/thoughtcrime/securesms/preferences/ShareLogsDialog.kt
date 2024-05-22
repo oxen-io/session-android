@@ -47,8 +47,8 @@ class ShareLogsDialog(private val updateCallback: (Boolean)->Unit): DialogFragme
     private var shareJob: Job? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {
-        title(R.string.dialog_share_logs_title)
-        text(R.string.dialog_share_logs_explanation)
+        title(R.string.helpReportABugExportLogs)
+        text(R.string.helpReportABugExportLogsDescription)
         button(R.string.share, dismiss = false) { runShareLogsJob() }
         cancelButton { updateCallback(false) }
     }

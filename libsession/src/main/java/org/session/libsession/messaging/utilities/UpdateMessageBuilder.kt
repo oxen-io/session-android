@@ -30,6 +30,8 @@ object UpdateMessageBuilder {
         val senderName: String = if (isOutgoing) context.getString(R.string.MessageRecord_you)
         else getSenderName(senderId!!)
 
+        // ACL TODO: Replace below with substitutions from phrase library
+
         return when (updateData) {
             is UpdateMessageData.Kind.GroupCreation -> {
                 if (isOutgoing) context.getString(R.string.MessageRecord_you_created_a_new_group)
@@ -48,7 +50,7 @@ object UpdateMessageBuilder {
                 val userPublicKey = storage.getUserPublicKey()!!
                 // 1st case: you are part of the removed members
                 return if (userPublicKey in updateData.updatedMembers) {
-                    if (isOutgoing) context.getString(R.string.MessageRecord_left_group)
+                    if (isOutgoing) context.getString(R.string.groupMemberYouLeft)
                     else context.getString(R.string.MessageRecord_you_were_removed_from_the_group)
                 } else {
                     // 2nd case: you are not part of the removed members
@@ -58,7 +60,7 @@ object UpdateMessageBuilder {
                 }
             }
             is UpdateMessageData.Kind.GroupMemberLeft -> {
-                if (isOutgoing) context.getString(R.string.MessageRecord_left_group)
+                if (isOutgoing) context.getString(R.string.groupMemberYouLeft)
                 else context.getString(R.string.ConversationItem_group_action_left, senderName)
             }
             else -> return ""
