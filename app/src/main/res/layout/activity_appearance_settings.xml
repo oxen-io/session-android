@@ -19,7 +19,7 @@
             android:paddingVertical="@dimen/small_spacing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/activity_appearance_themes_category"/>
+            android:text="@string/appearanceThemes"/>
 
         <androidx.cardview.widget.CardView
             app:cardElevation="0dp"
@@ -50,7 +50,7 @@
                         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
                         android:lines="1"
                         android:textSize="16sp"
-                        android:text="@string/classic_dark_theme_name"
+                        android:text="@string/appearanceThemesClassicDark"
                         android:padding="@dimen/medium_spacing"
                         android:layout_gravity="center"
                         android:layout_width="0dp"
@@ -88,7 +88,7 @@
                         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
                         android:textSize="16sp"
                         android:lines="1"
-                        android:text="@string/classic_light_theme_name"
+                        android:text="@string/appearanceThemesClassicLight"
                         android:padding="@dimen/medium_spacing"
                         android:layout_gravity="center"
                         android:layout_width="0dp"
@@ -127,7 +127,7 @@
                         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
                         android:textSize="16sp"
                         android:lines="1"
-                        android:text="@string/ocean_dark_theme_name"
+                        android:text="@string/appearanceThemesOceanDark"
                         android:padding="@dimen/medium_spacing"
                         android:layout_gravity="center"
                         android:layout_width="0dp"
@@ -166,7 +166,7 @@
                         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
                         android:textSize="16sp"
                         android:lines="1"
-                        android:text="@string/ocean_light_theme_name"
+                        android:text="@string/appearanceThemesOceanLight"
                         android:padding="@dimen/medium_spacing"
                         android:layout_gravity="center"
                         android:layout_width="0dp"
@@ -192,7 +192,7 @@
             android:paddingVertical="@dimen/small_spacing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/activity_appearance_primary_color_category"/>
+            android:text="@string/appearancePrimaryColor"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -312,7 +312,7 @@
             android:paddingVertical="@dimen/small_spacing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/activity_appearance_follow_system_category"/>
+            android:text="@string/appearanceAutoDarkMode"/>
 
         <androidx.cardview.widget.CardView
             app:cardElevation="0dp"

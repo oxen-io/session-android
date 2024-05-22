@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Сэсія</string>
+    <string name="sessionMessenger">Сэсія</string>
     <string name="yes">Так</string>
     <string name="no">Не</string>
     <string name="delete">Выдаліць</string>
-    <string name="ban">Заблакаваць</string>
     <string name="save">Захаваць</string>
     <!-- AbstractNotificationBuilder -->
-    <string name="AbstractNotificationBuilder_new_message">Новыя паведамленні</string>
+    <string name="messageNew">Новыя паведамленні</string>
     <!-- AlbumThumbnailView -->
     <!-- ApplicationPreferencesActivity -->
     <!-- DraftDatabase -->
