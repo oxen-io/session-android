@@ -171,7 +171,7 @@
         <item quantity="other">%d ساعت</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">ارسال پیش نمایش لینک ها</string>
+    <string name="linkPreviewsSend">ارسال پیش نمایش لینک ها</string>
     <string name="screenSecurity">محافظ صفحه نمایش</string>
     <string name="sessionNotifications">اطلاعیه‌ها</string>
     <string name="notificationsLedColor">رنگ چراغ ال‌ای‌دی</string>
@@ -271,7 +271,7 @@
     <string name="messageVoice">پیام صوتی</string>
     <string name="activity_link_device_skip_prompt">این مقداری طول می‌کشد، دوست دارید ردش کنید؟</string>
     <string name="communityJoinOfficial">یا به یکی از این‌ها بپیوندید…</string>
-    <string name="onboardingMessageNotificationExplaination">دو راه برای اطلاع رسانی شما از پیام‌های جدید در نشست وجود دارد.</string>
+    <string name="onboardingMessageNotificationExplanation">دو راه برای اطلاع رسانی شما از پیام‌های جدید در نشست وجود دارد.</string>
     <string name="notificationsFastMode">حالت سریع</string>
     <string name="notificationsSlowMode">حالت آهسته</string>
     <string name="notificationsFastModeDescriptionAndroid">شما سریع و مطمئن با استفاده از سرور‌های اطلاع‌رسانی گوگل از پیام‌های جدید مطلع می‌شوید.</string>

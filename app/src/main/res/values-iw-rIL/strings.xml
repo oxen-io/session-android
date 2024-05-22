@@ -178,7 +178,7 @@
         <item quantity="other">%d שעות</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">שלח קדם־תצוגות של קישורים</string>
+    <string name="linkPreviewsSend">שלח קדם־תצוגות של קישורים</string>
     <string name="screenSecurity">אבטחת מסך</string>
     <string name="sessionNotifications">התראות</string>
     <string name="notificationsLedColor">צבע LED</string>

@@ -166,7 +166,7 @@
         <item quantity="other">%d 小时</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">发送链接预览</string>
+    <string name="linkPreviewsSend">发送链接预览</string>
     <string name="screenSecurity">屏幕安全性</string>
     <string name="sessionNotifications">通知</string>
     <string name="notificationsLedColor">LED颜色</string>
@@ -266,7 +266,7 @@
     <string name="messageVoice">语音消息</string>
     <string name="activity_link_device_skip_prompt">这需要一点时间，您想要跳过吗？</string>
     <string name="communityJoinOfficial">或加入下列群组…</string>
-    <string name="onboardingMessageNotificationExplaination">我们有两种方式来向您发送消息通知。</string>
+    <string name="onboardingMessageNotificationExplanation">我们有两种方式来向您发送消息通知。</string>
     <string name="notificationsFastMode">快速模式</string>
     <string name="notificationsSlowMode">慢速模式</string>
     <string name="notificationsFastModeDescriptionAndroid">新消息将通过 Google 通知服务器即时可靠地发送。</string>

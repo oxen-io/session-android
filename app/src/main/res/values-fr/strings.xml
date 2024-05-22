@@ -173,8 +173,7 @@
     </plurals>
     <!-- preferences.xml -->
 
-    <string name="preferences__send_link_previews">Envoyer les aperçus des liens</string>
-    <string name="preferences__pref_autoplay_audio_title">Lire automatiquement les messages audios</string>
+    <string name="linkPreviewsSend">Envoyer les aperçus des liens</string>
 
     <string name="screenSecurity">Sécurité de l’écran</string>
     <string name="sessionNotifications">Notifications</string>
@@ -187,7 +186,6 @@
     <string name="readReceipts">Accusés de lecture</string>
     <string name="typingIndicators">Indicateurs de saisie</string>
     <string name="conversationsMessageTrimming">Élagage des messages</string>
-    <string name="preferences_chats__message_trimming_title">Raccourcir les communautés</string>
     <string name="preferences_notifications__content_message">Afficher :</string>
     <!-- **************************************** -->
     <!-- menus -->
@@ -281,7 +279,7 @@
     <string name="messageVoice">Message vocal</string>
     <string name="activity_link_device_skip_prompt">Cela prend un certain temps, voulez-vous passer ?</string>
     <string name="communityJoinOfficial">Ou rejoignez l\'un(e) de ceux-ci…</string>
-    <string name="onboardingMessageNotificationExplaination">Session peut vous avertir de la présence de nouveaux messages de deux façons.</string>
+    <string name="onboardingMessageNotificationExplanation">Session peut vous avertir de la présence de nouveaux messages de deux façons.</string>
     <string name="notificationsFastMode">Mode rapide</string>
     <string name="notificationsSlowMode">Mode lent</string>
     <string name="notificationsFastModeDescriptionAndroid">Vous serez averti de nouveaux messages de manière fiable et immédiate en utilisant les serveurs de notification de Google.</string>
@@ -343,7 +341,6 @@
         <item quantity="other">Et %1$d autres ont réagi %2$s à ce message</item>
     </plurals>
     <string name="fragment_enter_public_key_prompt">Commencez une nouvelle conversation en entrant l\'ID Session de quelqu\'un ou en lui partageant votre ID Session.</string>
-    <string name="fragment_enter_community_url_join_button_title">Rejoindre</string>
     <string name="new_conversation_dialog_back_button_content_description">Revenir en arrière</string>
     <string name="new_conversation_dialog_close_button_content_description">Fermer la fenêtre</string>
     <string name="ErrorNotifier_migration">Échec de la mise à jour de la base de données</string>

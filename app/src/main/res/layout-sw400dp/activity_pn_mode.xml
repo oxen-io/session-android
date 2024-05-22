@@ -20,7 +20,7 @@
             android:textStyle="bold"
             android:textColor="?android:textColorPrimary"
             android:contentDescription="@string/AccessibilityId_message_notifications"
-            android:text="@string/activity_pn_mode_message_notifications" />
+            android:text="@string/notificationsMessage" />
 
         <TextView
             android:layout_width="match_parent"
@@ -30,7 +30,7 @@
             android:layout_marginRight="@dimen/very_large_spacing"
             android:textSize="@dimen/medium_font_size"
             android:textColor="?android:textColorPrimary"
-            android:text="@string/activity_pn_mode_explanation" />
+            android:text="@string/onboardingMessageNotificationExplanation" />
 
         <org.thoughtcrime.securesms.util.PNModeView
             android:contentDescription="@string/AccessibilityId_fast_mode_notifications_option"
@@ -50,7 +50,7 @@
                 android:textSize="@dimen/medium_font_size"
                 android:textColor="?android:textColorPrimary"
                 android:textStyle="bold"
-                android:text="@string/activity_pn_mode_fast_mode" />
+                android:text="@string/notificationsFastMode" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -58,7 +58,7 @@
                 android:layout_marginTop="4dp"
                 android:textSize="@dimen/very_small_font_size"
                 android:textColor="?android:textColorPrimary"
-                android:text="@string/activity_pn_mode_fast_mode_explanation" />
+                android:text="@string/notificationsFastModeDescriptionAndroid" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -67,7 +67,7 @@
                 android:textSize="@dimen/small_font_size"
                 android:textColor="?colorAccent"
                 android:textStyle="bold"
-                android:text="@string/activity_pn_mode_recommended_option_tag" />
+                android:text="@string/recommended" />
 
         </org.thoughtcrime.securesms.util.PNModeView>
 
@@ -89,7 +89,7 @@
                 android:textSize="@dimen/medium_font_size"
                 android:textColor="?android:textColorPrimary"
                 android:textStyle="bold"
-                android:text="@string/activity_pn_mode_slow_mode"
+                android:text="@string/notificationsSlowMode"
                 />
 
             <TextView
@@ -98,7 +98,7 @@
                 android:layout_marginTop="4dp"
                 android:textSize="@dimen/very_small_font_size"
                 android:textColor="?android:textColorPrimary"
-                android:text="@string/activity_pn_mode_slow_mode_explanation" />
+                android:text="@string/notificationsSlowModeDescription" />
 
         </org.thoughtcrime.securesms.util.PNModeView>
 
@@ -112,7 +112,7 @@
             android:layout_marginTop="@dimen/very_large_spacing"
             android:layout_marginRight="@dimen/massive_spacing"
             android:layout_marginBottom="@dimen/onboarding_button_bottom_offset"
-            android:text="@string/continue_2" />
+            android:text="@string/_continue" />
 
     </LinearLayout>
 

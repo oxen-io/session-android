@@ -166,7 +166,7 @@
         <item quantity="other">%d時間</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">リンクプレビューを送る</string>
+    <string name="linkPreviewsSend">リンクプレビューを送る</string>
     <string name="screenSecurity">画面セキュリティ</string>
     <string name="sessionNotifications">通知</string>
     <string name="notificationsLedColor">LED色</string>

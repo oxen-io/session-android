@@ -17,7 +17,7 @@
         android:textColor="?android:textColorPrimary"
         android:alpha="0.6"
         android:textAlignment="center"
-        android:text="@string/activity_path_explanation" />
+        android:text="@string/onionRoutingPathDescription" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -49,6 +49,6 @@
         android:layout_width="196dp"
         android:layout_height="@dimen/medium_button_height"
         android:layout_marginBottom="@dimen/medium_spacing"
-        android:text="@string/activity_path_learn_more_button_title" />
+        android:text="@string/learnMore" />
 
 </LinearLayout>

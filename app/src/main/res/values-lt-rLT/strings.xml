@@ -181,7 +181,7 @@
         <item quantity="other">%d valandų</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Siųsti nuorodų peržiūras</string>
+    <string name="linkPreviewsSend">Siųsti nuorodų peržiūras</string>
     <string name="screenSecurity">Ekrano saugumas</string>
     <string name="sessionNotifications">Pranešimai</string>
     <string name="notificationsLedColor">Šviesos diodo spalva</string>
@@ -271,7 +271,7 @@
     <string name="attachment">Priedas</string>
     <string name="messageVoice">Balso žinutė</string>
     <string name="communityJoinOfficial">Arba prisijunkite prie vienos iš šių…</string>
-    <string name="onboardingMessageNotificationExplaination">Yra du būdai kaip Session gali jums pranešti apie naujas žinutes.</string>
+    <string name="onboardingMessageNotificationExplanation">Yra du būdai kaip Session gali jums pranešti apie naujas žinutes.</string>
     <string name="notificationsFastMode">Greita veiksena</string>
     <string name="notificationsSlowMode">Lėta veiksena</string>
     <string name="notificationsFastModeDescriptionAndroid">Jums bus nedelsiant ir patikimai pranešama apie naujas žinutes, naudojant „Google“ pranešimų serverius.</string>

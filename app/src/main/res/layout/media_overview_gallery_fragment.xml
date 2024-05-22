@@ -16,6 +16,6 @@
               android:gravity="center"
               android:textColor="?android:textColorPrimary"
               android:visibility="gone"
-              android:text="@string/media_overview_activity__no_media" />
+              android:text="@string/attachmentsFilesEmpty" />
 
 </RelativeLayout>

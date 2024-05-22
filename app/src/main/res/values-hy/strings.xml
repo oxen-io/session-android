@@ -171,7 +171,7 @@
         <item quantity="other">%d ժամ</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Ուղարկել հղման նախադիտումներ</string>
+    <string name="linkPreviewsSend">Ուղարկել հղման նախադիտումներ</string>
     <string name="screenSecurity">Էկրանակադրի անվտանգություն</string>
     <string name="sessionNotifications">Ծանուցումներ</string>
     <string name="notificationsLedColor">LED-ի գույն</string>
@@ -271,7 +271,7 @@
     <string name="messageVoice">Ձայնագրություն</string>
     <string name="activity_link_device_skip_prompt">Սա որոշ ժամանակ է տևում, կցանկանա՞ք բաց թողնել:</string>
     <string name="communityJoinOfficial">Կամ միացե՛ք սրանցից մեկին…</string>
-    <string name="onboardingMessageNotificationExplaination">Երկու եղանակով Session-ը կարող է ձեզ տեղեկացնել նոր հաղորդագրությունների մասին:</string>
+    <string name="onboardingMessageNotificationExplanation">Երկու եղանակով Session-ը կարող է ձեզ տեղեկացնել նոր հաղորդագրությունների մասին:</string>
     <string name="notificationsFastMode">Արագ ռեժիմ</string>
     <string name="notificationsSlowMode">Դանդաղ ռեժիմ</string>
     <string name="notificationsFastModeDescriptionAndroid">Դուք մշտապես և անմիջապես կտեղեկացվեք նոր հաղորդագրությունների մասին՝ օգտագործելով Google-ի ծանուցումների սերվերները:</string>

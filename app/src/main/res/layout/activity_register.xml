@@ -56,7 +56,7 @@
         android:layout_height="@dimen/medium_button_height"
         android:layout_marginLeft="@dimen/massive_spacing"
         android:layout_marginRight="@dimen/massive_spacing"
-        android:text="@string/continue_2" />
+        android:text="@string/_continue" />
 
     <Button
         style="@style/Widget.Session.Button.Common.ProminentOutline"

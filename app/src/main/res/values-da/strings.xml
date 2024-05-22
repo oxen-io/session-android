@@ -171,7 +171,7 @@
         <item quantity="other">%d timer</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Send link eksempelvisning</string>
+    <string name="linkPreviewsSend">Send link eksempelvisning</string>
     <string name="screenSecurity">Skærmsikkerhed</string>
     <string name="sessionNotifications">Notifikationer</string>
     <string name="notificationsLedColor">LED farve</string>
@@ -264,7 +264,7 @@
     <string name="messageVoice">Talebesked</string>
     <string name="activity_link_device_skip_prompt">Dette tager et stykke tid, vil du gerne springe over?</string>
     <string name="communityJoinOfficial">Eller deltag i en af disse…</string>
-    <string name="onboardingMessageNotificationExplaination">Der er to måder Session kan underrette dig om nye beskeder.</string>
+    <string name="onboardingMessageNotificationExplanation">Der er to måder Session kan underrette dig om nye beskeder.</string>
     <string name="urlCopy">Kopier URL</string>
     <string name="enable">Aktivér</string>
     <string name="download">Hent</string>

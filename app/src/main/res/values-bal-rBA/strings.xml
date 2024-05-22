@@ -139,7 +139,7 @@
     <string name="max">Maks</string>
     <!-- plurals.xml -->
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Kirim pratinjau tautan</string>
+    <string name="linkPreviewsSend">Kirim pratinjau tautan</string>
     <string name="screenSecurity">Keamanan Layar</string>
     <string name="sessionNotifications">Pemberitahuan</string>
     <string name="notificationsLedColor">Warna LED</string>

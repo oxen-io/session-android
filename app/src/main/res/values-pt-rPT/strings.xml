@@ -167,7 +167,7 @@
         <item quantity="other">%d horas</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Enviar pré-visualização de hiperligações</string>
+    <string name="linkPreviewsSend">Enviar pré-visualização de hiperligações</string>
     <string name="screenSecurity">Segurança de ecrã</string>
     <string name="sessionNotifications">Notificações</string>
     <string name="notificationsLedColor">Cor do LED</string>

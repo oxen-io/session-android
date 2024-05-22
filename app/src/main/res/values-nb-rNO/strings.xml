@@ -171,7 +171,7 @@
         <item quantity="other">%d timer</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Send linkforhåndsvisninger</string>
+    <string name="linkPreviewsSend">Send linkforhåndsvisninger</string>
     <string name="screenSecurity">Skjermsikkerhet</string>
     <string name="sessionNotifications">Varsler</string>
     <string name="notificationsLedColor">LED-farge</string>
@@ -271,7 +271,7 @@
     <string name="messageVoice">Talemelding</string>
     <string name="activity_link_device_skip_prompt">Dette tar en stund, vil du hoppe over?</string>
     <string name="communityJoinOfficial">Eller bli med i en av disse…</string>
-    <string name="onboardingMessageNotificationExplaination">Det er to måter Session kan gi beskjed om nye meldinger på.</string>
+    <string name="onboardingMessageNotificationExplanation">Det er to måter Session kan gi beskjed om nye meldinger på.</string>
     <string name="notificationsFastMode">Rask modus</string>
     <string name="notificationsSlowMode">Langsom Modus</string>
     <string name="notificationsFastModeDescriptionAndroid">Du vil bli varslet om nye meldinger på en pålitelig måte, og umiddelbart ved hjelp av Googles varslingsservere.</string>

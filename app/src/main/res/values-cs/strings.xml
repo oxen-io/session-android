@@ -181,7 +181,7 @@
         <item quantity="other">%d hodin</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Odesílat náhledy odkazu</string>
+    <string name="linkPreviewsSend">Odesílat náhledy odkazu</string>
     <string name="screenSecurity">Zabezpečení obrazovky</string>
     <string name="sessionNotifications">Upozornění</string>
     <string name="notificationsLedColor">Barva LED</string>
@@ -281,7 +281,7 @@
     <string name="messageVoice">Hlasová zpráva</string>
     <string name="activity_link_device_skip_prompt">Trvá to trochu déle, chcete přeskočit?</string>
     <string name="communityJoinOfficial">Nebo se připojte k jedné z těchto…</string>
-    <string name="onboardingMessageNotificationExplaination">Existují dva způsoby, jak vás může Session upozorňovat na nové zprávy.</string>
+    <string name="onboardingMessageNotificationExplanation">Existují dva způsoby, jak vás může Session upozorňovat na nové zprávy.</string>
     <string name="notificationsFastMode">Rychlý režim</string>
     <string name="notificationsSlowMode">Pomalý režim</string>
     <string name="notificationsFastModeDescriptionAndroid">Budete spolehlivě a okamžitě informováni o nových zprávách pomocí oznamovacích serverů Google.</string>

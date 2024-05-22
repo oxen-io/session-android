@@ -191,7 +191,7 @@
         <item quantity="other">%d ساعة</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">إرسال معاينة الرابط</string>
+    <string name="linkPreviewsSend">إرسال معاينة الرابط</string>
     <string name="screenSecurity">تأمين الشاشة</string>
     <string name="sessionNotifications">الإشعارات</string>
     <string name="notificationsLedColor">لون ضوء التنبيه LED</string>
@@ -291,7 +291,7 @@
     <string name="messageVoice">رسالة صوتية</string>
     <string name="activity_link_device_skip_prompt">هذا يستغرق بعض الوقت، هل تريد أن تتخطى؟</string>
     <string name="communityJoinOfficial">أو انضم إلى واحدة من…</string>
-    <string name="onboardingMessageNotificationExplaination">يوجد طريقتين لتلقي التنبيهات.</string>
+    <string name="onboardingMessageNotificationExplanation">يوجد طريقتين لتلقي التنبيهات.</string>
     <string name="notificationsFastMode">الوضع السريع</string>
     <string name="notificationsSlowMode">الوضع البطيء</string>
     <string name="notificationsFastModeDescriptionAndroid">سوف يتم إشعارك بالرسائل بشكل موثوق و فوري بإستخدام خوادم جوجل للإشعارات.</string>

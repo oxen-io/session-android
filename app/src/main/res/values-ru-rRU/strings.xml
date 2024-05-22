@@ -181,7 +181,7 @@
         <item quantity="other">%d час.</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Отправлять предпросмотр ссылки</string>
+    <string name="linkPreviewsSend">Отправлять предпросмотр ссылки</string>
     <string name="screenSecurity">Защита экрана</string>
     <string name="sessionNotifications">Уведомления</string>
     <string name="notificationsLedColor">Цвет светодиода</string>
@@ -281,7 +281,7 @@
     <string name="messageVoice">Голосовое сообщение</string>
     <string name="activity_link_device_skip_prompt">Это занимает некоторое время, хотите пропустить?</string>
     <string name="communityJoinOfficial">Или присоединитесь к одной из этих…</string>
-    <string name="onboardingMessageNotificationExplaination">Существует два способа оповещения о новых сообщениях.</string>
+    <string name="onboardingMessageNotificationExplanation">Существует два способа оповещения о новых сообщениях.</string>
     <string name="notificationsFastMode">Ускоренный режим</string>
     <string name="notificationsSlowMode">Медленный режим</string>
     <string name="notificationsFastModeDescriptionAndroid">Вы будете получать уведомления о новых сообщениях надежно и сразу же с помощью серверов уведомлений Google.</string>

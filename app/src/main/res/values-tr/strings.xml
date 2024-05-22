@@ -171,7 +171,7 @@
         <item quantity="other">%d saat</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Bağlantı ön izlemelerini gönder</string>
+    <string name="linkPreviewsSend">Bağlantı ön izlemelerini gönder</string>
     <string name="screenSecurity">Ekran güvenliği</string>
     <string name="sessionNotifications">Bildirimler</string>
     <string name="notificationsLedColor">LED rengi</string>
@@ -271,7 +271,7 @@
     <string name="messageVoice">Sesli mesaj</string>
     <string name="activity_link_device_skip_prompt">Bu biraz uzun sürüyor, atlamak ister misiniz?</string>
     <string name="communityJoinOfficial">Veya bunlardan birine katılın…</string>
-    <string name="onboardingMessageNotificationExplaination">Session\'ın sizi yeni mesajlar hakkında bilgilendirmesinin iki yolu vardır.</string>
+    <string name="onboardingMessageNotificationExplanation">Session\'ın sizi yeni mesajlar hakkında bilgilendirmesinin iki yolu vardır.</string>
     <string name="notificationsFastMode">Hızlı Mod</string>
     <string name="notificationsSlowMode">Yavaş Mod</string>
     <string name="notificationsFastModeDescriptionAndroid">Google\'ın bildirim sunucularını kullanarak yeni iletilerden güvenilir ve anında haberdar olacaksınız.</string>

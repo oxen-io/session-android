@@ -18,7 +18,7 @@
             android:layout_marginRight="@dimen/very_large_spacing"
             android:textSize="@dimen/small_font_size"
             android:textAlignment="center"
-            android:text="@string/fragment_scan_qr_code_camera_access_explanation" />
+            android:text="@string/cameraGrantAccessQr" />
 
         <Button
             style="@style/Widget.Session.Button.Common.ProminentOutline"
@@ -28,7 +28,7 @@
             android:layout_marginTop="@dimen/medium_spacing"
             android:paddingLeft="@dimen/medium_spacing"
             android:paddingRight="@dimen/medium_spacing"
-            android:text="@string/fragment_scan_qr_code_grant_camera_access_button_title" />
+            android:text="@string/cameraGrantAccess" />
 
     </LinearLayout>
 

@@ -176,7 +176,7 @@
         <item quantity="other">%d ore</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Trimite previzualizarea link-urilor</string>
+    <string name="linkPreviewsSend">Trimite previzualizarea link-urilor</string>
     <string name="screenSecurity">Securitate ecran</string>
     <string name="sessionNotifications">Notificări</string>
     <string name="notificationsLedColor">Culoare LED</string>

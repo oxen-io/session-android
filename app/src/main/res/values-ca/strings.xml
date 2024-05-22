@@ -170,7 +170,7 @@
         <item quantity="other">%d hores</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Envia previsualitzacions d\'enllaços</string>
+    <string name="linkPreviewsSend">Envia previsualitzacions d\'enllaços</string>
     <string name="screenSecurity">Seguretat de la pantalla</string>
     <string name="sessionNotifications">Notificacions</string>
     <string name="notificationsLedColor">Color del LED</string>
@@ -266,7 +266,7 @@
     <string name="messageVoice">Missatge de veu</string>
     <string name="activity_link_device_skip_prompt">Això triga un xic, t\'ho vols saltar?</string>
     <string name="communityJoinOfficial">O uneix-te a alguns d\'aquests…</string>
-    <string name="onboardingMessageNotificationExplaination">Hi ha dues maneres per les quals Session et pot notificar els missatges nous.</string>
+    <string name="onboardingMessageNotificationExplanation">Hi ha dues maneres per les quals Session et pot notificar els missatges nous.</string>
     <string name="notificationsFastMode">Mode ràpid</string>
     <string name="notificationsSlowMode">Mode lent</string>
     <string name="notificationsFastModeDescriptionAndroid">Es notificaran els missatges de forma immediata i fiable fent servir els servidors de notificació de Google.</string>

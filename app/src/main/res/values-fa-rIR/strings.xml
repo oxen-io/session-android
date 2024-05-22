@@ -172,8 +172,7 @@
     </plurals>
     <!-- preferences.xml -->
 
-    <string name="preferences__send_link_previews">ارسال پیش‌نمایش‌های لینک</string>
-    <string name="preferences__pref_autoplay_audio_title">پخش خودکار پیام‌های صوتی</string>
+    <string name="linkPreviewsSend">ارسال پیش‌نمایش‌های لینک</string>
     <string name="screenSecurity">امنیت صفحه</string>
     <string name="sessionNotifications">اعلانات</string>
     <string name="notificationsLedColor">رنگ چراغ ال‌ای‌دی</string>
@@ -185,7 +184,6 @@
     <string name="readReceipts">رسیدهای خواندن</string>
     <string name="typingIndicators">نشانگر‌های در حال تایپ</string>
     <string name="conversationsMessageTrimming">مرتب‌سازی پیام</string>
-    <string name="preferences_chats__message_trimming_title">مرتب‌سازی انجمن‌ها</string>
     <!-- **************************************** -->
     <!-- menus -->
     <!-- **************************************** -->
@@ -277,7 +275,7 @@
     <string name="messageVoice">پیام صوتی</string>
     <string name="activity_link_device_skip_prompt">این فرآیند کمی طولانی است، دوست دارید ردش کنید؟</string>
     <string name="communityJoinOfficial">یا به یکی از این‌ها بپیوندید…</string>
-    <string name="onboardingMessageNotificationExplaination">در برنامه سشن، برای مطلع کردن شما از رسیدن پیام‌های جدید، دو روش وجود دارد.</string>
+    <string name="onboardingMessageNotificationExplanation">در برنامه سشن، برای مطلع کردن شما از رسیدن پیام‌های جدید، دو روش وجود دارد.</string>
     <string name="notificationsFastMode">حالت سریع</string>
     <string name="notificationsFastModeDescriptionAndroid">با استفاده از سرورهای گوگل، شما به صورت سریع و مطمئن از پیام‌های جدید مطلع می‌شوید.</string>
     <string name="notificationsSlowModeDescription">Session هرازگاهی در پس زمینه وجود پیام‌های جدید را بررسی می‌کند.</string>
@@ -334,5 +332,4 @@
         <item quantity="other">و %1$d نفر دیگر با %2$s به این پیام واکنش نشان داده اند</item>
     </plurals>
     <string name="fragment_enter_public_key_prompt">یک مکالمه جدید را با وارد کردن شناسه Session شخصی شروع کنید یا شناسه جلسه خود را با آنها به اشتراک بگذارید.</string>
-    <string name="fragment_enter_community_url_join_button_title">پیوستن</string>
 </resources>

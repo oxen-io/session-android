@@ -172,7 +172,7 @@
         <item quantity="other">%d órája</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Hivatkozások előnézeti képének küldése</string>
+    <string name="linkPreviewsSend">Hivatkozások előnézeti képének küldése</string>
     <string name="screenSecurity">Képernyőbiztonság</string>
     <string name="sessionNotifications">Értesítések</string>
     <string name="notificationsLedColor">LED színe</string>
@@ -272,7 +272,7 @@
     <string name="messageVoice">Hangüzenet</string>
     <string name="activity_link_device_skip_prompt">Ez eltarthat egy ideig, szeretnéd átugrani?</string>
     <string name="communityJoinOfficial">Vagy csatlakozz ezekhez…</string>
-    <string name="onboardingMessageNotificationExplaination">2 mód van arra, hogy a Session értesítsen téged új üzenetekről.</string>
+    <string name="onboardingMessageNotificationExplanation">2 mód van arra, hogy a Session értesítsen téged új üzenetekről.</string>
     <string name="notificationsFastMode">Gyorsított mód</string>
     <string name="notificationsSlowMode">Lassított mód</string>
     <string name="notificationsFastModeDescriptionAndroid">A Google értesítési szerverein keresztül megbízhatóan és azonnal értesítést kapsz az új üzenetekről.</string>

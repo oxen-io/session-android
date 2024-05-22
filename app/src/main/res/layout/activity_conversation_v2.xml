@@ -279,7 +279,7 @@
             android:paddingHorizontal="@dimen/massive_spacing"
             android:paddingVertical="@dimen/small_spacing"
             android:textSize="@dimen/text_size"
-            android:text="@string/activity_conversation_block_user"/>
+            android:text="@string/block"/>
 
         <TextView
             android:id="@+id/sendAcceptsTextView"
@@ -288,7 +288,7 @@
             android:layout_margin="@dimen/medium_spacing"
             android:alpha="0.6"
             android:gravity="center_horizontal"
-            android:text="@string/message_requests_send_notice"
+            android:text="@string/messageRequestsAcceptDescription"
             android:textColor="?android:textColorPrimary"
             android:textSize="@dimen/small_font_size" />
 

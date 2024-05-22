@@ -30,7 +30,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/message_details_header__sent"
+                    android:text="@string/disappearingMessagesSent"
                     android:gravity="end"
                     android:textStyle="bold" />
 
@@ -78,7 +78,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/message_details_header__error"
+                    android:text="@string/_error"
                     android:gravity="end"
                     android:textStyle="bold"/>
 
@@ -106,7 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/medium_button_height"
                 style="@style/Widget.Session.Button.Common.ProminentOutline"
-                android:text="@string/message_recipients_list_item__resend" />
+                android:text="@string/resend" />
 
         </LinearLayout>
 

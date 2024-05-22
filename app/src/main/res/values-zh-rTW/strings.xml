@@ -166,7 +166,7 @@
         <item quantity="other">%d 小時</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">傳送連結預覽</string>
+    <string name="linkPreviewsSend">傳送連結預覽</string>
     <string name="screenSecurity">螢幕安全設定</string>
     <string name="sessionNotifications">通知</string>
     <string name="notificationsLedColor">LED燈號顏色</string>
@@ -266,7 +266,7 @@
     <string name="messageVoice">語音訊息</string>
     <string name="activity_link_device_skip_prompt">這可能需要一些時間，要跳過嗎？</string>
     <string name="communityJoinOfficial">或加入這些群組⋯</string>
-    <string name="onboardingMessageNotificationExplaination">Session 有兩種方式向您傳送通知。</string>
+    <string name="onboardingMessageNotificationExplanation">Session 有兩種方式向您傳送通知。</string>
     <string name="notificationsFastMode">快速模式</string>
     <string name="notificationsSlowMode">慢速模式</string>
     <string name="notificationsFastModeDescriptionAndroid">您將會透過 Google 的通知服務可靠且迅速的收到通知。</string>

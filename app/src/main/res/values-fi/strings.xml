@@ -171,7 +171,7 @@
         <item quantity="other">%d tuntia</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Lähetä esikatselukuva linkeistä</string>
+    <string name="linkPreviewsSend">Lähetä esikatselukuva linkeistä</string>
     <string name="screenSecurity">Näytön suojaus</string>
     <string name="sessionNotifications">Ilmoitukset</string>
     <string name="notificationsLedColor">LED:in väri</string>
@@ -271,7 +271,7 @@
     <string name="messageVoice">Ääniviesti</string>
     <string name="activity_link_device_skip_prompt">Tämä kestää jonkin aikaa, haluaisitko ohittaa?</string>
     <string name="communityJoinOfficial">Tai liity johonkin näistä…</string>
-    <string name="onboardingMessageNotificationExplaination">On kaksi tapaa joilla Session voi ilmoittaa sinulle uusista viesteistä.</string>
+    <string name="onboardingMessageNotificationExplanation">On kaksi tapaa joilla Session voi ilmoittaa sinulle uusista viesteistä.</string>
     <string name="notificationsFastMode">Nopea tila</string>
     <string name="notificationsSlowMode">Hidastila</string>
     <string name="notificationsFastModeDescriptionAndroid">Sinulle ilmoitetaan uusista viesteistä luotettavasti ja viivyttelemättä Applen ilmoituspalvelua käyttäen.</string>

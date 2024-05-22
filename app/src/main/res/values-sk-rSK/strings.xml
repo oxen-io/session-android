@@ -179,7 +179,7 @@
         <item quantity="other">%d hodín</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Posielať náhľady stránok</string>
+    <string name="linkPreviewsSend">Posielať náhľady stránok</string>
     <string name="screenSecurity">Zabezpečenie obrazovky</string>
     <string name="sessionNotifications">Upozornenia</string>
     <string name="notificationsLedColor">LED farba</string>

@@ -13,14 +13,14 @@
         android:id="@+id/deleteForMeTextView"
         android:contentDescription="@string/AccessibilityId_delete_just_for_me"
         style="@style/BottomSheetActionItem"
-        android:text="@string/delete_message_for_me"
+        android:text="@string/clearMessagesForMe"
         android:textColor="@color/destructive"/>
 
     <TextView
         android:id="@+id/deleteForEveryoneTextView"
-        android:contentDescription="@string/delete_message_for_everyone"
+        android:contentDescription="@string/AccessibilityId_delete_for_everyone"
         style="@style/BottomSheetActionItem"
-        android:text="@string/delete_message_for_everyone"
+        android:text="@string/clearMessagesForEveryone"
         android:textColor="@color/destructive"/>
 
     <TextView

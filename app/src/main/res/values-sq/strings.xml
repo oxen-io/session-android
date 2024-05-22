@@ -171,7 +171,7 @@
         <item quantity="other">%d orë</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Dërgo paraparje lidhjesh</string>
+    <string name="linkPreviewsSend">Dërgo paraparje lidhjesh</string>
     <string name="screenSecurity">Siguri ekrani</string>
     <string name="sessionNotifications">Njoftime</string>
     <string name="notificationsLedColor">Ngjyrë LED-i</string>

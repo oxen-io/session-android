@@ -142,7 +142,7 @@
     <string name="max">mwisho</string>
     <!-- plurals.xml -->
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">tuma kiungo kilichoonekana</string>
+    <string name="linkPreviewsSend">tuma kiungo kilichoonekana</string>
     <string name="screenSecurity">usalamaa wa skrini</string>
     <string name="sessionNotifications">Arifa</string>
     <string name="notificationsLedColor">Rangi za LED</string>

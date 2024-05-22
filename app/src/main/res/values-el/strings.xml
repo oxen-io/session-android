@@ -171,7 +171,7 @@
         <item quantity="other">%d ώρες</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Αποστολή προεπισκοπήσεων συνδέσμων</string>
+    <string name="linkPreviewsSend">Αποστολή προεπισκοπήσεων συνδέσμων</string>
     <string name="screenSecurity">Ασφάλεια οθόνης</string>
     <string name="sessionNotifications">Ειδοποιήσεις</string>
     <string name="notificationsLedColor">Χρώμα LED</string>
@@ -271,7 +271,7 @@
     <string name="messageVoice">Ηχητικό μήνυμα</string>
     <string name="activity_link_device_skip_prompt">Αυτό παίρνει λίγο χρόνο, θα θέλατε να παραλείψετε;</string>
     <string name="communityJoinOfficial">Ή συνδεθείτε σε ένα από αυτά…</string>
-    <string name="onboardingMessageNotificationExplaination">Υπάρχουν δύο τρόποι με τους οποίους το Session μπορεί να σας ειδοποιήσει για νέα μηνύματα.</string>
+    <string name="onboardingMessageNotificationExplanation">Υπάρχουν δύο τρόποι με τους οποίους το Session μπορεί να σας ειδοποιήσει για νέα μηνύματα.</string>
     <string name="notificationsFastMode">Γρήγορη Επιλογή</string>
     <string name="notificationsSlowMode">Αργή Επιλογή</string>
     <string name="notificationsFastModeDescriptionAndroid">Θα ειδοποιηθείτε για νέα μηνύματα αξιόπιστα και άμεσα χρησιμοποιώντας τους διακομιστές ειδοποιήσεων της Google.</string>

@@ -181,7 +181,7 @@
         <item quantity="other">%d godzin</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Podgląd linków</string>
+    <string name="linkPreviewsSend">Podgląd linków</string>
     <string name="screenSecurity">Ochrona ekranu</string>
     <string name="sessionNotifications">Powiadomienia</string>
     <string name="notificationsLedColor">Kolor LED</string>
@@ -281,7 +281,7 @@
     <string name="messageVoice">Wiadomość głosowa</string>
     <string name="activity_link_device_skip_prompt">To zajmuje chwilę, czy chcesz pominąć?</string>
     <string name="communityJoinOfficial">Lub dołącz do jednego z tych…</string>
-    <string name="onboardingMessageNotificationExplaination">Istnieją dwa sposoby powiadamiania o nowych wiadomościach.</string>
+    <string name="onboardingMessageNotificationExplanation">Istnieją dwa sposoby powiadamiania o nowych wiadomościach.</string>
     <string name="notificationsFastMode">Tryb szybki</string>
     <string name="notificationsSlowMode">Tryb wolny</string>
     <string name="notificationsFastModeDescriptionAndroid">Zostaniesz natychmiast powiadomiony o nowych wiadomościach w niezawodny sposób przy użyciu serwerów powiadomień Google.</string>

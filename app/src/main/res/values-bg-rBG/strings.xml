@@ -165,7 +165,7 @@
         <item quantity="other">%d часа</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Изпращане на визуализации на връзката</string>
+    <string name="linkPreviewsSend">Изпращане на визуализации на връзката</string>
     <string name="screenSecurity">Сигурност на екрана</string>
     <string name="sessionNotifications">Известия</string>
     <string name="notificationsLedColor">LED цвят</string>

@@ -171,7 +171,7 @@
         <item quantity="other">%d horoj</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Sendi antaŭrigardojn de ligilo</string>
+    <string name="linkPreviewsSend">Sendi antaŭrigardojn de ligilo</string>
     <string name="screenSecurity">Ekrana sekurigo</string>
     <string name="sessionNotifications">Sciigoj</string>
     <string name="notificationsLedColor">LED-a koloro</string>

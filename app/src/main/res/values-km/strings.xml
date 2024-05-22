@@ -159,7 +159,7 @@
         <item quantity="other">%d ម៉ោង</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">ការមើល ការផ្ញើតំណភ្ជាប់</string>
+    <string name="linkPreviewsSend">ការមើល ការផ្ញើតំណភ្ជាប់</string>
     <string name="screenSecurity">អេក្រង់សុវត្ថិភាព</string>
     <string name="sessionNotifications">សារជូនដំណឹង</string>
     <string name="notificationsLedColor">ពណ៌​LED</string>

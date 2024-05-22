@@ -171,7 +171,7 @@
         <item quantity="other">%d horas</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Enviar previsualizaciones</string>
+    <string name="linkPreviewsSend">Enviar previsualizaciones</string>
     <string name="screenSecurity">Seguridad de pantalla</string>
     <string name="sessionNotifications">Notificaciones</string>
     <string name="notificationsLedColor">Color del LED</string>
@@ -271,7 +271,7 @@
     <string name="messageVoice">Mensaje de voz</string>
     <string name="activity_link_device_skip_prompt">Esto está tomando un tiempo, ¿te gustaría saltarlo?</string>
     <string name="communityJoinOfficial">O únete a uno de estos…</string>
-    <string name="onboardingMessageNotificationExplaination">Hay dos maneras en las que Session puede notificarle de nuevos mensajes.</string>
+    <string name="onboardingMessageNotificationExplanation">Hay dos maneras en las que Session puede notificarle de nuevos mensajes.</string>
     <string name="notificationsFastMode">Modo Rápido</string>
     <string name="notificationsSlowMode">Modo Lento</string>
     <string name="notificationsFastModeDescriptionAndroid">Se le notificará de los nuevos mensajes de forma fiable e inmediata usando los servidores de notificaciones de Google.</string>

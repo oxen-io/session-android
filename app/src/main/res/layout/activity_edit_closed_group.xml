@@ -52,7 +52,7 @@
                     android:imeOptions="actionDone"
                     android:maxLength="@integer/max_group_and_community_name_length_chars"
                     android:contentDescription="@string/AccessibilityId_group_name"
-                    android:hint="@string/activity_edit_closed_group_edit_text_hint" />
+                    android:hint="@string/groupNameEnter" />
 
                 <ImageView
                     android:id="@+id/btnSaveGroupNameEdit"
@@ -111,7 +111,7 @@
                 android:layout_marginEnd="@dimen/small_spacing"
                 android:layout_marginBottom="@dimen/small_spacing"
                 android:layout_weight="1"
-                android:text="@string/activity_edit_closed_group_edit_members"
+                android:text="@string/members"
                 android:textColor="?android:textColorPrimary"
                 android:textSize="@dimen/medium_font_size" />
 
@@ -126,7 +126,7 @@
                 android:contentDescription="@string/AccessibilityId_add_members"
                 android:paddingStart="@dimen/medium_spacing"
                 android:paddingEnd="@dimen/medium_spacing"
-                android:text="@string/activity_edit_closed_group_add_members" />
+                android:text="@string/membersInvite" />
 
         </LinearLayout>
 

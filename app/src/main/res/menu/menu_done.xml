@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="@string/menu_done_button"
+        android:title="@string/done"
         android:id="@+id/doneButton"
         android:icon="?menu_accept_icon"
         android:contentDescription="@string/AccessibilityId_done"

@@ -18,7 +18,7 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="?android:textColorPrimary"
-        android:text="@string/activity_display_name_title_2" />
+        android:text="@string/displayNamePick" />
 
     <TextView
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
         android:layout_marginRight="@dimen/very_large_spacing"
         android:textSize="@dimen/small_font_size"
         android:textColor="?android:textColorPrimary"
-        android:text="@string/activity_display_name_explanation" />
+        android:text="@string/displayNameDescription" />
 
     <EditText
         style="@style/SmallSessionEditText"
@@ -45,7 +45,7 @@
         android:inputType="textCapWords"
         android:maxLength="@integer/max_user_nickname_length_chars"
         android:maxLines="1"
-        android:hint="@string/activity_display_name_edit_text_hint" />
+        android:hint="@string/displayNameDescription" />
 
     <View
         android:layout_width="match_parent"
@@ -61,6 +61,6 @@
         android:layout_marginLeft="@dimen/massive_spacing"
         android:layout_marginRight="@dimen/massive_spacing"
         android:layout_marginBottom="@dimen/small_spacing"
-        android:text="@string/continue_2" />
+        android:text="@string/_continue" />
 
 </LinearLayout>

@@ -171,7 +171,7 @@
         <item quantity="other">%dघंटे </item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">लिंक प्रिव्यू भेजें</string>
+    <string name="linkPreviewsSend">लिंक प्रिव्यू भेजें</string>
     <string name="screenSecurity">स्क्रीन सुरक्षा</string>
     <string name="sessionNotifications">सूचनाएं</string>
     <string name="notificationsLedColor">LED रंग </string>
@@ -271,7 +271,7 @@
     <string name="messageVoice">वौइस् मैसेज</string>
     <string name="activity_link_device_skip_prompt">यह समय ले रहा है, इसे छोड़ दें?</string>
     <string name="communityJoinOfficial">या इनमें से एक को जोड़ें...</string>
-    <string name="onboardingMessageNotificationExplaination">सेशन आपको नए संदेश के बारे में दो तरीकों से बता सकता है</string>
+    <string name="onboardingMessageNotificationExplanation">सेशन आपको नए संदेश के बारे में दो तरीकों से बता सकता है</string>
     <string name="notificationsFastMode">फास्ट मोड</string>
     <string name="notificationsSlowMode">स्लो मोड</string>
     <string name="notificationsFastModeDescriptionAndroid">आपको नई सूचनाओं के बारे में google के नोटीफिकेशन servers से तत्काल सूचित किया जाएगा।</string>

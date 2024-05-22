@@ -59,7 +59,7 @@
                 android:textSize="@dimen/medium_font_size"
                 android:textColor="?android:textColorPrimary"
                 android:textAlignment="center"
-                android:text="@string/fragment_view_my_qr_code_explanation" />
+                android:text="@string/qrYoursDescription" />
 
             <Button
                 style="@style/Widget.Session.Button.Common.ProminentOutline"

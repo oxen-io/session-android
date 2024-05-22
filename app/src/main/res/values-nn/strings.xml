@@ -153,7 +153,7 @@
         <item quantity="other">%d timar</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Send lenkjesniktitt</string>
+    <string name="linkPreviewsSend">Send lenkjesniktitt</string>
     <string name="screenSecurity">Skjermtryggleik</string>
     <string name="sessionNotifications">Varsel</string>
     <string name="notificationsLedColor">LED-farge</string>

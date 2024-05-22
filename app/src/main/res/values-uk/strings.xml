@@ -182,7 +182,7 @@
         <item quantity="other">%d годин</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Перегляд відправлених посилань</string>
+    <string name="linkPreviewsSend">Перегляд відправлених посилань</string>
     <string name="screenSecurity">Безпека екрану</string>
     <string name="sessionNotifications">Сповіщення</string>
     <string name="notificationsLedColor">Колір LED</string>
@@ -282,7 +282,7 @@
     <string name="messageVoice">Голосове повідомлення</string>
     <string name="activity_link_device_skip_prompt">Це займає деякий час, ви б хотіли це пропустити?</string>
     <string name="communityJoinOfficial">Або приєднуйтесь до одного з цих…</string>
-    <string name="onboardingMessageNotificationExplaination">Існує два способи Session може сповіщати вас про нові повідомлення.</string>
+    <string name="onboardingMessageNotificationExplanation">Існує два способи Session може сповіщати вас про нові повідомлення.</string>
     <string name="notificationsFastMode">Швидкий режим</string>
     <string name="notificationsSlowMode">Медленний режим</string>
     <string name="notificationsFastModeDescriptionAndroid">Вас надійно повідомлятимуть про нові сповіщщеня негайно, використовуючи сервери сповіщень Google.</string>

@@ -171,7 +171,7 @@
         <item quantity="other">%d uur</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Voorbeeldweergaven verzenden</string>
+    <string name="linkPreviewsSend">Voorbeeldweergaven verzenden</string>
     <string name="screenSecurity">Schermafdrukken blokkeren</string>
     <string name="sessionNotifications">Meldingen</string>
     <string name="notificationsLedColor">Notificatie-LED-kleur</string>
@@ -271,7 +271,7 @@
     <string name="messageVoice">Spraakbericht</string>
     <string name="activity_link_device_skip_prompt">Dit duurt een tijdje, wilt u het overslaan?</string>
     <string name="communityJoinOfficial">Of neem deel aan een van deze...</string>
-    <string name="onboardingMessageNotificationExplaination">Er zijn twee manieren waarop de Sessie u op de hoogte kan stellen van nieuwe berichten.</string>
+    <string name="onboardingMessageNotificationExplanation">Er zijn twee manieren waarop de Sessie u op de hoogte kan stellen van nieuwe berichten.</string>
     <string name="notificationsFastMode">Snelle modus</string>
     <string name="notificationsSlowMode">Langzame modus</string>
     <string name="notificationsFastModeDescriptionAndroid">U wordt op een betrouwbare en directe manier op de hoogte gebracht van nieuwe berichten via Googles notificatieservers.</string>

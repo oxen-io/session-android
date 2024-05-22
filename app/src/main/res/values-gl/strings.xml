@@ -170,7 +170,7 @@
         <item quantity="other">%d horas</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Enviar previsualizacións das ligazóns.</string>
+    <string name="linkPreviewsSend">Enviar previsualizacións das ligazóns.</string>
     <string name="screenSecurity">Seguranza da pantalla</string>
     <string name="sessionNotifications">Notificacións</string>
     <string name="notificationsLedColor">Cor LED</string>

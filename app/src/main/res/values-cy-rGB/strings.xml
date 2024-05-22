@@ -182,7 +182,7 @@
         <item quantity="other">%d awr</item>
     </plurals>
     <!-- preferences.xml -->
-    <string name="preferences__send_link_previews">Anfon rhagolwg dolen</string>
+    <string name="linkPreviewsSend">Anfon rhagolwg dolen</string>
     <string name="screenSecurity">Diogelu\'r sgrin</string>
     <string name="sessionNotifications">Hysbysiadau</string>
     <string name="notificationsLedColor">Lliw\'r LED</string>
