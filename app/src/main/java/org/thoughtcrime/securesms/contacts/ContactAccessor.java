@@ -73,7 +73,7 @@ public class ContactAccessor {
       }
     }
 
-//    if (context.getString(R.string.note_to_self).toLowerCase().contains(constraint.toLowerCase()) &&
+//    if (context.getString(R.string.noteToSelf).toLowerCase().contains(constraint.toLowerCase()) &&
 //        !numberList.contains(TextSecurePreferences.getLocalNumber(context)))
 //    {
 //      numberList.add(TextSecurePreferences.getLocalNumber(context));

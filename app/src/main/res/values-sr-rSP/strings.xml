@@ -81,7 +81,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">Блокирај</string>
     <!-- Slide -->
-    <string name="Slide_image">Слика</string>
+    <string name="image">Слика</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">Група ажурирана.</string>

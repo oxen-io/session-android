@@ -74,7 +74,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">Blokeeri</string>
     <!-- Slide -->
-    <string name="Slide_image">Pilt</string>
+    <string name="image">Pilt</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">Grupp uuendatud</string>

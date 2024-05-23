@@ -97,7 +97,7 @@ class MessageDetailActivity : PassphraseRequiredActionBarActivity() {
     override fun onCreate(savedInstanceState: Bundle?, ready: Boolean) {
         super.onCreate(savedInstanceState, ready)
 
-        title = resources.getString(R.string.conversation_context__menu_message_details)
+        title = resources.getString(R.string.messageInfo)
 
         viewModel.timestamp = intent.getLongExtra(MESSAGE_TIMESTAMP, -1L)
 
@@ -326,9 +326,9 @@ fun PreviewMessageDetails(
                     TitledText(R.string.message_details_header__file_size, "195.6kB"),
                     TitledText(R.string.message_details_header__resolution, "342x312"),
                 ),
-                sent = TitledText(R.string.message_details_header__sent, "6:12 AM Tue, 09/08/2022"),
-                received = TitledText(R.string.message_details_header__received, "6:12 AM Tue, 09/08/2022"),
-                error = TitledText(R.string.message_details_header__error, "Message failed to send"),
+                sent = TitledText(R.string.disappearingMessagesSent, "6:12 AM Tue, 09/08/2022"),
+                received = TitledText(R.string.received, "6:12 AM Tue, 09/08/2022"),
+                error = TitledText(R.string.error, "Message failed to send"),
                 senderInfo = TitledText("Connor", "d4f1g54sdf5g1d5f4g65ds4564df65f4g65d54"),
             )
         )

@@ -79,7 +79,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">مسدود</string>
     <!-- Slide -->
-    <string name="Slide_image">تصویر</string>
+    <string name="image">تصویر</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">گروه به روز شد</string>

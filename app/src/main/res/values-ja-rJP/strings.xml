@@ -76,7 +76,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">ブロック</string>
     <!-- Slide -->
-    <string name="Slide_image">画像</string>
+    <string name="image">画像</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">グループが更新されました</string>

@@ -85,7 +85,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">Užblokuoti</string>
     <!-- Slide -->
-    <string name="Slide_image">Paveikslas</string>
+    <string name="image">Paveikslas</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">Grupė atnaujinta</string>

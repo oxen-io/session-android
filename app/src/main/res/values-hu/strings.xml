@@ -80,7 +80,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">Blokkolás</string>
     <!-- Slide -->
-    <string name="Slide_image">Kép</string>
+    <string name="image">Kép</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">Csoport frissítve</string>

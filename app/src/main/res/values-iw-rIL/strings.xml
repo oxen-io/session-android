@@ -83,7 +83,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">חסום</string>
     <!-- Slide -->
-    <string name="Slide_image">תמונה</string>
+    <string name="image">תמונה</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">הקבוצה עודכנה</string>

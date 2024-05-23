@@ -62,7 +62,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">Blokir</string>
     <!-- Slide -->
-    <string name="Slide_image">Gambar</string>
+    <string name="image">Gambar</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">Grup diperbarui</string>

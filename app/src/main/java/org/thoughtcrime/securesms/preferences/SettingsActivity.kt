@@ -348,7 +348,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText("Session ID", hexEncodedPublicKey)
         clipboard.setPrimaryClip(clip)
-        Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
     }
 
     private fun sharePublicKey() {
@@ -391,7 +391,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         val invitation = "Hey, I've been using Session to chat with complete privacy and security. Come join me! Download it at https://getsession.org/. My Session ID is $hexEncodedPublicKey !"
         intent.putExtra(Intent.EXTRA_TEXT, invitation)
         intent.type = "text/plain"
-        val chooser = Intent.createChooser(intent, getString(R.string.activity_settings_invite_button_title))
+        val chooser = Intent.createChooser(intent, getString(R.string.sessionInviteAFriend))
         startActivity(chooser)
     }
 
@@ -418,7 +418,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
     private inner class DisplayNameEditActionModeCallback: ActionMode.Callback {
 
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-            mode.title = getString(R.string.activity_settings_display_name_edit_text_hint)
+            mode.title = getString(R.string.displayNameEnter)
             mode.menuInflater.inflate(R.menu.menu_apply, menu)
             this@SettingsActivity.displayNameEditActionMode = mode
             return true

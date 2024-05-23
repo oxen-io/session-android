@@ -40,7 +40,7 @@ class SeedActivity : BaseActionBarActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySeedBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportActionBar!!.title = resources.getString(R.string.activity_seed_title)
+        supportActionBar!!.title = resources.getString(R.string.recoveryPasswordDescription)
         val seedReminderViewTitle = SpannableString("You're almost finished! 90%") // Intentionally not yet translated
         seedReminderViewTitle.setSpan(ForegroundColorSpan(getAccentColor()), 24, 27, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         with(binding) {
@@ -89,7 +89,7 @@ class SeedActivity : BaseActionBarActivity() {
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText("Seed", seed)
         clipboard.setPrimaryClip(clip)
-        Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
     }
     // endregion
 }

@@ -43,10 +43,10 @@ class DisplayNameActivity : BaseActionBarActivity() {
     private fun register() {
         val displayName = binding.displayNameEditText.text.toString().trim()
         if (displayName.isEmpty()) {
-            return Toast.makeText(this, R.string.activity_display_name_display_name_missing_error, Toast.LENGTH_SHORT).show()
+            return Toast.makeText(this, R.string.displayNameErrorDescription, Toast.LENGTH_SHORT).show()
         }
         if (displayName.toByteArray().size > ProfileManagerProtocol.Companion.NAME_PADDED_LENGTH) {
-            return Toast.makeText(this, R.string.activity_display_name_display_name_too_long_error, Toast.LENGTH_SHORT).show()
+            return Toast.makeText(this, R.string.displayNameErrorDescriptionShorter, Toast.LENGTH_SHORT).show()
         }
         val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(binding.displayNameEditText.windowToken, 0)

@@ -164,9 +164,9 @@ object ConversationMenuHelper {
 
         if (!TextSecurePreferences.isCallNotificationsEnabled(context)) {
             context.showSessionDialog {
-                title(R.string.ConversationActivity_call_title)
-                text(R.string.ConversationActivity_call_prompt)
-                button(R.string.activity_settings_title, R.string.AccessibilityId_settings) {
+                title(R.string.callsPermissionsRequired)
+                text(R.string.callsPermissionsRequiredDescription)
+                button(R.string.sessionSettings, R.string.AccessibilityId_settings) {
                     Intent(context, PrivacySettingsActivity::class.java).let(context::startActivity)
                 }
                 cancelButton()
@@ -217,7 +217,7 @@ object ConversationMenuHelper {
                     .setIntent(ShortcutLauncherActivity.createIntent(context, thread.address))
                     .build()
                 if (ShortcutManagerCompat.requestPinShortcut(context, shortcutInfo, null)) {
-                    Toast.makeText(context, context.resources.getString(R.string.ConversationActivity_added_to_home_screen), Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, context.resources.getString(R.string.conversationsAddedToHome), Toast.LENGTH_LONG).show()
                 }
             }
         }.execute()
@@ -274,15 +274,16 @@ object ConversationMenuHelper {
         val sessionID = TextSecurePreferences.getLocalNumber(context)
         val isCurrentUserAdmin = admins.any { it.toString() == sessionID }
         val message = if (isCurrentUserAdmin) {
+            // ACL TODO - we need a proper string for this!
             "Because you are the creator of this group it will be deleted for everyone. This cannot be undone."
         } else {
-            context.resources.getString(R.string.ConversationActivity_are_you_sure_you_want_to_leave_this_group)
+            context.resources.getString(R.string.groupLeaveDescription)
         }
 
-        fun onLeaveFailed() = Toast.makeText(context, R.string.ConversationActivity_error_leaving_group, Toast.LENGTH_LONG).show()
+        fun onLeaveFailed() = Toast.makeText(context, R.string.groupLeaveErrorFailed, Toast.LENGTH_LONG).show()
 
         context.showSessionDialog {
-            title(R.string.ConversationActivity_leave_group)
+            title(R.string.groupLeave)
             text(message)
             button(R.string.yes) {
                 try {

@@ -51,6 +51,7 @@ import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.annimon.stream.Stream
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -172,6 +173,7 @@ import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.SaveAttachmentTask
 import org.thoughtcrime.securesms.util.SimpleTextWatcher
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.NAME_KEY
 import org.thoughtcrime.securesms.util.isScrolledToBottom
 import org.thoughtcrime.securesms.util.isScrolledToWithin30dpOfBottom
 import org.thoughtcrime.securesms.util.push
@@ -681,7 +683,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     }
 
                     override fun onFailure(e: ExecutionException?) {
-                        Toast.makeText(this@ConversationActivityV2, R.string.activity_conversation_attachment_prep_failed, Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@ConversationActivityV2, R.string.attachmentsErrorLoad, Toast.LENGTH_LONG).show()
                     }
                 })
                 return
@@ -737,7 +739,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val recipient = viewModel.recipient?.takeUnless { it.isGroupRecipient } ?: return
         val sessionID = recipient.address.toString()
         val name = sessionContactDb.getContactWithSessionID(sessionID)?.displayName(Contact.ContactContext.REGULAR) ?: sessionID
-        binding?.blockedBannerTextView?.text = resources.getString(R.string.activity_conversation_blocked_banner_text, name)
+        binding?.blockedBannerTextView?.text = resources.getString(R.string.blockBlockedDescription, name)
         binding?.blockedBanner?.isVisible = recipient.isBlocked
         binding?.blockedBanner?.setOnClickListener { viewModel.unblock() }
     }
@@ -1116,8 +1118,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
         val (textResource, insertParam) = when {
             recipient.isLocalNumber -> R.string.activity_conversation_empty_state_note_to_self to null
+            // ACL TODO: Fix up substitution here
             openGroup != null && !openGroup.canWrite -> R.string.activity_conversation_empty_state_read_only to recipient.toShortString()
-            blindedRecipient?.blocksCommunityMessageRequests == true -> R.string.activity_conversation_empty_state_blocks_community_requests to recipient.toShortString()
+            blindedRecipient?.blocksCommunityMessageRequests == true -> R.string.messageRequestsTurnedOff to recipient.toShortString()
+            // ACL TODO: And here
             else -> R.string.activity_conversation_empty_state_default to recipient.toShortString()
         }
         val showPlaceholder = adapter.itemCount == 0
@@ -1171,10 +1175,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun block(deleteThread: Boolean) {
+        val recipient = viewModel.recipient ?: return Log.w("Loki", "Recipient was null for block action")
         showSessionDialog {
-            title(R.string.RecipientPreferenceActivity_block_this_contact_question)
-            text(R.string.RecipientPreferenceActivity_you_will_no_longer_receive_messages_and_calls_from_this_contact)
-            destructiveButton(R.string.RecipientPreferenceActivity_block, R.string.AccessibilityId_block_confirm) {
+            title(R.string.block)
+            text(Phrase.from(context, R.string.blockDescription)
+                .put(NAME_KEY, recipient.name)
+                .format())
+            destructiveButton(R.string.block, R.string.AccessibilityId_block_confirm) {
                 viewModel.block()
                 if (deleteThread) {
                     viewModel.deleteThread()
@@ -1189,7 +1196,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val clip = ClipData.newPlainText("Session ID", sessionId)
         val manager = getSystemService(PassphraseRequiredActionBarActivity.CLIPBOARD_SERVICE) as ClipboardManager
         manager.setPrimaryClip(clip)
-        Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
     }
 
     override fun copyOpenGroupUrl(thread: Recipient) {
@@ -1201,7 +1208,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val clip = ClipData.newPlainText("Community URL", openGroup.joinURL)
         val manager = getSystemService(PassphraseRequiredActionBarActivity.CLIPBOARD_SERVICE) as ClipboardManager
         manager.setPrimaryClip(clip)
-        Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
     }
 
     override fun showDisappearingMessages(thread: Recipient) {
@@ -1214,14 +1221,19 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun unblock() {
-        showSessionDialog {
-            title(R.string.ConversationActivity_unblock_this_contact_question)
-            text(R.string.ConversationActivity_you_will_once_again_be_able_to_receive_messages_and_calls_from_this_contact)
-            destructiveButton(
-                R.string.ConversationActivity_unblock,
-                R.string.AccessibilityId_block_confirm
-            ) { viewModel.unblock() }
-            cancelButton()
+        val recipient = viewModel.recipient ?: return Log.w("Loki", "Recipient was null for unblock action")
+        if (recipient.isContactRecipient) {
+            showSessionDialog {
+                title(R.string.blockUnblock)
+                text(Phrase.from(context, R.string.blockUnblockDescription).put(NAME_KEY, recipient.name).format())
+                destructiveButton(
+                    R.string.blockUnblock,
+                    R.string.AccessibilityId_block_confirm
+                ) { viewModel.unblock() }
+                cancelButton()
+            }
+        } else {
+            Log.w("Loki", "Cannot unblock a user who is not a contact recipient - aborting unblock attempt.")
         }
     }
 
@@ -1692,7 +1704,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             showSessionDialog {
                 title(R.string.giphy_permission_title)
                 text(R.string.giphy_permission_message)
-                button(R.string.continue_2) {
+                button(R.string._continue) {
                     textSecurePreferences.setHasSeenGIFMetaDataWarning()
                     selectGif()
                 }
@@ -1739,7 +1751,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             }
 
             override fun onFailure(e: ExecutionException?) {
-                Toast.makeText(this@ConversationActivityV2, R.string.activity_conversation_attachment_prep_failed, Toast.LENGTH_LONG).show()
+                Toast.makeText(this@ConversationActivityV2, R.string.attachmentsErrorLoad, Toast.LENGTH_LONG).show()
             }
         }
         when (requestCode) {
@@ -1809,8 +1821,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         } else {
             Permissions.with(this)
                 .request(Manifest.permission.RECORD_AUDIO)
-                .withRationaleDialog(getString(R.string.ConversationActivity_to_send_audio_messages_allow_signal_access_to_your_microphone), R.drawable.ic_baseline_mic_48)
-                .withPermanentDenialDialog(getString(R.string.ConversationActivity_signal_requires_the_microphone_permission_in_order_to_send_audio_messages))
+                .withRationaleDialog(getString(R.string.permissionsMicrophoneAccessRequired), R.drawable.ic_baseline_mic_48)
+                .withPermanentDenialDialog(getString(R.string.permissionsMicrophoneAccessRequiredAndroid))
                 .execute()
         }
     }
@@ -1830,7 +1842,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             }
 
             override fun onFailure(e: ExecutionException) {
-                Toast.makeText(this@ConversationActivityV2, R.string.ConversationActivity_unable_to_record_audio, Toast.LENGTH_LONG).show()
+                Toast.makeText(this@ConversationActivityV2, R.string.audioUnableToRecord, Toast.LENGTH_LONG).show()
             }
         })
     }
@@ -1869,9 +1881,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private fun showDeleteLocallyUI(messages: Set<MessageRecord>) {
         val messageCount = 1
+        val titleStringId = if (messages.count() == 1) R.string.deleteMessage else R.string.deleteMessages
         showSessionDialog {
-            title(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
-            text(resources.getQuantityString(R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages, messageCount, messageCount))
+            title(resources.getString(titleStringId))
+            text(resources.getString(R.string.deleteMessagesDescriptionDevice))
             button(R.string.delete) { messages.forEach(viewModel::deleteLocally); endActionMode() }
             cancelButton(::endActionMode)
         }
@@ -1891,13 +1904,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
         // If the recipient is a community OR a Note-to-Self then we delete the message for everyone
         if (recipient.isCommunityRecipient || recipient.isLocalNumber) {
-            val messageCount = 1 // Only used for plurals string
             showSessionDialog {
-                title(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
-                text(resources.getQuantityString(R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages, messageCount, messageCount))
-                button(R.string.delete) {
-                    messages.forEach(viewModel::deleteForEveryone); endActionMode()
-                }
+                title(resources.getString(R.string.deleteMessage))
+                text(resources.getString(R.string.deleteMessageDescriptionEveryone))
+                button(R.string.delete) { messages.forEach(viewModel::deleteForEveryone); endActionMode() }
                 cancelButton { endActionMode() }
             }
         // Otherwise if this is a 1-on-1 conversation we may decided to delete just for ourselves or delete for everyone
@@ -1922,13 +1932,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
         else // Finally, if this is a closed group and you are deleting someone else's message(s) then we can only delete locally.
         {
-            val messageCount = 1
             showSessionDialog {
-                title(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
-                text(resources.getQuantityString(R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages, messageCount, messageCount))
-                button(R.string.delete) {
-                    messages.forEach(viewModel::deleteLocally); endActionMode()
-                }
+                title(resources.getString(R.string.deleteMessage))
+                text(resources.getString(R.string.deleteMessageDescriptionEveryone))
+                button(R.string.delete) { messages.forEach(viewModel::deleteLocally); endActionMode() }
                 cancelButton(::endActionMode)
             }
         }
@@ -1936,18 +1943,20 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     override fun banUser(messages: Set<MessageRecord>) {
         showSessionDialog {
-            title(R.string.ConversationFragment_ban_selected_user)
+            title(R.string.banUser)
+            // ACL TODO - We need a string for the below `text` element
             text("This will ban the selected user from this room. It won't ban them from other rooms.")
-            button(R.string.ban) { viewModel.banUser(messages.first().individualRecipient); endActionMode() }
+            button(R.string.banUser) { viewModel.banUser(messages.first().individualRecipient); endActionMode() }
             cancelButton(::endActionMode)
         }
     }
 
     override fun banAndDeleteAll(messages: Set<MessageRecord>) {
         showSessionDialog {
-            title(R.string.ConversationFragment_ban_selected_user)
+            title(R.string.banUser)
+            // ACL TODO - We need a string for the below `text` element
             text("This will ban the selected user from this room and delete all messages sent by them. It won't ban them from other rooms or delete the messages they sent there.")
-            button(R.string.ban) { viewModel.banAndDeleteAll(messages.first()); endActionMode() }
+            button(R.string.banUser) { viewModel.banAndDeleteAll(messages.first()); endActionMode() }
             cancelButton(::endActionMode)
         }
     }
@@ -1977,7 +1986,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         if (TextUtils.isEmpty(result)) { return }
         val manager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         manager.setPrimaryClip(ClipData.newPlainText("Message Content", result))
-        Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
         endActionMode()
     }
 
@@ -1986,7 +1995,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val clip = ClipData.newPlainText("Session ID", sessionID)
         val manager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         manager.setPrimaryClip(clip)
-        Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
         endActionMode()
     }
 
@@ -2058,7 +2067,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                         return@onAllGranted
                     }
                     Toast.makeText(this,
-                        resources.getQuantityString(R.plurals.ConversationFragment_error_while_saving_attachments_to_sd_card, 1),
+                        resources.getString(R.string.attachmentsSaveError),
                         Toast.LENGTH_LONG).show()
                 }
                 .execute()

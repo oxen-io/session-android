@@ -22,7 +22,7 @@ class BlockedContactsActivity: PassphraseRequiredActionBarActivity() {
         showSessionDialog {
             title(viewModel.getTitle(this@BlockedContactsActivity))
             text(viewModel.getMessage(this@BlockedContactsActivity))
-            button(R.string.continue_2) { viewModel.unblock() }
+            button(R.string._continue) { viewModel.unblock() }
             cancelButton()
         }
     }

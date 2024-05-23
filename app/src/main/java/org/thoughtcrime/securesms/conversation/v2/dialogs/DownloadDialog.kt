@@ -7,6 +7,7 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 import androidx.fragment.app.DialogFragment
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact
@@ -16,6 +17,7 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.createSessionDialog
 import org.thoughtcrime.securesms.database.SessionContactDatabase
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.CONVERSATION_NAME_KEY
 import javax.inject.Inject
 
 /** Shown when receiving media from a contact for the first time, to confirm that
@@ -29,15 +31,14 @@ class DownloadDialog(private val recipient: Recipient) : DialogFragment() {
         val sessionID = recipient.address.toString()
         val contact = contactDB.getContactWithSessionID(sessionID)
         val name = contact?.displayName(Contact.ContactContext.REGULAR) ?: sessionID
-        title(resources.getString(R.string.dialog_download_title, name))
-
-        val explanation = resources.getString(R.string.dialog_download_explanation, name)
+        title(resources.getString(R.string.attachmentsAutoDownloadModalTitle))
+        val explanation = Phrase.from(context, R.string.attachmentsAutoDownloadModalDescription).put(CONVERSATION_NAME_KEY, recipient.name).format()
         val spannable = SpannableStringBuilder(explanation)
         val startIndex = explanation.indexOf(name)
         spannable.setSpan(StyleSpan(Typeface.BOLD), startIndex, startIndex + name.count(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         text(spannable)
 
-        button(R.string.dialog_download_button_title, R.string.AccessibilityId_download_media) { trust() }
+        button(R.string.download, R.string.AccessibilityId_download_media) { trust() }
         cancelButton { dismiss() }
     }
 

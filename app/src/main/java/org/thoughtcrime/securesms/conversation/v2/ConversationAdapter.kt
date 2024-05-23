@@ -158,9 +158,9 @@ class ConversationAdapter(
                 if (message.isCallLog && message.isFirstMissedCall) {
                     viewHolder.view.setOnClickListener {
                         context.showSessionDialog {
-                            title(R.string.CallNotificationBuilder_first_call_title)
-                            text(R.string.CallNotificationBuilder_first_call_message)
-                            button(R.string.activity_settings_title) {
+                            title(R.string.callsMissedCallFrom)
+                            text(R.string.callsYouMissedCallPermissions)
+                            button(R.string.sessionSettings) {
                                 Intent(context, PrivacySettingsActivity::class.java)
                                     .let(context::startActivity)
                             }

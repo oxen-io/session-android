@@ -83,10 +83,10 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
         }
 
         showSessionDialog {
-            title(R.string.RecipientPreferenceActivity_block_this_contact_question)
-                text(R.string.message_requests_block_message)
-                button(R.string.recipient_preferences__block) { doBlock() }
-                button(R.string.no)
+            title(R.string.block)
+            text(R.string.blockDescription)
+            button(R.string.block) { doBlock() }
+            button(R.string.no)
         }
     }
 
@@ -123,7 +123,7 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
         }
 
         showSessionDialog {
-            text(resources.getString(R.string.message_requests_clear_all_message))
+            text(resources.getString(R.string.messageRequestsClearAllExplanation))
             button(R.string.yes) { doDeleteAllAndBlock() }
             button(R.string.no)
         }

@@ -123,7 +123,7 @@ fun ContentView.bindModel(query: String?, model: ContactModel) {
 fun ContentView.bindModel(model: SavedMessages) {
     binding.searchResultSubtitle.isVisible = false
     binding.searchResultTimestamp.isVisible = false
-    binding.searchResultTitle.setText(R.string.note_to_self)
+    binding.searchResultTitle.setText(R.string.noteToSelf)
     binding.searchResultProfilePicture.isVisible = false
     binding.searchResultSavedMessages.isVisible = true
 }

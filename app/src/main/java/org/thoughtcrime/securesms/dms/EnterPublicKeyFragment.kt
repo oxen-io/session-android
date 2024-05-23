@@ -78,7 +78,7 @@ class EnterPublicKeyFragment : Fragment() {
         val clipboard = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText("Session ID", hexEncodedPublicKey)
         clipboard.setPrimaryClip(clip)
-        Toast.makeText(requireContext(), R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), R.string.copied, Toast.LENGTH_SHORT).show()
     }
 
     private fun sharePublicKey() {

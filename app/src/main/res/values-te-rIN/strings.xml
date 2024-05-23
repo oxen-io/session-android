@@ -75,7 +75,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">నిరోధించు</string>
     <!-- Slide -->
-    <string name="Slide_image">చిత్రం</string>
+    <string name="image">చిత్రం</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">సమూహం నవీకరించబడింది</string>

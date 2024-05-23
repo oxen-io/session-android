@@ -72,7 +72,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">차단</string>
     <!-- Slide -->
-    <string name="Slide_image">이미지</string>
+    <string name="image">이미지</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">그룹이 갱신되었습니다</string>

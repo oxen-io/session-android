@@ -51,8 +51,8 @@ class NewMessageFragment : Fragment() {
         binding.viewPager.adapter = adapter
         val mediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, pos ->
             tab.text = when (pos) {
-                0 -> getString(R.string.activity_create_private_chat_enter_session_id_tab_title)
-                1 -> getString(R.string.activity_create_private_chat_scan_qr_code_tab_title)
+                0 -> getString(R.string.accountIdEnter)
+                1 -> getString(R.string.qrScan)
                 else -> throw IllegalStateException()
             }
         }
@@ -70,7 +70,7 @@ class NewMessageFragment : Fragment() {
                 createPrivateChat(hexEncodedPublicKey)
             }.failUi { exception ->
                 hideLoader()
-                var message = getString(R.string.fragment_enter_public_key_error_message)
+                var message = getString(R.string.onsErrorNotRecognised)
                 exception.localizedMessage?.let {
                     message = it
                 }

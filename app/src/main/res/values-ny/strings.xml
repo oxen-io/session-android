@@ -65,7 +65,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">Pakana</string>
     <!-- Slide -->
-    <string name="Slide_image">Shuyu</string>
+    <string name="image">Shuyu</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">Tantanakuy mushukyashka</string>

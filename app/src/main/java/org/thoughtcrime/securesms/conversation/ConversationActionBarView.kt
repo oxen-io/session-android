@@ -124,7 +124,7 @@ class ConversationActionBarView @JvmOverloads constructor(
                 context.getString(R.string.ConversationActivity_active_member_count, userCount)
             } else {
                 val userCount = groupDb.getGroupMemberAddresses(recipient.address.toGroupString(), true).size
-                Phrase.from(context.getString(R.string.members)).put(COUNT_KEY, userCount).toString()
+                Phrase.from(context.getString(R.string.members)).put(COUNT_KEY, userCount).format().toString()
             }
             settings += ConversationSetting(title, ConversationSettingType.MEMBER_COUNT)
         }

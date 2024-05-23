@@ -91,7 +91,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">حظر</string>
     <!-- Slide -->
-    <string name="Slide_image">صورة</string>
+    <string name="image">صورة</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">تم تحديث المحموعة</string>

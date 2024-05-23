@@ -529,11 +529,11 @@ class ConversationReactionOverlay : FrameLayout {
                 ?: return emptyList()
         val userPublicKey = getLocalNumber(context)!!
         // Select message
-        items += ActionItem(R.attr.menu_select_icon, R.string.conversation_context__menu_select, { handleActionItemClicked(Action.SELECT) }, R.string.AccessibilityId_select)
+        items += ActionItem(R.attr.menu_select_icon, R.string.select, { handleActionItemClicked(Action.SELECT) }, R.string.AccessibilityId_select)
         // Reply
         val canWrite = openGroup == null || openGroup.canWrite
         if (canWrite && !message.isPending && !message.isFailed && !message.isOpenGroupInvitation) {
-            items += ActionItem(R.attr.menu_reply_icon, R.string.conversation_context__menu_reply, { handleActionItemClicked(Action.REPLY) }, R.string.AccessibilityId_reply_message)
+            items += ActionItem(R.attr.menu_reply_icon, R.string.reply, { handleActionItemClicked(Action.REPLY) }, R.string.AccessibilityId_reply_message)
         }
         // Copy message text
         if (!containsControlMessage && hasText) {
@@ -541,7 +541,7 @@ class ConversationReactionOverlay : FrameLayout {
         }
         // Copy Session ID
         if (recipient.isGroupRecipient && !recipient.isCommunityRecipient && message.recipient.address.toString() != userPublicKey) {
-            items += ActionItem(R.attr.menu_copy_icon, R.string.activity_conversation_menu_copy_session_id, { handleActionItemClicked(Action.COPY_SESSION_ID) })
+            items += ActionItem(R.attr.menu_copy_icon, R.string.accountIDCopy, { handleActionItemClicked(Action.COPY_SESSION_ID) })
         }
         // Delete message
         if (userCanDeleteSelectedItems(context, message, openGroup, userPublicKey, blindedPublicKey)) {
@@ -549,17 +549,18 @@ class ConversationReactionOverlay : FrameLayout {
         }
         // Ban user
         if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey)) {
-            items += ActionItem(R.attr.menu_block_icon, R.string.conversation_context__menu_ban_user, { handleActionItemClicked(Action.BAN_USER) })
+            items += ActionItem(R.attr.menu_block_icon, R.string.banUser, { handleActionItemClicked(Action.BAN_USER) })
         }
+        // ACL TODO - The `banUser` string is just `Ban User` which doesn't really map to "Ban and Delete All"
         // Ban and delete all
         if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey)) {
-            items += ActionItem(R.attr.menu_trash_icon, R.string.conversation_context__menu_ban_and_delete_all, { handleActionItemClicked(Action.BAN_AND_DELETE_ALL) })
+            items += ActionItem(R.attr.menu_trash_icon, R.string.banUser, { handleActionItemClicked(Action.BAN_AND_DELETE_ALL) })
         }
         // Message detail
-        items += ActionItem(R.attr.menu_info_icon, R.string.conversation_context__menu_message_details, { handleActionItemClicked(Action.VIEW_INFO) })
+        items += ActionItem(R.attr.menu_info_icon, R.string.messageInfo, { handleActionItemClicked(Action.VIEW_INFO) })
         // Resend
         if (message.isFailed) {
-            items += ActionItem(R.attr.menu_reply_icon, R.string.conversation_context__menu_resend_message, { handleActionItemClicked(Action.RESEND) })
+            items += ActionItem(R.attr.menu_reply_icon, R.string.resend, { handleActionItemClicked(Action.RESEND) })
         }
         // Resync
         if (message.isSyncFailed) {

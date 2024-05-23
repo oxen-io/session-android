@@ -60,7 +60,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">Chặn</string>
     <!-- Slide -->
-    <string name="Slide_image">Ảnh</string>
+    <string name="image">Ảnh</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <!-- UpdateApkReadyListener -->

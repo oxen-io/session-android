@@ -132,7 +132,7 @@ class ConversationView : LinearLayout {
     }
 
     private fun getTitle(recipient: Recipient): String? = when {
-        recipient.isLocalNumber -> context.getString(R.string.note_to_self)
+        recipient.isLocalNumber -> context.getString(R.string.noteToSelf)
         else -> recipient.toShortString() // Internally uses the Contact API
     }
 

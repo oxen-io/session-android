@@ -65,7 +65,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">ปิดกั้น</string>
     <!-- Slide -->
-    <string name="Slide_image">ภาพ</string>
+    <string name="image">ภาพ</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">อัพเดตกลุ่มแล้ว</string>

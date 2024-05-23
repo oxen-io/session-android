@@ -366,37 +366,37 @@ class VisibleMessageView : LinearLayout {
         message.isFailed ->
             MessageStatusInfo(R.drawable.ic_delivery_status_failed,
                 resources.getColor(R.color.destructive, context.theme),
-                R.string.delivery_status_failed
+                R.string.messageStatusFailedToSend
             )
         message.isSyncFailed ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_failed,
                 context.getColor(R.color.accent_orange),
-                R.string.delivery_status_sync_failed
+                R.string.messageStatusFailedToSend
             )
         message.isPending ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sending,
                 context.getColorFromAttr(R.attr.message_status_color),
-                R.string.delivery_status_sending
+                R.string.sending
             )
         message.isSyncing || message.isResyncing ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sending,
                 context.getColorFromAttr(R.attr.message_status_color),
-                R.string.delivery_status_sending // We COULD tell the user that we're `syncing` (R.string.delivery_status_syncing) but it will likely make more sense to them if we say "Sending"
+                R.string.sending // We COULD tell the user that we're `syncing` (R.string.delivery_status_syncing) but it will likely make more sense to them if we say "Sending"
             )
         message.isRead || message.isIncoming ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_read,
                 context.getColorFromAttr(R.attr.message_status_color),
-                R.string.delivery_status_read
+                R.string.read
             )
         message.isSent ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sent,
                 context.getColorFromAttr(R.attr.message_status_color),
-                R.string.delivery_status_sent
+                R.string.disappearingMessagesSent
             )
         else -> {
             // The message isn't one we care about for message statuses we display to the user (i.e.,

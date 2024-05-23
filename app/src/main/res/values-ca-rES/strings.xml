@@ -78,7 +78,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">Bloca</string>
     <!-- Slide -->
-    <string name="Slide_image">Imatge</string>
+    <string name="image">Imatge</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">S\'ha actualitzat el grup</string>

@@ -12,9 +12,9 @@ import org.thoughtcrime.securesms.createSessionDialog
 class LinkPreviewDialog(private val onEnabled: () -> Unit) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {
-        title(R.string.dialog_link_preview_title)
-        text(R.string.dialog_link_preview_explanation)
-        button(R.string.dialog_link_preview_enable_button_title) { enable() }
+        title(R.string.linkPreviewsEnable)
+        text(R.string.linkPreviewsFirstDescription)
+        button(R.string.enable) { enable() }
         cancelButton { dismiss() }
     }
 

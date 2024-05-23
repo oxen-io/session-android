@@ -79,7 +79,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">Əngəllə</string>
     <!-- Slide -->
-    <string name="Slide_image">Təsvir</string>
+    <string name="image">Təsvir</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">Qrup yeniləndi</string>

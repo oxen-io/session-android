@@ -80,7 +80,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">Bloquer</string>
     <!-- Slide -->
-    <string name="Slide_image">Image</string>
+    <string name="image">Image</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">Le groupe a été mis à jour</string>

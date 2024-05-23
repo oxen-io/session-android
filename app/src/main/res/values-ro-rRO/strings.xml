@@ -82,7 +82,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">Blochează</string>
     <!-- Slide -->
-    <string name="Slide_image">Imagine</string>
+    <string name="image">Imagine</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">Grupul a fost actualizat</string>

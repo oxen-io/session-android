@@ -75,12 +75,12 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         val quoteIsLocalUser = localNumber != null && localNumber == author?.sessionID
 
         val authorDisplayName =
-            if (quoteIsLocalUser) context.getString(R.string.QuoteView_you)
+            if (quoteIsLocalUser) context.getString(R.string.onionRoutingPathYou)
             else author?.displayName(Contact.contextForRecipient(thread)) ?: "${authorPublicKey.take(4)}...${authorPublicKey.takeLast(4)}"
         binding.quoteViewAuthorTextView.text = authorDisplayName
         binding.quoteViewAuthorTextView.setTextColor(getTextColor(isOutgoingMessage))
         // Body
-        binding.quoteViewBodyTextView.text = if (isOpenGroupInvitation) resources.getString(R.string.open_group_invitation_view__open_group_invitation) else MentionUtilities.highlightMentions((body ?: "").toSpannable(), threadID, context)
+        binding.quoteViewBodyTextView.text = if (isOpenGroupInvitation) resources.getString(R.string.communityInvitation) else MentionUtilities.highlightMentions((body ?: "").toSpannable(), threadID, context)
         binding.quoteViewBodyTextView.setTextColor(getTextColor(isOutgoingMessage))
         // Accent line / attachment preview
         val hasAttachments = (attachments != null && attachments.asAttachments().isNotEmpty()) && !isOriginalMissing
@@ -98,12 +98,12 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                 attachments.audioSlide != null -> {
                     binding.quoteViewAttachmentPreviewImageView.setImageResource(R.drawable.ic_microphone)
                     binding.quoteViewAttachmentPreviewImageView.isVisible = true
-                    binding.quoteViewBodyTextView.text = resources.getString(R.string.Slide_audio)
+                    binding.quoteViewBodyTextView.text = resources.getString(R.string.audio)
                 }
                 attachments.documentSlide != null -> {
                     binding.quoteViewAttachmentPreviewImageView.setImageResource(R.drawable.ic_document_large_light)
                     binding.quoteViewAttachmentPreviewImageView.isVisible = true
-                    binding.quoteViewBodyTextView.text = resources.getString(R.string.document)
+                    binding.quoteViewBodyTextView.text = resources.getString(R.string.files)
                 }
                 attachments.thumbnailSlide != null -> {
                     val slide = attachments.thumbnailSlide!!
@@ -111,7 +111,7 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                     binding.quoteViewAttachmentThumbnailImageView.root.radius = toPx(4, resources)
                     binding.quoteViewAttachmentThumbnailImageView.root.setImageResource(glide, slide, false, null)
                     binding.quoteViewAttachmentThumbnailImageView.root.isVisible = true
-                    binding.quoteViewBodyTextView.text = if (MediaUtil.isVideo(slide.asAttachment())) resources.getString(R.string.Slide_video) else resources.getString(R.string.Slide_image)
+                    binding.quoteViewBodyTextView.text = if (MediaUtil.isVideo(slide.asAttachment())) resources.getString(R.string.video) else resources.getString(R.string.image)
                 }
             }
         }

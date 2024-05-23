@@ -79,7 +79,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">Bllokoje</string>
     <!-- Slide -->
-    <string name="Slide_image">Figurë</string>
+    <string name="image">Figurë</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">Grupi u përditësua</string>

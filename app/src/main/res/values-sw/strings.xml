@@ -62,7 +62,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">Zuia</string>
     <!-- Slide -->
-    <string name="Slide_image">picha</string>
+    <string name="image">picha</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">Kikundi kilichosasishwa</string>

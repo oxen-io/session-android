@@ -55,7 +55,6 @@
     <string name="via">Via</string>
     <string name="_error">Error</string>
     <string name="expand">Expand</string>
-    <string name="image">Image</string>
     <string name="hide">Hide</string>
     <string name="readReceipts">Read Receipts</string>
     <string name="typingIndicators">Typing Indicators</string>
@@ -118,7 +117,7 @@
     <string name="profileDisplayPicture">Display Picture</string>
     <string name="mediaMessage">Media message</string> <!-- ACL to confirm we are adding this - used to be `ThreadRecord_media_message` -->
 
-    <string name="Slide_image">Image</string>
+    <string name="image">Image</string>
     <string name="Unblock_dialog__title_single">Unblock %s</string>
     <string name="WebRtcCallActivity_Session_Call">Session Call</string>
     <string name="activity_create_closed_group_empty_state_button_title">Start a Session</string>

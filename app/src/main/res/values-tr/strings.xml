@@ -79,7 +79,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">Engelle</string>
     <!-- Slide -->
-    <string name="Slide_image">Görüntü</string>
+    <string name="image">Görüntü</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">Grup güncellendi</string>

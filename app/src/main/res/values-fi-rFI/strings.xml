@@ -79,7 +79,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">Estä</string>
     <!-- Slide -->
-    <string name="Slide_image">Kuva</string>
+    <string name="image">Kuva</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">Ryhmä päivitetty</string>

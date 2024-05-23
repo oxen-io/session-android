@@ -83,7 +83,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">Blokovať</string>
     <!-- Slide -->
-    <string name="Slide_image">Obrázok</string>
+    <string name="image">Obrázok</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">Skupina bola aktualizovaná</string>

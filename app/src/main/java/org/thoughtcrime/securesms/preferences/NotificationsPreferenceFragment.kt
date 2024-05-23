@@ -138,7 +138,7 @@ class NotificationsPreferenceFragment : ListSummaryPreferenceFragment() {
         override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
             val value = newValue as? Uri
             if (value == null || TextUtils.isEmpty(value.toString())) {
-                preference.setSummary(R.string.preferences__silent)
+                preference.setSummary(R.string.none)
             } else {
                 RingtoneManager.getRingtone(activity, value)
                     ?.getTitle(activity)
@@ -176,8 +176,8 @@ class NotificationsPreferenceFragment : ListSummaryPreferenceFragment() {
         @Suppress("unused")
         private val TAG = NotificationsPreferenceFragment::class.java.simpleName
         fun getSummary(context: Context): CharSequence = when (isNotificationsEnabled(context)) {
-                true -> R.string.ApplicationPreferencesActivity_On
-                false -> R.string.ApplicationPreferencesActivity_Off
+                true -> R.string.on
+                false -> R.string.off
             }.let(context::getString)
     }
 }

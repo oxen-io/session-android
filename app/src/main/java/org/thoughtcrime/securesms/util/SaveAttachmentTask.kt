@@ -32,8 +32,8 @@ import java.util.concurrent.TimeUnit
 class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int = 1) :
     ProgressDialogAsyncTask<SaveAttachmentTask.Attachment, Void, Pair<Int, String?>>(
         context,
-        context.resources.getQuantityString(R.plurals.ConversationFragment_saving_n_attachments, count, count),
-        context.resources.getQuantityString(R.plurals.ConversationFragment_saving_n_attachments_to_sd_card, count, count)
+        context.resources.getString(R.string.saving),
+        context.resources.getString(R.string.saving)
     ) {
 
     companion object {
@@ -47,12 +47,18 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
         @JvmOverloads
         fun showWarningDialog(context: Context, count: Int = 1, onAcceptListener: () -> Unit = {}) {
             context.showSessionDialog {
+                // ACL TODO - Also need a replacement for this `ConversationFragment_save_to_sd_card` ("Save to storage?")
                 title(R.string.ConversationFragment_save_to_sd_card)
                 iconAttribute(R.attr.dialog_alert_icon)
-                text(context.resources.getQuantityString(
-                    R.plurals.ConversationFragment_saving_n_media_to_storage_warning,
-                    count,
-                    count))
+
+                // ACL TODO - Need a replacement for the below, which was:
+                //<plurals name="ConversationFragment_saving_n_media_to_storage_warning">
+                //  <item quantity="one">Saving this media to storage will allow any other apps on your device to access it.\n\nContinue?</item>
+                //  <item quantity="other">Saving all %1$d media to storage will allow any other apps on your device to access them.\n\nContinue?</item>
+                //</plurals>
+                val txt = "Saving this media to storage will allow any other apps on your device to access it.\n\nContinue?"
+                text(txt)
+
                 button(R.string.yes) { onAcceptListener() }
                 button(R.string.no)
             }
@@ -235,18 +241,12 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
 
         when (result.first) {
             RESULT_FAILURE -> {
-                val message = context.resources.getQuantityText(
-                        R.plurals.ConversationFragment_error_while_saving_attachments_to_sd_card,
-                        attachmentCount)
+                val message = context.resources.getString(R.string.attachmentsSaveError)
                 Toast.makeText(context, message, Toast.LENGTH_LONG).show()
             }
 
             RESULT_SUCCESS -> {
-                val message = if (!TextUtils.isEmpty(result.second)) {
-                    context.resources.getString(R.string.SaveAttachmentTask_saved_to, result.second)
-                } else {
-                    context.resources.getString(R.string.SaveAttachmentTask_saved)
-                }
+                val message = context.resources.getString(R.string.saved)
                 Toast.makeText(context, message, Toast.LENGTH_LONG).show()
             }
 

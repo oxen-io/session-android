@@ -76,7 +76,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">屏蔽</string>
     <!-- Slide -->
-    <string name="Slide_image">图片</string>
+    <string name="image">图片</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">群组已更新</string>

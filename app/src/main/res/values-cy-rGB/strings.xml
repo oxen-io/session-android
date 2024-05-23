@@ -86,7 +86,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">Rhwystro</string>
     <!-- Slide -->
-    <string name="Slide_image">Llun</string>
+    <string name="image">Llun</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">Grŵp wedi\'i ddiweddaru</string>

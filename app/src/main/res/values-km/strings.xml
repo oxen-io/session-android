@@ -72,7 +72,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">ហាមឃាត់</string>
     <!-- Slide -->
-    <string name="Slide_image">រូបភាព</string>
+    <string name="image">រូបភាព</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">បានធ្វើបច្ចុប្បន្នភាពក្រុម</string>

@@ -78,9 +78,9 @@ class MessageDetailsViewModel @Inject constructor(
                 MessageDetailsState(
                     attachments = slides.map(::Attachment),
                     record = record,
-                    sent = dateSent.let(::Date).toString().let { TitledText(R.string.message_details_header__sent, it) },
-                    received = dateReceived.let(::Date).toString().let { TitledText(R.string.message_details_header__received, it) },
-                    error = lokiMessageDatabase.getErrorMessage(id)?.let { TitledText(R.string.message_details_header__error, it) },
+                    sent = dateSent.let(::Date).toString().let { TitledText(R.string.disappearingMessagesSent, it) },
+                    received = dateReceived.let(::Date).toString().let { TitledText(R.string.received, it) },
+                    error = lokiMessageDatabase.getErrorMessage(id)?.let { TitledText(R.string._error, it) },
                     senderInfo = individualRecipient.run { name?.let { TitledText(it, address.serialize()) } },
                     sender = individualRecipient,
                     thread = threadDb.getRecipientForThreadId(threadId)!!,
@@ -157,7 +157,7 @@ data class MessageDetailsState(
     val sender: Recipient? = null,
     val thread: Recipient? = null,
 ) {
-    val fromTitle = GetString(R.string.message_details_header__from)
+    val fromTitle = GetString(R.string.from)
     val canReply = record?.isOpenGroupInvitation != true
 }
 

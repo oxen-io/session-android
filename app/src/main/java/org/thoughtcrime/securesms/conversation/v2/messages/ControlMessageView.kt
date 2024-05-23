@@ -8,6 +8,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewControlMessageBinding
@@ -18,6 +19,7 @@ import org.thoughtcrime.securesms.conversation.disappearingmessages.Disappearing
 import org.thoughtcrime.securesms.conversation.disappearingmessages.expiryMode
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.NAME_KEY
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -76,8 +78,10 @@ class ControlMessageView : LinearLayout {
                 }
             }
             message.isMessageRequestResponse -> {
-                binding.textView.text =  context.getString(R.string.message_requests_accepted)
-                binding.root.contentDescription=context.getString(R.string.AccessibilityId_message_request_config_message)
+                binding.textView.text =  context.getString(R.string.messageRequestsAccepted)
+                binding.root.contentDescription = Phrase.from(context, R.string.messageRequestYouHaveAccepted)
+                    .put(NAME_KEY, message.individualRecipient.name)
+                    .format()
             }
             message.isCallLog -> {
                 val drawable = when {

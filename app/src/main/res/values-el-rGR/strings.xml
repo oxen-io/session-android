@@ -79,7 +79,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">Μπλοκάρισμα</string>
     <!-- Slide -->
-    <string name="Slide_image">Εικόνα</string>
+    <string name="image">Εικόνα</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">Η ομάδα ενημερώθηκε</string>

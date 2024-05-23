@@ -79,7 +79,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">Արգելափակել</string>
     <!-- Slide -->
-    <string name="Slide_image">Նկար</string>
+    <string name="image">Նկար</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">Խումբը թարմացված ք</string>

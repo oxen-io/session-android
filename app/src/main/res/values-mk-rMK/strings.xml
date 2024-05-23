@@ -57,7 +57,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">ဘလော့ လုပ်မည်</string>
     <!-- Slide -->
-    <string name="Slide_image">ပုံ</string>
+    <string name="image">ပုံ</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">အဖွဲ့ကို ပြင်ဆင်ပြီး</string>

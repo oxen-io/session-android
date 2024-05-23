@@ -47,7 +47,7 @@ class NewConversationHomeFragment : Fragment() {
         val adapter = ContactListAdapter(requireContext(), GlideApp.with(requireContext())) {
             delegate.onContactSelected(it.address.serialize())
         }
-        val unknownSectionTitle = getString(R.string.new_conversation_unknown_contacts_section_title)
+        val unknownSectionTitle = getString(R.string.unknown)
         val recipients = viewModel.recipients.value?.filter { !it.isGroupRecipient && it.address.serialize() != textSecurePreferences.getLocalNumber()!! } ?: emptyList()
         val contactGroups = recipients.map {
             val sessionId = it.address.serialize()

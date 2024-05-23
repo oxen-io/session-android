@@ -69,7 +69,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="block">Astengkirin</string>
     <!-- Slide -->
-    <string name="Slide_image">Wêne</string>
+    <string name="image">Wêne</string>
     <!-- SmsMessageRecord -->
     <!-- ThreadRecord -->
     <string name="groupUpdated">Kom hat hildemandin</string>
