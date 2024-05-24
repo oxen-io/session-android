@@ -66,8 +66,8 @@ public class UpdateApkReadyListener extends BroadcastReceiver {
 
     Notification notification = new NotificationCompat.Builder(context, NotificationChannels.APP_UPDATES)
         .setOngoing(true)
-        .setContentTitle(context.getString(R.string.UpdateApkReadyListener_Signal_update))
-        .setContentText(context.getString(R.string.UpdateApkReadyListener_a_new_version_of_signal_is_available_tap_to_update))
+        .setContentTitle(context.getString(R.string.updateSession))
+        .setContentText(context.getString(R.string.updateNewVersion))
         .setSmallIcon(R.drawable.ic_notification)
         .setColor(context.getResources().getColor(R.color.textsecure_primary))
         .setPriority(NotificationCompat.PRIORITY_HIGH)

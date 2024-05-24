@@ -12,8 +12,5 @@ class StringSubKeys {
         const val GROUP_NAME_KEY        = "group_name"
         const val NAME_KEY              = "name"
         const val TOTAL_COUNT_KEY       = "total_count"
-
-
-
     }
 }

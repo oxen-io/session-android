@@ -252,7 +252,7 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
 
   @Override
   public void onCameraError() {
-    Toast.makeText(this, R.string.MediaSendActivity_camera_unavailable, Toast.LENGTH_SHORT).show();
+    Toast.makeText(this, R.string.cameraErrorUnavailable, Toast.LENGTH_SHORT).show();
     setResult(RESULT_CANCELED, new Intent());
     finish();
   }
@@ -328,7 +328,7 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
 
       switch (error) {
         case ITEM_TOO_LARGE:
-          Toast.makeText(this, R.string.MediaSendActivity_an_item_was_removed_because_it_exceeded_the_size_limit, Toast.LENGTH_LONG).show();
+          Toast.makeText(this, R.string.attachmentsErrorSize, Toast.LENGTH_LONG).show();
           break;
         case TOO_MANY_ITEMS:
           int maxSelection = viewModel.getMaxSelection();
@@ -357,8 +357,8 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
   private void navigateToCamera() {
     Permissions.with(this)
                .request(Manifest.permission.CAMERA)
-               .withRationaleDialog(getString(R.string.ConversationActivity_to_capture_photos_and_video_allow_signal_access_to_the_camera), R.drawable.ic_baseline_photo_camera_48)
-               .withPermanentDenialDialog(getString(R.string.ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video))
+               .withRationaleDialog(getString(R.string.cameraGrantAccessDescription), R.drawable.ic_baseline_photo_camera_48)
+               .withPermanentDenialDialog(getString(R.string.cameraGrantAccessDenied))
                .onAllGranted(() -> {
                  Camera1Fragment fragment = getOrCreateCameraFragment();
                  getSupportFragmentManager().beginTransaction()
@@ -367,7 +367,7 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
                                             .addToBackStack(null)
                                             .commit();
                })
-               .onAnyDenied(() -> Toast.makeText(MediaSendActivity.this, R.string.ConversationActivity_signal_needs_camera_permissions_to_take_photos_or_video, Toast.LENGTH_LONG).show())
+               .onAnyDenied(() -> Toast.makeText(MediaSendActivity.this, R.string.cameraGrantAccessDescription, Toast.LENGTH_LONG).show())
                .execute();
   }
 
