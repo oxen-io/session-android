@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name" translatable="false">Session</string>
+
     <!-- Everything in this section is used by the app but missing from the CrowdIn translations as of 2024-03-14 -ACL -->
     <!-- ======================================================================================= -->
     <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
