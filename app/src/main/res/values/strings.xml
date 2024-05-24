@@ -316,6 +316,8 @@
     <string name="callsPermissionsRequired">Call Permissions Required</string>
     <string name="callsSettings">Calls (Beta)</string>
     <string name="cameraErrorUnavailable">Camera unavailable.</string>
+
+
     <string name="attachmentsErrorNoApp">Can\'t find an app to select media.</string>
     <string name="cancel">Cancel</string>
     <string name="attachmentsErrorTypes">Cannot attach images and video with other file types. Try sending other files in a separate message.</string>
@@ -657,6 +659,7 @@
     <string name="cameraGrantAccessDescription">Session needs camera access to take photos or videos.</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Session needs microphone access to send audio messages, but it has been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Microphone\".</string>
     <string name="cameraGrantAccessStorage">Session needs storage access to send photos and videos.</string>
+    <string name="cameraGrantAccessStorageDenied">Session needs storage access to send photos and videos, but it has been permanently denied. Please continue to app settings, select "Permissions", and enable "Storage".</string>
     <string name="updateSession">Session Update</string>
     <string name="notificationsSlowModeDescription">Session will occasionally check for new messages in the background.</string>
     <string name="set">Set</string>

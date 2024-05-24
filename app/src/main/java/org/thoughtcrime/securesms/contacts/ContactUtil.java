@@ -18,7 +18,7 @@ public final class ContactUtil {
     String  contactName = ContactUtil.getDisplayName(contact);
 
     if (!TextUtils.isEmpty(contactName)) {
-      return context.getString(R.string.MessageNotifier_contact_message, EmojiStrings.BUST_IN_SILHOUETTE, contactName);
+      return EmojiStrings.BUST_IN_SILHOUETTE + " " + contactName;
     }
 
     return SpanUtil.italic(context.getString(R.string.MessageNotifier_unknown_contact_message));

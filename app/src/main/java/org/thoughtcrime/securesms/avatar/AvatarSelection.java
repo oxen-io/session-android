@@ -105,7 +105,7 @@ public final class AvatarSelection {
       extraIntents.add(new Intent("network.loki.securesms.action.CLEAR_PROFILE_PHOTO"));
     }
 
-    Intent chooserIntent = Intent.createChooser(galleryIntent, context.getString(R.string.CreateProfileActivity_profile_photo));
+    Intent chooserIntent = Intent.createChooser(galleryIntent, context.getString(R.string.profileDisplayPicture));
 
     if (!extraIntents.isEmpty()) {
       chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, extraIntents.toArray(new Intent[0]));

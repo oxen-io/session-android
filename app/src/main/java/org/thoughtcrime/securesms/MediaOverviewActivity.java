@@ -176,8 +176,8 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
 
     @Override
     public CharSequence getPageTitle(int position) {
-      if      (position == 0) return getString(R.string.MediaOverviewActivity_Media);
-      else if (position == 1) return getString(R.string.MediaOverviewActivity_Documents);
+      if      (position == 0) return getString(R.string.media);
+      else if (position == 1) return getString(R.string.files);
       else                    throw new AssertionError();
     }
   }
@@ -330,8 +330,8 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
                 .onAllGranted(() -> {
                   new ProgressDialogAsyncTask<Void, Void, List<SaveAttachmentTask.Attachment>>(
                           context,
-                          R.string.MediaOverviewActivity_collecting_attachments,
-                          R.string.please_wait) {
+                          R.string.attachmentsCollecting,
+                          R.string.waitOneMoment) {
                     @Override
                     protected List<SaveAttachmentTask.Attachment> doInBackground(Void... params) {
                       List<SaveAttachmentTask.Attachment> attachments = new LinkedList<>();
@@ -382,8 +382,8 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
               recordCount,
               () -> new ProgressDialogAsyncTask<MediaDatabase.MediaRecord, Void, Void>(
                 requireContext(),
-                R.string.MediaOverviewActivity_Media_delete_progress_title,
-                R.string.MediaOverviewActivity_Media_delete_progress_message) {
+                R.string.deleting,
+                R.string.deleting) {
         @Override
         protected Void doInBackground(MediaDatabase.MediaRecord... records) {
           if (records == null || records.length == 0) {

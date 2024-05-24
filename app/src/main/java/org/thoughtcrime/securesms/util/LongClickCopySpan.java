@@ -24,14 +24,6 @@ public class LongClickCopySpan extends URLSpan {
     super(url);
   }
 
-  void onLongClick(View widget) {
-    Context context = widget.getContext();
-    String preparedUrl = prepareUrl(getURL());
-    copyUrl(context, preparedUrl);
-    Toast.makeText(context,
-            context.getString(R.string.ConversationItem_copied_text, preparedUrl), Toast.LENGTH_SHORT).show();
-  }
-
   @Override
   public void updateDrawState(@NonNull TextPaint ds) {
     super.updateDrawState(ds);

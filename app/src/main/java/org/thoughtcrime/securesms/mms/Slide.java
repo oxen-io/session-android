@@ -68,7 +68,7 @@ public abstract class Slide {
       // a voice note vs. other arbitrary audio attachments.
       if (attachment.isVoiceNote() || attachment.getFileName() == null ||
           attachment.getFileName().isEmpty()) {
-        attachmentString = context.getString(R.string.attachment_type_voice_message);
+        attachmentString = context.getString(R.string.messageVoice);
         return Optional.fromNullable("🎤 " + attachmentString);
       }
     }

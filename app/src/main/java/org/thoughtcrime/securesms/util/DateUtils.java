@@ -151,7 +151,7 @@ public class DateUtils extends android.text.format.DateUtils {
       return c.getString(R.string.DateUtils_just_now);
     } else if (isWithin(timestamp, 1, TimeUnit.HOURS)) {
       int mins = convertDelta(timestamp, TimeUnit.MINUTES);
-      return c.getResources().getString(R.string.DateUtils_minutes_ago, mins);
+      return mins + "m";
     } else if (isWithin(timestamp, 1, TimeUnit.DAYS)) {
       int hours = convertDelta(timestamp, TimeUnit.HOURS);
       return c.getResources().getQuantityString(R.plurals.hours_ago, hours, hours);
@@ -169,7 +169,7 @@ public class DateUtils extends android.text.format.DateUtils {
       return c.getString(R.string.DateUtils_just_now);
     } else if (isWithin(timestamp, 1, TimeUnit.HOURS)) {
       int mins = (int)TimeUnit.MINUTES.convert(System.currentTimeMillis() - timestamp, TimeUnit.MILLISECONDS);
-      return c.getResources().getString(R.string.DateUtils_minutes_ago, mins);
+      return mins + "m";
     } else {
       StringBuilder format = new StringBuilder();
       if      (isWithin(timestamp,   6, TimeUnit.DAYS)) format.append("EEE ");

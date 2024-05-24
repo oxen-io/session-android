@@ -156,7 +156,7 @@ class HomeActivityTests {
         // then the URL dialog should be displayed with a known punycode url
         val amazonPuny = "https://www.xn--mazon-wqa.com/"
 
-        val dialogPromptText = InstrumentationRegistry.getInstrumentation().targetContext.getString(R.string.dialog_open_url_explanation, amazonPuny)
+        val dialogPromptText = InstrumentationRegistry.getInstrumentation().targetContext.getString(R.string.urlOpenDescription, amazonPuny)
 
         onView(isRoot()).perform(waitFor(1000)) // no other way for this to work apparently
         onView(withText(dialogPromptText)).check(matches(isDisplayed()))

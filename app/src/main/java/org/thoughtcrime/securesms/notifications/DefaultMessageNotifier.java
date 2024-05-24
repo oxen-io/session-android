@@ -133,25 +133,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
   @Override
   public void notifyMessageDeliveryFailed(Context context, Recipient recipient, long threadId) {
-    if (visibleThread != threadId) {
-      Intent intent = new Intent(context, ConversationActivityV2.class);
-      intent.putExtra(ConversationActivityV2.ADDRESS, recipient.getAddress());
-      intent.putExtra(ConversationActivityV2.THREAD_ID, threadId);
-      intent.setData((Uri.parse("custom://" + SnodeAPI.getNowWithOffset())));
-
-      FailedNotificationBuilder builder = new FailedNotificationBuilder(context, TextSecurePreferences.getNotificationPrivacy(context), intent);
-      ((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE))
-        .notify((int)threadId, builder.build());
-    }
-  }
-
-  public void notifyMessagesPending(Context context) {
-    if (!TextSecurePreferences.isNotificationsEnabled(context)) {
-      return;
-    }
-
-    PendingMessageNotificationBuilder builder = new PendingMessageNotificationBuilder(context, TextSecurePreferences.getNotificationPrivacy(context));
-    ServiceUtil.getNotificationManager(context).notify(PENDING_MESSAGES_ID, builder.build());
+    // We do not provide notifications for message delivery failure.
   }
 
   @Override
@@ -491,9 +473,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
         }
       }
       if (messageRequest) {
-        body = SpanUtil.italic(context.getString(R.string.message_requests_notification));
-      } else if (KeyCachingService.isLocked(context)) {
-        body = SpanUtil.italic(context.getString(R.string.MessageNotifier_locked_message));
+        body = SpanUtil.italic(context.getString(R.string.messageRequestsNew));
       } else if (record.isMms() && !((MmsMessageRecord) record).getSharedContacts().isEmpty()) {
         Contact contact = ((MmsMessageRecord) record).getSharedContacts().get(0);
         body = ContactUtil.getStringSummary(context, contact);
@@ -506,7 +486,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
         int    italicLength = message.length() - body.length();
         body = SpanUtil.italic(message, italicLength);
       } else if (record.isOpenGroupInvitation()) {
-        body = SpanUtil.italic(context.getString(R.string.ThreadRecord_open_group_invitation));
+        body = SpanUtil.italic(context.getString(R.string.communityInvitation));
       }
       String userPublicKey = TextSecurePreferences.getLocalNumber(context);
       String blindedPublicKey = cache.get(threadId);

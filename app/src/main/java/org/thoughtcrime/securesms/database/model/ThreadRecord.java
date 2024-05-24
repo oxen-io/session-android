@@ -17,6 +17,10 @@
  */
 package org.thoughtcrime.securesms.database.model;
 
+import static org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.DISAPPEARING_MESSAGES_TYPE_KEY;
+import static org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.NAME_KEY;
+import static org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.TIME_KEY;
+
 import android.content.Context;
 import android.net.Uri;
 import android.text.Spannable;
@@ -26,6 +30,8 @@ import android.text.style.StyleSpan;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.squareup.phrase.Phrase;
 
 import org.session.libsession.utilities.ExpirationUtil;
 import org.session.libsession.utilities.recipients.Recipient;
@@ -81,53 +87,51 @@ public class ThreadRecord extends DisplayRecord {
   @Override
   public SpannableString getDisplayBody(@NonNull Context context) {
     if (isGroupUpdateMessage()) {
-      return emphasisAdded(context.getString(R.string.ThreadRecord_group_updated));
+      return emphasisAdded(context.getString(R.string.groupUpdated));
     } else if (isOpenGroupInvitation()) {
-      return emphasisAdded(context.getString(R.string.ThreadRecord_open_group_invitation));
-    } else if (SmsDatabase.Types.isFailedDecryptType(type)) {
-      return emphasisAdded(context.getString(R.string.MessageDisplayHelper_bad_encrypted_message));
-    } else if (SmsDatabase.Types.isNoRemoteSessionType(type)) {
-      return emphasisAdded(context.getString(R.string.MessageDisplayHelper_message_encrypted_for_non_existing_session));
-    } else if (SmsDatabase.Types.isEndSessionType(type)) {
-      return emphasisAdded(context.getString(R.string.ThreadRecord_secure_session_reset));
+      return emphasisAdded(context.getString(R.string.communityInvitation));
     } else if (MmsSmsColumns.Types.isLegacyType(type)) {
-      return emphasisAdded(context.getString(R.string.MessageRecord_message_encrypted_with_a_legacy_protocol_version_that_is_no_longer_supported));
+      return emphasisAdded(context.getString(R.string.messageErrorOld));
     } else if (MmsSmsColumns.Types.isDraftMessageType(type)) {
-      String draftText = context.getString(R.string.ThreadRecord_draft);
+      String draftText = context.getString(R.string.draft);
       return emphasisAdded(draftText + " " + getBody(), 0, draftText.length());
     } else if (SmsDatabase.Types.isOutgoingCall(type)) {
-      return emphasisAdded(context.getString(network.loki.messenger.R.string.ThreadRecord_called));
+      return emphasisAdded(context.getString(R.string.callsYouCalled));
     } else if (SmsDatabase.Types.isIncomingCall(type)) {
-      return emphasisAdded(context.getString(network.loki.messenger.R.string.ThreadRecord_called_you));
+      return emphasisAdded(context.getString(R.string.callsCalledYou));
     } else if (SmsDatabase.Types.isMissedCall(type)) {
-      return emphasisAdded(context.getString(network.loki.messenger.R.string.ThreadRecord_missed_call));
-    } else if (SmsDatabase.Types.isJoinedType(type)) {
-      return emphasisAdded(context.getString(R.string.ThreadRecord_s_is_on_signal, getRecipient().toShortString()));
+      return emphasisAdded(context.getString(R.string.callsMissedCallFrom));
     } else if (SmsDatabase.Types.isExpirationTimerUpdate(type)) {
       int seconds = (int) (getExpiresIn() / 1000);
       if (seconds <= 0) {
-        return emphasisAdded(context.getString(R.string.ThreadRecord_disappearing_messages_disabled));
+        return emphasisAdded(context.getString(R.string.disappearingMessagesTurnedOff));
       }
+      // ACL TODO - Get the disappearing msg type
       String time = ExpirationUtil.getExpirationDisplayValue(context, seconds);
-      return emphasisAdded(context.getString(R.string.ThreadRecord_disappearing_message_time_updated_to_s, time));
+      String txt = Phrase.from(context, R.string.disappearingMessagesSet)
+              .put(NAME_KEY, getRecipient().toShortString())
+              .put(TIME_KEY, time)
+              .put(DISAPPEARING_MESSAGES_TYPE_KEY, "ACL TO FIX - add disappearing messages type")
+              .format().toString();
+      return emphasisAdded(txt);
     } else if (MmsSmsColumns.Types.isMediaSavedExtraction(type)) {
-      return emphasisAdded(context.getString(R.string.ThreadRecord_media_saved_by_s, getRecipient().toShortString()));
+      String txt = Phrase.from(context, R.string.attachmentsMediaSaved)
+              .put(NAME_KEY, getRecipient().toShortString())
+              .format().toString();
+      return emphasisAdded(txt);
     } else if (MmsSmsColumns.Types.isScreenshotExtraction(type)) {
-      return emphasisAdded(context.getString(R.string.ThreadRecord_s_took_a_screenshot, getRecipient().toShortString()));
-    } else if (SmsDatabase.Types.isIdentityUpdate(type)) {
-      if (getRecipient().isGroupRecipient()) return emphasisAdded(context.getString(R.string.ThreadRecord_safety_number_changed));
-      else                                   return emphasisAdded(context.getString(R.string.ThreadRecord_your_safety_number_with_s_has_changed, getRecipient().toShortString()));
-    } else if (SmsDatabase.Types.isIdentityVerified(type)) {
-      return emphasisAdded(context.getString(R.string.ThreadRecord_you_marked_verified));
-    } else if (SmsDatabase.Types.isIdentityDefault(type)) {
-      return emphasisAdded(context.getString(R.string.ThreadRecord_you_marked_unverified));
+      String txt = Phrase.from(context, R.string.screenshotTaken)
+              .put(NAME_KEY, getRecipient().toShortString())
+              .format().toString();
+      return emphasisAdded(txt);
     } else if (MmsSmsColumns.Types.isMessageRequestResponse(type)) {
-      return emphasisAdded(context.getString(R.string.message_requests_accepted));
+      return emphasisAdded(context.getString(R.string.messageRequestsAccepted));
     } else if (getCount() == 0) {
-      return new SpannableString(context.getString(R.string.ThreadRecord_empty_message));
+      return new SpannableString(context.getString(R.string.messageEmpty));
     } else {
+      // This is shown when we receive a media message from an un-accepted contact
       if (TextUtils.isEmpty(getBody())) {
-        return new SpannableString(emphasisAdded(context.getString(R.string.ThreadRecord_media_message)));
+        return new SpannableString(emphasisAdded(context.getString(R.string.mediaMessage)));
       } else {
         return new SpannableString(getBody());
       }
