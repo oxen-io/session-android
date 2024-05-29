@@ -180,7 +180,7 @@ class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, Li
         // message we'll bail early if a link preview View already exists and just let
         // `updateLinkPreview` get called to update the existing View.
         if (linkPreview != null && linkPreviewDraftView != null) return
-
+        linkPreviewDraftView?.let(binding.inputBarAdditionalContentContainer::removeView)
         linkPreviewDraftView = LinkPreviewDraftView(context).also { it.delegate = this }
 
         // Add the link preview View. Note: If there's already a quote View in the 'additional

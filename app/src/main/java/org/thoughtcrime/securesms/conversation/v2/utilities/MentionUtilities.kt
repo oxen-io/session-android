@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.conversation.v2.utilities
 
+import android.app.Application
 import android.content.Context
 import android.graphics.Typeface
 import android.text.Spannable

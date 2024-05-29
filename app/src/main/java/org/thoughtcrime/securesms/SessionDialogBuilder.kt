@@ -7,7 +7,6 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.LinearLayout.LayoutParams
 import android.widget.LinearLayout.VERTICAL
 import android.widget.Space
 import android.widget.TextView
@@ -31,6 +30,7 @@ class SessionDialogBuilder(val context: Context) {
 
     private val dp20 = toPx(20, context.resources)
     private val dp40 = toPx(40, context.resources)
+    private val dp60 = toPx(60, context.resources)
 
     private val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
 
@@ -76,7 +76,7 @@ class SessionDialogBuilder(val context: Context) {
             }.let(topView::addView)
 
         Space(context).apply {
-            layoutParams = LayoutParams(0, dp20)
+            layoutParams = LinearLayout.LayoutParams(0, dp20)
         }.let(topView::addView)
     }
 
@@ -130,8 +130,7 @@ class SessionDialogBuilder(val context: Context) {
     ) = Button(context, null, 0, style).apply {
             setText(text)
             contentDescription = resources.getString(contentDescriptionRes)
-            layoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT, 1f)
-                .apply { setMargins(dp20) }
+            layoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, dp60, 1f)
             setOnClickListener {
                 listener.invoke()
                 if (dismiss) dismiss()

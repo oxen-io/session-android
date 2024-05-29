@@ -3,8 +3,6 @@
 package org.session.libsession.snode
 
 import android.os.Build
-import com.goterl.lazysodium.LazySodiumAndroid
-import com.goterl.lazysodium.SodiumAndroid
 import com.goterl.lazysodium.exceptions.SodiumException
 import com.goterl.lazysodium.interfaces.GenericHash
 import com.goterl.lazysodium.interfaces.PwHash
@@ -19,6 +17,7 @@ import nl.komponents.kovenant.functional.map
 import nl.komponents.kovenant.task
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.utilities.MessageWrapper
+import org.session.libsession.messaging.utilities.SodiumUtilities.sodium
 import org.session.libsignal.crypto.getRandomElement
 import org.session.libsignal.database.LokiAPIDatabaseProtocol
 import org.session.libsignal.protos.SignalServiceProtos
@@ -41,7 +40,6 @@ import kotlin.collections.set
 import kotlin.properties.Delegates.observable
 
 object SnodeAPI {
-    private val sodium by lazy { LazySodiumAndroid(SodiumAndroid()) }
     internal val database: LokiAPIDatabaseProtocol
         get() = SnodeModule.shared.storage
     private val broadcaster: Broadcaster

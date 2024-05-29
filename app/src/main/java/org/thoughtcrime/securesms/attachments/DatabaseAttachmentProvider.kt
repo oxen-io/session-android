@@ -5,6 +5,8 @@ import android.text.TextUtils
 import com.google.protobuf.ByteString
 import org.greenrobot.eventbus.EventBus
 import org.session.libsession.database.MessageDataProvider
+import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentState
@@ -184,10 +186,15 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
     override fun deleteMessage(messageID: Long, isSms: Boolean) {
         val messagingDatabase: MessagingDatabase = if (isSms)  DatabaseComponent.get(context).smsDatabase()
                                                    else DatabaseComponent.get(context).mmsDatabase()
+        val (threadId, timestamp) = runCatching { messagingDatabase.getMessageRecord(messageID).run { threadId to timestamp } }.getOrNull() ?: (null to null)
 
         messagingDatabase.deleteMessage(messageID)
         DatabaseComponent.get(context).lokiMessageDatabase().deleteMessage(messageID, isSms)
         DatabaseComponent.get(context).lokiMessageDatabase().deleteMessageServerHash(messageID, mms = !isSms)
+
+        threadId ?: return
+        timestamp ?: return
+        MessagingModuleConfiguration.shared.lastSentTimestampCache.delete(threadId, timestamp)
     }
 
     override fun deleteMessages(messageIDs: List<Long>, threadId: Long, isSms: Boolean) {
@@ -195,12 +202,17 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
         val messagingDatabase: MessagingDatabase = if (isSms)  DatabaseComponent.get(context).smsDatabase()
                                                    else DatabaseComponent.get(context).mmsDatabase()
 
+        val messages = messageIDs.mapNotNull { runCatching { messagingDatabase.getMessageRecord(it) }.getOrNull() }
+
         // Perform local delete
         messagingDatabase.deleteMessages(messageIDs.toLongArray(), threadId)
 
         // Perform online delete
         DatabaseComponent.get(context).lokiMessageDatabase().deleteMessages(messageIDs)
         DatabaseComponent.get(context).lokiMessageDatabase().deleteMessageServerHashes(messageIDs, mms = !isSms)
+
+        val threadId = messages.firstOrNull()?.threadId
+        threadId?.let{ MessagingModuleConfiguration.shared.lastSentTimestampCache.delete(it, messages.map { it.timestamp }) }
     }
 
     override fun updateMessageAsDeleted(timestamp: Long, author: String): Long? {

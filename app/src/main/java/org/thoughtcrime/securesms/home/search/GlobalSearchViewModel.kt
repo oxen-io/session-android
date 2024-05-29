@@ -24,8 +24,7 @@ class GlobalSearchViewModel @Inject constructor(private val searchRepository: Se
 
     private val executor = viewModelScope + SupervisorJob()
 
-    private val _result: MutableStateFlow<GlobalSearchResult> =
-            MutableStateFlow(GlobalSearchResult.EMPTY)
+    private val _result: MutableStateFlow<GlobalSearchResult> = MutableStateFlow(GlobalSearchResult.EMPTY)
 
     val result: StateFlow<GlobalSearchResult> = _result
 
@@ -41,13 +40,14 @@ class GlobalSearchViewModel @Inject constructor(private val searchRepository: Se
         _queryText
                 .buffer(onBufferOverflow = BufferOverflow.DROP_OLDEST)
                 .mapLatest { query ->
-                    if (query.trim().length < 2) {
+                    // Early exit on empty search query
+                    if (query.trim().isEmpty()) {
                         SearchResult.EMPTY
                     } else {
-                        // user input delay here in case we get a new query within a few hundred ms
-                        // this coroutine will be cancelled and expensive query will not be run if typing quickly
-                        // first query of 2 characters will be instant however
+                        // User input delay in case we get a new query within a few hundred ms this
+                        // coroutine will be cancelled and the expensive query will not be run.
                         delay(300)
+
                         val settableFuture = SettableFuture<SearchResult>()
                         searchRepository.query(query.toString(), settableFuture::set)
                         try {
@@ -64,6 +64,4 @@ class GlobalSearchViewModel @Inject constructor(private val searchRepository: Se
                 }
                 .launchIn(executor)
     }
-
-
 }

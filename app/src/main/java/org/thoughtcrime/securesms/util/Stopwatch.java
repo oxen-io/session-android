@@ -37,12 +37,10 @@ public class Stopwatch {
       for (int i = 1; i < splits.size(); i++) {
         out.append(splits.get(i).label).append(": ");
         out.append(splits.get(i).time - splits.get(i - 1).time);
-        out.append("  ");
+        out.append("ms  ");
       }
-
-      out.append("total: ").append(splits.get(splits.size() - 1).time - startTime);
+      out.append("total: ").append(splits.get(splits.size() - 1).time - startTime).append("ms.");
     }
-
     Log.d(tag, out.toString());
   }
 

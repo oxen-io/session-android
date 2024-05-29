@@ -61,11 +61,15 @@ class MarkReadReceiver : BroadcastReceiver() {
 
             val mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase()
 
+            val threadDb = DatabaseComponent.get(context).threadDatabase()
+
             // start disappear after read messages except TimerUpdates in groups.
             markedReadMessages
                 .filter { it.expiryType == ExpiryType.AFTER_READ }
                 .map { it.syncMessageId }
-                .filter { mmsSmsDatabase.getMessageForTimestamp(it.timetamp)?.run { isExpirationTimerUpdate && recipient.isClosedGroupRecipient } == false }
+                .filter { mmsSmsDatabase.getMessageForTimestamp(it.timetamp)?.run {
+                    isExpirationTimerUpdate && threadDb.getRecipientForThreadId(threadId)?.isGroupRecipient == true } == false
+                }
                 .forEach { messageExpirationManager.startDisappearAfterRead(it.timetamp, it.address.serialize()) }
 
             hashToDisappearAfterReadMessage(context, markedReadMessages)?.let {

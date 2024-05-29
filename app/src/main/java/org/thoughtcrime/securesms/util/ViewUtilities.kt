@@ -19,6 +19,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorRes
 import androidx.core.graphics.applyCanvas
+import org.session.libsignal.utilities.Log
 import kotlin.math.roundToInt
 
 fun View.contains(point: PointF): Boolean {
@@ -38,15 +39,19 @@ fun Context.getAccentColor() = getColorFromAttr(R.attr.colorAccent)
 // Method to grab the appropriate attribute for a message colour.
 // Note: This is an attribute, NOT a resource Id - see `getColorResourceIdFromAttr` for that.
 @AttrRes
-fun getMessageTextColourAttr(messageIsOutgoing: Boolean): Int =
-    if (messageIsOutgoing) R.attr.message_sent_text_color else R.attr.message_received_text_color
+fun getMessageTextColourAttr(messageIsOutgoing: Boolean): Int {
+    return if (messageIsOutgoing) R.attr.message_sent_text_color else R.attr.message_received_text_color
+}
 
 // Method to get an actual R.id.<SOME_COLOUR> resource Id from an attribute such as R.attr.message_sent_text_color etc.
 @ColorRes
 fun getColorResourceIdFromAttr(context: Context, attr: Int): Int {
-    val typedValue = TypedValue()
-    context.theme.resolveAttribute(attr, typedValue, true)
-    return typedValue.resourceId
+    val outTypedValue = TypedValue()
+    val successfullyFoundAttribute = context.theme.resolveAttribute(attr, outTypedValue, true)
+    if (successfullyFoundAttribute) { return outTypedValue.resourceId }
+
+    Log.w("ViewUtils", "Could not find colour attribute $attr in theme - using grey as a safe fallback")
+    return R.color.gray50
 }
 
 fun View.animateSizeChange(@DimenRes startSizeID: Int, @DimenRes endSizeID: Int, animationDuration: Long = 250) {

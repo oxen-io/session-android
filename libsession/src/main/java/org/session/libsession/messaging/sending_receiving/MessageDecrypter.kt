@@ -8,6 +8,7 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.sending_receiving.MessageReceiver.Error
 import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
+import org.session.libsession.messaging.utilities.SodiumUtilities.sodium
 import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
@@ -16,8 +17,6 @@ import org.session.libsignal.utilities.hexEncodedPublicKey
 import org.session.libsignal.utilities.removingIdPrefixIfNeeded
 
 object MessageDecrypter {
-
-    private val sodium by lazy { LazySodiumAndroid(SodiumAndroid()) }
 
     /**
      * Decrypts `ciphertext` using the Session protocol and `x25519KeyPair`.

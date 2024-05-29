@@ -78,8 +78,8 @@ public abstract class DisplayRecord {
   public int getReadReceiptCount() { return readReceiptCount; }
 
   public boolean isDelivered() {
-    return (deliveryStatus >= SmsDatabase.Status.STATUS_COMPLETE
-      && deliveryStatus < SmsDatabase.Status.STATUS_PENDING) || deliveryReceiptCount > 0;
+    return (deliveryStatus >= SmsDatabase.Status.STATUS_COMPLETE &&
+            deliveryStatus < SmsDatabase.Status.STATUS_PENDING) || deliveryReceiptCount > 0;
   }
 
   public boolean isSent() { return MmsSmsColumns.Types.isSentType(type); }
