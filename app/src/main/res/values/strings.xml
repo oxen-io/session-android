@@ -50,7 +50,6 @@
     <string name="BucketedThreadMedia_This_week">This week</string>
     <string name="BucketedThreadMedia_Today">Today</string>
     <string name="BucketedThreadMedia_Yesterday">Yesterday</string>
-    <string name="ConversationActivity_active_member_count">%1$d active members</string>
     <string name="ConversationActivity_copy_open_group_url">Copy Community URL</string>
     <string name="ConversationActivity_muted_until_date">Muted until %1$s</string>
     <string name="ConversationActivity_send_after_approval">You will be able to send voice messages and attachments once the recipient has approved this message request</string>
@@ -532,6 +531,7 @@
     <string name="media">Media</string>
     <string name="mediaMessage">Media message</string> <!-- ACL to confirm we are adding this - used to be `ThreadRecord_media_message` -->
     <string name="members">{count} members</string>
+    <string name="membersActive">{count} active members</string>
     <string name="membersAddAccountIdOrOns">Add Account ID or ONS</string>
     <string name="membersInvite">Invite Contacts</string>
     <string name="membersInviteSend">Send Invite</string>

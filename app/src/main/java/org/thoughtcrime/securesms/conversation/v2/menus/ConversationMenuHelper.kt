@@ -16,6 +16,7 @@ import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
+import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.leave
@@ -38,6 +39,7 @@ import org.thoughtcrime.securesms.service.WebRtcCallService
 import org.thoughtcrime.securesms.showMuteDialog
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.BitmapUtil
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.GROUP_NAME_KEY
 import java.io.IOException
 
 object ConversationMenuHelper {
@@ -274,13 +276,21 @@ object ConversationMenuHelper {
         val sessionID = TextSecurePreferences.getLocalNumber(context)
         val isCurrentUserAdmin = admins.any { it.toString() == sessionID }
         val message = if (isCurrentUserAdmin) {
-            // ACL TODO - we need a proper string for this!
-            "Because you are the creator of this group it will be deleted for everyone. This cannot be undone."
+            Phrase.from(context, R.string.groupLeaveDescriptionAdmin)
+                .put(GROUP_NAME_KEY, group.title)
+                .format().toString()
         } else {
-            context.resources.getString(R.string.groupLeaveDescription)
+            Phrase.from(context, R.string.groupLeaveDescription)
+                .put(GROUP_NAME_KEY, group.title)
+                .format().toString()
         }
 
-        fun onLeaveFailed() = Toast.makeText(context, R.string.groupLeaveErrorFailed, Toast.LENGTH_LONG).show()
+        fun onLeaveFailed() {
+            val txt = Phrase.from(context, R.string.groupLeaveErrorFailed)
+                .put(GROUP_NAME_KEY, group.title)
+                .format().toString()
+            Toast.makeText(context, txt, Toast.LENGTH_LONG).show()
+        }
 
         context.showSessionDialog {
             title(R.string.groupLeave)

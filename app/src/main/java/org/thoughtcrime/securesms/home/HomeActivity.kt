@@ -552,7 +552,9 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     private fun blockConversation(thread: ThreadRecord) {
         showSessionDialog {
             title(R.string.block)
-            text(R.string.blockDescription)
+            text(Phrase.from(context, R.string.blockDescription)
+                .put(NAME_KEY, thread.recipient.name)
+                .format())
             button(R.string.block) {
                 lifecycleScope.launch(Dispatchers.IO) {
                     storage.setBlocked(listOf(thread.recipient), true)

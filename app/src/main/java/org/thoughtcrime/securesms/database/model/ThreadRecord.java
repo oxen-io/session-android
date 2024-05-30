@@ -35,6 +35,7 @@ import com.squareup.phrase.Phrase;
 
 import org.session.libsession.utilities.ExpirationUtil;
 import org.session.libsession.utilities.recipients.Recipient;
+import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.database.MmsSmsColumns;
 import org.thoughtcrime.securesms.database.SmsDatabase;
 
@@ -58,7 +59,8 @@ public class ThreadRecord extends DisplayRecord {
   private           final long    expiresIn;
   private           final long    lastSeen;
   private           final boolean pinned;
-  private           final int initialRecipientHash;
+  private           final int     initialRecipientHash;
+  private           final long    dateSent;
 
   public ThreadRecord(@NonNull String body, @Nullable Uri snippetUri,
                       @Nullable MessageRecord lastMessage, @NonNull Recipient recipient, long date, long count, int unreadCount,
@@ -67,21 +69,50 @@ public class ThreadRecord extends DisplayRecord {
                       long lastSeen, int readReceiptCount, boolean pinned)
   {
     super(body, recipient, date, date, threadId, status, deliveryReceiptCount, snippetType, readReceiptCount);
-    this.snippetUri         = snippetUri;
-    this.lastMessage        = lastMessage;
-    this.count              = count;
-    this.unreadCount        = unreadCount;
-    this.unreadMentionCount = unreadMentionCount;
-    this.distributionType   = distributionType;
-    this.archived           = archived;
-    this.expiresIn          = expiresIn;
-    this.lastSeen           = lastSeen;
-    this.pinned             = pinned;
+    this.snippetUri           = snippetUri;
+    this.lastMessage          = lastMessage;
+    this.count                = count;
+    this.unreadCount          = unreadCount;
+    this.unreadMentionCount   = unreadMentionCount;
+    this.distributionType     = distributionType;
+    this.archived             = archived;
+    this.expiresIn            = expiresIn;
+    this.lastSeen             = lastSeen;
+    this.pinned               = pinned;
     this.initialRecipientHash = recipient.hashCode();
+    this.dateSent             = date;
   }
 
   public @Nullable Uri getSnippetUri() {
     return snippetUri;
+  }
+
+  private String getName() {
+    String name = getRecipient().getName();
+    if (name == null) {
+      Log.w("ACL", "Got a null name - using: Unknown");
+      name = "Unknown";
+    }
+    return name;
+  }
+
+  private String getDisappearingMsgExpiryTypeString(Context context) {
+      MessageRecord lm = this.lastMessage;
+      if (lm == null) {
+        Log.w("ThreadRecord", "Could not get last message to determine disappearing msg type.");
+        return "Unknown";
+      }
+      long expireStarted = lm.getExpireStarted();
+
+      // Note: This works because expireStarted is 0 for messages which are 'Disappear after read'
+      // while it's a touch higher than the sent timestamp for "Disappear after send". We could then
+      // use `expireStarted == 0`, but that's not how it's done in UpdateMessageBuilder so to play
+      // it same I'll assume there's a reason for this and follow suit.
+      // Also: `this.lastMessage.getExpiresIn()` is available.
+      if (expireStarted >= dateSent) {
+          return context.getString(R.string.MessageRecord_state_sent);
+      }
+      return context.getString(R.string.MessageRecord_state_read);
   }
 
   @Override
@@ -96,32 +127,45 @@ public class ThreadRecord extends DisplayRecord {
       String draftText = context.getString(R.string.draft);
       return emphasisAdded(draftText + " " + getBody(), 0, draftText.length());
     } else if (SmsDatabase.Types.isOutgoingCall(type)) {
-      return emphasisAdded(context.getString(R.string.callsYouCalled));
+      String txt = Phrase.from(context, R.string.callsYouCalled)
+              .put(NAME_KEY, getName())
+              .format().toString();
+      return emphasisAdded(txt);
     } else if (SmsDatabase.Types.isIncomingCall(type)) {
-      return emphasisAdded(context.getString(R.string.callsCalledYou));
+      String txt = Phrase.from(context, R.string.callsCalledYou)
+              .put(NAME_KEY, getName())
+              .format().toString();
+      return emphasisAdded(txt);
     } else if (SmsDatabase.Types.isMissedCall(type)) {
-      return emphasisAdded(context.getString(R.string.callsMissedCallFrom));
+      String txt = Phrase.from(context, R.string.callsMissedCallFrom)
+              .put(NAME_KEY, getName())
+              .format().toString();
+      return emphasisAdded(txt);
     } else if (SmsDatabase.Types.isExpirationTimerUpdate(type)) {
       int seconds = (int) (getExpiresIn() / 1000);
       if (seconds <= 0) {
-        return emphasisAdded(context.getString(R.string.disappearingMessagesTurnedOff));
+        String txt = Phrase.from(context, R.string.disappearingMessagesTurnedOff)
+                .put(NAME_KEY, getName())
+                .format().toString();
+        return emphasisAdded(txt);
       }
-      // ACL TODO - Get the disappearing msg type
+      // Implied that disappearing messages is enabled..
       String time = ExpirationUtil.getExpirationDisplayValue(context, seconds);
+      String disappearAfterWhat = getDisappearingMsgExpiryTypeString(context); // Disappear after send or read?
       String txt = Phrase.from(context, R.string.disappearingMessagesSet)
-              .put(NAME_KEY, getRecipient().toShortString())
+              .put(NAME_KEY, getName())
               .put(TIME_KEY, time)
-              .put(DISAPPEARING_MESSAGES_TYPE_KEY, "ACL TO FIX - add disappearing messages type")
+              .put(DISAPPEARING_MESSAGES_TYPE_KEY, disappearAfterWhat)
               .format().toString();
       return emphasisAdded(txt);
     } else if (MmsSmsColumns.Types.isMediaSavedExtraction(type)) {
       String txt = Phrase.from(context, R.string.attachmentsMediaSaved)
-              .put(NAME_KEY, getRecipient().toShortString())
+              .put(NAME_KEY, getName())
               .format().toString();
       return emphasisAdded(txt);
     } else if (MmsSmsColumns.Types.isScreenshotExtraction(type)) {
       String txt = Phrase.from(context, R.string.screenshotTaken)
-              .put(NAME_KEY, getRecipient().toShortString())
+              .put(NAME_KEY, getName())
               .format().toString();
       return emphasisAdded(txt);
     } else if (MmsSmsColumns.Types.isMessageRequestResponse(type)) {

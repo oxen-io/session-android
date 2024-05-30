@@ -32,7 +32,9 @@ class DownloadDialog(private val recipient: Recipient) : DialogFragment() {
         val contact = contactDB.getContactWithSessionID(sessionID)
         val name = contact?.displayName(Contact.ContactContext.REGULAR) ?: sessionID
         title(resources.getString(R.string.attachmentsAutoDownloadModalTitle))
-        val explanation = Phrase.from(context, R.string.attachmentsAutoDownloadModalDescription).put(CONVERSATION_NAME_KEY, recipient.name).format()
+        val explanation = Phrase.from(context, R.string.attachmentsAutoDownloadModalDescription)
+            .put(CONVERSATION_NAME_KEY, recipient.name)
+            .format()
         val spannable = SpannableStringBuilder(explanation)
         val startIndex = explanation.indexOf(name)
         spannable.setSpan(StyleSpan(Typeface.BOLD), startIndex, startIndex + name.count(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)

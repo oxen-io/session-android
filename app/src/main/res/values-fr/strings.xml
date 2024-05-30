@@ -31,7 +31,7 @@
     <string name="message">Message</string>
     <string name="ConversationActivity_muted_until_date">Son désactivé jusqu\'à %1$s</string>
     <string name="notificationsMuted">En sourdine</string>
-    <string name="ConversationActivity_active_member_count">%1$d membres actifs</string>
+    <string name="membersActive">{count} membres actifs</string>
     <string name="blockUnblock">Débloquer</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Session exige l’autorisation Microphone afin d’envoyer des messages audio, mais elle a été refusée définitivement. Veuillez accéder au menu des paramètres des applis, sélectionner « Autorisations » et activer « Microphone ».</string>
     <string name="callsPermissionsRequired">Autorisations d\'appel requises</string>

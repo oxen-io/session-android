@@ -9,12 +9,14 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.calls.WebRtcCallActivity
 import org.thoughtcrime.securesms.notifications.NotificationChannels
 import org.thoughtcrime.securesms.preferences.SettingsActivity
 import org.thoughtcrime.securesms.service.WebRtcCallService
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.NAME_KEY
 
 class CallNotificationBuilder {
 
@@ -34,21 +36,26 @@ class CallNotificationBuilder {
         }
 
         @JvmStatic
-        fun getFirstCallNotification(context: Context): Notification {
+        fun getFirstCallNotification(context: Context, callerName: String): Notification {
             val contentIntent = Intent(context, SettingsActivity::class.java)
 
             val pendingIntent = PendingIntent.getActivity(context, 0, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
-            val text = context.getString(R.string.callsYouMissedCallPermissions)
+            val titleTxt = Phrase.from(context, R.string.callsMissedCallFrom)
+                .put(NAME_KEY, callerName)
+                .format().toString()
+            val bodyTxt = Phrase.from(context, R.string.callsYouMissedCallPermissions)
+                .put(NAME_KEY, callerName)
+                .format().toString()
 
             val builder = NotificationCompat.Builder(context, NotificationChannels.CALLS)
                     .setSound(null)
                     .setSmallIcon(R.drawable.ic_baseline_call_24)
                     .setContentIntent(pendingIntent)
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setContentTitle(context.getString(R.string.callsMissedCallFrom))
-                    .setContentText(text)
-                    .setStyle(NotificationCompat.BigTextStyle().bigText(text))
+                    .setContentTitle(titleTxt)
+                    .setContentText(bodyTxt)
+                    .setStyle(NotificationCompat.BigTextStyle().bigText(bodyTxt))
                     .setAutoCancel(true)
 
             return builder.build()
@@ -67,9 +74,10 @@ class CallNotificationBuilder {
                     .setContentIntent(pendingIntent)
                     .setOngoing(true)
 
-
+            var recipName = "Unknown"
             recipient?.name?.let { name ->
                 builder.setContentTitle(name)
+                recipName = name
             }
 
             when (type) {
@@ -79,7 +87,8 @@ class CallNotificationBuilder {
                 }
                 TYPE_INCOMING_PRE_OFFER,
                 TYPE_INCOMING_RINGING -> {
-                    builder.setContentText(context.getString(R.string.callsIncoming))
+                    val txt = Phrase.from(context, R.string.callsIncoming).put(NAME_KEY, recipName).format()
+                    builder.setContentText(txt)
                             .setCategory(NotificationCompat.CATEGORY_CALL)
                     builder.addAction(getServiceNotificationAction(
                             context,
@@ -87,7 +96,7 @@ class CallNotificationBuilder {
                             R.drawable.ic_close_grey600_32dp,
                             R.string.decline
                     ))
-                    // if notifications aren't enabled, we will trigger the intent from WebRtcCallService
+                    // If notifications aren't enabled, we will trigger the intent from WebRtcCallService
                     builder.setFullScreenIntent(getFullScreenPendingIntent(
                         context
                     ), true)

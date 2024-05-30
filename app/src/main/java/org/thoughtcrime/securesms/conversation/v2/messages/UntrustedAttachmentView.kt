@@ -39,7 +39,9 @@ class UntrustedAttachmentView: LinearLayout {
         val iconDrawable = ContextCompat.getDrawable(context,iconRes)!!
         iconDrawable.mutate().setTint(textColor)
 
-        val text = Phrase.from(context, R.string.attachmentsTapToDownload).put(FILE_TYPE_KEY, stringRes).format()
+        val text = Phrase.from(context, R.string.attachmentsTapToDownload)
+            .put(FILE_TYPE_KEY, stringRes)
+            .format()
         binding.untrustedAttachmentTitle.text = text
 
         binding.untrustedAttachmentIcon.setImageDrawable(iconDrawable)
