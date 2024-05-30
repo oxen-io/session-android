@@ -155,7 +155,6 @@
     <string name="sessionNotifications">Notifikasi</string>
     <string name="notificationsLedColor">Warna LED</string>
     <string name="notificationsVibrate">Getar</string>
-    <string name="preferences__trim_all_conversations_now">Potong semua percakapan sekarang</string>
     <string name="_default">Baku</string>
     <string name="readReceipts">Laporan dibaca</string>
     <string name="typingIndicators">Indikator mengetik</string>

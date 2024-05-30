@@ -187,7 +187,6 @@
     <string name="notificationsLedColor">Šviesos diodo spalva</string>
     <string name="notificationsSound">Garsas</string>
     <string name="notificationsVibrate">Vibruoti</string>
-    <string name="preferences__trim_all_conversations_now">Išvalyti visus pokalbius dabar</string>
     <string name="_default">Numatytoji</string>
     <string name="incognitoKeyboard">Inkognito klaviatūra</string>
     <string name="readReceipts">Pranešimai apie žinučių skaitymą</string>

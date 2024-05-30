@@ -188,7 +188,6 @@
     <string name="notificationsLedColor">Колір LED</string>
     <string name="notificationsSound">Звук</string>
     <string name="notificationsVibrate">Вібрувати</string>
-    <string name="preferences__trim_all_conversations_now">Обрізати усі розмови зараз</string>
     <string name="_default">Типово</string>
     <string name="incognitoKeyboard">Клавіатура в режимі \"інкогніто\"</string>
     <string name="readReceipts">Звіти про прочитання</string>

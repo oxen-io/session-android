@@ -172,7 +172,6 @@
     <string name="notificationsLedColor">LED色</string>
     <string name="notificationsSound">着信音</string>
     <string name="notificationsVibrate">振動</string>
-    <string name="preferences__trim_all_conversations_now">全会話で古いメッセージを削減する</string>
     <string name="_default">初期設定の言語</string>
     <string name="incognitoKeyboard">プライバシーキーボード</string>
     <string name="readReceipts">既読通知</string>

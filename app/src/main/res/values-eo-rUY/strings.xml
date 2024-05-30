@@ -177,7 +177,6 @@
     <string name="notificationsLedColor">LED-a koloro</string>
     <string name="notificationsSound">Sono</string>
     <string name="notificationsVibrate">Vibrado</string>
-    <string name="preferences__trim_all_conversations_now">Mallongigi ĉiujn interparolojn nun</string>
     <string name="_default">Defaŭlta</string>
     <string name="incognitoKeyboard">Inkognita klavaro</string>
     <string name="readReceipts">Legokonfirmoj</string>

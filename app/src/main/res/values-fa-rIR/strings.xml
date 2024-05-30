@@ -178,7 +178,6 @@
     <string name="notificationsLedColor">رنگ چراغ ال‌ای‌دی</string>
     <string name="notificationsSound">صدا</string>
     <string name="notificationsVibrate">لرزش</string>
-    <string name="preferences__trim_all_conversations_now">حذف پیام‌های قدیمی، همین حالا</string>
     <string name="_default">پیش فرض</string>
     <string name="incognitoKeyboard">کیبورد ناشناس</string>
     <string name="readReceipts">رسیدهای خواندن</string>

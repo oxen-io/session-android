@@ -185,7 +185,6 @@
     <string name="notificationsLedColor">LED farba</string>
     <string name="notificationsSound">Zvuk</string>
     <string name="notificationsVibrate">Vibrácie</string>
-    <string name="preferences__trim_all_conversations_now">Premazať všetky konverzácie teraz</string>
     <string name="_default">Štandardné nastavenie</string>
     <string name="incognitoKeyboard">Inkognito klávesnica</string>
     <string name="readReceipts">Potvrdenia o prečítaní</string>

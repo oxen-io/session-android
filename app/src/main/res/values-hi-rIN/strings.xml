@@ -177,7 +177,6 @@
     <string name="notificationsLedColor">LED रंग </string>
     <string name="notificationsSound">आवाज़ </string>
     <string name="notificationsVibrate"> वाइब्रेट</string>
-    <string name="preferences__trim_all_conversations_now">अब सभी वार्तालापों को ट्रिम करें</string>
     <string name="_default">डिफ़ॉल्ट</string>
     <string name="incognitoKeyboard">गुप्त कीबोर्ड</string>
     <string name="readReceipts">पढ़ने की रसीदें</string>

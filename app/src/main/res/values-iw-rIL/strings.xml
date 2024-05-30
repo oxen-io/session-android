@@ -184,7 +184,6 @@
     <string name="notificationsLedColor">צבע LED</string>
     <string name="notificationsSound">קול</string>
     <string name="notificationsVibrate">רטט</string>
-    <string name="preferences__trim_all_conversations_now">קצץ את כל השיחות כעת</string>
     <string name="_default">ברירת מחדל</string>
     <string name="incognitoKeyboard">מקלדת סמויה</string>
     <string name="readReceipts">אישורי קריאה</string>

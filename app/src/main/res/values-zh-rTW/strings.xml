@@ -172,7 +172,6 @@
     <string name="notificationsLedColor">LED燈號顏色</string>
     <string name="notificationsSound">提示音效</string>
     <string name="notificationsVibrate">震動</string>
-    <string name="preferences__trim_all_conversations_now">現在開始精簡所有的對話群組</string>
     <string name="_default">預設</string>
     <string name="incognitoKeyboard">隱私鍵盤</string>
     <string name="readReceipts">已讀標記</string>

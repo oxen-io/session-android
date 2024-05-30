@@ -121,7 +121,6 @@
     <string name="notificationsLedColor">Langi ya screen eraga</string>
     <string name="notificationsSound">Doboozi</string>
     <string name="notificationsVibrate">Okuwuluguma</string>
-    <string name="preferences__trim_all_conversations_now">sala ku mboozi zona kati</string>
     <string name="_default">wifi calling compatiblity mode</string>
     <string name="conversationsMessageTrimming">Okuyimpaya obubaka</string>
     <!-- **************************************** -->

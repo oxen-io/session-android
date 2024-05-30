@@ -171,7 +171,6 @@
     <string name="notificationsLedColor">LED цвят</string>
     <string name="notificationsSound">Мелодия</string>
     <string name="notificationsVibrate">Вибрация</string>
-    <string name="preferences__trim_all_conversations_now">Скъси всички разговори сега</string>
     <string name="_default">По подразбиране</string>
     <string name="incognitoKeyboard">Тайна клавиатура</string>
     <string name="readReceipts">Потвърждения за прочитане</string>

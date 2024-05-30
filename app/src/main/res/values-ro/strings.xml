@@ -182,7 +182,6 @@
     <string name="notificationsLedColor">Culoare LED</string>
     <string name="notificationsSound">Sunet</string>
     <string name="notificationsVibrate">Vibrează</string>
-    <string name="preferences__trim_all_conversations_now">Scurtează acum toate conversaţiile </string>
     <string name="_default">Implicit</string>
     <string name="incognitoKeyboard">Tastatură incognito</string>
     <string name="readReceipts">Confirmări de citire</string>

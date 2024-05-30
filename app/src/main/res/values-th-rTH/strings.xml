@@ -152,7 +152,6 @@
     <string name="notificationsLedColor">สี LED</string>
     <string name="notificationsSound">เสียง</string>
     <string name="notificationsVibrate">สั่น</string>
-    <string name="preferences__trim_all_conversations_now">ตัดการสนทนาทั้งหมดให้สั้นลงเดี๋ยวนี้</string>
     <string name="_default">ค่าเริ่มต้น</string>
     <string name="incognitoKeyboard">แป้นพิมพ์แบบลับ</string>
     <string name="readReceipts">ใบตอบรับเมื่ออ่าน</string>

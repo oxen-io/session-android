@@ -168,7 +168,6 @@
     <string name="notificationsLedColor">LEDi värv</string>
     <string name="notificationsSound">Heli</string>
     <string name="notificationsVibrate">Vibratsioon</string>
-    <string name="preferences__trim_all_conversations_now">Piira kõik vestlused nüüd</string>
     <string name="_default">Vaikimisi</string>
     <string name="incognitoKeyboard">Inkognito klaviatuur</string>
     <string name="readReceipts">Lugemiskinnitused</string>

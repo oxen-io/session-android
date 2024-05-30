@@ -187,7 +187,6 @@
     <string name="notificationsLedColor">Kolor LED</string>
     <string name="notificationsSound">Dźwięk</string>
     <string name="notificationsVibrate">Wibracje</string>
-    <string name="preferences__trim_all_conversations_now">Przytnij wszystkie konwersacje teraz</string>
     <string name="_default">Domyślne</string>
     <string name="incognitoKeyboard">Klawiatura w trybie prywatnym</string>
     <string name="readReceipts">Potwierdzenia przeczytania</string>

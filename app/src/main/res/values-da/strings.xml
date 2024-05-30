@@ -177,7 +177,6 @@
     <string name="notificationsLedColor">LED farve</string>
     <string name="notificationsSound">Lyd</string>
     <string name="notificationsVibrate">Vibration</string>
-    <string name="preferences__trim_all_conversations_now">Trim alle samtaler</string>
     <string name="_default">Standard</string>
     <string name="incognitoKeyboard">Inkognito tastatur</string>
     <string name="readReceipts">Læst af modtager</string>

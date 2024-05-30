@@ -177,7 +177,6 @@
     <string name="notificationsLedColor">Notificatie-LED-kleur</string>
     <string name="notificationsSound">Geluid</string>
     <string name="notificationsVibrate">Trillen</string>
-    <string name="preferences__trim_all_conversations_now">Oude berichten nu verwijderen</string>
     <string name="_default">Systeem-standaard</string>
     <string name="incognitoKeyboard">Incognito toetsenbord</string>
     <string name="readReceipts">Leesbevestigingen</string>

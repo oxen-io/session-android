@@ -177,7 +177,6 @@
     <string name="notificationsLedColor">Ngjyrë LED-i</string>
     <string name="notificationsSound">Tingull</string>
     <string name="notificationsVibrate">Dridhu</string>
-    <string name="preferences__trim_all_conversations_now">Shkurtoji krejt bisedat tash</string>
     <string name="_default">Parazgjedhje</string>
     <string name="incognitoKeyboard">Tastatur e fshehtë</string>
     <string name="readReceipts">Dëftesa leximi</string>

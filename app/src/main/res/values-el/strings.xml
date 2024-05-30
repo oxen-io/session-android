@@ -177,7 +177,6 @@
     <string name="notificationsLedColor">Χρώμα LED</string>
     <string name="notificationsSound">Ήχος</string>
     <string name="notificationsVibrate">Δόνηση</string>
-    <string name="preferences__trim_all_conversations_now">Περικοπή όλων των συνομιλιών τώρα</string>
     <string name="_default">Προκαθορισμένο</string>
     <string name="incognitoKeyboard">Κρυφό πληκτρολόγιο</string>
     <string name="readReceipts">Αποδεικτικά ανάγνωσης</string>

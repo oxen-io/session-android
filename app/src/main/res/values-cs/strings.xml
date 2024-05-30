@@ -187,7 +187,6 @@
     <string name="notificationsLedColor">Barva LED</string>
     <string name="notificationsSound">Zvuk</string>
     <string name="notificationsVibrate">Vibrovat</string>
-    <string name="preferences__trim_all_conversations_now">Zkrátit všechny konverzace teď</string>
     <string name="_default">Výchozí</string>
     <string name="incognitoKeyboard">Inkognito klávesnice</string>
     <string name="readReceipts">Info o přečtení</string>

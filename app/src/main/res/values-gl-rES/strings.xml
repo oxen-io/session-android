@@ -176,7 +176,6 @@
     <string name="notificationsLedColor">Cor LED</string>
     <string name="notificationsSound">Son</string>
     <string name="notificationsVibrate">Vibrar</string>
-    <string name="preferences__trim_all_conversations_now">Recortar as mensaxes agora</string>
     <string name="_default">Por defecto</string>
     <string name="incognitoKeyboard">Teclado de incógnito</string>
     <string name="readReceipts">Confirmacións de lectura</string>

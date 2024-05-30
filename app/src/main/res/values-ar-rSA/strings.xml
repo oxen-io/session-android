@@ -197,7 +197,6 @@
     <string name="notificationsLedColor">لون ضوء التنبيه LED</string>
     <string name="notificationsSound">صوت</string>
     <string name="notificationsVibrate">هزاز</string>
-    <string name="preferences__trim_all_conversations_now">تقليم كل المحادثات الآن</string>
     <string name="_default">افتراضي</string>
     <string name="incognitoKeyboard">وضع التستّر للوحة المفاتيح</string>
     <string name="readReceipts">قراءة تقارير الإستلام</string>

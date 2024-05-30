@@ -177,7 +177,6 @@
     <string name="notificationsLedColor">Färg på ljusindikator</string>
     <string name="notificationsSound">Ljud</string>
     <string name="notificationsVibrate">Vibrera</string>
-    <string name="preferences__trim_all_conversations_now">Trimma alla konversationer nu</string>
     <string name="_default">Standard</string>
     <string name="incognitoKeyboard">Inkognito-tangentbord</string>
     <string name="readReceipts">Läskvittenser</string>

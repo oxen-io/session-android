@@ -132,7 +132,6 @@
     <string name="notificationsLedColor">Màu LED</string>
     <string name="notificationsSound">Âm thanh</string>
     <string name="notificationsVibrate">Rung</string>
-    <string name="preferences__trim_all_conversations_now">Lập tức rút ngắn tất cả các cuộc hội thoại</string>
     <string name="_default">Mặc định</string>
     <string name="conversationsMessageTrimming">Thu gọn tin nhắn</string>
     <!-- **************************************** -->

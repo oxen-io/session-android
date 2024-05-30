@@ -188,7 +188,6 @@
     <string name="notificationsLedColor">Lliw\'r LED</string>
     <string name="notificationsSound">Sain</string>
     <string name="notificationsVibrate">Dirgrynu</string>
-    <string name="preferences__trim_all_conversations_now">Tocio bob sgwrs nawr</string>
     <string name="_default">Rhagosodiad</string>
     <string name="incognitoKeyboard">Bysellfwrdd dirgel</string>
     <string name="readReceipts">Derbynebau darllen</string>

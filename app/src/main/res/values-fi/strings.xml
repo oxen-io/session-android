@@ -177,7 +177,6 @@
     <string name="notificationsLedColor">LED:in väri</string>
     <string name="notificationsSound">Ääni</string>
     <string name="notificationsVibrate">Värinä</string>
-    <string name="preferences__trim_all_conversations_now">Karsi kaikki keskustelut nyt</string>
     <string name="_default">Oletus</string>
     <string name="incognitoKeyboard">Yksityinen näppäimistö</string>
     <string name="readReceipts">Lukukuittaukset</string>

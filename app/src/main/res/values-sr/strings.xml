@@ -178,7 +178,6 @@
     <string name="notificationsLedColor">Боја ЛЕД светла</string>
     <string name="notificationsSound">Звук</string>
     <string name="notificationsVibrate">Вибрирање</string>
-    <string name="preferences__trim_all_conversations_now">Скрати све преписке сада</string>
     <string name="_default">Подразумеван</string>
     <string name="incognitoKeyboard">Инкогнито тастатура</string>
     <string name="readReceipts">Потврде читања</string>

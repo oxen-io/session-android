@@ -146,7 +146,6 @@
     <string name="notificationsLedColor">알림등 색상</string>
     <string name="notificationsSound">소리</string>
     <string name="notificationsVibrate">진동</string>
-    <string name="preferences__trim_all_conversations_now">모든 대화 줄이기</string>
     <string name="_default">기본</string>
     <string name="conversationsMessageTrimming">대화 줄이기</string>
     <!-- **************************************** -->

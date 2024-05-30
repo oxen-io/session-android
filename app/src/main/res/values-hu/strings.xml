@@ -178,7 +178,6 @@
     <string name="notificationsLedColor">LED színe</string>
     <string name="notificationsSound">Hang</string>
     <string name="notificationsVibrate">Rezgés</string>
-    <string name="preferences__trim_all_conversations_now">Összes beszélgetés csonkítása most</string>
     <string name="_default">Alapértelmezett</string>
     <string name="incognitoKeyboard">Inkognitó billentyűzet</string>
     <string name="readReceipts">Olvasási nyugták</string>

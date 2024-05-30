@@ -177,7 +177,6 @@
     <string name="notificationsLedColor">LED rəng</string>
     <string name="notificationsSound">Səs</string>
     <string name="notificationsVibrate">Titrəmə</string>
-    <string name="preferences__trim_all_conversations_now">Bütün danışıqları indi kəs</string>
     <string name="_default">İlkin</string>
     <string name="incognitoKeyboard">Gizli klaviatura</string>
     <string name="readReceipts">Oxundu bildirişləri</string>

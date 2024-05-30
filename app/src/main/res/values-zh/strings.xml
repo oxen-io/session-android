@@ -172,7 +172,6 @@
     <string name="notificationsLedColor">LED颜色</string>
     <string name="notificationsSound">声音</string>
     <string name="notificationsVibrate">振动</string>
-    <string name="preferences__trim_all_conversations_now">立刻整理所有的会话</string>
     <string name="_default">默认</string>
     <string name="incognitoKeyboard">隐身键盘</string>
     <string name="readReceipts">已读回执</string>

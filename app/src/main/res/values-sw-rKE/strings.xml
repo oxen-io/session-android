@@ -148,7 +148,6 @@
     <string name="notificationsLedColor">Rangi za LED</string>
     <string name="notificationsSound">Sauti</string>
     <string name="notificationsVibrate">vibrate</string>
-    <string name="preferences__trim_all_conversations_now">Piga mazungumzo yote sasa</string>
     <string name="_default">Chaguo Msingi</string>
     <string name="incognitoKeyboard">Kibodi cha kuingia</string>
     <string name="readReceipts">Soma stakabadhi</string>

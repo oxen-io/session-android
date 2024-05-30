@@ -180,7 +180,6 @@
     <string name="notificationsLedColor">Couleur de la DEL</string>
     <string name="notificationsSound">Son</string>
     <string name="notificationsVibrate">Vibrer</string>
-    <string name="preferences__trim_all_conversations_now">Réduire toutes les conversations maintenant</string>
     <string name="_default">Valeur par défaut</string>
     <string name="incognitoKeyboard">Clavier incognito</string>
     <string name="readReceipts">Accusés de lecture</string>

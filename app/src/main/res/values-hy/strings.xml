@@ -177,7 +177,6 @@
     <string name="notificationsLedColor">LED-ի գույն</string>
     <string name="notificationsSound">Ձայն</string>
     <string name="notificationsVibrate">Թրթռոց</string>
-    <string name="preferences__trim_all_conversations_now">Ջնջել խոսակցությունները հիմա</string>
     <string name="_default">Սկզբնական</string>
     <string name="incognitoKeyboard">Չհիշել բառերը</string>
     <string name="readReceipts">Կարդալու ազդանշաններ</string>

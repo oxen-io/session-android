@@ -145,7 +145,6 @@
     <string name="notificationsLedColor">Warna LED</string>
     <string name="notificationsSound">Bunyi</string>
     <string name="notificationsVibrate">Getar</string>
-    <string name="preferences__trim_all_conversations_now">Pangkas seluruh percakapan</string>
     <string name="_default">Bawaan</string>
     <string name="incognitoKeyboard">Papan ketik tersembunyi</string>
     <string name="readReceipts">Pesan terbaca</string>

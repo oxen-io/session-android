@@ -177,7 +177,6 @@
     <string name="notificationsLedColor">LED rengi</string>
     <string name="notificationsSound">Zil Sesi</string>
     <string name="notificationsVibrate">Titreşim</string>
-    <string name="preferences__trim_all_conversations_now">Tüm sohbetleri şimdi kırp</string>
     <string name="_default">Varsayılan</string>
     <string name="incognitoKeyboard">Gizli klavye</string>
     <string name="readReceipts">Okundu bilgisi</string>

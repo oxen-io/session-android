@@ -165,7 +165,6 @@
     <string name="notificationsLedColor">ఎల్ఈడి రంగు</string>
     <string name="notificationsSound">శబ్దము</string>
     <string name="notificationsVibrate">ప్రకంపన</string>
-    <string name="preferences__trim_all_conversations_now">ఇప్పుడు అన్ని సంభాషణలు  కత్తిరించి సరి చేయుట </string>
     <string name="_default">అప్రమేయ</string>
     <string name="incognitoKeyboard">అజ్ఞాత కీబోర్డ్</string>
     <string name="readReceipts">చదివిన రసీదులు</string>
