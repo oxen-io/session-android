@@ -110,9 +110,9 @@ public class ThreadRecord extends DisplayRecord {
       // it same I'll assume there's a reason for this and follow suit.
       // Also: `this.lastMessage.getExpiresIn()` is available.
       if (expireStarted >= dateSent) {
-          return context.getString(R.string.MessageRecord_state_sent);
+          return context.getString(R.string.disappearingMessagesSent);
       }
-      return context.getString(R.string.MessageRecord_state_read);
+      return context.getString(R.string.disappearingMessagesRead);
   }
 
   @Override

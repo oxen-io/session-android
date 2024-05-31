@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
-import android.text.SpannableString
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue
@@ -144,7 +143,7 @@ class ConversationView : LinearLayout {
 
     private fun ThreadRecord.getSnippetPrefix(): CharSequence? = when {
         recipient.isLocalNumber || lastMessage?.isControlMessage == true -> null
-        lastMessage?.isOutgoing == true -> resources.getString(R.string.MessageRecord_you)
+        lastMessage?.isOutgoing == true -> resources.getString(R.string.you)
         else -> lastMessage?.individualRecipient?.toShortString()
     }
     // endregion

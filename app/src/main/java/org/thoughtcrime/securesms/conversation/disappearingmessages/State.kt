@@ -51,7 +51,7 @@ enum class ExpiryType(
 ) {
     NONE(
         { ExpiryMode.NONE },
-        R.string.expiration_off,
+        R.string.off,
         contentDescription = R.string.AccessibilityId_disable_disappearing_messages,
     ),
     LEGACY(

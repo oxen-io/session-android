@@ -5,14 +5,8 @@
      I'm okay with `app_name` for this one specific string. -AL -->
     <string name="app_name" translatable="false">Session</string>
 
-    <!-- MessageRecord -->
-
-    <string name="MessageRecord_s_changed_messages_to_disappear_s_after_s"><b>{name}</b> has set messages to disappear {time} after they have been {disappearing_messages_type}.</string>
-
-
     <!-- ACL - All of the below below need to be updated to match the new serialised string names -->
-    <string name="MessageRecord_you_created_a_new_group">You created a new group.</string>
-    <string name="MessageRecord_s_added_you_to_the_group">%1$s added you to the group.</string>
+    <string name="MessageRecord_s_changed_messages_to_disappear_s_after_s"><b>{name}</b> has set messages to disappear {time} after they have been {disappearing_messages_type}.</string>
     <string name="MessageRecord_you_renamed_the_group_to_s">You renamed the group to %1$s</string>
     <string name="MessageRecord_s_renamed_the_group_to_s">%1$s renamed the group to: %2$s</string>
     <string name="MessageRecord_you_added_s_to_the_group">You added %1$s to the group.</string>
@@ -20,22 +14,13 @@
     <string name="MessageRecord_you_removed_s_from_the_group">You removed %1$s from the group.</string>
     <string name="MessageRecord_s_removed_s_from_the_group">%1$s removed %2$s from the group.</string>
     <string name="MessageRecord_you_were_removed_from_the_group">You were removed from the group.</string>
-
-    <string name="MessageRecord_you">You</string>
     <string name="MessageRecord_s_called_you">%s called you</string>
     <string name="MessageRecord_called_s">Called %s</string>
     <string name="MessageRecord_missed_call_from">Missed call from %s</string>
-    <string name="MessageRecord_follow_setting">Follow Setting</string>
-    <string name="AccessibilityId_follow_setting">Follow setting</string>
     <string name="MessageRecord_you_turned_off_disappearing_messages">You have turned off disappearing messages.</string>
     <string name="MessageRecord_you_turned_off_disappearing_messages_1_on_1">You turned off disappearing messages. Messages you send will no longer disappear.</string>
     <string name="MessageRecord_s_turned_off_disappearing_messages">%1$s turned off disappearing messages.</string>
     <string name="MessageRecord_s_turned_off_disappearing_messages_1_on_1">%1$s has turned off disappearing messages. Messages they send will no longer disappear.</string>
-
-    <!--
-    <string name="MessageRecord_you_set_messages_to_disappear_s_after_s">You have set messages to disappear %1$s after they have been %2$s</string>
-    -->
-
     <string name="MessageRecord_you_set_messages_to_disappear_s_after_s_1_on_1">You set your messages to disappear %1$s after they have been %2$s.</string>
     <string name="MessageRecord_you_changed_messages_to_disappear_s_after_s">You have changed messages to disappear %1$s after they have been %2$s</string>
     <string name="MessageRecord_s_set_messages_to_disappear_s_after_s">%1$s has set messages to disappear %2$s after they have been %3$s</string>
@@ -43,18 +28,15 @@
 
     <string name="MessageRecord_s_took_a_screenshot">%1$s took a screenshot.</string>
     <string name="MessageRecord_media_saved_by_s">Media saved by %1$s.</string>
-    <string name="MessageRecord_state_read">read</string>
-    <string name="MessageRecord_state_sent">sent</string>
+
 
     <!-- expiration -->
-    <string name="expiration_off">Off</string>
-
     <plurals name="expiration_seconds">
         <item quantity="one">%d second</item>
         <item quantity="other">%d seconds</item>
     </plurals>
 
-    <string name="expiration_seconds_abbreviated">%ds</string>
+    <string name="expirationSecondsAbbreviated">{seconds}s</string>
 
     <plurals name="expiration_minutes">
         <item quantity="one">%d minute</item>
@@ -470,6 +452,7 @@
     <string name="dialog_disappearing_messages_follow_setting_title">Follow Setting</string>
     <string name="dictationStart">Start Dictation...</string>
     <string name="disappearingMessages">Disappearing Messages</string>
+    <string name="disappearingMessagesAddedYou">{name} added you to the group.</string>
     <string name="disappearingMessagesChanged"><b>{name}</b> has changed messages to disappear {time} after they have been {disappearing_messages_type}.</string>
     <string name="disappearingMessagesDeleteAfterReadDescription">Messages delete after they have been read.</string>
     <string name="disappearingMessagesDeleteAfterSendDescription">Messages delete after they have been sent.</string>
@@ -480,6 +463,8 @@
     <string name="disappearingMessagesDisappearAfterSend">Disappear After Send</string>
     <string name="disappearingMessagesFiveM">5M</string>
     <string name="disappearingMessagesFiveMinutes">5 Minutes</string>
+    <string name="disappearingMessagesFollowSetting">Follow Setting</string>
+    <string name="disappearingMessagesNewGroup">You created a new group.</string>
     <string name="disappearingMessagesOneD">1D</string>
     <string name="disappearingMessagesOneDay">1 Day</string>
     <string name="disappearingMessagesOneH">1H</string>
@@ -487,6 +472,7 @@
     <string name="disappearingMessagesOneW">1W</string>
     <string name="disappearingMessagesOneWeek">1 Week</string>
     <string name="disappearingMessagesOnlyAdmins">Only group admins can change this setting.</string>
+    <string name="disappearingMessagesRead">Read</string>
     <string name="disappearingMessagesSent">Sent</string>
     <string name="disappearingMessagesSet"><b>{name}</b> has set messages to disappear {time} after they have been {disappearing_messages_type}.</string>
     <string name="disappearingMessagesSetYou"><b>You</b> set messages to disappear {time} after they have been {disappearing_messages_type}.</string>
@@ -924,4 +910,5 @@
     <string name="warning">Warning</string>
     <string name="window">Window</string>
     <string name="yes">Yes</string>
+    <string name="you">You</string>
 </resources>

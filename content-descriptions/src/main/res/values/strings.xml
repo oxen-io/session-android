@@ -82,6 +82,7 @@
     <string name="AccessibilityId_blocked_banner">Blocked banner</string>
     <string name="AccessibilityId_blocked_banner_text">Blocked banner text</string>
     <string name="AccessibilityId_control_message">Control message</string>
+    <string name="AccessibilityId_follow_setting">Follow setting</string>
     <!--New Session -->
     <string name="AccessibilityId_next">Next</string>
     <string name="AccessibilityId_session_id_input">Session id input box</string>

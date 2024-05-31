@@ -1,7 +1,7 @@
 package org.session.libsession.messaging.utilities
 
 import android.content.Context
-import android.util.Log
+import com.squareup.phrase.Phrase
 import org.session.libsession.R
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.calls.CallMessageType
@@ -18,6 +18,10 @@ import org.session.libsession.utilities.getExpirationTypeDisplayValue
 import org.session.libsession.utilities.truncateIdForDisplay
 
 object UpdateMessageBuilder {
+
+    // Keys for Phrase library substitution
+    const val NAME_KEY = "name"
+
     val storage = MessagingModuleConfiguration.shared.storage
 
     private fun getSenderName(senderId: String) = storage.getContactWithSessionID(senderId)
@@ -27,15 +31,15 @@ object UpdateMessageBuilder {
     fun buildGroupUpdateMessage(context: Context, updateMessageData: UpdateMessageData, senderId: String? = null, isOutgoing: Boolean = false): String {
         val updateData = updateMessageData.kind
         if (updateData == null || !isOutgoing && senderId == null) return ""
-        val senderName: String = if (isOutgoing) context.getString(R.string.MessageRecord_you)
+        val senderName: String = if (isOutgoing) context.getString(R.string.you)
         else getSenderName(senderId!!)
 
         // ACL TODO: Replace below with substitutions from phrase library
 
         return when (updateData) {
             is UpdateMessageData.Kind.GroupCreation -> {
-                if (isOutgoing) context.getString(R.string.MessageRecord_you_created_a_new_group)
-                else context.getString(R.string.MessageRecord_s_added_you_to_the_group, senderName)
+                if (isOutgoing) context.getString(R.string.disappearingMessagesNewGroup)
+                else Phrase.from(context, R.string.disappearingMessagesAddedYou).put(NAME_KEY, senderName).format().toString()
             }
             is UpdateMessageData.Kind.GroupNameChange -> {
                 if (isOutgoing) context.getString(R.string.MessageRecord_you_renamed_the_group_to_s, updateData.name)
@@ -77,7 +81,7 @@ object UpdateMessageBuilder {
         expireStarted: Long
     ): String {
         if (!isOutgoing && senderId == null) return ""
-        val senderName = if (isOutgoing) context.getString(R.string.MessageRecord_you) else getSenderName(senderId!!)
+        val senderName = if (isOutgoing) context.getString(R.string.you) else getSenderName(senderId!!)
         return if (duration <= 0) {
             if (isOutgoing) context.getString(if (isGroup) R.string.MessageRecord_you_turned_off_disappearing_messages else R.string.MessageRecord_you_turned_off_disappearing_messages_1_on_1)
             else context.getString(if (isGroup) R.string.MessageRecord_s_turned_off_disappearing_messages else R.string.MessageRecord_s_turned_off_disappearing_messages_1_on_1, senderName)

@@ -14,6 +14,7 @@ class StringSubKeys {
         const val GROUP_NAME_KEY                 = "group_name"
         const val MESSAGE_COUNT_KEY              = "message_count"
         const val NAME_KEY                       = "name"
+        const val SECONDS_KEY                    = "seconds"
         const val TOTAL_COUNT_KEY                = "total_count"
         const val TIME_KEY                       = "time"
         const val URL_KEY                        = "url"
