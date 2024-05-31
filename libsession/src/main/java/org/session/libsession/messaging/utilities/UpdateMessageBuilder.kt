@@ -84,8 +84,8 @@ object UpdateMessageBuilder {
         } else {
             val time = ExpirationUtil.getExpirationDisplayValue(context, duration.toInt())
             val action = context.getExpirationTypeDisplayValue(timestamp >= expireStarted)
-            if (isOutgoing) context.getString(
-                if (isGroup) R.string.disappearingMessagesSetYou else R.string.MessageRecord_you_set_messages_to_disappear_s_after_s_1_on_1,
+            if (isOutgoing) context.getString( //disappearingMessagesSetYou
+                if (isGroup) R.string.MessageRecord_s_changed_messages_to_disappear_s_after_s else R.string.MessageRecord_you_set_messages_to_disappear_s_after_s_1_on_1,
                 time,
                 action
             ) else context.getString(

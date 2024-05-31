@@ -3,6 +3,9 @@
     <!-- MessageRecord -->
     <string name="groupMemberYouLeft"><b>You</b> left the group.</string>
 
+    <string name="MessageRecord_s_changed_messages_to_disappear_s_after_s"><b>{name}</b> has set messages to disappear {time} after they have been {disappearing_messages_type}.</string>
+
+
     <!-- ACL - All of the below below need to be updated to match the new serialised string names -->
     <string name="MessageRecord_you_created_a_new_group">You created a new group.</string>
     <string name="MessageRecord_s_added_you_to_the_group">%1$s added you to the group.</string>

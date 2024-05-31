@@ -5,3 +5,4 @@ include ':liblazysodium'
 include ':libsession'
 include ':libsignal'
 include ':libsession-util'
+include ':common' // Common strings, but could also be drawables or layouts if we wanted
