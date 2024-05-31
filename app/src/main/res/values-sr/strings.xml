@@ -96,7 +96,6 @@
     <string name="onionRoutingPathYou">Ви</string>
     <string name="draft">Нацрт</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d нових порука у %2$d преписки</string>
     <string name="messageMarkRead">Означи прочитаним</string>
     <string name="MessageNotifier_unknown_contact_message">Контакт</string>
     <!-- Notification Channels -->

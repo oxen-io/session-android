@@ -89,7 +89,6 @@
     <string name="draft">Draf</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Tidak dapat menyimpan ke penyimpanan eksternal tanpa izin</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">Pesan baru %1$d di percakapan %2$d</string>
     <string name="messageMarkRead">Tandai dibaca</string>
     <string name="MessageNotifier_unknown_contact_message">Kontak</string>
     <!-- Notification Channels -->

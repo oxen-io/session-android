@@ -95,7 +95,6 @@
     <string name="draft">Entwurf</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Speichern in den Gerätespeicher ohne Berechtigungen nicht möglich.</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d neue Nachrichten in %2$d Unterhaltungen</string>
     <string name="messageMarkRead">Gelesen</string>
     <string name="MessageNotifier_unknown_contact_message">Kontakt</string>
     <!-- Notification Channels -->

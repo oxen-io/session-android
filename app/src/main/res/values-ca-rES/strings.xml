@@ -94,7 +94,6 @@
     <string name="draft">Esborrany</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">No es pot desar en un emmagatzematge extern sense permís.</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d missatges nous a %2$d converses</string>
     <string name="messageMarkRead">Marca\'l com a llegit</string>
     <string name="MessageNotifier_unknown_contact_message">Contacte</string>
     <!-- Notification Channels -->

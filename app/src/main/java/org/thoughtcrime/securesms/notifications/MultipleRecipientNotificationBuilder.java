@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms.notifications;
 
 import static org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.CONVERSATION_COUNT_KEY;
 import static org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.MESSAGE_COUNT_KEY;
+import static org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.NAME_KEY;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -49,9 +50,12 @@ public class MultipleRecipientNotificationBuilder extends AbstractNotificationBu
   }
 
   public void setMessageCount(int messageCount, int threadCount) {
-    String txt = Phrase.from(context, R.string.notificationsAndroidSystem).put(MESSAGE_COUNT_KEY, messageCount).put(CONVERSATION_COUNT_KEY, threadCount).format().toString();
+    String txt = Phrase.from(context, R.string.notificationsAndroidSystem)
+            .put(MESSAGE_COUNT_KEY, messageCount)
+            .put(CONVERSATION_COUNT_KEY, threadCount)
+            .format().toString();
     setSubText(txt);
-    setContentInfo(String.valueOf(messageCount)); // Note: Only visible in Android API 24 and below - remove when API is upgraded.
+    setContentInfo(String.valueOf(messageCount)); // Note: `setContentInfo` details are only visible in Android API 24 and below - remove when min. API is upgraded.
     setNumber(messageCount);
   }
 
@@ -61,7 +65,10 @@ public class MultipleRecipientNotificationBuilder extends AbstractNotificationBu
       displayName = getGroupDisplayName(recipient, threadRecipient.isCommunityRecipient());
     }
     if (privacy.isDisplayContact()) {
-      setContentText(context.getString(R.string.notificationsMostRecent, displayName));
+        String txt = Phrase.from(context, R.string.notificationsMostRecent)
+            .put(NAME_KEY, displayName)
+            .format().toString();
+        setContentText(txt);
     }
 
     if (recipient.getNotificationChannel() != null) {

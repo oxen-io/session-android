@@ -95,7 +95,6 @@
     <string name="draft">Սևագիր</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Հնարավոր չէ պահել արտաքին պահեստում առանց թույլտվությունների</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d նոր հաղորդագրություններ %2$d խոսակցություններում</string>
     <string name="messageMarkRead">Նշել որպես ընթերցված</string>
     <string name="MessageNotifier_unknown_contact_message">Կոնտակտ</string>
     <!-- Notification Channels -->

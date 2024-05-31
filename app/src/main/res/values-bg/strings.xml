@@ -92,7 +92,6 @@
     <string name="draft">Чернова</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Неуспешно запазване на външен диск без нуждното разрешение за достъп</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d нови съобщения в %2$d чата</string>
     <string name="messageMarkRead">Прочетено</string>
     <string name="MessageNotifier_unknown_contact_message">Контакт</string>
     <!-- Notification Channels -->

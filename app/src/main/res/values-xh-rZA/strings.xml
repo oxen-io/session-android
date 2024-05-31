@@ -61,7 +61,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Gwe</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d obubaka obupya mu %2$d mboozi</string>
     <string name="messageMarkRead">lamba osome</string>
     <!-- Notification Channels -->
     <!-- QuickResponseService -->

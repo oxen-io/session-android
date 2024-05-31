@@ -98,7 +98,6 @@
     <string name="draft">Ciornă</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Nu se poate salva pe spațiu de stocare extern fără permisiune</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d mesaje noi în %2$d conversaţii</string>
     <string name="messageMarkRead">Marchează ca citit</string>
     <string name="MessageNotifier_unknown_contact_message">Contact</string>
     <!-- Notification Channels -->

@@ -15,9 +15,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import network.loki.messenger.databinding.FragmentModalUrlBottomSheetBinding
-import org.thoughtcrime.securesms.util.UiModeUtilities
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.URL_KEY
 
 class ModalUrlBottomSheet(private val url: String): BottomSheetDialogFragment(), View.OnClickListener {
     private lateinit var binding: FragmentModalUrlBottomSheetBinding
@@ -29,7 +30,7 @@ class ModalUrlBottomSheet(private val url: String): BottomSheetDialogFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val explanation = resources.getString(R.string.urlOpenDescription, url)
+        val explanation = Phrase.from(context, R.string.urlOpenDescription).put(URL_KEY, url).format().toString()
         val spannable = SpannableStringBuilder(explanation)
         val startIndex = explanation.indexOf(url)
         spannable.setSpan(StyleSpan(Typeface.BOLD), startIndex, startIndex + url.count(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)

@@ -73,7 +73,6 @@
     <string name="draft">မူကြမ်း</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">ခွင့်ပြုချက်မပေးထားပါက အပြင်ဘက်တွင် သိမ်းဆည်း၍မရပါ</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">စကားဝိုင်း %2$d တွင် စာပေါင်း %1$d ရှိသည်။</string>
     <string name="messageMarkRead">ဖတ်ပြီးသား</string>
     <string name="MessageNotifier_unknown_contact_message">အဆက်အသွယ်</string>
     <!-- Notification Channels -->

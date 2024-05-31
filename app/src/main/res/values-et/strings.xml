@@ -90,7 +90,6 @@
     <string name="draft">Mustand</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Õiguste puudumise tõttu pole võimalik välisele andmekandjale salvestada.</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d uut sõnumit %2$d vestluses</string>
     <string name="messageMarkRead">Märgi loetuks</string>
     <string name="MessageNotifier_unknown_contact_message">Kontakt</string>
     <!-- Notification Channels -->

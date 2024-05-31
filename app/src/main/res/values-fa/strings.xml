@@ -95,7 +95,6 @@
     <string name="draft">پیش نویس</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">نمی‌توان بدون دسترسی‌ها در حافظه‌ی خارجی ذخیره‌سازی نمود</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d پیام در %2$d گفتگو</string>
     <string name="messageMarkRead">علامت گذاری به عنوان خوانده شده</string>
     <string name="MessageNotifier_unknown_contact_message">مخاطب</string>
     <!-- Notification Channels -->

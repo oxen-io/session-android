@@ -92,7 +92,6 @@
     <string name="draft">草稿</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">因為沒有儲存的權限，無法儲存到外部儲存空間</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d 則新訊息在 %2$d 的對話中</string>
     <string name="messageMarkRead">標示已讀</string>
     <string name="MessageNotifier_unknown_contact_message">聯絡人</string>
     <!-- Notification Channels -->

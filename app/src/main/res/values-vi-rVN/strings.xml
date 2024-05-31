@@ -72,7 +72,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Bạn</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d tin nhắn mới trong %2$d cuộc chuyện trò</string>
     <string name="messageMarkRead">Đánh dấu đã đọc</string>
     <string name="MessageNotifier_unknown_contact_message">Liên lạc</string>
     <!-- Notification Channels -->

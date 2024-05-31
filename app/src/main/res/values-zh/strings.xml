@@ -92,7 +92,6 @@
     <string name="draft">草稿</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">无法在没有写入到外部存储的权限时保存到外部存储</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d 新信息是在 %2$d 中的会话</string>
     <string name="messageMarkRead">标记为已读</string>
     <string name="MessageNotifier_unknown_contact_message">联系人</string>
     <!-- Notification Channels -->

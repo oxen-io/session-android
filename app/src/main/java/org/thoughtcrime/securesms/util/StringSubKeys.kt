@@ -16,6 +16,6 @@ class StringSubKeys {
         const val NAME_KEY                       = "name"
         const val TOTAL_COUNT_KEY                = "total_count"
         const val TIME_KEY                       = "time"
-
+        const val URL_KEY                        = "url"
     }
 }

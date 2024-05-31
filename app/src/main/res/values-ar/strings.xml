@@ -107,7 +107,6 @@
     <string name="draft">مسودة:</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">لا يمكن الحفظ إلى الذاكرة الخارجية بدون أذونات</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d رسائل جديدة في %2$d محادثات</string>
     <string name="messageMarkRead">اعتبرها مقروءة</string>
     <string name="MessageNotifier_unknown_contact_message">متصل</string>
     <!-- Notification Channels -->

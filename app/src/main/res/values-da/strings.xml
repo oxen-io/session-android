@@ -95,7 +95,6 @@
     <string name="draft">Kladde</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Ikke muligt at gemme til ekstern placering, uden tilladelse</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d nye beskeder i %2$d samtaler</string>
     <string name="messageMarkRead">Markér som læst</string>
     <string name="MessageNotifier_unknown_contact_message">Kontakt</string>
     <!-- Notification Channels -->

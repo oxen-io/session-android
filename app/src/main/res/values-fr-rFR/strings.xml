@@ -96,7 +96,6 @@
     <string name="draft">Brouillon</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Impossible d’enregistrer sur la mémoire externe sans autorisation</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d nouveaux messages dans %2$d conversations</string>
     <string name="messageMarkRead">Marquer comme lu</string>
     <string name="MessageNotifier_unknown_contact_message">Contact</string>
     <!-- Notification Channels -->

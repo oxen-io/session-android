@@ -85,7 +85,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">나</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">대화 %2$d개에 새 메시지 %1$d개</string>
     <string name="messageMarkRead">읽음으로 표시</string>
     <string name="MessageNotifier_unknown_contact_message">연락처</string>
     <!-- Notification Channels -->

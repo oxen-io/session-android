@@ -99,7 +99,6 @@
     <string name="draft">Koncept</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Bez povolenia sa nedá zapisovať na externé úložisko</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d nové správy v %2$d konverzáciách</string>
     <string name="messageMarkRead">Označiť ako prečítané</string>
     <string name="MessageNotifier_unknown_contact_message">Kontakt</string>
     <!-- Notification Channels -->

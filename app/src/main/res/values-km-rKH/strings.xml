@@ -88,7 +88,6 @@
     <string name="draft">ព្រាង</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">មិនអាចរក្សាទុកក្នុងអង្គរក្សាទុកខាងក្រៅ ដោយគ្មានការអនុញ្ញាត</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d សារថ្មីក្នុង %2$d ការសន្ទនា</string>
     <string name="messageMarkRead">សម្គាល់ថាបានអាន</string>
     <string name="MessageNotifier_unknown_contact_message">ទំនាក់ទំនង</string>
     <!-- Notification Channels -->

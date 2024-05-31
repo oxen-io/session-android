@@ -102,7 +102,6 @@
     <string name="draft">Drafft</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Methu cadw i storfa allanol heb ganiatâd</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d neges newydd mewn %2$d sgwrs</string>
     <string name="messageMarkRead">Marcio wedi\'i ddarllen</string>
     <string name="MessageNotifier_unknown_contact_message">Cysylltiad</string>
     <!-- Notification Channels -->

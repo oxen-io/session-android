@@ -95,7 +95,6 @@
     <string name="draft">Concept</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Kan niet opslaan naar externe opslag zonder machtiging</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d nieuwe berichten in %2$d gesprekken</string>
     <string name="messageMarkRead">Markeren als gelezen</string>
     <string name="MessageNotifier_unknown_contact_message">Contactpersoon</string>
     <!-- Notification Channels -->

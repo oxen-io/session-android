@@ -95,7 +95,6 @@
     <string name="draft">Borrador</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">No se puede guardar en una unidad de almacenamiento externo si Session no tiene acceso</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d mensajes nuevos en %2$d chats</string>
     <string name="messageMarkRead">Marcar como leído</string>
     <string name="MessageNotifier_unknown_contact_message">Contacto</string>
     <!-- Notification Channels -->

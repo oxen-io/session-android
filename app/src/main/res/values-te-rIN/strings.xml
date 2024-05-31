@@ -91,7 +91,6 @@
     <string name="draft">చిత్తు పత్రం</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">అనుమతులు లేకుండా బాహ్య నిల్వకి సేవ్ చేయడం సాధ్యపడలేదు</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%2$d సంభాషణలొ కొత్త %1$d సందేశాలు</string>
     <string name="messageMarkRead">చదివినట్టు గుర్తుపెట్టు</string>
     <string name="MessageNotifier_unknown_contact_message">పరిచయం</string>
     <!-- Notification Channels -->

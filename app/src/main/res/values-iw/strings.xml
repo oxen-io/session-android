@@ -99,7 +99,6 @@
     <string name="draft">טיוטה</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">לא היה ניתן לשמור באחסון חיצוני ללא הרשאות</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d הודעות חדשות ב־%2$d שיחות</string>
     <string name="messageMarkRead">סמן כנקרא</string>
     <string name="MessageNotifier_unknown_contact_message">איש קשר</string>
     <!-- Notification Channels -->

@@ -95,7 +95,6 @@
     <string name="draft">Utkast</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Kan inte spara till externt utrymme utan behörighet</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d nya meddelanden i %2$d konversationer</string>
     <string name="messageMarkRead">Läst</string>
     <string name="MessageNotifier_unknown_contact_message">Kontakt</string>
     <!-- Notification Channels -->

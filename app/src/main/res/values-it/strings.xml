@@ -95,7 +95,6 @@
     <string name="draft">Bozza</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Impossibile salvare sulla memoria senza l\'autorizzazione</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d nuovi messaggi in %2$d conversazioni</string>
     <string name="messageMarkRead">Segna come già letto</string>
     <string name="MessageNotifier_unknown_contact_message">Contatto</string>
     <!-- Notification Channels -->

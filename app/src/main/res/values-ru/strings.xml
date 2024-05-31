@@ -101,7 +101,6 @@
     <string name="draft">Черновик</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Не удается сохранить во внешнем хранилище. Доступ запрещен</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d новых сообщений в %2$d диалогах</string>
     <string name="messageMarkRead">Пометить как прочитано</string>
     <string name="MessageNotifier_unknown_contact_message">Контакт</string>
     <!-- Notification Channels -->

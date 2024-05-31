@@ -96,7 +96,6 @@
     <string name="draft">Piszkozat</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Nem lehet engedély nélkül menteni a külső tárolóra</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d új üzenet %2$d beszélgetésben</string>
     <string name="messageMarkRead">Olvasottnak jelöl</string>
     <string name="MessageNotifier_unknown_contact_message">Névjegy</string>
     <!-- Notification Channels -->

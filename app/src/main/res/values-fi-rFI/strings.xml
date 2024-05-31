@@ -95,7 +95,6 @@
     <string name="draft">Luonnos</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Tallennus ulkoiseen tallennustilaan ei onnistu ilman käyttöoikeutta.</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d uutta viestiä %2$d keskustelussa</string>
     <string name="messageMarkRead">Luettu</string>
     <string name="MessageNotifier_unknown_contact_message">Yhteystieto</string>
     <!-- Notification Channels -->

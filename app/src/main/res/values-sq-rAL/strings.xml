@@ -95,7 +95,6 @@
     <string name="draft">Skicë:</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">S\’bëhet dot ruajtje në depozitë të jashtme pa leje</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%1$d mesazhe të reja në %2$d biseda</string>
     <string name="messageMarkRead">Vëri shenjë si të lexuar</string>
     <string name="MessageNotifier_unknown_contact_message">Kontakt</string>
     <!-- Notification Channels -->

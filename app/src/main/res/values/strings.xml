@@ -614,7 +614,7 @@
     <string name="notificationsFastModeDescriptionIos">You\'ll be notified of new messages reliably and immediately using Apple\'s notification Servers.</string>
     <string name="notificationsGoToAndroidSettings">Go to Android notification settings</string>
     <string name="notificationsGoToDevice">Go to device notification settings</string>
-    <string name="notificationsIosGroup">{name} to {conversation_name}</string>
+    <string name="notificationsIosGroup">{name} to {conversation_name}</string> <!-- Do we actually need this? This is Android not iOS.. -ACL -->
     <string name="notificationsIosRestart">You may have received messages while your {device} was restarting.</string>
     <string name="notificationsLedColor">LED color</string>
     <string name="notificationsMentionsOnly">Mentions Only</string>

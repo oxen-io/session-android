@@ -95,7 +95,6 @@
     <string name="draft">प्रारूप</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">अनुमति के बिना बाहरी भंडारण में सहेजने में असमर्थ</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%2$d बातचीत में %1$d नए संदेश</string>
     <string name="messageMarkRead">पढ़ा हुआ चिह्नित करें</string>
     <string name="MessageNotifier_unknown_contact_message">संपर्क</string>
     <!-- Notification Channels -->

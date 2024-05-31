@@ -92,7 +92,6 @@
     <string name="draft">下書き</string>
     <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">外部ストレージに保存できません。ストレージへのアクセス許可が無効になっています。</string>
     <!-- MessageNotifier -->
-    <string name="notificationsAndroidSystem">%2$d個の会話に%1$d個の新着メッセージ</string>
     <string name="messageMarkRead">既読にする</string>
     <string name="MessageNotifier_unknown_contact_message">連絡先</string>
     <!-- Notification Channels -->
