@@ -240,6 +240,7 @@ android {
 dependencies {
 
     implementation("com.google.dagger:hilt-android:2.46.1")
+    implementation project(':common')
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
     implementation "androidx.appcompat:appcompat:$appcompatVersion"

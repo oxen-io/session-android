@@ -1,4 +1,4 @@
-package org.session.content_descriptions
+package org.session.common
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

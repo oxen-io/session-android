@@ -1,4 +1,4 @@
-package org.session.content_descriptions
+package org.session.common
 
 import org.junit.Test
 
