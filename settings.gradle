@@ -5,4 +5,5 @@ include ':liblazysodium'
 include ':libsession'
 include ':libsignal'
 include ':libsession-util'
-include ':common' // Common strings, but could also be drawables or layouts if we wanted
+// Common strings, but could also be drawables or layouts if we wanted
+include ':content-descriptions' // ONLY AccessibilityID strings (non-translated) used to identify UI elements in automated testing

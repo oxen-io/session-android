@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-   <!-- All translatable / user-facing strings are in the `common` module -->
+    <!-- All translatable / user-facing strings are in the `common` module, and all AccessibilityID
+    strings are in the `content-descriptions` module. -->
 </resources>

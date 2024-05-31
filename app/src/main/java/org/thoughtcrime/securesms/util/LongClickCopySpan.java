@@ -7,8 +7,6 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import android.text.TextPaint;
 import android.text.style.URLSpan;
-import android.view.View;
-import android.widget.Toast;
 
 import network.loki.messenger.R;
 
