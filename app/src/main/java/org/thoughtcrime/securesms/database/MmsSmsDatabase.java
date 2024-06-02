@@ -97,9 +97,13 @@ public class MmsSmsDatabase extends Database {
   }
 
   public @Nullable MessageRecord getMessageFor(long timestamp, String serializedAuthor) {
+    return getMessageFor(timestamp, serializedAuthor, true);
+  }
+
+  public @Nullable MessageRecord getMessageFor(long timestamp, String serializedAuthor, boolean getQuote) {
 
     try (Cursor cursor = queryTables(PROJECTION, MmsSmsColumns.NORMALIZED_DATE_SENT + " = " + timestamp, null, null)) {
-      MmsSmsDatabase.Reader reader = readerFor(cursor);
+      MmsSmsDatabase.Reader reader = readerFor(cursor, getQuote);
 
       MessageRecord messageRecord;
       boolean isOwnNumber = Util.isOwnNumber(context, serializedAuthor);
@@ -295,15 +299,7 @@ public class MmsSmsDatabase extends Database {
     return identifiedMessages;
   }
 
-  public long getLastSentMessageFromSender(long threadId, String serializedAuthor) {
-
-    // Early exit
-    boolean isOwnNumber = Util.isOwnNumber(context, serializedAuthor);
-    if (!isOwnNumber) {
-      Log.i(TAG, "Asked to find last sent message but sender isn't us - returning null.");
-      return -1;
-    }
-
+  public long getLastOutgoingTimestamp(long threadId) {
     String order = MmsSmsColumns.NORMALIZED_DATE_SENT + " DESC";
     String selection = MmsSmsColumns.THREAD_ID + " = " + threadId;
 
@@ -311,8 +307,13 @@ public class MmsSmsDatabase extends Database {
     try (Cursor cursor = queryTables(PROJECTION, selection, order, null)) {
       try (MmsSmsDatabase.Reader reader = readerFor(cursor)) {
         MessageRecord messageRecord;
+        long attempts = 0;
+        long maxAttempts = 20;
         while ((messageRecord = reader.getNext()) != null) {
-          if (messageRecord.isOutgoing()) { return messageRecord.id; }
+          // Note: We rely on the message order to get us the most recent outgoing message - so we
+          // take the first outgoing message we find as the last outgoing message.
+          if (messageRecord.isOutgoing()) return messageRecord.getTimestamp();
+          if (attempts++ > maxAttempts) break;
         }
       }
     }
@@ -638,7 +639,11 @@ public class MmsSmsDatabase extends Database {
   }
 
   public Reader readerFor(@NonNull Cursor cursor) {
-    return new Reader(cursor);
+    return readerFor(cursor, true);
+  }
+
+  public Reader readerFor(@NonNull Cursor cursor, boolean getQuote) {
+    return new Reader(cursor, getQuote);
   }
 
   @NotNull
@@ -661,11 +666,13 @@ public class MmsSmsDatabase extends Database {
   public class Reader implements Closeable {
 
     private final Cursor                 cursor;
+    private final boolean                getQuote;
     private       SmsDatabase.Reader     smsReader;
     private       MmsDatabase.Reader     mmsReader;
 
-    public Reader(Cursor cursor) {
+    public Reader(Cursor cursor, boolean getQuote) {
       this.cursor = cursor;
+      this.getQuote = getQuote;
     }
 
     private SmsDatabase.Reader getSmsReader() {
@@ -678,7 +685,7 @@ public class MmsSmsDatabase extends Database {
 
     private MmsDatabase.Reader getMmsReader() {
       if (mmsReader == null) {
-        mmsReader = DatabaseComponent.get(context).mmsDatabase().readerFor(cursor);
+        mmsReader = DatabaseComponent.get(context).mmsDatabase().readerFor(cursor, getQuote);
       }
 
       return mmsReader;

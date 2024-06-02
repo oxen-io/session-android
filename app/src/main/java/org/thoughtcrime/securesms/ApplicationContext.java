@@ -57,6 +57,7 @@ import org.signal.aesgcmprovider.AesGcmProvider;
 import org.thoughtcrime.securesms.components.TypingStatusSender;
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities;
 import org.thoughtcrime.securesms.database.EmojiSearchDatabase;
+import org.thoughtcrime.securesms.database.LastSentTimestampCache;
 import org.thoughtcrime.securesms.database.LokiAPIDatabase;
 import org.thoughtcrime.securesms.database.Storage;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
@@ -149,6 +150,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     @Inject TextSecurePreferences textSecurePreferences;
     @Inject PushRegistry pushRegistry;
     @Inject ConfigFactory configFactory;
+    @Inject LastSentTimestampCache lastSentTimestampCache;
     CallMessageProcessor callMessageProcessor;
     MessagingModuleConfiguration messagingModuleConfiguration;
 
@@ -218,7 +220,8 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
                 device,
                 messageDataProvider,
                 ()-> KeyPairUtilities.INSTANCE.getUserED25519KeyPair(this),
-                configFactory
+                configFactory,
+                lastSentTimestampCache
                 );
         callMessageProcessor = new CallMessageProcessor(this, textSecurePreferences, ProcessLifecycleOwner.get().getLifecycle(), storage);
         Log.i(TAG, "onCreate()");

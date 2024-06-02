@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
@@ -17,11 +16,17 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityPathBinding
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.utilities.getColorFromAttr
-import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Snode
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.util.GlowViewUtilities
@@ -184,6 +189,7 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
         private lateinit var location: Location
         private var dotAnimationStartDelay: Long = 0
         private var dotAnimationRepeatInterval: Long = 0
+        private var job: Job? = null
 
         private val dotView by lazy {
             val result = PathDotView(context)
@@ -240,19 +246,38 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
             dotViewLayoutParams.addRule(CENTER_IN_PARENT)
             dotView.layoutParams = dotViewLayoutParams
             addView(dotView)
-            Handler().postDelayed({
-                performAnimation()
-            }, dotAnimationStartDelay)
         }
 
-        private fun performAnimation() {
-            expand()
-            Handler().postDelayed({
-                collapse()
-                Handler().postDelayed({
-                    performAnimation()
-                }, dotAnimationRepeatInterval)
-            }, 1000)
+        override fun onAttachedToWindow() {
+            super.onAttachedToWindow()
+
+            startAnimation()
+        }
+
+        override fun onDetachedFromWindow() {
+            super.onDetachedFromWindow()
+
+            stopAnimation()
+        }
+
+        private fun startAnimation() {
+            job?.cancel()
+            job = GlobalScope.launch {
+                withContext(Dispatchers.Main) {
+                    while (isActive) {
+                        delay(dotAnimationStartDelay)
+                        expand()
+                        delay(EXPAND_ANIM_DELAY_MILLS)
+                        collapse()
+                        delay(dotAnimationRepeatInterval)
+                    }
+                }
+            }
+        }
+
+        private fun stopAnimation() {
+            job?.cancel()
+            job = null
         }
 
         private fun expand() {
@@ -269,6 +294,10 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
             val startColor = context.getAccentColor()
             val endColor = context.resources.getColorWithID(endColorID, context.theme)
             GlowViewUtilities.animateShadowColorChange(dotView, startColor, endColor)
+        }
+
+        companion object {
+            private const val EXPAND_ANIM_DELAY_MILLS = 1000L
         }
     }
     // endregion
