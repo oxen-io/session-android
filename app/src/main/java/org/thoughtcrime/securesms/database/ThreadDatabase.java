@@ -881,6 +881,10 @@ public class ThreadDatabase extends Database {
       this.cursor = cursor;
     }
 
+    public int getCount() {
+      return cursor == null ? 0 : cursor.getCount();
+    }
+
     public ThreadRecord getNext() {
       if (cursor == null || !cursor.moveToNext())
         return null;

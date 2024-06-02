@@ -122,7 +122,7 @@ class ProfilePictureView @JvmOverloads constructor(
 
             glide.clear(imageView)
 
-            val placeholder = PlaceholderAvatarPhoto(context, publicKey, displayName ?: "${publicKey.take(4)}...${publicKey.takeLast(4)}")
+            val placeholder = PlaceholderAvatarPhoto(publicKey, displayName ?: "${publicKey.take(4)}...${publicKey.takeLast(4)}")
 
             if (signalProfilePicture != null && avatar != "0" && avatar != "") {
                 glide.load(signalProfilePicture)

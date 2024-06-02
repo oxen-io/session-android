@@ -9,7 +9,11 @@ public interface MmsSmsColumns {
   public static final String THREAD_ID                = "thread_id";
   public static final String READ                     = "read";
   public static final String BODY                     = "body";
+
+  // This is the address of the message recipient, which may be a single user, a group, or a community!
+  // It is NOT the address of the sender of any given message!
   public static final String ADDRESS                  = "address";
+
   public static final String ADDRESS_DEVICE_ID        = "address_device_id";
   public static final String DELIVERY_RECEIPT_COUNT   = "delivery_receipt_count";
   public static final String READ_RECEIPT_COUNT       = "read_receipt_count";

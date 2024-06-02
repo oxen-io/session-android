@@ -2,12 +2,9 @@ package org.thoughtcrime.securesms.home
 
 import android.Manifest
 import android.app.NotificationManager
-import android.content.BroadcastReceiver
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.text.SpannableString
@@ -18,19 +15,18 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityHomeBinding
-import network.loki.messenger.databinding.ViewMessageRequestBannerBinding
 import network.loki.messenger.libsession_util.ConfigBase
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -76,14 +72,11 @@ import org.thoughtcrime.securesms.preferences.SettingsActivity
 import org.thoughtcrime.securesms.showMuteDialog
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
-import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.IP2Country
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
-import org.thoughtcrime.securesms.util.themeState
 import java.io.IOException
-import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -99,7 +92,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var glide: GlideRequests
-    private var broadcastReceiver: BroadcastReceiver? = null
 
     @Inject lateinit var threadDb: ThreadDatabase
     @Inject lateinit var mmsSmsDatabase: MmsSmsDatabase
@@ -117,7 +109,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         get() = textSecurePreferences.getLocalNumber()!!
 
     private val homeAdapter: HomeAdapter by lazy {
-        HomeAdapter(context = this, configFactory = configFactory, listener = this)
+        HomeAdapter(context = this, configFactory = configFactory, listener = this, ::showMessageRequests, ::hideMessageRequests)
     }
 
     private val globalSearchAdapter = GlobalSearchAdapter { model ->
@@ -189,7 +181,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 binding.seedReminderView.isVisible = false
             }
         }
-        setupMessageRequestsBanner()
         // Set up recycler view
         binding.globalSearchInputLayout.listener = this
         homeAdapter.setHasStableIds(true)
@@ -205,18 +196,10 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         // Set up empty state view
         binding.createNewPrivateChatButton.setOnClickListener { showNewConversation() }
         IP2Country.configureIfNeeded(this@HomeActivity)
-        startObservingUpdates()
 
         // Set up new conversation button
         binding.newConversationButton.setOnClickListener { showNewConversation() }
         // Observe blocked contacts changed events
-        val broadcastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                binding.recyclerView.adapter!!.notifyDataSetChanged()
-            }
-        }
-        this.broadcastReceiver = broadcastReceiver
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, IntentFilter("blockedContactsChanged"))
 
         // subscribe to outdated config updates, this should be removed after long enough time for device migration
         lifecycleScope.launch {
@@ -224,6 +207,26 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 TextSecurePreferences.events.filter { it == TextSecurePreferences.HAS_RECEIVED_LEGACY_CONFIG }.collect {
                     updateLegacyConfigView()
                 }
+            }
+        }
+
+        // Subscribe to threads and update the UI
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                homeViewModel.data
+                    .filterNotNull() // We don't actually want the null value here as it indicates a loading state (maybe we need a loading state?)
+                    .collectLatest { data ->
+                        val manager = binding.recyclerView.layoutManager as LinearLayoutManager
+                        val firstPos = manager.findFirstCompletelyVisibleItemPosition()
+                        val offsetTop = if(firstPos >= 0) {
+                            manager.findViewByPosition(firstPos)?.let { view ->
+                                manager.getDecoratedTop(view) - manager.getTopDecorationHeight(view)
+                            } ?: 0
+                        } else 0
+                        homeAdapter.data = data
+                        if(firstPos >= 0) { manager.scrollToPositionWithOffset(firstPos, offsetTop) }
+                        updateEmptyState()
+                    }
             }
         }
 
@@ -332,34 +335,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         binding.newConversationButton.isVisible = !isShown
     }
 
-    private fun setupMessageRequestsBanner() {
-        val messageRequestCount = threadDb.unapprovedConversationCount
-        // Set up message requests
-        if (messageRequestCount > 0 && !textSecurePreferences.hasHiddenMessageRequests()) {
-            with(ViewMessageRequestBannerBinding.inflate(layoutInflater)) {
-                unreadCountTextView.text = messageRequestCount.toString()
-                timestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(
-                    this@HomeActivity,
-                    Locale.getDefault(),
-                    threadDb.latestUnapprovedConversationTimestamp
-                )
-                root.setOnClickListener { showMessageRequests() }
-                root.setOnLongClickListener { hideMessageRequests(); true }
-                root.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
-                val hadHeader = homeAdapter.hasHeaderView()
-                homeAdapter.header = root
-                if (hadHeader) homeAdapter.notifyItemChanged(0)
-                else homeAdapter.notifyItemInserted(0)
-            }
-        } else {
-            val hadHeader = homeAdapter.hasHeaderView()
-            homeAdapter.header = null
-            if (hadHeader) {
-                homeAdapter.notifyItemRemoved(0)
-            }
-        }
-    }
-
     private fun updateLegacyConfigView() {
         binding.configOutdatedView.isVisible = ConfigBase.isNewConfigEnabled(textSecurePreferences.hasForcedNewConfig(), SnodeAPI.nowWithOffset)
                 && textSecurePreferences.getHasLegacyConfig()
@@ -385,52 +360,20 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 ConfigurationMessageUtilities.syncConfigurationIfNeeded(this@HomeActivity)
             }
         }
-
-        // If the theme hasn't changed then start observing updates again (if it does change then we
-        // will recreate the activity resulting in it responding to changes multiple times)
-        if (currentThemeState == textSecurePreferences.themeState() && !homeViewModel.getObservable(this).hasActiveObservers()) {
-            startObservingUpdates()
-        }
     }
 
     override fun onPause() {
         super.onPause()
         ApplicationContext.getInstance(this).messageNotifier.setHomeScreenVisible(false)
-
-        homeViewModel.getObservable(this).removeObservers(this)
     }
 
     override fun onDestroy() {
-        val broadcastReceiver = this.broadcastReceiver
-        if (broadcastReceiver != null) {
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
-        }
         super.onDestroy()
         EventBus.getDefault().unregister(this)
     }
     // endregion
 
     // region Updating
-    private fun startObservingUpdates() {
-        homeViewModel.getObservable(this).observe(this) { newData ->
-            val manager = binding.recyclerView.layoutManager as LinearLayoutManager
-            val firstPos = manager.findFirstCompletelyVisibleItemPosition()
-            val offsetTop = if(firstPos >= 0) {
-                manager.findViewByPosition(firstPos)?.let { view ->
-                    manager.getDecoratedTop(view) - manager.getTopDecorationHeight(view)
-                } ?: 0
-            } else 0
-            homeAdapter.data = newData
-            if(firstPos >= 0) { manager.scrollToPositionWithOffset(firstPos, offsetTop) }
-            setupMessageRequestsBanner()
-            updateEmptyState()
-        }
-
-        ApplicationContext.getInstance(this@HomeActivity).typingStatusRepository.typingThreads.observe(this) { threadIds ->
-            homeAdapter.typingThreadIDs = (threadIds ?: setOf())
-        }
-    }
-
     private fun updateEmptyState() {
         val threadCount = (binding.recyclerView.adapter)!!.itemCount
         binding.emptyStateContainer.isVisible = threadCount == 0 && binding.recyclerView.isVisible
@@ -441,7 +384,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         if (event.recipient.isLocalNumber) {
             updateProfileButton()
         } else {
-            homeViewModel.tryUpdateChannel()
+            homeViewModel.tryReload()
         }
     }
 
@@ -612,7 +555,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     private fun setConversationPinned(threadId: Long, pinned: Boolean) {
         lifecycleScope.launch(Dispatchers.IO) {
             storage.setPinned(threadId, pinned)
-            homeViewModel.tryUpdateChannel()
+            homeViewModel.tryReload()
         }
     }
 
@@ -687,8 +630,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             text("Hide message requests?")
             button(R.string.yes) {
                 textSecurePreferences.setHasHiddenMessageRequests()
-                setupMessageRequestsBanner()
-                homeViewModel.tryUpdateChannel()
+                homeViewModel.tryReload()
             }
             button(R.string.no)
         }

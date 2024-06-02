@@ -13,7 +13,8 @@ class MessagingModuleConfiguration(
     val device: Device,
     val messageDataProvider: MessageDataProvider,
     val getUserED25519KeyPair: () -> KeyPair?,
-    val configFactory: ConfigFactoryProtocol
+    val configFactory: ConfigFactoryProtocol,
+    val lastSentTimestampCache: LastSentTimestampCache
 ) {
 
     companion object {

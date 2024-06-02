@@ -18,6 +18,8 @@ import org.session.libsession.messaging.sending_receiving.notifications.Subscrip
 import org.session.libsession.messaging.sending_receiving.notifications.SubscriptionResponse
 import org.session.libsession.messaging.sending_receiving.notifications.UnsubscribeResponse
 import org.session.libsession.messaging.sending_receiving.notifications.UnsubscriptionRequest
+import org.session.libsession.messaging.utilities.SodiumUtilities
+import org.session.libsession.messaging.utilities.SodiumUtilities.sodium
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.snode.Version
@@ -34,8 +36,6 @@ private const val maxRetryCount = 4
 
 @Singleton
 class PushRegistryV2 @Inject constructor(private val pushReceiver: PushReceiver) {
-    private val sodium = LazySodiumAndroid(SodiumAndroid())
-
     fun register(
         device: Device,
         token: String,
