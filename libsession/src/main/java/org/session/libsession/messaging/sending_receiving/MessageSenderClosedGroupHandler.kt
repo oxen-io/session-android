@@ -253,7 +253,7 @@ fun MessageSender.leave(groupPublicKey: String, notifyUser: Boolean = true): Pro
         storage.setActive(groupID, false)
         sendNonDurably(closedGroupControlMessage, Address.fromSerialized(groupID), isSyncMessage = false).success {
             // Notify the user
-            val infoType = SignalServiceGroup.Type.QUIT
+            val infoType = SignalServiceGroup.Type.MEMBER_LEFT
             if (notifyUser) {
                 val threadID = storage.getOrCreateThreadIdFor(Address.fromSerialized(groupID))
                 storage.insertOutgoingInfoMessage(context, groupID, infoType, name, updatedMembers, admins, threadID, sentTime)

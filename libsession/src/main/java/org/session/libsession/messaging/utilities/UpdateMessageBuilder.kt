@@ -16,11 +16,18 @@ import org.session.libsession.messaging.sending_receiving.data_extraction.DataEx
 import org.session.libsession.utilities.ExpirationUtil
 import org.session.libsession.utilities.getExpirationTypeDisplayValue
 import org.session.libsession.utilities.truncateIdForDisplay
+import org.session.libsignal.utilities.Log
 
 object UpdateMessageBuilder {
 
+    const val TAG = "libsession"
+
     // Keys for Phrase library substitution
-    const val NAME_KEY = "name"
+    const val COUNT_KEY      = "count"
+    const val MEMBERS_KEY    = "members"
+    const val NAME_KEY       = "name"
+    const val OTHER_NAME_KEY = "other_name"
+    const val GROUP_NAME_KEY = "group_name"
 
     val storage = MessagingModuleConfiguration.shared.storage
 
@@ -31,41 +38,134 @@ object UpdateMessageBuilder {
     fun buildGroupUpdateMessage(context: Context, updateMessageData: UpdateMessageData, senderId: String? = null, isOutgoing: Boolean = false): String {
         val updateData = updateMessageData.kind
         if (updateData == null || !isOutgoing && senderId == null) return ""
-        val senderName: String = if (isOutgoing) context.getString(R.string.you)
-        else getSenderName(senderId!!)
-
-        // ACL TODO: Replace below with substitutions from phrase library
+        val senderName: String = if (isOutgoing) context.getString(R.string.you) else getSenderName(senderId!!)
 
         return when (updateData) {
+            // --- Group created or joined ---
             is UpdateMessageData.Kind.GroupCreation -> {
                 if (isOutgoing) context.getString(R.string.disappearingMessagesNewGroup)
-                else Phrase.from(context, R.string.disappearingMessagesAddedYou).put(NAME_KEY, senderName).format().toString()
+                else Phrase.from(context, R.string.disappearingMessagesAddedYou)
+                    .put(NAME_KEY, senderName)
+                    .format().toString()
             }
+
+            // --- Group name changed ---
             is UpdateMessageData.Kind.GroupNameChange -> {
-                if (isOutgoing) context.getString(R.string.MessageRecord_you_renamed_the_group_to_s, updateData.name)
-                else context.getString(R.string.MessageRecord_s_renamed_the_group_to_s, senderName, updateData.name)
+                if (isOutgoing) {
+                        Phrase.from(context, R.string.groupNameNew)
+                        .put(GROUP_NAME_KEY, updateData.name)
+                        .format().toString()
+                }
+                else {
+                    Phrase.from(context, R.string.disappearingMessagesRenamedGroup)
+                        .put(NAME_KEY, senderName)
+                        .put(GROUP_NAME_KEY, updateData.name)
+                        .format().toString()
+                }
             }
+
+            // --- Group member(s) were added ---
             is UpdateMessageData.Kind.GroupMemberAdded -> {
                 val members = updateData.updatedMembers.joinToString(", ", transform = ::getSenderName)
-                if (isOutgoing) context.getString(R.string.MessageRecord_you_added_s_to_the_group, members)
-                else context.getString(R.string.MessageRecord_s_added_s_to_the_group, senderName, members)
+                if (isOutgoing) {
+                    Phrase.from(context, R.string.groupYouAdded)
+                        .put(MEMBERS_KEY, members)
+                        .format().toString()
+                }
+                else {
+                    Phrase.from(context, R.string.groupNameAdded)
+                        .put(NAME_KEY,senderName)
+                        .put(MEMBERS_KEY, members)
+                        .format().toString()
+                }
             }
+
+            // --- Group member(s) removed ---
             is UpdateMessageData.Kind.GroupMemberRemoved -> {
                 val userPublicKey = storage.getUserPublicKey()!!
                 // 1st case: you are part of the removed members
                 return if (userPublicKey in updateData.updatedMembers) {
                     if (isOutgoing) context.getString(R.string.groupMemberYouLeft)
-                    else context.getString(R.string.MessageRecord_you_were_removed_from_the_group)
-                } else {
-                    // 2nd case: you are not part of the removed members
+                    else Phrase.from(context, R.string.groupRemovedYou)
+                            .put(GROUP_NAME_KEY, updateData.groupName)
+                            .format().toString()
+                }
+                else // 2nd case: you are not part of the removed members
+                {
                     val members = updateData.updatedMembers.joinToString(", ", transform = ::getSenderName)
-                    if (isOutgoing) context.getString(R.string.MessageRecord_you_removed_s_from_the_group, members)
-                    else context.getString(R.string.MessageRecord_s_removed_s_from_the_group, senderName, members)
+
+                    // a.) You are the person doing the removing of one or more members
+                    if (isOutgoing) {
+                        when (updateData.updatedMembers.size) {
+                            0 -> {
+                                Log.w(TAG, "Somehow you asked to remove zero members.")
+                                "" // Return an empty string - we don't want to show the error in the conversation
+                                }
+                            1 -> Phrase.from(context, R.string.groupRemoved)
+                                .put(NAME_KEY, updateData.updatedMembers.elementAt(0))
+                                .format().toString()
+                            2 -> Phrase.from(context, R.string.groupRemovedTwo)
+                                .put(NAME_KEY, updateData.updatedMembers.elementAt(0))
+                                .put(OTHER_NAME_KEY, updateData.updatedMembers.elementAt(1))
+                                .format().toString()
+                            else -> Phrase.from(context, R.string.groupRemovedMore)
+                                    .put(NAME_KEY, updateData.updatedMembers.elementAt(0))
+                                    .put(COUNT_KEY, updateData.updatedMembers.size - 1)
+                                    .format().toString()
+                        }
+                    }
+                    else // b.) Someone else is the person doing the removing of one or more members
+                    {
+                        // ACL TODO: Remove below line when confirmed that we aren't mentioning WHO removed anyone anymore.. or don't if we still are!
+                        //context.getString(R.string.MessageRecord_s_removed_s_from_the_group, senderName, members)
+
+                        // Note: I don't think we're doing "Alice removed Bob from the group"-type
+                        // messages anymore - just "Bob was removed from the group" - so this block
+                        // is identical to the one above, but I'll leave it like this until I can
+                        // confirm that this is the case.
+                        when (updateData.updatedMembers.size) {
+                            0 -> {
+                                Log.w(TAG, "Somehow someone else asked to remove zero members.")
+                                "" // Return an empty string - we don't want to show the error in the conversation
+                            }
+                            1 -> Phrase.from(context, R.string.groupRemoved)
+                                .put(NAME_KEY, updateData.updatedMembers.elementAt(0))
+                                .format().toString()
+                            2 -> Phrase.from(context, R.string.groupRemovedTwo)
+                                .put(NAME_KEY, updateData.updatedMembers.elementAt(0))
+                                .put(OTHER_NAME_KEY, updateData.updatedMembers.elementAt(1))
+                                .format().toString()
+                            else -> Phrase.from(context, R.string.groupRemovedMore)
+                                .put(NAME_KEY, updateData.updatedMembers.elementAt(0))
+                                .put(COUNT_KEY, updateData.updatedMembers.size - 1)
+                                .format().toString()
+                        }
+                    }
                 }
             }
+
+            // --- Group members left ---
             is UpdateMessageData.Kind.GroupMemberLeft -> {
                 if (isOutgoing) context.getString(R.string.groupMemberYouLeft)
-                else context.getString(R.string.ConversationItem_group_action_left, senderName)
+                else {
+                    when (updateData.updatedMembers.size) {
+                        0 -> {
+                            Log.w(TAG, "Somehow zero members left the group.")
+                            "" // Return an empty string - we don't want to show the error in the conversation
+                        }
+                        1 -> Phrase.from(context, R.string.groupMemberLeft)
+                            .put(NAME_KEY, updateData.updatedMembers.elementAt(0))
+                            .format().toString()
+                        2 -> Phrase.from(context, R.string.groupMemberLeftTwo)
+                            .put(NAME_KEY, updateData.updatedMembers.elementAt(0))
+                            .put(OTHER_NAME_KEY, updateData.updatedMembers.elementAt(1))
+                            .format().toString()
+                        else -> Phrase.from(context, R.string.groupMemberLeftMore)
+                            .put(NAME_KEY, updateData.updatedMembers.elementAt(0))
+                            .put(COUNT_KEY, updateData.updatedMembers.size - 1)
+                            .format().toString()
+                    }
+                }
             }
             else -> return ""
         }

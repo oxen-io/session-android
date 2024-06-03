@@ -3,13 +3,10 @@
     <!-- MessageRecord -->
     <string name="disappearingMessagesNewGroup">Vous avez créé un nouveau groupe.</string>
     <string name="disappearingMessagesAddedYou">%1$s vous a ajouté·e dans le groupe.</string>
-    <string name="MessageRecord_you_renamed_the_group_to_s">Vous avez renommé le groupe en %1$s</string>
-    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s a renommé le groupe en : %2$s</string>
-    <string name="MessageRecord_you_added_s_to_the_group">Vous avez ajouté %1$s au groupe.</string>
-    <string name="MessageRecord_s_added_s_to_the_group">%1$s a ajouté %2$s au groupe.</string>
-    <string name="MessageRecord_you_removed_s_from_the_group">Vous avez retiré %1$s du groupe.</string>
+    <string name="disappearingMessagesRenamedGroup">{name} a renommé le groupe en : {group_name}</string>
+    <string name="groupYouAdded">Vous avez ajouté {members} au groupe.</string>
+    <string name="groupNameAdded">%1$s a ajouté %2$s au groupe.</string>
     <string name="MessageRecord_s_removed_s_from_the_group">%1$s a supprimé %2$s du groupe.</string>
-    <string name="MessageRecord_you_were_removed_from_the_group">Vous avez été retiré·e du groupe.</string>
     <string name="you">Vous</string>
     <string name="MessageRecord_s_called_you">%s vous a appelé·e</string>
     <string name="MessageRecord_called_s">Vous avez appelé %s</string>
@@ -42,7 +39,6 @@
         <item quantity="other">%d semaines</item>
     </plurals>
     <string name="expiration_weeks_abbreviated">%d sem</string>
-    <string name="ConversationItem_group_action_left">%1$s a quitté le groupe.</string>
     <!-- RecipientProvider -->
     <string name="RecipientProvider_unnamed_group">Groupe sans nom</string>
 

@@ -7,13 +7,10 @@
 
     <!-- ACL - All of the below below need to be updated to match the new serialised string names -->
     <string name="MessageRecord_s_changed_messages_to_disappear_s_after_s"><b>{name}</b> has set messages to disappear {time} after they have been {disappearing_messages_type}.</string>
-    <string name="MessageRecord_you_renamed_the_group_to_s">You renamed the group to %1$s</string>
-    <string name="MessageRecord_s_renamed_the_group_to_s">%1$s renamed the group to: %2$s</string>
-    <string name="MessageRecord_you_added_s_to_the_group">You added %1$s to the group.</string>
-    <string name="MessageRecord_s_added_s_to_the_group">%1$s added %2$s to the group.</string>
-    <string name="MessageRecord_you_removed_s_from_the_group">You removed %1$s from the group.</string>
+    <string name="disappearingMessagesRenamedGroup">{name} renamed the group to: {group_name}</string>
+    <string name="groupYouAdded">You added {members} to the group.</string>
+    <string name="groupNameAdded">{name} added {members} to the group.</string>
     <string name="MessageRecord_s_removed_s_from_the_group">%1$s removed %2$s from the group.</string>
-    <string name="MessageRecord_you_were_removed_from_the_group">You were removed from the group.</string>
     <string name="MessageRecord_s_called_you">%s called you</string>
     <string name="MessageRecord_called_s">Called %s</string>
     <string name="MessageRecord_missed_call_from">Missed call from %s</string>
@@ -66,7 +63,6 @@
 
     <string name="expiration_weeks_abbreviated">%dw</string>
 
-    <string name="ConversationItem_group_action_left">%1$s has left the group.</string>
     <!-- RecipientProvider -->
     <string name="RecipientProvider_unnamed_group">Unnamed group</string>
 
@@ -581,7 +577,7 @@
     <string name="groupRemoveUsersMessages">Remove users and their messages</string>
     <string name="groupRemoveUsersOnly">Remove users</string>
     <string name="groupRemoved"><b>{name}</b> was removed from the group.</string>
-    <string name="groupRemovedMore"><b>{name}</b> and <b>{other_name}</b> were removed from the group.</string>
+    <string name="groupRemovedMore"><b>{name}</b> and <b>{count}</b> others were removed from the group.</string>
     <string name="groupRemovedTwo"><b>{name}</b> and <b>{other_name}</b> were removed from the group.</string>
     <string name="groupRemovedYou">You were removed from <b>{group_name}</b>.</string>
     <string name="groupSetDisplayPicture">Set Group Display Picture</string>
