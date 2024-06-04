@@ -140,7 +140,6 @@
     <string name="notificationsContent">දැනුම්දීමේ අන්තර්ගතය</string>
     <string name="sessionPrivacy">පෞද්ගලිකත්වය</string>
     <string name="contactsContacts">සබඳතා</string>
-    <string name="fragment_contact_selection_open_groups_title">විවෘත සමූහ</string>
     <!-- Next round of translation -->
     <string name="menu_apply_button">යොදන්න</string>
     <string name="groupEdit">සමූහය සංස්කරණය</string>

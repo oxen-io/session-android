@@ -258,7 +258,6 @@
     <string name="clearDataAll">Odstrániť všetky dáta</string>
     <string name="qrCode">QR kód</string>
     <string name="contactsContacts">Kontakty</string>
-    <string name="fragment_contact_selection_open_groups_title">Otvorené skupiny</string>
     <!-- Next round of translation -->
     <string name="menu_apply_button">Použiť</string>
     <string name="done">Dokončené</string>

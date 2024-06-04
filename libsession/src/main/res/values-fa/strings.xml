@@ -258,7 +258,6 @@
     <string name="clearDataAll">پاک کردن همه داده‌ها</string>
     <string name="qrCode">کد QR</string>
     <string name="contactsContacts">مخاطبین</string>
-    <string name="fragment_contact_selection_open_groups_title">گروه‌های باز</string>
     <!-- Next round of translation -->
     <string name="menu_apply_button">اعمال</string>
     <string name="done">انجام شد</string>

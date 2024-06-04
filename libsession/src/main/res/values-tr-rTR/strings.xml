@@ -258,7 +258,6 @@
     <string name="clearDataAll">Tüm Verileri Temizle</string>
     <string name="qrCode">QR kod</string>
     <string name="contactsContacts">Kişiler</string>
-    <string name="fragment_contact_selection_open_groups_title">Genel Gruplar</string>
     <!-- Next round of translation -->
     <string name="menu_apply_button">Uygula</string>
     <string name="done">Tamamlandı</string>

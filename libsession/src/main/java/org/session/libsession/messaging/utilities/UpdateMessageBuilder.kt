@@ -22,12 +22,14 @@ object UpdateMessageBuilder {
 
     const val TAG = "libsession"
 
-    // Keys for Phrase library substitution
-    const val COUNT_KEY      = "count"
-    const val MEMBERS_KEY    = "members"
-    const val NAME_KEY       = "name"
-    const val OTHER_NAME_KEY = "other_name"
-    const val GROUP_NAME_KEY = "group_name"
+    // Keys for Phrase library string substitutions - do not include the curly braces!
+    const val COUNT_KEY                      = "count"
+    const val DISAPPEARING_MESSAGES_TYPE_KEY = "disappearing_messages_type"
+    const val GROUP_NAME_KEY                 = "group_name"
+    const val MEMBERS_KEY                    = "members"
+    const val NAME_KEY                       = "name"
+    const val OTHER_NAME_KEY                 = "other_name"
+    const val TIME_KEY                       = "time"
 
     val storage = MessagingModuleConfiguration.shared.storage
 
@@ -83,10 +85,11 @@ object UpdateMessageBuilder {
             // --- Group member(s) removed ---
             is UpdateMessageData.Kind.GroupMemberRemoved -> {
                 val userPublicKey = storage.getUserPublicKey()!!
+
                 // 1st case: you are part of the removed members
                 return if (userPublicKey in updateData.updatedMembers) {
-                    if (isOutgoing) context.getString(R.string.groupMemberYouLeft)
-                    else Phrase.from(context, R.string.groupRemovedYou)
+                    if (isOutgoing) context.getString(R.string.groupMemberYouLeft) // You chose to leave
+                    else Phrase.from(context, R.string.groupRemovedYou)            // You were forced to leave
                             .put(GROUP_NAME_KEY, updateData.groupName)
                             .format().toString()
                 }
@@ -174,44 +177,91 @@ object UpdateMessageBuilder {
     fun buildExpirationTimerMessage(
         context: Context,
         duration: Long,
-        isGroup: Boolean,
+        isGroup: Boolean, // ACL TODO: Does this include communities? (i.e., open groups) - probably??? Do some testing!
         senderId: String? = null,
         isOutgoing: Boolean = false,
         timestamp: Long,
         expireStarted: Long
     ): String {
-        if (!isOutgoing && senderId == null) return ""
+        if (!isOutgoing && senderId == null) {
+            Log.w(TAG, "buildExpirationTimerMessage: Cannot build for outgoing message when senderId is null.")
+            return ""
+        }
+
         val senderName = if (isOutgoing) context.getString(R.string.you) else getSenderName(senderId!!)
-        return if (duration <= 0) {
-            if (isOutgoing) context.getString(if (isGroup) R.string.MessageRecord_you_turned_off_disappearing_messages else R.string.MessageRecord_you_turned_off_disappearing_messages_1_on_1)
-            else context.getString(if (isGroup) R.string.MessageRecord_s_turned_off_disappearing_messages else R.string.MessageRecord_s_turned_off_disappearing_messages_1_on_1, senderName)
-        } else {
-            val time = ExpirationUtil.getExpirationDisplayValue(context, duration.toInt())
-            val action = context.getExpirationTypeDisplayValue(timestamp >= expireStarted)
-            if (isOutgoing) context.getString( //disappearingMessagesSetYou
-                if (isGroup) R.string.MessageRecord_s_changed_messages_to_disappear_s_after_s else R.string.MessageRecord_you_set_messages_to_disappear_s_after_s_1_on_1,
-                time,
-                action
-            ) else context.getString(
-                if (isGroup) R.string.MessageRecord_s_set_messages_to_disappear_s_after_s else R.string.MessageRecord_s_set_messages_to_disappear_s_after_s_1_on_1,
-                senderName,
-                time,
-                action
-            )
+
+        // Case 1.) Disappearing messages have been turned off..
+        if (duration <= 0) {
+            // ..by you..
+            return if (isOutgoing) {
+                context.getString(R.string.disappearingMessagesTurnedOffYou)
+            }
+            else // ..or by someone else.
+            {
+                // ACL TODO - Do we want one of these to be "has turned THEIR disappearing messages off?" - likely the 1-on-1?
+                val stringId = if (isGroup) R.string.disappearingMessagesTurnedOff else // If you can turn disappearing msgs on/off in group then ur admin?? Check!
+                                            R.string.disappearingMessagesTurnedOff
+                Phrase.from(context, stringId).put(NAME_KEY, senderName).format().toString()
+            }
+        }
+
+        // Case 2.) Disappearing message settings have been changed but not turned off.
+        val time = ExpirationUtil.getExpirationDisplayValue(context, duration.toInt())
+        val action = context.getExpirationTypeDisplayValue(timestamp >= expireStarted)
+
+        //..by you..
+        if (isOutgoing) {
+            return if (isGroup) {
+                Phrase.from(context, R.string.disappearingMessagesSetYou)
+                    .put(TIME_KEY, time)
+                    .put(DISAPPEARING_MESSAGES_TYPE_KEY, action)
+                    .format().toString()
+            } else // 1-on-1 conversation
+            {
+                Phrase.from(context, R.string.disappearingMessagesUpdatedYours)
+                    .put(TIME_KEY, time)
+                    .put(DISAPPEARING_MESSAGES_TYPE_KEY, action)
+                    .format().toString()
+            }
+        }
+        else // ..or by someone else.
+        {
+            return Phrase.from(context, R.string.disappearingMessagesSet)
+                .put(NAME_KEY, senderName)
+                .put(TIME_KEY, time)
+                .put(DISAPPEARING_MESSAGES_TYPE_KEY, action)
+                .format().toString()
+        }
+
+    }
+
+    fun buildDataExtractionMessage(context: Context,
+                                   kind: DataExtractionNotificationInfoMessage.Kind,
+                                   senderId: String? = null): String {
+
+        val senderName = if (senderId != null) getSenderName(senderId) else context.getString(R.string.unknown)
+
+        return when (kind) {
+            SCREENSHOT  -> Phrase.from(context, R.string.screenshotTaken)
+                .put(NAME_KEY, senderName)
+                .format().toString()
+
+            MEDIA_SAVED -> Phrase.from(context, R.string.attachmentsMediaSaved)
+                .put(NAME_KEY, senderName)
+                .format().toString()
         }
     }
 
-    fun buildDataExtractionMessage(context: Context, kind: DataExtractionNotificationInfoMessage.Kind, senderId: String? = null) = when (kind) {
-        SCREENSHOT -> R.string.MessageRecord_s_took_a_screenshot
-        MEDIA_SAVED -> R.string.MessageRecord_media_saved_by_s
-    }.let { context.getString(it, getSenderName(senderId!!)) }
+    fun buildCallMessage(context: Context, type: CallMessageType, senderId: String): String {
+        val senderName = storage.getContactWithSessionID(senderId)?.displayName(Contact.ContactContext.REGULAR) ?: senderId
 
-    fun buildCallMessage(context: Context, type: CallMessageType, sender: String): String =
-        when (type) {
-            CALL_INCOMING -> R.string.MessageRecord_s_called_you
-            CALL_OUTGOING -> R.string.MessageRecord_called_s
-            CALL_MISSED, CALL_FIRST_MISSED -> R.string.MessageRecord_missed_call_from
-        }.let {
-            context.getString(it, storage.getContactWithSessionID(sender)?.displayName(Contact.ContactContext.REGULAR) ?: sender)
+        return when (type) {
+            CALL_INCOMING -> Phrase.from(context, R.string.callsCalledYou).put(NAME_KEY, senderName).format().toString()
+            CALL_OUTGOING -> Phrase.from(context, R.string.callsYouCalled).put(NAME_KEY, senderName).format().toString()
+
+            CALL_MISSED, CALL_FIRST_MISSED -> Phrase.from(context, R.string.callsMissedCallFrom)
+                .put(NAME_KEY, senderName)
+                .format().toString()
         }
+    }
 }

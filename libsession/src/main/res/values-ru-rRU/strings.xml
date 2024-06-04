@@ -268,7 +268,6 @@
     <string name="clearDataAll">Очистить все данные</string>
     <string name="qrCode">QR-код</string>
     <string name="contactsContacts">Контакты</string>
-    <string name="fragment_contact_selection_open_groups_title">Открытые группы</string>
     <!-- Next round of translation -->
     <string name="menu_apply_button">Применить</string>
     <string name="done">Готово</string>

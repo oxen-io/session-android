@@ -259,7 +259,6 @@
     <string name="clearDataAll">Az összes adat törlése</string>
     <string name="qrCode">QR kód</string>
     <string name="contactsContacts">Kapcsolatok</string>
-    <string name="fragment_contact_selection_open_groups_title">Nyílt Csoportok</string>
     <!-- Next round of translation -->
     <string name="menu_apply_button">Alkalmaz</string>
     <string name="done">Kész</string>

@@ -130,7 +130,6 @@
     <string name="clearDataAll">Izdzēst visus datus</string>
     <string name="qrCode">QR kods</string>
     <string name="contactsContacts">Kontakti</string>
-    <string name="fragment_contact_selection_open_groups_title">Atvērtās grupas</string>
     <!-- Next round of translation -->
     <string name="done">Pabeigts</string>
     <string name="groupEdit">Rediģēt grupu</string>

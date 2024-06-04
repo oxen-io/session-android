@@ -253,7 +253,6 @@
     <string name="clearDataAll">清除所有數據</string>
     <string name="qrCode">QR Code</string>
     <string name="contactsContacts">聯絡人</string>
-    <string name="fragment_contact_selection_open_groups_title">查看群組</string>
     <!-- Next round of translation -->
     <string name="menu_apply_button">應用</string>
     <string name="done">完成</string>

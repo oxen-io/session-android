@@ -253,7 +253,6 @@
     <string name="clearDataAll">すべてのデータを消去する</string>
     <string name="qrCode">QR コード</string>
     <string name="contactsContacts">連絡先</string>
-    <string name="fragment_contact_selection_open_groups_title">オープングループ</string>
     <!-- Next round of translation -->
     <string name="menu_apply_button">適用する</string>
     <string name="done">完了</string>

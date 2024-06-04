@@ -258,7 +258,6 @@
     <string name="clearDataAll">Tyhjennä tiedot</string>
     <string name="qrCode">QR-koodi</string>
     <string name="contactsContacts">Yhteystiedot</string>
-    <string name="fragment_contact_selection_open_groups_title">Avoimet Ryhmät</string>
     <!-- Next round of translation -->
     <string name="menu_apply_button">Käytä</string>
     <string name="done">Valmis</string>

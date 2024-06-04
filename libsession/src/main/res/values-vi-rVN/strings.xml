@@ -201,6 +201,5 @@
     <string name="clearDataAll">Xóa tất cả dữ liệu</string>
     <string name="qrCode">Mã QR</string>
     <string name="contactsContacts">Danh bạ</string>
-    <string name="fragment_contact_selection_open_groups_title">Nhóm mở</string>
     <!-- Next round of translation -->
 </resources>

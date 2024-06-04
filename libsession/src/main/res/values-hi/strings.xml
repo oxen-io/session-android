@@ -258,7 +258,6 @@
     <string name="clearDataAll">सभी डेटा हटाएं</string>
     <string name="qrCode">QR कोड</string>
     <string name="contactsContacts">संपर्क</string>
-    <string name="fragment_contact_selection_open_groups_title">खुले ग्रुप</string>
     <!-- Next round of translation -->
     <string name="menu_apply_button">लागू करें</string>
     <string name="done">पूरा हुआ</string>

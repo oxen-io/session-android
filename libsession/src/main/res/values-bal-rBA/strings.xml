@@ -219,6 +219,5 @@
     <string name="clearDataAll">Hapus semua data</string>
     <string name="qrCode">Kode QR</string>
     <string name="contactsContacts">Kontak</string>
-    <string name="fragment_contact_selection_open_groups_title">Grup terbuka</string>
     <!-- Next round of translation -->
 </resources>

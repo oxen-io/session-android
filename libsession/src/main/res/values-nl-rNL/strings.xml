@@ -258,7 +258,6 @@
     <string name="clearDataAll">Wis alle gegevens</string>
     <string name="qrCode">QR-code</string>
     <string name="contactsContacts">Contacten</string>
-    <string name="fragment_contact_selection_open_groups_title">Open groepen</string>
     <!-- Next round of translation -->
     <string name="menu_apply_button">Toepassen</string>
     <string name="done">Klaar</string>

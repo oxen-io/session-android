@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayoutMediator
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,6 +28,7 @@ import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.conversation.start.NewConversationDelegate
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.GROUP_NAME_KEY
 
 @AndroidEntryPoint
 class JoinCommunityFragment : Fragment() {
@@ -47,6 +49,7 @@ class JoinCommunityFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.backButton.setOnClickListener { delegate.onDialogBackPressed() }
         binding.closeButton.setOnClickListener { delegate.onDialogClosePressed() }
+
         fun showLoader() {
             binding.loader.visibility = View.VISIBLE
             binding.loader.animate().setDuration(150).alpha(1.0f).start()
@@ -61,18 +64,24 @@ class JoinCommunityFragment : Fragment() {
                 }
             })
         }
+
         fun joinCommunityIfPossible(url: String) {
             val openGroup = try {
                 OpenGroupUrlParser.parseUrl(url)
             } catch (e: OpenGroupUrlParser.Error) {
                 when (e) {
-                    is OpenGroupUrlParser.Error.MalformedURL     -> return Toast.makeText(activity, R.string.groupErrorJoin, Toast.LENGTH_SHORT).show()
-                    is OpenGroupUrlParser.Error.InvalidPublicKey -> return Toast.makeText(activity, R.string.communityEnterUrlErrorInvalidDescription, Toast.LENGTH_SHORT).show()
-                    is OpenGroupUrlParser.Error.NoPublicKey      -> return Toast.makeText(activity, R.string.communityEnterUrlErrorInvalidDescription, Toast.LENGTH_SHORT).show()
-                    is OpenGroupUrlParser.Error.NoRoom           -> return Toast.makeText(activity, R.string.groupErrorJoin, Toast.LENGTH_SHORT).show()
+                    is OpenGroupUrlParser.Error.MalformedURL, OpenGroupUrlParser.Error.NoRoomSpecified -> {
+                        val txt = Phrase.from(context, R.string.groupErrorJoin).put(GROUP_NAME_KEY, url).format().toString()
+                        return Toast.makeText(activity, txt, Toast.LENGTH_SHORT).show()
+                    }
+                    is OpenGroupUrlParser.Error.InvalidPublicKey, OpenGroupUrlParser.Error.NoPublicKey -> {
+                        return Toast.makeText(activity, R.string.communityEnterUrlErrorInvalidDescription, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
+
             showLoader()
+
             lifecycleScope.launch(Dispatchers.IO) {
                 try {
                     val sanitizedServer = openGroup.server.removeSuffix("/")
@@ -93,7 +102,8 @@ class JoinCommunityFragment : Fragment() {
                     Log.e("Loki", "Couldn't join community.", e)
                     withContext(Dispatchers.Main) {
                         hideLoader()
-                        Toast.makeText(activity, R.string.groupErrorJoin, Toast.LENGTH_SHORT).show()
+                        val txt = Phrase.from(context, R.string.groupErrorJoin).put(GROUP_NAME_KEY, url).format().toString()
+                        Toast.makeText(activity, txt, Toast.LENGTH_SHORT).show()
                     }
                     return@launch
                 }

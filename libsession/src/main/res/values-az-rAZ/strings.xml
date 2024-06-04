@@ -258,7 +258,6 @@
     <string name="clearDataAll">Bütün verilənləri təmizlə</string>
     <string name="qrCode">QR Kod</string>
     <string name="contactsContacts">Əlaqələr</string>
-    <string name="fragment_contact_selection_open_groups_title">Açıq qruplar</string>
     <!-- Next round of translation -->
     <string name="menu_apply_button">Tətbiq et</string>
     <string name="done">Bitdi</string>

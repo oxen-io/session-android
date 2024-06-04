@@ -36,7 +36,7 @@ class ContactSelectionListLoader(context: Context, val mode: Int, val filter: St
             list.addAll(getClosedGroups(contacts))
         }
         if (isFlagSet(DisplayMode.FLAG_OPEN_GROUPS)) {
-            list.addAll(getOpenGroups(contacts))
+            list.addAll(getCommunities(contacts))
         }
         if (isFlagSet(DisplayMode.FLAG_CONTACTS)) {
             list.addAll(getContacts(contacts))
@@ -51,13 +51,13 @@ class ContactSelectionListLoader(context: Context, val mode: Int, val filter: St
     }
 
     private fun getClosedGroups(contacts: List<Recipient>): List<ContactSelectionListItem> {
-        return getItems(contacts, context.getString(R.string.fragment_contact_selection_closed_groups_title)) {
+        return getItems(contacts, context.getString(R.string.conversationsGroups)) {
             it.address.isClosedGroup
         }
     }
 
-    private fun getOpenGroups(contacts: List<Recipient>): List<ContactSelectionListItem> {
-        return getItems(contacts, context.getString(R.string.fragment_contact_selection_open_groups_title)) {
+    private fun getCommunities(contacts: List<Recipient>): List<ContactSelectionListItem> {
+        return getItems(contacts, context.getString(R.string.conversationsCommunities)) {
             it.address.isCommunity
         }
     }

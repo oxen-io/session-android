@@ -514,15 +514,10 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     private fun unblockConversation(thread: ThreadRecord) {
         showSessionDialog {
             title(R.string.blockUnblock)
-
-            // ACL - There's no new string for this - it was:
-            // R.string.RecipientPreferenceActivity_you_will_once_again_be_able_to_receive_messages_and_calls_from_this_contact
-            text("You will once again be able to receive messages and calls from this contact.")
-
+            text(Phrase.from(context, R.string.blockUnblockName).put(NAME_KEY, thread.recipient.name).format())
             button(R.string.blockUnblock) {
                 lifecycleScope.launch(Dispatchers.IO) {
                     storage.setBlocked(listOf(thread.recipient), false)
-
                     withContext(Dispatchers.Main) {
                         binding.recyclerView.adapter!!.notifyDataSetChanged()
                     }

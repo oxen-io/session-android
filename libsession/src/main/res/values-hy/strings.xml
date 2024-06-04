@@ -258,7 +258,6 @@
     <string name="clearDataAll">Ջնջել բոլոր տվյալները</string>
     <string name="qrCode">QR կոդ</string>
     <string name="contactsContacts">Կոնտակտներ</string>
-    <string name="fragment_contact_selection_open_groups_title">Բաց Խմբեր</string>
     <!-- Next round of translation -->
     <string name="menu_apply_button">Հաստատել</string>
     <string name="done">Վերջ</string>

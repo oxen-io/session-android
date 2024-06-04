@@ -1226,9 +1226,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         if (recipient.isContactRecipient) {
             showSessionDialog {
                 title(R.string.blockUnblock)
-                text(Phrase.from(context, R.string.blockUnblockDescription)
-                    .put(NAME_KEY, recipient.name)
-                    .format())
+                text(Phrase.from(context, R.string.blockUnblockName).put(NAME_KEY, recipient.name).format())
                 destructiveButton(
                     R.string.blockUnblock,
                     R.string.AccessibilityId_block_confirm

@@ -6,25 +6,15 @@
     <string name="app_name" translatable="false">Session</string>
 
     <!-- ACL - All of the below below need to be updated to match the new serialised string names -->
-    <string name="MessageRecord_s_changed_messages_to_disappear_s_after_s"><b>{name}</b> has set messages to disappear {time} after they have been {disappearing_messages_type}.</string>
+
     <string name="disappearingMessagesRenamedGroup">{name} renamed the group to: {group_name}</string>
     <string name="groupYouAdded">You added {members} to the group.</string>
     <string name="groupNameAdded">{name} added {members} to the group.</string>
     <string name="MessageRecord_s_removed_s_from_the_group">%1$s removed %2$s from the group.</string>
-    <string name="MessageRecord_s_called_you">%s called you</string>
-    <string name="MessageRecord_called_s">Called %s</string>
-    <string name="MessageRecord_missed_call_from">Missed call from %s</string>
-    <string name="MessageRecord_you_turned_off_disappearing_messages">You have turned off disappearing messages.</string>
-    <string name="MessageRecord_you_turned_off_disappearing_messages_1_on_1">You turned off disappearing messages. Messages you send will no longer disappear.</string>
-    <string name="MessageRecord_s_turned_off_disappearing_messages">%1$s turned off disappearing messages.</string>
-    <string name="MessageRecord_s_turned_off_disappearing_messages_1_on_1">%1$s has turned off disappearing messages. Messages they send will no longer disappear.</string>
-    <string name="MessageRecord_you_set_messages_to_disappear_s_after_s_1_on_1">You set your messages to disappear %1$s after they have been %2$s.</string>
-    <string name="MessageRecord_you_changed_messages_to_disappear_s_after_s">You have changed messages to disappear %1$s after they have been %2$s</string>
-    <string name="MessageRecord_s_set_messages_to_disappear_s_after_s">%1$s has set messages to disappear %2$s after they have been %3$s</string>
-    <string name="MessageRecord_s_set_messages_to_disappear_s_after_s_1_on_1">%1$s has set their messages to disappear %2$s after they have been %3$s.</string>
 
-    <string name="MessageRecord_s_took_a_screenshot">%1$s took a screenshot.</string>
-    <string name="MessageRecord_media_saved_by_s">Media saved by %1$s.</string>
+
+    <string name="disappearingMessagesUpdatedYours">You set your messages to disappear {time} after they have been {disappearing_messages_type}.</string>
+    <string name="MessageRecord_you_changed_messages_to_disappear_s_after_s">You have changed messages to disappear %1$s after they have been %2$s</string>
 
 
     <!-- expiration -->
@@ -317,7 +307,7 @@
     <string name="blockBlockedNone">No blocked contacts</string>
     <string name="blockDescription">Are you sure you want to block <b>{name}</b>? Blocked users cannot send you message requests, group invites or call you.</string>
     <string name="blockUnblock">Unblock</string>
-    <string name="blockUnblockDescription">Are you sure you want to unblock {name}?</string>
+    <string name="blockUnblockName">Are you sure you want to unblock {name}?</string>
     <string name="call">Call</string>
     <string name="callsCalledYou">{name} called you</string>
     <string name="callsCannotStart">You cannot start a new call. Finish your current call first.</string>
@@ -409,10 +399,12 @@
     <string name="conversationsAutoplayAudioMessage">Autoplay Audio Message</string>
     <string name="conversationsAutoplayAudioMessageDescription">Autoplay consecutively sent audio messages</string>
     <string name="conversationsBlockedContacts">Blocked Contacts</string>
+    <string name="conversationsCommunities">Communities</string>
     <string name="conversationsDelete">Delete Conversation</string>
     <string name="conversationsDeleteDescription">Are you sure you want to delete your conversation with <b>{name}</b>? New messages from <b>{name}</b> will start a new conversation.</string>
     <string name="conversationsDeleted">Conversation deleted</string>
     <string name="conversationsEmpty">There are no messages in {conversation_name}.</string>
+    <string name="conversationsGroups">Groups</string>
     <string name="conversationsMessageTrimming">Message Trimming</string>
     <string name="conversationsMessageTrimmingTrimCommunities">Trim Communities</string>
     <string name="conversationsMessageTrimmingTrimCommunitiesDescription">Delete messages from Community conversations older than 6 months, and where there are over 2,000 messages.</string>
@@ -474,7 +466,7 @@
     <string name="disappearingMessagesSetYou"><b>You</b> set messages to disappear {time} after they have been {disappearing_messages_type}.</string>
     <string name="disappearingMessagesTimer">Timer</string>
     <string name="disappearingMessagesTurnedOff"><b>{name}</b> has turned disappearing messages off.</string>
-    <string name="disappearingMessagesTurnedOffYou"><b>You</b> turned disappearing messages off.</string>
+    <string name="disappearingMessagesTurnedOffYou"><b>You</b> turned <b>off</b> disappearing messages. Messages you send will no longer disappear.</string>
     <string name="disappearingMessagesTwelveH">12H</string>
     <string name="disappearingMessagesTwelveHours">12 Hours</string>
     <string name="disappearingMessagesTwoW">2W</string>
@@ -515,12 +507,10 @@
     <string name="file">File</string>
     <string name="files">Files</string>
     <string name="followSystemSettings">Follow system settings</string>
-    <string name="fragment_contact_selection_closed_groups_title">Closed Groups</string>
-    <string name="fragment_contact_selection_open_groups_title">Open Groups</string>
     <string name="fragment_enter_public_key_prompt">Start a new conversation by entering someone\'s Session ID or share your Session ID with them.</string>
     <string name="fragment_view_my_qr_code_share_title">Share QR Code</string>
     <string name="fragment_view_my_qr_code_title">Scan Me</string>
-    <string name="from">From</string>
+    <string name="from">From:</string>
     <string name="fullScreenToggle">Toggle Full Screen</string>
     <string name="gif">GIF</string>
     <string name="giphy_permission_message">Session will connect to Giphy to provide search results. You will not have full metadata protection when sending GIFs.</string>
@@ -533,8 +523,7 @@
     <string name="groupDescriptionEnter">Enter a group description</string>
     <string name="groupDisplayPictureUpdated">Group display picture updated.</string>
     <string name="groupEdit">Edit Group</string>
-    <string name="groupErrorJoin">Couldn\'t join group</string>
-    <string name="groupErrorLeave">Couldn\'t leave group</string>
+    <string name="groupErrorJoin">Failed to join {group_name}</string>
     <string name="groupInformationSet">Set Group Information</string>
     <string name="groupInviteDelete">Are you sure you want to delete this group invite?</string>
     <string name="groupInviteFailed">Invite failed</string>
@@ -803,7 +792,7 @@
     <string name="read">Read</string>
     <string name="readReceipts">Read Receipts</string>
     <string name="readReceiptsDescription">Show read receipts for all messages you send and receive.</string>
-    <string name="received">Received</string>
+    <string name="received">Received:</string>
     <string name="recommended">Recommended</string>
     <string name="recoveryPasswordDescription">Use your recovery password to load your account on new devices. Your account cannot be recovered without your recovery password. Make sure it\'s stored somewhere safe and secure — and don\'t share it with anyone.</string>
     <string name="recoveryPasswordEnter">Enter your recovery password</string>

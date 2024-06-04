@@ -260,7 +260,6 @@
     <string name="clearDataAll">Išvalyti visus duomenis</string>
     <string name="qrCode">QR kodas</string>
     <string name="contactsContacts">Adresatai</string>
-    <string name="fragment_contact_selection_open_groups_title">Atviros grupės</string>
     <!-- Next round of translation -->
     <string name="menu_apply_button">Taikyti</string>
     <string name="done">Atlikta</string>

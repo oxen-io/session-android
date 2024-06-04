@@ -227,7 +227,6 @@
     <string name="activity_create_closed_group_empty_state_button_title">Iniciar unha sesión</string>
     <string name="groupNameEnterPlease">Por favor, introduce o nome do grupo</string>
     <string name="qrCode">Código QR</string>
-    <string name="fragment_contact_selection_open_groups_title">Grupos abertos</string>
     <!-- Next round of translation -->
     <string name="groupEdit">Editar grupo</string>
 </resources>

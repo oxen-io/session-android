@@ -258,7 +258,6 @@
     <string name="clearDataAll">Fjern alle data</string>
     <string name="qrCode">QR-kode</string>
     <string name="contactsContacts">Kontakt</string>
-    <string name="fragment_contact_selection_open_groups_title">Åpne grupper</string>
     <!-- Next round of translation -->
     <string name="menu_apply_button">Bruk</string>
     <string name="done">Ferdig</string>

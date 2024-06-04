@@ -258,7 +258,6 @@
     <string name="clearDataAll">Rensa All Data</string>
     <string name="qrCode">QR-kod</string>
     <string name="contactsContacts">Kontakter</string>
-    <string name="fragment_contact_selection_open_groups_title">Öppna Grupper</string>
     <!-- Next round of translation -->
     <string name="menu_apply_button">Tillämpa</string>
     <string name="done">Klar</string>

@@ -258,7 +258,6 @@
     <string name="clearDataAll">Viŝi Tutajn Datumojn</string>
     <string name="qrCode">QR-Kodo</string>
     <string name="contactsContacts">Kontaktoj</string>
-    <string name="fragment_contact_selection_open_groups_title">Malfermaj Grupoj</string>
     <!-- Next round of translation -->
     <string name="menu_apply_button">Apliki</string>
     <string name="done">Farite</string>

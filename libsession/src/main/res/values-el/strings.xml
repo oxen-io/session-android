@@ -258,7 +258,6 @@
     <string name="clearDataAll">Εκκαθάριση όλων των δεδομένων</string>
     <string name="qrCode">QR κωδικός</string>
     <string name="contactsContacts">Επαφές</string>
-    <string name="fragment_contact_selection_open_groups_title">Ανοικτές Ομάδες</string>
     <!-- Next round of translation -->
     <string name="menu_apply_button">Εφαρμογή</string>
     <string name="done">Τέλος</string>

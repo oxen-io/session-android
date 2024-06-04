@@ -253,7 +253,6 @@
     <string name="clearDataAll">Esborra totes les dades</string>
     <string name="qrCode">Codi QR</string>
     <string name="contactsContacts">Contactes</string>
-    <string name="fragment_contact_selection_open_groups_title">Grups oberts</string>
     <!-- Next round of translation -->
     <string name="menu_apply_button">Aplica</string>
     <string name="done">Fet</string>

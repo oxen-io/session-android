@@ -253,7 +253,6 @@
     <string name="clearDataAll">清除所有数据</string>
     <string name="qrCode">二维码</string>
     <string name="contactsContacts">联系人</string>
-    <string name="fragment_contact_selection_open_groups_title">公开群组</string>
     <!-- Next round of translation -->
     <string name="menu_apply_button">应用</string>
     <string name="done">完成</string>
