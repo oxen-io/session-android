@@ -29,12 +29,11 @@ object ExpirationUtil {
             context.getString(R.string.off)
         } else if (expirationTimeSecs < 1.minutes.inWholeSeconds) {
             // If expiration time is expressed in seconds
-            val seconds = (expirationTimeSecs / 1.minutes.inWholeSeconds).toInt()
-            if (seconds == 1) {
-                Phrase.from(context, R.string.expirationSecond).put(SECONDS_KEY, seconds.toString()).format().toString()
+            if (expirationTimeSecs == 1) {
+                Phrase.from(context, R.string.expirationSecond).put(SECONDS_KEY, expirationTimeSecs.toString()).format().toString()
             }
             else {
-                Phrase.from(context, R.string.expirationMinutes).put(SECONDS_KEY, seconds.toString()).format().toString()
+                Phrase.from(context, R.string.expirationSeconds).put(SECONDS_KEY, expirationTimeSecs.toString()).format().toString()
             }
         } else if (expirationTimeSecs < 1.hours.inWholeSeconds) {
             // If expiration time is expressed in minutes
@@ -61,7 +60,7 @@ object ExpirationUtil {
                 Phrase.from(context, R.string.expirationDay).put(DAYS_KEY, days.toString()).format().toString()
             }
             else {
-                Phrase.from(context, R.string.expirationHours).put(DAYS_KEY, days.toString()).format().toString()
+                Phrase.from(context, R.string.expirationDays).put(DAYS_KEY, days.toString()).format().toString()
             }
         } else {
             // If expiration time is expressed in weeks
