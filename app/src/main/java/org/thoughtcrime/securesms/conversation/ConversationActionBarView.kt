@@ -98,8 +98,8 @@ class ConversationActionBarView @JvmOverloads constructor(
         val settings = mutableListOf<ConversationSetting>()
         if (config?.isEnabled == true) {
             val prefix = when (config.expiryMode) {
-                is ExpiryMode.AfterRead -> R.string.expiration_type_disappear_after_read
-                else -> R.string.expiration_type_disappear_after_send
+                is ExpiryMode.AfterRead -> R.string.disappearingMessagesDisappearAfterRead
+                else -> R.string.disappearingMessagesDisappearAfterSend
             }.let(context::getString)
             settings += ConversationSetting(
                 "$prefix - ${ExpirationUtil.getExpirationAbbreviatedDisplayValue(context, config.expiryMode.expirySeconds)}",

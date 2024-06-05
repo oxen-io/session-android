@@ -15,21 +15,7 @@
 
     <string name="disappearingMessagesUpdatedYours">You set your messages to disappear {time} after they have been {disappearing_messages_type}.</string>
 
-    <string name="expirationSecond">{seconds} second</string>
-    <string name="expirationSeconds">{seconds} seconds</string>
-    <string name="expirationSecondsAbbreviated">{seconds}s</string>
-    <string name="expirationMinute">{minutes} minute</string>
-    <string name="expirationMinutes">{minutes} minutes</string>
-    <string name="expirationMinutesAbbreviated">{minutes}m</string>
-    <string name="expirationHour">{hours} hour</string>
-    <string name="expirationHours">{hours} hours</string>
-    <string name="expirationHoursAbbreviated">{hours}h</string>
-    <string name="expirationDay">{days} day</string>
-    <string name="expirationDays">{days} days</string>
-    <string name="expirationDaysAbbreviated">{days}d</string>
-    <string name="expirationWeek">{weeks} week</string>
-    <string name="expirationWeeks">{weeks} weeks</string>
-    <string name="expirationWeeksAbbreviated">{weeks}w</string>
+
 
     <!-- RecipientProvider -->
     <string name="groupUnnamed">Unnamed group</string>
@@ -426,7 +412,9 @@
     <string name="disappearingMessagesDescription">This setting applies to everyone in this conversation.</string>
     <string name="disappearingMessagesDisappear">Disappear After {disappearing_messages_type} - {time}</string>
     <string name="disappearingMessagesDisappearAfterRead">Disappear After Read</string>
+    <string name="disappearingMessagesDisappearAfterReadDescription">Messages delete after they have been read.</string>
     <string name="disappearingMessagesDisappearAfterSend">Disappear After Send</string>
+    <string name="disappearingMessagesDisappearAfterSendDescription">Messages delete after they have been sent.</string>
     <string name="disappearingMessagesFiveM">5M</string>
     <string name="disappearingMessagesFiveMinutes">5 Minutes</string>
     <string name="disappearingMessagesFollowSetting">Follow Setting</string>
@@ -475,10 +463,21 @@
     <string name="errorDatabase">Database Error</string>
     <string name="errorUnknown">An unknown error occurred.</string>
     <string name="expand">Expand</string>
-    <string name="expiration_type_disappear_after_read">Disappear After Read</string>
-    <string name="expiration_type_disappear_after_read_description">Messages delete after they have been read.</string>
-    <string name="expiration_type_disappear_after_send">Disappear After Send</string>
-    <string name="expiration_type_disappear_after_send_description">Messages delete after they have been sent.</string>
+    <string name="expirationDay">{days} day</string>
+    <string name="expirationDays">{days} days</string>
+    <string name="expirationDaysAbbreviated">{days}d</string>
+    <string name="expirationHour">{hours} hour</string>
+    <string name="expirationHours">{hours} hours</string>
+    <string name="expirationHoursAbbreviated">{hours}h</string>
+    <string name="expirationMinute">{minutes} minute</string>
+    <string name="expirationMinutes">{minutes} minutes</string>
+    <string name="expirationMinutesAbbreviated">{minutes}m</string>
+    <string name="expirationSecond">{seconds} second</string>
+    <string name="expirationSeconds">{seconds} seconds</string>
+    <string name="expirationSecondsAbbreviated">{seconds}s</string>
+    <string name="expirationWeek">{weeks} week</string>
+    <string name="expirationWeeks">{weeks} weeks</string>
+    <string name="expirationWeeksAbbreviated">{weeks}w</string>
     <string name="expiration_type_disappear_legacy">Legacy</string>
     <string name="expiration_type_disappear_legacy_description">Original version of disappearing messages.</string>
     <string name="failures">Failures</string>

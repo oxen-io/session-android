@@ -61,14 +61,14 @@ enum class ExpiryType(
     ),
     AFTER_READ(
         ExpiryMode::AfterRead,
-        R.string.expiration_type_disappear_after_read,
-        R.string.expiration_type_disappear_after_read_description,
+        R.string.disappearingMessagesDisappearAfterRead,
+        R.string.disappearingMessagesDisappearAfterReadDescription,
         R.string.AccessibilityId_disappear_after_read_option
     ),
     AFTER_SEND(
         ExpiryMode::AfterSend,
-        R.string.expiration_type_disappear_after_send,
-        R.string.expiration_type_disappear_after_send_description,
+        R.string.disappearingMessagesDisappearAfterSend,
+        R.string.disappearingMessagesDisappearAfterSendDescription,
         R.string.AccessibilityId_disappear_after_send_option
     );
 
