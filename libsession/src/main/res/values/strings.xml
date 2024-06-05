@@ -14,47 +14,31 @@
 
 
     <string name="disappearingMessagesUpdatedYours">You set your messages to disappear {time} after they have been {disappearing_messages_type}.</string>
-    <string name="MessageRecord_you_changed_messages_to_disappear_s_after_s">You have changed messages to disappear %1$s after they have been %2$s</string>
 
 
     <!-- expiration -->
-    <plurals name="expiration_seconds">
-        <item quantity="one">%d second</item>
-        <item quantity="other">%d seconds</item>
-    </plurals>
-
+    <string name="expirationSecond">{seconds} second</string>
+    <string name="expirationSeconds">{seconds} seconds</string>
     <string name="expirationSecondsAbbreviated">{seconds}s</string>
 
-    <plurals name="expiration_minutes">
-        <item quantity="one">%d minute</item>
-        <item quantity="other">%d minutes</item>
-    </plurals>
+    <string name="expirationMinute">{minutes} minute</string>
+    <string name="expirationMinutes">{minutes} minutes</string>
+    <string name="expirationMinutesAbbreviated">{minute}m</string>
 
-    <string name="expiration_minutes_abbreviated">%dm</string>
+    <string name="expirationHour">{hours} hour</string>
+    <string name="expirationHours">{hours} hours</string>
+    <string name="expirationHoursAbbreviated">{hours}h</string>
 
-    <plurals name="expiration_hours">
-        <item quantity="one">%d hour</item>
-        <item quantity="other">%d hours</item>
-    </plurals>
+    <string name="expirationDay">{days} day</string>
+    <string name="expirationDays">{days} days</string>
+    <string name="expirationDaysAbbreviated">{days}d</string>
 
-    <string name="expiration_hours_abbreviated">%dh</string>
-
-    <plurals name="expiration_days">
-        <item quantity="one">%d day</item>
-        <item quantity="other">%d days</item>
-    </plurals>
-
-    <string name="expiration_days_abbreviated">%dd</string>
-
-    <plurals name="expiration_weeks">
-        <item quantity="one">%d week</item>
-        <item quantity="other">%d weeks</item>
-    </plurals>
-
-    <string name="expiration_weeks_abbreviated">%dw</string>
+    <string name="expirationWeek">{weeks} week</string>
+    <string name="expirationWeeks">{weeks} weeks</string>
+    <string name="expirationWeeksAbbreviated">{weeks}w</string>
 
     <!-- RecipientProvider -->
-    <string name="RecipientProvider_unnamed_group">Unnamed group</string>
+    <string name="groupUnnamed">Unnamed group</string>
 
 
 

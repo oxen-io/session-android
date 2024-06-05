@@ -8,34 +8,9 @@
     <string name="groupNameAdded">%1$s a ajouté %2$s au groupe.</string>
     <string name="MessageRecord_s_removed_s_from_the_group">%1$s a supprimé %2$s du groupe.</string>
     <string name="you">Vous</string>
-    <!-- expiration -->
-    <string name="expiration_off">Désactivé</string>
-    <plurals name="expiration_seconds">
-        <item quantity="one">%d seconde</item>
-        <item quantity="other">%d secondes</item>
-    </plurals>
-    <plurals name="expiration_minutes">
-        <item quantity="one">%d minute</item>
-        <item quantity="other">%d minutes</item>
-    </plurals>
-    <string name="expiration_minutes_abbreviated">%d min</string>
-    <plurals name="expiration_hours">
-        <item quantity="one">%d heure</item>
-        <item quantity="other">%d heures</item>
-    </plurals>
-    <string name="expiration_hours_abbreviated">%d h</string>
-    <plurals name="expiration_days">
-        <item quantity="one">%d jour</item>
-        <item quantity="other">%d jours</item>
-    </plurals>
-    <string name="expiration_days_abbreviated">%d j</string>
-    <plurals name="expiration_weeks">
-        <item quantity="one">%d semaine</item>
-        <item quantity="other">%d semaines</item>
-    </plurals>
-    <string name="expiration_weeks_abbreviated">%d sem</string>
+
     <!-- RecipientProvider -->
-    <string name="RecipientProvider_unnamed_group">Groupe sans nom</string>
+    <string name="groupUnnamed">Groupe sans nom</string>
 
     <string name="yes">Oui</string>
     <string name="no">Non</string>
