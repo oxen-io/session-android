@@ -15,24 +15,18 @@
 
     <string name="disappearingMessagesUpdatedYours">You set your messages to disappear {time} after they have been {disappearing_messages_type}.</string>
 
-
-    <!-- expiration -->
     <string name="expirationSecond">{seconds} second</string>
     <string name="expirationSeconds">{seconds} seconds</string>
     <string name="expirationSecondsAbbreviated">{seconds}s</string>
-
     <string name="expirationMinute">{minutes} minute</string>
     <string name="expirationMinutes">{minutes} minutes</string>
-    <string name="expirationMinutesAbbreviated">{minute}m</string>
-
+    <string name="expirationMinutesAbbreviated">{minutes}m</string>
     <string name="expirationHour">{hours} hour</string>
     <string name="expirationHours">{hours} hours</string>
     <string name="expirationHoursAbbreviated">{hours}h</string>
-
     <string name="expirationDay">{days} day</string>
     <string name="expirationDays">{days} days</string>
     <string name="expirationDaysAbbreviated">{days}d</string>
-
     <string name="expirationWeek">{weeks} week</string>
     <string name="expirationWeeks">{weeks} weeks</string>
     <string name="expirationWeeksAbbreviated">{weeks}w</string>
