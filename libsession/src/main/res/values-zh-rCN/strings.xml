@@ -29,7 +29,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">添加附件</string>
     <string name="message">消息</string>
-    <string name="ConversationActivity_muted_until_date">禁言至 %1$s</string>
     <string name="notificationsMuted">已静音</string>
     <string name="blockUnblock">解除屏蔽</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Session 需要麦克风权限才能发送语音信息，但是该权限已经被永久拒绝，请进入应用程序设置，点击权限，并启用“麦克风”。</string>

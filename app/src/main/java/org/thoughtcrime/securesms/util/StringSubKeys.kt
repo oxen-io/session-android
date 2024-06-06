@@ -17,6 +17,8 @@ class StringSubKeys {
         const val SECONDS_KEY                    = "seconds"
         const val TOTAL_COUNT_KEY                = "total_count"
         const val TIME_KEY                       = "time"
+        const val TIME_LARGE_KEY                 = "time_large"
+        const val TIME_SMALL_KEY                 = "time_small"
         const val URL_KEY                        = "url"
     }
 }

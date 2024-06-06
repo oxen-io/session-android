@@ -30,7 +30,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Ավելացնել կցորդ</string>
     <string name="message">Հաղորդագրություն</string>
-    <string name="ConversationActivity_muted_until_date">Անջատված է մինչև %1$s</string>
     <string name="notificationsMuted">Լուռ է</string>
     <string name="blockUnblock">Հանել արգելափակումից</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Session-ը պահանջում է միկրոֆոնի թույտվություն, խնդրում ենք մտնել կարգավորումներ, ընտրել \"թույլտվություն\", ապա թույլատրել \"միկրոֆոնը\".</string>

@@ -29,7 +29,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">첨부</string>
     <string name="message">메시지</string>
-    <string name="ConversationActivity_muted_until_date">%1$s까지 알림 꺼짐</string>
     <string name="notificationsMuted">알림 꺼짐</string>
     <string name="blockUnblock">차단 해제</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Session이 음성 메시지를 보내기 위한 마이크 권한이 영구적으로 차단되었습니다. 앱 설정에서 \"권한\" 탭을 클릭하고, \"마이크\" 권한을 허용해주세요.</string>

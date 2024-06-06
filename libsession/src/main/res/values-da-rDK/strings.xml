@@ -30,7 +30,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Vedhæft fil</string>
     <string name="message">Besked</string>
-    <string name="ConversationActivity_muted_until_date">Lydløs indtil %1$s</string>
     <string name="notificationsMuted">Lyden slået fra</string>
     <string name="blockUnblock">Fjern blokering</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Session kræver tilladelse til at tilgå mikrofonen for at kunne sende lydfiler, hvilket det er blevet nægtet. Gå venligst via appens menu til Indstillinger, vælg \"Tilladelser\" og tilvælg \"Mikrofon\"</string>

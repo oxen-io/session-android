@@ -29,7 +29,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Tambahkan lampiran</string>
     <string name="message">Pesan</string>
-    <string name="ConversationActivity_muted_until_date">Senyapkan sampai %1$s</string>
     <string name="notificationsMuted">Disenyapkan</string>
     <string name="blockUnblock">Buka blokir</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Session membutuhkan izin mikrofon untuk mengirim pesan suara, namun izin tersebut telah ditolak secara permanen. Harap melanjutkan ke menu pengaturan aplikasi, pilih \"Perizinan\", dan izinkan \"Mikrofon\".</string>

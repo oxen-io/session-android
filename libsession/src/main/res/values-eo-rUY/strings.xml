@@ -30,7 +30,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Aldoni kunsendaĵon</string>
     <string name="message">Mesaĝo</string>
-    <string name="ConversationActivity_muted_until_date">Silentigita ĝis %1$s</string>
     <string name="notificationsMuted">Silentigite</string>
     <string name="blockUnblock">Malbloki</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Session bezonas la Mikrofono-permeson por sendi aŭdajn mesaĝojn, sed ĝi estis porĉiame malakceptita. Bonvolu daŭrigi al la aplikaĵaj agordoj, elekti „Permesoj“, kaj ŝalti „Mikrofono“.</string>

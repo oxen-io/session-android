@@ -27,8 +27,11 @@ import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.COUNT_KEY
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.TIME_LARGE_KEY
 import java.util.Locale
 import javax.inject.Inject
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 @AndroidEntryPoint
 class ConversationActionBarView @JvmOverloads constructor(
@@ -112,7 +115,13 @@ class ConversationActionBarView @JvmOverloads constructor(
             settings += ConversationSetting(
                 recipient.mutedUntil.takeUnless { it == Long.MAX_VALUE }
                     // ACL TODO - need to deal with this R.string.ConversationActivity_muted_until_date thing
-                    ?.let { context.getString(R.string.ConversationActivity_muted_until_date, DateUtils.getFormattedDateTime(it, "EEE, MMM d, yyyy HH:mm", Locale.getDefault())) }
+                    ?.let {
+                        val mutedDuration = it.milliseconds
+                        val dateString = DateUtils.getFormattedDateTime(it,"EEE, MMM d, yyyy HH:mm", Locale.getDefault())
+                        Phrase.from(context, R.string.notificationsMuteFor)
+                            .put(TIME_LARGE_KEY, dateString)
+                            .format().toString()
+                    }
                     ?: context.getString(R.string.notificationsMuted),
                 ConversationSettingType.NOTIFICATION,
                 R.drawable.ic_outline_notifications_off_24

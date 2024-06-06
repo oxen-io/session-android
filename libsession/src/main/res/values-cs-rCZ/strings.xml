@@ -32,7 +32,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Přidat přílohu</string>
     <string name="message">Zpráva</string>
-    <string name="ConversationActivity_muted_until_date">Ztlumeno do %1$s</string>
     <string name="notificationsMuted">Ztlumeno</string>
     <string name="blockUnblock">Odblokovat</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Signál potřebuje oprávnění pro přístup k mikrofonu aby mohl poslat audio zprávu, ale toto oprávnění je nyní zakázáno. Prosím pokračujte do menu nastavení aplikací, vyberte \"Oprávnění\" a povolte \"Mikrofon\".</string>

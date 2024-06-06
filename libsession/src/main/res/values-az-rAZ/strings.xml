@@ -30,7 +30,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Qoşma əlavə et</string>
     <string name="message">Mesaj</string>
-    <string name="ConversationActivity_muted_until_date">%1$s qədər səssizdə</string>
     <string name="notificationsMuted">Səssizdə</string>
     <string name="blockUnblock">Kilidi aç</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Session, səsli mesaj göndərmək üçün mikrofona müraciət etməlidir, ancaq icazə birdəfəlik rədd edilib. Zəhmət olmasa \"İcazələr\" tənzimləmələrindən \"Mikrofon\"u fəallaşdırın.</string>

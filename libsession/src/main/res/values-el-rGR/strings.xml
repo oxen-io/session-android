@@ -30,7 +30,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Προσθήκη συνημμένου</string>
     <string name="message">Μήνυμα</string>
-    <string name="ConversationActivity_muted_until_date">Σε σίγαση μέχρι %1$s</string>
     <string name="notificationsMuted">Σίγαση</string>
     <string name="blockUnblock">Ξεμπλοκάρισμα</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Το Session χρειάζεται τα δικαιώματα Μικροφώνου για να μπορούμε να στείλουμε μηνύματα ήχου, αλλά αυτά δεν έχουν δοθεί μόνιμα. Παρακαλώ πηγαίνετε στις ρυθμίσεις εφαρμογών, επιλέξτε τα \"Δικαιώματα\", και ενεργοποιήστε το \"Μικρόφωνο\".</string>

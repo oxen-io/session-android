@@ -30,7 +30,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Bijlage toevoegen</string>
     <string name="message">Bericht</string>
-    <string name="ConversationActivity_muted_until_date">Gedempt tot %1$s</string>
     <string name="notificationsMuted">Dempen</string>
     <string name="blockUnblock">Deblokkeren</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Session heeft toegang nodig tot de microfoon om audioberichten te kunnen opnemen, maar deze is pertinent geweigerd. Ga naar de instellingen voor deze app, selecteer ‘Machtigingen’ en schakel ‘Microfoon’ in.</string>

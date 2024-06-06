@@ -30,7 +30,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Afegeix un adjunt</string>
     <string name="message">Missatge</string>
-    <string name="ConversationActivity_muted_until_date">Silenciat fins %1$s</string>
     <string name="blockUnblock">Desbloca</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">El Session necessita el permís del micròfon per tal d\'enviar missatges d\'àudio, però s\'ha denegat permanentment. Si us plau, continueu cap al menú de configuració de l\'aplicació, seleccioneu Permisos i habiliteu-hi el micròfon.</string>
     <!-- ConversationFragment -->

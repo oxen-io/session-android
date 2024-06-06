@@ -32,7 +32,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Добавить вложение</string>
     <string name="message">Сообщение</string>
-    <string name="ConversationActivity_muted_until_date">Уведомления отключены до %1$s</string>
     <string name="notificationsMuted">Без звука</string>
     <string name="blockUnblock">Разблокировать</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Для отправки аудиосообщений требуется разрешение на доступ к микрофону, но оно было вами отклонено. Чтобы предоставить разрешение вручную, перейдите в «Настройки», выберите «Приложения», найдите Session, затем выберите «Разрешения» и включите Микрофон.</string>

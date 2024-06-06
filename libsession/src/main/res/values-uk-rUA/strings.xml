@@ -32,7 +32,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Додати вкладення</string>
     <string name="message">Написати</string>
-    <string name="ConversationActivity_muted_until_date">Без звуку до %1$s</string>
     <string name="notificationsMuted">Беззвучний</string>
     <string name="blockUnblock">Розблокувати</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Session потребує дозволу \"Мікрофон\", щоб надсилати аудіоповідомлення але наразі доступу немає. Будь ласка, перейдіть до налаштувань додатку, оберіть \"Дозволи\", та увімкніть \"Мікрофон\".</string>

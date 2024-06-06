@@ -30,7 +30,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Legg til vedlegg</string>
     <string name="message">Melding</string>
-    <string name="ConversationActivity_muted_until_date">Dempet til %1$s</string>
     <string name="notificationsMuted">Dempet</string>
     <string name="blockUnblock">Fjern blokkering</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Session krever tillatelse fra systemet for å kunne bruke mikrofonen, men du har valgt å avslå dette permanent. Gå til «Apper»-menyen på systemet og slå på tillatelsen «Mikrofon».</string>

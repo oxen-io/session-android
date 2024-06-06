@@ -30,7 +30,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Bifoga fil</string>
     <string name="message">Meddelande</string>
-    <string name="ConversationActivity_muted_until_date">Tystades till %1$s</string>
     <string name="notificationsMuted">Tystad</string>
     <string name="blockUnblock">Avblockera</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Session behöver behörigheten Mikrofon för att skicka ljudmeddelanden men har nekats den permanent. Fortsätt till inställningsmenyn för Appar och aviseringar, välj \"Behörigheter\" och aktivera \"Mikrofon\".</string>

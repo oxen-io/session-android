@@ -30,7 +30,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Anhang hinzufügen</string>
     <string name="message">Nachricht</string>
-    <string name="ConversationActivity_muted_until_date">Stummgeschaltet bis %1$s</string>
     <string name="notificationsMuted">Stumm gestellt</string>
     <string name="blockUnblock">Entsperren</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Session benötigt die Berechtigung »Mikrofon« für das Senden von Sprachnachrichten, diese wurde jedoch dauerhaft abgelehnt. Bitte öffne die App-Einstellungen, wähle »Berechtigungen« und aktiviere »Mikrofon«.</string>

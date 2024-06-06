@@ -29,7 +29,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">پیوست فایل</string>
     <string name="message">پیام</string>
-    <string name="ConversationActivity_muted_until_date">بی صدا تا %1$s</string>
     <string name="notificationsMuted">بی صدا شده</string>
     <string name="blockUnblock">رفع مسدودیت</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Session برای ارسال صدا، نیازمند دسترسی به میکروفن دارد ولی این دسترسی قطع شده است. لطفا برای ادامه دادن، به بخش منوی تنظیمات برنامه رفته، \"اجازه ها\" را انتخاب کرده و گزینه ی \"میکروفن\" را فعال نمایید.</string>

@@ -30,7 +30,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">अटैचमेंट जोड़ें</string>
     <string name="message">मैसेज</string>
-    <string name="ConversationActivity_muted_until_date">%s तक मौन किया</string>
     <string name="notificationsMuted">म्यूट हो गए</string>
     <string name="blockUnblock">अनब्लॉक करें</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">ऑडियो संदेशों को भेजने के लिए Session को माइक्रोफ़ोन अनुमति की आवश्यकता होती है, लेकिन इसे स्थायी रूप से अस्वीकार कर दिया गया है। कृपया ऐप सेटिंग्स जारी रखें, \"अनुमतियां\" चुनें, और \"माइक्रोफ़ोन\" सक्षम करें।</string>

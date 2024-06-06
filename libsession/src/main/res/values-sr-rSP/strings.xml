@@ -30,7 +30,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Додај прилог</string>
     <string name="message">Пошаљи поруку</string>
-    <string name="ConversationActivity_muted_until_date">Мутиран до %1$s</string>
     <string name="notificationsMuted">Мутиран заувек</string>
     <string name="blockUnblock">Одблокирај</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Сесија треба дозволу за микрофон да пошаље аудио поруке, али је трајно забрањено. Настави у подешавања апликације, селектуј \"Дозволе\", и укључи \"Микрофон\".</string>

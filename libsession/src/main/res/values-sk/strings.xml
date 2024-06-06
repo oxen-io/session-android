@@ -31,7 +31,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Pridať prílohu</string>
     <string name="message">Správa</string>
-    <string name="ConversationActivity_muted_until_date">Stlmené upozornenia do %1$s</string>
     <string name="blockUnblock">Odblokovať</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Session potrebuje prístup k mikrofónu aby mohol posielať zvukové správy, ale prístup bol natrvalo zakázaný. Prosím v nastaveniach aplikácií zvoľte \"Oprávnenia\", a povoľte \"Mikrofón\".</string>
     <!-- ConversationFragment -->

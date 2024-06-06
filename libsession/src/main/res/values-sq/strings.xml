@@ -30,7 +30,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Shtoni bashkëngjitje</string>
     <string name="message">Mesazh</string>
-    <string name="ConversationActivity_muted_until_date">Bllokuar deri %1$s</string>
     <string name="notificationsMuted">Heshtur</string>
     <string name="blockUnblock">Zhbllokoje</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Që të mund të dërgojë mesazhe audio, Session-i lyp leje përdorimi të Mikrofonit, por kjo i është mohuar. Ju lutemi, kaloni te rregullimet e aplikacionit, përzgjidhni \"Leje\", dhe aktivizoni \"Mikrofonin\".</string>

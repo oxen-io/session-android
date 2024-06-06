@@ -30,7 +30,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Melléklet csatolása</string>
     <string name="message">Üzenet</string>
-    <string name="ConversationActivity_muted_until_date">Némítva: %1$s</string>
     <string name="notificationsMuted">Némítva</string>
     <string name="blockUnblock">Letiltás feloldása</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">A Session-nek szüksége van a Mikrofon engedélyre, hogy hangüzeneteket küldhessen, de ez jelenleg nincs megadva. Kérlek menj az alkalmazásbeállításokhoz, válaszd az \"Engedélyek\"-et és engedélyezd az \"Mikrofon\"-t.</string>

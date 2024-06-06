@@ -25,7 +25,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">இணைப்பை சேர்க்கவும்</string>
     <string name="message">செய்தி</string>
-    <string name="ConversationActivity_muted_until_date">%1$s வரை முடக்கப்பட்டுள்ளது</string>
     <string name="notificationsMuted">முடக்கப்பட்டடுள்ளது</string>
     <!-- ConversationFragment -->
     <!-- CreateProfileActivity -->

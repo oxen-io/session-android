@@ -30,7 +30,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Adicionar anexo</string>
     <string name="message">Mensagem</string>
-    <string name="ConversationActivity_muted_until_date">Silenciado até %1$s</string>
     <string name="notificationsMuted">Silenciado</string>
     <string name="blockUnblock">Desbloquear</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Session precisa de acesso ao microfone para enviar mensagens de áudio, mas ele foi permanentemente negado. Por favor continue para configurações de app, selecione \"Permissões\", e habilite \"Microfone\".</string>

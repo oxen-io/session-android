@@ -32,7 +32,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Pridėti priedą</string>
     <string name="message">Žinutė</string>
-    <string name="ConversationActivity_muted_until_date">Užtildytas iki %1$s</string>
     <string name="notificationsMuted">Užtildytas</string>
     <string name="blockUnblock">Atblokuoti</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Norint siųsti garso žinutes, Session reikia mikrofono leidimo, tačiau jis buvo visam laikui uždraustas. Pereikite į programėlės nustatymus, pasirinkite „Leidimai“ ir įjunkite „Mikrofoną“.</string>

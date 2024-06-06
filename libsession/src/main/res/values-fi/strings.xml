@@ -30,7 +30,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Lisää liite</string>
     <string name="message">Viesti</string>
-    <string name="ConversationActivity_muted_until_date">Mykistetty %1$s asti</string>
     <string name="notificationsMuted">Mykistetty</string>
     <string name="blockUnblock">Poista esto</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Signal tarvitsee lupaa käyttää mikrofonia äänitiedostojen lähettämistä varten, mutta tämä käyttöoikeus on pysyvästi evätty Sessionilta. Voit muuttaa tätä menemällä sovellusten asetuksiin, valitsemalla \"Sovelluksen käyttöoikeudet\" ja laittamalla päälle \"Mikrofoni\".</string>

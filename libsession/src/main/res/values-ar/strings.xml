@@ -34,7 +34,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">إضافة مرفقات</string>
     <string name="message">رسالة</string>
-    <string name="ConversationActivity_muted_until_date">كتم حتى %1$s</string>
     <string name="notificationsMuted">كتم</string>
     <string name="blockUnblock">إلغاء الحظر</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">يحتاج Session إلى إذن الميكروفون من أجل الرسائل الصوتية ولكن تم إيقاف الإذن على نحو دائم، رجاء زيارة إعدادات التطبيق ثم \"الأذونات\"، ثم تفعيل \"الميكروفون\".</string>

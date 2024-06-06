@@ -30,7 +30,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Eklenti ekle</string>
     <string name="message">İleti</string>
-    <string name="ConversationActivity_muted_until_date">%1$s\'e kadar sessiz</string>
     <string name="notificationsMuted">Sessize alındı</string>
     <string name="blockUnblock">Engeli kaldır</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Session, sesli iletiler göndermek için Mikrofon iznine ihtiyaç duyar, fakat bu izin kalıcı olarak reddedilmiş. Lütfen uygulama ayarları menüsüne girip \"İzinler\" kısmını seçin, ve \"Mikrofon\"u etkinleştirin.</string>

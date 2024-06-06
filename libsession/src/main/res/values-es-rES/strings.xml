@@ -30,7 +30,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Añadir archivo adjunto</string>
     <string name="message">Mensaje</string>
-    <string name="ConversationActivity_muted_until_date">Silenciado hasta %1$s</string>
     <string name="notificationsMuted">Silenciado</string>
     <string name="blockUnblock">Desbloquear</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Session necesita acceso al micrófono para enviar notas de voz. Por favor, ve al menú de configuración de la aplicación, selecciona «Permisos» y activa «Micrófono».</string>

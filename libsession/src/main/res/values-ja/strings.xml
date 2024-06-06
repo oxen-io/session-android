@@ -29,7 +29,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">添付ファイルを付ける</string>
     <string name="message">メッセージ</string>
-    <string name="ConversationActivity_muted_until_date">%1$sまでミュート</string>
     <string name="notificationsMuted">ミュート中</string>
     <string name="blockUnblock">ブロック解除</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Sessionで音声メッセージを添付するには、『マイク』へのアクセスを許可する必要がありますが、無効になっています。アプリ設定メニューから、『アプリの権限』を選び、『マイク』へのアクセス許可を有効にしてください。</string>

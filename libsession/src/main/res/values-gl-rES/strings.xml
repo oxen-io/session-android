@@ -30,7 +30,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Engadir anexo</string>
     <string name="message">Escribe aquí a túa mensaxe</string>
-    <string name="ConversationActivity_muted_until_date">Silenciado até %1$s</string>
     <string name="blockUnblock">Desbloquear</string>
     <string name="permissionsMicrophoneAccessRequiredAndroid">Session require permiso para poder enviar mensaxes de audio, pero este foi denegado de forma permanente. Vai aos axustes da aplicación, selecciona \"Permisos\" e activa \"Micrófono\".</string>
     <!-- ConversationFragment -->

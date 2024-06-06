@@ -25,7 +25,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">منسلکہ شامل کریں</string>
     <string name="message">پیغام</string>
-    <string name="ConversationActivity_muted_until_date">%1$s تک خاموش کر دیا گیا۔</string>
     <string name="notificationsMuted">خاموش</string>
     <!-- ConversationFragment -->
     <!-- CreateProfileActivity -->

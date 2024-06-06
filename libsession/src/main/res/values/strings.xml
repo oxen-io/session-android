@@ -92,7 +92,6 @@
     <string name="BucketedThreadMedia_Today">Today</string>
     <string name="BucketedThreadMedia_Yesterday">Yesterday</string>
     <string name="ConversationActivity_copy_open_group_url">Copy Community URL</string>
-    <string name="ConversationActivity_muted_until_date">Muted until %1$s</string>
     <string name="ConversationActivity_send_after_approval">You will be able to send voice messages and attachments once the recipient has approved this message request</string>
     <string name="ConversationFragment_save_to_sd_card">Save to storage?</string>
     <string name="ConversationItem_error_not_delivered">Send failed, tap for details</string>
@@ -685,6 +684,7 @@
     <string name="notificationsMute1Hour">Mute for 1 hour</string>
     <string name="notificationsMute1Week">Mute for 1 week</string>
     <string name="notificationsMute2Hours">Mute for 2 hours</string>
+    <string name="notificationsMuteFor">Mute for {time_large}</string>
     <string name="notificationsMuted">Muted</string>
     <string name="notificationsSlowMode">Slow Mode</string>
     <string name="notificationsSlowModeDescription">Session will occasionally check for new messages in the background.</string>
