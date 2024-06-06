@@ -4,10 +4,8 @@ import android.content.Context
 import org.session.libsession.R
 import java.util.concurrent.TimeUnit
 import kotlin.time.Duration
-import com.squareup.phrase.Phrase
-import kotlin.time.Duration.Companion.days
-import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.minutes
+import org.thoughtcrime.securesms.util.LocalisedTimeUtil
+import kotlin.time.Duration.Companion.seconds
 
 fun Context.getExpirationTypeDisplayValue(sent: Boolean) = if (sent) getString(R.string.disappearingMessagesSent) else getString(R.string.disappearingMessagesRead)
 
@@ -21,10 +19,13 @@ object ExpirationUtil {
     const val WEEKS_KEY   = "weeks"
 
     @JvmStatic
-    fun getExpirationDisplayValue(context: Context, duration: Duration): String = getExpirationDisplayValue(context, duration.inWholeSeconds.toInt())
+    fun getExpirationDisplayValue(context: Context, duration: Duration): String = LocalisedTimeUtil.getDurationWithLargestTimeUnit(context, duration)
 
     @JvmStatic
-    fun getExpirationDisplayValue(context: Context, expirationTimeSecs: Int): String {
+    fun getExpirationDisplayValue(context: Context, expirationTimeSecs: Int) =
+        LocalisedTimeUtil.getDurationWithLargestTimeUnit(context, expirationTimeSecs.seconds)
+
+        /*
         return if (expirationTimeSecs <= 0) {
             context.getString(R.string.off)
         } else if (expirationTimeSecs < 1.minutes.inWholeSeconds) {
@@ -71,25 +72,30 @@ object ExpirationUtil {
             else {
                 Phrase.from(context, R.string.expirationWeeks).put(WEEKS_KEY, weeks.toString()).format().toString()
             }
-
         }
-    }
+        */
+    //}
 
     fun getExpirationAbbreviatedDisplayValue(context: Context, expirationTimeSecs: Long) =
         if (expirationTimeSecs < TimeUnit.MINUTES.toSeconds(1)) {
-            Phrase.from(context, R.string.expirationSecondsAbbreviated).put(SECONDS_KEY, expirationTimeSecs.toString()).format().toString()
+            expirationTimeSecs.toString() + "s"
+            //Phrase.from(context, R.string.expirationSecondsAbbreviated).put(SECONDS_KEY, expirationTimeSecs.toString()).format().toString()
         } else if (expirationTimeSecs < TimeUnit.HOURS.toSeconds(1)) {
             val minutes = expirationTimeSecs / TimeUnit.MINUTES.toSeconds(1)
-            Phrase.from(context, R.string.expirationMinutesAbbreviated).put(MINUTES_KEY, minutes.toString()).format().toString()
+            minutes.toString() + "m"
+            //Phrase.from(context, R.string.expirationMinutesAbbreviated).put(MINUTES_KEY, minutes.toString()).format().toString()
         } else if (expirationTimeSecs < TimeUnit.DAYS.toSeconds(1)) {
             val hours = expirationTimeSecs / TimeUnit.HOURS.toSeconds(1)
-            Phrase.from(context, R.string.expirationHoursAbbreviated).put(HOURS_KEY, hours.toString()).format().toString()
+            hours.toString() + "h"
+            //Phrase.from(context, R.string.expirationHoursAbbreviated).put(HOURS_KEY, hours.toString()).format().toString()
         } else if (expirationTimeSecs < TimeUnit.DAYS.toSeconds(7)) {
             val days = expirationTimeSecs / TimeUnit.DAYS.toSeconds(1)
-            Phrase.from(context, R.string.expirationDaysAbbreviated).put(DAYS_KEY, days.toString()).format().toString()
+            days.toString() + "d"
+            //Phrase.from(context, R.string.expirationDaysAbbreviated).put(DAYS_KEY, days.toString()).format().toString()
         } else {
             val weeks = expirationTimeSecs / TimeUnit.DAYS.toSeconds(7)
-            Phrase.from(context, R.string.expirationWeeksAbbreviated).put(WEEKS_KEY, weeks.toString()).format().toString()
+            weeks.toString() + "w"
+            //Phrase.from(context, R.string.expirationWeeksAbbreviated).put(WEEKS_KEY, weeks.toString()).format().toString()
         }
 
 }

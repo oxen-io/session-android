@@ -462,6 +462,8 @@
     <string name="errorDatabase">Database Error</string>
     <string name="errorUnknown">An unknown error occurred.</string>
     <string name="expand">Expand</string>
+
+    <!--
     <string name="expirationDay">{days} day</string>
     <string name="expirationDays">{days} days</string>
     <string name="expirationDaysAbbreviated">{days}d</string>
@@ -477,6 +479,8 @@
     <string name="expirationWeek">{weeks} week</string>
     <string name="expirationWeeks">{weeks} weeks</string>
     <string name="expirationWeeksAbbreviated">{weeks}w</string>
+    -->
+
     <string name="expiration_type_disappear_legacy">Legacy</string>
     <string name="expiration_type_disappear_legacy_description">Original version of disappearing messages.</string>
     <string name="failures">Failures</string>

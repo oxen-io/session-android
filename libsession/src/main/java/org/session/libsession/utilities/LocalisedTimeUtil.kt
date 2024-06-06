@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Configuration
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import org.apache.commons.lang3.tuple.MutablePair
 import org.session.libsignal.utilities.Log
 import java.io.BufferedReader
 import java.io.IOException
@@ -61,48 +60,51 @@ object LocalisedTimeUtil {
         timeUnitMap = Json.decodeFromString(jsonString)
     }
 
-    // Method to get a locale-aware duration using the largest time unit in a given duration. For example
-    // a duration of 3 hours and 7 minutes will return "3 hours" in English, or "3 horas" in Spanish.
+    // Method to get a locale-aware duration string using the largest time unit in a given duration.
+    // For example a duration of 3 hours and 7 minutes will return "3 hours" in English, or
+    // "3 horas" in Spanish.
     fun getDurationWithLargestTimeUnit(context: Context, duration: Duration): String {
         // Load the time string map if we haven't already
         if (timeUnitMap.isEmpty()) { loadTimeStringMap(context, Locale.getDefault()) }
 
-        // Left is the duration value ("2" etc.) and right is the largest time unit string ("weeks" etc.)
-        // Note: We always add a space when returning, band we'll flip the order if the language is RTL.
-        var durationPair = MutablePair<String, String>()
-        when {
+        // Build up the 'value to unitString' map
+        var durationMap = when {
             duration.inWholeWeeks > 0 -> {
-                durationPair.left  = duration.inWholeWeeks.toString()
-                durationPair.right = if (duration.inWholeWeeks == 1L) timeUnitMap[WEEK_KEY]
-                                     else timeUnitMap[WEEKS_KEY]
+                duration.inWholeWeeks.toString() to
+                if (duration.inWholeWeeks == 1L) timeUnitMap[WEEK_KEY]
+                else timeUnitMap[WEEKS_KEY]
             }
+
             duration.inWholeDays > 0 -> {
-                durationPair.left  = duration.inWholeDays.toString()
-                durationPair.right = if (duration.inWholeDays == 1L) timeUnitMap[DAY_KEY]
-                                     else timeUnitMap[DAYS_KEY]
+                duration.inWholeDays.toString() to
+                if (duration.inWholeDays == 1L) timeUnitMap[DAY_KEY]
+                else timeUnitMap[DAYS_KEY]
             }
+
             duration.inWholeHours > 0 -> {
-                durationPair.left  = duration.inWholeHours.toString()
-                durationPair.right = if (duration.inWholeHours == 1L) timeUnitMap[HOUR_KEY]
-                                     else timeUnitMap[HOURS_KEY]
+                duration.inWholeHours.toString() to
+                if (duration.inWholeHours == 1L) timeUnitMap[HOUR_KEY]
+                else timeUnitMap[HOURS_KEY]
             }
+
             duration.inWholeMinutes > 0 -> {
-                durationPair.left  = duration.inWholeMinutes.toString()
-                durationPair.right = if (duration.inWholeMinutes == 1L) timeUnitMap[MINUTE_KEY]
-                                     else timeUnitMap[MINUTES_KEY]
+                duration.inWholeMinutes.toString() to
+                if (duration.inWholeMinutes == 1L) timeUnitMap[MINUTE_KEY]
+                else timeUnitMap[MINUTES_KEY]
             }
+
             else -> {
-                durationPair.left  = duration.inWholeSeconds.toString()
-                durationPair.right = if (duration.inWholeSeconds == 1L) timeUnitMap[SECOND_KEY]
-                                     else timeUnitMap[SECONDS_KEY]
+                duration.inWholeSeconds.toString() to
+                if (duration.inWholeSeconds == 1L) timeUnitMap[SECOND_KEY]
+                else timeUnitMap[SECONDS_KEY]
             }
         }
 
         // Return the duration string in the correct order
         return if (!isRtlLanguage(context)) {
-            durationPair.left + " " + durationPair.right
+            durationMap.first + " " + durationMap.second
         } else {
-            durationPair.right + " " + durationPair.left
+            durationMap.second + " " + durationMap.first
         }
     }
 
@@ -185,8 +187,5 @@ object LocalisedTimeUtil {
         // Return the pair of time durations in the correct order
         return if (!isRTL) "$largeTimePeriod $smallTimePeriod" // i.e., "3 hours 7 minutes"
         else               "$smallTimePeriod $largeTimePeriod" // i.e., "minutes 7 hours 3"
-
-        //return if (!isRTL) Pair(largeTimePeriod, smallTimePeriod) // i.e., "3 hours 7 minutes"
-//               else        Pair(smallTimePeriod, largeTimePeriod) // iei., "minutes 7 hours 3"
     }
 }

@@ -1,14 +1,12 @@
 package network.loki.messenger
 
 import android.content.Context
-import android.content.res.Configuration
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
 import junit.framework.TestCase.assertEquals
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import net.bytebuddy.asm.Advice.Local
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.session.libsignal.utilities.Log
@@ -19,7 +17,6 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.Locale
-import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes

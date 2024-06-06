@@ -26,6 +26,7 @@ import org.thoughtcrime.securesms.conversation.v2.utilities.MentionManagerUtilit
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
 import org.thoughtcrime.securesms.util.DateUtils
+import org.thoughtcrime.securesms.util.LocalisedTimeUtil
 import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.COUNT_KEY
 import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.TIME_LARGE_KEY
 import java.util.Locale
@@ -117,9 +118,9 @@ class ConversationActionBarView @JvmOverloads constructor(
                     // ACL TODO - need to deal with this R.string.ConversationActivity_muted_until_date thing
                     ?.let {
                         val mutedDuration = it.milliseconds
-                        val dateString = DateUtils.getFormattedDateTime(it,"EEE, MMM d, yyyy HH:mm", Locale.getDefault())
+                        val durationString = LocalisedTimeUtil.getDurationWithLargestTimeUnit(context, mutedDuration)
                         Phrase.from(context, R.string.notificationsMuteFor)
-                            .put(TIME_LARGE_KEY, dateString)
+                            .put(TIME_LARGE_KEY, durationString)
                             .format().toString()
                     }
                     ?: context.getString(R.string.notificationsMuted),
