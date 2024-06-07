@@ -118,12 +118,12 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
         memberCountTV.text = Phrase.from(applicationContext, R.string.members).put(COUNT_KEY, groupInfo.members.size).format().toString()
 
         mainContentContainer = findViewById(R.id.mainContentContainer)
-        cntGroupNameEdit = findViewById(R.id.cntGroupNameEdit)
-        cntGroupNameDisplay = findViewById(R.id.cntGroupNameDisplay)
-        edtGroupName = findViewById(R.id.edtGroupName)
-        emptyStateContainer = findViewById(R.id.emptyStateContainer)
-        lblGroupNameDisplay = findViewById(R.id.lblGroupNameDisplay)
-        loaderContainer = findViewById(R.id.loaderContainer)
+        cntGroupNameEdit     = findViewById(R.id.cntGroupNameEdit)
+        cntGroupNameDisplay  = findViewById(R.id.cntGroupNameDisplay)
+        edtGroupName         = findViewById(R.id.edtGroupName)
+        emptyStateContainer  = findViewById(R.id.emptyStateContainer)
+        lblGroupNameDisplay  = findViewById(R.id.lblGroupNameDisplay)
+        loaderContainer      = findViewById(R.id.loaderContainer)
 
         findViewById<View>(R.id.addMembersClosedGroupButton).setOnClickListener {
             onAddMembersClick()
@@ -135,7 +135,19 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
         }
 
         lblGroupNameDisplay.text = originalName
-        cntGroupNameDisplay.setOnClickListener { isEditingName = true }
+
+        // Only allow admins to click on the name of closed groups to edit them..
+        if (isSelfAdmin) {
+            cntGroupNameDisplay.setOnClickListener { isEditingName = true }
+        }
+        else // ..and also hide the edit `drawableEnd` for non-admins.
+        {
+            // Note: compoundDrawables returns 4 drawables (drawablesStart/Top/End/Bottom) -
+            // so the `drawableEnd` component is at index 2, which we replace with null.
+            val cd = lblGroupNameDisplay.compoundDrawables
+            lblGroupNameDisplay.setCompoundDrawables(cd[0], cd[1], null, cd[3])
+        }
+
         findViewById<View>(R.id.btnCancelGroupNameEdit).setOnClickListener { isEditingName = false }
         findViewById<View>(R.id.btnSaveGroupNameEdit).setOnClickListener { saveName() }
         edtGroupName.setImeActionLabel(getString(R.string.save), EditorInfo.IME_ACTION_DONE)

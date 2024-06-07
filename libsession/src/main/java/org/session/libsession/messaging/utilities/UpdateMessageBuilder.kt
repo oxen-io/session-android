@@ -59,7 +59,7 @@ object UpdateMessageBuilder {
                         .format().toString()
                 }
                 else {
-                    Phrase.from(context, R.string.disappearingMessagesRenamedGroup)
+                    Phrase.from(context, R.string.groupNameUpdatedBy)
                         .put(NAME_KEY, senderName)
                         .put(GROUP_NAME_KEY, updateData.name)
                         .format().toString()

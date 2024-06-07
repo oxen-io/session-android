@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Always non-translatable - Session is Session! Also, we get a clash with the waitingdots
-     lib if this is refactored to `appName` so for the sake of a peaceful life & a working build
-     I'm okay with `app_name` for this one specific string. -AL -->
-    <string name="app_name" translatable="false">Session</string>
+    <string name="app_name">Session</string>
 
     <!-- ACL - All of the below below need to be updated to match the new serialised string names -->
 
-    <string name="disappearingMessagesRenamedGroup">{name} renamed the group to: {group_name}</string>
+    <string name="groupNameUpdatedBy">{name} renamed the group to: {group_name}</string>
     <string name="groupYouAdded">You added {members} to the group.</string>
     <string name="groupNameAdded">{name} added {members} to the group.</string>
     <string name="MessageRecord_s_removed_s_from_the_group">%1$s removed %2$s from the group.</string>
-
-
     <string name="disappearingMessagesUpdatedYours">You set your messages to disappear {time} after they have been {disappearing_messages_type}.</string>
 
 
