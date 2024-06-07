@@ -338,7 +338,7 @@
     <string name="contactContacts">Contacts</string>
     <string name="contactDelete">Delete Contact</string>
     <string name="contactDeleteDescription">Are you sure you want to delete <b>{name}</b> from your contacts? New messages from <b>{name}</b> will arrive as a message request.</string>
-    <string name="contactNone">You don\'t have any contacts</string>
+    <string name="contactNone">You don\'t have any contacts yet</string>
     <string name="contactSelect">Select Contacts</string>
     <string name="contactShowUserDetails">Show User Details</string>
     <string name="contactUserDetails">User Details</string>
