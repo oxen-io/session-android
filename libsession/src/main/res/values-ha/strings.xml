@@ -162,7 +162,7 @@
     <string name="notificationsLedColor">Rengê LED</string>
     <string name="notificationsSound">Deng</string>
     <string name="notificationsVibrate">Lerizîn</string>
-    <string name="_default">Jixweber</string>
+    <string name="theDefault">Jixweber</string>
     <string name="incognitoKeyboard">Textenivîsa veşartî</string>
     <string name="readReceipts">Girtekan bixwîne</string>
     <string name="typingIndicators">Nîşandêrên nivîsandinê</string>

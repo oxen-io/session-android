@@ -176,7 +176,7 @@
     <string name="notificationsLedColor">LED színe</string>
     <string name="notificationsSound">Hang</string>
     <string name="notificationsVibrate">Rezgés</string>
-    <string name="_default">Alapértelmezett</string>
+    <string name="theDefault">Alapértelmezett</string>
     <string name="incognitoKeyboard">Inkognitó billentyűzet</string>
     <string name="readReceipts">Olvasási nyugták</string>
     <string name="typingIndicators">Gépelésindikátorok</string>
@@ -211,7 +211,7 @@
     <string name="registration_activity__skip">Kihagyás</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">Folytatás</string>
+    <string name="theContinue">Folytatás</string>
     <string name="copy">Másolás</string>
     <string name="communityEnterUrlErrorInvalid">Érvénytelen URL</string>
     <string name="copied">Vágólapra másolva</string>
@@ -278,7 +278,7 @@
     <string name="enable">Engedélyezés</string>
     <string name="download">Letöltés</string>
     <string name="media">Média</string>
-    <string name="_error">Hiba</string>
+    <string name="theError">Hiba</string>
     <string name="warning">Figyelmeztetés</string>
     <string name="pin">Kitűzés</string>
     <string name="pinUnpin">Kitűzés eltávolítása</string>

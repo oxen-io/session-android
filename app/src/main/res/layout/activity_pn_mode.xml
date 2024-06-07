@@ -111,7 +111,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginRight="@dimen/massive_spacing"
             android:layout_marginBottom="@dimen/onboarding_button_bottom_offset"
-            android:text="@string/_continue" />
+            android:text="@string/theContinue" />
 
     </LinearLayout>
 

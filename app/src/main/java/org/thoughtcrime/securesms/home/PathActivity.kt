@@ -16,6 +16,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.squareup.phrase.Phrase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -32,6 +33,7 @@ import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.util.GlowViewUtilities
 import org.thoughtcrime.securesms.util.IP2Country
 import org.thoughtcrime.securesms.util.PathDotView
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.APP_NAME_KEY
 import org.thoughtcrime.securesms.util.UiModeUtilities
 import org.thoughtcrime.securesms.util.animateSizeChange
 import org.thoughtcrime.securesms.util.disableClipping
@@ -50,6 +52,12 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
         binding = ActivityPathBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar!!.title = resources.getString(R.string.onionRoutingPath)
+
+        // Substitute the localised version of "Session" into the layout
+        val appName = applicationContext.getString(R.string.app_name)
+        val txt = Phrase.from(applicationContext, R.string.onionRoutingPathDescription).put(APP_NAME_KEY, appName).format().toString()
+        binding.pathDescription.text = txt
+
         binding.pathRowsContainer.disableClipping()
         binding.learnMoreButton.setOnClickListener { learnMore() }
         update(false)
@@ -98,6 +106,7 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
 
     private fun update(isAnimated: Boolean) {
         binding.pathRowsContainer.removeAllViews()
+
         if (OnionRequestAPI.paths.isNotEmpty()) {
             val path = OnionRequestAPI.paths.firstOrNull() ?: return finish()
             val dotAnimationRepeatInterval = path.count().toLong() * 1000 + 1000

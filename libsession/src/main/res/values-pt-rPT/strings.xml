@@ -171,7 +171,7 @@
     <string name="notificationsLedColor">Cor do LED</string>
     <string name="notificationsSound">Som</string>
     <string name="notificationsVibrate">Vibração</string>
-    <string name="_default">Pré-definição</string>
+    <string name="theDefault">Pré-definição</string>
     <string name="incognitoKeyboard">Teclado incógnito</string>
     <string name="readReceipts">Recibos de leitura</string>
     <string name="typingIndicators">Indicadores de escrita</string>
@@ -206,7 +206,7 @@
     <string name="registration_activity__skip">Saltar</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">Continuar</string>
+    <string name="theContinue">Continuar</string>
     <string name="copy">Copiar</string>
     <string name="communityEnterUrlErrorInvalid">URL inválido</string>
     <string name="copied">Copiado para a área de transferência</string>

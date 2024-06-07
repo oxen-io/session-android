@@ -170,7 +170,7 @@
     <string name="notificationsLedColor">LED色</string>
     <string name="notificationsSound">着信音</string>
     <string name="notificationsVibrate">振動</string>
-    <string name="_default">初期設定の言語</string>
+    <string name="theDefault">初期設定の言語</string>
     <string name="incognitoKeyboard">プライバシーキーボード</string>
     <string name="readReceipts">既読通知</string>
     <string name="typingIndicators">入力中アイコン</string>
@@ -205,7 +205,7 @@
     <string name="registration_activity__skip">スキップする</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">続行する</string>
+    <string name="theContinue">続行する</string>
     <string name="copy">コピーする</string>
     <string name="communityEnterUrlErrorInvalid">URL が無効です</string>
     <string name="copied">クリップボードにコピーされました</string>

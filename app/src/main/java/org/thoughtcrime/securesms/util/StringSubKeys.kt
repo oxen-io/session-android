@@ -3,8 +3,9 @@ package org.thoughtcrime.securesms.util;
 class StringSubKeys {
 
     // String substitution keys for use with the Phrase library.
-    // Note: Do NOT include the curly braces in these keys!
+    // Note: While the substitution will be to {foo} etc. in the strings - do NOT include the curly braces in these keys!
     object StringSubstitutionConstants {
+        const val APP_NAME_KEY                   = "app_name"
         const val COMMUNITY_NAME_KEY             = "community_name"
         const val CONVERSATION_COUNT_KEY         = "conversation_count"
         const val CONVERSATION_NAME_KEY          = "conversation_name"

@@ -16,6 +16,7 @@ import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import nl.komponents.kovenant.Promise
@@ -38,6 +39,7 @@ import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.groups.ClosedGroupManager.updateLegacyGroup
 import org.thoughtcrime.securesms.mms.GlideApp
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.COUNT_KEY
 import org.thoughtcrime.securesms.util.fadeIn
 import org.thoughtcrime.securesms.util.fadeOut
 import java.io.IOException
@@ -110,6 +112,10 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
         isSelfAdmin = groupInfo.admins.any{ it.serialize() == TextSecurePreferences.getLocalNumber(this) }
 
         name = originalName
+
+        // Update the group member count
+        val memberCountTV = findViewById<TextView>(R.id.editGroupMemberCount)
+        memberCountTV.text = Phrase.from(applicationContext, R.string.members).put(COUNT_KEY, groupInfo.members.size).format().toString()
 
         mainContentContainer = findViewById(R.id.mainContentContainer)
         cntGroupNameEdit = findViewById(R.id.cntGroupNameEdit)

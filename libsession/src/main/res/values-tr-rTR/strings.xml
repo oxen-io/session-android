@@ -175,7 +175,7 @@
     <string name="notificationsLedColor">LED rengi</string>
     <string name="notificationsSound">Zil Sesi</string>
     <string name="notificationsVibrate">Titreşim</string>
-    <string name="_default">Varsayılan</string>
+    <string name="theDefault">Varsayılan</string>
     <string name="incognitoKeyboard">Gizli klavye</string>
     <string name="readReceipts">Okundu bilgisi</string>
     <string name="typingIndicators">\'Yazıyor\' göstergeleri</string>
@@ -210,7 +210,7 @@
     <string name="registration_activity__skip">Atla</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">Devam Et</string>
+    <string name="theContinue">Devam Et</string>
     <string name="copy">Kopyala</string>
     <string name="communityEnterUrlErrorInvalid">Geçersiz URL</string>
     <string name="copied">Panoya kopyalandı</string>
@@ -277,7 +277,7 @@
     <string name="enable">Etkinleştir</string>
     <string name="download">İndir</string>
     <string name="media">Medya</string>
-    <string name="_error">Hata</string>
+    <string name="theError">Hata</string>
     <string name="warning">Uyarı</string>
     <string name="pin">Sabitle</string>
     <string name="pinUnpin">Sabitlemeyi kaldır</string>

@@ -2,7 +2,7 @@
 <resources>
 
   <string-array name="language_entries">
-      <item>@string/_default</item>
+      <item>@string/theDefault</item>
       <item>English</item>
       <item>Arabic العربية</item>
       <item>Azərbaycan</item>
@@ -193,7 +193,7 @@
     </array>
 
     <string-array name="pref_notification_priority_entries">
-        <item>@string/_default</item>
+        <item>@string/theDefault</item>
         <item>@string/max</item>
     </string-array>
 

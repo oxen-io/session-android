@@ -186,7 +186,7 @@
     <string name="notificationsLedColor">Колір LED</string>
     <string name="notificationsSound">Звук</string>
     <string name="notificationsVibrate">Вібрувати</string>
-    <string name="_default">Типово</string>
+    <string name="theDefault">Типово</string>
     <string name="incognitoKeyboard">Клавіатура в режимі \"інкогніто\"</string>
     <string name="readReceipts">Звіти про прочитання</string>
     <string name="typingIndicators">Індикатор введення тексту</string>
@@ -221,7 +221,7 @@
     <string name="registration_activity__skip">Пропустити</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">Далі</string>
+    <string name="theContinue">Далі</string>
     <string name="copy">Скопіювати</string>
     <string name="communityEnterUrlErrorInvalid">Недійсне URL посилання</string>
     <string name="copied">Скопійовано в буфер обміну</string>
@@ -288,6 +288,6 @@
     <string name="enable">Включити</string>
     <string name="download">Скачати</string>
     <string name="media">Медіа-файли</string>
-    <string name="_error">Помилка</string>
+    <string name="theError">Помилка</string>
     <string name="warning">Увага</string>
 </resources>

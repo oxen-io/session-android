@@ -175,7 +175,7 @@
     <string name="notificationsLedColor">LED farve</string>
     <string name="notificationsSound">Lyd</string>
     <string name="notificationsVibrate">Vibration</string>
-    <string name="_default">Standard</string>
+    <string name="theDefault">Standard</string>
     <string name="incognitoKeyboard">Inkognito tastatur</string>
     <string name="readReceipts">Læst af modtager</string>
     <string name="typingIndicators">Skrive indikator</string>
@@ -210,7 +210,7 @@
     <string name="registration_activity__skip">Spring over</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">Fortsæt</string>
+    <string name="theContinue">Fortsæt</string>
     <string name="copy">Kopiér</string>
     <string name="communityEnterUrlErrorInvalid">Ugyldig Webadresse</string>
     <string name="copied">Kopieret til udklipsholder</string>
@@ -265,7 +265,7 @@
     <string name="enable">Aktivér</string>
     <string name="download">Hent</string>
     <string name="media">Medie</string>
-    <string name="_error">Fejl</string>
+    <string name="theError">Fejl</string>
     <string name="warning">Advarsel</string>
     <string name="pin">Fastgør</string>
     <string name="pinUnpin">Frigør</string>

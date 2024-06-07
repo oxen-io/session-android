@@ -58,6 +58,6 @@
         android:layout_marginHorizontal="@dimen/massive_spacing"
         android:layout_marginBottom="@dimen/medium_spacing"
         android:contentDescription="@string/AccessibilityId_link_device"
-        android:text="@string/_continue" />
+        android:text="@string/theContinue" />
 
 </LinearLayout>

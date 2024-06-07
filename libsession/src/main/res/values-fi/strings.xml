@@ -175,7 +175,7 @@
     <string name="notificationsLedColor">LED:in väri</string>
     <string name="notificationsSound">Ääni</string>
     <string name="notificationsVibrate">Värinä</string>
-    <string name="_default">Oletus</string>
+    <string name="theDefault">Oletus</string>
     <string name="incognitoKeyboard">Yksityinen näppäimistö</string>
     <string name="readReceipts">Lukukuittaukset</string>
     <string name="typingIndicators">Kirjoitustilaindikaattori</string>
@@ -210,7 +210,7 @@
     <string name="registration_activity__skip">Ohita</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">Jatka</string>
+    <string name="theContinue">Jatka</string>
     <string name="copy">Kopioi</string>
     <string name="communityEnterUrlErrorInvalid">Virheellinen URL</string>
     <string name="copied">Kopioitu leikepöydälle</string>
@@ -277,7 +277,7 @@
     <string name="enable">Ota käyttöön</string>
     <string name="download">Lataa</string>
     <string name="media">Media</string>
-    <string name="_error">Virhe</string>
+    <string name="theError">Virhe</string>
     <string name="warning">Varoitus</string>
     <string name="pin">Koodi</string>
     <string name="pinUnpin">Ohita koodi</string>

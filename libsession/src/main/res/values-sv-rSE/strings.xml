@@ -175,7 +175,7 @@
     <string name="notificationsLedColor">Färg på ljusindikator</string>
     <string name="notificationsSound">Ljud</string>
     <string name="notificationsVibrate">Vibrera</string>
-    <string name="_default">Standard</string>
+    <string name="theDefault">Standard</string>
     <string name="incognitoKeyboard">Inkognito-tangentbord</string>
     <string name="readReceipts">Läskvittenser</string>
     <string name="typingIndicators">Skrivindikatorer</string>
@@ -210,7 +210,7 @@
     <string name="registration_activity__skip">Hoppa över</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">Fortsätt</string>
+    <string name="theContinue">Fortsätt</string>
     <string name="copy">Kopiera</string>
     <string name="communityEnterUrlErrorInvalid">Ogiltig URL</string>
     <string name="copied">Kopierade till urklipp</string>
@@ -277,6 +277,6 @@
     <string name="enable">Aktivera</string>
     <string name="download">Hämta</string>
     <string name="media">Media</string>
-    <string name="_error">Fel</string>
+    <string name="theError">Fel</string>
     <string name="warning">Varning</string>
 </resources>

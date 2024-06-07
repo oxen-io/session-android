@@ -170,7 +170,7 @@
     <string name="notificationsLedColor">LED цвят</string>
     <string name="notificationsSound">Мелодия</string>
     <string name="notificationsVibrate">Вибрация</string>
-    <string name="_default">По подразбиране</string>
+    <string name="theDefault">По подразбиране</string>
     <string name="incognitoKeyboard">Тайна клавиатура</string>
     <string name="readReceipts">Потвърждения за прочитане</string>
     <string name="typingIndicators">Индикатори за писане</string>
@@ -205,6 +205,6 @@
     <string name="registration_activity__skip">Пропусни</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">Продължи</string>
+    <string name="theContinue">Продължи</string>
     <!-- Next round of translation -->
 </resources>

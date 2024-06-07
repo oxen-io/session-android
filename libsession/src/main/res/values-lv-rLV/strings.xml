@@ -146,7 +146,7 @@
     <string name="enable">Ieslēgt</string>
     <string name="download">Lejupielādēt</string>
     <string name="media">Multivide</string>
-    <string name="_error">Kļūda</string>
+    <string name="theError">Kļūda</string>
     <string name="warning">Brīdinājums</string>
     <string name="pin">Piespraust</string>
     <string name="pinUnpin">Atspraust</string>

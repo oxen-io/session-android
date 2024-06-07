@@ -129,9 +129,9 @@
 
 
     <!-- Strings with modern names and {braced} substitution markers-->
-    <string name="_continue">Continue</string>
-    <string name="_default">Default</string>
-    <string name="_error">Error</string>
+    <string name="theContinue">Continue</string>
+    <string name="theDefault">Default</string>
+    <string name="theError">Error</string>
     <string name="about">About</string>
     <string name="accept">Accept</string>
     <string name="accountIDCopy">Copy Account ID</string>
@@ -405,8 +405,6 @@
     <string name="disappearingMessages">Disappearing Messages</string>
     <string name="disappearingMessagesAddedYou">{name} added you to the group.</string>
     <string name="disappearingMessagesChanged"><b>{name}</b> has changed messages to disappear {time} after they have been {disappearing_messages_type}.</string>
-    <string name="disappearingMessagesDeleteAfterReadDescription">Messages delete after they have been read.</string>
-    <string name="disappearingMessagesDeleteAfterSendDescription">Messages delete after they have been sent.</string>
     <string name="disappearingMessagesDeleteType">Delete Type</string>
     <string name="disappearingMessagesDescription">This setting applies to everyone in this conversation.</string>
     <string name="disappearingMessagesDisappear">Disappear After {disappearing_messages_type} - {time}</string>
@@ -554,9 +552,9 @@
     <string name="helpFAQ">FAQ</string>
     <string name="helpHelpUsTranslateSession">Help us translate Session</string>
     <string name="helpReportABug">Report a bug</string>
-    <string name="helpReportABugDescription">Share some details to help us resolve your issue. Export your logs, then upload the file through Session\'s Help Desk.</string>
+    <string name="helpReportABugDescription">Share some details to help us resolve your issue. Export your logs, then upload the file through {app_name}\'s Help Desk.</string>
     <string name="helpReportABugExportLogs">Export Logs</string>
-    <string name="helpReportABugExportLogsDescription">Export your logs, then upload the file through Session\'s Help Desk.</string>
+    <string name="helpReportABugExportLogsDescription">Export your logs, then upload the file through {app_name}\'s Help Desk.</string>
     <string name="helpReportABugExportLogsSaveToDesktop">Save to desktop</string>
     <string name="helpReportABugExportLogsSaveToDesktopDescription">Save this file to your desktop, then share it with Session developers.</string>
     <string name="helpSupport">Support</string>
@@ -711,7 +709,7 @@
     <string name="onboardingMessageNotificationExplanation">There are two ways Session can notify you of new messages.</string>
     <string name="onboardingTosPrivacy">By using this service, you agree to our <b>Terms of Service</b> and <b>Privacy Policy</b></string>
     <string name="onionRoutingPath">Path</string>
-    <string name="onionRoutingPathDescription">Session hides your IP by routing your messages through multiple service nodes in Session\'s decentralized network. This is your current path:</string>
+    <string name="onionRoutingPathDescription">{app_name} hides your IP by routing your messages through multiple service nodes in {app_name}\'s decentralized network. This is your current path:</string>
     <string name="onionRoutingPathDestination">Destination</string>
     <string name="onionRoutingPathEntryNode">Entry Node</string>
     <string name="onionRoutingPathServiceNode">Service Node</string>
@@ -757,7 +755,6 @@
     <string name="pinUnpin">Unpin</string>
     <string name="pinUnpinConversation">Unpin Conversation</string>
     <string name="preferences__message_requests_category">Message Requests</string>
-    <string name="preferences_notifications__content_message">Show:</string>
     <string name="preview">Preview</string>
     <string name="profile">Profile</string>
     <string name="profileDisplayPicture">Display Picture</string>

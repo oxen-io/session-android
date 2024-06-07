@@ -71,6 +71,7 @@ class NotificationsPreferenceFragment : ListSummaryPreferenceFragment() {
                 NotificationChannels.updateMessageVibrate(requireContext(), newValue as Boolean)
                 true
             }
+
         findPreference<Preference>(TextSecurePreferences.RINGTONE_PREF)!!.onPreferenceClickListener =
             Preference.OnPreferenceClickListener {
                 val current = prefs.getNotificationRingtone()
@@ -89,10 +90,10 @@ class NotificationsPreferenceFragment : ListSummaryPreferenceFragment() {
                 startActivityForResult(intent, 1)
                 true
             }
+
         findPreference<Preference>(TextSecurePreferences.NOTIFICATION_PRIVACY_PREF)!!.onPreferenceClickListener =
             Preference.OnPreferenceClickListener { preference: Preference ->
                 val listPreference = preference as ListPreference
-                listPreference.setDialogMessage(R.string.preferences_notifications__content_message)
                 listPreferenceDialog(requireContext(), listPreference) {
                     initializeListSummary(findPreference(TextSecurePreferences.NOTIFICATION_PRIVACY_PREF))
                 }

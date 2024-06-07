@@ -170,7 +170,7 @@
     <string name="notificationsLedColor">LED燈號顏色</string>
     <string name="notificationsSound">提示音效</string>
     <string name="notificationsVibrate">震動</string>
-    <string name="_default">預設</string>
+    <string name="theDefault">預設</string>
     <string name="incognitoKeyboard">隱私鍵盤</string>
     <string name="readReceipts">已讀標記</string>
     <string name="typingIndicators">打字狀態</string>
@@ -205,7 +205,7 @@
     <string name="registration_activity__skip">略過</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">繼續</string>
+    <string name="theContinue">繼續</string>
     <string name="copy">複製</string>
     <string name="communityEnterUrlErrorInvalid">無效網址</string>
     <string name="copied">已複製到剪貼簿</string>
@@ -272,7 +272,7 @@
     <string name="enable">啟用</string>
     <string name="download">下載</string>
     <string name="media">媒體</string>
-    <string name="_error">錯誤</string>
+    <string name="theError">錯誤</string>
     <string name="warning">警告</string>
     <string name="pin">釘選</string>
     <string name="pinUnpin">取消釘選</string>

@@ -183,7 +183,7 @@
     <string name="notificationsLedColor">צבע LED</string>
     <string name="notificationsSound">קול</string>
     <string name="notificationsVibrate">רטט</string>
-    <string name="_default">ברירת מחדל</string>
+    <string name="theDefault">ברירת מחדל</string>
     <string name="incognitoKeyboard">מקלדת סמויה</string>
     <string name="readReceipts">אישורי קריאה</string>
     <string name="typingIndicators">מחווני הקלדה</string>
@@ -217,7 +217,7 @@
     <string name="registration_activity__skip">דלג</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">המשך</string>
+    <string name="theContinue">המשך</string>
     <string name="copy">העתקה</string>
     <string name="communityEnterUrlErrorInvalid">קישור לא תקין</string>
     <string name="next">הבא</string>

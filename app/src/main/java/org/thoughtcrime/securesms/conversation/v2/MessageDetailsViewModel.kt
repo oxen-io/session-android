@@ -80,7 +80,7 @@ class MessageDetailsViewModel @Inject constructor(
                     record = record,
                     sent = dateSent.let(::Date).toString().let { TitledText(R.string.disappearingMessagesSent, it) },
                     received = dateReceived.let(::Date).toString().let { TitledText(R.string.received, it) },
-                    error = lokiMessageDatabase.getErrorMessage(id)?.let { TitledText(R.string._error, it) },
+                    error = lokiMessageDatabase.getErrorMessage(id)?.let { TitledText(R.string.theError, it) },
                     senderInfo = individualRecipient.run { name?.let { TitledText(it, address.serialize()) } },
                     sender = individualRecipient,
                     thread = threadDb.getRecipientForThreadId(threadId)!!,

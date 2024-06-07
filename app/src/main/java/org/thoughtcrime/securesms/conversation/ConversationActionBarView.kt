@@ -25,13 +25,10 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionManagerUtilities
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
-import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.LocalisedTimeUtil
 import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.COUNT_KEY
 import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.TIME_LARGE_KEY
-import java.util.Locale
 import javax.inject.Inject
-import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 @AndroidEntryPoint
@@ -100,22 +97,23 @@ class ConversationActionBarView @JvmOverloads constructor(
 
     fun updateSubtitle(recipient: Recipient, openGroup: OpenGroup? = null, config: ExpirationConfiguration? = null) {
         val settings = mutableListOf<ConversationSetting>()
+
         if (config?.isEnabled == true) {
             val prefix = when (config.expiryMode) {
                 is ExpiryMode.AfterRead -> R.string.disappearingMessagesDisappearAfterRead
                 else -> R.string.disappearingMessagesDisappearAfterSend
             }.let(context::getString)
             settings += ConversationSetting(
-                "$prefix - ${ExpirationUtil.getExpirationAbbreviatedDisplayValue(context, config.expiryMode.expirySeconds)}",
+                "$prefix - ${ExpirationUtil.getExpirationAbbreviatedDisplayValue(config.expiryMode.expirySeconds)}",
                 ConversationSettingType.EXPIRATION,
                 R.drawable.ic_timer,
                 resources.getString(R.string.AccessibilityId_disappearing_messages_type_and_time)
             )
         }
+
         if (recipient.isMuted) {
             settings += ConversationSetting(
                 recipient.mutedUntil.takeUnless { it == Long.MAX_VALUE }
-                    // ACL TODO - need to deal with this R.string.ConversationActivity_muted_until_date thing
                     ?.let {
                         val mutedDuration = it.milliseconds
                         val durationString = LocalisedTimeUtil.getDurationWithLargestTimeUnit(context, mutedDuration)
@@ -128,6 +126,7 @@ class ConversationActionBarView @JvmOverloads constructor(
                 R.drawable.ic_outline_notifications_off_24
             )
         }
+
         if (recipient.isGroupRecipient) {
             val title = if (recipient.isCommunityRecipient) {
                 val userCount = openGroup?.let { lokiApiDb.getUserCount(it.room, it.server) } ?: 0
@@ -138,6 +137,7 @@ class ConversationActionBarView @JvmOverloads constructor(
             }
             settings += ConversationSetting(title, ConversationSettingType.MEMBER_COUNT)
         }
+
         settingsAdapter.submitList(settings)
         binding.settingsTabLayout.isVisible = settings.size > 1
     }

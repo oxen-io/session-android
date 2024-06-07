@@ -180,7 +180,7 @@
     <string name="notificationsLedColor">Culoare LED</string>
     <string name="notificationsSound">Sunet</string>
     <string name="notificationsVibrate">Vibrează</string>
-    <string name="_default">Implicit</string>
+    <string name="theDefault">Implicit</string>
     <string name="incognitoKeyboard">Tastatură incognito</string>
     <string name="readReceipts">Confirmări de citire</string>
     <string name="typingIndicators">Indicatori tastare</string>
@@ -215,7 +215,7 @@
     <string name="registration_activity__skip">Omite</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">Continuă</string>
+    <string name="theContinue">Continuă</string>
     <string name="copy">Copiază</string>
     <string name="communityEnterUrlErrorInvalid">URL invalid</string>
     <string name="copied">Copiat în clipboard</string>

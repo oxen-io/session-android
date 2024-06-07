@@ -120,7 +120,7 @@
     <string name="notificationsLedColor">Langi ya screen eraga</string>
     <string name="notificationsSound">Doboozi</string>
     <string name="notificationsVibrate">Okuwuluguma</string>
-    <string name="_default">wifi calling compatiblity mode</string>
+    <string name="theDefault">wifi calling compatiblity mode</string>
     <string name="conversationsMessageTrimming">Okuyimpaya obubaka</string>
     <!-- **************************************** -->
     <!-- menus -->

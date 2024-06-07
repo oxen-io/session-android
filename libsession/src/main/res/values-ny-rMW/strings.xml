@@ -152,7 +152,7 @@
     <string name="notificationsLedColor">LEDpa tulpu</string>
     <string name="notificationsSound">Wakay uyari</string>
     <string name="notificationsVibrate">Chukchuy</string>
-    <string name="_default">Ña rurashka </string>
+    <string name="theDefault">Ña rurashka </string>
     <string name="incognitoKeyboard">Killkana hillay pakallaku</string>
     <string name="readReceipts">Killkakatinata willachik </string>
     <string name="conversationsMessageTrimming">Chaskimanta pitishka</string>

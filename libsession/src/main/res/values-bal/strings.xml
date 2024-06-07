@@ -144,7 +144,7 @@
     <string name="notificationsLedColor">Warna LED</string>
     <string name="notificationsSound">Bunyi</string>
     <string name="notificationsVibrate">Getar</string>
-    <string name="_default">Bawaan</string>
+    <string name="theDefault">Bawaan</string>
     <string name="incognitoKeyboard">Papan ketik tersembunyi</string>
     <string name="readReceipts">Pesan terbaca</string>
     <string name="typingIndicators">Indikator penulisan</string>
@@ -178,7 +178,7 @@
     <string name="registration_activity__skip">Lewati</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">Lanjut</string>
+    <string name="theContinue">Lanjut</string>
     <string name="copy">Salin</string>
     <string name="communityEnterUrlErrorInvalid">URL salah</string>
     <string name="copied">Salin ke clipboard</string>

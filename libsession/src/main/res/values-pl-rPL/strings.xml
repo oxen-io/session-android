@@ -185,7 +185,7 @@
     <string name="notificationsLedColor">Kolor LED</string>
     <string name="notificationsSound">Dźwięk</string>
     <string name="notificationsVibrate">Wibracje</string>
-    <string name="_default">Domyślne</string>
+    <string name="theDefault">Domyślne</string>
     <string name="incognitoKeyboard">Klawiatura w trybie prywatnym</string>
     <string name="readReceipts">Potwierdzenia przeczytania</string>
     <string name="typingIndicators">Wskaźniki pisania</string>
@@ -220,7 +220,7 @@
     <string name="registration_activity__skip">Pomiń</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">Kontynuuj</string>
+    <string name="theContinue">Kontynuuj</string>
     <string name="copy">Kopiuj</string>
     <string name="communityEnterUrlErrorInvalid">Nieprawidłowy URL</string>
     <string name="copied">Skopiowano do schowka</string>
@@ -287,7 +287,7 @@
     <string name="enable">Włącz</string>
     <string name="download">Pobierz</string>
     <string name="media">Multimedia</string>
-    <string name="_error">Błąd</string>
+    <string name="theError">Błąd</string>
     <string name="warning">Uwaga</string>
     <string name="pin">Przypnij</string>
     <string name="pinUnpin">Odepnij</string>

@@ -53,7 +53,7 @@ object RationaleDialog {
 
         return context.showSessionDialog {
             view(view)
-            button(R.string._continue) { onPositive.run() }
+            button(R.string.theContinue) { onPositive.run() }
             button(R.string.notNow)    { onNegative.run() }
         }
     }

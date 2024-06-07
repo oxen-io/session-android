@@ -126,7 +126,7 @@
     <string name="registration_activity__skip">මඟහරින්න</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">ඉදිරියට</string>
+    <string name="theContinue">ඉදිරියට</string>
     <string name="copy">පිටපත්</string>
     <string name="communityEnterUrlErrorInvalid">වලංගු නොවන ඒ.ස.නි. කි</string>
     <string name="copied">පසුරුපුවරුවට පිටපත් විය</string>
@@ -149,6 +149,6 @@
     <string name="enable">සබල කරන්න</string>
     <string name="download">බාගන්න</string>
     <string name="media">මාධ්‍යය</string>
-    <string name="_error">දෝෂය</string>
+    <string name="theError">දෝෂය</string>
     <string name="warning">අවවාදයයි</string>
 </resources>

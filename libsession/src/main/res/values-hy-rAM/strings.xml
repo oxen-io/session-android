@@ -175,7 +175,7 @@
     <string name="notificationsLedColor">LED-ի գույն</string>
     <string name="notificationsSound">Ձայն</string>
     <string name="notificationsVibrate">Թրթռոց</string>
-    <string name="_default">Սկզբնական</string>
+    <string name="theDefault">Սկզբնական</string>
     <string name="incognitoKeyboard">Չհիշել բառերը</string>
     <string name="readReceipts">Կարդալու ազդանշաններ</string>
     <string name="typingIndicators">Գրելու ինդիկատորներ</string>
@@ -210,7 +210,7 @@
     <string name="registration_activity__skip">Բաց թողնել</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">Շարունակել</string>
+    <string name="theContinue">Շարունակել</string>
     <string name="copy">Պատճենել</string>
     <string name="communityEnterUrlErrorInvalid">Սխալ Հղում</string>
     <string name="copied">Պատճենվել է կցարանում</string>
@@ -277,7 +277,7 @@
     <string name="enable">Միացնել</string>
     <string name="download">Ներբեռնել</string>
     <string name="media">Մեդիա</string>
-    <string name="_error">Սխալ</string>
+    <string name="theError">Սխալ</string>
     <string name="warning">Զգուշացում</string>
     <string name="pin">Ամրացնել</string>
     <string name="pinUnpin">Արձակել</string>

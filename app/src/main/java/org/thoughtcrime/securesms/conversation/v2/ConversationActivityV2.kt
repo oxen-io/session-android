@@ -1705,7 +1705,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             showSessionDialog {
                 title(R.string.giphy_permission_title)
                 text(R.string.giphy_permission_message)
-                button(R.string._continue) {
+                button(R.string.theContinue) {
                     textSecurePreferences.setHasSeenGIFMetaDataWarning()
                     selectGif()
                 }

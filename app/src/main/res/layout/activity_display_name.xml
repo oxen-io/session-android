@@ -61,6 +61,6 @@
         android:layout_marginLeft="@dimen/massive_spacing"
         android:layout_marginRight="@dimen/massive_spacing"
         android:layout_marginBottom="@dimen/small_spacing"
-        android:text="@string/_continue" />
+        android:text="@string/theContinue" />
 
 </LinearLayout>

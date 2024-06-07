@@ -158,7 +158,7 @@
     <string name="notificationsLedColor">LED-farge</string>
     <string name="notificationsSound">Lyd</string>
     <string name="notificationsVibrate">Vibrer</string>
-    <string name="_default">Forvald</string>
+    <string name="theDefault">Forvald</string>
     <string name="incognitoKeyboard">Inkognitotastatur</string>
     <string name="readReceipts">Lesekvitteringar</string>
     <string name="typingIndicators">Tastevisning</string>

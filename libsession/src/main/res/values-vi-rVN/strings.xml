@@ -131,7 +131,7 @@
     <string name="notificationsLedColor">Màu LED</string>
     <string name="notificationsSound">Âm thanh</string>
     <string name="notificationsVibrate">Rung</string>
-    <string name="_default">Mặc định</string>
+    <string name="theDefault">Mặc định</string>
     <string name="conversationsMessageTrimming">Thu gọn tin nhắn</string>
     <!-- **************************************** -->
     <!-- menus -->
@@ -159,7 +159,7 @@
     <string name="registration_activity__skip">Bỏ qua</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">Tiếp tục</string>
+    <string name="theContinue">Tiếp tục</string>
     <string name="copy">Sao chép</string>
     <string name="communityEnterUrlErrorInvalid">URL không hợp lệ</string>
     <string name="copied">Sao chép vào bộ nhớ tạm</string>

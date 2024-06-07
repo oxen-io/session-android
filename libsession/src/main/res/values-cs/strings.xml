@@ -185,7 +185,7 @@
     <string name="notificationsLedColor">Barva LED</string>
     <string name="notificationsSound">Zvuk</string>
     <string name="notificationsVibrate">Vibrovat</string>
-    <string name="_default">Výchozí</string>
+    <string name="theDefault">Výchozí</string>
     <string name="incognitoKeyboard">Inkognito klávesnice</string>
     <string name="readReceipts">Info o přečtení</string>
     <string name="typingIndicators">Indikátory psaní</string>
@@ -220,7 +220,7 @@
     <string name="registration_activity__skip">Přeskočit</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">Pokračovat</string>
+    <string name="theContinue">Pokračovat</string>
     <string name="copy">Kopírovat</string>
     <string name="communityEnterUrlErrorInvalid">Neplatná adresa URL</string>
     <string name="copied">Zkopírováno do schránky</string>
@@ -287,7 +287,7 @@
     <string name="enable">Povolit</string>
     <string name="download">Stáhnout</string>
     <string name="media">Média</string>
-    <string name="_error">Chyba</string>
+    <string name="theError">Chyba</string>
     <string name="warning">Varování</string>
     <string name="pin">Připnout</string>
     <string name="pinUnpin">Odepnout</string>

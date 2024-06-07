@@ -164,7 +164,7 @@
     <string name="notificationsLedColor">ពណ៌​LED</string>
     <string name="notificationsSound">សំឡេង</string>
     <string name="notificationsVibrate">ញ័រ</string>
-    <string name="_default">លំនាំដើម</string>
+    <string name="theDefault">លំនាំដើម</string>
     <string name="incognitoKeyboard">ក្តារចុចអនាមឹក</string>
     <string name="readReceipts">ទទួលបានការអាន</string>
     <string name="typingIndicators">វាស់ការវាយអក្សរ</string>

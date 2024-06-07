@@ -187,7 +187,7 @@
     <string name="notificationsLedColor">Lliw\'r LED</string>
     <string name="notificationsSound">Sain</string>
     <string name="notificationsVibrate">Dirgrynu</string>
-    <string name="_default">Rhagosodiad</string>
+    <string name="theDefault">Rhagosodiad</string>
     <string name="incognitoKeyboard">Bysellfwrdd dirgel</string>
     <string name="readReceipts">Derbynebau darllen</string>
     <string name="typingIndicators">Dangosyddion Teipio</string>

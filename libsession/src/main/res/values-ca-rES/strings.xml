@@ -174,7 +174,7 @@
     <string name="notificationsLedColor">Color del LED</string>
     <string name="notificationsSound">So</string>
     <string name="notificationsVibrate">Vibra</string>
-    <string name="_default">Per defecte</string>
+    <string name="theDefault">Per defecte</string>
     <string name="incognitoKeyboard">Teclat d\'incògnit</string>
     <string name="readReceipts">Confirmació de lectura</string>
     <string name="typingIndicators">Indicadors de tecleig</string>
@@ -209,7 +209,7 @@
     <string name="registration_activity__skip">Omet</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">Continua</string>
+    <string name="theContinue">Continua</string>
     <string name="copy">Copia</string>
     <string name="communityEnterUrlErrorInvalid">URL invàlida</string>
     <string name="copied">Copiat al porta-retalls</string>

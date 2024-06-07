@@ -147,7 +147,7 @@
     <string name="notificationsLedColor">Rangi za LED</string>
     <string name="notificationsSound">Sauti</string>
     <string name="notificationsVibrate">vibrate</string>
-    <string name="_default">Chaguo Msingi</string>
+    <string name="theDefault">Chaguo Msingi</string>
     <string name="incognitoKeyboard">Kibodi cha kuingia</string>
     <string name="readReceipts">Soma stakabadhi</string>
     <string name="typingIndicators">andika viashiria</string>

@@ -176,7 +176,7 @@
     <string name="notificationsLedColor">رنگ چراغ ال‌ای‌دی</string>
     <string name="notificationsSound">صدا</string>
     <string name="notificationsVibrate">لرزش</string>
-    <string name="_default">پیش فرض</string>
+    <string name="theDefault">پیش فرض</string>
     <string name="incognitoKeyboard">کیبورد ناشناس</string>
     <string name="readReceipts">رسیدهای خواندن</string>
     <string name="typingIndicators">نشانگر‌های در حال تایپ</string>
@@ -212,7 +212,7 @@
     <string name="registration_activity__skip">پرش</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">ادامه </string>
+    <string name="theContinue">ادامه </string>
     <string name="copy">کپی کردن</string>
     <string name="communityEnterUrlErrorInvalid">URL غیرمعتبر</string>
     <string name="copied">در حافظه موقت کپی شد</string>
@@ -280,7 +280,7 @@
     <string name="enable">فعال کردن</string>
     <string name="download">دانلود</string>
     <string name="media">رسانه</string>
-    <string name="_error">خطا</string>
+    <string name="theError">خطا</string>
     <string name="warning">هشدار</string>
     <string name="pin">سنجاق کردن</string>
     <string name="pinUnpin">برداشتن سنجاق</string>

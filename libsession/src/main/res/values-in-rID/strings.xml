@@ -153,7 +153,7 @@
     <string name="sessionNotifications">Notifikasi</string>
     <string name="notificationsLedColor">Warna LED</string>
     <string name="notificationsVibrate">Getar</string>
-    <string name="_default">Baku</string>
+    <string name="theDefault">Baku</string>
     <string name="readReceipts">Laporan dibaca</string>
     <string name="typingIndicators">Indikator mengetik</string>
     <!-- **************************************** -->
@@ -185,7 +185,7 @@
     <string name="registration_activity__skip">Lewati</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">Lanjutkan</string>
+    <string name="theContinue">Lanjutkan</string>
     <string name="copy">Salin</string>
     <string name="communityEnterUrlErrorInvalid">URL salah</string>
     <string name="copied">Salin ke clipboard</string>
@@ -215,6 +215,6 @@
     <string name="messageVoice">Pesan Suara</string>
     <string name="notificationsSlowModeDescription">Session sesekali akan memeriksa pesan baru di latar belakang.</string>
     <string name="open">Buka</string>
-    <string name="_error">Galat</string>
+    <string name="theError">Galat</string>
     <string name="warning">Peringatan</string>
 </resources>

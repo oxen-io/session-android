@@ -135,7 +135,7 @@
     <string name="notificationsLedColor">LED အရောင်</string>
     <string name="notificationsSound">အသံ</string>
     <string name="notificationsVibrate">တုန်ခါသည်</string>
-    <string name="_default">မူလ</string>
+    <string name="theDefault">မူလ</string>
     <string name="incognitoKeyboard">နောက်ယောင်ခံမှု မရှိသည့် ကီးဘုတ်</string>
     <string name="readReceipts">ဖတ်ပြီးပြီ</string>
     <string name="conversationsMessageTrimming">စာများကို ညှိခြင်း</string>

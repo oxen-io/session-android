@@ -190,7 +190,7 @@
     <string name="notificationsLedColor">Couleur de la DEL</string>
     <string name="notificationsSound">Son</string>
     <string name="notificationsVibrate">Vibrer</string>
-    <string name="_default">Valeur par défaut</string>
+    <string name="theDefault">Valeur par défaut</string>
     <string name="incognitoKeyboard">Clavier incognito</string>
     <string name="readReceipts">Accusés de lecture</string>
     <string name="typingIndicators">Indicateurs de saisie</string>
@@ -227,7 +227,7 @@
     <string name="registration_activity__skip">Ignorer</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">Continuer</string>
+    <string name="theContinue">Continuer</string>
     <string name="copy">Copier</string>
     <string name="close">Fermer</string>
     <string name="communityEnterUrlErrorInvalid">URL non valide</string>
@@ -297,7 +297,7 @@
     <string name="enable">Activer</string>
     <string name="download">Télécharger</string>
     <string name="media">Médias</string>
-    <string name="_error">Erreur</string>
+    <string name="theError">Erreur</string>
     <string name="warning">Attention</string>
     <string name="pin">Épingler</string>
     <string name="pinUnpin">Désépingler</string>

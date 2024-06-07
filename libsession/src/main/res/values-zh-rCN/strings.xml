@@ -170,7 +170,7 @@
     <string name="notificationsLedColor">LED颜色</string>
     <string name="notificationsSound">声音</string>
     <string name="notificationsVibrate">振动</string>
-    <string name="_default">默认</string>
+    <string name="theDefault">默认</string>
     <string name="incognitoKeyboard">隐身键盘</string>
     <string name="readReceipts">已读回执</string>
     <string name="typingIndicators">“正在输入”提示</string>
@@ -205,7 +205,7 @@
     <string name="registration_activity__skip">略过</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">继续</string>
+    <string name="theContinue">继续</string>
     <string name="copy">复制</string>
     <string name="communityEnterUrlErrorInvalid">无效的链接</string>
     <string name="copied">复制到剪贴板</string>
@@ -272,7 +272,7 @@
     <string name="enable">启用</string>
     <string name="download">下载</string>
     <string name="media">媒体文件</string>
-    <string name="_error">错误</string>
+    <string name="theError">错误</string>
     <string name="warning">警告</string>
     <string name="pin">置顶</string>
     <string name="pinUnpin">取消置顶</string>

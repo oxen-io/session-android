@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.core.view.isInvisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
+import com.squareup.phrase.Phrase
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
@@ -33,6 +34,7 @@ import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.createSessionDialog
 import org.thoughtcrime.securesms.util.FileProviderUtil
 import org.thoughtcrime.securesms.util.StreamUtil
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.APP_NAME_KEY
 
 import java.io.File
 import java.io.FileOutputStream
@@ -48,7 +50,11 @@ class ShareLogsDialog(private val updateCallback: (Boolean)->Unit): DialogFragme
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {
         title(R.string.helpReportABugExportLogs)
-        text(R.string.helpReportABugExportLogsDescription)
+        val appName = context.getString(R.string.app_name)
+        val txt = Phrase.from(context, R.string.helpReportABugExportLogsDescription)
+            .put(APP_NAME_KEY, appName)
+            .format().toString()
+        text(txt)
         button(R.string.share, dismiss = false) { runShareLogsJob() }
         cancelButton { updateCallback(false) }
     }

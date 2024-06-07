@@ -185,7 +185,7 @@
     <string name="notificationsLedColor">Šviesos diodo spalva</string>
     <string name="notificationsSound">Garsas</string>
     <string name="notificationsVibrate">Vibruoti</string>
-    <string name="_default">Numatytoji</string>
+    <string name="theDefault">Numatytoji</string>
     <string name="incognitoKeyboard">Inkognito klaviatūra</string>
     <string name="readReceipts">Pranešimai apie žinučių skaitymą</string>
     <string name="typingIndicators">Rašymo indikatoriai</string>
@@ -219,7 +219,7 @@
     <string name="registration_activity__skip">Praleisti</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">Tęsti</string>
+    <string name="theContinue">Tęsti</string>
     <string name="copy">Kopijuoti</string>
     <string name="communityEnterUrlErrorInvalid">Neteisingas URL</string>
     <string name="copied">Nukopijuota į iškarpinę</string>
@@ -275,6 +275,6 @@
     <string name="open">Atverti</string>
     <string name="enable">Įjungti</string>
     <string name="download">Atsisiųsti</string>
-    <string name="_error">Klaida</string>
+    <string name="theError">Klaida</string>
     <string name="warning">Įspėjimas</string>
 </resources>

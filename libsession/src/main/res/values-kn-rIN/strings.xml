@@ -115,7 +115,7 @@
     <string name="notificationsLedColor">ಎಲಿಡಿ ಬಣ್ಣ</string>
     <string name="notificationsSound">ಶಬ್ಧ</string>
     <string name="notificationsVibrate">ಕಂಪಿಸು</string>
-    <string name="_default">ಪೂರ್ವನಿಯೋಜಿತ</string>
+    <string name="theDefault">ಪೂರ್ವನಿಯೋಜಿತ</string>
     <!-- **************************************** -->
     <!-- menus -->
     <!-- **************************************** -->
@@ -138,7 +138,7 @@
     <!-- transport_selection_list_item -->
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">ಮುಂದುವರೆಯಿರಿ</string>
+    <string name="theContinue">ಮುಂದುವರೆಯಿರಿ</string>
     <string name="copy">ನಕಲಿಸಿ</string>
     <string name="communityEnterUrlErrorInvalid">ಅಮಾನ್ಯ URL</string>
     <string name="next">ಮುಂದಿನ</string>
@@ -156,6 +156,6 @@
     <string name="enable">ಸಕ್ರಿಯಗೊಳಿಸು</string>
     <string name="download">ಡೌನ್ಲೋಡ್</string>
     <string name="media">ಮಾಧ್ಯಮ</string>
-    <string name="_error">ದೋಷ</string>
+    <string name="theError">ದೋಷ</string>
     <string name="warning">ಎಚ್ಚರಿಕೆ</string>
 </resources>

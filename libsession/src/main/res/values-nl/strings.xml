@@ -175,7 +175,7 @@
     <string name="notificationsLedColor">Notificatie-LED-kleur</string>
     <string name="notificationsSound">Geluid</string>
     <string name="notificationsVibrate">Trillen</string>
-    <string name="_default">Systeem-standaard</string>
+    <string name="theDefault">Systeem-standaard</string>
     <string name="incognitoKeyboard">Incognito toetsenbord</string>
     <string name="readReceipts">Leesbevestigingen</string>
     <string name="typingIndicators">Typindicatoren</string>
@@ -210,7 +210,7 @@
     <string name="registration_activity__skip">Overslaan</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">Doorgaan</string>
+    <string name="theContinue">Doorgaan</string>
     <string name="copy">Kopiëren</string>
     <string name="communityEnterUrlErrorInvalid">Ongeldige URL</string>
     <string name="copied">Gekopieerd naar klembord</string>
@@ -277,7 +277,7 @@
     <string name="enable">Inschakelen</string>
     <string name="download">Download</string>
     <string name="media">Media</string>
-    <string name="_error">Error</string>
+    <string name="theError">Error</string>
     <string name="warning">Waarschuwing</string>
     <string name="pin">Vastzetten</string>
     <string name="pinUnpin">Losmaken</string>

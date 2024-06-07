@@ -175,7 +175,7 @@
     <string name="notificationsLedColor">LED रंग </string>
     <string name="notificationsSound">आवाज़ </string>
     <string name="notificationsVibrate"> वाइब्रेट</string>
-    <string name="_default">डिफ़ॉल्ट</string>
+    <string name="theDefault">डिफ़ॉल्ट</string>
     <string name="incognitoKeyboard">गुप्त कीबोर्ड</string>
     <string name="readReceipts">पढ़ने की रसीदें</string>
     <string name="typingIndicators">टाइपिंग सूचक</string>
@@ -210,7 +210,7 @@
     <string name="registration_activity__skip">छोड़ दे </string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">जारी रखें</string>
+    <string name="theContinue">जारी रखें</string>
     <string name="copy">कॉपी करें</string>
     <string name="communityEnterUrlErrorInvalid">अमान्य यूआरएल</string>
     <string name="copied">क्लिपबोर्ड पर कॉपी किया गया है</string>
@@ -277,7 +277,7 @@
     <string name="enable">सक्षम करें</string>
     <string name="download">डाउनलोड</string>
     <string name="media">मीडिया</string>
-    <string name="_error">त्रुटि!</string>
+    <string name="theError">त्रुटि!</string>
     <string name="warning">चेतावनी!</string>
     <string name="pin">पिन करें</string>
     <string name="pinUnpin">अनपिन करें</string>

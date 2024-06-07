@@ -176,7 +176,7 @@
     <string name="notificationsLedColor">Боја ЛЕД светла</string>
     <string name="notificationsSound">Звук</string>
     <string name="notificationsVibrate">Вибрирање</string>
-    <string name="_default">Подразумеван</string>
+    <string name="theDefault">Подразумеван</string>
     <string name="incognitoKeyboard">Инкогнито тастатура</string>
     <string name="readReceipts">Потврде читања</string>
     <string name="conversationsMessageTrimming">Скраћивање порука</string>

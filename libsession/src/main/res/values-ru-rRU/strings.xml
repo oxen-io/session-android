@@ -185,7 +185,7 @@
     <string name="notificationsLedColor">Цвет светодиода</string>
     <string name="notificationsSound">Мелодия</string>
     <string name="notificationsVibrate">Вибрация</string>
-    <string name="_default">По умолчанию</string>
+    <string name="theDefault">По умолчанию</string>
     <string name="incognitoKeyboard">Инкогнито-клавиатура</string>
     <string name="readReceipts">Уведомления о прочтении</string>
     <string name="typingIndicators">Индикаторы ввода</string>
@@ -220,7 +220,7 @@
     <string name="registration_activity__skip">Пропустить</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">Продолжить</string>
+    <string name="theContinue">Продолжить</string>
     <string name="copy">Копировать</string>
     <string name="communityEnterUrlErrorInvalid">Неверная ссылка</string>
     <string name="copied">Скопировано в буфер обмена</string>
@@ -287,7 +287,7 @@
     <string name="enable">Включить</string>
     <string name="download">Скачать</string>
     <string name="media">Медиа</string>
-    <string name="_error">Ошибка</string>
+    <string name="theError">Ошибка</string>
     <string name="warning">Предупреждение</string>
     <string name="pin">Закрепить</string>
     <string name="pinUnpin">Открепить</string>

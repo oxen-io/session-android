@@ -175,7 +175,7 @@
     <string name="notificationsLedColor">Χρώμα LED</string>
     <string name="notificationsSound">Ήχος</string>
     <string name="notificationsVibrate">Δόνηση</string>
-    <string name="_default">Προκαθορισμένο</string>
+    <string name="theDefault">Προκαθορισμένο</string>
     <string name="incognitoKeyboard">Κρυφό πληκτρολόγιο</string>
     <string name="readReceipts">Αποδεικτικά ανάγνωσης</string>
     <string name="typingIndicators">Δείκτες πληκτρολόγησης</string>
@@ -210,7 +210,7 @@
     <string name="registration_activity__skip">Παράλειψη</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">Συνέχεια</string>
+    <string name="theContinue">Συνέχεια</string>
     <string name="copy">Αντιγραφή</string>
     <string name="communityEnterUrlErrorInvalid">Μη έγκυρη διεύθυνση</string>
     <string name="copied">Αντιγράφηκε στο πρόχειρο</string>
@@ -277,7 +277,7 @@
     <string name="enable">Ενεργοποίηση</string>
     <string name="download">Λήψη</string>
     <string name="media">Πολυμέσα</string>
-    <string name="_error">Σφάλμα</string>
+    <string name="theError">Σφάλμα</string>
     <string name="warning">Προειδοποίηση</string>
     <string name="pin">Καρφίτσωμα</string>
     <string name="pinUnpin">Ξεκαρφίτσωμα</string>

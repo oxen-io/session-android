@@ -195,7 +195,7 @@
     <string name="notificationsLedColor">لون ضوء التنبيه LED</string>
     <string name="notificationsSound">صوت</string>
     <string name="notificationsVibrate">هزاز</string>
-    <string name="_default">افتراضي</string>
+    <string name="theDefault">افتراضي</string>
     <string name="incognitoKeyboard">وضع التستّر للوحة المفاتيح</string>
     <string name="readReceipts">قراءة تقارير الإستلام</string>
     <string name="typingIndicators">مؤشرات الكتابة</string>
@@ -230,7 +230,7 @@
     <string name="registration_activity__skip">تخطى</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="_continue">متابعة</string>
+    <string name="theContinue">متابعة</string>
     <string name="copy">اِنسخ</string>
     <string name="communityEnterUrlErrorInvalid">عنوان تعريف خاطئ</string>
     <string name="copied">تم النسخ الى الحافظة المؤقتة</string>
@@ -297,7 +297,7 @@
     <string name="enable">تفعيل</string>
     <string name="download">تنزيل</string>
     <string name="media">وسائط</string>
-    <string name="_error">خطأ</string>
+    <string name="theError">خطأ</string>
     <string name="warning">تحذير</string>
     <string name="pin">ًًًُُثَبت</string>
     <string name="pinUnpin">الغ التثبيت</string>
