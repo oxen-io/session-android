@@ -572,18 +572,24 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     private fun deleteConversation(thread: ThreadRecord) {
         val threadID = thread.threadId
         val recipient = thread.recipient
+
+        // If this is a group conversation
         val message = if (recipient.isGroupRecipient) {
             val group = groupDatabase.getGroup(recipient.address.toString()).orNull()
+
+            // If you are an admin of this group you can delete it
             if (group != null && group.admins.map { it.toString() }.contains(textSecurePreferences.getLocalNumber())) {
                 Phrase.from(this.applicationContext, R.string.groupDeleteDescription)
                     .put(GROUP_NAME_KEY, group.title)
                     .format().toString()
             } else {
+                // Otherwise you can only leave the group
                 Phrase.from(this.applicationContext, R.string.groupLeaveDescription)
                     .put(GROUP_NAME_KEY, group.title)
                     .format()
             }
         } else {
+            // If this is a 1-on-1 conversation
             Phrase.from(this.applicationContext, R.string.conversationsDeleteDescription)
                 .put(NAME_KEY, recipient.name)
                 .format()
@@ -616,6 +622,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                     }
                     // Update the badge count
                     ApplicationContext.getInstance(context).messageNotifier.updateNotification(context)
+
                     // Notify the user
                     val toastMessage = if (recipient.isGroupRecipient) R.string.groupMemberYouLeft else R.string.conversationsDeleted
                     Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show()

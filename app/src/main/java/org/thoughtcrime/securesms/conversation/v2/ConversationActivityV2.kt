@@ -18,7 +18,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
+import android.text.SpannableString
 import android.text.SpannableStringBuilder
+import android.text.Spanned
 import android.text.SpannedString
 import android.text.TextUtils
 import android.text.style.StyleSpan
@@ -1112,9 +1114,26 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         updateUnreadCountIndicator()
     }
 
+    // Method that takes a char sequence that contains one or more elements surrounded in bold tags
+    // like "Hello <b>world</b>" and returns a SpannableString that will display the appropriate
+    // elements in bold. If there are no such <b> or </b> elements then the original string is returned
+    // as a SpannableString without any bold highlighting.
+    private fun makeBoldBetweenTags(input: CharSequence): SpannableString {
+        val spannable = SpannableString(input)
+        var startIndex = 0
+        while (true) {
+            startIndex = input.indexOf("<b>", startIndex)
+            if (startIndex == -1) break
+            val endIndex = input.indexOf("</b>", startIndex + 3)
+            if (endIndex == -1) break
+            spannable.setSpan(StyleSpan(Typeface.BOLD),startIndex + 3, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            startIndex = endIndex + 4
+        }
+        return spannable
+    }
+
     private fun updatePlaceholder() {
-        val recipient = viewModel.recipient
-            ?: return Log.w("Loki", "recipient was null in placeholder update")
+        val recipient = viewModel.recipient ?: return Log.w("Loki", "recipient was null in placeholder update")
         val blindedRecipient = viewModel.blindedRecipient
         val binding = binding ?: return
         val openGroup = viewModel.openGroup
@@ -1124,12 +1143,15 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val txtCS: CharSequence = when {
             recipient.isLocalNumber -> getString(R.string.noteToSelfEmpty)
 
+            // If this is a community which we cannot write to
             openGroup != null && !openGroup.canWrite -> {
                 Phrase.from(applicationContext, R.string.conversationsEmpty)
-                    .put(CONVERSATION_NAME_KEY, recipient.toShortString())
+                    .put(CONVERSATION_NAME_KEY, openGroup.name)
                     .format()
             }
 
+            // If we're trying to message someone who has blocked community message requests?
+            // TODO: Why would we use a placeholder for this? Why wouldn't we we show a toast or something instead? -ACL 2024/06/11
             blindedRecipient?.blocksCommunityMessageRequests == true -> {
                 Phrase.from(applicationContext, R.string.messageRequestsTurnedOff)
                     .put(NAME_KEY, recipient.toShortString())
@@ -1137,6 +1159,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             }
 
             else -> {
+                // If this is a group or community that we can send messages to
                 Phrase.from(applicationContext, R.string.groupNoMessages)
                     .put(GROUP_NAME_KEY, recipient.toShortString())
                     .format()
@@ -1147,16 +1170,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         binding.placeholderText.isVisible = showPlaceholder
         if (showPlaceholder) {
             if (!isNoteToSelf) {
-                val span = txtCS as SpannedString
-                val annotations = span.getSpans(0, span.length, StyleSpan::class.java)
-                val boldSpan = annotations.first()
-                val spannedParam = txtCS.toSpannable()
-                spannedParam[0 until spannedParam.length] = StyleSpan(boldSpan.style)
-                val originalStart = span.getSpanStart(boldSpan)
-                val originalEnd = span.getSpanEnd(boldSpan)
-                val newString = SpannableStringBuilder(span)
-                    .replace(originalStart, originalEnd, spannedParam)
-                binding.placeholderText.text = newString
+                binding.placeholderText.text = makeBoldBetweenTags(txtCS)
             } else {
                 binding.placeholderText.text = txtCS
             }

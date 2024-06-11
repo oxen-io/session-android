@@ -69,11 +69,14 @@ object UpdateMessageBuilder {
             // --- Group member(s) were added ---
             is UpdateMessageData.Kind.GroupMemberAdded -> {
                 val members = updateData.updatedMembers.joinToString(", ", transform = ::getSenderName)
+
+                // You added these members
                 if (isOutgoing) {
                     Phrase.from(context, R.string.groupYouAdded)
                         .put(MEMBERS_KEY, members)
                         .format().toString()
                 }
+                // Someone else added these members
                 else {
                     Phrase.from(context, R.string.groupNameAdded)
                         .put(NAME_KEY,senderName)
@@ -132,14 +135,14 @@ object UpdateMessageBuilder {
                                 "" // Return an empty string - we don't want to show the error in the conversation
                             }
                             1 -> Phrase.from(context, R.string.groupRemoved)
-                                .put(NAME_KEY, updateData.updatedMembers.elementAt(0))
+                                .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
                                 .format().toString()
                             2 -> Phrase.from(context, R.string.groupRemovedTwo)
-                                .put(NAME_KEY, updateData.updatedMembers.elementAt(0))
-                                .put(OTHER_NAME_KEY, updateData.updatedMembers.elementAt(1))
+                                .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
+                                .put(OTHER_NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(1)))
                                 .format().toString()
                             else -> Phrase.from(context, R.string.groupRemovedMore)
-                                .put(NAME_KEY, updateData.updatedMembers.elementAt(0))
+                                .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
                                 .put(COUNT_KEY, updateData.updatedMembers.size - 1)
                                 .format().toString()
                         }
