@@ -575,7 +575,9 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         val message = if (recipient.isGroupRecipient) {
             val group = groupDatabase.getGroup(recipient.address.toString()).orNull()
             if (group != null && group.admins.map { it.toString() }.contains(textSecurePreferences.getLocalNumber())) {
-                "Because you are the creator of this group it will be deleted for everyone. This cannot be undone."
+                Phrase.from(this.applicationContext, R.string.groupDeleteDescription)
+                    .put(GROUP_NAME_KEY, group.title)
+                    .format().toString()
             } else {
                 Phrase.from(this.applicationContext, R.string.groupLeaveDescription)
                     .put(GROUP_NAME_KEY, group.title)

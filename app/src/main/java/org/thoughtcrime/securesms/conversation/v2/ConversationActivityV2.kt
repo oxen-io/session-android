@@ -173,6 +173,8 @@ import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.SaveAttachmentTask
 import org.thoughtcrime.securesms.util.SimpleTextWatcher
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.CONVERSATION_NAME_KEY
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.GROUP_NAME_KEY
 import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.NAME_KEY
 import org.thoughtcrime.securesms.util.isScrolledToBottom
 import org.thoughtcrime.securesms.util.isScrolledToWithin30dpOfBottom
@@ -1117,22 +1119,38 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val binding = binding ?: return
         val openGroup = viewModel.openGroup
 
-        val (textResource, insertParam) = when {
-            recipient.isLocalNumber -> R.string.activity_conversation_empty_state_note_to_self to null
-            // ACL TODO: Fix up substitution here
-            openGroup != null && !openGroup.canWrite -> R.string.activity_conversation_empty_state_read_only to recipient.toShortString()
-            blindedRecipient?.blocksCommunityMessageRequests == true -> R.string.messageRequestsTurnedOff to recipient.toShortString()
-            // ACL TODO: And here
-            else -> R.string.activity_conversation_empty_state_default to recipient.toShortString()
+        // Get the correct placeholder text for this type of empty conversation
+        val isNoteToSelf = recipient.isLocalNumber
+        val txtCS: CharSequence = when {
+            recipient.isLocalNumber -> getString(R.string.noteToSelfEmpty)
+
+            openGroup != null && !openGroup.canWrite -> {
+                Phrase.from(applicationContext, R.string.conversationsEmpty)
+                    .put(CONVERSATION_NAME_KEY, recipient.toShortString())
+                    .format()
+            }
+
+            blindedRecipient?.blocksCommunityMessageRequests == true -> {
+                Phrase.from(applicationContext, R.string.messageRequestsTurnedOff)
+                    .put(NAME_KEY, recipient.toShortString())
+                    .format()
+            }
+
+            else -> {
+                Phrase.from(applicationContext, R.string.groupNoMessages)
+                    .put(GROUP_NAME_KEY, recipient.toShortString())
+                    .format()
+            }
         }
+
         val showPlaceholder = adapter.itemCount == 0
         binding.placeholderText.isVisible = showPlaceholder
         if (showPlaceholder) {
-            if (insertParam != null) {
-                val span = getText(textResource) as SpannedString
+            if (!isNoteToSelf) {
+                val span = txtCS as SpannedString
                 val annotations = span.getSpans(0, span.length, StyleSpan::class.java)
                 val boldSpan = annotations.first()
-                val spannedParam = insertParam.toSpannable()
+                val spannedParam = txtCS.toSpannable()
                 spannedParam[0 until spannedParam.length] = StyleSpan(boldSpan.style)
                 val originalStart = span.getSpanStart(boldSpan)
                 val originalEnd = span.getSpanEnd(boldSpan)
@@ -1140,7 +1158,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     .replace(originalStart, originalEnd, spannedParam)
                 binding.placeholderText.text = newString
             } else {
-                binding.placeholderText.setText(textResource)
+                binding.placeholderText.text = txtCS
             }
         }
     }

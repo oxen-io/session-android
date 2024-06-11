@@ -137,9 +137,6 @@
     <string name="accountIdOrOnsInvite">Invite Account ID or ONS</string>
     <string name="accountIdYours">Your Account ID</string>
     <string name="activity_appearance_follow_system_explanation">Match system settings</string>
-    <string name="activity_conversation_empty_state_default">You have no messages from <b>%s</b>.\nSend a message to start the conversation!</string>
-    <string name="activity_conversation_empty_state_note_to_self">You have no messages in Note to Self.</string>
-    <string name="activity_conversation_empty_state_read_only">There are no messages in <b>%s</b>.</string>
     <string name="activity_conversation_outdated_client_banner_text">%s is using an outdated client. Disappearing messages may not work as expected.</string>
     <string name="activity_create_closed_group_empty_state_button_title">Start a Session</string>
     <string name="activity_disappearing_messages_delete_type">Delete Type</string>
@@ -332,7 +329,7 @@
     <string name="communityJoinedAlready">You are already a member of this community.</string>
     <string name="communityLeave">Leave Community</string>
     <string name="communityLeaveDescription">Are you sure you want to leave {community_name}?</string>
-    <string name="communityLeaveError">Couldn\'t leave community</string>
+    <string name="communityLeaveError">Failed to leave {community_name}</string>
     <string name="communityUrl">Community URL</string>
     <string name="communityUrlCopy">Copy Community URL</string>
     <string name="contactContacts">Contacts</string>
@@ -627,7 +624,7 @@
     <string name="messageRequestsDelete">Are you sure you want to delete this message request?</string>
     <string name="messageRequestsNew">You have a new message request</string>
     <string name="messageRequestsNonePending">No pending message requests</string>
-    <string name="messageRequestsTurnedOff"><b>%s</b> has message requests from Community conversations turned off, so you cannot send them a message.</string>
+    <string name="messageRequestsTurnedOff"><b>{name}</b> has message requests from Community conversations turned off, so you cannot send them a message.</string>
     <string name="messageSelect">Select Message</string>
     <string name="messageStatusFailedToSend">Failed to send</string>
     <string name="messageStatusFailedToSync">Failed to sync</string>
