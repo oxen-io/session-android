@@ -20,7 +20,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,7 +34,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.Toolbar;
@@ -56,6 +54,7 @@ import org.session.libsession.messaging.messages.control.DataExtractionNotificat
 import org.session.libsession.messaging.sending_receiving.MessageSender;
 import org.session.libsession.snode.SnodeAPI;
 import org.session.libsession.utilities.Address;
+import org.thoughtcrime.securesms.components.dialogs.DeleteMediaDialog;
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter;
 import org.thoughtcrime.securesms.database.MediaDatabase;
 import org.thoughtcrime.securesms.database.loaders.BucketedThreadMediaLoader;

@@ -17,7 +17,6 @@
 package org.thoughtcrime.securesms;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -26,7 +25,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -67,6 +65,7 @@ import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsession.utilities.recipients.RecipientModifiedListener;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.components.MediaView;
+import org.thoughtcrime.securesms.components.dialogs.DeleteMediaPreviewDialog;
 import org.thoughtcrime.securesms.database.MediaDatabase.MediaRecord;
 import org.thoughtcrime.securesms.database.loaders.PagingMediaLoader;
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord;

@@ -103,6 +103,9 @@ import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.attachments.ScreenshotObserver
 import org.thoughtcrime.securesms.audio.AudioRecorder
+import org.thoughtcrime.securesms.components.dialogs.DeleteMessageDeviceOnlyDialog
+import org.thoughtcrime.securesms.components.dialogs.DeleteMessageDialog
+import org.thoughtcrime.securesms.components.dialogs.DeleteNoteToSelfDialog
 import org.thoughtcrime.securesms.components.emoji.RecentEmojiPageModel
 import org.thoughtcrime.securesms.contacts.SelectContactsActivity.Companion.selectedContactsKey
 import org.thoughtcrime.securesms.conversation.ConversationActionBarDelegate
@@ -316,7 +319,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 if (!viewModel.isMessageRequestThread &&
                     viewModel.canReactToMessages
                 ) {
-                    showEmojiPicker(message, view)
+                    showConversationReaction(message, view)
                 } else {
                     handleLongPress(message, position)
                 }
@@ -1277,7 +1280,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
-    private fun showEmojiPicker(message: MessageRecord, visibleMessageView: VisibleMessageView) {
+    private fun showConversationReaction(message: MessageRecord, visibleMessageView: VisibleMessageView) {
         val messageContentBitmap = try {
             visibleMessageView.messageContentView.drawToBitmap()
         } catch (e: Exception) {
@@ -1881,15 +1884,63 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     // Note: The messages in the provided set may be a single message, or multiple if there are a
     // group of selected messages.
     override fun deleteMessages(messages: Set<MessageRecord>) {
-        val recipient = viewModel.recipient
-        if (recipient == null) {
+        val conversation = viewModel.recipient
+        if (conversation == null) {
             Log.w("ConversationActivityV2", "Asked to delete messages but could not obtain viewModel recipient - aborting.")
             return
         }
 
-        val allSentByCurrentUser = messages.all { it.isOutgoing }
-        val allHasHash = messages.all { lokiMessageDb.getMessageServerHash(it.id, it.isMms) != null }
+        // Refer to our figma document for info on message deletion [https://www.figma.com/design/kau6LggVcMMWmZRMibEo8F/Standardise-Message-Deletion?node-id=0-1&t=dEPcU0SZ9G2s4gh2-0]
 
+        val allSentByCurrentUser = messages.all { it.isOutgoing }
+        // hashes are required if wanting to delete messages from the 'storage server' - they are not required for communities
+        val canDeleteForEveryone = conversation.isCommunityRecipient || messages.all { lokiMessageDb.getMessageServerHash(it.id, it.isMms) != null }
+        // Determining is the current user is an admin will depend on the kind of conversation we are in
+        val isAdmin = when{
+            // for Groups V2
+            //todo GROUPS V2 add logic to determine if user is an admin
+
+            // for legacy groups, check if the user created the group
+
+            // for communities the the `isUserModerator` field
+            else -> false
+        }
+
+        // There are three types of dialogs for deletion:
+        // 1- Delete on device only OR all devices - Used for Note to self
+        // 2- Delete on device only OR for everyone - Used for 'admins' or a user's own messages, as long as the message have a server hash
+        // 3- Delete on device only - Used otherwise
+        when{
+            // the conversation is a note to self
+            conversation.isLocalNumber -> {
+                DeleteNoteToSelfDialog.show(
+                    context = this,
+                    recordCount = messages.size,
+                    doDelete = {}
+                )
+            }
+
+            // If the user is an admin or is interacting with their own message And are allowed to delete for everyone
+            (isAdmin || allSentByCurrentUser) && canDeleteForEveryone -> {
+                DeleteMessageDialog.show(
+                    context = this,
+                    recordCount = messages.size,
+                    doDelete = {}
+                )
+            }
+
+            // for non admins, users interacting with someone else's message, or control messages
+            else -> {
+                //todo this should also happen for ControlMessages
+                DeleteMessageDeviceOnlyDialog.show(
+                    context = this,
+                    recordCount = messages.size,
+                    doDelete = {}
+                )
+            }
+        }
+
+/*
         // If the recipient is a community OR a Note-to-Self then we delete the message for everyone
         if (recipient.isCommunityRecipient || recipient.isLocalNumber) {
             val messageCount = 1 // Only used for plurals string
@@ -1932,7 +1983,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 }
                 cancelButton(::endActionMode)
             }
-        }
+        }*/
     }
 
     override fun banUser(messages: Set<MessageRecord>) {
