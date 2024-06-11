@@ -180,7 +180,7 @@ object UpdateMessageBuilder {
     fun buildExpirationTimerMessage(
         context: Context,
         duration: Long,
-        isGroup: Boolean, // ACL TODO: Does this include communities? (i.e., open groups) - probably??? Do some testing!
+        isGroup: Boolean, // ACL TODO: Does this include communities? (i.e., open groups)?
         senderId: String? = null,
         isOutgoing: Boolean = false,
         timestamp: Long,
@@ -202,7 +202,7 @@ object UpdateMessageBuilder {
             else // ..or by someone else.
             {
                 // ACL TODO - Do we want one of these to be "has turned THEIR disappearing messages off?" - likely the 1-on-1?
-                val stringId = if (isGroup) R.string.disappearingMessagesTurnedOff else // If you can turn disappearing msgs on/off in group then ur admin?? Check!
+                val stringId = if (isGroup) R.string.disappearingMessagesTurnedOff else
                                             R.string.disappearingMessagesTurnedOff
                 Phrase.from(context, stringId).put(NAME_KEY, senderName).format().toString()
             }

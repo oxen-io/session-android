@@ -17,6 +17,7 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewConversationActionBarBinding
 import network.loki.messenger.databinding.ViewConversationSettingBinding
 import network.loki.messenger.libsession_util.util.ExpiryMode
+import network.loki.messenger.libsession_util.util.ExpiryMode.AfterRead
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.utilities.ExpirationUtil
@@ -27,6 +28,8 @@ import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
 import org.thoughtcrime.securesms.util.LocalisedTimeUtil
 import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.COUNT_KEY
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.DISAPPEARING_MESSAGES_TYPE_KEY
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.TIME_KEY
 import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.TIME_LARGE_KEY
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
@@ -98,13 +101,24 @@ class ConversationActionBarView @JvmOverloads constructor(
     fun updateSubtitle(recipient: Recipient, openGroup: OpenGroup? = null, config: ExpirationConfiguration? = null) {
         val settings = mutableListOf<ConversationSetting>()
 
+        // Specify the disappearing messages subtitle if we should
         if (config?.isEnabled == true) {
-            val prefix = when (config.expiryMode) {
-                is ExpiryMode.AfterRead -> R.string.disappearingMessagesDisappearAfterRead
-                else -> R.string.disappearingMessagesDisappearAfterSend
-            }.let(context::getString)
+            // Get the type of disappearing message and the abbreviated duration..
+            val dmTypeString = when (config.expiryMode) {
+                is AfterRead -> context.getString(R.string.read)
+                else -> context.getString(R.string.send)
+            }
+            val durationAbbreviated = ExpirationUtil.getExpirationAbbreviatedDisplayValue(config.expiryMode.expirySeconds)
+
+            // ..then substitute into the string..
+            val subtitleTxt = Phrase.from(context, R.string.disappearingMessagesDisappear)
+                .put(DISAPPEARING_MESSAGES_TYPE_KEY, dmTypeString)
+                .put(TIME_KEY, durationAbbreviated)
+                .format().toString()
+
+            // .. and apply to the subtitle.
             settings += ConversationSetting(
-                "$prefix - ${ExpirationUtil.getExpirationAbbreviatedDisplayValue(config.expiryMode.expirySeconds)}",
+                subtitleTxt,
                 ConversationSettingType.EXPIRATION,
                 R.drawable.ic_timer,
                 resources.getString(R.string.AccessibilityId_disappearing_messages_type_and_time)

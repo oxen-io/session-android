@@ -404,16 +404,8 @@
     <string name="disappearingMessagesDisappearAfterReadDescription">Messages delete after they have been read.</string>
     <string name="disappearingMessagesDisappearAfterSend">Disappear After Send</string>
     <string name="disappearingMessagesDisappearAfterSendDescription">Messages delete after they have been sent.</string>
-    <string name="disappearingMessagesFiveM">5M</string>
-    <string name="disappearingMessagesFiveMinutes">5 Minutes</string>
     <string name="disappearingMessagesFollowSetting">Follow Setting</string>
     <string name="disappearingMessagesNewGroup">You created a new group.</string>
-    <string name="disappearingMessagesOneD">1D</string>
-    <string name="disappearingMessagesOneDay">1 Day</string>
-    <string name="disappearingMessagesOneH">1H</string>
-    <string name="disappearingMessagesOneHour">1 Hour</string>
-    <string name="disappearingMessagesOneW">1W</string>
-    <string name="disappearingMessagesOneWeek">1 Week</string>
     <string name="disappearingMessagesOnlyAdmins">Only group admins can change this setting.</string>
     <string name="disappearingMessagesRead">Read</string>
     <string name="disappearingMessagesSent">Sent</string>
@@ -422,10 +414,6 @@
     <string name="disappearingMessagesTimer">Timer</string>
     <string name="disappearingMessagesTurnedOff"><b>{name}</b> has turned disappearing messages off.</string>
     <string name="disappearingMessagesTurnedOffYou"><b>You</b> turned <b>off</b> disappearing messages. Messages you send will no longer disappear.</string>
-    <string name="disappearingMessagesTwelveH">12H</string>
-    <string name="disappearingMessagesTwelveHours">12 Hours</string>
-    <string name="disappearingMessagesTwoW">2W</string>
-    <string name="disappearingMessagesTwoWeeks">2 Weeks</string>
     <string name="disappearingMessagesTypeRead">read</string>
     <string name="disappearingMessagesTypeSent">sent</string>
     <string name="disappearingMessagesUpdated"><b>{admin_name}</b> updated disappearing message settings.</string>
