@@ -4,7 +4,6 @@ plugins {
 }
 
 android {
-    //namespace 'network.loki.messenger.libsession_util'
     namespace 'org.session.libsession_util'
     compileSdkVersion androidCompileSdkVersion
 

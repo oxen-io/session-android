@@ -1,11 +1,7 @@
 package org.session.libsession.utilities
 
 import android.content.Context
-
 import org.session.libsession.R
-
-import network.loki.messenger.libsession_util.util.ExpiryMode
-
 import java.util.concurrent.TimeUnit
 import kotlin.time.Duration
 
