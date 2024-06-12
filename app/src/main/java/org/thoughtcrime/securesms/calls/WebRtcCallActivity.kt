@@ -89,8 +89,7 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    /*
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         if (intent?.action == ACTION_ANSWER) {
             val answerIntent = WebRtcCallService.acceptCallIntent(this)
@@ -98,7 +97,6 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
             ContextCompat.startForegroundService(this, answerIntent)
         }
     }
-    */
 
     override fun onCreate(savedInstanceState: Bundle?, ready: Boolean) {
         super.onCreate(savedInstanceState, ready)

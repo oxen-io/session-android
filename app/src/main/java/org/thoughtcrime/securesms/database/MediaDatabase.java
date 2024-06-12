@@ -102,9 +102,6 @@ public class MediaDatabase extends Database {
     }
 
     public static MediaRecord from(@NonNull Context context, @NonNull Cursor cursor) {
-
-
-
       AttachmentDatabase       attachmentDatabase = DatabaseComponent.get(context).attachmentDatabase();
       List<DatabaseAttachment> attachments        = attachmentDatabase.getAttachment(cursor);
       String                   serializedAddress  = cursor.getString(cursor.getColumnIndexOrThrow(MmsDatabase.ADDRESS));
