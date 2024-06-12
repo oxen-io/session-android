@@ -164,11 +164,6 @@
     <string name="audio">Hang</string>
     <string name="video">Videó</string>
     <string name="max">Legmagasabb</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d óra</item>
-        <item quantity="other">%d órája</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Hivatkozások előnézeti képének küldése</string>
     <string name="screenSecurity">Képernyőbiztonság</string>
@@ -221,8 +216,6 @@
     <string name="view_fake_chat_bubble_4">Fejlett anonim útválasztási és végponttól-végpontig titkosítási technológiák használatával.</string>
     <string name="view_fake_chat_bubble_5">A barátként nem engedhetem, hogy megbízhatatlan üzenetküldő appokat használj. Szívesen.</string>
     <string name="displayNamePick">Válassza ki a megjelenítendő nevet</string>
-    <string name="displayNameErrorDescription">Kérjük, válassza ki a megjelenítendő nevet</string>
-    <string name="displayNameErrorDescriptionShorter">Válasszon rövidebb megjelenítési nevet</string>
     <string name="recommended">Ajánlott</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Kérjük, válasszon egy lehetőséget</string>
     <string name="activity_home_empty_state_button_title">Indítson el egy beszélgetést</string>
@@ -268,7 +261,6 @@
     <string name="messageVoice">Hangüzenet</string>
     <string name="activity_link_device_skip_prompt">Ez eltarthat egy ideig, szeretnéd átugrani?</string>
     <string name="communityJoinOfficial">Vagy csatlakozz ezekhez…</string>
-    <string name="onboardingMessageNotificationExplanation">2 mód van arra, hogy a Session értesítsen téged új üzenetekről.</string>
     <string name="notificationsFastMode">Gyorsított mód</string>
     <string name="notificationsSlowMode">Lassított mód</string>
     <string name="notificationsFastModeDescriptionAndroid">A Google értesítési szerverein keresztül megbízhatóan és azonnal értesítést kapsz az új üzenetekről.</string>

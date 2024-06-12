@@ -163,11 +163,6 @@
     <string name="audio">Sonaĵo</string>
     <string name="video">Videaĵo</string>
     <string name="max">Maksimuma</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d horo</item>
-        <item quantity="other">%d horoj</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Sendi antaŭrigardojn de ligilo</string>
     <string name="screenSecurity">Ekrana sekurigo</string>
@@ -220,8 +215,6 @@
     <string name="view_fake_chat_bubble_4">Uzante kombinon de progresinta anonima enkursigo kaj tutvoje ĉifraj teknologioj.</string>
     <string name="view_fake_chat_bubble_5">Amikoj ne permesas amikojn uzi kompromititajn mesaĝilojn. Nedankinde.</string>
     <string name="displayNamePick">Elektu vian vidigan nomon</string>
-    <string name="displayNameErrorDescription">Bonvolu elekti vidigan nomon</string>
-    <string name="displayNameErrorDescriptionShorter">Bonvolu elekti plej mallongan vidigan nomon</string>
     <string name="recommended">Rekomendate</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Bonvolu Elekti Opcion</string>
     <string name="activity_home_empty_state_button_title">Komenci Sesion</string>

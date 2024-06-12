@@ -163,11 +163,6 @@
     <string name="audio">صدا</string>
     <string name="video">ویدئو</string>
     <string name="max">حداکثر</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d ساعت</item>
-        <item quantity="other">%d ساعت</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">ارسال پیش نمایش لینک ها</string>
     <string name="screenSecurity">محافظ صفحه نمایش</string>
@@ -220,8 +215,6 @@
     <string name="view_fake_chat_bubble_4">Session با استفاده از ترکیبی از فناوری‌های پیشرفته مسیریابی ناشناس و رمزگذاری سرتاسری این کار را انجام می‌دهد.</string>
     <string name="view_fake_chat_bubble_5">یک دوست هیچ‌وقت به دوستان خود اجازه استفاده از پیام‌رسان‌های در معرض خطر را نمی‌دهد.</string>
     <string name="displayNamePick">نام خود را برای نمایش انتخاب کنید</string>
-    <string name="displayNameErrorDescription">لطفا نام نمایشی را انتخاب کنید</string>
-    <string name="displayNameErrorDescriptionShorter">لطفا نام نمایشی کوتاه‌تری انتخاب کنید</string>
     <string name="recommended">گزینه پیشنهادی</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">لطفا یک گزینه را انتخاب کنید</string>
     <string name="activity_home_empty_state_button_title">شروع Session</string>
@@ -267,7 +260,6 @@
     <string name="messageVoice">پیام صوتی</string>
     <string name="activity_link_device_skip_prompt">این مقداری طول می‌کشد، دوست دارید ردش کنید؟</string>
     <string name="communityJoinOfficial">یا به یکی از این‌ها بپیوندید…</string>
-    <string name="onboardingMessageNotificationExplanation">دو راه برای اطلاع رسانی شما از پیام‌های جدید در نشست وجود دارد.</string>
     <string name="notificationsFastMode">حالت سریع</string>
     <string name="notificationsSlowMode">حالت آهسته</string>
     <string name="notificationsFastModeDescriptionAndroid">شما سریع و مطمئن با استفاده از سرور‌های اطلاع‌رسانی گوگل از پیام‌های جدید مطلع می‌شوید.</string>

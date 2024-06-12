@@ -163,11 +163,6 @@
     <string name="audio">Lyd</string>
     <string name="video">Video</string>
     <string name="max">Maks</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d time</item>
-        <item quantity="other">%d timer</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Send linkforhåndsvisninger</string>
     <string name="screenSecurity">Skjermsikkerhet</string>
@@ -220,8 +215,6 @@
     <string name="view_fake_chat_bubble_4">Bruker en kombinasjon av avansert anonym ruting og ende-til-ende-krypteringsteknologi.</string>
     <string name="view_fake_chat_bubble_5">Venner lar ikke venner bruke kompromitterte meldinger. Du er velkommen.</string>
     <string name="displayNamePick">Velg ditt visningsnavn</string>
-    <string name="displayNameErrorDescription">Vennligst velg et visningsnavn</string>
-    <string name="displayNameErrorDescriptionShorter">Vennligst velg et kortere visningsnavn</string>
     <string name="recommended">Anbefalt</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Vennligst velg et alternativ</string>
     <string name="activity_home_empty_state_button_title">Start en Session</string>
@@ -267,7 +260,6 @@
     <string name="messageVoice">Talemelding</string>
     <string name="activity_link_device_skip_prompt">Dette tar en stund, vil du hoppe over?</string>
     <string name="communityJoinOfficial">Eller bli med i en av disse…</string>
-    <string name="onboardingMessageNotificationExplanation">Det er to måter Session kan gi beskjed om nye meldinger på.</string>
     <string name="notificationsFastMode">Rask modus</string>
     <string name="notificationsSlowMode">Langsom Modus</string>
     <string name="notificationsFastModeDescriptionAndroid">Du vil bli varslet om nye meldinger på en pålitelig måte, og umiddelbart ved hjelp av Googles varslingsservere.</string>

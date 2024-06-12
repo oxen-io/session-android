@@ -163,13 +163,7 @@
     <string name="audio">صدا</string>
     <string name="video">ویدئو</string>
     <string name="max">حداکثر</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d ساعت</item>
-        <item quantity="other">%d ساعت</item>
-    </plurals>
     <!-- preferences.xml -->
-
     <string name="linkPreviewsSend">ارسال پیش‌نمایش‌های لینک</string>
     <string name="screenSecurity">امنیت صفحه</string>
     <string name="sessionNotifications">اعلانات</string>
@@ -222,8 +216,6 @@
     <string name="view_fake_chat_bubble_4">Session با استفاده از ترکیبی از فناوری‌های پیشرفته مسیریابی ناشناس و رمزگذاری سرتاسری این کار را انجام می‌دهد.</string>
     <string name="view_fake_chat_bubble_5">یک دوست هیچ‌وقت به دوستان خود اجازه استفاده از پیام‌رسان‌های در معرض خطر را نمی‌دهد.</string>
     <string name="displayNamePick">نام خود را برای نمایش انتخاب کنید</string>
-    <string name="displayNameErrorDescription">لطفا یک نام انتخاب کنید</string>
-    <string name="displayNameErrorDescriptionShorter">لطفا نام کوتاه‌تری انتخاب کنید</string>
     <string name="recommended">گزینه پیشنهادی</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">لطفا یک گزینه را انتخاب کنید</string>
     <string name="activity_home_empty_state_button_title">شروع Session</string>
@@ -271,7 +263,6 @@
     <string name="messageVoice">پیام صوتی</string>
     <string name="activity_link_device_skip_prompt">این فرآیند کمی طولانی است، دوست دارید ردش کنید؟</string>
     <string name="communityJoinOfficial">یا به یکی از این‌ها بپیوندید…</string>
-    <string name="onboardingMessageNotificationExplanation">در برنامه سشن، برای مطلع کردن شما از رسیدن پیام‌های جدید، دو روش وجود دارد.</string>
     <string name="notificationsFastMode">حالت سریع</string>
     <string name="notificationsFastModeDescriptionAndroid">با استفاده از سرورهای گوگل، شما به صورت سریع و مطمئن از پیام‌های جدید مطلع می‌شوید.</string>
     <string name="notificationsSlowModeDescription">Session هرازگاهی در پس زمینه وجود پیام‌های جدید را بررسی می‌کند.</string>

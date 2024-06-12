@@ -179,15 +179,6 @@
     <string name="audio">صوت</string>
     <string name="video">فيديو</string>
     <string name="max">الأقصى</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="zero">%d ساعة</item>
-        <item quantity="one">%d ساعة</item>
-        <item quantity="two">%d ساعتين</item>
-        <item quantity="few">%d ساعات</item>
-        <item quantity="many">%d ساعة</item>
-        <item quantity="other">%d ساعة</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">إرسال معاينة الرابط</string>
     <string name="screenSecurity">تأمين الشاشة</string>
@@ -240,8 +231,6 @@
     <string name="view_fake_chat_bubble_4">باِستخدام مُركَب من تكنولوجيات التشفير من الطرفين و توجيه مجهول للمعلومات.</string>
     <string name="view_fake_chat_bubble_5">الأصدقاء لا يتركون أصدقائهم يستعملون تطبيق مراسلة مكشوف. مرحبا بك.</string>
     <string name="displayNamePick">أختر اِسم الاِظهار</string>
-    <string name="displayNameErrorDescription">اِختر اسم من فضلك</string>
-    <string name="displayNameErrorDescriptionShorter">اِختر اسم اقصر من فضلك</string>
     <string name="recommended">محبذ</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">اِختر</string>
     <string name="activity_home_empty_state_button_title">اِبدا جلسة محادثة</string>
@@ -287,7 +276,6 @@
     <string name="messageVoice">رسالة صوتية</string>
     <string name="activity_link_device_skip_prompt">هذا يستغرق بعض الوقت، هل تريد أن تتخطى؟</string>
     <string name="communityJoinOfficial">أو انضم إلى واحدة من…</string>
-    <string name="onboardingMessageNotificationExplanation">يوجد طريقتين لتلقي التنبيهات.</string>
     <string name="notificationsFastMode">الوضع السريع</string>
     <string name="notificationsSlowMode">الوضع البطيء</string>
     <string name="notificationsFastModeDescriptionAndroid">سوف يتم إشعارك بالرسائل بشكل موثوق و فوري بإستخدام خوادم جوجل للإشعارات.</string>

@@ -176,15 +176,8 @@
     <string name="audio">Son</string>
     <string name="video">Vidéo</string>
     <string name="max">Maximale</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d heure</item>
-        <item quantity="other">%d heures</item>
-    </plurals>
     <!-- preferences.xml -->
-
     <string name="linkPreviewsSend">Envoyer les aperçus des liens</string>
-
     <string name="screenSecurity">Sécurité de l’écran</string>
     <string name="sessionNotifications">Notifications</string>
     <string name="notificationsLedColor">Couleur de la DEL</string>
@@ -238,8 +231,6 @@
     <string name="view_fake_chat_bubble_4">En utilisant une combinaison de technologies avancées de routage anonyme et de chiffrement de bout en bout.</string>
     <string name="view_fake_chat_bubble_5">Les vrais amis ne laissent pas leurs amis utiliser des outils de messagerie compromis. De rien.</string>
     <string name="displayNamePick">Choisissez votre nom d\'utilisateur</string>
-    <string name="displayNameErrorDescription">Veuillez choisir un nom d\'utilisateur</string>
-    <string name="displayNameErrorDescriptionShorter">Veuillez choisir un nom d\'utilisateur plus court</string>
     <string name="recommended">Recommandé</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Veuillez choisir une option</string>
     <string name="activity_home_empty_state_button_title">Démarrez une Session</string>
@@ -287,7 +278,6 @@
     <string name="messageVoice">Message vocal</string>
     <string name="activity_link_device_skip_prompt">Cela prend un certain temps, voulez-vous passer ?</string>
     <string name="communityJoinOfficial">Ou rejoignez l\'un(e) de ceux-ci…</string>
-    <string name="onboardingMessageNotificationExplanation">Session peut vous avertir de la présence de nouveaux messages de deux façons.</string>
     <string name="notificationsFastMode">Mode rapide</string>
     <string name="notificationsSlowMode">Mode lent</string>
     <string name="notificationsFastModeDescriptionAndroid">Vous serez averti de nouveaux messages de manière fiable et immédiate en utilisant les serveurs de notification de Google.</string>

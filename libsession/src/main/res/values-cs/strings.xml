@@ -171,13 +171,6 @@
     <string name="audio">Zvuk</string>
     <string name="video">Video</string>
     <string name="max">Maximum</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d hodina</item>
-        <item quantity="few">%d hodiny</item>
-        <item quantity="many">%d hodin</item>
-        <item quantity="other">%d hodin</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Odesílat náhledy odkazu</string>
     <string name="screenSecurity">Zabezpečení obrazovky</string>
@@ -230,8 +223,6 @@
     <string name="view_fake_chat_bubble_4">Použitím kombinace pokročilých anonymních směrovacích a end-to-end šifrovacích technologií.</string>
     <string name="view_fake_chat_bubble_5">Přátelé nenechávají přátelé používat kompromitované aplikace. Není zač.</string>
     <string name="displayNamePick">Vaše jméno</string>
-    <string name="displayNameErrorDescription">Vyberte prosím pseudonym</string>
-    <string name="displayNameErrorDescriptionShorter">Vyberte prosím kratší pseudonym</string>
     <string name="recommended">Doporučeno</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Prosím vyberte možnost</string>
     <string name="activity_home_empty_state_button_title">Zahájit relaci</string>
@@ -277,7 +268,6 @@
     <string name="messageVoice">Hlasová zpráva</string>
     <string name="activity_link_device_skip_prompt">Trvá to trochu déle, chcete přeskočit?</string>
     <string name="communityJoinOfficial">Nebo se připojte k jedné z těchto…</string>
-    <string name="onboardingMessageNotificationExplanation">Existují dva způsoby, jak vás může Session upozorňovat na nové zprávy.</string>
     <string name="notificationsFastMode">Rychlý režim</string>
     <string name="notificationsSlowMode">Pomalý režim</string>
     <string name="notificationsFastModeDescriptionAndroid">Budete spolehlivě a okamžitě informováni o nových zprávách pomocí oznamovacích serverů Google.</string>

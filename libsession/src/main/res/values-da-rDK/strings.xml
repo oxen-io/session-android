@@ -163,11 +163,6 @@
     <string name="audio">Lyd</string>
     <string name="video">Video</string>
     <string name="max">Max.</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d time</item>
-        <item quantity="other">%d timer</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Send link eksempelvisning</string>
     <string name="screenSecurity">Skærmsikkerhed</string>
@@ -220,8 +215,6 @@
     <string name="view_fake_chat_bubble_4">Ved hjælp af en kombination af avanceret anonym routing og end-to-end krypteringsteknologier.</string>
     <string name="view_fake_chat_bubble_5">Venner lader ikke venner bruge usikre besked tjenester. Du er velkommen.</string>
     <string name="displayNamePick">Vælg dit visningsnavn</string>
-    <string name="displayNameErrorDescription">Vælg venligst et display navn</string>
-    <string name="displayNameErrorDescriptionShorter">Vælg venligst et kortere display navn</string>
     <string name="recommended">Anbefalet</string>
     <string name="activity_home_empty_state_button_title">Start en Session</string>
     <string name="conversationsDeleted">Samtale slettet</string>
@@ -260,7 +253,6 @@
     <string name="messageVoice">Talebesked</string>
     <string name="activity_link_device_skip_prompt">Dette tager et stykke tid, vil du gerne springe over?</string>
     <string name="communityJoinOfficial">Eller deltag i en af disse…</string>
-    <string name="onboardingMessageNotificationExplanation">Der er to måder Session kan underrette dig om nye beskeder.</string>
     <string name="urlCopy">Kopier URL</string>
     <string name="enable">Aktivér</string>
     <string name="download">Hent</string>

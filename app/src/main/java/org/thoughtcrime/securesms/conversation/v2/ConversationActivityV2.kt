@@ -1132,10 +1132,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         return spannable
     }
 
+    // Update placeholder / control messages in a conversation
     private fun updatePlaceholder() {
         val recipient = viewModel.recipient ?: return Log.w("Loki", "recipient was null in placeholder update")
         val blindedRecipient = viewModel.blindedRecipient
-        val binding = binding ?: return
+        val binding = binding ?: return Log.w("Loki", "Couldn't access binding in updatePlaceholder")
         val openGroup = viewModel.openGroup
 
         // Get the correct placeholder text for this type of empty conversation
@@ -1150,8 +1151,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     .format()
             }
 
-            // If we're trying to message someone who has blocked community message requests?
-            // TODO: Why would we use a placeholder for this? Why wouldn't we we show a toast or something instead? -ACL 2024/06/11
+            // If we're trying to message someone who has blocked community message requests
             blindedRecipient?.blocksCommunityMessageRequests == true -> {
                 Phrase.from(applicationContext, R.string.messageRequestsTurnedOff)
                     .put(NAME_KEY, recipient.toShortString())
@@ -1159,7 +1159,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             }
 
             else -> {
-                // If this is a group or community that we can send messages to
+                // If this is a group or community that we CAN send messages to
                 Phrase.from(applicationContext, R.string.groupNoMessages)
                     .put(GROUP_NAME_KEY, recipient.toShortString())
                     .format()

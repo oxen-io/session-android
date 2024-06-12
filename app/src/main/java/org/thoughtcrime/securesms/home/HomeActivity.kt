@@ -590,9 +590,15 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             }
         } else {
             // If this is a 1-on-1 conversation
-            Phrase.from(this.applicationContext, R.string.conversationsDeleteDescription)
-                .put(NAME_KEY, recipient.name)
-                .format()
+            if (recipient.name != null) {
+                Phrase.from(this.applicationContext, R.string.conversationsDeleteDescription)
+                    .put(NAME_KEY, recipient.name)
+                    .format()
+            }
+            else {
+                // ACL TODO: This says "clear" while all other strings say delete - is this correct?
+                getString(R.string.clearMessagesNoteToSelfDescription)
+            }
         }
 
         showSessionDialog {

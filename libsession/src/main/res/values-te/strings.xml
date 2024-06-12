@@ -153,11 +153,6 @@
     <string name="audio">ఆడియో</string>
     <string name="video">వీడియో</string>
     <string name="max">గరిష్టం</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d గంట</item>
-        <item quantity="other">%d గంటలు</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="screenSecurity">స్క్రీన్ భద్రత</string>
     <string name="sessionNotifications">ప్రకటనలు</string>

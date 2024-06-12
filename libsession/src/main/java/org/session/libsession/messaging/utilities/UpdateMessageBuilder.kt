@@ -160,14 +160,14 @@ object UpdateMessageBuilder {
                             "" // Return an empty string - we don't want to show the error in the conversation
                         }
                         1 -> Phrase.from(context, R.string.groupMemberLeft)
-                            .put(NAME_KEY, updateData.updatedMembers.elementAt(0))
+                            .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
                             .format().toString()
                         2 -> Phrase.from(context, R.string.groupMemberLeftTwo)
-                            .put(NAME_KEY, updateData.updatedMembers.elementAt(0))
-                            .put(OTHER_NAME_KEY, updateData.updatedMembers.elementAt(1))
+                            .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
+                            .put(OTHER_NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(1)))
                             .format().toString()
                         else -> Phrase.from(context, R.string.groupMemberLeftMore)
-                            .put(NAME_KEY, updateData.updatedMembers.elementAt(0))
+                            .put(NAME_KEY, getSenderName(updateData.updatedMembers.elementAt(0)))
                             .put(COUNT_KEY, updateData.updatedMembers.size - 1)
                             .format().toString()
                     }

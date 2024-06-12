@@ -23,6 +23,7 @@
             android:text="@string/notificationsMessage" />
 
         <TextView
+            android:id="@+id/messageNotificationExplanation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/very_large_spacing"

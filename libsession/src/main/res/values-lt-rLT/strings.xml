@@ -171,13 +171,6 @@
     <string name="audio">Garso įrašai</string>
     <string name="video">Vaizdo įrašai</string>
     <string name="max">Maksimali</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d valanda</item>
-        <item quantity="few">%d valandos</item>
-        <item quantity="many">%d valandų</item>
-        <item quantity="other">%d valandų</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Siųsti nuorodų peržiūras</string>
     <string name="screenSecurity">Ekrano saugumas</string>
@@ -229,8 +222,6 @@
     <string name="view_fake_chat_bubble_4">Naudodama išplėstinio anoniminio nukreipimo ir ištisinio šifravimo technologijų kombinaciją.</string>
     <string name="view_fake_chat_bubble_5">Draugai neleidžia savo draugams naudotis į pavojų statančiomis programėlėmis. Prašom.</string>
     <string name="displayNamePick">Pasirinkite savo rodomą vardą</string>
-    <string name="displayNameErrorDescription">Pasirinkite rodomą vardą</string>
-    <string name="displayNameErrorDescriptionShorter">Pasirinkite trumpesnį rodomą vardą</string>
     <string name="recommended">Rekomenduojama</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Pasirinkite parinktį</string>
     <string name="conversationsDeleted">Pokalbis ištrintas</string>
@@ -267,7 +258,6 @@
     <string name="attachment">Priedas</string>
     <string name="messageVoice">Balso žinutė</string>
     <string name="communityJoinOfficial">Arba prisijunkite prie vienos iš šių…</string>
-    <string name="onboardingMessageNotificationExplanation">Yra du būdai kaip Session gali jums pranešti apie naujas žinutes.</string>
     <string name="notificationsFastMode">Greita veiksena</string>
     <string name="notificationsSlowMode">Lėta veiksena</string>
     <string name="notificationsFastModeDescriptionAndroid">Jums bus nedelsiant ir patikimai pranešama apie naujas žinutes, naudojant „Google“ pranešimų serverius.</string>

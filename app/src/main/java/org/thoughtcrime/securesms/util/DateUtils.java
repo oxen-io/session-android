@@ -146,6 +146,8 @@ public class DateUtils extends android.text.format.DateUtils {
   }
 
   // region Deprecated
+  // ACL: This method is UNUSED! Remove when merging onboarding etc!
+  /*
   public static String getBriefRelativeTimeSpanString(final Context c, final Locale locale, final long timestamp) {
     if (isWithin(timestamp, 1, TimeUnit.MINUTES)) {
       return c.getString(R.string.DateUtils_just_now);
@@ -163,7 +165,10 @@ public class DateUtils extends android.text.format.DateUtils {
       return getFormattedDateTime(timestamp, "MMM d, yyyy", locale);
     }
   }
+  */
 
+  // ACL: This method is UNUSED! Remove when merging onboarding etc!
+  /*
   public static String getExtendedRelativeTimeSpanString(final Context c, final Locale locale, final long timestamp) {
     if (isWithin(timestamp, 1, TimeUnit.MINUTES)) {
       return c.getString(R.string.DateUtils_just_now);
@@ -182,5 +187,6 @@ public class DateUtils extends android.text.format.DateUtils {
       return getFormattedDateTime(timestamp, format.toString(), locale);
     }
   }
+  */
   // endregion
 }

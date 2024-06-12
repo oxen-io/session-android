@@ -163,11 +163,6 @@
     <string name="audio">Áudio</string>
     <string name="video">Vídeo</string>
     <string name="max">Max</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d hora</item>
-        <item quantity="other">%d horas</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Enviar previews de link</string>
     <string name="screenSecurity">Segurança de tela</string>
@@ -220,8 +215,6 @@
     <string name="view_fake_chat_bubble_4">Usando uma combinação de tecnologias avançadas de roteamento anônimo e encriptação ponta-a-ponta.</string>
     <string name="view_fake_chat_bubble_5">Amigas(os) não deixam amigas(os) usarem mensageiros comprometidos. De nada.</string>
     <string name="displayNamePick">Escolha seu nome de display</string>
-    <string name="displayNameErrorDescription">Escolha um nome de display</string>
-    <string name="displayNameErrorDescriptionShorter">Escolha um nome de exibição mais curto</string>
     <string name="recommended">Recomendado</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Escolha uma opção</string>
     <string name="activity_home_empty_state_button_title">Iniciar uma sessão</string>
@@ -267,7 +260,6 @@
     <string name="messageVoice">Mensagem de Voz</string>
     <string name="activity_link_device_skip_prompt">Isto está demorando um pouco, tu gostarias de pular?</string>
     <string name="communityJoinOfficial">Ou junte-se a um desses…</string>
-    <string name="onboardingMessageNotificationExplanation">Existem duas maneiras que o Session poder notificar você sobre novas mensagens.</string>
     <string name="notificationsFastMode">Modo Rápido</string>
     <string name="notificationsSlowMode">Modo Lento</string>
     <string name="notificationsFastModeDescriptionAndroid">Você será notificado de forma confiável e imediata sobre novas mensagens usando os servidores de notificação da Google.</string>

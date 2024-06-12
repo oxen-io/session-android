@@ -163,11 +163,6 @@
     <string name="audio">Աուդիո</string>
     <string name="video">Վիդեո</string>
     <string name="max">Մաքսիմում</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d ժամ</item>
-        <item quantity="other">%d ժամ</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Ուղարկել հղման նախադիտումներ</string>
     <string name="screenSecurity">Էկրանակադրի անվտանգություն</string>
@@ -220,8 +215,6 @@
     <string name="view_fake_chat_bubble_4">Այն օգտվում է հատուկ տվյալների փոխանցման միջոցներից և ամբողջական կոդավորման տեխնոլոգիաներից։</string>
     <string name="view_fake_chat_bubble_5">Ընկերները չեն թողնի ընկերներին, որ նրանք օգտվեն վտանգավոր նամակների ծրագրերից։ Խնդրեմ։</string>
     <string name="displayNamePick">Ընտրեք ցուցադրվող անուն</string>
-    <string name="displayNameErrorDescription">Խնդրում ենք գրել անուն</string>
-    <string name="displayNameErrorDescriptionShorter">Խնդրում ենք ընտրել կարճ անուն</string>
     <string name="recommended">[Խորհուրդ է տրվում]</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Խնդրում ենք ընտրել</string>
     <string name="activity_home_empty_state_button_title">Սկսել Սեանս</string>
@@ -267,7 +260,6 @@
     <string name="messageVoice">Ձայնագրություն</string>
     <string name="activity_link_device_skip_prompt">Սա որոշ ժամանակ է տևում, կցանկանա՞ք բաց թողնել:</string>
     <string name="communityJoinOfficial">Կամ միացե՛ք սրանցից մեկին…</string>
-    <string name="onboardingMessageNotificationExplanation">Երկու եղանակով Session-ը կարող է ձեզ տեղեկացնել նոր հաղորդագրությունների մասին:</string>
     <string name="notificationsFastMode">Արագ ռեժիմ</string>
     <string name="notificationsSlowMode">Դանդաղ ռեժիմ</string>
     <string name="notificationsFastModeDescriptionAndroid">Դուք մշտապես և անմիջապես կտեղեկացվեք նոր հաղորդագրությունների մասին՝ օգտագործելով Google-ի ծանուցումների սերվերները:</string>

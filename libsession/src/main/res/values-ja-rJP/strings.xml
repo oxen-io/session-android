@@ -159,10 +159,6 @@
     <string name="audio">音声</string>
     <string name="video">動画</string>
     <string name="max">最大</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="other">%d時間</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">リンクプレビューを送る</string>
     <string name="screenSecurity">画面セキュリティ</string>
@@ -215,8 +211,6 @@
     <string name="view_fake_chat_bubble_4">高度な匿名ルーティングとエンドツーエンドの暗号化テクノロジーを組み合わせて使用します。</string>
     <string name="view_fake_chat_bubble_5">友人は、セキュリティ侵害されたメッセンジャーを自らの友人に使用させません。どういたしまして。</string>
     <string name="displayNamePick">表示名を選択してください</string>
-    <string name="displayNameErrorDescription">表示名を選択してください</string>
-    <string name="displayNameErrorDescriptionShorter">短い表示名を選択してください</string>
     <string name="recommended">オススメ</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">オプションを選択してください</string>
     <string name="activity_home_empty_state_button_title">Session を開始する</string>

@@ -163,11 +163,6 @@
     <string name="audio">Äänitallenteet</string>
     <string name="video">Videot</string>
     <string name="max">Maksimi</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d tunti</item>
-        <item quantity="other">%d tuntia</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Lähetä esikatselukuva linkeistä</string>
     <string name="screenSecurity">Näytön suojaus</string>
@@ -220,8 +215,6 @@
     <string name="view_fake_chat_bubble_4">Käyttämällä kehittyneitä nimettömiä reititys- ja päästä päähän -salaustekniikoita.</string>
     <string name="view_fake_chat_bubble_5">Ystävät eivät anna ystävien käyttää vaarantunutta viestintäsovellusta. Olet tervetullut.</string>
     <string name="displayNamePick">Valitse näyttönimi</string>
-    <string name="displayNameErrorDescription">Valitse näyttönimi</string>
-    <string name="displayNameErrorDescriptionShorter">Valitse lyhyempi näyttönimi</string>
     <string name="recommended">Suositeltu</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Valitse vaihtoehto</string>
     <string name="activity_home_empty_state_button_title">Aloita ryhmä</string>
@@ -267,7 +260,6 @@
     <string name="messageVoice">Ääniviesti</string>
     <string name="activity_link_device_skip_prompt">Tämä kestää jonkin aikaa, haluaisitko ohittaa?</string>
     <string name="communityJoinOfficial">Tai liity johonkin näistä…</string>
-    <string name="onboardingMessageNotificationExplanation">On kaksi tapaa joilla Session voi ilmoittaa sinulle uusista viesteistä.</string>
     <string name="notificationsFastMode">Nopea tila</string>
     <string name="notificationsSlowMode">Hidastila</string>
     <string name="notificationsFastModeDescriptionAndroid">Sinulle ilmoitetaan uusista viesteistä luotettavasti ja viivyttelemättä Applen ilmoituspalvelua käyttäen.</string>

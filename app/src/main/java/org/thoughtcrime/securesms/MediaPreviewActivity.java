@@ -409,6 +409,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
   @SuppressWarnings("CodeBlock2Expr")
   @SuppressLint("InlinedApi")
   private void saveToDisk() {
+    Log.w("ACL", "Asked to save to disk!");
     MediaItem mediaItem = getCurrentMediaItem();
     if (mediaItem == null) return;
 

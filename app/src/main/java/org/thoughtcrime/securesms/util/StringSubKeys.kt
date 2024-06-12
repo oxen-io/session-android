@@ -10,6 +10,7 @@ class StringSubKeys {
         const val CONVERSATION_COUNT_KEY         = "conversation_count"
         const val CONVERSATION_NAME_KEY          = "conversation_name"
         const val COUNT_KEY                      = "count"
+        const val DATE_TIME_KEY                  = "date_time"
         const val DISAPPEARING_MESSAGES_TYPE_KEY = "disappearing_messages_type"
         const val FILE_TYPE_KEY                  = "file_type"
         const val GROUP_NAME_KEY                 = "group_name"

@@ -158,11 +158,6 @@
     <string name="audio">Аудио</string>
     <string name="video">Видео</string>
     <string name="max">Максимално</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d час</item>
-        <item quantity="other">%d часа</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Изпращане на визуализации на връзката</string>
     <string name="screenSecurity">Сигурност на екрана</string>

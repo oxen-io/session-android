@@ -141,11 +141,6 @@
     <string name="audio">Uyariy</string>
     <string name="video">Shuyurikuchik</string>
     <string name="max">Chaykamanlla</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%dpacha</item>
-        <item quantity="other">%dpachakuna</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="screenSecurity">Rikuripa pakallayachina</string>
     <string name="sessionNotifications">Willachikuna</string>

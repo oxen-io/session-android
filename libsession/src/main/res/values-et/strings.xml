@@ -155,11 +155,6 @@
     <string name="arrays__images">Pildid</string>
     <string name="audio">Heli</string>
     <string name="max">Maksimaalne</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d tund</item>
-        <item quantity="other">%d tundi</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Saada linkide eelvaateid</string>
     <string name="screenSecurity">Kuva turvamine</string>

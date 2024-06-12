@@ -150,11 +150,6 @@
     <string name="audio">Deng</string>
     <string name="video">Vîdyo</string>
     <string name="max">Herî bilind</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d seet</item>
-        <item quantity="other">%d demjimêr</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Pêşdîtinên girêdanê bişîne</string>
     <string name="screenSecurity">Ewlehiya ekranê</string>

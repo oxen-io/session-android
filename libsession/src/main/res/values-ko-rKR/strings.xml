@@ -134,10 +134,6 @@
     <string name="arrays__images">이미지</string>
     <string name="audio">오디오</string>
     <string name="video">동영상</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="other">%d시간 전</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="screenSecurity">화면 보안</string>
     <string name="sessionNotifications">알림</string>

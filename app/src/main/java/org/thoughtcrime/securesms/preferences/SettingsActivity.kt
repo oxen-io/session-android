@@ -308,7 +308,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
     private fun showEditProfilePictureUI() {
         showSessionDialog {
-            title(R.string.activity_settings_set_display_picture)
+            title(R.string.profileDisplayPictureSet)
             view(R.layout.dialog_change_avatar)
             button(R.string.activity_settings_upload) { startAvatarSelection() }
             if (TextSecurePreferences.getProfileAvatarId(context) != 0) {

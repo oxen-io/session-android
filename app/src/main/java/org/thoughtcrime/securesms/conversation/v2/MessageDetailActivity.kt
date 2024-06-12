@@ -322,9 +322,9 @@ fun PreviewMessageDetails(
             state = MessageDetailsState(
                 nonImageAttachmentFileDetails = listOf(
                     TitledText(R.string.message_details_header__file_id, "Screen Shot 2023-07-06 at 11.35.50 am.png"),
-                    TitledText(R.string.message_details_header__file_type, "image/png"),
-                    TitledText(R.string.message_details_header__file_size, "195.6kB"),
-                    TitledText(R.string.message_details_header__resolution, "342x312"),
+                    TitledText(R.string.attachmentsFileType, "image/png"),
+                    TitledText(R.string.attachmentsFileSize, "195.6kB"),
+                    TitledText(R.string.attachmentsResolution, "342x312"),
                 ),
                 sent = TitledText(R.string.disappearingMessagesSent, "6:12 AM Tue, 09/08/2022"),
                 received = TitledText(R.string.received, "6:12 AM Tue, 09/08/2022"),

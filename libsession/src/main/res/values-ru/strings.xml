@@ -171,13 +171,6 @@
     <string name="audio">Аудио</string>
     <string name="video">Видео</string>
     <string name="max">Максимальный</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d час</item>
-        <item quantity="few">%d часа</item>
-        <item quantity="many">%d часов</item>
-        <item quantity="other">%d час.</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Отправлять предпросмотр ссылки</string>
     <string name="screenSecurity">Защита экрана</string>
@@ -230,8 +223,6 @@
     <string name="view_fake_chat_bubble_4">С использованием комбинации передовых технологий анонимной маршрутизации и сквозного шифрования.</string>
     <string name="view_fake_chat_bubble_5">Друзья не позволят друзьям использовать ненадежные мессенджеры. Пользуйтесь на здоровье.</string>
     <string name="displayNamePick">Выберите ваше отображаемое имя</string>
-    <string name="displayNameErrorDescription">Пожалуйста, выберите отображаемое имя</string>
-    <string name="displayNameErrorDescriptionShorter">Пожалуйста, выберите более короткое отображаемое имя</string>
     <string name="recommended">Рекомендуется</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Пожалуйста, выберите метод</string>
     <string name="activity_home_empty_state_button_title">Начать Сессию</string>
@@ -277,7 +268,6 @@
     <string name="messageVoice">Голосовое сообщение</string>
     <string name="activity_link_device_skip_prompt">Это занимает некоторое время, хотите пропустить?</string>
     <string name="communityJoinOfficial">Или присоединитесь к одной из этих…</string>
-    <string name="onboardingMessageNotificationExplanation">Существует два способа оповещения о новых сообщениях.</string>
     <string name="notificationsFastMode">Ускоренный режим</string>
     <string name="notificationsSlowMode">Медленный режим</string>
     <string name="notificationsFastModeDescriptionAndroid">Вы будете получать уведомления о новых сообщениях надежно и сразу же с помощью серверов уведомлений Google.</string>

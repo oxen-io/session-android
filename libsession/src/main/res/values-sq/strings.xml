@@ -163,11 +163,6 @@
     <string name="audio">Audio</string>
     <string name="video">Video</string>
     <string name="max">Maks.</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d orë</item>
-        <item quantity="other">%d orë</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Dërgo paraparje lidhjesh</string>
     <string name="screenSecurity">Siguri ekrani</string>

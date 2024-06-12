@@ -171,15 +171,6 @@
     <string name="audio">Sain</string>
     <string name="video">Fideo</string>
     <string name="max">Mwyaf</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="zero">%d awr</item>
-        <item quantity="one">%d awr</item>
-        <item quantity="two">%d awr</item>
-        <item quantity="few">%d awr</item>
-        <item quantity="many">%d awr</item>
-        <item quantity="other">%d awr</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Anfon rhagolwg dolen</string>
     <string name="screenSecurity">Diogelu\'r sgrin</string>

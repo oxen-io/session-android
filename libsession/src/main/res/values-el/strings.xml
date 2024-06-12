@@ -163,11 +163,6 @@
     <string name="audio">Ήχοι</string>
     <string name="video">Βίντεο</string>
     <string name="max">Μέγιστο</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d ώρα</item>
-        <item quantity="other">%d ώρες</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Αποστολή προεπισκοπήσεων συνδέσμων</string>
     <string name="screenSecurity">Ασφάλεια οθόνης</string>
@@ -220,8 +215,6 @@
     <string name="view_fake_chat_bubble_4">Χρησιμοποιώντας ένα συνδυασμό προηγμένων ανώνυμων τεχνολογιών δρομολόγησης και τεχνολογίας κρυπτογράφησης από άκρο σε άκρο.</string>
     <string name="view_fake_chat_bubble_5">Οι φίλοι δεν αφήνουν τους φίλους να χρησιμοποιούν ευάλωτες εφαρμογές μηνυμάτων. Είστε ευπρόσδεκτοι.</string>
     <string name="displayNamePick">Επιλέξτε το εμφανιζόμενο όνομα σας</string>
-    <string name="displayNameErrorDescription">Παρακαλώ επιλέξτε ένα εμφανιζόμενο όνομα</string>
-    <string name="displayNameErrorDescriptionShorter">Παρακαλώ επιλέξτε ένα μικρότερο όνομα εμφάνισης</string>
     <string name="recommended">Προτεινόμενο</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Παρακαλούμε κάντε μια επιλογή</string>
     <string name="activity_home_empty_state_button_title">Ξεκινήστε μια συνομιλία</string>
@@ -267,7 +260,6 @@
     <string name="messageVoice">Ηχητικό μήνυμα</string>
     <string name="activity_link_device_skip_prompt">Αυτό παίρνει λίγο χρόνο, θα θέλατε να παραλείψετε;</string>
     <string name="communityJoinOfficial">Ή συνδεθείτε σε ένα από αυτά…</string>
-    <string name="onboardingMessageNotificationExplanation">Υπάρχουν δύο τρόποι με τους οποίους το Session μπορεί να σας ειδοποιήσει για νέα μηνύματα.</string>
     <string name="notificationsFastMode">Γρήγορη Επιλογή</string>
     <string name="notificationsSlowMode">Αργή Επιλογή</string>
     <string name="notificationsFastModeDescriptionAndroid">Θα ειδοποιηθείτε για νέα μηνύματα αξιόπιστα και άμεσα χρησιμοποιώντας τους διακομιστές ειδοποιήσεων της Google.</string>

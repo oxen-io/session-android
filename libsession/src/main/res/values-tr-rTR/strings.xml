@@ -220,8 +220,6 @@
     <string name="view_fake_chat_bubble_4">Gelişmiş anonim yönlendirme ve uçtan uca şifreleme teknolojilerinin bir kombinasyonunu kullan.</string>
     <string name="view_fake_chat_bubble_5">Arkadaşlar, arkadaşlarının güvenliği ihlal edilmiş mesajlaşma programlarını kullanmasına izin vermez. Rica ederim.</string>
     <string name="displayNamePick">Görünen adınızı seçin</string>
-    <string name="displayNameErrorDescription">Lütfen bir görünen ad seçin</string>
-    <string name="displayNameErrorDescriptionShorter">Lütfen daha kısa bir görünen ad seçin</string>
     <string name="recommended">Önerilenler</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Lütfen Bir Seçenek Seçin</string>
     <string name="activity_home_empty_state_button_title">Oturumu başlat</string>
@@ -267,7 +265,6 @@
     <string name="messageVoice">Sesli mesaj</string>
     <string name="activity_link_device_skip_prompt">Bu biraz uzun sürüyor, atlamak ister misiniz?</string>
     <string name="communityJoinOfficial">Veya bunlardan birine katılın…</string>
-    <string name="onboardingMessageNotificationExplanation">Session\'ın sizi yeni mesajlar hakkında bilgilendirmesinin iki yolu vardır.</string>
     <string name="notificationsFastMode">Hızlı Mod</string>
     <string name="notificationsSlowMode">Yavaş Mod</string>
     <string name="notificationsFastModeDescriptionAndroid">Google\'ın bildirim sunucularını kullanarak yeni iletilerden güvenilir ve anında haberdar olacaksınız.</string>

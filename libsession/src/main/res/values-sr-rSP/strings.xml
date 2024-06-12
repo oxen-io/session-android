@@ -164,12 +164,6 @@
     <string name="audio">Звук</string>
     <string name="video">Видео</string>
     <string name="max">Највиши</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d сат</item>
-        <item quantity="few">%d сата</item>
-        <item quantity="other">%d сати</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="screenSecurity">Безбедност екрана</string>
     <string name="sessionNotifications">Обавештавање</string>
@@ -208,7 +202,6 @@
     <string name="registration_activity__skip">Прескочи</string>
     <!-- Conversation activity -->
     <!-- Session -->
-    <string name="displayNameErrorDescriptionShorter">Молимо вас да изаберете краће приказно име</string>
     <string name="recommended">Препоручено</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Молимо Вас да одаберете опцију</string>
     <string name="activity_home_empty_state_button_title">Почни сесију</string>

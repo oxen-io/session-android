@@ -216,8 +216,6 @@
     <string name="view_fake_chat_bubble_4">Usando uma combinação de tecnologias avançadas de roteamento anônimo e criptografia de ponta a ponta.</string>
     <string name="view_fake_chat_bubble_5">Amigos não deixam amigos usarem aplicativos de mensagem comprometidos. De nada.</string>
     <string name="displayNamePick">Escolha seu nome de exibição</string>
-    <string name="displayNameErrorDescription">Escolha um nome de exibição</string>
-    <string name="displayNameErrorDescriptionShorter">Escolha um nome de exibição mais curto</string>
     <string name="recommended">Recomendado</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Escolha uma opção</string>
     <string name="activity_home_empty_state_button_title">Iniciar uma sessão</string>

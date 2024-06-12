@@ -109,11 +109,6 @@
     <string name="arrays__images">Ebifaananyi</string>
     <string name="audio">Doboozi</string>
     <string name="video">Vidiyo</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d saawa</item>
-        <item quantity="other">%d saawa</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="screenSecurity">Okukuuma Screen yo</string>
     <string name="sessionNotifications">Obude</string>

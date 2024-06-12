@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityPnModeBinding
@@ -25,6 +26,7 @@ import org.thoughtcrime.securesms.notifications.PushRegistry
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.GlowViewUtilities
 import org.thoughtcrime.securesms.util.PNModeView
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.APP_NAME_KEY
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.getAccentColor
 import org.thoughtcrime.securesms.util.getColorWithID
@@ -47,8 +49,13 @@ class PNModeActivity : BaseActionBarActivity() {
         TextSecurePreferences.setHasSeenWelcomeScreen(this, true)
         binding = ActivityPnModeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        with(binding) {
+        with (binding) {
             contentView.disableClipping()
+
+            messageNotificationExplanation.text = Phrase.from(applicationContext, R.string.onboardingMessageNotificationExplanation)
+                .put(APP_NAME_KEY, getString(R.string.app_name))
+                .format()
+
             fcmOptionView.setOnClickListener { toggleFCM() }
             fcmOptionView.mainColor = ThemeUtil.getThemedColor(root.context, R.attr.colorPrimary)
             fcmOptionView.strokeColor = resources.getColorWithID(R.color.pn_option_border, theme)

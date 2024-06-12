@@ -188,8 +188,6 @@
     <string name="view_fake_chat_bubble_4">Menggunakan kombinasi routing yang anonim canggih dan teknologi enkripsi ujung-ke-ujung (end-to-end encryption)</string>
     <string name="view_fake_chat_bubble_5">Rekan yang baik tak membiarkan rekannya menggunakan aplikasi bertukar pesan yang tak aman. Terima kasih kembali.</string>
     <string name="displayNamePick">Pilih nama yang ditampilkan</string>
-    <string name="displayNameErrorDescription">Pilih nama yang ditampilkan</string>
-    <string name="displayNameErrorDescriptionShorter">Nama yang dibuat terlalu panjang</string>
     <string name="recommended">Direkomendasikan</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Pilih salah satu opsi</string>
     <string name="activity_home_empty_state_button_title">Mulai sebuah Session</string>

@@ -159,10 +159,6 @@
     <string name="audio">音频</string>
     <string name="video">视频</string>
     <string name="max">最大</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="other">%d 小时</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">发送链接预览</string>
     <string name="screenSecurity">屏幕安全性</string>
@@ -215,8 +211,6 @@
     <string name="view_fake_chat_bubble_4">通过结合高效的匿名路由和端到端的加密技术。</string>
     <string name="view_fake_chat_bubble_5">好朋友之间就要使用能够保证信息安全的聊天工具，不用谢啦！</string>
     <string name="displayNamePick">选择您想显示的名称</string>
-    <string name="displayNameErrorDescription">请设定一个名称</string>
-    <string name="displayNameErrorDescriptionShorter">请设定一个较短的名称</string>
     <string name="recommended">推荐的选项</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">请选择一个选项</string>
     <string name="activity_home_empty_state_button_title">开始对话</string>
@@ -262,7 +256,6 @@
     <string name="messageVoice">语音消息</string>
     <string name="activity_link_device_skip_prompt">这需要一点时间，您想要跳过吗？</string>
     <string name="communityJoinOfficial">或加入下列群组…</string>
-    <string name="onboardingMessageNotificationExplanation">我们有两种方式来向您发送消息通知。</string>
     <string name="notificationsFastMode">快速模式</string>
     <string name="notificationsSlowMode">慢速模式</string>
     <string name="notificationsFastModeDescriptionAndroid">新消息将通过 Google 通知服务器即时可靠地发送。</string>

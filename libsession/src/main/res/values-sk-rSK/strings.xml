@@ -169,13 +169,6 @@
     <string name="audio">Zvuk</string>
     <string name="video">Video</string>
     <string name="max">Maximálna</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d hodina</item>
-        <item quantity="few">%d hodiny</item>
-        <item quantity="many">%d hodín</item>
-        <item quantity="other">%d hodín</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Posielať náhľady stránok</string>
     <string name="screenSecurity">Zabezpečenie obrazovky</string>
@@ -228,8 +221,6 @@
     <string name="view_fake_chat_bubble_4">Použitím kombinácie pokročilých technológií anonymného smerovania a end-to-end šifrovania.</string>
     <string name="view_fake_chat_bubble_5">Priatelia nedovolia priateľom používať skompromitované chatové aplikácie. Nieje za čo.</string>
     <string name="displayNamePick">Vyberte svoje zobrazované meno</string>
-    <string name="displayNameErrorDescription">Zvoľte prosím zobrazované meno</string>
-    <string name="displayNameErrorDescriptionShorter">Zvoľte prosím kratšie zobrazované meno</string>
     <string name="recommended">Odporúčané</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Prosím, zvoľte možnosť</string>
     <string name="conversationsDeleted">Konverzácia úspešne zmazaná</string>

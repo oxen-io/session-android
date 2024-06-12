@@ -70,17 +70,6 @@
         <item quantity="other">and %d others</item>
     </plurals>
 
-    <plurals name="hours_ago">
-        <item quantity="one">%d hour</item>
-        <item quantity="other">%d hours</item>
-    </plurals>
-
-    <string-array name="membersInviteSendMultiple">
-        <item>Send Invites</item>
-        <item>Send Invites</item>
-    </string-array>
-
-
     <!-- Old naming convention strings that need to me renamed to their modern equivalents and have any % substitution modified to use {braces} -->
     <string name="AlbumThumbnailView_plus">\+%d</string>
     <string name="BucketedThreadMedia_This_week">This week</string>
@@ -139,8 +128,6 @@
     <string name="activity_appearance_follow_system_explanation">Match system settings</string>
     <string name="activity_conversation_outdated_client_banner_text">%s is using an outdated client. Disappearing messages may not work as expected.</string>
     <string name="activity_create_closed_group_empty_state_button_title">Start a Session</string>
-    <string name="activity_disappearing_messages_delete_type">Delete Type</string>
-    <string name="activity_disappearing_messages_group_footer">This setting applies to everyone in this conversation.\nOnly group admins can change this setting.</string>
     <string name="activity_disappearing_messages_subtitle">This setting applies to messages you send in this conversation.</string>
     <string name="activity_disappearing_messages_subtitle_sent">Messages disappear after they have been sent.</string>
     <string name="activity_disappearing_messages_timer">Timer</string>
@@ -157,7 +144,6 @@
     <string name="activity_seed_reveal_button_title">Hold to reveal</string>
     <string name="activity_seed_title_2">Meet your recovery phrase</string>
     <string name="activity_settings_remove">Remove</string>
-    <string name="activity_settings_set_display_picture">Set display picture</string>
     <string name="activity_settings_upload">Upload</string>
     <string name="actualSize">Actual Size</string>
     <string name="add">Add</string>
@@ -233,7 +219,7 @@
     <string name="attachmentsImageErrorMetadata">Unable to remove metadata from file.</string>
     <string name="attachmentsLoadingNewer">Loading Newer Media...</string>
     <string name="attachmentsLoadingOlder">Loading Older Media...</string>
-    <string name="attachmentsMedia">{name} on {datetime}</string>
+    <string name="attachmentsMedia">{name} on {date_time}</string>
     <string name="attachmentsMediaEmpty">You don\'t have any media in this conversation.</string>
     <string name="attachmentsMediaSaved">Media saved by {name}</string>
     <string name="attachmentsMoveAndScale">Move and Scale</string>
@@ -412,7 +398,7 @@
     <string name="disappearingMessagesSet"><b>{name}</b> has set messages to disappear {time} after they have been {disappearing_messages_type}.</string>
     <string name="disappearingMessagesSetYou"><b>You</b> set messages to disappear {time} after they have been {disappearing_messages_type}.</string>
     <string name="disappearingMessagesTimer">Timer</string>
-    <string name="disappearingMessagesTurnedOff"><b>{name}</b> has turned disappearing messages off.</string>
+    <string name="disappearingMessagesTurnedOff"><b>{name}</b> has turned disappearing messages off. Messages you send will no longer disappear.</string>
     <string name="disappearingMessagesTurnedOffYou"><b>You</b> turned <b>off</b> disappearing messages. Messages you send will no longer disappear.</string>
     <string name="disappearingMessagesTypeRead">read</string>
     <string name="disappearingMessagesTypeSent">sent</string>
@@ -422,8 +408,8 @@
     <string name="dismiss">Dismiss</string>
     <string name="displayNameDescription">It can be your real name, an alias, or anything else you like — and you can change it at any time.</string>
     <string name="displayNameEnter">Enter your display name</string>
-    <string name="displayNameErrorDescription">Please pick a display name</string>
-    <string name="displayNameErrorDescriptionShorter">Please pick a shorter display name</string>
+    <string name="displayNameErrorDescription">Please enter a display name</string>
+    <string name="displayNameErrorDescriptionShorter">Please enter a shorter display name</string>
     <string name="displayNameErrorNew">We were unable to load your display name. Please enter a new display name to continue.</string>
     <string name="displayNameNew">Pick a new display name</string>
     <string name="displayNamePick">Pick your display name</string>
@@ -440,25 +426,6 @@
     <string name="errorDatabase">Database Error</string>
     <string name="errorUnknown">An unknown error occurred.</string>
     <string name="expand">Expand</string>
-
-    <!--
-    <string name="expirationDay">{days} day</string>
-    <string name="expirationDays">{days} days</string>
-    <string name="expirationDaysAbbreviated">{days}d</string>
-    <string name="expirationHour">{hours} hour</string>
-    <string name="expirationHours">{hours} hours</string>
-    <string name="expirationHoursAbbreviated">{hours}h</string>
-    <string name="expirationMinute">{minutes} minute</string>
-    <string name="expirationMinutes">{minutes} minutes</string>
-    <string name="expirationMinutesAbbreviated">{minutes}m</string>
-    <string name="expirationSecond">{seconds} second</string>
-    <string name="expirationSeconds">{seconds} seconds</string>
-    <string name="expirationSecondsAbbreviated">{seconds}s</string>
-    <string name="expirationWeek">{weeks} week</string>
-    <string name="expirationWeeks">{weeks} weeks</string>
-    <string name="expirationWeeksAbbreviated">{weeks}w</string>
-    -->
-
     <string name="expiration_type_disappear_legacy">Legacy</string>
     <string name="expiration_type_disappear_legacy_description">Original version of disappearing messages.</string>
     <string name="failures">Failures</string>
@@ -514,7 +481,7 @@
     <string name="groupNameNew">Group name is now {group_name}.</string>
     <string name="groupNameUpdated">Group name updated.</string>
     <string name="groupNoMessages">You have no messages from <b>{group_name}</b>. Send a message to start the conversation!</string>
-    <string name="groupOnlyAdmin">You are the only admin in <b>{group_name}</b>. Group members and settings cannot be changed without an admin.</string>
+    <string name="groupOnlyAdmin">You are the only admin in <b>{group_name}</b>.\nGroup members and settings cannot be changed without an admin.</string>
     <string name="groupPromotedYou"><b>You</b> were promoted to Admin.</string>
     <string name="groupRemoveDescription">Would you like to remove <b>{name}</b> from <b>{group_name}</b>?</string>
     <string name="groupRemoveMessages">Remove user and their messages</string>
@@ -576,6 +543,7 @@
     <string name="membersAddAccountIdOrOns">Add Account ID or ONS</string>
     <string name="membersInvite">Invite Contacts</string>
     <string name="membersInviteSend">Send Invite</string>
+    <string name="membersInviteSendMultiple">Send Invites</string>
     <string name="membersInviteShareDescription">Would you like to share group message history with <b>{name}</b>?</string>
     <string name="membersInviteShareMessageHistory">Share message history</string>
     <string name="membersInviteShareMoreDescription">Would you like to share group message history with <b>{name}</b> and <b>{count} others</b>?</string>
@@ -604,7 +572,7 @@
     <string name="messageRequestPending">Your message request is currently pending.</string>
     <string name="messageRequestPendingDescription">You will be able to send voice messages and attachments once the recipient has approved this message request.</string>
     <string name="messageRequestYouHaveAccepted">You have accepted the message request from <b>{name}</b>.</string>
-    <string name="messageRequestsAcceptDescription">Sending a message to this user will automatically accept their message request and reveal your Session ID.</string>
+    <string name="messageRequestsAcceptDescription">Sending a message to this user will automatically accept their message request and reveal your Account ID.</string>
     <string name="messageRequestsAccepted">Your message request has been accepted.</string>
     <string name="messageRequestsClearAllExplanation">Are you sure you want to clear all message and group invites?</string>
     <string name="messageRequestsCommunities">Community Message Requests</string>
@@ -621,11 +589,7 @@
     <string name="messageVoice">Voice Message</string>
     <string name="messageVoiceSlideToCancel">Slide to Cancel</string>
     <string name="message_details_header__disappears">Disappears</string>
-    <string name="message_details_header__duration">Duration:</string>
     <string name="message_details_header__file_id">File Id:</string>
-    <string name="message_details_header__file_size">File Size:</string>
-    <string name="message_details_header__file_type">File Type:</string>
-    <string name="message_details_header__resolution">Resolution:</string>
     <string name="message_requests_decline_message">Are you sure you want to decline this message request?</string>
     <string name="messages">Messages</string>
     <string name="minimize">Minimize</string>
@@ -686,7 +650,7 @@
     <string name="onboardingBubbleSessionIsEngineered">Session is engineered to protect your privacy.</string>
     <string name="onboardingBubbleWelcomeToSession">Welcome to Session</string>
     <string name="onboardingHitThePlusButton">Hit the plus button to start a chat, create a group, or join an official community!</string>
-    <string name="onboardingMessageNotificationExplanation">There are two ways Session can notify you of new messages.</string>
+    <string name="onboardingMessageNotificationExplanation">There are two ways {app_name} can notify you of new messages.</string>
     <string name="onboardingTosPrivacy">By using this service, you agree to our <b>Terms of Service</b> and <b>Privacy Policy</b></string>
     <string name="onionRoutingPath">Path</string>
     <string name="onionRoutingPathDescription">{app_name} hides your IP by routing your messages through multiple service nodes in {app_name}\'s decentralized network. This is your current path:</string>
@@ -730,7 +694,7 @@
     <string name="permissionsMicrophoneDescription">Allow access to microphone</string>
     <string name="permissionsRequired">Permission required</string>
     <string name="photo">Photo</string>
-    <string name="pin">Pin </string>
+    <string name="pin">Pin</string>
     <string name="pinConversation">Pin Conversation</string>
     <string name="pinUnpin">Unpin</string>
     <string name="pinUnpinConversation">Unpin Conversation</string>
@@ -738,7 +702,7 @@
     <string name="preview">Preview</string>
     <string name="profile">Profile</string>
     <string name="profileDisplayPicture">Display Picture</string>
-    <string name="profileSetDisplayPicture">Set Display Picture</string>
+    <string name="profileDisplayPictureSet">Set Display Picture</string>
     <string name="promote">Promote</string>
     <string name="qrCode">QR Code</string>
     <string name="qrNotAccountId">This QR code does not contain an Account ID</string>
@@ -821,7 +785,6 @@
     <string name="typingIndicatorsSummary">See and share typing indicators (...)</string>
     <string name="undo">Undo</string>
     <string name="unknown">Unknown</string>
-    <string name="unread_marker">Unread Messages</string>
     <string name="updateApp">App updates</string>
     <string name="updateDownloaded">The update has been downloaded. Restart Session to apply the updates.</string>
     <string name="updateError">Cannot Update</string>
@@ -835,7 +798,6 @@
     <string name="urlCopy">Copy URL</string>
     <string name="urlOpen">Open URL</string>
     <string name="urlOpenBrowser">This will open in your browser.</string>
-    <string name="urlOpenBrowswer">This will open in your browser.</string>
     <string name="urlOpenDescription">Are you sure you want to open {url} in your browser?</string>
     <string name="useFastMode">Use Fast Mode</string>
     <string name="via">Via</string>

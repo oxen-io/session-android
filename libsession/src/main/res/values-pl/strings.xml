@@ -171,13 +171,6 @@
     <string name="audio">Dźwięk</string>
     <string name="video">Wideo</string>
     <string name="max">Maksymalny</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d godzina</item>
-        <item quantity="few">%d godzin</item>
-        <item quantity="many">%d godzin</item>
-        <item quantity="other">%d godzin</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Podgląd linków</string>
     <string name="screenSecurity">Ochrona ekranu</string>
@@ -230,8 +223,6 @@
     <string name="view_fake_chat_bubble_4">Wykorzystując połączenie zaawansowanych anonimowych tras i technologii szyfrowania end-to-end.</string>
     <string name="view_fake_chat_bubble_5">Przyjaciele nie pozwalają przyjaciołom korzystać z niezabezpieczonych komunikatorów. Nie ma za co.</string>
     <string name="displayNamePick">Wybierz swoją nazwę wyświetlaną</string>
-    <string name="displayNameErrorDescription">Wybierz wyświetlaną nazwę</string>
-    <string name="displayNameErrorDescriptionShorter">Wybierz krótszą wyświetlaną nazwę</string>
     <string name="recommended">Zalecana</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Wybierz opcję</string>
     <string name="activity_home_empty_state_button_title">Rozpocznij sesję</string>
@@ -277,7 +268,6 @@
     <string name="messageVoice">Wiadomość głosowa</string>
     <string name="activity_link_device_skip_prompt">To zajmuje chwilę, czy chcesz pominąć?</string>
     <string name="communityJoinOfficial">Lub dołącz do jednego z tych…</string>
-    <string name="onboardingMessageNotificationExplanation">Istnieją dwa sposoby powiadamiania o nowych wiadomościach.</string>
     <string name="notificationsFastMode">Tryb szybki</string>
     <string name="notificationsSlowMode">Tryb wolny</string>
     <string name="notificationsFastModeDescriptionAndroid">Zostaniesz natychmiast powiadomiony o nowych wiadomościach w niezawodny sposób przy użyciu serwerów powiadomień Google.</string>

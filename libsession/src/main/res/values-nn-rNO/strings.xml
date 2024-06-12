@@ -146,11 +146,6 @@
     <string name="arrays__images">Bilete</string>
     <string name="audio">Lyd</string>
     <string name="max">Maks</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d time</item>
-        <item quantity="other">%d timar</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Send lenkjesniktitt</string>
     <string name="screenSecurity">Skjermtryggleik</string>

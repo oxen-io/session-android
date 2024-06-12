@@ -163,11 +163,6 @@
     <string name="audio">Geluid</string>
     <string name="video">Video</string>
     <string name="max">Maximaal</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d uur</item>
-        <item quantity="other">%d uur</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Voorbeeldweergaven verzenden</string>
     <string name="screenSecurity">Schermafdrukken blokkeren</string>
@@ -220,8 +215,6 @@
     <string name="view_fake_chat_bubble_4">Met behulp van een combinatie van geavanceerde anonieme routing en end-to-end encryptietechnologieën.</string>
     <string name="view_fake_chat_bubble_5">Vrienden laten vrienden geen gecomprimeerde berichten apps gebruiken. Graag gedaan.</string>
     <string name="displayNamePick">Kies je weergavenaam</string>
-    <string name="displayNameErrorDescription">Kies a.u.b. een weergavenaam</string>
-    <string name="displayNameErrorDescriptionShorter">Kies a.u.b. een kortere weergavenaam</string>
     <string name="recommended">Aanbevolen</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Gelieve een optie te selecteren</string>
     <string name="activity_home_empty_state_button_title">Sessie starten</string>
@@ -267,7 +260,6 @@
     <string name="messageVoice">Spraakbericht</string>
     <string name="activity_link_device_skip_prompt">Dit duurt een tijdje, wilt u het overslaan?</string>
     <string name="communityJoinOfficial">Of neem deel aan een van deze...</string>
-    <string name="onboardingMessageNotificationExplanation">Er zijn twee manieren waarop de Sessie u op de hoogte kan stellen van nieuwe berichten.</string>
     <string name="notificationsFastMode">Snelle modus</string>
     <string name="notificationsSlowMode">Langzame modus</string>
     <string name="notificationsFastModeDescriptionAndroid">U wordt op een betrouwbare en directe manier op de hoogte gebracht van nieuwe berichten via Googles notificatieservers.</string>

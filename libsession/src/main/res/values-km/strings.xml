@@ -153,10 +153,6 @@
     <string name="audio">សំឡេង</string>
     <string name="video">វីដេអូ</string>
     <string name="max">អតិបរិមា</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="other">%d ម៉ោង</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">ការមើល ការផ្ញើតំណភ្ជាប់</string>
     <string name="screenSecurity">អេក្រង់សុវត្ថិភាព</string>

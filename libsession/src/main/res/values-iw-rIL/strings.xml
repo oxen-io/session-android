@@ -169,13 +169,6 @@
     <string name="audio">שמע</string>
     <string name="video">וידיאו</string>
     <string name="max">מרבי</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">שעה %d</item>
-        <item quantity="two">%d שעות</item>
-        <item quantity="many">%d שעות</item>
-        <item quantity="other">%d שעות</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">שלח קדם־תצוגות של קישורים</string>
     <string name="screenSecurity">אבטחת מסך</string>

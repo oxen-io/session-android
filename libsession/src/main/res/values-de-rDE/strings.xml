@@ -163,11 +163,6 @@
     <string name="audio">Audio</string>
     <string name="video">Video</string>
     <string name="max">Maximal</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d Stunde</item>
-        <item quantity="other">%d Stunden</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Link-Vorschauen senden</string>
     <string name="screenSecurity">Bildschirmschutz</string>
@@ -220,8 +215,6 @@
     <string name="view_fake_chat_bubble_4">Mit einer Kombination fortschrittlicher anonyme Routing- und End-to-End-Verschlüsselungstechnologien.</string>
     <string name="view_fake_chat_bubble_5">Freunde lassen Freunde keine kompromittierten Messenger verwenden. Herzlich Willkommen.</string>
     <string name="displayNamePick">Wählen Sie Ihren Anzeigenamen</string>
-    <string name="displayNameErrorDescription">Bitte wählen Sie einen Anzeigenamen</string>
-    <string name="displayNameErrorDescriptionShorter">Bitte wählen Sie einen kürzeren Anzeigenamen</string>
     <string name="recommended">Empfohlen</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Bitte wählen Sie eine Option aus.</string>
     <string name="activity_home_empty_state_button_title">Session starten</string>
@@ -267,7 +260,6 @@
     <string name="messageVoice">Sprachnachricht</string>
     <string name="activity_link_device_skip_prompt">Dies dauert eine Weile, möchtest du überspringen?</string>
     <string name="communityJoinOfficial">Oder tritt diesen bei…</string>
-    <string name="onboardingMessageNotificationExplanation">Session kann dich auf zwei Arten über neue Nachrichten informieren.</string>
     <string name="notificationsFastMode">Schneller Modus</string>
     <string name="notificationsSlowMode">Langsamer Modus</string>
     <string name="notificationsFastModeDescriptionAndroid">Du wirst über neue Nachrichten zuverlässig und sofort über Google\'s Server benachrichtigt.</string>

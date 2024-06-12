@@ -159,10 +159,6 @@
     <string name="audio">音訊</string>
     <string name="video">影片</string>
     <string name="max">最大的</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="other">%d 小時</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">傳送連結預覽</string>
     <string name="screenSecurity">螢幕安全設定</string>
@@ -215,8 +211,6 @@
     <string name="view_fake_chat_bubble_4">我們結合了進階匿名連線與端對端加密技術。</string>
     <string name="view_fake_chat_bubble_5">我們不會讓自己的朋友使用不夠好的聊天 app，不客氣。</string>
     <string name="displayNamePick">請輸入您的名稱</string>
-    <string name="displayNameErrorDescription">請選擇一個名稱</string>
-    <string name="displayNameErrorDescriptionShorter">請選擇一個較短的名稱</string>
     <string name="recommended">建議</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">請選擇其中一個選項</string>
     <string name="activity_home_empty_state_button_title">開始一個會話</string>
@@ -262,7 +256,6 @@
     <string name="messageVoice">語音訊息</string>
     <string name="activity_link_device_skip_prompt">這可能需要一些時間，要跳過嗎？</string>
     <string name="communityJoinOfficial">或加入這些群組⋯</string>
-    <string name="onboardingMessageNotificationExplanation">Session 有兩種方式向您傳送通知。</string>
     <string name="notificationsFastMode">快速模式</string>
     <string name="notificationsSlowMode">慢速模式</string>
     <string name="notificationsFastModeDescriptionAndroid">您將會透過 Google 的通知服務可靠且迅速的收到通知。</string>

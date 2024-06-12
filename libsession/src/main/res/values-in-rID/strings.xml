@@ -145,10 +145,6 @@
     <string name="audio">Suara</string>
     <string name="video">Video</string>
     <string name="max">Maksimal</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="other">%d jam</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="sessionNotifications">Notifikasi</string>
     <string name="notificationsLedColor">Warna LED</string>
@@ -191,8 +187,6 @@
     <string name="copied">Salin ke clipboard</string>
     <string name="next">Berikutnya</string>
     <string name="displayNamePick">Pilih nama yang ditampilkan</string>
-    <string name="displayNameErrorDescription">Pilih nama yang ditampilkan</string>
-    <string name="displayNameErrorDescriptionShorter">Pilih nama yang lebih pendek</string>
     <string name="recommended">Direkomendasikan</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Pilih salah satu opsi</string>
     <string name="activity_home_empty_state_button_title">Memulai Session</string>

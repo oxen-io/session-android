@@ -172,13 +172,6 @@
     <string name="audio">Аудіо</string>
     <string name="video">Відео</string>
     <string name="max">Максимум</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d година</item>
-        <item quantity="few">%d години</item>
-        <item quantity="many">%d годин</item>
-        <item quantity="other">%d годин</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Перегляд відправлених посилань</string>
     <string name="screenSecurity">Безпека екрану</string>
@@ -231,8 +224,6 @@
     <string name="view_fake_chat_bubble_4">Він використовує комбінацію анонімної мережі та скрізного енд-ту-енд шифрування.</string>
     <string name="view_fake_chat_bubble_5">Друзі не дозволяють друзям користуватися скомпромітованими мессенджерами. Ласкаво просимо.</string>
     <string name="displayNamePick">Виберіть ваш псевдонім для показу</string>
-    <string name="displayNameErrorDescription">Будь ласка, виберіть відображуватимий псевдонім</string>
-    <string name="displayNameErrorDescriptionShorter">Будь ласка, виберіть коротший псевдонім</string>
     <string name="recommended">Рекомендовано</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Будь ласка виберіть варіант</string>
     <string name="activity_home_empty_state_button_title">Почати сесію</string>
@@ -278,7 +269,6 @@
     <string name="messageVoice">Голосове повідомлення</string>
     <string name="activity_link_device_skip_prompt">Це займає деякий час, ви б хотіли це пропустити?</string>
     <string name="communityJoinOfficial">Або приєднуйтесь до одного з цих…</string>
-    <string name="onboardingMessageNotificationExplanation">Існує два способи Session може сповіщати вас про нові повідомлення.</string>
     <string name="notificationsFastMode">Швидкий режим</string>
     <string name="notificationsSlowMode">Медленний режим</string>
     <string name="notificationsFastModeDescriptionAndroid">Вас надійно повідомлятимуть про нові сповіщщеня негайно, використовуючи сервери сповіщень Google.</string>

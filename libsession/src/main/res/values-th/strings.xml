@@ -141,10 +141,6 @@
     <string name="audio">เสียง</string>
     <string name="video">วิดีโอ</string>
     <string name="max">สูงสุด</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="other">%d ชั่วโมง</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="screenSecurity">ความปลอดภัยหน้าจอ</string>
     <string name="sessionNotifications">การแจ้งเตือน</string>

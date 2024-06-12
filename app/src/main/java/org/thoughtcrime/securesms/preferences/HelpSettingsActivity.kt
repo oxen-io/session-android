@@ -10,11 +10,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isInvisible
 import androidx.preference.Preference
+import com.squareup.phrase.Phrase
 
 import network.loki.messenger.R
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.permissions.Permissions
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.APP_NAME_KEY
 
 class HelpSettingsActivity: PassphraseRequiredActionBarActivity() {
 
@@ -30,20 +32,26 @@ class HelpSettingsActivity: PassphraseRequiredActionBarActivity() {
 class HelpSettingsFragment: CorrectedPreferenceFragment() {
 
     companion object {
-        private const val EXPORT_LOGS = "export_logs"
-        private const val TRANSLATE = "translate_session"
-        private const val FEEDBACK = "feedback"
-        private const val FAQ = "faq"
-        private const val SUPPORT = "support"
+        private const val EXPORT_LOGS  = "export_logs"
+        private const val TRANSLATE    = "translate_session"
+        private const val FEEDBACK     = "feedback"
+        private const val FAQ          = "faq"
+        private const val SUPPORT      = "support"
 
-        private const val CROWDIN_URL = "https://crowdin.com/project/session-android"
+        private const val CROWDIN_URL  = "https://crowdin.com/project/session-android"
         private const val FEEDBACK_URL = "https://getsession.org/survey"
-        private const val FAQ_URL = "https://getsession.org/faq"
-        private const val SUPPORT_URL = "https://sessionapp.zendesk.com/hc/en-us"
+        private const val FAQ_URL      = "https://getsession.org/faq"
+        private const val SUPPORT_URL  = "https://sessionapp.zendesk.com/hc/en-us"
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences_help)
+
+        // String sub the summary text of the `export_logs` element in preferences_help.xml
+        var exportPref = preferenceScreen.findPreference<Preference>(EXPORT_LOGS)
+        exportPref?.summary = Phrase.from(context, R.string.helpReportABugExportLogsDescription)
+            .put(APP_NAME_KEY, getString(R.string.app_name))
+            .format()
     }
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean {

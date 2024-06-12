@@ -162,11 +162,6 @@
     <string name="audio">Àudio</string>
     <string name="video">Vídeo</string>
     <string name="max">Màxima</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%d hora</item>
-        <item quantity="other">%d hores</item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">Envia previsualitzacions d\'enllaços</string>
     <string name="screenSecurity">Seguretat de la pantalla</string>
@@ -219,8 +214,6 @@
     <string name="view_fake_chat_bubble_4">Fent servir una combinació de tecnologies d\'encaminament anònim avançat i un xifratge d\'extrem a extrem.</string>
     <string name="view_fake_chat_bubble_5">Amics no deixis que els amics facin servir missatgeries compromeses. Sigueu benvinguts.</string>
     <string name="displayNamePick">Tria el nom que es mostrarà</string>
-    <string name="displayNameErrorDescription">Tria un nom a mostrar, si us plau</string>
-    <string name="displayNameErrorDescriptionShorter">Selecciona un nom de visualització més curt</string>
     <string name="recommended">Recomanat</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Selecciona una opció, si us plau</string>
     <string name="activity_home_empty_state_button_title">Enceta un Session</string>
@@ -262,7 +255,6 @@
     <string name="messageVoice">Missatge de veu</string>
     <string name="activity_link_device_skip_prompt">Això triga un xic, t\'ho vols saltar?</string>
     <string name="communityJoinOfficial">O uneix-te a alguns d\'aquests…</string>
-    <string name="onboardingMessageNotificationExplanation">Hi ha dues maneres per les quals Session et pot notificar els missatges nous.</string>
     <string name="notificationsFastMode">Mode ràpid</string>
     <string name="notificationsSlowMode">Mode lent</string>
     <string name="notificationsFastModeDescriptionAndroid">Es notificaran els missatges de forma immediata i fiable fent servir els servidors de notificació de Google.</string>

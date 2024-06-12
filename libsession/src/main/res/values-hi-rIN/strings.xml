@@ -163,11 +163,6 @@
     <string name="audio">ऑडियो </string>
     <string name="video">वीडियो </string>
     <string name="max">अधिकतम</string>
-    <!-- plurals.xml -->
-    <plurals name="hours_ago">
-        <item quantity="one">%dघंटे </item>
-        <item quantity="other">%dघंटे </item>
-    </plurals>
     <!-- preferences.xml -->
     <string name="linkPreviewsSend">लिंक प्रिव्यू भेजें</string>
     <string name="screenSecurity">स्क्रीन सुरक्षा</string>
@@ -220,8 +215,6 @@
     <string name="view_fake_chat_bubble_4">एडवांस्ड anonymous routing और end-to-end encryption के मिश्रण का प्रयोग करके।</string>
     <string name="view_fake_chat_bubble_5">दोस्त दोस्तों को असुरक्षित मैसेंजर नहीं उपयोग करने देते। आपका स्वागत है।</string>
     <string name="displayNamePick">अपना प्रदर्शन नाम चुनें</string>
-    <string name="displayNameErrorDescription">कृपया एक डिस्प्ले नाम चुनें</string>
-    <string name="displayNameErrorDescriptionShorter">कृपया एक छोटा डिसप्ले नाम चुनें</string>
     <string name="recommended">सुझाया गया</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">कृपया एक विकल्प चुनें।</string>
     <string name="activity_home_empty_state_button_title">एक सेशन प्रारंभ करें</string>
@@ -267,7 +260,6 @@
     <string name="messageVoice">वौइस् मैसेज</string>
     <string name="activity_link_device_skip_prompt">यह समय ले रहा है, इसे छोड़ दें?</string>
     <string name="communityJoinOfficial">या इनमें से एक को जोड़ें...</string>
-    <string name="onboardingMessageNotificationExplanation">सेशन आपको नए संदेश के बारे में दो तरीकों से बता सकता है</string>
     <string name="notificationsFastMode">फास्ट मोड</string>
     <string name="notificationsSlowMode">स्लो मोड</string>
     <string name="notificationsFastModeDescriptionAndroid">आपको नई सूचनाओं के बारे में google के नोटीफिकेशन servers से तत्काल सूचित किया जाएगा।</string>
