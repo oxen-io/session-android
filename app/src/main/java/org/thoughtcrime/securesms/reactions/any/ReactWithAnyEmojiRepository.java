@@ -39,7 +39,7 @@ final class ReactWithAnyEmojiRepository {
   List<ReactWithAnyEmojiPage> getEmojiPageModels() {
     List<ReactWithAnyEmojiPage> pages       = new LinkedList<>();
 
-    pages.add(new ReactWithAnyEmojiPage(Collections.singletonList(new ReactWithAnyEmojiPageBlock(R.string.ReactWithAnyEmojiBottomSheetDialogFragment__recently_used, recentEmojiPageModel))));
+    pages.add(new ReactWithAnyEmojiPage(Collections.singletonList(new ReactWithAnyEmojiPageBlock(R.string.emojiCategoryRecentlyUsed, recentEmojiPageModel))));
     pages.addAll(emojiPages);
 
     return pages;

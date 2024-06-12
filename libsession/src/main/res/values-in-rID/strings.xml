@@ -31,7 +31,6 @@
     <string name="message">Pesan</string>
     <string name="notificationsMuted">Disenyapkan</string>
     <string name="blockUnblock">Buka blokir</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Session membutuhkan izin mikrofon untuk mengirim pesan suara, namun izin tersebut telah ditolak secara permanen. Harap melanjutkan ke menu pengaturan aplikasi, pilih \"Perizinan\", dan izinkan \"Mikrofon\".</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Simpan ke penyimpanan?</string>
     <!-- CreateProfileActivity -->
@@ -53,9 +52,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">Mengumpulkan semua lampiran...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Pesan Multimedia</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Mengunduh pesan MMS</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Gagal mengunduh pesan MMS, sentuh untuk coba kembali</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Kirim ke %s</string>
     <!-- MediaSendActivity -->

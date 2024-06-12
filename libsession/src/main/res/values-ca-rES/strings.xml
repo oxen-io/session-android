@@ -31,7 +31,6 @@
     <string name="attachmentsAdd">Afegeix un adjunt</string>
     <string name="message">Missatge</string>
     <string name="blockUnblock">Desbloca</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">El Session necessita el permís del micròfon per tal d\'enviar missatges d\'àudio, però s\'ha denegat permanentment. Si us plau, continueu cap al menú de configuració de l\'aplicació, seleccioneu Permisos i habiliteu-hi el micròfon.</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Voleu desar-ho a l\'emmagatzematge?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -57,9 +56,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">S\'estan adjuntant els fitxers...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Missatge multimèdia</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">S\'està baixant el missatge MMS</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">S\'ha produït un error en baixar el missatge MMS. Toqueu per tornar a intentar-ho</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Envia-ho a %s</string>
     <!-- MediaSendActivity -->
@@ -109,11 +105,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">Drecera no vàlida</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="one">%d element</item>
-        <item quantity="other">%d elements</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Càmera</string>

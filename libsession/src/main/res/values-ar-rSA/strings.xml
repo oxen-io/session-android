@@ -36,7 +36,6 @@
     <string name="message">رسالة</string>
     <string name="notificationsMuted">كتم</string>
     <string name="blockUnblock">إلغاء الحظر</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">يحتاج Session إلى إذن الميكروفون من أجل الرسائل الصوتية ولكن تم إيقاف الإذن على نحو دائم، رجاء زيارة إعدادات التطبيق ثم \"الأذونات\"، ثم تفعيل \"الميكروفون\".</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">أحفظ في الذاكرة؟</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -66,9 +65,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">جارٍ جمع المرفقات...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">رسالة وسائط متعددة</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">تنزيل رسالة الوسائط المتعددة</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">خطأ في تنزيل رسالة الوسائط المتعددة، انقر لاعادة المحاولة</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">إرسال إلى %s</string>
     <!-- MediaSendActivity -->
@@ -122,15 +118,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">إختصار غير صالح</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="zero">صفر</item>
-        <item quantity="one">عنصر واحد</item>
-        <item quantity="two">عنصران</item>
-        <item quantity="few">%d عناصر</item>
-        <item quantity="many">%d عنصر</item>
-        <item quantity="other">%d عناصر</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">كاميرا</string>

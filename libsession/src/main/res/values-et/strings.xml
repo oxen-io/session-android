@@ -28,7 +28,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Lisa manus</string>
     <string name="blockUnblock">Eemalda blokeering</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Session vajab audiosõnumite saatmiseks ligipääsu seadme mikrofonile, kuid see on püsivalt keelatud. Palun ava rakenduse sätete menüü, vali \"Õigused\" ja luba \"Mikrofon\".</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Salvesta sisemällu?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -54,9 +53,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">Kogun manuseid...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimeediasõnum</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Laadin alla MMS-sõnumit</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">MMS-sõnumi allalaadimisel tekkis viga, koputa uuesti proovimiseks</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Saada kohta %s</string>
     <!-- MediaSendActivity -->
@@ -106,11 +102,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">Sobimatu otsetee</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="one">%d üksus</item>
-        <item quantity="other">%d üksust</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Kaamera</string>

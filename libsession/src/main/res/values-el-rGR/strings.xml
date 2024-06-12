@@ -32,7 +32,6 @@
     <string name="message">Μήνυμα</string>
     <string name="notificationsMuted">Σίγαση</string>
     <string name="blockUnblock">Ξεμπλοκάρισμα</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Το Session χρειάζεται τα δικαιώματα Μικροφώνου για να μπορούμε να στείλουμε μηνύματα ήχου, αλλά αυτά δεν έχουν δοθεί μόνιμα. Παρακαλώ πηγαίνετε στις ρυθμίσεις εφαρμογών, επιλέξτε τα \"Δικαιώματα\", και ενεργοποιήστε το \"Μικρόφωνο\".</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Να αποθηκευτεί στη μνήμη;</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -58,9 +57,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">Τα συνημμένα συλλέγονται...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Μήνυμα πολυμέσων</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Το μήνυμα MMS λαμβάνεται</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Πρόβλημα κατά τη λήψη μηνύματος MMS, πατήστε για να ξαναδοκιμάσουμε</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Αποστολή σε %s</string>
     <!-- MediaSendActivity -->
@@ -110,11 +106,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">Μη έγκυρη συντόμευση</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="one">%d αντικείμενο</item>
-        <item quantity="other">%d αντικείμενα</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Κάμερα</string>

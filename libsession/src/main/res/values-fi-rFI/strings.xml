@@ -32,7 +32,6 @@
     <string name="message">Viesti</string>
     <string name="notificationsMuted">Mykistetty</string>
     <string name="blockUnblock">Poista esto</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Signal tarvitsee lupaa käyttää mikrofonia äänitiedostojen lähettämistä varten, mutta tämä käyttöoikeus on pysyvästi evätty Sessionilta. Voit muuttaa tätä menemällä sovellusten asetuksiin, valitsemalla \"Sovelluksen käyttöoikeudet\" ja laittamalla päälle \"Mikrofoni\".</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Kopioi tallennustilaan?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -58,9 +57,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">Kerätään liitetiedostoja...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimediaviesti</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Ladataan MMS-viestiä</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Virhe ladattaessa MMS-viestiä. Yritä uudelleen napauttamalla.</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Lähetä yhteystiedolle %s</string>
     <!-- MediaSendActivity -->
@@ -110,11 +106,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">Virheellinen pikakuvake</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="one">%d kappale</item>
-        <item quantity="other">%d kappaletta</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Kamera</string>

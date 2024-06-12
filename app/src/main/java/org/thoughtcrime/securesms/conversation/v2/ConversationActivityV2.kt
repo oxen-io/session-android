@@ -175,6 +175,7 @@ import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.SaveAttachmentTask
 import org.thoughtcrime.securesms.util.SimpleTextWatcher
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.APP_NAME_KEY
 import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.CONVERSATION_NAME_KEY
 import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.GROUP_NAME_KEY
 import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.NAME_KEY
@@ -1855,7 +1856,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             Permissions.with(this)
                 .request(Manifest.permission.RECORD_AUDIO)
                 .withRationaleDialog(getString(R.string.permissionsMicrophoneAccessRequired), R.drawable.ic_baseline_mic_48)
-                .withPermanentDenialDialog(getString(R.string.permissionsMicrophoneAccessRequiredAndroid))
+                .withPermanentDenialDialog(Phrase.from(applicationContext, R.string.permissionsMicrophoneAccessRequiredAndroid)
+                    .put(APP_NAME_KEY, getString(R.string.app_name))
+                    .format().toString())
                 .execute()
         }
     }

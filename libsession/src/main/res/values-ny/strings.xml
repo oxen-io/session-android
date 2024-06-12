@@ -27,7 +27,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Shuk imaykunata kimichipay</string>
     <string name="blockUnblock">Pakashkamanta llukchi</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Session ari nichun munanmi kikinpa Rimachikman yaykunkapak, shinapash mana arinirishkachu. \"Menú de configuración\" ukuman yaykushpa \"Permisos\" nikukta llapipay, \"Micrófono\" paskarichun.</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Allichik ukupi allichinayanchu</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -51,9 +50,6 @@
     <!-- LongMessageActivity -->
     <!-- MediaOverviewActivity -->
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimedia chaski</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">MMS chaskita uryakuchikun</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">MMS chaski mana uryakurkachu, kutinlla rurapay</string>
     <!-- MediaPickerActivity -->
     <!-- MediaSendActivity -->
     <!-- MediaRepository -->

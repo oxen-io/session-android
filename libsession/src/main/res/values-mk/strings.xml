@@ -22,7 +22,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">ပူးတွဲဖိုင် ထည့်ရန်</string>
     <string name="blockUnblock">ဘလော့ဖြည်ပါ </string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">အသံဖိုင်များပို့နိုင်ရန် Sessionမှ မိုက်ခရိုဖုန်းအား အသုံးပြုခွင့်ရရန် လိုအပ်သည်။ သို့သော် လုံးဝခွင့်မပြုပါ ဟုရွေးထားပြီး ဖြစ်နေသဖြင့် အပ်ပလီကေးရှင်း အပြင်အဆင်သို့ သွား၍ ခွင့်ပြုချက်များကို ရွေးချယ်ကာ မိုက်ခရိုဖုန်းကို အသုံးပြုနိုင်အောင် ပြုလုပ်ပါ။</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">သိမ်းမည်လား?</string>
     <!-- CreateProfileActivity -->
@@ -43,9 +42,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">ပူးတွဲဖိုင်များကို စုစည်းနေသည် </string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">ရုပ်၊သံပါ အချက်အလက်များ</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">MMS များအား ဒေါင်းလုပ်ဆွဲမည်</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">MMS များအားဒေါင်းလုပ်ဆွဲနေစဉ် ရပ်တန့်သွားသည်၊ ပြန်စရန် နှိပ်ပါ</string>
     <!-- MediaPickerActivity -->
     <!-- MediaSendActivity -->
     <!-- MediaRepository -->

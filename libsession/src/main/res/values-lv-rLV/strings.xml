@@ -31,7 +31,6 @@
     <string name="attachmentsAdd">Pievienot pielikumu</string>
     <string name="message">Paziņojums</string>
     <string name="blockUnblock">Atbloķēt</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Sesijai ir nepieciešama atļauja piekļūt mikrofonam, lai sūtītu balss ziņas, bet tā ir pastāvīgi aizliegta. Lūdzu, ejiet uz programmu iestatījumiem, izvēlieties “Atļaujas” un iespējojiet “Mikrofons”.</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Saglabāt krātuvē?</string>
     <!-- CreateProfileActivity -->

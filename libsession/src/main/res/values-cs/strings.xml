@@ -34,7 +34,6 @@
     <string name="message">Zpráva</string>
     <string name="notificationsMuted">Ztlumeno</string>
     <string name="blockUnblock">Odblokovat</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Signál potřebuje oprávnění pro přístup k mikrofonu aby mohl poslat audio zprávu, ale toto oprávnění je nyní zakázáno. Prosím pokračujte do menu nastavení aplikací, vyberte \"Oprávnění\" a povolte \"Mikrofon\".</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Uložit do paměti?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -62,9 +61,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">Shromažďuji přílohy...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimediální zpráva</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Stahuji MMS zprávu</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Chyba při stahování MMS zprávy, ťukněte pro opakování</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Poslat %s</string>
     <!-- MediaSendActivity -->
@@ -116,13 +112,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">Chybná klávesová zkratka</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="one">%d Položka</item>
-        <item quantity="few">%d Položek</item>
-        <item quantity="many">%d Položek</item>
-        <item quantity="other">%d Položek</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Kamera</string>

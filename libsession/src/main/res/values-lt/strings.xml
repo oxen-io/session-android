@@ -34,7 +34,6 @@
     <string name="message">Žinutė</string>
     <string name="notificationsMuted">Užtildytas</string>
     <string name="blockUnblock">Atblokuoti</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Norint siųsti garso žinutes, Session reikia mikrofono leidimo, tačiau jis buvo visam laikui uždraustas. Pereikite į programėlės nustatymus, pasirinkite „Leidimai“ ir įjunkite „Mikrofoną“.</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Įrašyti į atmintį?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -62,9 +61,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">Renkami priedai...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimedijos žinutė</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Atsiunčiama MMS žinutė</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Klaida, atsiunčiant MMS žinutę, bakstelėkite, norėdami bandyti dar kartą</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Siųsti adresatui %s</string>
     <!-- MediaSendActivity -->
@@ -116,13 +112,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">Neteisingas šaukinys</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="one">%d elementas</item>
-        <item quantity="few">%d elementai</item>
-        <item quantity="many">%d elementų</item>
-        <item quantity="other">%d elementas</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Kamera</string>

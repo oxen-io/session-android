@@ -44,7 +44,6 @@
     <string name="notificationsMuted">En sourdine</string>
     <string name="membersActive">{count} membres actifs</string>
     <string name="blockUnblock">Débloquer</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Session exige l’autorisation Microphone afin d’envoyer des messages audio, mais elle a été refusée définitivement. Veuillez accéder au menu des paramètres des applis, sélectionner « Autorisations » et activer « Microphone ».</string>
     <string name="callsPermissionsRequired">Autorisations d\'appel requises</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Enregistrer dans la mémoire du téléphone ?</string>
@@ -71,9 +70,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">Récupération des pièces jointes…</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Message multimédia</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Téléchargement du message multimédia</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Erreur de téléchargement du message multimédia. Touchez pour ressayer</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Envoyer à %s</string>
     <!-- MediaSendActivity -->
@@ -123,11 +119,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">Le raccourci est invalide</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="one">%délément</item>
-        <item quantity="other">%déléments</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Appareil photo</string>
@@ -308,22 +299,19 @@
     <string name="callsReconnecting">Reconnexion…</string>
     <string name="dismiss">Rejeter</string>
     <string name="appearancePrimaryColor">Couleur principale</string>
-    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__recently_used">Fréquemment Utilisés</string>
-    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__smileys_and_people">Émoticônes et personnes</string>
-    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__nature" comment="Heading for an emoji list's category">Nature</string>
-    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__food" comment="Heading for an emoji list's category">Nourriture</string>
-    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__activities">Activités</string>
-    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__places" comment="Heading for an emoji list's category">Voyage</string>
-    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__objects">Objets</string>
-    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__symbols">Symboles</string>
-    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__flags">Drapeaux</string>
+    <string name="emojiCategoryRecentlyUsed">Fréquemment Utilisés</string>
+    <string name="emojiCategorySmileys">Émoticônes et personnes</string>
+    <string name="emojiCategoryAnimals" comment="Heading for an emoji list's category">Nature</string>
+    <string name="emojiCategoryFood" comment="Heading for an emoji list's category">Nourriture</string>
+    <string name="emojiCategoryActivities">Activités</string>
+    <string name="emojiCategoryTravel" comment="Heading for an emoji list's category">Voyage</string>
+    <string name="emojiCategoryObjects">Objets</string>
+    <string name="emojiCategorySymbols">Symboles</string>
+    <string name="emojiCategoryFlags">Drapeaux</string>
     <string name="ReactWithAnyEmojiBottomSheetDialogFragment__emoticons">Emoticônes</string>
     <!-- ReactionsConversationView -->
     <string name="ReactionsConversationView_plus">+%1$d</string>
     <!-- ReactionsRecipientAdapter -->
-    <string name="ReactionsRecipientAdapter_you">Vous</string>
-    <string name="reaction_notification">%1$s a réagi à un message %2$s</string>
-    <string name="ReactionsConversationView_show_less">Masquer les détails</string>
     <string name="KeyboardPagerFragment_search_emoji">Rechercher un émoticône</string>
     <string name="KeyboardPagerfragment_back_to_emoji">Retour à l\'émoticône</string>
     <string name="KeyboardPagerfragment_clear_search_entry">Effacer la recherche</string>

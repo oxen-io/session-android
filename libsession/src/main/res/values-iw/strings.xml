@@ -33,7 +33,6 @@
     <string name="attachmentsAdd">הוסף צרופה</string>
     <string name="message">הודעה</string>
     <string name="blockUnblock">בטל חסימה</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Session דורש את הרשאת המיקרופון על מנת לשלוח הודעות שמע, אבל היא נדחתה לצמיתות. אנא המשך אל הגדרות היישום, בחר \"הרשאות\" ואפשר את \"מיקרופון\".</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">לשמור באחסון?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -61,9 +60,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">אוסף צרופות...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">הודעת מולטימדיה</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">מוריד הודעת MMS</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">שגיאה בהורדת הודעת MMS, הקש כדי לנסות שוב</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">שלח אל %s</string>
     <!-- MediaSendActivity -->
@@ -115,13 +111,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">קיצור דרך בלתי תקף</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="one">פריט %d</item>
-        <item quantity="two">%d פריטים</item>
-        <item quantity="many">%d פריטים</item>
-        <item quantity="other">%d פריטים</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">מצלמה</string>

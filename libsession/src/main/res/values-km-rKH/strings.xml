@@ -28,7 +28,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">ភ្ជាប់ឯកសារ</string>
     <string name="blockUnblock">បើកវិញ</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Session សុំសិទ្ធិប្រើប្រាស់ម៉ៃក្រូហ្វូន ដើម្បីផ្ញើសារជាសំឡេង, ប៉ុន្តែ វាត្រូវបានបដិសេធរហូត។ សូមបន្តទៅកាន់ ការកំណត់កម្មវិធី, ជ្រើសរើស  \"ការអនុញ្ញាត\", និងបើក \"ប្រដាប់ស្រូបសំឡេង\"។</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">រក្សារទុក?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -53,9 +52,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">កំពុងប្រមូលឯកសារភ្ជាប់...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">សារចម្រុះ</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">កំពុងទាញយកសារ MMS </string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">មានបញ្ហាទាញយកសារMMS សូមចុច ដើម្បីព្យាយាមម្តងទៀត</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">ផ្ញើទៅកាន់ %s</string>
     <!-- MediaSendActivity -->
@@ -104,10 +100,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">រូបតំណាងផ្លូវកាត់មិនត្រឹមត្រូវ</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="other">%d ធាតុ</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">កាមេរ៉ា</string>

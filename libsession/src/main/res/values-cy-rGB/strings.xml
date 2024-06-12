@@ -32,7 +32,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Ychwanegu atodiad</string>
     <string name="blockUnblock">Dadrwystro</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Mae ar Session angen caniatâd Meicroffon i anfon negeseuon sain, ond mae wed\'i atal yn barhaol. Ewch i osodiadau\'r ap, dewis \"Caniatâd\", a galluogi \"Microffon\".</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Cadw i\'r storio?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -62,9 +61,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">Casglu atodiadau...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Neges amlgyfrwng</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Llwytho i lawr neges MMS</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Gwall wrth lawrlwytho neges MMS, tapio i geisio eto</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Anfon i %s</string>
     <!-- MediaSendActivity -->
@@ -118,15 +114,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">Llwybr byr annilys</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="zero">%d Eitem</item>
-        <item quantity="one">%d Eitem</item>
-        <item quantity="two">%d Eitem</item>
-        <item quantity="few">%d Eitem</item>
-        <item quantity="many">%d Eitem</item>
-        <item quantity="other">%d Eitem</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="attachment_type_selector__gallery_description">Delwedd neu fideo</string>

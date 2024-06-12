@@ -34,7 +34,6 @@
     <string name="message">Сообщение</string>
     <string name="notificationsMuted">Без звука</string>
     <string name="blockUnblock">Разблокировать</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Для отправки аудиосообщений требуется разрешение на доступ к микрофону, но оно было вами отклонено. Чтобы предоставить разрешение вручную, перейдите в «Настройки», выберите «Приложения», найдите Session, затем выберите «Разрешения» и включите Микрофон.</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Сохранить в хранилище?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -62,9 +61,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">Сбор вложений...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">MMS-сообщение</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Загрузка MMS-сообщения</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Ошибка при скачивании MMS-сообщения; нажмите для повтора</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Отправить пользователю %s</string>
     <!-- MediaSendActivity -->
@@ -116,13 +112,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">Недопустимый ярлык</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="one">%d пункт</item>
-        <item quantity="few">%d пункта</item>
-        <item quantity="many">%d пунктов</item>
-        <item quantity="other">%d пунктов</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Камера</string>

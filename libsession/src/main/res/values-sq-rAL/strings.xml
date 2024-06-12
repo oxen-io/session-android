@@ -32,7 +32,6 @@
     <string name="message">Mesazh</string>
     <string name="notificationsMuted">Heshtur</string>
     <string name="blockUnblock">Zhbllokoje</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Që të mund të dërgojë mesazhe audio, Session-i lyp leje përdorimi të Mikrofonit, por kjo i është mohuar. Ju lutemi, kaloni te rregullimet e aplikacionit, përzgjidhni \"Leje\", dhe aktivizoni \"Mikrofonin\".</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Të ruhet në depozitë?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -58,9 +57,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">Po mblidhen bashkëngjitje…</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Mesazh multimedia</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Po shkarkohet mesazh MMS</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Gabim në shkarkim mesazhi MMS, prekeni që të riprovohet</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Dërgoje te %s</string>
     <!-- MediaSendActivity -->
@@ -110,11 +106,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">Shkurtore e pavlefshme</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="one">%d Objekt</item>
-        <item quantity="other">%d Objekte</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Kamera</string>

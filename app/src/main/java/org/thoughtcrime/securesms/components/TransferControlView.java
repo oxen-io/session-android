@@ -1,5 +1,7 @@
 package org.thoughtcrime.securesms.components;
 
+import static org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.COUNT_KEY;
+
 import android.animation.LayoutTransition;
 import android.content.Context;
 import androidx.annotation.NonNull;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 
 import com.annimon.stream.Stream;
 import com.pnikosis.materialishprogress.ProgressWheel;
+import com.squareup.phrase.Phrase;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -191,7 +194,8 @@ public class TransferControlView extends FrameLayout {
       return slides.get(0).getContentDescription();
     } else {
       int downloadCount = Stream.of(slides).reduce(0, (count, slide) -> slide.getTransferState() != AttachmentTransferProgress.TRANSFER_PROGRESS_DONE ? count + 1 : count);
-      return getContext().getResources().getQuantityString(R.plurals.TransferControlView_n_items, downloadCount, downloadCount);
+
+      return Phrase.from(getContext(), R.string.andMore).put(COUNT_KEY, downloadCount).format().toString();
     }
   }
 

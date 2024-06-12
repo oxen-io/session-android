@@ -32,7 +32,6 @@
     <string name="message">Besked</string>
     <string name="notificationsMuted">Lyden slået fra</string>
     <string name="blockUnblock">Fjern blokering</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Session kræver tilladelse til at tilgå mikrofonen for at kunne sende lydfiler, hvilket det er blevet nægtet. Gå venligst via appens menu til Indstillinger, vælg \"Tilladelser\" og tilvælg \"Mikrofon\"</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Gem i hukommelsen?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -58,9 +57,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">Samler vedhæftninger...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimedie besked</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Downloader MMS...</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">MMS besked kunne ikke downloades, tap for at prøve igen</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Send til %s</string>
     <!-- MediaSendActivity -->
@@ -110,11 +106,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">Ugyldig genvej</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="one">%d Enheder</item>
-        <item quantity="other">%d Enheder</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Kamera</string>

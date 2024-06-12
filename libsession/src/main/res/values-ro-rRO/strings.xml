@@ -33,7 +33,6 @@
     <string name="message">Mesaj</string>
     <string name="notificationsMuted">Ignoră</string>
     <string name="blockUnblock">Deblochează</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Session are nevoie de permisiunea pentru Microfon pentru a putea trimite mesaje audio dar i-a fost refuzat accesul permanent. Vă rugăm să navigați în meniul de setări al aplicației, selectați \"Permisiuni\" și activați \"Microfon\".</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Salvez pe spațiul de stocare?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -60,9 +59,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">Se colectează atașamentele...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Mesaj multimedia</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Se descarcă mesajul MMS</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Eroare la descărcarea mesajului MMS, apasă pentru reîncercare</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Trimiteți la %s</string>
     <!-- MediaSendActivity -->
@@ -113,12 +109,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">Scurtătură invalidă</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="one">%d articol</item>
-        <item quantity="few">%d  articole</item>
-        <item quantity="other">%d  articole</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Cameră</string>

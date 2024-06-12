@@ -32,7 +32,6 @@
     <string name="message">मैसेज</string>
     <string name="notificationsMuted">म्यूट हो गए</string>
     <string name="blockUnblock">अनब्लॉक करें</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">ऑडियो संदेशों को भेजने के लिए Session को माइक्रोफ़ोन अनुमति की आवश्यकता होती है, लेकिन इसे स्थायी रूप से अस्वीकार कर दिया गया है। कृपया ऐप सेटिंग्स जारी रखें, \"अनुमतियां\" चुनें, और \"माइक्रोफ़ोन\" सक्षम करें।</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">इसे स्टोरेज में सहेजें?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -58,9 +57,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">अटैचमेंट्स इकट्ठे कर रहे हैं...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">मल्टीमीडिया संदेश</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">एमएमएस संदेश डाउनलोड किया जा रहा है</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">एमएमएस संदेश डाउनलोड करने में त्रुटि, पुनः प्रयास करने के लिए टैप करें</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">%s को भेजें</string>
     <!-- MediaSendActivity -->
@@ -110,11 +106,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">अमान्य शॉर्टकट</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="one">%d वस्तु</item>
-        <item quantity="other">%d वस्तुएं</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">कैमरा</string>

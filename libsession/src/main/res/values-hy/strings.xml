@@ -32,7 +32,6 @@
     <string name="message">Հաղորդագրություն</string>
     <string name="notificationsMuted">Լուռ է</string>
     <string name="blockUnblock">Հանել արգելափակումից</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Session-ը պահանջում է միկրոֆոնի թույտվություն, խնդրում ենք մտնել կարգավորումներ, ընտրել \"թույլտվություն\", ապա թույլատրել \"միկրոֆոնը\".</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Պահպանե՞լ սարքի մեջ։</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -58,9 +57,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">Կցորդների հավաքում...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Մուլտիմեդիա հաղորդագրություններ</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Ներբեռնում է MMS հաղորդագրությունը</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Խնդիր առաջացավ MMS հաղորդագրությունը ներբեռնելիս, սեղմեք կրկին փորձելու համար</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Ուղարկել %s֊ին</string>
     <!-- MediaSendActivity -->
@@ -110,11 +106,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">Սխալ կարճեցում</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="one">%d Իր</item>
-        <item quantity="other">%d Իրեր</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Տեսախցիկ</string>

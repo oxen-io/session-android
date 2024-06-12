@@ -32,7 +32,6 @@
     <string name="attachmentsAdd">Pridať prílohu</string>
     <string name="message">Správa</string>
     <string name="blockUnblock">Odblokovať</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Session potrebuje prístup k mikrofónu aby mohol posielať zvukové správy, ale prístup bol natrvalo zakázaný. Prosím v nastaveniach aplikácií zvoľte \"Oprávnenia\", a povoľte \"Mikrofón\".</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Uložiť na úložisko?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -60,9 +59,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">Ukladám prílohy...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimediálna správa</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Preberanie MMS správy</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Chyba pri preberaní MMS správy, ťuknite pre opakovanie</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Poslať používateľovi %s</string>
     <!-- MediaSendActivity -->
@@ -114,13 +110,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">Neplatná skratka</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="one">%d položka</item>
-        <item quantity="few">%d položky</item>
-        <item quantity="many">%d položiek</item>
-        <item quantity="other">%d položiek</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Kamera</string>

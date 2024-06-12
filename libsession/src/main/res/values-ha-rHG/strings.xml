@@ -29,7 +29,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Servehî lê zede bike</string>
     <string name="blockUnblock">Astengê rake</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Session ji bo şandina peyamên dengî destûra Mîkrofonê pêwîst dike, lê ew bi awayekî mayinde hate redkirin. Ji kerema xwe biçe sazkariyên sepanê \"Destûr\"ê bibijêre û \"Mîkrofon\"ê çalak bike.</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Bila li bîrbarê were tomarkirin?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -53,9 +52,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">...Servehî tên berhevkirin</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Peyama multîmedyayê</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Peyama MMS tê daxistin</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Peyama MMSê nehate daxistin, ji bo dîsa hewldanê bitepîne</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Ji %s re bişîne</string>
     <!-- MediaSendActivity -->
@@ -101,11 +97,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">Kurterêya nederbasdar</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="one">%dhêman</item>
-        <item quantity="other">%dhêman</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Kamera</string>

@@ -30,7 +30,6 @@
     <string name="attachmentsAdd">Прикачване на файл</string>
     <string name="message">Съобщение</string>
     <string name="blockUnblock">Отблокирване</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Session се нуждае от достъп до микрофона Ви, за да може да изпраща аудио съобщения, но той му е отказан. Моля, отидете в настройки в менюто и изберете \"Разрешения\" и \"Микрофон\".</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Запази в хранилището?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -56,9 +55,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">Събиране на прикачени файлове...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Мултимедийно съобщение</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Изтегляне на MMS съобщение</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Грешка при изтегляне на MMS съобщение, натиснете за да опитате повторно</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Изпрати на %s</string>
     <!-- MediaSendActivity -->
@@ -108,11 +104,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">Невалидена препратка</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="one">%d нещо</item>
-        <item quantity="other">%d неща</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Камера</string>

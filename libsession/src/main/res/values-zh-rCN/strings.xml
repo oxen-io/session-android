@@ -31,7 +31,6 @@
     <string name="message">消息</string>
     <string name="notificationsMuted">已静音</string>
     <string name="blockUnblock">解除屏蔽</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Session 需要麦克风权限才能发送语音信息，但是该权限已经被永久拒绝，请进入应用程序设置，点击权限，并启用“麦克风”。</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">保存到存储？</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -56,9 +55,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">正在收集附件…</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">多媒体信息</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">正在下载彩信</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">下载彩信时错误，点击重试</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">发送给%s</string>
     <!-- MediaSendActivity -->
@@ -107,10 +103,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">无效的快捷方式</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="other">%d项目</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">相机</string>

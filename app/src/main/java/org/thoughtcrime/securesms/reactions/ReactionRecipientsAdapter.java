@@ -157,7 +157,7 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
       this.avatar.update(reaction.getSender());
 
       if (reaction.getSender().isLocalNumber()) {
-        this.recipient.setText(R.string.ReactionsRecipientAdapter_you);
+        this.recipient.setText(R.string.you);
         this.remove.setVisibility(View.VISIBLE);
       } else {
         String name = reaction.getSender().getName();

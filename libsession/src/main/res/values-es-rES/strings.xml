@@ -32,7 +32,6 @@
     <string name="message">Mensaje</string>
     <string name="notificationsMuted">Silenciado</string>
     <string name="blockUnblock">Desbloquear</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Session necesita acceso al micrófono para enviar notas de voz. Por favor, ve al menú de configuración de la aplicación, selecciona «Permisos» y activa «Micrófono».</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">¿Guardar en el almacenamiento?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -58,9 +57,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">Recopilando adjuntos ...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Mensaje multimedia</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Descargando mensaje MMS</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Fallo al descargar mensaje MMS, toca para reintentar</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Enviar a %s</string>
     <!-- MediaSendActivity -->
@@ -110,11 +106,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">Atajo no válido</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="one">%d objeto</item>
-        <item quantity="other">%d objetos</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Cámara</string>

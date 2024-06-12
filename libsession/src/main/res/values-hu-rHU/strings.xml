@@ -32,7 +32,6 @@
     <string name="message">Üzenet</string>
     <string name="notificationsMuted">Némítva</string>
     <string name="blockUnblock">Letiltás feloldása</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">A Session-nek szüksége van a Mikrofon engedélyre, hogy hangüzeneteket küldhessen, de ez jelenleg nincs megadva. Kérlek menj az alkalmazásbeállításokhoz, válaszd az \"Engedélyek\"-et és engedélyezd az \"Mikrofon\"-t.</string>
     <!-- ConversationFragment -->
     <string name="callsPermissionsRequired">Hívás engedély szükséges</string>
     <string name="ConversationFragment_save_to_sd_card">Mentés tárolóra?</string>
@@ -59,9 +58,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">Mellékletek összegyűjtése...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimédia üzenet</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">MMS üzenet letöltése</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Hiba történt az MMS üzenet letöltése során, koppints az újrapróbálkozáshoz</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Küldés neki: %s</string>
     <!-- MediaSendActivity -->
@@ -111,11 +107,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">Érvénytelen parancsikon</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="one">%d db elem</item>
-        <item quantity="other">%d db elem</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Kamera</string>

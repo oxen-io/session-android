@@ -32,7 +32,6 @@
     <string name="message">Пошаљи поруку</string>
     <string name="notificationsMuted">Мутиран заувек</string>
     <string name="blockUnblock">Одблокирај</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Сесија треба дозволу за микрофон да пошаље аудио поруке, али је трајно забрањено. Настави у подешавања апликације, селектуј \"Дозволе\", и укључи \"Микрофон\".</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Сачувати у складиште?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -59,9 +58,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">Сакупљам прилоге...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Мултимедијална порука</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Преузимам ММС поруку</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Грешка при преузимању ММС поруке, тапните да покушам поново</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Пошаљи %s</string>
     <!-- MediaSendActivity -->
@@ -111,12 +107,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">Неважећа пречица</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="one">%d предмет</item>
-        <item quantity="few">%d предмета</item>
-        <item quantity="other">%d предмета</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Камера</string>

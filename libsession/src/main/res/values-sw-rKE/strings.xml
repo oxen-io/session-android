@@ -25,7 +25,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Ongeza Kiambatanisho</string>
     <string name="blockUnblock">Fungua</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Session inahitaji idhini ya Kipaza sauti ili kutuma ujumbe wa sauti, lakini imekataliwa kabisa. Tafadhali endelea kwenye mipangilio ya programu, chagua \"Ruhusa\", na uwawezesha \"Kipaza sauti\".</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Hifadhi kwa kuhifadhi</string>
     <!-- CreateProfileActivity -->
@@ -46,9 +45,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">kukusanya viambatisho</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Ujumbe wa Multimedia</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">kupakua ujumbe wa mms</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Hitilafu kupakua ujumbe wa MMS, bomba ili ujaribu tena</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">tuma kwa 1%s</string>
     <!-- MediaSendActivity -->

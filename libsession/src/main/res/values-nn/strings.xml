@@ -28,7 +28,6 @@
     <!-- ConversationActivity -->
     <string name="attachmentsAdd">Legg til vedlegg</string>
     <string name="blockUnblock">Fjern blokkering</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">Session treng tilgang til mikrofonen for å senda lydklipp, men tilgangen er permanent avslått. Opna app-innstillingsmenyen og vel «Tilgang» – eventuelt «Tillatelser» – og skru på «Mikrofon».</string>
     <!-- ConversationFragment -->
     <string name="ConversationFragment_save_to_sd_card">Vil du lagra på eininga?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
@@ -53,9 +52,6 @@
     <!-- MediaOverviewActivity -->
     <string name="attachmentsCollecting">Hentar vedlegg …</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimediemelding</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Lastar ned MMS-melding</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Klarte ikkje lasta ned MMS-melding, trykk for å prøva igjen</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Send til %s</string>
     <!-- MediaSendActivity -->
@@ -100,11 +96,6 @@
     <!-- ShortcutLauncherActivity -->
     <string name="invalidShortcut">Ugyldig snarveg</string>
     <!-- SingleRecipientNotificationBuilder -->
-    <!-- TransferControlView -->
-    <plurals name="TransferControlView_n_items">
-        <item quantity="one">%delement</item>
-        <item quantity="other">%d element</item>
-    </plurals>
     <!-- VideoPlayer -->
     <!-- attachment_type_selector -->
     <string name="contentDescriptionCamera">Kamera</string>

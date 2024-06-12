@@ -103,11 +103,14 @@ public class NotificationMmsMessageRecord extends MmsMessageRecord {
   @Override
   public SpannableString getDisplayBody(@NonNull Context context) {
     if (status == MmsDatabase.Status.DOWNLOAD_INITIALIZED) {
-      return emphasisAdded(context.getString(R.string.NotificationMmsMessageRecord_multimedia_message));
+      // WAS: NotificationMmsMessageRecord_multimedia_message
+      return emphasisAdded(context.getString(R.string.attachmentsNotification)); // ACL TODO: Substitution for {emoji}? Have asked Lucy
     } else if (status == MmsDatabase.Status.DOWNLOAD_CONNECTING) {
-      return emphasisAdded(context.getString(R.string.NotificationMmsMessageRecord_downloading_mms_message));
+      // WAS: NotificationMmsMessageRecord_downloading_mms_message
+      return emphasisAdded(context.getString(R.string.attachmentsNotification)); // ACL TODO: Substitution for {emoji}? Have asked Lucy
     } else {
-      return emphasisAdded(context.getString(R.string.NotificationMmsMessageRecord_error_downloading_mms_message));
+      // WAS: NotificationMmsMessageRecord_error_downloading_mms_message
+      return emphasisAdded(context.getString(R.string.attachmentsNotification)); // ACL TODO: Substitution for {emoji}? Have asked Lucy
     }
   }
 }
