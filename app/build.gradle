@@ -234,7 +234,21 @@ android {
     testNamespace 'network.loki.messenger.test'
 }
 
+//def androidxComposeBoMVersion = '2024.06.00'
 dependencies {
+    // Allow Compose' "Bill of Materials" (BoM) to choose the version numbers for Compose-related
+    // components - which we then import without version numbers and let the BoM handle that.
+    // See: https://developer.android.com/develop/ui/compose/bom
+    // See: https://developer.android.com/develop/ui/compose/bom/bom-mapping
+    implementation platform("androidx.compose:compose-bom:$androidxComposeBoMVersion")
+    testImplementation platform("androidx.compose:compose-bom:$androidxComposeBoMVersion")
+
+    implementation "androidx.compose.ui:ui"
+    implementation "androidx.compose.ui:ui-tooling"
+    implementation "androidx.compose.runtime:runtime-livedata"
+    implementation "androidx.compose.foundation:foundation-layout"
+    implementation "androidx.compose.material:material"
+
     implementation("com.google.dagger:hilt-android:$daggerVersion")
     kapt("com.google.dagger:hilt-android-compiler:$daggerVersion")
 
@@ -371,12 +385,6 @@ dependencies {
     testImplementation 'org.robolectric:shadows-multidex:4.4'
 
     implementation 'com.github.bumptech.glide:compose:1.0.0-beta01'
-
-    implementation "androidx.compose.ui:ui:$androidxComposeVersion"
-    implementation "androidx.compose.ui:ui-tooling:$androidxComposeVersion"
-    implementation "androidx.compose.runtime:runtime-livedata:$androidxComposeVersion"
-    implementation "androidx.compose.foundation:foundation-layout:$androidxComposeVersion"
-    implementation "androidx.compose.material:material:$androidxComposeVersion"
 
     implementation "com.google.accompanist:accompanist-themeadapter-appcompat:0.33.1-alpha"
     implementation "com.google.accompanist:accompanist-pager-indicators:0.33.1-alpha"
