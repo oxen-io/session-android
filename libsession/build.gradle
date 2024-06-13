@@ -29,7 +29,9 @@ dependencies {
     implementation "androidx.preference:preference-ktx:$preferenceVersion"
     implementation "com.google.android.material:material:$materialVersion"
     implementation "com.google.protobuf:protobuf-java:$protobufVersion"
-    implementation "com.google.dagger:hilt-android:$daggerVersion"
+
+    implementation libs.dagger.hilt.android //"com.google.dagger:hilt-android:$daggerVersion"
+
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation "com.github.bumptech.glide:glide:$glideVersion"
@@ -42,16 +44,22 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesVersion"
+
+    implementation libs.kotlinx.coroutines.android
+
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxJsonVersion"
     implementation "nl.komponents.kovenant:kovenant:$kovenantVersion"
     testImplementation "junit:junit:$junitVersion"
     testImplementation 'org.assertj:assertj-core:3.11.1'
     testImplementation "org.mockito:mockito-inline:4.11.0"
     testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
-    testImplementation "androidx.test:core:$testCoreVersion"
+
+    testImplementation libs.androidx.test.core
+
     testImplementation "androidx.arch.core:core-testing:2.1.0"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesVersion"
+
+    testImplementation libs.kotlinx.coroutines.test
+
     testImplementation "org.conscrypt:conscrypt-openjdk-uber:2.0.0"
     implementation 'org.greenrobot:eventbus:3.0.0'
 }

@@ -16,13 +16,21 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         classpath "com.google.gms:google-services:$googleServicesVersion"
         classpath "com.squareup:javapoet:1.13.0"
-        classpath "com.google.dagger:hilt-android-gradle-plugin:$daggerVersion"
+
+        //classpath "com.google.dagger:hilt-android-gradle-plugin:$daggerVersion"
+        //impl libs.dagger.hilt.android.gradle.plugin
+
+
         if (project.hasProperty('huawei')) classpath 'com.huawei.agconnect:agcp:1.9.1.300'
     }
+
+
 }
 
 plugins{
-    id ("com.google.dagger.hilt.android") version "$daggerVersion" apply false
+    //id ("com.google.dagger.hilt.android") version "$daggerVersion" apply false
+    alias libs.plugins.dagger.hilt.android apply false
+
 }
 
 allprojects {
