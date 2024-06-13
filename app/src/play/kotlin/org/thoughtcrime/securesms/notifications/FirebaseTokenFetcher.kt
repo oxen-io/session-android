@@ -11,6 +11,8 @@ import javax.inject.Singleton
 
 @Singleton
 class FirebaseTokenFetcher @Inject constructor(): TokenFetcher {
+    val TAG = "FirebaseTF"
+
     override suspend fun fetch() = withContext(Dispatchers.IO) {
         /*
         // OG: Firebase 18.0.0 code:
@@ -21,8 +23,6 @@ class FirebaseTokenFetcher @Inject constructor(): TokenFetcher {
         */
 
         // ACL Firebase 24.0.0 code:
-        FirebaseMessaging.getInstance().token
-            .takeIf { isActive }
-            ?.await() ?: throw Exception("Firebase messaging token was null")
+        FirebaseMessaging.getInstance().token.await().takeIf { isActive } ?: throw Exception("Firebase token is null")
     }
 }
