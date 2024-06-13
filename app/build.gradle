@@ -234,7 +234,6 @@ android {
     testNamespace 'network.loki.messenger.test'
 }
 
-//def androidxComposeBoMVersion = '2024.06.00'
 dependencies {
     // Allow Compose' "Bill of Materials" (BoM) to choose the version numbers for Compose-related
     // components - which we then import without version numbers and let the BoM handle that.
