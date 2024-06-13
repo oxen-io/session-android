@@ -24,13 +24,20 @@ dependencies {
     implementation project(":liblazysodium")
     implementation "net.java.dev.jna:jna:5.12.1@aar"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    implementation "androidx.core:core-ktx:$androidxCoreVersion"
-    implementation "androidx.appcompat:appcompat:$androidxAppcompatVersion"
-    implementation "androidx.preference:preference-ktx:$preferenceVersion"
-    implementation "com.google.android.material:material:$materialVersion"
+
+    implementation libs.androidx.core.ktx
+
+
+    implementation libs.androidx.appcompat
+
+    implementation libs.androidx.preference.ktx
+
+
+    implementation libs.material
+
     implementation "com.google.protobuf:protobuf-java:$protobufVersion"
 
-    implementation libs.dagger.hilt.android //"com.google.dagger:hilt-android:$daggerVersion"
+    implementation libs.dagger.hilt.android
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
