@@ -426,7 +426,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
                 String txt = Phrase.from(getApplicationContext(), R.string.permissionsStorageSaveDenied)
                         .put(APP_NAME_KEY, getString(R.string.app_name))
                         .format().toString();
-                Toast.makeText(this, txt, Toast.LENGTH_LONG).show()
+                Toast.makeText(this, txt, Toast.LENGTH_LONG).show();
               })
               .onAllGranted(() -> {
                 SaveAttachmentTask saveTask = new SaveAttachmentTask(MediaPreviewActivity.this);

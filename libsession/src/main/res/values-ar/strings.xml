@@ -68,14 +68,6 @@
     <string name="MediaPickerActivity_send_to">إرسال إلى %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">الكاميرا غير متوفرة.</string>
-    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
-        <item quantity="zero">لا يمكنك مشاركة اكثر من %d عنصر.</item>
-        <item quantity="one">لا يمكنك مشاركة اكثر من %d عنصر.</item>
-        <item quantity="two">لا يمكنك مشاركة اكثر من %d عنصر.</item>
-        <item quantity="few">لا يمكنك مشاركة اكثر من %d عنصر.</item>
-        <item quantity="many">لا يمكنك مشاركة اكثر من %d عنصر.</item>
-        <item quantity="other">لا يمكنك مشاركة اكثر من %d عنصر.</item>
-    </plurals>
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">جميع الوسائط</string>
     <!-- MessageRecord -->

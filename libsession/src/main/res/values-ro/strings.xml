@@ -62,11 +62,6 @@
     <string name="MediaPickerActivity_send_to">Trimiteți la %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Cameră indisponibilă.</string>
-    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
-        <item quantity="one">Nu puteți partaja mai mult de %d element.</item>
-        <item quantity="few">Nu puteți partaja mai mult de %d element.</item>
-        <item quantity="other">Nu puteți partaja mai mult de %d elemente.</item>
-    </plurals>
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Toate fișierele media</string>
     <!-- MessageRecord -->

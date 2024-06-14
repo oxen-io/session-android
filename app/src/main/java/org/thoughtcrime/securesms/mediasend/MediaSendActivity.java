@@ -159,7 +159,7 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
       int maxSelection = viewModel.getMaxSelection();
 
       if (viewModel.getSelectedMedia().getValue() != null && viewModel.getSelectedMedia().getValue().size() >= maxSelection) {
-        Toast.makeText(this, getResources().getQuantityString(R.plurals.MediaSendActivity_cant_share_more_than_n_items, maxSelection, maxSelection), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.attachmentsErrorNumber), Toast.LENGTH_SHORT).show();
       } else {
         navigateToCamera();
       }
@@ -331,8 +331,9 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
           Toast.makeText(this, R.string.attachmentsErrorSize, Toast.LENGTH_LONG).show();
           break;
         case TOO_MANY_ITEMS:
-          int maxSelection = viewModel.getMaxSelection();
-          Toast.makeText(this, getResources().getQuantityString(R.plurals.MediaSendActivity_cant_share_more_than_n_items, maxSelection, maxSelection), Toast.LENGTH_SHORT).show();
+          // In modern session we'll say you can't sent more than 32 items, but if we ever want
+          // the exact count of how many items the user attempted to send it's: viewModel.getMaxSelection()
+          Toast.makeText(this, getString(R.string.attachmentsErrorNumber), Toast.LENGTH_SHORT).show();
           break;
       }
     });

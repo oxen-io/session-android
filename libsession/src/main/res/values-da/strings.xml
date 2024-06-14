@@ -60,10 +60,6 @@
     <string name="MediaPickerActivity_send_to">Send til %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Kamera utilgængeligt</string>
-    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
-        <item quantity="one">Du kan ikke dele flere end %d fil.</item>
-        <item quantity="other">Du kan ikke dele flere end %d filer</item>
-    </plurals>
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Alle mediefiler</string>
     <!-- MessageRecord -->

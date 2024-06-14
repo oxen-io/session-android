@@ -61,11 +61,6 @@
     <string name="MediaPickerActivity_send_to">Пошаљи %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Камера недоступна.</string>
-    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
-        <item quantity="one">Не можеш да делиш више од %d предмета.</item>
-        <item quantity="few">Не можеш да делиш више од %d предмета.</item>
-        <item quantity="other">Не можеш да делиш више од %d предмета.</item>
-    </plurals>
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Сви медији</string>
     <!-- MessageRecord -->

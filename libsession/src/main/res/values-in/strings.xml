@@ -55,9 +55,6 @@
     <string name="MediaPickerActivity_send_to">Kirim ke %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Kamera tidak tersedia.</string>
-    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
-        <item quantity="other">Anda tidak dapat membagikan lebih dari %d item.</item>
-    </plurals>
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Semua media</string>
     <!-- MessageRecord -->

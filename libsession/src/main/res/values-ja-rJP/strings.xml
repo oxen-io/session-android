@@ -58,9 +58,6 @@
     <string name="MediaPickerActivity_send_to">%sに送信</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">カメラは利用できません。</string>
-    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
-        <item quantity="other">%d以上のアイテムを共有できません</item>
-    </plurals>
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">すべてのメディア</string>
     <!-- MessageRecord -->

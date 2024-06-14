@@ -60,10 +60,6 @@
     <string name="MediaPickerActivity_send_to">Skicka till %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Kamera otillgänglig.</string>
-    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
-        <item quantity="one">Du kan inte dela mer än %d objekt.</item>
-        <item quantity="other">Du kan inte dela mer än %d objekt.</item>
-    </plurals>
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">All media</string>
     <!-- MessageRecord -->

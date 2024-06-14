@@ -60,10 +60,6 @@
     <string name="MediaPickerActivity_send_to">An %s senden</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Kamera nicht verfügbar.</string>
-    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
-        <item quantity="one">Du kannst nicht mehr als %d Element teilen.</item>
-        <item quantity="other">Du kannst nicht mehr als %d Elemente teilen.</item>
-    </plurals>
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Alle Medieninhalte</string>
     <!-- MessageRecord -->

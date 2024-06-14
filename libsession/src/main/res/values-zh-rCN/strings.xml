@@ -58,9 +58,6 @@
     <string name="MediaPickerActivity_send_to">发送给%s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">摄像头不可用</string>
-    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
-        <item quantity="other">您最多分享 %d 项</item>
-    </plurals>
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">所有媒体</string>
     <!-- MessageRecord -->

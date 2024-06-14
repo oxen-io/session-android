@@ -62,12 +62,6 @@
     <string name="MediaPickerActivity_send_to">Poslať používateľovi %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Kamera je nedostupná.</string>
-    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
-        <item quantity="one">Nemôžete zdieľať viac ako %d položku.</item>
-        <item quantity="few">Nemôžete zdieľať viac ako %d položiky.</item>
-        <item quantity="many">Nemôžete zdieľať viac ako %d položiek.</item>
-        <item quantity="other">Nemôžete zdieľať viac ako %d položiek.</item>
-    </plurals>
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Všetky médiá</string>
     <!-- MessageRecord -->

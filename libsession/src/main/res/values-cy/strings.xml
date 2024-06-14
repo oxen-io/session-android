@@ -64,14 +64,6 @@
     <string name="MediaPickerActivity_send_to">Anfon i %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Camera ddim ar gael</string>
-    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
-        <item quantity="zero">Nid oes modd rhannu mwy na %d eitem.</item>
-        <item quantity="one">Nid oes modd rhannu mwy na %d eitem.</item>
-        <item quantity="two">Nid oes modd rhannu mwy na %d eitem.</item>
-        <item quantity="few">Nid oes modd rhannu mwy na %d eitem.</item>
-        <item quantity="many">Nid oes modd rhannu mwy na %d eitem.</item>
-        <item quantity="other">Nid oes modd rhannu mwy na %d eitem.</item>
-    </plurals>
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Pob cyfrwng</string>
     <!-- MessageRecord -->

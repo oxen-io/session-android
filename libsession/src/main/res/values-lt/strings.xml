@@ -64,12 +64,6 @@
     <string name="MediaPickerActivity_send_to">Siųsti adresatui %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Kamera neprieinama.</string>
-    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
-        <item quantity="one">Jūs negalite bendrinti daugiau nei %d elementą.</item>
-        <item quantity="few">Jūs negalite bendrinti daugiau nei %d elementų.</item>
-        <item quantity="many">Jūs negalite bendrinti daugiau nei %d elementų.</item>
-        <item quantity="other">Jūs negalite bendrinti daugiau nei %d elementą.</item>
-    </plurals>
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Visa medija</string>
     <!-- MessageRecord -->

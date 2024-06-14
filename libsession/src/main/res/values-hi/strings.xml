@@ -60,10 +60,6 @@
     <string name="MediaPickerActivity_send_to">%s को भेजें</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">कैमरा अनुपलब्ध.</string>
-    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
-        <item quantity="one">आप %d से ज्यादा चीजें शेयर नहीं कर सकते</item>
-        <item quantity="other">आप %d से ज्यादा चीजें शेयर नहीं कर सकते</item>
-    </plurals>
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">सभी मीडिया</string>
     <!-- MessageRecord -->

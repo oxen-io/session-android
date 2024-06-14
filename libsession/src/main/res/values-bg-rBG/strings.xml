@@ -58,10 +58,6 @@
     <string name="MediaPickerActivity_send_to">Изпрати на %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Не е открита камера.</string>
-    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
-        <item quantity="one">Не можете да споделяте повече от %d елемент.</item>
-        <item quantity="other">Не можете да споделяте повече от %d елементи.</item>
-    </plurals>
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Всички прикачените файлове</string>
     <!-- MessageRecord -->

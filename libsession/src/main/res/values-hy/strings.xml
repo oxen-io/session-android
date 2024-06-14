@@ -60,10 +60,6 @@
     <string name="MediaPickerActivity_send_to">Ուղարկել %s֊ին</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Տեսախցիկը հասանելի չէ</string>
-    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
-        <item quantity="one">Դուք չեք կարող տարածել ավելին, քան %d իր։</item>
-        <item quantity="other">Դուք չեք կարող տարածել ավելին, քան %d իրեր։</item>
-    </plurals>
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Բոլոր մեդիաները</string>
     <!-- MessageRecord -->

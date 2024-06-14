@@ -60,10 +60,6 @@
     <string name="MediaPickerActivity_send_to">%s - göndər</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Kamera əlçatmazdır.</string>
-    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
-        <item quantity="one">%d elementdən çoxunu paylaşa bilməzsiniz.</item>
-        <item quantity="other">%d elementdən çoxunu paylaşa bilməzsiniz.</item>
-    </plurals>
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Bütün media</string>
     <!-- MessageRecord -->

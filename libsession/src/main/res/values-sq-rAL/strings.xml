@@ -60,10 +60,6 @@
     <string name="MediaPickerActivity_send_to">Dërgoje te %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Kamera jo gati</string>
-    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
-        <item quantity="one">S\’mund të ndani me të tjerët më shumë se %d objekte.</item>
-        <item quantity="other">S\’mund të ndani me të tjerët më shumë se %d objekte.</item>
-    </plurals>
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Krejt mediat</string>
     <!-- MessageRecord -->

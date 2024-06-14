@@ -60,10 +60,6 @@
     <string name="MediaPickerActivity_send_to">ارسال به %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">دوربین در دسترس نیست</string>
-    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
-        <item quantity="one">شما نمی توانید بیش از %d آیتم را به اشتراک بگذارید.</item>
-        <item quantity="other">شما نمی توانید بیش از %d آیتم را به اشتراک بگذارید.</item>
-    </plurals>
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">تمام رسانه ها</string>
     <!-- MessageRecord -->

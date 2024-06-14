@@ -64,12 +64,6 @@
     <string name="MediaPickerActivity_send_to">Wyślij do %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Aparat jest niedostępny.</string>
-    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
-        <item quantity="one">Nie można udostępnić więcej niż %d pliku multimediów.</item>
-        <item quantity="few">Nie można udostępnić więcej niż %d multimediów.</item>
-        <item quantity="many">Nie można udostępnić więcej niż %d multimediów.</item>
-        <item quantity="other">Nie można udostępnić więcej niż %d multimediów.</item>
-    </plurals>
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Wszystkie multimedia</string>
     <!-- MessageRecord -->

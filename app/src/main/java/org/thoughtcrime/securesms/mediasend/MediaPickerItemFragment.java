@@ -163,7 +163,7 @@ public class MediaPickerItemFragment extends Fragment implements MediaPickerItem
 
   @Override
   public void onMediaSelectionOverflow(int maxSelection) {
-    Toast.makeText(requireContext(), getResources().getQuantityString(R.plurals.MediaSendActivity_cant_share_more_than_n_items, maxSelection, maxSelection), Toast.LENGTH_SHORT).show();
+    Toast.makeText(requireContext(), getString(R.string.attachmentsErrorNumber), Toast.LENGTH_SHORT).show();
   }
 
   private void initToolbar(Toolbar toolbar) {

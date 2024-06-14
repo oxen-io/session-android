@@ -63,12 +63,6 @@
     <string name="MediaPickerActivity_send_to">שלח אל %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">מצלמה אינה זמינה.</string>
-    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
-        <item quantity="one">אינך יכול לשתף יותר מפריט %d.</item>
-        <item quantity="two">אינך יכול לשתף יותר מ־%d פריטים.</item>
-        <item quantity="many">אינך יכול לשתף יותר מ־%d פריטים.</item>
-        <item quantity="other">אינך יכול לשתף יותר מ־%d פריטים.</item>
-    </plurals>
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">כל המדיה</string>
     <!-- MessageRecord -->

@@ -64,12 +64,6 @@
     <string name="MediaPickerActivity_send_to">Відправити %s</string>
     <!-- MediaSendActivity -->
     <string name="cameraErrorUnavailable">Камера не доступна</string>
-    <plurals name="MediaSendActivity_cant_share_more_than_n_items">
-        <item quantity="one">Ви не можете надсилати більше, ніж %d файл.</item>
-        <item quantity="few">Ви не можете надсилати більше, ніж %d файлів.</item>
-        <item quantity="many">Ви не можете надсилати більше, ніж %d файлів.</item>
-        <item quantity="other">Ви не можете надсилати більше, ніж %d файлів.</item>
-    </plurals>
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Всі медіа-файли
 Всі зображення</string>
