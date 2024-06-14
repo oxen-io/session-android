@@ -1,5 +1,28 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
+    <color name="destructive">#FF453A</color>
+    <color name="unimportant">#D8D8D8</color>
+    <color name="profile_picture_background">#353535</color>
+    <color name="action_bar_background">#161616</color>
+    <color name="separator">#36383C</color>
+    <color name="unimportant_button_background">#323232</color>
+    <color name="dialog_background">#101011</color>
+    <color name="unimportant_dialog_button_background">@color/unimportant_button_background</color>
+    <color name="app_icon_background">#333132</color>
+    <color name="progress_bar_background">#0AFFFFFF</color>
+    <color name="compose_view_background">#1B1B1B</color>
+    <color name="compose_text_view_background">#141414</color>
+    <color name="quote_not_found_background">#80FFFFFF</color>
+    <color name="pn_option_border">#212121</color>
+    <color name="paths_building">#FFCE3A</color>
+    <color name="open_group_chip_color">#0DFFFFFF</color>
+
+    <color name="call_action_button">#DD353535</color>
+    <color name="call_action_button_highlighted">#FFFFFF</color>
+    <color name="call_action_foreground">#D8D8D8</color>
+    <color name="call_action_foreground_highlighted">#171717</color>
+    <color name="call_background">#171717</color>
+
     <array name="profile_picture_placeholder_colors">
         <item>@color/accent_green</item>
         <item>@color/accent_blue</item>
@@ -10,45 +33,10 @@
         <item>@color/accent_red</item>
     </array>
 
-    <color name="MediaOverview_Media_selected_overlay">#88000000</color>
-    <color name="action_bar_background">#161616</color>
-    <color name="action_mode_status_bar">@color/gray65</color>
-    <color name="app_icon_background">#333132</color>
-    <color name="avatar_background">@color/transparent_black_90</color>
-    <color name="background_dialog">@color/core_grey_75</color>
+    <color name="loki_darkest_gray">#0a0a0a</color>
+
+    <color name="white">#ffffffff</color>
     <color name="black">#ff000000</color>
-    <color name="button_primary_ripple">@color/transparent_black_15</color>
-    <color name="call_action_button">#DD353535</color>
-    <color name="call_action_button_highlighted">#FFFFFF</color>
-    <color name="call_action_foreground">#D8D8D8</color>
-    <color name="call_action_foreground_highlighted">#171717</color>
-    <color name="call_background">#171717</color>
-    <color name="classic_accent">#31F196</color>
-    <color name="classic_dark_0">#111111</color>
-    <color name="classic_dark_1">#1B1B1B</color>
-    <color name="classic_dark_2">#2D2D2D</color>
-    <color name="classic_dark_3">#414141</color>
-    <color name="classic_dark_4">#767676</color>
-    <color name="classic_dark_5">#A1A2A1</color>
-    <color name="classic_dark_6">#FFFFFF</color>
-    <color name="classic_light_0">#000000</color>
-    <color name="classic_light_1">#6D6D6D</color>
-    <color name="classic_light_2">#A1A2A1</color>
-    <color name="classic_light_3">#DFDFDF</color>
-    <color name="classic_light_4">#F0F0F0</color>
-    <color name="classic_light_5">#F9F9F9</color>
-    <color name="classic_light_6">#FFFFFF</color>
-    <color name="classic_light_navigation_bar">@color/navigation_bar</color>
-    <color name="compose_text_view_background">#141414</color>
-    <color name="compose_view_background">#1B1B1B</color>
-    <color name="danger_dark">#FF3A3A</color>
-    <color name="danger_light">#E12D19</color>
-    <color name="default_background_end">#171717</color>
-    <color name="default_background_start">#121212</color>
-    <color name="destructive">#FF453A</color>
-    <color name="device_link_item_background_dark">#ff333333</color>
-    <color name="device_link_item_background_light">#ffffffff</color>
-    <color name="dialog_background">#101011</color>
     <color name="gray12">#ffe0e0e0</color>
     <color name="gray13">#ffababab</color>
     <color name="gray20">#ffcccccc</color>
@@ -57,10 +45,105 @@
     <color name="gray65">#ff595959</color>
     <color name="gray70">#ff4d4d4d</color>
     <color name="gray78">#ff383838</color>
-    <color name="inverse_primary">@color/core_white</color>
-    <color name="loki_darkest_gray">#0a0a0a</color>
+
+    <color name="transparent_black_6">#0f000000</color>
+    <color name="transparent_black_15">#26000000</color>
+    <color name="transparent_black_30">#30000000</color>
+    <color name="transparent_black_40">#40000000</color>
+    <color name="transparent_black_70">#70000000</color>
+    <color name="transparent_white_87">#dfffffff</color>
+    <color name="transparent_black_90">#90000000</color>
+
+    <color name="transparent_white_15">#26ffffff</color>
+    <color name="transparent_white_20">#33ffffff</color>
+    <color name="transparent_white_30">#30ffffff</color>
+    <color name="transparent_white_40">#40ffffff</color>
+    <color name="transparent_white_aa">#aaffffff</color>
+
     <color name="navigation_bar">@color/compose_view_background</color>
+    <color name="classic_light_navigation_bar">@color/navigation_bar</color>
+    <color name="ocean_light_navigation_bar">@color/navigation_bar</color>
+    <color name="action_mode_status_bar">@color/gray65</color>
+    <color name="touch_highlight">#22000000</color>
+
+    <color name="device_link_item_background_light">#ffffffff</color>
+    <color name="device_link_item_background_dark">#ff333333</color>
+
+    <color name="transparent">#00FFFFFF</color>
+    <color name="transparent_black">#00000000</color>
+
+    <color name="MediaOverview_Media_selected_overlay">#88000000</color>
+
+    <color name="avatar_background">@color/transparent_black_90</color>
+
+    <color name="default_background_start">#121212</color>
+    <color name="default_background_end">#171717</color>
+
+
+    <color name="inverse_primary">@color/core_white</color>
+
+    <color name="button_primary_ripple">@color/transparent_black_15</color>
+
+    <color name="background_dialog">@color/core_grey_75</color>
+
+    <color name="reactions_pill_text_color">@color/core_grey_35</color>
+    <color name="reactions_pill_selected_text_color">@color/core_grey_15</color>
+    <color name="reactions_screen_dark_shade_color">@color/transparent_black_70</color>
+    <color name="reactions_screen_light_shade_color">#df5e5e5e</color>
+
+    <color name="signal_background_primary">@color/core_grey_95</color>
+    <color name="signal_background_secondary">@color/core_grey_75</color>
+    <color name="signal_background_tertiary">@color/core_grey_90</color>
+    <color name="signal_background_dialog">@color/core_grey_75</color>
+    <color name="signal_background_dialog_secondary">@color/core_grey_65</color>
+
+    <color name="signal_text_primary">@color/core_grey_05</color>
+    <color name="text_primary_disabled">@color/core_grey_60</color>
+    <color name="signal_text_primary_dialog">@color/core_grey_25</color>
+
+    <color name="react_with_any_background">?colorPrimary</color>
+
+
+    <color name="signal_inverse_transparent">@color/transparent</color>
+    <color name="signal_inverse_transparent_40">@color/transparent_white_40</color>
+
+
+    <color name="signal_icon_tint_tab_selected">@color/core_white</color>
+    <color name="signal_icon_tint_tab_unselected">@color/core_grey_25</color>
+
+    <color name="signal_text_secondary">@color/core_grey_25</color>
+    <color name="signal_text_selected">@color/core_white</color>
+
+    <color name="signal_text_hint">@color/core_grey_15</color>
+
+    <color name="signal_button_primary_ripple">@color/transparent_black_15</color>
+    <color name="signal_button_primary_text">@color/core_white</color>
+    <color name="signal_button_primary_text_disabled">@color/transparent_white_20</color>
+
+    <color name="signal_button_secondary">@color/core_grey_75</color>
+    <color name="signal_button_secondary_text_disabled">@color/core_grey_45</color>
+    <color name="signal_button_secondary_stroke">@color/core_grey_45</color>
+
+    <color name="classic_accent">#31F196</color>
+
+    <color name="classic_dark_0">#111111</color>
+    <color name="classic_dark_1">#1B1B1B</color>
+    <color name="classic_dark_2">#2D2D2D</color>
+    <color name="classic_dark_3">#414141</color>
+    <color name="classic_dark_4">#767676</color>
+    <color name="classic_dark_5">#A1A2A1</color>
+    <color name="classic_dark_6">#FFFFFF</color>
+
+    <color name="classic_light_0">#000000</color>
+    <color name="classic_light_1">#6D6D6D</color>
+    <color name="classic_light_2">#A1A2A1</color>
+    <color name="classic_light_3">#DFDFDF</color>
+    <color name="classic_light_4">#F0F0F0</color>
+    <color name="classic_light_5">#F9F9F9</color>
+    <color name="classic_light_6">#FFFFFF</color>
+
     <color name="ocean_accent">#57C9FA</color>
+
     <color name="ocean_dark_0">#000000</color>
     <color name="ocean_dark_1">#1A1C28</color>
     <color name="ocean_dark_2">#252735</color>
@@ -69,6 +152,7 @@
     <color name="ocean_dark_5">#A6A9CE</color>
     <color name="ocean_dark_6">#5CAACC</color>
     <color name="ocean_dark_7">#FFFFFF</color>
+
     <color name="ocean_light_0">#000000</color>
     <color name="ocean_light_1">#19345D</color>
     <color name="ocean_light_2">#6A6E90</color>
@@ -77,59 +161,13 @@
     <color name="ocean_light_5">#E7F3F4</color>
     <color name="ocean_light_6">#ECFAFB</color>
     <color name="ocean_light_7">#FCFFFF</color>
-    <color name="ocean_light_navigation_bar">@color/navigation_bar</color>
-    <color name="open_group_chip_color">#0DFFFFFF</color>
+
+    <color name="danger_dark">#FF3A3A</color>
+    <color name="danger_light">#E12D19</color>
+
     <color name="outdated_client_banner_background_color">#00F782</color>
-    <color name="paths_building">#FFCE3A</color>
-    <color name="pn_option_border">#212121</color>
-    <color name="profile_picture_background">#353535</color>
-    <color name="progress_bar_background">#0AFFFFFF</color>
-    <color name="quote_not_found_background">#80FFFFFF</color>
-    <color name="react_with_any_background">?colorPrimary</color>
-    <color name="reactions_pill_selected_text_color">@color/core_grey_15</color>
-    <color name="reactions_pill_text_color">@color/core_grey_35</color>
-    <color name="reactions_screen_dark_shade_color">@color/transparent_black_70</color>
-    <color name="reactions_screen_light_shade_color">#df5e5e5e</color>
-    <color name="separator">#36383C</color>
-    <color name="signal_background_dialog">@color/core_grey_75</color>
-    <color name="signal_background_dialog_secondary">@color/core_grey_65</color>
-    <color name="signal_background_primary">@color/core_grey_95</color>
-    <color name="signal_background_secondary">@color/core_grey_75</color>
-    <color name="signal_background_tertiary">@color/core_grey_90</color>
-    <color name="signal_button_primary_ripple">@color/transparent_black_15</color>
-    <color name="signal_button_primary_text">@color/core_white</color>
-    <color name="signal_button_primary_text_disabled">@color/transparent_white_20</color>
-    <color name="signal_button_secondary">@color/core_grey_75</color>
-    <color name="signal_button_secondary_stroke">@color/core_grey_45</color>
-    <color name="signal_button_secondary_text_disabled">@color/core_grey_45</color>
-    <color name="signal_icon_tint_tab_selected">@color/core_white</color>
-    <color name="signal_icon_tint_tab_unselected">@color/core_grey_25</color>
-    <color name="signal_inverse_transparent">@color/transparent</color>
-    <color name="signal_inverse_transparent_40">@color/transparent_white_40</color>
-    <color name="signal_text_hint">@color/core_grey_15</color>
-    <color name="signal_text_primary">@color/core_grey_05</color>
-    <color name="signal_text_primary_dialog">@color/core_grey_25</color>
-    <color name="signal_text_secondary">@color/core_grey_25</color>
-    <color name="signal_text_selected">@color/core_white</color>
-    <color name="text_primary_disabled">@color/core_grey_60</color>
-    <color name="touch_highlight">#22000000</color>
-    <color name="transparent">#00FFFFFF</color>
-    <color name="transparent_black">#00000000</color>
-    <color name="transparent_black_15">#26000000</color>
-    <color name="transparent_black_30">#30000000</color>
-    <color name="transparent_black_40">#40000000</color>
-    <color name="transparent_black_6">#0f000000</color>
-    <color name="transparent_black_70">#70000000</color>
-    <color name="transparent_black_90">#90000000</color>
-    <color name="transparent_white_15">#26ffffff</color>
-    <color name="transparent_white_20">#33ffffff</color>
-    <color name="transparent_white_30">#30ffffff</color>
-    <color name="transparent_white_40">#40ffffff</color>
-    <color name="transparent_white_87">#dfffffff</color>
-    <color name="transparent_white_aa">#aaffffff</color>
-    <color name="unimportant">#D8D8D8</color>
-    <color name="unimportant_button_background">#323232</color>
-    <color name="unimportant_dialog_button_background">@color/unimportant_button_background</color>
-    <color name="white">#ffffffff</color>
+
+    <!-- ACL attempt to stop API 28 crashing on long-press of emoji - doesn't work though... -->
+    <color name="secondary_text_material_dark">#61FFFF</color>
 
 </resources>

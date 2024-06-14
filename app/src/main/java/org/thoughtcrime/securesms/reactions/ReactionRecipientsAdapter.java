@@ -5,19 +5,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import org.session.libsession.messaging.utilities.SessionId;
 import org.thoughtcrime.securesms.components.ProfilePictureView;
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
 import org.thoughtcrime.securesms.database.model.MessageId;
-import org.thoughtcrime.securesms.mms.GlideApp;
-
 import java.util.Collections;
 import java.util.List;
-
 import network.loki.messenger.R;
 
 final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecipientsAdapter.ViewHolder> {
@@ -66,6 +61,9 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
   @Override
   public @NonNull
   ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+    // TODO: This will CRASH on Android 28 but it works on Android 34. The error is to do with a
+    // TODO: missing `secondary_text_material_dark` colour. Jira ticket: SES-2157
     switch (viewType) {
       case HEADER_TYPE:
         return new HeaderViewHolder(callback, LayoutInflater.from(parent.getContext()).inflate(R.layout.reactions_bottom_sheet_dialog_fragment_recycler_header, parent, false));
@@ -160,9 +158,11 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
         this.recipient.setText(R.string.you);
         this.remove.setVisibility(View.VISIBLE);
       } else {
+        // TODO: The name we get here turns out to be null - Jira ticket: SES-2158
         String name = reaction.getSender().getName();
         if (name != null && new SessionId(name).getPrefix() != null) {
           name = name.substring(0, 4) + "..." + name.substring(name.length() - 4);
+
         }
         this.recipient.setText(name);
         this.remove.setVisibility(View.GONE);

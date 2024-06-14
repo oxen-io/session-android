@@ -49,8 +49,6 @@
         <item quantity="other">Saving all %1$d media to storage will allow any other apps on your device to access them.\n\nContinue?</item>
     </plurals>
 
-
-
     <plurals name="ReactionsRecipientAdapter_other_reactors">
         <item quantity="one">And %1$d other has reacted %2$s to this message</item>
         <item quantity="other">And %1$d others have reacted %2$s to this message</item>
@@ -91,6 +89,9 @@
     <string name="emojiCategoryRecentlyUsed">Recently Used</string>
     <string name="emojiCategorySmileys">Smileys &amp; People</string>
     <string name="emojiCategorySymbols">Symbols</string>
+
+    <string name="emojiReactsHoverTwoNameMultiple">{name}, {other_name} and {count} others reacted with {emoji}</string>
+    <string name="emojiReactsHoverTwoNameOne">{name}, {other_name} and 1 other reacted with {emoji}</string>
 
 
 

@@ -296,9 +296,5 @@
     <string name="appearanceAutoDarkMode">حالت شب خودکار</string>
     <string name="activity_appearance_follow_system_explanation">مطابق‌سازی تنظیمات سیستم</string>
     <string name="Unblock_dialog__title_single">%sاز حالت مسدود خارج شود</string>
-    <plurals name="ReactionsRecipientAdapter_other_reactors">
-        <item quantity="one">و %1$d نفر دیگر با %2$s به این پیام واکنش نشان داده است</item>
-        <item quantity="other">و %1$d نفر دیگر با %2$s به این پیام واکنش نشان داده اند</item>
-    </plurals>
     <string name="fragment_enter_public_key_prompt">یک مکالمه جدید را با وارد کردن شناسه Session شخصی شروع کنید یا شناسه جلسه خود را با آنها به اشتراک بگذارید.</string>
 </resources>

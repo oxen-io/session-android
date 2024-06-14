@@ -316,10 +316,6 @@
         <item quantity="one">et %d autre</item>
         <item quantity="other">et %d autres</item>
     </plurals>
-    <plurals name="ReactionsRecipientAdapter_other_reactors">
-        <item quantity="one">Et %1$d autre a réagi %2$s à ce message</item>
-        <item quantity="other">Et %1$d autres ont réagi %2$s à ce message</item>
-    </plurals>
     <string name="fragment_enter_public_key_prompt">Commencez une nouvelle conversation en entrant l\'ID Session de quelqu\'un ou en lui partageant votre ID Session.</string>
     <string name="new_conversation_dialog_back_button_content_description">Revenir en arrière</string>
     <string name="new_conversation_dialog_close_button_content_description">Fermer la fenêtre</string>
