@@ -1547,14 +1547,16 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     override fun onReactionLongClicked(messageId: MessageId) {
         if (viewModel.recipient?.isGroupRecipient == true) {
-            val isUserModerator = viewModel.openGroup?.let { openGroup ->
-                val userPublicKey = textSecurePreferences.getLocalNumber() ?: return@let false
-                OpenGroupManager.isUserModerator(this, openGroup.id, userPublicKey, viewModel.blindedPublicKey)
-            } ?: false
+            val isUserModerator = isUserCommunityManager()
             val fragment = ReactionsDialogFragment.create(messageId, isUserModerator)
             fragment.show(supportFragmentManager, null)
         }
     }
+
+    private fun isUserCommunityManager() = viewModel.openGroup?.let { openGroup ->
+        val userPublicKey = textSecurePreferences.getLocalNumber() ?: return@let false
+        OpenGroupManager.isUserModerator(this, openGroup.id, userPublicKey, viewModel.blindedPublicKey)
+    } ?: false
 
     override fun playVoiceMessageAtIndexIfPossible(indexInAdapter: Int) {
         if (!textSecurePreferences.autoplayAudioMessages()) return
@@ -1896,15 +1898,36 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // hashes are required if wanting to delete messages from the 'storage server' - they are not required for communities
         val canDeleteForEveryone = conversation.isCommunityRecipient || messages.all { lokiMessageDb.getMessageServerHash(it.id, it.isMms) != null }
         // Determining is the current user is an admin will depend on the kind of conversation we are in
-        val isAdmin = when{
+        val isAdmin = when {
+            //todo GROUPS V2 add logic where code is commented to determine if user is an admin - CAREFUL in the current old code:
+            // isClosedGroup refers to the existing legacy groups.
+            // With the groupsV2 changes, isClosedGroup refers to groupsV2 and isLegacyClosedGroup is a new property to refer to old groups
+
             // for Groups V2
-            //todo GROUPS V2 add logic to determine if user is an admin
+            // conversation: check if it is a GroupsV2 conversation - then check if user is an admin
 
             // for legacy groups, check if the user created the group
+            conversation.isClosedGroupRecipient -> { //todo GROUPS V2 this property will change for groups v2. Check for legacyGroup here
+                // for legacy groups, we check if the current user is the one who created the group
+                run {
+                    val localUserAddress = textSecurePreferences.getLocalNumber() ?: return@run false
+                    val group = storage.getGroup(conversation.address.toGroupString())
+                    group?.admins?.contains(fromSerialized(localUserAddress)) ?: false
+                }
+            }
 
             // for communities the the `isUserModerator` field
+            conversation.isCommunityRecipient -> isUserCommunityManager()
+
+            // false in other cases
             else -> false
         }
+
+        /*
+        if(isLegacyGroup) 'check that current user is the user that created the group'
+else if(isCommunity) use OpenGroupManager.isUserModerator'
+// add a todo here: else if (isGroupV2) -- I will add this as a todo as I'm guessing I can't check this currently
+         */
 
         // There are three types of dialogs for deletion:
         // 1- Delete on device only OR all devices - Used for Note to self
