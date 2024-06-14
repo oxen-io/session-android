@@ -5,12 +5,12 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:$gradlePluginVersion"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
-        classpath "com.google.gms:google-services:$googleServicesVersion"
-
-        //classpath "com.google.dagger:hilt-android-gradle-plugin:$daggerVersion" ACL - DO WE EVEN NEED THIS?
+        // TODO: ACL - DO WE EVEN NEED ANY OF THIS? It genuinely doesn't care and builds & runs without it!
+        //classpath "com.android.tools.build:gradle:$gradlePluginVersion"
+        //classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        //classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
+        //classpath "com.google.gms:google-services:$googleServicesVersion"
+        //classpath "com.google.dagger:hilt-android-gradle-plugin:$daggerVersion"
     }
 }
 
@@ -236,6 +236,13 @@ android {
 }
 
 dependencies {
+    implementation project(":liblazysodium")
+    implementation project(":libsession")
+    implementation project(":libsession-util")
+    implementation project(":libsignal")
+
+    implementation libs.aesgcmProvider
+
     // Allow Compose' "Bill of Materials" (BoM) to choose the version numbers for Compose-related
     // components - which we then import without version numbers and let the BoM handle that.
     // See: https://developer.android.com/develop/ui/compose/bom
@@ -269,15 +276,16 @@ dependencies {
     implementation libs.androidx.recyclerview
     implementation libs.androidx.work.runtime.ktx
 
+    implementation libs.circular.progress.bar
+    implementation libs.conscrpt.android
+
     implementation libs.dagger.hilt.android
     kapt libs.dagger.hilt.android.compiler
 
     implementation libs.flexbox
     implementation libs.material
 
-
-
-    playImplementation ("com.google.firebase:firebase-messaging:$firebaseMessagingVersion") {
+    playImplementation dependencies.create(libs.firebase.messaging.get()) {
         exclude group: 'com.google.firebase', module: 'firebase-core'
         exclude group: 'com.google.firebase', module: 'firebase-analytics'
         exclude group: 'com.google.firebase', module: 'firebase-measurement-connector'
@@ -289,12 +297,12 @@ dependencies {
     if (project.hasProperty('huawei')) huaweiImplementation 'com.huawei.hms:push:6.7.0.300'
 
     // TODO: Cannot upgrade ExoPlayer atm - needs upgrade to modern `Media3` versions - see the exoPlayer vars for details.
-    implementation "com.google.android.exoplayer:exoplayer-core:$exoPlayerCoreVersion"
-    implementation "com.google.android.exoplayer:exoplayer-ui:$exoPlayerUiVersion"
+    implementation libs.exoplayer.core
+    implementation libs.exoplayer.ui
 
-    implementation "org.conscrypt:conscrypt-android:$conscryptVersion"
-    implementation "org.signal:aesgcmprovider:$aesgcmProviderVersion"
-    implementation "io.github.webrtc-sdk:android:$webRtcVersion"
+    implementation libs.webrtc.sdk
+
+    // ACL TODO: Continue from here!!!
     implementation "me.leolin:ShortcutBadger:$shortcutBadgerVersion"
     implementation 'se.emilsjolander:stickylistheaders:2.7.0'
     implementation 'com.jpardogo.materialtabstrip:library:1.0.9'
@@ -311,10 +319,6 @@ dependencies {
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
     implementation 'com.melnykov:floatingactionbutton:1.3.0'
     implementation 'com.google.zxing:android-integration:3.1.0'
-
-    implementation libs.dagger.hilt.android
-    kapt libs.dagger.hilt.android.compiler
-
     implementation 'mobi.upod:time-duration-picker:1.1.3'
     implementation 'com.google.zxing:core:3.2.1'
     implementation ("com.davemorrissey.labs:subsampling-scale-image-view:$subsamplingScaleImageViewVersion") {
@@ -333,16 +337,9 @@ dependencies {
     implementation 'com.annimon:stream:1.1.8'
     implementation 'com.codewaves.stickyheadergrid:stickyheadergrid:0.9.4'
 
-    //implementation "com.github.dmytrodanylyk:circular-progress-button:$circularProgressButtonVersion"
-    implementation libs.circular.progress.bar
-
 
     implementation "androidx.sqlite:sqlite-ktx:$sqLiteVersion"
     implementation 'net.zetetic:sqlcipher-android:4.5.4@aar'
-    implementation project(":libsignal")
-    implementation project(":libsession")
-    implementation project(":libsession-util")
-    implementation project(":liblazysodium")
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxJsonVersion"
     implementation "com.github.oxen-io.session-android-curve-25519:curve25519-java:$curve25519Version"
     implementation "net.java.dev.jna:jna:5.12.1@aar"
@@ -369,13 +366,8 @@ dependencies {
 
     testImplementation "androidx.arch.core:core-testing:2.2.0"
 
-
-    //testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesVersion"
-    //androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesVersion"
     testImplementation libs.kotlinx.coroutines.test
     androidTestImplementation libs.kotlinx.coroutines.test
-
-
 
     testImplementation libs.androidx.test.core
     androidTestImplementation libs.androidx.test.core
