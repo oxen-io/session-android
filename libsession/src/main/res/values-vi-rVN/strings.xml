@@ -29,7 +29,6 @@
     <string name="attachmentsAdd">Thêm tập tin đính kèm</string>
     <string name="blockUnblock">Không chặn</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Lưu vào thẻ nhớ?</string>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Không</string>

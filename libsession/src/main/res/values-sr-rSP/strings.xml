@@ -33,7 +33,6 @@
     <string name="notificationsMuted">Мутиран заувек</string>
     <string name="blockUnblock">Одблокирај</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Сачувати у складиште?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Упис овог медијума у складиште ће омогућити било којој апликацији на вашем уређају да му приступи.\n\nДа наставим?</item>
         <item quantity="few">Упис ова %1$d медијума у складиште ће омогућити било којој апликацији на вашем уређају да му приступи.\n\nДа наставим?</item>

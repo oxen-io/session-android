@@ -34,7 +34,6 @@
     <string name="message">הודעה</string>
     <string name="blockUnblock">בטל חסימה</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">לשמור באחסון?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">שמירת המדיה הזאת לאחסון תאפשר לכל אפליקציה אחרת לגשת אליהם.\n\nלהמשיך?</item>
         <item quantity="two">שמירת כל %1$d פריטי המדיה באחסון תתיר לכל יישומים כלשהם להשיג גישה לפריטי המדיה.\n\nלהמשיך?</item>
@@ -93,7 +92,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">אתה</string>
     <string name="draft">טיוטה</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">לא היה ניתן לשמור באחסון חיצוני ללא הרשאות</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">סמן כנקרא</string>
     <string name="MessageNotifier_unknown_contact_message">איש קשר</string>

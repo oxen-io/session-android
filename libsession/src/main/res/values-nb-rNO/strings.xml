@@ -33,7 +33,6 @@
     <string name="notificationsMuted">Dempet</string>
     <string name="blockUnblock">Fjern blokkering</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Vil du lagre på enheten?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Hvis du lagrer dette mediet på enheten som vanlig fil, kan andre programmer få tilgang til det.\n\nEr du sikker på at du vil fortsette?</item>
         <item quantity="other">Hvis du lagrer disse %1$d mediene på enheten som vanlige filer, kan andre programmer få tilgang til dem.\n\nEr du sikker på at du vil fortsette?</item>
@@ -88,7 +87,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Deg</string>
     <string name="draft">Utkast</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Du kan ikke lagre på ekstern lagringsenhet uten å slå på tillatelse i systemet først</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Merk som lest</string>
     <string name="MessageNotifier_unknown_contact_message">Kontakt</string>

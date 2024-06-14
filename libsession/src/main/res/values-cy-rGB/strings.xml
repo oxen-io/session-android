@@ -33,7 +33,6 @@
     <string name="attachmentsAdd">Ychwanegu atodiad</string>
     <string name="blockUnblock">Dadrwystro</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Cadw i\'r storio?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="zero">Bydd cadw\'r cyfryngau hyn i\'r storfa yn caniatáu i apiau eraill ar eich dyfais gael mynediad iddynt.\n\Parhau?</item>
         <item quantity="one">Bydd cadw\'r holl gyfryngau %1$d i\'r storfa yn caniatáu i unrhyw apiau eraill ar eich dyfais gael mynediad iddynt.\n\Parhau?</item>
@@ -96,7 +95,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Chi</string>
     <string name="draft">Drafft</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Methu cadw i storfa allanol heb ganiatâd</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Marcio wedi\'i ddarllen</string>
     <string name="MessageNotifier_unknown_contact_message">Cysylltiad</string>

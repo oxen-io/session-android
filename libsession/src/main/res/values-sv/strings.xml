@@ -33,7 +33,6 @@
     <string name="notificationsMuted">Tystad</string>
     <string name="blockUnblock">Avblockera</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Spara till lagring?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Att spara denna media till lagring kommer tillåta andra appar på din telefon att få tillgång.\n\nFortsätt?</item>
         <item quantity="other">Att spara all %1$d media till lagringen kommer tillåta alla andra appar på din enhet att komma åt dem.\n\nFortsätt?</item>
@@ -88,7 +87,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Du</string>
     <string name="draft">Utkast</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Kan inte spara till externt utrymme utan behörighet</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Läst</string>
     <string name="MessageNotifier_unknown_contact_message">Kontakt</string>

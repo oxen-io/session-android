@@ -71,7 +71,6 @@
     <string name="BucketedThreadMedia_Yesterday">Yesterday</string>
     <string name="ConversationActivity_copy_open_group_url">Copy Community URL</string>
     <string name="ConversationActivity_send_after_approval">You will be able to send voice messages and attachments once the recipient has approved this message request</string>
-    <string name="ConversationFragment_save_to_sd_card">Save to storage?</string>
     <string name="ConversationItem_error_not_delivered">Send failed, tap for details</string>
     <string name="DateUtils_just_now">Now</string>
     <string name="DateUtils_today">Today</string>
@@ -83,8 +82,6 @@
     <string name="KeyboardPagerfragment_back_to_emoji">Back to emoji</string>
     <string name="KeyboardPagerfragment_clear_search_entry">Clear search entry</string>
     <string name="MediaPickerActivity_send_to">Send to %s</string>
-    <string name="MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied">Session needs storage access in order to save to external storage, but it has been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Storage\".</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Unable to save to external storage without permissions</string>
     <string name="MessageNotifier_unknown_contact_message">Contact</string>
 
 
@@ -692,6 +689,7 @@
     <string name="permissionsMicrophoneAccessRequiredDesktop">You can enable microphone access in Session\'s privacy settings</string>
     <string name="permissionsMicrophoneDescription">Allow access to microphone</string>
     <string name="permissionsRequired">Permission required</string>
+    <string name="permissionsStorageSaveDenied">{app_name} needs storage access in order to save to external storage, but it has been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Storage\".</string>
     <string name="photo">Photo</string>
     <string name="pin">Pin</string>
     <string name="pinConversation">Pin Conversation</string>

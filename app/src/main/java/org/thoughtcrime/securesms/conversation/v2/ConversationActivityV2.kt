@@ -19,9 +19,7 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
 import android.text.SpannableString
-import android.text.SpannableStringBuilder
 import android.text.Spanned
-import android.text.SpannedString
 import android.text.TextUtils
 import android.text.style.StyleSpan
 import android.util.Pair
@@ -37,8 +35,6 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.core.text.set
-import androidx.core.text.toSpannable
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -2083,10 +2079,15 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             Permissions.with(this)
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .maxSdkVersion(Build.VERSION_CODES.P)
-                .withPermanentDenialDialog(getString(R.string.MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied))
+                .withPermanentDenialDialog(Phrase.from(applicationContext, R.string.permissionsStorageSaveDenied)
+                    .put(APP_NAME_KEY, getString(R.string.app_name))
+                    .format().toString())
                 .onAnyDenied {
                     endActionMode()
-                    Toast.makeText(this@ConversationActivityV2, R.string.MediaPreviewActivity_unable_to_write_to_external_storage_without_permission, Toast.LENGTH_LONG).show()
+                    val txt = Phrase.from(applicationContext, R.string.permissionsStorageSaveDenied)
+                                .put(APP_NAME_KEY, getString(R.string.app_name))
+                                .format().toString()
+                    Toast.makeText(this@ConversationActivityV2, txt, Toast.LENGTH_LONG).show()
                 }
                 .onAllGranted {
                     endActionMode()

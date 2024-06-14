@@ -47,8 +47,7 @@ class SaveAttachmentTask @JvmOverloads constructor(context: Context, count: Int 
         @JvmOverloads
         fun showWarningDialog(context: Context, count: Int = 1, onAcceptListener: () -> Unit = {}) {
             context.showSessionDialog {
-                // ACL TODO - Also need a replacement for this `ConversationFragment_save_to_sd_card` ("Save to storage?")
-                title(R.string.ConversationFragment_save_to_sd_card)
+                title(R.string.permissionsRequired)
                 iconAttribute(R.attr.dialog_alert_icon)
 
                 // ACL TODO - Need a replacement for the below, which was:

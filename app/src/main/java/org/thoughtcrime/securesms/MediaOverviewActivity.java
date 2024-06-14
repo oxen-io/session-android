@@ -16,11 +16,12 @@
  */
 package org.thoughtcrime.securesms;
 
+import static org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.APP_NAME_KEY;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,7 +36,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.Toolbar;
@@ -51,6 +51,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.codewaves.stickyheadergrid.StickyHeaderGridLayoutManager;
 import com.google.android.material.tabs.TabLayout;
+import com.squareup.phrase.Phrase;
 
 import org.session.libsession.messaging.messages.control.DataExtractionNotification;
 import org.session.libsession.messaging.sending_receiving.MessageSender;
@@ -325,8 +326,14 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
         Permissions.with(this)
                 .request(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .maxSdkVersion(Build.VERSION_CODES.P)
-                .withPermanentDenialDialog(getString(R.string.MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied))
-                .onAnyDenied(() -> Toast.makeText(getContext(), R.string.MediaPreviewActivity_unable_to_write_to_external_storage_without_permission, Toast.LENGTH_LONG).show())
+                .withPermanentDenialDialog(Phrase.from(context, R.string.permissionsStorageSaveDenied)
+                        .put(APP_NAME_KEY, getString(R.string.app_name))
+                        .format().toString())
+                .onAnyDenied(() -> Toast.makeText(getContext(),
+                                                  Phrase.from(context, R.string.permissionsStorageSaveDenied)
+                                                    .put(APP_NAME_KEY, getString(R.string.app_name))
+                                                    .format().toString(),
+                                                  Toast.LENGTH_LONG).show())
                 .onAllGranted(() -> {
                   new ProgressDialogAsyncTask<Void, Void, List<SaveAttachmentTask.Attachment>>(
                           context,

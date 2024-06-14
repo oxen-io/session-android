@@ -31,7 +31,6 @@
     <string name="message">Съобщение</string>
     <string name="blockUnblock">Отблокирване</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Запази в хранилището?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Запазването на този медиен файл ще даде достъп до него на всички други приложения.\n\nПродължи?</item>
         <item quantity="other">Запазването на всички %1$d медийни файла ще даде достъп до тях на всички други приложения.\n\nПродължи?</item>
@@ -86,7 +85,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Ти</string>
     <string name="draft">Чернова</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Неуспешно запазване на външен диск без нуждното разрешение за достъп</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Прочетено</string>
     <string name="MessageNotifier_unknown_contact_message">Контакт</string>

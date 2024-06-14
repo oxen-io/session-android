@@ -30,7 +30,6 @@
     <string name="attachmentsAdd">Servehî lê zede bike</string>
     <string name="blockUnblock">Astengê rake</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Bila li bîrbarê were tomarkirin?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Tu medyayê li bîrbarê tomar bike wê sepanên din yê di amûra we de jî destûra gihînê bide vê.\n\n Tê bidomîne?</item>
         <item quantity="other">Tu %1$d medyayan teva li bîrbarê tomar bike wê sepanên din yê di amûra we de jî destûra gihînê bidin vê.\n\n Tê bidomîne?</item>
@@ -79,7 +78,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Tu</string>
     <string name="draft">Reşnivîs</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Bê destûr nabe ku li bîrbara derveyî tomar bibe</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Xwendî nîşan bike</string>
     <string name="MessageNotifier_unknown_contact_message">Berdeng</string>

@@ -32,7 +32,6 @@
     <string name="message">Escribe aquí a túa mensaxe</string>
     <string name="blockUnblock">Desbloquear</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Gardar no almacenamento?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Ao gardar este contido multimedia no almacenamento permitirás o acceso a el doutras aplicacións do teu dispositivo. \n\nDesexas continuar?</item>
         <item quantity="other">Ao gardar todos os %1$d elementos multimedia no almacenamento permitirás o acceso a eles doutras aplicacións do teu dispositivo. \n\nDesexas continuar?</item>
@@ -87,7 +86,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Ti</string>
     <string name="draft">Borrador</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Non é posible gardar no almacenamento externo sen permiso</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Marcar como lida</string>
     <string name="MessageNotifier_unknown_contact_message">Contacto</string>

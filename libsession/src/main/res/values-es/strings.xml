@@ -33,7 +33,6 @@
     <string name="notificationsMuted">Silenciado</string>
     <string name="blockUnblock">Desbloquear</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">¿Guardar en el almacenamiento?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Guardar este archivo multimedia en el almacenamiento del teléfono permitirá que cualquier otra aplicación en tu dispositivo acceda a él.\n\n¿Continuar?</item>
         <item quantity="other">Guardar los %1$d archivos multimedia en el almacenamiento del teléfono permitirá que cualquier otra aplicación en tu dispositivo acceda a ellos.\n\n¿Continuar?</item>
@@ -88,7 +87,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Tú</string>
     <string name="draft">Borrador</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">No se puede guardar en una unidad de almacenamiento externo si Session no tiene acceso</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Marcar como leído</string>
     <string name="MessageNotifier_unknown_contact_message">Contacto</string>

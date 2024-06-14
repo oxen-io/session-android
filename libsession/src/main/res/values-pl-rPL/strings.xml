@@ -35,7 +35,6 @@
     <string name="notificationsMuted">Wyciszono</string>
     <string name="blockUnblock">Odblokuj</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Zapisać na dysk?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Zapisanie tego załącznika na dysku pozwoli na dostęp do nich innym aplikacjom na Twoim urządzeniu.\n\nKontynuuj?</item>
         <item quantity="few">Zapisywanie %1$d załączników na dysku pozwoli na dostęp do nich innym aplikacjom na Twoim urządzeniu.\n\nKontynuuj?</item>
@@ -94,7 +93,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Ty</string>
     <string name="draft">Szkic</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Nie można zapisać do pamięci zewnętrznej bez odpowiedniego pozwolenia</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Przeczytane</string>
     <string name="MessageNotifier_unknown_contact_message">Kontakt</string>

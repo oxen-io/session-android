@@ -46,7 +46,6 @@
     <string name="blockUnblock">Débloquer</string>
     <string name="callsPermissionsRequired">Autorisations d\'appel requises</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Enregistrer dans la mémoire du téléphone ?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">La sauvegarde du média dans l’espace de stockage autorisera d’autres applications à y accéder.\n\nContinuer ?</item>
         <item quantity="other">L’enregistrement des %1$d médias dans la mémoire permettra à n’importe quelles autres applis de votre appareil d’y accéder.\n\nContinuer ?</item>
@@ -101,7 +100,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Vous</string>
     <string name="draft">Brouillon</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Impossible d’enregistrer sur la mémoire externe sans autorisation</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Marquer comme lu</string>
     <string name="MessageNotifier_unknown_contact_message">Contact</string>

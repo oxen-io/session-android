@@ -33,7 +33,6 @@
     <string name="notificationsMuted">Լուռ է</string>
     <string name="blockUnblock">Հանել արգելափակումից</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Պահպանե՞լ սարքի մեջ։</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Այս մեդիան պահպանելով սարքի մեջ մնացած հավելվածները կկարողանան տեսնել այն։\n\nՇարունակե՞լ։</item>
         <item quantity="other">Այս %1$d մեդիան պահպանելով սարքի մեջ մնացած հավելվածները կկարողանան տեսնել այն։\n\nՇարունակե՞լ։</item>
@@ -88,7 +87,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Դուք</string>
     <string name="draft">Սևագիր</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Հնարավոր չէ պահել արտաքին պահեստում առանց թույլտվությունների</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Նշել որպես ընթերցված</string>
     <string name="MessageNotifier_unknown_contact_message">Կոնտակտ</string>

@@ -33,7 +33,6 @@
     <string name="notificationsMuted">Heshtur</string>
     <string name="blockUnblock">Zhbllokoje</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Të ruhet në depozitë?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Ruajtja e kësaj medieje në depozitë do t\’i lejojë përdorimin e tij cilitdo aplikacioni tjetër në pajisjen tuaj.\n\nTë vazhdohet?</item>
         <item quantity="other">Ruajtja e %1$d medieve në depozitë do t\’i lejojë përdorimin e tyre cilitdo aplikacioni tjetër në pajisjen tuaj.\n\nTë vazhdohet?</item>
@@ -88,7 +87,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Ju</string>
     <string name="draft">Skicë:</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">S\’bëhet dot ruajtje në depozitë të jashtme pa leje</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Vëri shenjë si të lexuar</string>
     <string name="MessageNotifier_unknown_contact_message">Kontakt</string>

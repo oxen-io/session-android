@@ -29,7 +29,6 @@
     <string name="attachmentsAdd">Legg til vedlegg</string>
     <string name="blockUnblock">Fjern blokkering</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Vil du lagra på eininga?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Viss du lagrar dette mediet på eininga som ei vanleg fil, kan andre program få tilgang til det.\n\nEr du sikker på at du vil halda fram?</item>
         <item quantity="other">Viss du lagrar desse %1$d media på eininga som vanlege filer, kan andre program få tilgang til dei.\n\nEr du sikker på at du vil halda fram?</item>
@@ -78,7 +77,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Deg</string>
     <string name="draft">Kladd</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Kan ikkje lagra til eksterne minnekort utan tilgang</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Merk lesen</string>
     <string name="MessageNotifier_unknown_contact_message">Kontakt</string>

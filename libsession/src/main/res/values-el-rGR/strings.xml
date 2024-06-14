@@ -33,7 +33,6 @@
     <string name="notificationsMuted">Σίγαση</string>
     <string name="blockUnblock">Ξεμπλοκάρισμα</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Να αποθηκευτεί στη μνήμη;</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Αποθηκεύοντας αυτό το πολυμέσο στην μνήμη θα επιτρέψει σε άλλες εφαρμογές στην συσκευή σου να έχουν πρόσβαση σε αυτό. \n\nΣυνέχεια;</item>
         <item quantity="other">Αποθηκεύοντας τα %1$d πολυμέσα στη μνήμη θα επιτρέψει σε άλλες εφαρμογές της συσκευής σας να έχουν πρόσβαση σε αυτά.\n\nΣυνέχεια;</item>
@@ -88,7 +87,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Εσείς</string>
     <string name="draft">Πρόχειρο</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Αδυναμία αποθήκευσης στην εξωτερική μνήμη χωρίς δικαιώματα</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Σημείωση ως αναγνωσμένο</string>
     <string name="MessageNotifier_unknown_contact_message">Επαφή</string>

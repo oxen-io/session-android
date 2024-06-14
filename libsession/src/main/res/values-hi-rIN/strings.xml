@@ -33,7 +33,6 @@
     <string name="notificationsMuted">म्यूट हो गए</string>
     <string name="blockUnblock">अनब्लॉक करें</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">इसे स्टोरेज में सहेजें?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">इस मीडिया को स्टोरेज में सहेजने से आपके डिवाइस पर किसी अन्य ऐप को इसे एक्सेस करने की अनुमति मिल जाएगी। \n\n जारी रखें?</item>
         <item quantity="other">सभी %1$d मीडिया को स्टोरेज में सहेजने से आपके डिवाइस पर किसी अन्य ऐप को इन्हें एक्सेस करने की अनुमति मिल जाएगी। \n\n जारी रखें?</item>
@@ -88,7 +87,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">आप</string>
     <string name="draft">प्रारूप</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">अनुमति के बिना बाहरी भंडारण में सहेजने में असमर्थ</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">पढ़ा हुआ चिह्नित करें</string>
     <string name="MessageNotifier_unknown_contact_message">संपर्क</string>

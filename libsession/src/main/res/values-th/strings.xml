@@ -27,7 +27,6 @@
     <string name="attachmentsAdd">เพิ่มไฟล์แนบ</string>
     <string name="blockUnblock">เลิกปิดกั้น</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">บันทึกลงที่เก็บข้อมูลหรือไม่</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="other">การบันทึกสื่อทั้งหมด %1$d รายการลงในที่เก็บข้อมูล จะอนุญาตให้แอปอื่นในอุปกรณ์ของคุณเข้าถึงสื่อเหล่านี้ได้ด้วย\n\nดำเนินการต่อหรือไม่</item>
     </plurals>
@@ -75,7 +74,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">คุณ</string>
     <string name="draft">ร่าง</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">ไม่สามารถบันทึกลงที่เก็บข้อมูลภายนอกได้ หากไม่ได้รับอนุญาต</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">ทำเครื่องหมายว่าอ่านแล้ว</string>
     <string name="MessageNotifier_unknown_contact_message">ผู้ติดต่อ</string>

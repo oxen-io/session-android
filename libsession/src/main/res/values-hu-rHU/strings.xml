@@ -34,7 +34,6 @@
     <string name="blockUnblock">Letiltás feloldása</string>
     <!-- ConversationFragment -->
     <string name="callsPermissionsRequired">Hívás engedély szükséges</string>
-    <string name="ConversationFragment_save_to_sd_card">Mentés tárolóra?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">A média mentése a tárolóra lehetővé teszi bármelyik másik alkalmazásnak a készülékeden, hogy hozzáférjen.\n\nFolytatod?</item>
         <item quantity="other">A(z) %1$d db médiafájl tárolóra mentése más alkalmazások számára is lehetővé teszi, hogy hozzájuk férjenek.\n\nFolytatod?</item>
@@ -89,7 +88,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Te</string>
     <string name="draft">Piszkozat</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Nem lehet engedély nélkül menteni a külső tárolóra</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Olvasottnak jelöl</string>
     <string name="MessageNotifier_unknown_contact_message">Névjegy</string>

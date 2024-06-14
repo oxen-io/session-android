@@ -23,7 +23,6 @@
     <string name="attachmentsAdd">ပူးတွဲဖိုင် ထည့်ရန်</string>
     <string name="blockUnblock">ဘလော့ဖြည်ပါ </string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">သိမ်းမည်လား?</string>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">မည်သည့်အရာမှ မဟုတ်သော</string>
@@ -67,7 +66,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">သင်</string>
     <string name="draft">မူကြမ်း</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">ခွင့်ပြုချက်မပေးထားပါက အပြင်ဘက်တွင် သိမ်းဆည်း၍မရပါ</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">ဖတ်ပြီးသား</string>
     <string name="MessageNotifier_unknown_contact_message">အဆက်အသွယ်</string>

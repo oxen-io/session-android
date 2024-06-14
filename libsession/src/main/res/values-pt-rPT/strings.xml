@@ -33,7 +33,6 @@
     <string name="notificationsMuted">Silenciado</string>
     <string name="blockUnblock">Desbloquear</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Guardar para o armazenamento local?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Guardar este ficheiro multimédia para o armazenamento local vai permitir que qualquer outra aplicação lhe possa aceder.\n\nContinuar?</item>
         <item quantity="other">Guardar estes %1$d ficheiros no armazenamento local vai permitir que qualquer outra aplicação lhes possa aceder.\n\nDeseja continuar?</item>
@@ -88,7 +87,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Você</string>
     <string name="draft">Rascunho</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Não é possível guardar para o armazenamento externo sem permissões.</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Marcar como lida</string>
     <string name="MessageNotifier_unknown_contact_message">Contacto</string>

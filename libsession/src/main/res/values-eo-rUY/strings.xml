@@ -33,7 +33,6 @@
     <string name="notificationsMuted">Silentigite</string>
     <string name="blockUnblock">Malbloki</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Ĉu konservi al konservejo?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Konservi tiun aŭdvidaĵon al konservejo ebligas al iuj ajn aplikaĵoj ĉe via aparato aliri al ili.\n\nĈu daŭrigi?</item>
         <item quantity="other">Konservi ĉiujn %1$d aŭdvidaĵojn al konservejo ebligas al iuj ajn aplikaĵoj ĉe via aparato aliri al ili.\n\nĈu daŭrigi?</item>
@@ -88,7 +87,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Vi</string>
     <string name="draft">Malneto</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Ne eblas konservi en la ekstera konservejo sen permesoj</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Marki legita</string>
     <string name="MessageNotifier_unknown_contact_message">Kontakto</string>

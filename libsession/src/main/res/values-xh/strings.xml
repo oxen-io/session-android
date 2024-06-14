@@ -20,7 +20,6 @@
     <string name="attachmentsAdd">Gatako ekigatiddwako</string>
     <string name="blockUnblock">sumulula</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">tereka mu terekero</string>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">tewali</string>

@@ -97,9 +97,14 @@ class HelpSettingsFragment: CorrectedPreferenceFragment() {
         Permissions.with(this)
             .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
             .maxSdkVersion(Build.VERSION_CODES.P)
-            .withPermanentDenialDialog(getString(R.string.MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied))
+            .withPermanentDenialDialog(Phrase.from(context, R.string.permissionsStorageSaveDenied)
+                .put(APP_NAME_KEY, getString(R.string.app_name))
+                .format().toString())
             .onAnyDenied {
-                Toast.makeText(requireActivity(), R.string.MediaPreviewActivity_unable_to_write_to_external_storage_without_permission, Toast.LENGTH_LONG).show()
+                val txt = Phrase.from(context, R.string.permissionsStorageSaveDenied)
+                    .put(APP_NAME_KEY, getString(R.string.app_name))
+                    .format().toString()
+                Toast.makeText(requireActivity(), txt, Toast.LENGTH_LONG).show()
             }
             .onAllGranted {
                 ShareLogsDialog(::updateExportButtonAndProgressBarUI).show(parentFragmentManager,"Share Logs Dialog")

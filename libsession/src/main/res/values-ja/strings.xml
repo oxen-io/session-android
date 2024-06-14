@@ -32,7 +32,6 @@
     <string name="notificationsMuted">ミュート中</string>
     <string name="blockUnblock">ブロック解除</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">ストレージに保存しますか？</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="other">%1$d個のメディア・ファイルをすべて外部メモリに保存することで、他のアプリからアクセスすることが可能になります。\n\n続行しますか？</item>
     </plurals>
@@ -85,7 +84,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">あなた</string>
     <string name="draft">下書き</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">外部ストレージに保存できません。ストレージへのアクセス許可が無効になっています。</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">既読にする</string>
     <string name="MessageNotifier_unknown_contact_message">連絡先</string>

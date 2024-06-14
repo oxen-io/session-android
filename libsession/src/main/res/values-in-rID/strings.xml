@@ -32,7 +32,6 @@
     <string name="notificationsMuted">Disenyapkan</string>
     <string name="blockUnblock">Buka blokir</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Simpan ke penyimpanan?</string>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Tidak ada</string>
@@ -82,7 +81,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Anda</string>
     <string name="draft">Draf</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Tidak dapat menyimpan ke penyimpanan eksternal tanpa izin</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Tandai dibaca</string>
     <string name="MessageNotifier_unknown_contact_message">Kontak</string>

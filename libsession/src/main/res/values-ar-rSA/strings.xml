@@ -37,7 +37,6 @@
     <string name="notificationsMuted">كتم</string>
     <string name="blockUnblock">إلغاء الحظر</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">أحفظ في الذاكرة؟</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="zero">حفظ %1$d وسيط في الذاكرة يسمح ﻷي تطبيق آخر على الهاتف من النفاذ له. \n\nاستمر؟</item>
         <item quantity="one">حفظ الوسائط في الذاكرة يسمح ﻷي تطبيق آخر على الهاتف من النفاذ له. \n\nاستمر؟</item>
@@ -100,7 +99,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">أنت</string>
     <string name="draft">مسودة:</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">لا يمكن الحفظ إلى الذاكرة الخارجية بدون أذونات</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">اعتبرها مقروءة</string>
     <string name="MessageNotifier_unknown_contact_message">متصل</string>

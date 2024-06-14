@@ -33,7 +33,6 @@
     <string name="notificationsMuted">Lyden slået fra</string>
     <string name="blockUnblock">Fjern blokering</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Gem i hukommelsen?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">At gemme denne fil på disk vil tillade alle andre apps at tilgå den.\n\nFortsæt?</item>
         <item quantity="other">Gemmes alle %1$d filer i hukommelsen, vil alle andre apps også have mulighed for at tilgå dem.\n\nFortsæt?</item>
@@ -88,7 +87,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Dig</string>
     <string name="draft">Kladde</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Ikke muligt at gemme til ekstern placering, uden tilladelse</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Markér som læst</string>
     <string name="MessageNotifier_unknown_contact_message">Kontakt</string>

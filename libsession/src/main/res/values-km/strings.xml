@@ -29,7 +29,6 @@
     <string name="attachmentsAdd">ភ្ជាប់ឯកសារ</string>
     <string name="blockUnblock">បើកវិញ</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">រក្សារទុក?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="other">ការរក្សាទុកទាំងអស់ %1$d ព័ត៌មាននៅលើថាសផ្ទុក នឹងអនុញ្ញាតអោយកម្មវិធីផ្សេងៗ បើកមើលបាន.\n\nបន្ត?</item>
     </plurals>
@@ -82,7 +81,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">អ្នក</string>
     <string name="draft">ព្រាង</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">មិនអាចរក្សាទុកក្នុងអង្គរក្សាទុកខាងក្រៅ ដោយគ្មានការអនុញ្ញាត</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">សម្គាល់ថាបានអាន</string>
     <string name="MessageNotifier_unknown_contact_message">ទំនាក់ទំនង</string>

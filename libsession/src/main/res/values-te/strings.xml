@@ -32,7 +32,6 @@
     <string name="message">సందేశం</string>
     <string name="blockUnblock">అనుమతించు</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">నిల్వలొ దాచు?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">ఈ మీడియాను నిల్వలో భద్రపరచడం వల్ల మీ పరికరంలో ఏదైనా ఇతర అనువర్తనాలు దానిని వాడుటకు  ప్రవేశాధికారము కలిపిస్తుంది.
 
@@ -85,7 +84,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">మీరు</string>
     <string name="draft">చిత్తు పత్రం</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">అనుమతులు లేకుండా బాహ్య నిల్వకి సేవ్ చేయడం సాధ్యపడలేదు</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">చదివినట్టు గుర్తుపెట్టు</string>
     <string name="MessageNotifier_unknown_contact_message">పరిచయం</string>

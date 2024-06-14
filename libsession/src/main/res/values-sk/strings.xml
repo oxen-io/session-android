@@ -33,7 +33,6 @@
     <string name="message">Správa</string>
     <string name="blockUnblock">Odblokovať</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Uložiť na úložisko?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Uložením tohto média na úložisko k nemu umožníte prístup ostatným aplikáciám v zariadení.\n\nPokračovať?</item>
         <item quantity="few">Uložením %1$d príloh na úložisko k nim umožníte prístup ostatným aplikáciám v zariadení.\n\nPokračovať?</item>
@@ -92,7 +91,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Vy</string>
     <string name="draft">Koncept</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Bez povolenia sa nedá zapisovať na externé úložisko</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Označiť ako prečítané</string>
     <string name="MessageNotifier_unknown_contact_message">Kontakt</string>

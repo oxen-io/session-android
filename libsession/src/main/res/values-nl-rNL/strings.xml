@@ -33,7 +33,6 @@
     <string name="notificationsMuted">Dempen</string>
     <string name="blockUnblock">Deblokkeren</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Opslaan naar SD-kaart?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Als je dit bestand opslaat op de SD-kaart wordt het niet versleuteld opgeslagen en hebben alle andere apps op je apparaat toegang tot dit bestand.\n\nDoorgaan?</item>
         <item quantity="other">Als je deze %1$d bestanden opslaat op de SD-kaart worden ze niet versleuteld opgeslagen en hebben alle andere apps op je apparaat ook toegang tot deze bestanden.\n\nDoorgaan?</item>
@@ -88,7 +87,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Jij</string>
     <string name="draft">Concept</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Kan niet opslaan naar externe opslag zonder machtiging</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Markeren als gelezen</string>
     <string name="MessageNotifier_unknown_contact_message">Contactpersoon</string>

@@ -33,7 +33,6 @@
     <string name="notificationsMuted">Silenziato</string>
     <string name="blockUnblock">Sblocca</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Salvare in memoria?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Salvare il file sulla memoria consentirà ad altre applicazioni di accedervi.\n\nContinuare?</item>
         <item quantity="other">Salvare il %1$d file sulla memoria consentirà ad altre applicazioni di accedervi.\n\nContinuare?</item>
@@ -88,7 +87,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Tu</string>
     <string name="draft">Bozza</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Impossibile salvare sulla memoria senza l\'autorizzazione</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Segna come già letto</string>
     <string name="MessageNotifier_unknown_contact_message">Contatto</string>

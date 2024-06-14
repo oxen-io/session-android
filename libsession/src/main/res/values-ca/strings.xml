@@ -32,7 +32,6 @@
     <string name="message">Missatge</string>
     <string name="blockUnblock">Desbloca</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Voleu desar-ho a l\'emmagatzematge?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Desar aquest mitjà a emmagatzematge permetrà que qualsevol altra aplicació del dispositiu també hi pugui accedir.\n\nVoleu continuar?</item>
         <item quantity="other">Desar els %1$d fitxers a l\'emmagatzematge permetrà que qualsevol altra aplicació del dispositiu també hi pugui accedir.\n\nVoleu continuar?</item>
@@ -87,7 +86,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Jo</string>
     <string name="draft">Esborrany</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">No es pot desar en un emmagatzematge extern sense permís.</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Marca\'l com a llegit</string>
     <string name="MessageNotifier_unknown_contact_message">Contacte</string>

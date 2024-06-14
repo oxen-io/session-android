@@ -32,7 +32,6 @@
     <string name="message">Paziņojums</string>
     <string name="blockUnblock">Atbloķēt</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Saglabāt krātuvē?</string>
     <!-- CreateProfileActivity -->
     <!-- CustomDefaultPreference -->
     <string name="none">Neviens</string>

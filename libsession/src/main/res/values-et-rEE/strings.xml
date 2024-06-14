@@ -29,7 +29,6 @@
     <string name="attachmentsAdd">Lisa manus</string>
     <string name="blockUnblock">Eemalda blokeering</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Salvesta sisemällu?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Selle meediafaili sisemällu salvestamine lubab mistahes teisel rakendusel sinu seadmes sellele juurde pääseda.\n\nJätkad?</item>
         <item quantity="other">Kõigi %1$d meediafaili sisemällu salvestamine lubab mistahes teisel rakendusel sinu seadmes nendele juurde pääseda.\n\nJätkad?</item>
@@ -84,7 +83,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Sina</string>
     <string name="draft">Mustand</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">Õiguste puudumise tõttu pole võimalik välisele andmekandjale salvestada.</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Märgi loetuks</string>
     <string name="MessageNotifier_unknown_contact_message">Kontakt</string>

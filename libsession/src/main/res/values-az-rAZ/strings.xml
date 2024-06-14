@@ -33,7 +33,6 @@
     <string name="notificationsMuted">Səssizdə</string>
     <string name="blockUnblock">Kilidi aç</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">Anbarda saxlanılsın?</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="one">Bu medianı anbarda saxlamaq, cihazınızdakı digər tətbiqlərin ona müraciətinə icazə verəcək.\n\nDavam edilsin?</item>
         <item quantity="other">%1$d medianı anbarda saxlamaq, cihazınızdakı digər tətbiqlərin onlara müraciətinə icazə verəcək.\n\nDavam edilsin?</item>
@@ -88,7 +87,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">Siz</string>
     <string name="draft">Qaralama</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">İcazə olmadan xarici anbarda saxlanıla bilmir</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Oxundu olaraq işarələ</string>
     <string name="MessageNotifier_unknown_contact_message">Əlaqə</string>

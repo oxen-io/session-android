@@ -32,7 +32,6 @@
     <string name="notificationsMuted">已静音</string>
     <string name="blockUnblock">解除屏蔽</string>
     <!-- ConversationFragment -->
-    <string name="ConversationFragment_save_to_sd_card">保存到存储？</string>
     <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
         <item quantity="other">保存所有的 %1$d 媒体到存储将会允许您设备上的其他应用访问她们。\n\n继续吗？</item>
     </plurals>
@@ -85,7 +84,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">您</string>
     <string name="draft">草稿</string>
-    <string name="MediaPreviewActivity_unable_to_write_to_external_storage_without_permission">无法在没有写入到外部存储的权限时保存到外部存储</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">标记为已读</string>
     <string name="MessageNotifier_unknown_contact_message">联系人</string>
