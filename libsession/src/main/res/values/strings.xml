@@ -267,6 +267,7 @@
     <string name="communityLeave">Leave Community</string>
     <string name="communityLeaveDescription">Are you sure you want to leave {community_name}?</string>
     <string name="communityLeaveError">Failed to leave {community_name}</string>
+    <string name="communityUnknown">Unknown Community</string>
     <string name="communityUrl">Community URL</string>
     <string name="communityUrlCopy">Copy Community URL</string>
     <string name="contactContacts">Contacts</string>
@@ -335,8 +336,8 @@
     <string name="disappearingMessages">Disappearing Messages</string>
     <string name="disappearingMessagesAddedYou">{name} added you to the group.</string>
     <string name="disappearingMessagesChanged"><b>{name}</b> has changed messages to disappear {time} after they have been {disappearing_messages_type}.</string>
-    <string name="disappearingMessagesCountdownBig">Message will delete in {time_large}</string>
-    <string name="disappearingMessagesCountdownBigSmall">Message will delete in {time_large} {time_small}</string>
+    <string name="disappearingMessagesCountdownBigMobile">Auto-deletes in {time_large}</string>
+    <string name="disappearingMessagesCountdownBigSmallMobile">Auto-deletes in {time_large} {time_small}</string>
     <string name="disappearingMessagesDeleteType">Delete Type</string>
     <string name="disappearingMessagesDescription">This setting applies to everyone in this conversation.</string>
     <string name="disappearingMessagesDescription1">This setting applies to messages you send in this conversation.</string>
@@ -362,7 +363,6 @@
     <string name="disappearingMessagesTypeSent">sent</string>
     <string name="disappearingMessagesUpdated"><b>{admin_name}</b> updated disappearing message settings.</string>
     <string name="disappearingMessagesUpdatedYou"><b>You</b> updated disappearing message settings.</string>
-    <string name="disappearing_messages_set_button_title">Set</string>
     <string name="dismiss">Dismiss</string>
     <string name="displayNameDescription">It can be your real name, an alias, or anything else you like — and you can change it at any time.</string>
     <string name="displayNameEnter">Enter your display name</string>
@@ -419,6 +419,8 @@
     <string name="groupDescriptionEnter">Enter a group description</string>
     <string name="groupDisplayPictureUpdated">Group display picture updated.</string>
     <string name="groupEdit">Edit Group</string>
+    <string name="groupError">Group Error</string>
+    <string name="groupErrorCreate">Failed to create group. Please check your internet connection and try again.</string>
     <string name="groupErrorJoin">Failed to join {group_name}</string>
     <string name="groupInformationSet">Set Group Information</string>
     <string name="groupInviteDelete">Are you sure you want to delete this group invite?</string>
@@ -429,7 +431,7 @@
     <string name="groupInviteSending">Sending invite</string>
     <string name="groupInviteSent">Invite sent</string>
     <string name="groupInviteSuccessful">Group invite successful</string>
-    <string name="groupInviteVersion">Users must have version {version} or higher to receive invitations</string> <!-- ACL: Unused at present - used in onboarding? -->
+    <string name="groupInviteVersion">Users must have version {version} or higher to receive invitations</string>
     <string name="groupInviteYou"><b>You</b> were invited to join the group.</string>
     <string name="groupLeave">Leave Group</string>
     <string name="groupLeaveDescription">Are you sure you want to leave {group_name}?</string>
@@ -466,6 +468,7 @@
     <string name="groupRemovedTwo"><b>{name}</b> and <b>{other_name}</b> were removed from the group.</string>
     <string name="groupRemovedYou">You were removed from <b>{group_name}</b>.</string>
     <string name="groupSetDisplayPicture">Set Group Display Picture</string>
+    <string name="groupUnknown">Unknown Group</string>
     <string name="groupUpdated">Group updated</string>
     <string name="helpFAQ">FAQ</string>
     <string name="helpHelpUsTranslateSession">Help us translate Session</string>
@@ -710,6 +713,7 @@
     <string name="resend">Resend</string>
     <string name="resolving">Resolving...</string>
     <string name="restart">Restart</string>
+    <string name="resync">Resync</string>
     <string name="retry">Retry</string>
     <string name="save">Save</string>
     <string name="saved">Saved</string>
@@ -731,6 +735,7 @@
     <string name="select">Select</string>
     <string name="selectAll">Select All</string>
     <string name="send">Send</string>
+    <string name="sent">Sent:</string>
     <string name="sending">Sending</string>
     <string name="sessionAppearance">Appearance</string>
     <string name="sessionClearData">Clear Data</string>

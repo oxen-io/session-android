@@ -66,7 +66,7 @@ fun DisappearingMessages(
         }
 
         if (state.showSetButton) OutlineButton(
-            GetString(R.string.disappearing_messages_set_button_title),
+            GetString(R.string.set),
             modifier = Modifier
                 .contentDescription(GetString(R.string.AccessibilityId_set_button))
                 .align(Alignment.CenterHorizontally)

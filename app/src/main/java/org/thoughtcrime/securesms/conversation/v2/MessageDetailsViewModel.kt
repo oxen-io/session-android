@@ -78,7 +78,7 @@ class MessageDetailsViewModel @Inject constructor(
                 MessageDetailsState(
                     attachments = slides.map(::Attachment),
                     record = record,
-                    sent = dateSent.let(::Date).toString().let { TitledText(R.string.disappearingMessagesSent, it) },
+                    sent = dateSent.let(::Date).toString().let { TitledText(R.string.sent, it) },
                     received = dateReceived.let(::Date).toString().let { TitledText(R.string.received, it) },
                     error = lokiMessageDatabase.getErrorMessage(id)?.let { TitledText(R.string.theError, it) },
                     senderInfo = individualRecipient.run { name?.let { TitledText(it, address.serialize()) } },

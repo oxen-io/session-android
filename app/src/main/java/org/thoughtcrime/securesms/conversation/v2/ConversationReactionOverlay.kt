@@ -719,7 +719,7 @@ private val MessageRecord.subtitle: ((Context) -> CharSequence?)?
             .milliseconds
             .to2partString()
             ?.let {
-                Phrase.from(context, R.string.disappearingMessagesCountdownBig)
+                Phrase.from(context, R.string.disappearingMessagesCountdownBigMobile)
                     .put(TIME_LARGE_KEY, it)
                     .format().toString()
             }
