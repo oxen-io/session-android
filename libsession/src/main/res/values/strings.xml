@@ -263,6 +263,7 @@
     <string name="communityJoinDescription">Are you sure you want to join {community_name}?</string>
     <string name="communityJoinOfficial">Or join one of these...</string>
     <string name="communityJoined">Joined Community</string>
+    <string name="communityJoinError">Failed to join {community_name}</string>
     <string name="communityJoinedAlready">You are already a member of this community.</string>
     <string name="communityLeave">Leave Community</string>
     <string name="communityLeaveDescription">Are you sure you want to leave {community_name}?</string>
@@ -491,6 +492,7 @@
     <string name="later">Later</string>
     <string name="learnMore">Learn More</string>
     <string name="leave">Leave</string>
+    <string name="leaving">Leaving...</string>
     <string name="linkPreviews">Link Previews</string>
     <string name="linkPreviewsDescription">Show link previews for supported URLs.</string>
     <string name="linkPreviewsEnable">Enable Link Previews</string>
@@ -678,6 +680,7 @@
     <string name="preview">Preview</string>
     <string name="profile">Profile</string>
     <string name="profileDisplayPicture">Display Picture</string>
+    <string name="profileDisplayPictureRemoveError">Failed to remove display picture.</string>
     <string name="profileDisplayPictureSet">Set Display Picture</string>
     <string name="promote">Promote</string>
     <string name="qrCode">QR Code</string>

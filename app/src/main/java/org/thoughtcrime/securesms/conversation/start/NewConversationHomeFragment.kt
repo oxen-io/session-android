@@ -49,6 +49,7 @@ class NewConversationHomeFragment : Fragment() {
         }
         val unknownSectionTitle = getString(R.string.unknown)
         val recipients = viewModel.recipients.value?.filter { !it.isGroupRecipient && it.address.serialize() != textSecurePreferences.getLocalNumber()!! } ?: emptyList()
+
         val contactGroups = recipients.map {
             val sessionId = it.address.serialize()
             val contact = DatabaseComponent.get(requireContext()).sessionContactDatabase().getContactWithSessionID(sessionId)
@@ -57,14 +58,28 @@ class NewConversationHomeFragment : Fragment() {
         }.sortedBy { it.displayName }
             .groupBy { if (PublicKeyValidation.isValid(it.displayName)) unknownSectionTitle else it.displayName.firstOrNull()?.uppercase() ?: unknownSectionTitle }
             .toMutableMap()
+
         contactGroups.remove(unknownSectionTitle)?.let { contactGroups.put(unknownSectionTitle, it) }
         adapter.items = contactGroups.flatMap { entry -> listOf(ContactListItem.Header(entry.key)) + entry.value }
+
         binding.contactsRecyclerView.adapter = adapter
-        val divider = ContextCompat.getDrawable(requireActivity(), R.drawable.conversation_menu_divider)!!.let {
-            DividerItemDecoration(requireActivity(), RecyclerView.VERTICAL).apply {
-                setDrawable(it)
+
+        // Rather than the contacts list show our TextView with "You don't have any contacts yet" if there are none
+        // TODO: The layout of this is just placeholder as it's likely going to be replaced with Compose soon.
+        if (contactGroups.isEmpty()) {
+            binding.contactsText.visibility = View.INVISIBLE
+            binding.noContactsTextView.visibility = View.VISIBLE
+            binding.contactsRecyclerView.visibility = View.GONE
+        } else {
+            binding.noContactsTextView.visibility = View.GONE
+            binding.contactsRecyclerView.visibility = View.VISIBLE
+
+            val divider = ContextCompat.getDrawable(requireActivity(), R.drawable.conversation_menu_divider)!!.let {
+                DividerItemDecoration(requireActivity(), RecyclerView.VERTICAL).apply {
+                    setDrawable(it)
+                }
             }
+            binding.contactsRecyclerView.addItemDecoration(divider)
         }
-        binding.contactsRecyclerView.addItemDecoration(divider)
     }
 }
