@@ -22,6 +22,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnLayout
 import androidx.vectordrawable.graphics.drawable.AnimatorInflaterCompat
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -46,6 +47,7 @@ import org.thoughtcrime.securesms.dependencies.DatabaseComponent.Companion.get
 import org.thoughtcrime.securesms.repository.ConversationRepository
 import org.thoughtcrime.securesms.util.AnimationCompleteListener
 import org.thoughtcrime.securesms.util.DateUtils
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.TIME_LARGE_KEY
 import java.util.Locale
 import javax.inject.Inject
 import kotlin.time.Duration
@@ -716,5 +718,9 @@ private val MessageRecord.subtitle: ((Context) -> CharSequence?)?
             .coerceAtLeast(0L)
             .milliseconds
             .to2partString()
-            ?.let { context.getString(R.string.auto_deletes_in, it) }
+            ?.let {
+                Phrase.from(context, R.string.disappearingMessagesCountdownBig)
+                    .put(TIME_LARGE_KEY, it)
+                    .format().toString()
+            }
     }

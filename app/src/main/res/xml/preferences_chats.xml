@@ -18,7 +18,7 @@
             android:title="@string/conversationsSendWithEnterKey" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/conversationsAutoplayAudioMessage">
+    <PreferenceCategory android:title="@string/conversationsAudioMessages">
         <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_autoplay_audio"

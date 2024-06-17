@@ -103,7 +103,7 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
                 attachments.documentSlide != null -> {
                     binding.quoteViewAttachmentPreviewImageView.setImageResource(R.drawable.ic_document_large_light)
                     binding.quoteViewAttachmentPreviewImageView.isVisible = true
-                    binding.quoteViewBodyTextView.text = resources.getString(R.string.files)
+                    binding.quoteViewBodyTextView.text = resources.getString(R.string.document)
                 }
                 attachments.thumbnailSlide != null -> {
                     val slide = attachments.thumbnailSlide!!

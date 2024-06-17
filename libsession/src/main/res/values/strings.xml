@@ -54,18 +54,15 @@
     <string name="KeyboardPagerfragment_clear_search_entry">Clear search entry</string>
     <string name="MediaPickerActivity_send_to">Send to %s</string>
     <string name="MessageNotifier_unknown_contact_message">Contact</string>
-
-
     <string name="emojiCategoryActivities">Activities</string>
+    <string name="emojiCategoryAnimals">Animals &amp; Nature</string>
     <string name="emojiCategoryFlags">Flags</string>
     <string name="emojiCategoryFood">Food &amp; Drink</string>
-    <string name="emojiCategoryAnimals">Animals &amp; Nature</string>
     <string name="emojiCategoryObjects">Objects</string>
-    <string name="emojiCategoryTravel">Travel &amp; Places</string>
     <string name="emojiCategoryRecentlyUsed">Recently Used</string>
     <string name="emojiCategorySmileys">Smileys &amp; People</string>
     <string name="emojiCategorySymbols">Symbols</string>
-
+    <string name="emojiCategoryTravel">Travel &amp; Places</string>
     <string name="emojiReactsHoverTwoNameMultiple">{name}, {other_name} and {count} others reacted with {emoji}</string>
     <string name="emojiReactsHoverTwoNameOne">{name}, {other_name} and 1 other reacted with {emoji}</string>
 
@@ -207,7 +204,6 @@
     <string name="authenticateFailedTooManyAttempts">Too many failed authentication attempts. Please try again later.</string>
     <string name="authenticateNotAccessed">Authentication could not be accessed.</string>
     <string name="authenticateToOpen">Authenticate to open Session.</string>
-    <string name="auto_deletes_in">Auto-deletes in %1$s</string>
     <string name="banErrorFailed">Ban failed</string>
     <string name="banUnbanErrorFailed">Unban failed</string>
     <string name="banUnbanUser">Unban User</string>
@@ -309,6 +305,7 @@
     <string name="conversation_item_sent__delivered_description">Delivered</string>
     <string name="conversationsAddToHome">Add to home screen</string>
     <string name="conversationsAddedToHome">Added to home screen</string>
+    <string name="conversationsAudioMessages">Audio Messages</string>
     <string name="conversationsAutoplayAudioMessage">Autoplay Audio Message</string>
     <string name="conversationsAutoplayAudioMessageDescription">Autoplay consecutively sent audio messages</string>
     <string name="conversationsBlockedContacts">Blocked Contacts</string>
@@ -355,6 +352,11 @@
     <string name="disappearingMessages">Disappearing Messages</string>
     <string name="disappearingMessagesAddedYou">{name} added you to the group.</string>
     <string name="disappearingMessagesChanged"><b>{name}</b> has changed messages to disappear {time} after they have been {disappearing_messages_type}.</string>
+
+    <!-- ACL TODO: Have asked Lucy to confirm these strings 2024/06/17 -->
+    <string name="disappearingMessagesCountdownBig">Message will delete in {time_large}</string>
+    <string name="disappearingMessagesCountdownBigSmall">Message will delete in {time_large} {time_small}</string>
+
     <string name="disappearingMessagesDeleteType">Delete Type</string>
     <string name="disappearingMessagesDescription">This setting applies to everyone in this conversation.</string>
     <string name="disappearingMessagesDescription1">This setting applies to messages you send in this conversation.</string>
@@ -364,6 +366,9 @@
     <string name="disappearingMessagesDisappearAfterSend">Disappear After Send</string>
     <string name="disappearingMessagesDisappearAfterSendDescription">Messages delete after they have been sent.</string>
     <string name="disappearingMessagesFollowSetting">Follow Setting</string>
+    <string name="disappearingMessagesFollowSettingOff">Set your messages to disappear <b>{time}</b> after they have been <b>{disappearing_messages_type}</b>?</string>
+    <string name="disappearingMessagesFollowSettingOn">Set your messages to disappear <b>{time}</b> after they have been <b>{disappearing_messages_type}</b>?</string>
+    <string name="disappearingMessagesLegacy">{name} is using an outdated client. Disappearing messages may not work as expected.</string>
     <string name="disappearingMessagesNewGroup">You created a new group.</string>
     <string name="disappearingMessagesOnlyAdmins">Only group admins can change this setting.</string>
     <string name="disappearingMessagesRead">Read</string>
@@ -387,6 +392,7 @@
     <string name="displayNameNew">Pick a new display name</string>
     <string name="displayNamePick">Pick your display name</string>
     <string name="displayNameSet">Set Display Name</string>
+    <string name="document">Document</string>
     <string name="done">Done</string>
     <string name="download">Download</string>
     <string name="downloading">Downloading...</string>
