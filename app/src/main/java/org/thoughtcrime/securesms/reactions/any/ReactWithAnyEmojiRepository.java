@@ -31,7 +31,6 @@ final class ReactWithAnyEmojiRepository {
     this.emojiPages           = new LinkedList<>();
 
     emojiPages.addAll(Stream.of(EmojiSource.getLatest().getDisplayPages())
-                            .filterNot(p -> p.getIconAttr() == EmojiCategory.EMOTICONS.getIcon())
                             .map(page -> new ReactWithAnyEmojiPage(Collections.singletonList(new ReactWithAnyEmojiPageBlock(EmojiCategory.getCategoryLabel(page.getIconAttr()), page))))
                             .toList());
   }

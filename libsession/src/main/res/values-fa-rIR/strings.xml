@@ -286,7 +286,6 @@
     <string name="emojiCategoryObjects">اشیاء</string>
     <string name="emojiCategorySymbols">نمادها</string>
     <string name="emojiCategoryFlags">پرچم ها</string>
-    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__emoticons">شکلک‌ها</string>
     <!-- ReactionsConversationView -->
     <string name="ReactionsConversationView_plus">+%1$d</string>
     <!-- ReactionsRecipientAdapter -->

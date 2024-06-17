@@ -304,7 +304,6 @@
     <string name="emojiCategoryObjects">Objets</string>
     <string name="emojiCategorySymbols">Symboles</string>
     <string name="emojiCategoryFlags">Drapeaux</string>
-    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__emoticons">Emoticônes</string>
     <!-- ReactionsConversationView -->
     <string name="ReactionsConversationView_plus">+%1$d</string>
     <!-- ReactionsRecipientAdapter -->

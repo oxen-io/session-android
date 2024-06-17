@@ -54,23 +54,6 @@
     <string name="KeyboardPagerfragment_clear_search_entry">Clear search entry</string>
     <string name="MediaPickerActivity_send_to">Send to %s</string>
     <string name="MessageNotifier_unknown_contact_message">Contact</string>
-    <string name="emojiCategoryActivities">Activities</string>
-    <string name="emojiCategoryAnimals">Animals &amp; Nature</string>
-    <string name="emojiCategoryFlags">Flags</string>
-    <string name="emojiCategoryFood">Food &amp; Drink</string>
-    <string name="emojiCategoryObjects">Objects</string>
-    <string name="emojiCategoryRecentlyUsed">Recently Used</string>
-    <string name="emojiCategorySmileys">Smileys &amp; People</string>
-    <string name="emojiCategorySymbols">Symbols</string>
-    <string name="emojiCategoryTravel">Travel &amp; Places</string>
-    <string name="emojiReactsHoverTwoNameMultiple">{name}, {other_name} and {count} others reacted with {emoji}</string>
-    <string name="emojiReactsHoverTwoNameOne">{name}, {other_name} and 1 other reacted with {emoji}</string>
-
-
-
-    <string name="ReactWithAnyEmojiBottomSheetDialogFragment__emoticons">Emoticons</string>
-
-
     <string name="ReactionsConversationView_plus">+%1$d</string>
     <string name="showLess">Show Less</string>
     <string name="Unblock_dialog__title_single">Unblock %s</string>
@@ -352,11 +335,8 @@
     <string name="disappearingMessages">Disappearing Messages</string>
     <string name="disappearingMessagesAddedYou">{name} added you to the group.</string>
     <string name="disappearingMessagesChanged"><b>{name}</b> has changed messages to disappear {time} after they have been {disappearing_messages_type}.</string>
-
-    <!-- ACL TODO: Have asked Lucy to confirm these strings 2024/06/17 -->
     <string name="disappearingMessagesCountdownBig">Message will delete in {time_large}</string>
     <string name="disappearingMessagesCountdownBigSmall">Message will delete in {time_large} {time_small}</string>
-
     <string name="disappearingMessagesDeleteType">Delete Type</string>
     <string name="disappearingMessagesDescription">This setting applies to everyone in this conversation.</string>
     <string name="disappearingMessagesDescription1">This setting applies to messages you send in this conversation.</string>
@@ -399,6 +379,17 @@
     <string name="draft">Draft</string>
     <string name="edit">Edit</string>
     <string name="emojiAndSymbols">Emoji &amp; Symbols</string>
+    <string name="emojiCategoryActivities">Activities</string>
+    <string name="emojiCategoryAnimals">Animals &amp; Nature</string>
+    <string name="emojiCategoryFlags">Flags</string>
+    <string name="emojiCategoryFood">Food &amp; Drink</string>
+    <string name="emojiCategoryObjects">Objects</string>
+    <string name="emojiCategoryRecentlyUsed">Recently Used</string>
+    <string name="emojiCategorySmileys">Smileys &amp; People</string>
+    <string name="emojiCategorySymbols">Symbols</string>
+    <string name="emojiCategoryTravel">Travel &amp; Places</string>
+    <string name="emojiReactsHoverTwoNameMultiple">{name}, {other_name} and {count} others reacted with {emoji}</string>
+    <string name="emojiReactsHoverTwoNameOne">{name}, {other_name} and 1 other reacted with {emoji}</string>
     <string name="emojiReactsCoolDown">Slow down! You\'ve sent too many emoji reacts. Try again soon</string>
     <string name="enable">Enable</string>
     <string name="error">Error</string>
