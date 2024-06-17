@@ -1742,8 +1742,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val hasSeenGIFMetaDataWarning: Boolean = textSecurePreferences.hasSeenGIFMetaDataWarning()
         if (!hasSeenGIFMetaDataWarning) {
             showSessionDialog {
-                title(R.string.giphy_permission_title)
-                text(R.string.giphy_permission_message)
+                title(R.string.giphyWarning)
+                text(Phrase.from(context, R.string.giphyWarningDescription).put(APP_NAME_KEY, getString(R.string.app_name)).format())
                 button(R.string.theContinue) {
                     textSecurePreferences.setHasSeenGIFMetaDataWarning()
                     selectGif()

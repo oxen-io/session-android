@@ -179,7 +179,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">إلغاء الكتم.</string>
+    <string name="notificationsMuteUnmute">إلغاء الكتم.</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">كتم الإشعارات</string>
     <!-- conversation -->

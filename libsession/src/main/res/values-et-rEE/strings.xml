@@ -162,7 +162,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">Keela vaigistus</string>
+    <string name="notificationsMuteUnmute">Keela vaigistus</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">Vaigista teated</string>
     <!-- conversation -->

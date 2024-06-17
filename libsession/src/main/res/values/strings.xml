@@ -409,8 +409,8 @@
     <string name="from">From:</string>
     <string name="fullScreenToggle">Toggle Full Screen</string>
     <string name="gif">GIF</string>
-    <string name="giphy_permission_message">Session will connect to Giphy to provide search results. You will not have full metadata protection when sending GIFs.</string>
-    <string name="giphy_permission_title">Search GIFs?</string>
+    <string name="giphyWarning">Giphy</string>
+    <string name="giphyWarningDescription">{app_name} will connect to Giphy to provide search results. You will not have full metadata protection when sending GIFs.</string>
     <string name="groupAddMemberMaximum">Groups have a maximum of 100 members</string>
     <string name="groupCreate">Create Group</string>
     <string name="groupCreateErrorNoMembers">Please pick at least one other group member.</string>
@@ -607,13 +607,13 @@
     <string name="notificationsMute2Hours">Mute for 2 hours</string>
     <string name="notificationsMuteFor">Mute for {time_large}</string>
     <string name="notificationsMuted">Muted</string>
+    <string name="notificationsMuteUnmute">Unmute</string>
     <string name="notificationsSlowMode">Slow Mode</string>
     <string name="notificationsSlowModeDescription">Session will occasionally check for new messages in the background.</string>
     <string name="notificationsSound">Sound</string>
     <string name="notificationsSoundDescription">Sound when App is open</string>
     <string name="notificationsStrategy">Notification Strategy</string>
     <string name="notificationsStyle">Notification Style</string>
-    <string name="notificationsUnmute">Unmute</string>
     <string name="notificationsVibrate">Vibrate</string>
     <string name="off">Off</string>
     <string name="onboardingAccountCreate">Create account</string>

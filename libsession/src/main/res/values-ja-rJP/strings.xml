@@ -169,7 +169,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">ミュートを解除</string>
+    <string name="notificationsMuteUnmute">ミュートを解除</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">通知をミュート</string>
     <!-- conversation -->

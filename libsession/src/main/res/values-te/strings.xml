@@ -167,7 +167,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">మ్యూట్ తీసివేయి</string>
+    <string name="notificationsMuteUnmute">మ్యూట్ తీసివేయి</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">  ప్రకటనలను మ్యూట్లో ఉంచు</string>
     <!-- conversation -->

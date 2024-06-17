@@ -156,7 +156,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">Usifute</string>
+    <string name="notificationsMuteUnmute">Usifute</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">Arifa za bubu</string>
     <!-- conversation -->

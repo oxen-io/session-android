@@ -173,7 +173,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">Activare sunet notificări</string>
+    <string name="notificationsMuteUnmute">Activare sunet notificări</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">Notificări fără sunet</string>
     <!-- conversation -->

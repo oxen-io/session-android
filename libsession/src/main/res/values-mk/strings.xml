@@ -143,7 +143,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">ပြန်ဖွင့်ပါ</string>
+    <string name="notificationsMuteUnmute">ပြန်ဖွင့်ပါ</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">အသိပေးချက်ကို ပိတ်ပါ</string>
     <!-- conversation -->

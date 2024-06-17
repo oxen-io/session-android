@@ -172,7 +172,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">Némítás feloldása</string>
+    <string name="notificationsMuteUnmute">Némítás feloldása</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">Értesítések némítása</string>
     <!-- conversation -->

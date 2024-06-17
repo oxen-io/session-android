@@ -153,7 +153,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">Bunyikan</string>
+    <string name="notificationsMuteUnmute">Bunyikan</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">Bisukan pemberitahuan</string>
     <!-- conversation -->

@@ -172,7 +172,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">בטל השתקה</string>
+    <string name="notificationsMuteUnmute">בטל השתקה</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">השתק התראות</string>
     <!-- conversation -->

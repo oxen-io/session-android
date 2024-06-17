@@ -171,7 +171,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">Malsilentigi</string>
+    <string name="notificationsMuteUnmute">Malsilentigi</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">Silentigi sciigojn</string>
     <!-- conversation -->

@@ -155,7 +155,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">เลิกปิดเสียง</string>
+    <string name="notificationsMuteUnmute">เลิกปิดเสียง</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">ปิดเสียงการแจ้งเตือน</string>
     <!-- conversation -->

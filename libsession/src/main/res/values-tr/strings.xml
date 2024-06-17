@@ -171,7 +171,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">Sesi aç</string>
+    <string name="notificationsMuteUnmute">Sesi aç</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">Bildirimleri sessize al</string>
     <!-- conversation -->

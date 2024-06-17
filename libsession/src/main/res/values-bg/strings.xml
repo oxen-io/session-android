@@ -166,7 +166,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">Изключи тих режим</string>
+    <string name="notificationsMuteUnmute">Изключи тих режим</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">Тих режим за известия</string>
     <!-- conversation -->

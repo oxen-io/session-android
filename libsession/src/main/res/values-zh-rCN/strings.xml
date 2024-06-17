@@ -169,7 +169,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">取消静音</string>
+    <string name="notificationsMuteUnmute">取消静音</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">静音通知</string>
     <!-- conversation -->

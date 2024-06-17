@@ -147,7 +147,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">알림 켜기</string>
+    <string name="notificationsMuteUnmute">알림 켜기</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">알림 끄기</string>
     <!-- conversation -->

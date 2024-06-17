@@ -174,7 +174,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">Įjungti pranešimus</string>
+    <string name="notificationsMuteUnmute">Įjungti pranešimus</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">Nutildyti pranešimus</string>
     <!-- conversation -->

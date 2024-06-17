@@ -155,7 +155,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">Upallayachishkata anchuchina</string>
+    <string name="notificationsMuteUnmute">Upallayachishkata anchuchina</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">Chayamuk rikunakunata upallayachina</string>
     <!-- conversation -->

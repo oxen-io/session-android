@@ -171,7 +171,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">Poista mykistys</string>
+    <string name="notificationsMuteUnmute">Poista mykistys</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">Mykistä ilmoitukset</string>
     <!-- conversation -->

@@ -157,7 +157,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">Vis varsel</string>
+    <string name="notificationsMuteUnmute">Vis varsel</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">Ikkje vis varsel</string>
     <!-- conversation -->

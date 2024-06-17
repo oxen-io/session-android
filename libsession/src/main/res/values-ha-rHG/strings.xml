@@ -161,7 +161,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">Bideng bike</string>
+    <string name="notificationsMuteUnmute">Bideng bike</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">Danezanan bêdeng bike</string>
     <!-- conversation -->

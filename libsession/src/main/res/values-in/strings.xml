@@ -154,7 +154,7 @@
     <!-- conversation_expiring_off -->
     <!-- conversation_expiring_on -->
     <!-- conversation_muted -->
-    <string name="notificationsUnmute">Batalkan senyap</string>
+    <string name="notificationsMuteUnmute">Batalkan senyap</string>
     <!-- conversation_unmuted -->
     <string name="notificationsMute">Senyapkan notifikasi</string>
     <!-- conversation -->
