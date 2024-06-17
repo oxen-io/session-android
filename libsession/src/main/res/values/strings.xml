@@ -9,7 +9,7 @@
     <string name="groupNameAdded">{name} added {members} to the group.</string>
     <string name="MessageRecord_s_removed_s_from_the_group">%1$s removed %2$s from the group.</string>
     <string name="disappearingMessagesUpdatedYours">You set your messages to disappear {time} after they have been {disappearing_messages_type}.</string>
-    
+
     <!-- RecipientProvider -->
     <string name="groupUnnamed">Unnamed group</string>
 
@@ -393,7 +393,7 @@
     <string name="draft">Draft</string>
     <string name="edit">Edit</string>
     <string name="emojiAndSymbols">Emoji &amp; Symbols</string>
-    <string name="emojiReactsCoolDown">Slow down! You've sent too many emoji reacts. Try again soon</string>
+    <string name="emojiReactsCoolDown">Slow down! You\'ve sent too many emoji reacts. Try again soon</string>
     <string name="enable">Enable</string>
     <string name="error">Error</string>
     <string name="errorCopyAndQuit">Copy Error and Quit</string>
