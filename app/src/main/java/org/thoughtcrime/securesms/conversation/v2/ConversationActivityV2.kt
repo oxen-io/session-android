@@ -1948,6 +1948,7 @@ else if(isCommunity) use OpenGroupManager.isUserModerator'
                 DeleteMessageDialog.show(
                     context = this,
                     recordCount = messages.size,
+                    defaultToEveryone = isAdmin,
                     doDelete = {}
                 )
             }

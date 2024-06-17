@@ -18,6 +18,15 @@
         <item name="android:textSize">@dimen/very_large_font_size</item>
     </style>
 
+    <style name="TextAppearance.Session.Dialog.Title" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/medium2_font_size</item>
+    </style>
+
+    <style name="TextAppearance.Session.Dialog.Message" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">@dimen/small2_font_size</item>
+    </style>
+
     <style name="Widget.Session.SearchView" parent="@style/Widget.AppCompat.SearchView">
         <item name="closeIcon">@drawable/ic_clear</item>
     </style>

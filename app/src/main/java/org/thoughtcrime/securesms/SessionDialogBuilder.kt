@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.LinearLayout.VERTICAL
 import android.widget.Space
 import android.widget.TextView
 import androidx.annotation.AttrRes
+import androidx.annotation.ColorRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
@@ -28,6 +30,7 @@ annotation class DialogDsl
 @DialogDsl
 class SessionDialogBuilder(val context: Context) {
 
+    private val dp8 = toPx(8, context.resources)
     private val dp20 = toPx(20, context.resources)
     private val dp40 = toPx(40, context.resources)
     private val dp60 = toPx(60, context.resources)
@@ -55,20 +58,20 @@ class SessionDialogBuilder(val context: Context) {
 
     fun title(text: CharSequence?) = title(text?.toString())
     fun title(text: String?) {
-        text(text, R.style.TextAppearance_AppCompat_Title) { setPadding(dp20, 0, dp20, 0) }
+        text(text, R.style.TextAppearance_Session_Dialog_Title) { setPadding(dp20, 0, dp20, 0) }
     }
 
-    fun text(@StringRes id: Int, style: Int = 0) = text(context.getString(id), style)
-    fun text(text: CharSequence?, @StyleRes style: Int = 0) {
+    fun text(@StringRes id: Int, style: Int? = null) = text(context.getString(id), style)
+    fun text(text: CharSequence?, @StyleRes style: Int? = null) {
         text(text, style) {
             layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
                 .apply { updateMargins(dp40, 0, dp40, 0) }
         }
     }
 
-    private fun text(text: CharSequence?, @StyleRes style: Int, modify: TextView.() -> Unit) {
+    private fun text(text: CharSequence?, @StyleRes style: Int? = null, modify: TextView.() -> Unit) {
         text ?: return
-        TextView(context, null, 0, style)
+        TextView(context, null, 0, style ?: R.style.TextAppearance_Session_Dialog_Message)
             .apply {
                 setText(text)
                 textAlignment = View.TEXT_ALIGNMENT_CENTER
@@ -76,7 +79,7 @@ class SessionDialogBuilder(val context: Context) {
             }.let(topView::addView)
 
         Space(context).apply {
-            layoutParams = LinearLayout.LayoutParams(0, dp20)
+            layoutParams = LinearLayout.LayoutParams(0, dp8)
         }.let(topView::addView)
     }
 
@@ -89,17 +92,31 @@ class SessionDialogBuilder(val context: Context) {
     fun singleChoiceItems(
         options: Collection<String>,
         currentSelected: Int = 0,
+        dismissOnRadioSelect: Boolean = true,
         onSelect: (Int) -> Unit
-    ) = singleChoiceItems(options.toTypedArray(), currentSelected, onSelect)
+    ) = singleChoiceItems(
+        options.toTypedArray(),
+        currentSelected,
+        dismissOnRadioSelect,
+        onSelect
+    )
 
     fun singleChoiceItems(
         options: Array<String>,
         currentSelected: Int = 0,
+        dismissOnRadioSelect: Boolean = true,
         onSelect: (Int) -> Unit
-    ): AlertDialog.Builder = dialogBuilder.setSingleChoiceItems(
-        options,
-        currentSelected
-    ) { dialog, it -> onSelect(it); dialog.dismiss() }
+    ): AlertDialog.Builder{
+        val adapter = ArrayAdapter<CharSequence>(context, R.layout.view_dialog_single_choice_item, options)
+
+        return dialogBuilder.setSingleChoiceItems(
+            adapter,
+            currentSelected
+        ) { dialog, it ->
+            onSelect(it);
+            if(dismissOnRadioSelect) dialog.dismiss()
+        }
+    }
 
     fun items(
         options: Array<String>,
@@ -125,10 +142,14 @@ class SessionDialogBuilder(val context: Context) {
         @StringRes text: Int,
         @StringRes contentDescriptionRes: Int = text,
         @StyleRes style: Int = R.style.Widget_Session_Button_Dialog_UnimportantText,
+        @ColorRes textColor: Int? = null,
         dismiss: Boolean = true,
         listener: (() -> Unit) = {}
     ) = Button(context, null, 0, style).apply {
             setText(text)
+            textColor?.let{
+                setTextColor(it)
+            }
             contentDescription = resources.getString(contentDescriptionRes)
             layoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, dp60, 1f)
             setOnClickListener {
