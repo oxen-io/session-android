@@ -9,33 +9,9 @@
     <string name="groupNameAdded">{name} added {members} to the group.</string>
     <string name="MessageRecord_s_removed_s_from_the_group">%1$s removed %2$s from the group.</string>
     <string name="disappearingMessagesUpdatedYours">You set your messages to disappear {time} after they have been {disappearing_messages_type}.</string>
-
-
-
+    
     <!-- RecipientProvider -->
     <string name="groupUnnamed">Unnamed group</string>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     <!-- Everything in this section is used by the app but missing from the CrowdIn translations as of 2024-03-14 -ACL -->
     <!-- ======================================================================================= -->
@@ -240,8 +216,10 @@
     <string name="block">Block</string>
     <string name="blockBlockedDescription">Unblock this contact to send a message.</string>
     <string name="blockBlockedNone">No blocked contacts</string>
+    <string name="blockBlockedUser">Blocked {name}</string>
     <string name="blockDescription">Are you sure you want to block <b>{name}</b>? Blocked users cannot send you message requests, group invites or call you.</string>
     <string name="blockUnblock">Unblock</string>
+    <string name="blockUnblockedUser">Unblocked {name}</string>
     <string name="blockUnblockName">Are you sure you want to unblock {name}?</string>
     <string name="call">Call</string>
     <string name="callsCalledYou">{name} called you</string>
@@ -379,6 +357,7 @@
     <string name="disappearingMessagesChanged"><b>{name}</b> has changed messages to disappear {time} after they have been {disappearing_messages_type}.</string>
     <string name="disappearingMessagesDeleteType">Delete Type</string>
     <string name="disappearingMessagesDescription">This setting applies to everyone in this conversation.</string>
+    <string name="disappearingMessagesDescription1">This setting applies to messages you send in this conversation.</string>
     <string name="disappearingMessagesDisappear">Disappear After {disappearing_messages_type} - {time}</string>
     <string name="disappearingMessagesDisappearAfterRead">Disappear After Read</string>
     <string name="disappearingMessagesDisappearAfterReadDescription">Messages delete after they have been read.</string>
@@ -414,6 +393,7 @@
     <string name="draft">Draft</string>
     <string name="edit">Edit</string>
     <string name="emojiAndSymbols">Emoji &amp; Symbols</string>
+    <string name="emojiReactsCoolDown">Slow down! You've sent too many emoji reacts. Try again soon</string>
     <string name="enable">Enable</string>
     <string name="error">Error</string>
     <string name="errorCopyAndQuit">Copy Error and Quit</string>
@@ -581,6 +561,7 @@
     <string name="messageStatusSyncing">Syncing</string>
     <string name="messageUnread">Unread messages</string>
     <string name="messageVoice">Voice Message</string>
+    <string name="messageVoiceErrorShort">Tap and hold to record a voice message.</string>
     <string name="messageVoiceSlideToCancel">Slide to Cancel</string>
     <string name="message_details_header__disappears">Disappears</string>
     <string name="message_details_header__file_id">File Id:</string>

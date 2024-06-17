@@ -1213,6 +1213,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 .format())
             destructiveButton(R.string.block, R.string.AccessibilityId_block_confirm) {
                 viewModel.block()
+
+                // Block confirmation toast added as per SS-64
+                val txt = Phrase.from(context, R.string.blockBlockedUser).put(NAME_KEY, recipient.name).format().toString()
+                Toast.makeText(context, txt, Toast.LENGTH_LONG).show()
+
                 if (deleteThread) {
                     viewModel.deleteThread()
                     finish()
@@ -1259,7 +1264,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 destructiveButton(
                     R.string.blockUnblock,
                     R.string.AccessibilityId_block_confirm
-                ) { viewModel.unblock() }
+                ) {
+                    viewModel.unblock()
+                    // Unblock confirmation toast added as per SS-64
+                    val txt = Phrase.from(context, R.string.blockUnblockedUser).put(NAME_KEY, recipient.name).format().toString()
+                    Toast.makeText(context, txt, Toast.LENGTH_LONG).show()
+                }
                 cancelButton()
             }
         } else {

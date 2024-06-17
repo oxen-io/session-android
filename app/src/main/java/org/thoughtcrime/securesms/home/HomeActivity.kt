@@ -506,6 +506,9 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                         binding.recyclerView.adapter!!.notifyDataSetChanged()
                     }
                 }
+                // Block confirmation toast added as per SS-64
+                val txt = Phrase.from(context, R.string.blockBlockedUser).put(NAME_KEY, thread.recipient.name).format().toString()
+                Toast.makeText(context, txt, Toast.LENGTH_LONG).show()
             }
             cancelButton()
         }
@@ -522,6 +525,9 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                         binding.recyclerView.adapter!!.notifyDataSetChanged()
                     }
                 }
+                // Unblock confirmation toast added as per SS-64
+                val txt = Phrase.from(context, R.string.blockUnblockedUser).put(NAME_KEY, thread.recipient.name).format().toString()
+                Toast.makeText(context, txt, Toast.LENGTH_LONG).show()
             }
             cancelButton()
         }
