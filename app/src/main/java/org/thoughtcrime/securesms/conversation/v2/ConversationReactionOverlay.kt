@@ -545,7 +545,8 @@ class ConversationReactionOverlay : FrameLayout {
         }
         // Delete message
         if (userCanDeleteSelectedItems(context, message, openGroup, userPublicKey, blindedPublicKey)) {
-            items += ActionItem(R.attr.menu_trash_icon, R.string.delete, { handleActionItemClicked(Action.DELETE) }, R.string.AccessibilityId_delete_message, message.subtitle, R.color.destructive)
+            items += ActionItem(R.attr.menu_trash_icon, R.string.delete, { handleActionItemClicked(Action.DELETE) },
+                R.string.AccessibilityId_delete_message, message.subtitle, ThemeUtil.getThemedColor(context, R.attr.danger))
         }
         // Ban user
         if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey)) {
