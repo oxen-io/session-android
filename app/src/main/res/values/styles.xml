@@ -137,7 +137,7 @@
     
     <style name="Widget.Session.Button.Dialog.DestructiveText">
         <item name="android:background">@drawable/destructive_dialog_text_button_background</item>
-        <item name="android:textColor">@color/destructive</item>
+        <item name="android:textColor">?danger</item>
     </style>
 
     <style name="Widget.Session.EditText.Compose" parent="@style/Signal.Text.Body">

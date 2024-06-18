@@ -686,6 +686,8 @@
         <item name="actionBarStyle">@style/Widget.Session.ActionBar</item>
         <item name="prominentButtonColor">?colorAccent</item>
         <item name="elementBorderColor">@color/classic_dark_3</item>
+        <item name="danger">@color/danger_dark</item>
+        <item name="textColorAlert">@color/classic_dark_6</item>
 
         <!-- Home screen -->
         <item name="searchBackgroundColor">#1B1B1B</item>

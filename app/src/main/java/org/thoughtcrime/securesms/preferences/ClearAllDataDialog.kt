@@ -53,7 +53,6 @@ class ClearAllDataDialog : DialogFragment() {
         binding.recyclerView.apply {
             itemAnimator = null
             adapter = optionAdapter
-            addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
             setHasFixedSize(true)
         }
         optionAdapter.submitList(listOf(device, network))

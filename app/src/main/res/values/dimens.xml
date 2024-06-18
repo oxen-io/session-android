@@ -155,6 +155,6 @@
     <dimen name="max_text_width">200dp</dimen>
     <dimen name="preference_corner_radius" />
     <dimen name="radial_size">34dp</dimen>
-    <dimen name="small_radial_size">24dp</dimen>
+    <dimen name="small_radial_size">26dp</dimen>
 
 </resources>
