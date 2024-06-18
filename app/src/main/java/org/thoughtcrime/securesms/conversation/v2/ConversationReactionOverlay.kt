@@ -553,10 +553,9 @@ class ConversationReactionOverlay : FrameLayout {
         if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey)) {
             items += ActionItem(R.attr.menu_block_icon, R.string.banUser, { handleActionItemClicked(Action.BAN_USER) })
         }
-        // ACL TODO - The `banUser` string is just `Ban User` which doesn't really map to "Ban and Delete All"
         // Ban and delete all
         if (userCanBanSelectedUsers(context, message, openGroup, userPublicKey, blindedPublicKey)) {
-            items += ActionItem(R.attr.menu_trash_icon, R.string.banUser, { handleActionItemClicked(Action.BAN_AND_DELETE_ALL) })
+            items += ActionItem(R.attr.menu_trash_icon, R.string.banDeleteAll, { handleActionItemClicked(Action.BAN_AND_DELETE_ALL) })
         }
         // Message detail
         items += ActionItem(R.attr.menu_info_icon, R.string.messageInfo, { handleActionItemClicked(Action.VIEW_INFO) })

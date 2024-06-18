@@ -30,7 +30,7 @@
             android:layout_weight="1"
             android:padding="@dimen/very_large_spacing"
             android:gravity="center"
-            android:text="@string/messageNewDescription"
+            android:text="@string/messageNewDescriptionMobile"
             android:background="?android:windowBackground"
             android:textSize="@dimen/small_font_size"
             android:textColor="?android:textColorTertiary" />

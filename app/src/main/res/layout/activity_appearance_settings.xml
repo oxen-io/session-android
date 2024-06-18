@@ -214,18 +214,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="?message_received_text_color"
-                    android:text="How are you?"
+                    android:text="@string/appearancePreview1"
                     android:gravity="center"
                     android:drawablePadding="12dp"
-                    app:drawableLeftCompat="@drawable/quote_accent_line"
-                    tools:ignore="HardcodedText" />
+                    app:drawableLeftCompat="@drawable/quote_accent_line" />
                 <TextView
                     android:layout_marginTop="4dp"
-                    android:text="I'm good thanks, you?"
+                    android:text="@string/appearancePreview2"
                     android:textColor="?message_received_text_color"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:ignore="HardcodedText" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <LinearLayout
@@ -238,11 +236,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
-                    android:text="I'm doing great, thanks."
+                    android:text="@string/appearancePreview3"
                     android:textColor="?message_sent_text_color"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:ignore="HardcodedText" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
         </LinearLayout>
@@ -336,7 +333,7 @@
                     android:textSize="@dimen/medium_font_size"
                     android:paddingHorizontal="@dimen/large_spacing"
                     android:paddingVertical="@dimen/small_spacing"
-                    android:text="@string/activity_appearance_follow_system_explanation"
+                    android:text="@string/followSystemSettings"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"/>

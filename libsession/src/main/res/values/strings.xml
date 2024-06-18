@@ -76,7 +76,6 @@
     <string name="accountIdShare">Hey, I\'ve been using {app_name} to chat with complete privacy and security. Come join me! My Account ID is<br/><br/>{account_id}<br/><br/>Download it at {download_url}</string>
     <string name="accountIdYours">Your Account ID</string>
     <string name="accountIdYoursDescription">This is your Account ID. Other users can scan it to start a conversation with you.</string>
-    <string name="activity_appearance_follow_system_explanation">Match system settings</string>
     <string name="activity_conversation_outdated_client_banner_text">%s is using an outdated client. Disappearing messages may not work as expected.</string>
     <string name="activity_create_closed_group_empty_state_button_title">Start a Session</string>
     <string name="activity_disappearing_messages_subtitle">This setting applies to messages you send in this conversation.</string>
@@ -346,7 +345,6 @@
     <string name="dialog_disappearing_messages_follow_setting_confirm">Confirm</string>
     <string name="dialog_disappearing_messages_follow_setting_off_body">Messages you send will no longer disappear. Are you sure you want to turn off disappearing messages?</string>
     <string name="dialog_disappearing_messages_follow_setting_on_body">Set your messages to disappear %1$s after they have been %2$s?</string>
-    <string name="dialog_disappearing_messages_follow_setting_set">Set</string>
     <string name="dialog_disappearing_messages_follow_setting_title">Follow Setting</string>
     <string name="dictationStart">Start Dictation...</string>
     <string name="disappearingMessages">Disappearing Messages</string>
@@ -503,7 +501,7 @@
     <string name="image">Image</string>
     <string name="incognitoKeyboard">Incognito Keyboard</string>
     <string name="incognitoKeyboardDescription">Request incognito mode if available. Depending on the keyboard you are using, your keyboard may ignore this request.</string>
-    <string name="info">Info</string>
+    <string name="info">Info</string>  <!-- ACL - Potential replacement for 'messageInfo' -->
     <string name="invalidShortcut">Invalid shortcut</string>
     <string name="join">Join</string>
     <string name="later">Later</string>
@@ -552,11 +550,11 @@
     <string name="messageErrorLimit">Message limit reached</string>
     <string name="messageErrorOld">Received a message encrypted using an old version of Session that is no longer supported. Please ask the sender to update to the most recent version and resend the message.</string>
     <string name="messageErrorOriginal">Original message not found</string>
-    <string name="messageInfo">Message Info</string>
+    <string name="messageInfo">Message Info</string>  <!-- ACL - Potentially replaced by 'info' -->
     <string name="messageMarkRead">Mark read</string>
     <string name="messageMarkUnread">Mark unread</string>
     <string name="messageNew">New Message</string>
-    <string name="messageNewDescription">Start a new conversation by entering someone\'s Account ID or scanning their QR code.</string>
+    <string name="messageNewDescriptionMobile">Start a new conversation by entering your friend\'s Account ID, ONS or scanning their QR code.</string>
     <string name="messageNewMessages">New Messages</string>
     <string name="messageNewYouveGotA">You\'ve got a new message</string>
     <string name="messageNewYouveGotMany">You\'ve got {count} new messages.</string>
@@ -733,7 +731,7 @@
     <string name="recoveryPasswordView">View Password</string>
     <string name="recoveryPasswordWarningSendDescription">This is your recovery password. If you send it to someone they\'ll have full access to your account.</string>
     <string name="redo">Redo</string>
-    <string name="registration_activity__skip">Skip</string>
+    <string name="registration_activity__skip">Skip</string> <!-- Replaced during onboarding -->
     <string name="remove">Remove</string>
     <string name="reply">Reply</string>
     <string name="resend">Resend</string>
