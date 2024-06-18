@@ -36,11 +36,15 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/notificationsContent">
+    <PreferenceCategory android:title="@string/notificationsContent" >
 
+        <!-- android:summary="@string/notificationsContentDescription" -->
+        <!-- android:layout="@layout/preference_right_summary_widget" -->
+        <!-- android:summary="@string/notificationsContentDescription" -->
         <org.thoughtcrime.securesms.preferences.widgets.SignalListPreference
             android:key="pref_notification_privacy"
             android:title="@string/notificationsContent"
+            android:summary="@string/notificationsContentDescription"
             android:defaultValue="all"
             android:entries="@array/pref_notification_privacy_entries"
             android:entryValues="@array/pref_notification_privacy_values" />

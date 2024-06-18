@@ -4,7 +4,6 @@ import android.os.Process
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.LinkedBlockingQueue
-import java.util.concurrent.SynchronousQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
@@ -13,7 +12,7 @@ object ThreadUtils {
     const val TAG = "ThreadUtils"
 
     const val PRIORITY_IMPORTANT_BACKGROUND_THREAD = Process.THREAD_PRIORITY_DEFAULT + Process.THREAD_PRIORITY_LESS_FAVORABLE
-    
+
     val executorPool: ExecutorService = Executors.newCachedThreadPool()
 
     // Note: To see how many threads are running in our app at any given time we can use:

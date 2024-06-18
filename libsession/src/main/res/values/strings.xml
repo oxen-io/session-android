@@ -73,7 +73,9 @@
     <string name="accountIdErrorInvalid">This Account ID is invalid. Please check and try again.</string>
     <string name="accountIdOrOnsEnter">Enter Account ID or ONS</string>
     <string name="accountIdOrOnsInvite">Invite Account ID or ONS</string>
+    <string name="accountIdShare">Hey, I\'ve been using {app_name} to chat with complete privacy and security. Come join me! My Account ID is<br/><br/>{account_id}<br/><br/>Download it at {download_url}</string>
     <string name="accountIdYours">Your Account ID</string>
+    <string name="accountIdYoursDescription">This is your Account ID. Other users can scan it to start a conversation with you.</string>
     <string name="activity_appearance_follow_system_explanation">Match system settings</string>
     <string name="activity_conversation_outdated_client_banner_text">%s is using an outdated client. Disappearing messages may not work as expected.</string>
     <string name="activity_create_closed_group_empty_state_button_title">Start a Session</string>
@@ -167,8 +169,8 @@
     <string name="attachmentsFileType">File Type:</string>
     <string name="attachmentsFilesEmpty">You don\'t have any files in this conversation.</string>
     <string name="attachmentsImageErrorMetadata">Unable to remove metadata from file.</string>
-    <string name="attachmentsLoadingNewer">Loading Newer Media...</string>
-    <string name="attachmentsLoadingOlder">Loading Older Media...</string>
+    <string name="attachmentsLoadingNewerFiles">Loading Newer Files...</string>
+    <string name="attachmentsLoadingOlderFiles">Loading Older Files...</string>
     <string name="attachmentsMedia">{name} on {date_time}</string>
     <string name="attachmentsMediaEmpty">You don\'t have any media in this conversation.</string>
     <string name="attachmentsMediaSaved">Media saved by {name}</string>
@@ -178,6 +180,7 @@
     <string name="attachmentsSaveError">Unable to save file.</string>
     <string name="attachmentsTapToDownload">Tap to download {file_type}</string>
     <string name="attachmentsThisMonth">This Month</string>
+    <string name="attachmentsWarning">Attachments you save can be accessed by other apps on your device.</string>
     <string name="audio">Audio</string>
     <string name="audioNoInput">No audio input found</string>
     <string name="audioNoOutput">No audio output found</string>
@@ -187,6 +190,7 @@
     <string name="authenticateFailedTooManyAttempts">Too many failed authentication attempts. Please try again later.</string>
     <string name="authenticateNotAccessed">Authentication could not be accessed.</string>
     <string name="authenticateToOpen">Authenticate to open Session.</string>
+    <string name="banDeleteAll">Ban and Delete All</string>
     <string name="banErrorFailed">Ban failed</string>
     <string name="banUnbanErrorFailed">Unban failed</string>
     <string name="banUnbanUser">Unban User</string>
@@ -205,6 +209,8 @@
     <string name="callsCannotStart">You cannot start a new call. Finish your current call first.</string>
     <string name="callsConnecting">Connecting...</string>
     <string name="callsEnd">End call</string>
+    <string name="callsErrorAnswer">Failed to answer call</string>
+    <string name="callsErrorStart">Failed to start call</string>
     <string name="callsInProgress">Call in progress</string>
     <string name="callsIncoming">Incoming call from {name}</string>
     <string name="callsMissed">Missed Call</string>
@@ -310,6 +316,7 @@
     <string name="conversationsSettingsAllMedia">All Media</string>
     <string name="conversationsSpellCheck">Spell Check</string>
     <string name="conversationsSpellCheckDescription">Enable spell check when typing messages</string>
+    <string name="conversationsStart">Start Conversation</string>
     <string name="copied">Copied</string>
     <string name="copy">Copy</string>
     <string name="create">Create</string>
@@ -317,11 +324,19 @@
     <string name="databaseOptimizing">Optimizing Database</string>
     <string name="decline">Decline</string>
     <string name="delete">Delete</string>
+    <string name="deleteAfterGroupPR3DeleteMessagesConfirmation">Permanently delete the messages in this conversation?</string>
+    <string name="deleteAfterLegacyDisappearingMessagesLegacy">Legacy</string>
+    <string name="deleteAfterLegacyDisappearingMessagesOriginal">Original version of disappearing messages.</string>
+    <string name="deleteAfterLegacyDisappearingMessagesTheyChangedTimer"><b>{name}</b> set the disappearing message timer to <b>{time}</b></string>
     <string name="deleteMessage">Delete Message</string>
+    <string name="deleteMessageConfirm">Are you sure you want to delete these messages?</string>
     <string name="deleteMessageDeleted">Message deleted</string>
     <string name="deleteMessageDescriptionDevice">Are you sure you want to delete this message from your device?</string>
     <string name="deleteMessageDescriptionEveryone">Are you sure you want to delete this message for everyone?</string>
+    <string name="deleteMessageDeviceOnly">Delete on this device only</string>
+    <string name="deleteMessageEveryone">Delete for everyone</string>
     <string name="deleteMessages">Delete Messages</string>
+    <string name="deleteMessagesConfirm">Delete Messages</string>
     <string name="deleteMessagesDeleted">Messages deleted</string>
     <string name="deleteMessagesDescriptionDevice">Are you sure you want to delete these messages from your device?</string>
     <string name="deleteMessagesDescriptionEveryone">Are you sure you want to delete these messages for everyone?</string>
@@ -392,6 +407,7 @@
     <string name="emojiReactsHoverTwoNameMultiple">{name}, {other_name} and {count} others reacted with {emoji}</string>
     <string name="emojiReactsHoverTwoNameOne">{name}, {other_name} and 1 other reacted with {emoji}</string>
     <string name="emojiReactsCoolDown">Slow down! You\'ve sent too many emoji reacts. Try again soon</string>
+    <string name="emojiReactsCountOthers">And {count} others have reacted {emoji} to this message.</string>
     <string name="enable">Enable</string>
     <string name="error">Error</string>
     <string name="errorConnection">Please check your internet connection and try again.</string>
@@ -502,6 +518,7 @@
     <string name="linkPreviewsFirstDescription">Display previews for URLs you send and receive. This can be useful, however Session must contact linked websites to generate previews. You can always turn off link previews in Session\'s settings.</string>
     <string name="linkPreviewsSend">Send Link Previews</string>
     <string name="linkPreviewsSendModalDescription">You will not have full metadata protection when sending link previews.</string>
+    <string name="loadAccount">Load Account</string>
     <string name="loadAccountProgressMessage">Loading your account</string>
     <string name="lockApp">Lock App</string>
     <string name="lockAppDescriptionAndroid">Require fingerprint, PIN, pattern or password to unlock Session.</string>
@@ -629,6 +646,8 @@
     <string name="onboardingBubbleWelcomeToSession">Welcome to Session</string>
     <string name="onboardingHitThePlusButton">Hit the plus button to start a chat, create a group, or join an official community!</string>
     <string name="onboardingMessageNotificationExplanation">There are two ways {app_name} can notify you of new messages.</string>
+    <string name="onboardingPrivacy">Privacy Policy</string>
+    <string name="onboardingToS">Terms of Service</string>
     <string name="onboardingTosPrivacy">By using this service, you agree to our <b>Terms of Service</b> and <b>Privacy Policy</b></string>
     <string name="onionRoutingPath">Path</string>
     <string name="onionRoutingPathDescription">{app_name} hides your IP by routing your messages through multiple service nodes in {app_name}\'s decentralized network. This is your current path:</string>
@@ -696,6 +715,8 @@
     <string name="readReceiptsDescription">Show read receipts for all messages you send and receive.</string>
     <string name="received">Received:</string>
     <string name="recommended">Recommended</string>
+    <string name="recoveryPasswordBannerTitle">Save your recovery password</string>
+    <string name="recoveryPasswordBannerDescription">Save your recovery password to make sure you don\'t lose access to your account.</string>
     <string name="recoveryPasswordDescription">Use your recovery password to load your account on new devices. Your account cannot be recovered without your recovery password. Make sure it\'s stored somewhere safe and secure — and don\'t share it with anyone.</string>
     <string name="recoveryPasswordEnter">Enter your recovery password</string>
     <string name="recoveryPasswordErrorMessageGeneric">Please check your recovery password and try again.</string>
@@ -708,6 +729,7 @@
     <string name="recoveryPasswordHidePermanentlyDescription2">Are you sure you want to permanently hide your recovery password on this device? This cannot be undone.</string>
     <string name="recoveryPasswordHideRecoveryPassword">Hide Recovery Password</string>
     <string name="recoveryPasswordHideRecoveryPasswordDescription">Permanently hide your recover password on this device.</string>
+    <string name="recoveryPasswordRestoreDescription">Enter your recovery password to load your account. If you haven\'t saved it, you can find it in your app settings.</string>
     <string name="recoveryPasswordView">View Password</string>
     <string name="recoveryPasswordWarningSendDescription">This is your recovery password. If you send it to someone they\'ll have full access to your account.</string>
     <string name="redo">Redo</string>
@@ -723,6 +745,7 @@
     <string name="saved">Saved</string>
     <string name="savedMessages">Saved messages</string>
     <string name="saving">Saving...</string>
+    <string name="scan">Scan</string>
     <string name="screenSecurity">Screen Security</string>
     <string name="screenshotNotifications">Screenshot Notifications</string>
     <string name="screenshotNotificationsDescription">Require a notification when a contact takes a screenshot of a one-to-one chat.</string>
@@ -756,6 +779,7 @@
     <string name="set">Set</string>
     <string name="settingsRestartDescription">You must restart Session to apply your new settings.</string>
     <string name="share">Share</string>
+    <string name="shareAccountIdDescription">Invite your friend to chat with you on Session by sharing your Account ID with them.</string>
     <string name="shareToSession">Share to Session</string>
     <string name="show">Show</string>
     <string name="showAll">Show All</string>
