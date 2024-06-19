@@ -103,9 +103,6 @@ import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.attachments.ScreenshotObserver
 import org.thoughtcrime.securesms.audio.AudioRecorder
-import org.thoughtcrime.securesms.components.dialogs.DeleteMessageDeviceOnlyDialog
-import org.thoughtcrime.securesms.components.dialogs.DeleteMessageDialog
-import org.thoughtcrime.securesms.components.dialogs.DeleteNoteToSelfDialog
 import org.thoughtcrime.securesms.components.emoji.RecentEmojiPageModel
 import org.thoughtcrime.securesms.contacts.SelectContactsActivity.Companion.selectedContactsKey
 import org.thoughtcrime.securesms.conversation.ConversationActionBarDelegate
@@ -117,6 +114,9 @@ import org.thoughtcrime.securesms.conversation.v2.MessageDetailActivity.Companio
 import org.thoughtcrime.securesms.conversation.v2.MessageDetailActivity.Companion.ON_REPLY
 import org.thoughtcrime.securesms.conversation.v2.MessageDetailActivity.Companion.ON_RESEND
 import org.thoughtcrime.securesms.conversation.v2.dialogs.BlockedDialog
+import org.thoughtcrime.securesms.conversation.v2.dialogs.DeleteMessageDeviceOnlyDialog
+import org.thoughtcrime.securesms.conversation.v2.dialogs.DeleteMessageDialog
+import org.thoughtcrime.securesms.conversation.v2.dialogs.DeleteNoteToSelfDialog
 import org.thoughtcrime.securesms.conversation.v2.dialogs.LinkPreviewDialog
 import org.thoughtcrime.securesms.conversation.v2.dialogs.SendSeedDialog
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarButton
@@ -1923,12 +1923,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             else -> false
         }
 
-        /*
-        if(isLegacyGroup) 'check that current user is the user that created the group'
-else if(isCommunity) use OpenGroupManager.isUserModerator'
-// add a todo here: else if (isGroupV2) -- I will add this as a todo as I'm guessing I can't check this currently
-         */
-
         // There are three types of dialogs for deletion:
         // 1- Delete on device only OR all devices - Used for Note to self
         // 2- Delete on device only OR for everyone - Used for 'admins' or a user's own messages, as long as the message have a server hash
@@ -1936,31 +1930,30 @@ else if(isCommunity) use OpenGroupManager.isUserModerator'
         when{
             // the conversation is a note to self
             conversation.isLocalNumber -> {
-                DeleteNoteToSelfDialog.show(
-                    context = this,
-                    recordCount = messages.size,
-                    doDelete = {}
-                )
+                DeleteNoteToSelfDialog(
+                    messageCount = messages.size,
+                    onDeleteDeviceOnly = {},
+                    onDeleteAllDevices = {}
+                ).show(supportFragmentManager, "DeleteNoteToSelfDialog")
             }
 
             // If the user is an admin or is interacting with their own message And are allowed to delete for everyone
             (isAdmin || allSentByCurrentUser) && canDeleteForEveryone -> {
-                DeleteMessageDialog.show(
-                    context = this,
-                    recordCount = messages.size,
+                DeleteMessageDialog(
+                    messageCount = messages.size,
                     defaultToEveryone = isAdmin,
-                    doDelete = {}
-                )
+                    onDeleteDeviceOnly = {},
+                    onDeleteForEveryone = {}
+                ).show(supportFragmentManager, "DeleteMessageDialog")
             }
 
             // for non admins, users interacting with someone else's message, or control messages
             else -> {
                 //todo this should also happen for ControlMessages
-                DeleteMessageDeviceOnlyDialog.show(
-                    context = this,
-                    recordCount = messages.size,
-                    doDelete = {}
-                )
+                DeleteMessageDeviceOnlyDialog(
+                    messageCount = messages.size,
+                    onDeleteDeviceOnly = {}
+                ).show(supportFragmentManager, "DeleteMessageDeviceOnlyDialog")
             }
         }
 

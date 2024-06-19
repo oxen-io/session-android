@@ -113,7 +113,7 @@ class SessionDialogBuilder(val context: Context) {
             adapter,
             currentSelected
         ) { dialog, it ->
-            onSelect(it);
+            onSelect(it)
             if(dismissOnRadioSelect) dialog.dismiss()
         }
     }

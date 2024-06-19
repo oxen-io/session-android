@@ -1,0 +1,73 @@
+package org.thoughtcrime.securesms.conversation.v2.dialogs
+
+import android.app.Dialog
+import android.os.Bundle
+import android.util.TypedValue
+import androidx.annotation.ColorInt
+import androidx.fragment.app.DialogFragment
+import network.loki.messenger.R
+import org.thoughtcrime.securesms.createSessionDialog
+
+/**
+ * Shown when deleting a message that can be removed both locally and for everyone
+ *
+ * @param messageCount The number of messages to be deleted.
+ * @param defaultToEveryone Whether the dialog should default to deleting for everyone.
+ * @param onDeleteDeviceOnly Callback to be executed when the user chooses to delete only on their device.
+ * @param onDeleteForEveryone Callback to be executed when the user chooses to delete for everyone.
+ */
+class DeleteMessageDialog(
+    private val messageCount: Int,
+    private val defaultToEveryone: Boolean,
+    private val onDeleteDeviceOnly: () -> Unit,
+    private val onDeleteForEveryone: () -> Unit
+) : DialogFragment() {
+
+    // tracking the user choice from the radio buttons
+    private var deleteForEveryone = defaultToEveryone
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {
+        val typedValue = TypedValue()
+        val theme = context.theme
+        theme.resolveAttribute(R.attr.danger, typedValue, true)
+        @ColorInt val deleteColor = typedValue.data
+
+        title("[UPDATE THIS!] Delete message") //todo DELETION update once we have strings
+        text("[UPDATE THIS!] This will delete this message") //todo DELETION update once we have strings
+        singleChoiceItems(
+            options = deleteOptions.map { it.label },
+            currentSelected = if (defaultToEveryone) 1 else 0, // some cases require the second option, "delete for everyone", to be the default selected
+            dismissOnRadioSelect = false
+        ) { index ->
+            deleteForEveryone = (deleteOptions[index] is DeleteOption.DeleteForEveryone) // we delete for everyone if the selected index is 1
+        }
+        button(
+            text = R.string.delete,
+            textColor = deleteColor,
+            listener = {
+                if (deleteForEveryone) {
+                    onDeleteForEveryone()
+                } else {
+                    onDeleteDeviceOnly()
+                }
+            }
+        )
+        cancelButton()
+    }
+
+    private val deleteOptions: List<DeleteOption> = listOf(
+        DeleteOption.DeleteDeviceOnly(), DeleteOption.DeleteForEveryone()
+    )
+
+    private sealed class DeleteOption(
+        open val label: String
+    ){
+        data class DeleteDeviceOnly(
+            override val label: String = "[UPDATE THIS!] Delete device only", //todo DELETION update once we have strings
+        ): DeleteOption(label)
+
+        data class DeleteForEveryone(
+            override val label: String = "[UPDATE THIS!] Delete for everyone", //todo DELETION update once we have strings
+        ): DeleteOption(label)
+    }
+}
