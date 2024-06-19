@@ -487,7 +487,7 @@
     <string name="groupUnknown">Unknown Group</string>
     <string name="groupUpdated">Group updated</string>
     <string name="helpFAQ">FAQ</string>
-    <string name="helpHelpUsTranslateSession">Help us translate Session</string>
+    <string name="helpHelpUsTranslateSession">Help us translate {app_name}</string>
     <string name="helpReportABug">Report a bug</string>
     <string name="helpReportABugDescription">Share some details to help us resolve your issue. Export your logs, then upload the file through {app_name}\'s Help Desk.</string>
     <string name="helpReportABugExportLogs">Export Logs</string>
@@ -501,7 +501,7 @@
     <string name="image">Image</string>
     <string name="incognitoKeyboard">Incognito Keyboard</string>
     <string name="incognitoKeyboardDescription">Request incognito mode if available. Depending on the keyboard you are using, your keyboard may ignore this request.</string>
-    <string name="info">Info</string>  <!-- ACL - Potential replacement for 'messageInfo' -->
+    <string name="info">Info</string>  <!-- ACL - Potential replacement for 'messageInfo'? -->
     <string name="invalidShortcut">Invalid shortcut</string>
     <string name="join">Join</string>
     <string name="later">Later</string>
@@ -785,7 +785,6 @@
     <string name="tryAgain">Try Again</string>
     <string name="typingIndicators">Typing Indicators</string>
     <string name="typingIndicatorsDescription">See and share typing indicators (...)</string>
-    <string name="typingIndicatorsSummary">See and share typing indicators (...)</string>
     <string name="undo">Undo</string>
     <string name="unknown">Unknown</string>
     <string name="updateApp">App updates</string>

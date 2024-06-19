@@ -52,6 +52,12 @@ class HelpSettingsFragment: CorrectedPreferenceFragment() {
         exportPref?.summary = Phrase.from(context, R.string.helpReportABugExportLogsDescription)
             .put(APP_NAME_KEY, getString(R.string.app_name))
             .format()
+
+        // String sub the summary text of the `translate_session` element in preferences_help.xml
+        var translatePref = preferenceScreen.findPreference<Preference>(TRANSLATE)
+        translatePref?.title = Phrase.from(context, R.string.helpHelpUsTranslateSession)
+            .put(APP_NAME_KEY, getString(R.string.app_name))
+            .format()
     }
 
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
