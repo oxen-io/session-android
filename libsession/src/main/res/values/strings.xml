@@ -680,7 +680,7 @@
     <string name="permissionsKeepInSystemTrayDescription">Session continues running in the background when you close the window</string>
     <string name="permissionsMicrophone">Microphone</string>
     <string name="permissionsMicrophoneAccessRequired">Microphone Access Required</string>
-    <string name="permissionsMicrophoneAccessRequiredAndroid">{app_name} needs microphone access to send audio messages, but it has been permanently denied. Please continue to app settings, select "Permissions", and enable "Microphone".</string>
+    <string name="permissionsMicrophoneAccessRequiredAndroid">{app_name} needs microphone access to send audio messages, but it has been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Microphone\".</string>
     <string name="permissionsMicrophoneAccessRequiredDesktop">You can enable microphone access in Session\'s privacy settings</string>
     <string name="permissionsMicrophoneDescription">Allow access to microphone</string>
     <string name="permissionsRequired">Permission required</string>
