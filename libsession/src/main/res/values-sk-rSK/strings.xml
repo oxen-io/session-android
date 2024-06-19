@@ -94,7 +94,6 @@
     <string name="updateApp">Aktualizácie aplikácie</string>
     <string name="other">Iné</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Rýchla odpoveď nie je dostupná, keď je Session zamknutý!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Uložené</string>
     <!-- SearchToolbar -->

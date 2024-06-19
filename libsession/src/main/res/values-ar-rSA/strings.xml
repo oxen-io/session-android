@@ -100,7 +100,6 @@
     <string name="updateApp">تحديثات التطبيق</string>
     <string name="other">أخرى</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">الردود السريعة غير متاحة عند قفل Session!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">تم الحفظ</string>
     <!-- SearchToolbar -->

@@ -90,7 +90,6 @@
     <string name="updateApp">應用程式更新</string>
     <string name="other">其他</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">當 Session 鎖定時無法使用快速回覆！</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">已儲存</string>
     <!-- SearchToolbar -->

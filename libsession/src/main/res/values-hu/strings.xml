@@ -93,7 +93,6 @@
     <string name="updateApp">App frissítések</string>
     <string name="other">Egyéb</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">A gyors válasz nem érhető el, ha a Session zárolva van!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Elmentve</string>
     <!-- SearchToolbar -->

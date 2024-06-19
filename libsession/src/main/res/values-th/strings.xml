@@ -83,7 +83,6 @@
     <string name="updateApp">การอัปเดตแอป</string>
     <string name="other">ที่อื่น</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">การตอบด่วนใช้ไม่ได้ถ้า Session ถูกล็อกอยู่</string>
     <!-- SaveAttachmentTask -->
     <!-- SearchToolbar -->
     <string name="search">ค้นหา</string>

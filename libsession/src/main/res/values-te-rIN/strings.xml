@@ -93,7 +93,6 @@
     <string name="updateApp">అనువర్తన నవీకరణలు</string>
     <string name="other">ఇతర</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Session బంధించినపుడు తక్షణ స్పందన అందుబాటులొ లేదు!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">సేవ్</string>
     <!-- SearchToolbar -->

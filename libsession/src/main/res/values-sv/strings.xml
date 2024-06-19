@@ -92,7 +92,6 @@
     <string name="updateApp">Appuppdateringar</string>
     <string name="other">Övrigt</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Snabbsvar är ej tillgängligt när Session är låst!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Sparad</string>
     <!-- SearchToolbar -->

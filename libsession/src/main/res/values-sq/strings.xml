@@ -92,7 +92,6 @@
     <string name="updateApp">Përditësime aplikacioni</string>
     <string name="other">Tjetër</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">S\’bëhet dot përgjigje e shpejtë, kur Session-i është i kyçur!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">U ruajt</string>
     <!-- SearchToolbar -->

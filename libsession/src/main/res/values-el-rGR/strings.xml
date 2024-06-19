@@ -92,7 +92,6 @@
     <string name="updateApp">Αναβαθμίσεις εφαρμογής</string>
     <string name="other">Άλλο</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Η γρήγορη απάντηση δεν είναι διαθέσιμη όταν το Session είναι κλειδωμένο!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Αποθηκεύτηκε</string>
     <!-- SearchToolbar -->

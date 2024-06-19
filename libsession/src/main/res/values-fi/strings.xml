@@ -92,7 +92,6 @@
     <string name="updateApp">Sovellusten päivitykset</string>
     <string name="other">Muu</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Pikavastaus ei toimi, kun Session on lukittu!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Tallennettu</string>
     <!-- SearchToolbar -->

@@ -1,10 +1,15 @@
 package org.thoughtcrime.securesms.service;
 
+import static org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.APP_NAME_KEY;
+
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.widget.Toast;
+
+import com.squareup.phrase.Phrase;
 
 import network.loki.messenger.R;
 
@@ -28,14 +33,29 @@ public class QuickResponseService extends IntentService {
 
   @Override
   protected void onHandleIntent(Intent intent) {
-    if (!TelephonyManager.ACTION_RESPOND_VIA_MESSAGE.equals(intent.getAction())) {
+    if (intent == null) {
+      Log.w(TAG, "Got null intent from QuickResponseService");
+      return;
+    }
+
+    String actionString = intent.getAction();
+    if (actionString == null) {
+      Log.w(TAG, "Got null action from QuickResponseService intent");
+      return;
+    }
+
+    if (!TelephonyManager.ACTION_RESPOND_VIA_MESSAGE.equals(actionString)) {
       Log.w(TAG, "Received unknown intent: " + intent.getAction());
       return;
     }
 
     if (KeyCachingService.isLocked(this)) {
       Log.w(TAG, "Got quick response request when locked...");
-      Toast.makeText(this, R.string.lockAppQuickResponse, Toast.LENGTH_LONG).show();
+      Context c = getApplicationContext();
+      String txt = Phrase.from(c, R.string.lockAppQuickResponse)
+                      .put(APP_NAME_KEY, c.getString(R.string.app_name))
+                      .format().toString();
+      Toast.makeText(this, txt, Toast.LENGTH_LONG).show();
       return;
     }
 

@@ -86,7 +86,6 @@
     <string name="updateApp">Programoppdateringar</string>
     <string name="other">Anna</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Hurtigsvar er utilgjengeleg når Session er låst.</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Lagra</string>
     <!-- SearchToolbar -->

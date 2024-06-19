@@ -92,7 +92,6 @@
     <string name="updateApp">Aplikaĵaj ĝisdatigoj</string>
     <string name="other">Alia</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Rapida respondo ne eblas, kiam Session estas ŝlosita!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Konservitaj</string>
     <!-- SearchToolbar -->

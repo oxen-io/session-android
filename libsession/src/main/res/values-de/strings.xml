@@ -92,7 +92,6 @@
     <string name="updateApp">App-Aktualisierungen</string>
     <string name="other">Sonstige</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Schnellantwort nicht verfügbar, solange Session gesperrt ist!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Gespeichert</string>
     <!-- SearchToolbar -->

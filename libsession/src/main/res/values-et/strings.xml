@@ -88,7 +88,6 @@
     <string name="updateApp">Rakenduse uuendused</string>
     <string name="other">Muu</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Kiirvastus pole saadaval, kui Session on lukustatud!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Salvestatud</string>
     <!-- SearchToolbar -->

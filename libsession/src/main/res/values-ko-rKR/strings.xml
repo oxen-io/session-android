@@ -83,7 +83,6 @@
     <string name="MessageNotifier_unknown_contact_message">연락처</string>
     <!-- Notification Channels -->
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Session 잠겨 있는 경우 빠른 응답 사용할 수 없음</string>
     <!-- SaveAttachmentTask -->
     <!-- SearchToolbar -->
     <string name="search">검색</string>

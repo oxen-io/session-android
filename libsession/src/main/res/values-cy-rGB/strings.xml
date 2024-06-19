@@ -96,7 +96,6 @@
     <string name="updateApp">Diweddariadau ap</string>
     <string name="other">Arall</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Nid yw ymateb cyflym ar gael pan fydd Session wedi\'i gloi!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Wedi cadw</string>
     <!-- SearchToolbar -->

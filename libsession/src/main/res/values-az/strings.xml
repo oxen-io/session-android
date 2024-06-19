@@ -92,7 +92,6 @@
     <string name="updateApp">Tətbiq yeniləmələri</string>
     <string name="other">Digər</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Session kilidli ikən, cəld cavablar əlçatmazdır!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Saxlanıldı</string>
     <!-- SearchToolbar -->

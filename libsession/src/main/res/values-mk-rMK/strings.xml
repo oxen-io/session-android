@@ -72,7 +72,6 @@
     <!-- Notification Channels -->
     <string name="other">အခြား</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Session လော့ခ်ကျသွားသည့်အခါ ချက်ချင်းမတုံ့ပြန်နိုင်ပါ!</string>
     <!-- SaveAttachmentTask -->
     <!-- SearchToolbar -->
     <string name="search">ရှာရန်</string>

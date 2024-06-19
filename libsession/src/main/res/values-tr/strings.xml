@@ -92,7 +92,6 @@
     <string name="updateApp">Uygulama güncellemeleri</string>
     <string name="other">Diğer</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Session kilitliyken hızlı cevap kullanılamaz!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Kaydedildi</string>
     <!-- SearchToolbar -->

@@ -87,7 +87,6 @@
     <string name="updateApp">បច្ចុប្បន្នភាពកម្មវិធី</string>
     <string name="other">ផ្សេងៗ</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">មិនមានការឆ្លើយតបភ្លាមៗ នៅពេល Session ត្រូវបានចាក់សោរ!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">បានរក្សាទុក</string>
     <!-- SearchToolbar -->

@@ -92,7 +92,6 @@
     <string name="updateApp">Aggiornamenti app</string>
     <string name="other">Altro</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Risposta veloce non disponibile quando Session è bloccato!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Salvato</string>
     <!-- SearchToolbar -->

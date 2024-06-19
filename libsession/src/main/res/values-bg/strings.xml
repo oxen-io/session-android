@@ -90,7 +90,6 @@
     <string name="updateApp">Обновления на приложението</string>
     <string name="other">Друг</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Бърз отговор не е възможен, когато Session е заключен!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Запазено</string>
     <!-- SearchToolbar -->

@@ -72,7 +72,6 @@
     <string name="MessageNotifier_unknown_contact_message">Liên lạc</string>
     <!-- Notification Channels -->
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Trả lời nhanh không khả thi khi Session bị khoá!</string>
     <!-- SaveAttachmentTask -->
     <!-- SearchToolbar -->
     <string name="search">Tìm kiếm</string>

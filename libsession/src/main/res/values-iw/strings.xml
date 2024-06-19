@@ -95,7 +95,6 @@
     <string name="updateApp">עדכוני יישום</string>
     <string name="other">אחר</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">תגובה מהירה אינה זמינה כאשר Session נעול!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">נשמר</string>
     <!-- SearchToolbar -->

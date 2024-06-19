@@ -80,7 +80,6 @@
     <string name="updateApp">pembaruan aplikasi</string>
     <string name="other">Yang lain</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Tanggapan cepat tidak tersedia ketika Session sedang dikunci!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Tersimpan</string>
     <!-- SearchToolbar -->

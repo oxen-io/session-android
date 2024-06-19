@@ -80,7 +80,6 @@
     <string name="updateApp">Sasisho za programu</string>
     <string name="other">ingine</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Jibu la haraka halipatikani wakati Session imefungwa!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">imehifadhiwa</string>
     <!-- SearchToolbar -->

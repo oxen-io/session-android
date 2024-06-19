@@ -92,7 +92,6 @@
     <string name="updateApp">Ծրագրի թարմացումներ</string>
     <string name="other">Այլ</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Կարճ պատասխանը անհնար է, երբ Session-ը կողպված է:</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Պահպանված է</string>
     <!-- SearchToolbar -->

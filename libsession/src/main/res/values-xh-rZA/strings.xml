@@ -62,7 +62,6 @@
     <string name="messageMarkRead">lamba osome</string>
     <!-- Notification Channels -->
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">okudamu okwangu tekubawo nga amayengo gasibidwa</string>
     <!-- SaveAttachmentTask -->
     <!-- SearchToolbar -->
     <string name="search">Noonya</string>

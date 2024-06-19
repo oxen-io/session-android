@@ -94,7 +94,6 @@
     <string name="updateApp">Actualizări aplicație</string>
     <string name="other">Altul</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Răspunsul rapid nu este disponibil cât timp Session este blocat!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Salvat</string>
     <!-- SearchToolbar -->

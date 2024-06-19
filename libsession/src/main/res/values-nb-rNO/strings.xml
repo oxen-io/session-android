@@ -92,7 +92,6 @@
     <string name="updateApp">Oppdateringer</string>
     <string name="other">Annet</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Hurtigsvar er utilgjengelig når Session er låst.</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Lagret</string>
     <!-- SearchToolbar -->

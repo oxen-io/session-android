@@ -105,7 +105,6 @@
     <string name="updateApp">Mises à jour de l’appli</string>
     <string name="other">Autre</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">La réponse rapide n’est pas proposée quand Session est verrouillée !</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Enregistrée</string>
     <!-- SearchToolbar -->

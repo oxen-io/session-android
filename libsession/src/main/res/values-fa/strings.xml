@@ -92,7 +92,6 @@
     <string name="updateApp">به‌روزآوری‌های برنامه</string>
     <string name="other">دیگر</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">پاسخگوی سریع هنگامی که نرم‌افزار Session قفل باشد غیرفعال می‌شود.</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">ذخیره شد</string>
     <!-- SearchToolbar -->

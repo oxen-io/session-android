@@ -97,7 +97,6 @@
     <string name="updateApp">Оновлення додатку</string>
     <string name="other">Інший</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Швидка відповідь неможлива, коли Session заблоковано!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Збережено</string>
     <!-- SearchToolbar -->

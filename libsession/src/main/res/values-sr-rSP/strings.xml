@@ -93,7 +93,6 @@
     <string name="updateApp">Ажурирања апликације</string>
     <string name="other">Остало</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Брзи одговор није доступан ако је Session закључан!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Сачувано</string>
     <!-- SearchToolbar -->

@@ -92,7 +92,6 @@
     <string name="updateApp">ऐप अपडेट</string>
     <string name="other">अन्य</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Session लॉक होने पर त्वरित प्रतिक्रिया अनुपलब्ध है!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">सेव किया गया</string>
     <!-- SearchToolbar -->

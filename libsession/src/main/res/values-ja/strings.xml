@@ -90,7 +90,6 @@
     <string name="updateApp">アプリ更新</string>
     <string name="other">その他</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Sessionのロック中はクイック・レスポンスは使えません</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">保存済み</string>
     <!-- SearchToolbar -->

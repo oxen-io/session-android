@@ -92,7 +92,6 @@
     <string name="updateApp">App opdateringer</string>
     <string name="other">Andet</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Hurtig svar utilgængelig når Session er låst!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Gemt</string>
     <!-- SearchToolbar -->

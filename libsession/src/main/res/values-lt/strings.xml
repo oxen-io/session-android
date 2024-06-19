@@ -96,7 +96,6 @@
     <string name="updateApp">Programėlės atnaujinimai</string>
     <string name="other">Kitas</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Spartusis atsakymas neprieinamas, kai Session yra užrakinta!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Įrašyta</string>
     <!-- SearchToolbar -->

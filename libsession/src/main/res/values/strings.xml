@@ -521,8 +521,8 @@
     <string name="lockAppDescriptionIos">Require Touch ID, Face ID or your passcode to unlock Session.</string>
     <string name="lockAppEnablePasscode">You must enable a passcode in your iOS Settings in order to use Screen Lock.</string>
     <string name="lockAppLocked">{app_name} is locked</string>
-    <string name="lockAppQuickResponse">Quick response unavailable when Session is locked!</string>
     <string name="lockAppStatus">Lock status</string>
+    <string name="lockAppQuickResponse">Quick response is unavailable when {app_name} is locked!</string>
     <string name="lockAppUnlock">Tap to unlock</string>
     <string name="lockAppUnlocked">{app_name} is unlocked</string>
     <string name="max">Max</string>

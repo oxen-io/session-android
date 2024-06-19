@@ -96,7 +96,6 @@
     <string name="updateApp">Aktulizace aplikace</string>
     <string name="other">Ostatní</string>
     <!-- QuickResponseService -->
-    <string name="lockAppQuickResponse">Rychlá odpověď není dostupná, pokud je Session uzamčen!</string>
     <!-- SaveAttachmentTask -->
     <string name="saved">Uloženo</string>
     <!-- SearchToolbar -->
