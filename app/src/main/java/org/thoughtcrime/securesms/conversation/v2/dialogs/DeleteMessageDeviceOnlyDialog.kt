@@ -13,10 +13,12 @@ import org.thoughtcrime.securesms.createSessionDialog
  *
  * @param messageCount The number of messages to be deleted.
  * @param onDeleteDeviceOnly Callback to be executed when the user chooses to delete only on their device.
+ * @param onCancel Callback to be executed when cancelling the dialog.
  */
 class DeleteMessageDeviceOnlyDialog(
     private val messageCount: Int,
-    private val onDeleteDeviceOnly: () -> Unit
+    private val onDeleteDeviceOnly: () -> Unit,
+    private val onCancel: () -> Unit
 ) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {
@@ -34,6 +36,6 @@ class DeleteMessageDeviceOnlyDialog(
                 onDeleteDeviceOnly()
             }
         )
-        cancelButton()
+        cancelButton(onCancel)
     }
 }

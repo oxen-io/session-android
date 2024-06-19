@@ -164,13 +164,6 @@ class ConversationViewModel(
             }
     }
 
-    fun deleteMessagesWithoutUnsendRequest(messages: Set<MessageRecord>) = viewModelScope.launch {
-        repository.deleteMessageWithoutUnsendRequest(threadId, messages)
-            .onFailure {
-                showMessage("Couldn't delete message due to error: $it")
-            }
-    }
-
     fun banUser(recipient: Recipient) = viewModelScope.launch {
         repository.banUser(threadId, recipient)
             .onSuccess {

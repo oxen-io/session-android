@@ -14,11 +14,13 @@ import org.thoughtcrime.securesms.createSessionDialog
  * @param messageCount The number of messages to be deleted.
  * @param onDeleteDeviceOnly Callback to be executed when the user chooses to delete only on their device.
  * @param onDeleteAllDevices Callback to be executed when the user chooses to delete for everyone.
+ * @param onCancel Callback to be executed when cancelling the dialog.
  */
 class DeleteNoteToSelfDialog(
     private val messageCount: Int,
     private val onDeleteDeviceOnly: () -> Unit,
-    private val onDeleteAllDevices: () -> Unit
+    private val onDeleteAllDevices: () -> Unit,
+    private val onCancel: () -> Unit
 ) : DialogFragment() {
 
     // tracking the user choice from the radio buttons
@@ -50,7 +52,7 @@ class DeleteNoteToSelfDialog(
                 }
             }
         )
-        cancelButton()
+        cancelButton(onCancel)
     }
 
     private val deleteOptions: List<DeleteOption> = listOf(

@@ -61,7 +61,6 @@ interface ConversationRepository {
     fun setApproved(recipient: Recipient, isApproved: Boolean)
     suspend fun deleteForEveryone(threadId: Long, recipient: Recipient, message: MessageRecord): ResultOf<Unit>
     fun buildUnsendRequest(recipient: Recipient, message: MessageRecord): UnsendRequest?
-    suspend fun deleteMessageWithoutUnsendRequest(threadId: Long, messages: Set<MessageRecord>): ResultOf<Unit>
     suspend fun banUser(threadId: Long, recipient: Recipient): ResultOf<Unit>
     suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): ResultOf<Unit>
     suspend fun deleteThread(threadId: Long): ResultOf<Unit>
@@ -245,38 +244,6 @@ class DefaultConversationRepository @Inject constructor(
             author = message.takeUnless { it.isOutgoing }?.run { individualRecipient.address.contactIdentifier() } ?: textSecurePreferences.getLocalNumber(),
             timestamp = message.timestamp
         )
-    }
-
-    override suspend fun deleteMessageWithoutUnsendRequest(
-        threadId: Long,
-        messages: Set<MessageRecord>
-    ): ResultOf<Unit> = suspendCoroutine { continuation ->
-        val openGroup = lokiThreadDb.getOpenGroupChat(threadId)
-        if (openGroup != null) {
-            val messageServerIDs = mutableMapOf<Long, MessageRecord>()
-            for (message in messages) {
-                val messageServerID =
-                    lokiMessageDb.getServerID(message.id, !message.isMms) ?: continue
-                messageServerIDs[messageServerID] = message
-            }
-            messageServerIDs.forEach { (messageServerID, message) ->
-                OpenGroupApi.deleteMessage(messageServerID, openGroup.room, openGroup.server)
-                    .success {
-                        messageDataProvider.deleteMessage(message.id, !message.isMms)
-                    }.fail { error ->
-                        continuation.resumeWithException(error)
-                    }
-            }
-        } else {
-            for (message in messages) {
-                if (message.isMms) {
-                    mmsDb.deleteMessage(message.id)
-                } else {
-                    smsDb.deleteMessage(message.id)
-                }
-            }
-        }
-        continuation.resume(ResultOf.Success(Unit))
     }
 
     override suspend fun banUser(threadId: Long, recipient: Recipient): ResultOf<Unit> =

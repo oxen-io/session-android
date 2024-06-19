@@ -15,12 +15,14 @@ import org.thoughtcrime.securesms.createSessionDialog
  * @param defaultToEveryone Whether the dialog should default to deleting for everyone.
  * @param onDeleteDeviceOnly Callback to be executed when the user chooses to delete only on their device.
  * @param onDeleteForEveryone Callback to be executed when the user chooses to delete for everyone.
+ * @param onCancel Callback to be executed when cancelling the dialog.
  */
 class DeleteMessageDialog(
     private val messageCount: Int,
     private val defaultToEveryone: Boolean,
     private val onDeleteDeviceOnly: () -> Unit,
-    private val onDeleteForEveryone: () -> Unit
+    private val onDeleteForEveryone: () -> Unit,
+    private val onCancel: () -> Unit
 ) : DialogFragment() {
 
     // tracking the user choice from the radio buttons
@@ -52,7 +54,7 @@ class DeleteMessageDialog(
                 }
             }
         )
-        cancelButton()
+        cancelButton(onCancel)
     }
 
     private val deleteOptions: List<DeleteOption> = listOf(

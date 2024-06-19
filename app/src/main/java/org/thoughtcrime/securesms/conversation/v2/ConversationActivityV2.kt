@@ -1852,36 +1852,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         handleLongPress(messages.first(), 0) //TODO: begin selection mode
     }
 
-    // The option to "Delete just for me" or "Delete for everyone"
-    private fun showDeleteOrDeleteForEveryoneInCommunityUI(messages: Set<MessageRecord>) {
-        val bottomSheet = DeleteOptionsBottomSheet()
-        bottomSheet.recipient = viewModel.recipient!!
-        bottomSheet.onDeleteForMeTapped = {
-            messages.forEach(viewModel::deleteLocally)
-            bottomSheet.dismiss()
-            endActionMode()
-        }
-        bottomSheet.onDeleteForEveryoneTapped = {
-            messages.forEach(viewModel::deleteForEveryone)
-            bottomSheet.dismiss()
-            endActionMode()
-        }
-        bottomSheet.onCancelTapped = {
-            bottomSheet.dismiss()
-            endActionMode()
-        }
-        bottomSheet.show(supportFragmentManager, bottomSheet.tag)
-    }
-
-    private fun showDeleteLocallyUI(messages: Set<MessageRecord>) {
-        val messageCount = 1
-        showSessionDialog {
-            title(resources.getQuantityString(R.plurals.ConversationFragment_delete_selected_messages, messageCount, messageCount))
-            text(resources.getQuantityString(R.plurals.ConversationFragment_this_will_permanently_delete_all_n_selected_messages, messageCount, messageCount))
-            button(R.string.delete) { messages.forEach(viewModel::deleteLocally); endActionMode() }
-            cancelButton(::endActionMode)
-        }
-    }
 
     // Note: The messages in the provided set may be a single message, or multiple if there are a
     // group of selected messages.
@@ -1893,6 +1863,18 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
 
         // Refer to our figma document for info on message deletion [https://www.figma.com/design/kau6LggVcMMWmZRMibEo8F/Standardise-Message-Deletion?node-id=0-1&t=dEPcU0SZ9G2s4gh2-0]
+
+        //todo DELETION delete for everyone
+
+        //todo DELETION delete this device
+
+        //todo DELETION delete all my devices
+
+        //todo DELETION handle control messages
+
+        //todo DELETION handle delete the "this message has been deleted" messages
+
+        //todo DELETION deal with the "UnsendRequest" logic in figma
 
         val allSentByCurrentUser = messages.all { it.isOutgoing }
         // hashes are required if wanting to delete messages from the 'storage server' - they are not required for communities
@@ -1932,8 +1914,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             conversation.isLocalNumber -> {
                 DeleteNoteToSelfDialog(
                     messageCount = messages.size,
-                    onDeleteDeviceOnly = {},
-                    onDeleteAllDevices = {}
+                    onDeleteDeviceOnly = {
+                        endActionMode()
+                    },
+                    onDeleteAllDevices = {
+                        endActionMode()
+                    },
+                    onCancel = { endActionMode() }
                 ).show(supportFragmentManager, "DeleteNoteToSelfDialog")
             }
 
@@ -1942,17 +1929,25 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 DeleteMessageDialog(
                     messageCount = messages.size,
                     defaultToEveryone = isAdmin,
-                    onDeleteDeviceOnly = {},
-                    onDeleteForEveryone = {}
+                    onDeleteDeviceOnly = {
+                        endActionMode()
+                    },
+                    onDeleteForEveryone = {
+                        endActionMode()
+                    },
+                    onCancel = { endActionMode() }
                 ).show(supportFragmentManager, "DeleteMessageDialog")
             }
 
             // for non admins, users interacting with someone else's message, or control messages
             else -> {
-                //todo this should also happen for ControlMessages
+                //todo DELETION this should also happen for ControlMessages
                 DeleteMessageDeviceOnlyDialog(
                     messageCount = messages.size,
-                    onDeleteDeviceOnly = {}
+                    onDeleteDeviceOnly = {
+                        endActionMode()
+                    },
+                    onCancel = { endActionMode() }
                 ).show(supportFragmentManager, "DeleteMessageDeviceOnlyDialog")
             }
         }
