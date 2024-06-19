@@ -53,7 +53,6 @@
     <string name="KeyboardPagerfragment_back_to_emoji">Back to emoji</string>
     <string name="KeyboardPagerfragment_clear_search_entry">Clear search entry</string>
     <string name="MediaPickerActivity_send_to">Send to %s</string>
-    <string name="MessageNotifier_unknown_contact_message">Contact</string>
     <string name="ReactionsConversationView_plus">+%1$d</string>
     <string name="showLess">Show Less</string>
     <string name="Unblock_dialog__title_single">Unblock %s</string>
@@ -67,7 +66,7 @@
     <string name="theError">Error</string>
     <string name="about">About</string>
     <string name="accept">Accept</string>
-    <string name="accountIDCopy">Copy Account ID</string>
+    <string name="accountIdCopy">Copy Account ID</string>
     <string name="accountIdEnter">Enter Account ID</string>
     <string name="accountIdEnterYourFriends">Enter your friend\'s Account ID or ONS</string>
     <string name="accountIdErrorInvalid">This Account ID is invalid. Please check and try again.</string>
@@ -83,7 +82,6 @@
     <string name="activity_disappearing_messages_timer">Timer</string>
     <string name="activity_disappearing_messages_title">Disappearing Messages</string>
     <string name="activity_help_settings__export_logs">Export Logs</string>
-    <string name="activity_help_settings__faq">FAQ</string>
     <string name="activity_home_empty_state_button_title">Start a Session</string>
     <string name="activity_home_outdated_client_config">Some of your devices are using outdated versions. Syncing may be unreliable until they are updated.</string>
     <string name="activity_link_device_skip_prompt">This is taking a while, would you like to skip?</string>
@@ -583,7 +581,6 @@
     <string name="messageVoiceSlideToCancel">Slide to Cancel</string>
     <string name="message_details_header__disappears">Disappears</string>
     <string name="message_details_header__file_id">File Id:</string>
-    <string name="message_requests_decline_message">Are you sure you want to decline this message request?</string>
     <string name="messages">Messages</string>
     <string name="minimize">Minimize</string>
     <string name="new_conversation_dialog_back_button_content_description">Navigate Back</string>

@@ -231,7 +231,6 @@
     <string name="notificationsStyle">سبک اعلان</string>
     <string name="notificationsContent">محتوای اعلان</string>
     <string name="sessionPrivacy">حریم خصوصی</string>
-    <string name="activity_help_settings__faq">سؤالات متداول</string>
     <string name="activity_help_settings__export_logs">صدور گزارش‌ها</string>
     <string name="notificationsStrategy">استراتژی اعلان</string>
     <string name="useFastMode">استفاده از حالت سریع</string>
@@ -262,11 +261,9 @@
     <string name="pinUnpin">برداشتن سنجاق</string>
     <string name="messages">پیام‌ها</string>
     <string name="sessionMessageRequests">درخواست های پیام</string>
-    <string name="messageRequestsAcceptDescription">ارسال پیام به این کاربر موجب می‌شود درخواست پیام او به صورت خودکار قبول گردد و باعث آشکار شدن کد شناسایی Session شما میشود.</string>
     <string name="accept">پذیرفتن</string>
     <string name="decline">رد کردن</string>
     <string name="clearAll">حذف همه</string>
-    <string name="message_requests_decline_message">آیا مطمئن هستید که می خواهید این درخواست پیام را رد کنید؟</string>
     <string name="messageRequestsAccepted">درخواست پیام شما قبول شد.</string>
     <string name="messageRequestPending">درخواست پیام شما در انتظار پاسخ می باشد.</string>
     <string name="messageRequestsNonePending">هیچ درخواست پیامی وجود ندارد</string>

@@ -54,7 +54,7 @@
         app:showAsAction="never" />
 
     <item
-        android:title="@string/accountIDCopy"
+        android:title="@string/accountIdCopy"
         android:id="@+id/menu_context_copy_public_key"
         app:showAsAction="never" />
 

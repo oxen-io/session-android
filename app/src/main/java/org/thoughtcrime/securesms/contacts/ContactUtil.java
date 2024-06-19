@@ -21,7 +21,7 @@ public final class ContactUtil {
       return EmojiStrings.BUST_IN_SILHOUETTE + " " + contactName;
     }
 
-    return SpanUtil.italic(context.getString(R.string.MessageNotifier_unknown_contact_message));
+    return SpanUtil.italic(context.getString(R.string.unknown));
   }
 
   private static @NonNull String getDisplayName(@Nullable Contact contact) {

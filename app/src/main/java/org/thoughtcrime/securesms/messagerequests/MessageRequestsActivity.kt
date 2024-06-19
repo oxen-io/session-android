@@ -105,7 +105,7 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
 
         showSessionDialog {
             title(R.string.decline)
-            text(resources.getString(R.string.message_requests_decline_message))
+            text(resources.getString(R.string.messageRequestsDelete))
             button(R.string.decline) { doDecline() }
             button(R.string.no)
         }

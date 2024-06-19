@@ -29,7 +29,7 @@
     <PreferenceCategory>
         <Preference
             android:key="faq"
-            android:title="@string/activity_help_settings__faq"
+            android:title="@string/helpFAQ"
             android:widgetLayout="@layout/preference_external_link" />
     </PreferenceCategory>
 

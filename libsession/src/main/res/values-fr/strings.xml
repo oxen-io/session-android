@@ -248,7 +248,6 @@
     <string name="notificationsStyle">Style de notification</string>
     <string name="notificationsContent">Contenu de notification</string>
     <string name="sessionPrivacy">Confidentialité</string>
-    <string name="activity_help_settings__faq">FAQ</string>
     <string name="activity_help_settings__export_logs">Exporter les journaux</string>
     <string name="notificationsStrategy">Stratégie de notification</string>
     <string name="useFastMode">Utiliser le Mode Rapide</string>
@@ -280,11 +279,9 @@
     <string name="pinUnpin">Désépingler</string>
     <string name="messages">Messages</string>
     <string name="sessionMessageRequests">Demandes de message</string>
-    <string name="messageRequestsAcceptDescription">Envoyer un message à cet utilisateur acceptera automatiquement sa demande de message et révélera votre ID de session.</string>
     <string name="accept">Accepter</string>
     <string name="decline">Refuser</string>
     <string name="clearAll">Effacer tout</string>
-    <string name="message_requests_decline_message">Êtes-vous sûr de vouloir refuser cette demande de message ?</string>
     <string name="messageRequestsAccepted">Votre demande de message a été acceptée.</string>
     <string name="messageRequestPending">Votre demande de message est en attente.</string>
     <string name="messageRequestsNonePending">Aucune demande de message en attente</string>
