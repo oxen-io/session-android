@@ -249,7 +249,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
         relativeTimeSpan = getString(R.string.draft);
       }
 
-      if      (mediaItem.outgoing)          getSupportActionBar().setTitle(getString(R.string.onionRoutingPathYou));
+      if      (mediaItem.outgoing)          getSupportActionBar().setTitle(getString(R.string.you));
       else if (mediaItem.recipient != null) getSupportActionBar().setTitle(mediaItem.recipient.toShortString());
       else                                  getSupportActionBar().setTitle("");
 

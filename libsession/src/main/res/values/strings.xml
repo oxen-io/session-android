@@ -519,7 +519,7 @@
     <string name="loadAccount">Load Account</string>
     <string name="loadAccountProgressMessage">Loading your account</string>
     <string name="lockApp">Lock App</string>
-    <string name="lockAppDescriptionAndroid">Require fingerprint, PIN, pattern or password to unlock Session.</string>
+    <string name="lockAppDescriptionAndroid">Require fingerprint, PIN, pattern or password to unlock {app_name}.</string>
     <string name="lockAppDescriptionIos">Require Touch ID, Face ID or your passcode to unlock Session.</string>
     <string name="lockAppEnablePasscode">You must enable a passcode in your iOS Settings in order to use Screen Lock.</string>
     <string name="lockAppLocked">Session is locked</string>
@@ -653,7 +653,6 @@
     <string name="onionRoutingPathEntryNode">Entry Node</string>
     <string name="onionRoutingPathServiceNode">Service Node</string>
     <string name="onionRoutingPathUnknownCountry">Unknown Country</string>
-    <string name="onionRoutingPathYou">You</string>
     <string name="onsErrorNotRecognised">We couldn\'t recognise this ONS. Please check it and try again.</string>
     <string name="onsErrorUnableToSearch">We were unable to search for this ONS. Please try again later.</string>
     <string name="open">Open</string>

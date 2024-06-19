@@ -75,7 +75,7 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         val quoteIsLocalUser = localNumber != null && localNumber == author?.sessionID
 
         val authorDisplayName =
-            if (quoteIsLocalUser) context.getString(R.string.onionRoutingPathYou)
+            if (quoteIsLocalUser) context.getString(R.string.you)
             else author?.displayName(Contact.contextForRecipient(thread)) ?: "${authorPublicKey.take(4)}...${authorPublicKey.takeLast(4)}"
         binding.quoteViewAuthorTextView.text = authorDisplayName
         binding.quoteViewAuthorTextView.setTextColor(getTextColor(isOutgoingMessage))
