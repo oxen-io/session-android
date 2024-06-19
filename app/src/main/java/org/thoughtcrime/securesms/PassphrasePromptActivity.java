@@ -16,6 +16,8 @@
  */
 package org.thoughtcrime.securesms;
 
+import static org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.APP_NAME_KEY;
+
 import android.animation.Animator;
 import android.app.KeyguardManager;
 import android.content.ComponentName;
@@ -31,8 +33,13 @@ import android.view.animation.BounceInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.core.hardware.fingerprint.FingerprintManagerCompat;
 import androidx.core.os.CancellationSignal;
+
+import com.squareup.phrase.Phrase;
+
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.components.AnimatingToggle;
@@ -150,6 +157,16 @@ public class PassphrasePromptActivity extends BaseActionBarActivity {
   }
 
   private void initializeResources() {
+
+    TextView statusTitle = findViewById(R.id.app_lock_status_title);
+    if (statusTitle != null) {
+      Context c = getApplicationContext();
+      String lockedTxt = Phrase.from(c, R.string.lockAppLocked)
+              .put(APP_NAME_KEY, c.getString(R.string.app_name))
+              .format().toString();
+      statusTitle.setText(lockedTxt);
+    }
+
     visibilityToggle              = findViewById(R.id.button_toggle);
     fingerprintPrompt             = findViewById(R.id.fingerprint_auth_container);
     lockScreenButton              = findViewById(R.id.lock_screen_auth_container);

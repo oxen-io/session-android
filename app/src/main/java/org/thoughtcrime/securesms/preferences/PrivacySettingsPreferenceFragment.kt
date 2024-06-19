@@ -119,6 +119,8 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
                 requireContext().getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
             if (!keyguardManager.isKeyguardSecure) {
                 findPreference<SwitchPreferenceCompat>(TextSecurePreferences.SCREEN_LOCK)!!.isChecked = false
+
+                // TODO: Ticket SES-2182 raised to investigate & fix app lock / unlock functionality -ACL 2024/06/20
                 findPreference<Preference>(TextSecurePreferences.SCREEN_LOCK)!!.isEnabled = false
             }
         } else {

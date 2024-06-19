@@ -450,7 +450,7 @@
     <string name="groupLeave">Leave Group</string>
     <string name="groupLeaveDescription">Are you sure you want to leave {group_name}?</string>
     <string name="groupLeaveDescriptionAdmin">Are you sure you want to leave {group_name}? This will deactivate the group for all members.</string>
-    <string name="groupLeaveErrorFailed">Failed to leave {group_name}.</string>
+    <string name="groupLeaveErrorFailed">Failed to leave {group_name}</string>
     <string name="groupLegacyBanner">Groups have been upgraded, create a new group to upgrade. Old group functionality will be degraded from {date}.</string>
     <string name="groupMemberLeft"><b>{name}</b> left the group.</string>
     <string name="groupMemberLeftMore"><b>{name}</b> and <b>{count} others</b> left the group.</string>
@@ -520,11 +520,11 @@
     <string name="lockAppDescriptionAndroid">Require fingerprint, PIN, pattern or password to unlock {app_name}.</string>
     <string name="lockAppDescriptionIos">Require Touch ID, Face ID or your passcode to unlock Session.</string>
     <string name="lockAppEnablePasscode">You must enable a passcode in your iOS Settings in order to use Screen Lock.</string>
-    <string name="lockAppLocked">Session is locked</string>
+    <string name="lockAppLocked">{app_name} is locked</string>
     <string name="lockAppQuickResponse">Quick response unavailable when Session is locked!</string>
     <string name="lockAppStatus">Lock status</string>
     <string name="lockAppUnlock">Tap to unlock</string>
-    <string name="lockAppUnlocked">Session is unlocked</string>
+    <string name="lockAppUnlocked">{app_name} is unlocked</string>
     <string name="max">Max</string>
     <string name="media">Media</string>
     <string name="mediaMessage">Media message</string> <!-- ACL to confirm we are adding this - used to be `ThreadRecord_media_message` -->
