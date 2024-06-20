@@ -75,7 +75,6 @@
     <string name="accountIdShare">Hey, I\'ve been using {app_name} to chat with complete privacy and security. Come join me! My Account ID is<br/><br/>{account_id}<br/><br/>Download it at {download_url}</string>
     <string name="accountIdYours">Your Account ID</string>
     <string name="accountIdYoursDescription">This is your Account ID. Other users can scan it to start a conversation with you.</string>
-    <string name="activity_conversation_outdated_client_banner_text">%s is using an outdated client. Disappearing messages may not work as expected.</string>
     <string name="activity_create_closed_group_empty_state_button_title">Start a Session</string>
     <string name="activity_disappearing_messages_subtitle">This setting applies to messages you send in this conversation.</string>
     <string name="activity_disappearing_messages_subtitle_sent">Messages disappear after they have been sent.</string>
@@ -650,7 +649,7 @@
     <string name="onionRoutingPathEntryNode">Entry Node</string>
     <string name="onionRoutingPathServiceNode">Service Node</string>
     <string name="onionRoutingPathUnknownCountry">Unknown Country</string>
-    <string name="onsErrorNotRecognised">We couldn\'t recognise this ONS. Please check it and try again.</string>
+    <string name="onsErrorNotRecognized">We couldn\'t recognize this ONS. Please check it and try again.</string>
     <string name="onsErrorUnableToSearch">We were unable to search for this ONS. Please try again later.</string>
     <string name="open">Open</string>
     <string name="other">Other</string>

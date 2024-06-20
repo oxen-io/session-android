@@ -740,7 +740,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val recipient = viewModel.recipient?.takeUnless { it.isGroupRecipient } ?: return
         val sessionID = recipient.address.toString()
         val name = sessionContactDb.getContactWithSessionID(sessionID)?.displayName(Contact.ContactContext.REGULAR) ?: sessionID
-        binding?.blockedBannerTextView?.text = resources.getString(R.string.blockBlockedDescription, name)
+        binding?.blockedBannerTextView?.text = applicationContext.getString(R.string.blockBlockedDescription)
         binding?.blockedBanner?.isVisible = recipient.isBlocked
         binding?.blockedBanner?.setOnClickListener { viewModel.unblock() }
     }
@@ -753,8 +753,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
         binding?.outdatedBanner?.isVisible = shouldShowLegacy
         if (shouldShowLegacy) {
-            binding?.outdatedBannerTextView?.text =
-                resources.getString(R.string.activity_conversation_outdated_client_banner_text, legacyRecipient!!.name)
+            val txt = Phrase.from(applicationContext, R.string.disappearingMessagesLegacy)
+                .put(NAME_KEY, legacyRecipient!!.name)
+                .format()
+            binding?.outdatedBannerTextView?.text = txt
         }
     }
 
@@ -2180,14 +2182,14 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                         searchViewModel.onMissingResult() }
                 }
             }
-            binding?.searchBottomBar?.setData(result.position, result.getResults().size)
+            binding?.searchBottomBar?.setData(result.position, result.getResults().size, searchViewModel.getActiveQuery())
         })
     }
 
     fun onSearchOpened() {
         searchViewModel.onSearchOpened()
         binding?.searchBottomBar?.visibility = View.VISIBLE
-        binding?.searchBottomBar?.setData(0, 0)
+        binding?.searchBottomBar?.setData(0, 0, "")
         binding?.inputBar?.visibility = View.INVISIBLE
     }
 

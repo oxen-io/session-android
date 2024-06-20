@@ -35,7 +35,6 @@
         android:layout_above="@+id/typingIndicatorViewContainer"
         android:layout_below="@id/toolbar" />
 
-
     <org.thoughtcrime.securesms.conversation.v2.components.TypingIndicatorViewContainer
         android:focusable="false"
         android:id="@+id/typingIndicatorViewContainer"

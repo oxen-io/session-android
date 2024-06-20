@@ -9,8 +9,8 @@ import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewSearchBottomBarBinding
 import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.COUNT_KEY
+import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.QUERY_KEY
 import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.TOTAL_COUNT_KEY
-
 
 class SearchBottomBar : LinearLayout {
     private lateinit var binding: ViewSearchBottomBarBinding
@@ -25,7 +25,7 @@ class SearchBottomBar : LinearLayout {
         binding = ViewSearchBottomBarBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
-    fun setData(position: Int, count: Int) = with(binding) {
+    fun setData(position: Int, count: Int, query: String?) = with(binding) {
         searchProgressWheel.visibility = GONE
         searchUp.setOnClickListener { v: View? ->
             if (eventListener != null) {
@@ -37,13 +37,25 @@ class SearchBottomBar : LinearLayout {
                 eventListener!!.onSearchMoveDownPressed()
             }
         }
+
+        // If we found search results list how many we found
         if (count > 0) {
             searchPosition.text = Phrase.from(context, R.string.searchMatches)
                 .put(COUNT_KEY, position + 1)
                 .put(TOTAL_COUNT_KEY, count)
                 .format()
         } else {
-            searchPosition.text = ""
+            // If there are no results we don't display anything if the query is
+            // empty, but we'll substitute "No results found for <query>" otherwise.
+            var txt = ""
+            if (query != null) {
+                if (query.isNotEmpty()) {
+                    txt = Phrase.from(context, R.string.searchMatchesNoneSpecific)
+                        .put(QUERY_KEY, query)
+                        .format().toString()
+                }
+            }
+            searchPosition.text = txt
         }
         setViewEnabled(searchUp, position < count - 1)
         setViewEnabled(searchDown, position > 0)

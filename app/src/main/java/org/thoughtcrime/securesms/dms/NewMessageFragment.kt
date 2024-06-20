@@ -70,7 +70,7 @@ class NewMessageFragment : Fragment() {
                 createPrivateChat(hexEncodedPublicKey)
             }.failUi { exception ->
                 hideLoader()
-                var message = getString(R.string.onsErrorNotRecognised)
+                var message = getString(R.string.onsErrorNotRecognized)
                 exception.localizedMessage?.let {
                     message = it
                 }

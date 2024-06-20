@@ -292,7 +292,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
     captionContainer          = findViewById(R.id.media_preview_caption_container);
     playbackControlsContainer = findViewById(R.id.media_preview_playback_controls_container);
 
-    setSupportActionBar(findViewById(R.id.toolbar));
+    setSupportActionBar(findViewById(R.id.search_toolbar));
     ActionBar actionBar = getSupportActionBar();
     actionBar.setDisplayHomeAsUpEnabled(true);
     actionBar.setHomeButtonEnabled(true);

@@ -44,10 +44,9 @@ public class SearchToolbar extends LinearLayout {
     inflate(getContext(), R.layout.search_toolbar, this);
     setOrientation(VERTICAL);
 
-    Toolbar toolbar = findViewById(R.id.toolbar);
+    Toolbar toolbar = findViewById(R.id.search_toolbar);
 
-    toolbar.setNavigationIcon(
-            getContext().getResources().getDrawable(R.drawable.ic_baseline_clear_24));
+    toolbar.setNavigationIcon(getContext().getResources().getDrawable(R.drawable.ic_baseline_clear_24));
     toolbar.inflateMenu(R.menu.conversation_list_search);
 
     this.searchItem = toolbar.getMenu().findItem(R.id.action_filter_search);
