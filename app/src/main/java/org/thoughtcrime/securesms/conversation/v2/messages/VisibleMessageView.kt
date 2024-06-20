@@ -32,6 +32,8 @@ import org.session.libsession.messaging.contacts.Contact.ContactContext
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.ThemeUtil
+import org.session.libsession.utilities.ThemeUtil.*
 import org.session.libsession.utilities.ViewUtil
 import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsession.utilities.modifyLayoutParams
@@ -364,7 +366,7 @@ class VisibleMessageView : LinearLayout {
     private fun getMessageStatusInfo(message: MessageRecord): MessageStatusInfo = when {
         message.isFailed ->
             MessageStatusInfo(R.drawable.ic_delivery_status_failed,
-                resources.getColor(R.color.destructive, context.theme),
+                getThemedColor(context, R.attr.danger),
                 R.string.delivery_status_failed
             )
         message.isSyncFailed ->

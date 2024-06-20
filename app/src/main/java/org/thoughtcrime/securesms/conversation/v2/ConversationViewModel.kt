@@ -141,9 +141,8 @@ class ConversationViewModel(
         repository.deleteThread(threadId)
     }
 
-    fun deleteLocally(message: MessageRecord) {
-        val recipient = recipient ?: return Log.w("Loki", "Recipient was null for delete locally action")
-        repository.deleteLocally(recipient, message)
+    fun deleteLocally(messages: Set<MessageRecord>, threadId: Long) {
+        repository.deleteLocally(messages, threadId)
     }
 
     fun setRecipientApproved() {
@@ -160,13 +159,6 @@ class ConversationViewModel(
             }
             .onFailure {
                 Log.w("Loki", "FAILED TO delete message ${message.id} ")
-                showMessage("Couldn't delete message due to error: $it")
-            }
-    }
-
-    fun deleteMessagesWithoutUnsendRequest(messages: Set<MessageRecord>) = viewModelScope.launch {
-        repository.deleteMessageWithoutUnsendRequest(threadId, messages)
-            .onFailure {
                 showMessage("Couldn't delete message due to error: $it")
             }
     }

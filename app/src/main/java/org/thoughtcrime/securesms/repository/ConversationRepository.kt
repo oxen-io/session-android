@@ -56,12 +56,11 @@ interface ConversationRepository {
     fun clearDrafts(threadId: Long)
     fun inviteContacts(threadId: Long, contacts: List<Recipient>)
     fun setBlocked(recipient: Recipient, blocked: Boolean)
-    fun deleteLocally(recipient: Recipient, message: MessageRecord)
+    fun deleteLocally(messages: Set<MessageRecord>, threadId: Long)
     fun deleteAllLocalMessagesInThreadFromSenderOfMessage(messageRecord: MessageRecord)
     fun setApproved(recipient: Recipient, isApproved: Boolean)
     suspend fun deleteForEveryone(threadId: Long, recipient: Recipient, message: MessageRecord): ResultOf<Unit>
     fun buildUnsendRequest(recipient: Recipient, message: MessageRecord): UnsendRequest?
-    suspend fun deleteMessageWithoutUnsendRequest(threadId: Long, messages: Set<MessageRecord>): ResultOf<Unit>
     suspend fun banUser(threadId: Long, recipient: Recipient): ResultOf<Unit>
     suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): ResultOf<Unit>
     suspend fun deleteThread(threadId: Long): ResultOf<Unit>
@@ -159,13 +158,17 @@ class DefaultConversationRepository @Inject constructor(
         storage.setBlocked(listOf(recipient), blocked)
     }
 
-    override fun deleteLocally(recipient: Recipient, message: MessageRecord) {
-        buildUnsendRequest(recipient, message)?.let { unsendRequest ->
-            textSecurePreferences.getLocalNumber()?.let {
-                MessageSender.send(unsendRequest, Address.fromSerialized(it))
-            }
+    override fun deleteLocally(messages: Set<MessageRecord>, threadId: Long) {
+        // split the messages into mms and sms
+        val (mms, sms) = messages.partition { it.isMms }
+
+        if(mms.isNotEmpty()){
+            messageDataProvider.deleteMessages(mms.map { it.id }, threadId, isSms = false)
         }
-        messageDataProvider.deleteMessage(message.id, !message.isMms)
+
+        if(sms.isNotEmpty()){
+            messageDataProvider.deleteMessages(sms.map { it.id }, threadId, isSms = true)
+        }
     }
 
     override fun deleteAllLocalMessagesInThreadFromSenderOfMessage(messageRecord: MessageRecord) {
@@ -245,38 +248,6 @@ class DefaultConversationRepository @Inject constructor(
             author = message.takeUnless { it.isOutgoing }?.run { individualRecipient.address.contactIdentifier() } ?: textSecurePreferences.getLocalNumber(),
             timestamp = message.timestamp
         )
-    }
-
-    override suspend fun deleteMessageWithoutUnsendRequest(
-        threadId: Long,
-        messages: Set<MessageRecord>
-    ): ResultOf<Unit> = suspendCoroutine { continuation ->
-        val openGroup = lokiThreadDb.getOpenGroupChat(threadId)
-        if (openGroup != null) {
-            val messageServerIDs = mutableMapOf<Long, MessageRecord>()
-            for (message in messages) {
-                val messageServerID =
-                    lokiMessageDb.getServerID(message.id, !message.isMms) ?: continue
-                messageServerIDs[messageServerID] = message
-            }
-            messageServerIDs.forEach { (messageServerID, message) ->
-                OpenGroupApi.deleteMessage(messageServerID, openGroup.room, openGroup.server)
-                    .success {
-                        messageDataProvider.deleteMessage(message.id, !message.isMms)
-                    }.fail { error ->
-                        continuation.resumeWithException(error)
-                    }
-            }
-        } else {
-            for (message in messages) {
-                if (message.isMms) {
-                    mmsDb.deleteMessage(message.id)
-                } else {
-                    smsDb.deleteMessage(message.id)
-                }
-            }
-        }
-        continuation.resume(ResultOf.Success(Unit))
     }
 
     override suspend fun banUser(threadId: Long, recipient: Recipient): ResultOf<Unit> =

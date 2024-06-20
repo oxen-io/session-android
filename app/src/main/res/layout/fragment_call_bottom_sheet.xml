@@ -62,7 +62,7 @@
 
         <TextView
             style="@style/Widget.Session.Button.Common.ProminentFilled"
-            android:backgroundTint="@color/destructive"
+            android:backgroundTint="?danger"
             android:layout_marginHorizontal="@dimen/small_spacing"
             android:id="@+id/declineButton"
             android:layout_width="wrap_content"

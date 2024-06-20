@@ -248,6 +248,7 @@ private fun handleConfigurationMessage(message: ConfigurationMessage) {
 }
 
 fun MessageReceiver.handleUnsendRequest(message: UnsendRequest): Long? {
+    //todo DELETION modify unsend request validation
     val userPublicKey = MessagingModuleConfiguration.shared.storage.getUserPublicKey()
     if (message.sender != message.author && (message.sender != userPublicKey && userPublicKey != null)) { return null }
     val context = MessagingModuleConfiguration.shared.context

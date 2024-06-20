@@ -35,7 +35,7 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:background="@drawable/circle_tintable"
-                android:backgroundTint="@color/destructive" />
+                android:backgroundTint="?danger" />
 
             <TextView
                 android:id="@+id/recordingViewDurationTextView"
@@ -121,7 +121,7 @@
             android:alpha="0.5"
             android:layout_centerInParent="true"
             android:background="@drawable/circle_tintable"
-            android:backgroundTint="@color/destructive" />
+            android:backgroundTint="?danger" />
 
     </RelativeLayout>
 
@@ -136,7 +136,7 @@
         android:layout_marginEnd="-8dp"
         android:layout_marginBottom="0dp"
         android:background="@drawable/circle_tintable"
-        android:backgroundTint="@color/destructive" >
+        android:backgroundTint="?danger" >
 
         <ImageView
             android:id="@+id/recordButtonOverlayImageView"

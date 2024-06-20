@@ -463,7 +463,7 @@
                         android:id="@+id/clearText"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:textColor="@color/destructive"
+                        android:textColor="?danger"
                         android:textSize="@dimen/medium_font_size"
                         android:layout_marginHorizontal="@dimen/medium_spacing"
                         android:textStyle="bold"

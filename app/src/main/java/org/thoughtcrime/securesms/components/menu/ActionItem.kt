@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms.components.menu
 
 import android.content.Context
 import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 
 /**
@@ -13,5 +14,5 @@ data class ActionItem(
   val action: Runnable,
   val contentDescription: Int? = null,
   val subtitle: ((Context) -> CharSequence?)? = null,
-  @ColorRes val color: Int? = null,
+  @ColorInt val color: Int? = null,
 )
