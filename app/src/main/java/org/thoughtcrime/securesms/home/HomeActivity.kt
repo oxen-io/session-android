@@ -691,7 +691,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 setupMessageRequestsBanner()
                 homeViewModel.tryUpdateChannel()
             }
-            button(R.string.no) // Do nothing
+            button(R.string.no)
         }
     }
 

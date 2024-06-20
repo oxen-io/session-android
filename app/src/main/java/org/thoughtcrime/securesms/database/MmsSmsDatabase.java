@@ -249,15 +249,12 @@ public class MmsSmsDatabase extends Database {
   public int getNotifiedCount(long threadId) {
     String selection = MmsSmsColumns.NOTIFIED + " = 1 AND " + MmsSmsColumns.THREAD_ID + " = " + threadId;
     try (Cursor cursor = queryTables(PROJECTION, selection, null, null)) {
-
-      //return cursor != null ? cursor.getCount() : 0;
-
       if (cursor == null) {
-        Log.w("[ACL]", "Cursor is null in MmsSmsDB.getNotifiedCount - returning 0.");
+        Log.w(TAG, "Cursor is null in MmsSmsDB.getNotifiedCount - returning 0.");
         return 0;
       }
       else {
-        Log.w("[ACL]", "Cursor `getNotifiedCount` is: " + cursor.getCount());
+        Log.w(TAG, "Cursor `getNotifiedCount` is: " + cursor.getCount());
         return cursor.getCount();
       }
     }
