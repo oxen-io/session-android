@@ -93,11 +93,11 @@ class ConversationViewModelTest: BaseViewModelTest() {
 
     @Test
     fun `should delete locally`() {
-        val message = mock<MessageRecord>()
+        val messages = mock<Set<MessageRecord>>()
 
-        viewModel.deleteLocally(message)
+        viewModel.deleteLocally(messages, threadId)
 
-        verify(repository).deleteLocally(recipient, message)
+        verify(repository).deleteLocally(messages, threadId)
     }
 
     @Test

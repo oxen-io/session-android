@@ -1915,6 +1915,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 DeleteNoteToSelfDialog(
                     messageCount = messages.size,
                     onDeleteDeviceOnly = {
+                        viewModel.deleteLocally(messages = messages, threadId = viewModel.threadId)
                         endActionMode()
                     },
                     onDeleteAllDevices = {
@@ -1930,6 +1931,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     messageCount = messages.size,
                     defaultToEveryone = isAdmin,
                     onDeleteDeviceOnly = {
+                        viewModel.deleteLocally(messages = messages, threadId = viewModel.threadId)
                         endActionMode()
                     },
                     onDeleteForEveryone = {
@@ -1945,6 +1947,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 DeleteMessageDeviceOnlyDialog(
                     messageCount = messages.size,
                     onDeleteDeviceOnly = {
+                        viewModel.deleteLocally(messages = messages, threadId = viewModel.threadId)
                         endActionMode()
                     },
                     onCancel = { endActionMode() }

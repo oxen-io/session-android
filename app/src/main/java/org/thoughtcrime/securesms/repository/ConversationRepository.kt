@@ -56,7 +56,7 @@ interface ConversationRepository {
     fun clearDrafts(threadId: Long)
     fun inviteContacts(threadId: Long, contacts: List<Recipient>)
     fun setBlocked(recipient: Recipient, blocked: Boolean)
-    fun deleteLocally(recipient: Recipient, message: MessageRecord)
+    fun deleteLocally(messages: Set<MessageRecord>, threadId: Long)
     fun deleteAllLocalMessagesInThreadFromSenderOfMessage(messageRecord: MessageRecord)
     fun setApproved(recipient: Recipient, isApproved: Boolean)
     suspend fun deleteForEveryone(threadId: Long, recipient: Recipient, message: MessageRecord): ResultOf<Unit>
@@ -158,13 +158,17 @@ class DefaultConversationRepository @Inject constructor(
         storage.setBlocked(listOf(recipient), blocked)
     }
 
-    override fun deleteLocally(recipient: Recipient, message: MessageRecord) {
-        buildUnsendRequest(recipient, message)?.let { unsendRequest ->
-            textSecurePreferences.getLocalNumber()?.let {
-                MessageSender.send(unsendRequest, Address.fromSerialized(it))
-            }
+    override fun deleteLocally(messages: Set<MessageRecord>, threadId: Long) {
+        // split the messages into mms and sms
+        val (mms, sms) = messages.partition { it.isMms }
+
+        if(mms.isNotEmpty()){
+            messageDataProvider.deleteMessages(mms.map { it.id }, threadId, isSms = false)
         }
-        messageDataProvider.deleteMessage(message.id, !message.isMms)
+
+        if(sms.isNotEmpty()){
+            messageDataProvider.deleteMessages(sms.map { it.id }, threadId, isSms = true)
+        }
     }
 
     override fun deleteAllLocalMessagesInThreadFromSenderOfMessage(messageRecord: MessageRecord) {

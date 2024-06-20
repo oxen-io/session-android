@@ -141,9 +141,8 @@ class ConversationViewModel(
         repository.deleteThread(threadId)
     }
 
-    fun deleteLocally(message: MessageRecord) {
-        val recipient = recipient ?: return Log.w("Loki", "Recipient was null for delete locally action")
-        repository.deleteLocally(recipient, message)
+    fun deleteLocally(messages: Set<MessageRecord>, threadId: Long) {
+        repository.deleteLocally(messages, threadId)
     }
 
     fun setRecipientApproved() {
