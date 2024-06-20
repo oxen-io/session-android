@@ -30,7 +30,9 @@ class ModalUrlBottomSheet(private val url: String): BottomSheetDialogFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val explanation = Phrase.from(context, R.string.urlOpenDescription).put(URL_KEY, url).format().toString()
+        val explanation = Phrase.from(context, R.string.urlOpenDescription)
+            .put(URL_KEY, url)
+            .format()
         val spannable = SpannableStringBuilder(explanation)
         val startIndex = explanation.indexOf(url)
         spannable.setSpan(StyleSpan(Typeface.BOLD), startIndex, startIndex + url.count(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
