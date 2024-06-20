@@ -510,7 +510,7 @@
     <string name="linkPreviewsEnable">Enable Link Previews</string>
     <string name="linkPreviewsErrorLoad">Unable to load link preview</string>
     <string name="linkPreviewsErrorUnsecure">Preview not loaded for unsecure link</string>
-    <string name="linkPreviewsFirstDescription">Display previews for URLs you send and receive. This can be useful, however Session must contact linked websites to generate previews. You can always turn off link previews in Session\'s settings.</string>
+    <string name="linkPreviewsFirstDescription">Display previews for URLs you send and receive. This can be useful, however {app_name} must contact linked websites to generate previews. You can always turn off link previews in {app_name}\'s settings.</string>
     <string name="linkPreviewsSend">Send Link Previews</string>
     <string name="linkPreviewsSendModalDescription">You will not have full metadata protection when sending link previews.</string>
     <string name="loadAccount">Load Account</string>
