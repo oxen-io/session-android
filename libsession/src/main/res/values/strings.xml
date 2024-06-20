@@ -368,7 +368,7 @@
     <string name="disappearingMessagesSet"><b>{name}</b> has set messages to disappear {time} after they have been {disappearing_messages_type}.</string>
     <string name="disappearingMessagesSetYou"><b>You</b> set messages to disappear {time} after they have been {disappearing_messages_type}.</string>
     <string name="disappearingMessagesTimer">Timer</string>
-    <string name="disappearingMessagesTurnedOff"><b>{name}</b> has turned disappearing messages off. Messages you send will no longer disappear.</string>
+    <string name="disappearingMessagesTurnedOff"><b>{name}</b> has turned disappearing messages off. Messages they send will no longer disappear.</string>
     <string name="disappearingMessagesTurnedOffYou"><b>You</b> turned <b>off</b> disappearing messages. Messages you send will no longer disappear.</string>
     <string name="disappearingMessagesTypeRead">read</string>
     <string name="disappearingMessagesTypeSent">sent</string>

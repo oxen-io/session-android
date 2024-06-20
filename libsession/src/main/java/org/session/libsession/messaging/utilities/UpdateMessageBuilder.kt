@@ -201,10 +201,9 @@ object UpdateMessageBuilder {
             }
             else // ..or by someone else.
             {
-                // ACL TODO - Do we want one of these to be "has turned THEIR disappearing messages off?" - likely the 1-on-1?
-                val stringId = if (isGroup) R.string.disappearingMessagesTurnedOff else
-                                            R.string.disappearingMessagesTurnedOff
-                Phrase.from(context, stringId).put(NAME_KEY, senderName).format().toString()
+                Phrase.from(context, R.string.disappearingMessagesTurnedOff)
+                    .put(NAME_KEY, senderName)
+                    .format().toString()
             }
         }
 

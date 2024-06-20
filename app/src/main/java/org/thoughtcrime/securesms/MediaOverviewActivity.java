@@ -57,6 +57,7 @@ import org.session.libsession.messaging.messages.control.DataExtractionNotificat
 import org.session.libsession.messaging.sending_receiving.MessageSender;
 import org.session.libsession.snode.SnodeAPI;
 import org.session.libsession.utilities.Address;
+import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter;
 import org.thoughtcrime.securesms.database.MediaDatabase;
 import org.thoughtcrime.securesms.database.loaders.BucketedThreadMediaLoader;
@@ -118,17 +119,26 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
   }
 
   private void initializeResources() {
-    Address address = getIntent().getParcelableExtra(ADDRESS_EXTRA);
-
     this.viewPager = ViewUtil.findById(this, R.id.pager);
-    this.toolbar   = ViewUtil.findById(this, R.id.toolbar);
+    this.toolbar   = ViewUtil.findById(this, R.id.search_toolbar);
     this.tabLayout = ViewUtil.findById(this, R.id.tab_layout);
-    this.recipient = Recipient.from(this, address, true);
+
+    Address address = getIntent().getParcelableExtra(ADDRESS_EXTRA);
+    if (address == null) {
+      Log.w(TAG, "Got null address in initializeResources.");
+    } else {
+      this.recipient = Recipient.from(this, address, true);
+    }
   }
 
   private void initializeToolbar() {
     setSupportActionBar(this.toolbar);
     ActionBar actionBar = getSupportActionBar();
+    if (actionBar == null) {
+      Log.w(TAG, "Could not get support actionbar");
+      return;
+    }
+    // Implied else that the actionbar is fine to work with...
     actionBar.setTitle(recipient.toShortString());
     actionBar.setDisplayHomeAsUpEnabled(true);
     actionBar.setHomeButtonEnabled(true);
