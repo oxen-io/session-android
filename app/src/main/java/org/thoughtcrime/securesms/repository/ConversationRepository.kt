@@ -1,6 +1,5 @@
 package org.thoughtcrime.securesms.repository
 
-import network.loki.messenger.libsession_util.util.ExpiryMode
 import android.content.ContentResolver
 import android.content.Context
 import app.cash.copper.Query
@@ -8,6 +7,7 @@ import app.cash.copper.flow.observeQuery
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
@@ -71,19 +71,12 @@ interface ConversationRepository {
     ): ResultOf<Unit>
 
     suspend fun banUser(threadId: Long, recipient: Recipient): ResultOf<Unit>
-
     suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): ResultOf<Unit>
-
     suspend fun deleteThread(threadId: Long): ResultOf<Unit>
-
     suspend fun deleteMessageRequest(thread: ThreadRecord): ResultOf<Unit>
-
     suspend fun clearAllMessageRequests(block: Boolean): ResultOf<Unit>
-
     suspend fun acceptMessageRequest(threadId: Long, recipient: Recipient): ResultOf<Unit>
-
     fun declineMessageRequest(threadId: Long)
-
     fun hasReceived(threadId: Long): Boolean
 
 }
