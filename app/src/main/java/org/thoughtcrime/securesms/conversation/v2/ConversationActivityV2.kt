@@ -1924,7 +1924,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun showDeleteLocallyUI(messages: Set<MessageRecord>) {
-        val messageCount = 1
         val titleStringId = if (messages.count() == 1) R.string.deleteMessage else R.string.deleteMessages
         showSessionDialog {
             title(resources.getString(titleStringId))
