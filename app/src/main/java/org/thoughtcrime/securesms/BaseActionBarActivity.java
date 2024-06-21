@@ -30,13 +30,15 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
   private static final String TAG = BaseActionBarActivity.class.getSimpleName();
   public ThemeState currentThemeState;
 
+  private Resources.Theme modifiedTheme;
+
   private TextSecurePreferences getPreferences() {
     ApplicationContext appContext = (ApplicationContext) getApplicationContext();
     return appContext.textSecurePreferences;
   }
 
   @StyleRes
-  public int getDesiredTheme() {
+  private int getDesiredTheme() {
     ThemeState themeState = ActivityUtilitiesKt.themeState(getPreferences());
     int userSelectedTheme = themeState.getTheme();
 
@@ -58,7 +60,7 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
   }
 
   @StyleRes @Nullable
-  public Integer getAccentTheme() {
+  private Integer getAccentTheme() {
     if (!getPreferences().hasPreference(SELECTED_ACCENT_COLOR)) return null;
     ThemeState themeState = ActivityUtilitiesKt.themeState(getPreferences());
     return themeState.getAccentStyle();
@@ -66,8 +68,12 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
 
   @Override
   public Resources.Theme getTheme() {
+    if (modifiedTheme != null) {
+        return modifiedTheme;
+    }
+
     // New themes
-    Resources.Theme modifiedTheme = super.getTheme();
+    modifiedTheme = super.getTheme();
     modifiedTheme.applyStyle(getDesiredTheme(), true);
     Integer accentTheme = getAccentTheme();
     if (accentTheme != null) {

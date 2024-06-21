@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/unreadMarkerContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/small_spacing"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:visibility="gone"
+    tools:visibility="visible">
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="@dimen/medium_spacing"
+        android:layout_marginEnd="@dimen/small_spacing"
+        android:layout_weight="1"
+        android:background="?android:colorAccent" />
+
+    <TextView
+        android:id="@+id/unreadMarker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/unread_marker"
+        android:textColor="?android:colorAccent"
+        android:textSize="@dimen/small_font_size"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="@dimen/small_spacing"
+        android:layout_marginEnd="@dimen/medium_spacing"
+        android:layout_weight="1"
+        android:background="?android:colorAccent" />
+</LinearLayout>

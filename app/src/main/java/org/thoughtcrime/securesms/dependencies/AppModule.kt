@@ -19,11 +19,11 @@ abstract class AppModule {
 
     @Binds
     abstract fun bindConversationRepository(repository: DefaultConversationRepository): ConversationRepository
-
 }
 
 @EntryPoint
 @InstallIn(SingletonComponent::class)
 interface AppComponent {
     fun getPrefs(): TextSecurePreferences
+
 }

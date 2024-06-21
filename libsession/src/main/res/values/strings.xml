@@ -200,7 +200,7 @@
     <string name="blockUnblockedUser">Unblocked {name}</string>
     <string name="blockUnblockNameMultiple">Are you sure you want to unblock {name} and {count} others?</string>
     <string name="blockUnblockName">Are you sure you want to unblock {name}?</string>
-    <string name="blockUnblockName">Are you sure you want to unblock {name} and 1 other?</string>
+    <string name="blockUnblockNameTwo">Are you sure you want to unblock {name} and 1 other?</string>
     <string name="call">Call</string>
     <string name="callsCalledYou">{name} called you</string>
     <string name="callsCannotStart">You cannot start a new call. Finish your current call first.</string>
