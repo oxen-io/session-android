@@ -58,7 +58,6 @@
     <string name="Unblock_dialog__title_single">Unblock %s</string>
     <string name="WebRtcCallActivity_Session_Call">Session Call</string>
 
-
     <!-- Strings with modern names and {braced} substitution markers-->
     <string name="andMore">+{count}</string>
     <string name="theContinue">Continue</string>
@@ -85,9 +84,9 @@
     <string name="activity_home_outdated_client_config">Some of your devices are using outdated versions. Syncing may be unreliable until they are updated.</string>
     <string name="activity_link_device_skip_prompt">This is taking a while, would you like to skip?</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Please Pick an Option</string>
-    <string name="activity_register_explanation">Your Session ID is the unique address people can use to contact you on Session. With no connection to your real identity, your Session ID is totally anonymous and private by design.</string>
-    <string name="activity_register_title">Say hello to your Session ID</string>
-    <string name="activity_seed_explanation">Your recovery phrase is the master key to your Session ID — you can use it to restore your Session ID if you lose access to your device. Store your recovery phrase in a safe place, and don\'t give it to anyone.</string>
+    <string name="activity_register_explanation">Your Session ID is the unique address people can use to contact you on Session. With no connection to your real identity, your Session ID is totally anonymous and private by design.</string> <!-- Replaced during onboarding -->
+    <string name="activity_register_title">Say hello to your Session ID</string> <!-- Replaced during onboarding -->
+    <string name="activity_seed_explanation">Your recovery phrase is the master key to your Session ID — you can use it to restore your Session ID if you lose access to your device. Store your recovery phrase in a safe place, and don\'t give it to anyone.</string> <!-- Replaced during onboarding -->
     <string name="activity_seed_reveal_button_title">Hold to reveal</string>
     <string name="activity_seed_title_2">Meet your recovery phrase</string>
     <string name="activity_settings_remove">Remove</string>
