@@ -1866,15 +1866,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
         //todo DELETION delete for everyone
 
-        //todo DELETION delete this device
-
         //todo DELETION delete all my devices
 
         //todo DELETION handle control messages
 
         //todo DELETION handle delete the "this message has been deleted" messages
 
-        //todo DELETION deal with the "UnsendRequest" logic in figma
 
         val allSentByCurrentUser = messages.all { it.isOutgoing }
         // hashes are required if wanting to delete messages from the 'storage server' - they are not required for communities
@@ -1905,6 +1902,14 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             else -> false
         }
 
+        // creating a reusable callback
+        val deleteDeviceOnly = {
+            viewModel.deleteLocally(messages = messages, threadId = viewModel.threadId)
+            endActionMode()
+            //todo DELETION replace deleted messages with 'deleted message' bubble
+            //todo DELETION show confirmation toast
+        }
+
         // There are three types of dialogs for deletion:
         // 1- Delete on device only OR all devices - Used for Note to self
         // 2- Delete on device only OR for everyone - Used for 'admins' or a user's own messages, as long as the message have a server hash
@@ -1914,10 +1919,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             conversation.isLocalNumber -> {
                 DeleteNoteToSelfDialog(
                     messageCount = messages.size,
-                    onDeleteDeviceOnly = {
-                        viewModel.deleteLocally(messages = messages, threadId = viewModel.threadId)
-                        endActionMode()
-                    },
+                    onDeleteDeviceOnly = deleteDeviceOnly,
                     onDeleteAllDevices = {
                         endActionMode()
                     },
@@ -1930,10 +1932,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 DeleteMessageDialog(
                     messageCount = messages.size,
                     defaultToEveryone = isAdmin,
-                    onDeleteDeviceOnly = {
-                        viewModel.deleteLocally(messages = messages, threadId = viewModel.threadId)
-                        endActionMode()
-                    },
+                    onDeleteDeviceOnly = deleteDeviceOnly,
                     onDeleteForEveryone = {
                         endActionMode()
                     },
@@ -1946,10 +1945,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 //todo DELETION this should also happen for ControlMessages
                 DeleteMessageDeviceOnlyDialog(
                     messageCount = messages.size,
-                    onDeleteDeviceOnly = {
-                        viewModel.deleteLocally(messages = messages, threadId = viewModel.threadId)
-                        endActionMode()
-                    },
+                    onDeleteDeviceOnly = deleteDeviceOnly,
                     onCancel = { endActionMode() }
                 ).show(supportFragmentManager, "DeleteMessageDeviceOnlyDialog")
             }
