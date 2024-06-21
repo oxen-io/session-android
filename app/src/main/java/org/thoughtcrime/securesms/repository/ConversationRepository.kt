@@ -56,6 +56,7 @@ interface ConversationRepository {
     fun clearDrafts(threadId: Long)
     fun inviteContacts(threadId: Long, contacts: List<Recipient>)
     fun setBlocked(recipient: Recipient, blocked: Boolean)
+    fun markMessagesAsDeleted(messages: Set<MessageRecord>, threadId: Long)
     fun deleteLocally(messages: Set<MessageRecord>, threadId: Long)
     fun deleteAllLocalMessagesInThreadFromSenderOfMessage(messageRecord: MessageRecord)
     fun setApproved(recipient: Recipient, isApproved: Boolean)
@@ -158,6 +159,10 @@ class DefaultConversationRepository @Inject constructor(
         storage.setBlocked(listOf(recipient), blocked)
     }
 
+    /**
+     * This will delete these messages from the db
+     * Not to be confused with 'marking messages as deleted'
+     */
     override fun deleteLocally(messages: Set<MessageRecord>, threadId: Long) {
         // split the messages into mms and sms
         val (mms, sms) = messages.partition { it.isMms }
@@ -169,6 +174,27 @@ class DefaultConversationRepository @Inject constructor(
         if(sms.isNotEmpty()){
             messageDataProvider.deleteMessages(sms.map { it.id }, threadId, isSms = true)
         }
+    }
+
+    /**
+     * This will mark the messages as deleted.
+     * They won't be removed from the db but instead will appear as a special type
+     * of message that says something like "This message was deleted"
+     */
+    override fun markMessagesAsDeleted(messages: Set<MessageRecord>, threadId: Long) {
+        // split the messages into mms and sms
+        val (mms, sms) = messages.partition { it.isMms }
+
+        if(mms.isNotEmpty()){
+            messageDataProvider.markMessagesAsDeleted(mms.map { it.id }, threadId, isSms = false)
+        }
+
+        if(sms.isNotEmpty()){
+            messageDataProvider.markMessagesAsDeleted(sms.map { it.id }, threadId, isSms = true)
+        }
+
+        //todo DELETION delete attachments and links
+        //todo DELETION delete notifications
     }
 
     override fun deleteAllLocalMessagesInThreadFromSenderOfMessage(messageRecord: MessageRecord) {

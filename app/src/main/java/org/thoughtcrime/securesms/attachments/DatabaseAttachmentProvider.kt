@@ -221,12 +221,28 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
         val message = database.getMessageFor(timestamp, address) ?: return null
         val messagingDatabase: MessagingDatabase = if (message.isMms)  DatabaseComponent.get(context).mmsDatabase()
                                                    else DatabaseComponent.get(context).smsDatabase()
-        messagingDatabase.markAsDeleted(message.id, message.isRead, message.hasMention)
+        messagingDatabase.markAsDeleted(message.id)
         if (message.isOutgoing) {
             messagingDatabase.deleteMessage(message.id)
         }
-
+//todo DELETION might need to change this with new logic
         return message.id
+    }
+
+    override fun markMessagesAsDeleted(
+        messageIDs: List<Long>,
+        threadId: Long,
+        isSms: Boolean
+    ) {
+        val messagingDatabase: MessagingDatabase = if (isSms)  DatabaseComponent.get(context).smsDatabase()
+        else DatabaseComponent.get(context).mmsDatabase()
+
+        //todo DELETION can this be batched?
+        //todo DELETION we need to have different types of "marked as deleted": incoming and outgoing
+        //todo DELETION we need to have customisable text for "marked as deleted" message
+        messageIDs.forEach { messageID ->
+            messagingDatabase.markAsDeleted(messageID)
+        }
     }
 
     override fun getServerHashForMessage(messageID: Long, mms: Boolean): String? =

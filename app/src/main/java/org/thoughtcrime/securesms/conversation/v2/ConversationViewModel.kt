@@ -141,8 +141,21 @@ class ConversationViewModel(
         repository.deleteThread(threadId)
     }
 
+    /**
+     * This will delete these messages from the db
+     * Not to be confused with 'marking messages as deleted'
+     */
     fun deleteLocally(messages: Set<MessageRecord>, threadId: Long) {
         repository.deleteLocally(messages, threadId)
+    }
+
+    /**
+     * This will mark the messages as deleted.
+     * They won't be removed from the db but instead will appear as a special type
+     * of message that says something like "This message was deleted"
+     */
+    fun markAsDeleted(messages: Set<MessageRecord>, threadId: Long) {
+        repository.markMessagesAsDeleted(messages, threadId)
     }
 
     fun setRecipientApproved() {
