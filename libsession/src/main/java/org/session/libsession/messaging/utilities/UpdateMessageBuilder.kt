@@ -26,19 +26,7 @@ import org.session.util.StringSubstitutionConstants.OTHER_NAME_KEY
 import org.session.util.StringSubstitutionConstants.TIME_KEY
 
 object UpdateMessageBuilder {
-
     const val TAG = "libsession"
-
-    // Keys for Phrase library string substitutions - do not include the curly braces!
-    /*
-    const val COUNT_KEY                      = "count"
-    const val DISAPPEARING_MESSAGES_TYPE_KEY = "disappearing_messages_type"
-    const val GROUP_NAME_KEY                 = "group_name"
-    const val MEMBERS_KEY                    = "members"
-    const val NAME_KEY                       = "name"
-    const val OTHER_NAME_KEY                 = "other_name"
-    const val TIME_KEY                       = "time"
-    */
 
     val storage = MessagingModuleConfiguration.shared.storage
 

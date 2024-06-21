@@ -57,7 +57,6 @@
     <string name="cameraErrorUnavailable">Kamera utilgjengeleg.</string>
     <!-- MediaRepository -->
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Mottok ei melding som er kryptert med ein gammal versjon av Session som ikkje lenger vert støtta. Be avsendaren om å oppdatera til nyaste versjon og senda meldinga på nytt.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

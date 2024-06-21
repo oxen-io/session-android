@@ -59,7 +59,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Kogu meedia</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Vastuvõetud sõnum, mis on krüptitud kasutades vana, mittetoetatud Sessioni versiooni. Palun palu saatjal uuendada uusimale versioonile ja siis sõnum uuesti saata.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

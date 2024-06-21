@@ -63,7 +63,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Tüm medya</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Artık desteklenmeyen eski bir Signal sürümü kullanılarak şifrelenmiş bir ileti alındı. Gönderen kişiden Session\'i en son sürüme güncellemesini ve iletiyi yeniden göndermesini isteyin.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

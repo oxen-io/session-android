@@ -51,7 +51,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Semua media</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Menerima pesan terenkripsi menggunakan Session versi lama tidak lagi didukung, Harap beri tahu pengirim untuk memutakhirkan ke versi terbaru dan kirim ulang pesannya.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

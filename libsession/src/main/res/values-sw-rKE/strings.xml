@@ -51,7 +51,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Vyombo vyote vya habari</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Imepokea ujumbe uliofichwa kwa kutumia toleo la zamani la Session ambayo haitumiki tena. Tafadhali kumwomba mtumaji kuwasasishe kwa toleo la hivi karibuni na kurejesha ujumbe.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

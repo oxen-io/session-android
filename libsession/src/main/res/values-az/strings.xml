@@ -63,7 +63,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Bütün media</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Artıq dəstəklənməyən Session-un əvvəlki versiyası istifadə edilərək şifrələnmiş bir mesaj alındı. Zəhmət olmasa göndərən şəxsdən tətbiqi ən son versiyaya yeniləyib mesajı təkrar göndərməsini xahiş edin.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

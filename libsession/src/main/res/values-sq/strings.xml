@@ -63,7 +63,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Krejt mediat</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Morët një mesazh të fshehtëzuar duke përdorur një version të vjetër të Session-it, që nuk mirëmbahet më. Ju lutemi, kërkojini dërguesit ta përditësojë me versionin më të ri dhe ta ridërgojë mesazhin.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

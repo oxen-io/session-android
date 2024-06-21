@@ -199,7 +199,9 @@
     <string name="blockDescription">Are you sure you want to block <b>{name}</b>? Blocked users cannot send you message requests, group invites or call you.</string>
     <string name="blockUnblock">Unblock</string>
     <string name="blockUnblockedUser">Unblocked {name}</string>
+    <string name="blockUnblockNameMultiple">Are you sure you want to unblock {name} and {count} others?</string>
     <string name="blockUnblockName">Are you sure you want to unblock {name}?</string>
+    <string name="blockUnblockName">Are you sure you want to unblock {name} and 1 other?</string>
     <string name="call">Call</string>
     <string name="callsCalledYou">{name} called you</string>
     <string name="callsCannotStart">You cannot start a new call. Finish your current call first.</string>
@@ -544,7 +546,7 @@
     <string name="messageEmpty">This message is empty.</string>
     <string name="messageErrorDelivery">Message delivery failed</string>
     <string name="messageErrorLimit">Message limit reached</string>
-    <string name="messageErrorOld">Received a message encrypted using an old version of Session that is no longer supported. Please ask the sender to update to the most recent version and resend the message.</string>
+    <string name="messageErrorOld">Received a message encrypted using an old version of {app_name} that is no longer supported. Please ask the sender to update to the most recent version and resend the message.</string>
     <string name="messageErrorOriginal">Original message not found</string>
     <string name="messageInfo">Message Info</string>  <!-- ACL - Potentially replaced by 'info' -->
     <string name="messageMarkRead">Mark read</string>

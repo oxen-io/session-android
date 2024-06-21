@@ -63,7 +63,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Alle Medieninhalte</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Eine empfangene Nachricht wurde mit einer alten, nicht mehr unterstützten Version von Signal verschlüsselt. Bitte den Absender, Session auf die neueste Version zu aktualisieren und die Nachricht erneut zu senden.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

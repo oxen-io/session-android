@@ -58,7 +58,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Hemû medya</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Peyamek ku bi guhertoyek bêkêr ya Signalê hatiye şifrekirin hate wergirtin. Ji şandiyarî re bêje bila Sessionê hildemîne û peyamê dîsa bişîne.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

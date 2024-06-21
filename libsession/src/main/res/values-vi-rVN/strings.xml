@@ -50,7 +50,6 @@
     <!-- MediaSendActivity -->
     <!-- MediaRepository -->
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Đã nhận một tin nhắn được mã khoá bởi phiên bản Session cũ và không còn được hỗ trợ. Hãy yêu cầu người gửi cập nhật phiên bản mới nhất và gửi lại tin nhắn.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

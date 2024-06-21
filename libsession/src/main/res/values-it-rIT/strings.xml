@@ -63,7 +63,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Tutti i file multimediali</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Hai ricevuto un messaggio cifrato usando una vecchia versione di Session che non è più supportata. Ti preghiamo di chiedere al mittente di aggiornare l\'app e rimandare il messaggio.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

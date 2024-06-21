@@ -371,7 +371,7 @@ class VisibleMessageView : LinearLayout {
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_failed,
                 context.getColor(R.color.accent_orange),
-                R.string.messageStatusFailedToSend
+                R.string.messageStatusFailedToSync
             )
         message.isPending ->
             MessageStatusInfo(

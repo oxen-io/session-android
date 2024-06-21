@@ -54,7 +54,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">สื่อทั้งหมด</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">ได้รับข้อความที่เข้ารหัสด้วย Session รุ่นเก่าที่ไม่รองรับอีกต่อไปแล้ว โปรดขอให้ผู้ส่งอัพเดตแอปเป็นเวอร์ชันล่าสุดและส่งข้อความอีกครั้ง</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

@@ -67,7 +67,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Wszystkie multimedia</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Otrzymano zaszyfrowaną wiadomość wysłaną przy użyciu starej wersji Session, która nie jest już wspierana. Poproś nadawcę tej wiadomości o zaktualizowanie aplikacji do najnowszej wersji i przesłanie wiadomości ponownie.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

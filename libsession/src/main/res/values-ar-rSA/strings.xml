@@ -71,7 +71,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">جميع الوسائط</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">لقد استلمت رسالة مشفرة من إصدارة Session قديمة وتوقف دعمها. من فضلك اطلب من الراسل الترقية إلي أحدث إصدار وإعادة إرسال الرسالة.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

@@ -68,7 +68,6 @@
     <string name="conversationsSettingsAllMedia">Всі медіа-файли
 Всі зображення</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Отримано повідомлення, яке зашифроване старою версією Session, яка вже не підтримується. Попросіть друга оновитися до останньої версії та надіслати повідомлення знову.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

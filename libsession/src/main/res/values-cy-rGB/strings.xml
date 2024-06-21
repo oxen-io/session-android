@@ -67,7 +67,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Pob cyfrwng</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Wedi derbyn neges wedi\'i hamgryptio gan ddefnyddio hen fersiwn o Session nad yw bellach yn cael ei gefnogi. Gofynnwch i\'r anfonwr ddiweddaru i\'r fersiwn ddiweddaraf ac ail-anfon y neges.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

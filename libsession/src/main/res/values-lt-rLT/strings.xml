@@ -67,7 +67,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Visa medija</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Gauta žinutė buvo užšifruota, naudojant seną Session versiją, kuri daugiau nebepalaikoma. Paprašykite siuntėjo atnaujinti savo programėlę į naujausią versiją ir iš naujo išsiųsti žinutę.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

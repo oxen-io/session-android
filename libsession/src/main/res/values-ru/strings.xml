@@ -67,7 +67,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Все медиафайлы</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Полученное сообщение зашифровано в старой версии Session, которая больше не поддерживается. Пожалуйста, попросите отправителя обновиться до последней версии и отправить сообщение заново.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

@@ -67,7 +67,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Všechna media</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Přijata zpráva šifrovaná starou verzí Session, která již není podporována. Prosím požádejte odesílatele, aby si zaktualizoval aplikaci na nejnovější verzi a poté poslal zprávu znovu.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

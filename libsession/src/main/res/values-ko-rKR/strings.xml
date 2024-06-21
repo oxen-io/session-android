@@ -60,7 +60,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">모든 미디어</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">지원하지 않는 Session 버전으로 부터 암호화된 메시지를 받았습니다. 상대방에게 최신 버전으로 업데이트 하고 다시 보내기를 요청해 주세요.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

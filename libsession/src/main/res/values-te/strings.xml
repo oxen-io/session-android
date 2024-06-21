@@ -64,7 +64,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">అన్ని మీడియా</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">ఇకపై మద్దతు అని Session యొక్క పాత సంస్కరణను ఉపయోగించి ఎన్క్రిప్ట్ ఒక సందేశాన్ని పొందింది. దయచేసి ఇటీవల సంస్కరణకు అప్డేట్ మరియు సందేశాన్ని మళ్లీ పంపినవారు అడగండి</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

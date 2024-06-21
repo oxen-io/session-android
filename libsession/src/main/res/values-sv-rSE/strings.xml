@@ -63,7 +63,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">All media</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Tog emot ett meddelande som krypterats med en tidigare version av Session som inte längre stöds. Be avsändaren uppdatera till senaste versionen och skicka om meddelandet.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

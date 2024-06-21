@@ -63,7 +63,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">सभी मीडिया</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Session के पुराने संस्करण का उपयोग करके एन्क्रिप्ट किया गया एक संदेश प्राप्त हुआ जो अब समर्थित नहीं है। कृपया प्रेषक से नवीनतम संस्करण में अपडेट करने और संदेश भेजने के लिए कहें।</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

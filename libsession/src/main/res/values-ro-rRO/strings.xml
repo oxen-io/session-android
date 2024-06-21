@@ -65,7 +65,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Toate fișierele media</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Ai primit un mesaj care a fost criptat cu o versiune mai veche de Session care nu mai este suportată. Roagă-l pe expeditor să-și actualizeze aplicația la ultima versiune și să retrimită mesajul.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

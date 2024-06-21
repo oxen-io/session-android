@@ -66,7 +66,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">כל המדיה</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">התקבלה הודעה מוצפנת ע\"י שימוש בגרסה ישנה של Session שאינה נתמכת יותר. אנא בקש מהשולח לעדכן אל הגרסה העדכנית ביותר ולשלוח מחדש את ההודעה.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

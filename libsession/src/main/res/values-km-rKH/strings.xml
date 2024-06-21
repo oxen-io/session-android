@@ -58,7 +58,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">ព័ត៌មានទាំងអស់</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">ទទួលបានសារដែលមានកាណាល់កូដសម្ងាត់ តែជាជំនាន់ចាស់របស់Session ដែលគេលែងប្រើហើយ។ សូមប្រាប់អ្នកផ្ញើ ឲ្យធ្វើបច្ចុប្បន្នភាពទៅជំនាន់ចុងក្រោយបង្អស់ និងផ្ញើសារម្តងទៀត។</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

@@ -54,7 +54,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Tukuylla uyayrikuchik</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Shuk pakalla chaski chayamurka ñawpa Signalmanta, mana paskarita usharinchu. Maykan kachamushkaman Sessionta mushukyachichun mañapay, chaski chayamuchun.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

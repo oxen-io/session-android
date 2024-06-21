@@ -63,7 +63,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Բոլոր մեդիաները</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Հաղորդագրությունը չի ուղարկվել, քանի որ session-ի տվյալ տարբերակը հնացել է, խնդրում ենք թարմացնել այն, և ուղարկեք հաղորդագրությունը նորից.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

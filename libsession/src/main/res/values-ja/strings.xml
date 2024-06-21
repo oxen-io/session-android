@@ -61,7 +61,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">すべてのメディア</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">受信したメッセージは古いSignalで暗号化されているので解読不能です。Sessionをアップデートして再送するよう送信者にお願いしてください。</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

@@ -76,7 +76,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Tous les médias</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Vous avez reçu un message chiffré avec une ancienne version de Signal qui n’est plus prise en charge. Veuillez demander à l’expéditeur de mettre Session à jour vers la version la plus récente et de renvoyer son message.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

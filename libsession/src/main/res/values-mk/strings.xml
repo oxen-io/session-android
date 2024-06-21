@@ -46,7 +46,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">ရုပ်/သံ/ပုံ စာများအားလုံး</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">ထပ်မံပံ့ပိုးမှုမရှိတော့သော Session ဗားရှင်းအဟောင်းဖြင့် encrypt လုပ်ထားသော စာကိုလက်ခံရရှိသည်။ စာပို့သူအား signal နောက်ဆုံးဗားရှင်းကိုမြှင့်ပြီး စာအားပြန်ပို့ခုိင်းပါ။</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

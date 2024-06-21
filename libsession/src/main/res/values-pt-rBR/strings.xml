@@ -63,7 +63,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Todas as mídias</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Recebida uma mensagem encriptada usando uma versão antiga de Session que não é mais suportada. Por favor peça o(a) enviador(a) que atualize para a versão mais recente e reenvie a mensagem.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

@@ -64,7 +64,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Összes médiafájl</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Egy olyan üzenet érkezett, amely a Session egy régebbi, már nem támogatott verziójával lett titkosítva. Kérd meg a feladót, hogy frissítsen a legfrissebb verzióra, majd küldje el újra az üzenetet!</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

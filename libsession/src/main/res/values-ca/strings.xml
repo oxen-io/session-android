@@ -62,7 +62,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Tot el contingut</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">S\'ha rebut un missatge encriptat amb una versió antiga del Session que ja no s\'admet. Digueu-li a l\'emissor que l\'actualitzi a la versió més recent i torni a enviar el missatge.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

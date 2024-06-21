@@ -61,7 +61,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">所有媒体</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">已收到的信息使用了旧版本的 Signal 进行加密，并且已经不再被支持。请联系发送者升级 Session 到最新版本然后再次发送该信息。</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

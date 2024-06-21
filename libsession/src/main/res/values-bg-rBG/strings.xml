@@ -61,7 +61,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Всички прикачените файлове</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Получихте съобщение криптирано със стара версия на Session, която вече не се поддържа. Моля, помолете изпращача да обнови версията си и да препрати съобщението.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

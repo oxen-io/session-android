@@ -64,7 +64,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Сви медији</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Примљена је порука шифрована старим издањем Session-a које више није подржано. Замолите пошиљаоца да надогради на најновије издање и поново пошаље поруку.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->

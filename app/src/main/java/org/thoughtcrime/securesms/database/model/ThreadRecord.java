@@ -17,6 +17,7 @@
  */
 package org.thoughtcrime.securesms.database.model;
 
+import static org.session.util.StringSubstitutionConstants.APP_NAME_KEY;
 import static org.session.util.StringSubstitutionConstants.DISAPPEARING_MESSAGES_TYPE_KEY;
 import static org.session.util.StringSubstitutionConstants.NAME_KEY;
 import static org.session.util.StringSubstitutionConstants.TIME_KEY;
@@ -118,7 +119,10 @@ public class ThreadRecord extends DisplayRecord {
         } else if (isOpenGroupInvitation()) {
             return emphasisAdded(context.getString(R.string.communityInvitation));
         } else if (MmsSmsColumns.Types.isLegacyType(type)) {
-            return emphasisAdded(context.getString(R.string.messageErrorOld));
+            String txt = Phrase.from(context, R.string.messageErrorOld)
+                    .put(APP_NAME_KEY, context.getString(R.string.app_name))
+                    .format().toString();
+            return emphasisAdded(txt);
         } else if (MmsSmsColumns.Types.isDraftMessageType(type)) {
             String draftText = context.getString(R.string.draft);
             return emphasisAdded(draftText + " " + getBody(), 0, draftText.length());

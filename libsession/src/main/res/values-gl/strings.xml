@@ -62,7 +62,6 @@
     <!-- MediaRepository -->
     <string name="conversationsSettingsAllMedia">Ficheiros multimedia</string>
     <!-- MessageRecord -->
-    <string name="messageErrorOld">Recibiuse unha mensaxe cifrada a través dunha versión antiga de Session que xa non ten soporte. Por favor, pídelle ao remitente que actualice a súa versión e volva enviar a mensaxe.</string>
     <!-- ExpirationDialog -->
     <!-- PassphrasePromptActivity -->
     <!-- RecipientPreferencesActivity -->
