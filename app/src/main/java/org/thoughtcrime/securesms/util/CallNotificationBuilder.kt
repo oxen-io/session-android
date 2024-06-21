@@ -12,11 +12,11 @@ import androidx.core.app.NotificationManagerCompat
 import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.util.StringSubstitutionConstants.NAME_KEY
 import org.thoughtcrime.securesms.calls.WebRtcCallActivity
 import org.thoughtcrime.securesms.notifications.NotificationChannels
 import org.thoughtcrime.securesms.preferences.SettingsActivity
 import org.thoughtcrime.securesms.service.WebRtcCallService
-import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.NAME_KEY
 
 class CallNotificationBuilder {
 

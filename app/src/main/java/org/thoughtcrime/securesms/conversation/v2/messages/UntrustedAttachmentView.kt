@@ -9,10 +9,9 @@ import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewUntrustedAttachmentBinding
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.util.StringSubstitutionConstants.FILE_TYPE_KEY
 import org.thoughtcrime.securesms.conversation.v2.dialogs.DownloadDialog
 import org.thoughtcrime.securesms.util.ActivityDispatcher
-import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.FILE_TYPE_KEY
-import java.util.Locale
 
 class UntrustedAttachmentView: LinearLayout {
     private val binding: ViewUntrustedAttachmentBinding by lazy { ViewUntrustedAttachmentBinding.bind(this) }

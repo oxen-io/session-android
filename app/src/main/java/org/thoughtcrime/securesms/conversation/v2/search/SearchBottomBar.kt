@@ -8,9 +8,9 @@ import android.widget.LinearLayout
 import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewSearchBottomBarBinding
-import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.COUNT_KEY
-import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.QUERY_KEY
-import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.TOTAL_COUNT_KEY
+import org.session.util.StringSubstitutionConstants.COUNT_KEY
+import org.session.util.StringSubstitutionConstants.QUERY_KEY
+import org.session.util.StringSubstitutionConstants.TOTAL_COUNT_KEY
 
 class SearchBottomBar : LinearLayout {
     private lateinit var binding: ViewSearchBottomBarBinding

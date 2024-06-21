@@ -18,15 +18,14 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityPnModeBinding
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.ThemeUtil
+import org.session.util.StringSubstitutionConstants.APP_NAME_KEY
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.BaseActionBarActivity
 import org.thoughtcrime.securesms.home.HomeActivity
-import org.thoughtcrime.securesms.notifications.PushManager
 import org.thoughtcrime.securesms.notifications.PushRegistry
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.GlowViewUtilities
 import org.thoughtcrime.securesms.util.PNModeView
-import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.APP_NAME_KEY
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.getAccentColor
 import org.thoughtcrime.securesms.util.getColorWithID
@@ -53,6 +52,10 @@ class PNModeActivity : BaseActionBarActivity() {
             contentView.disableClipping()
 
             messageNotificationExplanation.text = Phrase.from(applicationContext, R.string.onboardingMessageNotificationExplanation)
+                .put(APP_NAME_KEY, getString(R.string.app_name))
+                .format()
+
+            slowModeDescriptionTV?.text = Phrase.from(applicationContext, R.string.notificationsSlowModeDescription)
                 .put(APP_NAME_KEY, getString(R.string.app_name))
                 .format()
 

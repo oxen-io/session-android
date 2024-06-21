@@ -75,7 +75,6 @@
     <!-- ThreadRecord -->
     <string name="groupUpdated">Csoport frissítve</string>
     <!-- UpdateApkReadyListener -->
-    <string name="updateNewVersion">A Session egy új verziója érhető el, koppints a frissítéshez</string>
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->

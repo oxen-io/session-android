@@ -72,7 +72,6 @@
     <!-- ThreadRecord -->
     <string name="groupUpdated">群組已更新</string>
     <!-- UpdateApkReadyListener -->
-    <string name="updateNewVersion">有新版本的 Session，輕觸更新</string>
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->

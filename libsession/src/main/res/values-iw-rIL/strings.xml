@@ -77,7 +77,6 @@
     <!-- ThreadRecord -->
     <string name="groupUpdated">הקבוצה עודכנה</string>
     <!-- UpdateApkReadyListener -->
-    <string name="updateNewVersion">גרסה חדשה של Session זמינה, הקש כדי לעדכן</string>
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->

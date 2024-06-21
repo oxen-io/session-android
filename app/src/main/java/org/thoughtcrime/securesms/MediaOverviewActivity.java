@@ -16,7 +16,7 @@
  */
 package org.thoughtcrime.securesms;
 
-import static org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.APP_NAME_KEY;
+import static org.session.util.StringSubstitutionConstants.APP_NAME_KEY;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -33,7 +33,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,38 +47,34 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
-
 import com.codewaves.stickyheadergrid.StickyHeaderGridLayoutManager;
 import com.google.android.material.tabs.TabLayout;
 import com.squareup.phrase.Phrase;
-
-import org.session.libsession.messaging.messages.control.DataExtractionNotification;
-import org.session.libsession.messaging.sending_receiving.MessageSender;
-import org.session.libsession.snode.SnodeAPI;
-import org.session.libsession.utilities.Address;
-import org.session.libsignal.utilities.Log;
-import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter;
-import org.thoughtcrime.securesms.database.MediaDatabase;
-import org.thoughtcrime.securesms.database.loaders.BucketedThreadMediaLoader;
-import org.thoughtcrime.securesms.database.loaders.BucketedThreadMediaLoader.BucketedThreadMedia;
-import org.thoughtcrime.securesms.database.loaders.ThreadMediaLoader;
-import org.thoughtcrime.securesms.mms.GlideApp;
-import org.thoughtcrime.securesms.permissions.Permissions;
-import org.session.libsession.utilities.recipients.Recipient;
-import org.thoughtcrime.securesms.util.AttachmentUtil;
-import org.thoughtcrime.securesms.util.SaveAttachmentTask;
-import org.thoughtcrime.securesms.util.StickyHeaderDecoration;
-import org.session.libsession.utilities.Util;
-import org.session.libsession.utilities.ViewUtil;
-import org.session.libsession.utilities.task.ProgressDialogAsyncTask;
-
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-
 import kotlin.Unit;
 import network.loki.messenger.R;
+import org.session.libsession.messaging.messages.control.DataExtractionNotification;
+import org.session.libsession.messaging.sending_receiving.MessageSender;
+import org.session.libsession.snode.SnodeAPI;
+import org.session.libsession.utilities.Address;
+import org.session.libsession.utilities.Util;
+import org.session.libsession.utilities.ViewUtil;
+import org.session.libsession.utilities.recipients.Recipient;
+import org.session.libsession.utilities.task.ProgressDialogAsyncTask;
+import org.session.libsignal.utilities.Log;
+import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter;
+import org.thoughtcrime.securesms.database.MediaDatabase;
+import org.thoughtcrime.securesms.database.loaders.BucketedThreadMediaLoader.BucketedThreadMedia;
+import org.thoughtcrime.securesms.database.loaders.BucketedThreadMediaLoader;
+import org.thoughtcrime.securesms.database.loaders.ThreadMediaLoader;
+import org.thoughtcrime.securesms.mms.GlideApp;
+import org.thoughtcrime.securesms.permissions.Permissions;
+import org.thoughtcrime.securesms.util.AttachmentUtil;
+import org.thoughtcrime.securesms.util.SaveAttachmentTask;
+import org.thoughtcrime.securesms.util.StickyHeaderDecoration;
 
 /**
  * Activity for displaying media attachments in-app

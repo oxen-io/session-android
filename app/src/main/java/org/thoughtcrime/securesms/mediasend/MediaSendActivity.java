@@ -1,5 +1,7 @@
 package org.thoughtcrime.securesms.mediasend;
 
+import static org.session.util.StringSubstitutionConstants.APP_NAME_KEY;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +21,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.squareup.phrase.Phrase;
 
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.MediaTypes;
@@ -356,10 +360,19 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
   }
 
   private void navigateToCamera() {
+
+    Context c = getApplicationContext();
+    String permanentDenialTxt = Phrase.from(c, R.string.cameraGrantAccessDenied)
+            .put(APP_NAME_KEY, c.getString(R.string.app_name))
+            .format().toString();
+    String requireCameraPermissionsTxt = Phrase.from(c, R.string.cameraGrantAccessDescription)
+            .put(APP_NAME_KEY, c.getString(R.string.app_name))
+            .format().toString();
+
     Permissions.with(this)
                .request(Manifest.permission.CAMERA)
-               .withRationaleDialog(getString(R.string.cameraGrantAccessDescription), R.drawable.ic_baseline_photo_camera_48)
-               .withPermanentDenialDialog(getString(R.string.cameraGrantAccessDenied))
+               .withRationaleDialog(requireCameraPermissionsTxt, R.drawable.ic_baseline_photo_camera_48)
+               .withPermanentDenialDialog(permanentDenialTxt)
                .onAllGranted(() -> {
                  Camera1Fragment fragment = getOrCreateCameraFragment();
                  getSupportFragmentManager().beginTransaction()
@@ -368,7 +381,7 @@ public class MediaSendActivity extends PassphraseRequiredActionBarActivity imple
                                             .addToBackStack(null)
                                             .commit();
                })
-               .onAnyDenied(() -> Toast.makeText(MediaSendActivity.this, R.string.cameraGrantAccessDescription, Toast.LENGTH_LONG).show())
+               .onAnyDenied(() -> Toast.makeText(MediaSendActivity.this, requireCameraPermissionsTxt, Toast.LENGTH_LONG).show())
                .execute();
   }
 

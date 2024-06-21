@@ -36,11 +36,11 @@ import org.junit.runner.RunWith
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.guava.Optional
+import org.session.util.StringSubstitutionConstants.URL_KEY
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBar
 import org.thoughtcrime.securesms.home.HomeActivity
 import org.thoughtcrime.securesms.mms.GlideApp
-import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.URL_KEY
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest

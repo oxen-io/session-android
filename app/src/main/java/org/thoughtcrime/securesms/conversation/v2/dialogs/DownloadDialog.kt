@@ -14,10 +14,10 @@ import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.AttachmentDownloadJob
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.util.StringSubstitutionConstants.CONVERSATION_NAME_KEY
 import org.thoughtcrime.securesms.createSessionDialog
 import org.thoughtcrime.securesms.database.SessionContactDatabase
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.CONVERSATION_NAME_KEY
 import javax.inject.Inject
 
 /** Shown when receiving media from a contact for the first time, to confirm that

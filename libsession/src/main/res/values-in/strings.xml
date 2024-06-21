@@ -69,7 +69,6 @@
     <!-- ThreadRecord -->
     <string name="groupUpdated">Grup diperbarui</string>
     <!-- UpdateApkReadyListener -->
-    <string name="updateNewVersion">Versi terbaru dari Session telah tersedia, klik untuk memperbarui</string>
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->

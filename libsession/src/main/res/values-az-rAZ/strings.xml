@@ -74,7 +74,6 @@
     <!-- ThreadRecord -->
     <string name="groupUpdated">Qrup yeniləndi</string>
     <!-- UpdateApkReadyListener -->
-    <string name="updateNewVersion">Session-ın yeni versiyası hazırdır, yeniləmək üçün toxunun</string>
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->

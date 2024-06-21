@@ -6,8 +6,8 @@ import androidx.fragment.app.DialogFragment
 import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.util.StringSubstitutionConstants.APP_NAME_KEY
 import org.thoughtcrime.securesms.createSessionDialog
-import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.APP_NAME_KEY
 
 /** Shown the first time the user inputs a URL that could generate a link preview, to
  * let them know that Session offers the ability to send and receive link previews. */

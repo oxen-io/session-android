@@ -78,7 +78,6 @@
     <!-- ThreadRecord -->
     <string name="groupUpdated">Skupina upravena</string>
     <!-- UpdateApkReadyListener -->
-    <string name="updateNewVersion">Je k dispozici nová verze Session, klikněte pro aktualizaci</string>
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->

@@ -72,7 +72,6 @@
     <!-- ThreadRecord -->
     <string name="groupUpdated">Групата е обновена</string>
     <!-- UpdateApkReadyListener -->
-    <string name="updateNewVersion">Има нова версия на Session, натиснете, за да обновите.</string>
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->

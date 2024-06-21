@@ -25,10 +25,10 @@ import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.OpenGroupUrlParser
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
+import org.session.util.StringSubstitutionConstants.GROUP_NAME_KEY
 import org.thoughtcrime.securesms.conversation.start.NewConversationDelegate
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
-import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.GROUP_NAME_KEY
 
 @AndroidEntryPoint
 class JoinCommunityFragment : Fragment() {

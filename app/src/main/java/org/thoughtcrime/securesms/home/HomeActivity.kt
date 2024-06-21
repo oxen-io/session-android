@@ -44,6 +44,8 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils
 import org.session.libsignal.utilities.toHexString
+import org.session.util.StringSubstitutionConstants.GROUP_NAME_KEY
+import org.session.util.StringSubstitutionConstants.NAME_KEY
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.conversation.start.NewConversationFragment
@@ -74,8 +76,6 @@ import org.thoughtcrime.securesms.showMuteDialog
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.IP2Country
-import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.GROUP_NAME_KEY
-import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.NAME_KEY
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
@@ -91,7 +91,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     companion object {
         const val FROM_ONBOARDING = "HomeActivity_FROM_ONBOARDING"
     }
-
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var glide: GlideRequests

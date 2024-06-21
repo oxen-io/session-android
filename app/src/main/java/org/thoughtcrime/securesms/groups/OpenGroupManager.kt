@@ -12,9 +12,9 @@ import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPoller
 import org.session.libsignal.utilities.Log
+import org.session.util.StringSubstitutionConstants.COMMUNITY_NAME_KEY
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
-import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.COMMUNITY_NAME_KEY
 import java.util.concurrent.Executors
 
 object OpenGroupManager {

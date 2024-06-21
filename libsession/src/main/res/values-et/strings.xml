@@ -70,7 +70,6 @@
     <!-- ThreadRecord -->
     <string name="groupUpdated">Grupp uuendatud</string>
     <!-- UpdateApkReadyListener -->
-    <string name="updateNewVersion">Uus Sessioni versioon on saadaval, koputa uuendamiseks</string>
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->

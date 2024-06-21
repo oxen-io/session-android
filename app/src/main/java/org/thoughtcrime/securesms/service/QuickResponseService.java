@@ -1,6 +1,6 @@
 package org.thoughtcrime.securesms.service;
 
-import static org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.APP_NAME_KEY;
+import static org.session.util.StringSubstitutionConstants.APP_NAME_KEY;
 
 import android.app.IntentService;
 import android.content.Context;

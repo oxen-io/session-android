@@ -11,12 +11,11 @@ import android.widget.Toast
 import androidx.core.view.isInvisible
 import androidx.preference.Preference
 import com.squareup.phrase.Phrase
-
 import network.loki.messenger.R
 import org.session.libsignal.utilities.Log
+import org.session.util.StringSubstitutionConstants.APP_NAME_KEY
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.permissions.Permissions
-import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.APP_NAME_KEY
 
 class HelpSettingsActivity: PassphraseRequiredActionBarActivity() {
 

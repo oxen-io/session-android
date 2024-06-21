@@ -82,7 +82,6 @@
     <!-- ThreadRecord -->
     <string name="groupUpdated">تم تحديث المحموعة</string>
     <!-- UpdateApkReadyListener -->
-    <string name="updateNewVersion">إصدار جديد لـ Session متوفر، أنقر لتحديثه</string>
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->

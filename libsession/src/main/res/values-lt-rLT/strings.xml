@@ -78,7 +78,6 @@
     <!-- ThreadRecord -->
     <string name="groupUpdated">Grupė atnaujinta</string>
     <!-- UpdateApkReadyListener -->
-    <string name="updateNewVersion">Yra prieinama nauja Session versija, bakstelėkite, norėdami atnaujinti</string>
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->

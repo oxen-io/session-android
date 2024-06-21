@@ -1,17 +1,13 @@
 package org.thoughtcrime.securesms.components;
 
-import static org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.APP_NAME_KEY;
+import static org.session.util.StringSubstitutionConstants.APP_NAME_KEY;
 
 import android.content.Context;
 import android.util.AttributeSet;
-
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.Preference;
-
 import com.squareup.phrase.Phrase;
-
 import java.util.Objects;
-
 import network.loki.messenger.R;
 
 public class SwitchPreferenceCompat extends CheckBoxPreference {

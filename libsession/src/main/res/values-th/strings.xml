@@ -65,7 +65,6 @@
     <!-- ThreadRecord -->
     <string name="groupUpdated">อัพเดตกลุ่มแล้ว</string>
     <!-- UpdateApkReadyListener -->
-    <string name="updateNewVersion">Session เวอร์ชันใหม่มาแล้ว แตะเพื่ออัพเดต</string>
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->

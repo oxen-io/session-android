@@ -68,7 +68,6 @@
     <!-- ThreadRecord -->
     <string name="groupUpdated">Grupper oppdatert</string>
     <!-- UpdateApkReadyListener -->
-    <string name="updateNewVersion">Det finst ei ny utgåve av Session; trykk for å oppdatera</string>
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->

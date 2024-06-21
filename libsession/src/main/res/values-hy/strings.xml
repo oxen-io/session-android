@@ -74,7 +74,6 @@
     <!-- ThreadRecord -->
     <string name="groupUpdated">Խումբը թարմացված ք</string>
     <!-- UpdateApkReadyListener -->
-    <string name="updateNewVersion">Հասանել է Session֊ի նոր տարբերակը. Սեղմեք՝ թարմացնելու համար</string>
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->

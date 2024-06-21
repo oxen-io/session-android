@@ -16,7 +16,7 @@
  */
 package org.thoughtcrime.securesms.notifications;
 
-import static org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.EMOJI_KEY;
+import static org.session.util.StringSubstitutionConstants.EMOJI_KEY;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;

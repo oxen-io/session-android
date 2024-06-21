@@ -17,9 +17,9 @@
  */
 package org.thoughtcrime.securesms.database.model;
 
-import static org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.DISAPPEARING_MESSAGES_TYPE_KEY;
-import static org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.NAME_KEY;
-import static org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.TIME_KEY;
+import static org.session.util.StringSubstitutionConstants.DISAPPEARING_MESSAGES_TYPE_KEY;
+import static org.session.util.StringSubstitutionConstants.NAME_KEY;
+import static org.session.util.StringSubstitutionConstants.TIME_KEY;
 
 import android.content.Context;
 import android.net.Uri;
@@ -27,18 +27,14 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.squareup.phrase.Phrase;
-
 import org.session.libsession.utilities.ExpirationUtil;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.database.MmsSmsColumns;
 import org.thoughtcrime.securesms.database.SmsDatabase;
-
 import network.loki.messenger.R;
 
 /**
@@ -90,7 +86,7 @@ public class ThreadRecord extends DisplayRecord {
     private String getName() {
         String name = getRecipient().getName();
         if (name == null) {
-            Log.w("ACL", "Got a null name - using: Unknown");
+            Log.w("ThreadRecord", "Got a null name - using: Unknown");
             name = "Unknown";
         }
         return name;
@@ -106,8 +102,8 @@ public class ThreadRecord extends DisplayRecord {
 
         // Note: This works because expireStarted is 0 for messages which are 'Disappear after read'
         // while it's a touch higher than the sent timestamp for "Disappear after send". We could then
-        // use `expireStarted == 0`, but that's not how it's done in UpdateMessageBuilder so to play
-        // it same I'll assume there's a reason for this and follow suit.
+        // use `expireStarted == 0`, but that's not how it's done in UpdateMessageBuilder so to keep
+        // things the same I'll assume there's a reason for this and follow suit.
         // Also: `this.lastMessage.getExpiresIn()` is available.
         if (expireStarted >= dateSent) {
             return context.getString(R.string.disappearingMessagesSent);

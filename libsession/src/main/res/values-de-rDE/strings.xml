@@ -74,7 +74,6 @@
     <!-- ThreadRecord -->
     <string name="groupUpdated">Gruppe aktualisiert</string>
     <!-- UpdateApkReadyListener -->
-    <string name="updateNewVersion">Eine neue Version von Session ist verfügbar. Zum Aktualisieren antippen.</string>
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->

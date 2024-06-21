@@ -8,8 +8,10 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ScrollView
+import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewFakeChatBinding
+import org.session.util.StringSubstitutionConstants.APP_NAME_KEY
 import org.thoughtcrime.securesms.util.disableClipping
 
 class FakeChatView : ScrollView {
@@ -47,6 +49,15 @@ class FakeChatView : ScrollView {
 
     // region Animation
     fun startAnimating() {
+
+        binding.bubble1.text = Phrase.from(context, R.string.onboardingBubbleWelcomeToSession)
+            .put(APP_NAME_KEY, context.getString(R.string.app_name))
+            .format().toString()
+
+        binding.bubble2.text = Phrase.from(context, R.string.onboardingBubbleSessionIsEngineered)
+            .put(APP_NAME_KEY, context.getString(R.string.app_name))
+            .format().toString()
+
         listOf( binding.bubble1, binding.bubble2, binding.bubble3, binding.bubble4, binding.bubble5 ).forEach { it.alpha = 0.0f }
         fun show(bubble: View) {
             val animation = ValueAnimator.ofObject(FloatEvaluator(), 0.0f, 1.0f)

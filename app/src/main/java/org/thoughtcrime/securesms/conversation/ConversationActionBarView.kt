@@ -16,7 +16,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewConversationActionBarBinding
 import network.loki.messenger.databinding.ViewConversationSettingBinding
-import network.loki.messenger.libsession_util.util.ExpiryMode
 import network.loki.messenger.libsession_util.util.ExpiryMode.AfterRead
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroup
@@ -27,12 +26,13 @@ import org.thoughtcrime.securesms.conversation.v2.utilities.MentionManagerUtilit
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
 import org.thoughtcrime.securesms.util.LocalisedTimeUtil
-import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.COUNT_KEY
-import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.DISAPPEARING_MESSAGES_TYPE_KEY
-import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.TIME_KEY
-import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.TIME_LARGE_KEY
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
+
+import org.session.util.StringSubstitutionConstants.COUNT_KEY
+import org.session.util.StringSubstitutionConstants.DISAPPEARING_MESSAGES_TYPE_KEY
+import org.session.util.StringSubstitutionConstants.TIME_KEY
+import org.session.util.StringSubstitutionConstants.TIME_LARGE_KEY
 
 @AndroidEntryPoint
 class ConversationActionBarView @JvmOverloads constructor(

@@ -74,7 +74,6 @@
     <!-- ThreadRecord -->
     <string name="groupUpdated">समूह अद्यतन</string>
     <!-- UpdateApkReadyListener -->
-    <string name="updateNewVersion">Session का एक नया संस्करण उपलब्ध है, अपडेट करने के लिए टैप करें</string>
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->

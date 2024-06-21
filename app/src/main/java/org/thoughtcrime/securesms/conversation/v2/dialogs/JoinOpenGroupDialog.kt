@@ -14,10 +14,10 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.utilities.OpenGroupUrlParser
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils
+import org.session.util.StringSubstitutionConstants.COMMUNITY_NAME_KEY
 import org.thoughtcrime.securesms.createSessionDialog
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
-import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.COMMUNITY_NAME_KEY
 
 /** Shown upon tapping an open group invitation. */
 class JoinOpenGroupDialog(private val name: String, private val url: String) : DialogFragment() {

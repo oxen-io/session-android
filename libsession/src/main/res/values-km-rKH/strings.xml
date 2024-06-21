@@ -69,7 +69,6 @@
     <!-- ThreadRecord -->
     <string name="groupUpdated">បានធ្វើបច្ចុប្បន្នភាពក្រុម</string>
     <!-- UpdateApkReadyListener -->
-    <string name="updateNewVersion">កំណែថ្មីរបស់ Session មានហើយ, ចុច ដើម្បីធ្វើបច្ចុប្បន្នភាព។</string>
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->

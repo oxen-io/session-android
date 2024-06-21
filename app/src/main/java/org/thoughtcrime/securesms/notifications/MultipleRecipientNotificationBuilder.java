@@ -1,8 +1,8 @@
 package org.thoughtcrime.securesms.notifications;
 
-import static org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.CONVERSATION_COUNT_KEY;
-import static org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.MESSAGE_COUNT_KEY;
-import static org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.NAME_KEY;
+import static org.session.util.StringSubstitutionConstants.CONVERSATION_COUNT_KEY;
+import static org.session.util.StringSubstitutionConstants.MESSAGE_COUNT_KEY;
+import static org.session.util.StringSubstitutionConstants.NAME_KEY;
 
 import android.app.Notification;
 import android.app.PendingIntent;

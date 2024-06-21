@@ -38,7 +38,7 @@ import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.*
 import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol
 import org.session.libsession.utilities.recipients.Recipient
-import org.session.libsignal.utilities.getProperty
+import org.session.util.StringSubstitutionConstants.VERSION_KEY
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.avatar.AvatarSelection
 import org.thoughtcrime.securesms.components.ProfilePictureView
@@ -111,7 +111,9 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             clearAllDataButton.setOnClickListener { clearAllData() }
 
             val gitCommitFirstSixChars = BuildConfig.GIT_HASH.take(6)
-            val versionString = getString(R.string.updateVersion) + "  ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE} - $gitCommitFirstSixChars)"
+
+            val versionDetails = " ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE} - $gitCommitFirstSixChars)"
+            val versionString = Phrase.from(applicationContext, R.string.updateVersion).put(VERSION_KEY, versionDetails).format()
             versionTextView.text = versionString
         }
     }

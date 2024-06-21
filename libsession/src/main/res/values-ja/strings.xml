@@ -72,7 +72,6 @@
     <!-- ThreadRecord -->
     <string name="groupUpdated">グループが更新されました</string>
     <!-- UpdateApkReadyListener -->
-    <string name="updateNewVersion">Sessionの最新版が出ました。タップしてアップデートしてください。</string>
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->

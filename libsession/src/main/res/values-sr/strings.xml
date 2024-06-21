@@ -75,7 +75,6 @@
     <!-- ThreadRecord -->
     <string name="groupUpdated">Група ажурирана.</string>
     <!-- UpdateApkReadyListener -->
-    <string name="updateNewVersion">Ново издање Session-a је доступно, тапните за надоградњу</string>
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->

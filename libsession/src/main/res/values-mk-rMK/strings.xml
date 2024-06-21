@@ -57,7 +57,6 @@
     <!-- ThreadRecord -->
     <string name="groupUpdated">အဖွဲ့ကို ပြင်ဆင်ပြီး</string>
     <!-- UpdateApkReadyListener -->
-    <string name="updateNewVersion">Session ဗားရှင်းအသစ်ရပါပြီ၊ အဆင့်မြှင့်ရန် နှိပ်လိုက်ပါ</string>
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->

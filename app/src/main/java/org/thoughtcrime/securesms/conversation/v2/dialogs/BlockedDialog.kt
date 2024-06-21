@@ -13,10 +13,9 @@ import network.loki.messenger.R
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.util.StringSubstitutionConstants.COMMUNITY_NAME_KEY
 import org.thoughtcrime.securesms.createSessionDialog
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.COMMUNITY_NAME_KEY
-import org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.NAME_KEY
 
 /** Shown upon sending a message to a user that's blocked. */
 class BlockedDialog(private val recipient: Recipient, private val context: Context) : DialogFragment() {

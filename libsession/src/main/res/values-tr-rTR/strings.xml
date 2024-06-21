@@ -74,7 +74,6 @@
     <!-- ThreadRecord -->
     <string name="groupUpdated">Grup güncellendi</string>
     <!-- UpdateApkReadyListener -->
-    <string name="updateNewVersion">Session\'in yeni sürümü mevcut, güncellemek için dokunun</string>
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->

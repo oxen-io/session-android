@@ -74,7 +74,6 @@
     <!-- ThreadRecord -->
     <string name="groupUpdated">گروه به روز شد</string>
     <!-- UpdateApkReadyListener -->
-    <string name="updateNewVersion">نسخه جدید Session در دسترس است، برای آپدیت اینجا را تپ کنید</string>
     <!-- MessageDisplayHelper -->
     <!-- MmsMessageRecord -->
     <!-- MuteDialog -->

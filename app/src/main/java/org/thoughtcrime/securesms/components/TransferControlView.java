@@ -1,6 +1,6 @@
 package org.thoughtcrime.securesms.components;
 
-import static org.thoughtcrime.securesms.util.StringSubKeys.StringSubstitutionConstants.COUNT_KEY;
+import static org.session.util.StringSubstitutionConstants.COUNT_KEY;
 
 import android.animation.LayoutTransition;
 import android.content.Context;
@@ -21,7 +21,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment;
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress;
-import org.thoughtcrime.securesms.database.AttachmentDatabase;
 import org.thoughtcrime.securesms.events.PartProgressEvent;
 import org.thoughtcrime.securesms.mms.Slide;
 
