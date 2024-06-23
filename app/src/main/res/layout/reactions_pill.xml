@@ -15,7 +15,7 @@
       android:layout_width="17dp"
       android:layout_height="17dp" />
 
-  <Space
+  <View
       android:id="@+id/reactions_pill_spacer"
       android:layout_width="4dp"
       android:layout_height="wrap_content" />

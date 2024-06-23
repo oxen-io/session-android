@@ -1,6 +1,6 @@
 package org.thoughtcrime.securesms.database;
 
-import static org.session.libsession.utilities.GroupUtil.OPEN_GROUP_PREFIX;
+import static org.session.libsession.utilities.GroupUtil.COMMUNITY_PREFIX;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -123,18 +123,18 @@ public class RecipientDatabase extends Database {
   public static String getUpdateApprovedCommand() {
     return "UPDATE "+ TABLE_NAME + " " +
             "SET " + APPROVED + " = 1, " + APPROVED_ME + " = 1 " +
-            "WHERE " + ADDRESS + " NOT LIKE '" + OPEN_GROUP_PREFIX + "%'";
+            "WHERE " + ADDRESS + " NOT LIKE '" + COMMUNITY_PREFIX + "%'";
   }
 
   public static String getUpdateResetApprovedCommand() {
     return "UPDATE "+ TABLE_NAME + " " +
             "SET " + APPROVED + " = 0, " + APPROVED_ME + " = 0 " +
-            "WHERE " + ADDRESS + " NOT LIKE '" + OPEN_GROUP_PREFIX + "%'";
+            "WHERE " + ADDRESS + " NOT LIKE '" + COMMUNITY_PREFIX + "%'";
   }
 
   public static String getUpdateApprovedSelectConversations() {
     return "UPDATE "+ TABLE_NAME + " SET "+APPROVED+" = 1, "+APPROVED_ME+" = 1 "+
-            "WHERE "+ADDRESS+ " NOT LIKE '"+OPEN_GROUP_PREFIX+"%' " +
+            "WHERE "+ADDRESS+ " NOT LIKE '"+ COMMUNITY_PREFIX +"%' " +
             "AND ("+ADDRESS+" IN (SELECT "+ThreadDatabase.TABLE_NAME+"."+ThreadDatabase.ADDRESS+" FROM "+ThreadDatabase.TABLE_NAME+" WHERE ("+ThreadDatabase.MESSAGE_COUNT+" != 0) "+
             "OR "+ADDRESS+" IN (SELECT "+GroupDatabase.TABLE_NAME+"."+GroupDatabase.ADMINS+" FROM "+GroupDatabase.TABLE_NAME+")))";
   }

@@ -21,6 +21,7 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPoller.Companion.maxInactivityPeriod
 import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
+import org.session.libsession.messaging.utilities.SodiumUtilities.sodium
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.snode.OnionResponse
 import org.session.libsession.snode.SnodeAPI
@@ -48,7 +49,6 @@ object OpenGroupApi {
     val defaultRooms = MutableSharedFlow<List<DefaultGroup>>(replay = 1)
     private val hasPerformedInitialPoll = mutableMapOf<String, Boolean>()
     private var hasUpdatedLastOpenDate = false
-    private val sodium by lazy { LazySodiumAndroid(SodiumAndroid()) }
     private val timeSinceLastOpen by lazy {
         val context = MessagingModuleConfiguration.shared.context
         val lastOpenDate = TextSecurePreferences.getLastOpenTimeDate(context)
@@ -602,8 +602,7 @@ object OpenGroupApi {
     // region Message Deletion
     @JvmStatic
     fun deleteMessage(serverID: Long, room: String, server: String): Promise<Unit, Exception> {
-        val request =
-            Request(verb = DELETE, room = room, server = server, endpoint = Endpoint.RoomMessageIndividual(room, serverID))
+        val request = Request(verb = DELETE, room = room, server = server, endpoint = Endpoint.RoomMessageIndividual(room, serverID))
         return send(request).map {
             Log.d("Loki", "Message deletion successful.")
         }
@@ -659,7 +658,9 @@ object OpenGroupApi {
     }
 
     fun banAndDeleteAll(publicKey: String, room: String, server: String): Promise<Unit, Exception> {
+
         val requests = mutableListOf<BatchRequestInfo<*>>(
+            // Ban request
             BatchRequestInfo(
                 request = BatchRequest(
                     method = POST,
@@ -669,6 +670,7 @@ object OpenGroupApi {
                 endpoint = Endpoint.UserBan(publicKey),
                 responseType = object: TypeReference<Any>(){}
             ),
+            // Delete request
             BatchRequestInfo(
                 request = BatchRequest(DELETE, "/room/$room/all/$publicKey"),
                 endpoint = Endpoint.RoomDeleteMessages(room, publicKey),

@@ -72,7 +72,7 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         // Author
         val author = contactDb.getContactWithSessionID(authorPublicKey)
         val localNumber = TextSecurePreferences.getLocalNumber(context)
-        val quoteIsLocalUser = localNumber != null && localNumber == author?.sessionID
+        val quoteIsLocalUser = localNumber != null && authorPublicKey == localNumber
 
         val authorDisplayName =
             if (quoteIsLocalUser) context.getString(R.string.QuoteView_you)

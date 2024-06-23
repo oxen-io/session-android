@@ -58,7 +58,7 @@ class ContactSelectionListLoader(context: Context, val mode: Int, val filter: St
 
     private fun getOpenGroups(contacts: List<Recipient>): List<ContactSelectionListItem> {
         return getItems(contacts, context.getString(R.string.fragment_contact_selection_open_groups_title)) {
-            it.address.isOpenGroup
+            it.address.isCommunity
         }
     }
 

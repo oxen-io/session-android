@@ -43,6 +43,7 @@ import network.loki.messenger.R;
 public class ThreadRecord extends DisplayRecord {
 
   private @Nullable final Uri     snippetUri;
+  public @Nullable  final MessageRecord lastMessage;
   private           final long    count;
   private           final int     unreadCount;
   private           final int     unreadMentionCount;
@@ -54,13 +55,14 @@ public class ThreadRecord extends DisplayRecord {
   private           final int initialRecipientHash;
 
   public ThreadRecord(@NonNull String body, @Nullable Uri snippetUri,
-                      @NonNull Recipient recipient, long date, long count, int unreadCount,
+                      @Nullable MessageRecord lastMessage, @NonNull Recipient recipient, long date, long count, int unreadCount,
                       int unreadMentionCount, long threadId, int deliveryReceiptCount, int status,
                       long snippetType,  int distributionType, boolean archived, long expiresIn,
                       long lastSeen, int readReceiptCount, boolean pinned)
   {
     super(body, recipient, date, date, threadId, status, deliveryReceiptCount, snippetType, readReceiptCount);
     this.snippetUri         = snippetUri;
+    this.lastMessage        = lastMessage;
     this.count              = count;
     this.unreadCount        = unreadCount;
     this.unreadMentionCount = unreadMentionCount;

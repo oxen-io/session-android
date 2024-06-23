@@ -4,8 +4,6 @@ import android.animation.FloatEvaluator
 import android.animation.IntEvaluator
 import android.animation.ValueAnimator
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.ImageView
@@ -14,6 +12,11 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewInputBarRecordingBinding
 import org.thoughtcrime.securesms.util.DateUtils
@@ -25,10 +28,10 @@ import java.util.Date
 class InputBarRecordingView : RelativeLayout {
     private lateinit var binding: ViewInputBarRecordingBinding
     private var startTimestamp = 0L
-    private val snHandler = Handler(Looper.getMainLooper())
     private var dotViewAnimation: ValueAnimator? = null
     private var pulseAnimation: ValueAnimator? = null
     var delegate: InputBarRecordingViewDelegate? = null
+    private var timerJob: Job? = null
 
     val lockView: LinearLayout
         get() = binding.lockView
@@ -50,9 +53,10 @@ class InputBarRecordingView : RelativeLayout {
         binding = ViewInputBarRecordingBinding.inflate(LayoutInflater.from(context), this, true)
         binding.inputBarMiddleContentContainer.disableClipping()
         binding.inputBarCancelButton.setOnClickListener { hide() }
+
     }
 
-    fun show() {
+    fun show(scope: CoroutineScope) {
         startTimestamp = Date().time
         binding.recordButtonOverlayImageView.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_microphone, context.theme))
         binding.inputBarCancelButton.alpha = 0.0f
@@ -69,7 +73,7 @@ class InputBarRecordingView : RelativeLayout {
         animateDotView()
         pulse()
         animateLockViewUp()
-        updateTimer()
+        startTimer(scope)
     }
 
     fun hide() {
@@ -86,6 +90,24 @@ class InputBarRecordingView : RelativeLayout {
         }
         animation.start()
         delegate?.handleVoiceMessageUIHidden()
+        stopTimer()
+    }
+
+    private fun startTimer(scope: CoroutineScope) {
+        timerJob?.cancel()
+        timerJob = scope.launch {
+            while (isActive) {
+                val duration = (Date().time - startTimestamp) / 1000L
+                binding.recordingViewDurationTextView.text = DateUtils.formatElapsedTime(duration)
+
+                delay(500)
+            }
+        }
+    }
+
+    private fun stopTimer() {
+        timerJob?.cancel()
+        timerJob = null
     }
 
     private fun animateDotView() {
@@ -127,12 +149,6 @@ class InputBarRecordingView : RelativeLayout {
             binding.lockView.layoutParams = layoutParams
         }
         animation.start()
-    }
-
-    private fun updateTimer() {
-        val duration = (Date().time - startTimestamp) / 1000L
-        binding.recordingViewDurationTextView.text = DateUtils.formatElapsedTime(duration)
-        snHandler.postDelayed({ updateTimer() }, 500)
     }
 
     fun lock() {

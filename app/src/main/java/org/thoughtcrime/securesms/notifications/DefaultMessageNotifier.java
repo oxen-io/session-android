@@ -239,14 +239,6 @@ public class DefaultMessageNotifier implements MessageNotifier {
         ThreadDatabase threads             = DatabaseComponent.get(context).threadDatabase();
         Recipient      recipient           = threads.getRecipientForThreadId(threadId);
 
-        // ACL FUCK THIS FUCKING LOGIC SPAGHETTI BULLSHIT CUNT FUCKING CRAP
-        /*
-        if (recipient != null && !recipient.isGroupRecipient() && threads.getMessageCount(threadId) == 1 &&
-            !(recipient.isApproved() || threads.getLastSeenAndHasSent(threadId).second())) {
-                TextSecurePreferences.removeHasHiddenMessageRequests(context);
-        }
-        */
-
         if (!TextSecurePreferences.areNotificationsEnabled(context) || (recipient != null && recipient.isMuted()))
         {
             return;
@@ -362,11 +354,25 @@ public class DefaultMessageNotifier implements MessageNotifier {
     builder.setThread(notifications.get(0).getRecipient());
     builder.setMessageCount(notificationState.getMessageCount());
     MentionManagerUtilities.INSTANCE.populateUserPublicKeyCacheIfNeeded(notifications.get(0).getThreadId(),context);
-    builder.setPrimaryMessageBody(recipient, notifications.get(0).getIndividualRecipient(),
-            MentionUtilities.highlightMentions(text == null ? "" : text,
-                    notifications.get(0).getThreadId(),
-                    context),
-            notifications.get(0).getSlideDeck());
+
+    // TODO: Removing highlighting mentions in the notification because this context is the libsession one which
+    // TODO: doesn't have access to the `R.attr.message_sent_text_color` and `R.attr.message_received_text_color`
+    // TODO: attributes to perform the colour lookup. Also, it makes little sense to highlight the mentions using
+    // TODO: the app theme as it may result in insufficient contrast with the notification background which will
+    // TODO: be using the SYSTEM theme.
+    builder.setPrimaryMessageBody(recipient,
+                                  notifications.get(0).getIndividualRecipient(),
+                                  text == null ? "" : text,
+                                  notifications.get(0).getSlideDeck());
+
+            //<<<<<<< HEAD
+            //MentionUtilities.highlightMentions(text == null ? "" : text,
+            //        notifications.get(0).getThreadId(),
+            //        context),
+            //notifications.get(0).getSlideDeck());
+
+          //MentionUtilities.highlightMentions(text == null ? "" : text, notifications.get(0).getThreadId(), context), // Removing hightlighting mentions -ACL
+
     builder.setContentIntent(notifications.get(0).getPendingIntent(context));
     builder.setDeleteIntent(notificationState.getDeleteIntent(context));
     builder.setOnlyAlertOnce(!signal);
@@ -523,18 +529,13 @@ public class DefaultMessageNotifier implements MessageNotifier {
         boolean alreadyHaveActiveNotificationForThread = notificationState.getThreads().contains(threadId);
         boolean alreadyHaveAtLeastOneNotificationRegardingThreadInDb = mmsSmsDatabase.getNotifiedCount(threadId) >= 1;
 
-        // ACL this is just whether the user has temporarily hidden the message requests block - which
-        //
+        // ACL this is just whether the user has temporarily hidden the message requests block
         //boolean hasHiddenMessageRequests = TextSecurePreferences.hasHiddenMessageRequests(context);
 
         if (isMessageRequest && (alreadyHaveActiveNotificationForThread || alreadyHaveAtLeastOneNotificationRegardingThreadInDb)) {
-
             Log.w("[ACL]", "Got msg req but bailing from cns: alreadyHaveNotificationForThread: " + alreadyHaveActiveNotificationForThread);
             continue;
-
         }
-
-
 
         if (isMessageRequest) {
         body = SpanUtil.italic(context.getString(R.string.message_requests_notification));

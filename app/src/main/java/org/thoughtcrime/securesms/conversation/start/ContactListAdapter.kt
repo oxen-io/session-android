@@ -35,11 +35,28 @@ class ContactListAdapter(
             binding.profilePictureView.update(contact.recipient)
             binding.nameTextView.text = contact.displayName
             binding.root.setOnClickListener { listener(contact.recipient) }
+
+            // TODO: When we implement deleting contacts (hide might be safest for now) then probably set a long-click listener here w/ something like:
+            /*
+            binding.root.setOnLongClickListener {
+                Log.w("[ACL]", "Long clicked on contact ${contact.recipient.name}")
+                binding.contentView.context.showSessionDialog {
+                    title("Delete Contact")
+                    text("Are you sure you want to delete this contact?")
+                    button(R.string.delete) {
+                        val contacts = configFactory.contacts ?: return
+                        contacts.upsertContact(contact.recipient.address.serialize()) { priority = PRIORITY_HIDDEN }
+                        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+                        endActionMode()
+                    }
+                    cancelButton(::endActionMode)
+                }
+                true
+            }
+            */
         }
 
-        fun unbind() {
-            binding.profilePictureView.recycle()
-        }
+        fun unbind() { binding.profilePictureView.recycle() }
     }
 
     class HeaderViewHolder(
@@ -52,15 +69,11 @@ class ContactListAdapter(
         }
     }
 
-    override fun getItemCount(): Int {
-        return items.size
-    }
+    override fun getItemCount(): Int { return items.size }
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         super.onViewRecycled(holder)
-        if (holder is ContactViewHolder) {
-            holder.unbind()
-        }
+        if (holder is ContactViewHolder) { holder.unbind() }
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -72,13 +85,9 @@ class ContactListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == ViewType.Contact) {
-            ContactViewHolder(
-                ViewContactBinding.inflate(LayoutInflater.from(context), parent, false)
-            )
+            ContactViewHolder(ViewContactBinding.inflate(LayoutInflater.from(context), parent, false))
         } else {
-            HeaderViewHolder(
-                ContactSectionHeaderBinding.inflate(LayoutInflater.from(context), parent, false)
-            )
+            HeaderViewHolder(ContactSectionHeaderBinding.inflate(LayoutInflater.from(context), parent, false))
         }
     }
 

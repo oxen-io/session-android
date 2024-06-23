@@ -116,7 +116,7 @@ class ConversationActionBarView @JvmOverloads constructor(
             )
         }
         if (recipient.isGroupRecipient) {
-            val title = if (recipient.isOpenGroupRecipient) {
+            val title = if (recipient.isCommunityRecipient) {
                 val userCount = openGroup?.let { lokiApiDb.getUserCount(it.room, it.server) } ?: 0
                 context.getString(R.string.ConversationActivity_active_member_count, userCount)
             } else {

@@ -1,10 +1,9 @@
 package org.thoughtcrime.securesms.crypto
 
 import android.content.Context
-import com.goterl.lazysodium.LazySodiumAndroid
-import com.goterl.lazysodium.SodiumAndroid
 import com.goterl.lazysodium.utils.Key
 import com.goterl.lazysodium.utils.KeyPair
+import org.session.libsession.messaging.utilities.SodiumUtilities.sodium
 import org.session.libsignal.crypto.ecc.DjbECPrivateKey
 import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.session.libsignal.crypto.ecc.ECKeyPair
@@ -12,8 +11,6 @@ import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Hex
 
 object KeyPairUtilities {
-
-    private val sodium by lazy { LazySodiumAndroid(SodiumAndroid()) }
 
     fun generate(): KeyPairGenerationResult {
         val seed = sodium.randomBytesBuf(16)

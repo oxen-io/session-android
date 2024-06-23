@@ -151,8 +151,8 @@ class ExpiringMessageManager(context: Context) : MessageExpirationManagerProtoco
 
         val userPublicKey = getLocalNumber(context)
         val senderPublicKey = message.sender
-        val sentTimestamp = if (message.sentTimestamp == null) 0 else message.sentTimestamp!!
-        val expireStartedAt = if (expiryMode is AfterSend || message.isSenderSelf) sentTimestamp else 0
+        val sentTimestamp = message.sentTimestamp ?: 0
+        val expireStartedAt = if ((expiryMode is AfterSend || message.isSenderSelf) && !message.isGroup) sentTimestamp else 0
 
         // Notify the user
         if (senderPublicKey == null || userPublicKey == senderPublicKey) {

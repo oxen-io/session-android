@@ -50,7 +50,7 @@ public class AttachmentServer implements Runnable {
       throws IOException
   {
     try {
-      this.context      = context;
+      this.context      = context.getApplicationContext();
       this.attachment   = attachment;
       this.socket       = new ServerSocket(0, 0, InetAddress.getByAddress(new byte[]{127, 0, 0, 1}));
       this.port         = socket.getLocalPort();

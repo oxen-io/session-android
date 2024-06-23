@@ -847,7 +847,7 @@ interface TextSecurePreferences {
             getDefaultSharedPreferences(context).edit().putString(key, value).apply()
         }
 
-        private fun getIntegerPreference(context: Context, key: String, defaultValue: Int): Int {
+        fun getIntegerPreference(context: Context, key: String, defaultValue: Int): Int {
             return getDefaultSharedPreferences(context).getInt(key, defaultValue)
         }
 
