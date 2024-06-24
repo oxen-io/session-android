@@ -83,7 +83,6 @@
     <string name="draft">Utkast</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Läst</string>
-    <string name="MessageNotifier_unknown_contact_message">Kontakt</string>
     <!-- Notification Channels -->
     <string name="failures">Misslyckanden</string>
     <string name="lockAppStatus">Låsstatus</string>

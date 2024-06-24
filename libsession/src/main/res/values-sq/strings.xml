@@ -83,7 +83,6 @@
     <string name="draft">Skicë:</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Vëri shenjë si të lexuar</string>
-    <string name="MessageNotifier_unknown_contact_message">Kontakt</string>
     <!-- Notification Channels -->
     <string name="failures">Dështime</string>
     <string name="lockAppStatus">Gjendje kyçjeje</string>

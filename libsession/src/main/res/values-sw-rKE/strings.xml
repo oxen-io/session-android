@@ -71,7 +71,6 @@
     <string name="draft">rasimu</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">soma nakili</string>
-    <string name="MessageNotifier_unknown_contact_message">Mawasiliano</string>
     <!-- Notification Channels -->
     <string name="failures">Kushindwa</string>
     <string name="lockAppStatus">Hali ya kufunga</string>

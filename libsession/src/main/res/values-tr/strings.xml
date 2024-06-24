@@ -83,7 +83,6 @@
     <string name="draft">Taslak</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Okundu işaretle</string>
-    <string name="MessageNotifier_unknown_contact_message">Kişi</string>
     <!-- Notification Channels -->
     <string name="failures">Hatalar</string>
     <string name="lockAppStatus">Kilit durumu</string>

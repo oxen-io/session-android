@@ -88,7 +88,6 @@
     <string name="draft">Чернетка</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Позначити як прочитане</string>
-    <string name="MessageNotifier_unknown_contact_message">Контакт</string>
     <!-- Notification Channels -->
     <string name="failures">Відмови</string>
     <string name="lockAppStatus">Статус блокування</string>

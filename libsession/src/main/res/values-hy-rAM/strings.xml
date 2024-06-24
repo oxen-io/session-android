@@ -83,7 +83,6 @@
     <string name="draft">Սևագիր</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Նշել որպես ընթերցված</string>
-    <string name="MessageNotifier_unknown_contact_message">Կոնտակտ</string>
     <!-- Notification Channels -->
     <string name="failures">Ձախողումներ</string>
     <string name="lockAppStatus">Կողպեքի վիճակը</string>

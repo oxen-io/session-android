@@ -83,7 +83,6 @@
     <string name="draft">Bozza</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Segna come già letto</string>
-    <string name="MessageNotifier_unknown_contact_message">Contatto</string>
     <!-- Notification Channels -->
     <string name="failures">Errori</string>
     <string name="lockAppStatus">In stato bloccato</string>

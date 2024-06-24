@@ -83,7 +83,6 @@
     <string name="draft">प्रारूप</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">पढ़ा हुआ चिह्नित करें</string>
-    <string name="MessageNotifier_unknown_contact_message">संपर्क</string>
     <!-- Notification Channels -->
     <string name="failures">विफलतायें </string>
     <string name="lockAppStatus">लॉक स्थिति</string>

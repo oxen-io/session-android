@@ -66,7 +66,6 @@
     <string name="draft">မူကြမ်း</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">ဖတ်ပြီးသား</string>
-    <string name="MessageNotifier_unknown_contact_message">အဆက်အသွယ်</string>
     <!-- Notification Channels -->
     <string name="other">အခြား</string>
     <!-- QuickResponseService -->

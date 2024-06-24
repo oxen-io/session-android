@@ -83,7 +83,6 @@
     <string name="draft">Borrador</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Marcar como leído</string>
-    <string name="MessageNotifier_unknown_contact_message">Contacto</string>
     <!-- Notification Channels -->
     <string name="failures">Fallos</string>
     <string name="lockAppStatus">Estado de bloqueo</string>

@@ -83,7 +83,6 @@
     <string name="draft">Qaralama</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Oxundu olaraq işarələ</string>
-    <string name="MessageNotifier_unknown_contact_message">Əlaqə</string>
     <!-- Notification Channels -->
     <string name="failures">Xətalar</string>
     <string name="lockAppStatus">Kilid vəziyyəti</string>

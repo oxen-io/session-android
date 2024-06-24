@@ -83,7 +83,6 @@
     <string name="draft">Πρόχειρο</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Σημείωση ως αναγνωσμένο</string>
-    <string name="MessageNotifier_unknown_contact_message">Επαφή</string>
     <!-- Notification Channels -->
     <string name="failures">Αποτυχίες</string>
     <string name="lockAppStatus">Κατάσταση κλειδώματος</string>

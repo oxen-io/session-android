@@ -81,7 +81,6 @@
     <string name="draft">下書き</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">既読にする</string>
-    <string name="MessageNotifier_unknown_contact_message">連絡先</string>
     <!-- Notification Channels -->
     <string name="failures">障害</string>
     <string name="lockAppStatus">ロック状態</string>

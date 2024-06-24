@@ -83,7 +83,6 @@
     <string name="draft">Rascunho</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Marcar como lida</string>
-    <string name="MessageNotifier_unknown_contact_message">Contacto</string>
     <!-- Notification Channels -->
     <string name="failures">Falhas</string>
     <string name="lockAppStatus">Estado do bloqueio</string>

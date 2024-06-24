@@ -84,7 +84,6 @@
     <string name="draft">చిత్తు పత్రం</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">చదివినట్టు గుర్తుపెట్టు</string>
-    <string name="MessageNotifier_unknown_contact_message">పరిచయం</string>
     <!-- Notification Channels -->
     <string name="failures">వైఫల్యాలు</string>
     <string name="lockAppStatus">స్థితి లాక్</string>

@@ -60,7 +60,6 @@
     <!-- MediaPreviewActivity -->
     <string name="onionRoutingPathYou">ඔබ</string>
     <!-- MessageNotifier -->
-    <string name="MessageNotifier_unknown_contact_message">සබඳතාව</string>
     <!-- Notification Channels -->
     <string name="updateApp">යෙදුම් යාවත්කාල</string>
     <string name="other">වෙනත්</string>

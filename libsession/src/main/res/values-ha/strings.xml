@@ -78,7 +78,6 @@
     <string name="draft">Reşnivîs</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Xwendî nîşan bike</string>
-    <string name="MessageNotifier_unknown_contact_message">Berdeng</string>
     <!-- Notification Channels -->
     <string name="failures">Çewtî</string>
     <string name="lockAppStatus">Rewşa kilîdê</string>

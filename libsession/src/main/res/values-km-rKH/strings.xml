@@ -78,7 +78,6 @@
     <string name="draft">ព្រាង</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">សម្គាល់ថាបានអាន</string>
-    <string name="MessageNotifier_unknown_contact_message">ទំនាក់ទំនង</string>
     <!-- Notification Channels -->
     <string name="failures">បរាជ័យ</string>
     <string name="lockAppStatus">ស្ថានភាពចាក់សោរ</string>

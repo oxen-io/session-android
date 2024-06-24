@@ -79,7 +79,6 @@
     <string name="draft">Mustand</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Märgi loetuks</string>
-    <string name="MessageNotifier_unknown_contact_message">Kontakt</string>
     <!-- Notification Channels -->
     <string name="failures">Ebaõnnestumised</string>
     <string name="lockAppStatus">Luku olek</string>

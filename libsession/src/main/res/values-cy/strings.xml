@@ -87,7 +87,6 @@
     <string name="draft">Drafft</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Marcio wedi\'i ddarllen</string>
-    <string name="MessageNotifier_unknown_contact_message">Cysylltiad</string>
     <!-- Notification Channels -->
     <string name="failures">Methiannau</string>
     <string name="lockAppStatus">Statws y clo</string>

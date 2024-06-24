@@ -87,7 +87,6 @@
     <string name="draft">Szkic</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Przeczytane</string>
-    <string name="MessageNotifier_unknown_contact_message">Kontakt</string>
     <!-- Notification Channels -->
     <string name="failures">Awarie</string>
     <string name="lockAppStatus">Status blokady</string>

@@ -81,7 +81,6 @@
     <string name="draft">Чернова</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Прочетено</string>
-    <string name="MessageNotifier_unknown_contact_message">Контакт</string>
     <!-- Notification Channels -->
     <string name="failures">Грешки</string>
     <string name="lockAppStatus">Статус на заключването</string>

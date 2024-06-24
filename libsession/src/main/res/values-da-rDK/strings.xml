@@ -83,7 +83,6 @@
     <string name="draft">Kladde</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Markér som læst</string>
-    <string name="MessageNotifier_unknown_contact_message">Kontakt</string>
     <!-- Notification Channels -->
     <string name="failures">Registrerede fejl</string>
     <string name="lockAppStatus">Låse status</string>

@@ -87,7 +87,6 @@
     <string name="draft">Koncept</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Označit jako přečtené</string>
-    <string name="MessageNotifier_unknown_contact_message">Kontakt</string>
     <!-- Notification Channels -->
     <string name="failures">Chyby</string>
     <string name="lockAppStatus">Stav zámku</string>

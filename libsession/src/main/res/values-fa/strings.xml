@@ -83,7 +83,6 @@
     <string name="draft">پیش نویس</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">علامت گذاری به عنوان خوانده شده</string>
-    <string name="MessageNotifier_unknown_contact_message">مخاطب</string>
     <!-- Notification Channels -->
     <string name="failures">شکست‌ها</string>
     <string name="lockAppStatus">وضعیت قفل</string>

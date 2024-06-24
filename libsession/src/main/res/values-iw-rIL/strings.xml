@@ -86,7 +86,6 @@
     <string name="draft">טיוטה</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">סמן כנקרא</string>
-    <string name="MessageNotifier_unknown_contact_message">איש קשר</string>
     <!-- Notification Channels -->
     <string name="failures">כישלונות</string>
     <string name="lockAppStatus">מעמד נעילה</string>

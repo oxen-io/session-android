@@ -87,7 +87,6 @@
     <string name="draft">Черновик</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Пометить как прочитано</string>
-    <string name="MessageNotifier_unknown_contact_message">Контакт</string>
     <!-- Notification Channels -->
     <string name="failures">Сбои</string>
     <string name="lockAppStatus">Статус блокировки</string>

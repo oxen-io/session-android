@@ -83,7 +83,6 @@
     <string name="draft">Entwurf</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Gelesen</string>
-    <string name="MessageNotifier_unknown_contact_message">Kontakt</string>
     <!-- Notification Channels -->
     <string name="failures">Fehler</string>
     <string name="lockAppStatus">Sperrstatus</string>

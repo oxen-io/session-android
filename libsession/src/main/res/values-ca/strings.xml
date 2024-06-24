@@ -82,7 +82,6 @@
     <string name="draft">Esborrany</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Marca\'l com a llegit</string>
-    <string name="MessageNotifier_unknown_contact_message">Contacte</string>
     <!-- Notification Channels -->
     <string name="failures">Fallades</string>
     <string name="lockAppStatus">Estat del bloqueig</string>

@@ -91,7 +91,6 @@
     <string name="draft">مسودة:</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">اعتبرها مقروءة</string>
-    <string name="MessageNotifier_unknown_contact_message">متصل</string>
     <!-- Notification Channels -->
     <string name="failures">إخفاقات</string>
     <string name="lockAppStatus">حالة القفل</string>

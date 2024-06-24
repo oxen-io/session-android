@@ -84,7 +84,6 @@
     <string name="draft">Нацрт</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Означи прочитаним</string>
-    <string name="MessageNotifier_unknown_contact_message">Контакт</string>
     <!-- Notification Channels -->
     <string name="failures">Грешке</string>
     <string name="lockAppStatus">Закључај статус</string>

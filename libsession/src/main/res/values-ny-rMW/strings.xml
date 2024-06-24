@@ -74,7 +74,6 @@
     <string name="draft">Pichak</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Killkakatishkami nishpa unanchay</string>
-    <string name="MessageNotifier_unknown_contact_message">Yupay mashi</string>
     <!-- Notification Channels -->
     <string name="failures">Pantakuna</string>
     <string name="lockAppStatus">Kashkata pakana</string>

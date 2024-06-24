@@ -83,7 +83,6 @@
     <string name="draft">Luonnos</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Luettu</string>
-    <string name="MessageNotifier_unknown_contact_message">Yhteystieto</string>
     <!-- Notification Channels -->
     <string name="failures">Viat</string>
     <string name="lockAppStatus">Lukituksen tila</string>

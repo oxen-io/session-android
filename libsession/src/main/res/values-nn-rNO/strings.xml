@@ -77,7 +77,6 @@
     <string name="draft">Kladd</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Merk lesen</string>
-    <string name="MessageNotifier_unknown_contact_message">Kontakt</string>
     <!-- Notification Channels -->
     <string name="failures">Feil</string>
     <string name="lockAppStatus">Låsestatus</string>

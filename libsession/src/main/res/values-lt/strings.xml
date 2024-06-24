@@ -87,7 +87,6 @@
     <string name="draft">Juodraštis</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Žymėti kaip skaitytą</string>
-    <string name="MessageNotifier_unknown_contact_message">Adresatas</string>
     <!-- Notification Channels -->
     <string name="failures">Nesėkmės</string>
     <string name="lockAppStatus">Užrakinimo būsena</string>

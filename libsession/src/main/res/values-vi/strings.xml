@@ -68,7 +68,6 @@
     <string name="onionRoutingPathYou">Bạn</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Đánh dấu đã đọc</string>
-    <string name="MessageNotifier_unknown_contact_message">Liên lạc</string>
     <!-- Notification Channels -->
     <!-- QuickResponseService -->
     <!-- SaveAttachmentTask -->

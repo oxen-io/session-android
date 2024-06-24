@@ -71,7 +71,6 @@
     <string name="draft">Draf</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Tandai sudah dibaca</string>
-    <string name="MessageNotifier_unknown_contact_message">Kontak</string>
     <!-- Notification Channels -->
     <string name="failures">Gagal</string>
     <string name="lockAppStatus">Status penguncian</string>

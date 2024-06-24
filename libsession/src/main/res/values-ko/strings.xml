@@ -79,7 +79,6 @@
     <string name="onionRoutingPathYou">나</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">읽음으로 표시</string>
-    <string name="MessageNotifier_unknown_contact_message">연락처</string>
     <!-- Notification Channels -->
     <!-- QuickResponseService -->
     <!-- SaveAttachmentTask -->

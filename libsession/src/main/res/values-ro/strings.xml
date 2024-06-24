@@ -85,7 +85,6 @@
     <string name="draft">Ciornă</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Marchează ca citit</string>
-    <string name="MessageNotifier_unknown_contact_message">Contact</string>
     <!-- Notification Channels -->
     <string name="failures">Erori</string>
     <string name="lockAppStatus">Stare blocare</string>

@@ -83,7 +83,6 @@
     <string name="draft">Concept</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Markeren als gelezen</string>
-    <string name="MessageNotifier_unknown_contact_message">Contactpersoon</string>
     <!-- Notification Channels -->
     <string name="failures">Mislukkingen</string>
     <string name="lockAppStatus">Vergrendelingstoestand</string>

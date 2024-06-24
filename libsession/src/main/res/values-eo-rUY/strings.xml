@@ -83,7 +83,6 @@
     <string name="draft">Malneto</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">Marki legita</string>
-    <string name="MessageNotifier_unknown_contact_message">Kontakto</string>
     <!-- Notification Channels -->
     <string name="failures">Malsukcesoj</string>
     <string name="lockAppStatus">Ŝlosostato</string>

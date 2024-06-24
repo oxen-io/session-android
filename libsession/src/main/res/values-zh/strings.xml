@@ -81,7 +81,6 @@
     <string name="draft">草稿</string>
     <!-- MessageNotifier -->
     <string name="messageMarkRead">标记为已读</string>
-    <string name="MessageNotifier_unknown_contact_message">联系人</string>
     <!-- Notification Channels -->
     <string name="failures">失败</string>
     <string name="lockAppStatus">锁定状态</string>
