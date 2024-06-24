@@ -74,7 +74,10 @@ class PeerConnectionWrapper(private val context: Context,
         newPeerConnection.setAudioPlayout(true)
         newPeerConnection.setAudioRecording(true)
 
-        newPeerConnection.addStream(mediaStream)
+        // Calls to `addStream` are deprecated & cause errors so we must use `addTracks` when
+        // using `io.github.webrtc-sdk:android:114.5735.10` and newer.
+        newPeerConnection.addTrack(mediaStream.audioTracks[0])
+        if (mediaStream.videoTracks.isNotEmpty()) newPeerConnection.addTrack(mediaStream.videoTracks[0])
     }
 
     init {

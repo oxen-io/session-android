@@ -16,44 +16,38 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         classpath "com.google.gms:google-services:$googleServicesVersion"
         classpath "com.squareup:javapoet:1.13.0"
-        classpath "com.google.dagger:hilt-android-gradle-plugin:$daggerVersion"
+
+        //classpath "com.google.dagger:hilt-android-gradle-plugin:$daggerVersion"
+        //impl libs.dagger.hilt.android.gradle.plugin
+
+
         if (project.hasProperty('huawei')) classpath 'com.huawei.agconnect:agcp:1.9.1.300'
     }
+
+
 }
 
 plugins{
-    id("com.google.dagger.hilt.android") version "2.44" apply false
+    //id ("com.google.dagger.hilt.android") version "$daggerVersion" apply false
+    alias libs.plugins.dagger.hilt.android apply false
+
 }
 
 allprojects {
     repositories {
         google()
+        jcenter()
         mavenCentral()
-        maven {
-            url "https://raw.github.com/signalapp/maven/master/photoview/releases/"
-            content {
-                includeGroupByRegex "com\\.github\\.chrisbanes.*"
-            }
-        }
-        maven {
-            url "https://raw.github.com/signalapp/maven/master/shortcutbadger/releases/"
-            content {
-                includeGroupByRegex "me\\.leolin.*"
-            }
-        }
+
+        // See: https://github.com/dmytrodanylyk/circular-progress-button
+        // Also: We should be pulling in v1.4 - see: https://github.com/dmytrodanylyk/circular-progress-button/releases
         maven {
             url "https://raw.github.com/signalapp/maven/master/circular-progress-button/releases/"
             content {
                 includeGroupByRegex "com\\.github\\.dmytrodanylyk\\.circular-progress-button\\.*"
             }
         }
-        maven {
-            url "https://raw.github.com/signalapp/maven/master/sqlcipher/release/"
-            content {
-                includeGroupByRegex "org\\.signal.*"
-            }
-        }
-        jcenter()
+
         maven { url "https://jitpack.io" }
         if (project.hasProperty('huawei')) maven {
             url 'https://developer.huawei.com/repo/'

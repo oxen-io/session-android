@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
+    namespace 'org.session.libsignal'
     compileSdkVersion androidCompileSdkVersion
 
     defaultConfig {
@@ -9,20 +10,24 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 }
 
 dependencies {
-    implementation "androidx.annotation:annotation:1.5.0"
+    implementation "androidx.annotation:annotation:$androidxAnnotationVersion"
+
+
     implementation "com.google.protobuf:protobuf-java:$protobufVersion"
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
     implementation "com.github.oxen-io.session-android-curve-25519:curve25519-java:$curve25519Version"
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+
+    implementation libs.kotlinx.coroutines.android
+
     implementation "nl.komponents.kovenant:kovenant:$kovenantVersion"
     testImplementation "junit:junit:$junitVersion"
     testImplementation "org.assertj:assertj-core:3.11.1"

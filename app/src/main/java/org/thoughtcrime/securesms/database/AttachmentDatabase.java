@@ -700,7 +700,7 @@ public class AttachmentDatabase extends Database {
         }
 
         Set<DatabaseAttachment> result = new TreeSet<>((o1, o2) -> o1.getAttachmentId().equals(o2.getAttachmentId()) ? 0 : 1);
-        JSONArray                array  = new JSONArray(cursor.getString(cursor.getColumnIndexOrThrow(ATTACHMENT_JSON_ALIAS)));
+        JSONArray                array = new JSONArray(cursor.getString(cursor.getColumnIndexOrThrow(ATTACHMENT_JSON_ALIAS)));
 
         for (int i=0;i<array.length();i++) {
           JsonUtil.SaneJSONObject object = new JsonUtil.SaneJSONObject(array.getJSONObject(i));

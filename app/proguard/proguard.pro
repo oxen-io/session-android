@@ -7,4 +7,8 @@
 -keepclassmembers class ** {
     public void onEvent*(**);
 }
+# Required for https://github.com/dmytrodanylyk/circular-progress-button
+-keepclassmembers class com.dd.StrokeGradientDrawable {
+    public void setStrokeColor(int);
+}
 

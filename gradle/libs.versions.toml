@@ -1,0 +1,238 @@
+[versions]
+# --------------------------------------------------------------------------------------------------
+# NOTE: If you see a wiggly underscore on any of these version strings it means there's a new
+# version available and it may, potentially, be a good idea to upgrade to the latest version.
+# If you do upgrade a package, please update the associated comment appropriately!
+# --------------------------------------------------------------------------------------------------
+
+accompanistVersion = "0.33.1-alpha"
+
+# As of 2024-05-05 v0.0.3 is the latest stable.
+# See: https://mvnrepository.com/artifact/org.signal/aesgcmprovider
+# Previous version: 0.0.3 (stable since May 2019)
+aesgcmProviderVersion = "0.0.3"
+
+# As of 2024-05-04 v1.9.0 is the latest stable.
+# See: https://mvnrepository.com/artifact/androidx.activity/activity
+# Previous version: 1.5.1
+androidxActivityKtxVersion = "1.9.0"
+
+# As of 2024-06-14 v1.7.0 is the latest stable release.
+# See: https://developer.android.com/jetpack/androidx/releases/appcompat
+# Previous version: 1.6.1 (circa Feb 2023 - new alpha & beta builds arriving but nothing yet stable)
+androidxAppcompatVersion = "1.7.0"
+
+# As of 2024-05-05 v1.0.0 is the latest stable release. See: https://mvnrepository.com/artifact/androidx.cardview/cardview
+# Previous version: 1.0.0 (circa Sept. 2018 - no new updates expected)
+androidxCardViewVersion = "1.0.0"
+
+# As of 2024-06-13 we have started using Compose' "Bill of Materials" to define the suite of
+# compose-related versions, and the latest version of BoM is: 2024.06.00
+# See: https://developer.android.com/develop/ui/compose/bom/bom-mapping
+# Previous versions: 1.5.2 (circa Sept 2023) for most Compose-related components.
+androidxComposeBoMVersion = "2024.06.00"
+
+# As of 2024-05-05 v2.1.4 is the latest stable release.
+# See: https://mvnrepository.com/artifact/androidx.constraintlayout/constraintlayout
+# Previous version: 2.1.4 (last stable release May 2022 - although multiple alphas released up to July 2023)
+androidxConstraintLayoutVersion = "2.1.4"
+
+
+
+# As of 2024-05-04 v1.13.1 is the latest stable release. See: https://mvnrepository.com/artifact/androidx.core/core
+# Previous version: 1.8.0
+androidxCoreKtxVersion = "1.13.1"
+
+# As of 2024-05-04 version 1.3.7 is the latest stable release.
+# See: https://mvnrepository.com/artifact/androidx.exifinterface/exifinterface
+# Previous version: 1.3.4
+androidxExifInterfaceVersion = "1.3.7"
+
+# As of 2024-06-14 version 1.8.0 is the latest stable release.
+# See: https://mvnrepository.com/artifact/androidx.fragment/fragment-ktx
+## Previous version: 1.5.3
+androidxFragmentKtxVersion = "1.8.0"
+
+# As of 2024-05-04 v1.7.0 is the latest stable.
+# See: https://mvnrepository.com/artifact/androidx.gridlayout/gridlayout
+# Previous version: 1.0.0 (stable since Sept 2018)
+androidxGridLayoutVersion = "1.0.0"
+
+# As of 2024-06-14 v2.8.2 is the latest stable release.
+# See: https://developer.android.com/jetpack/androidx/releases/lifecycle
+# Previous version: 2.5.1
+androidxLifecycleVersion = "2.8.2"
+
+# As of 2024-05-05 v2.2.0 is the latest stable release.
+# See: https://mvnrepository.com/artifact/androidx.lifecycle/lifecycle-extensions
+# Previous version: 2.2.0 (stable since Jan 2020)
+androidxLifecycleExtensionsVersion = "2.2.0"
+
+# As of 2024-06-14 version 3.3.0 is the latest stable release.
+# See: https://mvnrepository.com/artifact/androidx.paging/paging-runtime-ktx
+# Previous version: 3.0.0
+androidxPagingRuntimeKtxVersion = "3.3.0"
+
+# As of 2024-05-04 version 1.2.1 is the latest stable release.
+# See: https://mvnrepository.com/artifact/androidx.preference/preference-ktx?repo=scijava-public
+# Previous version: 1.2.0
+androidxPreferenceKtxVersion = "1.2.1"
+
+# As of 2024-05-04 v1.3.2 is the latest stable release. See: https://androidx.tech/artifacts/recyclerview/recyclerview/
+# Previous version: 1.2.1
+androidxRecyclerViewVersion = "1.3.2"
+
+# As of 2024-05-04 version 1.5.0 is the latest stable release. See: https://mvnrepository.com/artifact/androidx.test/core
+# Previous version: 1.5.0 (not a typo - last stable release was towards the end of 2022)
+androidxTestCoreVersion = "1.5.0"
+
+androidxTestOrchestratorVersion = "1.4.2"
+androidxTestRulesVersion = "1.5.0"
+androidxTestRunnerVersion = "1.5.2"
+androidxTruthVersion = "1.5.0"
+
+# As of 2024-05-04 v2.9.0 is the latest stable.
+# See: https://mvnrepository.com/artifact/androidx.work/work-runtime-ktx
+# Previous version: 2.7.1
+androidxWorkRuntimeKtxVersion = "2.9.0"
+
+baristaVersion = "4.2.0"
+
+# As of 2024-05-04 v1.4 is the latest stable. See: https://github.com/dmytrodanylyk/circular-progress-button/releases
+# Previous version: 1.1.3-S2
+circularProgressButtonVersion = "1.4"
+
+# As of 2024-05-05 v2.5.2 is the latest stable.
+# See: https://mvnrepository.com/artifact/org.conscrypt/conscrypt-android
+# Previous version: 2.0.0
+conscryptAndroidVersion = "2.5.2"
+
+# As of 2024-04-09 v2.51.1 is the latest. See: https://github.com/google/dagger/releases
+# Previous version: 2.46.1
+daggerVersion = "2.51.1"
+
+# As of 2024-06-14 v3.5.1 is the latest stable release.
+# See: https://mvnrepository.com/artifact/androidx.test.espresso/espresso-core/3.5.1
+# Previous version: 3.5.1 (apparently this was updated more recently than most other packages)
+espressoVersion = "3.5.1"
+
+# TODO: ExoPlayer Core is deprecated, and the latest 2.19.1 does not build w/ modern Java - need to upgrade to Media3 ExoPlayer.
+# As of 2024-05-04 v2.19.1 is the latest.
+# See: https://mvnrepository.com/artifact/com.google.android.exoplayer/exoplayer-core
+# For Media3 details, see:
+# - https://mvnrepository.com/artifact/androidx.media3/media3-exoplayer
+# - https://developer.android.com/media/media3
+# - https://developer.android.com/media/media3/exoplayer/migration-guide
+# - https://github.com/androidx/media/tree/release/demos
+# Previous version: 2.9.1 (leaving as 2.9.1 for now)
+exoPlayerCoreVersion = "2.9.1"
+
+# TODO: ExpoPlayer UI is deprecated, and the latest 2.19.1 does not build w/ modern java - need to upgrade to Media3 UI.
+# As of 2024-05-04 v2.19.1 is the latest.
+# See : https://mvnrepository.com/artifact/com.google.android.exoplayer/exoplayer-ui
+# Also: https://mvnrepository.com/artifact/androidx.media3/media3-ui - also see above migration guide etc.
+# Previous version: 2.9.1 (leaving as 2.9.1 for now)
+exoPlayerUiVersion = "2.9.1"
+
+# As of 2024-05-04 v24.0.0 is the latest stable.
+# See: https://mvnrepository.com/artifact/com.google.firebase/firebase-messaging
+# Previous version: 18.0.0
+firebaseMessagingVersion = "24.0.0"
+
+# As of 2024-05-10 v3.0.0 is the latest stable release.
+# See: https://mvnrepository.com/artifact/com.google.android.flexbox/flexbox
+# Previous version: 2.0.1
+flexboxVersion = "3.0.0"
+
+glideComposeVersion = "1.0.0-beta01"
+
+googleTruthVersion = "1.1.3"
+
+
+junitVersion = "1.1.5"
+
+# As of 2024-04-09 v1.8.0 is the latest stable. See: https://github.com/Kotlin/kotlinx.coroutines/releases
+# Previous version: 1.6.4
+kotlinxCoroutinesVersion = "1.8.0"
+
+# As of 2024-05-04 version 1.12.0 is the latest stable release.
+# See: https://mvnrepository.com/artifact/com.google.android.material/material
+# Previous version: 1.8.0
+materialVersion = "1.12.0"
+
+roboelectricVersion = "4.4"
+shadowsMultidexVersion = "4.4"
+
+# As of 2024-05-04 version 114.5735.10 is the latest stable release.
+# See: https://github.com/webrtc-sdk/android
+# Previous version: 1.0.32006 of 'org.webrtc:google-webrtc' (no longer maintained as of 2019)
+webRtcVersion = "114.5735.10"
+
+[libraries]
+
+aesgcmProvider = { module = "org.signal:aesgcmprovider", version.ref = "aesgcmProviderVersion" }
+androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "androidxActivityKtxVersion" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidxAppcompatVersion" }
+androidx-cardview = { module = "androidx.cardview:cardview", version.ref = "androidxCardViewVersion" }
+
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "androidxComposeBoMVersion" }
+
+# All versioning information for the following Compose modules is provided by androidx-compose-bom, above
+androidx-compose-ui                = { module = "androidx.compose.ui:ui"                        }
+androidx-compose-ui-tooling        = { module = "androidx.compose.ui:ui-tooling"                }
+androidx-compose-runtime-livedata  = { module = "androidx.compose.runtime:runtime-livedata"     }
+androidx-compose-foundation-layout = { module = "androidx.compose.foundation:foundation-layout" }
+androidx-compose-material          = { module = "androidx.compose.material:material"            }
+
+androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidxConstraintLayoutVersion" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCoreKtxVersion" }
+androidx-exifinterface = { module = "androidx.exifinterface:exifinterface", version.ref = "androidxExifInterfaceVersion" }
+androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "androidxFragmentKtxVersion" }
+androidx-gridlayout = { module = "androidx.gridlayout:gridlayout", version.ref = "androidxGridLayoutVersion" }
+androidx-lifecycle-common-java8 = { module = "androidx.lifecycle:lifecycle-common-java8", version.ref = "androidxLifecycleVersion" }
+androidx-lifecycle-extensions = { module = "androidx.lifecycle:lifecycle-extensions", version.ref = "androidxLifecycleExtensionsVersion" }
+androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androidxLifecycleVersion" }
+androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "androidxLifecycleVersion" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidxLifecycleVersion" }
+androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "androidxPagingRuntimeKtxVersion" }
+androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "androidxPreferenceKtxVersion" }
+androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "androidxRecyclerViewVersion" }
+androidx-test-core = { module = "androidx.test:core", version.ref = "androidxTestCoreVersion" }
+androidx-test-orchestrator = { module = "androidx.test:orchestrator", version.ref="androidxTestOrchestratorVersion" }
+androidx-test-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
+androidx-test-truth = { module = "androidx.test.ext:truth", version.ref = "androidxTruthVersion" }
+androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidxTestRulesVersion" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidxTestRunnerVersion" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidxWorkRuntimeKtxVersion" }
+barista = { module = "com.adevinta.android:barista", version.ref = "baristaVersion" }
+circular-progress-bar = { module = "com.github.dmytrodanylyk:circular-progress-button", version.ref = "circularProgressButtonVersion" }
+conscrpt-android = { module = "org.conscrypt:conscrypt-android", version.ref = "conscryptAndroidVersion" }
+accompanist-pager-indicators = { module = "com.google.accompanist:accompanist-pager-indicators", version.ref = "accompanistVersion" }
+accompantist-themeadapter-appcompat = { module = "com.google.accompanist:accompanist-themeadapter-appcompat", version.ref = "accompanistVersion" }
+dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "daggerVersion" }
+dagger-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "daggerVersion" }
+espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoVersion" }
+espresso-contrib = { module = "androidx.test.espresso:espresso-contrib", version.ref = "espressoVersion" }
+espresso-intents = { module = "androidx.test.espresso:espresso-intents", version.ref = "espressoVersion" }
+espresso-accessibility = { module = "androidx.test.espresso:espresso-accessibility", version.ref = "espressoVersion" }
+espresso-web = { module = "androidx.test.espresso:espresso-web", version.ref = "espressoVersion" }
+espresso-idling-concurrent = { module = "androidx.test.espresso.idling:idling-concurrent", version.ref = "espressoVersion" }
+espresso-idling-resource = { module = "androidx.test.espresso:espresso-idling-resource", version.ref = "espressoVersion" }
+exoplayer-core = { module = "com.google.android.exoplayer:exoplayer-core", version.ref = "exoPlayerCoreVersion" }
+exoplayer-ui   = { module = "com.google.android.exoplayer:exoplayer-ui", version.ref = "exoPlayerUiVersion"     }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseMessagingVersion" }
+flexbox = { module = "com.google.android.flexbox:flexbox", version.ref = "flexboxVersion" }
+glide-compose = { module = "com.github.bumptech.glide:compose", version.ref = "glideComposeVersion" }
+google-truth = { module = "com.google.truth:truth", version.ref = "googleTruthVersion" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesVersion" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesVersion" }
+kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref="kotlinxCoroutinesVersion" }
+material = { module = "com.google.android.material:material", version.ref = "materialVersion" }
+roboelectric = { module = "org.robolectric:robolectric", version.ref = "roboelectricVersion" }
+shadows-multidex = { module = "org.robolectric:shadows-multidex", version.ref = "shadowsMultidexVersion" }
+webrtc-sdk = { module = "io.github.webrtc-sdk:android", version.ref = "webRtcVersion" }
+
+[plugins]
+
+dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "daggerVersion" }
+#dagger-hilt-android-gradle-plugin = { id = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "daggerVersion" }
