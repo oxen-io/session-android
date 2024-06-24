@@ -109,6 +109,7 @@ public class NotificationMmsMessageRecord extends MmsMessageRecord {
       // WAS: NotificationMmsMessageRecord_downloading_mms_message
       return emphasisAdded(context.getString(R.string.attachmentsNotification)); // ACL TODO: Substitution for {emoji}? Have asked Lucy
     } else {
+      // If there was an error downloading the attachment
       // WAS: NotificationMmsMessageRecord_error_downloading_mms_message
       return emphasisAdded(context.getString(R.string.attachmentsNotification)); // ACL TODO: Substitution for {emoji}? Have asked Lucy
     }

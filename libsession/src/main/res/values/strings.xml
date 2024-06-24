@@ -784,7 +784,6 @@
     <string name="updateApp">App updates</string>
     <string name="updateDownloaded">The update has been downloaded. Restart Session to apply the updates.</string>
     <string name="updateError">Cannot Update</string>
-    <string name="updateErrorDescription">Session Desktop failed to update. Please go to https://getsession.org/ and install the new version manually, then contact our Help Center to let us know about this problem.</string>
     <string name="updateNewVersion">A new version of {app_name} is available, tap to update</string>
     <string name="updateNewVersionDescription">There is a new version of Session available. Would you like to download the update?</string>
     <string name="updateReleaseNotes">Go to Release Notes</string>
