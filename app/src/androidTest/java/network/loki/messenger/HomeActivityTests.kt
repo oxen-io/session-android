@@ -23,6 +23,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import com.adevinta.android.barista.interaction.PermissionGranter
+import com.squareup.phrase.Phrase
 import network.loki.messenger.util.InputBarButtonDrawableMatcher.Companion.inputButtonWithDrawable
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -35,6 +36,7 @@ import org.junit.runner.RunWith
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.guava.Optional
+import org.session.util.StringSubstitutionConstants.URL_KEY
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBar
 import org.thoughtcrime.securesms.home.HomeActivity
@@ -156,7 +158,11 @@ class HomeActivityTests {
         // then the URL dialog should be displayed with a known punycode url
         val amazonPuny = "https://www.xn--mazon-wqa.com/"
 
-        val dialogPromptText = InstrumentationRegistry.getInstrumentation().targetContext.getString(R.string.dialog_open_url_explanation, amazonPuny)
+        // Substitute the URL into our string
+        val c = InstrumentationRegistry.getInstrumentation().targetContext
+        val dialogPromptText = Phrase.from(c, R.string.urlOpenDescription)
+            .put(URL_KEY, amazonPuny)
+            .format().toString()
 
         onView(isRoot()).perform(waitFor(1000)) // no other way for this to work apparently
         onView(withText(dialogPromptText)).check(matches(isDisplayed()))

@@ -76,7 +76,7 @@
         android:layout_marginTop="4dp"
         android:textColor="@color/accent_green"
         android:textSize="@dimen/very_small_font_size"
-        android:text="@string/MessageRecord_follow_setting"
+        android:text="@string/disappearingMessagesFollowSetting"
         android:contentDescription="@string/AccessibilityId_follow_setting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

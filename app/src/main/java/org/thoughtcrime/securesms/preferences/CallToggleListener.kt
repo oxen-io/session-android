@@ -19,9 +19,9 @@ internal class CallToggleListener(
 
         // check if we've shown the info dialog and check for microphone permissions
         context.showSessionDialog {
-            title(R.string.dialog_voice_video_title)
-            text(R.string.dialog_voice_video_message)
-            button(R.string.dialog_link_preview_enable_button_title, R.string.AccessibilityId_enable) { requestMicrophonePermission() }
+            title(R.string.callsVoiceAndVideoBeta)
+            text(R.string.callsVoiceAndVideoModalDescription)
+            button(R.string.enable, R.string.AccessibilityId_enable) { requestMicrophonePermission() }
             cancelButton()
         }
 

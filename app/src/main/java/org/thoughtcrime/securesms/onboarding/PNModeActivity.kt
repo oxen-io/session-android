@@ -12,15 +12,16 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityPnModeBinding
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.ThemeUtil
+import org.session.util.StringSubstitutionConstants.APP_NAME_KEY
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.BaseActionBarActivity
 import org.thoughtcrime.securesms.home.HomeActivity
-import org.thoughtcrime.securesms.notifications.PushManager
 import org.thoughtcrime.securesms.notifications.PushRegistry
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.GlowViewUtilities
@@ -47,8 +48,17 @@ class PNModeActivity : BaseActionBarActivity() {
         TextSecurePreferences.setHasSeenWelcomeScreen(this, true)
         binding = ActivityPnModeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        with(binding) {
+        with (binding) {
             contentView.disableClipping()
+
+            messageNotificationExplanation.text = Phrase.from(applicationContext, R.string.onboardingMessageNotificationExplanation)
+                .put(APP_NAME_KEY, getString(R.string.app_name))
+                .format()
+
+            slowModeDescriptionTV?.text = Phrase.from(applicationContext, R.string.notificationsSlowModeDescription)
+                .put(APP_NAME_KEY, getString(R.string.app_name))
+                .format()
+
             fcmOptionView.setOnClickListener { toggleFCM() }
             fcmOptionView.mainColor = ThemeUtil.getThemedColor(root.context, R.attr.colorPrimary)
             fcmOptionView.strokeColor = resources.getColorWithID(R.color.pn_option_border, theme)
@@ -89,7 +99,7 @@ class PNModeActivity : BaseActionBarActivity() {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(intent)
         } catch (e: Exception) {
-            Toast.makeText(this, R.string.invalid_url, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.communityEnterUrlErrorInvalid, Toast.LENGTH_SHORT).show()
         }
     }
 

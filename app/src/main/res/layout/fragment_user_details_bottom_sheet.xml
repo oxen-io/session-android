@@ -95,7 +95,7 @@
                 android:maxLines="1"
                 android:imeOptions="actionDone"
                 android:textColorHint="?android:textColorSecondary"
-                android:hint="@string/fragment_user_details_bottom_sheet_edit_text_hint" />
+                android:hint="@string/nicknameEnter" />
 
             <ImageView
                 android:id="@+id/saveNicknameButton"
@@ -128,6 +128,6 @@
         android:layout_marginTop="@dimen/medium_spacing"
         android:contentDescription="@string/AccessibilityId_message_user"
         android:paddingHorizontal="@dimen/large_spacing"
-        android:text="@string/ConversationActivity_message" />
+        android:text="@string/message" />
 
 </LinearLayout>

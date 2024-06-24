@@ -177,7 +177,8 @@ private class LinkDeviceActivityAdapter(private val activity: LinkDeviceActivity
             1 -> {
                 val result = ScanQRCodeWrapperFragment()
                 result.delegate = activity
-                result.message = activity.getString(R.string.activity_link_device_qr_message)
+                // ACL TODO - I think this entire LinkDeviceActivity is going following onboarding - used to be: activity.getString(R.string.activity_link_device_qr_message
+                result.message = "ACL REMOVE THIS AS THE TEXT IS DIFF AFTER ONBOARDING"
                 result
             }
             else -> throw IllegalStateException()
@@ -186,8 +187,8 @@ private class LinkDeviceActivityAdapter(private val activity: LinkDeviceActivity
 
     override fun getPageTitle(index: Int): CharSequence {
         return when (index) {
-            0 -> activity.getString(R.string.activity_link_device_recovery_phrase)
-            1 -> activity.getString(R.string.activity_link_device_scan_qr_code)
+            0 -> activity.getString(R.string.sessionRecoveryPassword)
+            1 -> activity.getString(R.string.qrScan)
             else -> throw IllegalStateException()
         }
     }

@@ -16,6 +16,8 @@
  */
 package org.thoughtcrime.securesms.notifications;
 
+import static org.session.util.StringSubstitutionConstants.EMOJI_KEY;
+
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -25,7 +27,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.service.notification.StatusBarNotification;
@@ -39,12 +40,12 @@ import androidx.core.app.NotificationManagerCompat;
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.goterl.lazysodium.utils.KeyPair;
+import com.squareup.phrase.Phrase;
 
 import org.session.libsession.messaging.open_groups.OpenGroup;
 import org.session.libsession.messaging.sending_receiving.notifications.MessageNotifier;
 import org.session.libsession.messaging.utilities.SessionId;
 import org.session.libsession.messaging.utilities.SodiumUtilities;
-import org.session.libsession.snode.SnodeAPI;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.Contact;
 import org.session.libsession.utilities.ServiceUtil;
@@ -55,7 +56,6 @@ import org.session.libsignal.utilities.Log;
 import org.session.libsignal.utilities.Util;
 import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.contacts.ContactUtil;
-import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2;
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionManagerUtilities;
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities;
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities;
@@ -133,25 +133,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
   @Override
   public void notifyMessageDeliveryFailed(Context context, Recipient recipient, long threadId) {
-    if (visibleThread != threadId) {
-      Intent intent = new Intent(context, ConversationActivityV2.class);
-      intent.putExtra(ConversationActivityV2.ADDRESS, recipient.getAddress());
-      intent.putExtra(ConversationActivityV2.THREAD_ID, threadId);
-      intent.setData((Uri.parse("custom://" + SnodeAPI.getNowWithOffset())));
-
-      FailedNotificationBuilder builder = new FailedNotificationBuilder(context, TextSecurePreferences.getNotificationPrivacy(context), intent);
-      ((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE))
-        .notify((int)threadId, builder.build());
-    }
-  }
-
-  public void notifyMessagesPending(Context context) {
-    if (!TextSecurePreferences.isNotificationsEnabled(context)) {
-      return;
-    }
-
-    PendingMessageNotificationBuilder builder = new PendingMessageNotificationBuilder(context, TextSecurePreferences.getNotificationPrivacy(context));
-    ServiceUtil.getNotificationManager(context).notify(PENDING_MESSAGES_ID, builder.build());
+    // We do not provide notifications for message delivery failure.
   }
 
   @Override
@@ -491,9 +473,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
         }
       }
       if (messageRequest) {
-        body = SpanUtil.italic(context.getString(R.string.message_requests_notification));
-      } else if (KeyCachingService.isLocked(context)) {
-        body = SpanUtil.italic(context.getString(R.string.MessageNotifier_locked_message));
+        body = SpanUtil.italic(context.getString(R.string.messageRequestsNew));
       } else if (record.isMms() && !((MmsMessageRecord) record).getSharedContacts().isEmpty()) {
         Contact contact = ((MmsMessageRecord) record).getSharedContacts().get(0);
         body = ContactUtil.getStringSummary(context, contact);
@@ -506,7 +486,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
         int    italicLength = message.length() - body.length();
         body = SpanUtil.italic(message, italicLength);
       } else if (record.isOpenGroupInvitation()) {
-        body = SpanUtil.italic(context.getString(R.string.ThreadRecord_open_group_invitation));
+        body = SpanUtil.italic(context.getString(R.string.communityInvitation));
       }
       String userPublicKey = TextSecurePreferences.getLocalNumber(context);
       String blindedPublicKey = cache.get(threadId);
@@ -543,7 +523,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
           if (threadRecipients != null && !threadRecipients.isGroupRecipient()) {
             ReactionRecord reaction = lastReact.get();
             Recipient reactor = Recipient.from(context, Address.fromSerialized(reaction.getAuthor()), false);
-            String emoji = context.getString(R.string.reaction_notification, reactor.toShortString(), reaction.getEmoji());
+            String emoji = Phrase.from(context, R.string.emojiReactsNotification).put(EMOJI_KEY, reaction.getEmoji()).format().toString();
             notificationState.addNotification(new NotificationItem(id, mms, reactor, reactor, threadRecipients, threadId, emoji, reaction.getDateSent(), slideDeck));
           }
         }

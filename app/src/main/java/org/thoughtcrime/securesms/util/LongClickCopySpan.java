@@ -7,8 +7,6 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import android.text.TextPaint;
 import android.text.style.URLSpan;
-import android.view.View;
-import android.widget.Toast;
 
 import network.loki.messenger.R;
 
@@ -22,14 +20,6 @@ public class LongClickCopySpan extends URLSpan {
 
   public LongClickCopySpan(String url) {
     super(url);
-  }
-
-  void onLongClick(View widget) {
-    Context context = widget.getContext();
-    String preparedUrl = prepareUrl(getURL());
-    copyUrl(context, preparedUrl);
-    Toast.makeText(context,
-            context.getString(R.string.ConversationItem_copied_text, preparedUrl), Toast.LENGTH_SHORT).show();
   }
 
   @Override

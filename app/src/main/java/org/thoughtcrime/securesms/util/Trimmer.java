@@ -30,8 +30,8 @@ public class Trimmer {
       progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
       progressDialog.setCancelable(false);
       progressDialog.setIndeterminate(false);
-      progressDialog.setTitle(R.string.trimmer__deleting);
-      progressDialog.setMessage(context.getString(R.string.trimmer__deleting_old_messages));
+      progressDialog.setTitle(R.string.deleting);
+      progressDialog.setMessage(context.getString(R.string.deleting));
       progressDialog.setMax(100);
       progressDialog.show();
     }
@@ -53,9 +53,6 @@ public class Trimmer {
     @Override
     protected void onPostExecute(Void result) {
       progressDialog.dismiss();
-      Toast.makeText(context,
-                     R.string.trimmer__old_messages_successfully_deleted,
-                     Toast.LENGTH_LONG).show();
     }
 
     @Override

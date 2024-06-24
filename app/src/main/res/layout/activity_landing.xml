@@ -17,7 +17,7 @@
         android:layout_marginRight="@dimen/very_large_spacing"
         android:textSize="@dimen/large_font_size"
         android:textStyle="bold"
-        android:text="@string/activity_landing_title_2" />
+        android:text="@string/onboardingBubblePrivacyInYourPocket" />
     
     <org.thoughtcrime.securesms.onboarding.FakeChatView
         android:id="@+id/fakeChatView"
@@ -38,7 +38,7 @@
         android:layout_height="@dimen/medium_button_height"
         android:layout_marginLeft="@dimen/massive_spacing"
         android:layout_marginRight="@dimen/massive_spacing"
-        android:text="@string/activity_landing_register_button_title" />
+        android:text="@string/onboardingAccountCreate" />
 
     <Button
         style="@style/Widget.Session.Button.Common.ProminentOutline"
@@ -49,8 +49,9 @@
         android:layout_marginLeft="@dimen/massive_spacing"
         android:layout_marginTop="@dimen/small_spacing"
         android:layout_marginRight="@dimen/massive_spacing"
-        android:text="@string/activity_landing_restore_button_title" />
+        android:text="@string/onboardingAccountExists" />
 
+    <!-- ACL: This link device will be removed during onboarding -->
     <Button
         style="@style/Widget.Session.Button.Common.Borderless"
         android:contentDescription="@string/AccessibilityId_link_a_device"
@@ -61,6 +62,6 @@
         android:gravity="center"
         android:textAllCaps="false"
         android:textSize="@dimen/medium_font_size"
-        android:text="@string/activity_link_device_link_device" />
+        android:text="@string/onboardingAccountExists" />
 
 </LinearLayout>

@@ -120,7 +120,7 @@ public class GiphyActivity extends PassphraseRequiredActionBarActivity
 
       protected void onPostExecute(@Nullable Uri uri) {
         if (uri == null) {
-          Toast.makeText(GiphyActivity.this, R.string.GiphyActivity_error_while_retrieving_full_resolution_gif, Toast.LENGTH_LONG).show();
+          Toast.makeText(GiphyActivity.this, R.string.errorUnknown, Toast.LENGTH_LONG).show();
         } else if (viewHolder == finishingImage) {
           Intent intent = new Intent();
           intent.setData(uri);
@@ -165,8 +165,8 @@ public class GiphyActivity extends PassphraseRequiredActionBarActivity
 
     @Override
     public CharSequence getPageTitle(int position) {
-      if (position == 0) return context.getString(R.string.GiphyFragmentPagerAdapter_gifs);
-      else               return context.getString(R.string.GiphyFragmentPagerAdapter_stickers);
+      if (position == 0) return context.getString(R.string.gif);
+      else               return context.getString(R.string.stickers);
     }
   }
 

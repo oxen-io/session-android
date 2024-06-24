@@ -7,10 +7,8 @@ import android.view.View
 import android.widget.LinearLayout
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewUserBinding
-import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.recipients.Recipient
-import org.thoughtcrime.securesms.conversation.v2.utilities.MentionManagerUtilities
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
 
@@ -50,7 +48,7 @@ class UserView : LinearLayout {
     fun bind(user: Recipient, glide: GlideRequests, actionIndicator: ActionIndicator, isSelected: Boolean = false) {
         val isLocalUser = user.isLocalNumber
         fun getUserDisplayName(publicKey: String): String {
-            if (isLocalUser) return context.getString(R.string.MessageRecord_you)
+            if (isLocalUser) return context.getString(R.string.you)
             val contact = DatabaseComponent.get(context).sessionContactDatabase().getContactWithSessionID(publicKey)
             return contact?.displayName(Contact.ContactContext.REGULAR) ?: publicKey
         }

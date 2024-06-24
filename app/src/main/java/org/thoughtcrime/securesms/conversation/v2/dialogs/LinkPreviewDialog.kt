@@ -3,8 +3,10 @@ package org.thoughtcrime.securesms.conversation.v2.dialogs
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
+import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.util.StringSubstitutionConstants.APP_NAME_KEY
 import org.thoughtcrime.securesms.createSessionDialog
 
 /** Shown the first time the user inputs a URL that could generate a link preview, to
@@ -12,9 +14,12 @@ import org.thoughtcrime.securesms.createSessionDialog
 class LinkPreviewDialog(private val onEnabled: () -> Unit) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {
-        title(R.string.dialog_link_preview_title)
-        text(R.string.dialog_link_preview_explanation)
-        button(R.string.dialog_link_preview_enable_button_title) { enable() }
+        title(R.string.linkPreviewsEnable)
+        val txt = Phrase.from(context, R.string.linkPreviewsFirstDescription)
+            .put(APP_NAME_KEY, context.getString(R.string.app_name))
+            .format()
+        text(txt)
+        button(R.string.enable) { enable() }
         cancelButton { dismiss() }
     }
 

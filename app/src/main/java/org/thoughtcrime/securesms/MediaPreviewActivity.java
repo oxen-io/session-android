@@ -16,8 +16,9 @@
  */
 package org.thoughtcrime.securesms;
 
+import static org.session.util.StringSubstitutionConstants.APP_NAME_KEY;
+
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -26,7 +27,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -56,6 +56,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import com.squareup.phrase.Phrase;
 
 import org.session.libsession.messaging.messages.control.DataExtractionNotification;
 import org.session.libsession.messaging.sending_receiving.MessageSender;
@@ -244,10 +246,10 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
       if (mediaItem.date > 0) {
         relativeTimeSpan = DateUtils.getDisplayFormattedTimeSpanString(this, Locale.getDefault(), mediaItem.date);
       } else {
-        relativeTimeSpan = getString(R.string.MediaPreviewActivity_draft);
+        relativeTimeSpan = getString(R.string.draft);
       }
 
-      if      (mediaItem.outgoing)          getSupportActionBar().setTitle(getString(R.string.MediaPreviewActivity_you));
+      if      (mediaItem.outgoing)          getSupportActionBar().setTitle(getString(R.string.you));
       else if (mediaItem.recipient != null) getSupportActionBar().setTitle(mediaItem.recipient.toShortString());
       else                                  getSupportActionBar().setTitle("");
 
@@ -258,7 +260,6 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
   @Override
   public void onResume() {
     super.onResume();
-
     initializeMedia();
   }
 
@@ -291,7 +292,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
     captionContainer          = findViewById(R.id.media_preview_caption_container);
     playbackControlsContainer = findViewById(R.id.media_preview_playback_controls_container);
 
-    setSupportActionBar(findViewById(R.id.toolbar));
+    setSupportActionBar(findViewById(R.id.search_toolbar));
     ActionBar actionBar = getSupportActionBar();
     actionBar.setDisplayHomeAsUpEnabled(true);
     actionBar.setHomeButtonEnabled(true);
@@ -361,7 +362,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
   private void initializeMedia() {
     if (!isContentTypeSupported(initialMediaType)) {
       Log.w(TAG, "Unsupported media type sent to MediaPreviewActivity, finishing.");
-      Toast.makeText(getApplicationContext(), R.string.MediaPreviewActivity_unssuported_media_type, Toast.LENGTH_LONG).show();
+      Toast.makeText(getApplicationContext(), R.string.attachmentsErrorNotSupported, Toast.LENGTH_LONG).show();
       finish();
     }
 
@@ -410,6 +411,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
   @SuppressWarnings("CodeBlock2Expr")
   @SuppressLint("InlinedApi")
   private void saveToDisk() {
+    Log.w("ACL", "Asked to save to disk!");
     MediaItem mediaItem = getCurrentMediaItem();
     if (mediaItem == null) return;
 
@@ -417,8 +419,15 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
       Permissions.with(this)
               .request(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
               .maxSdkVersion(Build.VERSION_CODES.P)
-              .withPermanentDenialDialog(getString(R.string.MediaPreviewActivity_signal_needs_the_storage_permission_in_order_to_write_to_external_storage_but_it_has_been_permanently_denied))
-              .onAnyDenied(() -> Toast.makeText(this, R.string.MediaPreviewActivity_unable_to_write_to_external_storage_without_permission, Toast.LENGTH_LONG).show())
+              .withPermanentDenialDialog(Phrase.from(getApplicationContext(), R.string.permissionsStorageSaveDenied)
+                      .put(APP_NAME_KEY, getString(R.string.app_name))
+                      .format().toString())
+              .onAnyDenied(() -> {
+                String txt = Phrase.from(getApplicationContext(), R.string.permissionsStorageSaveDenied)
+                        .put(APP_NAME_KEY, getString(R.string.app_name))
+                        .format().toString();
+                Toast.makeText(this, txt, Toast.LENGTH_LONG).show();
+              })
               .onAllGranted(() -> {
                 SaveAttachmentTask saveTask = new SaveAttachmentTask(MediaPreviewActivity.this);
                 long saveDate = (mediaItem.date > 0) ? mediaItem.date : SnodeAPI.getNowWithOffset();

@@ -58,7 +58,7 @@ class DisappearingMessages @Inject constructor(
                 )
         })
         destructiveButton(
-                text = if (message.expiresIn == 0L) R.string.dialog_disappearing_messages_follow_setting_confirm else R.string.dialog_disappearing_messages_follow_setting_set,
+                text = if (message.expiresIn == 0L) R.string.dialog_disappearing_messages_follow_setting_confirm else R.string.set,
                 contentDescription = if (message.expiresIn == 0L) R.string.AccessibilityId_confirm else R.string.AccessibilityId_set_button
         ) {
             set(message.threadId, message.recipient.address, message.expiryMode, message.recipient.isClosedGroupRecipient)

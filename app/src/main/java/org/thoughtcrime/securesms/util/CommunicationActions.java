@@ -1,21 +1,14 @@
 package org.thoughtcrime.securesms.util;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.TaskStackBuilder;
-
 import org.session.libsession.utilities.recipients.Recipient;
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2;
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent;
-
-import network.loki.messenger.R;
 
 public class CommunicationActions {
 
@@ -44,14 +37,5 @@ public class CommunicationActions {
         }
       }
     }.execute();
-  }
-
-  public static void openBrowserLink(@NonNull Context context, @NonNull String link) {
-    try {
-      Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-      context.startActivity(intent);
-    } catch (ActivityNotFoundException e) {
-      Toast.makeText(context, R.string.CommunicationActions_no_browser_found, Toast.LENGTH_SHORT).show();
-    }
   }
 }

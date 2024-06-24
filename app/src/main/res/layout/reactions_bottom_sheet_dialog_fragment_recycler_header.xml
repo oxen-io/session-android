@@ -30,7 +30,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"/>
         <TextView
-            android:text="@string/message_requests_clear_all"
+            android:text="@string/clearAll"
             android:textColor="@color/destructive"
             android:visibility="gone"
             android:id="@+id/header_view_clear_all"

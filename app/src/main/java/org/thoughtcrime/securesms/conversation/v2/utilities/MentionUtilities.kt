@@ -1,6 +1,5 @@
 package org.thoughtcrime.securesms.conversation.v2.utilities
 
-import android.app.Application
 import android.content.Context
 import android.graphics.Typeface
 import android.text.Spannable
@@ -9,7 +8,6 @@ import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.util.Range
-import androidx.appcompat.widget.ThemeUtils
 import androidx.core.content.res.ResourcesCompat
 import network.loki.messenger.R
 import nl.komponents.kovenant.combine.Tuple2
@@ -17,9 +15,7 @@ import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.ThemeUtil
-import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.util.UiModeUtilities
 import org.thoughtcrime.securesms.util.getAccentColor
 import org.thoughtcrime.securesms.util.getColorResourceIdFromAttr
 import org.thoughtcrime.securesms.util.getMessageTextColourAttr
@@ -46,7 +42,7 @@ object MentionUtilities {
                 val publicKey = text.subSequence(matcher.start() + 1, matcher.end()).toString() // +1 to get rid of the @
                 val isUserBlindedPublicKey = openGroup?.let { SodiumUtilities.sessionId(userPublicKey, publicKey, it.publicKey) } ?: false
                 val userDisplayName: String? = if (publicKey.equals(userPublicKey, ignoreCase = true) || isUserBlindedPublicKey) {
-                    context.getString(R.string.MessageRecord_you)
+                    context.getString(R.string.you)
                 } else {
                     val contact = DatabaseComponent.get(context).sessionContactDatabase().getContactWithSessionID(publicKey)
                     @Suppress("NAME_SHADOWING") val context = if (openGroup != null) Contact.ContactContext.OPEN_GROUP else Contact.ContactContext.REGULAR

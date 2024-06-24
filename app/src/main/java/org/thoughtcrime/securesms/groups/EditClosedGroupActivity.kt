@@ -16,6 +16,7 @@ import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import nl.komponents.kovenant.Promise
@@ -31,6 +32,7 @@ import org.session.libsession.utilities.ThemeUtil
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.toHexString
+import org.session.util.StringSubstitutionConstants.COUNT_KEY
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.contacts.SelectContactsActivity
 import org.thoughtcrime.securesms.database.Storage
@@ -111,13 +113,17 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
 
         name = originalName
 
+        // Update the group member count
+        val memberCountTV = findViewById<TextView>(R.id.editGroupMemberCount)
+        memberCountTV.text = Phrase.from(applicationContext, R.string.members).put(COUNT_KEY, groupInfo.members.size).format().toString()
+
         mainContentContainer = findViewById(R.id.mainContentContainer)
-        cntGroupNameEdit = findViewById(R.id.cntGroupNameEdit)
-        cntGroupNameDisplay = findViewById(R.id.cntGroupNameDisplay)
-        edtGroupName = findViewById(R.id.edtGroupName)
-        emptyStateContainer = findViewById(R.id.emptyStateContainer)
-        lblGroupNameDisplay = findViewById(R.id.lblGroupNameDisplay)
-        loaderContainer = findViewById(R.id.loaderContainer)
+        cntGroupNameEdit     = findViewById(R.id.cntGroupNameEdit)
+        cntGroupNameDisplay  = findViewById(R.id.cntGroupNameDisplay)
+        edtGroupName         = findViewById(R.id.edtGroupName)
+        emptyStateContainer  = findViewById(R.id.emptyStateContainer)
+        lblGroupNameDisplay  = findViewById(R.id.lblGroupNameDisplay)
+        loaderContainer      = findViewById(R.id.loaderContainer)
 
         findViewById<View>(R.id.addMembersClosedGroupButton).setOnClickListener {
             onAddMembersClick()
@@ -129,7 +135,19 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
         }
 
         lblGroupNameDisplay.text = originalName
-        cntGroupNameDisplay.setOnClickListener { isEditingName = true }
+
+        // Only allow admins to click on the name of closed groups to edit them..
+        if (isSelfAdmin) {
+            cntGroupNameDisplay.setOnClickListener { isEditingName = true }
+        }
+        else // ..and also hide the edit `drawableEnd` for non-admins.
+        {
+            // Note: compoundDrawables returns 4 drawables (drawablesStart/Top/End/Bottom) -
+            // so the `drawableEnd` component is at index 2, which we replace with null.
+            val cd = lblGroupNameDisplay.compoundDrawables
+            lblGroupNameDisplay.setCompoundDrawables(cd[0], cd[1], null, cd[3])
+        }
+
         findViewById<View>(R.id.btnCancelGroupNameEdit).setOnClickListener { isEditingName = false }
         findViewById<View>(R.id.btnSaveGroupNameEdit).setOnClickListener { saveName() }
         edtGroupName.setImeActionLabel(getString(R.string.save), EditorInfo.IME_ACTION_DONE)
@@ -245,10 +263,10 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
     private fun saveName() {
         val name = edtGroupName.text.toString().trim()
         if (name.isEmpty()) {
-            return Toast.makeText(this, R.string.activity_edit_closed_group_group_name_missing_error, Toast.LENGTH_SHORT).show()
+            return Toast.makeText(this, R.string.groupNameEnterPlease, Toast.LENGTH_SHORT).show()
         }
         if (name.length >= 64) {
-            return Toast.makeText(this, R.string.activity_edit_closed_group_group_name_too_long_error, Toast.LENGTH_SHORT).show()
+            return Toast.makeText(this, R.string.groupNameEnterShorter, Toast.LENGTH_SHORT).show()
         }
         this.name = name
         lblGroupNameDisplay.text = name
@@ -283,18 +301,19 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
         }
 
         if (members.isEmpty()) {
-            return Toast.makeText(this, R.string.activity_edit_closed_group_not_enough_group_members_error, Toast.LENGTH_LONG).show()
+            return Toast.makeText(this, R.string.groupCreateErrorNoMembers, Toast.LENGTH_LONG).show()
         }
 
         val maxGroupMembers = if (isClosedGroup) groupSizeLimit else legacyGroupSizeLimit
         if (members.size >= maxGroupMembers) {
-            return Toast.makeText(this, R.string.activity_create_closed_group_too_many_group_members_error, Toast.LENGTH_LONG).show()
+            return Toast.makeText(this, R.string.groupAddMemberMaximum, Toast.LENGTH_LONG).show()
         }
 
         val userPublicKey = TextSecurePreferences.getLocalNumber(this)!!
         val userAsRecipient = Recipient.from(this, Address.fromSerialized(userPublicKey), false)
 
         if (!members.contains(userAsRecipient) && !members.map { it.address.toString() }.containsAll(originalMembers.minus(userPublicKey))) {
+            // ACL TODO - Need a proper string for this
             val message = "Can't leave while adding or removing other members."
             return Toast.makeText(this@EditClosedGroupActivity, message, Toast.LENGTH_LONG).show()
         }

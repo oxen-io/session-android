@@ -116,7 +116,7 @@ class VisibleMessageContentView : ConstraintLayout {
             binding.quoteView.root.isVisible = true
             val quote = message.quote!!
             val quoteText = if (quote.isOriginalMissing) {
-                context.getString(R.string.QuoteView_original_missing)
+                context.getString(R.string.messageErrorOriginal)
             } else {
                 quote.text
             }

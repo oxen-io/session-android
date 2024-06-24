@@ -21,6 +21,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.isVisible
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.BuildConfig
 import network.loki.messenger.R
@@ -37,7 +38,7 @@ import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.*
 import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol
 import org.session.libsession.utilities.recipients.Recipient
-import org.session.libsignal.utilities.getProperty
+import org.session.util.StringSubstitutionConstants.VERSION_KEY
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.avatar.AvatarSelection
 import org.thoughtcrime.securesms.components.ProfilePictureView
@@ -110,7 +111,10 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             clearAllDataButton.setOnClickListener { clearAllData() }
 
             val gitCommitFirstSixChars = BuildConfig.GIT_HASH.take(6)
-            versionTextView.text = String.format(getString(R.string.version_s), "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE} - $gitCommitFirstSixChars)")
+
+            val versionDetails = " ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE} - $gitCommitFirstSixChars)"
+            val versionString = Phrase.from(applicationContext, R.string.updateVersion).put(VERSION_KEY, versionDetails).format()
+            versionTextView.text = versionString
         }
     }
 
@@ -168,7 +172,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                 if (inputFile == null && tempFile != null) {
                     inputFile = Uri.fromFile(tempFile)
                 }
-                AvatarSelection.circularCropImage(this, inputFile, outputFile, R.string.CropImageActivity_profile_avatar)
+                AvatarSelection.circularCropImage(this, inputFile, outputFile, R.string.photo)
             }
             AvatarSelection.REQUEST_CODE_CROP_IMAGE -> {
                 if (resultCode != Activity.RESULT_OK) {
@@ -288,11 +292,11 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
     private fun saveDisplayName(): Boolean {
         val displayName = binding.displayNameEditText.text.toString().trim()
         if (displayName.isEmpty()) {
-            Toast.makeText(this, R.string.activity_settings_display_name_missing_error, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.displayNameErrorDescription, Toast.LENGTH_SHORT).show()
             return false
         }
         if (displayName.toByteArray().size > ProfileManagerProtocol.Companion.NAME_PADDED_LENGTH) {
-            Toast.makeText(this, R.string.activity_settings_display_name_too_long_error, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.displayNameErrorDescriptionShorter, Toast.LENGTH_SHORT).show()
             return false
         }
         updateProfile(false, displayName = displayName)
@@ -306,7 +310,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
     private fun showEditProfilePictureUI() {
         showSessionDialog {
-            title(R.string.activity_settings_set_display_picture)
+            title(R.string.profileDisplayPictureSet)
             view(R.layout.dialog_change_avatar)
             button(R.string.activity_settings_upload) { startAvatarSelection() }
             if (TextSecurePreferences.getProfileAvatarId(context) != 0) {
@@ -346,7 +350,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText("Session ID", hexEncodedPublicKey)
         clipboard.setPrimaryClip(clip)
-        Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
     }
 
     private fun sharePublicKey() {
@@ -389,7 +393,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         val invitation = "Hey, I've been using Session to chat with complete privacy and security. Come join me! Download it at https://getsession.org/. My Session ID is $hexEncodedPublicKey !"
         intent.putExtra(Intent.EXTRA_TEXT, invitation)
         intent.type = "text/plain"
-        val chooser = Intent.createChooser(intent, getString(R.string.activity_settings_invite_button_title))
+        val chooser = Intent.createChooser(intent, getString(R.string.sessionInviteAFriend))
         startActivity(chooser)
     }
 
@@ -416,7 +420,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
     private inner class DisplayNameEditActionModeCallback: ActionMode.Callback {
 
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-            mode.title = getString(R.string.activity_settings_display_name_edit_text_hint)
+            mode.title = getString(R.string.displayNameEnter)
             mode.menuInflater.inflate(R.menu.menu_apply, menu)
             this@SettingsActivity.displayNameEditActionMode = mode
             return true

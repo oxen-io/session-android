@@ -101,7 +101,7 @@ class UserDetailsBottomSheet: BottomSheetDialogFragment() {
                     requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val clip = ClipData.newPlainText("Session ID", publicKey)
                 clipboard.setPrimaryClip(clip)
-                Toast.makeText(requireContext(), R.string.copied_to_clipboard, Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(), R.string.copied, Toast.LENGTH_SHORT)
                     .show()
                 true
             }

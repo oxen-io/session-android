@@ -79,7 +79,7 @@
                            android:visibility="gone"
                            android:background="@drawable/circle_touch_highlight_background"
                            android:src="@drawable/ic_download_circle_filled_48"
-                           android:contentDescription="@string/audio_view__download_accessibility_description"
+                           android:contentDescription="@string/download"
                            tools:visibility="visible"/>
 
             </org.thoughtcrime.securesms.components.AnimatingToggle>

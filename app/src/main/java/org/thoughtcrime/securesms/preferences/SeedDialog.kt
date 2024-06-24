@@ -24,8 +24,8 @@ class SeedDialog: DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {
-        title(R.string.dialog_seed_title)
-        text(R.string.dialog_seed_explanation)
+        title(R.string.sessionRecoveryPassword)
+        text(R.string.recoveryPasswordDescription)
         text(seed, R.style.SessionIDTextView)
         button(R.string.copy, R.string.AccessibilityId_copy_recovery_phrase) { copySeed() }
         button(R.string.close) { dismiss() }
@@ -35,7 +35,7 @@ class SeedDialog: DialogFragment() {
         val clipboard = requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText("Seed", seed)
         clipboard.setPrimaryClip(clip)
-        Toast.makeText(requireContext(), R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), R.string.copied, Toast.LENGTH_SHORT).show()
         dismiss()
     }
 }

@@ -73,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
-                android:text="@string/conversation_input_panel__slide_to_cancel"
+                android:text="@string/messageVoiceSlideToCancel"
                 android:textSize="@dimen/very_small_font_size"
                 android:textColor="?android:textColorPrimary"
                 android:alpha="0.6" />

@@ -70,6 +70,6 @@ public class VideoSlide extends Slide {
 
   @NonNull @Override
   public String getContentDescription() {
-    return context.getString(R.string.Slide_video);
+    return context.getString(R.string.video);
   }
 }

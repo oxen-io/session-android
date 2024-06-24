@@ -1,5 +1,9 @@
 package org.thoughtcrime.securesms.notifications;
 
+import static org.session.util.StringSubstitutionConstants.CONVERSATION_COUNT_KEY;
+import static org.session.util.StringSubstitutionConstants.MESSAGE_COUNT_KEY;
+import static org.session.util.StringSubstitutionConstants.NAME_KEY;
+
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -9,6 +13,8 @@ import android.text.SpannableStringBuilder;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+
+import com.squareup.phrase.Phrase;
 
 import org.session.libsession.messaging.contacts.Contact;
 import org.session.libsession.utilities.NotificationPrivacyPreference;
@@ -44,9 +50,12 @@ public class MultipleRecipientNotificationBuilder extends AbstractNotificationBu
   }
 
   public void setMessageCount(int messageCount, int threadCount) {
-    setSubText(context.getString(R.string.MessageNotifier_d_new_messages_in_d_conversations,
-                                 messageCount, threadCount));
-    setContentInfo(String.valueOf(messageCount));
+    String txt = Phrase.from(context, R.string.notificationsAndroidSystem)
+            .put(MESSAGE_COUNT_KEY, messageCount)
+            .put(CONVERSATION_COUNT_KEY, threadCount)
+            .format().toString();
+    setSubText(txt);
+    setContentInfo(String.valueOf(messageCount)); // Note: `setContentInfo` details are only visible in Android API 24 and below - remove when min. API is upgraded.
     setNumber(messageCount);
   }
 
@@ -56,7 +65,10 @@ public class MultipleRecipientNotificationBuilder extends AbstractNotificationBu
       displayName = getGroupDisplayName(recipient, threadRecipient.isCommunityRecipient());
     }
     if (privacy.isDisplayContact()) {
-      setContentText(context.getString(R.string.MessageNotifier_most_recent_from_s, displayName));
+        String txt = Phrase.from(context, R.string.notificationsMostRecent)
+            .put(NAME_KEY, displayName)
+            .format().toString();
+        setContentText(txt);
     }
 
     if (recipient.getNotificationChannel() != null) {
@@ -66,7 +78,7 @@ public class MultipleRecipientNotificationBuilder extends AbstractNotificationBu
 
   public void addActions(PendingIntent markAsReadIntent) {
     NotificationCompat.Action markAllAsReadAction = new NotificationCompat.Action(R.drawable.check,
-                                            context.getString(R.string.MessageNotifier_mark_all_as_read),
+                                            context.getString(R.string.messageMarkRead),
                                             markAsReadIntent);
     addAction(markAllAsReadAction);
     extend(new NotificationCompat.WearableExtender().addAction(markAllAsReadAction));

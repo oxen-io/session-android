@@ -46,8 +46,8 @@ class ClearAllDataDialog : DialogFragment() {
 
     private fun createView(): View {
         binding = DialogClearAllDataBinding.inflate(LayoutInflater.from(requireContext()))
-        val device = radioOption("deviceOnly", R.string.dialog_clear_all_data_clear_device_only)
-        val network = radioOption("deviceAndNetwork", R.string.dialog_clear_all_data_clear_device_and_network)
+        val device = radioOption("deviceOnly", R.string.clearDeviceOnly)
+        val network = radioOption("deviceAndNetwork", R.string.clearDeviceAndNetwork)
         var selectedOption: RadioOption<String> = device
         val optionAdapter = RadioOptionAdapter { selectedOption = it }
         binding.recyclerView.apply {
@@ -80,10 +80,12 @@ class ClearAllDataDialog : DialogFragment() {
 
             when (step) {
                 Steps.INFO_PROMPT -> {
-                    binding.dialogDescriptionText.setText(R.string.dialog_clear_all_data_message)
+                    binding.dialogDescriptionText.setText(R.string.clearDataAllDescription)
                 }
                 Steps.NETWORK_PROMPT -> {
-                    binding.dialogDescriptionText.setText(R.string.dialog_clear_all_data_clear_device_and_network_confirmation)
+                    // ACL TODO - This was `dialog_clear_all_data_clear_device_and_network_confirmation` - need an equivalent?
+                    val txt = "Are you sure you want to delete your data from the network? If you continue you will not be able to restore your messages or contacts."
+                    binding.dialogDescriptionText.text = txt
                 }
                 Steps.DELETING -> { /* do nothing intentionally */ }
             }

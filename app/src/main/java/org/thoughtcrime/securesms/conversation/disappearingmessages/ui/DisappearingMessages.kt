@@ -53,7 +53,9 @@ fun DisappearingMessages(
                     OptionsCard(it, callbacks)
                 }
 
-                if (state.showGroupFooter) Text(text = stringResource(R.string.activity_disappearing_messages_group_footer),
+                if (state.showGroupFooter) Text(text = stringResource(R.string.disappearingMessagesDescription) +
+                                                       "\n" +
+                                                       stringResource(R.string.disappearingMessagesOnlyAdmins),
                     style = TextStyle(
                         fontSize = 11.sp,
                         fontWeight = FontWeight(400),
@@ -64,7 +66,7 @@ fun DisappearingMessages(
         }
 
         if (state.showSetButton) OutlineButton(
-            GetString(R.string.disappearing_messages_set_button_title),
+            GetString(R.string.set),
             modifier = Modifier
                 .contentDescription(GetString(R.string.AccessibilityId_set_button))
                 .align(Alignment.CenterHorizontally)

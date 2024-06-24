@@ -14,7 +14,7 @@
         android:layout_width="@dimen/fake_chat_view_bubble_width"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/medium_spacing"
-        android:text="@string/view_fake_chat_bubble_1"
+        android:text="@string/onboardingBubbleWelcomeToSession"
         android:layout_gravity="right" />
 
     <TextView
@@ -23,7 +23,7 @@
         android:layout_width="@dimen/fake_chat_view_bubble_width"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/medium_spacing"
-        android:text="@string/view_fake_chat_bubble_2"
+        android:text="@string/onboardingBubbleSessionIsEngineered"
         android:layout_gravity="left" />
 
     <TextView
@@ -32,9 +32,10 @@
         android:layout_width="@dimen/fake_chat_view_bubble_width"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/medium_spacing"
-        android:text="@string/view_fake_chat_bubble_3"
+        android:text="@string/onboardingBubbleNoPhoneNumber"
         android:layout_gravity="right" />
 
+    <!-- ACL - These last 2 fake messages will be replaced during onboarding -->
     <TextView
         style="@style/FakeChatViewMessageBubble.Incoming"
         android:id="@+id/bubble4"
