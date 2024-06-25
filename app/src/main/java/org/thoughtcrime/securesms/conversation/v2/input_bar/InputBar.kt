@@ -68,7 +68,6 @@ class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, Li
 
     // Keep track of when the user pressed the record voice message button, the duration that
     // they held record, and the current audio recording mechanism state.
-    // of the recording when they let go.
     var voiceMessageStartMS    = 0L
     var voiceMessageDurationMS = 0L
     var voiceRecorderState = VoiceRecorderState.Idle
