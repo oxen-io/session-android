@@ -1863,10 +1863,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     override fun sendVoiceMessage() {
         // When the record voice message button is released we always need to reset the UI and cancel
-        // any recording that might have taken place..
+        // any further recording operation..
         hideVoiceMessageUI()
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-
         val future = audioRecorder.stopRecording()
         stopAudioHandler.removeCallbacks(stopVoiceMessageRecordingTask)
 
@@ -1880,12 +1879,15 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // exits before transmitting the audio!
         inputBar.voiceRecorderState = VoiceRecorderState.Idle
 
+        // Voice message too short? Warn with toast instead of sending.
+        // Note: The 0L check prevents the warning toast being shown when leaving the conversation activity.
         if (voiceMessageDurationMS != 0L && voiceMessageDurationMS < MinimumVoiceMessageDurationMS) {
             Toast.makeText(this@ConversationActivityV2, R.string.messageVoiceErrorShort, Toast.LENGTH_LONG).show()
             inputBar.voiceMessageDurationMS = 0L
             return
         }
 
+        // Voice message okay? Attempt to send it.
         future.addListener(object : ListenableFuture.Listener<Pair<Uri, Long>> {
 
             override fun onSuccess(result: Pair<Uri, Long>) {
@@ -1909,13 +1911,14 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         audioRecorder.stopRecording()
         stopAudioHandler.removeCallbacks(stopVoiceMessageRecordingTask)
 
+        // Note: The 0L check prevents the warning toast being shown when leaving the conversation activity
         val voiceMessageDuration = inputBar.voiceMessageDurationMS
         if (voiceMessageDuration != 0L && voiceMessageDuration < MinimumVoiceMessageDurationMS) {
             Toast.makeText(applicationContext, applicationContext.getString(R.string.messageVoiceErrorShort), Toast.LENGTH_SHORT).show()
             inputBar.voiceMessageDurationMS = 0L
         }
 
-        // When tear-down is complete (via cancelling ) we can move back into the idle state ready to record
+        // When tear-down is complete (via cancelling) we can move back into the idle state ready to record
         // another voice message.
         inputBar.voiceRecorderState = VoiceRecorderState.Idle
     }
