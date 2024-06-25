@@ -50,7 +50,7 @@ class InputBarRecordingView : RelativeLayout {
         val AnimateLockDurationMS = 250L
         val DotAnimationDurationMS = 500L
         val DotPulseAnimationDurationMS = 1000L
-        val HideDurationMS = 250L
+        val ShowHideDurationMS = 250L
     }
 
     constructor(context: Context) : super(context) { initialize() }
@@ -87,7 +87,7 @@ class InputBarRecordingView : RelativeLayout {
     fun hide() {
         alpha = 1.0f
         val animation = ValueAnimator.ofObject(FloatEvaluator(), 1.0f, 0.0f)
-        animation.duration = HideDurationMS
+        animation.duration = ShowHideDurationMS
         animation.addUpdateListener { animator ->
             alpha = animator.animatedValue as Float
             if (animator.animatedFraction == 1.0f) {
