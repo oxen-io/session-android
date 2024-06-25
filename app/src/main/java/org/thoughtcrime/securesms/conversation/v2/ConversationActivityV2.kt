@@ -283,7 +283,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         get() = binding.conversationRecyclerView.isScrolledToWithin30dpOfBottom
 
     private val layoutManager: LinearLayoutManager?
-        get() { return binding.conversationRecyclerView?.layoutManager as LinearLayoutManager? }
+        get() { return binding.conversationRecyclerView.layoutManager as LinearLayoutManager? }
 
     private val seed by lazy {
         var hexEncodedSeed = IdentityKeyUtil.retrieve(this, IdentityKeyUtil.LOKI_SEED)
@@ -295,7 +295,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val loadFileContents: (String) -> String = { fileName ->
             MnemonicUtilities.loadFileContents(appContext, fileName)
         }
-        MnemonicCodec(loadFileContents).encode(hexEncodedSeed!!, MnemonicCodec.Language.Configuration.english)
+        MnemonicCodec(loadFileContents).encode(hexEncodedSeed, MnemonicCodec.Language.Configuration.english)
     }
 
     // There is a bug when initially joining a community where all messages will immediately be marked
@@ -341,7 +341,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
         // Register an AdapterDataObserver to scroll us to the bottom of the RecyclerView for if
         // we're already near the the bottom and the data changes.
-        adapter.registerAdapterDataObserver(ConversationAdapterDataObserver(binding.conversationRecyclerView!!, adapter))
+        adapter.registerAdapterDataObserver(ConversationAdapterDataObserver(binding.conversationRecyclerView, adapter))
 
         adapter
     }
@@ -606,7 +606,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // If the current last visible message index is less than the previous one (i.e. we've
         // lost visibility of one or more messages due to showing the IME keyboard) AND we're
         // at the bottom of the message feed..
-        val atBottomAndTrueLastNoLongerVisible = currentLastVisibleRecyclerViewIndex!! <= previousLastVisibleRecyclerViewIndex!! && !binding.scrollToBottomButton?.isVisible!!
+        val atBottomAndTrueLastNoLongerVisible = currentLastVisibleRecyclerViewIndex <= previousLastVisibleRecyclerViewIndex &&
+                                                 !binding.scrollToBottomButton.isVisible
 
         // ..OR we're at the last message or have received a new message..
         val atLastOrReceivedNewMessage = currentLastVisibleRecyclerViewIndex == (adapter.itemCount - 1)
@@ -1335,36 +1336,48 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     private fun sendEmojiReaction(emoji: String, originalMessage: MessageRecord) {
         // Create the message
-        val recipient = viewModel.recipient ?: return
+        val recipient = viewModel.recipient ?: return Log.w(TAG, "Could not locate recipient when sending emoji reaction")
         val reactionMessage = VisibleMessage()
         val emojiTimestamp = SnodeAPI.nowWithOffset
         reactionMessage.sentTimestamp = emojiTimestamp
-        val author = textSecurePreferences.getLocalNumber()!!
-        // Put the message in the database
-        val reaction = ReactionRecord(
-            messageId = originalMessage.id,
-            isMms = originalMessage.isMms,
-            author = author,
-            emoji = emoji,
-            count = 1,
-            dateSent = emojiTimestamp,
-            dateReceived = emojiTimestamp
-        )
-        reactionDb.addReaction(MessageId(originalMessage.id, originalMessage.isMms), reaction, false)
-        val originalAuthor = if (originalMessage.isOutgoing) {
-            fromSerialized(viewModel.blindedPublicKey ?: textSecurePreferences.getLocalNumber()!!)
-        } else originalMessage.individualRecipient.address
-        // Send it
-        reactionMessage.reaction = Reaction.from(originalMessage.timestamp, originalAuthor.serialize(), emoji, true)
-        if (recipient.isCommunityRecipient) {
-            val messageServerId = lokiMessageDb.getServerID(originalMessage.id, !originalMessage.isMms) ?: return
-            viewModel.openGroup?.let {
-                OpenGroupApi.addReaction(it.room, it.server, messageServerId, emoji)
-            }
+        val author = textSecurePreferences.getLocalNumber()
+
+        if (author == null) {
+            Log.w(TAG, "Unable to locate local number when sending emoji reaction - aborting.")
+            return
         } else {
-            MessageSender.send(reactionMessage, recipient.address)
+            // Put the message in the database
+            val reaction = ReactionRecord(
+                messageId = originalMessage.id,
+                isMms = originalMessage.isMms,
+                author = author,
+                emoji = emoji,
+                count = 1,
+                dateSent = emojiTimestamp,
+                dateReceived = emojiTimestamp
+            )
+            reactionDb.addReaction(MessageId(originalMessage.id, originalMessage.isMms), reaction, false)
+
+            val originalAuthor = if (originalMessage.isOutgoing) {
+                fromSerialized(viewModel.blindedPublicKey ?: textSecurePreferences.getLocalNumber()!!)
+            } else originalMessage.individualRecipient.address
+
+            // Send it
+            reactionMessage.reaction = Reaction.from(originalMessage.timestamp, originalAuthor.serialize(), emoji, true)
+            if (recipient.isCommunityRecipient) {
+
+                val messageServerId = lokiMessageDb.getServerID(originalMessage.id, !originalMessage.isMms) ?:
+                    return Log.w(TAG, "Failed to find message server ID when adding emoji reaction")
+
+                viewModel.openGroup?.let {
+                    OpenGroupApi.addReaction(it.room, it.server, messageServerId, emoji)
+                }
+            } else {
+                MessageSender.send(reactionMessage, recipient.address)
+            }
+
+            LoaderManager.getInstance(this).restartLoader(0, null, this)
         }
-        LoaderManager.getInstance(this).restartLoader(0, null, this)
     }
 
     private fun sendEmojiRemoval(emoji: String, originalMessage: MessageRecord) {
@@ -1372,23 +1385,32 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val message = VisibleMessage()
         val emojiTimestamp = SnodeAPI.nowWithOffset
         message.sentTimestamp = emojiTimestamp
-        val author = textSecurePreferences.getLocalNumber()!!
-        reactionDb.deleteReaction(emoji, MessageId(originalMessage.id, originalMessage.isMms), author, false)
+        val author = textSecurePreferences.getLocalNumber()
 
-        val originalAuthor = if (originalMessage.isOutgoing) {
-            fromSerialized(viewModel.blindedPublicKey ?: textSecurePreferences.getLocalNumber()!!)
-        } else originalMessage.individualRecipient.address
-
-        message.reaction = Reaction.from(originalMessage.timestamp, originalAuthor.serialize(), emoji, false)
-        if (recipient.isCommunityRecipient) {
-            val messageServerId = lokiMessageDb.getServerID(originalMessage.id, !originalMessage.isMms) ?: return
-            viewModel.openGroup?.let {
-                OpenGroupApi.deleteReaction(it.room, it.server, messageServerId, emoji)
-            }
+        if (author == null) {
+            Log.w(TAG, "Unable to locate local number when removing emoji reaction - aborting.")
+            return
         } else {
-            MessageSender.send(message, recipient.address)
+            reactionDb.deleteReaction(emoji, MessageId(originalMessage.id, originalMessage.isMms), author, false)
+
+            val originalAuthor = if (originalMessage.isOutgoing) {
+                fromSerialized(viewModel.blindedPublicKey ?: textSecurePreferences.getLocalNumber()!!)
+            } else originalMessage.individualRecipient.address
+
+            message.reaction = Reaction.from(originalMessage.timestamp, originalAuthor.serialize(), emoji, false)
+            if (recipient.isCommunityRecipient) {
+
+                val messageServerId = lokiMessageDb.getServerID(originalMessage.id, !originalMessage.isMms) ?:
+                    return Log.w(TAG, "Failed to find message server ID when removing emoji reaction")
+
+                viewModel.openGroup?.let {
+                    OpenGroupApi.deleteReaction(it.room, it.server, messageServerId, emoji)
+                }
+            } else {
+                MessageSender.send(message, recipient.address)
+            }
+            LoaderManager.getInstance(this).restartLoader(0, null, this)
         }
-        LoaderManager.getInstance(this).restartLoader(0, null, this)
     }
 
     override fun onCustomReactionSelected(messageRecord: MessageRecord, hasAddedCustomEmoji: Boolean) {
@@ -1645,9 +1667,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         message.text = text
         val expiresInMillis = viewModel.expirationConfiguration?.expiryMode?.expiryMillis ?: 0
         val expireStartedAt = if (viewModel.expirationConfiguration?.expiryMode is ExpiryMode.AfterSend) {
-            message.sentTimestamp!!
+            message.sentTimestamp
         } else 0
-        val outgoingTextMessage = OutgoingTextMessage.from(message, recipient, expiresInMillis, expireStartedAt)
+        val outgoingTextMessage = OutgoingTextMessage.from(message, recipient, expiresInMillis, expireStartedAt!!)
         // Clear the input bar
         binding.inputBar.text = ""
         binding.inputBar.cancelQuoteDraft()
