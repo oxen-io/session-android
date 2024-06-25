@@ -1849,7 +1849,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             showVoiceMessageUI()
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-            // Allow the caller (us!) to define what should happen when the voice recording finishes
+            // Allow the caller (us!) to define what should happen when the voice recording finishes.
+            // Specifically in this instance, if we just tap the record audio button then by the time
+            // we actually finish setting up and get here the recording has been cancelled and the voice
+            // recorder state is Idle! As such we'll only tick the recorder state over to Recording if
+            // we were still in the SettingUpToRecord state when we got here (i.e., the record voice
+            // message button is still held or is locked to keep recording audio without being held).
             val callback: () -> Unit = {
                 if (binding.inputBar?.voiceRecorderState == VoiceRecorderState.SettingUpToRecord) {
                     binding.inputBar.voiceRecorderState = VoiceRecorderState.Recording
