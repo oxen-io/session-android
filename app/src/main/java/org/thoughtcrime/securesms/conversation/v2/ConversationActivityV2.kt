@@ -1862,7 +1862,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun sendVoiceMessage() {
-        // When the record voice message button is release we always need to reset the UI and cancel
+        // When the record voice message button is released we always need to reset the UI and cancel
         // any recording that might have taken place..
         hideVoiceMessageUI()
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -1870,7 +1870,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val future = audioRecorder.stopRecording()
         stopAudioHandler.removeCallbacks(stopVoiceMessageRecordingTask)
 
-        // ..but we'll bail without sending the voice message & inform the user than they need to press and HOLD
+        // ..but we'll bail without sending the voice message & inform the user that they need to press and HOLD
         // the record voice message button if their message was less than 1 second long.
         val inputBar = binding?.inputBar
         val voiceMessageDurationMS = inputBar?.voiceMessageDurationMS!!
@@ -1912,7 +1912,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             Toast.makeText(applicationContext, applicationContext.getString(R.string.messageVoiceErrorShort), Toast.LENGTH_SHORT).show()
         }
 
-        // Finally, when tear-down is complete we can move back into the idle state ready to record
+        // When tear-down is complete (via cancelling ) we can move back into the idle state ready to record
         // another voice message.
         inputBar.voiceRecorderState = VoiceRecorderState.Idle
     }
