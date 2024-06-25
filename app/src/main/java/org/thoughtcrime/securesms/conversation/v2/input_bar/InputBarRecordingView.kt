@@ -45,7 +45,7 @@ class InputBarRecordingView : RelativeLayout {
     val recordButtonOverlay: RelativeLayout
         get() = binding.recordButtonOverlay
 
-    // Static constants for animation durations
+    // Static constants for animation durations in milliseconds
     companion object {
         val AnimateLockDurationMS = 250L
         val DotAnimationDurationMS = 500L
