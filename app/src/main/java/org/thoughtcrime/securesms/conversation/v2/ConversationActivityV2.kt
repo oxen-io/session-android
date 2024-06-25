@@ -1848,8 +1848,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             showVoiceMessageUI()
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-            // Note: The input bar's recording state is set to VoiceRecorderState.Recording when it completes its setup
-            audioRecorder.startRecording(binding?.inputBar)
+            // Allow the caller (us!) to define what should happen when the voice recording finishes
+            val callback: () -> Unit = {
+                if (binding?.inputBar?.voiceRecorderState == VoiceRecorderState.SettingUpToRecord) {
+                    binding!!.inputBar.voiceRecorderState = VoiceRecorderState.Recording
+                }
+            }
+            audioRecorder.startRecording(callback)
 
             stopAudioHandler.postDelayed(stopVoiceMessageRecordingTask, 300000) // Limit voice messages to 5 minute each
         } else {

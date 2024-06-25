@@ -1,9 +1,8 @@
 package org.thoughtcrime.securesms.audio;
 
-import android.annotation.TargetApi;
+
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.util.Pair;
 import androidx.annotation.NonNull;
@@ -15,12 +14,9 @@ import org.session.libsignal.utilities.ListenableFuture;
 import org.session.libsignal.utilities.Log;
 import org.session.libsignal.utilities.SettableFuture;
 import org.session.libsignal.utilities.ThreadUtils;
-import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBar;
-import org.thoughtcrime.securesms.conversation.v2.input_bar.VoiceRecorderState;
 import org.thoughtcrime.securesms.providers.BlobProvider;
 import org.thoughtcrime.securesms.util.MediaUtil;
 
-@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class AudioRecorder {
 
   private static final String TAG = AudioRecorder.class.getSimpleName();
@@ -32,11 +28,16 @@ public class AudioRecorder {
   private AudioCodec audioCodec;
   private Uri        captureUri;
 
+  // Simple interface that allows us to provide a callback method to our `startRecording` method
+  public interface AudioMessageRecordingFinishedCallback {
+    void onAudioMessageRecordingFinished();
+  }
+
   public AudioRecorder(@NonNull Context context) {
     this.context = context;
   }
 
-  public void startRecording(InputBar inputBar) {
+  public void startRecording(AudioMessageRecordingFinishedCallback callback) {
     Log.i(TAG, "startRecording()");
 
     executor.execute(() -> {
@@ -62,9 +63,7 @@ public class AudioRecorder {
         // we'll only tick the recorder state over to Recording if we were still in the
         // SettingUpToRecord state when we got here (i.e., the record voice message button is still
         // held or is locked to keep recording audio without being held).
-        if (inputBar.getVoiceRecorderState() == VoiceRecorderState.SettingUpToRecord) {
-          inputBar.setVoiceRecorderState(VoiceRecorderState.Recording);
-        }
+        callback.onAudioMessageRecordingFinished();
       } catch (IOException e) {
         Log.w(TAG, e);
       }

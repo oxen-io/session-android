@@ -194,6 +194,14 @@ class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, Li
 
     private fun startRecordingVoiceMessage() { delegate?.startRecordingVoiceMessage() }
 
+    // Method passed into the AudioRecorder to adjust our state at the end of the executor
+    private fun updateVoiceRecorderStateAfterExecution() {
+
+        if (voiceRecorderState == VoiceRecorderState.SettingUpToRecord) {
+            voiceRecorderState = VoiceRecorderState.Recording
+        }
+    }
+
     fun draftQuote(thread: Recipient, message: MessageRecord, glide: GlideRequests) {
         quoteView?.let(binding.inputBarAdditionalContentContainer::removeView)
 
@@ -281,6 +289,7 @@ class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, Li
     fun setSelection(index: Int) {
         binding.inputBarEditText.setSelection(index)
     }
+
     // endregion
 }
 
