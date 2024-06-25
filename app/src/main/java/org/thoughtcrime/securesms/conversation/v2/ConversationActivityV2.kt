@@ -363,6 +363,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private var currentLastVisibleRecyclerViewIndex:  Int = RecyclerView.NO_POSITION
     private var recyclerScrollState: Int = RecyclerView.SCROLL_STATE_IDLE
 
+    // Lower limit for the length of voice messages - any lower and we inform the user rather than sending
+    private val MinimumVoiceMessageDurationMS = 1000L
+
     // region Settings
     companion object {
         // Extras
@@ -1485,9 +1488,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun onMicrophoneButtonUp(event: MotionEvent) {
-
-        Log.w("ACL", "In CA.onMicrophoneButtonUp")
-
         val x = event.rawX.roundToInt()
         val y = event.rawY.roundToInt()
         val inputBar = binding?.inputBar!!
@@ -1500,13 +1500,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         if (isValidLockViewLocation(x, y) &&  inputBar.voiceMessageDurationMS >= InputBarRecordingView.AnimateLockDurationMS) {
             binding?.inputBarRecordingView?.lock()
 
-            Log.w("ACL", "We think this is a valid lock location AND the voice message was at least 1 second")
-
             // If the user put the record audio button into the lock state then we are still recording audio
             binding?.inputBar?.voiceRecorderState = VoiceRecorderState.Recording
-            Log.w("ACL", "onMicrophoneButtonUp w/ lock: Setting voice recorder state to: Recording")
         }
-        else // If the user didn't attempt to lock the recording on
+        else // If the user didn't attempt to lock voice recording on..
         {
             // Regardless of where the button up event occurred we're now shutting down the recording (whether we send it or not)
             binding?.inputBar?.voiceRecorderState = VoiceRecorderState.ShuttingDownAfterRecord
@@ -1519,18 +1516,15 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
                 // If the up event occurred over the record button overlay we send the voice message..
                 if (hitRect.contains(x, y)) {
-                    Log.w("ACL", "About to call CA.sendVoiceMessage()")
                     sendVoiceMessage()
                 } else {
                     // ..otherwise if they've released off the button we'll cancel sending.
-                    Log.w("ACL", "Cancelling voice message from CA")
                     cancelVoiceMessage()
                 }
             }
             else
             {
-                // Finally, if for some reason the record button overlay was null we'll also cancel recording
-                Log.e("ACL", "RBA was null - cancelling voice message")
+                // Just to cover all our bases, if for whatever reason the record button overlay was null we'll also cancel recording
                 cancelVoiceMessage()
             }
         }
@@ -1870,22 +1864,16 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // the record voice message button if their message was less than 1 second long.
         val inputBar = binding?.inputBar
         val voiceMessageDurationMS = inputBar?.voiceMessageDurationMS!!
-        Log.w("ACL", "sendVoiceMessage: Voice message duration MS was: $voiceMessageDurationMS")
 
-
-        // Now tear-down is complete we can move back into the idle state ready to record another voice message
+        // Now tear-down is complete we can move back into the idle state ready to record another voice message.
         // CAREFUL: This state must be set BEFORE we show any warning toast about short messages because it early
         // exits before transmitting the audio!
         inputBar.voiceRecorderState = VoiceRecorderState.Idle
-        Log.w("ACL", "sendVoiceMessage: Setting voice recorder state to: Idle")
 
-        if (voiceMessageDurationMS < 1000L) {
-            Log.e("ACL", "Showing toast and bailing!")
+        if (voiceMessageDurationMS < MinimumVoiceMessageDurationMS) {
             Toast.makeText(this@ConversationActivityV2, R.string.messageVoiceErrorShort, Toast.LENGTH_LONG).show()
             return
         }
-
-
 
         future.addListener(object : ListenableFuture.Listener<Pair<Uri, Long>> {
 
@@ -1910,16 +1898,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         audioRecorder.stopRecording()
         stopAudioHandler.removeCallbacks(stopVoiceMessageRecordingTask)
 
-        if (inputBar.voiceMessageDurationMS < 1000L) {
-            Log.w("ACL", "Showing toast in cancel voice message")
+        if (inputBar.voiceMessageDurationMS < MinimumVoiceMessageDurationMS) {
             Toast.makeText(applicationContext, applicationContext.getString(R.string.messageVoiceErrorShort), Toast.LENGTH_SHORT).show()
         }
 
         // Finally, when tear-down is complete we can move back into the idle state ready to record
         // another voice message.
-        Log.w("ACL", "cancelVoiceMessage: Setting voice recorder state back to idle!")
         inputBar.voiceRecorderState = VoiceRecorderState.Idle
-        Log.w("ACL", "cancelVoiceMessage: Setting voice recorder state to: Idle")
     }
 
     override fun selectMessages(messages: Set<MessageRecord>) {

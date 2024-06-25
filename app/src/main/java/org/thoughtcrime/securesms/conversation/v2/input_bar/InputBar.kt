@@ -108,25 +108,20 @@ class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, Li
             override fun onTouch(v: View, event: MotionEvent): Boolean {
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
-                        Log.e("ACL", "Entered onTouch.ACTION_DOWN with recorder state: " + voiceRecorderState)
-
                         // Only start spinning up the voice recorder if we're not already recording, setting up, or tearing down
                         if (voiceRecorderState == VoiceRecorderState.Idle) {
                             // Take note of when we start recording so we can figure out how long the record button was held for
                             voiceMessageStartMS = System.currentTimeMillis()
-                            Log.w("ACL", "Touch DOWN at: $voiceMessageStartMS")
 
                             // We are now setting up to record, and when we actually start recording then
                             // AudioRecorder.startRecording will move us into the Recording state.
                             voiceRecorderState = VoiceRecorderState.SettingUpToRecord
-                            Log.w("ACL", "Setting voice recorder state to: SettingUpToRecord")
                             startRecordingVoiceMessage()
                         }
                     }
                     MotionEvent.ACTION_UP -> {
                         // Work out how long the record audio button was held for
                         voiceMessageDurationMS = System.currentTimeMillis() - voiceMessageStartMS;
-                        Log.w("ACL", "Touch UP at: ${System.currentTimeMillis()} - duration MS is: $voiceMessageDurationMS")
 
                         // Regardless of our current recording state we'll always call the onMicrophoneButtonUp method
                         // and let the logic in that take the appropriate action as we cannot guarantee that letting
@@ -134,7 +129,6 @@ class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, Li
                         // the button into the 'locked' state so they don't have to keep it held down to record a voice
                         // message.
                         // Also: We need to tear down the voice recorder if it has been recording and is now stopping.
-                        Log.w("ACL", "Calling onMicrophoneButtonUp for teardown")
                         delegate?.onMicrophoneButtonUp(event)
                     }
                 }

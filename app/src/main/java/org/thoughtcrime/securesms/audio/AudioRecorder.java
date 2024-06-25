@@ -57,10 +57,9 @@ public class AudioRecorder {
                                  .forData(new ParcelFileDescriptor.AutoCloseInputStream(fds[0]), 0)
                                  .withMimeType(MediaTypes.AUDIO_AAC)
                                  .createForSingleSessionOnDisk(context, e -> Log.w(TAG, "Error during recording", e));
+
         audioCodec = new AudioCodec();
-
         audioCodec.start(new ParcelFileDescriptor.AutoCloseOutputStream(fds[1]));
-
 
         // If we just tap the record audio button then by the time we actually finish setting up and
         // get here the recording has been cancelled and the voice recorder state is Idle! As such
@@ -69,9 +68,7 @@ public class AudioRecorder {
         // held or locked to keep recording without being held).
         if (inputBar.getVoiceRecorderState() == VoiceRecorderState.SettingUpToRecord) {
           inputBar.setVoiceRecorderState(VoiceRecorderState.Recording);
-          Log.w("ACL", "AudioRecorder: Setting voice recorder state to: Recording");
         }
-
       } catch (IOException e) {
         Log.w(TAG, e);
       }
