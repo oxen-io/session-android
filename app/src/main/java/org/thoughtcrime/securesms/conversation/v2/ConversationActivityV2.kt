@@ -117,7 +117,8 @@ import org.thoughtcrime.securesms.conversation.v2.dialogs.LinkPreviewDialog
 import org.thoughtcrime.securesms.conversation.v2.dialogs.SendSeedDialog
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarButton
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarDelegate
-import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarRecordingView
+import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarRecordingView.Companion.AnimateLockDurationMS
+import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarRecordingView.Companion.HideDurationMS
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarRecordingViewDelegate
 import org.thoughtcrime.securesms.conversation.v2.input_bar.VoiceRecorderState
 import org.thoughtcrime.securesms.conversation.v2.input_bar.mentions.MentionCandidatesView
@@ -189,7 +190,6 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
-import kotlin.time.Duration.Companion.milliseconds
 
 private const val TAG = "ConversationActivityV2"
 
@@ -1040,7 +1040,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private fun expandVoiceMessageLockView() {
         val lockView = binding?.inputBarRecordingView?.lockView ?: return
         val animation = ValueAnimator.ofObject(FloatEvaluator(), lockView.scaleX, 1.10f)
-        animation.duration = 250L
+        animation.duration = AnimateLockDurationMS
         animation.addUpdateListener { animator ->
             lockView.scaleX = animator.animatedValue as Float
             lockView.scaleY = animator.animatedValue as Float
@@ -1051,7 +1051,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private fun collapseVoiceMessageLockView() {
         val lockView = binding?.inputBarRecordingView?.lockView ?: return
         val animation = ValueAnimator.ofObject(FloatEvaluator(), lockView.scaleX, 1.0f)
-        animation.duration = 250L
+        animation.duration = AnimateLockDurationMS
         animation.addUpdateListener { animator ->
             lockView.scaleX = animator.animatedValue as Float
             lockView.scaleY = animator.animatedValue as Float
@@ -1064,7 +1064,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val slideToCancelTextView = binding?.inputBarRecordingView?.slideToCancelTextView ?: return
         listOf( chevronImageView, slideToCancelTextView ).forEach { view ->
             val animation = ValueAnimator.ofObject(FloatEvaluator(), view.translationX, 0.0f)
-            animation.duration = 250L
+            animation.duration = AnimateLockDurationMS
             animation.addUpdateListener { animator ->
                 view.translationX = animator.animatedValue as Float
             }
@@ -1077,7 +1077,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val inputBar = binding?.inputBar ?: return
         inputBar.alpha = 1.0f
         val animation = ValueAnimator.ofObject(FloatEvaluator(), 0.0f, 1.0f)
-        animation.duration = 250L
+        animation.duration = HideDurationMS
         animation.addUpdateListener { animator ->
             inputBar.alpha = animator.animatedValue as Float
         }
@@ -1497,8 +1497,21 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // the lock area into position. Without this time check we can accidentally lock
         // to recording audio on a quick tap as the lock area animates out from the record
         // audio message button and the pointer-up event catches it mid-animation.
-        if (isValidLockViewLocation(x, y) &&  inputBar.voiceMessageDurationMS >= InputBarRecordingView.AnimateLockDurationMS) {
+        //
+        // Further, by limiting this to AnimateLockDurationMS rather than our minimum voice
+        // message length we get a fast, responsive UI that can lock 'straight away' - BUT
+        // we then have to artificially bump the voice message duration because if you press
+        // and slide to lock then release in one quick motion the pointer up event may be
+        // less than our minimum voice message duration - so we'll bump our recorded duration
+        // slightly to make sure we don't see the "Tap and hold to record..." toast when we
+        // finish recording the message.
+        if (isValidLockViewLocation(x, y) &&  inputBar.voiceMessageDurationMS >= AnimateLockDurationMS) {
             binding?.inputBarRecordingView?.lock()
+
+            // Artificially bump message duration on lock if required
+            if (inputBar.voiceMessageDurationMS < MinimumVoiceMessageDurationMS) {
+                inputBar.voiceMessageDurationMS = MinimumVoiceMessageDurationMS;
+            }
 
             // If the user put the record audio button into the lock state then we are still recording audio
             binding?.inputBar?.voiceRecorderState = VoiceRecorderState.Recording
@@ -1853,9 +1866,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // any recording that might have taken place..
         hideVoiceMessageUI()
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-
-        // If we didn't even get to the poi
-        //if (!binding?.inputBar?.alreadyRecordingVoiceMessage) return;
 
         val future = audioRecorder.stopRecording()
         stopAudioHandler.removeCallbacks(stopVoiceMessageRecordingTask)

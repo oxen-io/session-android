@@ -5,24 +5,20 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
-import androidx.annotation.NonNull;
-
-import org.session.libsession.utilities.MediaTypes;
-import org.session.libsignal.utilities.Log;
 import android.util.Pair;
-
+import androidx.annotation.NonNull;
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import org.session.libsession.utilities.MediaTypes;
+import org.session.libsession.utilities.Util;
+import org.session.libsignal.utilities.ListenableFuture;
+import org.session.libsignal.utilities.Log;
+import org.session.libsignal.utilities.SettableFuture;
+import org.session.libsignal.utilities.ThreadUtils;
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBar;
 import org.thoughtcrime.securesms.conversation.v2.input_bar.VoiceRecorderState;
 import org.thoughtcrime.securesms.providers.BlobProvider;
 import org.thoughtcrime.securesms.util.MediaUtil;
-
-import org.session.libsignal.utilities.ThreadUtils;
-import org.session.libsession.utilities.Util;
-import org.session.libsignal.utilities.ListenableFuture;
-import org.session.libsignal.utilities.SettableFuture;
-
-import java.io.IOException;
-import java.util.concurrent.ExecutorService;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class AudioRecorder {
@@ -65,7 +61,7 @@ public class AudioRecorder {
         // get here the recording has been cancelled and the voice recorder state is Idle! As such
         // we'll only tick the recorder state over to Recording if we were still in the
         // SettingUpToRecord state when we got here (i.e., the record voice message button is still
-        // held or locked to keep recording without being held).
+        // held or is locked to keep recording audio without being held).
         if (inputBar.getVoiceRecorderState() == VoiceRecorderState.SettingUpToRecord) {
           inputBar.setVoiceRecorderState(VoiceRecorderState.Recording);
         }

@@ -21,7 +21,6 @@ import network.loki.messenger.databinding.ViewInputBarBinding
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
-import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.conversation.v2.components.LinkPreviewDraftView
 import org.thoughtcrime.securesms.conversation.v2.components.LinkPreviewDraftViewDelegate
 import org.thoughtcrime.securesms.conversation.v2.messages.QuoteView
@@ -106,6 +105,10 @@ class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, Li
         // `microphoneButton.onUp` and tap the button then the logged output order is onUp and THEN onPress!
         microphoneButton.setOnTouchListener(object : OnTouchListener {
             override fun onTouch(v: View, event: MotionEvent): Boolean {
+
+                // We only handle single finger touch events so just consume the event and bail if there are more
+                if (event.pointerCount > 1) return true
+
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
                         // Only start spinning up the voice recorder if we're not already recording, setting up, or tearing down
