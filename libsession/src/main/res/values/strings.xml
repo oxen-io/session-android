@@ -73,4 +73,6 @@
     <string name="ConversationItem_group_action_left">%1$s has left the group.</string>
     <!-- RecipientProvider -->
     <string name="RecipientProvider_unnamed_group">Unnamed group</string>
+
+    <string name="messageVoiceErrorShort">Tap and hold to record a voice message.</string>
 </resources>

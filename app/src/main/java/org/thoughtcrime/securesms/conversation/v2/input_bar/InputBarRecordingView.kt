@@ -45,6 +45,14 @@ class InputBarRecordingView : RelativeLayout {
     val recordButtonOverlay: RelativeLayout
         get() = binding.recordButtonOverlay
 
+    // Static constants for animation durations
+    companion object {
+        val AnimateLockDurationMS = 250L
+        val DotAnimationDurationMS = 500L
+        val DotPulseAnimationDurationMS = 1000L
+        val HideDurationMS = 250L
+    }
+
     constructor(context: Context) : super(context) { initialize() }
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) { initialize() }
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) { initialize() }
@@ -79,7 +87,7 @@ class InputBarRecordingView : RelativeLayout {
     fun hide() {
         alpha = 1.0f
         val animation = ValueAnimator.ofObject(FloatEvaluator(), 1.0f, 0.0f)
-        animation.duration = 250L
+        animation.duration = HideDurationMS
         animation.addUpdateListener { animator ->
             alpha = animator.animatedValue as Float
             if (animator.animatedFraction == 1.0f) {
@@ -113,7 +121,7 @@ class InputBarRecordingView : RelativeLayout {
     private fun animateDotView() {
         val animation = ValueAnimator.ofObject(FloatEvaluator(), 1.0f, 0.0f)
         dotViewAnimation = animation
-        animation.duration = 500L
+        animation.duration = DotAnimationDurationMS
         animation.addUpdateListener { animator ->
             binding.dotView.alpha = animator.animatedValue as Float
         }
@@ -128,7 +136,7 @@ class InputBarRecordingView : RelativeLayout {
         binding.pulseView.animateSizeChange(collapsedSize, expandedSize, 1000)
         val animation = ValueAnimator.ofObject(FloatEvaluator(), 0.5, 0.0f)
         pulseAnimation = animation
-        animation.duration = 1000L
+        animation.duration = DotPulseAnimationDurationMS
         animation.addUpdateListener { animator ->
             binding.pulseView.alpha = animator.animatedValue as Float
             if (animator.animatedFraction == 1.0f && isVisible) { pulse() }
@@ -143,7 +151,7 @@ class InputBarRecordingView : RelativeLayout {
         layoutParams.bottomMargin = startMarginBottom
         binding.lockView.layoutParams = layoutParams
         val animation = ValueAnimator.ofObject(IntEvaluator(), startMarginBottom, endMarginBottom)
-        animation.duration = 250L
+        animation.duration = AnimateLockDurationMS
         animation.addUpdateListener { animator ->
             layoutParams.bottomMargin = animator.animatedValue as Int
             binding.lockView.layoutParams = layoutParams
@@ -153,14 +161,14 @@ class InputBarRecordingView : RelativeLayout {
 
     fun lock() {
         val fadeOutAnimation = ValueAnimator.ofObject(FloatEvaluator(), 1.0f, 0.0f)
-        fadeOutAnimation.duration = 250L
+        fadeOutAnimation.duration = AnimateLockDurationMS
         fadeOutAnimation.addUpdateListener { animator ->
             binding.inputBarMiddleContentContainer.alpha = animator.animatedValue as Float
             binding.lockView.alpha = animator.animatedValue as Float
         }
         fadeOutAnimation.start()
         val fadeInAnimation = ValueAnimator.ofObject(FloatEvaluator(), 0.0f, 1.0f)
-        fadeInAnimation.duration = 250L
+        fadeInAnimation.duration = AnimateLockDurationMS
         fadeInAnimation.addUpdateListener { animator ->
             binding.inputBarCancelButton.alpha = animator.animatedValue as Float
         }

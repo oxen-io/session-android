@@ -117,7 +117,9 @@ import org.thoughtcrime.securesms.conversation.v2.dialogs.LinkPreviewDialog
 import org.thoughtcrime.securesms.conversation.v2.dialogs.SendSeedDialog
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarButton
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarDelegate
+import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarRecordingView
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarRecordingViewDelegate
+import org.thoughtcrime.securesms.conversation.v2.input_bar.VoiceRecorderState
 import org.thoughtcrime.securesms.conversation.v2.input_bar.mentions.MentionCandidatesView
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationActionModeCallback
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationActionModeCallbackDelegate
@@ -187,6 +189,7 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
+import kotlin.time.Duration.Companion.milliseconds
 
 private const val TAG = "ConversationActivityV2"
 
@@ -1482,18 +1485,52 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun onMicrophoneButtonUp(event: MotionEvent) {
+
+        Log.w("ACL", "In CA.onMicrophoneButtonUp")
+
         val x = event.rawX.roundToInt()
         val y = event.rawY.roundToInt()
-        if (isValidLockViewLocation(x, y)) {
+        val inputBar = binding?.inputBar!!
+
+        // Lock voice recording on if the button is released over the lock area AND the
+        // voice recording has currently lasted for at least the time it takes to animate
+        // the lock area into position. Without this time check we can accidentally lock
+        // to recording audio on a quick tap as the lock area animates out from the record
+        // audio message button and the pointer-up event catches it mid-animation.
+        if (isValidLockViewLocation(x, y) &&  inputBar.voiceMessageDurationMS >= InputBarRecordingView.AnimateLockDurationMS) {
             binding?.inputBarRecordingView?.lock()
-        } else {
-            val recordButtonOverlay = binding?.inputBarRecordingView?.recordButtonOverlay ?: return
-            val location = IntArray(2) { 0 }
-            recordButtonOverlay.getLocationOnScreen(location)
-            val hitRect = Rect(location[0], location[1], location[0] + recordButtonOverlay.width, location[1] + recordButtonOverlay.height)
-            if (hitRect.contains(x, y)) {
-                sendVoiceMessage()
-            } else {
+
+            Log.w("ACL", "We think this is a valid lock location AND the voice message was at least 1 second")
+
+            // If the user put the record audio button into the lock state then we are still recording audio
+            binding?.inputBar?.voiceRecorderState = VoiceRecorderState.Recording
+            Log.w("ACL", "onMicrophoneButtonUp w/ lock: Setting voice recorder state to: Recording")
+        }
+        else // If the user didn't attempt to lock the recording on
+        {
+            // Regardless of where the button up event occurred we're now shutting down the recording (whether we send it or not)
+            binding?.inputBar?.voiceRecorderState = VoiceRecorderState.ShuttingDownAfterRecord
+
+            val rba = binding?.inputBarRecordingView?.recordButtonOverlay
+            if (rba != null) {
+                val location = IntArray(2) { 0 }
+                rba.getLocationOnScreen(location)
+                val hitRect = Rect(location[0], location[1], location[0] + rba.width, location[1] + rba.height)
+
+                // If the up event occurred over the record button overlay we send the voice message..
+                if (hitRect.contains(x, y)) {
+                    Log.w("ACL", "About to call CA.sendVoiceMessage()")
+                    sendVoiceMessage()
+                } else {
+                    // ..otherwise if they've released off the button we'll cancel sending.
+                    Log.w("ACL", "Cancelling voice message from CA")
+                    cancelVoiceMessage()
+                }
+            }
+            else
+            {
+                // Finally, if for some reason the record button overlay was null we'll also cancel recording
+                Log.e("ACL", "RBA was null - cancelling voice message")
                 cancelVoiceMessage()
             }
         }
@@ -1803,7 +1840,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         if (Permissions.hasAll(this, Manifest.permission.RECORD_AUDIO)) {
             showVoiceMessageUI()
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            audioRecorder.startRecording()
+
+            // Note: The input bar's recording state is set to VoiceRecorderState.Recording when it completes its setup
+            audioRecorder.startRecording(binding?.inputBar)
+
             stopAudioHandler.postDelayed(stopVoiceMessageRecordingTask, 300000) // Limit voice messages to 5 minute each
         } else {
             Permissions.with(this)
@@ -1815,10 +1855,38 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun sendVoiceMessage() {
+        // When the record voice message button is release we always need to reset the UI and cancel
+        // any recording that might have taken place..
         hideVoiceMessageUI()
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+        // If we didn't even get to the poi
+        //if (!binding?.inputBar?.alreadyRecordingVoiceMessage) return;
+
         val future = audioRecorder.stopRecording()
         stopAudioHandler.removeCallbacks(stopVoiceMessageRecordingTask)
+
+        // ..but we'll bail without sending the voice message & inform the user than they need to press and HOLD
+        // the record voice message button if their message was less than 1 second long.
+        val inputBar = binding?.inputBar
+        val voiceMessageDurationMS = inputBar?.voiceMessageDurationMS!!
+        Log.w("ACL", "sendVoiceMessage: Voice message duration MS was: $voiceMessageDurationMS")
+
+
+        // Now tear-down is complete we can move back into the idle state ready to record another voice message
+        // CAREFUL: This state must be set BEFORE we show any warning toast about short messages because it early
+        // exits before transmitting the audio!
+        inputBar.voiceRecorderState = VoiceRecorderState.Idle
+        Log.w("ACL", "sendVoiceMessage: Setting voice recorder state to: Idle")
+
+        if (voiceMessageDurationMS < 1000L) {
+            Log.e("ACL", "Showing toast and bailing!")
+            Toast.makeText(this@ConversationActivityV2, R.string.messageVoiceErrorShort, Toast.LENGTH_LONG).show()
+            return
+        }
+
+
+
         future.addListener(object : ListenableFuture.Listener<Pair<Uri, Long>> {
 
             override fun onSuccess(result: Pair<Uri, Long>) {
@@ -1835,10 +1903,23 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     override fun cancelVoiceMessage() {
+        val inputBar = binding?.inputBar!!
+
         hideVoiceMessageUI()
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         audioRecorder.stopRecording()
         stopAudioHandler.removeCallbacks(stopVoiceMessageRecordingTask)
+
+        if (inputBar.voiceMessageDurationMS < 1000L) {
+            Log.w("ACL", "Showing toast in cancel voice message")
+            Toast.makeText(applicationContext, applicationContext.getString(R.string.messageVoiceErrorShort), Toast.LENGTH_SHORT).show()
+        }
+
+        // Finally, when tear-down is complete we can move back into the idle state ready to record
+        // another voice message.
+        Log.w("ACL", "cancelVoiceMessage: Setting voice recorder state back to idle!")
+        inputBar.voiceRecorderState = VoiceRecorderState.Idle
+        Log.w("ACL", "cancelVoiceMessage: Setting voice recorder state to: Idle")
     }
 
     override fun selectMessages(messages: Set<MessageRecord>) {

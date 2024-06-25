@@ -11,6 +11,8 @@ import org.session.libsession.utilities.MediaTypes;
 import org.session.libsignal.utilities.Log;
 import android.util.Pair;
 
+import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBar;
+import org.thoughtcrime.securesms.conversation.v2.input_bar.VoiceRecorderState;
 import org.thoughtcrime.securesms.providers.BlobProvider;
 import org.thoughtcrime.securesms.util.MediaUtil;
 
@@ -38,7 +40,7 @@ public class AudioRecorder {
     this.context = context;
   }
 
-  public void startRecording() {
+  public void startRecording(InputBar inputBar) {
     Log.i(TAG, "startRecording()");
 
     executor.execute(() -> {
@@ -58,6 +60,18 @@ public class AudioRecorder {
         audioCodec = new AudioCodec();
 
         audioCodec.start(new ParcelFileDescriptor.AutoCloseOutputStream(fds[1]));
+
+
+        // If we just tap the record audio button then by the time we actually finish setting up and
+        // get here the recording has been cancelled and the voice recorder state is Idle! As such
+        // we'll only tick the recorder state over to Recording if we were still in the
+        // SettingUpToRecord state when we got here (i.e., the record voice message button is still
+        // held or locked to keep recording without being held).
+        if (inputBar.getVoiceRecorderState() == VoiceRecorderState.SettingUpToRecord) {
+          inputBar.setVoiceRecorderState(VoiceRecorderState.Recording);
+          Log.w("ACL", "AudioRecorder: Setting voice recorder state to: Recording");
+        }
+
       } catch (IOException e) {
         Log.w(TAG, e);
       }
