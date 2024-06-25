@@ -1880,8 +1880,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // exits before transmitting the audio!
         inputBar.voiceRecorderState = VoiceRecorderState.Idle
 
-        if (voiceMessageDurationMS < MinimumVoiceMessageDurationMS) {
+        if (voiceMessageDurationMS != 0L && voiceMessageDurationMS < MinimumVoiceMessageDurationMS) {
             Toast.makeText(this@ConversationActivityV2, R.string.messageVoiceErrorShort, Toast.LENGTH_LONG).show()
+            inputBar.voiceMessageDurationMS = 0L
             return
         }
 
@@ -1908,8 +1909,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         audioRecorder.stopRecording()
         stopAudioHandler.removeCallbacks(stopVoiceMessageRecordingTask)
 
-        if (inputBar.voiceMessageDurationMS < MinimumVoiceMessageDurationMS) {
+        val voiceMessageDuration = inputBar.voiceMessageDurationMS
+        if (voiceMessageDuration != 0L && voiceMessageDuration < MinimumVoiceMessageDurationMS) {
             Toast.makeText(applicationContext, applicationContext.getString(R.string.messageVoiceErrorShort), Toast.LENGTH_SHORT).show()
+            inputBar.voiceMessageDurationMS = 0L
         }
 
         // When tear-down is complete (via cancelling ) we can move back into the idle state ready to record
