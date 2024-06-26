@@ -68,9 +68,13 @@ class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, Li
 
     // Keep track of when the user pressed the record voice message button, the duration that
     // they held record, and the current audio recording mechanism state.
-    var voiceMessageStartMS    = 0L
+    private var voiceMessageStartMS = 0L
     var voiceMessageDurationMS = 0L
-    var voiceRecorderState = VoiceRecorderState.Idle
+        private set
+    internal var voiceRecorderState = VoiceRecorderState.Idle
+
+    fun setVoiceMessageDuration(durationMS: Long)        { voiceMessageDurationMS = durationMS }
+    fun setVoiceRecorderState(state: VoiceRecorderState) { voiceRecorderState = state          }
 
     val attachmentButtonsContainerHeight: Int
         get() = binding.attachmentsButtonContainer.height

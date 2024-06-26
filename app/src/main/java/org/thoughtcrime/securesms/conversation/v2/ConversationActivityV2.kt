@@ -117,8 +117,8 @@ import org.thoughtcrime.securesms.conversation.v2.dialogs.LinkPreviewDialog
 import org.thoughtcrime.securesms.conversation.v2.dialogs.SendSeedDialog
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarButton
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarDelegate
-import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarRecordingView.Companion.AnimateLockDurationMS
-import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarRecordingView.Companion.ShowHideDurationMS
+import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarRecordingView.Companion.ANIMATE_LOCK_DURATION_MS
+import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarRecordingView.Companion.SHOW_HIDE_VOICE_UI_DURATION_MS
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarRecordingViewDelegate
 import org.thoughtcrime.securesms.conversation.v2.input_bar.VoiceRecorderState
 import org.thoughtcrime.securesms.conversation.v2.input_bar.mentions.MentionCandidatesView
@@ -204,9 +204,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     OnReactionSelectedListener, ReactWithAnyEmojiDialogFragment.Callback, ReactionsDialogFragment.Callback,
     ConversationMenuHelper.ConversationMenuListener {
 
-    private var _binding: ActivityConversationV2Binding? = null
-    private val binding get() = _binding!!
-    
+    private lateinit var binding: ActivityConversationV2Binding
+
     @Inject lateinit var textSecurePreferences: TextSecurePreferences
     @Inject lateinit var threadDb: ThreadDatabase
     @Inject lateinit var mmsSmsDb: MmsSmsDatabase
@@ -387,7 +386,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {
         super.onCreate(savedInstanceState, isReady)
-        _binding = ActivityConversationV2Binding.inflate(layoutInflater)
+        binding = ActivityConversationV2Binding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // messageIdToScroll
@@ -841,7 +840,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         cancelVoiceMessage()
         tearDownRecipientObserver()
         super.onDestroy()
-        _binding = null
     }
     // endregion
 
@@ -1030,7 +1028,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         binding.inputBarRecordingView.show(lifecycleScope)
         binding.inputBar.alpha = 0.0f
         val animation = ValueAnimator.ofObject(FloatEvaluator(), 1.0f, 0.0f)
-        animation.duration = ShowHideDurationMS
+        animation.duration = SHOW_HIDE_VOICE_UI_DURATION_MS
         animation.addUpdateListener { animator ->
             binding.inputBar.alpha = animator.animatedValue as Float
         }
@@ -1040,7 +1038,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private fun expandVoiceMessageLockView() {
         val lockView = binding.inputBarRecordingView.lockView
         val animation = ValueAnimator.ofObject(FloatEvaluator(), lockView.scaleX, 1.10f)
-        animation.duration = AnimateLockDurationMS
+        animation.duration = ANIMATE_LOCK_DURATION_MS
         animation.addUpdateListener { animator ->
             lockView.scaleX = animator.animatedValue as Float
             lockView.scaleY = animator.animatedValue as Float
@@ -1051,7 +1049,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private fun collapseVoiceMessageLockView() {
         val lockView = binding.inputBarRecordingView.lockView
         val animation = ValueAnimator.ofObject(FloatEvaluator(), lockView.scaleX, 1.0f)
-        animation.duration = AnimateLockDurationMS
+        animation.duration = ANIMATE_LOCK_DURATION_MS
         animation.addUpdateListener { animator ->
             lockView.scaleX = animator.animatedValue as Float
             lockView.scaleY = animator.animatedValue as Float
@@ -1064,7 +1062,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val slideToCancelTextView = binding.inputBarRecordingView.slideToCancelTextView
         listOf( chevronImageView, slideToCancelTextView ).forEach { view ->
             val animation = ValueAnimator.ofObject(FloatEvaluator(), view.translationX, 0.0f)
-            animation.duration = AnimateLockDurationMS
+            animation.duration = ANIMATE_LOCK_DURATION_MS
             animation.addUpdateListener { animator ->
                 view.translationX = animator.animatedValue as Float
             }
@@ -1077,7 +1075,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val inputBar = binding.inputBar
         inputBar.alpha = 1.0f
         val animation = ValueAnimator.ofObject(FloatEvaluator(), 0.0f, 1.0f)
-        animation.duration = ShowHideDurationMS
+        animation.duration = SHOW_HIDE_VOICE_UI_DURATION_MS
         animation.addUpdateListener { animator ->
             inputBar.alpha = animator.animatedValue as Float
         }
@@ -1518,12 +1516,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // less than our minimum voice message duration - so we'll bump our recorded duration
         // slightly to make sure we don't see the "Tap and hold to record..." toast when we
         // finish recording the message.
-        if (isValidLockViewLocation(x, y) &&  inputBar.voiceMessageDurationMS >= AnimateLockDurationMS) {
+        if (isValidLockViewLocation(x, y) &&  inputBar.voiceMessageDurationMS >= ANIMATE_LOCK_DURATION_MS) {
             binding.inputBarRecordingView.lock()
 
             // Artificially bump message duration on lock if required
             if (inputBar.voiceMessageDurationMS < MinimumVoiceMessageDurationMS) {
-                inputBar.voiceMessageDurationMS = MinimumVoiceMessageDurationMS;
+                inputBar.setVoiceMessageDuration(MinimumVoiceMessageDurationMS);
             }
 
             // If the user put the record audio button into the lock state then we are still recording audio
@@ -1866,7 +1864,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             // message button is still held or is locked to keep recording audio without being held).
             val callback: () -> Unit = {
                 if (binding.inputBar.voiceRecorderState == VoiceRecorderState.SettingUpToRecord) {
-                    binding.inputBar.voiceRecorderState = VoiceRecorderState.Recording
+                    binding.inputBar.setVoiceRecorderState(VoiceRecorderState.Recording)
                 }
             }
             audioRecorder.startRecording(callback)
@@ -1897,13 +1895,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // Now tear-down is complete we can move back into the idle state ready to record another voice message.
         // CAREFUL: This state must be set BEFORE we show any warning toast about short messages because it early
         // exits before transmitting the audio!
-        inputBar.voiceRecorderState = VoiceRecorderState.Idle
+        inputBar.setVoiceRecorderState(VoiceRecorderState.Idle)
 
         // Voice message too short? Warn with toast instead of sending.
         // Note: The 0L check prevents the warning toast being shown when leaving the conversation activity.
         if (voiceMessageDurationMS != 0L && voiceMessageDurationMS < MinimumVoiceMessageDurationMS) {
             Toast.makeText(this@ConversationActivityV2, R.string.messageVoiceErrorShort, Toast.LENGTH_LONG).show()
-            inputBar.voiceMessageDurationMS = 0L
+            inputBar.setVoiceMessageDuration(0L)
             return
         }
 
@@ -1935,12 +1933,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val voiceMessageDuration = inputBar.voiceMessageDurationMS
         if (voiceMessageDuration != 0L && voiceMessageDuration < MinimumVoiceMessageDurationMS) {
             Toast.makeText(applicationContext, applicationContext.getString(R.string.messageVoiceErrorShort), Toast.LENGTH_SHORT).show()
-            inputBar.voiceMessageDurationMS = 0L
+            inputBar.setVoiceMessageDuration(0L)
         }
 
         // When tear-down is complete (via cancelling) we can move back into the idle state ready to record
         // another voice message.
-        inputBar.voiceRecorderState = VoiceRecorderState.Idle
+        inputBar.setVoiceRecorderState(VoiceRecorderState.Idle)
     }
 
     override fun selectMessages(messages: Set<MessageRecord>) {
