@@ -117,9 +117,9 @@ import org.thoughtcrime.securesms.conversation.v2.dialogs.LinkPreviewDialog
 import org.thoughtcrime.securesms.conversation.v2.dialogs.SendSeedDialog
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarButton
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarDelegate
-import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarRecordingView.Companion.ANIMATE_LOCK_DURATION_MS
-import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarRecordingView.Companion.SHOW_HIDE_VOICE_UI_DURATION_MS
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarRecordingViewDelegate
+import org.thoughtcrime.securesms.conversation.v2.input_bar.VoiceRecorderConstants.ANIMATE_LOCK_DURATION_MS
+import org.thoughtcrime.securesms.conversation.v2.input_bar.VoiceRecorderConstants.SHOW_HIDE_VOICE_UI_DURATION_MS
 import org.thoughtcrime.securesms.conversation.v2.input_bar.VoiceRecorderState
 import org.thoughtcrime.securesms.conversation.v2.input_bar.mentions.MentionCandidatesView
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationActionModeCallback
@@ -364,7 +364,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private var recyclerScrollState: Int = RecyclerView.SCROLL_STATE_IDLE
 
     // Lower limit for the length of voice messages - any lower and we inform the user rather than sending
-    private val MinimumVoiceMessageDurationMS = 1000L
+    private val MINIMUM_VOICE_MESSAGE_DURATION_MS = 1000L
 
     // region Settings
     companion object {
@@ -1068,7 +1068,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             }
             animation.start()
         }
-        binding.inputBarRecordingView?.hide()
+        binding.inputBarRecordingView.hide()
     }
 
     override fun handleVoiceMessageUIHidden() {
@@ -1520,8 +1520,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             binding.inputBarRecordingView.lock()
 
             // Artificially bump message duration on lock if required
-            if (inputBar.voiceMessageDurationMS < MinimumVoiceMessageDurationMS) {
-                inputBar.setVoiceMessageDuration(MinimumVoiceMessageDurationMS);
+            if (inputBar.voiceMessageDurationMS < MINIMUM_VOICE_MESSAGE_DURATION_MS) {
+                inputBar.setVoiceMessageDuration(MINIMUM_VOICE_MESSAGE_DURATION_MS)
             }
 
             // If the user put the record audio button into the lock state then we are still recording audio
@@ -1899,7 +1899,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
         // Voice message too short? Warn with toast instead of sending.
         // Note: The 0L check prevents the warning toast being shown when leaving the conversation activity.
-        if (voiceMessageDurationMS != 0L && voiceMessageDurationMS < MinimumVoiceMessageDurationMS) {
+        if (voiceMessageDurationMS != 0L && voiceMessageDurationMS < MINIMUM_VOICE_MESSAGE_DURATION_MS) {
             Toast.makeText(this@ConversationActivityV2, R.string.messageVoiceErrorShort, Toast.LENGTH_LONG).show()
             inputBar.setVoiceMessageDuration(0L)
             return
@@ -1931,7 +1931,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
         // Note: The 0L check prevents the warning toast being shown when leaving the conversation activity
         val voiceMessageDuration = inputBar.voiceMessageDurationMS
-        if (voiceMessageDuration != 0L && voiceMessageDuration < MinimumVoiceMessageDurationMS) {
+        if (voiceMessageDuration != 0L && voiceMessageDuration < MINIMUM_VOICE_MESSAGE_DURATION_MS) {
             Toast.makeText(applicationContext, applicationContext.getString(R.string.messageVoiceErrorShort), Toast.LENGTH_SHORT).show()
             inputBar.setVoiceMessageDuration(0L)
         }
