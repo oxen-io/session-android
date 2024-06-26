@@ -92,7 +92,6 @@ import org.thoughtcrime.securesms.mms.PartAuthority
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.SessionMetaProtocol
 import java.security.MessageDigest
-import kotlin.time.Duration.Companion.days
 import network.loki.messenger.libsession_util.util.Contact as LibSessionContact
 
 private const val TAG = "Storage"
@@ -100,7 +99,7 @@ private const val TAG = "Storage"
 open class Storage(
     context: Context,
     helper: SQLCipherOpenHelper,
-    private val configFactory: ConfigFactory
+    val configFactory: ConfigFactory
 ) : Database(context, helper), StorageProtocol, ThreadDatabase.ConversationThreadUpdateListener {
 
     override fun threadCreated(address: Address, threadId: Long) {
@@ -121,7 +120,7 @@ open class Storage(
                     )
                     volatile.set(newVolatileParams)
                 }
-            } else if (address.isOpenGroup) {
+            } else if (address.isCommunity) {
                 // these should be added on the group join / group info fetch
                 Log.w("Loki", "Thread created called for open group address, not adding any extra information")
             }
@@ -152,7 +151,7 @@ open class Storage(
                 val sessionId = GroupUtil.doubleDecodeGroupId(address.serialize())
                 volatile.eraseLegacyClosedGroup(sessionId)
                 groups.eraseLegacyGroup(sessionId)
-            } else if (address.isOpenGroup) {
+            } else if (address.isCommunity) {
                 // these should be removed in the group leave / handling new configs
                 Log.w("Loki", "Thread delete called for open group address, expecting to be handled elsewhere")
             }
@@ -182,7 +181,7 @@ open class Storage(
     }
 
     override fun getUserProfile(): Profile {
-        val displayName = TextSecurePreferences.getProfileName(context)!!
+        val displayName = TextSecurePreferences.getProfileName(context)
         val profileKey = ProfileKeyUtil.getProfileKey(context)
         val profilePictureUrl = TextSecurePreferences.getProfilePictureURL(context)
         return Profile(displayName, profileKey, profilePictureUrl)
@@ -257,7 +256,7 @@ open class Storage(
                     // recipient closed group
                     recipient.isClosedGroupRecipient -> config.getOrConstructLegacyGroup(GroupUtil.doubleDecodeGroupId(recipient.address.serialize()))
                     // recipient is open group
-                    recipient.isOpenGroupRecipient -> {
+                    recipient.isCommunityRecipient -> {
                         val openGroupJoinUrl = getOpenGroup(threadId)?.joinURL ?: return
                         BaseCommunityInfo.parseFullUrl(openGroupJoinUrl)?.let { (base, room, pubKey) ->
                             config.getOrConstructCommunity(base, room, pubKey)
@@ -327,7 +326,7 @@ open class Storage(
                 setRecipientApprovedMe(targetRecipient, true)
             }
         }
-        if (message.threadID == null && !targetRecipient.isOpenGroupRecipient) {
+        if (message.threadID == null && !targetRecipient.isCommunityRecipient) {
             // open group recipients should explicitly create threads
             message.threadID = getOrCreateThreadIdFor(targetAddress)
         }
@@ -767,13 +766,36 @@ open class Storage(
 
     override fun markAsSent(timestamp: Long, author: String) {
         val database = DatabaseComponent.get(context).mmsSmsDatabase()
-        val messageRecord = database.getMessageFor(timestamp, author) ?: return
+        val messageRecord = database.getSentMessageFor(timestamp, author)
+        if (messageRecord == null) {
+            Log.w(TAG, "Failed to retrieve local message record in Storage.markAsSent - aborting.")
+            return
+        }
+
         if (messageRecord.isMms) {
-            val mmsDatabase = DatabaseComponent.get(context).mmsDatabase()
-            mmsDatabase.markAsSent(messageRecord.getId(), true)
+            DatabaseComponent.get(context).mmsDatabase().markAsSent(messageRecord.getId(), true)
         } else {
-            val smsDatabase = DatabaseComponent.get(context).smsDatabase()
-            smsDatabase.markAsSent(messageRecord.getId(), true)
+            DatabaseComponent.get(context).smsDatabase().markAsSent(messageRecord.getId(), true)
+        }
+    }
+
+    // Method that marks a message as sent in Communities (only!) - where the server modifies the
+    // message timestamp and as such we cannot use that to identify the local message.
+    override fun markAsSentToCommunity(threadId: Long, messageID: Long) {
+        val database = DatabaseComponent.get(context).mmsSmsDatabase()
+        val message = database.getLastSentMessageRecordFromSender(threadId, TextSecurePreferences.getLocalNumber(context))
+
+        // Ensure we can find the local message..
+        if (message == null) {
+            Log.w(TAG, "Could not find local message in Storage.markAsSentToCommunity - aborting.")
+            return
+        }
+
+        // ..and mark as sent if found.
+        if (message.isMms) {
+            DatabaseComponent.get(context).mmsDatabase().markAsSent(message.getId(), true)
+        } else {
+            DatabaseComponent.get(context).smsDatabase().markAsSent(message.getId(), true)
         }
     }
 
@@ -808,13 +830,37 @@ open class Storage(
 
     override fun markUnidentified(timestamp: Long, author: String) {
         val database = DatabaseComponent.get(context).mmsSmsDatabase()
-        val messageRecord = database.getMessageFor(timestamp, author) ?: return
+        val messageRecord = database.getMessageFor(timestamp, author)
+        if (messageRecord == null) {
+            Log.w(TAG, "Could not identify message with timestamp: $timestamp from author: $author")
+            return
+        }
         if (messageRecord.isMms) {
             val mmsDatabase = DatabaseComponent.get(context).mmsDatabase()
             mmsDatabase.markUnidentified(messageRecord.getId(), true)
         } else {
             val smsDatabase = DatabaseComponent.get(context).smsDatabase()
             smsDatabase.markUnidentified(messageRecord.getId(), true)
+        }
+    }
+
+    // Method that marks a message as unidentified in Communities (only!) - where the server
+    // modifies the message timestamp and as such we cannot use that to identify the local message.
+    override fun markUnidentifiedInCommunity(threadId: Long, messageId: Long) {
+        val database = DatabaseComponent.get(context).mmsSmsDatabase()
+        val message = database.getLastSentMessageRecordFromSender(threadId, TextSecurePreferences.getLocalNumber(context))
+
+        // Check to ensure the message exists
+        if (message == null) {
+            Log.w(TAG, "Could not find local message in Storage.markUnidentifiedInCommunity - aborting.")
+            return
+        }
+
+        // Mark it as unidentified if we found the message successfully
+        if (message.isMms) {
+            DatabaseComponent.get(context).mmsDatabase().markUnidentified(message.getId(), true)
+        } else {
+            DatabaseComponent.get(context).smsDatabase().markUnidentified(message.getId(), true)
         }
     }
 
@@ -971,7 +1017,10 @@ open class Storage(
         val infoMessage = OutgoingGroupMediaMessage(recipient, updateData, groupID, null, sentTimestamp, 0, 0, true, null, listOf(), listOf())
         val mmsDB = DatabaseComponent.get(context).mmsDatabase()
         val mmsSmsDB = DatabaseComponent.get(context).mmsSmsDatabase()
-        if (mmsSmsDB.getMessageFor(sentTimestamp, userPublicKey) != null) return
+        if (mmsSmsDB.getMessageFor(sentTimestamp, userPublicKey) != null) {
+            Log.w(TAG, "Bailing from insertOutgoingInfoMessage because we believe the message has already been sent!")
+            return
+        }
         val infoMessageID = mmsDB.insertMessageOutbox(infoMessage, threadID, false, null, runThreadUpdate = true)
         mmsDB.markAsSent(infoMessageID, true)
     }
@@ -1289,7 +1338,7 @@ open class Storage(
                     priority = if (isPinned) PRIORITY_PINNED else ConfigBase.PRIORITY_VISIBLE
                 )
                 groups.set(newGroupInfo)
-            } else if (threadRecipient.isOpenGroupRecipient) {
+            } else if (threadRecipient.isCommunityRecipient) {
                 val openGroup = getOpenGroup(threadID) ?: return
                 val (baseUrl, room, pubKeyHex) = BaseCommunityInfo.parseFullUrl(openGroup.joinURL) ?: return
                 val newGroupInfo = groups.getOrConstructCommunityInfo(baseUrl, room, Hex.toStringCondensed(pubKeyHex)).copy (
@@ -1322,29 +1371,29 @@ open class Storage(
         val threadDB = DatabaseComponent.get(context).threadDatabase()
         val groupDB = DatabaseComponent.get(context).groupDatabase()
         threadDB.deleteConversation(threadID)
-        val recipient = getRecipientForThread(threadID) ?: return
-        when {
-            recipient.isContactRecipient -> {
-                if (recipient.isLocalNumber) return
-                val contacts = configFactory.contacts ?: return
-                contacts.upsertContact(recipient.address.serialize()) { priority = PRIORITY_HIDDEN }
-                ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
-            }
-            recipient.isClosedGroupRecipient -> {
-                // TODO: handle closed group
-                val volatile = configFactory.convoVolatile ?: return
-                val groups = configFactory.userGroups ?: return
-                val groupID = recipient.address.toGroupString()
-                val closedGroup = getGroup(groupID)
-                val groupPublicKey = GroupUtil.doubleDecodeGroupId(recipient.address.serialize())
-                if (closedGroup != null) {
-                    groupDB.delete(groupID) // TODO: Should we delete the group? (seems odd to leave it)
-                    volatile.eraseLegacyClosedGroup(groupPublicKey)
-                    groups.eraseLegacyGroup(groupPublicKey)
-                } else {
-                    Log.w("Loki-DBG", "Failed to find a closed group for ${groupPublicKey.take(4)}")
-                }
-            }
+
+        val recipient = getRecipientForThread(threadID)
+        if (recipient == null) {
+            Log.w(TAG, "Got null recipient when deleting conversation - aborting.");
+            return
+        }
+
+        // There is nothing further we need to do if this is a 1-on-1 conversation, and it's not
+        // possible to delete communities in this manner so bail.
+        if (recipient.isContactRecipient || recipient.isCommunityRecipient) return
+
+        // If we get here then this is a closed group conversation (i.e., recipient.isClosedGroupRecipient)
+        val volatile = configFactory.convoVolatile ?: return
+        val groups = configFactory.userGroups ?: return
+        val groupID = recipient.address.toGroupString()
+        val closedGroup = getGroup(groupID)
+        val groupPublicKey = GroupUtil.doubleDecodeGroupId(recipient.address.serialize())
+        if (closedGroup != null) {
+            groupDB.delete(groupID)
+            volatile.eraseLegacyClosedGroup(groupPublicKey)
+            groups.eraseLegacyGroup(groupPublicKey)
+        } else {
+            Log.w("Loki-DBG", "Failed to find a closed group for ${groupPublicKey.take(4)}")
         }
     }
 

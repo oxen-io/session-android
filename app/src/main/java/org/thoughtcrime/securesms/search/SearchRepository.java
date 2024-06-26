@@ -4,12 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.MergeCursor;
-import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
-
 import com.annimon.stream.Stream;
-
 import org.session.libsession.messaging.contacts.Contact;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.GroupRecord;
@@ -27,37 +23,25 @@ import org.thoughtcrime.securesms.database.model.ThreadRecord;
 import org.thoughtcrime.securesms.search.model.MessageResult;
 import org.thoughtcrime.securesms.search.model.SearchResult;
 import org.thoughtcrime.securesms.util.Stopwatch;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
-
 import kotlin.Pair;
 
-/**
- * Manages data retrieval for search.
- */
+// Class to manage data retrieval for search
 public class SearchRepository {
-
   private static final String TAG = SearchRepository.class.getSimpleName();
 
   private static final Set<Character> BANNED_CHARACTERS = new HashSet<>();
   static {
-    // Several ranges of invalid ASCII characters
-    for (int i = 33; i <= 47; i++) {
-      BANNED_CHARACTERS.add((char) i);
-    }
-    for (int i = 58; i <= 64; i++) {
-      BANNED_CHARACTERS.add((char) i);
-    }
-    for (int i = 91; i <= 96; i++) {
-      BANNED_CHARACTERS.add((char) i);
-    }
-    for (int i = 123; i <= 126; i++) {
-      BANNED_CHARACTERS.add((char) i);
-    }
+    // Construct a list containing several ranges of invalid ASCII characters
+    // See: https://www.ascii-code.com/
+    for (int i = 33; i <= 47; i++)   { BANNED_CHARACTERS.add((char) i); } // !, ", #, $, %, &, ', (, ), *, +, ,, -, ., /
+    for (int i = 58; i <= 64; i++)   { BANNED_CHARACTERS.add((char) i); } // :, ;, <, =, >, ?, @
+    for (int i = 91; i <= 96; i++)   { BANNED_CHARACTERS.add((char) i); } // [, \, ], ^, _, `
+    for (int i = 123; i <= 126; i++) { BANNED_CHARACTERS.add((char) i); } // {, |, }, ~
   }
 
   private final Context                context;
@@ -86,25 +70,25 @@ public class SearchRepository {
   }
 
   public void query(@NonNull String query, @NonNull Callback<SearchResult> callback) {
-    if (TextUtils.isEmpty(query)) {
+    // If the sanitized search is empty then abort without search
+    String cleanQuery = sanitizeQuery(query).trim();
+    if (cleanQuery.isEmpty()) {
       callback.onResult(SearchResult.EMPTY);
       return;
     }
 
     executor.execute(() -> {
       Stopwatch timer = new Stopwatch("FtsQuery");
-
-      String cleanQuery = sanitizeQuery(query);
       timer.split("clean");
 
       Pair<CursorList<Contact>, List<String>> contacts = queryContacts(cleanQuery);
-      timer.split("contacts");
+      timer.split("Contacts");
 
       CursorList<GroupRecord> conversations = queryConversations(cleanQuery, contacts.getSecond());
-      timer.split("conversations");
+      timer.split("Conversations");
 
       CursorList<MessageResult> messages = queryMessages(cleanQuery);
-      timer.split("messages");
+      timer.split("Messages");
 
       timer.stop(TAG);
 
@@ -113,22 +97,20 @@ public class SearchRepository {
   }
 
   public void query(@NonNull String query, long threadId, @NonNull Callback<CursorList<MessageResult>> callback) {
-    if (TextUtils.isEmpty(query)) {
+    // If the sanitized search query is empty then abort the search
+    String cleanQuery = sanitizeQuery(query).trim();
+    if (cleanQuery.isEmpty()) {
       callback.onResult(CursorList.emptyList());
       return;
     }
 
     executor.execute(() -> {
-      long startTime = System.currentTimeMillis();
-      CursorList<MessageResult> messages = queryMessages(sanitizeQuery(query), threadId);
-      Log.d(TAG, "[ConversationQuery] " + (System.currentTimeMillis() - startTime) + " ms");
-
+      CursorList<MessageResult> messages = queryMessages(cleanQuery, threadId);
       callback.onResult(messages);
     });
   }
 
   private Pair<CursorList<Contact>, List<String>> queryContacts(String query) {
-
     Cursor contacts = contactDatabase.queryContactsByName(query);
     List<Address> contactList = new ArrayList<>();
     List<String> contactStrings = new ArrayList<>();
@@ -155,11 +137,10 @@ public class SearchRepository {
     MergeCursor merged = new MergeCursor(new Cursor[]{addressThreads, individualRecipients});
 
     return new Pair<>(new CursorList<>(merged, new ContactModelBuilder(contactDatabase, threadDatabase)), contactStrings);
-
   }
 
   private CursorList<GroupRecord> queryConversations(@NonNull String query, List<String> matchingAddresses) {
-    List<String>  numbers   = contactAccessor.getNumbersForThreadSearchFilter(context, query);
+    List<String> numbers = contactAccessor.getNumbersForThreadSearchFilter(context, query);
     String localUserNumber = TextSecurePreferences.getLocalNumber(context);
     if (localUserNumber != null) {
       matchingAddresses.remove(localUserNumber);
@@ -178,9 +159,7 @@ public class SearchRepository {
       membersGroupList.close();
     }
 
-
     Cursor conversations = threadDatabase.getFilteredConversationList(new ArrayList<>(addresses));
-
     return conversations != null ? new CursorList<>(conversations, new GroupModelBuilder(threadDatabase, groupDatabase))
             : CursorList.emptyList();
   }
@@ -215,7 +194,7 @@ public class SearchRepository {
         out.append(' ');
       }
     }
-
+    
     return out.toString();
   }
 
@@ -245,9 +224,7 @@ public class SearchRepository {
 
     private final Context context;
 
-    RecipientModelBuilder(@NonNull Context context) {
-      this.context = context;
-    }
+    RecipientModelBuilder(@NonNull Context context) { this.context = context; }
 
     @Override
     public Recipient build(@NonNull Cursor cursor) {
@@ -290,9 +267,7 @@ public class SearchRepository {
 
     private final Context context;
 
-    MessageModelBuilder(@NonNull Context context) {
-      this.context = context;
-    }
+    MessageModelBuilder(@NonNull Context context) { this.context = context; }
 
     @Override
     public MessageResult build(@NonNull Cursor cursor) {

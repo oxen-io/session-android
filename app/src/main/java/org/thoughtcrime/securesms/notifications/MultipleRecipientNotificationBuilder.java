@@ -53,7 +53,7 @@ public class MultipleRecipientNotificationBuilder extends AbstractNotificationBu
   public void setMostRecentSender(Recipient recipient, Recipient threadRecipient) {
     String displayName = recipient.toShortString();
     if (threadRecipient.isGroupRecipient()) {
-      displayName = getGroupDisplayName(recipient, threadRecipient.isOpenGroupRecipient());
+      displayName = getGroupDisplayName(recipient, threadRecipient.isCommunityRecipient());
     }
     if (privacy.isDisplayContact()) {
       setContentText(context.getString(R.string.MessageNotifier_most_recent_from_s, displayName));
@@ -79,7 +79,7 @@ public class MultipleRecipientNotificationBuilder extends AbstractNotificationBu
   public void addMessageBody(@NonNull Recipient sender, Recipient threadRecipient, @Nullable CharSequence body) {
     String displayName = sender.toShortString();
     if (threadRecipient.isGroupRecipient()) {
-      displayName = getGroupDisplayName(sender, threadRecipient.isOpenGroupRecipient());
+      displayName = getGroupDisplayName(sender, threadRecipient.isCommunityRecipient());
     }
     if (privacy.isDisplayMessage()) {
       SpannableStringBuilder builder = new SpannableStringBuilder();

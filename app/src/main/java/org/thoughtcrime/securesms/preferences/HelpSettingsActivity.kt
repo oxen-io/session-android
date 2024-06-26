@@ -5,9 +5,14 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isInvisible
 import androidx.preference.Preference
+
 import network.loki.messenger.R
+import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.permissions.Permissions
 
@@ -67,6 +72,19 @@ class HelpSettingsFragment: CorrectedPreferenceFragment() {
         }
     }
 
+    private fun updateExportButtonAndProgressBarUI(exportJobRunning: Boolean) {
+        this.activity?.runOnUiThread(Runnable {
+            // Change export logs button text
+            val exportLogsButton = this.activity?.findViewById(R.id.export_logs_button) as TextView?
+            if (exportLogsButton == null) { Log.w("Loki", "Could not find export logs button view.") }
+            exportLogsButton?.text = if (exportJobRunning) getString(R.string.cancel) else getString(R.string.activity_help_settings__export_logs)
+
+            // Show progress bar
+            val exportProgressBar = this.activity?.findViewById(R.id.export_progress_bar) as ProgressBar?
+            exportProgressBar?.isInvisible = !exportJobRunning
+        })
+    }
+
     private fun shareLogs() {
         Permissions.with(this)
             .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -76,7 +94,7 @@ class HelpSettingsFragment: CorrectedPreferenceFragment() {
                 Toast.makeText(requireActivity(), R.string.MediaPreviewActivity_unable_to_write_to_external_storage_without_permission, Toast.LENGTH_LONG).show()
             }
             .onAllGranted {
-                ShareLogsDialog().show(parentFragmentManager,"Share Logs Dialog")
+                ShareLogsDialog(::updateExportButtonAndProgressBarUI).show(parentFragmentManager,"Share Logs Dialog")
             }
             .execute()
     }

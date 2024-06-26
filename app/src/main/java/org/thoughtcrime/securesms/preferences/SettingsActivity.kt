@@ -17,6 +17,7 @@ import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.isVisible
@@ -36,6 +37,7 @@ import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.*
 import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsignal.utilities.getProperty
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.avatar.AvatarSelection
 import org.thoughtcrime.securesms.components.ProfilePictureView
@@ -106,7 +108,9 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             helpButton.setOnClickListener { showHelp() }
             seedButton.setOnClickListener { showSeed() }
             clearAllDataButton.setOnClickListener { clearAllData() }
-            versionTextView.text = String.format(getString(R.string.version_s), "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})")
+
+            val gitCommitFirstSixChars = BuildConfig.GIT_HASH.take(6)
+            versionTextView.text = String.format(getString(R.string.version_s), "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE} - $gitCommitFirstSixChars)")
         }
     }
 
@@ -203,6 +207,21 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             binding.displayNameEditText.selectAll()
             binding.displayNameEditText.requestFocus()
             inputMethodManager.showSoftInput(binding.displayNameEditText, 0)
+
+            // Save the updated display name when the user presses enter on the soft keyboard
+            binding.displayNameEditText.setOnEditorActionListener { v, actionId, event ->
+                when (actionId) {
+                    // Note: IME_ACTION_DONE is how we've configured the soft keyboard to respond,
+                    // while IME_ACTION_UNSPECIFIED is what triggers when we hit enter on a
+                    // physical keyboard.
+                    EditorInfo.IME_ACTION_DONE, EditorInfo.IME_ACTION_UNSPECIFIED -> {
+                        saveDisplayName()
+                        displayNameEditActionMode?.finish()
+                        true
+                    }
+                    else -> false
+                }
+            }
         } else {
             inputMethodManager.hideSoftInputFromWindow(binding.displayNameEditText.windowToken, 0)
         }

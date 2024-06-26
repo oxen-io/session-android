@@ -55,7 +55,7 @@ class IP2Country private constructor(private val context: Context) {
 
         public fun configureIfNeeded(context: Context) {
             if (isInitialized) { return; }
-            shared = IP2Country(context)
+            shared = IP2Country(context.applicationContext)
         }
     }
 

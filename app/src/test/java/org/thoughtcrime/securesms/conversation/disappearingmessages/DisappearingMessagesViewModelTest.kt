@@ -39,7 +39,7 @@ import kotlin.time.Duration.Companion.minutes
 private const val THREAD_ID = 1L
 private const val LOCAL_NUMBER = "05---local---address"
 private val LOCAL_ADDRESS = Address.fromSerialized(LOCAL_NUMBER)
-private const val GROUP_NUMBER = "${GroupUtil.OPEN_GROUP_PREFIX}4133"
+private const val GROUP_NUMBER = "${GroupUtil.COMMUNITY_PREFIX}4133"
 private val GROUP_ADDRESS = Address.fromSerialized(GROUP_NUMBER)
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -53,6 +53,7 @@ class DisappearingMessagesViewModelTest {
     @Mock lateinit var application: Application
     @Mock lateinit var textSecurePreferences: TextSecurePreferences
     @Mock lateinit var messageExpirationManager: SSKEnvironment.MessageExpirationManagerProtocol
+    @Mock lateinit var disappearingMessages: DisappearingMessages
     @Mock lateinit var threadDb: ThreadDatabase
     @Mock lateinit var groupDb: GroupDatabase
     @Mock lateinit var storage: Storage
@@ -114,9 +115,9 @@ class DisappearingMessagesViewModelTest {
                 isSelfAdmin = true,
                 address = LOCAL_ADDRESS,
                 isNoteToSelf = true,
-                expiryMode = ExpiryMode.NONE,
+                expiryMode = ExpiryMode.Legacy(0),
                 isNewConfigEnabled = false,
-                persistedMode = ExpiryMode.NONE,
+                persistedMode = ExpiryMode.Legacy(0),
                 showDebugOptions = false
             )
         )
@@ -127,7 +128,7 @@ class DisappearingMessagesViewModelTest {
             UiState(
                 OptionsCard(
                     R.string.activity_disappearing_messages_timer,
-                    typeOption(ExpiryMode.NONE, selected = true),
+                    typeOption(ExpiryMode.NONE, selected = false),
                     timeOption(ExpiryType.LEGACY, 12.hours),
                     timeOption(ExpiryType.LEGACY, 1.days),
                     timeOption(ExpiryType.LEGACY, 7.days),
@@ -555,6 +556,7 @@ class DisappearingMessagesViewModelTest {
         application,
         textSecurePreferences,
         messageExpirationManager,
+        disappearingMessages,
         threadDb,
         groupDb,
         storage,

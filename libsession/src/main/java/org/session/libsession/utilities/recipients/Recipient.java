@@ -70,7 +70,7 @@ public class Recipient implements RecipientModifiedListener {
   private final @NonNull Address address;
   private final @NonNull List<Recipient> participants = new LinkedList<>();
 
-  private           Context context;
+  private final     Context context;
   private @Nullable String  name;
   private @Nullable String  customLabel;
   private           boolean resolving;
@@ -132,7 +132,7 @@ public class Recipient implements RecipientModifiedListener {
             @NonNull  Optional<RecipientDetails> details,
             @NonNull  ListenableFutureTask<RecipientDetails> future)
   {
-    this.context   = context;
+    this.context   = context.getApplicationContext();
     this.address   = address;
     this.color     = null;
     this.resolving = true;
@@ -259,7 +259,7 @@ public class Recipient implements RecipientModifiedListener {
   }
 
   Recipient(@NonNull Context context, @NonNull Address address, @NonNull RecipientDetails details) {
-    this.context                = context;
+    this.context                = context.getApplicationContext();
     this.address                = address;
     this.contactUri             = details.contactUri;
     this.name                   = details.name;
@@ -459,16 +459,16 @@ public class Recipient implements RecipientModifiedListener {
   }
   public boolean is1on1() { return address.isContact() && !isLocalNumber; }
 
-  public boolean isOpenGroupRecipient() {
-    return address.isOpenGroup();
+  public boolean isCommunityRecipient() {
+    return address.isCommunity();
   }
 
   public boolean isOpenGroupOutboxRecipient() {
-    return address.isOpenGroupOutbox();
+    return address.isCommunityOutbox();
   }
 
   public boolean isOpenGroupInboxRecipient() {
-    return address.isOpenGroupInbox();
+    return address.isCommunityInbox();
   }
 
   public boolean isClosedGroupRecipient() {

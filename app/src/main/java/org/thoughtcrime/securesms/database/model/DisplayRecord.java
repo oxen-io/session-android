@@ -22,7 +22,10 @@ import android.text.SpannableString;
 import androidx.annotation.NonNull;
 
 import org.session.libsession.utilities.recipients.Recipient;
+import org.session.libsignal.utilities.Log;
+import org.thoughtcrime.securesms.database.MmsDatabase;
 import org.thoughtcrime.securesms.database.MmsSmsColumns;
+import org.thoughtcrime.securesms.database.MmsSmsDatabase;
 import org.thoughtcrime.securesms.database.SmsDatabase;
 
 /**
@@ -48,6 +51,9 @@ public abstract class DisplayRecord {
     long dateReceived, long threadId, int deliveryStatus, int deliveryReceiptCount,
     long type, int readReceiptCount)
   {
+    // TODO: This gets hit very, very often and it likely shouldn't - place a Log.d statement in it to see.
+    //Log.d("[ACL]", "Creating a display record with delivery status of: " + deliveryStatus);
+
     this.threadId             = threadId;
     this.recipient            = recipient;
     this.dateSent             = dateSent;
@@ -72,13 +78,11 @@ public abstract class DisplayRecord {
   public int getReadReceiptCount() { return readReceiptCount; }
 
   public boolean isDelivered() {
-    return (deliveryStatus >= SmsDatabase.Status.STATUS_COMPLETE
-      && deliveryStatus < SmsDatabase.Status.STATUS_PENDING) || deliveryReceiptCount > 0;
+    return (deliveryStatus >= SmsDatabase.Status.STATUS_COMPLETE &&
+            deliveryStatus < SmsDatabase.Status.STATUS_PENDING) || deliveryReceiptCount > 0;
   }
 
-  public boolean isSent() {
-    return !isFailed() && !isPending();
-  }
+  public boolean isSent() { return MmsSmsColumns.Types.isSentType(type); }
 
   public boolean isSyncing() {
     return MmsSmsColumns.Types.isSyncingType(type);
@@ -99,9 +103,10 @@ public abstract class DisplayRecord {
   }
 
   public boolean isPending() {
-    return MmsSmsColumns.Types.isPendingMessageType(type)
-      && !MmsSmsColumns.Types.isIdentityVerified(type)
-      && !MmsSmsColumns.Types.isIdentityDefault(type);
+    boolean isPending = MmsSmsColumns.Types.isPendingMessageType(type) &&
+                        !MmsSmsColumns.Types.isIdentityVerified(type)  &&
+                        !MmsSmsColumns.Types.isIdentityDefault(type);
+    return isPending;
   }
 
   public boolean isRead() { return readReceiptCount > 0; }
@@ -109,6 +114,11 @@ public abstract class DisplayRecord {
   public boolean isOutgoing() {
     return MmsSmsColumns.Types.isOutgoingMessageType(type);
   }
+
+  public boolean isIncoming() {
+    return !MmsSmsColumns.Types.isOutgoingMessageType(type);
+  }
+
   public boolean isGroupUpdateMessage() {
     return SmsDatabase.Types.isGroupUpdateMessage(type);
   }

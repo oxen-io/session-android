@@ -40,18 +40,16 @@ object ResendMessageUtilities {
             message.recipient = messageRecord.recipient.address.serialize()
         }
         message.threadID = messageRecord.threadId
-        if (messageRecord.isMms) {
-            val mmsMessageRecord = messageRecord as MmsMessageRecord
-            if (mmsMessageRecord.linkPreviews.isNotEmpty()) {
-                message.linkPreview = LinkPreview.from(mmsMessageRecord.linkPreviews[0])
-            }
-            if (mmsMessageRecord.quote != null) {
-                message.quote = Quote.from(mmsMessageRecord.quote!!.quoteModel)
-                if (userBlindedKey != null && messageRecord.quote!!.author.serialize() == TextSecurePreferences.getLocalNumber(context)) {
-                    message.quote!!.publicKey = userBlindedKey
+        if (messageRecord.isMms && messageRecord is MmsMessageRecord) {
+            messageRecord.linkPreviews.firstOrNull()?.let { message.linkPreview = LinkPreview.from(it) }
+            messageRecord.quote?.quoteModel?.let {
+                message.quote = Quote.from(it)?.apply {
+                    if (userBlindedKey != null && publicKey == TextSecurePreferences.getLocalNumber(context)) {
+                        publicKey = userBlindedKey
+                    }
                 }
             }
-            message.addSignalAttachments(mmsMessageRecord.slideDeck.asAttachments())
+            message.addSignalAttachments(messageRecord.slideDeck.asAttachments())
         }
         val sentTimestamp = message.sentTimestamp
         val sender = MessagingModuleConfiguration.shared.storage.getUserPublicKey()

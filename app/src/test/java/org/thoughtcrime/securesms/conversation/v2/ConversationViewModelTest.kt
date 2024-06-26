@@ -3,12 +3,14 @@ package org.thoughtcrime.securesms.conversation.v2
 import com.goterl.lazysodium.utils.KeyPair
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.endsWith
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.anyLong
@@ -18,7 +20,9 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.BaseViewModelTest
+import org.thoughtcrime.securesms.NoOpLogger
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.repository.ConversationRepository
@@ -32,6 +36,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
     private val threadId = 123L
     private val edKeyPair = mock<KeyPair>()
     private lateinit var recipient: Recipient
+    private lateinit var messageRecord: MessageRecord
 
     private val viewModel: ConversationViewModel by lazy {
         ConversationViewModel(threadId, edKeyPair, repository, storage)
@@ -40,6 +45,9 @@ class ConversationViewModelTest: BaseViewModelTest() {
     @Before
     fun setUp() {
         recipient = mock()
+        messageRecord = mock { record ->
+            whenever(record.individualRecipient).thenReturn(recipient)
+        }
         whenever(repository.maybeGetRecipientForThreadId(anyLong())).thenReturn(recipient)
         whenever(repository.recipientUpdateFlow(anyLong())).thenReturn(emptyFlow())
     }
@@ -144,7 +152,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
         val error = Throwable()
         whenever(repository.banAndDeleteAll(anyLong(), any())).thenReturn(ResultOf.Failure(error))
 
-        viewModel.banAndDeleteAll(recipient)
+        viewModel.banAndDeleteAll(messageRecord)
 
         assertThat(viewModel.uiState.first().uiMessages.first().message, endsWith("$error"))
     }
@@ -153,7 +161,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
     fun `should emit a message on ban user and delete all success`() = runBlockingTest {
         whenever(repository.banAndDeleteAll(anyLong(), any())).thenReturn(ResultOf.Success(Unit))
 
-        viewModel.banAndDeleteAll(recipient)
+        viewModel.banAndDeleteAll(messageRecord)
 
         assertThat(
             viewModel.uiState.first().uiMessages.first().message,
@@ -189,7 +197,7 @@ class ConversationViewModelTest: BaseViewModelTest() {
 
     @Test
     fun `open group recipient should have no blinded recipient`() {
-        whenever(recipient.isOpenGroupRecipient).thenReturn(true)
+        whenever(recipient.isCommunityRecipient).thenReturn(true)
         whenever(recipient.isOpenGroupOutboxRecipient).thenReturn(false)
         whenever(recipient.isOpenGroupInboxRecipient).thenReturn(false)
         assertThat(viewModel.blindedRecipient, nullValue())

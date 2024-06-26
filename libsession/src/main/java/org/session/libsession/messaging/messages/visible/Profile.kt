@@ -4,10 +4,11 @@ import com.google.protobuf.ByteString
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.protos.SignalServiceProtos
 
-class Profile() {
-    var displayName: String? = null
-    var profileKey: ByteArray? = null
+class Profile(
+    var displayName: String? = null,
+    var profileKey: ByteArray? = null,
     var profilePictureURL: String? = null
+) {
 
     companion object {
         const val TAG = "Profile"
@@ -23,12 +24,6 @@ class Profile() {
                 return Profile(displayName)
             }
         }
-    }
-
-    constructor(displayName: String, profileKey: ByteArray? = null, profilePictureURL: String? = null) : this() {
-        this.displayName = displayName
-        this.profileKey = profileKey
-        this.profilePictureURL = profilePictureURL
     }
 
     fun toProto(): SignalServiceProtos.DataMessage? {

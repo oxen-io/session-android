@@ -21,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
+import android.provider.Settings
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityWebrtcBinding
@@ -93,19 +94,28 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
         super.onNewIntent(intent)
         if (intent?.action == ACTION_ANSWER) {
             val answerIntent = WebRtcCallService.acceptCallIntent(this)
+            answerIntent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             ContextCompat.startForegroundService(this, answerIntent)
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?, ready: Boolean) {
         super.onCreate(savedInstanceState, ready)
-        rotationListener.enable()
+
+        // Only enable auto-rotate if system auto-rotate is enabled
+        if (isAutoRotateOn()) {
+            rotationListener.enable()
+        } else {
+            rotationListener.disable()
+        }
+
         binding = ActivityWebrtcBinding.inflate(layoutInflater)
         setContentView(binding.root)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true)
             setTurnScreenOn(true)
         }
+
         window.addFlags(
             WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                     or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
@@ -181,6 +191,14 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
             onBackPressed()
         }
 
+    }
+
+    //Function to check if Android System Auto-rotate is on or off
+    private fun isAutoRotateOn(): Boolean {
+        return Settings.System.getInt(
+            contentResolver,
+            Settings.System.ACCELEROMETER_ROTATION, 0
+        ) == 1
     }
 
     override fun onDestroy() {
@@ -334,6 +352,10 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
                     if (isEnabled) {
                         viewModel.localRenderer?.let { surfaceView ->
                             surfaceView.setZOrderOnTop(true)
+
+                            // Mirror the video preview of the person making the call to prevent disorienting them
+                            surfaceView.setMirror(true)
+
                             binding.localRenderer.addView(surfaceView)
                         }
                     }

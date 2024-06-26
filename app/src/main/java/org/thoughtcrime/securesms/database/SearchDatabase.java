@@ -10,6 +10,7 @@ import com.annimon.stream.Stream;
 import net.zetetic.database.sqlcipher.SQLiteDatabase;
 
 import org.session.libsession.utilities.Util;
+
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 
 import java.util.List;
@@ -115,11 +116,9 @@ public class SearchDatabase extends Database {
   public Cursor queryMessages(@NonNull String query) {
     SQLiteDatabase db          = databaseHelper.getReadableDatabase();
     String         prefixQuery = adjustQuery(query);
-
     int queryLimit = Math.min(query.length()*50,500);
-
     Cursor cursor = db.rawQuery(MESSAGES_QUERY, new String[] { prefixQuery, prefixQuery, String.valueOf(queryLimit) });
-    setNotifyConverationListListeners(cursor);
+    setNotifyConversationListListeners(cursor);
     return cursor;
   }
 
@@ -128,7 +127,7 @@ public class SearchDatabase extends Database {
     String         prefixQuery = adjustQuery(query);
 
     Cursor cursor = db.rawQuery(MESSAGES_FOR_THREAD_QUERY, new String[] { prefixQuery, String.valueOf(threadId), prefixQuery, String.valueOf(threadId) });
-    setNotifyConverationListListeners(cursor);
+    setNotifyConversationListListeners(cursor);
     return cursor;
 
   }

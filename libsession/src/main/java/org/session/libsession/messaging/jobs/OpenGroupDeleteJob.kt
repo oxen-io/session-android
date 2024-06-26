@@ -22,7 +22,7 @@ class OpenGroupDeleteJob(private val messageServerIds: LongArray, private val th
     override suspend fun execute(dispatcherName: String) {
         val dataProvider = MessagingModuleConfiguration.shared.messageDataProvider
         val numberToDelete = messageServerIds.size
-        Log.d(TAG, "Deleting $numberToDelete messages")
+        Log.d(TAG, "About to attempt to delete $numberToDelete messages")
 
         // FIXME: This entire process should probably run in a transaction (with the attachment deletion happening only if it succeeded)
         try {
@@ -42,6 +42,7 @@ class OpenGroupDeleteJob(private val messageServerIds: LongArray, private val th
             delegate?.handleJobSucceeded(this, dispatcherName)
         }
         catch (e: Exception) {
+            Log.w(TAG, "OpenGroupDeleteJob failed: $e")
             delegate?.handleJobFailed(this, dispatcherName, e)
         }
     }

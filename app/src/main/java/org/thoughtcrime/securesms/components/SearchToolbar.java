@@ -1,6 +1,5 @@
 package org.thoughtcrime.securesms.components;
 
-
 import android.animation.Animator;
 import android.content.Context;
 import android.os.Build;
@@ -68,9 +67,7 @@ public class SearchToolbar extends LinearLayout {
       }
 
       @Override
-      public boolean onQueryTextChange(String newText) {
-        return onQueryTextSubmit(newText);
-      }
+      public boolean onQueryTextChange(String newText) { return onQueryTextSubmit(newText); }
     });
 
     searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {

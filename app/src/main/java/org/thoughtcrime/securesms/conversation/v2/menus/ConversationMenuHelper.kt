@@ -50,7 +50,7 @@ object ConversationMenuHelper {
     ) {
         // Prepare
         menu.clear()
-        val isOpenGroup = thread.isOpenGroupRecipient
+        val isOpenGroup = thread.isCommunityRecipient
         // Base menu (options that should always be present)
         inflater.inflate(R.menu.menu_conversation, menu)
         // Expiring messages
@@ -253,7 +253,7 @@ object ConversationMenuHelper {
     }
 
     private fun copyOpenGroupUrl(context: Context, thread: Recipient) {
-        if (!thread.isOpenGroupRecipient) { return }
+        if (!thread.isCommunityRecipient) { return }
         val listener = context as? ConversationMenuListener ?: return
         listener.copyOpenGroupUrl(thread)
     }
@@ -300,7 +300,7 @@ object ConversationMenuHelper {
     }
 
     private fun inviteContacts(context: Context, thread: Recipient) {
-        if (!thread.isOpenGroupRecipient) { return }
+        if (!thread.isCommunityRecipient) { return }
         val intent = Intent(context, SelectContactsActivity::class.java)
         val activity = context as AppCompatActivity
         activity.startActivityForResult(intent, ConversationActivityV2.INVITE_CONTACTS)

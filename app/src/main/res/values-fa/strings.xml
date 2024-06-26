@@ -7,7 +7,7 @@
     <string name="ban">مسدود</string>
     <string name="save">ذخیره</string>
     <string name="note_to_self">یادداشت به خود</string>
-    <string name="version_s">نسخه</string>
+    <string name="version_s">%s نسخه</string>
     <!-- AbstractNotificationBuilder -->
     <string name="AbstractNotificationBuilder_new_message">پیام جدید</string>
     <!-- AlbumThumbnailView -->

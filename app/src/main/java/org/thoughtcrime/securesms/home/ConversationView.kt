@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
+import android.text.SpannableString
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
@@ -89,7 +91,7 @@ class ConversationView : LinearLayout {
                 || (configFactory.convoVolatile?.getConversationUnread(thread) == true)
         binding.unreadMentionTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize)
         binding.unreadMentionIndicator.isVisible = (thread.unreadMentionCount != 0 && thread.recipient.address.isGroup)
-        val senderDisplayName = getUserDisplayName(thread.recipient)
+        val senderDisplayName = getTitle(thread.recipient)
                 ?: thread.recipient.address.toString()
         binding.conversationViewDisplayNameTextView.text = senderDisplayName
         binding.timestampTextView.text = thread.date.takeIf { it != 0L }?.let { DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), it) }
@@ -101,9 +103,7 @@ class ConversationView : LinearLayout {
             R.drawable.ic_notifications_mentions
         }
         binding.muteIndicatorImageView.setImageResource(drawableRes)
-        val rawSnippet = thread.getDisplayBody(context)
-        val snippet = highlightMentions(rawSnippet, thread.threadId, context)
-        binding.snippetTextView.text = snippet
+        binding.snippetTextView.text = highlightMentions(thread.getSnippet(), thread.threadId, context)
         binding.snippetTextView.typeface = if (unreadCount > 0 && !thread.isRead) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
         binding.snippetTextView.visibility = if (isTyping) View.GONE else View.VISIBLE
         if (isTyping) {
@@ -131,12 +131,21 @@ class ConversationView : LinearLayout {
         binding.profilePictureView.recycle()
     }
 
-    private fun getUserDisplayName(recipient: Recipient): String? {
-        return if (recipient.isLocalNumber) {
-            context.getString(R.string.note_to_self)
-        } else {
-            recipient.toShortString() // Internally uses the Contact API
-        }
+    private fun getTitle(recipient: Recipient): String? = when {
+        recipient.isLocalNumber -> context.getString(R.string.note_to_self)
+        else -> recipient.toShortString() // Internally uses the Contact API
+    }
+
+    private fun ThreadRecord.getSnippet(): CharSequence =
+        concatSnippet(getSnippetPrefix(), getDisplayBody(context))
+
+    private fun concatSnippet(prefix: CharSequence?, body: CharSequence): CharSequence =
+        prefix?.let { TextUtils.concat(it, ": ", body) } ?: body
+
+    private fun ThreadRecord.getSnippetPrefix(): CharSequence? = when {
+        recipient.isLocalNumber || lastMessage?.isControlMessage == true -> null
+        lastMessage?.isOutgoing == true -> resources.getString(R.string.MessageRecord_you)
+        else -> lastMessage?.individualRecipient?.toShortString()
     }
     // endregion
 }
