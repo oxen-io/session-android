@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
@@ -98,22 +99,25 @@ class ClearAllDataDialog : DialogFragment() {
     }
 
     private fun clearAllData(deleteNetworkMessages: Boolean) {
+
+        var attemptToDeleteNetworkMessages = deleteNetworkMessages
+
         clearJob = lifecycleScope.launch(Dispatchers.IO) {
             val previousStep = step
             withContext(Dispatchers.Main) {
                 step = Steps.DELETING
             }
 
-            if (!deleteNetworkMessages) {
+            RetryLocalOnlyDeletion@
+            if (!attemptToDeleteNetworkMessages) {
                 try {
                     ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(requireContext()).get()
                 } catch (e: Exception) {
                     Log.e("Loki", "Failed to force sync", e)
+                    Toast.makeText(requireContext(), R.string.errorUnknown, Toast.LENGTH_SHORT).show()
                 }
                 ApplicationContext.getInstance(context).clearAllData(false)
-                withContext(Dispatchers.Main) {
-                    dismiss()
-                }
+                withContext(Dispatchers.Main) { dismiss() }
             } else {
                 // finish
                 val result = try {
@@ -123,6 +127,7 @@ class ClearAllDataDialog : DialogFragment() {
                     }
                     SnodeAPI.deleteAllMessages().get()
                 } catch (e: Exception) {
+                    attemptToDeleteNetworkMessages = false
                     null
                 }
 
