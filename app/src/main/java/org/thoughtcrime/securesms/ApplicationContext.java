@@ -501,7 +501,8 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         });
     }
 
-    public void clearAllData(boolean isMigratingToV2KeyPair) {
+    // Method to clear the local data - returns true on success otherwise false
+    public boolean clearAllData(boolean isMigratingToV2KeyPair) {
         if (firebaseInstanceIdJob != null && firebaseInstanceIdJob.isActive()) {
             firebaseInstanceIdJob.cancel(null);
         }
@@ -515,9 +516,11 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         getSharedPreferences(PREFERENCES_NAME, 0).edit().clear().commit();
         if (!deleteDatabase(SQLCipherOpenHelper.DATABASE_NAME)) {
             Log.d("Loki", "Failed to delete database.");
+            return false;
         }
         configFactory.keyPairChanged();
         Util.runOnMain(() -> new Handler().postDelayed(ApplicationContext.this::restartApplication, 200));
+        return true;
     }
 
     public void restartApplication() {
