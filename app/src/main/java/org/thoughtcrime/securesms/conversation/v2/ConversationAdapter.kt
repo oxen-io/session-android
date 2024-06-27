@@ -5,9 +5,7 @@ import android.content.Intent
 import android.database.Cursor
 import android.util.SparseArray
 import android.util.SparseBooleanArray
-import android.view.LayoutInflater
 import android.view.MotionEvent
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.WorkerThread
 import androidx.core.util.getOrDefault
@@ -20,14 +18,11 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
-import network.loki.messenger.databinding.ViewVisibleMessageBinding
 import org.session.libsession.messaging.contacts.Contact
-import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.conversation.v2.messages.ControlMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
 import org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageViewDelegate
 import org.thoughtcrime.securesms.database.CursorRecyclerViewAdapter
-import org.thoughtcrime.securesms.database.MmsSmsColumns
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
@@ -90,7 +85,7 @@ class ConversationAdapter(
         }
     }
 
-    class VisibleMessageViewHolder(val view: View) : ViewHolder(view)
+    class VisibleMessageViewHolder(val view: VisibleMessageView) : ViewHolder(view)
     class ControlMessageViewHolder(val view: ControlMessageView) : ViewHolder(view)
 
     override fun getItemViewType(cursor: Cursor): Int {
@@ -103,7 +98,7 @@ class ConversationAdapter(
         @Suppress("NAME_SHADOWING")
         val viewType = ViewType.allValues[viewType]
         return when (viewType) {
-            ViewType.Visible -> VisibleMessageViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_visible_message, parent, false))
+            ViewType.Visible -> VisibleMessageViewHolder(VisibleMessageView(context))
             ViewType.Control -> ControlMessageViewHolder(ControlMessageView(context))
             else -> throw IllegalStateException("Unexpected view type: $viewType.")
         }
@@ -115,7 +110,7 @@ class ConversationAdapter(
         val messageBefore = getMessageBefore(position, cursor)
         when (viewHolder) {
             is VisibleMessageViewHolder -> {
-                val visibleMessageView = ViewVisibleMessageBinding.bind(viewHolder.view).visibleMessageView
+                val visibleMessageView = viewHolder.view
                 val isSelected = selectedItems.contains(message)
                 visibleMessageView.snIsSelected = isSelected
                 visibleMessageView.indexInAdapter = position
@@ -181,7 +176,7 @@ class ConversationAdapter(
 
     override fun onItemViewRecycled(viewHolder: ViewHolder?) {
         when (viewHolder) {
-            is VisibleMessageViewHolder -> viewHolder.view.findViewById<VisibleMessageView>(R.id.visibleMessageView).recycle()
+            is VisibleMessageViewHolder -> viewHolder.view.recycle()
             is ControlMessageViewHolder -> viewHolder.view.recycle()
         }
         super.onItemViewRecycled(viewHolder)
@@ -209,20 +204,6 @@ class ConversationAdapter(
         return messageDB.readerFor(cursor).current
     }
 
-    private fun getLastSentMessageId(cursor: Cursor): Long {
-        // If we don't move to first (or at least step backwards) we can step off the end of the
-        // cursor and any query will return an "Index = -1" error.
-        val cursorHasContent = cursor.moveToFirst()
-        if (cursorHasContent) {
-            val thisThreadId = cursor.getLong(4) // Column index 4 is "thread_id"
-            if (thisThreadId != -1L) {
-                val thisUsersSessionId = TextSecurePreferences.getLocalNumber(context)
-                return messageDB.getLastSentMessageFromSender(thisThreadId, thisUsersSessionId)
-            }
-        }
-        return -1L
-    }
-
     override fun changeCursor(cursor: Cursor?) {
         super.changeCursor(cursor)
 
@@ -243,11 +224,6 @@ class ConversationAdapter(
         toDeselect.iterator().forEach { (pos, record) ->
             onDeselect(record, pos)
         }
-
-        // This value gets updated here ONLY when the cursor changes, and the value is then passed
-        // through to `VisibleMessageView.bind` each time we bind via `onBindItemViewHolder`, above.
-        // If there are no messages then lastSentMessageId is assigned the value -1L.
-        if (cursor != null) { lastSentMessageId = getLastSentMessageId(cursor) }
     }
 
     fun findLastSeenItemPosition(lastSeenTimestamp: Long): Int? {

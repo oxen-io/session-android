@@ -39,6 +39,7 @@ import org.session.libsignal.crypto.PushTransportDetails
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.IdPrefix
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Namespace
 import org.session.libsignal.utilities.defaultRequiresAuth
 import org.session.libsignal.utilities.hasNamespaces
@@ -72,11 +73,21 @@ object MessageSender {
 
     // Convenience
     fun send(message: Message, destination: Destination, isSyncMessage: Boolean): Promise<Unit, Exception> {
+        if (message is VisibleMessage) MessagingModuleConfiguration.shared.lastSentTimestampCache.submitTimestamp(message.threadID!!, message.sentTimestamp!!)
         return if (destination is Destination.LegacyOpenGroup || destination is Destination.OpenGroup || destination is Destination.OpenGroupInbox) {
             sendToOpenGroupDestination(destination, message)
         } else {
             sendToSnodeDestination(destination, message, isSyncMessage)
         }
+    }
+
+    fun buildConfigMessageToSnode(destinationPubKey: String, message: SharedConfigurationMessage): SnodeMessage {
+        return SnodeMessage(
+            destinationPubKey,
+            Base64.encodeBytes(message.data),
+            ttl = message.ttl,
+            SnodeAPI.nowWithOffset
+        )
     }
 
     // One-on-One Chats & Closed Groups
@@ -370,7 +381,8 @@ object MessageSender {
     }
 
     // Result Handling
-    fun handleSuccessfulMessageSend(message: Message, destination: Destination, isSyncMessage: Boolean = false, openGroupSentTimestamp: Long = -1) {
+    private fun handleSuccessfulMessageSend(message: Message, destination: Destination, isSyncMessage: Boolean = false, openGroupSentTimestamp: Long = -1) {
+        if (message is VisibleMessage) MessagingModuleConfiguration.shared.lastSentTimestampCache.submitTimestamp(message.threadID!!, openGroupSentTimestamp)
         val storage = MessagingModuleConfiguration.shared.storage
         val userPublicKey = storage.getUserPublicKey()!!
         val timestamp = message.sentTimestamp!!
@@ -392,8 +404,10 @@ object MessageSender {
 
             // in case any errors from previous sends
             storage.clearErrorMessage(messageID)
+
             // Track the open group server message ID
-            if (message.openGroupServerMessageID != null && (destination is Destination.LegacyOpenGroup || destination is Destination.OpenGroup)) {
+            val messageIsAddressedToCommunity = message.openGroupServerMessageID != null && (destination is Destination.LegacyOpenGroup || destination is Destination.OpenGroup)
+            if (messageIsAddressedToCommunity) {
                 val server: String
                 val room: String
                 when (destination) {
@@ -415,9 +429,26 @@ object MessageSender {
                     storage.setOpenGroupServerMessageID(messageID, message.openGroupServerMessageID!!, threadID, !(message as VisibleMessage).isMediaMessage())
                 }
             }
-            // Mark the message as sent
-            storage.markAsSent(timestamp, userPublicKey)
-            storage.markUnidentified(timestamp, userPublicKey)
+
+            // Mark the message as sent.
+            // Note: When sending a message to a community the server modifies the message timestamp
+            // so when we go to look up the message in the local database by timestamp it fails and
+            // we're left with the message delivery status as "Sending" forever! As such, we use a
+            // pair of modified "markAsSentToCommunity" and "markUnidentifiedInCommunity" methods
+            // to retrieve the local message by thread & message ID rather than timestamp when
+            // handling community messages only so we can tick the delivery status over to 'Sent'.
+            // Fixed in: https://optf.atlassian.net/browse/SES-1567
+            if (messageIsAddressedToCommunity)
+            {
+                storage.markAsSentToCommunity(message.threadID!!, message.id!!)
+                storage.markUnidentifiedInCommunity(message.threadID!!, message.id!!)
+            }
+            else
+            {
+                storage.markAsSent(timestamp, userPublicKey)
+                storage.markUnidentified(timestamp, userPublicKey)
+            }
+
             // Start the disappearing messages timer if needed
             SSKEnvironment.shared.messageExpirationManager.maybeStartExpiration(message, startDisappearAfterRead = true)
         } ?: run {

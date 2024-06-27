@@ -45,7 +45,7 @@
     <PreferenceCategory android:title="@string/preferences__link_previews">
 
         <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="pref_link_previews"
             android:summary="@string/preferences__link_previews_summary"
             android:title="@string/preferences__send_link_previews"/>

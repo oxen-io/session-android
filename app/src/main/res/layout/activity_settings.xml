@@ -59,6 +59,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:contentDescription="@string/AccessibilityId_username"
+                    android:gravity="center"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="@dimen/very_large_font_size"
                     android:maxLength="@integer/max_user_nickname_length_chars"

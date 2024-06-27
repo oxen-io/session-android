@@ -6,39 +6,38 @@
             android:key="export_logs"
             android:title="@string/activity_help_settings__report_bug_title"
             android:summary="@string/activity_help_settings__report_bug_summary"
-            android:widgetLayout="@layout/export_logs_widget"/>
+            android:widgetLayout="@layout/export_logs_widget" />
+
+        <!-- Note: Having this as `android:layout` rather than `android:layoutWidget` allows it to fit the screen width -->
+        <Preference android:layout="@layout/preference_widget_progress" />
     </PreferenceCategory>
 
     <PreferenceCategory>
         <Preference
             android:key="translate_session"
             android:title="@string/activity_help_settings__translate_session"
-            android:widgetLayout="@layout/preference_external_link"
-            />
+            android:widgetLayout="@layout/preference_external_link" />
     </PreferenceCategory>
 
     <PreferenceCategory>
         <Preference
             android:key="feedback"
             android:title="@string/activity_help_settings__feedback"
-            android:widgetLayout="@layout/preference_external_link"
-            />
+            android:widgetLayout="@layout/preference_external_link" />
     </PreferenceCategory>
 
     <PreferenceCategory>
         <Preference
             android:key="faq"
             android:title="@string/activity_help_settings__faq"
-            android:widgetLayout="@layout/preference_external_link"
-            />
+            android:widgetLayout="@layout/preference_external_link" />
     </PreferenceCategory>
 
     <PreferenceCategory>
         <Preference
             android:key="support"
             android:title="@string/activity_help_settings__support"
-            android:widgetLayout="@layout/preference_external_link"
-            />
+            android:widgetLayout="@layout/preference_external_link" />
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -2,7 +2,7 @@ package org.session.libsession.messaging.mentions
 
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
-import java.util.*
+import java.util.Locale
 
 object MentionsManager {
     var userPublicKeyCache = mutableMapOf<Long, Set<String>>() // Thread ID to set of user hex encoded public keys

@@ -17,6 +17,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
+import org.session.libsession.utilities.getColorFromAttr
 import org.thoughtcrime.securesms.util.adapter.mapping.LayoutFactory
 import org.thoughtcrime.securesms.util.adapter.mapping.MappingAdapter
 import org.thoughtcrime.securesms.util.adapter.mapping.MappingModel
@@ -84,7 +85,7 @@ class ContextMenuList(recyclerView: RecyclerView, onItemClick: () -> Unit) {
         context.theme.resolveAttribute(item.iconRes, typedValue, true)
         icon.setImageDrawable(ContextCompat.getDrawable(context, typedValue.resourceId))
 
-        icon.imageTintList = color?.let(ColorStateList::valueOf)
+        icon.imageTintList = ColorStateList.valueOf(color ?: context.getColorFromAttr(android.R.attr.textColor))
       }
       item.contentDescription?.let(context.resources::getString)?.let { itemView.contentDescription = it }
       title.setText(item.title)

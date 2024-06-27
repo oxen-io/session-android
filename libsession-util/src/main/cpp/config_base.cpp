@@ -1,5 +1,6 @@
 #include "config_base.h"
 #include "util.h"
+#include "jni_utils.h"
 
 extern "C" {
 JNIEXPORT jboolean JNICALL
@@ -85,29 +86,34 @@ Java_network_loki_messenger_libsession_1util_ConfigBase_confirmPushed(JNIEnv *en
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_ConfigBase_merge___3Lkotlin_Pair_2(JNIEnv *env, jobject thiz,
                                                                      jobjectArray to_merge) {
-    std::lock_guard lock{util::util_mutex_};
-    auto conf = ptrToConfigBase(env, thiz);
-    size_t number = env->GetArrayLength(to_merge);
-    std::vector<std::pair<std::string,session::ustring>> configs = {};
-    for (int i = 0; i < number; i++) {
-        auto jElement = (jobject) env->GetObjectArrayElement(to_merge, i);
-        auto pair = extractHashAndData(env, jElement);
-        configs.push_back(pair);
-    }
-    auto returned = conf->merge(configs);
-    auto string_stack = util::build_string_stack(env, returned);
-    return string_stack;
+    return jni_utils::run_catching_cxx_exception_or_throws<jobject>(env, [=] {
+        std::lock_guard lock{util::util_mutex_};
+        auto conf = ptrToConfigBase(env, thiz);
+        size_t number = env->GetArrayLength(to_merge);
+        std::vector<std::pair<std::string, session::ustring>> configs = {};
+        for (int i = 0; i < number; i++) {
+            auto jElement = (jobject) env->GetObjectArrayElement(to_merge, i);
+            auto pair = extractHashAndData(env, jElement);
+            configs.push_back(pair);
+        }
+        auto returned = conf->merge(configs);
+        auto string_stack = util::build_string_stack(env, returned);
+        return string_stack;
+    });
 }
 
 JNIEXPORT jobject JNICALL
 Java_network_loki_messenger_libsession_1util_ConfigBase_merge__Lkotlin_Pair_2(JNIEnv *env, jobject thiz,
                                                                    jobject to_merge) {
-    std::lock_guard lock{util::util_mutex_};
-    auto conf = ptrToConfigBase(env, thiz);
-    std::vector<std::pair<std::string, session::ustring>> configs = {extractHashAndData(env, to_merge)};
-    auto returned = conf->merge(configs);
-    auto string_stack = util::build_string_stack(env, returned);
-    return string_stack;
+    return jni_utils::run_catching_cxx_exception_or_throws<jobject>(env, [=] {
+        std::lock_guard lock{util::util_mutex_};
+        auto conf = ptrToConfigBase(env, thiz);
+        std::vector<std::pair<std::string, session::ustring>> configs = {
+                extractHashAndData(env, to_merge)};
+        auto returned = conf->merge(configs);
+        auto string_stack = util::build_string_stack(env, returned);
+        return string_stack;
+    });
 }
 
 #pragma clang diagnostic pop

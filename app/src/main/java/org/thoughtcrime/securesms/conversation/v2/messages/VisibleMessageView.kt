@@ -11,8 +11,10 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.HapticFeedbackConstants
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.annotation.ColorInt
@@ -22,22 +24,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.view.marginBottom
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
+import network.loki.messenger.databinding.ViewEmojiReactionsBinding
 import network.loki.messenger.databinding.ViewVisibleMessageBinding
+import network.loki.messenger.databinding.ViewstubVisibleMessageMarkerContainerBinding
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.contacts.Contact.ContactContext
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.utilities.Address
-import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.ViewUtil
 import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsession.utilities.modifyLayoutParams
 import org.session.libsignal.utilities.IdPrefix
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
+import org.thoughtcrime.securesms.database.LastSentTimestampCache
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
 import org.thoughtcrime.securesms.database.LokiThreadDatabase
 import org.thoughtcrime.securesms.database.MmsDatabase
@@ -64,15 +67,26 @@ import kotlin.math.sqrt
 private const val TAG = "VisibleMessageView"
 
 @AndroidEntryPoint
-class VisibleMessageView : LinearLayout {
+class VisibleMessageView : FrameLayout {
+    private var replyDisabled: Boolean = false
     @Inject lateinit var threadDb: ThreadDatabase
     @Inject lateinit var lokiThreadDb: LokiThreadDatabase
     @Inject lateinit var lokiApiDb: LokiAPIDatabase
     @Inject lateinit var mmsSmsDb: MmsSmsDatabase
     @Inject lateinit var smsDb: SmsDatabase
     @Inject lateinit var mmsDb: MmsDatabase
+    @Inject lateinit var lastSentTimestampCache: LastSentTimestampCache
 
-    private val binding by lazy { ViewVisibleMessageBinding.bind(this) }
+    private val binding = ViewVisibleMessageBinding.inflate(LayoutInflater.from(context), this, true)
+
+    private val markerContainerBinding = lazy(LazyThreadSafetyMode.NONE) {
+        ViewstubVisibleMessageMarkerContainerBinding.bind(binding.unreadMarkerContainerStub.inflate())
+    }
+
+    private val emojiReactionsBinding = lazy(LazyThreadSafetyMode.NONE) {
+        ViewEmojiReactionsBinding.bind(binding.emojiReactionsView.inflate())
+    }
+
     private val swipeToReplyIcon = ContextCompat.getDrawable(context, R.drawable.ic_baseline_reply_24)!!.mutate()
     private val swipeToReplyIconRect = Rect()
     private var dx = 0.0f
@@ -91,7 +105,7 @@ class VisibleMessageView : LinearLayout {
     var onPress: ((event: MotionEvent) -> Unit)? = null
     var onSwipeToReply: (() -> Unit)? = null
     var onLongPress: (() -> Unit)? = null
-    val messageContentView: VisibleMessageContentView by lazy { binding.messageContentView.root }
+    val messageContentView: VisibleMessageContentView get() = binding.messageContentView.root
 
     companion object {
         const val swipeToReplyThreshold = 64.0f // dp
@@ -105,12 +119,7 @@ class VisibleMessageView : LinearLayout {
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    override fun onFinishInflate() {
-        super.onFinishInflate()
-        initialize()
-    }
-
-    private fun initialize() {
+    init {
         isHapticFeedbackEnabled = true
         setWillNotDraw(false)
         binding.root.disableClipping()
@@ -118,7 +127,11 @@ class VisibleMessageView : LinearLayout {
         binding.messageInnerContainer.disableClipping()
         binding.messageInnerLayout.disableClipping()
         binding.messageContentView.root.disableClipping()
+
+        // Default layout params
+        layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
+
     // endregion
 
     // region Updating
@@ -135,6 +148,7 @@ class VisibleMessageView : LinearLayout {
         onAttachmentNeedsDownload: (Long, Long) -> Unit,
         lastSentMessageId: Long
     ) {
+        replyDisabled = message.isOpenGroupInvitation
         val threadID = message.threadId
         val thread = threadDb.getRecipientForThreadId(threadID) ?: return
         val isGroupThread = thread.isGroupRecipient
@@ -166,7 +180,7 @@ class VisibleMessageView : LinearLayout {
                 binding.profilePictureView.publicKey = senderSessionID
                 binding.profilePictureView.update(message.individualRecipient)
                 binding.profilePictureView.setOnClickListener {
-                    if (thread.isOpenGroupRecipient) {
+                    if (thread.isCommunityRecipient) {
                         val openGroup = lokiThreadDb.getOpenGroupChat(threadID)
                         if (IdPrefix.fromValue(senderSessionID) == IdPrefix.BLINDED && openGroup?.canWrite == true) {
                             // TODO: support v2 soon
@@ -179,7 +193,7 @@ class VisibleMessageView : LinearLayout {
                         maybeShowUserDetails(senderSessionID, threadID)
                     }
                 }
-                if (thread.isOpenGroupRecipient) {
+                if (thread.isCommunityRecipient) {
                     val openGroup = lokiThreadDb.getOpenGroupChat(threadID) ?: return
                     var standardPublicKey = ""
                     var blindedPublicKey: String? = null
@@ -195,36 +209,43 @@ class VisibleMessageView : LinearLayout {
         }
         binding.senderNameTextView.isVisible = !message.isOutgoing && (isStartOfMessageCluster && (isGroupThread || snIsSelected))
         val contactContext =
-            if (thread.isOpenGroupRecipient) ContactContext.OPEN_GROUP else ContactContext.REGULAR
+            if (thread.isCommunityRecipient) ContactContext.OPEN_GROUP else ContactContext.REGULAR
         binding.senderNameTextView.text = contact?.displayName(contactContext) ?: senderSessionID
 
         // Unread marker
-        binding.unreadMarkerContainer.isVisible = lastSeen != -1L && message.timestamp > lastSeen && (previous == null || previous.timestamp <= lastSeen) && !message.isOutgoing
+        val shouldShowUnreadMarker = lastSeen != -1L && message.timestamp > lastSeen && (previous == null || previous.timestamp <= lastSeen) && !message.isOutgoing
+        if (shouldShowUnreadMarker) {
+            markerContainerBinding.value.root.isVisible = true
+        } else if (markerContainerBinding.isInitialized()) {
+            // Only need to hide the binding when the binding is inflated. (default is gone)
+            markerContainerBinding.value.root.isVisible = false
+        }
 
         // Date break
         val showDateBreak = isStartOfMessageCluster || snIsSelected
         binding.dateBreakTextView.text = if (showDateBreak) DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), message.timestamp) else null
         binding.dateBreakTextView.isVisible = showDateBreak
 
-        // Message status indicator
+        // Update message status indicator
         showStatusMessage(message)
 
         // Emoji Reactions
-        val emojiLayoutParams = binding.emojiReactionsView.root.layoutParams as ConstraintLayout.LayoutParams
-        emojiLayoutParams.horizontalBias = if (message.isOutgoing) 1f else 0f
-        binding.emojiReactionsView.root.layoutParams = emojiLayoutParams
-
         if (message.reactions.isNotEmpty()) {
             val capabilities = lokiThreadDb.getOpenGroupChat(threadID)?.server?.let { lokiApiDb.getServerCapabilities(it) }
             if (capabilities.isNullOrEmpty() || capabilities.contains(OpenGroupApi.Capability.REACTIONS.name.lowercase())) {
-                binding.emojiReactionsView.root.setReactions(message.id, message.reactions, message.isOutgoing, delegate)
-                binding.emojiReactionsView.root.isVisible = true
-            } else {
-                binding.emojiReactionsView.root.isVisible = false
+                emojiReactionsBinding.value.root.let { root ->
+                    root.setReactions(message.id, message.reactions, message.isOutgoing, delegate)
+                    root.isVisible = true
+                    (root.layoutParams as ConstraintLayout.LayoutParams).apply {
+                        horizontalBias = if (message.isOutgoing) 1f else 0f
+                    }
+                }
+            } else if (emojiReactionsBinding.isInitialized()) {
+                emojiReactionsBinding.value.root.isVisible = false
             }
         }
-        else {
-            binding.emojiReactionsView.root.isVisible = false
+        else if (emojiReactionsBinding.isInitialized()) {
+            emojiReactionsBinding.value.root.isVisible = false
         }
 
         // Populate content view
@@ -243,44 +264,99 @@ class VisibleMessageView : LinearLayout {
         onDoubleTap = { binding.messageContentView.root.onContentDoubleTap?.invoke() }
     }
 
+    // Method to display or hide the status of a message.
+    // Note: Although most commonly used to display the delivery status of a message, we also use the
+    // message status area to display the disappearing messages state - so in this latter case we'll
+    // be displaying the "Sent" and the animating clock icon for outgoing messages or "Read" and the
+    // animated clock icon for incoming messages.
     private fun showStatusMessage(message: MessageRecord) {
+        // We'll start by hiding everything and then only make visible what we need
+        binding.messageStatusTextView.isVisible  = false
+        binding.messageStatusImageView.isVisible = false
+        binding.expirationTimerView.isVisible    = false
 
-        val scheduledToDisappear = message.expiresIn > 0
+        // Get details regarding how we should display the message (it's delivery icon, icon tint colour, and
+        // the resource string for what text to display (R.string.delivery_status_sent etc.).
+        val (iconID, iconColor, textId) = getMessageStatusInfo(message)
+
+        // If we get any nulls then a message isn't one with a state that we care about (i.e., control messages
+        // etc.) - so bail. See: `DisplayRecord.is<WHATEVER>` for the full suite of message state methods.
+        // Also: We set all delivery status elements visibility to false just to make sure we don't display any
+        // stale data.
+        if (textId == null) return
 
         binding.messageInnerLayout.modifyLayoutParams<FrameLayout.LayoutParams> {
             gravity = if (message.isOutgoing) Gravity.END else Gravity.START
         }
-
         binding.statusContainer.modifyLayoutParams<ConstraintLayout.LayoutParams> {
             horizontalBias = if (message.isOutgoing) 1f else 0f
         }
 
-        binding.expirationTimerView.isGone = true
+        // If the message is incoming AND it is not scheduled to disappear then don't show any status or timer details
+        val scheduledToDisappear = message.expiresIn > 0
+        if (message.isIncoming && !scheduledToDisappear) return
 
-        if (message.isOutgoing || scheduledToDisappear) {
-            val (iconID, iconColor, textId) = getMessageStatusImage(message)
-            textId?.let(binding.messageStatusTextView::setText)
-            iconColor?.let(binding.messageStatusTextView::setTextColor)
-            iconID?.let { ContextCompat.getDrawable(context, it) }
-                ?.run { iconColor?.let { mutate().apply { setTint(it) } } ?: this }
-                ?.let(binding.messageStatusImageView::setImageDrawable)
+        // Set text & icons as appropriate for the message state. Note: Possible message states we care
+        // about are: isFailed, isSyncFailed, isPending, isSyncing, isResyncing, isRead, and isSent.
+        textId.let(binding.messageStatusTextView::setText)
+        iconColor?.let(binding.messageStatusTextView::setTextColor)
+        iconID?.let { ContextCompat.getDrawable(context, it) }
+            ?.run { iconColor?.let { mutate().apply { setTint(it) } } ?: this }
+            ?.let(binding.messageStatusImageView::setImageDrawable)
 
-            // Always show the delivery status of the last sent message
-            val thisUsersSessionId = TextSecurePreferences.getLocalNumber(context)
-            val lastSentMessageId = mmsSmsDb.getLastSentMessageFromSender(message.threadId, thisUsersSessionId)
-            val isLastSentMessage = lastSentMessageId == message.id
+        // Potential options at this point are that the message is:
+        //   i.) incoming AND scheduled to disappear.
+        //   ii.) outgoing but NOT scheduled to disappear, or
+        //   iii.) outgoing AND scheduled to disappear.
 
-            binding.messageStatusTextView.isVisible = textId != null && (isLastSentMessage || scheduledToDisappear)
-            val showTimer = scheduledToDisappear && !message.isPending
-            binding.messageStatusImageView.isVisible = iconID != null && !showTimer && (!message.isSent || isLastSentMessage)
-
-            binding.messageStatusImageView.bringToFront()
+        // ----- Case i..) Message is incoming and scheduled to disappear -----
+        if (message.isIncoming && scheduledToDisappear) {
+            // Display the status ('Read') and the show the timer only (no delivery icon)
+            binding.messageStatusTextView.isVisible  = true
+            binding.expirationTimerView.isVisible    = true
             binding.expirationTimerView.bringToFront()
-            binding.expirationTimerView.isVisible = showTimer
-            if (showTimer) updateExpirationTimer(message)
-        } else {
-            binding.messageStatusTextView.isVisible = false
-            binding.messageStatusImageView.isVisible = false
+            updateExpirationTimer(message)
+            return
+        }
+
+        // --- If we got here then we know the message is outgoing ---
+
+        // ----- Case ii.) Message is outgoing but NOT scheduled to disappear -----
+        if (!scheduledToDisappear) {
+            // If this isn't a disappearing message then we never show the timer
+
+            // If the message has NOT been successfully sent then always show the delivery status text and icon..
+            val neitherSentNorRead = !(message.isSent || message.isRead)
+            if (neitherSentNorRead) {
+                binding.messageStatusTextView.isVisible = true
+                binding.messageStatusImageView.isVisible = true
+            } else {
+                // ..but if the message HAS been successfully sent or read then only display the delivery status
+                // text and image if this is the last sent message.
+                val lastSentTimestamp = lastSentTimestampCache.getTimestamp(message.threadId)
+                val isLastSent = lastSentTimestamp == message.timestamp
+                binding.messageStatusTextView.isVisible  = isLastSent
+                binding.messageStatusImageView.isVisible = isLastSent
+                if (isLastSent) { binding.messageStatusImageView.bringToFront() }
+            }
+        }
+        else // ----- Case iii.) Message is outgoing AND scheduled to disappear -----
+        {
+            // Always display the delivery status text on all outgoing disappearing messages
+            binding.messageStatusTextView.isVisible = true
+
+            // If the message is sent or has been read..
+            val sentOrRead = message.isSent || message.isRead
+            if (sentOrRead) {
+                // ..then display the timer icon for this disappearing message (but keep the message status icon hidden)
+                binding.expirationTimerView.isVisible = true
+                binding.expirationTimerView.bringToFront()
+                updateExpirationTimer(message)
+            } else {
+                // If the message has NOT been sent or read (or it has failed) then show the delivery status icon rather than the timer icon
+                binding.messageStatusImageView.isVisible = true
+                binding.messageStatusImageView.bringToFront()
+            }
         }
     }
 
@@ -302,10 +378,9 @@ class VisibleMessageView : LinearLayout {
                                  @ColorInt val iconTint: Int?,
                                  @StringRes val messageText: Int?)
 
-    private fun getMessageStatusImage(message: MessageRecord): MessageStatusInfo = when {
+    private fun getMessageStatusInfo(message: MessageRecord): MessageStatusInfo = when {
         message.isFailed ->
-            MessageStatusInfo(
-                R.drawable.ic_delivery_status_failed,
+            MessageStatusInfo(R.drawable.ic_delivery_status_failed,
                 resources.getColor(R.color.destructive, context.theme),
                 R.string.delivery_status_failed
             )
@@ -318,24 +393,32 @@ class VisibleMessageView : LinearLayout {
         message.isPending ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sending,
-                context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_sending
+                context.getColorFromAttr(R.attr.message_status_color),
+                R.string.delivery_status_sending
             )
-        message.isResyncing ->
+        message.isSyncing || message.isResyncing ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sending,
-                context.getColor(R.color.accent_orange), R.string.delivery_status_syncing
+                context.getColorFromAttr(R.attr.message_status_color),
+                R.string.delivery_status_sending // We COULD tell the user that we're `syncing` (R.string.delivery_status_syncing) but it will likely make more sense to them if we say "Sending"
             )
-        message.isRead || !message.isOutgoing ->
+        message.isRead || message.isIncoming ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_read,
-                context.getColorFromAttr(R.attr.message_status_color), R.string.delivery_status_read
+                context.getColorFromAttr(R.attr.message_status_color),
+                R.string.delivery_status_read
             )
-        else ->
+        message.isSent ->
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sent,
                 context.getColorFromAttr(R.attr.message_status_color),
                 R.string.delivery_status_sent
             )
+        else -> {
+            // The message isn't one we care about for message statuses we display to the user (i.e.,
+            // control messages etc. - see the  `DisplayRecord.is<WHATEVER>` suite of methods for options).
+            MessageStatusInfo(null, null, null)
+        }
     }
 
     private fun updateExpirationTimer(message: MessageRecord) {
@@ -409,6 +492,7 @@ class VisibleMessageView : LinearLayout {
         } else {
             longPressCallback?.let { gestureHandler.removeCallbacks(it) }
         }
+        if (replyDisabled) return
         if (translationX > 0) { return } // Only allow swipes to the left
         // The idea here is to asymptotically approach a maximum drag distance
         val damping = 50.0f

@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import net.zetetic.database.sqlcipher.SQLiteDatabase.CONFLICT_REPLACE
 import org.session.libsignal.database.LokiMessageDatabaseProtocol
+import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 
 class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(context, helper), LokiMessageDatabaseProtocol {
@@ -72,7 +73,12 @@ class LokiMessageDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
                 "${Companion.messageID} = ? AND $messageType = ?",
                 arrayOf(messageID.toString(), (if (isSms) SMS_TYPE else MMS_TYPE).toString())) { cursor ->
             cursor.getInt(serverID).toLong()
-        } ?: return
+        }
+
+        if (serverID == null) {
+            Log.w(this::class.simpleName, "Could not get server ID to delete message with ID: $messageID")
+            return
+        }
 
         database.beginTransaction()
 

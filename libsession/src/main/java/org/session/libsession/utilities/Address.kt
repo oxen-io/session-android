@@ -22,17 +22,17 @@ class Address private constructor(address: String) : Parcelable, Comparable<Addr
         get() = GroupUtil.isEncodedGroup(address)
     val isClosedGroup: Boolean
         get() = GroupUtil.isClosedGroup(address)
-    val isOpenGroup: Boolean
-        get() = GroupUtil.isOpenGroup(address)
-    val isOpenGroupInbox: Boolean
-        get() = GroupUtil.isOpenGroupInbox(address)
-    val isOpenGroupOutbox: Boolean
+    val isCommunity: Boolean
+        get() = GroupUtil.isCommunity(address)
+    val isCommunityInbox: Boolean
+        get() = GroupUtil.isCommunityInbox(address)
+    val isCommunityOutbox: Boolean
         get() = address.startsWith(IdPrefix.BLINDED.value) || address.startsWith(IdPrefix.BLINDEDV2.value)
     val isContact: Boolean
-        get() = !(isGroup || isOpenGroupInbox)
+        get() = !(isGroup || isCommunityInbox)
 
     fun contactIdentifier(): String {
-        if (!isContact && !isOpenGroup) {
+        if (!isContact && !isCommunity) {
             if (isGroup) throw AssertionError("Not e164, is group")
             throw AssertionError("Not e164, unknown")
         }

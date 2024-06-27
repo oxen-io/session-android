@@ -357,7 +357,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
     executeStatements(db, SmsDatabase.CREATE_INDEXS);
     executeStatements(db, MmsDatabase.CREATE_INDEXS);
     executeStatements(db, AttachmentDatabase.CREATE_INDEXS);
-    executeStatements(db, ThreadDatabase.CREATE_INDEXS);
+    executeStatements(db, ThreadDatabase.CREATE_INDEXES);
     executeStatements(db, DraftDatabase.CREATE_INDEXS);
     executeStatements(db, GroupDatabase.CREATE_INDEXS);
     executeStatements(db, GroupReceiptDatabase.CREATE_INDEXES);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,45 +8,11 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/unreadMarkerContainer"
+    <ViewStub
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/small_spacing"
-        android:visibility="gone"
-        tools:visibility="visible">
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginStart="@dimen/medium_spacing"
-            android:layout_marginEnd="@dimen/small_spacing"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/unreadMarker"
-            android:background="?android:colorAccent" />
-        <TextView
-            android:id="@+id/unreadMarker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:text="@string/unread_marker"
-            android:gravity="center"
-            android:textColor="?android:colorAccent"
-            android:textSize="@dimen/small_font_size"
-            android:textStyle="bold" />
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginStart="@dimen/small_spacing"
-            android:layout_marginEnd="@dimen/medium_spacing"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/unreadMarker"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:background="?android:colorAccent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:id="@+id/unreadMarkerContainerStub"
+        android:layout="@layout/viewstub_visible_message_marker_container" />
 
     <TextView
         android:id="@+id/dateBreakTextView"
@@ -129,8 +95,10 @@
             </LinearLayout>
         </FrameLayout>
 
-        <include layout="@layout/view_emoji_reactions"
+        <ViewStub
+            android:layout="@layout/view_emoji_reactions"
             android:id="@+id/emojiReactionsView"
+            android:inflatedId="@+id/emojiReactionsView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
@@ -176,4 +144,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</org.thoughtcrime.securesms.conversation.v2.messages.VisibleMessageView>
+</LinearLayout>

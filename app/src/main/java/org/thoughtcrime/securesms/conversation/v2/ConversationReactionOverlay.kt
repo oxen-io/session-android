@@ -39,7 +39,6 @@ import org.thoughtcrime.securesms.components.menu.ActionItem
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationMenuItemHelper.userCanBanSelectedUsers
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationMenuItemHelper.userCanDeleteSelectedItems
 import org.thoughtcrime.securesms.database.MmsSmsDatabase
-import org.thoughtcrime.securesms.database.SessionContactDatabase
 import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.ReactionRecord
@@ -533,7 +532,7 @@ class ConversationReactionOverlay : FrameLayout {
         items += ActionItem(R.attr.menu_select_icon, R.string.conversation_context__menu_select, { handleActionItemClicked(Action.SELECT) }, R.string.AccessibilityId_select)
         // Reply
         val canWrite = openGroup == null || openGroup.canWrite
-        if (canWrite && !message.isPending && !message.isFailed) {
+        if (canWrite && !message.isPending && !message.isFailed && !message.isOpenGroupInvitation) {
             items += ActionItem(R.attr.menu_reply_icon, R.string.conversation_context__menu_reply, { handleActionItemClicked(Action.REPLY) }, R.string.AccessibilityId_reply_message)
         }
         // Copy message text
@@ -541,7 +540,7 @@ class ConversationReactionOverlay : FrameLayout {
             items += ActionItem(R.attr.menu_copy_icon, R.string.copy, { handleActionItemClicked(Action.COPY_MESSAGE) })
         }
         // Copy Session ID
-        if (recipient.isGroupRecipient && !recipient.isOpenGroupRecipient && message.recipient.address.toString() != userPublicKey) {
+        if (recipient.isGroupRecipient && !recipient.isCommunityRecipient && message.recipient.address.toString() != userPublicKey) {
             items += ActionItem(R.attr.menu_copy_icon, R.string.activity_conversation_menu_copy_session_id, { handleActionItemClicked(Action.COPY_SESSION_ID) })
         }
         // Delete message

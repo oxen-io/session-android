@@ -22,7 +22,7 @@ class GroupRecord(
     }
 
     val isOpenGroup: Boolean
-        get() = Address.fromSerialized(encodedId).isOpenGroup
+        get() = Address.fromSerialized(encodedId).isCommunity
     val isClosedGroup: Boolean
         get() = Address.fromSerialized(encodedId).isClosedGroup
 

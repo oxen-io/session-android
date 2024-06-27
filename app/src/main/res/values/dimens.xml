@@ -11,6 +11,7 @@
     <dimen name="massive_font_size">50sp</dimen>
 
     <!-- Element Sizes -->
+    <dimen name="dialog_button_height">60dp</dimen>
     <dimen name="small_button_height">34dp</dimen>
     <dimen name="medium_button_height">38dp</dimen>
     <dimen name="large_button_height">54dp</dimen>

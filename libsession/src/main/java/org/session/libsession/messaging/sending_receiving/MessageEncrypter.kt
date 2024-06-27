@@ -7,14 +7,13 @@ import com.goterl.lazysodium.interfaces.Sign
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.sending_receiving.MessageSender.Error
 import org.session.libsession.messaging.utilities.SodiumUtilities
+import org.session.libsession.messaging.utilities.SodiumUtilities.sodium
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.removingIdPrefixIfNeeded
 
 object MessageEncrypter {
-
-    private val sodium by lazy { LazySodiumAndroid(SodiumAndroid()) }
 
     /**
      * Encrypts `plaintext` using the Session protocol for `hexEncodedX25519PublicKey`.

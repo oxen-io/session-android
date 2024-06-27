@@ -203,12 +203,10 @@ private fun handleConfigurationMessage(message: ConfigurationMessage) {
 
     TextSecurePreferences.setConfigurationMessageSynced(context, true)
     TextSecurePreferences.setLastProfileUpdateTime(context, message.sentTimestamp!!)
-    val isForceSync = TextSecurePreferences.hasForcedNewConfig(context)
-    val currentTime = SnodeAPI.nowWithOffset
-    if (ConfigBase.isNewConfigEnabled(isForceSync, currentTime)) {
-        TextSecurePreferences.setHasLegacyConfig(context, true)
-        if (!firstTimeSync) return
-    }
+
+    TextSecurePreferences.setHasLegacyConfig(context, true)
+    if (!firstTimeSync) return
+
     val allClosedGroupPublicKeys = storage.getAllClosedGroupPublicKeys()
     for (closedGroup in message.closedGroups) {
         if (allClosedGroupPublicKeys.contains(closedGroup.publicKey)) {
@@ -260,7 +258,7 @@ fun MessageReceiver.handleUnsendRequest(message: UnsendRequest): Long? {
         SnodeAPI.deleteMessage(author, listOf(serverHash))
     }
     val deletedMessageId = messageDataProvider.updateMessageAsDeleted(timestamp, author)
-    if (!messageDataProvider.isOutgoingMessage(messageIdToDelete)) {
+    if (!messageDataProvider.isOutgoingMessage(timestamp)) {
         SSKEnvironment.shared.notificationManager.updateNotification(context)
     }
 
@@ -290,6 +288,7 @@ fun MessageReceiver.handleVisibleMessage(
 ): Long? {
     val storage = MessagingModuleConfiguration.shared.storage
     val context = MessagingModuleConfiguration.shared.context
+    message.takeIf { it.isSenderSelf }?.sentTimestamp?.let { MessagingModuleConfiguration.shared.lastSentTimestampCache.submitTimestamp(threadId, it) }
     val userPublicKey = storage.getUserPublicKey()
     val messageSender: String? = message.sender
 
@@ -410,12 +409,7 @@ fun MessageReceiver.handleVisibleMessage(
         message.hasMention = listOf(userPublicKey, userBlindedKey)
             .filterNotNull()
             .any { key ->
-                return@any (
-                    messageText != null &&
-                    messageText.contains("@$key")
-                ) || (
-                    (quoteModel?.author?.serialize() ?: "") == key
-                )
+                messageText?.contains("@$key") == true || key == (quoteModel?.author?.serialize() ?: "")
             }
 
         // Persist the message

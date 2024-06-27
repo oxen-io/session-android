@@ -117,7 +117,7 @@ class MessageDetailsViewModel @Inject constructor(
         Attachment(slide.details, slide.fileName.orNull(), slide.uri, slide is ImageSlide)
 
     fun onClickImage(index: Int) {
-        val state = state.value ?: return
+        val state = state.value
         val mmsRecord = state.mmsRecord ?: return
         val slide = mmsRecord.slideDeck.slides[index] ?: return
         // only open to downloaded images
@@ -158,6 +158,7 @@ data class MessageDetailsState(
     val thread: Recipient? = null,
 ) {
     val fromTitle = GetString(R.string.message_details_header__from)
+    val canReply = record?.isOpenGroupInvitation != true
 }
 
 data class Attachment(

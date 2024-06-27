@@ -91,10 +91,10 @@ class UserDetailsBottomSheet: BottomSheetDialogFragment() {
                     && !threadRecipient.isOpenGroupInboxRecipient
                     && !threadRecipient.isOpenGroupOutboxRecipient
 
-            publicKeyTextView.isVisible = !threadRecipient.isOpenGroupRecipient
+            publicKeyTextView.isVisible = !threadRecipient.isCommunityRecipient
                     && !threadRecipient.isOpenGroupInboxRecipient
                     && !threadRecipient.isOpenGroupOutboxRecipient
-            messageButton.isVisible = !threadRecipient.isOpenGroupRecipient || IdPrefix.fromValue(publicKey)?.isBlinded() == true
+            messageButton.isVisible = !threadRecipient.isCommunityRecipient || IdPrefix.fromValue(publicKey)?.isBlinded() == true
             publicKeyTextView.text = publicKey
             publicKeyTextView.setOnLongClickListener {
                 val clipboard =

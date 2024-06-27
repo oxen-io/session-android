@@ -182,9 +182,7 @@ class WebRtcCallService : LifecycleService(), CallManager.WebRtcListener {
         }
 
         fun broadcastWantsToAnswer(context: Context, wantsToAnswer: Boolean) {
-            val intent = Intent(ACTION_WANTS_TO_ANSWER)
-                .putExtra(EXTRA_WANTS_TO_ANSWER, wantsToAnswer)
-
+            val intent = Intent(ACTION_WANTS_TO_ANSWER).putExtra(EXTRA_WANTS_TO_ANSWER, wantsToAnswer)
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
         }
 
@@ -506,9 +504,9 @@ class WebRtcCallService : LifecycleService(), CallManager.WebRtcListener {
     }
 
     private fun handleAnswerCall(intent: Intent) {
-        val recipient = callManager.recipient ?: return
-        val pending = callManager.pendingOffer ?: return
-        val callId = callManager.callId ?: return
+        val recipient = callManager.recipient    ?: return Log.e(TAG, "No recipient to answer in handleAnswerCall")
+        val pending   = callManager.pendingOffer ?: return Log.e(TAG, "No pending offer in handleAnswerCall")
+        val callId    = callManager.callId       ?: return Log.e(TAG, "No callId in handleAnswerCall")
         val timestamp = callManager.pendingOfferTime
 
         if (callManager.currentConnectionState != CallState.RemoteRing) {
@@ -526,9 +524,7 @@ class WebRtcCallService : LifecycleService(), CallManager.WebRtcListener {
                 insertMissedCall(recipient, true)
                 terminate()
             }
-            if (didHangup) {
-                return
-            }
+            if (didHangup) { return }
         }
 
         callManager.postConnectionEvent(Event.SendAnswer) {
@@ -686,7 +682,6 @@ class WebRtcCallService : LifecycleService(), CallManager.WebRtcListener {
     private fun registerPowerButtonReceiver() {
         if (powerButtonReceiver == null) {
             powerButtonReceiver = PowerButtonReceiver()
-
             registerReceiver(powerButtonReceiver, IntentFilter(Intent.ACTION_SCREEN_OFF))
         }
     }
@@ -719,7 +714,6 @@ class WebRtcCallService : LifecycleService(), CallManager.WebRtcListener {
         }
     }
 
-
     private fun handleCheckTimeout(intent: Intent) {
         val callId = callManager.callId ?: return
         val callState = callManager.currentConnectionState
@@ -746,9 +740,9 @@ class WebRtcCallService : LifecycleService(), CallManager.WebRtcListener {
         }
 
         if (!CallNotificationBuilder.areNotificationsEnabled(this) && type == TYPE_INCOMING_PRE_OFFER) {
-            // start an intent for the fullscreen
+            // Start an intent for the fullscreen call activity
             val foregroundIntent = Intent(this, WebRtcCallActivity::class.java)
-                .setFlags(FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_BROUGHT_TO_FRONT)
+                .setFlags(FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_BROUGHT_TO_FRONT or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
                 .setAction(WebRtcCallActivity.ACTION_FULL_SCREEN_INTENT)
             startActivity(foregroundIntent)
         }

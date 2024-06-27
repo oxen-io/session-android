@@ -31,8 +31,8 @@ configurations.all {
     exclude module: "commons-logging"
 }
 
-def canonicalVersionCode = 369
-def canonicalVersionName = "1.18.1"
+def canonicalVersionCode = 373
+def canonicalVersionName = "1.18.4"
 
 def postFixSize = 10
 def abiPostFix = ['armeabi-v7a' : 1,
@@ -40,6 +40,17 @@ def abiPostFix = ['armeabi-v7a' : 1,
                   'x86'         : 3,
                   'x86_64'      : 4,
                   'universal'   : 5]
+
+// Function to get the current git commit hash so we can embed it along w/ the build version.
+// Note: This is visible in the SettingsActivity, right at the bottom (R.id.versionTextView).
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine "git", "rev-parse", "--short", "HEAD"
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
 
 android {
     compileSdkVersion androidCompileSdkVersion
@@ -94,6 +105,7 @@ android {
         project.ext.set("archivesBaseName", "session")
 
         buildConfigField "long", "BUILD_TIMESTAMP", getLastCommitTimestamp() + "L"
+        buildConfigField "String", "GIT_HASH", "\"$getGitHash\""
         buildConfigField "String", "CONTENT_PROXY_HOST", "\"contentproxy.signal.org\""
         buildConfigField "int", "CONTENT_PROXY_PORT", "443"
         buildConfigField "String", "USER_AGENT", "\"OWA\""
