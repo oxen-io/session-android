@@ -2,6 +2,8 @@ package org.thoughtcrime.securesms.preferences
 
 import android.app.Dialog
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
@@ -24,12 +26,9 @@ import org.thoughtcrime.securesms.createSessionDialog
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 
-enum class DeletionScope {
-    DeleteLocalDataOnly,
-    DeleteBothLocalAndNetworkData
-}
-
 class ClearAllDataDialog : DialogFragment() {
+    private val TAG = "ClearAllDataDialog"
+
     private lateinit var binding: DialogClearAllDataBinding
 
     enum class Steps {
@@ -39,9 +38,15 @@ class ClearAllDataDialog : DialogFragment() {
         RETRY_LOCAL_DELETE_ONLY_PROMPT
     }
 
-    var clearJob: Job? = null
+    // Rather than passing a bool we'll use an enum to clarify our intent
+    private enum class DeletionScope {
+        DeleteLocalDataOnly,
+        DeleteBothLocalAndNetworkData
+    }
 
-    var step = Steps.INFO_PROMPT
+    private var clearJob: Job? = null
+
+    private var step = Steps.INFO_PROMPT
         set(value) {
             field = value
             updateUI()
@@ -53,8 +58,8 @@ class ClearAllDataDialog : DialogFragment() {
 
     private fun createView(): View {
         binding = DialogClearAllDataBinding.inflate(LayoutInflater.from(requireContext()))
-        val device = radioOption("deviceOnly", R.string.dialog_clear_all_data_clear_device_only)
-        val network = radioOption("deviceAndNetwork", R.string.dialog_clear_all_data_clear_device_and_network)
+        val device = radioOption("deviceOnly", R.string.clearDeviceOnly)
+        val network = radioOption("deviceAndNetwork", R.string.clearDeviceAndNetwork)
         var selectedOption: RadioOption<String> = device
         val optionAdapter = RadioOptionAdapter { selectedOption = it }
         binding.recyclerView.apply {
@@ -96,9 +101,10 @@ class ClearAllDataDialog : DialogFragment() {
                 Steps.DELETING -> { /* do nothing intentionally */ }
                 Steps.RETRY_LOCAL_DELETE_ONLY_PROMPT -> {
                     binding.dialogDescriptionText.setText(R.string.clearDataErrorDescriptionGeneric)
+                    binding.clearAllDataButton.text = getString(R.string.clearDevice)
                 }
             }
-            binding.recyclerView.isGone = step == Steps.NETWORK_PROMPT
+            binding.recyclerView.isGone = step == Steps.NETWORK_PROMPT || step == Steps.RETRY_LOCAL_DELETE_ONLY_PROMPT
             binding.cancelButton.isVisible = !isLoading
             binding.clearAllDataButton.isVisible = !isLoading
             binding.progressBar.isVisible = isLoading
@@ -109,27 +115,30 @@ class ClearAllDataDialog : DialogFragment() {
     }
 
     private fun clearAllData(deletionScope: DeletionScope) {
+
         clearJob = lifecycleScope.launch(Dispatchers.IO) {
-            val previousStep = step
             withContext(Dispatchers.Main) { step = Steps.DELETING }
 
             if (deletionScope == DeletionScope.DeleteLocalDataOnly) {
+
                 try {
                     ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(requireContext()).get()
                 } catch (e: Exception) {
-                    Log.e("Loki", "Failed to force sync deleting data", e)
-                    Toast.makeText(requireContext(), R.string.errorUnknown, Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, "Failed to force sync when deleting data", e)
+                    Handler(Looper.getMainLooper()).post {
+                        Toast.makeText(ApplicationContext.getInstance(requireContext()), R.string.errorUnknown, Toast.LENGTH_LONG).show()
+                    }
                     return@launch
                 }
                 val success = ApplicationContext.getInstance(context).clearAllData(false)
                 withContext(Dispatchers.Main) { dismiss() }
-
                 if (!success) {
-                    Toast.makeText(requireContext(), R.string.errorUnknown, Toast.LENGTH_SHORT).show()
+                    Handler(Looper.getMainLooper()).post {
+                        Toast.makeText(ApplicationContext.getInstance(requireContext()), R.string.errorUnknown, Toast.LENGTH_LONG).show()
+                    }
                 }
             }
             else if (deletionScope == DeletionScope.DeleteBothLocalAndNetworkData) {
-
                 val deletionResultMap: Map<String, Boolean>? = try {
                     val openGroups = DatabaseComponent.get(requireContext()).lokiThreadDatabase().getAllOpenGroups()
                     openGroups.map { it.value.server }.toSet().forEach { server ->
@@ -137,22 +146,16 @@ class ClearAllDataDialog : DialogFragment() {
                     }
                     SnodeAPI.deleteAllMessages().get()
                 } catch (e: Exception) {
-
+                    Log.e(TAG, "Failed to delete network messages - offering user option to delete local data only.", e)
                     null
                 }
 
-                // If one or more deletions failed..
+                // If one or more deletions failed inform the user and allow them to choose a local-only delete if they wish..
                 if (deletionResultMap == null || deletionResultMap.values.any { !it } || deletionResultMap.isEmpty()) {
-                    Log.w("ACL", "Hit one or more deletions failed block")
-
                     withContext(Dispatchers.Main) { step = Steps.RETRY_LOCAL_DELETE_ONLY_PROMPT }
-                    //withContext(Dispatchers.Main) { dismiss() }
                 }
                 else if (deletionResultMap.values.all { it }) {
-
-                    Log.w("ACL", "Hit NOT failed block?!?!")
-
-                    // Don't force sync because all the messages are deleted?
+                    // ..otherwise if the network data deletion was successful proceed to delete the local data as well.
                     ApplicationContext.getInstance(context).clearAllData(false)
                     withContext(Dispatchers.Main) { dismiss() }
                 }
