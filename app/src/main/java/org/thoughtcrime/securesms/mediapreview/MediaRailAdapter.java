@@ -154,7 +154,7 @@ public class MediaRailAdapter extends RecyclerView.Adapter<MediaRailAdapter.Medi
       image.setImageResource(glideRequests, media.getUri());
       image.setOnClickListener(v -> railItemListener.onRailItemClicked(distanceFromActive));
       // set the rounded corners
-      image.setRadius(toPx(5, image.getResources()));
+      image.setRoundedCorners(toPx(5, image.getResources()));
 
       outline.setVisibility(isActive ? View.VISIBLE : View.GONE);
 

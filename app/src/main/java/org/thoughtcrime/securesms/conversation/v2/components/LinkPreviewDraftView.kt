@@ -31,7 +31,7 @@ class LinkPreviewDraftView : LinearLayout {
         // Hide the loader and show the content view
         binding.linkPreviewDraftContainer.isVisible = true
         binding.linkPreviewDraftLoader.isVisible = false
-        binding.thumbnailImageView.root.radius = toPx(4, resources)
+        binding.thumbnailImageView.root.setRoundedCorners(toPx(4, resources))
         if (linkPreview.getThumbnail().isPresent) {
             // This internally fetches the thumbnail
             binding.thumbnailImageView.root.setImageResource(glide, ImageSlide(context, linkPreview.getThumbnail().get()), false)

@@ -2,10 +2,13 @@ package org.thoughtcrime.securesms.conversation.v2.utilities
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Outline
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.View
+import android.view.ViewOutlineProvider
 import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -46,7 +49,6 @@ open class ThumbnailView @JvmOverloads constructor(
     private val dimensDelegate = ThumbnailDimensDelegate()
 
     private var slide: Slide? = null
-    var radius: Int = 0
 
     init {
         attrs?.let { context.theme.obtainStyledAttributes(it, R.styleable.ThumbnailView, 0, 0) }
@@ -58,7 +60,9 @@ open class ThumbnailView @JvmOverloads constructor(
                     getDimensionPixelSize(R.styleable.ThumbnailView_maxHeight, 0)
                 )
 
-                radius = getDimensionPixelSize(R.styleable.ThumbnailView_thumbnail_radius, 0)
+                setRoundedCorners(
+                    getDimensionPixelSize(R.styleable.ThumbnailView_thumbnail_radius, 0)
+                )
 
                 recycle()
             }
@@ -81,9 +85,24 @@ open class ThumbnailView @JvmOverloads constructor(
 
     private fun getDefaultWidth() = maxOf(layoutParams?.width ?: 0, 0)
     private fun getDefaultHeight() = maxOf(layoutParams?.height ?: 0, 0)
+
     // endregion
 
     // region Interaction
+    fun setRoundedCorners(radius: Int){
+        // create an outline provider and clip the whole view to that shape
+        // that way we can round the image and the background ( and any other artifacts that the view may contain )
+        val mOutlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                // all corners
+                outline.setRoundRect(0, 0, view.width, view.height, radius.toFloat())
+            }
+        }
+
+        outlineProvider = mOutlineProvider
+        clipToOutline = true
+    }
+
     fun setImageResource(
         glide: GlideRequests,
         slide: Slide,
@@ -139,7 +158,7 @@ open class ThumbnailView @JvmOverloads constructor(
         .diskCacheStrategy(DiskCacheStrategy.NONE)
         .overrideDimensions()
         .transition(DrawableTransitionOptions.withCrossFade())
-        .crop(radius)
+        .transform(CenterCrop())
         .missingThumbnailPicture(slide.isInProgress)
 
     private fun buildPlaceholderGlideRequest(
@@ -162,7 +181,7 @@ open class ThumbnailView @JvmOverloads constructor(
     ): ListenableFuture<Boolean> = glideRequests.load(DecryptableUri(uri))
         .diskCacheStrategy(DiskCacheStrategy.NONE)
         .transition(DrawableTransitionOptions.withCrossFade())
-        .crop(radius)
+        .transform(CenterCrop())
         .intoDrawableTargetAsFuture()
 
     private fun GlideRequest<Drawable>.intoDrawableTargetAsFuture() =
@@ -176,10 +195,6 @@ open class ThumbnailView @JvmOverloads constructor(
         dimensDelegate.resourceSize().takeIf { 0 !in it }
             ?.let { override(it[WIDTH], it[HEIGHT]) }
             ?: override(getDefaultWidth(), getDefaultHeight())
-
-    private fun <T> GlideRequest<T>.crop(radius: Int) =
-        if (radius > 0) transforms(CenterCrop(), RoundedCorners(radius))
-        else transforms(CenterCrop())
 }
 
 private fun <T> GlideRequest<T>.missingThumbnailPicture(
