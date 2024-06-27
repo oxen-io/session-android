@@ -1,6 +1,5 @@
 package org.thoughtcrime.securesms.conversation.v2.utilities
 
-import android.app.Application
 import android.content.Context
 import android.graphics.Typeface
 import android.text.Spannable
@@ -9,7 +8,6 @@ import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.util.Range
-import androidx.appcompat.widget.ThemeUtils
 import androidx.core.content.res.ResourcesCompat
 import network.loki.messenger.R
 import nl.komponents.kovenant.combine.Tuple2
@@ -18,13 +16,8 @@ import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.ThemeUtil
-import org.session.libsession.utilities.getColorFromAttr
-import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
-import org.thoughtcrime.securesms.util.UiModeUtilities
 import org.thoughtcrime.securesms.util.getAccentColor
-import org.thoughtcrime.securesms.util.getColorResourceIdFromAttr
-import org.thoughtcrime.securesms.util.getMessageTextColourAttr
 import java.util.regex.Pattern
 
 object MentionUtilities {
@@ -70,31 +63,26 @@ object MentionUtilities {
         }
         val result = SpannableString(text)
 
-        val isLightMode = UiModeUtilities.isDayUiMode(context)
         for (mention in mentions) {
             val backgroundColor: Int?
             val foregroundColor: Int
+            // incoming message mentioning you
             if (isYou(mention.second, userPublicKey, openGroup)) {
-                backgroundColor = context.getColorFromAttr(R.attr.colorAccent)
+                backgroundColor = context.getAccentColor()
                 foregroundColor = ResourcesCompat.getColor(context.resources, R.color.black, context.theme)
-            } else if (isOutgoingMessage) {
+            } else if (isOutgoingMessage) { // outgoing message mentioning someone else
                 backgroundColor = null
-                foregroundColor = ResourcesCompat.getColor(context.resources, if (isLightMode) R.color.white else R.color.black, context.theme)
-            } else {
+                foregroundColor = ResourcesCompat.getColor(context.resources, R.color.black, context.theme)
+            } else { // incoming messages mentioning someone else
                 backgroundColor = null
-                foregroundColor = context.getAccentColor()
+                foregroundColor = if(ThemeUtil.isDarkTheme(context)) context.getAccentColor()
+                else ResourcesCompat.getColor(context.resources, R.color.black, context.theme)
             }
             backgroundColor?.let { background ->
                 result.setSpan(BackgroundColorSpan(background), mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             result.setSpan(ForegroundColorSpan(foregroundColor), mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             result.setSpan(StyleSpan(Typeface.BOLD), mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-            // If we're using a light theme then we change the background colour of the mention to be the accent colour
-            if (ThemeUtil.isLightTheme(context)) {
-                val backgroundColour = context.getAccentColor();
-                result.setSpan(BackgroundColorSpan(backgroundColour), mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            }
         }
         return result
     }
