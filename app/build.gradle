@@ -166,7 +166,7 @@ android {
             dimension "distribution"
             ext.websiteUpdateUrl = "https://github.com/oxen-io/session-android/releases"
             buildConfigField "boolean", "PLAY_STORE_DISABLED", "true"
-            buildConfigField "org.session.libsession.utilities.Device", "DEVICE", "org.session.libsession.utilities.Device.ANDROID"
+            buildConfigField "org.session.libsession.utilities.Device", "DEVICE", "org.session.libsession.utilities.Device.FDROID"
             buildConfigField "String", "NOPLAY_UPDATE_URL", "\"$ext.websiteUpdateUrl\""
             buildConfigField 'String', 'PUSH_KEY_SUFFIX', '\"\"'
         }

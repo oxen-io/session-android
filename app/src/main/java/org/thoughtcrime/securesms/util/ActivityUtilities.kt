@@ -1,6 +1,7 @@
 package org.thoughtcrime.securesms.util
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.View
@@ -38,10 +39,10 @@ fun BaseActionBarActivity.setUpActionBarSessionLogo(hideBackButton: Boolean = fa
     }
 }
 
-val AppCompatActivity.defaultSessionRequestCode: Int
+val Activity.defaultSessionRequestCode: Int
     get() = 42
 
-fun AppCompatActivity.push(intent: Intent, isForResult: Boolean = false) {
+fun Activity.push(intent: Intent, isForResult: Boolean = false) {
     if (isForResult) {
         startActivityForResult(intent, defaultSessionRequestCode)
     } else {
@@ -50,7 +51,7 @@ fun AppCompatActivity.push(intent: Intent, isForResult: Boolean = false) {
     overridePendingTransition(R.anim.slide_from_right, R.anim.fade_scale_out)
 }
 
-fun AppCompatActivity.show(intent: Intent, isForResult: Boolean = false) {
+fun Activity.show(intent: Intent, isForResult: Boolean = false) {
     if (isForResult) {
         startActivityForResult(intent, defaultSessionRequestCode)
     } else {

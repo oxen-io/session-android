@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
+import org.session.libsession.utilities.Device
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.TextSecurePreferences.Companion.isNotificationsEnabled
 import org.thoughtcrime.securesms.ApplicationContext
@@ -32,6 +33,8 @@ class NotificationsPreferenceFragment : ListSummaryPreferenceFragment() {
     lateinit var pushRegistry: PushRegistry
     @Inject
     lateinit var prefs: TextSecurePreferences
+    @Inject
+    lateinit var device: Device
 
     override fun onCreate(paramBundle: Bundle?) {
         super.onCreate(paramBundle)
@@ -39,6 +42,7 @@ class NotificationsPreferenceFragment : ListSummaryPreferenceFragment() {
         // Set up FCM toggle
         val fcmKey = "pref_key_use_fcm"
         val fcmPreference: SwitchPreferenceCompat = findPreference(fcmKey)!!
+        fcmPreference.isVisible = device.pushAvailable
         fcmPreference.isChecked = prefs.isPushEnabled()
         fcmPreference.setOnPreferenceChangeListener { _: Preference, newValue: Any ->
                 prefs.setPushEnabled(newValue as Boolean)
