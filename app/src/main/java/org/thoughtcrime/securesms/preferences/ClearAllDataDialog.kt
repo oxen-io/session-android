@@ -38,7 +38,7 @@ class ClearAllDataDialog : DialogFragment() {
         RETRY_LOCAL_DELETE_ONLY_PROMPT
     }
 
-    // Rather than passing a bool we'll use an enum to clarify our intent
+    // Rather than passing a bool around we'll use an enum to clarify our intent
     private enum class DeletionScope {
         DeleteLocalDataOnly,
         DeleteBothLocalAndNetworkData
@@ -150,7 +150,7 @@ class ClearAllDataDialog : DialogFragment() {
                     null
                 }
 
-                // If one or more deletions failed inform the user and allow them to choose a local-only delete if they wish..
+                // If one or more deletions failed then inform the user and allow them to clear the device only if they wish..
                 if (deletionResultMap == null || deletionResultMap.values.any { !it } || deletionResultMap.isEmpty()) {
                     withContext(Dispatchers.Main) { step = Steps.RETRY_LOCAL_DELETE_ONLY_PROMPT }
                 }
