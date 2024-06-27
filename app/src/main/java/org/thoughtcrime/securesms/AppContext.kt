@@ -5,7 +5,6 @@ import kotlinx.coroutines.asExecutor
 import nl.komponents.kovenant.Kovenant
 import nl.komponents.kovenant.jvm.asDispatcher
 import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.ThreadUtils
 import java.util.concurrent.Executors
 
 object AppContext {
