@@ -282,7 +282,12 @@ class VisibleMessageContentView : ConstraintLayout {
         fun getBodySpans(context: Context, message: MessageRecord, searchQuery: String?): Spannable {
             var body = message.body.toSpannable()
 
-            body = MentionUtilities.highlightMentions(body, message.isOutgoing, message.threadId, context)
+            body = MentionUtilities.highlightMentions(
+                text = body,
+                isOutgoingMessage = message.isOutgoing,
+                threadID = message.threadId,
+                context = context
+            )
             body = SearchUtil.getHighlightedSpan(Locale.getDefault(),
                 { BackgroundColorSpan(Color.WHITE) }, body, searchQuery)
             body = SearchUtil.getHighlightedSpan(Locale.getDefault(),

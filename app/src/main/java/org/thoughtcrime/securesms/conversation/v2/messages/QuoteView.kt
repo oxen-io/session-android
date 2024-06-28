@@ -80,7 +80,15 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         binding.quoteViewAuthorTextView.text = authorDisplayName
         binding.quoteViewAuthorTextView.setTextColor(getTextColor(isOutgoingMessage))
         // Body
-        binding.quoteViewBodyTextView.text = if (isOpenGroupInvitation) resources.getString(R.string.open_group_invitation_view__open_group_invitation) else MentionUtilities.highlightMentions((body ?: "").toSpannable(), threadID, context)
+        binding.quoteViewBodyTextView.text = if (isOpenGroupInvitation)
+            resources.getString(R.string.open_group_invitation_view__open_group_invitation)
+        else MentionUtilities.highlightMentions(
+            text = (body ?: "").toSpannable(),
+            isOutgoingMessage = isOutgoingMessage,
+            isQuote = true,
+            threadID = threadID,
+            context = context
+        )
         binding.quoteViewBodyTextView.setTextColor(getTextColor(isOutgoingMessage))
         // Accent line / attachment preview
         val hasAttachments = (attachments != null && attachments.asAttachments().isNotEmpty()) && !isOriginalMissing

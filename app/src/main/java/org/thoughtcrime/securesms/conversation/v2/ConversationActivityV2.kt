@@ -1958,7 +1958,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val messageIterator = sortedMessages.iterator()
         while (messageIterator.hasNext()) {
             val message = messageIterator.next()
-            val body = MentionUtilities.highlightMentions(message.body, viewModel.threadId, this)
+            val body = MentionUtilities.highlightMentions(
+                text = message.body,
+                formatOnly = true, // no styling here, only text formatting
+                threadID = viewModel.threadId,
+                context = this
+            )
+
             if (TextUtils.isEmpty(body)) { continue }
             if (messageSize > 1) {
                 val formattedTimestamp = DateUtils.getDisplayFormattedTimeSpanString(this, Locale.getDefault(), message.timestamp)

@@ -1,6 +1,7 @@
 package org.thoughtcrime.securesms.conversation.v2.utilities
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Typeface
 import android.text.Spannable
 import android.text.SpannableString
@@ -24,13 +25,28 @@ import java.util.regex.Pattern
 
 object MentionUtilities {
 
-    @JvmStatic
-    fun highlightMentions(text: CharSequence, threadID: Long, context: Context): String {
-        return highlightMentions(text, false, threadID, context).toString() // isOutgoingMessage is irrelevant
-    }
 
+    /**
+     * Highlights mentions in a given text.
+     *
+     * @param text The text to highlight mentions in.
+     * @param isOutgoingMessage Whether the message is outgoing.
+     * @param isQuote Whether the message is a quote.
+     * @param formatOnly Whether to only format the mentions. If true we only format the text itself,
+     * for example resolving an accountID to a username. If false we also apply styling, like colors and background.
+     * @param threadID The ID of the thread the message belongs to.
+     * @param context The context to use.
+     * @return A SpannableString with highlighted mentions.
+     */
     @JvmStatic
-    fun highlightMentions(text: CharSequence, isOutgoingMessage: Boolean, threadID: Long, context: Context): SpannableString {
+    fun highlightMentions(
+        text: CharSequence,
+        isOutgoingMessage: Boolean = false,
+        isQuote: Boolean = false,
+        formatOnly: Boolean = false,
+        threadID: Long,
+        context: Context
+    ): SpannableString {
         @Suppress("NAME_SHADOWING") var text = text
         val pattern = Pattern.compile("@[0-9a-fA-F]*")
         var matcher = pattern.matcher(text)
@@ -38,11 +54,13 @@ object MentionUtilities {
         var startIndex = 0
         val userPublicKey = TextSecurePreferences.getLocalNumber(context)!!
         val openGroup = DatabaseComponent.get(context).storage().getOpenGroup(threadID)
+
+        // format the mention text
         if (matcher.find(startIndex)) {
             while (true) {
                 val publicKey = text.subSequence(matcher.start() + 1, matcher.end()).toString() // +1 to get rid of the @
                 val isYou = isYou(publicKey, userPublicKey, openGroup)
-                val userDisplayName: String? = if (!isOutgoingMessage && isYou) {
+                val userDisplayName: String? = if (isYou) {
                     context.getString(R.string.MessageRecord_you)
                 } else {
                     val contact = DatabaseComponent.get(context).sessionContactDatabase().getContactWithSessionID(publicKey)
@@ -64,32 +82,64 @@ object MentionUtilities {
         }
         val result = SpannableString(text)
 
-        for (mention in mentions) {
-            val backgroundColor: Int?
-            val foregroundColor: Int
-            // incoming message mentioning you
-            if (isYou(mention.second, userPublicKey, openGroup)) {
-                backgroundColor = context.getAccentColor()
-                foregroundColor = ResourcesCompat.getColor(context.resources, R.color.black, context.theme)
-            } else if (isOutgoingMessage) { // outgoing message mentioning someone else
-                backgroundColor = null
-                foregroundColor = ResourcesCompat.getColor(context.resources, R.color.black, context.theme)
-            } else { // incoming messages mentioning someone else
-                backgroundColor = null
-                foregroundColor = if(ThemeUtil.isDarkTheme(context)) context.getAccentColor()
-                else ResourcesCompat.getColor(context.resources, R.color.black, context.theme)
-            }
-            backgroundColor?.let { background ->
+        // apply styling if required
+        if(!formatOnly) {
+            for (mention in mentions) {
+                val backgroundColor: Int?
+                val foregroundColor: Int?
+                // quotes only bold the text
+                if(isQuote) {
+                    backgroundColor = null
+                    foregroundColor = null
+                }
+                // incoming message mentioning you
+                else if (isYou(mention.second, userPublicKey, openGroup)) {
+                    backgroundColor = context.getAccentColor()
+                    foregroundColor =
+                        ResourcesCompat.getColor(context.resources, R.color.black, context.theme)
+                }
+                // outgoing message mentioning someone else
+                else if (isOutgoingMessage) {
+                    backgroundColor = null
+                    foregroundColor =
+                        ResourcesCompat.getColor(context.resources, R.color.black, context.theme)
+                }
+                // incoming messages mentioning someone else
+                else {
+                    backgroundColor = null
+                    foregroundColor = if (ThemeUtil.isDarkTheme(context)) context.getAccentColor()
+                    else ResourcesCompat.getColor(context.resources, R.color.black, context.theme)
+                }
+
+                // apply the background, if any
+                backgroundColor?.let { background ->
+                    result.setSpan(
+                        RoundedBackgroundSpan(
+                            textColor = Color.BLACK, // always black on a bg
+                            backgroundColor = background
+                        ),
+                        mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                }
+
+                // apply the foreground, if any
+                foregroundColor?.let {
+                    result.setSpan(
+                        ForegroundColorSpan(it),
+                        mention.first.lower,
+                        mention.first.upper,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                }
+
+                // apply bold on the mention
                 result.setSpan(
-                    RoundedBackgroundSpan(
-                        textColor = foregroundColor,
-                        backgroundColor = background
-                    ),
-                    mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    StyleSpan(Typeface.BOLD),
+                    mention.first.lower,
+                    mention.first.upper,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
             }
-            result.setSpan(ForegroundColorSpan(foregroundColor), mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            result.setSpan(StyleSpan(Typeface.BOLD), mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
         return result
     }

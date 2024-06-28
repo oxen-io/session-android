@@ -444,13 +444,30 @@ public class DefaultMessageNotifier implements MessageNotifier {
     while(iterator.hasPrevious()) {
       NotificationItem item = iterator.previous();
       builder.addMessageBody(item.getIndividualRecipient(), item.getRecipient(),
-                             MentionUtilities.highlightMentions(item.getText(), item.getThreadId(), context));
+              MentionUtilities.highlightMentions(
+                      item.getText() != null ? item.getText() : "",
+                      false,
+                      false,
+                      true, // no styling here, only text formatting
+                      item.getThreadId(),
+                      context
+              )
+      );
     }
 
     if (signal) {
       builder.setAlarms(notificationState.getRingtone(context), notificationState.getVibrate());
+      CharSequence text = notifications.get(0).getText();
       builder.setTicker(notifications.get(0).getIndividualRecipient(),
-                        MentionUtilities.highlightMentions(notifications.get(0).getText(), notifications.get(0).getThreadId(), context));
+              MentionUtilities.highlightMentions(
+                      text != null ? text : "",
+                      false,
+                      false,
+                      true, // no styling here, only text formatting
+                      notifications.get(0).getThreadId(),
+                      context
+              )
+      );
     }
 
     builder.putStringExtra(LATEST_MESSAGE_ID_TAG, messageIdTag);
