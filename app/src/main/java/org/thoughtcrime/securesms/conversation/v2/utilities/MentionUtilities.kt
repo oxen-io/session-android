@@ -17,7 +17,9 @@ import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.ThemeUtil
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
+import org.thoughtcrime.securesms.util.RoundedBackgroundSpan
 import org.thoughtcrime.securesms.util.getAccentColor
+import org.thoughtcrime.securesms.util.toPx
 import java.util.regex.Pattern
 
 object MentionUtilities {
@@ -48,12 +50,11 @@ object MentionUtilities {
                     contact?.displayName(context)
                 }
                 if (userDisplayName != null) {
-                    val mention = if (isYou) " @$userDisplayName " else "@$userDisplayName"
+                    val mention = "@$userDisplayName"
                     text = text.subSequence(0, matcher.start()).toString() + mention + text.subSequence(matcher.end(), text.length)
                     val endIndex = matcher.start() + 1 + userDisplayName.length
                     startIndex = endIndex
-                    val upper = endIndex + if (isYou) 2 else 0
-                    mentions.add(Tuple2(Range.create(matcher.start(), upper), publicKey))
+                    mentions.add(Tuple2(Range.create(matcher.start(), endIndex), publicKey))
                 } else {
                     startIndex = matcher.end()
                 }
@@ -79,7 +80,13 @@ object MentionUtilities {
                 else ResourcesCompat.getColor(context.resources, R.color.black, context.theme)
             }
             backgroundColor?.let { background ->
-                result.setSpan(BackgroundColorSpan(background), mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                result.setSpan(
+                    RoundedBackgroundSpan(
+                        textColor = foregroundColor,
+                        backgroundColor = background
+                    ),
+                    mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
             }
             result.setSpan(ForegroundColorSpan(foregroundColor), mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             result.setSpan(StyleSpan(Typeface.BOLD), mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
