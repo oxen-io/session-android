@@ -68,7 +68,7 @@ public class AndroidAutoHeardReceiver extends BroadcastReceiver {
             messageIdsCollection.addAll(messageIds);
           }
 
-          ApplicationContext.getInstance(context).messageNotifier.updateNotification(context);
+          ApplicationContext.getInstance(context).messageNotifier.updateNotificationWithoutSignalingAndResetReminderCount(context);
           MarkReadReceiver.process(context, messageIdsCollection);
 
           return null;

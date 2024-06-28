@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import org.session.libsession.utilities.TextSecurePreferences
-import org.session.libsession.utilities.TextSecurePreferences.Companion.isNotificationsEnabled
+import org.session.libsession.utilities.TextSecurePreferences.Companion.areNotificationsEnabled
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.components.SwitchPreferenceCompat
 import org.thoughtcrime.securesms.notifications.NotificationChannels
@@ -164,7 +164,7 @@ class NotificationsPreferenceFragment : ListSummaryPreferenceFragment() {
         override fun onPreferenceChange(preference: Preference, value: Any): Boolean {
             object : AsyncTask<Void?, Void?, Void?>() {
                 override fun doInBackground(vararg params: Void?): Void? {
-                    ApplicationContext.getInstance(activity).messageNotifier.updateNotification(activity!!)
+                    ApplicationContext.getInstance(activity).messageNotifier.updateNotificationWithoutSignalingAndResetReminderCount(activity!!)
                     return null
                 }
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
@@ -175,7 +175,7 @@ class NotificationsPreferenceFragment : ListSummaryPreferenceFragment() {
     companion object {
         @Suppress("unused")
         private val TAG = NotificationsPreferenceFragment::class.java.simpleName
-        fun getSummary(context: Context): CharSequence = when (isNotificationsEnabled(context)) {
+        fun getSummary(context: Context): CharSequence = when (areNotificationsEnabled(context)) {
                 true -> R.string.ApplicationPreferencesActivity_On
                 false -> R.string.ApplicationPreferencesActivity_Off
             }.let(context::getString)

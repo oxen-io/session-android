@@ -88,7 +88,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         const val FROM_ONBOARDING = "HomeActivity_FROM_ONBOARDING"
     }
 
-
     private lateinit var binding: ActivityHomeBinding
     private lateinit var glide: GlideRequests
 
@@ -108,7 +107,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         get() = textSecurePreferences.getLocalNumber()!!
 
     private val homeAdapter: HomeAdapter by lazy {
-        HomeAdapter(context = this, configFactory = configFactory, listener = this, ::showMessageRequests, ::hideMessageRequests)
+        HomeAdapter(context = this, configFactory = configFactory, listener = this, ::showMessageRequests, ::displayShowHideMessageRequestsDialog)
     }
 
     private val globalSearchAdapter = GlobalSearchAdapter { model ->
@@ -603,7 +602,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                         }
                     }
                     // Update the badge count
-                    ApplicationContext.getInstance(context).messageNotifier.updateNotification(context)
+                    ApplicationContext.getInstance(context).messageNotifier.updateNotificationWithoutSignalingAndResetReminderCount(context)
                     // Notify the user
                     val toastMessage = if (recipient.isGroupRecipient) R.string.MessageRecord_left_group else R.string.activity_home_conversation_deleted_message
                     Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show()
@@ -623,7 +622,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         push(intent)
     }
 
-    private fun hideMessageRequests() {
+    private fun displayShowHideMessageRequestsDialog() {
         showSessionDialog {
             text("Hide message requests?")
             button(R.string.yes) {
