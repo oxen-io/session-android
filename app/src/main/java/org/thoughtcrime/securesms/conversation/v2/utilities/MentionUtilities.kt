@@ -17,6 +17,7 @@ import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.ThemeUtil
+import org.session.libsession.utilities.getColorFromAttr
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.util.RoundedBackgroundSpan
 import org.thoughtcrime.securesms.util.getAccentColor
@@ -87,6 +88,11 @@ object MentionUtilities {
             for (mention in mentions) {
                 val backgroundColor: Int?
                 val foregroundColor: Int?
+
+                // the text is black in dark mode and primary text color for light mode
+                val mainTextColor = if (ThemeUtil.isDarkTheme(context)) context.getColor(R.color.black)
+                    else context.getColorFromAttr(android.R.attr.textColorPrimary)
+
                 // quotes only bold the text
                 if(isQuote) {
                     backgroundColor = null
@@ -95,27 +101,26 @@ object MentionUtilities {
                 // incoming message mentioning you
                 else if (isYou(mention.second, userPublicKey, openGroup)) {
                     backgroundColor = context.getAccentColor()
-                    foregroundColor =
-                        ResourcesCompat.getColor(context.resources, R.color.black, context.theme)
+                    foregroundColor = mainTextColor
                 }
-                // outgoing message mentioning someone else
+                // outgoing message
                 else if (isOutgoingMessage) {
                     backgroundColor = null
-                    foregroundColor =
-                        ResourcesCompat.getColor(context.resources, R.color.black, context.theme)
+                    foregroundColor = mainTextColor
                 }
                 // incoming messages mentioning someone else
                 else {
                     backgroundColor = null
+                    // accent color for dark themes and primary text for light
                     foregroundColor = if (ThemeUtil.isDarkTheme(context)) context.getAccentColor()
-                    else ResourcesCompat.getColor(context.resources, R.color.black, context.theme)
+                    else mainTextColor
                 }
 
                 // apply the background, if any
                 backgroundColor?.let { background ->
                     result.setSpan(
                         RoundedBackgroundSpan(
-                            textColor = Color.BLACK, // always black on a bg
+                            textColor = mainTextColor,
                             backgroundColor = background
                         ),
                         mention.first.lower, mention.first.upper, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
