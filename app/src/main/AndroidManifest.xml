@@ -113,12 +113,17 @@
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.Session.DayNight.FlatActionBar" />
         <activity
-            android:name="org.thoughtcrime.securesms.onboarding.DisplayNameActivity"
+            android:name="org.thoughtcrime.securesms.onboarding.LoadingActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.Session.DayNight.FlatActionBar" />
         <activity
-            android:name="org.thoughtcrime.securesms.onboarding.PNModeActivity"
+            android:name="org.thoughtcrime.securesms.onboarding.pickname.PickDisplayNameActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.Session.DayNight.FlatActionBar" />
+        <activity
+            android:name="org.thoughtcrime.securesms.onboarding.messagenotifications.MessageNotificationsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Session.DayNight.FlatActionBar" />
         <activity
@@ -153,7 +158,7 @@
             android:label="@string/activity_edit_closed_group_title"
             android:screenOrientation="portrait" />
         <activity
-            android:name="org.thoughtcrime.securesms.onboarding.SeedActivity"
+            android:name="org.thoughtcrime.securesms.onboarding.recoverypassword.RecoveryPasswordActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="org.thoughtcrime.securesms.contacts.SelectContactsActivity"

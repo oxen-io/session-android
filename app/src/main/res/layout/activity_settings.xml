@@ -86,7 +86,7 @@
                 android:textColor="?android:textColorPrimary"
                 android:fontFamily="@font/space_mono_regular"
                 android:textAlignment="center"
-                android:contentDescription="@string/AccessibilityId_session_id"
+                android:contentDescription="@string/AccessibilityId_account_id"
                 tools:text="05987d601943c267879be41830888066c6a024cbdc9a548d06813924bf3372ea78" />
 
             <LinearLayout
@@ -375,14 +375,14 @@
                     android:background="?colorDividerBackground" />
 
                 <RelativeLayout
-                    android:id="@+id/seedButton"
+                    android:id="@+id/passwordButton"
                     android:background="?selectableItemBackground"
                     android:paddingHorizontal="@dimen/large_spacing"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/setting_button_height"
-                    android:contentDescription="@string/AccessibilityId_recovery_phrase">
+                    android:contentDescription="@string/AccessibilityId_recovery_password_menu_item">
                     <ImageView
-                        android:id="@+id/seedContainer"
+                        android:id="@+id/passwordContainer"
                         android:layout_width="@dimen/small_profile_picture_size"
                         android:layout_height="@dimen/small_profile_picture_size"
                         android:layout_alignParentStart="true"
@@ -399,11 +399,12 @@
                         android:layout_marginHorizontal="@dimen/medium_spacing"
                         android:textStyle="bold"
                         android:gravity="center"
-                        android:layout_toEndOf="@+id/seedContainer"
-                        android:text="@string/activity_settings_recovery_phrase_button_title"  />
+                        android:layout_toEndOf="@+id/passwordContainer"
+                        android:text="@string/sessionRecoveryPassword"  />
                 </RelativeLayout>
 
                 <View
+                    android:id="@+id/passwordDivider"
                     android:layout_marginHorizontal="@dimen/very_large_spacing"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"

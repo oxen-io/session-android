@@ -548,23 +548,20 @@
     <string name="invalid_session_id">Neteisingas Session ID</string>
     <string name="cancel">Atsisakyti</string>
     <string name="your_session_id">Jūsų Session ID</string>
-    <string name="activity_landing_title_2">Jūsų Session prasideda čia...</string>
-    <string name="activity_landing_register_button_title">Susikurti Session ID</string>
-    <string name="activity_landing_restore_button_title">Tęsti savo Session</string>
     <string name="view_fake_chat_bubble_1">Kas yra Session?</string>
     <string name="view_fake_chat_bubble_2">Tai – decentralizuota, šifruota pokalbių programėlė</string>
     <string name="view_fake_chat_bubble_3">Ji nerenka mano asmeninės informacijos ar mano pokalbių metaduomenų? Kaip ji veikia?</string>
     <string name="view_fake_chat_bubble_4">Naudodama išplėstinio anoniminio nukreipimo ir ištisinio šifravimo technologijų kombinaciją.</string>
     <string name="view_fake_chat_bubble_5">Draugai neleidžia savo draugams naudotis į pavojų statančiomis programėlėmis. Prašom.</string>
-    <string name="activity_register_title">Pasisveikinkite su savo Session ID</string>
-    <string name="activity_register_explanation">Jūsų Session ID yra unikalus adresas, kurį žmonės gali naudoti, kad susisiektų su jumis per Session programėlę. Neturėdamas jokių sąsajų su jūsų tikrąja tapatybe, jūsų Session ID yra tyčia visiškai anoniminis ir privatus.</string>
+
+
     <string name="activity_restore_title">Atkurkite savo paskyrą</string>
     <string name="activity_restore_seed_edit_text_hint">Įveskite savo atkūrimo frazę</string>
-    <string name="activity_display_name_title_2">Pasirinkite savo rodomą vardą</string>
-    <string name="activity_display_name_explanation">Tai bus jūsų vardas, kai naudositės Session. Tai gali būti jūsų tikras vardas, slapyvardis ar bet kas kita.</string>
-    <string name="activity_display_name_edit_text_hint">Įveskite pasirinktą rodomą vardą</string>
-    <string name="activity_display_name_display_name_missing_error">Pasirinkite rodomą vardą</string>
-    <string name="activity_display_name_display_name_too_long_error">Pasirinkite trumpesnį rodomą vardą</string>
+    <string name="displayNamePick">Pasirinkite savo rodomą vardą</string>
+    <string name="displayNameDescription">Tai bus jūsų vardas, kai naudositės Session. Tai gali būti jūsų tikras vardas, slapyvardis ar bet kas kita.</string>
+    <string name="displayNameEnter">Įveskite pasirinktą rodomą vardą</string>
+    <string name="displayNameErrorDescription">Pasirinkite rodomą vardą</string>
+    <string name="displayNameErrorDescriptionShorter">Pasirinkite trumpesnį rodomą vardą</string>
     <string name="activity_pn_mode_recommended_option_tag">Rekomenduojama</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Pasirinkite parinktį</string>
     <string name="activity_home_empty_state_message">Kol kas neturite jokių adresatų</string>
@@ -572,10 +569,6 @@
     <string name="activity_home_leaving_group_failed_message">"Nepavyko išeiti iš grupės"</string>
     <string name="activity_home_delete_conversation_dialog_message">Ar tikrai norite ištrinti šį pokalbį?</string>
     <string name="activity_home_conversation_deleted_message">Pokalbis ištrintas</string>
-    <string name="activity_seed_title">Jūsų atkūrimo frazė</string>
-    <string name="activity_seed_title_2">Pasitikite savo atkūrimo frazę</string>
-    <string name="activity_seed_explanation">Jūsų atkūrimo frazė yra pagrindinis raktas į jūsų Session ID — galite ją naudoti, kad atkurtumėte savo Session ID tuo atveju, jei prarasite prieigą prie savo įrenginio. Laikykite savo atkūrimo frazę saugioje vietoje ir niekam jos nerodykite.</string>
-    <string name="view_seed_reminder_title">Beveik užbaigėte! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Apsaugokite savo paskyrą įsirašydami atkūrimo frazę</string>
     <string name="view_seed_reminder_subtitle_2">Bakstelėkite ir laikykite ant redaguotų žodžių, kad būtų atskleista jūsų atkūrimo frazė. Tuomet, laikykite ją saugioje vietoje, kad apsaugotumėte savo Session ID.</string>
     <string name="view_seed_reminder_subtitle_3">Užtikrinkite, kad laikytumėte savo atkūrimo frazę saugioje vietoje</string>
@@ -611,7 +604,6 @@
     <string name="activity_settings_notifications_button_title">Pranešimai</string>
     <string name="activity_settings_chats_button_title">Pokalbiai</string>
     <string name="activity_settings_devices_button_title">Įrenginiai</string>
-    <string name="activity_settings_recovery_phrase_button_title">Atkūrimo frazė</string>
     <string name="activity_settings_clear_all_data_button_title">Išvalyti duomenis</string>
     <string name="activity_settings_help_translate_session">Padėkite išversti Session</string>
     <string name="activity_notification_settings_title">Pranešimai</string>
@@ -623,8 +615,6 @@
     <string name="preferences_notifications_strategy_category_fast_mode_summary">Jums bus nedelsiant ir patikimai pranešama apie naujas žinutes, naudojant „Google“ pranešimų serverius.</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">Keisti pavadinimą</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Atsieti įrenginį</string>
-    <string name="dialog_seed_title">Jūsų atkūrimo frazė</string>
-    <string name="dialog_seed_explanation">Tai yra jūsų atkūrimo frazė. Naudodami ją, galite atkurti ir perkelti savo Session ID į naują įrenginį.</string>
     <string name="dialog_clear_all_data_title">Išvalyti visus duomenis</string>
     <string name="dialog_clear_all_data_explanation">Tai visam laikui ištrins jūsų žinutes, seansus ir adresatus.</string>
     <string name="dialog_clear_all_data_local_only">Tik ištrinti</string>
@@ -658,7 +648,6 @@
     <string name="details">Išsamiau</string>
     <string name="dialog_backup_activation_failed">Nepavyko aktyvuoti atsarginių kopijų. Bandykite dar kartą arba susisiekite su palaikymu.</string>
     <string name="activity_backup_restore_title">Atkurti atsarginę kopiją</string>
-    <string name="activity_link_device_link_device">Susieti įrenginį</string>
     <string name="activity_link_device_recovery_phrase">Atkūrimo frazė</string>
     <string name="activity_link_device_scan_qr_code">Skenuoti QR kodą</string>
     <string name="activity_join_public_chat_join_rooms">Arba prisijunkite prie vienos iš šių…</string>
@@ -668,7 +657,6 @@
     <string name="activity_pn_mode_slow_mode">Lėta veiksena</string>
     <string name="activity_pn_mode_fast_mode_explanation">Jums bus nedelsiant ir patikimai pranešama apie naujas žinutes, naudojant „Google“ pranešimų serverius.</string>
     <string name="activity_pn_mode_slow_mode_explanation">Session programėlė retkarčiais fone tikrins, ar yra naujų žinučių.</string>
-    <string name="fragment_recovery_phrase_title">Atkūrimo frazė</string>
     <string name="activity_prompt_passphrase_session_locked">Session yra užrakinta</string>
     <string name="activity_prompt_passphrase_tap_to_unlock">Bakstelėkite norėdami atrakinti</string>
     <string name="fragment_user_details_bottom_sheet_edit_text_hint">Įveskite slapyvardį</string>

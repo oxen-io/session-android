@@ -21,31 +21,15 @@ class MnemonicCodec(private val loadFileContents: (String) -> String) {
 
         companion object {
             internal val wordSetCache = mutableMapOf<Language, List<String>>()
-            internal val truncatedWordSetCache = mutableMapOf<Language, List<String>>()
         }
 
-        internal fun loadWordSet(): List<String> {
-            val cachedResult = wordSetCache[this]
-            if (cachedResult != null) {
-                return cachedResult
-            } else {
-                val contents = loadFileContents(configuration.filename)
-                val result = contents.split(",")
-                wordSetCache[this] = result
-                return result
-            }
+        internal fun loadWordSet(): List<String> = wordSetCache.getOrPut(this) {
+            loadFileContents(configuration.filename).split(",")
         }
 
-        internal fun loadTruncatedWordSet(): List<String> {
-            val cachedResult = wordSetCache[this]
-            if (cachedResult != null) {
-                return cachedResult
-            } else {
-                val prefixLength = configuration.prefixLength
-                val result = loadWordSet().map { it.substring(0 until prefixLength) }
-                truncatedWordSetCache[this] = result
-                return result
-            }
+        internal fun loadTruncatedWordSet(): List<String> = wordSetCache.getOrPut(this) {
+            val prefixLength = configuration.prefixLength
+            loadWordSet().map { it.substring(0 until prefixLength) }
         }
     }
 
@@ -94,10 +78,8 @@ class MnemonicCodec(private val loadFileContents: (String) -> String) {
         var result = ""
         val n = truncatedWordSet.size.toLong()
         // Check preconditions
-        if (words.size < 12) { throw DecodingError.InputTooShort
-        }
-        if (words.size % 3 == 0) { throw DecodingError.MissingLastWord
-        }
+        if (words.size < 12) throw DecodingError.InputTooShort
+        if (words.size % 3 == 0) throw DecodingError.MissingLastWord
         // Get checksum word
         val checksumWord = words.removeAt(words.lastIndex)
         // Decode

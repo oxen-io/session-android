@@ -520,7 +520,7 @@ object SnodeAPI {
                     Log.w("Loki", "response code was not 200")
                     handleSnodeError(
                         response["code"] as? Int ?: 0,
-                        response,
+                        response["body"] as? Map<*, *>,
                         snode,
                         publicKey
                     )

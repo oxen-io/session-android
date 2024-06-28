@@ -531,24 +531,21 @@
     <string name="invalid_session_id">Etibarsız Session Kimliyi</string>
     <string name="cancel">İmtina</string>
     <string name="your_session_id">Session Kimliyiniz</string>
-    <string name="activity_landing_title_2">Session-unuz burada başlayır...</string>
-    <string name="activity_landing_register_button_title">Session Kimliyini yarat</string>
-    <string name="activity_landing_restore_button_title">Seansınıza davam edin</string>
     <string name="view_fake_chat_bubble_1">Session nədir?</string>
     <string name="view_fake_chat_bubble_2">Mərkəzi olmayan, şifrəli bir mesajlaşma tətbiqidir</string>
     <string name="view_fake_chat_bubble_3">Yəni, şəxsi məlumatlarımı və ya danışıq meta verilənlərimi yığmır? Necə işləyir?</string>
     <string name="view_fake_chat_bubble_4">Qabaqcıl anonim yönləndirmə və bir ucdan digərinə qədər şifrələmə texnologiyalarının kombinasiyasını istifadə edir.</string>
     <string name="view_fake_chat_bubble_5">Dostlar, dostlarının güvənliyi qorunmayan messencerlərdən istifadə etməsinə icazə verməz. Xoşdur, buyurun.</string>
-    <string name="activity_register_title">Session kimliyinizə salam deyin</string>
-    <string name="activity_register_explanation">Session kimliyiniz, əlaqələrin Session-da sizinlə əlaqə saxlamaq üçün istifadə edəcəyi unikal bir ünvandır. Gerçək kimliyinizlə heç bir bağlantısı olmadan, Session kimliyiniz, ümumilikdə anonimlik və gizlilik üzərinə dizayn edilmişdir.</string>
+
+
     <string name="activity_restore_title">Hesabınızı bərpa edin</string>
     <string name="activity_restore_explanation">Hesabınızı bərpa etmək üçün qeydiyyatdan keçərkən sizə verliən bərpa paroluunu daxil edin.</string>
     <string name="activity_restore_seed_edit_text_hint">Bərpa parolunu daxil edin</string>
-    <string name="activity_display_name_title_2">Ekran adınızı seçin</string>
-    <string name="activity_display_name_explanation">Bu, Session istifadə edərkən adınız olacaq. Gerçək adınız, ləqəbiniz və ya istədiyiniz başqa bir ad ola bilər.</string>
-    <string name="activity_display_name_edit_text_hint">Ekran adını daxil edin</string>
-    <string name="activity_display_name_display_name_missing_error">Zəhmət olmasa bir ekran adı seçin</string>
-    <string name="activity_display_name_display_name_too_long_error">Zəhmət olmasa qısa bir ekran adı seçin</string>
+    <string name="displayNamePick">Ekran adınızı seçin</string>
+    <string name="displayNameDescription">Bu, Session istifadə edərkən adınız olacaq. Gerçək adınız, ləqəbiniz və ya istədiyiniz başqa bir ad ola bilər.</string>
+    <string name="displayNameEnter">Ekran adını daxil edin</string>
+    <string name="displayNameErrorDescription">Zəhmət olmasa bir ekran adı seçin</string>
+    <string name="displayNameErrorDescriptionShorter">Zəhmət olmasa qısa bir ekran adı seçin</string>
     <string name="activity_pn_mode_recommended_option_tag">Tövsiyə edilən</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Zəhmət olmasa bir variant seçin</string>
     <string name="activity_home_empty_state_message">Hələ ki, heç bir əlaqəniz yoxdur</string>
@@ -557,11 +554,6 @@
     <string name="activity_home_leaving_group_failed_message">"Qrupu tərk etmək alınmadı"</string>
     <string name="activity_home_delete_conversation_dialog_message">Bu danışığı silmək istədiyinizə əminsiniz?</string>
     <string name="activity_home_conversation_deleted_message">Danışıq silindi</string>
-    <string name="activity_seed_title">Bərpa parolunuz</string>
-    <string name="activity_seed_title_2">Bərpa parolunuzla tanış olun</string>
-    <string name="activity_seed_explanation">Bərpa parolunuz, Session kimliyinizin ana açarıdır - cihazınıza müraciəti itirsəniz, Session kimliyinizi geri yükləmək üçün bunu istifadə edə bilərsiniz. Bərpa parolunuzu etibarlı bir yerdə saxlayın və heç kəsə verməyin.</string>
-    <string name="activity_seed_reveal_button_title">Aşkarlamaq üçün basılı saxlayın</string>
-    <string name="view_seed_reminder_title">Demək olar ki, bitdi! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Bərpa parolunuzu bir yerdə saxlayaraq hesabınızı qoruyun</string>
     <string name="view_seed_reminder_subtitle_2">Bərpa parolunuzu aşkarlamaq üçün düzəldilmiş sözlərə basılı saxlayın, daha sonra Session kimliyinizi qorumaq üçün güvənli bir yerdə saxlayın.</string>
     <string name="view_seed_reminder_subtitle_3">Bərpa parolunuzu etibarlı bir yerdə saxladığınıza əmin olun</string>
@@ -606,7 +598,6 @@
     <string name="activity_settings_devices_button_title">Cihazlar</string>
     <string name="activity_settings_invite_button_title">Dostu dəvət edin</string>
     <string name="activity_settings_faq_button_title">TSS</string>
-    <string name="activity_settings_recovery_phrase_button_title">Bərpa parolu</string>
     <string name="activity_settings_clear_all_data_button_title">Verilənləri təmizlə</string>
     <string name="activity_settings_clear_all_data_and_network_button_title">Şəbəkə daxil olmaqla verilənləri təmizlə</string>
     <string name="activity_settings_help_translate_session">Session-un tərcüməsinə kömək et</string>
@@ -619,8 +610,6 @@
     <string name="preferences_notifications_strategy_category_fast_mode_summary">Google-un bildiriş serverlərini istifadə edərək yeni mesajlardan dərhal və etibarlı şəkildə xəbərdar olacaqsınız.</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">Adı dəyişdir</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Cihazın əlaqəsini kəs</string>
-    <string name="dialog_seed_title">Bərpa parolunuz</string>
-    <string name="dialog_seed_explanation">Bu, bərpa parolunuzdur. Bununla, Session kimliyinizi bərpa edə və ya yeni bir cihaza daşıya bilərsiniz.</string>
     <string name="dialog_clear_all_data_title">Bütün verilənləri təmizlə</string>
     <string name="dialog_clear_all_data_explanation">Bu, bütün mesajlarınızı, seanslarınızı və əlaqələrinizi birdəfəlik siləcək.</string>
     <string name="dialog_clear_all_data_network_explanation">Yalnız bu cihazı silmək istəyirsiniz, yoxsa hesabınızın tamamını silmək istəyirsiniz?</string>
@@ -664,7 +653,6 @@
     <string name="activity_backup_restore_explanation_1">Bir nüsxə faylı seçin və ya yaradılan vaxt verilən parolu daxil edin.</string>
     <string name="activity_backup_restore_passphrase">30 rəqəmli parol</string>
     <string name="activity_link_device_skip_prompt">Bu bir az vaxt apara bilər, ötürmək istəyirsiniz?</string>
-    <string name="activity_link_device_link_device">Bir cihazla əlaqə yarat</string>
     <string name="activity_link_device_recovery_phrase">Bərpa parolu</string>
     <string name="activity_link_device_scan_qr_code">QR kodu skan et</string>
     <string name="activity_link_device_qr_message">QR kodunu göstərmək üçün digər cihazınızda Tənzimləmələr → \"Bərpa parolu\"na gedin.</string>
@@ -675,7 +663,6 @@
     <string name="activity_pn_mode_slow_mode">Yavaş rejim</string>
     <string name="activity_pn_mode_fast_mode_explanation">Google-un bildiriş serverlərini istifadə edərək yeni mesajlardan dərhal və etibarlı şəkildə xəbərdar olacaqsınız.</string>
     <string name="activity_pn_mode_slow_mode_explanation">Session, arada arxaplanda yeni mesajları yoxlayacaq.</string>
-    <string name="fragment_recovery_phrase_title">Bərpa parolu</string>
     <string name="activity_prompt_passphrase_session_locked">Session kilidlidir</string>
     <string name="activity_prompt_passphrase_tap_to_unlock">Kilidi açmaq üçün toxunun</string>
     <string name="fragment_user_details_bottom_sheet_edit_text_hint">Bir ləqəb daxil edin</string>

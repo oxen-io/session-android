@@ -414,16 +414,16 @@
     <string name="invalid_url">URL salah</string>
     <string name="copied_to_clipboard">Salin ke clipboard</string>
     <string name="next">Berikutnya</string>
-    <string name="activity_register_title">Ucapkan halo pada Session ID anda</string>
-    <string name="activity_register_explanation">Session ID adalah alamat unik yang bisa digunakan untuk mengontak anda. Tanpa koneksi dengan identitas asli, Session ID anda didesain bersifat anonim dan rahasia.</string>
+
+
     <string name="activity_restore_title">Memulihkan akun Anda</string>
     <string name="activity_restore_explanation">Masukkan kata pemulihan yang diberikan saat anda masuk untuk memulihkan akun anda.</string>
     <string name="activity_restore_seed_edit_text_hint">Masukan kata pemulihan</string>
-    <string name="activity_display_name_title_2">Pilih nama yang ditampilkan</string>
-    <string name="activity_display_name_explanation">Ini akan menjadi nama anda ketika menggunakan Session. Bisa merupakan nama asli, alias, atau apapun yang anda suka.</string>
-    <string name="activity_display_name_edit_text_hint">Masukkan nama</string>
-    <string name="activity_display_name_display_name_missing_error">Pilih nama yang ditampilkan</string>
-    <string name="activity_display_name_display_name_too_long_error">Pilih nama yang lebih pendek</string>
+    <string name="displayNamePick">Pilih nama yang ditampilkan</string>
+    <string name="displayNameDescription">Ini akan menjadi nama anda ketika menggunakan Session. Bisa merupakan nama asli, alias, atau apapun yang anda suka.</string>
+    <string name="displayNameEnter">Masukkan nama</string>
+    <string name="displayNameErrorDescription">Pilih nama yang ditampilkan</string>
+    <string name="displayNameErrorDescriptionShorter">Pilih nama yang lebih pendek</string>
     <string name="activity_pn_mode_recommended_option_tag">Direkomendasikan</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Pilih salah satu opsi</string>
     <string name="activity_home_empty_state_message">Anda belum memiliki kontak</string>
@@ -431,10 +431,6 @@
     <string name="activity_home_leave_group_dialog_message">Apakah anda yakin ingin meninggalkan grup ini?</string>
     <string name="activity_home_leaving_group_failed_message">"Tidak dapat meninggalkan grup"</string>
     <string name="activity_home_conversation_deleted_message">Percakapan dihapus</string>
-    <string name="activity_seed_title">Kata pemulihan anda</string>
-    <string name="activity_seed_title_2">Inilah kata pemulihan anda</string>
-    <string name="activity_seed_reveal_button_title">Tekan untuk melihat</string>
-    <string name="view_seed_reminder_title">Hampir selesai! 80%</string>
     <string name="activity_path_device_row_title">Anda</string>
     <string name="activity_path_destination_row_title">Tujuan</string>
     <string name="activity_path_learn_more_button_title">Selengkapnya</string>

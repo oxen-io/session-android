@@ -15,6 +15,7 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AlertDialog
+import androidx.core.text.HtmlCompat
 import androidx.core.view.setMargins
 import androidx.core.view.updateMargins
 import androidx.fragment.app.Fragment
@@ -79,6 +80,8 @@ class SessionDialogBuilder(val context: Context) {
             layoutParams = LinearLayout.LayoutParams(0, dp20)
         }.let(topView::addView)
     }
+
+    fun htmlText(@StringRes id: Int, @StyleRes style: Int = 0, modify: TextView.() -> Unit = {}) { text(context.resources.getText(id)) }
 
     fun view(view: View) = contentView.addView(view)
 

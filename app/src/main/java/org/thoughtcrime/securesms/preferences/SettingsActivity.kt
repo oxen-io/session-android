@@ -20,6 +20,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.BuildConfig
@@ -46,6 +47,7 @@ import org.thoughtcrime.securesms.home.PathActivity
 import org.thoughtcrime.securesms.messagerequests.MessageRequestsActivity
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.mms.GlideRequests
+import org.thoughtcrime.securesms.onboarding.recoverypassword.startRecoveryPasswordActivity
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.preferences.appearance.AppearanceSettingsActivity
 import org.thoughtcrime.securesms.profiles.ProfileMediaConstraints
@@ -65,6 +67,10 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
     @Inject
     lateinit var configFactory: ConfigFactory
+    @Inject
+    lateinit var prefs: TextSecurePreferences
+
+
 
     private lateinit var binding: ActivitySettingsBinding
     private var displayNameEditActionMode: ActionMode? = null
@@ -87,13 +93,17 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         super.onCreate(savedInstanceState, isReady)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val displayName = getDisplayName()
         glide = GlideApp.with(this)
-        with(binding) {
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        binding.run {
             setupProfilePictureView(profilePictureView)
             profilePictureView.setOnClickListener { showEditProfilePictureUI() }
             ctnGroupNameSection.setOnClickListener { startActionMode(DisplayNameEditActionModeCallback()) }
-            btnGroupNameDisplay.text = displayName
+            btnGroupNameDisplay.text = getDisplayName()
             publicKeyTextView.text = hexEncodedPublicKey
             copyButton.setOnClickListener { copyPublicKey() }
             shareButton.setOnClickListener { sharePublicKey() }
@@ -106,7 +116,9 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             appearanceButton.setOnClickListener { showAppearanceSettings() }
             inviteFriendButton.setOnClickListener { sendInvitation() }
             helpButton.setOnClickListener { showHelp() }
-            seedButton.setOnClickListener { showSeed() }
+            passwordDivider.isGone = prefs.getHidePassword()
+            passwordButton.isGone = prefs.getHidePassword()
+            passwordButton.setOnClickListener { showPassword() }
             clearAllDataButton.setOnClickListener { clearAllData() }
 
             val gitCommitFirstSixChars = BuildConfig.GIT_HASH.take(6)
@@ -403,8 +415,8 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         show(intent)
     }
 
-    private fun showSeed() {
-        SeedDialog().show(supportFragmentManager, "Recovery Phrase Dialog")
+    private fun showPassword() {
+        startRecoveryPasswordActivity()
     }
 
     private fun clearAllData() {
