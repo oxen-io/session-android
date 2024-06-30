@@ -1521,7 +1521,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
             // Artificially bump message duration on lock if required
             if (inputBar.voiceMessageDurationMS < MINIMUM_VOICE_MESSAGE_DURATION_MS) {
-                inputBar.setVoiceMessageDuration(MINIMUM_VOICE_MESSAGE_DURATION_MS)
+                inputBar.voiceMessageDurationMS = MINIMUM_VOICE_MESSAGE_DURATION_MS
             }
 
             // If the user put the record audio button into the lock state then we are still recording audio
@@ -1864,7 +1864,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             // message button is still held or is locked to keep recording audio without being held).
             val callback: () -> Unit = {
                 if (binding.inputBar.voiceRecorderState == VoiceRecorderState.SettingUpToRecord) {
-                    binding.inputBar.setVoiceRecorderState(VoiceRecorderState.Recording)
+                    binding.inputBar.voiceRecorderState = VoiceRecorderState.Recording
                 }
             }
             audioRecorder.startRecording(callback)
@@ -1895,13 +1895,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // Now tear-down is complete we can move back into the idle state ready to record another voice message.
         // CAREFUL: This state must be set BEFORE we show any warning toast about short messages because it early
         // exits before transmitting the audio!
-        inputBar.setVoiceRecorderState(VoiceRecorderState.Idle)
+        inputBar.voiceRecorderState = VoiceRecorderState.Idle
 
         // Voice message too short? Warn with toast instead of sending.
         // Note: The 0L check prevents the warning toast being shown when leaving the conversation activity.
         if (voiceMessageDurationMS != 0L && voiceMessageDurationMS < MINIMUM_VOICE_MESSAGE_DURATION_MS) {
             Toast.makeText(this@ConversationActivityV2, R.string.messageVoiceErrorShort, Toast.LENGTH_LONG).show()
-            inputBar.setVoiceMessageDuration(0L)
+            inputBar.voiceMessageDurationMS = 0L
             return
         }
 
@@ -1933,12 +1933,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val voiceMessageDuration = inputBar.voiceMessageDurationMS
         if (voiceMessageDuration != 0L && voiceMessageDuration < MINIMUM_VOICE_MESSAGE_DURATION_MS) {
             Toast.makeText(applicationContext, applicationContext.getString(R.string.messageVoiceErrorShort), Toast.LENGTH_SHORT).show()
-            inputBar.setVoiceMessageDuration(0L)
+            inputBar.voiceMessageDurationMS = 0L
         }
 
         // When tear-down is complete (via cancelling) we can move back into the idle state ready to record
         // another voice message.
-        inputBar.setVoiceRecorderState(VoiceRecorderState.Idle)
+        inputBar.voiceRecorderState = VoiceRecorderState.Idle
     }
 
     override fun selectMessages(messages: Set<MessageRecord>) {

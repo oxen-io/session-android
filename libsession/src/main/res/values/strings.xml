@@ -74,5 +74,5 @@
     <!-- RecipientProvider -->
     <string name="RecipientProvider_unnamed_group">Unnamed group</string>
 
-    <string name="messageVoiceErrorShort">Tap and hold to record a voice message.</string>
+    <string name="messageVoiceErrorShort">Hold to record a voice message.</string>
 </resources>

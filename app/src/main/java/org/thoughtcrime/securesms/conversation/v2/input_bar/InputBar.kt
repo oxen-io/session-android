@@ -71,11 +71,7 @@ class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, Li
     // they held record, and the current audio recording mechanism state.
     private var voiceMessageStartMS = 0L
     var voiceMessageDurationMS = 0L
-        private set
-    internal var voiceRecorderState = VoiceRecorderState.Idle
-
-    fun setVoiceMessageDuration(durationMS: Long)        { voiceMessageDurationMS = durationMS }
-    fun setVoiceRecorderState(state: VoiceRecorderState) { voiceRecorderState = state          }
+    var voiceRecorderState = VoiceRecorderState.Idle
 
     val attachmentButtonsContainerHeight: Int
         get() = binding.attachmentsButtonContainer.height
