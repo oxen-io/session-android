@@ -61,7 +61,7 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
             SharedConfigurationMessage(config.protoKindFor(), data, seqNo) to config
         }.map { (message, config) ->
             // return a list of batch request objects
-            val snodeMessage = MessageSender.buildWrappedMessageToSnode(destination, message, true)
+            val snodeMessage = MessageSender.buildConfigMessageToSnode(destination.destinationPublicKey(), message)
             val authenticated = SnodeAPI.buildAuthenticatedStoreBatchInfo(
                 destination.destinationPublicKey(),
                 config.configNamespace(),

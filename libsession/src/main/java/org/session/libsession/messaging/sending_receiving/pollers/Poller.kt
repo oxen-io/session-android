@@ -25,6 +25,7 @@ import org.session.libsession.snode.RawResponse
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.snode.SnodeModule
 import org.session.libsession.utilities.ConfigFactoryProtocol
+import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Namespace
 import org.session.libsignal.utilities.Snode
@@ -126,37 +127,26 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
     private fun processConfig(snode: Snode, rawMessages: RawResponse, namespace: Int, forConfigObject: ConfigBase?) {
         if (forConfigObject == null) return
 
-        val messages = SnodeAPI.parseRawMessagesResponse(
-            rawMessages,
-            snode,
-            userPublicKey,
-            namespace,
-            updateLatestHash = true,
-            updateStoredHashes = true,
-        )
+        val messages = rawMessages["messages"] as? List<*>
+        val processed = if (!messages.isNullOrEmpty()) {
+            SnodeAPI.updateLastMessageHashValueIfPossible(snode, userPublicKey, messages, namespace)
+            SnodeAPI.removeDuplicates(userPublicKey, messages, namespace, true).mapNotNull { messageBody ->
+                val rawMessageAsJSON = messageBody as? Map<*, *> ?: return@mapNotNull null
+                val hashValue = rawMessageAsJSON["hash"] as? String ?: return@mapNotNull null
+                val b64EncodedBody = rawMessageAsJSON["data"] as? String ?: return@mapNotNull null
+                val timestamp = rawMessageAsJSON["t"] as? Long ?: SnodeAPI.nowWithOffset
+                val body = Base64.decode(b64EncodedBody)
+                Triple(body, hashValue, timestamp)
+            }
+        } else emptyList()
 
-        if (messages.isEmpty()) {
-            // no new messages to process
-            return
-        }
+        if (processed.isEmpty()) return
 
         var latestMessageTimestamp: Long? = null
-        messages.forEach { (envelope, hash) ->
+        processed.forEach { (body, hash, timestamp) ->
             try {
-                val (message, _) = MessageReceiver.parse(data = envelope.toByteArray(),
-                    // assume no groups in personal poller messages
-                    openGroupServerID = null, currentClosedGroups = emptySet()
-                )
-                // sanity checks
-                if (message !is SharedConfigurationMessage) {
-                    Log.w("Loki", "shared config message handled in configs wasn't SharedConfigurationMessage but was ${message.javaClass.simpleName}")
-                    return@forEach
-                }
-                val merged = forConfigObject.merge(hash!! to message.data).firstOrNull { it == hash }
-                if (merged != null) {
-                    // We successfully merged the hash, we can now update the timestamp
-                    latestMessageTimestamp = if ((message.sentTimestamp ?: 0L) > (latestMessageTimestamp ?: 0L)) { message.sentTimestamp } else { latestMessageTimestamp }
-                }
+                forConfigObject.merge(hash to body)
+                latestMessageTimestamp = if (timestamp > (latestMessageTimestamp ?: 0L)) { timestamp } else { latestMessageTimestamp }
             } catch (e: Exception) {
                 Log.e("Loki", e)
             }
