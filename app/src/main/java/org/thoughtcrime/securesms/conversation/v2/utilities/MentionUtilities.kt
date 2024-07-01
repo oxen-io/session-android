@@ -85,18 +85,22 @@ object MentionUtilities {
         val result = SpannableString(text)
 
         // apply styling if required
+        // Normal text color: black in dark mode and primary text color for light mode
+        val mainTextColor by lazy {
+            if (ThemeUtil.isDarkTheme(context)) context.getColor(R.color.black)
+            else context.getColorFromAttr(android.R.attr.textColorPrimary)
+        }
+
+        // Highlighted text color: primary/accent in dark mode and primary text color for light mode
+        val highlightedTextColor by lazy {
+            if (ThemeUtil.isDarkTheme(context)) context.getAccentColor()
+            else context.getColorFromAttr(android.R.attr.textColorPrimary)
+        }
+
         if(!formatOnly) {
             for (mention in mentions) {
                 val backgroundColor: Int?
                 val foregroundColor: Int?
-
-                // Normal text color: black in dark mode and primary text color for light mode
-                val mainTextColor = if (ThemeUtil.isDarkTheme(context)) context.getColor(R.color.black)
-                    else context.getColorFromAttr(android.R.attr.textColorPrimary)
-
-                // Highlighted text color: primary/accent in dark mode and primary text color for light mode
-                val highlightedTextColor = if (ThemeUtil.isDarkTheme(context)) context.getAccentColor()
-                else context.getColorFromAttr(android.R.attr.textColorPrimary)
 
                 // quotes
                 if(isQuote) {
