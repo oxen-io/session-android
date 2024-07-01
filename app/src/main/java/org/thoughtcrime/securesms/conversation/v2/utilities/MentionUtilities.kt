@@ -89,14 +89,19 @@ object MentionUtilities {
                 val backgroundColor: Int?
                 val foregroundColor: Int?
 
-                // the text is black in dark mode and primary text color for light mode
+                // Normal text color: black in dark mode and primary text color for light mode
                 val mainTextColor = if (ThemeUtil.isDarkTheme(context)) context.getColor(R.color.black)
                     else context.getColorFromAttr(android.R.attr.textColorPrimary)
 
-                // quotes only bold the text
+                // Highlighted text color: primary/accent in dark mode and primary text color for light mode
+                val highlightedTextColor = if (ThemeUtil.isDarkTheme(context)) context.getAccentColor()
+                else context.getColorFromAttr(android.R.attr.textColorPrimary)
+
+                // quotes
                 if(isQuote) {
                     backgroundColor = null
-                    foregroundColor = null
+                    // the text color has different rule depending if the message is incoming or outgoing
+                    foregroundColor = if(isOutgoingMessage) null else highlightedTextColor
                 }
                 // incoming message mentioning you
                 else if (isYou(mention.second, userPublicKey, openGroup)) {
@@ -112,8 +117,7 @@ object MentionUtilities {
                 else {
                     backgroundColor = null
                     // accent color for dark themes and primary text for light
-                    foregroundColor = if (ThemeUtil.isDarkTheme(context)) context.getAccentColor()
-                    else mainTextColor
+                    foregroundColor = highlightedTextColor
                 }
 
                 // apply the background, if any
