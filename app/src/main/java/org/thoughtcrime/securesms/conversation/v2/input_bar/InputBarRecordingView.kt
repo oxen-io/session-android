@@ -25,6 +25,14 @@ import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.toPx
 import java.util.Date
 
+// Constants for animation durations in milliseconds
+object VoiceRecorderConstants {
+    const val ANIMATE_LOCK_DURATION_MS        = 250L
+    const val DOT_ANIMATION_DURATION_MS       = 500L
+    const val DOT_PULSE_ANIMATION_DURATION_MS = 1000L
+    const val SHOW_HIDE_VOICE_UI_DURATION_MS  = 250L
+}
+
 class InputBarRecordingView : RelativeLayout {
     private lateinit var binding: ViewInputBarRecordingBinding
     private var startTimestamp = 0L
@@ -79,7 +87,7 @@ class InputBarRecordingView : RelativeLayout {
     fun hide() {
         alpha = 1.0f
         val animation = ValueAnimator.ofObject(FloatEvaluator(), 1.0f, 0.0f)
-        animation.duration = 250L
+        animation.duration = VoiceRecorderConstants.SHOW_HIDE_VOICE_UI_DURATION_MS
         animation.addUpdateListener { animator ->
             alpha = animator.animatedValue as Float
             if (animator.animatedFraction == 1.0f) {
@@ -113,7 +121,7 @@ class InputBarRecordingView : RelativeLayout {
     private fun animateDotView() {
         val animation = ValueAnimator.ofObject(FloatEvaluator(), 1.0f, 0.0f)
         dotViewAnimation = animation
-        animation.duration = 500L
+        animation.duration = VoiceRecorderConstants.DOT_ANIMATION_DURATION_MS
         animation.addUpdateListener { animator ->
             binding.dotView.alpha = animator.animatedValue as Float
         }
@@ -128,7 +136,7 @@ class InputBarRecordingView : RelativeLayout {
         binding.pulseView.animateSizeChange(collapsedSize, expandedSize, 1000)
         val animation = ValueAnimator.ofObject(FloatEvaluator(), 0.5, 0.0f)
         pulseAnimation = animation
-        animation.duration = 1000L
+        animation.duration = VoiceRecorderConstants.DOT_PULSE_ANIMATION_DURATION_MS
         animation.addUpdateListener { animator ->
             binding.pulseView.alpha = animator.animatedValue as Float
             if (animator.animatedFraction == 1.0f && isVisible) { pulse() }
@@ -143,7 +151,7 @@ class InputBarRecordingView : RelativeLayout {
         layoutParams.bottomMargin = startMarginBottom
         binding.lockView.layoutParams = layoutParams
         val animation = ValueAnimator.ofObject(IntEvaluator(), startMarginBottom, endMarginBottom)
-        animation.duration = 250L
+        animation.duration = VoiceRecorderConstants.ANIMATE_LOCK_DURATION_MS
         animation.addUpdateListener { animator ->
             layoutParams.bottomMargin = animator.animatedValue as Int
             binding.lockView.layoutParams = layoutParams
@@ -153,21 +161,25 @@ class InputBarRecordingView : RelativeLayout {
 
     fun lock() {
         val fadeOutAnimation = ValueAnimator.ofObject(FloatEvaluator(), 1.0f, 0.0f)
-        fadeOutAnimation.duration = 250L
+        fadeOutAnimation.duration = VoiceRecorderConstants.ANIMATE_LOCK_DURATION_MS
         fadeOutAnimation.addUpdateListener { animator ->
             binding.inputBarMiddleContentContainer.alpha = animator.animatedValue as Float
             binding.lockView.alpha = animator.animatedValue as Float
         }
         fadeOutAnimation.start()
         val fadeInAnimation = ValueAnimator.ofObject(FloatEvaluator(), 0.0f, 1.0f)
-        fadeInAnimation.duration = 250L
+        fadeInAnimation.duration = VoiceRecorderConstants.ANIMATE_LOCK_DURATION_MS
         fadeInAnimation.addUpdateListener { animator ->
             binding.inputBarCancelButton.alpha = animator.animatedValue as Float
         }
         fadeInAnimation.start()
         binding.recordButtonOverlayImageView.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_arrow_up, context.theme))
-        binding.recordButtonOverlay.setOnClickListener { delegate?.sendVoiceMessage() }
         binding.inputBarCancelButton.setOnClickListener { delegate?.cancelVoiceMessage() }
+
+        // When the user has locked the voice recorder button on then THIS is where the next click
+        // is registered to actually send the voice message - it does NOT hit the microphone button
+        // onTouch listener again.
+        binding.recordButtonOverlay.setOnClickListener { delegate?.sendVoiceMessage() }
     }
 }
 
