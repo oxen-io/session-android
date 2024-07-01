@@ -8,7 +8,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import org.session.libsession.utilities.ConfigFactoryUpdateListener
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsignal.crypto.MnemonicCodec
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities
+import org.thoughtcrime.securesms.crypto.MnemonicLoader
 import org.thoughtcrime.securesms.database.ConfigDatabase
 import javax.inject.Singleton
 
@@ -33,4 +35,9 @@ object SessionUtilModule {
             registerListener(context as ConfigFactoryUpdateListener)
         }
 
+    @Provides
+    fun provideMnemonicLoader(@ApplicationContext context: Context) = MnemonicLoader(context)
+
+    @Provides
+    fun provideMnemonicCodec(loader: MnemonicLoader) = MnemonicCodec(loader::loadFileContents)
 }

@@ -34,7 +34,6 @@ import org.session.libsignal.utilities.hexEncodedPublicKey
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.BaseActionBarActivity
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities
-import org.thoughtcrime.securesms.crypto.MnemonicUtilities
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.util.ScanQRCodeWrapperFragment
 import org.thoughtcrime.securesms.util.ScanQRCodeWrapperFragmentDelegate
@@ -47,6 +46,8 @@ class LinkDeviceActivity : BaseActionBarActivity(), ScanQRCodeWrapperFragmentDel
 
     @Inject
     lateinit var configFactory: ConfigFactory
+    @Inject
+    lateinit var mnemonicCodec: MnemonicCodec
 
     private lateinit var binding: ActivityLinkDeviceBinding
     internal val database: LokiAPIDatabaseProtocol
@@ -89,20 +90,20 @@ class LinkDeviceActivity : BaseActionBarActivity(), ScanQRCodeWrapperFragmentDel
     }
 
     fun continueWithMnemonic(mnemonic: String) {
-        val loadFileContents: (String) -> String = { fileName ->
-            MnemonicUtilities.loadFileContents(this, fileName)
-        }
-        try {
-            val hexEncodedSeed = MnemonicCodec(loadFileContents).decode(mnemonic)
-            val seed = Hex.fromStringCondensed(hexEncodedSeed)
-            continueWithSeed(seed)
-        } catch (error: Exception) {
-            val message = if (error is MnemonicCodec.DecodingError) {
-                error.description
-            } else {
-                "An error occurred."
+        lifecycleScope.launch {
+            try {
+                val hexEncodedSeed = mnemonicCodec.decode(mnemonic)
+                val seed = Hex.fromStringCondensed(hexEncodedSeed)
+                continueWithSeed(seed)
+            } catch (error: Exception) {
+                val message = if (error is MnemonicCodec.DecodingError) {
+                    error.description
+                } else {
+                    "An error occurred."
+                }
+
+                Toast.makeText(this@LinkDeviceActivity, message, Toast.LENGTH_LONG).show()
             }
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
         }
     }
 

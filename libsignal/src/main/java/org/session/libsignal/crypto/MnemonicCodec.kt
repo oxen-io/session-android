@@ -5,9 +5,9 @@ import java.util.zip.CRC32
 /**
  * Based on [mnemonic.js](https://github.com/loki-project/loki-messenger/blob/development/libloki/modules/mnemonic.js) .
  */
-class MnemonicCodec(private val loadFileContents: (String) -> String) {
+class MnemonicCodec(private val loadFileContents: suspend (String) -> String) {
 
-    class Language(private val loadFileContents: (String) -> String, private val configuration: Configuration) {
+    data class Language(private val configuration: Configuration) {
 
         data class Configuration(val filename: String, val prefixLength: Int) {
 
@@ -24,7 +24,7 @@ class MnemonicCodec(private val loadFileContents: (String) -> String) {
             internal val truncatedWordSetCache = mutableMapOf<Language, List<String>>()
         }
 
-        internal fun loadWordSet(): List<String> {
+        internal suspend fun loadWordSet(loadFileContents: suspend (String) -> String): List<String> {
             val cachedResult = wordSetCache[this]
             if (cachedResult != null) {
                 return cachedResult
@@ -36,13 +36,13 @@ class MnemonicCodec(private val loadFileContents: (String) -> String) {
             }
         }
 
-        internal fun loadTruncatedWordSet(): List<String> {
+        internal suspend fun loadTruncatedWordSet(loadFileContents: suspend (String) -> String): List<String> {
             val cachedResult = wordSetCache[this]
             if (cachedResult != null) {
                 return cachedResult
             } else {
                 val prefixLength = configuration.prefixLength
-                val result = loadWordSet().map { it.substring(0 until prefixLength) }
+                val result = loadWordSet(loadFileContents).map { it.substring(0 until prefixLength) }
                 truncatedWordSetCache[this] = result
                 return result
             }
@@ -57,10 +57,10 @@ class MnemonicCodec(private val loadFileContents: (String) -> String) {
         object VerificationFailed : DecodingError("Your mnemonic couldn't be verified. Please check what you entered and try again.")
     }
 
-    fun encode(hexEncodedString: String, languageConfiguration: Language.Configuration = Language.Configuration.english): String {
+    suspend fun encode(hexEncodedString: String, languageConfiguration: Language.Configuration = Language.Configuration.english): String {
         var string = hexEncodedString
-        val language = Language(loadFileContents, languageConfiguration)
-        val wordSet = language.loadWordSet()
+        val language = Language(languageConfiguration)
+        val wordSet = language.loadWordSet(loadFileContents)
         val prefixLength = languageConfiguration.prefixLength
         val result = mutableListOf<String>()
         val n = wordSet.size.toLong()
@@ -86,10 +86,10 @@ class MnemonicCodec(private val loadFileContents: (String) -> String) {
         return result.joinToString(" ")
     }
 
-    fun decode(mnemonic: String, languageConfiguration: Language.Configuration = Language.Configuration.english): String {
+    suspend fun decode(mnemonic: String, languageConfiguration: Language.Configuration = Language.Configuration.english): String {
         val words = mnemonic.split(" ").toMutableList()
-        val language = Language(loadFileContents, languageConfiguration)
-        val truncatedWordSet = language.loadTruncatedWordSet()
+        val language = Language(languageConfiguration)
+        val truncatedWordSet = language.loadTruncatedWordSet(loadFileContents)
         val prefixLength = languageConfiguration.prefixLength
         var result = ""
         val n = truncatedWordSet.size.toLong()

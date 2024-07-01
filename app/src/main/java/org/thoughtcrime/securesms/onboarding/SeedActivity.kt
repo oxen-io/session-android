@@ -9,6 +9,8 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.widget.LinearLayout
 import android.widget.Toast
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.runBlocking
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivitySeedBinding
 import org.session.libsession.utilities.TextSecurePreferences
@@ -17,10 +19,14 @@ import org.session.libsignal.crypto.MnemonicCodec
 import org.session.libsignal.utilities.hexEncodedPrivateKey
 import org.thoughtcrime.securesms.BaseActionBarActivity
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
-import org.thoughtcrime.securesms.crypto.MnemonicUtilities
+import org.thoughtcrime.securesms.crypto.MnemonicLoader
 import org.thoughtcrime.securesms.util.getAccentColor
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SeedActivity : BaseActionBarActivity() {
+    @Inject
+    lateinit var mnemonicCodec: MnemonicCodec
 
     private lateinit var binding: ActivitySeedBinding
 
@@ -29,10 +35,10 @@ class SeedActivity : BaseActionBarActivity() {
         if (hexEncodedSeed == null) {
             hexEncodedSeed = IdentityKeyUtil.getIdentityKeyPair(this).hexEncodedPrivateKey // Legacy account
         }
-        val loadFileContents: (String) -> String = { fileName ->
-            MnemonicUtilities.loadFileContents(this, fileName)
+
+        runBlocking {
+            mnemonicCodec.encode(hexEncodedSeed!!, MnemonicCodec.Language.Configuration.english)
         }
-        MnemonicCodec(loadFileContents).encode(hexEncodedSeed!!, MnemonicCodec.Language.Configuration.english)
     }
 
     // region Lifecycle

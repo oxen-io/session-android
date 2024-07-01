@@ -7,20 +7,27 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.runBlocking
 import network.loki.messenger.R
 import org.session.libsignal.crypto.MnemonicCodec
 import org.session.libsignal.utilities.hexEncodedPrivateKey
 import org.thoughtcrime.securesms.createSessionDialog
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
-import org.thoughtcrime.securesms.crypto.MnemonicUtilities
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SeedDialog: DialogFragment() {
+    @Inject
+    lateinit var mnemonicCodec: MnemonicCodec
+
     private val seed by lazy {
         val hexEncodedSeed = IdentityKeyUtil.retrieve(requireContext(), IdentityKeyUtil.LOKI_SEED)
             ?: IdentityKeyUtil.getIdentityKeyPair(requireContext()).hexEncodedPrivateKey // Legacy account
 
-        MnemonicCodec { fileName -> MnemonicUtilities.loadFileContents(requireContext(), fileName) }
-            .encode(hexEncodedSeed, MnemonicCodec.Language.Configuration.english)
+        runBlocking {
+            mnemonicCodec.encode(hexEncodedSeed, MnemonicCodec.Language.Configuration.english)
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = createSessionDialog {

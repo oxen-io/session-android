@@ -58,6 +58,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityConversationV2Binding
@@ -130,7 +131,7 @@ import org.thoughtcrime.securesms.conversation.v2.utilities.AttachmentManager
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities
 import org.thoughtcrime.securesms.conversation.v2.utilities.ResendMessageUtilities
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
-import org.thoughtcrime.securesms.crypto.MnemonicUtilities
+import org.thoughtcrime.securesms.crypto.MnemonicLoader
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.LokiMessageDatabase
 import org.thoughtcrime.securesms.database.LokiThreadDatabase
@@ -215,6 +216,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     @Inject lateinit var storage: Storage
     @Inject lateinit var reactionDb: ReactionDatabase
     @Inject lateinit var viewModelFactory: ConversationViewModel.AssistedFactory
+    @Inject lateinit var mnemonicCodec: MnemonicCodec
 
     private val screenshotObserver by lazy {
         ScreenshotObserver(this, Handler(Looper.getMainLooper())) {
@@ -287,11 +289,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             hexEncodedSeed = IdentityKeyUtil.getIdentityKeyPair(this).hexEncodedPrivateKey // Legacy account
         }
 
-        val appContext = applicationContext
-        val loadFileContents: (String) -> String = { fileName ->
-            MnemonicUtilities.loadFileContents(appContext, fileName)
+        runBlocking {
+            mnemonicCodec.encode(hexEncodedSeed!!, MnemonicCodec.Language.Configuration.english)
         }
-        MnemonicCodec(loadFileContents).encode(hexEncodedSeed!!, MnemonicCodec.Language.Configuration.english)
     }
 
     // There is a bug when initially joining a community where all messages will immediately be marked
