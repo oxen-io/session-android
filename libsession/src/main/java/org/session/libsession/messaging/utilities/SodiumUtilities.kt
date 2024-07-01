@@ -161,14 +161,14 @@ object SodiumUtilities {
 
     /* This method should be used to check if a users standard sessionId matches a blinded one */
     fun sessionId(
-        standardSessionId: String,
-        blindedSessionId: String,
+        standardAccountId: String,
+        blindedAccountId: String,
         serverPublicKey: String
     ): Boolean {
         // Only support generating blinded keys for standard session ids
-        val sessionId = SessionId(standardSessionId)
+        val sessionId = AccountId(standardAccountId)
         if (sessionId.prefix != IdPrefix.STANDARD) return false
-        val blindedId = SessionId(blindedSessionId)
+        val blindedId = AccountId(blindedAccountId)
         if (blindedId.prefix != IdPrefix.BLINDED) return false
         val k = generateBlindingFactor(serverPublicKey) ?: return false
 
@@ -182,8 +182,8 @@ object SodiumUtilities {
         // For the negative, what we're going to get out of the above is simply the negative of pk1, so flip the sign bit to get pk2
         //     pk2 = pk1[0:31] + bytes([pk1[31] ^ 0b1000_0000])
         val pk2 = pk1.take(31).toByteArray() + listOf(pk1.last().xor(128.toByte())).toByteArray()
-        return SessionId(IdPrefix.BLINDED, pk1).publicKey == blindedId.publicKey ||
-                SessionId(IdPrefix.BLINDED, pk2).publicKey == blindedId.publicKey
+        return AccountId(IdPrefix.BLINDED, pk1).publicKey == blindedId.publicKey ||
+                AccountId(IdPrefix.BLINDED, pk2).publicKey == blindedId.publicKey
     }
 
     fun encrypt(message: ByteArray, secretKey: ByteArray, nonce: ByteArray, additionalData: ByteArray? = null): ByteArray? {
@@ -232,7 +232,7 @@ object SodiumUtilities {
 
 }
 
-class SessionId {
+class AccountId {
     var prefix: IdPrefix?
     var publicKey: String
 

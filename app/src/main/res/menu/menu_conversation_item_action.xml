@@ -53,7 +53,7 @@
         app:showAsAction="never" />
 
     <item
-        android:title="@string/activity_conversation_menu_copy_session_id"
+        android:title="@string/activity_conversation_menu_copy_account_id"
         android:id="@+id/menu_context_copy_public_key"
         app:showAsAction="never" />
 

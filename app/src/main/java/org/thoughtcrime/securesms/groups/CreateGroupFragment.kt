@@ -25,7 +25,7 @@ import org.session.libsession.utilities.Device
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.contacts.SelectContactsAdapter
-import org.thoughtcrime.securesms.conversation.start.NewConversationDelegate
+import org.thoughtcrime.securesms.conversation.start.StartConversationDelegate
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.keyboard.emoji.KeyboardPageSearchView
@@ -43,7 +43,7 @@ class CreateGroupFragment : Fragment() {
     private lateinit var binding: FragmentCreateGroupBinding
     private val viewModel: CreateGroupViewModel by viewModels()
 
-    lateinit var delegate: NewConversationDelegate
+    lateinit var delegate: StartConversationDelegate
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

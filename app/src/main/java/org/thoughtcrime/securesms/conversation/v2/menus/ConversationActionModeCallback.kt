@@ -6,7 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import network.loki.messenger.R
 import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.IdPrefix
@@ -39,7 +39,7 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
         val userPublicKey = TextSecurePreferences.getLocalNumber(context)!!
         val edKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!
         val blindedPublicKey = openGroup?.publicKey?.let { SodiumUtilities.blindedKeyPair(it, edKeyPair)?.publicKey?.asBytes }
-            ?.let { SessionId(IdPrefix.BLINDED, it) }?.hexString
+            ?.let { AccountId(IdPrefix.BLINDED, it) }?.hexString
         fun userCanDeleteSelectedItems(): Boolean {
             val allSentByCurrentUser = selectedItems.all { it.isOutgoing }
             val allReceivedByCurrentUser = selectedItems.all { !it.isOutgoing }
@@ -63,7 +63,7 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
         menu.findItem(R.id.menu_context_ban_and_delete_all).isVisible = userCanBanSelectedUsers()
         // Copy message text
         menu.findItem(R.id.menu_context_copy).isVisible = !containsControlMessage && hasText
-        // Copy Session ID
+        // Copy Account ID
         menu.findItem(R.id.menu_context_copy_public_key).isVisible =
              (thread.isGroupRecipient && !thread.isCommunityRecipient && selectedItems.size == 1 && firstMessage.individualRecipient.address.toString() != userPublicKey)
         // Message detail
@@ -91,7 +91,7 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
             R.id.menu_context_ban_user -> delegate?.banUser(selectedItems)
             R.id.menu_context_ban_and_delete_all -> delegate?.banAndDeleteAll(selectedItems)
             R.id.menu_context_copy -> delegate?.copyMessages(selectedItems)
-            R.id.menu_context_copy_public_key -> delegate?.copySessionID(selectedItems)
+            R.id.menu_context_copy_public_key -> delegate?.copyAccountID(selectedItems)
             R.id.menu_context_resync -> delegate?.resyncMessage(selectedItems)
             R.id.menu_context_resend -> delegate?.resendMessage(selectedItems)
             R.id.menu_message_details -> delegate?.showMessageDetail(selectedItems)
@@ -115,7 +115,7 @@ interface ConversationActionModeCallbackDelegate {
     fun banUser(messages: Set<MessageRecord>)
     fun banAndDeleteAll(messages: Set<MessageRecord>)
     fun copyMessages(messages: Set<MessageRecord>)
-    fun copySessionID(messages: Set<MessageRecord>)
+    fun copyAccountID(messages: Set<MessageRecord>)
     fun resyncMessage(messages: Set<MessageRecord>)
     fun resendMessage(messages: Set<MessageRecord>)
     fun showMessageDetail(messages: Set<MessageRecord>)

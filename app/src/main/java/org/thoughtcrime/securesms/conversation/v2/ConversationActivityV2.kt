@@ -81,7 +81,7 @@ import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
-import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Address.Companion.fromSerialized
@@ -114,7 +114,6 @@ import org.thoughtcrime.securesms.conversation.v2.MessageDetailActivity.Companio
 import org.thoughtcrime.securesms.conversation.v2.MessageDetailActivity.Companion.ON_RESEND
 import org.thoughtcrime.securesms.conversation.v2.dialogs.BlockedDialog
 import org.thoughtcrime.securesms.conversation.v2.dialogs.LinkPreviewDialog
-import org.thoughtcrime.securesms.conversation.v2.dialogs.SendSeedDialog
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarButton
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarDelegate
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarRecordingViewDelegate
@@ -161,6 +160,7 @@ import org.thoughtcrime.securesms.mms.MediaConstraints
 import org.thoughtcrime.securesms.mms.Slide
 import org.thoughtcrime.securesms.mms.SlideDeck
 import org.thoughtcrime.securesms.mms.VideoSlide
+import org.thoughtcrime.securesms.recoverypassword.RecoveryPasswordActivity
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.reactions.ReactionsDialogFragment
 import org.thoughtcrime.securesms.reactions.any.ReactWithAnyEmojiDialogFragment
@@ -170,11 +170,11 @@ import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.MediaUtil
 import org.thoughtcrime.securesms.util.SaveAttachmentTask
-import org.thoughtcrime.securesms.util.SimpleTextWatcher
 import org.thoughtcrime.securesms.util.isScrolledToBottom
 import org.thoughtcrime.securesms.util.isScrolledToWithin30dpOfBottom
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
+import org.thoughtcrime.securesms.util.start
 import org.thoughtcrime.securesms.util.toPx
 import java.lang.ref.WeakReference
 import java.util.Locale
@@ -234,7 +234,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             intent.getParcelableExtra<Address>(ADDRESS)?.let { it ->
                 threadId = threadDb.getThreadIdIfExistsFor(it.serialize())
                 if (threadId == -1L) {
-                    val sessionId = SessionId(it.serialize())
+                    val sessionId = AccountId(it.serialize())
                     val openGroup = lokiThreadDb.getOpenGroupChat(intent.getLongExtra(FROM_GROUP_THREAD_ID, -1))
                     val address = if (sessionId.prefix == IdPrefix.BLINDED && openGroup != null) {
                         storage.getOrCreateBlindedIdMapping(sessionId.hexString, openGroup.server, openGroup.publicKey).sessionId?.let {
@@ -706,12 +706,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             viewContainer.setTypists(recipients)
         }
         if (textSecurePreferences.isTypingIndicatorsEnabled()) {
-            binding!!.inputBar.addTextChangedListener(object : SimpleTextWatcher() {
-
-                override fun onTextChanged(text: String?) {
-                    ApplicationContext.getInstance(this@ConversationActivityV2).typingStatusSender.onTypingStarted(viewModel.threadId)
-                }
-            })
+            binding!!.inputBar.addTextChangedListener {
+                ApplicationContext.getInstance(this).typingStatusSender.onTypingStarted(viewModel.threadId)
+            }
         }
     }
 
@@ -734,8 +731,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     // called from onCreate
     private fun setUpBlockedBanner() {
         val recipient = viewModel.recipient?.takeUnless { it.isGroupRecipient } ?: return
-        val sessionID = recipient.address.toString()
-        val name = sessionContactDb.getContactWithSessionID(sessionID)?.displayName(Contact.ContactContext.REGULAR) ?: sessionID
+        val accountID = recipient.address.toString()
+        val name = sessionContactDb.getContactWithAccountID(accountID)?.displayName(Contact.ContactContext.REGULAR) ?: accountID
         binding?.blockedBannerTextView?.text = resources.getString(R.string.activity_conversation_blocked_banner_text, name)
         binding?.blockedBanner?.isVisible = recipient.isBlocked
         binding?.blockedBanner?.setOnClickListener { viewModel.unblock() }
@@ -1185,8 +1182,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
-    override fun copySessionID(sessionId: String) {
-        val clip = ClipData.newPlainText("Session ID", sessionId)
+    override fun copyAccountID(sessionId: String) {
+        val clip = ClipData.newPlainText("Account ID", sessionId)
         val manager = getSystemService(PassphraseRequiredActionBarActivity.CLIPBOARD_SERVICE) as ClipboardManager
         manager.setPrimaryClip(clip)
         Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
@@ -1603,9 +1600,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val userPublicKey = textSecurePreferences.getLocalNumber()
         val isNoteToSelf = (recipient.isContactRecipient && recipient.address.toString() == userPublicKey)
         if (text.contains(seed) && !isNoteToSelf && !hasPermissionToSendSeed) {
-            val dialog = SendSeedDialog { sendTextOnlyMessage(true) }
-            dialog.show(supportFragmentManager, "Send Seed Dialog")
-            return null
+            start<RecoveryPasswordActivity>()
         }
         // Create the message
         val message = VisibleMessage().applyExpiryMode(viewModel.threadId)
@@ -1986,9 +1981,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         endActionMode()
     }
 
-    override fun copySessionID(messages: Set<MessageRecord>) {
-        val sessionID = messages.first().individualRecipient.address.toString()
-        val clip = ClipData.newPlainText("Session ID", sessionID)
+    override fun copyAccountID(messages: Set<MessageRecord>) {
+        val accountID = messages.first().individualRecipient.address.toString()
+        val clip = ClipData.newPlainText("Account ID", accountID)
         val manager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
         manager.setPrimaryClip(clip)
         Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
@@ -2198,7 +2193,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 ConversationReactionOverlay.Action.DELETE -> deleteMessages(selectedItems)
                 ConversationReactionOverlay.Action.BAN_AND_DELETE_ALL -> banAndDeleteAll(selectedItems)
                 ConversationReactionOverlay.Action.BAN_USER -> banUser(selectedItems)
-                ConversationReactionOverlay.Action.COPY_SESSION_ID -> copySessionID(selectedItems)
+                ConversationReactionOverlay.Action.COPY_ACCOUNT_ID -> copyAccountID(selectedItems)
             }
         }
     }

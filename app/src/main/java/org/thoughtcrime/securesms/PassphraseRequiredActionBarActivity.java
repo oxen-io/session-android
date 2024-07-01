@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.home.HomeActivity;
-import org.thoughtcrime.securesms.onboarding.LandingActivity;
+import org.thoughtcrime.securesms.onboarding.landing.LandingActivity;
 import org.thoughtcrime.securesms.service.KeyCachingService;
 
 import java.util.Locale;

@@ -16,42 +16,37 @@ import android.widget.TextView
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import network.loki.messenger.databinding.ViewGlobalSearchInputBinding
+import org.thoughtcrime.securesms.util.SimpleTextWatcher
+import org.thoughtcrime.securesms.util.addTextChangedListener
 
 class GlobalSearchInputLayout @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null
 ) : LinearLayout(context, attrs),
         View.OnFocusChangeListener,
-        View.OnClickListener,
-        TextWatcher, TextView.OnEditorActionListener {
+        TextView.OnEditorActionListener {
 
     var binding: ViewGlobalSearchInputBinding = ViewGlobalSearchInputBinding.inflate(LayoutInflater.from(context), this, true)
 
     var listener: GlobalSearchInputLayoutListener? = null
 
-    private val _query = MutableStateFlow<CharSequence?>(null)
-    val query: StateFlow<CharSequence?> = _query
+    private val _query = MutableStateFlow<CharSequence>("")
+    val query: StateFlow<CharSequence> = _query
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         binding.searchInput.onFocusChangeListener = this
-        binding.searchInput.addTextChangedListener(this)
+        binding.searchInput.addTextChangedListener(::setQuery)
         binding.searchInput.setOnEditorActionListener(this)
-        binding.searchInput.setFilters( arrayOf<InputFilter>(LengthFilter(100)) ) // 100 char search limit
-        binding.searchCancel.setOnClickListener(this)
-        binding.searchClear.setOnClickListener(this)
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
+        binding.searchInput.filters = arrayOf<InputFilter>(LengthFilter(100)) // 100 char search limit
+        binding.searchCancel.setOnClickListener { clearSearch(true) }
+        binding.searchClear.setOnClickListener { clearSearch(false) }
     }
 
     override fun onFocusChange(v: View?, hasFocus: Boolean) {
         if (v === binding.searchInput) {
-            val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            if (!hasFocus) {
-                imm.hideSoftInputFromWindow(windowToken, 0)
-            } else {
-                imm.showSoftInput(v, 0)
+            (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).apply {
+                if (hasFocus) showSoftInput(v, 0)
+                else hideSoftInputFromWindow(windowToken, 0)
             }
             listener?.onInputFocusChanged(hasFocus)
         }
@@ -65,27 +60,16 @@ class GlobalSearchInputLayout @JvmOverloads constructor(
         return false
     }
 
-    override fun onClick(v: View?) {
-        if (v === binding.searchCancel) {
-            clearSearch(true)
-        } else if (v === binding.searchClear) {
-            clearSearch(false)
-        }
-    }
-
     fun clearSearch(clearFocus: Boolean) {
         binding.searchInput.text = null
+        setQuery("")
         if (clearFocus) {
             binding.searchInput.clearFocus()
         }
     }
 
-    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-    override fun afterTextChanged(s: Editable?) {
-        _query.value = s?.toString()
+    private fun setQuery(query: String) {
+        _query.value = query
     }
 
     interface GlobalSearchInputLayoutListener {

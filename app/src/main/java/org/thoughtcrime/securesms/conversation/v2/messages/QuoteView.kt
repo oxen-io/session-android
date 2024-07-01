@@ -70,7 +70,7 @@ class QuoteView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         isOutgoingMessage: Boolean, isOpenGroupInvitation: Boolean, threadID: Long,
         isOriginalMissing: Boolean, glide: GlideRequests) {
         // Author
-        val author = contactDb.getContactWithSessionID(authorPublicKey)
+        val author = contactDb.getContactWithAccountID(authorPublicKey)
         val localNumber = TextSecurePreferences.getLocalNumber(context)
         val quoteIsLocalUser = localNumber != null && authorPublicKey == localNumber
 

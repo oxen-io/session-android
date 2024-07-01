@@ -55,7 +55,7 @@ import org.session.libsession.messaging.sending_receiving.link_preview.LinkPrevi
 import org.session.libsession.messaging.sending_receiving.notifications.PushRegistryV1
 import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPollerV2
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
-import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.messaging.utilities.UpdateMessageData
 import org.session.libsession.snode.OnionRequestAPI
@@ -126,7 +126,7 @@ open class Storage(
             }
         } else if (address.isContact) {
             // non-standard contact prefixes: 15, 00 etc shouldn't be stored in config
-            if (SessionId(address.serialize()).prefix != IdPrefix.STANDARD) return
+            if (AccountId(address.serialize()).prefix != IdPrefix.STANDARD) return
             // don't update our own address into the contacts DB
             if (getUserPublicKey() != address.serialize()) {
                 val contacts = configFactory.contacts ?: return
@@ -157,7 +157,7 @@ open class Storage(
             }
         } else {
             // non-standard contact prefixes: 15, 00 etc shouldn't be stored in config
-            if (SessionId(address.serialize()).prefix != IdPrefix.STANDARD) return
+            if (AccountId(address.serialize()).prefix != IdPrefix.STANDARD) return
             volatile.eraseOneToOne(address.serialize())
             if (getUserPublicKey() != address.serialize()) {
                 val contacts = configFactory.contacts ?: return
@@ -265,7 +265,7 @@ open class Storage(
                     // otherwise recipient is one to one
                     recipient.isContactRecipient -> {
                         // don't process non-standard session IDs though
-                        val sessionId = SessionId(recipient.address.serialize())
+                        val sessionId = AccountId(recipient.address.serialize())
                         if (sessionId.prefix != IdPrefix.STANDARD) return
 
                         config.getOrConstructOneToOne(recipient.address.serialize())
@@ -1175,8 +1175,8 @@ open class Storage(
         return threadId ?: -1
     }
 
-    override fun getContactWithSessionID(sessionID: String): Contact? {
-        return DatabaseComponent.get(context).sessionContactDatabase().getContactWithSessionID(sessionID)
+    override fun getContactWithAccountID(accountID: String): Contact? {
+        return DatabaseComponent.get(context).sessionContactDatabase().getContactWithAccountID(accountID)
     }
 
     override fun getAllContacts(): Set<Contact> {
@@ -1185,7 +1185,7 @@ open class Storage(
 
     override fun setContact(contact: Contact) {
         DatabaseComponent.get(context).sessionContactDatabase().setContact(contact)
-        val address = fromSerialized(contact.sessionID)
+        val address = fromSerialized(contact.accountID)
         if (!getRecipientApproved(address)) return
         val recipientHash = SSKEnvironment.shared.profileManager.contactUpdatedInternal(contact)
         val recipient = Recipient.from(context, address, false)
@@ -1203,7 +1203,7 @@ open class Storage(
     override fun addLibSessionContacts(contacts: List<LibSessionContact>, timestamp: Long) {
         val mappingDb = DatabaseComponent.get(context).blindedIdMappingDatabase()
         val moreContacts = contacts.filter { contact ->
-            val id = SessionId(contact.id)
+            val id = AccountId(contact.id)
             id.prefix?.isBlinded() == false || mappingDb.getBlindedIdMapping(contact.id).none { it.sessionId != null }
         }
         val profileManager = SSKEnvironment.shared.profileManager
@@ -1256,7 +1256,7 @@ open class Storage(
         val threadDatabase = DatabaseComponent.get(context).threadDatabase()
         val mappingDb = DatabaseComponent.get(context).blindedIdMappingDatabase()
         val moreContacts = contacts.filter { contact ->
-            val id = SessionId(contact.publicKey)
+            val id = AccountId(contact.publicKey)
             id.prefix != IdPrefix.BLINDED || mappingDb.getBlindedIdMapping(contact.publicKey).none { it.sessionId != null }
         }
         for (contact in moreContacts) {
@@ -1491,14 +1491,8 @@ open class Storage(
                     val address = recipient.address.serialize()
                     val blindedId = when {
                         recipient.isGroupRecipient -> null
-                        recipient.isOpenGroupInboxRecipient -> {
-                            GroupUtil.getDecodedOpenGroupInboxSessionId(address)
-                        }
-                        else -> {
-                            if (SessionId(address).prefix == IdPrefix.BLINDED) {
-                                address
-                            } else null
-                        }
+                        recipient.isOpenGroupInboxRecipient -> GroupUtil.getDecodedOpenGroupInboxAccountId(address)
+                        else -> address.takeIf { AccountId(it).prefix == IdPrefix.BLINDED }
                     } ?: continue
                     mappingDb.getBlindedIdMapping(blindedId).firstOrNull()?.let {
                         mappings[address] = it
@@ -1516,8 +1510,8 @@ open class Storage(
                 smsDb.updateThreadId(blindedThreadId, threadId)
                 threadDB.deleteConversation(blindedThreadId)
             }
-            recipientDb.setApproved(sender, true)
-            recipientDb.setApprovedMe(sender, true)
+            setRecipientApproved(sender, true)
+            setRecipientApprovedMe(sender, true)
             val message = IncomingMediaMessage(
                 sender.address,
                 response.sentTimestamp!!,
@@ -1619,7 +1613,7 @@ open class Storage(
             return mapping
         }
         getAllContacts().forEach { contact ->
-            val sessionId = SessionId(contact.sessionID)
+            val sessionId = AccountId(contact.accountID)
             if (sessionId.prefix == IdPrefix.STANDARD && SodiumUtilities.sessionId(sessionId.hexString, blindedId, serverPublicKey)) {
                 val contactMapping = mapping.copy(sessionId = sessionId.hexString)
                 db.addBlindedIdMapping(contactMapping)
@@ -1744,7 +1738,7 @@ open class Storage(
 
         if (recipient.isClosedGroupRecipient) {
             val userGroups = configFactory.userGroups ?: return
-            val groupPublicKey = GroupUtil.addressToGroupSessionId(recipient.address)
+            val groupPublicKey = GroupUtil.addressToGroupAccountId(recipient.address)
             val groupInfo = userGroups.getLegacyGroupInfo(groupPublicKey)
                 ?.copy(disappearingTimer = expiryMode.expirySeconds) ?: return
             userGroups.set(groupInfo)

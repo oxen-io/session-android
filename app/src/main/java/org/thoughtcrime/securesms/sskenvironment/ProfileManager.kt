@@ -5,7 +5,7 @@ import network.loki.messenger.libsession_util.util.UserPic
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.RetrieveProfileAvatarJob
-import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
@@ -18,10 +18,10 @@ class ProfileManager(private val context: Context, private val configFactory: Co
 
     override fun setNickname(context: Context, recipient: Recipient, nickname: String?) {
         if (recipient.isLocalNumber) return
-        val sessionID = recipient.address.serialize()
+        val accountID = recipient.address.serialize()
         val contactDatabase = DatabaseComponent.get(context).sessionContactDatabase()
-        var contact = contactDatabase.getContactWithSessionID(sessionID)
-        if (contact == null) contact = Contact(sessionID)
+        var contact = contactDatabase.getContactWithAccountID(accountID)
+        if (contact == null) contact = Contact(accountID)
         contact.threadID = DatabaseComponent.get(context).storage().getThreadId(recipient.address)
         if (contact.nickname != nickname) {
             contact.nickname = nickname
@@ -33,10 +33,10 @@ class ProfileManager(private val context: Context, private val configFactory: Co
     override fun setName(context: Context, recipient: Recipient, name: String?) {
         // New API
         if (recipient.isLocalNumber) return
-        val sessionID = recipient.address.serialize()
+        val accountID = recipient.address.serialize()
         val contactDatabase = DatabaseComponent.get(context).sessionContactDatabase()
-        var contact = contactDatabase.getContactWithSessionID(sessionID)
-        if (contact == null) contact = Contact(sessionID)
+        var contact = contactDatabase.getContactWithAccountID(accountID)
+        if (contact == null) contact = Contact(accountID)
         contact.threadID = DatabaseComponent.get(context).storage().getThreadId(recipient.address)
         if (contact.name != name) {
             contact.name = name
@@ -67,10 +67,10 @@ class ProfileManager(private val context: Context, private val configFactory: Co
             newProfileKey = profileKey,
             newProfilePicture = profilePictureURL
         )
-        val sessionID = recipient.address.serialize()
+        val accountID = recipient.address.serialize()
         val contactDatabase = DatabaseComponent.get(context).sessionContactDatabase()
-        var contact = contactDatabase.getContactWithSessionID(sessionID)
-        if (contact == null) contact = Contact(sessionID)
+        var contact = contactDatabase.getContactWithAccountID(accountID)
+        if (contact == null) contact = Contact(accountID)
         contact.threadID = DatabaseComponent.get(context).storage().getThreadId(recipient.address)
         if (!contact.profilePictureEncryptionKey.contentEquals(profileKey) || contact.profilePictureURL != profilePictureURL) {
             contact.profilePictureEncryptionKey = profileKey
@@ -91,10 +91,10 @@ class ProfileManager(private val context: Context, private val configFactory: Co
 
     override fun contactUpdatedInternal(contact: Contact): String? {
         val contactConfig = configFactory.contacts ?: return null
-        if (contact.sessionID == TextSecurePreferences.getLocalNumber(context)) return null
-        val sessionId = SessionId(contact.sessionID)
+        if (contact.accountID == TextSecurePreferences.getLocalNumber(context)) return null
+        val sessionId = AccountId(contact.accountID)
         if (sessionId.prefix != IdPrefix.STANDARD) return null // only internally store standard session IDs
-        contactConfig.upsertContact(contact.sessionID) {
+        contactConfig.upsertContact(contact.accountID) {
             this.name = contact.name.orEmpty()
             this.nickname = contact.nickname.orEmpty()
             val url = contact.profilePictureURL
@@ -108,7 +108,7 @@ class ProfileManager(private val context: Context, private val configFactory: Co
         if (contactConfig.needsPush()) {
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
         }
-        return contactConfig.get(contact.sessionID)?.hashCode()?.toString()
+        return contactConfig.get(contact.accountID)?.hashCode()?.toString()
     }
 
 }

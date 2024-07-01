@@ -7,19 +7,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import network.loki.messenger.R
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.thoughtcrime.securesms.conversation.disappearingmessages.ExpiryType
 import org.thoughtcrime.securesms.conversation.disappearingmessages.State
 import org.thoughtcrime.securesms.ui.PreviewTheme
-import org.thoughtcrime.securesms.ui.ThemeResPreviewParameterProvider
+import org.thoughtcrime.securesms.ui.color.Colors
+import org.thoughtcrime.securesms.ui.SessionColorsParameterProvider
 
 @Preview(widthDp = 450, heightDp = 700)
 @Composable
 fun PreviewStates(
     @PreviewParameter(StatePreviewParameterProvider::class) state: State
 ) {
-    PreviewTheme(R.style.Classic_Dark) {
+    PreviewTheme {
         DisappearingMessages(
             state.toUiState()
         )
@@ -51,9 +51,9 @@ class StatePreviewParameterProvider : PreviewParameterProvider<State> {
 @Preview
 @Composable
 fun PreviewThemes(
-    @PreviewParameter(ThemeResPreviewParameterProvider::class) themeResId: Int
+    @PreviewParameter(SessionColorsParameterProvider::class) colors: Colors
 ) {
-    PreviewTheme(themeResId) {
+    PreviewTheme(colors) {
         DisappearingMessages(
             State(expiryMode = ExpiryMode.AfterSend(43200)).toUiState(),
             modifier = Modifier.size(400.dp, 600.dp)

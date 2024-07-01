@@ -5,7 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import androidx.core.database.getStringOrNull
 import org.session.libsession.messaging.contacts.Contact
-import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.IdPrefix
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
@@ -14,7 +14,7 @@ class SessionContactDatabase(context: Context, helper: SQLCipherOpenHelper) : Da
 
     companion object {
         private const val sessionContactTable = "session_contact_database"
-        const val sessionID = "session_id"
+        const val accountID = "account_id"
         const val name = "name"
         const val nickname = "nickname"
         const val profilePictureURL = "profile_picture_url"
@@ -24,7 +24,7 @@ class SessionContactDatabase(context: Context, helper: SQLCipherOpenHelper) : Da
         const val isTrusted = "is_trusted"
         @JvmStatic val createSessionContactTableCommand =
             "CREATE TABLE $sessionContactTable " +
-                "($sessionID STRING PRIMARY KEY, " +
+                "($accountID STRING PRIMARY KEY, " +
                 "$name TEXT DEFAULT NULL, " +
                 "$nickname TEXT DEFAULT NULL, " +
                 "$profilePictureURL TEXT DEFAULT NULL, " +
@@ -34,9 +34,9 @@ class SessionContactDatabase(context: Context, helper: SQLCipherOpenHelper) : Da
                 "$isTrusted INTEGER DEFAULT 0);"
     }
 
-    fun getContactWithSessionID(sessionID: String): Contact? {
+    fun getContactWithAccountID(accountID: String): Contact? {
         val database = databaseHelper.readableDatabase
-        return database.get(sessionContactTable, "${Companion.sessionID} = ?", arrayOf( sessionID )) { cursor ->
+        return database.get(sessionContactTable, "${Companion.accountID} = ?", arrayOf( accountID )) { cursor ->
             contactFromCursor(cursor)
         }
     }
@@ -46,7 +46,7 @@ class SessionContactDatabase(context: Context, helper: SQLCipherOpenHelper) : Da
         return database.getAll(sessionContactTable, null, null) { cursor ->
             contactFromCursor(cursor)
         }.filter { contact ->
-            val sessionId = SessionId(contact.sessionID)
+            val sessionId = AccountId(contact.accountID)
             sessionId.prefix == IdPrefix.STANDARD
         }.toSet()
     }
@@ -55,7 +55,7 @@ class SessionContactDatabase(context: Context, helper: SQLCipherOpenHelper) : Da
         val database = databaseHelper.writableDatabase
         val contentValues = ContentValues(1)
         contentValues.put(Companion.isTrusted, if (isTrusted) 1 else 0)
-        database.update(sessionContactTable, contentValues, "$sessionID = ?", arrayOf( contact.sessionID ))
+        database.update(sessionContactTable, contentValues, "$accountID = ?", arrayOf( contact.accountID ))
         if (threadID >= 0) {
             notifyConversationListeners(threadID)
         }
@@ -65,7 +65,7 @@ class SessionContactDatabase(context: Context, helper: SQLCipherOpenHelper) : Da
     fun setContact(contact: Contact) {
         val database = databaseHelper.writableDatabase
         val contentValues = ContentValues(8)
-        contentValues.put(sessionID, contact.sessionID)
+        contentValues.put(accountID, contact.accountID)
         contentValues.put(name, contact.name)
         contentValues.put(nickname, contact.nickname)
         contentValues.put(profilePictureURL, contact.profilePictureURL)
@@ -75,13 +75,13 @@ class SessionContactDatabase(context: Context, helper: SQLCipherOpenHelper) : Da
         }
         contentValues.put(threadID, contact.threadID)
         contentValues.put(isTrusted, if (contact.isTrusted) 1 else 0)
-        database.insertOrUpdate(sessionContactTable, contentValues, "$sessionID = ?", arrayOf( contact.sessionID ))
+        database.insertOrUpdate(sessionContactTable, contentValues, "$accountID = ?", arrayOf( contact.accountID ))
         notifyConversationListListeners()
     }
 
     fun contactFromCursor(cursor: Cursor): Contact {
-        val sessionID = cursor.getString(cursor.getColumnIndexOrThrow(sessionID))
-        val contact = Contact(sessionID)
+        val accountID = cursor.getString(cursor.getColumnIndexOrThrow(accountID))
+        val contact = Contact(accountID)
         contact.name = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(name))
         contact.nickname = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(nickname))
         contact.profilePictureURL = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(profilePictureURL))

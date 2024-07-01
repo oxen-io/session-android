@@ -20,7 +20,7 @@ import org.session.libsession.utilities.truncateIdForDisplay
 object UpdateMessageBuilder {
     val storage = MessagingModuleConfiguration.shared.storage
 
-    private fun getSenderName(senderId: String) = storage.getContactWithSessionID(senderId)
+    private fun getSenderName(senderId: String) = storage.getContactWithAccountID(senderId)
         ?.displayName(Contact.ContactContext.REGULAR)
         ?: truncateIdForDisplay(senderId)
 
@@ -106,6 +106,6 @@ object UpdateMessageBuilder {
             CALL_OUTGOING -> R.string.MessageRecord_called_s
             CALL_MISSED, CALL_FIRST_MISSED -> R.string.MessageRecord_missed_call_from
         }.let {
-            context.getString(it, storage.getContactWithSessionID(sender)?.displayName(Contact.ContactContext.REGULAR) ?: sender)
+            context.getString(it, storage.getContactWithAccountID(sender)?.displayName(Contact.ContactContext.REGULAR) ?: sender)
         }
 }

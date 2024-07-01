@@ -317,7 +317,7 @@ public class Recipient implements RecipientModifiedListener {
 
   public synchronized @Nullable String getName() {
     StorageProtocol storage = MessagingModuleConfiguration.getShared().getStorage();
-    String sessionID = this.address.toString();
+    String accountID = this.address.toString();
     if (isGroupRecipient()) {
       if (this.name == null) {
         List<String> names = new LinkedList<>();
@@ -329,12 +329,12 @@ public class Recipient implements RecipientModifiedListener {
         return this.name;
       }
     } else if (isOpenGroupInboxRecipient()){
-      String inboxID = GroupUtil.getDecodedOpenGroupInboxSessionId(sessionID);
-      Contact contact = storage.getContactWithSessionID(inboxID);
-      if (contact == null) { return sessionID; }
+      String inboxID = GroupUtil.getDecodedOpenGroupInboxAccountId(accountID);
+      Contact contact = storage.getContactWithAccountID(inboxID);
+      if (contact == null) { return accountID; }
       return contact.displayName(Contact.ContactContext.REGULAR);
     } else {
-      Contact contact = storage.getContactWithSessionID(sessionID);
+      Contact contact = storage.getContactWithAccountID(accountID);
       if (contact == null) { return null; }
       return contact.displayName(Contact.ContactContext.REGULAR);
     }

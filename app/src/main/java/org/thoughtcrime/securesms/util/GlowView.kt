@@ -118,7 +118,7 @@ class PNModeView : LinearLayout, GlowView {
     // endregion
 }
 
-class NewConversationButtonImageView : androidx.appcompat.widget.AppCompatImageView, GlowView {
+class StartConversationButtonImageView : androidx.appcompat.widget.AppCompatImageView, GlowView {
     @ColorInt override var mainColor: Int = 0
     set(newValue) { field = newValue; paint.color = newValue }
     @ColorInt override var sessionShadowColor: Int = 0

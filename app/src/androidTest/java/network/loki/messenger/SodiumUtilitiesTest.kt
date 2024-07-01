@@ -143,7 +143,7 @@ class SodiumUtilitiesTest {
     }
 
     @Test
-    fun sessionIdFailureInvalidSessionId() {
+    fun sessionIdFailureInvalidAccountId() {
         val result = SodiumUtilities.sessionId("AB$publicKey", "15$blindedPublicKey", serverPublicKey)
 
         assertFalse(result)

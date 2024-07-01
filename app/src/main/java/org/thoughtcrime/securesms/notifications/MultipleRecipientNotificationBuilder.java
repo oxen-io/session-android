@@ -118,11 +118,11 @@ public class MultipleRecipientNotificationBuilder extends AbstractNotificationBu
    */
   private String getGroupDisplayName(Recipient recipient, boolean openGroupRecipient) {
     SessionContactDatabase contactDB = DatabaseComponent.get(context).sessionContactDatabase();
-    String sessionID = recipient.getAddress().serialize();
-    Contact contact = contactDB.getContactWithSessionID(sessionID);
-    if (contact == null) { return sessionID; }
+    String accountID = recipient.getAddress().serialize();
+    Contact contact = contactDB.getContactWithAccountID(accountID);
+    if (contact == null) { return accountID; }
     String displayName = contact.displayName(openGroupRecipient ? Contact.ContactContext.OPEN_GROUP : Contact.ContactContext.REGULAR);
-    if (displayName == null) { return sessionID; }
+    if (displayName == null) { return accountID; }
     return displayName;
   }
 }

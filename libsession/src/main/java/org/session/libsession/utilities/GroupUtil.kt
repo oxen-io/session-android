@@ -1,7 +1,7 @@
 package org.session.libsession.utilities
 
 import org.session.libsession.messaging.open_groups.OpenGroup
-import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsignal.messages.SignalServiceGroup
 import org.session.libsignal.utilities.Hex
 import java.io.IOException
@@ -17,7 +17,7 @@ object GroupUtil {
     }
 
     @JvmStatic
-    fun getEncodedOpenGroupInboxID(openGroup: OpenGroup, sessionId: SessionId): Address {
+    fun getEncodedOpenGroupInboxID(openGroup: OpenGroup, sessionId: AccountId): Address {
         val openGroupInboxId =
             "${openGroup.server}!${openGroup.publicKey}!${sessionId.hexString}".toByteArray()
         return getEncodedOpenGroupInboxID(openGroupInboxId)
@@ -60,7 +60,7 @@ object GroupUtil {
     }
 
     @JvmStatic
-    fun getDecodedOpenGroupInboxSessionId(groupID: String): String {
+    fun getDecodedOpenGroupInboxAccountId(groupID: String): String {
         val decodedGroupId = getDecodedGroupID(groupID)
         if (decodedGroupId.split("!").count() > 2) {
             return decodedGroupId.split("!", limit = 3)[2]
@@ -112,7 +112,7 @@ object GroupUtil {
         Hex.toStringCondensed(getDecodedGroupIDAsData(getDecodedGroupID(groupID)))
 
     @JvmStatic
-    fun addressToGroupSessionId(address: Address): String =
+    fun addressToGroupAccountId(address: Address): String =
         doubleDecodeGroupId(address.toGroupString())
 
     fun createConfigMemberMap(

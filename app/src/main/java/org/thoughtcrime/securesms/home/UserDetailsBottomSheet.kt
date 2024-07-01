@@ -99,7 +99,7 @@ class UserDetailsBottomSheet: BottomSheetDialogFragment() {
             publicKeyTextView.setOnLongClickListener {
                 val clipboard =
                     requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText("Session ID", publicKey)
+                val clip = ClipData.newPlainText("Account ID", publicKey)
                 clipboard.setPrimaryClip(clip)
                 Toast.makeText(requireContext(), R.string.copied_to_clipboard, Toast.LENGTH_SHORT)
                     .show()
@@ -138,7 +138,7 @@ class UserDetailsBottomSheet: BottomSheetDialogFragment() {
         else { newNickName = previousContactNickname }
         val publicKey = recipient.address.serialize()
         val storage = MessagingModuleConfiguration.shared.storage
-        val contact = storage.getContactWithSessionID(publicKey) ?: Contact(publicKey)
+        val contact = storage.getContactWithAccountID(publicKey) ?: Contact(publicKey)
         contact.nickname = newNickName
         storage.setContact(contact)
         nameTextView.text = recipient.name ?: publicKey // Uses the Contact API internally

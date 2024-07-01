@@ -11,6 +11,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.view.isGone
@@ -27,6 +28,8 @@ import org.thoughtcrime.securesms.conversation.v2.messages.QuoteViewDelegate
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.mms.GlideRequests
+import org.thoughtcrime.securesms.util.SimpleTextWatcher
+import org.thoughtcrime.securesms.util.addTextChangedListener
 import org.thoughtcrime.securesms.util.contains
 import org.thoughtcrime.securesms.util.toDp
 import org.thoughtcrime.securesms.util.toPx
@@ -220,8 +223,8 @@ class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, Li
         setOf(attachmentsButton, microphoneButton).forEach { it.snIsEnabled = showMediaControls }
     }
 
-    fun addTextChangedListener(textWatcher: TextWatcher) {
-        binding.inputBarEditText.addTextChangedListener(textWatcher)
+    fun addTextChangedListener(listener: (String) -> Unit) {
+        binding.inputBarEditText.addTextChangedListener(listener)
     }
 
     fun setSelection(index: Int) {

@@ -72,10 +72,6 @@ public class SearchRepository {
   public void query(@NonNull String query, @NonNull Callback<SearchResult> callback) {
     // If the sanitized search is empty then abort without search
     String cleanQuery = sanitizeQuery(query).trim();
-    if (cleanQuery.isEmpty()) {
-      callback.onResult(SearchResult.EMPTY);
-      return;
-    }
 
     executor.execute(() -> {
       Stopwatch timer = new Stopwatch("FtsQuery");
@@ -110,7 +106,7 @@ public class SearchRepository {
     });
   }
 
-  private Pair<CursorList<Contact>, List<String>> queryContacts(String query) {
+  public Pair<CursorList<Contact>, List<String>> queryContacts(String query) {
     Cursor contacts = contactDatabase.queryContactsByName(query);
     List<Address> contactList = new ArrayList<>();
     List<String> contactStrings = new ArrayList<>();
@@ -118,10 +114,10 @@ public class SearchRepository {
     while (contacts.moveToNext()) {
       try {
         Contact contact = contactDatabase.contactFromCursor(contacts);
-        String contactSessionId = contact.getSessionID();
-        Address address = Address.fromSerialized(contactSessionId);
+        String contactAccountId = contact.getAccountID();
+        Address address = Address.fromSerialized(contactAccountId);
         contactList.add(address);
-        contactStrings.add(contactSessionId);
+        contactStrings.add(contactAccountId);
       } catch (Exception e) {
         Log.e("Loki", "Error building Contact from cursor in query", e);
       }
@@ -211,7 +207,7 @@ public class SearchRepository {
     @Override
     public Contact build(@NonNull Cursor cursor) {
       ThreadRecord threadRecord = threadDb.readerFor(cursor).getCurrent();
-      Contact contact = contactDb.getContactWithSessionID(threadRecord.getRecipient().getAddress().serialize());
+      Contact contact = contactDb.getContactWithAccountID(threadRecord.getRecipient().getAddress().serialize());
       if (contact == null) {
         contact = new Contact(threadRecord.getRecipient().getAddress().serialize());
         contact.setThreadID(threadRecord.getThreadId());

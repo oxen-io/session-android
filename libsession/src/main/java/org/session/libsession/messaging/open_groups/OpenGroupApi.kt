@@ -19,7 +19,7 @@ import okhttp3.MediaType
 import okhttp3.RequestBody
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPoller.Companion.maxInactivityPeriod
-import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.messaging.utilities.SodiumUtilities.sodium
 import org.session.libsession.snode.OnionRequestAPI
@@ -356,7 +356,7 @@ object OpenGroupApi {
                 .plus(bodyHash)
             if (serverCapabilities.isEmpty() || serverCapabilities.contains(Capability.BLIND.name.lowercase())) {
                 SodiumUtilities.blindedKeyPair(publicKey, ed25519KeyPair)?.let { keyPair ->
-                    pubKey = SessionId(
+                    pubKey = AccountId(
                         IdPrefix.BLINDED,
                         keyPair.publicKey.asBytes
                     ).hexString
@@ -369,7 +369,7 @@ object OpenGroupApi {
                     ) ?: return Promise.ofFail(Error.SigningFailed)
                 } ?: return Promise.ofFail(Error.SigningFailed)
             } else {
-                pubKey = SessionId(
+                pubKey = AccountId(
                     IdPrefix.UN_BLINDED,
                     ed25519KeyPair.publicKey.asBytes
                 ).hexString
@@ -960,12 +960,12 @@ object OpenGroupApi {
         }
     }
 
-    fun sendDirectMessage(message: String, blindedSessionId: String, server: String): Promise<DirectMessage, Exception> {
+    fun sendDirectMessage(message: String, blindedAccountId: String, server: String): Promise<DirectMessage, Exception> {
         val request = Request(
             verb = POST,
             room = null,
             server = server,
-            endpoint = Endpoint.InboxFor(blindedSessionId),
+            endpoint = Endpoint.InboxFor(blindedAccountId),
             parameters = mapOf("message" to message)
         )
         return getResponseBody(request).map { response ->

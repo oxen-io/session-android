@@ -4,7 +4,6 @@ import android.os.Bundle
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
-import org.thoughtcrime.securesms.preferences.NotificationsPreferenceFragment
 
 @AndroidEntryPoint
 class NotificationSettingsActivity : PassphraseRequiredActionBarActivity() {

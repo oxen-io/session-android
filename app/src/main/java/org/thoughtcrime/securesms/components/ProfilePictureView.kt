@@ -15,6 +15,7 @@ import org.session.libsession.avatars.ProfileContactPhoto
 import org.session.libsession.avatars.ResourceContactPhoto
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.AppTextSecurePreferences
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
@@ -26,6 +27,8 @@ class ProfilePictureView @JvmOverloads constructor(
 ) : RelativeLayout(context, attrs) {
     private val binding = ViewProfilePictureBinding.inflate(LayoutInflater.from(context), this)
     private val glide: GlideRequests = GlideApp.with(this)
+    private val prefs = AppTextSecurePreferences(context)
+    private val userPublicKey = prefs.getLocalNumber()
     var publicKey: String? = null
     var displayName: String? = null
     var additionalPublicKey: String? = null
@@ -38,25 +41,28 @@ class ProfilePictureView @JvmOverloads constructor(
     private val unknownOpenGroupDrawable by lazy { ResourceContactPhoto(R.drawable.ic_notification)
         .asDrawable(context, ContactColors.UNKNOWN_COLOR.toConversationColor(context), false) }
 
-    // endregion
-
     constructor(context: Context, sender: Recipient): this(context) {
         update(sender)
     }
 
-    // region Updating
     fun update(recipient: Recipient) {
-        fun getUserDisplayName(publicKey: String): String {
-            val contact = DatabaseComponent.get(context).sessionContactDatabase().getContactWithSessionID(publicKey)
-            return contact?.displayName(Contact.ContactContext.REGULAR) ?: publicKey
-        }
+        recipient.run { update(address, isClosedGroupRecipient, isOpenGroupInboxRecipient) }
+    }
 
-        if (recipient.isClosedGroupRecipient) {
+    fun update(
+        address: Address,
+        isClosedGroupRecipient: Boolean = false,
+        isOpenGroupInboxRecipient: Boolean = false
+    ) {
+        fun getUserDisplayName(publicKey: String): String = prefs.takeIf { userPublicKey == publicKey }?.getProfileName()
+            ?: DatabaseComponent.get(context).sessionContactDatabase().getContactWithAccountID(publicKey)?.displayName(Contact.ContactContext.REGULAR)
+            ?: publicKey
+
+        if (isClosedGroupRecipient) {
             val members = DatabaseComponent.get(context).groupDatabase()
-                    .getGroupMemberAddresses(recipient.address.toGroupString(), true)
-                    .sorted()
-                    .take(2)
-                    .toMutableList()
+                .getGroupMemberAddresses(address.toGroupString(), true)
+                .sorted()
+                .take(2)
             if (members.size <= 1) {
                 publicKey = ""
                 displayName = ""
@@ -70,13 +76,13 @@ class ProfilePictureView @JvmOverloads constructor(
                 additionalPublicKey = apk
                 additionalDisplayName = getUserDisplayName(apk)
             }
-        } else if(recipient.isOpenGroupInboxRecipient) {
-            val publicKey = GroupUtil.getDecodedOpenGroupInboxSessionId(recipient.address.serialize())
+        } else if(isOpenGroupInboxRecipient) {
+            val publicKey = GroupUtil.getDecodedOpenGroupInboxAccountId(address.serialize())
             this.publicKey = publicKey
             displayName = getUserDisplayName(publicKey)
             additionalPublicKey = null
         } else {
-            val publicKey = recipient.address.toString()
+            val publicKey = address.serialize()
             this.publicKey = publicKey
             displayName = getUserDisplayName(publicKey)
             additionalPublicKey = null

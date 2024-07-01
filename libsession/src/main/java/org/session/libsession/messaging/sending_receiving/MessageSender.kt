@@ -24,7 +24,7 @@ import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.open_groups.OpenGroupApi.Capability
 import org.session.libsession.messaging.open_groups.OpenGroupMessage
 import org.session.libsession.messaging.utilities.MessageWrapper
-import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.snode.RawResponsePromise
 import org.session.libsession.snode.SnodeAPI
@@ -312,9 +312,9 @@ object MessageSender {
             else -> {}
         }
         val messageSender = if (serverCapabilities.contains(Capability.BLIND.name.lowercase()) && blindedPublicKey != null) {
-            SessionId(IdPrefix.BLINDED, blindedPublicKey!!).hexString
+            AccountId(IdPrefix.BLINDED, blindedPublicKey!!).hexString
         } else {
-            SessionId(IdPrefix.UN_BLINDED, userEdKeyPair.publicKey.asBytes).hexString
+            AccountId(IdPrefix.UN_BLINDED, userEdKeyPair.publicKey.asBytes).hexString
         }
         message.sender = messageSender
         // Set the failure handler (need it here already for precondition failure handling)

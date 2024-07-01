@@ -10,11 +10,13 @@ import network.loki.messenger.R
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
+import org.session.libsession.utilities.truncateIdForDisplay
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.ContentView
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.GroupConversation
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.Header
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.Message
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.SavedMessages
+import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter.Model.SubHeader
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.SearchUtil
 import java.util.Locale
@@ -78,6 +80,7 @@ fun ContentView.bindQuery(query: String, model: GlobalSearchAdapter.Model) {
             binding.searchResultSubtitle.text = getHighlight(query, membersString)
         }
         is Header, // do nothing for header
+        is SubHeader, // do nothing for subheader
         is SavedMessages -> Unit // do nothing for saved messages (displays note to self)
     }
 }
@@ -88,7 +91,6 @@ private fun getHighlight(query: String?, toSearch: String): Spannable? {
 
 fun ContentView.bindModel(query: String?, model: GroupConversation) {
     binding.searchResultProfilePicture.isVisible = true
-    binding.searchResultSavedMessages.isVisible = false
     binding.searchResultSubtitle.isVisible = model.groupRecord.isClosedGroup
     binding.searchResultTimestamp.isVisible = false
     val threadRecipient = Recipient.from(binding.root.context, Address.fromSerialized(model.groupRecord.encodedId), false)
@@ -98,10 +100,7 @@ fun ContentView.bindModel(query: String?, model: GroupConversation) {
 
     val groupRecipients = model.groupRecord.members.map { Recipient.from(binding.root.context, it, false) }
 
-    val membersString = groupRecipients.joinToString {
-        val address = it.address.serialize()
-        it.name ?: "${address.take(4)}...${address.takeLast(4)}"
-    }
+    val membersString = groupRecipients.joinToString(transform = Recipient::getSearchName)
     if (model.groupRecord.isClosedGroup) {
         binding.searchResultSubtitle.text = getHighlight(query, membersString)
     }
@@ -109,12 +108,11 @@ fun ContentView.bindModel(query: String?, model: GroupConversation) {
 
 fun ContentView.bindModel(query: String?, model: ContactModel) {
     binding.searchResultProfilePicture.isVisible = true
-    binding.searchResultSavedMessages.isVisible = false
     binding.searchResultSubtitle.isVisible = false
     binding.searchResultTimestamp.isVisible = false
     binding.searchResultSubtitle.text = null
     val recipient =
-        Recipient.from(binding.root.context, Address.fromSerialized(model.contact.sessionID), false)
+        Recipient.from(binding.root.context, Address.fromSerialized(model.contact.accountID), false)
     binding.searchResultProfilePicture.update(recipient)
     val nameString = model.contact.getSearchName()
     binding.searchResultTitle.text = getHighlight(query, nameString)
@@ -124,13 +122,12 @@ fun ContentView.bindModel(model: SavedMessages) {
     binding.searchResultSubtitle.isVisible = false
     binding.searchResultTimestamp.isVisible = false
     binding.searchResultTitle.setText(R.string.note_to_self)
-    binding.searchResultProfilePicture.isVisible = false
-    binding.searchResultSavedMessages.isVisible = true
+    binding.searchResultProfilePicture.update(Address.fromSerialized(model.currentUserPublicKey))
+    binding.searchResultProfilePicture.isVisible = true
 }
 
 fun ContentView.bindModel(query: String?, model: Message) {
     binding.searchResultProfilePicture.isVisible = true
-    binding.searchResultSavedMessages.isVisible = false
     binding.searchResultTimestamp.isVisible = true
 //    val hasUnreads = model.unread > 0
 //    binding.unreadCountIndicator.isVisible = hasUnreads
@@ -154,8 +151,7 @@ fun ContentView.bindModel(query: String?, model: Message) {
     binding.searchResultSubtitle.isVisible = true
 }
 
-fun Recipient.getSearchName(): String = name ?: address.serialize().let { address -> "${address.take(4)}...${address.takeLast(4)}" }
+fun Recipient.getSearchName(): String = name ?: address.serialize().let(::truncateIdForDisplay)
 
-fun Contact.getSearchName(): String =
-        if (nickname.isNullOrEmpty()) name ?: "${sessionID.take(4)}...${sessionID.takeLast(4)}"
-        else "${name ?: "${sessionID.take(4)}...${sessionID.takeLast(4)}"} ($nickname)"
+fun Contact.getSearchName(): String = nickname?.takeIf { it.isNotEmpty() }
+    ?: name?.takeIf { it.isNotEmpty() } ?: truncateIdForDisplay(accountID)

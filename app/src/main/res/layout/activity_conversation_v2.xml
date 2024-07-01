@@ -256,6 +256,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/blockedBanner"
         android:elevation="8dp"
+        android:contentDescription="@string/AccessibilityId_control_message"
         tools:text="@string/activity_conversation_empty_state_default"
         />
 

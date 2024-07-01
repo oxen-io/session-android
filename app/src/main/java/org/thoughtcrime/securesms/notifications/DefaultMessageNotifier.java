@@ -42,7 +42,7 @@ import com.goterl.lazysodium.utils.KeyPair;
 
 import org.session.libsession.messaging.open_groups.OpenGroup;
 import org.session.libsession.messaging.sending_receiving.notifications.MessageNotifier;
-import org.session.libsession.messaging.utilities.SessionId;
+import org.session.libsession.messaging.utilities.AccountId;
 import org.session.libsession.messaging.utilities.SodiumUtilities;
 import org.session.libsession.snode.SnodeAPI;
 import org.session.libsession.utilities.Address;
@@ -578,7 +578,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
     if (openGroup != null && edKeyPair != null) {
       KeyPair blindedKeyPair = SodiumUtilities.blindedKeyPair(openGroup.getPublicKey(), edKeyPair);
       if (blindedKeyPair != null) {
-        return new SessionId(IdPrefix.BLINDED, blindedKeyPair.getPublicKey().getAsBytes()).getHexString();
+        return new AccountId(IdPrefix.BLINDED, blindedKeyPair.getPublicKey().getAsBytes()).getHexString();
       }
     }
     return null;

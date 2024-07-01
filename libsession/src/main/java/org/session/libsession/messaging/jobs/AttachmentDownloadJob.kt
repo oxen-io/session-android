@@ -95,7 +95,7 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
         } else {
             messageDataProvider.getIndividualRecipientForMms(databaseMessageID)?.address?.serialize()
         }
-        val contact = sender?.let { storage.getContactWithSessionID(it) }
+        val contact = sender?.let { storage.getContactWithAccountID(it) }
         if (threadRecipient == null || sender == null || (contact == null && !selfSend)) {
             handleFailure(Error.NoSender, null)
             return

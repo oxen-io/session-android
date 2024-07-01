@@ -90,7 +90,7 @@ interface Response {
 
 @Serializable
 data class PushNotificationMetadata(
-        /** Account ID (such as Session ID or closed group ID) where the message arrived **/
+        /** Account ID (such as Account ID or closed group ID) where the message arrived **/
         @SerialName("@")
         val account: String,
 

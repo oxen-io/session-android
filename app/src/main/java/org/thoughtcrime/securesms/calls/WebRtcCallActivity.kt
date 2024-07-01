@@ -381,7 +381,7 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
 
     private fun getUserDisplayName(publicKey: String): String {
         val contact =
-            DatabaseComponent.get(this).sessionContactDatabase().getContactWithSessionID(publicKey)
+            DatabaseComponent.get(this).sessionContactDatabase().getContactWithAccountID(publicKey)
         return contact?.displayName(Contact.ContactContext.REGULAR) ?: publicKey
     }
 

@@ -26,7 +26,7 @@ class DeleteOptionsBottomSheet : BottomSheetDialogFragment(), View.OnClickListen
     val contact by lazy {
         val senderId = recipient.address.serialize()
         // this dialog won't show for open group contacts
-        contactDatabase.getContactWithSessionID(senderId)
+        contactDatabase.getContactWithAccountID(senderId)
             ?.displayName(Contact.ContactContext.REGULAR)
     }
 

@@ -1,7 +1,7 @@
 package org.session.libsignal.utilities
 
 enum class IdPrefix(val value: String) {
-    STANDARD("05"), BLINDED("15"), UN_BLINDED("00"), BLINDEDV2("25");
+    STANDARD("05"), BLINDED("15"), UN_BLINDED("00"), BLINDEDV2("25"), GROUP("03");
 
     fun isBlinded() = value == BLINDED.value || value == BLINDEDV2.value
 
@@ -11,6 +11,7 @@ enum class IdPrefix(val value: String) {
             BLINDED.value -> BLINDED
             BLINDEDV2.value -> BLINDEDV2
             UN_BLINDED.value -> UN_BLINDED
+            GROUP.value -> GROUP
             else -> null
         }
     }
