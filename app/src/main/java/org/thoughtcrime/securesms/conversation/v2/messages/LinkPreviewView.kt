@@ -41,7 +41,7 @@ class LinkPreviewView : LinearLayout {
         // Thumbnail
         if (linkPreview.getThumbnail().isPresent) {
             // This internally fetches the thumbnail
-            binding.thumbnailImageView.root.setImageResource(glide, ImageSlide(context, linkPreview.getThumbnail().get()), isPreview = false, message)
+            binding.thumbnailImageView.root.setImageResource(glide, ImageSlide(context, linkPreview.getThumbnail().get()), isPreview = false)
             binding.thumbnailImageView.root.loadIndicator.isVisible = false
         }
         // Title

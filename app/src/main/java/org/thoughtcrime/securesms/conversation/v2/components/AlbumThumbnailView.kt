@@ -104,7 +104,7 @@ class AlbumThumbnailView : RelativeLayout {
         // iterate binding
         slides.take(MAX_ALBUM_DISPLAY_SIZE).forEachIndexed { position, slide ->
             val thumbnailView = getThumbnailView(position)
-            thumbnailView.setImageResource(glideRequests, slide, isPreview = false, mms = message)
+            thumbnailView.setImageResource(glideRequests, slide, isPreview = false)
         }
     }
 
