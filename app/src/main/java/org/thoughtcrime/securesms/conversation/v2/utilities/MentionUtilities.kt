@@ -26,6 +26,7 @@ import java.util.regex.Pattern
 
 object MentionUtilities {
 
+    private val pattern by lazy { Pattern.compile("@[0-9a-fA-F]*") }
 
     /**
      * Highlights mentions in a given text.
@@ -49,12 +50,12 @@ object MentionUtilities {
         context: Context
     ): SpannableString {
         @Suppress("NAME_SHADOWING") var text = text
-        val pattern = Pattern.compile("@[0-9a-fA-F]*")
+
         var matcher = pattern.matcher(text)
         val mentions = mutableListOf<Tuple2<Range<Int>, String>>()
         var startIndex = 0
         val userPublicKey = TextSecurePreferences.getLocalNumber(context)!!
-        val openGroup = DatabaseComponent.get(context).storage().getOpenGroup(threadID)
+        val openGroup by lazy { DatabaseComponent.get(context).storage().getOpenGroup(threadID) }
 
         // format the mention text
         if (matcher.find(startIndex)) {
@@ -124,6 +125,7 @@ object MentionUtilities {
                 backgroundColor?.let { background ->
                     result.setSpan(
                         RoundedBackgroundSpan(
+                            context = context,
                             textColor = mainTextColor,
                             backgroundColor = background
                         ),

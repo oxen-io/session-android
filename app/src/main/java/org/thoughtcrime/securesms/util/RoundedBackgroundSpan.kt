@@ -1,5 +1,6 @@
 package org.thoughtcrime.securesms.util
 
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -18,11 +19,12 @@ import android.text.style.ReplacementSpan
 
 
 class RoundedBackgroundSpan(
+    context: Context,
     private val textColor: Int,
     private val backgroundColor: Int,
-    private val cornerRadius: Float = toPx(8, Resources.getSystem()).toFloat(), // setting some Session defaults
-    private val paddingHorizontal: Float = toPx(3, Resources.getSystem()).toFloat(),
-    private val paddingVertical: Float = toPx(3, Resources.getSystem()).toFloat()
+    private val cornerRadius: Float = toPx(8, context.resources).toFloat(), // setting some Session defaults
+    private val paddingHorizontal: Float = toPx(3, context.resources).toFloat(),
+    private val paddingVertical: Float = toPx(3, context.resources).toFloat()
 ) : ReplacementSpan() {
 
     override fun draw(
