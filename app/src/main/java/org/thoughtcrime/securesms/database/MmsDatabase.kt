@@ -218,6 +218,21 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         return cursor
     }
 
+    fun getRecentChatMemberIDs(threadID: Long, limit: Int): List<String> {
+        val sql = """
+            SELECT DISTINCT $ADDRESS FROM $TABLE_NAME
+            WHERE $THREAD_ID = ?
+            ORDER BY $DATE_SENT DESC
+            LIMIT $limit
+        """.trimIndent()
+
+        return databaseHelper.readableDatabase.rawQuery(sql, threadID).use { cursor ->
+            cursor.asSequence()
+                .map { it.getString(0) }
+                .toList()
+        }
+    }
+
     val expireStartedMessages: Reader
         get() {
             val where = "$EXPIRE_STARTED > 0"

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.PointF
 import android.net.Uri
+import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.util.AttributeSet
@@ -224,8 +225,8 @@ class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, Li
         binding.inputBarEditText.addTextChangedListener(textWatcher)
     }
 
-    fun setSelection(index: Int) {
-        binding.inputBarEditText.setSelection(index)
+    fun setInputBarEditableFactory(factory: Editable.Factory) {
+        binding.inputBarEditText.setEditableFactory(factory)
     }
     // endregion
 }

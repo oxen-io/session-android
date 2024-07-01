@@ -29,8 +29,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup.LayoutParams
 import android.view.WindowManager
-import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -46,6 +46,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -67,8 +68,6 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.AttachmentDownloadJob
 import org.session.libsession.messaging.jobs.JobQueue
-import org.session.libsession.messaging.mentions.Mention
-import org.session.libsession.messaging.mentions.MentionsManager
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.messages.applyExpiryMode
 import org.session.libsession.messaging.messages.control.DataExtractionNotification
@@ -118,7 +117,8 @@ import org.thoughtcrime.securesms.conversation.v2.dialogs.SendSeedDialog
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarButton
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarDelegate
 import org.thoughtcrime.securesms.conversation.v2.input_bar.InputBarRecordingViewDelegate
-import org.thoughtcrime.securesms.conversation.v2.input_bar.mentions.MentionCandidatesView
+import org.thoughtcrime.securesms.conversation.v2.input_bar.mentions.MentionCandidateAdapter
+import org.thoughtcrime.securesms.conversation.v2.mention.MentionViewModel
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationActionModeCallback
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationActionModeCallbackDelegate
 import org.thoughtcrime.securesms.conversation.v2.menus.ConversationMenuHelper
@@ -215,6 +215,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     @Inject lateinit var storage: Storage
     @Inject lateinit var reactionDb: ReactionDatabase
     @Inject lateinit var viewModelFactory: ConversationViewModel.AssistedFactory
+    @Inject lateinit var mentionViewModelFactory: MentionViewModel.AssistedFactory
 
     private val screenshotObserver by lazy {
         ScreenshotObserver(this, Handler(Looper.getMainLooper())) {
@@ -228,7 +229,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         ViewModelProvider(this, LinkPreviewViewModel.Factory(LinkPreviewRepository()))
             .get(LinkPreviewViewModel::class.java)
     }
-    private val viewModel: ConversationViewModel by viewModels {
+
+    private val threadId: Long by lazy {
         var threadId = intent.getLongExtra(THREAD_ID, -1L)
         if (threadId == -1L) {
             intent.getParcelableExtra<Address>(ADDRESS)?.let { it ->
@@ -248,6 +250,11 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 }
             } ?: finish()
         }
+
+        threadId
+    }
+
+    private val viewModel: ConversationViewModel by viewModels {
         viewModelFactory.create(threadId, MessagingModuleConfiguration.shared.getUserED25519KeyPair())
     }
     private var actionMode: ActionMode? = null
@@ -260,11 +267,12 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private var isLockViewExpanded = false
     private var isShowingAttachmentOptions = false
     // Mentions
-    private val mentions = mutableListOf<Mention>()
-    private var mentionCandidatesView: MentionCandidatesView? = null
-    private var previousText: CharSequence = ""
-    private var currentMentionStartIndex = -1
-    private var isShowingMentionCandidatesView = false
+    private val mentionViewModel: MentionViewModel by viewModels {
+        mentionViewModelFactory.create(threadId)
+    }
+    private val mentionCandidateAdapter = MentionCandidateAdapter {
+        mentionViewModel.onCandidateSelected(it.member.publicKey)
+    }
     // Search
     val searchViewModel: SearchViewModel by viewModels()
     var searchViewItem: MenuItem? = null
@@ -325,11 +333,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     onDeselect(message, position, it)
                 }
             },
-            onAttachmentNeedsDownload = { attachmentId, mmsId ->
-                lifecycleScope.launch(Dispatchers.IO) {
-                    JobQueue.shared.add(AttachmentDownloadJob(attachmentId, mmsId))
-                }
-            },
+            onAttachmentNeedsDownload = viewModel::onAttachmentDownloadRequest,
             glide = glide,
             lifecycleCoroutineScope = lifecycleScope
         )
@@ -486,6 +490,27 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                         }
                     }
         }
+
+        setupMentionView()
+    }
+
+    private fun setupMentionView() {
+        binding?.conversationMentionCandidates?.let { view ->
+            view.adapter = mentionCandidateAdapter
+            view.itemAnimator = null
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mentionViewModel.autoCompleteState
+                    .collectLatest { state ->
+                        mentionCandidateAdapter.candidates =
+                            (state as? MentionViewModel.AutoCompleteState.Result)?.members.orEmpty()
+                    }
+            }
+        }
+
+        binding?.inputBar?.setInputBarEditableFactory(mentionViewModel.editableFactory)
     }
 
     override fun onResume() {
@@ -642,23 +667,19 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         binding.inputBar.delegate = this
         binding.inputBarRecordingView.delegate = this
         // GIF button
-        binding.gifButtonContainer.addView(gifButton)
-        gifButton.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)
+        binding.gifButtonContainer.addView(gifButton, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         gifButton.onUp = { showGIFPicker() }
         gifButton.snIsEnabled = false
         // Document button
-        binding.documentButtonContainer.addView(documentButton)
-        documentButton.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)
+        binding.documentButtonContainer.addView(documentButton, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         documentButton.onUp = { showDocumentPicker() }
         documentButton.snIsEnabled = false
         // Library button
-        binding.libraryButtonContainer.addView(libraryButton)
-        libraryButton.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)
+        binding.libraryButtonContainer.addView(libraryButton, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         libraryButton.onUp = { pickFromLibrary() }
         libraryButton.snIsEnabled = false
         // Camera button
-        binding.cameraButtonContainer.addView(cameraButton)
-        cameraButton.layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)
+        binding.cameraButtonContainer.addView(cameraButton, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         cameraButton.onUp = { showCamera() }
         cameraButton.snIsEnabled = false
     }
@@ -913,7 +934,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         if (textSecurePreferences.isLinkPreviewsEnabled()) {
             linkPreviewViewModel.onTextChanged(this, inputBarText, 0, 0)
         }
-        showOrHideMentionCandidatesIfNeeded(newContent)
         if (LinkPreviewUtil.findWhitelistedUrls(newContent.toString()).isNotEmpty()
             && !textSecurePreferences.isLinkPreviewsEnabled() && !textSecurePreferences.hasSeenLinkPreviewSuggestionDialog()) {
             LinkPreviewDialog {
@@ -923,76 +943,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             }.show(supportFragmentManager, "Link Preview Dialog")
             textSecurePreferences.setHasSeenLinkPreviewSuggestionDialog()
         }
-    }
-
-    private fun showOrHideMentionCandidatesIfNeeded(text: CharSequence) {
-        if (text.length < previousText.length) {
-            currentMentionStartIndex = -1
-            hideMentionCandidates()
-            val mentionsToRemove = mentions.filter { !text.contains(it.displayName) }
-            mentions.removeAll(mentionsToRemove)
-        }
-        if (text.isNotEmpty()) {
-            val lastCharIndex = text.lastIndex
-            val lastChar = text[lastCharIndex]
-            // Check if there is whitespace before the '@' or the '@' is the first character
-            val isCharacterBeforeLastWhiteSpaceOrStartOfLine: Boolean
-            if (text.length == 1) {
-                isCharacterBeforeLastWhiteSpaceOrStartOfLine = true // Start of line
-            } else {
-                val charBeforeLast = text[lastCharIndex - 1]
-                isCharacterBeforeLastWhiteSpaceOrStartOfLine = Character.isWhitespace(charBeforeLast)
-            }
-            if (lastChar == '@' && isCharacterBeforeLastWhiteSpaceOrStartOfLine) {
-                currentMentionStartIndex = lastCharIndex
-                showOrUpdateMentionCandidatesIfNeeded()
-            } else if (Character.isWhitespace(lastChar) || lastChar == '@') { // the lastCharacter == "@" is to check for @@
-                currentMentionStartIndex = -1
-                hideMentionCandidates()
-            } else if (currentMentionStartIndex != -1) {
-                val query = text.substring(currentMentionStartIndex + 1) // + 1 to get rid of the "@"
-                showOrUpdateMentionCandidatesIfNeeded(query)
-            }
-        } else {
-            currentMentionStartIndex = -1
-            hideMentionCandidates()
-        }
-        previousText = text
-    }
-
-    private fun showOrUpdateMentionCandidatesIfNeeded(query: String = "") {
-        val additionalContentContainer = binding?.additionalContentContainer ?: return
-        val recipient = viewModel.recipient ?: return
-        if (!isShowingMentionCandidatesView) {
-            additionalContentContainer.removeAllViews()
-            val view = MentionCandidatesView(this).apply {
-                contentDescription = context.getString(R.string.AccessibilityId_mentions_list)
-            }
-            view.glide = glide
-            view.onCandidateSelected = { handleMentionSelected(it) }
-            additionalContentContainer.addView(view)
-            val candidates = MentionsManager.getMentionCandidates(query, viewModel.threadId, recipient.isCommunityRecipient)
-            this.mentionCandidatesView = view
-            view.show(candidates, viewModel.threadId)
-        } else {
-            val candidates = MentionsManager.getMentionCandidates(query, viewModel.threadId, recipient.isCommunityRecipient)
-            this.mentionCandidatesView!!.setMentionCandidates(candidates)
-        }
-        isShowingMentionCandidatesView = true
-    }
-
-    private fun hideMentionCandidates() {
-        if (isShowingMentionCandidatesView) {
-            val mentionCandidatesView = mentionCandidatesView ?: return
-            val animation = ValueAnimator.ofObject(FloatEvaluator(), mentionCandidatesView.alpha, 0.0f)
-            animation.duration = 250L
-            animation.addUpdateListener { animator ->
-                mentionCandidatesView.alpha = animator.animatedValue as Float
-                if (animator.animatedFraction == 1.0f) { binding?.additionalContentContainer?.removeAllViews() }
-            }
-            animation.start()
-        }
-        isShowingMentionCandidatesView = false
     }
 
     override fun toggleAttachmentOptions() {
@@ -1510,18 +1460,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         return hitRect.contains(x, y)
     }
 
-    private fun handleMentionSelected(mention: Mention) {
-        val binding = binding ?: return
-        if (currentMentionStartIndex == -1) { return }
-        mentions.add(mention)
-        val previousText = binding.inputBar.text
-        val newText = previousText.substring(0, currentMentionStartIndex) + "@" + mention.displayName + " "
-        binding.inputBar.text = newText
-        binding.inputBar.setSelection(newText.length)
-        currentMentionStartIndex = -1
-        hideMentionCandidates()
-        this.previousText = newText
-    }
 
     override fun scrollToMessageIfPossible(timestamp: Long) {
         val lastSeenItemPosition = adapter.getItemPositionForTimestamp(timestamp) ?: return
@@ -1620,10 +1558,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         binding?.inputBar?.text = ""
         binding?.inputBar?.cancelQuoteDraft()
         binding?.inputBar?.cancelLinkPreviewDraft()
-        // Clear mentions
-        previousText = ""
-        currentMentionStartIndex = -1
-        mentions.clear()
         // Put the message in the database
         message.id = smsDb.insertMessageOutbox(viewModel.threadId, outgoingTextMessage, false, message.sentTimestamp!!, null, true)
         // Send it
@@ -1668,10 +1602,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         binding?.inputBar?.text = ""
         binding?.inputBar?.cancelQuoteDraft()
         binding?.inputBar?.cancelLinkPreviewDraft()
-        // Clear mentions
-        previousText = ""
-        currentMentionStartIndex = -1
-        mentions.clear()
         // Reset the attachment manager
         attachmentManager.clear()
         // Reset attachments button if needed
@@ -1958,7 +1888,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val messageIterator = sortedMessages.iterator()
         while (messageIterator.hasNext()) {
             val message = messageIterator.next()
-            val body = MentionUtilities.highlightMentions(message.body, viewModel.threadId, this)
+            val body = MentionUtilities.highlightMentions(
+                text = message.body,
+                formatOnly = true, // no styling here, only text formatting
+                threadID = viewModel.threadId,
+                context = this
+            )
+
             if (TextUtils.isEmpty(body)) { continue }
             if (messageSize > 1) {
                 val formattedTimestamp = DateUtils.getDisplayFormattedTimeSpanString(this, Locale.getDefault(), message.timestamp)
@@ -2099,17 +2035,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
 
     // region General
     private fun getMessageBody(): String {
-        var result = binding?.inputBar?.text?.trim() ?: return ""
-        for (mention in mentions) {
-            try {
-                val startIndex = result.indexOf("@" + mention.displayName)
-                val endIndex = startIndex + mention.displayName.count() + 1 // + 1 to include the "@"
-                result = result.substring(0, startIndex) + "@" + mention.publicKey + result.substring(endIndex)
-            } catch (exception: Exception) {
-                Log.d("Loki", "Failed to process mention due to error: $exception")
-            }
-        }
-        return result
+        return mentionViewModel.normalizeMessageBody()
     }
     // endregion
 
