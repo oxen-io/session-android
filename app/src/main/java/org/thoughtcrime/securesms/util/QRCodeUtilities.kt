@@ -9,17 +9,26 @@ import com.google.zxing.qrcode.QRCodeWriter
 
 object QRCodeUtilities {
 
-    fun encode(data: String, size: Int, isInverted: Boolean = false, hasTransparentBackground: Boolean = true): Bitmap {
+    fun encode(
+        data: String,
+        size: Int,
+        isInverted: Boolean = false,
+        hasTransparentBackground: Boolean = true,
+        dark: Int = Color.BLACK,
+        light: Int = Color.WHITE,
+    ): Bitmap {
         try {
             val hints = hashMapOf( EncodeHintType.MARGIN to 1 )
             val result = QRCodeWriter().encode(data, BarcodeFormat.QR_CODE, size, size, hints)
             val bitmap = Bitmap.createBitmap(result.width, result.height, Bitmap.Config.ARGB_8888)
+            val color = if (isInverted) light else dark
+            val background = if (isInverted) dark else light
             for (y in 0 until result.height) {
                 for (x in 0 until result.width) {
                     if (result.get(x, y)) {
-                        bitmap.setPixel(x, y, if (isInverted) Color.WHITE else Color.BLACK)
+                        bitmap.setPixel(x, y, color)
                     } else if (!hasTransparentBackground) {
-                        bitmap.setPixel(x, y, if (isInverted) Color.BLACK else Color.WHITE)
+                        bitmap.setPixel(x, y, background)
                     }
                 }
             }

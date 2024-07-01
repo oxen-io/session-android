@@ -364,7 +364,7 @@ fun FileDetails(fileDetails: List<TitledText>) {
 fun TitledErrorText(titledText: TitledText?) {
     TitledText(
         titledText,
-        valueStyle = LocalTextStyle.current.copy(color = colorDestructive)
+        style = LocalTextStyle.current.copy(color = colorDestructive)
     )
 }
 
@@ -372,7 +372,7 @@ fun TitledErrorText(titledText: TitledText?) {
 fun TitledMonospaceText(titledText: TitledText?) {
     TitledText(
         titledText,
-        valueStyle = LocalTextStyle.current.copy(fontFamily = FontFamily.Monospace)
+        style = LocalTextStyle.current.copy(fontFamily = FontFamily.Monospace)
     )
 }
 
@@ -380,11 +380,11 @@ fun TitledMonospaceText(titledText: TitledText?) {
 fun TitledText(
     titledText: TitledText?,
     modifier: Modifier = Modifier,
-    valueStyle: TextStyle = LocalTextStyle.current,
+    style: TextStyle = LocalTextStyle.current,
 ) {
     titledText?.apply {
         TitledView(title, modifier) {
-            Text(text, style = valueStyle, modifier = Modifier.fillMaxWidth())
+            Text(text, style = style, modifier = Modifier.fillMaxWidth())
         }
     }
 }

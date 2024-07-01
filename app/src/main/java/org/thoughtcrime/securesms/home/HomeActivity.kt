@@ -7,9 +7,32 @@ import android.content.ClipboardManager
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.text.SpannableString
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -64,12 +87,19 @@ import org.thoughtcrime.securesms.messagerequests.MessageRequestsActivity
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.notifications.PushRegistry
-import org.thoughtcrime.securesms.onboarding.SeedActivity
-import org.thoughtcrime.securesms.onboarding.SeedReminderViewDelegate
+import org.thoughtcrime.securesms.onboarding.recoverypassword.startRecoveryPasswordActivity
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.preferences.SettingsActivity
 import org.thoughtcrime.securesms.showMuteDialog
 import org.thoughtcrime.securesms.showSessionDialog
+import org.thoughtcrime.securesms.ui.AppTheme
+import org.thoughtcrime.securesms.ui.GetString
+import org.thoughtcrime.securesms.ui.OutlineButton
+import org.thoughtcrime.securesms.ui.PreviewTheme
+import org.thoughtcrime.securesms.ui.SessionShieldIcon
+import org.thoughtcrime.securesms.ui.ThemeResPreviewParameterProvider
+import org.thoughtcrime.securesms.ui.h8
+import org.thoughtcrime.securesms.ui.small
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.IP2Country
 import org.thoughtcrime.securesms.util.disableClipping
@@ -81,7 +111,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class HomeActivity : PassphraseRequiredActionBarActivity(),
     ConversationClickListener,
-    SeedReminderViewDelegate,
     GlobalSearchInputLayout.GlobalSearchInputLayoutListener {
 
     companion object {
@@ -169,15 +198,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         binding.sessionToolbar.disableClipping()
         // Set up seed reminder view
         lifecycleScope.launchWhenStarted {
-            val hasViewedSeed = textSecurePreferences.getHasViewedSeed()
-            if (!hasViewedSeed) {
-                binding.seedReminderView.isVisible = true
-                binding.seedReminderView.title = SpannableString("You're almost finished! 80%") // Intentionally not yet translated
-                binding.seedReminderView.subtitle = resources.getString(R.string.view_seed_reminder_subtitle_1)
-                binding.seedReminderView.setProgress(80, false)
-                binding.seedReminderView.delegate = this@HomeActivity
-            } else {
-                binding.seedReminderView.isVisible = false
+            binding.seedReminderView.setContent {
+                if (!textSecurePreferences.getHasViewedSeed()) SeedReminder()
             }
         }
         // Set up recycler view
@@ -193,7 +215,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         }
 
         // Set up empty state view
-        binding.createNewPrivateChatButton.setOnClickListener { showNewConversation() }
+        binding.emptyStateContainer.setContent { EmptyView(ApplicationContext.getInstance(this).newAccount) }
+
         IP2Country.configureIfNeeded(this@HomeActivity)
 
         // Set up new conversation button
@@ -316,6 +339,79 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         }
     }
 
+    @Preview
+    @Composable
+    fun PreviewMessageDetails(
+        @PreviewParameter(ThemeResPreviewParameterProvider::class) themeResId: Int
+    ) {
+        PreviewTheme(themeResId) {
+            SeedReminder()
+        }
+    }
+
+    @Composable
+    private fun SeedReminder() {
+        AppTheme {
+            Column {
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(4.dp)
+                        .background(MaterialTheme.colors.secondary))
+                Row(
+                    Modifier
+                        .background(MaterialTheme.colors.surface)
+                        .padding(horizontal = 24.dp, vertical = 16.dp)
+                ) {
+                    Column(Modifier.weight(1f)) {
+                        Row {
+                            Text(stringResource(R.string.save_your_recovery_password), style = MaterialTheme.typography.h8)
+                            Spacer(Modifier.requiredWidth(8.dp))
+                            SessionShieldIcon()
+                        }
+                        Text(stringResource(R.string.save_your_recovery_password_to_make_sure_you_don_t_lose_access_to_your_account), style = MaterialTheme.typography.small)
+                    }
+                    Spacer(Modifier.width(12.dp))
+                    OutlineButton(
+                        stringResource(R.string.continue_2),
+                        Modifier.align(Alignment.CenterVertically),
+                        contentDescription = GetString(R.string.AccessibilityId_reveal_recovery_phrase_button)
+                    ) { startRecoveryPasswordActivity() }
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun EmptyView(newAccount: Boolean) {
+        AppTheme {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .padding(horizontal = 50.dp)
+                    .padding(bottom = 12.dp)
+            ) {
+                Spacer(modifier = Modifier.weight(1f))
+                Icon(
+                    painter = painterResource(id = if (newAccount) R.drawable.emoji_tada_large else R.drawable.ic_logo_large),
+                    contentDescription = null,
+                    tint = Color.Unspecified
+                )
+                if (newAccount) Text(stringResource(R.string.onboardingAccountCreated), style = MaterialTheme.typography.h4, textAlign = TextAlign.Center)
+                if (newAccount) Text(stringResource(R.string.welcome_to_session), color = MaterialTheme.colors.secondary, textAlign = TextAlign.Center)
+
+                Divider(modifier = Modifier.padding(vertical = 16.dp))
+                Text(
+                    stringResource(R.string.conversationsNone),
+                    style = MaterialTheme.typography.h8,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(bottom = 12.dp))
+                Text(stringResource(R.string.onboardingHitThePlusButton), textAlign = TextAlign.Center)
+                Spacer(modifier = Modifier.weight(2f))
+            }
+        }
+    }
+
     override fun onInputFocusChanged(hasFocus: Boolean) {
         if (hasFocus) {
             setSearchShown(true)
@@ -404,11 +500,6 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         super.onBackPressed()
     }
 
-    override fun handleSeedReminderViewContinueButtonTapped() {
-        val intent = Intent(this, SeedActivity::class.java)
-        show(intent)
-    }
-
     override fun onConversationClick(thread: ThreadRecord) {
         val intent = Intent(this, ConversationActivityV2::class.java)
         intent.putExtra(ConversationActivityV2.THREAD_ID, thread.threadId)
@@ -432,7 +523,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             bottomSheet.dismiss()
             if (!thread.recipient.isGroupRecipient && !thread.recipient.isLocalNumber) {
                 val clip = ClipData.newPlainText("Session ID", thread.recipient.address.toString())
-                val manager = getSystemService(PassphraseRequiredActionBarActivity.CLIPBOARD_SERVICE) as ClipboardManager
+                val manager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                 manager.setPrimaryClip(clip)
                 Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
             }
@@ -441,7 +532,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 val openGroup = DatabaseComponent.get(this@HomeActivity).lokiThreadDatabase().getOpenGroupChat(threadId) ?: return@onCopyConversationId Unit
 
                 val clip = ClipData.newPlainText("Community URL", openGroup.joinURL)
-                val manager = getSystemService(PassphraseRequiredActionBarActivity.CLIPBOARD_SERVICE) as ClipboardManager
+                val manager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                 manager.setPrimaryClip(clip)
                 Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
             }
@@ -569,7 +660,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         val message = if (recipient.isGroupRecipient) {
             val group = groupDatabase.getGroup(recipient.address.toString()).orNull()
             if (group != null && group.admins.map { it.toString() }.contains(textSecurePreferences.getLocalNumber())) {
-                "Because you are the creator of this group it will be deleted for everyone. This cannot be undone."
+                getString(R.string.admin_group_leave_warning)
             } else {
                 resources.getString(R.string.activity_home_leave_group_dialog_message)
             }
@@ -625,7 +716,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
     private fun hideMessageRequests() {
         showSessionDialog {
-            text("Hide message requests?")
+            text(getString(R.string.hide_message_requests))
             button(R.string.yes) {
                 textSecurePreferences.setHasHiddenMessageRequests()
                 homeViewModel.tryReload()

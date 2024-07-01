@@ -18,6 +18,7 @@ import org.session.libsession.utilities.TextSecurePreferences.Companion.CALL_NOT
 import org.session.libsession.utilities.TextSecurePreferences.Companion.CLASSIC_DARK
 import org.session.libsession.utilities.TextSecurePreferences.Companion.CLASSIC_LIGHT
 import org.session.libsession.utilities.TextSecurePreferences.Companion.FOLLOW_SYSTEM_SETTINGS
+import org.session.libsession.utilities.TextSecurePreferences.Companion.HIDE_PASSWORD
 import org.session.libsession.utilities.TextSecurePreferences.Companion.LAST_VACUUM_TIME
 import org.session.libsession.utilities.TextSecurePreferences.Companion.LEGACY_PREF_KEY_SELECTED_UI_MODE
 import org.session.libsession.utilities.TextSecurePreferences.Companion.OCEAN_DARK
@@ -30,6 +31,7 @@ import java.io.IOException
 import java.util.Arrays
 import java.util.Date
 import javax.inject.Inject
+import javax.inject.Singleton
 
 interface TextSecurePreferences {
 
@@ -182,6 +184,8 @@ interface TextSecurePreferences {
     fun hasForcedNewConfig(): Boolean
     fun hasPreference(key: String): Boolean
     fun clearAll()
+    fun getHidePassword(): Boolean
+    fun setHidePassword(value: Boolean)
 
     companion object {
         val TAG = TextSecurePreferences::class.simpleName
@@ -283,6 +287,7 @@ interface TextSecurePreferences {
 
         const val SELECTED_STYLE = "pref_selected_style" // classic_dark/light, ocean_dark/light
         const val FOLLOW_SYSTEM_SETTINGS = "pref_follow_system" // follow system day/night
+        const val HIDE_PASSWORD = "pref_hide_password"
 
         const val LEGACY_PREF_KEY_SELECTED_UI_MODE = "SELECTED_UI_MODE" // this will be cleared upon launching app, for users migrating to theming build
         const val CLASSIC_DARK = "classic.dark"
@@ -1016,6 +1021,7 @@ interface TextSecurePreferences {
     }
 }
 
+@Singleton
 class AppTextSecurePreferences @Inject constructor(
     @ApplicationContext private val context: Context
 ): TextSecurePreferences {
@@ -1711,4 +1717,9 @@ class AppTextSecurePreferences @Inject constructor(
         getDefaultSharedPreferences(context).edit().clear().commit()
     }
 
+    override fun getHidePassword() = getBooleanPreference(HIDE_PASSWORD, false)
+
+    override fun setHidePassword(value: Boolean) {
+        setBooleanPreference(HIDE_PASSWORD, value)
+    }
 }

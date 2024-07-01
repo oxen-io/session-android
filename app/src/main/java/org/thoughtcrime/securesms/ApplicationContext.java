@@ -156,6 +156,8 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
 
     private volatile boolean isAppVisible;
 
+    public boolean newAccount = false;
+
     @Override
     public Object getSystemService(String name) {
         if (MessagingModuleConfiguration.MESSAGING_MODULE_SERVICE.equals(name)) {
@@ -214,6 +216,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         DatabaseModule.init(this);
         MessagingModuleConfiguration.configure(this);
         super.onCreate();
+
         messagingModuleConfiguration = new MessagingModuleConfiguration(
                 this,
                 storage,

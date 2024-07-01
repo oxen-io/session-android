@@ -530,24 +530,21 @@
     <string name="invalid_session_id">Malvalida Session ID</string>
     <string name="cancel">Nuligi</string>
     <string name="your_session_id">Via Session ID</string>
-    <string name="activity_landing_title_2">Via Sesio komenci ĉi tie...</string>
-    <string name="activity_landing_register_button_title">Krei Session ID-on</string>
-    <string name="activity_landing_restore_button_title">Daŭrigi Vian Sesion</string>
     <string name="view_fake_chat_bubble_1">Kio estas Session?</string>
     <string name="view_fake_chat_bubble_2">Ĝi estas malcentraliza kaj ĉifrita mesaĝilo</string>
     <string name="view_fake_chat_bubble_3">Do ĝi ne kolektas miajn personajn informojn aŭ miajn konversaciajn metadatumojn? Kiel ĝi funkcias?</string>
     <string name="view_fake_chat_bubble_4">Uzante kombinon de progresinta anonima enkursigo kaj tutvoje ĉifraj teknologioj.</string>
     <string name="view_fake_chat_bubble_5">Amikoj ne permesas amikojn uzi kompromititajn mesaĝilojn. Nedankinde.</string>
-    <string name="activity_register_title">Diru saluton al via Session ID</string>
-    <string name="activity_register_explanation">Via Session ID estas la unika adreso kiun homoj povas uzi por kontakti en Session. Sen ligo al via vera identeco, via Session ID estas tute anonima kaj privata per dezajno.</string>
+
+
     <string name="activity_restore_title">Restaŭri vian konton</string>
     <string name="activity_restore_explanation">Entajpu la riparan frazon, kiu estis donita al vi kiam vi aliĝis, por ripari vian konton.</string>
     <string name="activity_restore_seed_edit_text_hint">Entajpu vian riparan frazon</string>
-    <string name="activity_display_name_title_2">Elektu vian vidigan nomon</string>
-    <string name="activity_display_name_explanation">Ĉi tio estos via nomo kiam vi uzas Sesion. Ĝi povas esti via vera nomo, alinomo, aŭ io ajn alia vi volas.</string>
-    <string name="activity_display_name_edit_text_hint">Entajpu vidigan nomon</string>
-    <string name="activity_display_name_display_name_missing_error">Bonvolu elekti vidigan nomon</string>
-    <string name="activity_display_name_display_name_too_long_error">Bonvolu elekti plej mallongan vidigan nomon</string>
+    <string name="displayNamePick">Elektu vian vidigan nomon</string>
+    <string name="displayNameDescription">Ĉi tio estos via nomo kiam vi uzas Sesion. Ĝi povas esti via vera nomo, alinomo, aŭ io ajn alia vi volas.</string>
+    <string name="displayNameEnter">Entajpu vidigan nomon</string>
+    <string name="displayNameErrorDescription">Bonvolu elekti vidigan nomon</string>
+    <string name="displayNameErrorDescriptionShorter">Bonvolu elekti plej mallongan vidigan nomon</string>
     <string name="activity_pn_mode_recommended_option_tag">Rekomendate</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Bonvolu Elekti Opcion</string>
     <string name="activity_home_empty_state_message">Vi ankoraŭ ne havas kontaktojn</string>
@@ -556,11 +553,6 @@
     <string name="activity_home_leaving_group_failed_message">"Ne povis foriri el la grupo"</string>
     <string name="activity_home_delete_conversation_dialog_message">Ĉu vi certas, ke vi volas forviŝi ĉi tiun konversacion?</string>
     <string name="activity_home_conversation_deleted_message">Konversacio forviŝite</string>
-    <string name="activity_seed_title">Via Ripara Frazo</string>
-    <string name="activity_seed_title_2">Ekkonu vian riparan frazon</string>
-    <string name="activity_seed_explanation">Via ripara frazo estas la ĉefŝlosilo de via Session ID — vi povas uzi ĝin por restaŭri vian Session ID-on se vi malgajros aliron al via aparato. Konservu vian riparan frazon en sekura loko, kaj donu ĝin al neniu.</string>
-    <string name="activity_seed_reveal_button_title">Tuŝadu por malkaŝi</string>
-    <string name="view_seed_reminder_title">Vi preskaŭ estas fininta! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Sekurigi vian konton per konservi vian riparan frazon</string>
     <string name="view_seed_reminder_subtitle_2">Tuŝadu la kaŝitajn vortojn por malkaŝi vian riparan frazon, tiam konservi ĝin sekure por sekurigi vian Session ID-on.</string>
     <string name="view_seed_reminder_subtitle_3">Certigu konservi vian riparan frazon en sekura loko</string>
@@ -603,7 +595,6 @@
     <string name="activity_settings_devices_button_title">Aparatoj</string>
     <string name="activity_settings_invite_button_title">Inviti Amikon</string>
     <string name="activity_settings_faq_button_title">Oftaj Demandoj</string>
-    <string name="activity_settings_recovery_phrase_button_title">Ripara Frazo</string>
     <string name="activity_settings_clear_all_data_button_title">Viŝi Datumojn</string>
     <string name="activity_settings_help_translate_session">Helpu nin Traduki Session</string>
     <string name="activity_notification_settings_title">Sciigoj</string>
@@ -614,8 +605,6 @@
     <string name="preferences_notifications_strategy_category_fast_mode_title">Uzi Rapidan Reĝimon</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">Ŝanĝi nomon</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Malligi aparaton</string>
-    <string name="dialog_seed_title">Via Ripara Frazo</string>
-    <string name="dialog_seed_explanation">Ĉi tio estas via ripara frazo. Kun ĝi, vi povas restaŭri aŭ migri vian Session ID-on al nova aparato.</string>
     <string name="dialog_clear_all_data_title">Viŝi Tutajn Datumojn</string>
     <string name="dialog_clear_all_data_explanation">Ĉi tio daŭre forviŝi viajn mesaĝojn, sesiojn, kaj kontaktojn.</string>
     <string name="dialog_clear_all_data_local_only">Forviŝi Sole</string>
@@ -656,7 +645,6 @@
     <string name="activity_backup_restore_title">Restaŭri savkopion</string>
     <string name="activity_backup_restore_select_file">Elekti dosieron</string>
     <string name="activity_backup_restore_passphrase">30-cifera pasfrazo</string>
-    <string name="activity_link_device_link_device">Ligi Aparaton</string>
     <string name="activity_link_device_recovery_phrase">Ripara Frazo</string>
     <string name="activity_link_device_scan_qr_code">Skani QR-Kodon</string>
     <string name="activity_join_public_chat_join_rooms">Aŭ aliĝu unu de ĉi tiuj…</string>
@@ -664,7 +652,6 @@
     <string name="activity_pn_mode_fast_mode">Rapida Reĝimo</string>
     <string name="activity_pn_mode_slow_mode">Malrapida Maniero</string>
     <string name="activity_pn_mode_slow_mode_explanation">Session foje serĉos novajn mesaĝojn en la fono.</string>
-    <string name="fragment_recovery_phrase_title">Ripara Frazo</string>
     <string name="activity_prompt_passphrase_session_locked">Session estas Ŝlosita</string>
     <string name="activity_prompt_passphrase_tap_to_unlock">Tuŝetu por Malŝlosi</string>
     <string name="fragment_user_details_bottom_sheet_edit_text_hint">Entajpu alnomon</string>

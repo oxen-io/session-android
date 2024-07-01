@@ -556,24 +556,21 @@
     <string name="invalid_session_id">Session ID non valide</string>
     <string name="cancel">Annuler</string>
     <string name="your_session_id">Votre Session ID</string>
-    <string name="activity_landing_title_2">Votre Session débute ici...</string>
-    <string name="activity_landing_register_button_title">Créer un Session ID</string>
-    <string name="activity_landing_restore_button_title">Continuez votre Session</string>
     <string name="view_fake_chat_bubble_1">Qu\'est-ce que Session ?</string>
     <string name="view_fake_chat_bubble_2">C\'est une application de messagerie décentralisée et cryptée</string>
     <string name="view_fake_chat_bubble_3">Elle ne recueille donc pas mes informations personnelles ou mes métadonnées de conversations ? Comment ça marche ?</string>
     <string name="view_fake_chat_bubble_4">En utilisant une combinaison de technologies avancées de routage anonyme et de chiffrement de bout en bout.</string>
     <string name="view_fake_chat_bubble_5">Les vrais amis ne laissent pas leurs amis utiliser des outils de messagerie compromis. De rien.</string>
-    <string name="activity_register_title">Dites bonjour à votre Session ID</string>
-    <string name="activity_register_explanation">Votre Session ID est l\'identifiant unique que les gens utilisent pour vous contacter dans Session. Sans lien avec votre identité réelle, votre Session ID est complètement anonyme et privé.</string>
+
+
     <string name="activity_restore_title">Restaurez votre compte</string>
     <string name="activity_restore_explanation">Pour restaurer votre compte, veuillez entrer la phrase de récupération qui vous a été fournie lors de la création de votre compte.</string>
     <string name="activity_restore_seed_edit_text_hint">Saisissez votre phrase de récupération</string>
-    <string name="activity_display_name_title_2">Choisissez votre nom d\'utilisateur</string>
-    <string name="activity_display_name_explanation">Ce sera votre nom lorsque vous utiliserez Session. Il peut s\'agir de votre vrai nom, d\'un pseudo ou de ce que vous voulez.</string>
-    <string name="activity_display_name_edit_text_hint">Saisissez un nom d\'utilisateur</string>
-    <string name="activity_display_name_display_name_missing_error">Veuillez choisir un nom d\'utilisateur</string>
-    <string name="activity_display_name_display_name_too_long_error">Veuillez choisir un nom d\'utilisateur plus court</string>
+    <string name="displayNamePick">Choisissez votre nom d\'utilisateur</string>
+    <string name="displayNameDescription">Ce sera votre nom lorsque vous utiliserez Session. Il peut s\'agir de votre vrai nom, d\'un pseudo ou de ce que vous voulez.</string>
+    <string name="displayNameEnter">Saisissez un nom d\'utilisateur</string>
+    <string name="displayNameErrorDescription">Veuillez choisir un nom d\'utilisateur</string>
+    <string name="displayNameErrorDescriptionShorter">Veuillez choisir un nom d\'utilisateur plus court</string>
     <string name="activity_pn_mode_recommended_option_tag">Recommandé</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Veuillez choisir une option</string>
     <string name="activity_home_empty_state_message">Vous n\'avez pas encore de contacts</string>
@@ -582,11 +579,6 @@
     <string name="activity_home_leaving_group_failed_message">"Impossible de quitter le groupe"</string>
     <string name="activity_home_delete_conversation_dialog_message">Voulez-vous vraiment supprimer cette conversation ?</string>
     <string name="activity_home_conversation_deleted_message">Conversation supprimée</string>
-    <string name="activity_seed_title">Votre phrase de récupération</string>
-    <string name="activity_seed_title_2">Voici votre phrase de récupération</string>
-    <string name="activity_seed_explanation">Votre phrase de récupération est la clé principale de votre Session ID - vous pouvez l\'utiliser pour restaurer votre Session ID si vous perdez l\'accès à votre appareil. Conservez la dans un endroit sûr et ne la donnez à personne.</string>
-    <string name="activity_seed_reveal_button_title">Appuyer pour révéler</string>
-    <string name="view_seed_reminder_title">Vous avez presque terminé ! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Sécurisez votre compte en sauvegardant votre phrase de récupération</string>
     <string name="view_seed_reminder_subtitle_2">Appuyez et maintenez les mots masqués pour révéler votre phrase de récupération, puis stockez-la en toute sécurité pour sécuriser votre Session ID.</string>
     <string name="view_seed_reminder_subtitle_3">Assurez-vous de conserver votre phrase de récupération dans un endroit sûr</string>
@@ -632,7 +624,6 @@
     <string name="activity_settings_devices_button_title">Appareils reliés</string>
     <string name="activity_settings_invite_button_title">Inviter un ami</string>
     <string name="activity_settings_faq_button_title">FAQ</string>
-    <string name="activity_settings_recovery_phrase_button_title">Phrase de récupération</string>
     <string name="activity_settings_clear_all_data_button_title">Effacer les données</string>
     <string name="activity_settings_clear_all_data_and_network_button_title">Effacer les données et le réseau</string>
     <string name="activity_settings_help_translate_session">Aidez-nous à traduire Session</string>
@@ -654,8 +645,6 @@
     <string name="preferences_notifications_strategy_category_fast_mode_summary">Vous serez averti de nouveaux messages de manière fiable et immédiate en utilisant les serveurs de notification de Google.</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">Modifier le nom</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Déconnecter l\'appareil</string>
-    <string name="dialog_seed_title">Votre phrase de récupération</string>
-    <string name="dialog_seed_explanation">Vous pouvez utiliser votre phrase de récupération pour restaurer votre compte ou relier un appareil.</string>
     <string name="dialog_clear_all_data_title">Effacer toutes les données</string>
     <string name="dialog_clear_all_data_explanation">Cela supprimera définitivement vos messages, vos sessions et vos contacts.</string>
     <string name="dialog_clear_all_data_network_explanation">Souhaitez-vous effacer seulement cet appareil ou supprimer l\'ensemble de votre compte ?</string>
@@ -704,7 +693,6 @@
     <string name="activity_backup_restore_explanation_1">Sélectionnez un fichier de sauvegarde et entrez la phrase de passe avec laquelle il a été créé.</string>
     <string name="activity_backup_restore_passphrase">Phrase de passe de 30 caractères</string>
     <string name="activity_link_device_skip_prompt">Cela prend un certain temps, voulez-vous passer ?</string>
-    <string name="activity_link_device_link_device">Relier un appareil</string>
     <string name="activity_link_device_recovery_phrase">Phrase de récupération</string>
     <string name="activity_link_device_scan_qr_code">Scanner le QR Code</string>
     <string name="activity_link_device_qr_message">Allez dans Paramètres → Phrase de récupération sur votre autre appareil pour afficher votre QR code.</string>
@@ -715,7 +703,6 @@
     <string name="activity_pn_mode_slow_mode">Mode lent</string>
     <string name="activity_pn_mode_fast_mode_explanation">Vous serez averti de nouveaux messages de manière fiable et immédiate en utilisant les serveurs de notification de Google.</string>
     <string name="activity_pn_mode_slow_mode_explanation">Session vérifiera occasionnellement la présence de nouveaux messages en tâche de fond.</string>
-    <string name="fragment_recovery_phrase_title">Phrase de récupération</string>
     <string name="activity_prompt_passphrase_session_locked">Session est Verrouillé</string>
     <string name="activity_prompt_passphrase_tap_to_unlock">Toucher pour déverrouiller</string>
     <string name="fragment_user_details_bottom_sheet_edit_text_hint">Saisissez un nom</string>

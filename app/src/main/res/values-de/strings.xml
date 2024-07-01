@@ -529,24 +529,21 @@
     <string name="invalid_session_id">Ungültige Session ID</string>
     <string name="cancel">Abbrechen</string>
     <string name="your_session_id">Ihre Session ID</string>
-    <string name="activity_landing_title_2">Ihre Session beginnt hier...</string>
-    <string name="activity_landing_register_button_title">Session ID erstellen</string>
-    <string name="activity_landing_restore_button_title">Ihre Session fortsetzen</string>
     <string name="view_fake_chat_bubble_1">Was ist Session?</string>
     <string name="view_fake_chat_bubble_2">Es ist eine dezentrale, verschlüsselte Messaging-App.</string>
     <string name="view_fake_chat_bubble_3">Es werden also weder meine persönlichen Daten noch die Metadaten meiner Konversation erfasst? Wie funktioniert das?</string>
     <string name="view_fake_chat_bubble_4">Mit einer Kombination fortschrittlicher anonyme Routing- und End-to-End-Verschlüsselungstechnologien.</string>
     <string name="view_fake_chat_bubble_5">Freunde lassen Freunde keine kompromittierten Messenger verwenden. Herzlich Willkommen.</string>
-    <string name="activity_register_title">Das ist Ihre Session ID.</string>
-    <string name="activity_register_explanation">Ihre Session ID ist die eindeutige Adresse, unter der Personen Sie über Session kontaktieren können. Ihre Session ID ist nicht mit Ihrer realen Identität verbunden, völlig anonym und von Natur aus privat.</string>
+
+
     <string name="activity_restore_title">Ihr Konto wiederherstellen</string>
     <string name="activity_restore_explanation">Geben Sie den Wiederherstellungssatz ein, den Sie bei der Anmeldung zur Wiederherstellung Ihres Kontos erhalten haben.</string>
     <string name="activity_restore_seed_edit_text_hint">Ihr Wiederherstellungssatz</string>
-    <string name="activity_display_name_title_2">Wählen Sie Ihren Anzeigenamen</string>
-    <string name="activity_display_name_explanation">Dies ist Ihr Name, wenn Sie Session verwenden. Es kann Ihr richtiger Name, ein Alias oder etwas andere sein.</string>
-    <string name="activity_display_name_edit_text_hint">Geben Sie einen Anzeigenamen ein</string>
-    <string name="activity_display_name_display_name_missing_error">Bitte wählen Sie einen Anzeigenamen</string>
-    <string name="activity_display_name_display_name_too_long_error">Bitte wählen Sie einen kürzeren Anzeigenamen</string>
+    <string name="displayNamePick">Wählen Sie Ihren Anzeigenamen</string>
+    <string name="displayNameDescription">Dies ist Ihr Name, wenn Sie Session verwenden. Es kann Ihr richtiger Name, ein Alias oder etwas andere sein.</string>
+    <string name="displayNameEnter">Geben Sie einen Anzeigenamen ein</string>
+    <string name="displayNameErrorDescription">Bitte wählen Sie einen Anzeigenamen</string>
+    <string name="displayNameErrorDescriptionShorter">Bitte wählen Sie einen kürzeren Anzeigenamen</string>
     <string name="activity_pn_mode_recommended_option_tag">Empfohlen</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Bitte wählen Sie eine Option aus.</string>
     <string name="activity_home_empty_state_message">Sie haben noch keine Kontakte.</string>
@@ -555,11 +552,6 @@
     <string name="activity_home_leaving_group_failed_message">"Gruppe konnte nicht verlassen werden."</string>
     <string name="activity_home_delete_conversation_dialog_message">Möchten Sie diese Unterhaltung wirklich löschen?</string>
     <string name="activity_home_conversation_deleted_message">Die Unterhaltung wurde gelöscht.</string>
-    <string name="activity_seed_title">Ihr Wiederherstellungssatz</string>
-    <string name="activity_seed_title_2">Das ist Ihr Wiederherstellungssatz.</string>
-    <string name="activity_seed_explanation">Ihr Wiederherstellungssatz ist der Hauptschlüssel für Ihre Session ID. Mit diesem Satz können Sie Ihre Session ID wiederherstellen, wenn Sie den Zugriff auf Ihr Gerät verlieren. Bewahren Sie Ihren Wiederherstellungssatz an einem sicheren Ort auf und geben Sie ihn an niemandem weiter.</string>
-    <string name="activity_seed_reveal_button_title">Zur Anzeige gedrückt halten</string>
-    <string name="view_seed_reminder_title">Du bist fast fertgi! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Sichern Sie Ihr Konto, indem Sie Ihren Wiederherstellungssatz speichern</string>
     <string name="view_seed_reminder_subtitle_2">Tippen und halten Sie die verborgenen Wörter, um Ihren Wiederherstellungssatz anzuzeigen, und speichern Sie ihn dann sicher, um Ihre Session ID zu sichern.</string>
     <string name="view_seed_reminder_subtitle_3">Bewahren Sie Ihren Wiederherstellungssatz an einem sicheren Ort auf.</string>
@@ -604,7 +596,6 @@
     <string name="activity_settings_devices_button_title">Geräte</string>
     <string name="activity_settings_invite_button_title">Einen Freund einladen</string>
     <string name="activity_settings_faq_button_title">Häufig gestellte Fragen</string>
-    <string name="activity_settings_recovery_phrase_button_title">Wiederherstellungssatz</string>
     <string name="activity_settings_clear_all_data_button_title">Daten löschen</string>
     <string name="activity_settings_clear_all_data_and_network_button_title">Daten löschen, einschließlich Netzwerk</string>
     <string name="activity_settings_help_translate_session">Hilf uns, Session zu übersetzen</string>
@@ -617,8 +608,6 @@
     <string name="preferences_notifications_strategy_category_fast_mode_summary">Über neue Nachrichten wirst du zuverlässig und sofort von Googles Benachrichtigungsservern informiert.</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">Namen ändern</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Gerät trennen</string>
-    <string name="dialog_seed_title">Ihr Wiederherstellungssatz</string>
-    <string name="dialog_seed_explanation">Das ist Ihr Wiederherstellungssatz. Damit können Sie Ihre Session ID wiederherstellen oder auf ein neues Gerät migrieren.</string>
     <string name="dialog_clear_all_data_title">Alle Daten löschen</string>
     <string name="dialog_clear_all_data_explanation">Dadurch werden Ihre Nachrichten, Sessions und Kontakte dauerhaft gelöscht.</string>
     <string name="dialog_clear_all_data_network_explanation">Möchtest du nur dieses Gerät leeren oder dein gesamtes Konto löschen?</string>
@@ -662,7 +651,6 @@
     <string name="activity_backup_restore_explanation_1">Wähle eine Sicherungs-Datei aus und gib die Passphrase von ihrer Erstellung ein.</string>
     <string name="activity_backup_restore_passphrase">30-stellige Passphrase</string>
     <string name="activity_link_device_skip_prompt">Dies dauert eine Weile, möchtest du überspringen?</string>
-    <string name="activity_link_device_link_device">Gerät verbinden</string>
     <string name="activity_link_device_recovery_phrase">Wiederherstellungssatz</string>
     <string name="activity_link_device_scan_qr_code">QR-Code scannen</string>
     <string name="activity_link_device_qr_message">Navigiere zu Einstellungen → Wiederherstellungssatz auf deinem anderen Gerät, um deinen QR-Code anzuzeigen.</string>
@@ -673,7 +661,6 @@
     <string name="activity_pn_mode_slow_mode">Langsamer Modus</string>
     <string name="activity_pn_mode_fast_mode_explanation">Du wirst über neue Nachrichten zuverlässig und sofort über Google\'s Server benachrichtigt.</string>
     <string name="activity_pn_mode_slow_mode_explanation">Session sucht gelegentlich nach neuen Nachrichten im Hintergrund.</string>
-    <string name="fragment_recovery_phrase_title">Sicherungs-Passphrase</string>
     <string name="activity_prompt_passphrase_session_locked">Session ist gesperrt</string>
     <string name="activity_prompt_passphrase_tap_to_unlock">Tippe zum entsperren</string>
     <string name="fragment_user_details_bottom_sheet_edit_text_hint">Spitznamen eingeben</string>
