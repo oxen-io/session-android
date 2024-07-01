@@ -11,6 +11,8 @@ import android.content.res.Resources
 import android.database.Cursor
 import android.graphics.Rect
 import android.graphics.Typeface
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Build
@@ -82,6 +84,7 @@ import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
 import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Address.Companion.fromSerialized
@@ -1879,6 +1882,35 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
+    // Method to check if we have network access and a Session Node path
+    private fun networkAndSessionNodePathIsValid(): Boolean {
+
+        // Check that we have any network connection at all
+        val connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        if (networkCapabilities == null || !networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET))
+        {
+            Toast.makeText(applicationContext, "Cannot send voice message - no network connection.", Toast.LENGTH_LONG).show()
+            return false
+        }
+
+        // Check that we have a suite of Session Nodes to route through.
+        // Note: We can have the entry node plus the 2 Session Nodes and the data _still_ might not
+        // send due to any node flakiness - but without doing some manner of test-ping through
+        // there's no way to test our client -> destination connectivity (unless we abuse the typing
+        // indicators?)
+        val paths = OnionRequestAPI.paths
+        if (paths.isNullOrEmpty() || paths.count() != 2) {
+            Toast.makeText(applicationContext,
+                "Cannot send voice message - bad Session Node path.",
+                Toast.LENGTH_LONG)
+                .show()
+            return false
+        }
+
+        return true
+    }
+
     override fun sendVoiceMessage() {
         // When the record voice message button is released we always need to reset the UI and cancel
         // any further recording operation..
@@ -1900,12 +1932,19 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // Voice message too short? Warn with toast instead of sending.
         // Note: The 0L check prevents the warning toast being shown when leaving the conversation activity.
         if (voiceMessageDurationMS != 0L && voiceMessageDurationMS < MINIMUM_VOICE_MESSAGE_DURATION_MS) {
-            Toast.makeText(this@ConversationActivityV2, R.string.messageVoiceErrorShort, Toast.LENGTH_LONG).show()
+            Toast.makeText(this@ConversationActivityV2, R.string.messageVoiceErrorShort, Toast.LENGTH_SHORT).show()
             inputBar.voiceMessageDurationMS = 0L
             return
         }
 
-        // Voice message okay? Attempt to send it.
+        // Put up a relevant Toast if we can see any obvious network issues
+        if (!networkAndSessionNodePathIsValid()) {
+            // We could return here - but instead we'll try our best to send - which will fail - but
+            // it's possible that the message will go into the failed to send state and it may retry
+            // & succeed if network connection is restored.
+        }
+
+        // Attempt to send it the voice message
         future.addListener(object : ListenableFuture.Listener<Pair<Uri, Long>> {
 
             override fun onSuccess(result: Pair<Uri, Long>) {

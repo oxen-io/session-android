@@ -174,8 +174,12 @@ class InputBarRecordingView : RelativeLayout {
         }
         fadeInAnimation.start()
         binding.recordButtonOverlayImageView.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_arrow_up, context.theme))
-        binding.recordButtonOverlay.setOnClickListener { delegate?.sendVoiceMessage() }
         binding.inputBarCancelButton.setOnClickListener { delegate?.cancelVoiceMessage() }
+
+        // When the user has locked the voice recorder button on then THIS is where the next click
+        // is registered to actually send the voice message - it does NOT hit the microphone button
+        // onTouch listener again.
+        binding.recordButtonOverlay.setOnClickListener { delegate?.sendVoiceMessage() }
     }
 }
 
