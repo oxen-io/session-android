@@ -70,8 +70,7 @@ class PrivacySettingsPreferenceFragment : ListSummaryPreferenceFragment() {
     }
 
     private fun setCall(isEnabled: Boolean) {
-        (findPreference<Preference>(TextSecurePreferences.CALL_NOTIFICATIONS_ENABLED) as SwitchPreferenceCompat?)!!.isChecked =
-            isEnabled
+        findPreference<SwitchPreferenceCompat>(TextSecurePreferences.CALL_NOTIFICATIONS_ENABLED)!!.isChecked = isEnabled
         if (isEnabled && !areNotificationsEnabled(requireActivity())) {
             // show a dialog saying that calls won't work properly if you don't have notifications on at a system level
             showSessionDialog {
