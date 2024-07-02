@@ -203,7 +203,7 @@ class EditGroupViewModel @AssistedInject constructor(
 
         EditGroupState(
             EditGroupViewState(
-                groupName = name,
+                groupName = name.orEmpty(),
                 groupDescription = description,
                 memberStateList = closedGroupMembers,
                 admin = closedGroup.isUserAdmin
