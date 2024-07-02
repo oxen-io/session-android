@@ -73,4 +73,10 @@
     <string name="ConversationItem_group_action_left">%1$s has left the group.</string>
     <!-- RecipientProvider -->
     <string name="RecipientProvider_unnamed_group">Unnamed group</string>
+
+    <string name="clearDataErrorDescriptionGeneric">An unknown error occurred and your data was not deleted. Do you want to delete your data from just this device instead?</string>
+    <string name="errorUnknown">An unknown error occurred.</string>
+    <string name="clearDevice">Clear Device</string>
+    <string name="clearDeviceOnly">Clear device only</string>
+    <string name="clearDeviceAndNetwork">Clear device and network</string>
 </resources>

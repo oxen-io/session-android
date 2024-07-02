@@ -657,8 +657,6 @@
     <string name="dialog_clear_all_data_explanation">این گزینه به طور دائم پیام‌ها، جلسات و مخاطبین شما را حذف می‌کند.</string>
     <string name="dialog_clear_all_data_network_explanation">آیا فقط می‌خواهید این دستگاه را پاک کنید یا می‌خواهید کل اکانت را پاک کنید؟</string>
     <string name="dialog_clear_all_data_message">این کار پیام‌ها و مخاطبین شما را برای همیشه حذف می‌کند. آیا می‌خواهید فقط این دستگاه را پاک کنید یا داتا خود را از شبکه نیز حذف کنید?</string>
-    <string name="dialog_clear_all_data_clear_device_only">فقط پاک کردن دستگاه</string>
-    <string name="dialog_clear_all_data_clear_device_and_network">پاک کردن دستگاه و شبکه</string>
     <string name="dialog_clear_all_data_clear_device_and_network_confirmation">آیا مطمئن هستید که می خواهید داتا های خود را از شبکه حذف کنید؟ اگر ادامه دهید، نمی‌توانید پیام‌ها یا مخاطبین خود را بازیابی کنید.</string>
     <string name="dialog_clear_all_data_clear">پاک</string>
     <string name="dialog_clear_all_data_local_only">فقط حذف شود</string>
