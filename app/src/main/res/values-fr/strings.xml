@@ -660,8 +660,6 @@
     <string name="dialog_clear_all_data_explanation">Cela supprimera définitivement vos messages, vos sessions et vos contacts.</string>
     <string name="dialog_clear_all_data_network_explanation">Souhaitez-vous effacer seulement cet appareil ou supprimer l\'ensemble de votre compte ?</string>
     <string name="dialog_clear_all_data_message">Cela supprimera définitivement vos messages, sessions et contacts. Voulez-vous uniquement effacer cet appareil ou supprimer l\'intégralité de votre compte ?</string>
-    <string name="dialog_clear_all_data_clear_device_only">Effacer l\'appareil uniquement</string>
-    <string name="dialog_clear_all_data_clear_device_and_network">Effacer l\'appareil et le réseau</string>
     <string name="dialog_clear_all_data_clear_device_and_network_confirmation">Êtes-vous sûr de vouloir supprimer vos données du réseau ? Si vous continuez, vous ne pourrez pas restaurer vos messages ou vos contacts.</string>
     <string name="dialog_clear_all_data_clear">Effacer</string>
     <string name="dialog_clear_all_data_local_only">Effacer seulement</string>
