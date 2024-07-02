@@ -2,17 +2,15 @@ package org.thoughtcrime.securesms.preferences
 
 import android.app.Dialog
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
-import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -31,7 +29,7 @@ class ClearAllDataDialog : DialogFragment() {
 
     private lateinit var binding: DialogClearAllDataBinding
 
-    enum class Steps {
+    private enum class Steps {
         INFO_PROMPT,
         NETWORK_PROMPT,
         DELETING,
@@ -69,9 +67,11 @@ class ClearAllDataDialog : DialogFragment() {
             setHasFixedSize(true)
         }
         optionAdapter.submitList(listOf(device, network))
+
         binding.cancelButton.setOnClickListener {
             dismiss()
         }
+
         binding.clearAllDataButton.setOnClickListener {
             when (step) {
                 Steps.INFO_PROMPT -> if (selectedOption == network) {
@@ -104,7 +104,8 @@ class ClearAllDataDialog : DialogFragment() {
                     binding.clearAllDataButton.text = getString(R.string.clearDevice)
                 }
             }
-            binding.recyclerView.isGone = step == Steps.NETWORK_PROMPT || step == Steps.RETRY_LOCAL_DELETE_ONLY_PROMPT
+
+            binding.recyclerView.isVisible = step == Steps.INFO_PROMPT
             binding.cancelButton.isVisible = !isLoading
             binding.clearAllDataButton.isVisible = !isLoading
             binding.progressBar.isVisible = isLoading
@@ -114,31 +115,33 @@ class ClearAllDataDialog : DialogFragment() {
         }
     }
 
+    private suspend fun performDeleteLocalDataOnlyStep() {
+        try {
+            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(requireContext()).get()
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to force sync when deleting data", e)
+            withContext(Main) {
+                Toast.makeText(ApplicationContext.getInstance(requireContext()), R.string.errorUnknown, Toast.LENGTH_LONG).show()
+            }
+            return
+        }
+        val success = ApplicationContext.getInstance(context).clearAllData(false)
+        withContext(Main) { dismiss() }
+        if (!success) {
+            withContext(Main) {
+                Toast.makeText(ApplicationContext.getInstance(requireContext()), R.string.errorUnknown, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
     private fun clearAllData(deletionScope: DeletionScope) {
 
         clearJob = lifecycleScope.launch(Dispatchers.IO) {
-            withContext(Dispatchers.Main) { step = Steps.DELETING }
+            withContext(Main) { step = Steps.DELETING }
 
             if (deletionScope == DeletionScope.DeleteLocalDataOnly) {
-
-                try {
-                    ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(requireContext()).get()
-                } catch (e: Exception) {
-                    Log.e(TAG, "Failed to force sync when deleting data", e)
-                    Handler(Looper.getMainLooper()).post {
-                        Toast.makeText(ApplicationContext.getInstance(requireContext()), R.string.errorUnknown, Toast.LENGTH_LONG).show()
-                    }
-                    return@launch
-                }
-                val success = ApplicationContext.getInstance(context).clearAllData(false)
-                withContext(Dispatchers.Main) { dismiss() }
-                if (!success) {
-                    Handler(Looper.getMainLooper()).post {
-                        Toast.makeText(ApplicationContext.getInstance(requireContext()), R.string.errorUnknown, Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
-            else if (deletionScope == DeletionScope.DeleteBothLocalAndNetworkData) {
+                performDeleteLocalDataOnlyStep()
+            } else if (deletionScope == DeletionScope.DeleteBothLocalAndNetworkData) {
                 val deletionResultMap: Map<String, Boolean>? = try {
                     val openGroups = DatabaseComponent.get(requireContext()).lokiThreadDatabase().getAllOpenGroups()
                     openGroups.map { it.value.server }.toSet().forEach { server ->
@@ -152,12 +155,12 @@ class ClearAllDataDialog : DialogFragment() {
 
                 // If one or more deletions failed then inform the user and allow them to clear the device only if they wish..
                 if (deletionResultMap == null || deletionResultMap.values.any { !it } || deletionResultMap.isEmpty()) {
-                    withContext(Dispatchers.Main) { step = Steps.RETRY_LOCAL_DELETE_ONLY_PROMPT }
+                    withContext(Main) { step = Steps.RETRY_LOCAL_DELETE_ONLY_PROMPT }
                 }
                 else if (deletionResultMap.values.all { it }) {
                     // ..otherwise if the network data deletion was successful proceed to delete the local data as well.
                     ApplicationContext.getInstance(context).clearAllData(false)
-                    withContext(Dispatchers.Main) { dismiss() }
+                    withContext(Main) { dismiss() }
                 }
             }
         }
