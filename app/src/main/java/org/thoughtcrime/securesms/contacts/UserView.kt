@@ -7,10 +7,8 @@ import android.view.View
 import android.widget.LinearLayout
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewUserBinding
-import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.recipients.Recipient
-import org.thoughtcrime.securesms.conversation.v2.utilities.MentionManagerUtilities
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideRequests
 

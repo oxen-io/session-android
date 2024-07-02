@@ -9,11 +9,6 @@
     <include layout="@layout/thumbnail_view"
         android:id="@+id/album_cell_1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:minWidth="@dimen/media_bubble_min_width"
-        app:maxWidth="@dimen/media_bubble_max_width"
-        app:minHeight="@dimen/media_bubble_min_height"
-        app:maxHeight="@dimen/media_bubble_max_height"
-        app:thumbnail_radius="1dp"/>
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

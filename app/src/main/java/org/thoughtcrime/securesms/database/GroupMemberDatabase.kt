@@ -3,9 +3,12 @@ package org.thoughtcrime.securesms.database
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import org.json.JSONArray
 import org.session.libsession.messaging.open_groups.GroupMember
 import org.session.libsession.messaging.open_groups.GroupMemberRole
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
+import org.thoughtcrime.securesms.util.asSequence
+import java.util.EnumSet
 
 class GroupMemberDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(context, helper) {
 
@@ -49,6 +52,19 @@ class GroupMemberDatabase(context: Context, helper: SQLCipherOpenHelper) : Datab
         }
 
         return mappings.map { it.role }
+    }
+
+    fun getGroupMembersRoles(groupId: String, memberIDs: Collection<String>): Map<String, List<GroupMemberRole>> {
+        val sql = """
+            SELECT * FROM $TABLE_NAME
+            WHERE $GROUP_ID = ? AND $PROFILE_ID IN (SELECT value FROM json_each(?))
+        """.trimIndent()
+
+        return readableDatabase.rawQuery(sql, groupId, JSONArray(memberIDs).toString()).use { cursor ->
+            cursor.asSequence()
+                .map { readGroupMember(it) }
+                .groupBy(keySelector = { it.profileId }, valueTransform = { it.role })
+        }
     }
 
     fun setGroupMembers(members: List<GroupMember>) {
