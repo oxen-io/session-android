@@ -62,6 +62,7 @@ class WebRtcCallService : LifecycleService(), CallManager.WebRtcListener {
         const val ACTION_LOCAL_HANGUP = "LOCAL_HANGUP"
         const val ACTION_SET_MUTE_AUDIO = "SET_MUTE_AUDIO"
         const val ACTION_SET_MUTE_VIDEO = "SET_MUTE_VIDEO"
+        const val ACTION_SWAP_VIDEO_VIEW = "SWAP_VIDEO_VIEW"
         const val ACTION_FLIP_CAMERA = "FLIP_CAMERA"
         const val ACTION_UPDATE_AUDIO = "UPDATE_AUDIO"
         const val ACTION_WIRED_HEADSET_CHANGE = "WIRED_HEADSET_CHANGE"
@@ -81,6 +82,7 @@ class WebRtcCallService : LifecycleService(), CallManager.WebRtcListener {
         const val EXTRA_RECIPIENT_ADDRESS = "RECIPIENT_ID"
         const val EXTRA_ENABLED = "ENABLED"
         const val EXTRA_AUDIO_COMMAND = "AUDIO_COMMAND"
+        const val EXTRA_SWAPPED = "is_video_swapped"
         const val EXTRA_MUTE = "mute_value"
         const val EXTRA_AVAILABLE = "enabled_value"
         const val EXTRA_REMOTE_DESCRIPTION = "remote_description"
@@ -107,6 +109,11 @@ class WebRtcCallService : LifecycleService(), CallManager.WebRtcListener {
 
         fun acceptCallIntent(context: Context) = Intent(context, WebRtcCallService::class.java)
             .setAction(ACTION_ANSWER_CALL)
+
+        fun swapVideoViews(context: Context, swapped: Boolean) =
+             Intent(context, WebRtcCallService::class.java)
+                .setAction(ACTION_SWAP_VIDEO_VIEW)
+                .putExtra(EXTRA_SWAPPED, swapped)
 
         fun microphoneIntent(context: Context, enabled: Boolean) =
             Intent(context, WebRtcCallService::class.java)
@@ -292,6 +299,7 @@ class WebRtcCallService : LifecycleService(), CallManager.WebRtcListener {
                 action == ACTION_DENY_CALL -> handleDenyCall(intent)
                 action == ACTION_LOCAL_HANGUP -> handleLocalHangup(intent)
                 action == ACTION_REMOTE_HANGUP -> handleRemoteHangup(intent)
+                action == ACTION_SWAP_VIDEO_VIEW ->handleSwapVideoView(intent)
                 action == ACTION_SET_MUTE_AUDIO -> handleSetMuteAudio(intent)
                 action == ACTION_SET_MUTE_VIDEO -> handleSetMuteVideo(intent)
                 action == ACTION_FLIP_CAMERA -> handleSetCameraFlip(intent)
@@ -592,6 +600,11 @@ class WebRtcCallService : LifecycleService(), CallManager.WebRtcListener {
         }
 
         onHangup()
+    }
+
+    private fun handleSwapVideoView(intent: Intent) {
+        val swapped = intent.getBooleanExtra(EXTRA_SWAPPED, false)
+        callManager.handleSwapVideoView(swapped)
     }
 
     private fun handleSetMuteAudio(intent: Intent) {

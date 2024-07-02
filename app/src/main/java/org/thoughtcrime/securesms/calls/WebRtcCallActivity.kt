@@ -136,6 +136,12 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
             supportActionBar?.setDisplayHomeAsUpEnabled(false)
         }
 
+        binding.floatingRendererContainer.setOnClickListener {
+            val swapVideoViewIntent =
+                WebRtcCallService.swapVideoViews(this, viewModel.videoViewSwapped)
+            startService(swapVideoViewIntent)
+        }
+
         binding.microphoneButton.setOnClickListener {
             val audioEnabledIntent =
                 WebRtcCallService.microphoneIntent(this, !viewModel.microphoneEnabled)
@@ -348,6 +354,7 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
 
             launch {
                 viewModel.localVideoEnabledState.collect { isEnabled ->
+                    binding.localFloatingRenderer.removeAllViews()
                     binding.localRenderer.removeAllViews()
                     if (isEnabled) {
                         viewModel.localRenderer?.let { surfaceView ->
@@ -358,22 +365,51 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
 
                             binding.localRenderer.addView(surfaceView)
                         }
+                        viewModel.localFloatingRenderer?.let { surfaceView ->
+                            surfaceView.setZOrderOnTop(true)
+                            binding.localFloatingRenderer.addView(surfaceView)
+
+                        }
                     }
-                    binding.localRenderer.isVisible = isEnabled
+                    binding.localFloatingRenderer.isVisible = isEnabled && !viewModel.videoViewSwapped
+                    binding.localRenderer.isVisible = isEnabled && viewModel.videoViewSwapped
                     binding.enableCameraButton.isSelected = isEnabled
+                    binding.floatingRendererContainer.isVisible = binding.localFloatingRenderer.isVisible
+                    binding.videocamOffIcon.isVisible = !binding.localFloatingRenderer.isVisible
+                    binding.remoteRecipient.isVisible = !(binding.remoteRenderer.isVisible || binding.localRenderer.isVisible)
+                    binding.swapViewIcon.bringToFront()
                 }
             }
 
             launch {
                 viewModel.remoteVideoEnabledState.collect { isEnabled ->
                     binding.remoteRenderer.removeAllViews()
+                    binding.remoteFloatingRenderer.removeAllViews()
                     if (isEnabled) {
                         viewModel.remoteRenderer?.let { surfaceView ->
                             binding.remoteRenderer.addView(surfaceView)
                         }
+                        viewModel.remoteFloatingRenderer?.let { surfaceView ->
+                            surfaceView.setZOrderOnTop(true)
+                            binding.remoteFloatingRenderer.addView(surfaceView)
+                        }
                     }
-                    binding.remoteRenderer.isVisible = isEnabled
-                    binding.remoteRecipient.isVisible = !isEnabled
+                    binding.remoteRenderer.isVisible = isEnabled && !viewModel.videoViewSwapped
+                    binding.remoteFloatingRenderer.isVisible = isEnabled && viewModel.videoViewSwapped
+                    binding.videocamOffIcon.isVisible = !binding.remoteFloatingRenderer.isVisible
+                    binding.floatingRendererContainer.isVisible = binding.remoteFloatingRenderer.isVisible
+                    binding.remoteRecipient.isVisible = !(binding.remoteRenderer.isVisible || binding.localRenderer.isVisible)
+                    binding.swapViewIcon.bringToFront()
+                }
+            }
+
+            launch {
+                viewModel.videoViewSwappedState.collect{ isSwapped ->
+                    binding.remoteRenderer.isVisible = !isSwapped && viewModel.remoteVideoEnabled
+                    binding.remoteFloatingRenderer.isVisible = isSwapped && viewModel.remoteVideoEnabled
+                    binding.localFloatingRenderer.isVisible = !isSwapped && viewModel.videoEnabled
+                    binding.localRenderer.isVisible = isSwapped && viewModel.videoEnabled
+                    binding.floatingRendererContainer.isVisible = binding.localFloatingRenderer.isVisible || binding.remoteFloatingRenderer.isVisible
                 }
             }
         }
@@ -388,6 +424,7 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
     override fun onStop() {
         super.onStop()
         uiJob?.cancel()
+        binding.remoteFloatingRenderer.removeAllViews()
         binding.remoteRenderer.removeAllViews()
         binding.localRenderer.removeAllViews()
     }

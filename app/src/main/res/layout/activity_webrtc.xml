@@ -22,6 +22,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"/>
+
+        <FrameLayout
+            android:id="@+id/local_renderer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"/>
     </FrameLayout>
     <ImageView
         android:id="@+id/remote_recipient"
@@ -111,6 +117,7 @@
         android:layout_height="wrap_content"/>
 
     <FrameLayout
+        android:id="@+id/floating_renderer_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintDimensionRatio="h,9:16"
@@ -118,10 +125,23 @@
         android:layout_marginVertical="@dimen/massive_spacing"
         app:layout_constraintWidth_percent="0.2"
         android:layout_height="0dp"
-        android:layout_width="0dp">
+        android:layout_width="0dp"
+        android:visibility="invisible"
+        android:background="@color/black">
+        <ImageView
+            android:id="@+id/videocam_off_icon"
+            android:src="@drawable/ic_baseline_videocam_off_24"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"/>
         <FrameLayout
             android:elevation="8dp"
-            android:id="@+id/local_renderer"
+            android:id="@+id/local_floating_renderer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <FrameLayout
+            android:elevation="8dp"
+            android:id="@+id/remote_floating_renderer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
         <com.github.ybq.android.spinkit.SpinKitView
@@ -133,6 +153,16 @@
             android:layout_gravity="center"
             tools:visibility="visible"
             android:visibility="gone" />
+        <ImageView
+            android:id="@+id/swap_view_icon"
+            android:src="@drawable/ic_baseline_screen_rotation_alt_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/very_small_spacing"
+            android:layout_marginEnd="@dimen/very_small_spacing"
+            android:layout_gravity="end"
+            android:layout_width="14dp"
+            android:layout_height="14dp"/>
     </FrameLayout>
 
     <ImageView

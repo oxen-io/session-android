@@ -3,7 +3,10 @@ package org.thoughtcrime.securesms.webrtc
 import android.content.Context
 import android.content.pm.PackageManager
 import android.telephony.TelephonyManager
+import android.view.SurfaceView
+import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.serialization.json.Json
@@ -31,6 +34,7 @@ import org.thoughtcrime.securesms.webrtc.CallManager.StateEvent.AudioDeviceUpdat
 import org.thoughtcrime.securesms.webrtc.CallManager.StateEvent.AudioEnabled
 import org.thoughtcrime.securesms.webrtc.CallManager.StateEvent.RecipientUpdate
 import org.thoughtcrime.securesms.webrtc.CallManager.StateEvent.VideoEnabled
+import org.thoughtcrime.securesms.webrtc.CallManager.StateEvent.VideoSwapped
 import org.thoughtcrime.securesms.webrtc.audio.AudioManagerCompat
 import org.thoughtcrime.securesms.webrtc.audio.OutgoingRinger
 import org.thoughtcrime.securesms.webrtc.audio.SignalAudioManager
@@ -67,6 +71,7 @@ class CallManager(
     SignalAudioManager.EventListener, CameraEventListener, DataChannel.Observer {
 
     sealed class StateEvent {
+        data class VideoSwapped(val isSwapped: Boolean): StateEvent()
         data class AudioEnabled(val isEnabled: Boolean): StateEvent()
         data class VideoEnabled(val isEnabled: Boolean): StateEvent()
         data class CallStateUpdate(val state: CallState): StateEvent()
@@ -109,6 +114,8 @@ class CallManager(
     val videoEvents = _videoEvents.asSharedFlow()
     private val _remoteVideoEvents = MutableStateFlow(VideoEnabled(false))
     val remoteVideoEvents = _remoteVideoEvents.asSharedFlow()
+    private val _videoViewSwappedEvents = MutableStateFlow(VideoSwapped(false))
+    val videoViewSwappedEvents = _videoViewSwappedEvents.asSharedFlow()
 
     private val stateProcessor = StateProcessor(CallState.Idle)
 
@@ -152,8 +159,10 @@ class CallManager(
     private val outgoingIceDebouncer = Debouncer(200L)
 
     var localRenderer: SurfaceViewRenderer? = null
+    var localFloatingRenderer: SurfaceViewRenderer? = null
     var remoteRotationSink: RemoteRotationVideoProxySink? = null
     var remoteRenderer: SurfaceViewRenderer? = null
+    var remoteFloatingRenderer: SurfaceViewRenderer? = null
     private var peerConnectionFactory: PeerConnectionFactory? = null
 
     fun clearPendingIceUpdates() {
@@ -220,15 +229,26 @@ class CallManager(
 //                setScalingType(SCALE_ASPECT_FIT)
             }
 
+            localFloatingRenderer = SurfaceViewRenderer(context).apply {
+//                setScalingType(SCALE_ASPECT_FIT)
+            }
             remoteRenderer = SurfaceViewRenderer(context).apply {
 //                setScalingType(SCALE_ASPECT_FIT)
             }
+
+            remoteFloatingRenderer = SurfaceViewRenderer(context).apply {
+//                setScalingType(SCALE_ASPECT_FIT)
+            }
+
             remoteRotationSink = RemoteRotationVideoProxySink()
 
 
             localRenderer?.init(base.eglBaseContext, null)
             localRenderer?.setMirror(localCameraState.activeDirection == CameraState.Direction.FRONT)
+            localFloatingRenderer?.init(base.eglBaseContext, null)
+            localFloatingRenderer?.setMirror(localCameraState.activeDirection == CameraState.Direction.FRONT)
             remoteRenderer?.init(base.eglBaseContext, null)
+            remoteFloatingRenderer?.init(base.eglBaseContext, null)
             remoteRotationSink!!.setSink(remoteRenderer!!)
 
             val encoderFactory = DefaultVideoEncoderFactory(base.eglBaseContext, true, true)
@@ -383,12 +403,16 @@ class CallManager(
             peerConnection?.dispose()
             peerConnection = null
 
+            localFloatingRenderer?.release()
             localRenderer?.release()
             remoteRotationSink?.release()
+            remoteFloatingRenderer?.release()
             remoteRenderer?.release()
             eglBase?.release()
 
+            localFloatingRenderer = null
             localRenderer = null
+            remoteFloatingRenderer = null
             remoteRenderer = null
             eglBase = null
 
@@ -401,6 +425,7 @@ class CallManager(
             _audioEvents.value = AudioEnabled(false)
             _videoEvents.value = VideoEnabled(false)
             _remoteVideoEvents.value = VideoEnabled(false)
+            _videoViewSwappedEvents.value = VideoSwapped(false)
             pendingOutgoingIceUpdates.clear()
             pendingIncomingIceUpdates.clear()
         }
@@ -469,7 +494,7 @@ class CallManager(
         val recipient = recipient ?: return Promise.ofFail(NullPointerException("recipient is null"))
         val offer = pendingOffer ?: return Promise.ofFail(NullPointerException("pendingOffer is null"))
         val factory = peerConnectionFactory ?: return Promise.ofFail(NullPointerException("peerConnectionFactory is null"))
-        val local = localRenderer ?: return Promise.ofFail(NullPointerException("localRenderer is null"))
+        val local = localFloatingRenderer ?: return Promise.ofFail(NullPointerException("localRenderer is null"))
         val base = eglBase ?: return Promise.ofFail(NullPointerException("eglBase is null"))
         val connection = PeerConnectionWrapper(
                 context,
@@ -515,7 +540,7 @@ class CallManager(
                 ?: return Promise.ofFail(NullPointerException("recipient is null"))
         val factory = peerConnectionFactory
                 ?: return Promise.ofFail(NullPointerException("peerConnectionFactory is null"))
-        val local = localRenderer
+        val local = localFloatingRenderer
                 ?: return Promise.ofFail(NullPointerException("localRenderer is null"))
         val base = eglBase ?: return Promise.ofFail(NullPointerException("eglBase is null"))
 
@@ -606,6 +631,17 @@ class CallManager(
         if (!stateProcessor.processEvent(Event.Hangup)) {
             Log.e("Loki", "")
             stateProcessor.processEvent(Event.Error)
+        }
+    }
+
+    fun handleSwapVideoView(swapped: Boolean) {
+        _videoViewSwappedEvents.value = VideoSwapped(!swapped)
+        if (!swapped) {
+            peerConnection?.rotationVideoSink?.setSink(localRenderer)
+            remoteRotationSink?.setSink(remoteFloatingRenderer!!)
+        } else {
+            peerConnection?.rotationVideoSink?.setSink(localFloatingRenderer)
+            remoteRotationSink?.setSink(remoteRenderer!!)
         }
     }
 

@@ -32,13 +32,29 @@ class CallViewModel @Inject constructor(private val callManager: CallManager): V
     val localRenderer: SurfaceViewRenderer?
     get() = callManager.localRenderer
 
+    val localFloatingRenderer: SurfaceViewRenderer?
+    get() = callManager.localFloatingRenderer
+
     val remoteRenderer: SurfaceViewRenderer?
     get() = callManager.remoteRenderer
+
+    val remoteFloatingRenderer: SurfaceViewRenderer?
+    get() = callManager.remoteFloatingRenderer
 
     private var _videoEnabled: Boolean = false
 
     val videoEnabled: Boolean
         get() = _videoEnabled
+
+    private var _remoteVideoEnabled: Boolean = false
+
+    val remoteVideoEnabled: Boolean
+        get() = _remoteVideoEnabled
+
+    private var _videoViewSwapped: Boolean = false
+
+    val videoViewSwapped: Boolean
+        get() = _videoViewSwapped
 
     private var _microphoneEnabled: Boolean = true
 
@@ -65,7 +81,14 @@ class CallViewModel @Inject constructor(private val callManager: CallManager): V
                 .onEach { _videoEnabled = it }
 
     val remoteVideoEnabledState
-        get() = callManager.remoteVideoEvents.map { it.isEnabled }
+        get() = callManager.remoteVideoEvents
+                .map { it.isEnabled }
+                .onEach { _remoteVideoEnabled = it }
+
+    val videoViewSwappedState
+        get() = callManager.videoViewSwappedEvents
+                .map { it.isSwapped }
+                .onEach { _videoViewSwapped = it }
 
     var deviceRotation: Int = 0
         set(value) {

@@ -41,7 +41,7 @@ class PeerConnectionWrapper(private val context: Context,
     private val mediaStream: MediaStream
     private val videoSource: VideoSource?
     private val videoTrack: VideoTrack?
-    private val rotationVideoSink = RotationVideoSink()
+    public val rotationVideoSink = RotationVideoSink()
 
     val readyForIce
         get() = peerConnection?.localDescription != null && peerConnection?.remoteDescription != null
