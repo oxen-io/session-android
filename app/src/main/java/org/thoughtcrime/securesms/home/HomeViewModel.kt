@@ -80,7 +80,7 @@ class HomeViewModel @Inject constructor(
     ).flowOn(Dispatchers.IO)
 
     private fun unapprovedConversationCount() = reloadTriggersAndContentChanges()
-        .map { threadDb.unapprovedConversationCount }
+        .map { threadDb.unapprovedConversationList.use { cursor -> cursor.count } }
 
     private fun latestUnapprovedConversationTimestamp() = reloadTriggersAndContentChanges()
         .map { threadDb.latestUnapprovedConversationTimestamp }

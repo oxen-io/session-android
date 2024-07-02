@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:elevation="4dp"
+    android:padding="@dimen/medium_spacing">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/small_spacing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_clear_all_messages_title"
+            android:textColor="?android:textColorPrimary"
+            android:textStyle="bold"
+            android:textSize="@dimen/medium_font_size" />
+
+        <ImageView
+            android:id="@+id/close"
+            android:src="@drawable/ic_baseline_close_24"
+            android:layout_gravity="end|top"
+            android:layout_marginHorizontal="@dimen/small_spacing"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:tint="?android:textColorPrimary" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/dialogDescriptionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/large_spacing"
+        android:text="@string/dialog_clear_all_messages_message"
+        android:textAlignment="center"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="@dimen/small_font_size" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/large_spacing"
+        android:orientation="horizontal">
+
+        <Button
+            style="@style/Widget.Session.Button.Dialog.DestructiveText"
+            android:id="@+id/clear"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/small_button_height"
+            android:layout_weight="1"
+            android:layout_marginEnd="@dimen/medium_spacing"
+            android:text="@string/dialog_clear_all_data_clear" />
+
+        <Button
+            style="@style/Widget.Session.Button.Dialog.UnimportantText"
+            android:id="@+id/cancel"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/small_button_height"
+            android:layout_weight="1"
+            android:text="@string/dialog_clear_all_messages_cancel" />
+
+        <Button
+            style="@style/Widget.Session.Button.Dialog.DestructiveText"
+            android:id="@+id/forEveryone"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/small_button_height"
+            android:layout_weight="1"
+            android:layout_marginEnd="@dimen/medium_spacing"
+            android:text="@string/dialog_clear_all_messages_for_everyone" />
+
+        <Button
+            style="@style/Widget.Session.Button.Dialog.UnimportantText"
+            android:id="@+id/forMe"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/small_button_height"
+            android:layout_weight="1"
+            android:text="@string/dialog_clear_all_messages_for_me" />
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            style="@style/SpinKitView.Small.ThreeBounce"
+            android:id="@+id/progressBar"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/small_button_height"
+            android:layout_weight="1"
+            app:SpinKit_Color="?colorAccent"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</LinearLayout>

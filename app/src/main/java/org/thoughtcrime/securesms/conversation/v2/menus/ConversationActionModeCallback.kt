@@ -6,10 +6,10 @@ import android.view.Menu
 import android.view.MenuItem
 import network.loki.messenger.R
 import org.session.libsession.messaging.MessagingModuleConfiguration
-import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.utilities.IdPrefix
+import org.session.libsignal.utilities.SessionId
 import org.thoughtcrime.securesms.conversation.v2.ConversationAdapter
 import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord
 import org.thoughtcrime.securesms.database.model.MessageRecord
@@ -39,7 +39,7 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
         val userPublicKey = TextSecurePreferences.getLocalNumber(context)!!
         val edKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!
         val blindedPublicKey = openGroup?.publicKey?.let { SodiumUtilities.blindedKeyPair(it, edKeyPair)?.publicKey?.asBytes }
-            ?.let { SessionId(IdPrefix.BLINDED, it) }?.hexString
+            ?.let { SessionId(IdPrefix.BLINDED, it) }?.hexString()
         fun userCanDeleteSelectedItems(): Boolean {
             val allSentByCurrentUser = selectedItems.all { it.isOutgoing }
             val allReceivedByCurrentUser = selectedItems.all { !it.isOutgoing }

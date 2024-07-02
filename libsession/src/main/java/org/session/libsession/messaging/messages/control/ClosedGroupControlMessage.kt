@@ -28,6 +28,8 @@ class ClosedGroupControlMessage() : ControlMessage() {
         }
     }
 
+    override fun shouldDiscardIfBlocked(): Boolean = kind !is Kind.EncryptionKeyPair
+
     override val isSelfSendValid: Boolean = true
 
     override fun isValid(): Boolean {
@@ -154,7 +156,6 @@ class ClosedGroupControlMessage() : ControlMessage() {
             return SignalServiceProtos.Content.newBuilder().apply {
                 dataMessage = DataMessage.newBuilder().also {
                     it.closedGroupControlMessage = closedGroupControlMessage.build()
-                    it.setGroupContext()
                 }.build()
             }.build()
         } catch (e: Exception) {

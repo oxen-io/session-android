@@ -149,7 +149,12 @@
             android:label="@string/blocked_contacts_title"
             />
         <activity
+            android:name="org.thoughtcrime.securesms.groups.EditLegacyClosedGroupActivity"
+            android:label="@string/activity_edit_closed_group_title"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="org.thoughtcrime.securesms.groups.EditClosedGroupActivity"
+            android:theme="@style/Theme.Session.DayNight.NoActionBar"
             android:label="@string/activity_edit_closed_group_title"
             android:screenOrientation="portrait" />
         <activity
@@ -232,7 +237,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.thoughtcrime.securesms.home.HomeActivity" />
         </activity>
-
+        <activity android:name="org.thoughtcrime.securesms.conversation.settings.ConversationSettingsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Session.DayNight.NoActionBar"/>
+        <activity android:name="org.thoughtcrime.securesms.conversation.settings.ConversationNotificationSettingsActivity"
+            android:label="@string/activity_notification_settings_title"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Session.DayNight"/>
         <activity
             android:name="org.thoughtcrime.securesms.conversation.v2.MessageDetailActivity"
             android:screenOrientation="portrait"

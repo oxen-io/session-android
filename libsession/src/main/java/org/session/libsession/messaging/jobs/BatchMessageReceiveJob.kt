@@ -8,6 +8,7 @@ import kotlinx.coroutines.runBlocking
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
 import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.control.CallMessage
 import org.session.libsession.messaging.messages.control.ClosedGroupControlMessage
@@ -28,19 +29,20 @@ import org.session.libsession.messaging.sending_receiving.handleOpenGroupReactio
 import org.session.libsession.messaging.sending_receiving.handleUnsendRequest
 import org.session.libsession.messaging.sending_receiving.handleVisibleMessage
 import org.session.libsession.messaging.utilities.Data
-import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsignal.protos.UtilProtos
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.SessionId
 import kotlin.math.max
 
 data class MessageReceiveParameters(
     val data: ByteArray,
     val serverHash: String? = null,
     val openGroupMessageServerID: Long? = null,
-    val reactions: Map<String, OpenGroupApi.Reaction>? = null
+    val reactions: Map<String, OpenGroupApi.Reaction>? = null,
+    val closedGroup: Destination.ClosedGroup? = null
 )
 
 class BatchMessageReceiveJob(
@@ -70,6 +72,7 @@ class BatchMessageReceiveJob(
         private val SERVER_HASH_KEY = "serverHash"
         private val OPEN_GROUP_MESSAGE_SERVER_ID_KEY = "openGroupMessageServerID"
         private val OPEN_GROUP_ID_KEY = "open_group_id"
+        private val CLOSED_GROUP_DESTINATION_KEY = "closed_group_destination"
     }
 
     private fun shouldCreateThread(parsedMessage: ParsedMessage): Boolean {
@@ -109,7 +112,13 @@ class BatchMessageReceiveJob(
             messages.forEach { messageParameters ->
                 val (data, serverHash, openGroupMessageServerID) = messageParameters
                 try {
-                    val (message, proto) = MessageReceiver.parse(data, openGroupMessageServerID, openGroupPublicKey = serverPublicKey, currentClosedGroups = currentClosedGroups)
+                    val (message, proto) = MessageReceiver.parse(
+                        data,
+                        openGroupMessageServerID,
+                        openGroupPublicKey = serverPublicKey,
+                        currentClosedGroups = currentClosedGroups,
+                        closedGroupSessionId = messageParameters.closedGroup?.publicKey
+                    )
                     message.serverHash = serverHash
                     val parsedParams = ParsedMessage(messageParameters, message, proto)
                     val threadID = Message.getThreadId(message, openGroupID, storage, shouldCreateThread(parsedParams)) ?: NO_THREAD_MAPPING
@@ -161,7 +170,7 @@ class BatchMessageReceiveJob(
                                         }?.let {
                                             SessionId(
                                                 IdPrefix.BLINDED, it.publicKey.asBytes
-                                            ).hexString
+                                            ).hexString()
                                         }
                                     if (message.sender == localUserPublicKey || isUserBlindedSender) {
                                         // use sent timestamp here since that is technically the last one we have
@@ -197,7 +206,12 @@ class BatchMessageReceiveJob(
                                     }
                                 }
 
-                                else -> MessageReceiver.handle(message, proto, threadId, openGroupID)
+                                else -> MessageReceiver.handle(message,
+                                    proto,
+                                    threadId,
+                                    openGroupID,
+                                    closedGroup = parameters.closedGroup?.publicKey?.let(SessionId::from)
+                                )
                             }
                         } catch (e: Exception) {
                             Log.e(TAG, "Couldn't process message (id: $id)", e)
@@ -257,12 +271,14 @@ class BatchMessageReceiveJob(
             .build()
         val serverHashes = messages.map { it.serverHash.orEmpty() }
         val openGroupServerIds = messages.map { it.openGroupMessageServerID ?: -1L }
+        val closedGroups = messages.map { it.closedGroup?.publicKey.orEmpty() }
         return Data.Builder()
             .putInt(NUM_MESSAGES_KEY, arraySize)
             .putByteArray(DATA_KEY, dataArrays.toByteArray())
             .putString(OPEN_GROUP_ID_KEY, openGroupID)
             .putLongArray(OPEN_GROUP_MESSAGE_SERVER_ID_KEY, openGroupServerIds.toLongArray())
             .putStringArray(SERVER_HASH_KEY, serverHashes.toTypedArray())
+            .putStringArray(CLOSED_GROUP_DESTINATION_KEY, closedGroups.toTypedArray())
             .build()
     }
 
@@ -278,11 +294,22 @@ class BatchMessageReceiveJob(
                 if (data.hasStringArray(SERVER_HASH_KEY)) data.getStringArray(SERVER_HASH_KEY) else arrayOf()
             val openGroupMessageServerIDs = data.getLongArray(OPEN_GROUP_MESSAGE_SERVER_ID_KEY)
             val openGroupID = data.getStringOrDefault(OPEN_GROUP_ID_KEY, null)
+            val closedGroups =
+                if (data.hasStringArray(CLOSED_GROUP_DESTINATION_KEY)) data.getStringArray(CLOSED_GROUP_DESTINATION_KEY)
+                else arrayOf()
 
             val parameters = (0 until numMessages).map { index ->
                 val serverHash = serverHashes[index].let { if (it.isEmpty()) null else it }
                 val serverId = openGroupMessageServerIDs[index].let { if (it == -1L) null else it }
-                MessageReceiveParameters(contents[index], serverHash, serverId)
+                val closedGroup = closedGroups.getOrNull(index)?.let {
+                    if (it.isEmpty()) null else Destination.ClosedGroup(it)
+                }
+                MessageReceiveParameters(
+                    data = contents[index],
+                    serverHash = serverHash,
+                    openGroupMessageServerID = serverId,
+                    closedGroup = closedGroup
+                )
             }
 
             return BatchMessageReceiveJob(parameters, openGroupID)

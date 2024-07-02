@@ -98,11 +98,11 @@ object PushRegistryV1 {
     // Legacy Closed Groups
 
     fun subscribeGroup(
-        closedGroupPublicKey: String,
+        closedGroupSessionId: String,
         isPushEnabled: Boolean = TextSecurePreferences.isPushEnabled(context),
         publicKey: String = MessagingModuleConfiguration.shared.storage.getUserPublicKey()!!
     ) = if (isPushEnabled) {
-        performGroupOperation("subscribe_closed_group", closedGroupPublicKey, publicKey)
+        performGroupOperation("subscribe_closed_group", closedGroupSessionId, publicKey)
     } else emptyPromise()
 
     fun unsubscribeGroup(

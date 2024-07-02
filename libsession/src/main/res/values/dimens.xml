@@ -103,8 +103,6 @@
     <dimen name="quote_corner_radius_bottom">2dp</dimen>
     <dimen name="quote_corner_radius_preview">16dp</dimen>
 
-    <integer name="media_overview_cols">3</integer>
-
     <dimen name="contact_selection_actions_tap_area">10dp</dimen>
 
     <dimen name="unread_count_bubble_radius">13sp</dimen>

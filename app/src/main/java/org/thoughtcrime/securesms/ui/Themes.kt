@@ -13,16 +13,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.LayoutDirection
 import com.google.accompanist.themeadapter.appcompat.AppCompatTheme
 import com.google.android.material.color.MaterialColors
 import network.loki.messenger.R
 
 val LocalExtraColors = staticCompositionLocalOf<ExtraColors> { error("No Custom Attribute value provided") }
+val LocalPreviewMode = staticCompositionLocalOf { false }
 
 
 data class ExtraColors(
     val settingsBackground: Color,
-    val prominentButtonColor: Color
+    val destructive: Color,
+    val prominentButtonColor: Color,
+    val warning: Color,
 )
 
 /**
@@ -35,7 +39,9 @@ fun AppTheme(
     val extraColors = LocalContext.current.run {
         ExtraColors(
             settingsBackground = getColorFromTheme(R.attr.colorSettingsBackground),
+            destructive = Color(getColor(R.color.destructive)),
             prominentButtonColor = getColorFromTheme(R.attr.prominentButtonColor),
+            warning = Color(getColor(R.color.warning))
         )
     }
 
@@ -58,7 +64,8 @@ fun PreviewTheme(
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
-        LocalContext provides ContextThemeWrapper(LocalContext.current, themeResId)
+        LocalContext provides ContextThemeWrapper(LocalContext.current, themeResId),
+        LocalPreviewMode provides true
     ) {
         AppTheme {
             Box(modifier = Modifier.background(color = MaterialTheme.colors.background)) {
@@ -75,4 +82,9 @@ class ThemeResPreviewParameterProvider : PreviewParameterProvider<Int> {
         R.style.Ocean_Dark,
         R.style.Ocean_Light,
     )
+}
+
+class BidiPreviewParameterProvider: PreviewParameterProvider<LayoutDirection> {
+    override val values: Sequence<LayoutDirection>
+        get() = sequenceOf( LayoutDirection.Ltr, LayoutDirection.Rtl)
 }

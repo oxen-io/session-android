@@ -9,11 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.session.libsession.messaging.utilities.SessionId;
+import org.session.libsignal.utilities.SessionId;
 import org.thoughtcrime.securesms.components.ProfilePictureView;
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
 import org.thoughtcrime.securesms.database.model.MessageId;
-import org.thoughtcrime.securesms.mms.GlideApp;
 
 import java.util.Collections;
 import java.util.List;

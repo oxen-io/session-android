@@ -27,6 +27,8 @@ import android.text.style.StyleSpan;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.session.libsession.messaging.utilities.UpdateMessageBuilder;
+import org.session.libsession.messaging.utilities.UpdateMessageData;
 import org.session.libsession.utilities.ExpirationUtil;
 import org.session.libsession.utilities.recipients.Recipient;
 import org.thoughtcrime.securesms.database.MmsSmsColumns;
@@ -53,12 +55,13 @@ public class ThreadRecord extends DisplayRecord {
   private           final long    lastSeen;
   private           final boolean pinned;
   private           final int initialRecipientHash;
+  private           final String invitingAdminId;
 
   public ThreadRecord(@NonNull String body, @Nullable Uri snippetUri,
                       @Nullable MessageRecord lastMessage, @NonNull Recipient recipient, long date, long count, int unreadCount,
                       int unreadMentionCount, long threadId, int deliveryReceiptCount, int status,
                       long snippetType,  int distributionType, boolean archived, long expiresIn,
-                      long lastSeen, int readReceiptCount, boolean pinned)
+                      long lastSeen, int readReceiptCount, boolean pinned, String invitingAdminId)
   {
     super(body, recipient, date, date, threadId, status, deliveryReceiptCount, snippetType, readReceiptCount);
     this.snippetUri         = snippetUri;
@@ -72,6 +75,7 @@ public class ThreadRecord extends DisplayRecord {
     this.lastSeen           = lastSeen;
     this.pinned             = pinned;
     this.initialRecipientHash = recipient.hashCode();
+    this.invitingAdminId    = invitingAdminId;
   }
 
   public @Nullable Uri getSnippetUri() {
@@ -81,6 +85,18 @@ public class ThreadRecord extends DisplayRecord {
   @Override
   public SpannableString getDisplayBody(@NonNull Context context) {
     if (isGroupUpdateMessage()) {
+      String body = getBody();
+      if (!body.isEmpty()) {
+        UpdateMessageData updateMessageData = UpdateMessageData.fromJSON(body);
+        if (updateMessageData != null) {
+          return emphasisAdded(
+                  UpdateMessageBuilder.buildGroupUpdateMessage(context, updateMessageData, null, isOutgoing(), false)
+                          .toString()
+          );
+        } else {
+          return null;
+        }
+      }
       return emphasisAdded(context.getString(R.string.ThreadRecord_group_updated));
     } else if (isOpenGroupInvitation()) {
       return emphasisAdded(context.getString(R.string.ThreadRecord_open_group_invitation));
@@ -183,5 +199,31 @@ public class ThreadRecord extends DisplayRecord {
 
   public int getInitialRecipientHash() {
     return initialRecipientHash;
+  }
+
+  public boolean isLeavingGroup() {
+    if (isGroupUpdateMessage()) {
+      String body = getBody();
+      if (!body.isEmpty()) {
+        UpdateMessageData updateMessageData = UpdateMessageData.Companion.fromJSON(body);
+        return updateMessageData.isGroupLeavingKind();
+      }
+    }
+    return false;
+  }
+
+  public boolean isErrorLeavingGroup() {
+    if (isGroupUpdateMessage()) {
+      String body = getBody();
+      if (!body.isEmpty()) {
+        UpdateMessageData updateMessageData = UpdateMessageData.Companion.fromJSON(body);
+        return updateMessageData.isGroupErrorQuitKind();
+      }
+    }
+    return false;
+  }
+
+  public String getInvitingAdminId() {
+    return invitingAdminId;
   }
 }

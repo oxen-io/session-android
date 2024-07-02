@@ -13,6 +13,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityMessageRequestsBinding
+import org.session.libsession.utilities.Address
+import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.database.ThreadDatabase
@@ -78,14 +80,17 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
 
     override fun onBlockConversationClick(thread: ThreadRecord) {
         fun doBlock() {
-            viewModel.blockMessageRequest(thread)
+            val recipient = thread.invitingAdminId?.let {
+                Recipient.from(this, Address.fromSerialized(it), false)
+            } ?: thread.recipient
+            viewModel.blockMessageRequest(thread, recipient)
             LoaderManager.getInstance(this).restartLoader(0, null, this)
         }
 
         showSessionDialog {
-            title(R.string.RecipientPreferenceActivity_block_this_contact_question)
+            title(R.string.recipient_preferences__block)
                 text(R.string.message_requests_block_message)
-                button(R.string.recipient_preferences__block) { doBlock() }
+                destructiveButton(R.string.recipient_preferences__block, contentDescriptionRes = R.string.recipient_preferences__block) { doBlock() }
                 button(R.string.no)
         }
     }
@@ -102,8 +107,12 @@ class MessageRequestsActivity : PassphraseRequiredActionBarActivity(), Conversat
         showSessionDialog {
             title(R.string.decline)
             text(resources.getString(R.string.message_requests_decline_message))
-            button(R.string.decline) { doDecline() }
-            button(R.string.no)
+            if (thread.recipient.isClosedGroupV2Recipient) {
+                destructiveButton(R.string.delete, contentDescriptionRes = R.string.delete) { doDecline() }
+            } else {
+                destructiveButton(R.string.decline, contentDescriptionRes = R.string.decline) { doDecline() }
+            }
+            cancelButton()
         }
     }
 

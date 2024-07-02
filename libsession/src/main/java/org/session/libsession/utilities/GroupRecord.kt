@@ -23,8 +23,8 @@ class GroupRecord(
 
     val isOpenGroup: Boolean
         get() = Address.fromSerialized(encodedId).isCommunity
-    val isClosedGroup: Boolean
-        get() = Address.fromSerialized(encodedId).isClosedGroup
+    val isLegacyClosedGroup: Boolean
+        get() = Address.fromSerialized(encodedId).isLegacyClosedGroup
 
     init {
         if (!TextUtils.isEmpty(members)) {

@@ -44,7 +44,6 @@
         <item quantity="other">%d semaines</item>
     </plurals>
     <string name="expiration_weeks_abbreviated">%d sem</string>
-    <string name="ConversationItem_group_action_left">%1$s a quitté le groupe.</string>
     <!-- RecipientProvider -->
     <string name="RecipientProvider_unnamed_group">Groupe sans nom</string>
 </resources>

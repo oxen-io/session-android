@@ -44,7 +44,8 @@ public class MediaDatabase extends Database {
         + MmsDatabase.TABLE_NAME + "." + MmsDatabase.MESSAGE_BOX + ", "
         + MmsDatabase.TABLE_NAME + "." + MmsDatabase.DATE_SENT + ", "
         + MmsDatabase.TABLE_NAME + "." + MmsDatabase.DATE_RECEIVED + ", "
-        + MmsDatabase.TABLE_NAME + "." + MmsDatabase.ADDRESS + " "
+        + MmsDatabase.TABLE_NAME + "." + MmsDatabase.ADDRESS + ", "
+        + MmsDatabase.TABLE_NAME + "." + MmsDatabase.LINK_PREVIEWS + " "
         + "FROM " + AttachmentDatabase.TABLE_NAME + " LEFT JOIN " + MmsDatabase.TABLE_NAME
         + " ON " + AttachmentDatabase.TABLE_NAME + "." + AttachmentDatabase.MMS_ID + " = " + MmsDatabase.TABLE_NAME + "." + MmsDatabase.ID + " "
         + "WHERE " + AttachmentDatabase.MMS_ID + " IN (SELECT " + MmsSmsColumns.ID
@@ -52,7 +53,8 @@ public class MediaDatabase extends Database {
         + " WHERE " + MmsDatabase.THREAD_ID + " = ?) AND (%s) AND "
         + AttachmentDatabase.DATA + " IS NOT NULL AND "
         + AttachmentDatabase.QUOTE + " = 0 AND "
-        + AttachmentDatabase.STICKER_PACK_ID + " IS NULL "
+        + AttachmentDatabase.STICKER_PACK_ID + " IS NULL AND "
+        + MmsDatabase.LINK_PREVIEWS + " IS NULL "
         + "ORDER BY " + AttachmentDatabase.TABLE_NAME + "." + AttachmentDatabase.ROW_ID + " DESC";
 
   private static final String GALLERY_MEDIA_QUERY  = String.format(BASE_MEDIA_QUERY, AttachmentDatabase.CONTENT_TYPE + " LIKE 'image/%' OR " + AttachmentDatabase.CONTENT_TYPE + " LIKE 'video/%'");

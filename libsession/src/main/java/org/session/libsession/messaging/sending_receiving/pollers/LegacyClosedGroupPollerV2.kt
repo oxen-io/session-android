@@ -22,7 +22,7 @@ import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 import kotlin.math.min
 
-class ClosedGroupPollerV2 {
+class LegacyClosedGroupPollerV2 {
     private val executorService = Executors.newScheduledThreadPool(1)
     private var isPolling = mutableMapOf<String, Boolean>()
     private var futures = mutableMapOf<String, ScheduledFuture<*>>()
@@ -36,7 +36,7 @@ class ClosedGroupPollerV2 {
         private val maxPollInterval = 4 * 60 * 1000
 
         @JvmStatic
-        val shared = ClosedGroupPollerV2()
+        val shared = LegacyClosedGroupPollerV2()
     }
 
     class InsufficientSnodesException() : Exception("No snodes left to poll.")
@@ -108,13 +108,13 @@ class ClosedGroupPollerV2 {
             if (!isPolling(groupPublicKey)) { throw PollingCanceledException() }
             val currentForkInfo = SnodeAPI.forkInfo
             when {
-                currentForkInfo.defaultRequiresAuth() -> SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = Namespace.UNAUTHENTICATED_CLOSED_GROUP)
-                    .map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, Namespace.UNAUTHENTICATED_CLOSED_GROUP) }
+                currentForkInfo.defaultRequiresAuth() -> SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = Namespace.UNAUTHENTICATED_CLOSED_GROUP())
+                    .map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, Namespace.UNAUTHENTICATED_CLOSED_GROUP()) }
                 currentForkInfo.hasNamespaces() -> task {
-                    val unAuthed = SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = Namespace.UNAUTHENTICATED_CLOSED_GROUP)
-                        .map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, Namespace.UNAUTHENTICATED_CLOSED_GROUP) }
-                    val default = SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = Namespace.DEFAULT)
-                        .map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, Namespace.DEFAULT) }
+                    val unAuthed = SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = Namespace.UNAUTHENTICATED_CLOSED_GROUP())
+                        .map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, Namespace.UNAUTHENTICATED_CLOSED_GROUP()) }
+                    val default = SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = Namespace.DEFAULT())
+                        .map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey, Namespace.DEFAULT()) }
                     val unAuthedResult = unAuthed.get()
                     val defaultResult = default.get()
                     val format = DateFormat.getTimeInstance()
@@ -123,7 +123,7 @@ class ClosedGroupPollerV2 {
                     }
                     unAuthedResult + defaultResult
                 }
-                else -> SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = Namespace.DEFAULT)
+                else -> SnodeAPI.getRawMessages(snode, groupPublicKey, requiresAuth = false, namespace = Namespace.DEFAULT())
                     .map { SnodeAPI.parseRawMessagesResponse(it, snode, groupPublicKey) }
             }
         }

@@ -13,18 +13,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import network.loki.messenger.libsession_util.util.GroupMember
+import org.session.libsession.database.StorageProtocol
 import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
-import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.database.MmsDatabase
+import org.session.libsignal.utilities.SessionId
 import org.thoughtcrime.securesms.audio.AudioSlidePlayer
 import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.model.MessageRecord
@@ -36,7 +38,7 @@ class ConversationViewModel(
     val threadId: Long,
     val edKeyPair: KeyPair?,
     private val repository: ConversationRepository,
-    private val storage: Storage,
+    private val storage: StorageProtocol,
     private val messageDataProvider: MessageDataProvider,
     database: MmsDatabase,
 ) : ViewModel() {
@@ -65,11 +67,34 @@ class ConversationViewModel(
             }
         }
 
+    val invitingAdmin: Recipient?
+        get() {
+            val recipient = recipient ?: return null
+            if (!recipient.isClosedGroupV2Recipient) return null
+
+            return repository.getInvitingAdmin(threadId)
+        }
+
     private var _openGroup: RetrieveOnce<OpenGroup> = RetrieveOnce {
         storage.getOpenGroup(threadId)
     }
     val openGroup: OpenGroup?
         get() = _openGroup.value
+
+    val closedGroupMembers: List<GroupMember>
+        get() {
+            val recipient = recipient ?: return emptyList()
+            if (!recipient.isClosedGroupV2Recipient) return emptyList()
+            return storage.getMembers(recipient.address.serialize())
+        }
+
+    val isClosedGroupAdmin: Boolean
+        get() {
+            val recipient = recipient ?: return false
+            return !recipient.isClosedGroupV2Recipient ||
+                    (closedGroupMembers.firstOrNull { it.sessionId == storage.getUserPublicKey() }?.admin ?: false)
+        }
+
 
     val serverCapabilities: List<String>
         get() = openGroup?.let { storage.getServerCapabilities(it.server) } ?: listOf()
@@ -77,13 +102,13 @@ class ConversationViewModel(
     val blindedPublicKey: String?
         get() = if (openGroup == null || edKeyPair == null || !serverCapabilities.contains(OpenGroupApi.Capability.BLIND.name.lowercase())) null else {
             SodiumUtilities.blindedKeyPair(openGroup!!.publicKey, edKeyPair)?.publicKey?.asBytes
-                ?.let { SessionId(IdPrefix.BLINDED, it) }?.hexString
+                ?.let { SessionId(IdPrefix.BLINDED, it) }?.hexString()
         }
 
     val isMessageRequestThread : Boolean
         get() {
             val recipient = recipient ?: return false
-            return !recipient.isLocalNumber && !recipient.isGroupRecipient && !recipient.isApproved
+            return !recipient.isLocalNumber && !recipient.isLegacyClosedGroupRecipient && !recipient.isCommunityRecipient && !recipient.isApproved
         }
 
     val canReactToMessages: Boolean
@@ -135,16 +160,17 @@ class ConversationViewModel(
     }
 
     fun block() {
-        val recipient = recipient ?: return Log.w("Loki", "Recipient was null for block action")
-        if (recipient.isContactRecipient) {
-            repository.setBlocked(recipient, true)
+        // inviting admin will be true if this request is a closed group message request
+        val recipient = invitingAdmin ?: recipient ?: return Log.w("Loki", "Recipient was null for block action")
+        if (recipient.isContactRecipient || recipient.isClosedGroupV2Recipient) {
+            repository.setBlocked(threadId, recipient, true)
         }
     }
 
     fun unblock() {
         val recipient = recipient ?: return Log.w("Loki", "Recipient was null for unblock action")
         if (recipient.isContactRecipient) {
-            repository.setBlocked(recipient, false)
+            repository.setBlocked(threadId, recipient, false)
         }
     }
 
@@ -233,7 +259,8 @@ class ConversationViewModel(
     }
 
     fun declineMessageRequest() {
-        repository.declineMessageRequest(threadId)
+        val recipient = recipient ?: return
+        repository.declineMessageRequest(threadId, recipient)
     }
 
     private fun showMessage(message: String) {
@@ -282,7 +309,7 @@ class ConversationViewModel(
         @Assisted private val threadId: Long,
         @Assisted private val edKeyPair: KeyPair?,
         private val repository: ConversationRepository,
-        private val storage: Storage,
+        private val storage: StorageProtocol,
         private val mmsDatabase: MmsDatabase,
         private val messageDataProvider: MessageDataProvider,
     ) : ViewModelProvider.Factory {

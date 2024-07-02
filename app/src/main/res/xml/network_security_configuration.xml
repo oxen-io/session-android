@@ -21,4 +21,7 @@
             <certificates src="@raw/seed3"/>
         </trust-anchors>
     </domain-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">public.loki.foundation</domain>
+    </domain-config>
 </network-security-config>

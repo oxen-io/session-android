@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.messagerequests
 import android.content.Context
 import android.content.res.ColorStateList
 import android.database.Cursor
+import android.os.Build
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.ContextThemeWrapper
@@ -29,7 +30,9 @@ class MessageRequestsAdapter(
         val view = MessageRequestView(context)
         view.setOnClickListener { view.thread?.let { listener.onConversationClick(it) } }
         view.setOnLongClickListener {
-            view.thread?.let { showPopupMenu(view) }
+            view.thread?.let { thread ->
+                showPopupMenu(view, thread.recipient.isGroupRecipient, thread.invitingAdminId)
+            }
             true
         }
         return ViewHolder(view)
@@ -45,10 +48,14 @@ class MessageRequestsAdapter(
         holder?.view?.recycle()
     }
 
-    private fun showPopupMenu(view: MessageRequestView) {
+    private fun showPopupMenu(view: MessageRequestView, groupRecipient: Boolean, invitingAdmin: String?) {
         val popupMenu = PopupMenu(ContextThemeWrapper(context, R.style.PopupMenu_MessageRequests), view)
-        popupMenu.menuInflater.inflate(R.menu.menu_message_request, popupMenu.menu)
-        popupMenu.menu.findItem(R.id.menu_block_message_request)?.isVisible = !view.thread!!.recipient.isOpenGroupInboxRecipient
+        // still show the block option if we have an inviting admin for the group
+        if ((groupRecipient && invitingAdmin == null) || view.thread!!.recipient.isOpenGroupInboxRecipient) {
+            popupMenu.menuInflater.inflate(R.menu.menu_group_request, popupMenu.menu)
+        } else {
+            popupMenu.menuInflater.inflate(R.menu.menu_message_request, popupMenu.menu)
+        }
         popupMenu.setOnMenuItemClickListener { menuItem ->
             if (menuItem.itemId == R.id.menu_delete_message_request) {
                 listener.onDeleteConversationClick(view.thread!!)
@@ -61,10 +68,14 @@ class MessageRequestsAdapter(
             val item = popupMenu.menu.getItem(i)
             val s = SpannableString(item.title)
             s.setSpan(ForegroundColorSpan(context.getColor(R.color.destructive)), 0, s.length, 0)
-            item.iconTintList = ColorStateList.valueOf(context.getColor(R.color.destructive))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                item.iconTintList = ColorStateList.valueOf(context.getColor(R.color.destructive))
+            }
             item.title = s
         }
-        popupMenu.setForceShowIcon(true)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            popupMenu.setForceShowIcon(true)
+        }
         popupMenu.show()
     }
 

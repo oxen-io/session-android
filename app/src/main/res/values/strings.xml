@@ -6,10 +6,12 @@
     <string name="delete">Delete</string>
     <string name="resend">Resend</string>
     <string name="reply">Reply</string>
+    <string name="leave">Leave</string>
     <string name="ban">Ban</string>
     <string name="please_wait">Please wait…</string>
     <string name="save">Save</string>
     <string name="image">Image</string>
+    <string name="video">Video</string>
     <string name="note_to_self">Note to Self</string>
     <string name="version_s">Version %s</string>
     <string name="expand">Expand</string>
@@ -58,7 +60,6 @@
     <string name="AccessibilityId_create_group">Create group</string>
     <string name="AccessibilityId_join_community">Join community button</string>
     <!-- Join community pop up -->
-    <string name="AccessibilityId_community_input_box">Community input</string>
     <string name="AccessibilityId_join_community_button">Join community button</string>
     <!--  Conversation options (three dots menu)-->
     <string name="AccessibilityId_all_media">All media</string>
@@ -75,13 +76,20 @@
     <string name="AccessibilityId_edit_group">Edit group</string>
     <string name="AccessibilityId_leave_group">Leave group</string>
     <string name="AccessibilityId_group_name">Group name</string>
+    <string name="AccessibilityId_group_description">Group description</string>
     <string name="AccessibilityId_accept_name_change">Accept name change</string>
     <string name="AccessibilityId_cancel_name_change">Cancel name change</string>
     <string name="AccessibilityId_apply_changes">Apply changes</string>
     <string name="AccessibilityId_add_members">Add members</string>
+    <string name="AccessibilityId_reinvite_member">Resend invite</string>
+    <string name="AccessibilityId_member_state">Status</string>
+    <string name="AccessibilityId_promote_member">Promote member</string>
     <string name="AccessibilityId_done">Done</string>
     <string name="AccessibilityId_mentions_list">Mentions list</string>
     <string name="AccessibilityId_contact_mentions">Contact mentions</string>
+    <string name="AccessibilityId_closed_group_edit_group_name">Group name</string>
+    <string name="AccessibilityId_closed_group_edit_group_description">Group description</string>
+    <string name="AccessibilityId_create_closed_group_create_button">Create group</string>
     <!--  Conversation icons -->
     <string name="AccessibilityId_call_button">Call button</string>
     <string name="AccessibilityId_settings">Settings</string>
@@ -334,6 +342,9 @@
     <string name="MediaRepository_all_media">All media</string>
     <!-- MessageRecord -->
     <string name="MessageRecord_message_encrypted_with_a_legacy_protocol_version_that_is_no_longer_supported">Received a message encrypted using an old version of Session that is no longer supported. Please ask the sender to update to the most recent version and resend the message.</string>
+    <string name="MessageRecord_leaving_group">Leaving...</string>
+    <string name="MessageRecord_leave_group_error">Failed to leave Group!</string>
+    <string name="MessageRecord_unable_leave_group">Unable to leave the Group, please try again</string>
     <string name="MessageRecord_left_group">You have left the group.</string>
     <string name="MessageRecord_you_updated_group">You updated the group.</string>
     <string name="MessageRecord_s_updated_group">%s updated the group.</string>
@@ -346,6 +357,7 @@
     <!-- RecipientPreferencesActivity -->
     <string name="RecipientPreferenceActivity_block_this_contact_question">Block this contact?</string>
     <string name="RecipientPreferenceActivity_you_will_no_longer_receive_messages_and_calls_from_this_contact">You will no longer receive messages and calls from this contact.</string>
+    <string name="RecipientPreferenceActivity_block_user_body">Are you sure you want to block {user}? Blocked users cannot send you message requests, group invites or call you.</string>
     <string name="RecipientPreferenceActivity_block">Block</string>
     <string name="RecipientPreferenceActivity_unblock_this_contact_question">Unblock this contact?</string>
     <string name="RecipientPreferenceActivity_you_will_once_again_be_able_to_receive_messages_and_calls_from_this_contact">You will once again be able to receive messages and calls from this contact.</string>
@@ -757,9 +769,9 @@
     <string name="activity_pn_mode_no_option_picked_dialog_title">Please Pick an Option</string>
     <string name="activity_home_empty_state_message">You don\'t have any contacts yet</string>
     <string name="activity_home_empty_state_button_title">Start a Session</string>
-    <string name="activity_home_leave_group_dialog_message">Are you sure you want to leave this group?</string>
+    <string name="activity_home_leave_group_dialog_message">Are you sure you want to leave %s?</string>
     <string name="activity_home_leaving_group_failed_message">"Couldn\'t leave group"</string>
-    <string name="activity_home_delete_conversation_dialog_message">Are you sure you want to delete this conversation?</string>
+    <string name="activity_home_delete_conversation_dialog_message">Are you sure you want to delete your conversation with %s?</string>
     <string name="activity_home_conversation_deleted_message">Conversation deleted</string>
     <string name="activity_seed_title">Your Recovery Phrase</string>
     <string name="activity_seed_title_2">Meet your recovery phrase</string>
@@ -793,6 +805,7 @@
     <string name="activity_create_closed_group_group_name_missing_error">Please enter a group name</string>
     <string name="activity_create_closed_group_group_name_too_long_error">Please enter a shorter group name</string>
     <string name="activity_create_closed_group_not_enough_group_members_error">Please pick at least 1 group member</string>
+    <string name="activity_create_closed_group_empty_placeholer">You haven\'t added any members</string>
     <string name="activity_create_closed_group_too_many_group_members_error">A closed group cannot have more than 100 members</string>
     <string name="activity_join_public_chat_title">Join Open Group</string>
     <string name="activity_join_public_chat_error">Couldn\'t join group</string>
@@ -863,6 +876,7 @@
     <string name="menu_apply_button">Apply</string>
     <string name="menu_done_button">Done</string>
     <string name="activity_edit_closed_group_title">Edit Group</string>
+    <string name="activity_edit_closed_group_remove_users_single">Would you like to remove <b>{user}</b> from <b>{group}</b>?</string>
     <string name="activity_edit_closed_group_edit_text_hint">Enter a new group name</string>
     <string name="activity_edit_closed_group_edit_members">Members</string>
     <string name="activity_edit_closed_group_add_members">Add members</string>
@@ -919,8 +933,8 @@
     <string name="dialog_link_preview_title">Enable Link Previews?</string>
     <string name="dialog_link_preview_explanation">Enabling link previews will show previews for URLs you send and receive. This can be useful, but Session will need to contact linked websites to generate previews. You can always disable link previews in Session\'s settings.</string>
     <string name="dialog_link_preview_enable_button_title">Enable</string>
-    <string name="dialog_download_title">Trust %s?</string>
-    <string name="dialog_download_explanation">Are you sure you want to download media sent by %s?</string>
+    <string name="dialog_auto_download_title">Auto Download?</string>
+    <string name="dialog_auto_download_explanation">Would you like to automatically download all files from %s?</string>
     <string name="dialog_download_button_title">Download</string>
     <string name="activity_conversation_blocked_banner_text">%s is blocked. Unblock them?</string>
     <string name="activity_conversation_block_user">Block User</string>
@@ -931,10 +945,12 @@
     <string name="dialog_send_seed_title">Warning</string>
     <string name="dialog_send_seed_explanation">This is your recovery phrase. If you send it to someone they\'ll have full access to your account.</string>
     <string name="dialog_send_seed_send_button_title">Send</string>
-    <string name="notify_type_all">All</string>
-    <string name="notify_type_mentions">Mentions</string>
+    <string name="notify_type_all">All Messages</string>
+    <string name="notify_type_mentions">Mentions Only</string>
+    <string name="notify_type_mute">Mute</string>
     <string name="deleted_message">This message has been deleted</string>
     <string name="delete_message_for_me">Delete just for me</string>
+    <string name="delete_message_for_my_devices">Delete from all my devices</string>
     <string name="delete_message_for_everyone">Delete for everyone</string>
     <string name="delete_message_for_me_and_recipient">Delete for me and %s</string>
     <string name="activity_settings_survey_feedback">Feedback/Survey</string>
@@ -948,13 +964,14 @@
     <string name="global_search_messages">Messages</string>
     <string name="activity_message_requests_title">Message Requests</string>
     <string name="message_requests_send_notice">Sending a message to this user will automatically accept their message request and reveal your Session ID.</string>
+    <string name="message_requests_send_group_notice">Sending a message to this group will automatically accept the group invite.</string>
     <string name="accept">Accept</string>
     <string name="decline">Decline</string>
     <string name="message_requests_clear_all">Clear All</string>
     <string name="message_requests_decline_message">Are you sure you want to decline this message request?</string>
     <string name="message_requests_block_message">Are you sure you want to block this message request?</string>
     <string name="message_requests_deleted">Message request deleted</string>
-    <string name="message_requests_clear_all_message">Are you sure you want to clear all message requests?</string>
+    <string name="message_requests_clear_all_message">Are you sure you want to clear all message requests and group invites?</string>
     <string name="message_requests_cleared">Message requests deleted</string>
     <string name="message_requests_accepted">Your message request has been accepted.</string>
     <string name="message_requests_pending">Your message request is currently pending.</string>
@@ -1082,4 +1099,49 @@
     <string name="unread_marker">Unread Messages</string>
     <string name="auto_deletes_in">Auto-deletes in %1$s</string>
 
+    <string name="conversation_settings_search">Search Conversation</string>
+    <string name="conversation_settings_all_media">All Media</string>
+    <string name="conversation_settings_pin_conversation">Pin Conversation</string>
+    <string name="conversation_settings_unpin_conversation">Unpin Conversation</string>
+    <string name="conversation_settings_notifications">Notifications</string>
+    <string name="conversation_settings_auto_download_title">Auto-download Media</string>
+    <string name="conversation_settings_auto_download_summary">Automatically download media and files from this chat.</string>
+    <string name="conversation_settings_admin_settings_title">Admin Settings</string>
+    <string name="conversation_settings_disappearing_messages">Disappearing Messages</string>
+    <string name="conversation_settings_edit_group">Edit Group</string>
+    <string name="conversation_settings_add_admins">Add Admins</string>
+    <string name="conversation_settings_clear_messages">Clear Messages</string>
+    <string name="conversation_settings_leave_group">Leave Group</string>
+    <string name="conversation_settings_group_members">Group Members</string>
+    <string name="conversation_settings_delete_group">Delete Group</string>
+    <string name="dialog_clear_all_messages_title">Clear All</string>
+    <string name="dialog_clear_all_media_title">Clear All Media</string>
+    <string name="dialog_clear_all_messages_message">Are you sure you want to clear all group messages?</string>
+    <string name="dialog_clear_all_media_message">Are you sure you want to clear all media and files? This will also delete all messages with attachments.</string>
+    <string name="dialog_clear_all_messages_local_message">Are you sure you want to clear %s messages from your device?</string>
+    <string name="dialog_clear_all_messages_for_me">For Me</string>
+    <string name="dialog_clear_all_messages_for_everyone">For Everyone</string>
+    <string name="dialog_clear_all_messages_clear">Clear</string>
+    <string name="dialog_clear_all_messages_cancel">Cancel</string>
+    <string name="media_overview_activity__clear_media">Clear All</string>
+    <string name="activity_create_closed_group_select_contacts">Select Contacts</string>
+    <string name="activity_create_closed_group_add_account_or_ons">Add Account ID or ONS</string>
+    <string name="conversation_settings_leave_group_name">Are you sure you want to leave <b>{group}</b>?</string>
+    <string name="conversation_settings_leave_group_as_admin">Because you are the creator of this group it will be deleted for everyone. This cannot be undone.</string>
+    <string name="dialog_edit_group_information_title">Update Group Information</string>
+    <string name="dialog_edit_group_information_message">Group name and description is visible to all group members.</string>
+    <string name="dialog_edit_group_information_enter_group_name">Enter group name</string>
+    <string name="dialog_edit_group_information_enter_group_description">Enter group description</string>
+    <string name="EditGroup_resend_action">Resend</string>
+    <string name="EditGroup_promote_action">Promote</string>
+    <string name="AccessibilityId_empty_conversation">Empty conversation</string>
+    <string name="AccessibilityId_outdated_group_banner">Legacy group banner</string>
+    <string name="groupLegacyBanner">Groups have been upgraded, create a new group to upgrade. Old group functionality will be degraded from {date}.</string>
+    <string name="groupInviteVersionBanner">Users must have at least Session version {version} to see invites</string>
+    <string name="groupMemberStateInviteSent">Invite sent</string>
+    <string name="groupMemberStateInviting">Sending invite</string>
+    <string name="groupMemberStateInviteFailed">Invite failed</string>
+    <string name="groupMemberStatePromotionSent">Admin promotion sent</string>
+    <string name="groupMemberStatePromoting">Sending admin promotion</string>
+    <string name="groupMemberStatePromotionFailed">Admin promotion failed</string>
 </resources>

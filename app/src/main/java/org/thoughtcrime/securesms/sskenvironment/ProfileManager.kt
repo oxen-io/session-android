@@ -5,11 +5,11 @@ import network.loki.messenger.libsession_util.util.UserPic
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.RetrieveProfileAvatarJob
-import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.IdPrefix
+import org.session.libsignal.utilities.SessionId
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities

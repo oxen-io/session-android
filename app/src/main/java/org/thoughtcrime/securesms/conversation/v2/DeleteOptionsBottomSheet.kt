@@ -56,11 +56,14 @@ class DeleteOptionsBottomSheet : BottomSheetDialogFragment(), View.OnClickListen
         if (!this::recipient.isInitialized) {
             return dismiss()
         }
-        if (!recipient.isGroupRecipient && !contact.isNullOrEmpty()) {
+        if (recipient.isLocalNumber) {
+            binding.deleteForEveryoneTextView.text =
+                getString(R.string.delete_message_for_my_devices)
+        } else if (!recipient.isGroupRecipient && !contact.isNullOrEmpty()) {
             binding.deleteForEveryoneTextView.text =
                 resources.getString(R.string.delete_message_for_me_and_recipient, contact)
         }
-        binding.deleteForEveryoneTextView.isVisible = !recipient.isClosedGroupRecipient
+        binding.deleteForEveryoneTextView.isVisible = !recipient.isLegacyClosedGroupRecipient
         binding.deleteForMeTextView.setOnClickListener(this)
         binding.deleteForEveryoneTextView.setOnClickListener(this)
         binding.cancelTextView.setOnClickListener(this)

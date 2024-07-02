@@ -106,7 +106,8 @@ class ClearAllDataDialog : DialogFragment() {
 
             if (!deleteNetworkMessages) {
                 try {
-                    ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(requireContext()).get()
+                    // TODO: maybe convert this to a blocking config job
+                    ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(requireContext())
                 } catch (e: Exception) {
                     Log.e("Loki", "Failed to force sync", e)
                 }

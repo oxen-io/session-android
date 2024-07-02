@@ -12,7 +12,9 @@ fun ConversationVolatileConfig.getConversationUnread(thread: ThreadRecord): Bool
         && recipient.isOpenGroupInboxRecipient
         && recipient.address.serialize().startsWith(IdPrefix.STANDARD.value)) {
         return getOneToOne(recipient.address.serialize())?.unread == true
-    } else if (recipient.isClosedGroupRecipient) {
+    } else if (recipient.isClosedGroupV2Recipient) {
+        return getClosedGroup(recipient.address.serialize())?.unread == true
+    } else if (recipient.isLegacyClosedGroupRecipient) {
         return getLegacyClosedGroup(GroupUtil.doubleDecodeGroupId(recipient.address.toGroupString()))?.unread == true
     } else if (recipient.isCommunityRecipient) {
         val openGroup = MessagingModuleConfiguration.shared.storage.getOpenGroup(thread.threadId) ?: return false

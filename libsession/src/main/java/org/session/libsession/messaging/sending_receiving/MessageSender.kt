@@ -1,12 +1,12 @@
 package org.session.libsession.messaging.sending_receiving
 
 import network.loki.messenger.libsession_util.util.ExpiryMode
+import network.loki.messenger.libsession_util.util.GroupInfo.ClosedGroupInfo.Companion.isAuthData
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.deferred
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageSendJob
-import org.session.libsession.messaging.jobs.NotifyPNServerJob
 import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.Message
 import org.session.libsession.messaging.messages.applyExpiryMode
@@ -14,6 +14,7 @@ import org.session.libsession.messaging.messages.control.CallMessage
 import org.session.libsession.messaging.messages.control.ClosedGroupControlMessage
 import org.session.libsession.messaging.messages.control.ConfigurationMessage
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
+import org.session.libsession.messaging.messages.control.GroupUpdated
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.control.SharedConfigurationMessage
 import org.session.libsession.messaging.messages.control.UnsendRequest
@@ -24,11 +25,12 @@ import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.open_groups.OpenGroupApi.Capability
 import org.session.libsession.messaging.open_groups.OpenGroupMessage
 import org.session.libsession.messaging.utilities.MessageWrapper
-import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.snode.RawResponsePromise
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.snode.SnodeAPI.nowWithOffset
+import org.session.libsession.snode.SnodeAPI.signingKeyCallback
+import org.session.libsession.snode.SnodeAPI.subkeyCallback
 import org.session.libsession.snode.SnodeMessage
 import org.session.libsession.snode.SnodeModule
 import org.session.libsession.utilities.Address
@@ -39,8 +41,8 @@ import org.session.libsignal.crypto.PushTransportDetails
 import org.session.libsignal.protos.SignalServiceProtos
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.IdPrefix
-import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Namespace
+import org.session.libsignal.utilities.SessionId
 import org.session.libsignal.utilities.defaultRequiresAuth
 import org.session.libsignal.utilities.hasNamespaces
 import org.session.libsignal.utilities.hexEncodedPublicKey
@@ -59,6 +61,7 @@ object MessageSender {
         object NoUserED25519KeyPair : Error("Couldn't find user ED25519 key pair.")
         object SigningFailed : Error("Couldn't sign message.")
         object EncryptionFailed : Error("Couldn't encrypt message.")
+        data class InvalidDestination(val destination: Destination): Error("Can't send this way to $destination")
 
         // Closed groups
         object NoThread : Error("Couldn't find a thread associated with the given group public key.")
@@ -94,6 +97,7 @@ object MessageSender {
     @Throws(Exception::class)
     fun buildWrappedMessageToSnode(destination: Destination, message: Message, isSyncMessage: Boolean): SnodeMessage {
         val storage = MessagingModuleConfiguration.shared.storage
+        val configFactory = MessagingModuleConfiguration.shared.configFactory
         val userPublicKey = storage.getUserPublicKey()
         // Set the timestamp, sender and recipient
         val messageSendTime = nowWithOffset
@@ -106,7 +110,8 @@ object MessageSender {
         // SHARED CONFIG
         when (destination) {
             is Destination.Contact -> message.recipient = destination.publicKey
-            is Destination.ClosedGroup -> message.recipient = destination.groupPublicKey
+            is Destination.LegacyClosedGroup -> message.recipient = destination.groupPublicKey
+            is Destination.ClosedGroup -> message.recipient = destination.publicKey
             else -> throw IllegalStateException("Destination should not be an open group.")
         }
 
@@ -139,22 +144,17 @@ object MessageSender {
             message.profile = storage.getUserProfile()
         }
         // Convert it to protobuf
-        val proto = message.toProto() ?: throw Error.ProtoConversionFailed
-        // Serialize the protobuf
-        val plaintext = PushTransportDetails.getPaddedMessageBody(proto.toByteArray())
-        // Encrypt the serialized protobuf
-        val ciphertext = when (destination) {
-            is Destination.Contact -> MessageEncrypter.encrypt(plaintext, destination.publicKey)
-            is Destination.ClosedGroup -> {
-                val encryptionKeyPair =
-                    MessagingModuleConfiguration.shared.storage.getLatestClosedGroupEncryptionKeyPair(
-                        destination.groupPublicKey
-                    )!!
-                MessageEncrypter.encrypt(plaintext, encryptionKeyPair.hexEncodedPublicKey)
+        val proto = message.toProto()?.toBuilder() ?: throw Error.ProtoConversionFailed
+        if (message is GroupUpdated) {
+            // Add all cases where we have to attach profile
+            if (message.inner.hasInviteResponse()) {
+                proto.mergeDataMessage(storage.getUserProfile().toProto())
             }
-            else -> throw IllegalStateException("Destination should not be open group.")
         }
-        // Wrap the result
+        // Serialize the protobuf
+        val plaintext = PushTransportDetails.getPaddedMessageBody(proto.build().toByteArray())
+
+        // Envelope information
         val kind: SignalServiceProtos.Envelope.Type
         val senderPublicKey: String
         when (destination) {
@@ -162,13 +162,47 @@ object MessageSender {
                 kind = SignalServiceProtos.Envelope.Type.SESSION_MESSAGE
                 senderPublicKey = ""
             }
-            is Destination.ClosedGroup -> {
+            is Destination.LegacyClosedGroup -> {
                 kind = SignalServiceProtos.Envelope.Type.CLOSED_GROUP_MESSAGE
                 senderPublicKey = destination.groupPublicKey
             }
+            is Destination.ClosedGroup -> {
+                kind = SignalServiceProtos.Envelope.Type.CLOSED_GROUP_MESSAGE
+                senderPublicKey = destination.publicKey
+            }
             else -> throw IllegalStateException("Destination should not be open group.")
         }
-        val wrappedMessage = MessageWrapper.wrap(kind, message.sentTimestamp!!, senderPublicKey, ciphertext)
+
+        // Encrypt the serialized protobuf
+        val ciphertext = when (destination) {
+            is Destination.Contact -> MessageEncrypter.encrypt(plaintext, destination.publicKey)
+            is Destination.LegacyClosedGroup -> {
+                val encryptionKeyPair =
+                    MessagingModuleConfiguration.shared.storage.getLatestClosedGroupEncryptionKeyPair(
+                        destination.groupPublicKey
+                    )!!
+                MessageEncrypter.encrypt(plaintext, encryptionKeyPair.hexEncodedPublicKey)
+            }
+            is Destination.ClosedGroup -> {
+                val groupKeys = configFactory.getGroupKeysConfig(SessionId.from(destination.publicKey)) ?: throw Error.NoKeyPair
+                val envelope = MessageWrapper.createEnvelope(kind, message.sentTimestamp!!, senderPublicKey, proto.build().toByteArray())
+                groupKeys.use { keys ->
+                    if (keys.keys().isEmpty()) {
+                        throw Error.EncryptionFailed
+                    }
+                    keys.encrypt(envelope.toByteArray())
+                }
+            }
+            else -> throw IllegalStateException("Destination should not be open group.")
+        }
+        // Wrap the result using envelope information
+        val wrappedMessage = when (destination) {
+            is Destination.ClosedGroup -> {
+                // encrypted bytes from the above closed group encryption and envelope steps
+                ciphertext
+            }
+            else -> MessageWrapper.wrap(kind, message.sentTimestamp!!, senderPublicKey, ciphertext)
+        }
         val base64EncodedData = Base64.encodeBytes(wrappedMessage)
         // Send the result
         return SnodeMessage(
@@ -184,6 +218,7 @@ object MessageSender {
         val deferred = deferred<Unit, Exception>()
         val promise = deferred.promise
         val storage = MessagingModuleConfiguration.shared.storage
+        val configFactory = MessagingModuleConfiguration.shared.configFactory
         val userPublicKey = storage.getUserPublicKey()
 
         // recipient will be set later, so initialize it as a function here
@@ -202,18 +237,32 @@ object MessageSender {
             // TODO: this might change in future for config messages
             val forkInfo = SnodeAPI.forkInfo
             val namespaces: List<Int> = when {
-                destination is Destination.ClosedGroup
-                        && forkInfo.defaultRequiresAuth() -> listOf(Namespace.UNAUTHENTICATED_CLOSED_GROUP)
+                destination is Destination.LegacyClosedGroup
+                        && forkInfo.defaultRequiresAuth() -> listOf(Namespace.UNAUTHENTICATED_CLOSED_GROUP())
 
-                destination is Destination.ClosedGroup
+                destination is Destination.LegacyClosedGroup
                         && forkInfo.hasNamespaces() -> listOf(
-                    Namespace.UNAUTHENTICATED_CLOSED_GROUP,
+                    Namespace.UNAUTHENTICATED_CLOSED_GROUP(),
                     Namespace.DEFAULT
-                )
+                ())
+                destination is Destination.ClosedGroup -> listOf(Namespace.CLOSED_GROUP_MESSAGES())
 
-                else -> listOf(Namespace.DEFAULT)
+                else -> listOf(Namespace.DEFAULT())
             }
-            namespaces.map { namespace -> SnodeAPI.sendMessage(snodeMessage, requiresAuth = false, namespace = namespace) }.let { promises ->
+            namespaces.map { namespace ->
+                if (destination is Destination.ClosedGroup) {
+                    // possibly handle a failure for no user groups or no closed group signing key?
+                    val signingKey = configFactory.userGroups!!.getClosedGroup(destination.publicKey)!!.signingKey()
+                    val callback = if (isAuthData(signingKey)) {
+                        val keys = configFactory.getGroupKeysConfig(SessionId.from(destination.publicKey))!!
+                        val params = subkeyCallback(signingKey, keys)
+                        params
+                    } else signingKeyCallback(signingKey)
+                    SnodeAPI.sendAuthenticatedMessage(snodeMessage, callback, namespace = namespace)
+                } else {
+                    SnodeAPI.sendMessage(snodeMessage, requiresAuth = false, namespace = namespace)
+                }
+            }.let { promises ->
                 var isSuccess = false
                 val promiseCount = promises.size
                 val errorCount = AtomicInteger(0)
@@ -238,15 +287,6 @@ object MessageSender {
                             else -> false
                         }
 
-                        /*
-                        if (message is ClosedGroupControlMessage && message.kind is ClosedGroupControlMessage.Kind.New) {
-                            shouldNotify = true
-                        }
-                         */
-                        if (shouldNotify) {
-                            val notifyPNServerJob = NotifyPNServerJob(snodeMessage)
-                            JobQueue.shared.add(notifyPNServerJob)
-                        }
                         deferred.resolve(Unit)
                     }
                     promise.fail {
@@ -312,9 +352,9 @@ object MessageSender {
             else -> {}
         }
         val messageSender = if (serverCapabilities.contains(Capability.BLIND.name.lowercase()) && blindedPublicKey != null) {
-            SessionId(IdPrefix.BLINDED, blindedPublicKey!!).hexString
+            SessionId(IdPrefix.BLINDED, blindedPublicKey!!).hexString()
         } else {
-            SessionId(IdPrefix.UN_BLINDED, userEdKeyPair.publicKey.asBytes).hexString
+            SessionId(IdPrefix.UN_BLINDED, userEdKeyPair.publicKey.asBytes).hexString()
         }
         message.sender = messageSender
         // Set the failure handler (need it here already for precondition failure handling)
@@ -381,7 +421,7 @@ object MessageSender {
     }
 
     // Result Handling
-    private fun handleSuccessfulMessageSend(message: Message, destination: Destination, isSyncMessage: Boolean = false, openGroupSentTimestamp: Long = -1) {
+    fun handleSuccessfulMessageSend(message: Message, destination: Destination, isSyncMessage: Boolean = false, openGroupSentTimestamp: Long = -1) {
         if (message is VisibleMessage) MessagingModuleConfiguration.shared.lastSentTimestampCache.submitTimestamp(message.threadID!!, openGroupSentTimestamp)
         val storage = MessagingModuleConfiguration.shared.storage
         val userPublicKey = storage.getUserPublicKey()!!
@@ -538,8 +578,8 @@ object MessageSender {
     }
 
     @JvmStatic
-    fun explicitLeave(groupPublicKey: String, notifyUser: Boolean): Promise<Unit, Exception> {
-        return leave(groupPublicKey, notifyUser)
+    fun explicitLeave(groupPublicKey: String, notifyUser: Boolean, deleteThread: Boolean = false) {
+        leave(groupPublicKey, notifyUser, deleteThread)
     }
 
 }

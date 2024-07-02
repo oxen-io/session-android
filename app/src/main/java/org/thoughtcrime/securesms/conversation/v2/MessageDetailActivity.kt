@@ -55,6 +55,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewVisibleMessageContentBinding
+import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.thoughtcrime.securesms.MediaPreviewActivity.getPreviewIntent
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
@@ -82,7 +83,7 @@ import javax.inject.Inject
 class MessageDetailActivity : PassphraseRequiredActionBarActivity() {
 
     @Inject
-    lateinit var storage: Storage
+    lateinit var storage: StorageProtocol
 
     private val viewModel: MessageDetailsViewModel by viewModels()
 

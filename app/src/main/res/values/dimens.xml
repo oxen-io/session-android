@@ -105,7 +105,7 @@
     <dimen name="quote_corner_radius_bottom">2dp</dimen>
     <dimen name="quote_corner_radius_preview">16dp</dimen>
 
-    <integer name="media_overview_cols">3</integer>
+    <integer name="media_overview_cols">4</integer>
 
     <dimen name="contact_selection_actions_tap_area">10dp</dimen>
 
@@ -151,5 +151,6 @@
     <dimen name="preference_corner_radius" />
     <dimen name="radial_size">34dp</dimen>
     <dimen name="small_radial_size">24dp</dimen>
+    <dimen name="setting_image_size">26dp</dimen>
 
 </resources>

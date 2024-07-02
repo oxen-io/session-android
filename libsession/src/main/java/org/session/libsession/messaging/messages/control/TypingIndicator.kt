@@ -14,6 +14,8 @@ class TypingIndicator() : ControlMessage() {
         return kind != null
     }
 
+    override fun shouldDiscardIfBlocked(): Boolean = true
+
     companion object {
         const val TAG = "TypingIndicator"
 

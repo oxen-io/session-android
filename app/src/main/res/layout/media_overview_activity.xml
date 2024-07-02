@@ -17,7 +17,17 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
-                app:layout_scrollFlags="scroll|enterAlways"/>
+                app:layout_scrollFlags="scroll|enterAlways">
+            <TextView
+                android:visibility="gone"
+                android:layout_marginHorizontal="@dimen/medium_spacing"
+                android:textColor="@color/destructive"
+                android:layout_gravity="center_vertical|end"
+                android:id="@+id/clearMedia"
+                android:text="@string/media_overview_activity__clear_media"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </androidx.appcompat.widget.Toolbar>
 
         <org.thoughtcrime.securesms.components.ControllableTabLayout
                 android:id="@+id/tab_layout"

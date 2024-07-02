@@ -118,7 +118,7 @@ public abstract class MessageRecord extends DisplayRecord {
   public SpannableString getDisplayBody(@NonNull Context context) {
     if (isGroupUpdateMessage()) {
       UpdateMessageData updateMessageData = UpdateMessageData.Companion.fromJSON(getBody());
-      return new SpannableString(UpdateMessageBuilder.INSTANCE.buildGroupUpdateMessage(context, updateMessageData, getIndividualRecipient().getAddress().serialize(), isOutgoing()));
+      return new SpannableString(UpdateMessageBuilder.INSTANCE.buildGroupUpdateMessage(context, updateMessageData, getIndividualRecipient().getAddress().serialize(), isOutgoing(), true));
     } else if (isExpirationTimerUpdate()) {
       int seconds = (int) (getExpiresIn() / 1000);
       boolean isGroup = DatabaseComponent.get(context).threadDatabase().getRecipientForThreadId(getThreadId()).isGroupRecipient();

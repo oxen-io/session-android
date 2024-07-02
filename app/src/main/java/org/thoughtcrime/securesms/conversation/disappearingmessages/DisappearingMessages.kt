@@ -5,6 +5,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import network.loki.messenger.R
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.messages.control.ExpirationTimerUpdate
 import org.session.libsession.messaging.sending_receiving.MessageSender
@@ -14,7 +15,6 @@ import org.session.libsession.utilities.ExpirationUtil
 import org.session.libsession.utilities.SSKEnvironment.MessageExpirationManagerProtocol
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.getExpirationTypeDisplayValue
-import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
@@ -40,7 +40,11 @@ class DisappearingMessages @Inject constructor(
 
         messageExpirationManager.insertExpirationTimerMessage(message)
         MessageSender.send(message, address)
-        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+        if (address.isClosedGroupV2) {
+            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(Destination.from(address))
+        } else {
+            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+        }
     }
 
     fun showFollowSettingDialog(context: Context, message: MessageRecord) = context.showSessionDialog {
@@ -59,9 +63,9 @@ class DisappearingMessages @Inject constructor(
         })
         destructiveButton(
                 text = if (message.expiresIn == 0L) R.string.dialog_disappearing_messages_follow_setting_confirm else R.string.dialog_disappearing_messages_follow_setting_set,
-                contentDescription = if (message.expiresIn == 0L) R.string.AccessibilityId_confirm else R.string.AccessibilityId_set_button
+                contentDescriptionRes = if (message.expiresIn == 0L) R.string.AccessibilityId_confirm else R.string.AccessibilityId_set_button
         ) {
-            set(message.threadId, message.recipient.address, message.expiryMode, message.recipient.isClosedGroupRecipient)
+            set(message.threadId, message.recipient.address, message.expiryMode, message.recipient.isClosedGroupV2Recipient)
         }
         cancelButton()
     }

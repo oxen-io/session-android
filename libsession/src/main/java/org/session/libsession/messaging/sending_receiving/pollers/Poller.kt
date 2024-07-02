@@ -19,8 +19,6 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageReceiveParameters
-import org.session.libsession.messaging.messages.control.SharedConfigurationMessage
-import org.session.libsession.messaging.sending_receiving.MessageReceiver
 import org.session.libsession.snode.RawResponse
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.snode.SnodeModule
@@ -36,7 +34,7 @@ import kotlin.time.Duration.Companion.days
 
 private class PromiseCanceledException : Exception("Promise canceled.")
 
-class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Timer) {
+class Poller(private val configFactory: ConfigFactoryProtocol) {
     var userPublicKey = MessagingModuleConfiguration.shared.storage.getUserPublicKey() ?: ""
     private var hasStarted: Boolean = false
     private val usedSnodes: MutableSet<Snode> = mutableSetOf()
@@ -174,7 +172,7 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                     hashesToExtend += config.currentHashes()
                     SnodeAPI.buildAuthenticatedRetrieveBatchRequest(
                         snode, userPublicKey,
-                        config.configNamespace(),
+                        config.namespace(),
                         maxSize = -8
                     )
                 }.forEach { request ->
@@ -205,10 +203,10 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                         // in case we had null configs, the array won't be fully populated
                         // index of the sparse array key iterator should be the request index, with the key being the namespace
                         listOfNotNull(
-                            configFactory.user?.configNamespace(),
-                            configFactory.contacts?.configNamespace(),
-                            configFactory.userGroups?.configNamespace(),
-                            configFactory.convoVolatile?.configNamespace()
+                            configFactory.user?.namespace(),
+                            configFactory.contacts?.namespace(),
+                            configFactory.userGroups?.namespace(),
+                            configFactory.convoVolatile?.namespace()
                         ).map {
                             it to requestSparseArray.indexOfKey(it)
                         }.filter { (_, i) -> i >= 0 }.forEach { (key, requestIndex) ->
@@ -222,7 +220,7 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                                     Log.e("Loki", "Batch sub-request didn't contain a body")
                                     return@forEach
                                 }
-                                if (key == Namespace.DEFAULT) {
+                                if (key == Namespace.DEFAULT()) {
                                     return@forEach // continue, skip default namespace
                                 } else {
                                     when (ConfigBase.kindFor(key)) {
@@ -236,7 +234,7 @@ class Poller(private val configFactory: ConfigFactoryProtocol, debounceTimer: Ti
                         }
 
                         // the first response will be the personal messages (we want these to be processed after config messages)
-                        val personalResponseIndex = requestSparseArray.indexOfKey(Namespace.DEFAULT)
+                        val personalResponseIndex = requestSparseArray.indexOfKey(Namespace.DEFAULT())
                         if (personalResponseIndex >= 0) {
                             responseList.getOrNull(personalResponseIndex)?.let { rawResponse ->
                                 if (rawResponse["code"] as? Int != 200) {

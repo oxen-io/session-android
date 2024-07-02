@@ -5,11 +5,12 @@ import com.goterl.lazysodium.SodiumAndroid
 import com.goterl.lazysodium.interfaces.AEAD
 import com.goterl.lazysodium.interfaces.GenericHash
 import com.goterl.lazysodium.interfaces.Hash
+import com.goterl.lazysodium.interfaces.Sign
 import com.goterl.lazysodium.utils.Key
 import com.goterl.lazysodium.utils.KeyPair
 import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
-import org.session.libsignal.utilities.toHexString
+import org.session.libsignal.utilities.SessionId
 import org.whispersystems.curve25519.Curve25519
 import kotlin.experimental.xor
 
@@ -230,23 +231,22 @@ object SodiumUtilities {
         } else null
     }
 
-}
-
-class SessionId {
-    var prefix: IdPrefix?
-    var publicKey: String
-
-    constructor(id: String) {
-        prefix = IdPrefix.fromValue(id)
-        publicKey = id.drop(2)
+    /**
+     * Returns true only if the signature verified successfully
+     */
+    fun verifySignature(signature: ByteArray, publicKey: ByteArray, messageToVerify: ByteArray): Boolean {
+        return sodium.cryptoSignVerifyDetached(signature, messageToVerify, messageToVerify.size, publicKey)
     }
 
-    constructor(prefix: IdPrefix, publicKey: ByteArray) {
-        this.prefix = prefix
-        this.publicKey = publicKey.toHexString()
+    /**
+     * For signing
+     */
+    fun sign(message: ByteArray, signingKey: ByteArray): ByteArray {
+        val signature = ByteArray(Sign.BYTES)
+
+        if (!sodium.cryptoSignDetached(signature, message, message.size.toLong(), signingKey)) {
+            throw SecurityException("Couldn't sign the message with the signing key")
+        }
+        return signature
     }
-
-    val hexString
-        get() = prefix?.value + publicKey
 }
-

@@ -1,10 +1,10 @@
 package org.session.libsession.messaging.utilities
 
 import com.google.protobuf.ByteString
-import org.session.libsignal.utilities.Log
 import org.session.libsignal.protos.SignalServiceProtos.Envelope
 import org.session.libsignal.protos.WebSocketProtos.WebSocketMessage
 import org.session.libsignal.protos.WebSocketProtos.WebSocketRequestMessage
+import org.session.libsignal.utilities.Log
 import java.security.SecureRandom
 
 object MessageWrapper {
@@ -32,7 +32,7 @@ object MessageWrapper {
         }
     }
 
-    private fun createEnvelope(type: Envelope.Type, timestamp: Long, senderPublicKey: String, content: ByteArray): Envelope {
+    fun createEnvelope(type: Envelope.Type, timestamp: Long, senderPublicKey: String, content: ByteArray): Envelope {
         try {
             val builder = Envelope.newBuilder()
             builder.type = type

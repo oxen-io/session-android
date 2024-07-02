@@ -51,7 +51,7 @@ class ProfilePictureView @JvmOverloads constructor(
             return contact?.displayName(Contact.ContactContext.REGULAR) ?: publicKey
         }
 
-        if (recipient.isClosedGroupRecipient) {
+        if (recipient.isLegacyClosedGroupRecipient) {
             val members = DatabaseComponent.get(context).groupDatabase()
                     .getGroupMemberAddresses(recipient.address.toGroupString(), true)
                     .sorted()

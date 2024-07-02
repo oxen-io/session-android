@@ -215,13 +215,29 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
         threadId?.let{ MessagingModuleConfiguration.shared.lastSentTimestampCache.delete(it, messages.map { it.timestamp }) }
     }
 
+    override fun updateMessageAsDeleted(messageId: Long, isSms: Boolean): Long {
+        val messagingDatabase: MessagingDatabase =
+            if (isSms) DatabaseComponent.get(context).smsDatabase()
+            else DatabaseComponent.get(context).mmsDatabase()
+
+        val isOutgoing = messagingDatabase.isOutgoing(messageId)
+        messagingDatabase.markAsDeleted(messageId)
+
+        if (isOutgoing) {
+            messagingDatabase.deleteMessage(messageId)
+        }
+
+        return messageId
+    }
+
     override fun updateMessageAsDeleted(timestamp: Long, author: String): Long? {
         val database = DatabaseComponent.get(context).mmsSmsDatabase()
         val address = Address.fromSerialized(author)
         val message = database.getMessageFor(timestamp, address) ?: return null
+        updateMessageAsDeleted(message.id, !message.isMms)
         val messagingDatabase: MessagingDatabase = if (message.isMms)  DatabaseComponent.get(context).mmsDatabase()
                                                    else DatabaseComponent.get(context).smsDatabase()
-        messagingDatabase.markAsDeleted(message.id, message.isRead, message.hasMention)
+        messagingDatabase.markAsDeleted(message.id)
         if (message.isOutgoing) {
             messagingDatabase.deleteMessage(message.id)
         }

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- MessageRecord -->
+    <string name="MessageRecord_leaving_group">Leaving...</string>
+    <string name="MessageRecord_leave_group_error">Failed to leave Group!</string>
+    <string name="MessageRecord_unable_leave_group">Unable to leave the Group, please try again</string>
     <string name="MessageRecord_left_group">You have left the group.</string>
     <string name="MessageRecord_you_created_a_new_group">You created a new group.</string>
     <string name="MessageRecord_s_added_you_to_the_group">%1$s added you to the group.</string>
@@ -70,7 +73,43 @@
 
     <string name="expiration_weeks_abbreviated">%dw</string>
 
-    <string name="ConversationItem_group_action_left">%1$s has left the group.</string>
+<!--  If the names within {} are changed, references  -->
+    <string name="ConversationItem_group_action_left"><b>{user}</b> has left the group.</string>
+    <string name="ConversationItem_group_action_avatar_updated">Group display picture updated.</string>
+    <string name="ConversationItem_group_name_updated">Group name is now <b>{name}</b></string>
+    <string name="ConversationItem_group_name_updated_fallback">Group name updated.</string>
+    <string name="ConversationItem_group_member_added_single"><b>{first}</b> was invited to join the group.</string>
+    <string name="ConversationItem_group_member_added_two"><b>{first}</b> and <b>{second}</b> were invited to join the group.</string>
+    <string name="ConversationItem_group_member_added_multiple"><b>{first}</b> and <b>{number_others} others</b> were invited to join the group.</string>
+    <string name="ConversationItem_group_member_removed_single"><b>{first}</b> was removed from the group.</string>
+    <string name="ConversationItem_group_member_removed_two"><b>{first}</b> and <b>{second}</b> were removed from the group.</string>
+    <string name="ConversationItem_group_member_removed_multiple"><b>{first}</b> and <b>{number_others} others</b> were removed from the group.</string>
+    <string name="ConversationItem_group_member_promoted_single"><b>{first}</b> was promoted to Admin.</string>
+    <string name="ConversationItem_group_member_promoted_two"><b>{first}</b> and <b>{second}</b> were promoted to Admin.</string>
+    <string name="ConversationItem_group_member_promoted_multiple"><b>{first}</b> and <b>{number_others} others</b> were promoted to Admin.</string>
+    <string name="ConversationItem_group_member_you_added_single">You were invited to join the group.</string>
+    <string name="ConversationItem_group_member_you_added_two">You and <b>{second}</b> were invited to join the group.</string>
+    <string name="ConversationItem_group_member_you_added_multiple">You and <b>{number_others} others</b> were invited to join the group.</string>
+    <string name="ConversationItem_group_member_you_removed_single">You were removed from the group.</string>
+    <string name="ConversationItem_group_member_you_removed_two">You and <b>{second}</b> were removed from the group.</string>
+    <string name="ConversationItem_group_member_you_removed_multiple">You and <b>{number_others} others</b> were removed from the group.</string>
+    <string name="ConversationItem_group_member_you_promoted_single">You were promoted to Admin.</string>
+    <string name="ConversationItem_group_member_you_promoted_two">You and <b>{second}</b> were promoted to Admin.</string>
+    <string name="ConversationItem_group_member_you_promoted_multiple">You and <b>{number_others} others</b> were promoted to Admin.</string>
+    <string name="ConversationItem_group_member_admin_cannot_remove">Admins cannot be removed</string>
+    <string name="ConversationItem_group_member_invited_admin"><b>{admin}</b> invited you to join <b>{group}</b>.</string>
+    <string name="ConversationItem_group_member_invited">You were invited to join <b>{group}</b>.</string>
+
+    <string name="ConversationItem_group_member_added_single_modal">New messages in this Group are shared with <b>{first}</b>.</string>
+    <string name="ConversationItem_group_member_added_two_modal">New messages in this Group are shared with <b>{first}</b> and <b>{second}</b>.</string>
+    <string name="ConversationItem_group_member_added_multiple_modal">New messages in this Group are shared with <b>{first}</b> and <b>{number_others} others</b>.</string>
+    <string name="ConversationItem_group_member_you_added_single_modal">New messages in this Group are shared with <b>{first}</b>.</string>
+    <string name="ConversationItem_group_member_you_added_two_modal">New messages in this Group are shared with <b>{first}</b> and <b>{second}</b>.</string>
+    <string name="ConversationItem_group_member_you_added_multiple_modal">New messages in this Group are shared with <b>{first}</b> and <b>{number_others} others</b>.</string>
+
     <!-- RecipientProvider -->
     <string name="RecipientProvider_unnamed_group">Unnamed group</string>
+    <string name="InviteContacts_failed_single">Failed to invite <b>{user}</b> to <b>{group}</b></string>
+    <string name="InviteContacts_failed_two">Failed to invite <b>{first}</b> and <b>{second}</b> to <b>{group}</b></string>
+    <string name="InviteContacts_failed_multiple">Failed to invite <b>{first}</b> and <b>{num_others} others</b> to <b>{group}</b></string>
 </resources>

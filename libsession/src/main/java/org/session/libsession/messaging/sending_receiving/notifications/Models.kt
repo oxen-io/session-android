@@ -16,15 +16,17 @@ data class SubscriptionRequest(
     /** the 33-byte account being subscribed to; typically a session ID */
     val pubkey: String,
     /** when the pubkey starts with 05 (i.e. a session ID) this is the ed25519 32-byte pubkey associated with the session ID */
-    val session_ed25519: String?,
+    val session_ed25519: String? = null,
     /** 32-byte swarm authentication subkey; omitted (or null) when not using subkey auth (new closed groups) */
-    val subkey_tag: String? = null,
+    val subaccount: String? = null,
     /** array of integer namespaces to subscribe to, **must be sorted in ascending order** */
     val namespaces: List<Int>,
     /** if provided and true then notifications will include the body of the message (as long as it isn't too large) */
     val data: Boolean,
     /** the signature unix timestamp in seconds, not ms */
     val sig_ts: Long,
+    /** needed also for subaccount authentication */
+    val subaccount_sig: String? = null,
     /** the 64-byte ed25519 signature */
     val signature: String,
     /** the string identifying the notification service, "firebase" for android (currently) */
@@ -41,7 +43,7 @@ data class UnsubscriptionRequest(
     /** the 33-byte account being subscribed to; typically a session ID */
     val pubkey: String,
     /** when the pubkey starts with 05 (i.e. a session ID) this is the ed25519 32-byte pubkey associated with the session ID */
-    val session_ed25519: String?,
+    val session_ed25519: String? = null,
     /** 32-byte swarm authentication subkey; omitted (or null) when not using subkey auth (new closed groups) */
     val subkey_tag: String? = null,
     /** the signature unix timestamp in seconds, not ms */

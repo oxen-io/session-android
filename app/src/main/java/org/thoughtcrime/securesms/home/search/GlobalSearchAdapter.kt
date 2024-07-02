@@ -9,9 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewGlobalSearchHeaderBinding
 import network.loki.messenger.databinding.ViewGlobalSearchResultBinding
+import network.loki.messenger.libsession_util.util.GroupInfo
 import org.session.libsession.utilities.GroupRecord
 import org.session.libsession.utilities.recipients.Recipient
-import org.thoughtcrime.securesms.mms.GlideApp
+import org.session.libsignal.utilities.SessionId
 import org.thoughtcrime.securesms.search.model.MessageResult
 import java.security.InvalidParameterException
 import org.session.libsession.messaging.contacts.Contact as ContactModel
@@ -98,7 +99,7 @@ class GlobalSearchAdapter (private val modelCallback: (Model)->Unit): RecyclerVi
         fun bind(query: String, model: Model) {
             binding.searchResultProfilePicture.recycle()
             when (model) {
-                is Model.GroupConversation -> bindModel(query, model)
+                is Model.LegacyGroupConversation -> bindModel(query, model)
                 is Model.Contact -> bindModel(query, model)
                 is Model.Message -> bindModel(query, model)
                 is Model.SavedMessages -> bindModel(model)
@@ -119,7 +120,8 @@ class GlobalSearchAdapter (private val modelCallback: (Model)->Unit): RecyclerVi
         data class Header(@StringRes val title: Int) : Model()
         data class SavedMessages(val currentUserPublicKey: String): Model()
         data class Contact(val contact: ContactModel) : Model()
-        data class GroupConversation(val groupRecord: GroupRecord) : Model()
+        data class LegacyGroupConversation(val groupRecord: GroupRecord) : Model()
+        data class ClosedGroupConversation(val sessionId: SessionId)
         data class Message(val messageResult: MessageResult, val unread: Int) : Model()
     }
 

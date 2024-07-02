@@ -52,6 +52,7 @@ import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.annimon.stream.Stream
+import com.squareup.phrase.Phrase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -64,6 +65,7 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityConversationV2Binding
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import nl.komponents.kovenant.ui.successUi
+import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.AttachmentDownloadJob
@@ -80,7 +82,6 @@ import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.link_preview.LinkPreview
 import org.session.libsession.messaging.sending_receiving.quotes.QuoteModel
-import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Address.Companion.fromSerialized
@@ -95,6 +96,7 @@ import org.session.libsignal.crypto.MnemonicCodec
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.ListenableFuture
 import org.session.libsignal.utilities.Log
+import org.session.libsignal.utilities.SessionId
 import org.session.libsignal.utilities.guava.Optional
 import org.session.libsignal.utilities.hexEncodedPrivateKey
 import org.thoughtcrime.securesms.ApplicationContext
@@ -105,6 +107,8 @@ import org.thoughtcrime.securesms.components.emoji.RecentEmojiPageModel
 import org.thoughtcrime.securesms.contacts.SelectContactsActivity.Companion.selectedContactsKey
 import org.thoughtcrime.securesms.conversation.ConversationActionBarDelegate
 import org.thoughtcrime.securesms.conversation.disappearingmessages.DisappearingMessagesActivity
+import org.thoughtcrime.securesms.conversation.settings.ConversationSettingsActivityContract
+import org.thoughtcrime.securesms.conversation.settings.ConversationSettingsActivityResult
 import org.thoughtcrime.securesms.conversation.v2.ConversationReactionOverlay.OnActionSelectedListener
 import org.thoughtcrime.securesms.conversation.v2.ConversationReactionOverlay.OnReactionSelectedListener
 import org.thoughtcrime.securesms.conversation.v2.MessageDetailActivity.Companion.MESSAGE_TIMESTAMP
@@ -139,7 +143,6 @@ import org.thoughtcrime.securesms.database.MmsSmsDatabase
 import org.thoughtcrime.securesms.database.ReactionDatabase
 import org.thoughtcrime.securesms.database.SessionContactDatabase
 import org.thoughtcrime.securesms.database.SmsDatabase
-import org.thoughtcrime.securesms.database.Storage
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.MessageId
 import org.thoughtcrime.securesms.database.model.MessageRecord
@@ -147,6 +150,7 @@ import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.giph.ui.GiphyActivity
 import org.thoughtcrime.securesms.groups.OpenGroupManager
+import org.thoughtcrime.securesms.home.search.getSearchName
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewRepository
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewUtil
 import org.thoughtcrime.securesms.linkpreview.LinkPreviewViewModel
@@ -199,7 +203,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     ConversationActionModeCallbackDelegate, VisibleMessageViewDelegate, RecipientModifiedListener,
     SearchBottomBar.EventListener, LoaderManager.LoaderCallbacks<Cursor>, ConversationActionBarDelegate,
     OnReactionSelectedListener, ReactWithAnyEmojiDialogFragment.Callback, ReactionsDialogFragment.Callback,
-    ConversationMenuHelper.ConversationMenuListener {
+    ConversationMenuHelper.ConversationMenuListener, View.OnClickListener {
 
     private var binding: ActivityConversationV2Binding? = null
 
@@ -212,7 +216,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     @Inject lateinit var smsDb: SmsDatabase
     @Inject lateinit var mmsDb: MmsDatabase
     @Inject lateinit var lokiMessageDb: LokiMessageDatabase
-    @Inject lateinit var storage: Storage
+    @Inject lateinit var storage: StorageProtocol
     @Inject lateinit var reactionDb: ReactionDatabase
     @Inject lateinit var viewModelFactory: ConversationViewModel.AssistedFactory
     @Inject lateinit var mentionViewModelFactory: MentionViewModel.AssistedFactory
@@ -221,6 +225,13 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         ScreenshotObserver(this, Handler(Looper.getMainLooper())) {
             // post screenshot message
             sendScreenshotNotification()
+        }
+    }
+
+    private val conversationSettingsCallback = registerForActivityResult(ConversationSettingsActivityContract()) { result ->
+        if (result is ConversationSettingsActivityResult.SearchConversation) {
+            // open search
+            binding?.toolbar?.menu?.findItem(R.id.menu_search)?.expandActionView()
         }
     }
 
@@ -239,7 +250,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                     val sessionId = SessionId(it.serialize())
                     val openGroup = lokiThreadDb.getOpenGroupChat(intent.getLongExtra(FROM_GROUP_THREAD_ID, -1))
                     val address = if (sessionId.prefix == IdPrefix.BLINDED && openGroup != null) {
-                        storage.getOrCreateBlindedIdMapping(sessionId.hexString, openGroup.server, openGroup.publicKey).sessionId?.let {
+                        storage.getOrCreateBlindedIdMapping(sessionId.hexString(), openGroup.server, openGroup.publicKey).sessionId?.let {
                             fromSerialized(it)
                         } ?: GroupUtil.getEncodedOpenGroupInboxID(openGroup, sessionId)
                     } else {
@@ -378,6 +389,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         const val PICK_GIF = 10
         const val PICK_FROM_LIBRARY = 12
         const val INVITE_CONTACTS = 124
+        const val CONVERSATION_SETTINGS = 125 // used to open conversation search on result
     }
     // endregion
 
@@ -431,6 +443,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         updatePlaceholder()
         setUpBlockedBanner()
         binding!!.searchBottomBar.setEventListener(this)
+        binding!!.toolbarContent.profilePictureView.setOnClickListener(this)
         updateSendAfterApprovalText()
         setUpMessageRequestsBar()
 
@@ -459,6 +472,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 setUpSearchResultObserver()
                 scrollToFirstUnreadMessageIfNeeded()
                 setUpOutdatedClientBanner()
+                setUpLegacyGroupBanner()
 
                 if (author != null && messageTimestamp >= 0 && targetPosition >= 0) {
                     binding?.conversationRecyclerView?.scrollToPosition(targetPosition)
@@ -768,10 +782,29 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val shouldShowLegacy = ExpirationConfiguration.isNewConfigEnabled &&
                 legacyRecipient != null
 
-        binding?.outdatedBanner?.isVisible = shouldShowLegacy
+        binding?.outdatedDisappearingBanner?.isVisible = shouldShowLegacy
         if (shouldShowLegacy) {
-            binding?.outdatedBannerTextView?.text =
+            binding?.outdatedDisappearingBannerTextView?.text =
                 resources.getString(R.string.activity_conversation_outdated_client_banner_text, legacyRecipient!!.name)
+        }
+    }
+
+    private fun setUpLegacyGroupBanner() {
+        val shouldDisplayBanner = viewModel.recipient?.isLegacyClosedGroupRecipient ?: return
+        val binding = binding ?: return
+
+        with(binding) {
+            outdatedGroupBanner.isVisible = shouldDisplayBanner
+            outdatedGroupBanner.setOnClickListener {
+                showSessionDialog {
+                    title(R.string.dialog_open_url_title)
+                    text(R.string.dialog_open_url_explanation)
+                    cancelButton()
+                    destructiveButton(R.string.open) {
+                        // open the URL (tbc)
+                    }
+                }
+            }
         }
     }
 
@@ -887,21 +920,31 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     }
 
     private fun showOrHideInputIfNeeded() {
-        binding?.inputBar?.showInput = viewModel.recipient?.takeIf { it.isClosedGroupRecipient }
+        binding?.inputBar?.showInput = viewModel.recipient?.takeIf { it.isLegacyClosedGroupRecipient }
             ?.run { address.toGroupString().let(groupDb::getGroup).orNull()?.isActive == true }
             ?: true
     }
 
     private fun setUpMessageRequestsBar() {
-        binding?.inputBar?.showMediaControls = !isOutgoingMessageRequestThread()
-        binding?.messageRequestBar?.isVisible = isIncomingMessageRequestThread()
-        binding?.acceptMessageRequestButton?.setOnClickListener {
+        val recipient = viewModel.recipient ?: return
+        val binding = binding ?: return
+        binding.inputBar.showMediaControls = !isOutgoingMessageRequestThread()
+        binding.messageRequestBar.isVisible = isIncomingMessageRequestThread()
+        binding.sendAcceptsTextView.setText(
+            if (recipient.isClosedGroupV2Recipient) R.string.message_requests_send_group_notice
+            else R.string.message_requests_send_notice
+        )
+        binding.acceptMessageRequestButton.setOnClickListener {
             acceptMessageRequest()
         }
-        binding?.messageRequestBlock?.setOnClickListener {
+        binding.messageRequestBlock.isVisible = recipient.isContactRecipient || (recipient.isClosedGroupV2Recipient && viewModel.invitingAdmin != null)
+        binding.messageRequestBlock.setOnClickListener {
             block(deleteThread = true)
         }
-        binding?.declineMessageRequestButton?.setOnClickListener {
+        if (recipient.isClosedGroupV2Recipient) {
+            binding.declineMessageRequestButton.setText(R.string.delete)
+        }
+        binding.declineMessageRequestButton.setOnClickListener {
             viewModel.declineMessageRequest()
             lifecycleScope.launch(Dispatchers.IO) {
                 ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@ConversationActivityV2)
@@ -925,8 +968,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     } ?: false
 
     private fun isIncomingMessageRequestThread(): Boolean = viewModel.recipient?.run {
-        !isGroupRecipient && !isApproved && !isLocalNumber &&
-        !threadDb.getLastSeenAndHasSent(viewModel.threadId).second() && threadDb.getMessageCount(viewModel.threadId) > 0
+        !isLegacyClosedGroupRecipient && !isApproved && !isLocalNumber &&
+        !threadDb.getLastSeenAndHasSent(viewModel.threadId).second() &&
+                        (threadDb.getMessageCount(viewModel.threadId) > 0 || isClosedGroupV2Recipient)
     } ?: false
 
     override fun inputBarEditTextContentChanged(newContent: CharSequence) {
@@ -1120,10 +1164,33 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         } ?: false
     }
 
+    override fun onClick(v: View?) {
+        if (v === binding?.toolbarContent?.profilePictureView) {
+            // open conversation settings
+            conversationSettingsCallback.launch(viewModel.threadId)
+        }
+    }
+
     override fun block(deleteThread: Boolean) {
+        val recipient = viewModel.recipient ?: return
+        val title: String
+        val body: String
+        val invitingAdmin = viewModel.invitingAdmin
+
+        if (recipient.isClosedGroupV2Recipient && invitingAdmin != null) {
+            // show the block user if we have them
+            title = getString(R.string.RecipientPreferenceActivity_block)
+            body = Phrase.from(this, R.string.RecipientPreferenceActivity_block_user_body)
+                .put("user", invitingAdmin.getSearchName())
+                .format().toString()
+        } else {
+            // show regular block user
+            title = getString(R.string.RecipientPreferenceActivity_block)
+            body = getString(R.string.RecipientPreferenceActivity_you_will_no_longer_receive_messages_and_calls_from_this_contact)
+        }
         showSessionDialog {
-            title(R.string.RecipientPreferenceActivity_block_this_contact_question)
-            text(R.string.RecipientPreferenceActivity_you_will_no_longer_receive_messages_and_calls_from_this_contact)
+            title(title)
+            text(body)
             destructiveButton(R.string.RecipientPreferenceActivity_block, R.string.AccessibilityId_block_confirm) {
                 viewModel.block()
                 if (deleteThread) {
@@ -1154,8 +1221,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
     }
 
+    // TODO: don't need to allow new closed group check here, removed in new disappearing messages
     override fun showDisappearingMessages(thread: Recipient) {
-        if (thread.isClosedGroupRecipient) {
+        if (thread.isLegacyClosedGroupRecipient) {
             groupDb.getGroup(thread.address.toGroupString()).orNull()?.run { if (!isActive) return }
         }
         Intent(this, DisappearingMessagesActivity::class.java)
@@ -1830,7 +1898,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 cancelButton { endActionMode() }
             }
         // Otherwise if this is a 1-on-1 conversation we may decided to delete just for ourselves or delete for everyone
-        } else if (allSentByCurrentUser && allHasHash) {
+        } else if ((allSentByCurrentUser || viewModel.isClosedGroupAdmin) && allHasHash) {
             val bottomSheet = DeleteOptionsBottomSheet()
             bottomSheet.recipient = recipient
             bottomSheet.onDeleteForMeTapped = {

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewConversationBinding
+import org.session.libsession.utilities.getColorFromAttr
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities.highlightMentions
 import org.thoughtcrime.securesms.database.RecipientDatabase.NOTIFY_TYPE_ALL
@@ -51,6 +52,16 @@ class ConversationView : LinearLayout {
 
     // region Updating
     fun bind(thread: ThreadRecord, isTyping: Boolean, glide: GlideRequests) {
+        if (thread.isLeavingGroup) {
+            binding.conversationViewDisplayNameTextView.setTextColor(context.getColorFromAttr(android.R.attr.textColorSecondary))
+            binding.snippetTextView.setTextColor(context.getColorFromAttr(android.R.attr.textColorSecondary))
+        } else if (thread.isErrorLeavingGroup) {
+            binding.conversationViewDisplayNameTextView.setTextColor(context.getColorFromAttr(android.R.attr.textColorPrimary))
+            binding.snippetTextView.setTextColor(context.getColor(R.color.destructive))
+        } else {
+            binding.conversationViewDisplayNameTextView.setTextColor(context.getColorFromAttr(android.R.attr.textColorPrimary))
+            binding.snippetTextView.setTextColor(context.getColorFromAttr(android.R.attr.textColorPrimary))
+        }
         this.thread = thread
         if (thread.isPinned) {
             binding.conversationViewDisplayNameTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(

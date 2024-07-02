@@ -36,7 +36,6 @@ import org.thoughtcrime.securesms.conversation.v2.utilities.ModalURLSpan
 import org.thoughtcrime.securesms.conversation.v2.utilities.TextUtilities.getIntersectedModalSpans
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
-import org.thoughtcrime.securesms.database.model.SmsMessageRecord
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.util.GlowViewUtilities
@@ -65,7 +64,6 @@ class VisibleMessageContentView : ConstraintLayout {
         glide: GlideRequests = GlideApp.with(this),
         thread: Recipient,
         searchQuery: String? = null,
-        contactIsTrusted: Boolean = true,
         onAttachmentNeedsDownload: (DatabaseAttachment) -> Unit,
         suppressThumbnails: Boolean = false
     ) {
@@ -75,8 +73,9 @@ class VisibleMessageContentView : ConstraintLayout {
         binding.contentParent.mainColor = color
         binding.contentParent.cornerRadius = resources.getDimension(R.dimen.message_corner_radius)
 
-        val onlyBodyMessage = message is SmsMessageRecord
-        val mediaThumbnailMessage = contactIsTrusted && message is MmsMessageRecord && message.slideDeck.thumbnailSlide != null
+        val mediaDownloaded = message is MmsMessageRecord && message.slideDeck.asAttachments().all { it.transferState == AttachmentTransferProgress.TRANSFER_PROGRESS_DONE }
+        val mediaInProgress = message is MmsMessageRecord && message.slideDeck.asAttachments().any { it.isInProgress }
+        val mediaThumbnailMessage = message is MmsMessageRecord && message.slideDeck.thumbnailSlide != null
 
         // reset visibilities / containers
         onContentClick.clear()
@@ -89,7 +88,6 @@ class VisibleMessageContentView : ConstraintLayout {
             binding.bodyTextView.isVisible = false
             binding.quoteView.root.isVisible = false
             binding.linkPreviewView.root.isVisible = false
-            binding.untrustedView.root.isVisible = false
             binding.voiceMessageView.root.isVisible = false
             binding.documentView.root.isVisible = false
             binding.albumThumbnailView.root.isVisible = false
@@ -104,9 +102,9 @@ class VisibleMessageContentView : ConstraintLayout {
         binding.bodyTextView.text = null
         binding.quoteView.root.isVisible = message is MmsMessageRecord && message.quote != null
         binding.linkPreviewView.root.isVisible = message is MmsMessageRecord && message.linkPreviews.isNotEmpty()
-        binding.untrustedView.root.isVisible = !contactIsTrusted && message is MmsMessageRecord && message.quote == null && message.linkPreviews.isEmpty()
-        binding.voiceMessageView.root.isVisible = contactIsTrusted && message is MmsMessageRecord && message.slideDeck.audioSlide != null
-        binding.documentView.root.isVisible = contactIsTrusted && message is MmsMessageRecord && message.slideDeck.documentSlide != null
+        binding.pendingAttachmentView.root.isVisible = !mediaDownloaded && !mediaInProgress && message is MmsMessageRecord && message.quote == null && message.linkPreviews.isEmpty()
+        binding.voiceMessageView.root.isVisible = (mediaDownloaded || mediaInProgress) && message is MmsMessageRecord && message.slideDeck.audioSlide != null
+        binding.documentView.root.isVisible = (mediaDownloaded || mediaInProgress) && message is MmsMessageRecord && message.slideDeck.documentSlide != null
         binding.albumThumbnailView.root.isVisible = mediaThumbnailMessage
         binding.openGroupInvitationView.root.isVisible = message.isOpenGroupInvitation
 
@@ -144,6 +142,7 @@ class VisibleMessageContentView : ConstraintLayout {
         }
 
         when {
+            // LINK PREVIEW
             message is MmsMessageRecord && message.linkPreviews.isNotEmpty() -> {
                 binding.linkPreviewView.root.bind(message, glide, isStartOfMessageCluster, isEndOfMessageCluster)
                 onContentClick.add { event -> binding.linkPreviewView.root.calculateHit(event) }
@@ -151,10 +150,11 @@ class VisibleMessageContentView : ConstraintLayout {
                 // When in a link preview ensure the bodyTextView can expand to the full width
                 binding.bodyTextView.maxWidth = binding.linkPreviewView.root.layoutParams.width
             }
+            // AUDIO
             message is MmsMessageRecord && message.slideDeck.audioSlide != null -> {
                 hideBody = true
                 // Audio attachment
-                if (contactIsTrusted || message.isOutgoing) {
+                if (mediaDownloaded || mediaInProgress || message.isOutgoing) {
                     binding.voiceMessageView.root.indexInAdapter = indexInAdapter
                     binding.voiceMessageView.root.delegate = context as? ConversationActivityV2
                     binding.voiceMessageView.root.bind(message, isStartOfMessageCluster, isEndOfMessageCluster)
@@ -163,26 +163,38 @@ class VisibleMessageContentView : ConstraintLayout {
                     onContentClick.add { binding.voiceMessageView.root.togglePlayback() }
                     onContentDoubleTap = { binding.voiceMessageView.root.handleDoubleTap() }
                 } else {
-                    // TODO: move this out to its own area
-                    binding.untrustedView.root.bind(UntrustedAttachmentView.AttachmentType.AUDIO, VisibleMessageContentView.getTextColor(context,message))
-                    onContentClick.add { binding.untrustedView.root.showTrustDialog(message.individualRecipient) }
+                    hideBody = true
+                    (message.slideDeck.audioSlide?.asAttachment() as? DatabaseAttachment)?.let { attachment ->
+                        binding.pendingAttachmentView.root.bind(
+                            PendingAttachmentView.AttachmentType.AUDIO,
+                            getTextColor(context,message),
+                            attachment
+                        )
+                        onContentClick.add { binding.pendingAttachmentView.root.showDownloadDialog(thread, attachment) }
+                    }
                 }
             }
+            // DOCUMENT
             message is MmsMessageRecord && message.slideDeck.documentSlide != null -> {
-                hideBody = true
+                hideBody = true // TODO: check if this is still the logic we want
                 // Document attachment
-                if (contactIsTrusted || message.isOutgoing) {
-                    binding.documentView.root.bind(message, VisibleMessageContentView.getTextColor(context, message))
+                if (mediaDownloaded || mediaInProgress || message.isOutgoing) {
+                    binding.documentView.root.bind(message, getTextColor(context, message))
                 } else {
-                    binding.untrustedView.root.bind(UntrustedAttachmentView.AttachmentType.DOCUMENT, VisibleMessageContentView.getTextColor(context,message))
-                    onContentClick.add { binding.untrustedView.root.showTrustDialog(message.individualRecipient) }
+                    hideBody = true
+                    (message.slideDeck.documentSlide?.asAttachment() as? DatabaseAttachment)?.let { attachment ->
+                        binding.pendingAttachmentView.root.bind(
+                            PendingAttachmentView.AttachmentType.DOCUMENT,
+                            getTextColor(context,message),
+                            attachment
+                            )
+                        onContentClick.add { binding.pendingAttachmentView.root.showDownloadDialog(thread, attachment) }
+                    }
                 }
             }
+            // IMAGE / VIDEO
             message is MmsMessageRecord && !suppressThumbnails && message.slideDeck.asAttachments().isNotEmpty() -> {
-                /*
-                 *    Images / Video attachment
-                 */
-                if (contactIsTrusted || message.isOutgoing) {
+                if (mediaDownloaded || mediaInProgress || message.isOutgoing) {
                     // isStart and isEnd of cluster needed for calculating the mask for full bubble image groups
                     // bind after add view because views are inflated and calculated during bind
                     binding.albumThumbnailView.root.bind(
@@ -200,13 +212,22 @@ class VisibleMessageContentView : ConstraintLayout {
                 } else {
                     hideBody = true
                     binding.albumThumbnailView.root.clearViews()
-                    binding.untrustedView.root.bind(UntrustedAttachmentView.AttachmentType.MEDIA, VisibleMessageContentView.getTextColor(context,message))
-                    onContentClick.add { binding.untrustedView.root.showTrustDialog(message.individualRecipient) }
+                    val firstAttachment = message.slideDeck.asAttachments().first() as? DatabaseAttachment
+                    firstAttachment?.let { attachment ->
+                        binding.pendingAttachmentView.root.bind(
+                            PendingAttachmentView.AttachmentType.IMAGE,
+                            getTextColor(context,message),
+                            attachment
+                            )
+                        onContentClick.add {
+                            binding.pendingAttachmentView.root.showDownloadDialog(thread, attachment)
+                        }
+                    }
                 }
             }
             message.isOpenGroupInvitation -> {
                 hideBody = true
-                binding.openGroupInvitationView.root.bind(message, VisibleMessageContentView.getTextColor(context, message))
+                binding.openGroupInvitationView.root.bind(message, getTextColor(context, message))
                 onContentClick.add { binding.openGroupInvitationView.root.joinOpenGroup() }
             }
         }
@@ -243,7 +264,7 @@ class VisibleMessageContentView : ConstraintLayout {
     fun recycle() {
         arrayOf(
             binding.deletedMessageView.root,
-            binding.untrustedView.root,
+            binding.pendingAttachmentView.root,
             binding.voiceMessageView.root,
             binding.openGroupInvitationView.root,
             binding.documentView.root,

@@ -6,15 +6,15 @@ import android.database.Cursor
 import androidx.core.database.getStringOrNull
 import org.json.JSONArray
 import org.session.libsession.messaging.contacts.Contact
-import org.session.libsession.messaging.utilities.SessionId
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.IdPrefix
+import org.session.libsignal.utilities.SessionId
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 
 class SessionContactDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(context, helper) {
 
     companion object {
-        private const val sessionContactTable = "session_contact_database"
+        const val sessionContactTable = "session_contact_database"
         const val sessionID = "session_id"
         const val name = "name"
         const val nickname = "nickname"
@@ -84,23 +84,21 @@ class SessionContactDatabase(context: Context, helper: SQLCipherOpenHelper) : Da
             contentValues.put(profilePictureEncryptionKey, Base64.encodeBytes(it))
         }
         contentValues.put(threadID, contact.threadID)
-        contentValues.put(isTrusted, if (contact.isTrusted) 1 else 0)
         database.insertOrUpdate(sessionContactTable, contentValues, "$sessionID = ?", arrayOf( contact.sessionID ))
         notifyConversationListListeners()
     }
 
     fun contactFromCursor(cursor: Cursor): Contact {
-        val sessionID = cursor.getString(cursor.getColumnIndexOrThrow(sessionID))
+        val sessionID = cursor.getString(sessionID)
         val contact = Contact(sessionID)
-        contact.name = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(name))
-        contact.nickname = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(nickname))
-        contact.profilePictureURL = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(profilePictureURL))
-        contact.profilePictureFileName = cursor.getStringOrNull(cursor.getColumnIndexOrThrow(profilePictureFileName))
-        cursor.getStringOrNull(cursor.getColumnIndexOrThrow(profilePictureEncryptionKey))?.let {
+        contact.name = cursor.getStringOrNull(name)
+        contact.nickname = cursor.getStringOrNull(nickname)
+        contact.profilePictureURL = cursor.getStringOrNull(profilePictureURL)
+        contact.profilePictureFileName = cursor.getStringOrNull(profilePictureFileName)
+        cursor.getStringOrNull(profilePictureEncryptionKey)?.let {
             contact.profilePictureEncryptionKey = Base64.decode(it)
         }
-        contact.threadID = cursor.getLong(cursor.getColumnIndexOrThrow(threadID))
-        contact.isTrusted = cursor.getInt(cursor.getColumnIndexOrThrow(isTrusted)) != 0
+        contact.threadID = cursor.getLong(threadID)
         return contact
     }
 

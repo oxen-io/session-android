@@ -17,12 +17,13 @@ buildscript {
 plugins {
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    id 'com.google.devtools.ksp'
+    id 'app.cash.molecule'
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'witness'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlinx-serialization'
 apply plugin: 'dagger.hilt.android.plugin'
@@ -58,12 +59,12 @@ android {
     useLibrary 'org.apache.http.legacy'
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11'
     }
 
     packagingOptions {
@@ -89,7 +90,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.7'
+        kotlinCompilerExtensionVersion '1.5.3'
     }
 
     defaultConfig {
@@ -239,8 +240,14 @@ android {
 
 dependencies {
 
-    implementation("com.google.dagger:hilt-android:2.46.1")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    implementation("com.google.dagger:hilt-android:$daggerVersion")
+    kapt("com.google.dagger:hilt-android-compiler:$daggerVersion")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+
+    implementation "io.github.raamcosta.compose-destinations:core:$composeDestinationsVersion"
+    ksp "io.github.raamcosta.compose-destinations:ksp:$composeDestinationsVersion"
+
+
 
     implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
@@ -322,6 +329,7 @@ dependencies {
     implementation "com.google.protobuf:protobuf-java:$protobufVersion"
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    implementation "com.squareup.phrase:phrase:$phraseVersion"
     implementation 'app.cash.copper:copper-flow:1.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
@@ -347,7 +355,6 @@ dependencies {
     androidTestImplementation('com.adevinta.android:barista:4.2.0') {
         exclude group: 'org.jetbrains.kotlin'
     }
-
     // AndroidJUnitRunner and JUnit Rules
     androidTestImplementation 'androidx.test:runner:1.5.2'
     androidTestImplementation 'androidx.test:rules:1.5.0'
@@ -366,6 +373,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-web:3.5.1'
     androidTestImplementation 'androidx.test.espresso.idling:idling-concurrent:3.5.1'
     androidTestImplementation 'androidx.test.espresso:espresso-idling-resource:3.5.1'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.5.3"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:1.5.3"
     androidTestUtil 'androidx.test:orchestrator:1.4.2'
 
     testImplementation 'org.robolectric:robolectric:4.12.2'
@@ -375,14 +384,14 @@ dependencies {
 
 
     implementation 'com.github.bumptech.glide:compose:1.0.0-alpha.5'
-    implementation 'androidx.compose.ui:ui:1.5.2'
-    implementation 'androidx.compose.ui:ui-tooling:1.5.2'
+    implementation 'androidx.compose.ui:ui:1.5.3'
+    implementation 'androidx.compose.ui:ui-tooling:1.5.3'
     implementation "com.google.accompanist:accompanist-themeadapter-appcompat:0.33.1-alpha"
     implementation "com.google.accompanist:accompanist-pager-indicators:0.33.1-alpha"
-    implementation "androidx.compose.runtime:runtime-livedata:1.5.2"
+    implementation "androidx.compose.runtime:runtime-livedata:1.5.3"
 
-    implementation 'androidx.compose.foundation:foundation-layout:1.5.2'
-    implementation 'androidx.compose.material:material:1.5.2'
+    implementation 'androidx.compose.foundation:foundation-layout:1.5.3'
+    implementation 'androidx.compose.material:material:1.5.3'
 }
 
 static def getLastCommitTimestamp() {

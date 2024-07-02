@@ -52,7 +52,7 @@ class ContactSelectionListLoader(context: Context, val mode: Int, val filter: St
 
     private fun getClosedGroups(contacts: List<Recipient>): List<ContactSelectionListItem> {
         return getItems(contacts, context.getString(R.string.fragment_contact_selection_closed_groups_title)) {
-            it.address.isClosedGroup
+            it.address.isLegacyClosedGroup || it.address.isClosedGroupV2
         }
     }
 
