@@ -125,42 +125,46 @@ class ClearAllDataDialog : DialogFragment() {
             }
             return
         }
-        val success = ApplicationContext.getInstance(context).clearAllData(false)
-        withContext(Main) { dismiss() }
-        if (!success) {
+        ApplicationContext.getInstance(context).clearAllData(false).let { success ->
             withContext(Main) {
-                Toast.makeText(ApplicationContext.getInstance(requireContext()), R.string.errorUnknown, Toast.LENGTH_LONG).show()
+                if (success) {
+                    dismiss()
+                } else {
+                    Toast.makeText(ApplicationContext.getInstance(requireContext()), R.string.errorUnknown, Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
 
     private fun clearAllData(deletionScope: DeletionScope) {
+        step = Steps.DELETING
 
         clearJob = lifecycleScope.launch(Dispatchers.IO) {
-            withContext(Main) { step = Steps.DELETING }
-
-            if (deletionScope == DeletionScope.DeleteLocalDataOnly) {
-                performDeleteLocalDataOnlyStep()
-            } else if (deletionScope == DeletionScope.DeleteBothLocalAndNetworkData) {
-                val deletionResultMap: Map<String, Boolean>? = try {
-                    val openGroups = DatabaseComponent.get(requireContext()).lokiThreadDatabase().getAllOpenGroups()
-                    openGroups.map { it.value.server }.toSet().forEach { server ->
-                        OpenGroupApi.deleteAllInboxMessages(server).get()
+            when (deletionScope) {
+                DeletionScope.DeleteLocalDataOnly -> {
+                    performDeleteLocalDataOnlyStep()
+                }
+                DeletionScope.DeleteBothLocalAndNetworkData -> {
+                    val deletionResultMap: Map<String, Boolean>? = try {
+                        val openGroups = DatabaseComponent.get(requireContext()).lokiThreadDatabase().getAllOpenGroups()
+                        openGroups.map { it.value.server }.toSet().forEach { server ->
+                            OpenGroupApi.deleteAllInboxMessages(server).get()
+                        }
+                        SnodeAPI.deleteAllMessages().get()
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Failed to delete network messages - offering user option to delete local data only.", e)
+                        null
                     }
-                    SnodeAPI.deleteAllMessages().get()
-                } catch (e: Exception) {
-                    Log.e(TAG, "Failed to delete network messages - offering user option to delete local data only.", e)
-                    null
-                }
 
-                // If one or more deletions failed then inform the user and allow them to clear the device only if they wish..
-                if (deletionResultMap == null || deletionResultMap.values.any { !it } || deletionResultMap.isEmpty()) {
-                    withContext(Main) { step = Steps.RETRY_LOCAL_DELETE_ONLY_PROMPT }
-                }
-                else if (deletionResultMap.values.all { it }) {
-                    // ..otherwise if the network data deletion was successful proceed to delete the local data as well.
-                    ApplicationContext.getInstance(context).clearAllData(false)
-                    withContext(Main) { dismiss() }
+                    // If one or more deletions failed then inform the user and allow them to clear the device only if they wish..
+                    if (deletionResultMap == null || deletionResultMap.values.any { !it } || deletionResultMap.isEmpty()) {
+                        withContext(Main) { step = Steps.RETRY_LOCAL_DELETE_ONLY_PROMPT }
+                    }
+                    else if (deletionResultMap.values.all { it }) {
+                        // ..otherwise if the network data deletion was successful proceed to delete the local data as well.
+                        ApplicationContext.getInstance(context).clearAllData(false)
+                        withContext(Main) { dismiss() }
+                    }
                 }
             }
         }
