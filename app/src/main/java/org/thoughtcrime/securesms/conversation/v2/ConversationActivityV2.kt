@@ -1820,6 +1820,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
         if (networkCapabilities == null || !networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET))
         {
+            // TODO: Replace hard-coded string with string resource when SES-1486 is addressed
             Toast.makeText(applicationContext, "Cannot send voice message - no network connection.", Toast.LENGTH_LONG).show()
             return false
         }
@@ -1832,6 +1833,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val paths = OnionRequestAPI.paths
         if (paths.isNullOrEmpty() || paths.count() != 2) {
             Toast.makeText(applicationContext,
+                // TODO: Replace hard-coded string with string resource when SES-1486 is addressed
                 "Cannot send voice message - bad Session Node path.",
                 Toast.LENGTH_LONG)
                 .show()
