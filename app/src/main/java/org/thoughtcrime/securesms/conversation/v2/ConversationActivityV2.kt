@@ -1816,8 +1816,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         val connectedToInternet = NetworkUtils.haveValidNetworkConnection(applicationContext)
         if (!connectedToInternet)
         {
-            // TODO: Replace hard-coded string with string resource when SES-2319 is addressed
-            Toast.makeText(applicationContext, "Cannot send voice message - no network connection.", Toast.LENGTH_LONG).show()
+            // TODO: Adjust to display error to user with official localised string when SES-2319 is addressed
+            Log.e(TAG, "Cannot sent voice message - no network connection.")
         }
 
         // Check that we have a suite of Session Nodes to route through.
@@ -1827,11 +1827,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         // indicators?)
         val paths = OnionRequestAPI.paths
         if (paths.isNullOrEmpty() || paths.count() != 2) {
-            Toast.makeText(applicationContext,
-                // TODO: Replace hard-coded string with string resource when SES-2319 is addressed
-                "Cannot send voice message - bad Session Node path.",
-                Toast.LENGTH_LONG)
-                .show()
+            // TODO: Adjust to display error to user with official localised string when SES-2319 is addressed
+            Log.e(TAG, "Cannot send voice message - bad Session Node path.")
         }
     }
 
