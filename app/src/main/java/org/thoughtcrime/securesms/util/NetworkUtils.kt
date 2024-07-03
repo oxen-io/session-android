@@ -9,7 +9,7 @@ class NetworkUtils {
 
     companion object {
 
-        // Method to check if a valid Internet connection is available or not
+        // Method to determine if we have a valid Internet connection or not
         fun haveValidNetworkConnection(context: Context) : Boolean {
             val cm = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
 
