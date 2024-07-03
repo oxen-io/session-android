@@ -1,6 +1,8 @@
 package org.session.libsession.messaging.jobs
 
 import okhttp3.HttpUrl
+import org.session.libsession.database.MessageDataProvider
+import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroupApi
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId
@@ -40,6 +42,36 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
         // Keys used for database storage
         private val ATTACHMENT_ID_KEY = "attachment_id"
         private val TS_INCOMING_MESSAGE_ID_KEY = "tsIncoming_message_id"
+
+        /**
+         * Check if the attachment in the given message is eligible for download.
+         *
+         * Note that this function only checks for the eligibility of the attachment in the sense
+         * of whether the download is allowed, it does not check if the download has already taken
+         * place.
+         */
+        fun eligibleForDownload(threadID: Long,
+                                storage: StorageProtocol,
+                                messageDataProvider: MessageDataProvider,
+                                databaseMessageID: Long): Boolean {
+            val threadRecipient = storage.getRecipientForThread(threadID) ?: return false
+
+            // if we are the sender we are always eligible
+            val selfSend = messageDataProvider.isMmsOutgoing(databaseMessageID)
+            if (selfSend) {
+                return true
+            }
+
+            // you can't be eligible without a sender
+            val sender = messageDataProvider.getIndividualRecipientForMms(databaseMessageID)?.address?.serialize()
+                ?: return false
+
+            // you can't be eligible without a contact entry
+            val contact = storage.getContactWithSessionID(sender) ?: return false
+
+            // we are eligible if we are receiving a group message or the contact is trusted
+            return threadRecipient.isGroupRecipient || contact.isTrusted
+        }
     }
 
     override suspend fun execute(dispatcherName: String) {
@@ -88,21 +120,7 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
             return
         }
 
-        val threadRecipient = storage.getRecipientForThread(threadID)
-        val selfSend = messageDataProvider.isMmsOutgoing(databaseMessageID)
-        val sender = if (selfSend) {
-            storage.getUserPublicKey()
-        } else {
-            messageDataProvider.getIndividualRecipientForMms(databaseMessageID)?.address?.serialize()
-        }
-        val contact = sender?.let { storage.getContactWithSessionID(it) }
-        if (threadRecipient == null || sender == null || (contact == null && !selfSend)) {
-            handleFailure(Error.NoSender, null)
-            return
-        }
-        if (!threadRecipient.isGroupRecipient && contact?.isTrusted != true && storage.getUserPublicKey() != sender) {
-            // if we aren't receiving a group message, a message from ourselves (self-send) and the contact sending is not trusted:
-            // do not continue, but do not fail
+        if (!eligibleForDownload(threadID, storage, messageDataProvider, databaseMessageID)) {
             handleFailure(Error.NoSender, null)
             return
         }

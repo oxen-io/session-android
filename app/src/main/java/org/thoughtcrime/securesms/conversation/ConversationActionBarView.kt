@@ -21,7 +21,6 @@ import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.utilities.ExpirationUtil
 import org.session.libsession.utilities.modifyLayoutParams
 import org.session.libsession.utilities.recipients.Recipient
-import org.thoughtcrime.securesms.conversation.v2.utilities.MentionManagerUtilities
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.LokiAPIDatabase
 import org.thoughtcrime.securesms.util.DateUtils
@@ -78,7 +77,6 @@ class ConversationActionBarView @JvmOverloads constructor(
         binding.profilePictureView.layoutParams = resources.getDimensionPixelSize(
             if (recipient.isClosedGroupRecipient) R.dimen.medium_profile_picture_size else R.dimen.small_profile_picture_size
         ).let { LayoutParams(it, it) }
-        MentionManagerUtilities.populateUserPublicKeyCacheIfNeeded(threadId, context)
         update(recipient, openGroup, config)
     }
 

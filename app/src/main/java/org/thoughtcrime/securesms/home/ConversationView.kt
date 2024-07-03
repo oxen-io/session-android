@@ -103,7 +103,12 @@ class ConversationView : LinearLayout {
             R.drawable.ic_notifications_mentions
         }
         binding.muteIndicatorImageView.setImageResource(drawableRes)
-        binding.snippetTextView.text = highlightMentions(thread.getSnippet(), thread.threadId, context)
+        binding.snippetTextView.text = highlightMentions(
+            text = thread.getSnippet(),
+            formatOnly = true, // no styling here, only text formatting
+            threadID = thread.threadId,
+            context = context
+        )
         binding.snippetTextView.typeface = if (unreadCount > 0 && !thread.isRead) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
         binding.snippetTextView.visibility = if (isTyping) View.GONE else View.VISIBLE
         if (isTyping) {

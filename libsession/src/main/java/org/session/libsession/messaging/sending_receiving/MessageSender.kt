@@ -81,6 +81,15 @@ object MessageSender {
         }
     }
 
+    fun buildConfigMessageToSnode(destinationPubKey: String, message: SharedConfigurationMessage): SnodeMessage {
+        return SnodeMessage(
+            destinationPubKey,
+            Base64.encodeBytes(message.data),
+            ttl = message.ttl,
+            SnodeAPI.nowWithOffset
+        )
+    }
+
     // One-on-One Chats & Closed Groups
     @Throws(Exception::class)
     fun buildWrappedMessageToSnode(destination: Destination, message: Message, isSyncMessage: Boolean): SnodeMessage {

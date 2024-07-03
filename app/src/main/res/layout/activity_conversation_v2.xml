@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     android:focusable="false"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -13,6 +13,9 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/conversationRecyclerView"
+        app:layout_constraintStart_toStartOf="parent"
         android:background="?colorPrimary"
         app:contentInsetStart="0dp">
 
@@ -31,9 +34,11 @@
         android:focusable="false"
         android:id="@+id/conversationRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/typingIndicatorViewContainer"
-        android:layout_below="@id/toolbar" />
+        android:layout_height="0dp"
+        app:layout_constraintVertical_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/typingIndicatorViewContainer"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
 
     <org.thoughtcrime.securesms.conversation.v2.components.TypingIndicatorViewContainer
@@ -42,20 +47,27 @@
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:visibility="gone"
-        android:layout_above="@+id/textSendAfterApproval"
+        tools:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/conversationRecyclerView"
+        app:layout_constraintBottom_toTopOf="@+id/textSendAfterApproval"
         />
 
     <org.thoughtcrime.securesms.conversation.v2.input_bar.InputBar
         android:id="@+id/inputBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
+        tools:layout_height="60dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/messageRequestBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
     <org.thoughtcrime.securesms.conversation.v2.search.SearchBottomBar
         android:id="@+id/searchBottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:visibility="gone"/>
 
     <FrameLayout
@@ -75,11 +87,18 @@
         android:inflatedId="@+id/conversation_reaction_scrubber"
         android:layout="@layout/conversation_reaction_scrubber"/>
 
-    <FrameLayout
-        android:id="@+id/additionalContentContainer"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/conversation_mention_candidates"
+        android:clipToOutline="true"
+        android:contentDescription="@string/AccessibilityId_mentions_list"
+        tools:listitem="@layout/view_mention_candidate_v2"
+        android:background="@drawable/mention_candidate_view_background"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/conversationRecyclerView"/>
+        tools:visibility="gone"
+        app:layout_constraintHeight_max="176dp"
+        app:layout_constraintBottom_toBottomOf="@+id/conversationRecyclerView" />
 
     <LinearLayout
         android:id="@+id/attachmentOptionsContainer"
@@ -87,19 +106,19 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/small_spacing"
         android:elevation="8dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="60dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/inputBar"
+        android:layout_marginBottom="16dp"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <FrameLayout
             android:id="@+id/gifButtonContainer"
             android:layout_width="@dimen/input_bar_button_expanded_size"
             android:layout_height="@dimen/input_bar_button_expanded_size"
             android:contentDescription="@string/AccessibilityId_gif_button"
             android:alpha="0" />
 
-        <RelativeLayout
+        <FrameLayout
             android:id="@+id/documentButtonContainer"
             android:layout_marginTop="8dp"
             android:layout_width="@dimen/input_bar_button_expanded_size"
@@ -107,7 +126,7 @@
             android:contentDescription="@string/AccessibilityId_documents_folder"
             android:alpha="0" />
 
-        <RelativeLayout
+        <FrameLayout
             android:id="@+id/libraryButtonContainer"
             android:layout_marginTop="8dp"
             android:layout_width="@dimen/input_bar_button_expanded_size"
@@ -115,7 +134,7 @@
             android:contentDescription="@string/AccessibilityId_images_folder"
             android:alpha="0" />
 
-        <RelativeLayout
+        <FrameLayout
             android:id="@+id/cameraButtonContainer"
             android:layout_marginTop="8dp"
             android:layout_width="@dimen/input_bar_button_expanded_size"
@@ -129,22 +148,26 @@
         android:id="@+id/textSendAfterApproval"
         android:text="@string/ConversationActivity_send_after_approval"
         android:visibility="gone"
+        tools:visibility="visible"
         android:textAlignment="center"
         android:textColor="@color/classic_light_2"
         android:padding="22dp"
         android:textSize="12sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_above="@id/messageRequestBar"/>
+        tools:text="You'll be able to send"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/typingIndicatorViewContainer"
+        app:layout_constraintBottom_toTopOf="@+id/messageRequestBar" />
 
     <RelativeLayout
         android:id="@+id/scrollToBottomButton"
+        tools:visibility="visible"
         android:visibility="gone"
         android:layout_width="40dp"
         android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
-        android:layout_above="@+id/messageRequestBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/messageRequestBar"
         android:layout_alignWithParentIfMissing="true"
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="32dp">
@@ -197,14 +220,14 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="-12dp"
         android:visibility="gone"
-        android:layout_alignParentBottom="true" />
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/blockedBanner"
         android:contentDescription="@string/AccessibilityId_blocked_banner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         android:background="@color/destructive"
         android:visibility="gone"
         tools:visibility="visible">
@@ -214,20 +237,20 @@
             android:contentDescription="@string/AccessibilityId_blocked_banner_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_gravity="center"
             android:layout_margin="@dimen/medium_spacing"
             android:textColor="@color/white"
             android:textSize="@dimen/small_font_size"
             android:textStyle="bold"
             tools:text="Elon is blocked. Unblock them?" />
 
-    </RelativeLayout>
+    </FrameLayout>
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/outdatedBanner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/blockedBanner"
+        app:layout_constraintTop_toBottomOf="@+id/blockedBanner"
         android:background="@color/outdated_client_banner_background_color"
         android:visibility="gone"
         tools:visibility="visible">
@@ -237,14 +260,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:layout_centerInParent="true"
+            android:layout_gravity="center"
             android:layout_marginVertical="@dimen/very_small_spacing"
             android:layout_marginHorizontal="@dimen/medium_spacing"
             android:textColor="@color/black"
             android:textSize="@dimen/tiny_font_size"
             tools:text="This user's client is outdated, things may not work as expected" />
 
-    </RelativeLayout>
+    </FrameLayout>
 
     <TextView
         android:padding="@dimen/medium_spacing"
@@ -254,7 +277,7 @@
         android:id="@+id/placeholderText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/blockedBanner"
+        app:layout_constraintTop_toBottomOf="@+id/outdatedBanner"
         android:elevation="8dp"
         tools:text="@string/activity_conversation_empty_state_default"
         />
@@ -263,11 +286,12 @@
         android:id="@+id/messageRequestBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/inputBar"
+        app:layout_constraintBottom_toTopOf="@+id/inputBar"
+        app:layout_constraintTop_toBottomOf="@+id/textSendAfterApproval"
         android:layout_marginBottom="@dimen/large_spacing"
         android:orientation="vertical"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <TextView
             android:id="@+id/messageRequestBlock"
@@ -321,4 +345,4 @@
 
     </LinearLayout>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

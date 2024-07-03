@@ -1,28 +1,22 @@
 package org.thoughtcrime.securesms.audio;
 
-import android.annotation.TargetApi;
+
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.os.ParcelFileDescriptor;
-import androidx.annotation.NonNull;
-
-import org.session.libsession.utilities.MediaTypes;
-import org.session.libsignal.utilities.Log;
 import android.util.Pair;
-
+import androidx.annotation.NonNull;
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import org.session.libsession.utilities.MediaTypes;
+import org.session.libsession.utilities.Util;
+import org.session.libsignal.utilities.ListenableFuture;
+import org.session.libsignal.utilities.Log;
+import org.session.libsignal.utilities.SettableFuture;
+import org.session.libsignal.utilities.ThreadUtils;
 import org.thoughtcrime.securesms.providers.BlobProvider;
 import org.thoughtcrime.securesms.util.MediaUtil;
 
-import org.session.libsignal.utilities.ThreadUtils;
-import org.session.libsession.utilities.Util;
-import org.session.libsignal.utilities.ListenableFuture;
-import org.session.libsignal.utilities.SettableFuture;
-
-import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-
-@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class AudioRecorder {
 
   private static final String TAG = AudioRecorder.class.getSimpleName();
@@ -34,11 +28,16 @@ public class AudioRecorder {
   private AudioCodec audioCodec;
   private Uri        captureUri;
 
+  // Simple interface that allows us to provide a callback method to our `startRecording` method
+  public interface AudioMessageRecordingFinishedCallback {
+    void onAudioMessageRecordingFinished();
+  }
+
   public AudioRecorder(@NonNull Context context) {
     this.context = context;
   }
 
-  public void startRecording() {
+  public void startRecording(AudioMessageRecordingFinishedCallback callback) {
     Log.i(TAG, "startRecording()");
 
     executor.execute(() -> {
@@ -55,9 +54,11 @@ public class AudioRecorder {
                                  .forData(new ParcelFileDescriptor.AutoCloseInputStream(fds[0]), 0)
                                  .withMimeType(MediaTypes.AUDIO_AAC)
                                  .createForSingleSessionOnDisk(context, e -> Log.w(TAG, "Error during recording", e));
-        audioCodec = new AudioCodec();
 
+        audioCodec = new AudioCodec();
         audioCodec.start(new ParcelFileDescriptor.AutoCloseOutputStream(fds[1]));
+
+        callback.onAudioMessageRecordingFinished();
       } catch (IOException e) {
         Log.w(TAG, e);
       }

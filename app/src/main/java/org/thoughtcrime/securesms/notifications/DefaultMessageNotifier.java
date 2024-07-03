@@ -30,16 +30,26 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-
 import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.goterl.lazysodium.utils.KeyPair;
-
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import me.leolin.shortcutbadger.ShortcutBadger;
+import network.loki.messenger.R;
 import org.session.libsession.messaging.open_groups.OpenGroup;
 import org.session.libsession.messaging.sending_receiving.notifications.MessageNotifier;
 import org.session.libsession.messaging.utilities.SessionId;
@@ -56,7 +66,6 @@ import org.session.libsignal.utilities.Util;
 import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.contacts.ContactUtil;
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2;
-import org.thoughtcrime.securesms.conversation.v2.utilities.MentionManagerUtilities;
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities;
 import org.thoughtcrime.securesms.crypto.KeyPairUtilities;
 import org.thoughtcrime.securesms.database.LokiThreadDatabase;
@@ -73,21 +82,6 @@ import org.thoughtcrime.securesms.mms.SlideDeck;
 import org.thoughtcrime.securesms.service.KeyCachingService;
 import org.thoughtcrime.securesms.util.SessionMetaProtocol;
 import org.thoughtcrime.securesms.util.SpanUtil;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import me.leolin.shortcutbadger.ShortcutBadger;
-import network.loki.messenger.R;
 
 /**
  * Handles posting system notifications for new messages.
@@ -110,7 +104,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
     private volatile static       long               visibleThread                = -1;
     private volatile static       boolean            homeScreenVisible            = false;
-    private volatile static       long               lastDesktopActivityTimestamp = -1;
+    private volatile static       long               lastNotificationTimestamp    = -1;
     private volatile static       long               lastAudibleNotification      = -1;
     private          static final CancelableExecutor executor                     = new CancelableExecutor();
 
@@ -126,7 +120,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
     @Override
     public void setLastDesktopActivityTimestamp(long timestamp) {
-        lastDesktopActivityTimestamp = timestamp;
+        lastNotificationTimestamp = timestamp;
     }
 
     @Override
@@ -211,23 +205,22 @@ public class DefaultMessageNotifier implements MessageNotifier {
     @Override
     public void scheduleDelayedNotificationOrPassThroughToSpecificThreadAndSignal(@NonNull Context context, long threadId)
     {
-        // If we've notified within the last minute then schedule a DELAYED notification
-        // ACL - Is this what we really want to do? 1 notification per minute??????
-        if (System.currentTimeMillis() - lastDesktopActivityTimestamp < DESKTOP_ACTIVITY_PERIOD) {
+        // If we've notified within the last minute then schedule a DELAYED notification to prevent
+        // spamming the user with notifications..
+        long millisSinceLastNotification = System.currentTimeMillis() - lastNotificationTimestamp;
+        if (millisSinceLastNotification < DESKTOP_ACTIVITY_PERIOD) {
             Log.i(TAG, "Scheduling delayed notification...");
-            Log.w("[ACL]", "Scheduling delayed notification because we've notified within the last minute...");
             executor.execute(new DelayedNotification(context, threadId));
-        }
-        else
-        {
-            // We hit this `updateNotification` and then `BatchMessageReceiveJob` hits it AGAIN - so
-            // only update the notification if we haven't already been notified.
+        } else {
+            // ..otherwise we can create a notification right now.
+            // Note: We hit this `updateNotificationForSpecificThread` and then `BatchMessageReceiveJob`
+            // hits it AGAIN - so only update the notification if we haven't already been notified.
             MmsSmsDatabase mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase();
             int dbNotifiedCount = mmsSmsDatabase.getNotifiedCount(threadId);
             if (dbNotifiedCount == 0) {
                 updateNotificationForSpecificThread(context, threadId, true);
             } else {
-                Log.d(TAG, "Previous notification for thread " + threadId+ " - not re-notifying.");
+                Log.d(TAG, "Have already notified about thread " + threadId + " - not re-notifying.");
             }
         }
     }
@@ -239,15 +232,18 @@ public class DefaultMessageNotifier implements MessageNotifier {
         ThreadDatabase threads             = DatabaseComponent.get(context).threadDatabase();
         Recipient      recipient           = threads.getRecipientForThreadId(threadId);
 
-        if (!TextSecurePreferences.areNotificationsEnabled(context) || (recipient != null && recipient.isMuted()))
+        // Don't show notifications if they're disabled or there's a recipient that is muted
+        if (!TextSecurePreferences.areNotificationsEnabled(context) ||
+                (recipient != null && recipient.isMuted()))
         {
             return;
         }
 
+        // If the user is looking directly at the conversation or the home screen (where they'll see
+        // the snippet update) then we don't need to notify them - they can literally see the msg.
         boolean canAlreadySeeUpdate = thisThreadIsVisible || homeScreenVisible;
-
-        if (!canAlreadySeeUpdate || hasExistingNotifications(context)) {
-            Log.w("[ACL]", "We can't see this thread or home, or we already have a notification for this thread so opting to update notification - should signal?: " + signalTheUser);
+        if (!canAlreadySeeUpdate) { // ACL TRY THIS WITHOUT --> || hasExistingNotifications(context)) {
+            //Log.w("[ACL]", "We can't see this thread or home, or we already have a notification for this thread so opting to update notification - should signal?: " + signalTheUser);
             updateNotification(context, signalTheUser, 0);
         }
   }
@@ -265,57 +261,48 @@ public class DefaultMessageNotifier implements MessageNotifier {
   @Override
   public void updateNotification(@NonNull Context context, boolean shouldSignal, int reminderCount)
   {
-    Cursor telcoCursor = null;
+      try (Cursor telcoCursor = DatabaseComponent.get(context).mmsSmsDatabase().getUnread()) {
 
-    try {
-      telcoCursor = DatabaseComponent.get(context).mmsSmsDatabase().getUnread(); // TODO: add a notification specific lighter query here
-
-      // Don't show notifications if the user hasn't seen the welcome screen yet
-      if ((telcoCursor == null || telcoCursor.isAfterLast()) || !TextSecurePreferences.hasSeenWelcomeScreen(context))
-      {
-        updateBadge(context, 0);
-        cancelActiveNotifications(context);
-        clearReminder(context);
-        return;
-      }
-
-      NotificationState notificationState = constructNotificationState(context, telcoCursor);
-
-      // If we were asked to audibly signal but the minimum audible period hasn't elapsed then flip
-      // our flag so that we don't make a sound
-      if (shouldSignal && (System.currentTimeMillis() - lastAudibleNotification) < MIN_AUDIBLE_PERIOD_MILLIS) {
-        shouldSignal = false;
-      }
-
-      // If we're going to signal then update the last audible notification time to now
-      if (shouldSignal) {
-        lastAudibleNotification = System.currentTimeMillis();
-      }
-
-      try {
-        if (notificationState.hasMultipleThreads()) {
-          for (long threadId : notificationState.getThreads()) {
-            sendSingleThreadNotification(context, new NotificationState(notificationState.getNotificationsForThread(threadId)), false, true);
+          // Don't show notifications if the user hasn't seen the welcome screen yet
+          if ((telcoCursor == null || telcoCursor.isAfterLast()) || !TextSecurePreferences.hasSeenWelcomeScreen(context)) {
+              updateBadge(context, 0);
+              cancelActiveNotifications(context);
+              clearReminder(context);
+              return;
           }
-          sendMultipleThreadNotification(context, notificationState, shouldSignal);
-        } else if (notificationState.getMessageCount() > 0) {
-          // If we do NOT have multiple threads and have at least one message then notify
-          sendSingleThreadNotification(context, notificationState, shouldSignal, false);
-        } else {
-          // If we do NOT have multiple threads and do NOT have at least one message
-          cancelActiveNotifications(context);
-        }
-      } catch (Exception e) {
-        Log.e(TAG, "Error creating notification", e);
+
+          NotificationState notificationState = constructNotificationState(context, telcoCursor);
+
+          // If we were asked to audibly signal but the minimum audible period hasn't elapsed then flip
+          // our flag so that we don't make a sound.
+          long millisSinceLastNotification = System.currentTimeMillis() - lastNotificationTimestamp;
+          boolean haveAlreadyNotifiedRecently = millisSinceLastNotification < MIN_AUDIBLE_PERIOD_MILLIS;
+          if (shouldSignal && haveAlreadyNotifiedRecently) { shouldSignal = false; }
+
+          // If we're going to signal the user then update the last audible notification time to now
+          if (shouldSignal) { lastAudibleNotification = System.currentTimeMillis(); }
+
+          try {
+              if (notificationState.hasMultipleThreads()) {
+                  for (long threadId : notificationState.getThreads()) {
+                      sendSingleThreadNotification(context, new NotificationState(notificationState.getNotificationsForThread(threadId)), false, true);
+                  }
+                  sendMultipleThreadNotification(context, notificationState, shouldSignal);
+              } else if (notificationState.getMessageCount() > 0) {
+                  // If we do NOT have multiple threads and have at least one message then notify
+                  sendSingleThreadNotification(context, notificationState, shouldSignal, false);
+              } else {
+                  // If we do NOT have multiple threads and do NOT have at least one message
+                  cancelActiveNotifications(context);
+              }
+          } catch (Exception e) {
+              Log.e(TAG, "Error creating notification", e);
+          }
+          cancelOrphanedNotifications(context, notificationState);
+          updateBadge(context, notificationState.getMessageCount());
+
+          if (shouldSignal) { scheduleReminder(context, reminderCount); }
       }
-      cancelOrphanedNotifications(context, notificationState);
-      updateBadge(context, notificationState.getMessageCount());
-
-      if (shouldSignal) { scheduleReminder(context, reminderCount); }
-
-    } finally {
-      if (telcoCursor != null) telcoCursor.close();
-    }
   }
 
   private void sendSingleThreadNotification(@NonNull  Context context,
@@ -353,7 +340,6 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
     builder.setThread(notifications.get(0).getRecipient());
     builder.setMessageCount(notificationState.getMessageCount());
-    MentionManagerUtilities.INSTANCE.populateUserPublicKeyCacheIfNeeded(notifications.get(0).getThreadId(),context);
 
     // TODO: Removing highlighting mentions in the notification because this context is the libsession one which
     // TODO: doesn't have access to the `R.attr.message_sent_text_color` and `R.attr.message_received_text_color`
@@ -456,21 +442,40 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
     while(iterator.hasPrevious()) {
       NotificationItem item = iterator.previous();
-      builder.addMessageBody(item.getIndividualRecipient(), item.getRecipient(),
-              MentionUtilities.highlightMentions(item.getText(), item.getThreadId(), context));
+
+      CharSequence body = MentionUtilities.highlightMentions(
+              item.getText() != null ? item.getText() : "",
+              false,
+              false,
+              true, // no styling here, only text formatting
+              item.getThreadId(),
+              context
+      );
+
+      builder.addMessageBody(item.getIndividualRecipient(), item.getRecipient(), body);
     }
 
     if (signal) {
       builder.setAlarms(notificationState.getRingtone(context), notificationState.getVibrate());
-      builder.setTicker(notifications.get(0).getIndividualRecipient(),
-              MentionUtilities.highlightMentions(notifications.get(0).getText(), notifications.get(0).getThreadId(), context));
+      CharSequence text = notifications.get(0).getText();
+
+      CharSequence body = MentionUtilities.highlightMentions(
+              text != null ? text : "",
+              false,
+              false,
+              true, // no styling here, only text formatting
+              notifications.get(0).getThreadId(),
+              context
+      );
+
+      builder.setTicker(notifications.get(0).getIndividualRecipient(), body);
     }
 
     builder.putStringExtra(LATEST_MESSAGE_ID_TAG, messageIdTag);
 
     Notification notification = builder.build();
     NotificationManagerCompat.from(context).notify(SUMMARY_NOTIFICATION_ID, notification);
-    Log.i(TAG, "Posted notification. " + notification);
+    Log.i(TAG, "Posted notification: " + notification);
   }
 
   private NotificationState constructNotificationState(@NonNull  Context context, @NonNull  Cursor cursor)
@@ -537,7 +542,8 @@ public class DefaultMessageNotifier implements MessageNotifier {
             continue;
         }
 
-        if (isMessageRequest) {
+      // ACL: This entire block of spaghetti is evil and needs to be cleaned up
+      if (isMessageRequest) {
         body = SpanUtil.italic(context.getString(R.string.message_requests_notification));
       } else if (KeyCachingService.isLocked(context)) {
         body = SpanUtil.italic(context.getString(R.string.MessageNotifier_locked_message));
@@ -564,8 +570,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
 
 
-      if (!sender.isMuted()) {
-        if (sender != null && sender.notifyType == RecipientDatabase.NOTIFY_TYPE_MENTIONS) {
+        if (sender.notifyType == RecipientDatabase.NOTIFY_TYPE_MENTIONS) {
           // check if mentioned here
           boolean isQuoteMentioned = false;
           if (record instanceof MmsMessageRecord) {
@@ -597,7 +602,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
             notificationState.addNotification(new NotificationItem(id, mms, reactor, reactor, sender, threadId, emoji, reaction.getDateSent(), slideDeck));
           }
         }
-      }
+
     }
 
     reader.close();
