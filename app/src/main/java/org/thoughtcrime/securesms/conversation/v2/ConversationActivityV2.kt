@@ -1809,8 +1809,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         }
     }
 
-    // Method to check if we have network access and a Session Node path
-    private fun networkAndSessionNodePathIsValid(): Boolean {
+    private fun informUserIfNetworkOrSessionNodePathIsInvalid() {
 
         // Check that we have a valid network network connection & inform the user if not
         val connectedToInternet = NetworkChangeReceiver.haveValidNetworkConnection(applicationContext)
@@ -1818,7 +1817,6 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
         {
             // TODO: Replace hard-coded string with string resource when SES-1486 is addressed
             Toast.makeText(applicationContext, "Cannot send voice message - no network connection.", Toast.LENGTH_LONG).show()
-            return false
         }
 
         // Check that we have a suite of Session Nodes to route through.
@@ -1833,10 +1831,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
                 "Cannot send voice message - bad Session Node path.",
                 Toast.LENGTH_LONG)
                 .show()
-            return false
         }
-
-        return true
     }
 
     override fun sendVoiceMessage() {
@@ -1865,7 +1860,8 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             return
         }
 
-        // Note: We could return here if `!networkAndSessionNodePathIsValid()` - but instead we'll try
+        informUserIfNetworkOrSessionNodePathIsInvalid()
+        // Note: We could return here if there was a network or node path issue, but instead we'll try
         // our best to send the voice message even if it might fail - because in that case it'll get put
         // into the draft database and can be retried when we regain network connectivity and a working
         // node path.
