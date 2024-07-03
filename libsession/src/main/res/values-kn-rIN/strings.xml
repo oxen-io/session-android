@@ -9,7 +9,6 @@
     <!-- AbstractNotificationBuilder -->
     <string name="messageNew">ಹೊಸ ಸಂದೇಶ</string>
     <!-- AlbumThumbnailView -->
-    <string name="AlbumThumbnailView_plus">\+%d</string>
     <!-- ApplicationPreferencesActivity -->
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->

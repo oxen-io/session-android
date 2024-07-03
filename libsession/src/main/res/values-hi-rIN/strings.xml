@@ -9,7 +9,6 @@
     <!-- AbstractNotificationBuilder -->
     <string name="messageNew">नया सन्देश</string>
     <!-- AlbumThumbnailView -->
-    <string name="AlbumThumbnailView_plus">\+%d</string>
     <!-- ApplicationPreferencesActivity -->
     <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
         <item quantity="one">%d संदेश प्रति बातचीत</item>

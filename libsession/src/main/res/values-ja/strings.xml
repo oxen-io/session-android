@@ -9,7 +9,6 @@
     <!-- AbstractNotificationBuilder -->
     <string name="messageNew">新着メッセージ</string>
     <!-- AlbumThumbnailView -->
-    <string name="AlbumThumbnailView_plus">\+%d</string>
     <!-- ApplicationPreferencesActivity -->
     <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
         <item quantity="other">会話ごとに%d件のメッセージ</item>

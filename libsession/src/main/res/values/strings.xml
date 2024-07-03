@@ -35,7 +35,6 @@
     </plurals>
 
     <!-- Old naming convention strings that need to me renamed to their modern equivalents and have any % substitution modified to use {braces} -->
-    <string name="AlbumThumbnailView_plus">\+%d</string>
     <string name="BucketedThreadMedia_This_week">This week</string>
     <string name="BucketedThreadMedia_Today">Today</string>
     <string name="BucketedThreadMedia_Yesterday">Yesterday</string>
@@ -577,7 +576,7 @@
     <string name="messageStatusSyncing">Syncing</string>
     <string name="messageUnread">Unread messages</string>
     <string name="messageVoice">Voice Message</string>
-    <string name="messageVoiceErrorShort">Tap and hold to record a voice message.</string>
+    <string name="messageVoiceErrorShort">Hold to record a voice message.</string>
     <string name="messageVoiceSlideToCancel">Slide to Cancel</string>
     <string name="message_details_header__disappears">Disappears</string>
     <string name="message_details_header__file_id">File Id:</string>
@@ -812,12 +811,4 @@
     <string name="window">Window</string>
     <string name="yes">Yes</string>
     <string name="you">You</string>
-
-    <!--
-    <string name="clearDataErrorDescriptionGeneric">An unknown error occurred and your data was not deleted. Do you want to delete your data from just this device instead?</string>
-    <string name="clearDevice">Clear Device</string>
-    <string name="clearDeviceOnly">Clear device only</string>
-    <string name="clearDeviceAndNetwork">Clear device and network</string>
-    -->
-
 </resources>

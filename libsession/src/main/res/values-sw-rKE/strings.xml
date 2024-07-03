@@ -8,7 +8,6 @@
     <!-- AbstractNotificationBuilder -->
     <string name="messageNew">Ujumbe mpya</string>
     <!-- AlbumThumbnailView -->
-    <string name="AlbumThumbnailView_plus">/+ 1%d</string>
     <!-- ApplicationPreferencesActivity -->
     <!-- DraftDatabase -->
     <!-- AttachmentManager -->

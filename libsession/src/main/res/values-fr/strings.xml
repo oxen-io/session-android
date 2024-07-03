@@ -20,7 +20,6 @@
     <!-- AbstractNotificationBuilder -->
     <string name="messageNew">Nouveau message</string>
     <!-- AlbumThumbnailView -->
-    <string name="AlbumThumbnailView_plus">\+%d</string>
     <!-- ApplicationPreferencesActivity -->
     <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
         <item quantity="one">%d message par conversation</item>

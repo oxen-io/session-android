@@ -16,6 +16,9 @@ import network.loki.messenger.databinding.AlbumThumbnailViewBinding
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.session.libsession.utilities.recipients.Recipient
+import com.squareup.phrase.Phrase
+
+import org.session.util.StringSubstitutionConstants.COUNT_KEY
 import org.thoughtcrime.securesms.MediaPreviewActivity
 import org.thoughtcrime.securesms.components.CornerMask
 import org.thoughtcrime.securesms.conversation.v2.utilities.ThumbnailView
@@ -97,7 +100,10 @@ class AlbumThumbnailView : RelativeLayout {
             binding.albumCellContainer.findViewById<TextView>(R.id.album_cell_overflow_text)?.let { overflowText ->
                 // overflowText will be null if !overflowed
                 overflowText.isVisible = overflowed // more than max album size
-                overflowText.text = context.getString(R.string.AlbumThumbnailView_plus, slides.size - MAX_ALBUM_DISPLAY_SIZE)
+                val txt = Phrase.from(context, R.string.andMore)
+                    .put(COUNT_KEY, slides.size - MAX_ALBUM_DISPLAY_SIZE)
+                    .format()
+                overflowText.text = txt
             }
             this.slideSize = slides.size
         }

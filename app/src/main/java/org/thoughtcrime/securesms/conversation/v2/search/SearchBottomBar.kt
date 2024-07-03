@@ -25,6 +25,31 @@ class SearchBottomBar : LinearLayout {
         binding = ViewSearchBottomBarBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
+    fun setData(position: Int, count: Int) = with(binding) {
+        searchProgressWheel.visibility = GONE
+        searchUp.setOnClickListener { v: View? ->
+            if (eventListener != null) {
+                eventListener!!.onSearchMoveUpPressed()
+            }
+        }
+        searchDown.setOnClickListener { v: View? ->
+            if (eventListener != null) {
+                eventListener!!.onSearchMoveDownPressed()
+            }
+        }
+        if (count > 0) {
+            searchPosition.text = Phrase.from(context, R.string.searchMatches)
+                .put(COUNT_KEY, position + 1)
+                .put(TOTAL_COUNT_KEY, count)
+                .format()
+        } else {
+            searchPosition.text = ""
+        }
+        setViewEnabled(searchUp, position < count - 1)
+        setViewEnabled(searchDown, position > 0)
+    }
+
+    /*
     fun setData(position: Int, count: Int, query: String?) = with(binding) {
         searchProgressWheel.visibility = GONE
         searchUp.setOnClickListener { v: View? ->
@@ -60,6 +85,7 @@ class SearchBottomBar : LinearLayout {
         setViewEnabled(searchUp, position < count - 1)
         setViewEnabled(searchDown, position > 0)
     }
+    */
 
     fun showLoading() {
         binding.searchProgressWheel.visibility = VISIBLE

@@ -9,7 +9,6 @@
     <!-- AbstractNotificationBuilder -->
     <string name="messageNew">新消息</string>
     <!-- AlbumThumbnailView -->
-    <string name="AlbumThumbnailView_plus">\+%d</string>
     <!-- ApplicationPreferencesActivity -->
     <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
         <item quantity="other">每个会话限制 %d 条消息</item>

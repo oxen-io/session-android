@@ -9,7 +9,6 @@
     <!-- AbstractNotificationBuilder -->
     <string name="messageNew">Nová zpráva</string>
     <!-- AlbumThumbnailView -->
-    <string name="AlbumThumbnailView_plus">\+ %d</string>
     <!-- ApplicationPreferencesActivity -->
     <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
         <item quantity="one">%d zpráva na konverzaci</item>
