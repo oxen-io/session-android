@@ -12,9 +12,7 @@
         android:id="@+id/rail_item_image"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_gravity="center"
-        android:background="@drawable/mediarail_media_outline"
-        app:thumbnail_radius="5dp"/>
+        android:layout_gravity="center"/>
 
     <ImageView
         android:id="@+id/rail_item_outline"

@@ -39,7 +39,13 @@ class MessageRequestView : LinearLayout {
         binding.displayNameTextView.text = senderDisplayName
         binding.timestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), thread.date)
         val rawSnippet = thread.getDisplayBody(context)
-        val snippet = highlightMentions(rawSnippet, thread.threadId, context)
+        val snippet = highlightMentions(
+            text = rawSnippet,
+            formatOnly = true, // no styling here, only text formatting
+            threadID = thread.threadId,
+            context = context
+        )
+
         binding.snippetTextView.text = snippet
 
         post {

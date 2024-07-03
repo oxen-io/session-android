@@ -28,7 +28,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityHomeBinding
-import network.loki.messenger.libsession_util.ConfigBase
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -338,8 +337,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     }
 
     private fun updateLegacyConfigView() {
-        binding.configOutdatedView.isVisible = ConfigBase.isNewConfigEnabled(textSecurePreferences.hasForcedNewConfig(), SnodeAPI.nowWithOffset)
-                && textSecurePreferences.getHasLegacyConfig()
+        binding.configOutdatedView.isVisible = textSecurePreferences.getHasLegacyConfig()
     }
 
     override fun onResume() {

@@ -37,6 +37,7 @@ class BackgroundGroupAddJob(val joinUrl: String): Job {
                 delegate?.handleJobFailed(this, dispatcherName, DuplicateGroupException())
                 return
             }
+
             storage.addOpenGroup(openGroup.joinUrl())
             storage.onOpenGroupAdded(openGroup.server, openGroup.room)
         } catch (e: Exception) {

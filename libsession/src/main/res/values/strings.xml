@@ -11,7 +11,6 @@
     <string name="disappearingMessagesUpdatedYours">You set your messages to disappear {time} after they have been {disappearing_messages_type}.</string>
 
     <!-- RecipientProvider -->
-    <string name="groupUnnamed">Unnamed group</string>
 
     <!-- Everything in this section is used by the app but missing from the CrowdIn translations as of 2024-03-14 -ACL -->
     <!-- ======================================================================================= -->
@@ -483,6 +482,7 @@
     <string name="groupRemovedYou">You were removed from <b>{group_name}</b>.</string>
     <string name="groupSetDisplayPicture">Set Group Display Picture</string>
     <string name="groupUnknown">Unknown Group</string>
+    <string name="groupUnnamed">Unnamed group</string>
     <string name="groupUpdated">Group updated</string>
     <string name="helpFAQ">FAQ</string>
     <string name="helpHelpUsTranslateSession">Help us translate {app_name}</string>
@@ -812,4 +812,12 @@
     <string name="window">Window</string>
     <string name="yes">Yes</string>
     <string name="you">You</string>
+
+    <!--
+    <string name="clearDataErrorDescriptionGeneric">An unknown error occurred and your data was not deleted. Do you want to delete your data from just this device instead?</string>
+    <string name="clearDevice">Clear Device</string>
+    <string name="clearDeviceOnly">Clear device only</string>
+    <string name="clearDeviceAndNetwork">Clear device and network</string>
+    -->
+
 </resources>
