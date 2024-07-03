@@ -1865,13 +1865,10 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
             return
         }
 
-        // Put up a relevant Toast if we can see any obvious network issues
-        if (!networkAndSessionNodePathIsValid()) {
-            // We could return here - but instead we'll try our best to send (which will fail) BUT it
-            // will put the voice message into the draft database - at which point if we (for example)
-            // close and re-open the app and this time it has network access AND a working node path
-            // it will retry to send the voice message and succeed!
-        }
+        // Note: We could return here if `!networkAndSessionNodePathIsValid()` - but instead we'll try
+        // our best to send the voice message even if it might fail - because in that case it'll get put
+        // into the draft database and can be retried when we regain network connectivity and a working
+        // node path.
 
         // Attempt to send it the voice message
         future.addListener(object : ListenableFuture.Listener<Pair<Uri, Long>> {
