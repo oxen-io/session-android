@@ -171,6 +171,7 @@ import org.thoughtcrime.securesms.util.ActivityDispatcher
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.MediaUtil
+import org.thoughtcrime.securesms.util.NetworkUtils
 import org.thoughtcrime.securesms.util.SaveAttachmentTask
 import org.thoughtcrime.securesms.util.SimpleTextWatcher
 import org.thoughtcrime.securesms.util.isScrolledToBottom
@@ -1812,7 +1813,7 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     private fun informUserIfNetworkOrSessionNodePathIsInvalid() {
 
         // Check that we have a valid network network connection & inform the user if not
-        val connectedToInternet = NetworkChangeReceiver.haveValidNetworkConnection(applicationContext)
+        val connectedToInternet = NetworkUtils.haveValidNetworkConnection(applicationContext)
         if (!connectedToInternet)
         {
             // TODO: Replace hard-coded string with string resource when SES-1486 is addressed
