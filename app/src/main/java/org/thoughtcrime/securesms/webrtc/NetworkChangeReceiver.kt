@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms.webrtc
 
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Context.CONNECTIVITY_SERVICE
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
@@ -10,9 +11,18 @@ import org.session.libsignal.utilities.Log
 
 class NetworkChangeReceiver(private val onNetworkChangedCallback: (Boolean)->Unit) {
 
+    companion object {
+
+        // Method to check if a valid Internet connection is available or not
+        fun haveValidNetworkConnection(context: Context) : Boolean {
+            val cm = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+            return cm.activeNetwork != null
+        }
+    }
+
     private val networkList: MutableSet<Network> = mutableSetOf()
 
-    val broadcastDelegate = object: BroadcastReceiver() {
+    private val broadcastDelegate = object: BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             receiveBroadcast(context, intent)
         }
@@ -41,14 +51,9 @@ class NetworkChangeReceiver(private val onNetworkChangedCallback: (Boolean)->Uni
     }
 
     fun receiveBroadcast(context: Context, intent: Intent) {
-        val connected = context.isConnected()
+        val connected = haveValidNetworkConnection(context)
         Log.i("Loki", "received broadcast, network connected: $connected")
         onNetworkChangedCallback(connected)
-    }
-
-    fun Context.isConnected() : Boolean {
-        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        return cm.activeNetwork != null
     }
 
     fun register(context: Context) {

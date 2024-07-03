@@ -11,8 +11,6 @@ import android.content.res.Resources
 import android.database.Cursor
 import android.graphics.Rect
 import android.graphics.Typeface
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Build
@@ -68,8 +66,6 @@ import network.loki.messenger.libsession_util.util.ExpiryMode
 import nl.komponents.kovenant.ui.successUi
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
-import org.session.libsession.messaging.jobs.AttachmentDownloadJob
-import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.messages.applyExpiryMode
 import org.session.libsession.messaging.messages.control.DataExtractionNotification
@@ -182,6 +178,7 @@ import org.thoughtcrime.securesms.util.isScrolledToWithin30dpOfBottom
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
 import org.thoughtcrime.securesms.util.toPx
+import org.thoughtcrime.securesms.webrtc.NetworkChangeReceiver
 import java.lang.ref.WeakReference
 import java.util.Locale
 import java.util.concurrent.ExecutionException
@@ -1815,10 +1812,9 @@ class ConversationActivityV2 : PassphraseRequiredActionBarActivity(), InputBarDe
     // Method to check if we have network access and a Session Node path
     private fun networkAndSessionNodePathIsValid(): Boolean {
 
-        // Check that we have any network connection at all
-        val connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-        if (networkCapabilities == null || !networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET))
+        // Check that we have a valid network network connection & inform the user if not
+        val connectedToInternet = NetworkChangeReceiver.haveValidNetworkConnection(applicationContext)
+        if (!connectedToInternet)
         {
             // TODO: Replace hard-coded string with string resource when SES-1486 is addressed
             Toast.makeText(applicationContext, "Cannot send voice message - no network connection.", Toast.LENGTH_LONG).show()
