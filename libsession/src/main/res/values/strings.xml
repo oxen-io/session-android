@@ -52,8 +52,6 @@
     <string name="KeyboardPagerfragment_clear_search_entry">Clear search entry</string>
     <string name="MediaPickerActivity_send_to">Send to %s</string>
     <string name="ReactionsConversationView_plus">+%1$d</string>
-    <string name="showLess">Show Less</string>
-    <string name="Unblock_dialog__title_single">Unblock %s</string>
 
 
     <!-- Strings with modern names and {braced} substitution markers-->
@@ -774,6 +772,7 @@
     <string name="shareToSession">Share to Session</string>
     <string name="show">Show</string>
     <string name="showAll">Show All</string>
+    <string name="showLess">Show Less</string>
     <string name="stickers">Stickers</string>
     <string name="supportGoTo">Go to Support Page</string>
     <string name="tryAgain">Try Again</string>

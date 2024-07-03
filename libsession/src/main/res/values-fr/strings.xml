@@ -303,7 +303,6 @@
     <string name="KeyboardPagerfragment_back_to_emoji">Retour à l\'émoticône</string>
     <string name="KeyboardPagerfragment_clear_search_entry">Effacer la recherche</string>
     <string name="appearanceAutoDarkMode">Thème sombre automatique</string>
-    <string name="Unblock_dialog__title_single">Débloquer %s</string>
     <plurals name="Unblock_dialog__message_multiple_overflow">
         <item quantity="one">et %d autre</item>
         <item quantity="other">et %d autres</item>
