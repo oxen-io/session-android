@@ -116,10 +116,9 @@ class AlbumThumbnailView : RelativeLayout {
 
     // endregion
 
-
     fun layoutRes(slideCount: Int) = when (slideCount) {
-        1 -> R.layout.album_thumbnail_1 // single
-        2 -> R.layout.album_thumbnail_2// two sidebyside
+        1 -> R.layout.album_thumbnail_1    // single
+        2 -> R.layout.album_thumbnail_2    // two side-by-side
         else -> R.layout.album_thumbnail_3 // three stacked with additional text
     }
 
