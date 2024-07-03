@@ -284,7 +284,7 @@
     <string name="messageRequestsNew">Vous avez une nouvelle demande de message</string>
     <string name="callsInProgress">Appel en cours</string>
     <string name="callsEnd">Raccrocher</string>
-    <string name="WebRtcCallActivity_Session_Call">Appel Session</string>
+    <string name="callsSessionCall">Appel Session</string>
     <string name="callsReconnecting">Reconnexion…</string>
     <string name="dismiss">Rejeter</string>
     <string name="appearancePrimaryColor">Couleur principale</string>

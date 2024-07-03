@@ -266,7 +266,7 @@
     <string name="messageRequestsNew">شما درخواست پیام جدیدی دارید</string>
     <string name="callsInProgress">در حال تماس...</string>
     <string name="callsEnd">پایان تماس</string>
-    <string name="WebRtcCallActivity_Session_Call">تماس Session</string>
+    <string name="callsSessionCall">تماس Session</string>
     <string name="callsReconnecting">در حال اتصال دوباره...</string>
     <string name="dismiss">رد کردن</string>
     <string name="appearancePrimaryColor">رنگ اولیه</string>

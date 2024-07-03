@@ -56,7 +56,7 @@
     <string name="ReactionsConversationView_plus">+%1$d</string>
     <string name="showLess">Show Less</string>
     <string name="Unblock_dialog__title_single">Unblock %s</string>
-    <string name="WebRtcCallActivity_Session_Call">Session Call</string>
+
 
     <!-- Strings with modern names and {braced} substitution markers-->
     <string name="andMore">+{count}</string>
@@ -217,6 +217,7 @@
     <string name="callsPermissionsRequiredDescription">You can enable the \"Voice and Video Calls\" permission in Privacy Settings.</string>
     <string name="callsReconnecting">Reconnecting…</string>
     <string name="callsRinging">Ringing...</string>
+    <string name="callsSessionCall">Session Call</string>
     <string name="callsSettings">Calls (Beta)</string>
     <string name="callsVoiceAndVideo">Voice and Video Calls</string>
     <string name="callsVoiceAndVideoBeta">Voice and Video Calls (Beta)</string>
