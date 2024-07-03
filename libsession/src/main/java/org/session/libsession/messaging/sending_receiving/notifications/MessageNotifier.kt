@@ -6,7 +6,7 @@ import org.session.libsession.utilities.recipients.Recipient
 interface MessageNotifier {
     fun setHomeScreenVisible(isVisible: Boolean)
     fun setVisibleThread(threadId: Long)
-    fun setLastDesktopActivityTimestamp(timestamp: Long)
+    fun setLastNotificationTimestamp(timestamp: Long)
     fun notifyMessageDeliveryFailed(context: Context?, recipient: Recipient?, threadId: Long)
     fun cancelDelayedNotifications()
     fun updateNotificationWithoutSignalingAndResetReminderCount(context: Context)

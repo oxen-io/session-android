@@ -35,7 +35,7 @@ public class OptimizedMessageNotifier implements MessageNotifier {
   }
 
   @Override
-  public void setLastDesktopActivityTimestamp(long timestamp) { wrapped.setLastDesktopActivityTimestamp(timestamp);}
+  public void setLastNotificationTimestamp(long timestamp) { wrapped.setLastNotificationTimestamp(timestamp);}
 
   @Override
   public void notifyMessageDeliveryFailed(Context context, Recipient recipient, long threadId) {

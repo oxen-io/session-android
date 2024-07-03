@@ -87,7 +87,6 @@ import org.thoughtcrime.securesms.util.SpanUtil;
  * Handles posting system notifications for new messages.
  * @author Moxie Marlinspike
  */
-
 public class DefaultMessageNotifier implements MessageNotifier {
 
     private static final String TAG = DefaultMessageNotifier.class.getSimpleName();
@@ -95,11 +94,17 @@ public class DefaultMessageNotifier implements MessageNotifier {
     public static final  String EXTRA_REMOTE_REPLY        = "extra_remote_reply";
     public static final  String LATEST_MESSAGE_ID_TAG     = "extra_latest_message_id";
 
-    private static final int    FOREGROUND_ID              = 313399;
-    private static final int    SUMMARY_NOTIFICATION_ID    = 1338;
+    // Arbitrary IDs for various types of notifications
+    private static final int    FOREGROUND_ID             = 313399;
+    private static final int    SUMMARY_NOTIFICATION_ID   = 1338;
     private static final int    PENDING_MESSAGES_ID       = 1111;
+
     private static final String NOTIFICATION_GROUP        = "messages";
+
+    // Don't make a notification sound more often than once every five seconds
     private static final long   MIN_AUDIBLE_PERIOD_MILLIS = TimeUnit.SECONDS.toMillis(5);
+
+    // Don't ping the user about notifications more than once per minute
     private static final long   DESKTOP_ACTIVITY_PERIOD   = TimeUnit.MINUTES.toMillis(1);
 
     private volatile static       long               visibleThread                = -1;
@@ -119,7 +124,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
     }
 
     @Override
-    public void setLastDesktopActivityTimestamp(long timestamp) {
+    public void setLastNotificationTimestamp(long timestamp) {
         lastNotificationTimestamp = timestamp;
     }
 
@@ -152,18 +157,23 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
     private void cancelActiveNotifications(@NonNull Context context) {
         NotificationManager notifications = ServiceUtil.getNotificationManager(context);
-        boolean hasNotifications = notifications.getActiveNotifications().length > 0;
+
+        // Cancel the summary notification..
         notifications.cancel(SUMMARY_NOTIFICATION_ID);
 
-        try {
-            StatusBarNotification[] activeNotifications = notifications.getActiveNotifications();
-            for (StatusBarNotification activeNotification : activeNotifications) {
-                notifications.cancel(activeNotification.getId());
+        // ..then should we have any other notifications cancel each one individually.
+        // Note:
+        StatusBarNotification[] activeNotifications = notifications.getActiveNotifications();
+        boolean haveActiveNotifications = activeNotifications.length > 0;
+        if (haveActiveNotifications) {
+            try {
+                for (StatusBarNotification activeNotification : activeNotifications) {
+                    notifications.cancel(activeNotification.getId());
+                }
+            } catch (Throwable e) {
+                Log.w(TAG, e);
+                notifications.cancelAll();
             }
-        } catch (Throwable e) {
-            // XXX Appears to be a ROM bug, see #6043
-            Log.w(TAG, e);
-            notifications.cancelAll();
         }
     }
 
@@ -324,6 +334,9 @@ public class DefaultMessageNotifier implements MessageNotifier {
     String                             messageIdTag   = String.valueOf(notifications.get(0).getTimestamp());
 
     NotificationManager notificationManager = ServiceUtil.getNotificationManager(context);
+
+    // Notifications can be bundled together in Android R (API 30) and above - so if that's the case
+    // and we already have
     for (StatusBarNotification notification: notificationManager.getActiveNotifications()) {
       if ( (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && notification.isAppGroup() == bundled)
               && messageIdTag.equals(notification.getNotification().extras.getString(LATEST_MESSAGE_ID_TAG))) {
@@ -331,15 +344,26 @@ public class DefaultMessageNotifier implements MessageNotifier {
       }
     }
 
+    // Set when this notification occurred so that notifications can be sorted by date
     long timestamp = notifications.get(0).getTimestamp();
     if (timestamp != 0) builder.setWhen(timestamp);
 
     builder.putStringExtra(LATEST_MESSAGE_ID_TAG, messageIdTag);
 
     CharSequence text = notifications.get(0).getText();
+    CharSequence body = MentionUtilities.highlightMentions(
+              text != null ? text : "",
+              false,
+              false,
+              true, // no styling here, only text formatting
+              notifications.get(0).getThreadId(),
+              context
+    );
 
     builder.setThread(notifications.get(0).getRecipient());
     builder.setMessageCount(notificationState.getMessageCount());
+
+
 
     // TODO: Removing highlighting mentions in the notification because this context is the libsession one which
     // TODO: doesn't have access to the `R.attr.message_sent_text_color` and `R.attr.message_received_text_color`
@@ -348,16 +372,8 @@ public class DefaultMessageNotifier implements MessageNotifier {
     // TODO: be using the SYSTEM theme.
     builder.setPrimaryMessageBody(recipient,
                                   notifications.get(0).getIndividualRecipient(),
-                                  text == null ? "" : text,
+                                  text != null ? body : "",
                                   notifications.get(0).getSlideDeck());
-
-            //<<<<<<< HEAD
-            //MentionUtilities.highlightMentions(text == null ? "" : text,
-            //        notifications.get(0).getThreadId(),
-            //        context),
-            //notifications.get(0).getSlideDeck());
-
-          //MentionUtilities.highlightMentions(text == null ? "" : text, notifications.get(0).getThreadId(), context), // Removing hightlighting mentions -ACL
 
     builder.setContentIntent(notifications.get(0).getPendingIntent(context));
     builder.setDeleteIntent(notificationState.getDeleteIntent(context));
