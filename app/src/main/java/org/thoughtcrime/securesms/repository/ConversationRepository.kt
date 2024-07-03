@@ -58,6 +58,7 @@ interface ConversationRepository {
     fun deleteLocally(recipient: Recipient, message: MessageRecord)
     fun deleteAllLocalMessagesInThreadFromSenderOfMessage(messageRecord: MessageRecord)
     fun setApproved(recipient: Recipient, isApproved: Boolean)
+    fun isKicked(recipient: Recipient): Boolean
 
     suspend fun deleteForEveryone(
         threadId: Long,
@@ -75,7 +76,6 @@ interface ConversationRepository {
     fun declineMessageRequest(threadId: Long, recipient: Recipient)
     fun hasReceived(threadId: Long): Boolean
     fun getInvitingAdmin(threadId: Long): Recipient?
-
 }
 
 class DefaultConversationRepository @Inject constructor(
@@ -158,6 +158,16 @@ class DefaultConversationRepository @Inject constructor(
             smsDb.insertMessageOutbox(-1, outgoingTextMessage, message.sentTimestamp!!, true)
             MessageSender.send(message, contact.address)
         }
+    }
+
+    override fun isKicked(recipient: Recipient): Boolean {
+        // For now, we only know care we are kicked for a groups v2 recipient
+        if (!recipient.isClosedGroupV2Recipient) {
+            return false
+        }
+
+        return configFactory.userGroups
+            ?.getClosedGroup(recipient.address.serialize())?.kicked == true
     }
 
     // This assumes that recipient.isContactRecipient is true

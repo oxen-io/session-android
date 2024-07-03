@@ -2484,6 +2484,13 @@ open class Storage(
             }
             recipientDb.setApproved(sender, true)
             recipientDb.setApprovedMe(sender, true)
+
+            // Also update the config about this contact
+            configFactory.contacts?.upsertContact(sender.address.serialize()) {
+                approved = true
+                approvedMe = true
+            }
+
             val message = IncomingMediaMessage(
                 sender.address,
                 response.sentTimestamp!!,

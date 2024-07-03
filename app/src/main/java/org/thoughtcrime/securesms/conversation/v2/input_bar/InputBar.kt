@@ -44,8 +44,13 @@ class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, Li
     var additionalContentHeight = 0
     var quote: MessageRecord? = null
     var linkPreview: LinkPreview? = null
-    var showInput: Boolean = true
-        set(value) { field = value; showOrHideInputIfNeeded() }
+    private var showInput: Boolean = true
+        set(value) {
+            if (field != value) {
+                field = value
+                showOrHideInputIfNeeded()
+            }
+        }
     var showMediaControls: Boolean = true
         set(value) {
             field = value
@@ -205,20 +210,20 @@ class InputBar : RelativeLayout, InputBarEditTextDelegate, QuoteViewDelegate, Li
     }
 
     private fun showOrHideInputIfNeeded() {
-        if (showInput) {
-            setOf( binding.inputBarEditText, attachmentsButton ).forEach { it.isVisible = true }
-            microphoneButton.isVisible = text.isEmpty()
-            sendButton.isVisible = text.isNotEmpty()
-        } else {
+        if (!showInput) {
             cancelQuoteDraft()
             cancelLinkPreviewDraft()
-            val views = setOf( binding.inputBarEditText, attachmentsButton, microphoneButton, sendButton )
-            views.forEach { it.isVisible = false }
         }
+
+        binding.inputBarEditText.isVisible = showInput
+        attachmentsButton.isVisible = showInput
+        microphoneButton.isVisible = showInput && text.isEmpty()
+        sendButton.isVisible = showInput && text.isNotEmpty()
     }
 
     private fun showOrHideMediaControlsIfNeeded() {
-        setOf(attachmentsButton, microphoneButton).forEach { it.snIsEnabled = showMediaControls }
+        attachmentsButton.snIsEnabled = showMediaControls
+        microphoneButton.snIsEnabled = showMediaControls
     }
 
     fun addTextChangedListener(textWatcher: TextWatcher) {

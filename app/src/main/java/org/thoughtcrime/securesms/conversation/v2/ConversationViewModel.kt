@@ -1,21 +1,25 @@
 package org.thoughtcrime.securesms.conversation.v2
 
 import android.content.Context
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.goterl.lazysodium.utils.KeyPair
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import network.loki.messenger.R
 import network.loki.messenger.libsession_util.util.GroupMember
-import org.session.libsession.database.StorageProtocol
 import org.session.libsession.database.MessageDataProvider
+import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.messages.ExpirationConfiguration
 import org.session.libsession.messaging.open_groups.OpenGroup
 import org.session.libsession.messaging.open_groups.OpenGroupApi
@@ -25,13 +29,14 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.Log
-import org.thoughtcrime.securesms.database.MmsDatabase
 import org.session.libsignal.utilities.SessionId
 import org.thoughtcrime.securesms.audio.AudioSlidePlayer
-import org.thoughtcrime.securesms.database.Storage
+import org.thoughtcrime.securesms.database.GroupDatabase
+import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.repository.ConversationRepository
+import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import java.util.UUID
 
 class ConversationViewModel(
@@ -40,14 +45,16 @@ class ConversationViewModel(
     private val repository: ConversationRepository,
     private val storage: StorageProtocol,
     private val messageDataProvider: MessageDataProvider,
-    database: MmsDatabase,
+    private val groupDb: GroupDatabase,
+    private val threadDb: ThreadDatabase,
+    private val appContext: Context,
 ) : ViewModel() {
 
     val showSendAfterApprovalText: Boolean
         get() = recipient?.run { isContactRecipient && !isLocalNumber && !hasApprovedMe() } ?: false
 
-    private val _uiState = MutableStateFlow(ConversationUiState(conversationExists = true))
-    val uiState: StateFlow<ConversationUiState> = _uiState
+    private val _uiState = MutableStateFlow(ConversationUiState())
+    val uiState: StateFlow<ConversationUiState> get() = _uiState
 
     private var _recipient: RetrieveOnce<Recipient> = RetrieveOnce {
         repository.maybeGetRecipientForThreadId(threadId)
@@ -67,6 +74,11 @@ class ConversationViewModel(
             }
         }
 
+    /**
+     * The admin who invites us to this group(v2) conversation.
+     *
+     * null if this convo is not a group(v2) conversation, or error getting the info
+     */
     val invitingAdmin: Recipient?
         get() {
             val recipient = recipient ?: return null
@@ -81,7 +93,7 @@ class ConversationViewModel(
     val openGroup: OpenGroup?
         get() = _openGroup.value
 
-    val closedGroupMembers: List<GroupMember>
+    private val closedGroupMembers: List<GroupMember>
         get() {
             val recipient = recipient ?: return emptyList()
             if (!recipient.isClosedGroupV2Recipient) return emptyList()
@@ -94,7 +106,6 @@ class ConversationViewModel(
             return !recipient.isClosedGroupV2Recipient ||
                     (closedGroupMembers.firstOrNull { it.sessionId == storage.getUserPublicKey() }?.admin ?: false)
         }
-
 
     val serverCapabilities: List<String>
         get() = openGroup?.let { storage.getServerCapabilities(it.server) } ?: listOf()
@@ -122,14 +133,97 @@ class ConversationViewModel(
     )
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             repository.recipientUpdateFlow(threadId)
                 .collect { recipient ->
-                    if (recipient == null && _uiState.value.conversationExists) {
-                        _uiState.update { it.copy(conversationExists = false) }
+                    _uiState.update {
+                        it.copy(
+                            shouldExit = recipient == null,
+                            showInput = shouldShowInput(recipient),
+                            enableInputMediaControls = shouldEnableInputMediaControls(recipient),
+                            messageRequestState = buildMessageRequestState(recipient),
+                        )
                     }
                 }
         }
+    }
+
+    /**
+     * Determines if the input media controls should be enabled.
+     *
+     * Normally we will show the input media controls, only in these situations we hide them:
+     *  1. First time we send message to a person.
+     *     Since we haven't been approved by them, we can't send them any media, only text
+     */
+    private fun shouldEnableInputMediaControls(recipient: Recipient?): Boolean {
+        if (recipient != null &&
+            (recipient.is1on1 && !recipient.isLocalNumber) &&
+            !recipient.hasApprovedMe()) {
+            return false
+        }
+
+        return true
+    }
+
+    /**
+     * Determines if the input bar should be shown.
+     *
+     * For these situations we hide the input bar:
+     *  1. The user has been kicked from a group(v2), OR
+     *  2. The legacy group is inactive, OR
+     *  3. The community chat is read only
+     */
+    private fun shouldShowInput(recipient: Recipient?): Boolean {
+        return when {
+            recipient?.isClosedGroupV2Recipient == true -> !repository.isKicked(recipient)
+            recipient?.isLegacyClosedGroupRecipient == true -> {
+                groupDb.getGroup(recipient.address.toGroupString()).orNull()?.isActive == true
+            }
+            openGroup != null -> openGroup?.canWrite == true
+            else -> true
+        }
+    }
+
+    private fun buildMessageRequestState(recipient: Recipient?): MessageRequestUiState {
+        // The basic requirement of showing a message request is:
+        // 1. The other party has not been approved by us, AND
+        // 2. We haven't sent a message to them before (if we do, we would be the one requesting permission), AND
+        // 3. We have received message from them AND
+        // 4. The type of conversation supports message request (only 1to1 and groups v2)
+
+        if (
+            recipient != null &&
+
+            // Req 1: we haven't approved the other party
+            (!recipient.isApproved && !recipient.isLocalNumber) &&
+
+            // Req 4: the type of conversation supports message request
+            (recipient.is1on1 || recipient.isClosedGroupV2Recipient) &&
+
+            // Req 2: we haven't sent a message to them before
+            !threadDb.getLastSeenAndHasSent(threadId).second() &&
+
+            // Req 3: we have received message from them
+            threadDb.getMessageCount(threadId) > 0
+        ) {
+
+            return MessageRequestUiState.Visible(
+                acceptButtonText = if (recipient.isClosedGroupV2Recipient) {
+                    R.string.message_requests_send_group_notice
+                } else {
+                    R.string.message_requests_send_notice
+                },
+                // You can block a 1to1 conversation, or a normal groups v2 conversation
+                showBlockButton = recipient.is1on1 || recipient.isClosedGroupV2Recipient,
+                declineButtonText = if (recipient.isClosedGroupV2Recipient) {
+                    R.string.delete
+                } else {
+                    R.string.decline
+                }
+            )
+        }
+
+        return MessageRequestUiState.Invisible
     }
 
     override fun onCleared() {
@@ -193,11 +287,6 @@ class ConversationViewModel(
         AudioSlidePlayer.getInstance()?.takeIf { it.audioSlide == audioSlide }?.stop()
     }
 
-    fun setRecipientApproved() {
-        val recipient = recipient ?: return Log.w("Loki", "Recipient was null for set approved action")
-        repository.setApproved(recipient, true)
-    }
-
     fun deleteForEveryone(message: MessageRecord) = viewModelScope.launch {
         val recipient = recipient ?: return@launch Log.w("Loki", "Recipient was null for delete for everyone - aborting delete operation.")
         stopPlayingAudioMessage(message)
@@ -247,20 +336,41 @@ class ConversationViewModel(
 
     fun acceptMessageRequest() = viewModelScope.launch {
         val recipient = recipient ?: return@launch Log.w("Loki", "Recipient was null for accept message request action")
+        val currentState = _uiState.value.messageRequestState as? MessageRequestUiState.Visible
+            ?: return@launch Log.w("Loki", "Current state was not visible for accept message request action")
+
+        _uiState.update {
+            it.copy(messageRequestState = MessageRequestUiState.Pending(currentState))
+        }
+
         repository.acceptMessageRequest(threadId, recipient)
             .onSuccess {
                 _uiState.update {
-                    it.copy(isMessageRequestAccepted = true)
+                    it.copy(messageRequestState = MessageRequestUiState.Invisible)
+                }
+
+                withContext(Dispatchers.IO) {
+                    ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(appContext)
                 }
             }
             .onFailure {
                 showMessage("Couldn't accept message request due to error: $it")
+
+                _uiState.update { state ->
+                    state.copy(messageRequestState = currentState)
+                }
             }
     }
 
     fun declineMessageRequest() {
         val recipient = recipient ?: return
-        repository.declineMessageRequest(threadId, recipient)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.declineMessageRequest(threadId, recipient)
+            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(appContext)
+
+            _uiState.update { it.copy(shouldExit = true) }
+        }
     }
 
     private fun showMessage(message: String) {
@@ -299,6 +409,25 @@ class ConversationViewModel(
         attachmentDownloadHandler.onAttachmentDownloadRequest(attachment)
     }
 
+    fun beforeSendingTextOnlyMessage() {
+        implicitlyApproveRecipient()
+    }
+
+    fun beforeSendingAttachments() {
+        implicitlyApproveRecipient()
+    }
+
+    private fun implicitlyApproveRecipient() {
+        val recipient = recipient
+
+        if (uiState.value.messageRequestState is MessageRequestUiState.Visible) {
+            acceptMessageRequest()
+        } else if (recipient?.isApproved == false) {
+            // edge case for new outgoing thread on new recipient without sending approval messages
+            repository.setApproved(recipient, true)
+        }
+    }
+
     @dagger.assisted.AssistedFactory
     interface AssistedFactory {
         fun create(threadId: Long, edKeyPair: KeyPair?): Factory
@@ -310,8 +439,11 @@ class ConversationViewModel(
         @Assisted private val edKeyPair: KeyPair?,
         private val repository: ConversationRepository,
         private val storage: StorageProtocol,
-        private val mmsDatabase: MmsDatabase,
         private val messageDataProvider: MessageDataProvider,
+        private val groupDb: GroupDatabase,
+        private val threadDb: ThreadDatabase,
+        @ApplicationContext
+        private val context: Context,
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -321,7 +453,9 @@ class ConversationViewModel(
                 repository = repository,
                 storage = storage,
                 messageDataProvider = messageDataProvider,
-                database = mmsDatabase
+                groupDb = groupDb,
+                threadDb = threadDb,
+                appContext = context,
             ) as T
         }
     }
@@ -331,9 +465,23 @@ data class UiMessage(val id: Long, val message: String)
 
 data class ConversationUiState(
     val uiMessages: List<UiMessage> = emptyList(),
-    val isMessageRequestAccepted: Boolean? = null,
-    val conversationExists: Boolean
+    val messageRequestState: MessageRequestUiState = MessageRequestUiState.Invisible,
+    val shouldExit: Boolean = false,
+    val showInput: Boolean = true,
+    val enableInputMediaControls: Boolean = true,
 )
+
+sealed interface MessageRequestUiState {
+    data object Invisible : MessageRequestUiState
+
+    data class Pending(val prevState: Visible) : MessageRequestUiState
+
+    data class Visible(
+        @StringRes val acceptButtonText: Int,
+        val showBlockButton: Boolean,
+        @StringRes val declineButtonText: Int,
+    ) : MessageRequestUiState
+}
 
 data class RetrieveOnce<T>(val retrieval: () -> T?) {
     private var triedToRetrieve: Boolean = false

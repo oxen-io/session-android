@@ -266,7 +266,13 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
                     if (sessionId == userSessionId.hexString() && generation.toInt() >= keys.currentGeneration()) {
                         Log.d("GroupPoller", "We were kicked from the group, delete and stop polling")
                         stop()
-                        // TODO: add in async group leaving job
+
+                        configFactoryProtocol.userGroups?.let { userGroups ->
+                            userGroups.getClosedGroup(closedGroupSessionId.hexString())?.let { group ->
+                                userGroups.set(group.setKicked())
+                                configFactoryProtocol.persist(userGroups, SnodeAPI.nowWithOffset)
+                            }
+                        }
                     }
                 }
             }

@@ -1,9 +1,15 @@
 package org.session.libsession.messaging.jobs
 
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.utilities.Data
+import org.session.libsession.snode.SnodeAPI
+import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.SessionId
 
 
+/**
+ * A job that cleans up state and data after being kicked from a group.
+ */
 class GroupKickCleanUpJob(private val groupId: SessionId, private val removeMessages: Boolean) :
     Job {
     override var delegate: JobDelegate? = null
@@ -12,7 +18,24 @@ class GroupKickCleanUpJob(private val groupId: SessionId, private val removeMess
     override val maxFailureCount: Int get() = 1
 
     override suspend fun execute(dispatcherName: String) {
-        TODO("Not yet implemented")
+        try {
+            doExecute()
+            delegate?.handleJobSucceeded(this, dispatcherName)
+        } catch (e: Exception) {
+            delegate?.handleJobFailed(this, dispatcherName, e)
+        }
+    }
+
+    private fun doExecute() {
+        val configFactory = MessagingModuleConfiguration.shared.configFactory
+        val userGroups = configFactory.userGroups
+            ?: return Log.d(LOG_TAG, "UserGroups config doesn't exist")
+
+        val group = userGroups.getClosedGroup(groupId.hexString())?.setKicked()
+            ?: return Log.d(LOG_TAG, "Group doesn't exist")
+
+        userGroups.set(group)
+        configFactory.persist(userGroups, SnodeAPI.nowWithOffset)
     }
 
     override fun serialize(): Data = Data.Builder()
@@ -27,6 +50,8 @@ class GroupKickCleanUpJob(private val groupId: SessionId, private val removeMess
 
         private const val DATA_KEY_GROUP_ID = "groupId"
         private const val DATA_KEY_REMOVE_MESSAGES = "removeMessages"
+
+        private const val LOG_TAG = "GroupKickCleanUpJob"
     }
 
     class Factory : Job.Factory<GroupKickCleanUpJob> {
