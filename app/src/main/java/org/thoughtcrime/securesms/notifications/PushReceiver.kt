@@ -3,14 +3,13 @@ package org.thoughtcrime.securesms.notifications
 import android.content.Context
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.goterl.lazysodium.LazySodiumAndroid
-import com.goterl.lazysodium.SodiumAndroid
+import androidx.core.content.ContextCompat.getString
 import com.goterl.lazysodium.interfaces.AEAD
 import com.goterl.lazysodium.utils.Key
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonBuilder
+import network.loki.messenger.R
 import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.MessageReceiveParameters
@@ -55,8 +54,8 @@ class PushReceiver @Inject constructor(@ApplicationContext val context: Context)
         val builder = NotificationCompat.Builder(context, NotificationChannels.OTHER)
             .setSmallIcon(network.loki.messenger.R.drawable.ic_notification)
             .setColor(context.getColor(network.loki.messenger.R.color.textsecure_primary))
-            .setContentTitle("Session")
-            .setContentText("You've got a new message.")
+            .setContentTitle(getString(context, R.string.app_name))
+            .setContentText(getString(context, R.string.messageNewYouveGotA))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
         NotificationManagerCompat.from(context).notify(11111, builder.build())
