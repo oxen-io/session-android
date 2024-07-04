@@ -117,7 +117,7 @@ class ClearAllDataDialog : DialogFragment() {
 
     private suspend fun performDeleteLocalDataOnlyStep() {
         try {
-            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(requireContext()).get()
+            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(requireContext())
         } catch (e: Exception) {
             Log.e(TAG, "Failed to force sync when deleting data", e)
             withContext(Main) {
