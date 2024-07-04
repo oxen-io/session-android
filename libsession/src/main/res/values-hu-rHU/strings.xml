@@ -206,7 +206,6 @@
     <string name="view_seed_reminder_title">Már majdnem kész! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Biztosítsa fiókját a helyreállítási szöveg elmentésével</string>
     <string name="view_seed_reminder_subtitle_2">Érintse meg és tartsa lenyomva a szerkesztett szavakat, hogy felfedje a helyreállítási kifejezést, majd tárolja biztonságosan Session-azonosítója biztonsága érdekében.</string>
-    <string name="view_seed_reminder_subtitle_3">Ügyeljen arra, hogy a helyreállítási szöveget biztonságos helyen tárolja</string>
     <string name="onionRoutingPath">Útvonal</string>
     <string name="onionRoutingPathEntryNode">Belépési csomópont</string>
     <string name="onionRoutingPathServiceNode">Szolgáltatási csomópont</string>

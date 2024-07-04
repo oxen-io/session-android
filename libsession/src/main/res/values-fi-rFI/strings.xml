@@ -205,7 +205,6 @@
     <string name="view_seed_reminder_title">Olet melkein valmis! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Suojaa tilisi tallentamalla palautuslauseke</string>
     <string name="view_seed_reminder_subtitle_2">Napauta ja pidä piiloteettuja sanoja paljastaaksesi palautuslauseen, ja säästä se turvallisesti suojataksesi Session tilisi.</string>
-    <string name="view_seed_reminder_subtitle_3">Varmista, että säilytät palautuslauseesi turvallisessa paikassa</string>
     <string name="onionRoutingPath">Polku</string>
     <string name="onionRoutingPathEntryNode">Sisääntulon Solmu</string>
     <string name="onionRoutingPathServiceNode">Palvelu Solmu</string>

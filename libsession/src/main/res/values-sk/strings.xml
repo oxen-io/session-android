@@ -205,7 +205,6 @@
     <string name="activity_seed_reveal_button_title">Podržaním odhaľte</string>
     <string name="view_seed_reminder_title">Ste takmer hotoví! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Zabezpečte svoj účet uložením frázy obnovenia</string>
-    <string name="view_seed_reminder_subtitle_3">Uistite sa, že frázu na obnovenie máte uloženú na bezpečnom mieste</string>
     <string name="onionRoutingPath">Cesta</string>
     <string name="onionRoutingPathEntryNode">Vstupný uzol</string>
     <string name="onionRoutingPathServiceNode">Servisný uzol</string>

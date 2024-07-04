@@ -205,7 +205,6 @@
     <string name="view_seed_reminder_title">Je bent bijna klaar! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Beveilig uw account door uw herstel zin op te slaan</string>
     <string name="view_seed_reminder_subtitle_2">Hou de herschreven woorden ingedrukt om uw herstelzin te onthullen, en sla het vervolgens veilig op om uw Sessie-ID te beveiligen.</string>
-    <string name="view_seed_reminder_subtitle_3">Zorg ervoor dat u uw herstel zin op een veilige plek opslaat</string>
     <string name="onionRoutingPath">Locatie</string>
     <string name="onionRoutingPathEntryNode">Invoer node</string>
     <string name="onionRoutingPathServiceNode">Service node</string>

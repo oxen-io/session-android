@@ -205,7 +205,6 @@
     <string name="view_seed_reminder_title">Demək olar ki, bitdi! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Bərpa parolunuzu bir yerdə saxlayaraq hesabınızı qoruyun</string>
     <string name="view_seed_reminder_subtitle_2">Bərpa parolunuzu aşkarlamaq üçün düzəldilmiş sözlərə basılı saxlayın, daha sonra Session kimliyinizi qorumaq üçün güvənli bir yerdə saxlayın.</string>
-    <string name="view_seed_reminder_subtitle_3">Bərpa parolunuzu etibarlı bir yerdə saxladığınıza əmin olun</string>
     <string name="onionRoutingPath">Yol</string>
     <string name="onionRoutingPathEntryNode">Giriş Düyünü</string>
     <string name="onionRoutingPathServiceNode">Xidmət Düyünü</string>

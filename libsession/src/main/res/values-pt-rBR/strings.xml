@@ -205,7 +205,6 @@
     <string name="view_seed_reminder_title">Você está quase terminando! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Proteja sua conta salvando sua frase de recuperação</string>
     <string name="view_seed_reminder_subtitle_2">Toque e segure as palavras editadas para revelar sua frase de recuperação e armazene-a com segurança para proteger seu ID Session.</string>
-    <string name="view_seed_reminder_subtitle_3">Guarde sua frase de recuperação em um local seguro</string>
     <string name="onionRoutingPath">Caminho</string>
     <string name="onionRoutingPathEntryNode">Nó de Entrada</string>
     <string name="onionRoutingPathServiceNode">Nó de Serviço</string>

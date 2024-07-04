@@ -205,7 +205,6 @@
     <string name="view_seed_reminder_title">Du är nästan klar! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Säkra ditt konto genom att spara din återställningsfras</string>
     <string name="view_seed_reminder_subtitle_2">Tryck på och håll ned de dolda orden för att avslöja din återställningsfras och lagra dem på ett säkert sätt för att säkra ditt Session-ID.</string>
-    <string name="view_seed_reminder_subtitle_3">Se till att spara din återställningsfras på en säker plats</string>
     <string name="onionRoutingPath">Sökväg</string>
     <string name="onionRoutingPathEntryNode">Entrénod</string>
     <string name="onionRoutingPathServiceNode">Tjänstnod</string>

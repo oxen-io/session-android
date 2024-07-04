@@ -210,7 +210,6 @@
     <string name="view_seed_reminder_title">Neredeyse bitirdiniz! %80</string>
     <string name="view_seed_reminder_subtitle_1">Kurtarma ifadenizi kaydederek hesabınızı güvenceye alın</string>
     <string name="view_seed_reminder_subtitle_2">Kurtarma ifadenizi ortaya çıkarmak için düzeltilen kelimelere dokunun ve basılı tutun, ardından Session kimliğinizi korumak için güvenli bir şekilde saklayın.</string>
-    <string name="view_seed_reminder_subtitle_3">Kurtarma ifadenizi güvenli bir yerde sakladığınızdan emin olun</string>
     <string name="onionRoutingPath">Yol</string>
     <string name="onionRoutingPathEntryNode">Giriş Düğüm</string>
     <string name="onionRoutingPathServiceNode">Hizmet Düğüm</string>

@@ -203,7 +203,6 @@
     <string name="view_seed_reminder_title">就快完成了！80%</string>
     <string name="view_seed_reminder_subtitle_1">保存恢复口令以保护您的帐号安全</string>
     <string name="view_seed_reminder_subtitle_2">点击并按住遮盖住的单词以显示您的恢复口令，请将它安全地存储以保护您的Session ID。</string>
-    <string name="view_seed_reminder_subtitle_3">请确保将恢复口令存储在安全的地方</string>
     <string name="onionRoutingPath">路径</string>
     <string name="onionRoutingPathEntryNode">入口节点</string>
     <string name="onionRoutingPathServiceNode">服务节点</string>

@@ -203,7 +203,6 @@
     <string name="view_seed_reminder_title">あと少しで終了です。80%</string>
     <string name="view_seed_reminder_subtitle_1">リカバリーフレーズを保存してアカウントを保護する</string>
     <string name="view_seed_reminder_subtitle_2">編集された単語をタップして長押ししてリカバリーフレーズを表示し、それを安全に保管して Session ID を保護します。</string>
-    <string name="view_seed_reminder_subtitle_3">リカバリーフレーズは安全な場所に保管してください</string>
     <string name="onionRoutingPath">パス</string>
     <string name="onionRoutingPathEntryNode">エントリーノード</string>
     <string name="onionRoutingPathServiceNode">サービスノード</string>

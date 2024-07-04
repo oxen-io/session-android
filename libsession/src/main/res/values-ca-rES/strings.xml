@@ -204,7 +204,6 @@
     <string name="view_seed_reminder_title">Gairebé has acabat! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Protegeix el teu compte desant la frase de recuperació</string>
     <string name="view_seed_reminder_subtitle_2">Mantingues premudes les paraules redactades per a mostrar la teva frase de recuperació. Desa-la de manera segura per a protegir la teva ID de Session.</string>
-    <string name="view_seed_reminder_subtitle_3">Assegura\'t d\'emmagatzemar la frase de recuperació en un lloc segur</string>
     <string name="onionRoutingPath">Ruta</string>
     <string name="onionRoutingPathEntryNode">Node d\'entrada</string>
     <string name="onionRoutingPathServiceNode">Node de servei</string>

@@ -205,7 +205,6 @@
     <string name="view_seed_reminder_title">पूर्ण होने वाला है! 80%</string>
     <string name="view_seed_reminder_subtitle_1">अकाउंट सुरक्षित रखने के लिए अपनी पुनर्व्यप्ती वाक्यांश को सेव करके रखें</string>
     <string name="view_seed_reminder_subtitle_2">अपना पुनर्प्राप्ति वाक्यांश प्रकट करने के लिए संशोधित शब्दों को टैप और होल्ड करें, फिर अपनी Session ID को सुरक्षित करने के लिए इसे सुरक्षित रूप से संग्रहीत करें।</string>
-    <string name="view_seed_reminder_subtitle_3">अपने रिकवरी फ्रेज को एक सुरक्षित जगह रखे</string>
     <string name="onionRoutingPath">पथ</string>
     <string name="onionRoutingPathEntryNode">प्रवेश नोड</string>
     <string name="onionRoutingPathServiceNode">सर्विस नोड</string>

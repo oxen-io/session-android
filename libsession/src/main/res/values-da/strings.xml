@@ -204,7 +204,6 @@
     <string name="view_seed_reminder_title">Du er næsten færdig! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Sikre din konto ved at gemme din gendannelsessætning</string>
     <string name="view_seed_reminder_subtitle_2">Tryk og hold de redigerede ord for at afsløre din gendannelsessætning, og gem det derefter et sikkert sted for at sikre dit Session ID.</string>
-    <string name="view_seed_reminder_subtitle_3">Sørg for at gemme din gendannelsessætning et sikkert sted</string>
     <string name="onionRoutingPath">Sti</string>
     <string name="onionRoutingPathDestination">Destination</string>
     <string name="learnMore">Læs mere</string>

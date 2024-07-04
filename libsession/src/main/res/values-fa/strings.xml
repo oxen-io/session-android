@@ -205,7 +205,6 @@
     <string name="view_seed_reminder_title">شما تقریبا تمام کردید! ۸۰٪</string>
     <string name="view_seed_reminder_subtitle_1">با ذخیره کردن عبارت بازیابی، از حساب خود را محافظت کنید</string>
     <string name="view_seed_reminder_subtitle_2">برای فاش کردن عبارت بازیابی، بر روی کلمات redacted ضربه زده و نگه دارید، سپس با خیال راحت آن را ذخیره کنید تا از شناسه‌ی Session خود محافظت نمایید.</string>
-    <string name="view_seed_reminder_subtitle_3">حتماً عبارت بازیابی خود را در مکانی امن ذخیره کنید</string>
     <string name="onionRoutingPath">مسیر</string>
     <string name="onionRoutingPathEntryNode">گره ورودی</string>
     <string name="onionRoutingPathServiceNode">گره سرویس</string>

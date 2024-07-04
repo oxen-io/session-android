@@ -203,7 +203,6 @@
     <string name="view_seed_reminder_title">安裝快完成囉！80%</string>
     <string name="view_seed_reminder_subtitle_1">透過儲存您的恢復短語來保護您的帳戶</string>
     <string name="view_seed_reminder_subtitle_2">點擊並按住已編輯的字詞以顯示您的恢復短語，然後將其妥善保管以保護您的 Session ID。</string>
-    <string name="view_seed_reminder_subtitle_3">請確保將您的恢復短語存儲在安全的地方</string>
     <string name="onionRoutingPath">路徑</string>
     <string name="onionRoutingPathEntryNode">入口節點</string>
     <string name="onionRoutingPathServiceNode">服務節點</string>

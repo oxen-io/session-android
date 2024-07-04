@@ -205,7 +205,6 @@
     <string name="view_seed_reminder_title">Vi preskaŭ estas fininta! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Sekurigi vian konton per konservi vian riparan frazon</string>
     <string name="view_seed_reminder_subtitle_2">Tuŝadu la kaŝitajn vortojn por malkaŝi vian riparan frazon, tiam konservi ĝin sekure por sekurigi vian Session ID-on.</string>
-    <string name="view_seed_reminder_subtitle_3">Certigu konservi vian riparan frazon en sekura loko</string>
     <string name="onionRoutingPath">Vojo</string>
     <string name="onionRoutingPathEntryNode">Enira Nodo</string>
     <string name="onionRoutingPathServiceNode">Serva Nodo</string>

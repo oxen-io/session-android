@@ -205,7 +205,6 @@
     <string name="view_seed_reminder_title">Դուք վերջացրել եք 80%</string>
     <string name="view_seed_reminder_subtitle_1">Պահեք ձեր անվտանգությունը պահպանելով session-ի բանալին</string>
     <string name="view_seed_reminder_subtitle_2">Հպեք և պահեք տրված բառերը՝ ձեր վերականգնման բանալին գտնելու համար, այնուհետև պահեք այն ապահով՝ ձեր Session ID-ն ապահով պահելու համար.</string>
-    <string name="view_seed_reminder_subtitle_3">Վստահ եղեք որ ձեր վերականգման բանալին հուսալի տեղում է</string>
     <string name="onionRoutingPath">Ուղի</string>
     <string name="onionRoutingPathEntryNode">Մուտքային Հանգույց</string>
     <string name="onionRoutingPathServiceNode">Ծառայության Հանգույց</string>

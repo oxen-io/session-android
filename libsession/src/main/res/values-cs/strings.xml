@@ -209,7 +209,6 @@
     <string name="view_seed_reminder_title">Jste skoro u konce! 80 %</string>
     <string name="view_seed_reminder_subtitle_1">Zabezpečte svůj účet uložením Vašich klíčových slov</string>
     <string name="view_seed_reminder_subtitle_2">Pro zobrazení fráze pro obnovení klepněte a podržte redigovaná slova a poté ji bezpečně uložte, abyste si ochránili své Session ID.</string>
-    <string name="view_seed_reminder_subtitle_3">Uchovejte svou frázi pro obnovení na bezpečném místě</string>
     <string name="onionRoutingPath">Cesta</string>
     <string name="onionRoutingPathEntryNode">Vstupní uzel</string>
     <string name="onionRoutingPathServiceNode">Provozní uzel</string>

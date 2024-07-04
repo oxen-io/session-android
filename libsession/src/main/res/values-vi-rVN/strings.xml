@@ -166,7 +166,6 @@
     <string name="activity_seed_reveal_button_title">Giữ để hiển thị.</string>
     <string name="view_seed_reminder_subtitle_1">Bảo vệ tài khoản của bạn bằng việc bảo vệ cụm từ khôi phục của bạn</string>
     <string name="view_seed_reminder_subtitle_2">Chạm và giữ cụm từ bị che để hiển thị cụm từ khôi phục của bạn, sau đó lưu nó cẩn thận để bảo vệ Session ID của bạn.</string>
-    <string name="view_seed_reminder_subtitle_3">Hãy lưu cụm từ khôi phục của bạn ở một nơi an toàn</string>
     <string name="onionRoutingPath">Đường đi</string>
     <string name="onionRoutingPathEntryNode">Nút khởi đầu</string>
     <string name="onionRoutingPathServiceNode">Nút Dịch vụ</string>

@@ -205,7 +205,6 @@
     <string name="view_seed_reminder_title">Du er nesten ferdig! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Sikre kontoen din ved å lagre din gjenopprettingsfrase</string>
     <string name="view_seed_reminder_subtitle_2">Trykk og hold inne de overflødige ordene for å hente gjenopprettingsfrasen din, og lagre den trygt å sikre din Session-ID.</string>
-    <string name="view_seed_reminder_subtitle_3">Pass på å lagre gjenopprettingsfrasen på et sikkert sted</string>
     <string name="onionRoutingPath">Bane</string>
     <string name="onionRoutingPathEntryNode">Enhetens node</string>
     <string name="onionRoutingPathServiceNode">Tjeneste node</string>

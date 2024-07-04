@@ -209,7 +209,6 @@
     <string name="view_seed_reminder_title">Вы почти закончили! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Защитите свой аккаунт, сохранив секретную фразу</string>
     <string name="view_seed_reminder_subtitle_2">Нажмите и удерживайте сокращенные слова, чтобы открыть секретную фразу, а затем сохраните ее в надежном месте, чтобы защитить свой Session ID.</string>
-    <string name="view_seed_reminder_subtitle_3">Обязательно сохраните секретную фразу в надежном месте</string>
     <string name="onionRoutingPath">Маршрут</string>
     <string name="onionRoutingPathEntryNode">Узел входа</string>
     <string name="onionRoutingPathServiceNode">Служебный узел</string>

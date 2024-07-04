@@ -209,7 +209,6 @@
     <string name="view_seed_reminder_title">Prawie skończyłeś! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Zabezpiecz swoje konto, zapisując frazę odzyskiwania</string>
     <string name="view_seed_reminder_subtitle_2">Stuknij i przytrzymaj zredagowane słowa, aby odsłonić frazę odzyskiwania, a następnie przechowuj ją w bezpiecznym miejscu, aby zabezpieczyć identyfikator Session.</string>
-    <string name="view_seed_reminder_subtitle_3">Pamiętaj, aby przechowywać frazę odzyskiwania w bezpiecznym miejscu</string>
     <string name="onionRoutingPath">Ścieżka</string>
     <string name="onionRoutingPathEntryNode">Węzeł wejścia</string>
     <string name="onionRoutingPathServiceNode">Węzeł serwisowy</string>

@@ -213,7 +213,6 @@
     <string name="view_seed_reminder_title">انت على وشك الإنتهاء! ٨٠٪</string>
     <string name="view_seed_reminder_subtitle_1">أمّن حسابك بحفظ كلمات إسترجاع الحساب</string>
     <string name="view_seed_reminder_subtitle_2">انقر بإستمرار على الكلمات المغطاة للكشف عن كلمات إسترداد حسابك، ثم قم بتخزينها بأمان للحفاظ على معرّف الجلسة الخاص بك.</string>
-    <string name="view_seed_reminder_subtitle_3">تأكد من الإحتفاظ بكلمات الإسترجاع الخاصة بك في مكان آمن</string>
     <string name="onionRoutingPath">مسار</string>
     <string name="onionRoutingPathEntryNode">عقدة الدخول</string>
     <string name="onionRoutingPathServiceNode">عقدة الخدمة</string>

@@ -71,7 +71,7 @@ class SeedActivity : BaseActionBarActivity() {
         seedReminderViewTitle.setSpan(ForegroundColorSpan(getAccentColor()), 17, 21, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         with(binding) {
             seedReminderView.title = seedReminderViewTitle
-            seedReminderView.subtitle = resources.getString(R.string.view_seed_reminder_subtitle_3)
+            seedReminderView.subtitle = resources.getString(R.string.recoveryPasswordBannerDescription)
             seedReminderView.setProgress(100, true)
             val seedTextViewLayoutParams = seedTextView.layoutParams as LinearLayout.LayoutParams
             seedTextViewLayoutParams.height = seedTextView.height

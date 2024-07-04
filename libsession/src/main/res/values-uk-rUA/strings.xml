@@ -210,7 +210,6 @@
     <string name="view_seed_reminder_title">Ви майже закінчили! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Захистіть свій обліковий запис, записавши на папері відновлювальну фразу</string>
     <string name="view_seed_reminder_subtitle_2">Натисніть і втримуйте приховані слова, щоб розкрити вашу фразу відновлення, запишіть її на папері, щоб безпечно захистити вашу Session ID адресу.</string>
-    <string name="view_seed_reminder_subtitle_3">Переконайтеся, що ви записали свою фразу відновлення на папері і поклали її в безпечне місце</string>
     <string name="onionRoutingPath">Шлях</string>
     <string name="onionRoutingPathEntryNode">Вхідний Вузел</string>
     <string name="onionRoutingPathServiceNode">Сервісний Вузел</string>

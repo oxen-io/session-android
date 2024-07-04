@@ -206,7 +206,6 @@
     <string name="view_seed_reminder_title">Beveik užbaigėte! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Apsaugokite savo paskyrą įsirašydami atkūrimo frazę</string>
     <string name="view_seed_reminder_subtitle_2">Bakstelėkite ir laikykite ant redaguotų žodžių, kad būtų atskleista jūsų atkūrimo frazė. Tuomet, laikykite ją saugioje vietoje, kad apsaugotumėte savo Session ID.</string>
-    <string name="view_seed_reminder_subtitle_3">Užtikrinkite, kad laikytumėte savo atkūrimo frazę saugioje vietoje</string>
     <string name="onionRoutingPath">Kelias</string>
     <string name="onionRoutingPathEntryNode">Įėjimo mazgas</string>
     <string name="onionRoutingPathServiceNode">Aptarnavimo mazgas</string>

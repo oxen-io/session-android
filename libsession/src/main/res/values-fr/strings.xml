@@ -223,7 +223,6 @@
     <string name="view_seed_reminder_title">Vous avez presque terminé ! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Sécurisez votre compte en sauvegardant votre phrase de récupération</string>
     <string name="view_seed_reminder_subtitle_2">Appuyez et maintenez les mots masqués pour révéler votre phrase de récupération, puis stockez-la en toute sécurité pour sécuriser votre Session ID.</string>
-    <string name="view_seed_reminder_subtitle_3">Assurez-vous de conserver votre phrase de récupération dans un endroit sûr</string>
     <string name="onionRoutingPath">Chemin</string>
     <string name="onionRoutingPathEntryNode">Nœud d’entrée</string>
     <string name="onionRoutingPathServiceNode">Nœud de service</string>
