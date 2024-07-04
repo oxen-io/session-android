@@ -287,7 +287,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@SettingsActivity)
         }
 
-        // Or if the promise failed then we hit this failUi block
+        // Or if the promise failed to upload the new profile picture then we hit this failUi block
         uploadProfilePicturePromise.failUi {
             Log.e(TAG, "Failed to upload profile picture")
             Toast.makeText(this@SettingsActivity, R.string.profileErrorUpdate, Toast.LENGTH_LONG).show()
