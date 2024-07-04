@@ -27,8 +27,8 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivitySettingsBinding
 import network.loki.messenger.libsession_util.util.UserPic
 import nl.komponents.kovenant.Promise
-import nl.komponents.kovenant.all
 import nl.komponents.kovenant.ui.alwaysUi
+import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.avatars.ProfileContactPhoto
@@ -37,7 +37,7 @@ import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.*
 import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol
 import org.session.libsession.utilities.recipients.Recipient
-import org.session.libsignal.utilities.getProperty
+import org.session.libsignal.utilities.Log
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
 import org.thoughtcrime.securesms.avatar.AvatarSelection
 import org.thoughtcrime.securesms.components.ProfilePictureView
@@ -62,6 +62,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class SettingsActivity : PassphraseRequiredActionBarActivity() {
+    private val TAG = "SettingsActivity"
 
     @Inject
     lateinit var configFactory: ConfigFactory
@@ -233,21 +234,39 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         displayName: String? = null
     ) {
         binding.loader.isVisible = true
-        val promises = mutableListOf<Promise<*, Exception>>()
+
         if (displayName != null) {
             TextSecurePreferences.setProfileName(this, displayName)
             configFactory.user?.setName(displayName)
         }
+
         val encodedProfileKey = ProfileKeyUtil.generateEncodedProfileKey(this)
+
+        // If we're updating the profile picture..
+        // Note: We define the promise here so we have the scope to check success/fail later without
+        // having to nest the blocks inside the conditional blocks.
+        lateinit var uploadProfilePicturePromise: Promise<*, Exception>
         if (isUpdatingProfilePicture) {
+            // ..then we're either adding a new / different picture..
             if (profilePicture != null) {
-                promises.add(ProfilePictureUtilities.upload(profilePicture, encodedProfileKey, this))
+                uploadProfilePicturePromise = ProfilePictureUtilities.upload(profilePicture, encodedProfileKey, this)
             } else {
-                MessagingModuleConfiguration.shared.storage.clearUserPic()
+                // ..or we're removing the picture.
+                try {
+                    MessagingModuleConfiguration.shared.storage.clearUserPic()
+                }
+                catch (e: Exception) {
+                    Log.e(TAG, "Failed to clear user profile picture", e)
+                    Toast.makeText(this@SettingsActivity, R.string.profileDisplayPictureRemoveError, Toast.LENGTH_LONG).show()
+                }
+
+                // If we were only removing the profile pic there's no promise to handle so we bail
+                return
             }
         }
-        val compoundPromise = all(promises)
-        compoundPromise.successUi { // Do this on the UI thread so that it happens before the alwaysUi clause below
+
+        // If the upload picture promise succeeded then we hit this successUi block
+        uploadProfilePicturePromise.successUi {
             val userConfig = configFactory.user
             if (isUpdatingProfilePicture) {
                 AvatarHelper.setAvatar(this, Address.fromSerialized(TextSecurePreferences.getLocalNumber(this)!!), profilePicture)
@@ -267,7 +286,15 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             }
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@SettingsActivity)
         }
-        compoundPromise.alwaysUi {
+
+        // Or if the promise failed then we hit this failUi block
+        uploadProfilePicturePromise.failUi {
+            Log.e(TAG, "Failed to upload profile picture")
+            Toast.makeText(this@SettingsActivity, R.string.profileErrorUpdate, Toast.LENGTH_LONG).show()
+        }
+
+        // Finally, regardless of whether the promise succeeded or failed, we always hit this `alwaysUi` block
+        uploadProfilePicturePromise.alwaysUi {
             if (displayName != null) {
                 binding.btnGroupNameDisplay.text = displayName
             }

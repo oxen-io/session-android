@@ -80,4 +80,7 @@
     <string name="clearDevice">Clear Device</string>
     <string name="clearDeviceOnly">Clear device only</string>
     <string name="clearDeviceAndNetwork">Clear device and network</string>
+
+    <string name="profileDisplayPictureRemoveError">Failed to remove display picture.</string>
+    <string name="profileErrorUpdate">Failed to update profile.</string>
 </resources>
