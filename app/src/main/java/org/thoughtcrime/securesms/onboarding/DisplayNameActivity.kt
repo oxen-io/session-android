@@ -7,16 +7,25 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
+import dagger.hilt.android.AndroidEntryPoint
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityDisplayNameBinding
+import org.session.libsession.utilities.Device
 import org.session.libsession.utilities.SSKEnvironment.ProfileManagerProtocol
 import org.thoughtcrime.securesms.BaseActionBarActivity
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.setUpActionBarSessionLogo
 import org.session.libsession.utilities.TextSecurePreferences
+import org.thoughtcrime.securesms.home.HomeActivity
+import org.thoughtcrime.securesms.home.showHomeActivity
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class DisplayNameActivity : BaseActionBarActivity() {
     private lateinit var binding: ActivityDisplayNameBinding
+
+    @Inject
+    lateinit var device: Device
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +60,14 @@ class DisplayNameActivity : BaseActionBarActivity() {
         val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(binding.displayNameEditText.windowToken, 0)
         TextSecurePreferences.setProfileName(this, displayName)
-        val intent = Intent(this, PNModeActivity::class.java)
-        push(intent)
+        if (device.pushAvailable) {
+            val intent = Intent(
+                this,
+                PNModeActivity::class.java
+            )
+            push(intent)
+        } else {
+            showHomeActivity()
+        }
     }
 }
