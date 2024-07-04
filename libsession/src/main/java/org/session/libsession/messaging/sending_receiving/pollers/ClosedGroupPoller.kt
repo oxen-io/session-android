@@ -271,7 +271,19 @@ class ClosedGroupPoller(
 
                         configFactoryProtocol.userGroups?.let { userGroups ->
                             userGroups.getClosedGroup(closedGroupSessionId.hexString())?.let { group ->
-                                userGroups.set(group.setKicked())
+                                // Retrieve the group name one last time from the group info,
+                                // as we are going to clear the keys, we won't have the chance to
+                                // read the group name anymore.
+                                val groupName = configFactoryProtocol.getGroupInfoConfig(closedGroupSessionId)
+                                    ?.use { it.getName() }
+                                    ?: group.name
+
+                                userGroups.set(group.copy(
+                                    authData = null,
+                                    adminKey = null,
+                                    name = groupName
+                                ))
+
                                 configFactoryProtocol.persist(userGroups, SnodeAPI.nowWithOffset)
                             }
                         }
