@@ -365,12 +365,9 @@ class ConversationViewModel(
     fun declineMessageRequest() {
         val recipient = recipient ?: return
 
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.declineMessageRequest(threadId, recipient)
-            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(appContext)
-
-            _uiState.update { it.copy(shouldExit = true) }
-        }
+        repository.declineMessageRequest(threadId, recipient)
+        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(appContext)
+        _uiState.update { it.copy(shouldExit = true) }
     }
 
     private fun showMessage(message: String) {

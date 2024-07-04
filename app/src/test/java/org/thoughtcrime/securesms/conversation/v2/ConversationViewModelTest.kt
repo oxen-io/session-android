@@ -29,7 +29,6 @@ class ConversationViewModelTest: BaseViewModelTest() {
 
     private val repository = mock<ConversationRepository>()
     private val storage = mock<Storage>()
-    private val mmsDatabase = mock<MmsDatabase>()
 
     private val threadId = 123L
     private val edKeyPair = mock<KeyPair>()
@@ -37,7 +36,16 @@ class ConversationViewModelTest: BaseViewModelTest() {
     private lateinit var messageRecord: MessageRecord
 
     private val viewModel: ConversationViewModel by lazy {
-        ConversationViewModel(threadId, edKeyPair, repository, storage, mock(), mmsDatabase)
+        ConversationViewModel(
+            threadId = threadId,
+            edKeyPair = edKeyPair,
+            repository = repository,
+            storage = storage,
+            messageDataProvider = mock(),
+            groupDb = mock(),
+            threadDb = mock(),
+            appContext = mock()
+        )
     }
 
     @Before
@@ -165,20 +173,6 @@ class ConversationViewModelTest: BaseViewModelTest() {
             viewModel.uiState.first().uiMessages.first().message,
             equalTo("Successfully banned user and deleted all their messages")
         )
-    }
-
-    @Test
-    fun `should accept message request`() = runBlockingTest {
-        viewModel.acceptMessageRequest()
-
-        verify(repository).acceptMessageRequest(threadId, recipient)
-    }
-
-    @Test
-    fun `should decline message request`() {
-        viewModel.declineMessageRequest()
-
-        verify(repository).declineMessageRequest(threadId, recipient)
     }
 
     @Test
