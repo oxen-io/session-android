@@ -184,6 +184,7 @@ interface StorageProtocol {
     fun removeMember(groupSessionId: String, removedMembers: Array<String>)
     fun handlePromoted(keyPair: KeyPair)
     fun handleMemberLeft(message: GroupUpdated, closedGroupId: SessionId)
+    fun handleKicked(groupSessionId: SessionId)
     fun leaveGroup(groupSessionId: String, deleteOnLeave: Boolean): Boolean
     fun setName(groupSessionId: String, newName: String)
     fun sendGroupUpdateDeleteMessage(groupSessionId: String, messageHashes: List<String>): Promise<Unit, Exception>

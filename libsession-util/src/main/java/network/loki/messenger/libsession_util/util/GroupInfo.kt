@@ -8,14 +8,25 @@ sealed class GroupInfo {
 
     data class ClosedGroupInfo(
         val groupSessionId: SessionId,
-        val adminKey: ByteArray,
-        val authData: ByteArray,
+        val adminKey: ByteArray?,
+        val authData: ByteArray?,
         val priority: Long,
         val invited: Boolean,
+        val name: String,
     ): GroupInfo() {
 
+        init {
+            require(adminKey == null || adminKey.isNotEmpty()) {
+                "Admin key must be non-empty if present"
+            }
+
+            require(authData == null || authData.isNotEmpty()) {
+                "Auth data must be non-empty if present"
+            }
+        }
+
         val kicked: Boolean
-            get() = adminKey.isEmpty() && authData.isEmpty()
+            get() = adminKey == null && authData == null
 
         fun setKicked(): ClosedGroupInfo {
             if (kicked) {
@@ -23,8 +34,8 @@ sealed class GroupInfo {
             }
 
             return copy(
-                adminKey = ByteArray(0),
-                authData = ByteArray(0),
+                adminKey = null,
+                authData = null,
             )
         }
 
@@ -51,12 +62,9 @@ sealed class GroupInfo {
             return result
         }
 
-        fun signingKey(): ByteArray {
-            return if (adminKey.isNotEmpty()) adminKey else authData
-        }
+        val signingKey: ByteArray? get() = adminKey ?: authData
 
-        fun hasAdminKey() = adminKey.isNotEmpty()
-
+        fun hasAdminKey() = adminKey != null
     }
 
     data class LegacyGroupInfo(

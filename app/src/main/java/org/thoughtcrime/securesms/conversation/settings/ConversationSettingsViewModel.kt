@@ -46,7 +46,7 @@ class ConversationSettingsViewModel(
             }
             recipient.isClosedGroupV2Recipient -> {
                 val group = storage.getLibSessionClosedGroup(recipient.address.serialize()) ?: return@let false
-                group.hasAdminKey()
+                group.adminKey != null
             }
             else -> false
         }

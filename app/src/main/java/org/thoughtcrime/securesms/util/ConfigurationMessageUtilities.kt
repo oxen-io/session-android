@@ -55,7 +55,7 @@ object ConfigurationMessageUtilities {
                 if (destination is Destination.ClosedGroup) {
                     // ensure we have the appropriate admin keys, skip this destination otherwise
                     val group = configFactory.userGroups?.getClosedGroup(destination.publicKey) ?: return@forEach
-                    if (group.adminKey.isEmpty()) return@forEach Log.w("ConfigurationSync", "Trying to schedule config sync for group we aren't an admin of")
+                    if (group.adminKey == null) return@forEach Log.w("ConfigurationSync", "Trying to schedule config sync for group we aren't an admin of")
                 }
                 val currentStorageJob = storage.getConfigSyncJob(destination)
                 if (currentStorageJob != null) {

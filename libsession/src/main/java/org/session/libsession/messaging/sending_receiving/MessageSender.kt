@@ -249,10 +249,10 @@ object MessageSender {
 
                 else -> listOf(Namespace.DEFAULT())
             }
-            namespaces.map { namespace ->
+            namespaces.mapNotNull { namespace ->
                 if (destination is Destination.ClosedGroup) {
                     // possibly handle a failure for no user groups or no closed group signing key?
-                    val signingKey = configFactory.userGroups!!.getClosedGroup(destination.publicKey)!!.signingKey()
+                    val signingKey = configFactory.userGroups!!.getClosedGroup(destination.publicKey)!!.signingKey ?: return@mapNotNull null
                     val callback = if (isAuthData(signingKey)) {
                         val keys = configFactory.getGroupKeysConfig(SessionId.from(destination.publicKey))!!
                         val params = subkeyCallback(signingKey, keys)

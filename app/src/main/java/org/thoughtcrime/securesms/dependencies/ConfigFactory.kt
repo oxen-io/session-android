@@ -44,7 +44,7 @@ class ConfigFactory(
         const val configChangeBufferPeriod: Long = (2 * 60 * 1000)
     }
 
-    fun keyPairChanged() { // this should only happen restoring or clearing data
+    fun keyPairChanged() { // this should only happen restoring or clearing datac
         _userConfig?.free()
         _contacts?.free()
         _convoVolatileConfig?.free()
@@ -163,11 +163,11 @@ class ConfigFactory(
             _userGroups
         }
 
-    private fun getGroupAuthInfo(groupSessionId: SessionId) = userGroups?.getClosedGroup(groupSessionId.hexString())?.let {
-        it.adminKey to it.authData
-    }
+    private fun getGroupInfo(groupSessionId: SessionId) = userGroups?.getClosedGroup(groupSessionId.hexString())
 
-    override fun getGroupInfoConfig(groupSessionId: SessionId): GroupInfoConfig? = getGroupAuthInfo(groupSessionId)?.let { (sk, _) ->
+    override fun getGroupInfoConfig(groupSessionId: SessionId): GroupInfoConfig? = getGroupInfo(groupSessionId)?.let { groupInfo ->
+        val sk = groupInfo.signingKey ?: return@let null
+
         // get any potential initial dumps
         val dump = configDatabase.retrieveConfigAndHashes(
             ConfigDatabase.INFO_VARIANT,
@@ -180,7 +180,9 @@ class ConfigFactory(
     override fun getGroupKeysConfig(groupSessionId: SessionId,
                                     info: GroupInfoConfig?,
                                     members: GroupMembersConfig?,
-                                    free: Boolean): GroupKeysConfig? = getGroupAuthInfo(groupSessionId)?.let { (sk, _) ->
+                                    free: Boolean): GroupKeysConfig? = getGroupInfo(groupSessionId)?.let { groupInfo ->
+        val sk = groupInfo.signingKey ?: return@let null
+
         // Get the user info or return early
         val (userSk, _) = maybeGetUserInfo() ?: return@let null
 
@@ -214,7 +216,9 @@ class ConfigFactory(
         keys
     }
 
-    override fun getGroupMemberConfig(groupSessionId: SessionId): GroupMembersConfig? = getGroupAuthInfo(groupSessionId)?.let { (sk, _) ->
+    override fun getGroupMemberConfig(groupSessionId: SessionId): GroupMembersConfig? = getGroupInfo(groupSessionId)?.let { groupInfo ->
+        val sk = groupInfo.signingKey ?: return@let null
+
         // Get initial dump if we have one
         val dump = configDatabase.retrieveConfigAndHashes(
             ConfigDatabase.MEMBER_VARIANT,
@@ -232,7 +236,9 @@ class ConfigFactory(
         groupSessionId: SessionId,
         info: GroupInfoConfig,
         members: GroupMembersConfig
-    ): GroupKeysConfig? = getGroupAuthInfo(groupSessionId)?.let { (sk, _) ->
+    ): GroupKeysConfig? = getGroupInfo(groupSessionId)?.let { groupInfo ->
+        val sk = groupInfo.signingKey ?: return@let null
+
         val (userSk, _) = maybeGetUserInfo() ?: return null
         GroupKeysConfig.newInstance(
             userSk,

@@ -42,7 +42,8 @@ public class SignalServiceGroup {
     MEMBER_ADDED,
     MEMBER_REMOVED,
     LEAVING,
-    ERROR_QUIT
+    ERROR_QUIT,
+    KICKED,
   }
 
   private final byte[]                            groupId;

@@ -26,6 +26,9 @@ namespace util {
     }
 
     session::ustring ustring_from_bytes(JNIEnv* env, jbyteArray byteArray) {
+        if (byteArray == nullptr) {
+            return {};
+        }
         size_t len = env->GetArrayLength(byteArray);
         auto bytes = env->GetByteArrayElements(byteArray, nullptr);
 
@@ -34,11 +37,11 @@ namespace util {
         return st;
     }
 
-    session::ustring ustring_from_jstring(JNIEnv* env, jstring string) {
+    std::string string_from_jstring(JNIEnv* env, jstring string) {
         size_t len = env->GetStringUTFLength(string);
         auto chars = env->GetStringUTFChars(string, nullptr);
 
-        session::ustring st{reinterpret_cast<const unsigned char *>(chars), len};
+        std::string st(chars, len);
         env->ReleaseStringUTFChars(string, chars);
         return st;
     }

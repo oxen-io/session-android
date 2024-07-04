@@ -4,6 +4,7 @@
     <string name="MessageRecord_leaving_group">Leaving...</string>
     <string name="MessageRecord_leave_group_error">Failed to leave Group!</string>
     <string name="MessageRecord_unable_leave_group">Unable to leave the Group, please try again</string>
+    <string name="MessageRecord_kicked">You were removed from this group</string>
     <string name="MessageRecord_left_group">You have left the group.</string>
     <string name="MessageRecord_you_created_a_new_group">You created a new group.</string>
     <string name="MessageRecord_s_added_you_to_the_group">%1$s added you to the group.</string>

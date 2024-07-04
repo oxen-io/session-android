@@ -1076,7 +1076,10 @@ open class Storage(
         val groupCreationTimestamp = SnodeAPI.nowWithOffset
 
         val group = userGroups.createGroup()
-        val adminKey = group.adminKey
+        val adminKey = checkNotNull(group.adminKey) {
+            "Admin key is null for new group creation."
+        }
+
         userGroups.set(group)
         val groupInfo = configFactory.getGroupInfoConfig(group.groupSessionId) ?: return Optional.absent()
         val groupMembers = configFactory.getGroupMemberConfig(group.groupSessionId) ?: return Optional.absent()
@@ -1404,11 +1407,12 @@ open class Storage(
         val inviteDb = DatabaseComponent.get(context).lokiMessageDatabase()
         val shouldAutoApprove = getRecipientApproved(fromSerialized(invitingAdmin.hexString()))
         val closedGroupInfo = GroupInfo.ClosedGroupInfo(
-            groupId,
-            byteArrayOf(),
-            authData,
-            PRIORITY_VISIBLE,
-            !shouldAutoApprove,
+            groupSessionId = groupId,
+            adminKey = null,
+            authData = authData,
+            priority = PRIORITY_VISIBLE,
+            invited = !shouldAutoApprove,
+            name = name,
         )
         groups.set(closedGroupInfo)
         configFactory.persist(groups, SnodeAPI.nowWithOffset)
@@ -1863,16 +1867,27 @@ open class Storage(
         }
     }
 
+    override fun handleKicked(groupSessionId: SessionId) {
+        pollerFactory.pollerFor(groupSessionId)?.stop()
+        pushRegistry.unregisterForGroup(groupSessionId)
+    }
+
     override fun leaveGroup(groupSessionId: String, deleteOnLeave: Boolean): Boolean {
         val closedGroupId = SessionId.from(groupSessionId)
-        val message = GroupUpdated(
-            GroupUpdateMessage.newBuilder()
-                .setMemberLeftMessage(DataMessage.GroupUpdateMemberLeftMessage.getDefaultInstance())
-                .build()
-        )
+        val canSendGroupMessage = configFactory.userGroups?.getClosedGroup(groupSessionId)?.kicked != true
+
         try {
-            // throws on unsuccessful send
-            MessageSender.sendNonDurably(message, fromSerialized(groupSessionId), false).get()
+            if (canSendGroupMessage) {
+                val message = GroupUpdated(
+                    GroupUpdateMessage.newBuilder()
+                        .setMemberLeftMessage(DataMessage.GroupUpdateMemberLeftMessage.getDefaultInstance())
+                        .build()
+                )
+
+                // throws on unsuccessful send
+                MessageSender.sendNonDurably(message, fromSerialized(groupSessionId), false).get()
+            }
+
             pollerFactory.pollerFor(closedGroupId)?.stop()
             pushRegistry.unregisterForGroup(closedGroupId)
             // TODO: set "deleted" and post to -10 group namespace?
@@ -1936,8 +1951,9 @@ open class Storage(
 
         val adminKey = if (closedGroup.hasAdminKey()) closedGroup.adminKey else null
         val subkeyCallback by lazy {
-            closedGroup.authData
-            subkeyCallback(closedGroup.authData, keys, freeKeysAfterSign = false)
+            closedGroup.authData?.let {
+                subkeyCallback(it, keys, freeKeysAfterSign = false)
+            }
         }
         val groupDestination = Destination.ClosedGroup(groupSessionId)
         ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(groupDestination)
@@ -1961,7 +1977,7 @@ open class Storage(
             sentTimestamp = timestamp
         }
 
-        val signCallback = adminKey?.let(::signingKeyCallback) ?: subkeyCallback
+        val signCallback = adminKey?.let(::signingKeyCallback) ?: subkeyCallback ?: return Promise.ofFail(NullPointerException("No signing key found"))
         // Delete might need fake hash?
         val authenticatedDelete = if (adminKey == null) null else buildAuthenticatedDeleteBatchInfo(groupSessionId, messageHashes, signCallback, required = true)
         val authenticatedStore = buildAuthenticatedStoreBatchInfo(

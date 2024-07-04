@@ -12,6 +12,7 @@ import network.loki.messenger.libsession_util.GroupMembersConfig
 import network.loki.messenger.libsession_util.util.GroupInfo
 import network.loki.messenger.libsession_util.util.GroupInfo.ClosedGroupInfo.Companion.isAuthData
 import network.loki.messenger.libsession_util.util.Sodium
+import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.jobs.BatchMessageReceiveJob
 import org.session.libsession.messaging.jobs.JobQueue
@@ -20,6 +21,7 @@ import org.session.libsession.messaging.messages.Destination
 import org.session.libsession.snode.RawResponse
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.ConfigFactoryProtocol
+import org.session.libsignal.messages.SignalServiceGroup
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.Namespace
@@ -27,10 +29,12 @@ import org.session.libsignal.utilities.SessionId
 import org.session.libsignal.utilities.Snode
 import kotlin.time.Duration.Companion.days
 
-class ClosedGroupPoller(private val scope: CoroutineScope,
-                        private val executor: CoroutineDispatcher,
-                        private val closedGroupSessionId: SessionId,
-                        private val configFactoryProtocol: ConfigFactoryProtocol) {
+class ClosedGroupPoller(
+    private val scope: CoroutineScope,
+    private val executor: CoroutineDispatcher,
+    private val closedGroupSessionId: SessionId,
+    private val configFactoryProtocol: ConfigFactoryProtocol,
+    private val storageProtocol: StorageProtocol = MessagingModuleConfiguration.shared.storage) {
 
     data class ParsedRawMessage(
             val data: ByteArray,
@@ -108,8 +112,6 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
                 free = false
             ) ?: return null
 
-            val isAdmin = group.hasAdminKey()
-
             val hashesToExtend = mutableSetOf<String>()
 
             hashesToExtend += info.currentHashes()
@@ -122,7 +124,7 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
             val membersIndex = 3
             val messageIndex = 4
 
-            val authData = group.signingKey()
+            val authData = group.signingKey ?: return null
             val signCallback = if (isAuthData(authData)) {
                 SnodeAPI.subkeyCallback(authData, keys, false)
             } else SnodeAPI.signingKeyCallback(authData)
@@ -169,7 +171,7 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
                 SnodeAPI.buildAuthenticatedAlterTtlBatchRequest(
                         messageHashes = hashesToExtend.toList(),
                         publicKey = closedGroupSessionId.hexString(),
-                        signingKey = group.signingKey(),
+                        signingKey = authData,
                         newExpiry = SnodeAPI.nowWithOffset + 14.days.inWholeMilliseconds,
                         extend = true
                 )?.let { extensionRequest ->
@@ -273,6 +275,19 @@ class ClosedGroupPoller(private val scope: CoroutineScope,
                                 configFactoryProtocol.persist(userGroups, SnodeAPI.nowWithOffset)
                             }
                         }
+
+                        storageProtocol.handleKicked(closedGroupSessionId)
+
+                        MessagingModuleConfiguration.shared.storage.insertIncomingInfoMessage(
+                            context = MessagingModuleConfiguration.shared.context,
+                            senderPublicKey = userSessionId.publicKey,
+                            groupID = closedGroupSessionId.hexString(),
+                            type = SignalServiceGroup.Type.KICKED,
+                            name = "",
+                            members = emptyList(),
+                            admins = emptyList(),
+                            sentTimestamp = SnodeAPI.nowWithOffset,
+                        )
                     }
                 }
             }

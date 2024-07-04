@@ -98,7 +98,8 @@ class PushRegistry @Inject constructor(
 
     fun unregisterForGroup(groupSessionId: SessionId) {
         val groupHexString = groupSessionId.hexString()
-        val authData = configFactory.userGroups?.getClosedGroup(groupHexString)?.authData ?: return
+        val authData = configFactory.userGroups?.getClosedGroup(groupHexString)?.authData
+            ?.takeIf { it.isNotEmpty() } ?: return
         val keysConfig = configFactory.getGroupKeysConfig(groupSessionId) ?: return
 
         MainScope().launch(Dispatchers.IO) {

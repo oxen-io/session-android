@@ -38,10 +38,10 @@ object UpdateMessageBuilder {
 
     @JvmStatic
     fun buildGroupUpdateMessage(context: Context, updateMessageData: UpdateMessageData, senderId: String? = null, isOutgoing: Boolean = false, isInConversation: Boolean): CharSequence {
-        val updateData = updateMessageData.kind
-        if (updateData == null || !isOutgoing && senderId == null) return ""
-        val senderName: String = if (isOutgoing) context.getString(R.string.MessageRecord_you)
-        else getSenderName(senderId!!)
+        val updateData = updateMessageData.kind ?: return ""
+        val senderName: String by lazy {
+            senderId?.let(this::getSenderName).orEmpty()
+        }
 
         return when (updateData) {
             is UpdateMessageData.Kind.GroupCreation -> {
@@ -70,14 +70,14 @@ object UpdateMessageBuilder {
                     else context.getString(R.string.MessageRecord_s_removed_s_from_the_group, senderName, members)
                 }
             }
-            UpdateMessageData.Kind.GroupMemberLeft -> if (isOutgoing) {
+            is UpdateMessageData.Kind.GroupMemberLeft -> if (isOutgoing) {
                 context.getString(R.string.MessageRecord_left_group)
             } else {
                 Phrase.from(context, R.string.ConversationItem_group_action_left)
                     .put("user", senderName)
                     .format()!!
             }
-            UpdateMessageData.Kind.GroupAvatarUpdated -> context.getString(R.string.ConversationItem_group_action_avatar_updated)
+            is UpdateMessageData.Kind.GroupAvatarUpdated -> context.getString(R.string.ConversationItem_group_action_avatar_updated)
             is UpdateMessageData.Kind.GroupExpirationUpdated -> TODO()
             is UpdateMessageData.Kind.GroupMemberUpdated -> {
                 val userPublicKey = storage.getUserPublicKey()!!
@@ -210,6 +210,9 @@ object UpdateMessageBuilder {
                 } else {
                     context.getString(R.string.MessageRecord_leave_group_error)
                 }
+            }
+            is UpdateMessageData.Kind.GroupKicked -> {
+                return context.getString(R.string.MessageRecord_kicked)
             }
         }
     }
