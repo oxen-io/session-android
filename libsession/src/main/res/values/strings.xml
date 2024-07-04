@@ -113,4 +113,11 @@
     <string name="InviteContacts_failed_single">Failed to invite <b>{user}</b> to <b>{group}</b></string>
     <string name="InviteContacts_failed_two">Failed to invite <b>{first}</b> and <b>{second}</b> to <b>{group}</b></string>
     <string name="InviteContacts_failed_multiple">Failed to invite <b>{first}</b> and <b>{num_others} others</b> to <b>{group}</b></string>
+
+    <string name="messageVoiceErrorShort">Hold to record a voice message.</string>
+    <string name="clearDataErrorDescriptionGeneric">An unknown error occurred and your data was not deleted. Do you want to delete your data from just this device instead?</string>
+    <string name="errorUnknown">An unknown error occurred.</string>
+    <string name="clearDevice">Clear Device</string>
+    <string name="clearDeviceOnly">Clear device only</string>
+    <string name="clearDeviceAndNetwork">Clear device and network</string>
 </resources>

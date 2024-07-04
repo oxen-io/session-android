@@ -25,7 +25,6 @@ import org.session.libsignal.utilities.Snode
 import org.session.libsignal.utilities.ThreadUtils
 import org.session.libsignal.utilities.recover
 import org.session.libsignal.utilities.toHexString
-import java.util.Date
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.collections.set
 
