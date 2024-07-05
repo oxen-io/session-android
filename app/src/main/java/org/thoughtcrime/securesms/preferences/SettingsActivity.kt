@@ -22,6 +22,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.isVisible
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
+import java.security.SecureRandom
+import javax.inject.Inject
 import network.loki.messenger.BuildConfig
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivitySettingsBinding
@@ -56,9 +59,6 @@ import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
-import java.io.File
-import java.security.SecureRandom
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SettingsActivity : PassphraseRequiredActionBarActivity() {
@@ -275,15 +275,16 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                 // new config
                 val url = TextSecurePreferences.getProfilePictureURL(this)
                 val profileKey = ProfileKeyUtil.getProfileKey(this)
-                if (profilePicture == null) {
-                    userConfig?.setPic(UserPic.DEFAULT)
-                } else if (!url.isNullOrEmpty() && profileKey.isNotEmpty()) {
+
+                // If we have a URL and a profile key then set the user's profile picture
+                if (!url.isNullOrEmpty() && profileKey.isNotEmpty()) {
                     userConfig?.setPic(UserPic(url, profileKey))
                 }
             }
             if (userConfig != null && userConfig.needsDump()) {
                 configFactory.persist(userConfig, SnodeAPI.nowWithOffset)
             }
+
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@SettingsActivity)
         }
 
