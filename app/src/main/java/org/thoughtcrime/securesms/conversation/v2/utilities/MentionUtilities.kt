@@ -18,6 +18,7 @@ import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.ThemeUtil
 import org.session.libsession.utilities.getColorFromAttr
+import org.session.libsession.utilities.truncateIdForDisplay
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.util.RoundedBackgroundSpan
 import org.thoughtcrime.securesms.util.getAccentColor
@@ -67,7 +68,7 @@ object MentionUtilities {
                 } else {
                     val contact = DatabaseComponent.get(context).sessionContactDatabase().getContactWithSessionID(publicKey)
                     @Suppress("NAME_SHADOWING") val context = if (openGroup != null) Contact.ContactContext.OPEN_GROUP else Contact.ContactContext.REGULAR
-                    contact?.displayName(context)
+                    contact?.displayName(context) ?: truncateIdForDisplay(publicKey)
                 }
                 if (userDisplayName != null) {
                     val mention = "@$userDisplayName"
