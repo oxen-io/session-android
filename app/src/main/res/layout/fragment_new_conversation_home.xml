@@ -35,7 +35,7 @@
             android:padding="@dimen/small_spacing"
             android:layout_marginStart="@dimen/large_spacing"
             android:clickable="true"
-            android:contentDescription="@string/new_conversation_dialog_close_button_content_description"
+            android:contentDescription="@string/AccessibilityId_closeDialog"
             android:focusable="true"
             android:src="@drawable/ic_baseline_close_24"
             android:background="?selectableItemBackgroundBorderless"

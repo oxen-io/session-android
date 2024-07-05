@@ -148,4 +148,7 @@
     <string name="AccessibilityId_username">Username</string>
     <string name="AccessibilityId_username_input">Username input</string>
     <string name="AccessibilityId_username_text">Username text</string>
+
+    <string name="AccessibilityId_navigateBack">Navigate Back</string>
+    <string name="AccessibilityId_closeDialog">Close Dialog</string>
 </resources>

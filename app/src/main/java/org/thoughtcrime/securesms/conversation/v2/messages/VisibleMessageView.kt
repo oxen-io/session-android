@@ -401,7 +401,7 @@ class VisibleMessageView : FrameLayout {
             MessageStatusInfo(
                 R.drawable.ic_delivery_status_sending,
                 context.getColorFromAttr(R.attr.message_status_color),
-                R.string.sending // We COULD tell the user that we're `syncing` (R.string.delivery_status_syncing) but it will likely make more sense to them if we say "Sending"
+                R.string.messageStatusSyncing
             )
         message.isRead || message.isIncoming ->
             MessageStatusInfo(

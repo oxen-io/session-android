@@ -335,7 +335,6 @@
     <string name="deleteMessagesDescriptionDevice">Are you sure you want to delete these messages from your device?</string>
     <string name="deleteMessagesDescriptionEveryone">Are you sure you want to delete these messages for everyone?</string>
     <string name="deleting">Deleting</string>
-    <string name="delivery_status_syncing">Syncing</string>
     <string name="developerToolsToggle">Toggle Developer Tools</string>
     <string name="dialog_disappearing_messages_follow_setting_confirm">Confirm</string>
     <string name="dialog_disappearing_messages_follow_setting_off_body">Messages you send will no longer disappear. Are you sure you want to turn off disappearing messages?</string>
@@ -343,7 +342,6 @@
     <string name="dialog_disappearing_messages_follow_setting_title">Follow Setting</string>
     <string name="disappearingMessages">Disappearing Messages</string>
     <string name="disappearingMessagesAddedYou">{name} added you to the group.</string>
-    <string name="disappearingMessagesChanged"><b>{name}</b> has changed messages to disappear {time} after they have been {disappearing_messages_type}.</string>
     <string name="disappearingMessagesCountdownBigMobile">Auto-deletes in {time_large}</string>
     <string name="disappearingMessagesCountdownBigSmallMobile">Auto-deletes in {time_large} {time_small}</string>
     <string name="disappearingMessagesDeleteType">Delete Type</string>
@@ -580,8 +578,7 @@
     <string name="message_details_header__file_id">File Id:</string>
     <string name="messages">Messages</string>
     <string name="minimize">Minimize</string>
-    <string name="new_conversation_dialog_back_button_content_description">Navigate Back</string>
-    <string name="new_conversation_dialog_close_button_content_description">Close Dialog</string>
+
     <string name="next">Next</string>
     <string name="nicknameDescription">Choose a nickname for {name}. This will appear to you in your one-to-one and group conversations.</string>
     <string name="nicknameEnter">Enter nickname</string>

@@ -33,7 +33,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/titleText"
         app:tint="?android:textColorPrimary"
-        android:contentDescription="@string/new_conversation_dialog_back_button_content_description" />
+        android:contentDescription="@string/AccessibilityId_navigateBack" />
 
     <ImageView
         android:id="@+id/closeButton"
@@ -48,7 +48,7 @@
         app:layout_constraintBottom_toBottomOf="@id/titleText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/titleText"
-        android:contentDescription="@string/new_conversation_dialog_close_button_content_description" />
+        android:contentDescription="@string/AccessibilityId_closeDialog" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"

@@ -307,8 +307,6 @@
         <item quantity="other">et %d autres</item>
     </plurals>
     <string name="fragment_enter_public_key_prompt">Commencez une nouvelle conversation en entrant l\'ID Session de quelqu\'un ou en lui partageant votre ID Session.</string>
-    <string name="new_conversation_dialog_back_button_content_description">Revenir en arrière</string>
-    <string name="new_conversation_dialog_close_button_content_description">Fermer la fenêtre</string>
     <string name="ErrorNotifier_migration">Échec de la mise à jour de la base de données</string>
     <string name="ErrorNotifier_migration_downgrade">Veuillez contacter le support pour signaler l\'erreur.</string>
 </resources>
