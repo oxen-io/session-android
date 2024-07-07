@@ -6,6 +6,14 @@ public class Log {
 
   private static Logger[] loggers;
 
+//  public static void setLogGranularity(Level loggerGranularityLevel) {
+//    if (loggers != null) {
+//      for (Logger logger : loggers) {
+//        logger.setLevel(loggerGranularityLevel);
+//      }
+//    }
+  //}
+
   @MainThread
   public static void initialize(Logger... loggers) {
     Log.loggers = loggers;
@@ -143,5 +151,6 @@ public class Log {
     public abstract void e(String tag, String message, Throwable t);
     public abstract void wtf(String tag, String message, Throwable t);
     public abstract void blockUntilAllWritesFinished();
+    //public abstract void setLogGranularityLevel(Level logGranularityLevel);
   }
 }

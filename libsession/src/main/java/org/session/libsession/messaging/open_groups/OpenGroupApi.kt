@@ -14,8 +14,11 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.functional.map
 import okhttp3.Headers
+import okhttp3.Headers.Companion.toHeaders
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPoller.Companion.maxInactivityPeriod
@@ -282,10 +285,10 @@ object OpenGroupApi {
     )
 
     private fun createBody(body: ByteArray?, parameters: Any?): RequestBody? {
-        if (body != null) return RequestBody.create(MediaType.get("application/octet-stream"), body)
+        if (body != null) return RequestBody.create("application/octet-stream".toMediaType(), body)
         if (parameters == null) return null
         val parametersAsJSON = JsonUtil.toJson(parameters)
-        return RequestBody.create(MediaType.get("application/json"), parametersAsJSON)
+        return RequestBody.create("application/json".toMediaType(), parametersAsJSON)
     }
 
     private fun getResponseBody(request: Request): Promise<ByteArray, Exception> {
@@ -301,7 +304,7 @@ object OpenGroupApi {
     }
 
     private fun send(request: Request): Promise<OnionResponse, Exception> {
-        HttpUrl.parse(request.server) ?: return Promise.ofFail(Error.InvalidURL)
+        request.server.toHttpUrlOrNull() ?: return Promise.ofFail(Error.InvalidURL)
         val urlBuilder = StringBuilder("${request.server}/${request.endpoint.value}")
         if (request.verb == GET && request.queryParameters.isNotEmpty()) {
             urlBuilder.append("?")
@@ -387,7 +390,7 @@ object OpenGroupApi {
 
             val requestBuilder = okhttp3.Request.Builder()
                 .url(urlRequest)
-                .headers(Headers.of(headers))
+                .headers(headers.toHeaders())
             when (request.verb) {
                 GET -> requestBuilder.get()
                 PUT -> requestBuilder.put(createBody(request.body, request.parameters)!!)

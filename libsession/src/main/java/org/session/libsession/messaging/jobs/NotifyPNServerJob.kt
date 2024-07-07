@@ -4,6 +4,7 @@ import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.io.Input
 import com.esotericsoftware.kryo.io.Output
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
 import okhttp3.RequestBody
 import org.session.libsession.messaging.jobs.Job.Companion.MAX_BUFFER_SIZE
@@ -33,7 +34,7 @@ class NotifyPNServerJob(val message: SnodeMessage) : Job {
         val server = Server.LEGACY
         val parameters = mapOf( "data" to message.data, "send_to" to message.recipient )
         val url = "${server.url}/notify"
-        val body = RequestBody.create(MediaType.get("application/json"), JsonUtil.toJson(parameters))
+        val body = RequestBody.create("application/json".toMediaType(), JsonUtil.toJson(parameters))
         val request = Request.Builder().url(url).post(body).build()
         retryIfNeeded(4) {
             OnionRequestAPI.sendOnionRequest(
