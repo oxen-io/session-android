@@ -435,9 +435,15 @@ open class Storage(
     }
 
     override fun getConfigSyncJob(destination: Destination): Job? {
-        return DatabaseComponent.get(context).sessionJobDatabase().getAllJobs(ConfigurationSyncJob.KEY).values.firstOrNull {
+
+        val j = DatabaseComponent.get(context).sessionJobDatabase().getAllJobs(ConfigurationSyncJob.KEY).values.firstOrNull {
             (it as? ConfigurationSyncJob)?.destination == destination
         }
+
+        val foundExistingJob = j != null
+        Log.w("ACL", "Hit getConfigSyncJob - found existing job? $foundExistingJob")
+
+        return j
     }
 
     override fun resumeMessageSendJobIfNeeded(messageSendJobID: String) {
@@ -533,13 +539,12 @@ open class Storage(
         addLibSessionContacts(extracted, messageTimestamp)
     }
 
-    private suspend fun doStuff() { //= GlobalScope.async {
+    private suspend fun doStuff() {
         lateinit var syncPromise: Promise<Unit, Exception>
         try {
             Log.e("ACL", "About to try stuff with timeout")
             withTimeout(5.seconds.inWholeMilliseconds) {
-                //val response = fetch("/api") // Assuming you have a fetch function
-                //response.json() // Assuming you have a function to parse JSON
+
                 Log.e("ACL", "Created sync promise")
                 syncPromise = ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
 
@@ -591,7 +596,13 @@ open class Storage(
         val job = scope.launch {
             doStuff()
         }
-        job.start()
+        //job.start()
+
+
+
+
+
+
 
         //ThreadUtils.queue {
 //        coroutineScope {

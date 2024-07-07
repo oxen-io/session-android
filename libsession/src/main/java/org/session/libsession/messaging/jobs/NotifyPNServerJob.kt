@@ -3,11 +3,10 @@ package org.session.libsession.messaging.jobs
 import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.io.Input
 import com.esotericsoftware.kryo.io.Output
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
 import okhttp3.RequestBody
-import org.session.libsession.messaging.jobs.Job.Companion.MAX_BUFFER_SIZE
+import org.session.libsession.messaging.jobs.Job.Companion.MAX_BUFFER_SIZE_BYTES
 import org.session.libsession.messaging.sending_receiving.notifications.Server
 import org.session.libsession.messaging.utilities.Data
 import org.session.libsession.snode.OnionRequestAPI
@@ -68,7 +67,7 @@ class NotifyPNServerJob(val message: SnodeMessage) : Job {
         val kryo = Kryo()
         kryo.isRegistrationRequired = false
         val serializedMessage = ByteArray(4096)
-        val output = Output(serializedMessage, MAX_BUFFER_SIZE)
+        val output = Output(serializedMessage, MAX_BUFFER_SIZE_BYTES)
         kryo.writeObject(output, message)
         output.close()
         return Data.Builder()

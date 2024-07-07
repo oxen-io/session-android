@@ -37,6 +37,9 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
             // don't allow pushing  configs for non-local user
             || (destination is Destination.Contact && destination.publicKey != userPublicKey)
         ) {
+
+            Log.w("ACL", "WTF is going on here?")
+
             Log.w(TAG, "No need to run config sync job, TODO")
             return delegate?.handleJobSucceeded(this, dispatcherName) ?: Unit
         }

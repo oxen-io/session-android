@@ -176,7 +176,7 @@ class AttachmentUploadJob(val attachmentID: Long, val threadID: String, val mess
         val kryo = Kryo()
         kryo.isRegistrationRequired = false
         val serializedMessage = ByteArray(4096)
-        val output = Output(serializedMessage, Job.MAX_BUFFER_SIZE)
+        val output = Output(serializedMessage, Job.MAX_BUFFER_SIZE_BYTES)
         kryo.writeClassAndObject(output, message)
         output.close()
         return Data.Builder()
