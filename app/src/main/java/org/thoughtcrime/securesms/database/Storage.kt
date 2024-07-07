@@ -4,12 +4,8 @@ import android.content.Context
 import android.net.Uri
 import android.widget.Toast
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.TimeoutCancellationException
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import network.loki.messenger.R
@@ -28,7 +24,7 @@ import network.loki.messenger.libsession_util.util.UserPic
 import network.loki.messenger.libsession_util.util.afterSend
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.ui.failUi
-import org.apache.http.conn.params.ConnManagerParams.setTimeout
+import nl.komponents.kovenant.ui.successUi
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.BlindedIdMapping
@@ -93,7 +89,6 @@ import org.session.libsignal.utilities.Hex
 import org.session.libsignal.utilities.IdPrefix
 import org.session.libsignal.utilities.KeyHelper
 import org.session.libsignal.utilities.Log
-import org.session.libsignal.utilities.ThreadUtils
 import org.session.libsignal.utilities.guava.Optional
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 import org.thoughtcrime.securesms.database.model.MessageId
@@ -107,7 +102,6 @@ import org.thoughtcrime.securesms.mms.PartAuthority
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.SessionMetaProtocol
 import java.security.MessageDigest
-import java.util.concurrent.TimeUnit
 import kotlin.time.Duration.Companion.seconds
 import network.loki.messenger.libsession_util.util.Contact as LibSessionContact
 
@@ -539,7 +533,7 @@ open class Storage(
         addLibSessionContacts(extracted, messageTimestamp)
     }
 
-    private suspend fun doStuff() {
+    private suspend fun performClearProfilePictureJob() {
         lateinit var syncPromise: Promise<Unit, Exception>
         try {
             Log.e("ACL", "About to try stuff with timeout")
@@ -552,21 +546,35 @@ open class Storage(
                     Log.e(TAG, "Failed to sync following clearing user profile picture", syncPromise.getError())
                     Toast.makeText(context, context.getString(R.string.profileDisplayPictureRemoveError), Toast.LENGTH_LONG).show()
                 }
+
+                syncPromise.successUi {
+                    Log.e(TAG, "Successfully synced following clearing user profile picture")
+                    Toast.makeText(context, "Doubtful this has already synced - we just got a Promise.ofSuccess, is all!!", Toast.LENGTH_SHORT).show()
+                }
+
             }.success {
                 Log.e("ACL", "We think we succeeded!")
             }
             .fail { Log.e("ACL", "We think we failed!") }
         }
         catch (tce: TimeoutCancellationException) {
+
+            // I don't think we ever see this! =(
+
             Log.e("ACL", "Caught timeout!")
-            syncPromise.fail { /* We don't really have to do anything here - we just mark the promise as failed */ }
+
+            syncPromise.fail {
+                /* We don't really have to do anything here - we just mark the promise as failed */
+                Log.w("ACL", "Hit syncPromise.fail!!!!!")
+            }
+
             // If the timeout expires
             Log.e(TAG, "Timed out attempting to sync following clearing user profile picture", tce)
-            Toast.makeText(context, context.getString(R.string.profileDisplayPictureRemoveError) + "WANG!", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, context.getString(R.string.profileDisplayPictureRemoveError) + " foo!", Toast.LENGTH_LONG).show()
 
         }
         catch (e: Exception) {
-            Log.e("ACL", "Caught generic exeption!")
+            Log.e("ACL", "Caught generic exception!")
             Log.e(TAG, e)
         }
     }
@@ -594,14 +602,19 @@ open class Storage(
 
         val scope = CoroutineScope(Dispatchers.IO)
         val job = scope.launch {
-            doStuff()
+            performClearProfilePictureJob()
         }
-        //job.start()
 
-
-
-
-
+        if (job.isCompleted) {
+            Log.w("ACL", "clearProfileJob is completed!")
+        } else if (job.isCancelled) {
+            Log.w("ACL", "clearProfileJob is cancelled!")
+        } else if (job.isActive) {
+            Log.w("ACL", "clearProfileJob is active!")
+        } else
+        {
+            Log.w("ACL", "clearProfileJob is neither completed, cancelled, or active!?!?")
+        }
 
 
         //ThreadUtils.queue {
