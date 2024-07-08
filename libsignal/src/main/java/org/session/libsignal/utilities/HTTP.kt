@@ -9,8 +9,6 @@ import okhttp3.Response
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
-import java.util.logging.Level
-import java.util.logging.Logger
 import javax.net.ssl.SSLContext
 import javax.net.ssl.X509TrustManager
 
@@ -19,8 +17,6 @@ object HTTP {
     var isConnectedToNetwork: (() -> Boolean) = { false }
 
     private val seedNodeConnection by lazy {
-        Logger.getGlobal().level = Level.FINE
-        Logger.getLogger(OkHttpClient::class.java.name).level = Level.FINE
 
         OkHttpClient().newBuilder()
             .callTimeout(timeout, TimeUnit.SECONDS)
