@@ -36,11 +36,7 @@ object ConfigurationMessageUtilities {
 
     private val debouncer = WindowDebouncer(3000, Timer())
 
-    private fun scheduleConfigSync(userPublicKey: String): ConfigurationSyncJob? {
-
-        Log.w("ACL", "Hit scheduleConfigSync")
-
-        var newConfigSyncJob: ConfigurationSyncJob? = null
+    private fun scheduleConfigSync(userPublicKey: String) {
 
         debouncer.publish {
             // don't schedule job if we already have one
@@ -48,55 +44,24 @@ object ConfigurationMessageUtilities {
             val ourDestination = Destination.Contact(userPublicKey)
             val currentStorageJob = storage.getConfigSyncJob(ourDestination)
             if (currentStorageJob != null) {
-
-                Log.w("ACL", "Found existing config sync job - failure count is: ${currentStorageJob.failureCount}")
-
-                // The comment above ("don't schedule.." etc) says don't schedule job if we have one - then we set shouldRunAgain to true?!?!?!
                 (currentStorageJob as ConfigurationSyncJob).shouldRunAgain.set(true)
-
-                // OG
-                //(currentStorageJob as ConfigurationSyncJob).shouldRunAgain.set(true)
-
-
-                newConfigSyncJob = currentStorageJob;
                 return@publish
             }
-
-
-            Log.w("ACL", "About to create new configuration sync job")
-            newConfigSyncJob = ConfigurationSyncJob(ourDestination)
-            JobQueue.shared.add(newConfigSyncJob!!)
-
-            Log.w("ACL", "Created new config sync job - max failure count is: ${newConfigSyncJob!!.maxFailureCount}")
-
-        } // `return@publish` will bring us back to here
-
-        return newConfigSyncJob
+            val newConfigSyncJob = ConfigurationSyncJob(ourDestination)
+            JobQueue.shared.add(newConfigSyncJob)
+        }
     }
 
     @JvmStatic
     fun syncConfigurationIfNeeded(context: Context) {
-
-        Log.w("ACL", "Hit syncConfigurationIfNeeded")
-
-        // add if check here to schedule new config job process and return early
-        val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return Log.w(TAG, "ConfigurationMessageUtilities could not get local number.")
+        val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return Log.w(TAG, "User Public Key is null")
         scheduleConfigSync(userPublicKey)
     }
 
     fun forceSyncConfigurationNowIfNeeded(context: Context): Promise<Unit, Exception> {
-
-        Log.w("ACL", "Hit forceSyncConfigurationNowIfNeeded")
-
-        // add if check here to schedule new config job process and return early
         val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return Promise.ofFail(NullPointerException("User Public Key is null"))
-        // schedule job if none exist
-        // don't schedule job if we already have one
-        val configSyncJob = scheduleConfigSync(userPublicKey)
-
-
-
-        // ACL: This is dumb - it immediately says "Yes, I've succeeded" - but if the config sync JUST started then it's still ongoing and may still fail!
+        // Schedule a new job if one doesn't already exist (only)
+        scheduleConfigSync(userPublicKey)
         return Promise.ofSuccess(Unit)
     }
 

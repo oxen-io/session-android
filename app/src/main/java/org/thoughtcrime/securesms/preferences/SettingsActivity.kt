@@ -240,58 +240,44 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             configFactory.user?.setName(displayName)
         }
 
+        // Bail if we're not updating the profile picture in any way
+        if (!isUpdatingProfilePicture) return
+
         val encodedProfileKey = ProfileKeyUtil.generateEncodedProfileKey(this)
 
-        // If we're updating the profile picture..
-        // Note: We define the promise here so we have the scope to check success/fail later without
-        // having to nest the blocks inside the conditional blocks.
+
         lateinit var uploadProfilePicturePromise: Promise<*, Exception>
+        var removingProfilePic = false
 
-        var removingProfilePic = false;
-
-        if (isUpdatingProfilePicture) {
-            // ..then we're either adding a new / different picture..
-            if (profilePicture != null) {
-                uploadProfilePicturePromise = ProfilePictureUtilities.upload(profilePicture, encodedProfileKey, this)
-            } else {
-                // ..or we're removing the picture.
-                //try {
-                    Log.w("ACL", "Definitely removing profile pic!")
-
-                    removingProfilePic = true;
-                    val emptyByteArray = ByteArray(0)
-                    uploadProfilePicturePromise = ProfilePictureUtilities.upload(emptyByteArray, encodedProfileKey, this)
-                    MessagingModuleConfiguration.shared.storage.clearUserPic()
-                //}
-                //catch (e: Exception) {
-//                    Log.e(TAG, "Failed to clear user profile picture", e)
-//                    Toast.makeText(this@SettingsActivity, R.string.profileDisplayPictureRemoveError, Toast.LENGTH_LONG).show()
-//                }
-
-                // If we were only removing the profile pic there's no promise to handle so we bail
-  //              return
-            }
+        // Adding a new profile picture?
+        if (profilePicture != null) {
+            uploadProfilePicturePromise = ProfilePictureUtilities.upload(profilePicture, encodedProfileKey, this)
+        } else {
+            // If not then we must be removing the existing one.
+            // Note: To get a promise that will resolve / sync correctly we overwrite the existing profile picture with
+            // a 0 byte image.
+            removingProfilePic = true
+            val emptyByteArray = ByteArray(0)
+            uploadProfilePicturePromise = ProfilePictureUtilities.upload(emptyByteArray, encodedProfileKey, this)
+            MessagingModuleConfiguration.shared.storage.clearUserPic()
         }
 
         // If the upload picture promise succeeded then we hit this successUi block
         uploadProfilePicturePromise.successUi {
-
-            if (removingProfilePic) { Log.w("ACL", "Hit successUi for removing profile pic") }
-
             val userConfig = configFactory.user
-            if (isUpdatingProfilePicture) {
-                AvatarHelper.setAvatar(this, Address.fromSerialized(TextSecurePreferences.getLocalNumber(this)!!), profilePicture)
-                TextSecurePreferences.setProfileAvatarId(this, profilePicture?.let { SecureRandom().nextInt() } ?: 0 )
-                ProfileKeyUtil.setEncodedProfileKey(this, encodedProfileKey)
-                // new config
-                val url = TextSecurePreferences.getProfilePictureURL(this)
-                val profileKey = ProfileKeyUtil.getProfileKey(this)
+            AvatarHelper.setAvatar(this, Address.fromSerialized(TextSecurePreferences.getLocalNumber(this)!!), profilePicture)
+            TextSecurePreferences.setProfileAvatarId(this, profilePicture?.let { SecureRandom().nextInt() } ?: 0 )
+            ProfileKeyUtil.setEncodedProfileKey(this, encodedProfileKey)
 
-                // If we have a URL and a profile key then set the user's profile picture
-                if (!url.isNullOrEmpty() && profileKey.isNotEmpty()) {
-                    userConfig?.setPic(UserPic(url, profileKey))
-                }
+            // new config
+            val url = TextSecurePreferences.getProfilePictureURL(this)
+            val profileKey = ProfileKeyUtil.getProfileKey(this)
+
+            // If we have a URL and a profile key then set the user's profile picture
+            if (!url.isNullOrEmpty() && profileKey.isNotEmpty()) {
+                userConfig?.setPic(UserPic(url, profileKey))
             }
+
             if (userConfig != null && userConfig.needsDump()) {
                 configFactory.persist(userConfig, SnodeAPI.nowWithOffset)
             }
@@ -301,9 +287,9 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
         // Or if the promise failed to upload the new profile picture then we hit this failUi block
         uploadProfilePicturePromise.failUi {
-
             if (removingProfilePic) {
-                Log.w("ACL", "Hit failUi for removing profile pic")
+                Log.e(TAG, "Failed to remove profile picture")
+                Toast.makeText(this@SettingsActivity, R.string.profileDisplayPictureRemoveError, Toast.LENGTH_LONG).show()
             } else {
                 Log.e(TAG, "Failed to upload profile picture")
                 Toast.makeText(this@SettingsActivity, R.string.profileErrorUpdate, Toast.LENGTH_LONG).show()

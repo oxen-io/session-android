@@ -2,13 +2,7 @@ package org.thoughtcrime.securesms.database
 
 import android.content.Context
 import android.net.Uri
-import android.widget.Toast
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.TimeoutCancellationException
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
-import network.loki.messenger.R
+import java.security.MessageDigest
 import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.ConfigBase.Companion.PRIORITY_HIDDEN
 import network.loki.messenger.libsession_util.ConfigBase.Companion.PRIORITY_PINNED
@@ -17,14 +11,12 @@ import network.loki.messenger.libsession_util.ConversationVolatileConfig
 import network.loki.messenger.libsession_util.UserGroupsConfig
 import network.loki.messenger.libsession_util.UserProfile
 import network.loki.messenger.libsession_util.util.BaseCommunityInfo
+import network.loki.messenger.libsession_util.util.Contact as LibSessionContact
 import network.loki.messenger.libsession_util.util.Conversation
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import network.loki.messenger.libsession_util.util.GroupInfo
 import network.loki.messenger.libsession_util.util.UserPic
 import network.loki.messenger.libsession_util.util.afterSend
-import nl.komponents.kovenant.Promise
-import nl.komponents.kovenant.ui.failUi
-import nl.komponents.kovenant.ui.successUi
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.BlindedIdMapping
@@ -101,9 +93,6 @@ import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.mms.PartAuthority
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.SessionMetaProtocol
-import java.security.MessageDigest
-import kotlin.time.Duration.Companion.seconds
-import network.loki.messenger.libsession_util.util.Contact as LibSessionContact
 
 private const val TAG = "Storage"
 
@@ -429,15 +418,9 @@ open class Storage(
     }
 
     override fun getConfigSyncJob(destination: Destination): Job? {
-
-        val j = DatabaseComponent.get(context).sessionJobDatabase().getAllJobs(ConfigurationSyncJob.KEY).values.firstOrNull {
+        return DatabaseComponent.get(context).sessionJobDatabase().getAllJobs(ConfigurationSyncJob.KEY).values.firstOrNull {
             (it as? ConfigurationSyncJob)?.destination == destination
         }
-
-        val foundExistingJob = j != null
-        Log.w("ACL", "Hit getConfigSyncJob - found existing job? $foundExistingJob")
-
-        return j
     }
 
     override fun resumeMessageSendJobIfNeeded(messageSendJobID: String) {
@@ -533,59 +516,13 @@ open class Storage(
         addLibSessionContacts(extracted, messageTimestamp)
     }
 
-    private suspend fun performClearProfilePictureJob() {
-        lateinit var syncPromise: Promise<Unit, Exception>
-        try {
-            Log.e("ACL", "About to try stuff with timeout")
-            withTimeout(5.seconds.inWholeMilliseconds) {
-
-                Log.e("ACL", "Created sync promise")
-                syncPromise = ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
-
-                syncPromise.failUi {
-                    Log.e(TAG, "Failed to sync following clearing user profile picture", syncPromise.getError())
-                    Toast.makeText(context, context.getString(R.string.profileDisplayPictureRemoveError), Toast.LENGTH_LONG).show()
-                }
-
-                syncPromise.successUi {
-                    Log.e(TAG, "Successfully synced following clearing user profile picture")
-                    Toast.makeText(context, "Doubtful this has already synced - we just got a Promise.ofSuccess, is all!!", Toast.LENGTH_SHORT).show()
-                }
-
-            }.success {
-                Log.e("ACL", "We think we succeeded!")
-            }
-            .fail { Log.e("ACL", "We think we failed!") }
-        }
-        catch (tce: TimeoutCancellationException) {
-
-            // I don't think we ever see this! =(
-
-            Log.e("ACL", "Caught timeout!")
-
-            syncPromise.fail {
-                /* We don't really have to do anything here - we just mark the promise as failed */
-                Log.w("ACL", "Hit syncPromise.fail!!!!!")
-            }
-
-            // If the timeout expires
-            Log.e(TAG, "Timed out attempting to sync following clearing user profile picture", tce)
-            Toast.makeText(context, context.getString(R.string.profileDisplayPictureRemoveError) + " foo!", Toast.LENGTH_LONG).show()
-
-        }
-        catch (e: Exception) {
-            Log.e("ACL", "Caught generic exception!")
-            Log.e(TAG, e)
-        }
-    }
-
     override  fun clearUserPic() {
         val userPublicKey = getUserPublicKey() ?: return Log.w(TAG, "No user public key when trying to clear user pic")
         val recipientDatabase = DatabaseComponent.get(context).recipientDatabase()
 
-        // would love to get rid of recipient and context from this
         val recipient = Recipient.from(context, fromSerialized(userPublicKey), false)
-        // clear picture if userPic is null
+
+        // Clear details related to the user's profile picture
         TextSecurePreferences.setProfileKey(context, null)
         ProfileKeyUtil.setEncodedProfileKey(context, null)
         recipientDatabase.setProfileAvatar(recipient, null)
@@ -594,75 +531,6 @@ open class Storage(
 
         Recipient.removeCached(fromSerialized(userPublicKey))
         configFactory.user?.setPic(UserPic.DEFAULT)
-
-        // Attempt to sync the cleared profile picture & inform the user should that fail
-        //val timeoutPromise = nl.komponents.kovenant.Promise { _, reject -> setTimeout(() => fail)
-
-        //try
-
-        /*
-        val job = CoroutineScope(Dispatchers.IO).launch {
-            performClearProfilePictureJob()
-        }
-
-        if (job.isCompleted) {
-            Log.w("ACL", "clearProfileJob is completed!")
-        } else if (job.isCancelled) {
-            Log.w("ACL", "clearProfileJob is cancelled!")
-        } else if (job.isActive) {
-            Log.w("ACL", "clearProfileJob is active!")
-        } else
-        {
-            Log.w("ACL", "clearProfileJob is neither completed, cancelled, or active!?!?")
-        }
-        */
-
-
-        //ThreadUtils.queue {
-//        coroutineScope {
-//
-//            val foo = doStuff().await()
-//
-//            lateinit var syncPromise: Promise<Unit, Exception>
-//            try {
-//                Log.e("ACL", "About to try stuff with timeout")
-//                withTimeout(5.seconds.inWholeMilliseconds) {
-//                    //val response = fetch("/api") // Assuming you have a fetch function
-//                    //response.json() // Assuming you have a function to parse JSON
-//                    Log.e("ACL", "Created sync promise")
-//                    syncPromise = ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
-//
-//                    syncPromise.failUi {
-//                        Log.e(TAG, "Failed to sync following clearing user profile picture", syncPromise.getError())
-//                        Toast.makeText(context, context.getString(R.string.profileDisplayPictureRemoveError), Toast.LENGTH_LONG).show()
-//                    }
-//                }
-//            }
-//            catch (tce: TimeoutCancellationException) {
-//                Log.e("ACL", "Caught timeout!")
-//                syncPromise.fail { /* We don't really have to do anything here - we just mark the promise as failed */ }
-//                // If the timeout expires
-//                Log.e(TAG, "Timed out attempting to sync following clearing user profile picture", tce)
-//                Toast.makeText(context, context.getString(R.string.profileDisplayPictureRemoveError) + "WANG!", Toast.LENGTH_LONG).show()
-//
-//            }
-//            catch (e: Exception) {
-//                Log.e("ACL", "Caught generic execption!")
-//                Log.e(TAG, e)
-//            }
-//        }
-
-        //withDispatchers
-        //val foo = doStuff().await()
-        //foo.start()
-
-
-//        val syncPromise = ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
-//
-//        syncPromise.failUi {
-//            Log.e(TAG, "Failed to sync following clearing user profile picture", syncPromise.getError())
-//            Toast.makeText(context, context.getString(R.string.profileDisplayPictureRemoveError), Toast.LENGTH_LONG).show()
-//        }
     }
 
     private fun updateConvoVolatile(convos: ConversationVolatileConfig, messageTimestamp: Long) {

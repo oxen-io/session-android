@@ -1,5 +1,6 @@
 package org.session.libsession.messaging.jobs
 
+import java.util.concurrent.atomic.AtomicBoolean
 import network.loki.messenger.libsession_util.ConfigBase.Companion.protoKindFor
 import nl.komponents.kovenant.functional.bind
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -10,7 +11,6 @@ import org.session.libsession.messaging.utilities.Data
 import org.session.libsession.snode.RawResponse
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsignal.utilities.Log
-import java.util.concurrent.atomic.AtomicBoolean
 
 // only contact (self) and closed group destinations will be supported
 data class ConfigurationSyncJob(val destination: Destination): Job {
@@ -37,9 +37,6 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
             // don't allow pushing  configs for non-local user
             || (destination is Destination.Contact && destination.publicKey != userPublicKey)
         ) {
-
-            Log.w("ACL", "WTF is going on here?")
-
             Log.w(TAG, "No need to run config sync job, TODO")
             return delegate?.handleJobSucceeded(this, dispatcherName) ?: Unit
         }
