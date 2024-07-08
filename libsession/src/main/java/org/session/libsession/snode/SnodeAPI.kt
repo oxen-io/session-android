@@ -86,7 +86,7 @@ object SnodeAPI {
     private const val snodeFailureThreshold = 3
     private const val useOnionRequests = true
 
-    const val useTestnet = false
+    const val useTestnet = true
 
     // Error
     internal sealed class Error(val description: String) : Exception(description) {
