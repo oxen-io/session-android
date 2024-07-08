@@ -138,6 +138,7 @@ message DataMessage {
     optional GroupUpdateMemberLeftMessage           memberLeftMessage      = 5;
     optional GroupUpdateInviteResponseMessage       inviteResponse         = 6;
     optional GroupUpdateDeleteMemberContentMessage  deleteMemberContent    = 7;
+    optional GroupUpdateMemberLeftNotificationMessage  memberLeftNotificationMessage = 8;
   }
 
   // New closed groups
@@ -211,6 +212,9 @@ message DataMessage {
     optional bytes  adminSignature = 3;
   }
 
+  message GroupUpdateMemberLeftNotificationMessage {
+    // the pubkey of the member left is included as part of the closed group encryption logic (senderIdentity on desktop)
+  }
 
   message ClosedGroupControlMessage {
 

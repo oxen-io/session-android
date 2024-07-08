@@ -305,15 +305,24 @@ object MessageSender {
     private fun getSpecifiedTtl(
         message: Message,
         isSyncMessage: Boolean
-    ): Long? = message.takeUnless { it is ClosedGroupControlMessage }?.run {
-        threadID ?: (if (isSyncMessage && this is VisibleMessage) syncTarget else recipient)
-            ?.let(Address.Companion::fromSerialized)
-            ?.let(MessagingModuleConfiguration.shared.storage::getThreadId)
-    }?.let(MessagingModuleConfiguration.shared.storage::getExpirationConfiguration)
-    ?.takeIf { it.isEnabled }
-    ?.expiryMode
-    ?.takeIf { it is ExpiryMode.AfterSend || isSyncMessage }
-    ?.expiryMillis
+    ): Long? {
+        // For ClosedGroupControlMessage or GroupUpdateMemberLeftMessage, the expiration timer doesn't apply
+        if (message is ClosedGroupControlMessage || (message is GroupUpdated && message.inner.hasMemberLeftMessage())) {
+            return null
+        }
+
+        // Otherwise the expiration configuration applies
+        return message.run {
+            threadID ?: (if (isSyncMessage && this is VisibleMessage) syncTarget else recipient)
+                ?.let(Address.Companion::fromSerialized)
+                ?.let(MessagingModuleConfiguration.shared.storage::getThreadId)
+        }
+            ?.let(MessagingModuleConfiguration.shared.storage::getExpirationConfiguration)
+            ?.takeIf { it.isEnabled }
+            ?.expiryMode
+            ?.takeIf { it is ExpiryMode.AfterSend || isSyncMessage }
+            ?.expiryMillis
+    }
 
     // Open Groups
     private fun sendToOpenGroupDestination(destination: Destination, message: Message): Promise<Unit, Exception> {

@@ -565,6 +565,7 @@ private fun MessageReceiver.handleGroupUpdated(message: GroupUpdated, closedGrou
         inner.hasInfoChangeMessage() -> handleGroupInfoChange(message, closedGroup!!)
         inner.hasMemberChangeMessage() -> handleMemberChange(message, closedGroup!!)
         inner.hasMemberLeftMessage() -> handleMemberLeft(message, closedGroup!!)
+        inner.hasMemberLeftNotificationMessage() -> handleMemberLeftNotification(message, closedGroup!!)
         inner.hasDeleteMemberContent() -> handleDeleteMemberContent(message, closedGroup!!)
     }
 }
@@ -621,6 +622,10 @@ private fun handleMemberChange(message: GroupUpdated, closedGroup: SessionId) {
 private fun handleMemberLeft(message: GroupUpdated, closedGroup: SessionId) {
     val storage = MessagingModuleConfiguration.shared.storage
     storage.handleMemberLeft(message, closedGroup)
+}
+
+private fun handleMemberLeftNotification(message: GroupUpdated, closedGroup: SessionId) {
+    MessagingModuleConfiguration.shared.storage.handleMemberLeftNotification(message, closedGroup)
 }
 
 private fun handleGroupInfoChange(message: GroupUpdated, closedGroup: SessionId) {

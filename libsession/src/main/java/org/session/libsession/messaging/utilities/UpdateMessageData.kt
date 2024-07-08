@@ -122,7 +122,7 @@ class UpdateMessageData () {
                         else -> null
                     }?.let { UpdateMessageData(it) }
                 }
-                inner.hasMemberLeftMessage() -> UpdateMessageData(Kind.GroupMemberLeft)
+                inner.hasMemberLeftNotificationMessage() -> UpdateMessageData(Kind.GroupMemberLeft)
                 else -> null
             }
         }

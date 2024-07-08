@@ -1714,7 +1714,7 @@ open class Storage(
         insertGroupInfoChange(message, closedGroupId)
     }
 
-    override fun removeMember(groupSessionId: String, removedMembers: Array<String>) {
+    private fun doRemoveMember(groupSessionId: String, removedMembers: Array<String>, sendRemovedMessage: Boolean) {
         val closedGroupId = SessionId.from(groupSessionId)
         val adminKey = configFactory.userGroups?.getClosedGroup(groupSessionId)?.adminKey ?: return
         if (adminKey.isEmpty()) {
@@ -1792,28 +1792,36 @@ open class Storage(
             members.free()
             keys.free()
 
-            val timestamp = SnodeAPI.nowWithOffset
-            val messageToSign = "MEMBER_CHANGE${GroupUpdateMemberChangeMessage.Type.REMOVED.name}$timestamp"
-            val signature = SodiumUtilities.sign(messageToSign.toByteArray(), adminKey)
-            val updateMessage = GroupUpdateMessage.newBuilder()
-                .setMemberChangeMessage(
-                    GroupUpdateMemberChangeMessage.newBuilder()
-                        .addAllMemberSessionIds(removedMembers.toList())
-                        .setType(GroupUpdateMemberChangeMessage.Type.REMOVED)
-                        .setAdminSignature(ByteString.copyFrom(signature))
-                )
-                .build()
-            val message = GroupUpdated(
-                updateMessage
-            ).apply { sentTimestamp = timestamp }
-            val groupDestination = Destination.ClosedGroup(groupSessionId)
-            MessageSender.send(message, groupDestination, false)
-            insertGroupInfoChange(message, closedGroupId)
+            if (sendRemovedMessage) {
+                val timestamp = SnodeAPI.nowWithOffset
+                val messageToSign = "MEMBER_CHANGE${GroupUpdateMemberChangeMessage.Type.REMOVED.name}$timestamp"
+                val signature = SodiumUtilities.sign(messageToSign.toByteArray(), adminKey)
+
+                val updateMessage = GroupUpdateMessage.newBuilder()
+                    .setMemberChangeMessage(
+                        GroupUpdateMemberChangeMessage.newBuilder()
+                            .addAllMemberSessionIds(removedMembers.toList())
+                            .setType(GroupUpdateMemberChangeMessage.Type.REMOVED)
+                            .setAdminSignature(ByteString.copyFrom(signature))
+                    )
+                    .build()
+                val message = GroupUpdated(
+                    updateMessage
+                ).apply { sentTimestamp = timestamp }
+                val groupDestination = Destination.ClosedGroup(groupSessionId)
+                MessageSender.send(message, groupDestination, false)
+                insertGroupInfoChange(message, closedGroupId)
+            }
         } catch (e: Exception) {
             info.free()
             members.free()
             keys.free()
         }
+
+    }
+
+    override fun removeMember(groupSessionId: String, removedMembers: Array<String>) {
+        doRemoveMember(groupSessionId, removedMembers, sendRemovedMessage = true)
     }
 
     override fun handlePromoted(keyPair: KeyPair) {
@@ -1848,7 +1856,7 @@ open class Storage(
         val closedGroup = userGroups.getClosedGroup(closedGroupId.hexString()) ?: return
         if (closedGroup.hasAdminKey()) {
             // re-key and do a new config removing the previous member
-            removeMember(closedGroupHexString, arrayOf(message.sender!!))
+            doRemoveMember(closedGroupHexString, arrayOf(message.sender!!), sendRemovedMessage = false)
         } else {
             configFactory.getGroupMemberConfig(closedGroupId)?.use { memberConfig ->
                 // if the leaving member is an admin, disable the group and remove it
@@ -1860,11 +1868,13 @@ open class Storage(
                         deleteConversation(threadId)
                     }
                     configFactory.removeGroup(closedGroupId)
-                } else {
-                    insertGroupInfoChange(message, closedGroupId)
                 }
             }
         }
+    }
+
+    override fun handleMemberLeftNotification(message: GroupUpdated, closedGroupId: SessionId) {
+        insertGroupInfoChange(message, closedGroupId)
     }
 
     override fun handleKicked(groupSessionId: SessionId) {
@@ -1878,14 +1888,26 @@ open class Storage(
 
         try {
             if (canSendGroupMessage) {
-                val message = GroupUpdated(
-                    GroupUpdateMessage.newBuilder()
-                        .setMemberLeftMessage(DataMessage.GroupUpdateMemberLeftMessage.getDefaultInstance())
-                        .build()
-                )
-
                 // throws on unsuccessful send
-                MessageSender.sendNonDurably(message, fromSerialized(groupSessionId), false).get()
+                MessageSender.sendNonDurably(
+                    message = GroupUpdated(
+                        GroupUpdateMessage.newBuilder()
+                            .setMemberLeftMessage(DataMessage.GroupUpdateMemberLeftMessage.getDefaultInstance())
+                            .build()
+                    ),
+                    address = fromSerialized(groupSessionId),
+                    isSyncMessage = false
+                ).get()
+
+                MessageSender.sendNonDurably(
+                    message = GroupUpdated(
+                        GroupUpdateMessage.newBuilder()
+                            .setMemberLeftNotificationMessage(DataMessage.GroupUpdateMemberLeftNotificationMessage.getDefaultInstance())
+                            .build()
+                    ),
+                    address = fromSerialized(groupSessionId),
+                    isSyncMessage = false
+                ).get()
             }
 
             pollerFactory.pollerFor(closedGroupId)?.stop()
