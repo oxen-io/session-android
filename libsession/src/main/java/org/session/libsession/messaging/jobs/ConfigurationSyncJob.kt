@@ -180,7 +180,6 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
         // type mappings
         const val CONTACT_TYPE = 1
         const val GROUP_TYPE = 2
-
     }
 
     class Factory: Job.Factory<ConfigurationSyncJob> {

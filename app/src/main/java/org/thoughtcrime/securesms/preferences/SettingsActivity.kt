@@ -259,11 +259,18 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             removingProfilePic = true
             val emptyByteArray = ByteArray(0)
             uploadProfilePicturePromise = ProfilePictureUtilities.upload(emptyByteArray, encodedProfileKey, this)
-            MessagingModuleConfiguration.shared.storage.clearUserPic()
         }
 
         // If the upload picture promise succeeded then we hit this successUi block
         uploadProfilePicturePromise.successUi {
+
+            // If successfully removed the profile picture on the network then we can clear the
+            // local profile picture - otherwise it's weird to fail the online section but it
+            // _looks_ like it worked because we cleared the local image.
+            if (removingProfilePic) {
+                MessagingModuleConfiguration.shared.storage.clearUserPic()
+            }
+
             val userConfig = configFactory.user
             AvatarHelper.setAvatar(this, Address.fromSerialized(TextSecurePreferences.getLocalNumber(this)!!), profilePicture)
             TextSecurePreferences.setProfileAvatarId(this, profilePicture?.let { SecureRandom().nextInt() } ?: 0 )
