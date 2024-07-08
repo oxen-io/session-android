@@ -65,7 +65,7 @@ object HTTP {
             .writeTimeout(timeout, TimeUnit.SECONDS)
             .build()
     }
-    
+
     private const val timeout: Long = 120
 
     open class HTTPRequestFailedException(

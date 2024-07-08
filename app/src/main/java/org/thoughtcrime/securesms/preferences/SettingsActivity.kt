@@ -264,9 +264,11 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         // If the upload picture promise succeeded then we hit this successUi block
         uploadProfilePicturePromise.successUi {
 
-            // If successfully removed the profile picture on the network then we can clear the
-            // local profile picture - otherwise it's weird to fail the online section but it
-            // _looks_ like it worked because we cleared the local image.
+            // If we successfully removed the profile picture on the network then we can clear the
+            // local data - otherwise it's weird to fail the online section but it _looks_ like it
+            // worked because we cleared the local image (also it denies them the chance to retry
+            // removal if we do it locally, and may result in them having a visible profile picture
+            // everywhere EXCEPT on their own device!).
             if (removingProfilePic) {
                 MessagingModuleConfiguration.shared.storage.clearUserPic()
             }
