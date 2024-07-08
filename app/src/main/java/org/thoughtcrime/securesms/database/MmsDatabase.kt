@@ -290,7 +290,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         db.update(TABLE_NAME, contentValues, ID_WHERE, arrayOf(messageId.toString()))
     }
 
-    override fun markAsDeleted(messageId: Long) {
+    override fun markAsDeleted(messageId: Long, isOutgoing: Boolean) {
         val database = databaseHelper.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(READ, 1)
@@ -301,7 +301,10 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         queue(Runnable { attachmentDatabase.deleteAttachmentsForMessage(messageId) })
         val threadId = getThreadIdForMessage(messageId)
 
-        markAs(messageId, MmsSmsColumns.Types.BASE_DELETED_TYPE, threadId)
+        val deletedType = if (isOutgoing) {  MmsSmsColumns.Types.BASE_DELETED_OUTGOING_TYPE} else {
+            MmsSmsColumns.Types.BASE_DELETED_INCOMING_TYPE
+        }
+        markAs(messageId, deletedType, threadId)
     }
 
     override fun markExpireStarted(messageId: Long, startedTimestamp: Long) {

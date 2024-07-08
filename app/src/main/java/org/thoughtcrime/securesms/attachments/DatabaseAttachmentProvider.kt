@@ -6,6 +6,7 @@ import com.google.protobuf.ByteString
 import org.greenrobot.eventbus.EventBus
 import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.messaging.MessagingModuleConfiguration
+import org.session.libsession.messaging.messages.MarkAsDeletedMessage
 import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId
@@ -221,7 +222,8 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
         val message = database.getMessageFor(timestamp, address) ?: return null
         val messagingDatabase: MessagingDatabase = if (message.isMms)  DatabaseComponent.get(context).mmsDatabase()
                                                    else DatabaseComponent.get(context).smsDatabase()
-        messagingDatabase.markAsDeleted(message.id)
+
+        messagingDatabase.markAsDeleted(message.id, message.isOutgoing)
         if (message.isOutgoing) {
             messagingDatabase.deleteMessage(message.id)
         }
@@ -230,7 +232,7 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
     }
 
     override fun markMessagesAsDeleted(
-        messageIDs: List<Long>,
+        messages: List<MarkAsDeletedMessage>,
         threadId: Long,
         isSms: Boolean
     ) {
@@ -240,8 +242,8 @@ class DatabaseAttachmentProvider(context: Context, helper: SQLCipherOpenHelper) 
         //todo DELETION can this be batched?
         //todo DELETION we need to have different types of "marked as deleted": incoming and outgoing
         //todo DELETION we need to have customisable text for "marked as deleted" message
-        messageIDs.forEach { messageID ->
-            messagingDatabase.markAsDeleted(messageID)
+        messages.forEach { message ->
+            messagingDatabase.markAsDeleted(message.messageId, message.isOutgoing)
         }
     }
 

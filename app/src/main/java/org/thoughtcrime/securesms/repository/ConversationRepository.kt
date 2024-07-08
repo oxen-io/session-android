@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.messaging.messages.Destination
+import org.session.libsession.messaging.messages.MarkAsDeletedMessage
 import org.session.libsession.messaging.messages.control.MessageRequestResponse
 import org.session.libsession.messaging.messages.control.UnsendRequest
 import org.session.libsession.messaging.messages.signal.OutgoingTextMessage
@@ -186,11 +187,17 @@ class DefaultConversationRepository @Inject constructor(
         val (mms, sms) = messages.partition { it.isMms }
 
         if(mms.isNotEmpty()){
-            messageDataProvider.markMessagesAsDeleted(mms.map { it.id }, threadId, isSms = false)
+            messageDataProvider.markMessagesAsDeleted(mms.map { MarkAsDeletedMessage(
+                messageId = it.id,
+                isOutgoing = it.isOutgoing
+            ) }, threadId, isSms = false)
         }
 
         if(sms.isNotEmpty()){
-            messageDataProvider.markMessagesAsDeleted(sms.map { it.id }, threadId, isSms = true)
+            messageDataProvider.markMessagesAsDeleted(sms.map { MarkAsDeletedMessage(
+                messageId = it.id,
+                isOutgoing = it.isOutgoing
+            ) }, threadId, isSms = true)
         }
 
         //todo DELETION delete attachments and links

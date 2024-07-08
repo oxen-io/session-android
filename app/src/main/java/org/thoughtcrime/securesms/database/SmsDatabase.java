@@ -236,14 +236,17 @@ public class SmsDatabase extends MessagingDatabase {
   }
 
   @Override
-  public void markAsDeleted(long messageId) {
+  public void markAsDeleted(long messageId, boolean isOutgoing) {
     SQLiteDatabase database     = databaseHelper.getWritableDatabase();
     ContentValues contentValues = new ContentValues();
     contentValues.put(READ, 1);
     contentValues.put(BODY, "");
     contentValues.put(HAS_MENTION, 0);
     database.update(TABLE_NAME, contentValues, ID_WHERE, new String[] {String.valueOf(messageId)});
-    updateTypeBitmask(messageId, Types.BASE_TYPE_MASK, Types.BASE_DELETED_TYPE);
+
+    updateTypeBitmask(messageId, Types.BASE_TYPE_MASK,
+            isOutgoing? MmsSmsColumns.Types.BASE_DELETED_OUTGOING_TYPE : MmsSmsColumns.Types.BASE_DELETED_INCOMING_TYPE
+    );
   }
 
   @Override
