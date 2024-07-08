@@ -246,27 +246,38 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         // Note: We define the promise here so we have the scope to check success/fail later without
         // having to nest the blocks inside the conditional blocks.
         lateinit var uploadProfilePicturePromise: Promise<*, Exception>
+
+        var removingProfilePic = false;
+
         if (isUpdatingProfilePicture) {
             // ..then we're either adding a new / different picture..
             if (profilePicture != null) {
                 uploadProfilePicturePromise = ProfilePictureUtilities.upload(profilePicture, encodedProfileKey, this)
             } else {
                 // ..or we're removing the picture.
-                try {
+                //try {
+                    Log.w("ACL", "Definitely removing profile pic!")
+
+                    removingProfilePic = true;
+                    val emptyByteArray = ByteArray(0)
+                    uploadProfilePicturePromise = ProfilePictureUtilities.upload(emptyByteArray, encodedProfileKey, this)
                     MessagingModuleConfiguration.shared.storage.clearUserPic()
-                }
-                catch (e: Exception) {
-                    Log.e(TAG, "Failed to clear user profile picture", e)
-                    Toast.makeText(this@SettingsActivity, R.string.profileDisplayPictureRemoveError, Toast.LENGTH_LONG).show()
-                }
+                //}
+                //catch (e: Exception) {
+//                    Log.e(TAG, "Failed to clear user profile picture", e)
+//                    Toast.makeText(this@SettingsActivity, R.string.profileDisplayPictureRemoveError, Toast.LENGTH_LONG).show()
+//                }
 
                 // If we were only removing the profile pic there's no promise to handle so we bail
-                return
+  //              return
             }
         }
 
         // If the upload picture promise succeeded then we hit this successUi block
         uploadProfilePicturePromise.successUi {
+
+            if (removingProfilePic) { Log.w("ACL", "Hit successUi for removing profile pic") }
+
             val userConfig = configFactory.user
             if (isUpdatingProfilePicture) {
                 AvatarHelper.setAvatar(this, Address.fromSerialized(TextSecurePreferences.getLocalNumber(this)!!), profilePicture)
@@ -290,8 +301,13 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
         // Or if the promise failed to upload the new profile picture then we hit this failUi block
         uploadProfilePicturePromise.failUi {
-            Log.e(TAG, "Failed to upload profile picture")
-            Toast.makeText(this@SettingsActivity, R.string.profileErrorUpdate, Toast.LENGTH_LONG).show()
+
+            if (removingProfilePic) {
+                Log.w("ACL", "Hit failUi for removing profile pic")
+            } else {
+                Log.e(TAG, "Failed to upload profile picture")
+                Toast.makeText(this@SettingsActivity, R.string.profileErrorUpdate, Toast.LENGTH_LONG).show()
+            }
         }
 
         // Finally, regardless of whether the promise succeeded or failed, we always hit this `alwaysUi` block

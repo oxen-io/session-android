@@ -600,8 +600,8 @@ open class Storage(
 
         //try
 
-        val scope = CoroutineScope(Dispatchers.IO)
-        val job = scope.launch {
+        /*
+        val job = CoroutineScope(Dispatchers.IO).launch {
             performClearProfilePictureJob()
         }
 
@@ -615,6 +615,7 @@ open class Storage(
         {
             Log.w("ACL", "clearProfileJob is neither completed, cancelled, or active!?!?")
         }
+        */
 
 
         //ThreadUtils.queue {
