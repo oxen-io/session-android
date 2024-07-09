@@ -245,8 +245,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
         val encodedProfileKey = ProfileKeyUtil.generateEncodedProfileKey(this)
 
-
-        lateinit var uploadProfilePicturePromise: Promise<*, Exception>
+        val uploadProfilePicturePromise: Promise<*, Exception>
         var removingProfilePic = false
 
         // Adding a new profile picture?

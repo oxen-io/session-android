@@ -137,7 +137,7 @@ object HTTP {
         }
         return when (val statusCode = response.code) {
             200 -> {
-                response.body.bytes()
+                response.body!!.bytes()
             }
             else -> {
                 Log.d("Loki", "${verb.rawValue} request to $url failed with status code: $statusCode.")
