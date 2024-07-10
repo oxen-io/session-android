@@ -5,7 +5,6 @@ import android.net.Uri
 import com.google.protobuf.ByteString
 import network.loki.messenger.libsession_util.Config
 import java.security.MessageDigest
-import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.ConfigBase.Companion.PRIORITY_HIDDEN
 import network.loki.messenger.libsession_util.ConfigBase.Companion.PRIORITY_PINNED
 import network.loki.messenger.libsession_util.ConfigBase.Companion.PRIORITY_VISIBLE
@@ -1402,7 +1401,8 @@ open class Storage(
         groupId: SessionId,
         name: String,
         authData: ByteArray,
-        invitingAdmin: SessionId
+        invitingAdmin: SessionId,
+        invitingMessageHash: String?,
     ) {
         val recipient = Recipient.from(context, fromSerialized(groupId.hexString()), false)
         val profileManager = SSKEnvironment.shared.profileManager
@@ -1438,6 +1438,24 @@ open class Storage(
         } else {
             inviteDb.addGroupInviteReferrer(groupThreadId, invitingAdmin.hexString())
             insertGroupInviteControlMessage(SnodeAPI.nowWithOffset, invitingAdmin.hexString(), groupId)
+        }
+
+        if (invitingMessageHash != null) {
+            val publicKey = getUserPublicKey()!!
+            val batch = SnodeAPI.buildAuthenticatedDeleteBatchInfo(
+                publicKey,
+                listOf(invitingMessageHash)
+            )
+
+            if (batch != null) {
+                SnodeAPI.getSingleTargetSnode(publicKey).map { snode ->
+                    SnodeAPI.getRawBatchResponse(snode, publicKey, listOf(batch))
+                }.success {
+                    Log.d(TAG, "Successfully deleted invite message")
+                }.fail { e ->
+                    Log.e(TAG, "Error deleting invite message", e)
+                }
+            }
         }
     }
 

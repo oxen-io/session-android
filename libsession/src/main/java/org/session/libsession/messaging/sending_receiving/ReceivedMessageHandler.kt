@@ -1,7 +1,6 @@
 package org.session.libsession.messaging.sending_receiving
 
 import android.text.TextUtils
-import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import network.loki.messenger.libsession_util.util.Sodium
 import org.session.libsession.avatars.AvatarHelper
@@ -668,7 +667,7 @@ private fun MessageReceiver.handleNewLibSessionClosedGroupMessage(message: Group
     val sender = message.sender!!
     val adminId = SessionId.from(sender)
     // add the group
-    storage.addClosedGroupInvite(groupId, invite.name, invite.memberAuthData.toByteArray(), adminId)
+    storage.addClosedGroupInvite(groupId, invite.name, invite.memberAuthData.toByteArray(), adminId, message.serverHash)
 }
 
 /**
