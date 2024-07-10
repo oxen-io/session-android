@@ -575,36 +575,42 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     private fun deleteConversation(thread: ThreadRecord) {
         val threadID = thread.threadId
         val recipient = thread.recipient
+        val title: String
+        val message: CharSequence
 
-        // If this is a group conversation
-        val message = if (recipient.isGroupRecipient) {
+        if (recipient.isGroupRecipient) {
             val group = groupDatabase.getGroup(recipient.address.toString()).orNull()
 
             // If you are an admin of this group you can delete it
             if (group != null && group.admins.map { it.toString() }.contains(textSecurePreferences.getLocalNumber())) {
-                Phrase.from(this.applicationContext, R.string.groupDeleteDescription)
+                title = getString(R.string.groupDelete)
+                message = Phrase.from(this.applicationContext, R.string.groupDeleteDescription)
                     .put(GROUP_NAME_KEY, group.title)
-                    .format().toString()
+                    .format()
             } else {
-                // Otherwise you can only leave the group
-                Phrase.from(this.applicationContext, R.string.groupLeaveDescription)
+                // Otherwise if you're not an admin you can only leave the group
+                title = getString(R.string.groupLeave)
+                message = Phrase.from(this.applicationContext, R.string.groupLeaveDescription)
                     .put(GROUP_NAME_KEY, group.title)
                     .format()
             }
         } else {
             // If this is a 1-on-1 conversation
             if (recipient.name != null) {
-                Phrase.from(this.applicationContext, R.string.conversationsDeleteDescription)
+                title = getString(R.string.conversationsDelete)
+                message = Phrase.from(this.applicationContext, R.string.conversationsDeleteDescription)
                     .put(NAME_KEY, recipient.name)
                     .format()
             }
             else {
-                // ACL TODO: This says "clear" while all other strings say delete - is this correct?
-                getString(R.string.clearMessagesNoteToSelfDescription)
+                // If not group-related and we don't have a recipient name then this must be our Note to Self conversation
+                title = getString(R.string.noteToSelf)
+                message = getString(R.string.clearMessagesNoteToSelfDescription)
             }
         }
 
         showSessionDialog {
+            title(title)
             text(message)
             button(R.string.yes) {
                 lifecycleScope.launch(Dispatchers.Main) {

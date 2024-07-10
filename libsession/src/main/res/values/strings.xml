@@ -266,7 +266,6 @@
     <string name="communityJoinError">Failed to join {community_name}</string>
     <string name="communityJoinedAlready">You are already a member of this community.</string>
     <string name="communityLeave">Leave Community</string>
-    <string name="communityLeaveDescription">Are you sure you want to leave {community_name}?</string>
     <string name="communityLeaveError">Failed to leave {community_name}</string>
     <string name="communityUnknown">Unknown Community</string>
     <string name="communityUrl">Community URL</string>

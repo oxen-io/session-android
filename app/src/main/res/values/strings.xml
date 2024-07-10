@@ -2,5 +2,5 @@
 <resources>
     <!-- All localisable strings are now in the `libsession` module (which will be renamed to
     `common` in the near future), and all content description / AccessibilityID_ strings are in
-    their own content-descriptions module -->
+    their own content-descriptions module. -->
 </resources>
