@@ -15,8 +15,8 @@ import org.session.libsession.avatars.ProfileContactPhoto
 import org.session.libsession.avatars.ResourceContactPhoto
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.utilities.Address
-import org.session.libsession.utilities.AppTextSecurePreferences
 import org.session.libsession.utilities.GroupUtil
+import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.mms.GlideApp
@@ -27,7 +27,7 @@ class ProfilePictureView @JvmOverloads constructor(
 ) : RelativeLayout(context, attrs) {
     private val binding = ViewProfilePictureBinding.inflate(LayoutInflater.from(context), this)
     private val glide: GlideRequests = GlideApp.with(this)
-    private val prefs = AppTextSecurePreferences(context)
+    private val prefs = TextSecurePreferences(context)
     private val userPublicKey = prefs.getLocalNumber()
     var publicKey: String? = null
     var displayName: String? = null

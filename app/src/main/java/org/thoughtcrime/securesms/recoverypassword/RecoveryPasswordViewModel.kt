@@ -10,12 +10,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.session.libsession.utilities.AppTextSecurePreferences
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsignal.crypto.MnemonicCodec
 import org.session.libsignal.utilities.hexEncodedPrivateKey
@@ -27,7 +25,7 @@ import javax.inject.Inject
 class RecoveryPasswordViewModel @Inject constructor(
     private val application: Application
 ): AndroidViewModel(application) {
-    val prefs = AppTextSecurePreferences(application)
+    val prefs = TextSecurePreferences(application)
 
     val seed = MutableStateFlow<String?>(null)
     val mnemonic = seed.filterNotNull()

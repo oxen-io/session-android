@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import org.session.libsession.utilities.AppTextSecurePreferences
+import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.ui.color.ClassicDark
 import org.thoughtcrime.securesms.ui.color.ClassicLight
 import org.thoughtcrime.securesms.ui.color.Colors
@@ -73,7 +73,7 @@ private fun Colors.toMaterialColors() = androidx.compose.material.Colors(
     isLight = isLight
 )
 
-@Composable private fun Context.colors() = AppTextSecurePreferences(this).colors()
+@Composable private fun Context.colors() = TextSecurePreferences(this).colors()
 
 val pillShape = RoundedCornerShape(percent = 50)
 val buttonShape = pillShape

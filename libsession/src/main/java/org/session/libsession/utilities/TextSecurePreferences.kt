@@ -13,20 +13,6 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import org.session.libsession.R
-import org.session.libsession.utilities.TextSecurePreferences.Companion.AUTOPLAY_AUDIO_MESSAGES
-import org.session.libsession.utilities.TextSecurePreferences.Companion.CALL_NOTIFICATIONS_ENABLED
-import org.session.libsession.utilities.TextSecurePreferences.Companion.CLASSIC_DARK
-import org.session.libsession.utilities.TextSecurePreferences.Companion.CLASSIC_LIGHT
-import org.session.libsession.utilities.TextSecurePreferences.Companion.FOLLOW_SYSTEM_SETTINGS
-import org.session.libsession.utilities.TextSecurePreferences.Companion.HIDE_PASSWORD
-import org.session.libsession.utilities.TextSecurePreferences.Companion.LAST_VACUUM_TIME
-import org.session.libsession.utilities.TextSecurePreferences.Companion.LEGACY_PREF_KEY_SELECTED_UI_MODE
-import org.session.libsession.utilities.TextSecurePreferences.Companion.OCEAN_DARK
-import org.session.libsession.utilities.TextSecurePreferences.Companion.OCEAN_LIGHT
-import org.session.libsession.utilities.TextSecurePreferences.Companion.SELECTED_ACCENT_COLOR
-import org.session.libsession.utilities.TextSecurePreferences.Companion.SELECTED_STYLE
-import org.session.libsession.utilities.TextSecurePreferences.Companion.SHOWN_CALL_NOTIFICATION
-import org.session.libsession.utilities.TextSecurePreferences.Companion.SHOWN_CALL_WARNING
 import org.session.libsignal.utilities.Log
 import java.io.IOException
 import java.util.Arrays
@@ -34,159 +20,10 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
-interface TextSecurePreferences {
-
-    fun getLastConfigurationSyncTime(): Long
-    fun setLastConfigurationSyncTime(value: Long)
-    fun getConfigurationMessageSynced(): Boolean
-    fun setConfigurationMessageSynced(value: Boolean)
-    fun isPushEnabled(): Boolean
-    fun setPushEnabled(value: Boolean)
-    fun getPushToken(): String?
-    fun setPushToken(value: String)
-    fun getPushRegisterTime(): Long
-    fun setPushRegisterTime(value: Long)
-    fun isScreenLockEnabled(): Boolean
-    fun setScreenLockEnabled(value: Boolean)
-    fun getScreenLockTimeout(): Long
-    fun setScreenLockTimeout(value: Long)
-    fun setBackupPassphrase(passphrase: String?)
-    fun getBackupPassphrase(): String?
-    fun setEncryptedBackupPassphrase(encryptedPassphrase: String?)
-    fun getEncryptedBackupPassphrase(): String?
-    fun setBackupEnabled(value: Boolean)
-    fun isBackupEnabled(): Boolean
-    fun setNextBackupTime(time: Long)
-    fun getNextBackupTime(): Long
-    fun setBackupSaveDir(dirUri: String?)
-    fun getBackupSaveDir(): String?
-    fun getNeedsSqlCipherMigration(): Boolean
-    fun setAttachmentEncryptedSecret(secret: String)
-    fun setAttachmentUnencryptedSecret(secret: String?)
-    fun getAttachmentEncryptedSecret(): String?
-    fun getAttachmentUnencryptedSecret(): String?
-    fun setDatabaseEncryptedSecret(secret: String)
-    fun setDatabaseUnencryptedSecret(secret: String?)
-    fun getDatabaseUnencryptedSecret(): String?
-    fun getDatabaseEncryptedSecret(): String?
-    fun isIncognitoKeyboardEnabled(): Boolean
-    fun isReadReceiptsEnabled(): Boolean
-    fun setReadReceiptsEnabled(enabled: Boolean)
-    fun isTypingIndicatorsEnabled(): Boolean
-    fun setTypingIndicatorsEnabled(enabled: Boolean)
-    fun isLinkPreviewsEnabled(): Boolean
-    fun setLinkPreviewsEnabled(enabled: Boolean)
-    fun hasSeenGIFMetaDataWarning(): Boolean
-    fun setHasSeenGIFMetaDataWarning()
-    fun isGifSearchInGridLayout(): Boolean
-    fun setIsGifSearchInGridLayout(isGrid: Boolean)
-    fun getProfileKey(): String?
-    fun setProfileKey(key: String?)
-    fun setProfileName(name: String?)
-    fun getProfileName(): String?
-    fun setProfileAvatarId(id: Int)
-    fun getProfileAvatarId(): Int
-    fun setProfilePictureURL(url: String?)
-    fun getProfilePictureURL(): String?
-    fun getNotificationPriority(): Int
-    fun getMessageBodyTextSize(): Int
-    fun setDirectCaptureCameraId(value: Int)
-    fun getDirectCaptureCameraId(): Int
-    fun getNotificationPrivacy(): NotificationPrivacyPreference
-    fun getRepeatAlertsCount(): Int
-    fun getLocalRegistrationId(): Int
-    fun setLocalRegistrationId(registrationId: Int)
-    fun isInThreadNotifications(): Boolean
-    fun isUniversalUnidentifiedAccess(): Boolean
-    fun getUpdateApkRefreshTime(): Long
-    fun setUpdateApkRefreshTime(value: Long)
-    fun setUpdateApkDownloadId(value: Long)
-    fun getUpdateApkDownloadId(): Long
-    fun setUpdateApkDigest(value: String?)
-    fun getUpdateApkDigest(): String?
-    fun getLocalNumber(): String?
-    fun getHasLegacyConfig(): Boolean
-    fun setHasLegacyConfig(newValue: Boolean)
-    fun setLocalNumber(localNumber: String)
-    fun removeLocalNumber()
-    fun isEnterSendsEnabled(): Boolean
-    fun isPasswordDisabled(): Boolean
-    fun setPasswordDisabled(disabled: Boolean)
-    fun isScreenSecurityEnabled(): Boolean
-    fun getLastVersionCode(): Int
-    fun setLastVersionCode(versionCode: Int)
-    fun isPassphraseTimeoutEnabled(): Boolean
-    fun getPassphraseTimeoutInterval(): Int
-    fun getLanguage(): String?
-    fun isNotificationsEnabled(): Boolean
-    fun getNotificationRingtone(): Uri
-    fun removeNotificationRingtone()
-    fun setNotificationRingtone(ringtone: String?)
-    fun setNotificationVibrateEnabled(enabled: Boolean)
-    fun isNotificationVibrateEnabled(): Boolean
-    fun getNotificationLedColor(): Int
-    fun isThreadLengthTrimmingEnabled(): Boolean
-    fun isSystemEmojiPreferred(): Boolean
-    fun getMobileMediaDownloadAllowed(): Set<String>?
-    fun getWifiMediaDownloadAllowed(): Set<String>?
-    fun getRoamingMediaDownloadAllowed(): Set<String>?
-    fun getMediaDownloadAllowed(key: String, @ArrayRes defaultValuesRes: Int): Set<String>?
-    fun getLogEncryptedSecret(): String?
-    fun setLogEncryptedSecret(base64Secret: String?)
-    fun getLogUnencryptedSecret(): String?
-    fun setLogUnencryptedSecret(base64Secret: String?)
-    fun getNotificationChannelVersion(): Int
-    fun setNotificationChannelVersion(version: Int)
-    fun getNotificationMessagesChannelVersion(): Int
-    fun setNotificationMessagesChannelVersion(version: Int)
-    fun getBooleanPreference(key: String?, defaultValue: Boolean): Boolean
-    fun setBooleanPreference(key: String?, value: Boolean)
-    fun getStringPreference(key: String, defaultValue: String?): String?
-    fun setStringPreference(key: String?, value: String?)
-    fun getIntegerPreference(key: String, defaultValue: Int): Int
-    fun setIntegerPreference(key: String, value: Int)
-    fun setIntegerPreferenceBlocking(key: String, value: Int): Boolean
-    fun getLongPreference(key: String, defaultValue: Long): Long
-    fun setLongPreference(key: String, value: Long)
-    fun removePreference(key: String)
-    fun getStringSetPreference(key: String, defaultValues: Set<String>): Set<String>?
-    fun getHasViewedSeed(): Boolean
-    fun setHasViewedSeed(hasViewedSeed: Boolean)
-    fun setRestorationTime(time: Long)
-    fun getRestorationTime(): Long
-    fun getLastProfilePictureUpload(): Long
-    fun setLastProfilePictureUpload(newValue: Long)
-    fun getLastSnodePoolRefreshDate(): Long
-    fun setLastSnodePoolRefreshDate(date: Date)
-    fun shouldUpdateProfile(profileUpdateTime: Long): Boolean
-    fun setLastProfileUpdateTime(profileUpdateTime: Long)
-    fun getLastOpenTimeDate(): Long
-    fun setLastOpenDate()
-    fun hasSeenLinkPreviewSuggestionDialog(): Boolean
-    fun setHasSeenLinkPreviewSuggestionDialog()
-    fun hasHiddenMessageRequests(): Boolean
-    fun setHasHiddenMessageRequests()
-    fun setShownCallWarning(): Boolean
-    fun setShownCallNotification(): Boolean
-    fun isCallNotificationsEnabled(): Boolean
-    fun getLastVacuum(): Long
-    fun setLastVacuumNow()
-    fun getFingerprintKeyGenerated(): Boolean
-    fun setFingerprintKeyGenerated()
-    fun getSelectedAccentColor(): String?
-    @StyleRes fun getAccentColorStyle(): Int?
-    fun setAccentColorStyle(@StyleRes newColorStyle: Int?)
-    fun getThemeStyle(): String
-    fun getFollowSystemSettings(): Boolean
-    fun setThemeStyle(themeStyle: String)
-    fun setFollowSystemSettings(followSystemSettings: Boolean)
-    fun autoplayAudioMessages(): Boolean
-    fun hasForcedNewConfig(): Boolean
-    fun hasPreference(key: String): Boolean
-    fun clearAll()
-    fun getHidePassword(): Boolean
-    fun setHidePassword(value: Boolean)
-
+@Singleton
+class TextSecurePreferences @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
     companion object {
         val TAG = TextSecurePreferences::class.simpleName
 
@@ -825,246 +662,240 @@ interface TextSecurePreferences {
             getDefaultSharedPreferences(context).edit().clear().commit()
         }
     }
-}
 
-@Singleton
-class AppTextSecurePreferences @Inject constructor(
-    @ApplicationContext private val context: Context
-): TextSecurePreferences {
-
-    override fun getLastConfigurationSyncTime(): Long {
+    fun getLastConfigurationSyncTime(): Long {
         return getLongPreference(TextSecurePreferences.LAST_CONFIGURATION_SYNC_TIME, 0)
     }
 
-    override fun setLastConfigurationSyncTime(value: Long) {
+    fun setLastConfigurationSyncTime(value: Long) {
         setLongPreference(TextSecurePreferences.LAST_CONFIGURATION_SYNC_TIME, value)
     }
 
-    override fun getConfigurationMessageSynced(): Boolean {
+    fun getConfigurationMessageSynced(): Boolean {
         return getBooleanPreference(TextSecurePreferences.CONFIGURATION_SYNCED, false)
     }
 
-    override fun setConfigurationMessageSynced(value: Boolean) {
+    fun setConfigurationMessageSynced(value: Boolean) {
         setBooleanPreference(TextSecurePreferences.CONFIGURATION_SYNCED, value)
         TextSecurePreferences._events.tryEmit(TextSecurePreferences.CONFIGURATION_SYNCED)
     }
 
-    override fun isPushEnabled(): Boolean {
+    fun isPushEnabled(): Boolean {
         return getBooleanPreference(TextSecurePreferences.IS_PUSH_ENABLED, false)
     }
 
-    override fun setPushEnabled(value: Boolean) {
+    fun setPushEnabled(value: Boolean) {
         setBooleanPreference(TextSecurePreferences.IS_PUSH_ENABLED, value)
     }
 
-    override fun getPushToken(): String? {
+    fun getPushToken(): String? {
         return getStringPreference(TextSecurePreferences.PUSH_TOKEN, "")
     }
 
-    override fun setPushToken(value: String) {
+    fun setPushToken(value: String) {
         setStringPreference(TextSecurePreferences.PUSH_TOKEN, value)
     }
 
-    override fun getPushRegisterTime(): Long {
+    fun getPushRegisterTime(): Long {
         return getLongPreference(TextSecurePreferences.PUSH_REGISTER_TIME, 0)
     }
 
-    override fun setPushRegisterTime(value: Long) {
+    fun setPushRegisterTime(value: Long) {
         setLongPreference(TextSecurePreferences.PUSH_REGISTER_TIME, value)
     }
 
-    override fun isScreenLockEnabled(): Boolean {
+    fun isScreenLockEnabled(): Boolean {
         return getBooleanPreference(TextSecurePreferences.SCREEN_LOCK, false)
     }
 
-    override fun setScreenLockEnabled(value: Boolean) {
+    fun setScreenLockEnabled(value: Boolean) {
         setBooleanPreference(TextSecurePreferences.SCREEN_LOCK, value)
     }
 
-    override fun getScreenLockTimeout(): Long {
+    fun getScreenLockTimeout(): Long {
         return getLongPreference(TextSecurePreferences.SCREEN_LOCK_TIMEOUT, 0)
     }
 
-    override fun setScreenLockTimeout(value: Long) {
+    fun setScreenLockTimeout(value: Long) {
         setLongPreference(TextSecurePreferences.SCREEN_LOCK_TIMEOUT, value)
     }
 
-    override fun setBackupPassphrase(passphrase: String?) {
+    fun setBackupPassphrase(passphrase: String?) {
         setStringPreference(TextSecurePreferences.BACKUP_PASSPHRASE, passphrase)
     }
 
-    override fun getBackupPassphrase(): String? {
+    fun getBackupPassphrase(): String? {
         return getStringPreference(TextSecurePreferences.BACKUP_PASSPHRASE, null)
     }
 
-    override fun setEncryptedBackupPassphrase(encryptedPassphrase: String?) {
+    fun setEncryptedBackupPassphrase(encryptedPassphrase: String?) {
         setStringPreference(TextSecurePreferences.ENCRYPTED_BACKUP_PASSPHRASE, encryptedPassphrase)
     }
 
-    override fun getEncryptedBackupPassphrase(): String? {
+    fun getEncryptedBackupPassphrase(): String? {
         return getStringPreference(TextSecurePreferences.ENCRYPTED_BACKUP_PASSPHRASE, null)
     }
 
-    override fun setBackupEnabled(value: Boolean) {
+    fun setBackupEnabled(value: Boolean) {
         setBooleanPreference(TextSecurePreferences.BACKUP_ENABLED, value)
     }
 
-    override fun isBackupEnabled(): Boolean {
+    fun isBackupEnabled(): Boolean {
         return getBooleanPreference(TextSecurePreferences.BACKUP_ENABLED, false)
     }
 
-    override fun setNextBackupTime(time: Long) {
+    fun setNextBackupTime(time: Long) {
         setLongPreference(TextSecurePreferences.BACKUP_TIME, time)
     }
 
-    override fun getNextBackupTime(): Long {
+    fun getNextBackupTime(): Long {
         return getLongPreference(TextSecurePreferences.BACKUP_TIME, -1)
     }
 
-    override fun setBackupSaveDir(dirUri: String?) {
+    fun setBackupSaveDir(dirUri: String?) {
         setStringPreference(TextSecurePreferences.BACKUP_SAVE_DIR, dirUri)
     }
 
-    override fun getBackupSaveDir(): String? {
+    fun getBackupSaveDir(): String? {
         return getStringPreference(TextSecurePreferences.BACKUP_SAVE_DIR, null)
     }
 
-    override fun getNeedsSqlCipherMigration(): Boolean {
+    fun getNeedsSqlCipherMigration(): Boolean {
         return getBooleanPreference(TextSecurePreferences.NEEDS_SQLCIPHER_MIGRATION, false)
     }
 
-    override fun setAttachmentEncryptedSecret(secret: String) {
+    fun setAttachmentEncryptedSecret(secret: String) {
         setStringPreference(TextSecurePreferences.ATTACHMENT_ENCRYPTED_SECRET, secret)
     }
 
-    override fun setAttachmentUnencryptedSecret(secret: String?) {
+    fun setAttachmentUnencryptedSecret(secret: String?) {
         setStringPreference(TextSecurePreferences.ATTACHMENT_UNENCRYPTED_SECRET, secret)
     }
 
-    override fun getAttachmentEncryptedSecret(): String? {
+    fun getAttachmentEncryptedSecret(): String? {
         return getStringPreference(TextSecurePreferences.ATTACHMENT_ENCRYPTED_SECRET, null)
     }
 
-    override fun getAttachmentUnencryptedSecret(): String? {
+    fun getAttachmentUnencryptedSecret(): String? {
         return getStringPreference(TextSecurePreferences.ATTACHMENT_UNENCRYPTED_SECRET, null)
     }
 
-    override fun setDatabaseEncryptedSecret(secret: String) {
+    fun setDatabaseEncryptedSecret(secret: String) {
         setStringPreference(TextSecurePreferences.DATABASE_ENCRYPTED_SECRET, secret)
     }
 
-    override fun setDatabaseUnencryptedSecret(secret: String?) {
+    fun setDatabaseUnencryptedSecret(secret: String?) {
         setStringPreference(TextSecurePreferences.DATABASE_UNENCRYPTED_SECRET, secret)
     }
 
-    override fun getDatabaseUnencryptedSecret(): String? {
+    fun getDatabaseUnencryptedSecret(): String? {
         return getStringPreference(TextSecurePreferences.DATABASE_UNENCRYPTED_SECRET, null)
     }
 
-    override fun getDatabaseEncryptedSecret(): String? {
+    fun getDatabaseEncryptedSecret(): String? {
         return getStringPreference(TextSecurePreferences.DATABASE_ENCRYPTED_SECRET, null)
     }
 
-    override fun isIncognitoKeyboardEnabled(): Boolean {
+    fun isIncognitoKeyboardEnabled(): Boolean {
         return getBooleanPreference(TextSecurePreferences.INCOGNITO_KEYBORAD_PREF, true)
     }
 
-    override fun isReadReceiptsEnabled(): Boolean {
+    fun isReadReceiptsEnabled(): Boolean {
         return getBooleanPreference(TextSecurePreferences.READ_RECEIPTS_PREF, false)
     }
 
-    override fun setReadReceiptsEnabled(enabled: Boolean) {
+    fun setReadReceiptsEnabled(enabled: Boolean) {
         setBooleanPreference(TextSecurePreferences.READ_RECEIPTS_PREF, enabled)
     }
 
-    override fun isTypingIndicatorsEnabled(): Boolean {
+    fun isTypingIndicatorsEnabled(): Boolean {
         return getBooleanPreference(TextSecurePreferences.TYPING_INDICATORS, false)
     }
 
-    override fun setTypingIndicatorsEnabled(enabled: Boolean) {
+    fun setTypingIndicatorsEnabled(enabled: Boolean) {
         setBooleanPreference(TextSecurePreferences.TYPING_INDICATORS, enabled)
     }
 
-    override fun isLinkPreviewsEnabled(): Boolean {
+    fun isLinkPreviewsEnabled(): Boolean {
         return getBooleanPreference(TextSecurePreferences.LINK_PREVIEWS, false)
     }
 
-    override fun setLinkPreviewsEnabled(enabled: Boolean) {
+    fun setLinkPreviewsEnabled(enabled: Boolean) {
         setBooleanPreference(TextSecurePreferences.LINK_PREVIEWS, enabled)
     }
 
-    override fun hasSeenGIFMetaDataWarning(): Boolean {
+    fun hasSeenGIFMetaDataWarning(): Boolean {
         return getBooleanPreference(TextSecurePreferences.GIF_METADATA_WARNING, false)
     }
 
-    override fun setHasSeenGIFMetaDataWarning() {
+    fun setHasSeenGIFMetaDataWarning() {
         setBooleanPreference(TextSecurePreferences.GIF_METADATA_WARNING, true)
     }
 
-    override fun isGifSearchInGridLayout(): Boolean {
+    fun isGifSearchInGridLayout(): Boolean {
         return getBooleanPreference(TextSecurePreferences.GIF_GRID_LAYOUT, false)
     }
 
-    override fun setIsGifSearchInGridLayout(isGrid: Boolean) {
+    fun setIsGifSearchInGridLayout(isGrid: Boolean) {
         setBooleanPreference(TextSecurePreferences.GIF_GRID_LAYOUT, isGrid)
     }
 
-    override fun getProfileKey(): String? {
+    fun getProfileKey(): String? {
         return getStringPreference(TextSecurePreferences.PROFILE_KEY_PREF, null)
     }
 
-    override fun setProfileKey(key: String?) {
+    fun setProfileKey(key: String?) {
         setStringPreference(TextSecurePreferences.PROFILE_KEY_PREF, key)
     }
 
-    override fun setProfileName(name: String?) {
+    fun setProfileName(name: String?) {
         setStringPreference(TextSecurePreferences.PROFILE_NAME_PREF, name)
         TextSecurePreferences._events.tryEmit(TextSecurePreferences.PROFILE_NAME_PREF)
     }
 
-    override fun getProfileName(): String? {
+    fun getProfileName(): String? {
         return getStringPreference(TextSecurePreferences.PROFILE_NAME_PREF, null)
     }
 
-    override fun setProfileAvatarId(id: Int) {
+    fun setProfileAvatarId(id: Int) {
         setIntegerPreference(TextSecurePreferences.PROFILE_AVATAR_ID_PREF, id)
     }
 
-    override fun getProfileAvatarId(): Int {
+    fun getProfileAvatarId(): Int {
         return getIntegerPreference(TextSecurePreferences.PROFILE_AVATAR_ID_PREF, 0)
     }
 
-    override fun setProfilePictureURL(url: String?) {
+    fun setProfilePictureURL(url: String?) {
         setStringPreference(TextSecurePreferences.PROFILE_AVATAR_URL_PREF, url)
     }
 
-    override fun getProfilePictureURL(): String? {
+    fun getProfilePictureURL(): String? {
         return getStringPreference(TextSecurePreferences.PROFILE_AVATAR_URL_PREF, null)
     }
 
-    override fun getNotificationPriority(): Int {
+    fun getNotificationPriority(): Int {
         return getStringPreference(
             TextSecurePreferences.NOTIFICATION_PRIORITY_PREF, NotificationCompat.PRIORITY_HIGH.toString())!!.toInt()
     }
 
-    override fun getMessageBodyTextSize(): Int {
+    fun getMessageBodyTextSize(): Int {
         return getStringPreference(TextSecurePreferences.MESSAGE_BODY_TEXT_SIZE_PREF, "16")!!.toInt()
     }
 
-    override fun setDirectCaptureCameraId(value: Int) {
+    fun setDirectCaptureCameraId(value: Int) {
         setIntegerPreference(TextSecurePreferences.DIRECT_CAPTURE_CAMERA_ID, value)
     }
 
-    override fun getDirectCaptureCameraId(): Int {
+    fun getDirectCaptureCameraId(): Int {
         return getIntegerPreference(TextSecurePreferences.DIRECT_CAPTURE_CAMERA_ID, Camera.CameraInfo.CAMERA_FACING_BACK)
     }
 
-    override fun getNotificationPrivacy(): NotificationPrivacyPreference {
+    fun getNotificationPrivacy(): NotificationPrivacyPreference {
         return NotificationPrivacyPreference(getStringPreference(
             TextSecurePreferences.NOTIFICATION_PRIVACY_PREF, "all"))
     }
 
-    override fun getRepeatAlertsCount(): Int {
+    fun getRepeatAlertsCount(): Int {
         return try {
             getStringPreference(TextSecurePreferences.REPEAT_ALERTS_PREF, "0")!!.toInt()
         } catch (e: NumberFormatException) {
@@ -1073,111 +904,111 @@ class AppTextSecurePreferences @Inject constructor(
         }
     }
 
-    override fun getLocalRegistrationId(): Int {
+    fun getLocalRegistrationId(): Int {
         return getIntegerPreference(TextSecurePreferences.LOCAL_REGISTRATION_ID_PREF, 0)
     }
 
-    override fun setLocalRegistrationId(registrationId: Int) {
+    fun setLocalRegistrationId(registrationId: Int) {
         setIntegerPreference(TextSecurePreferences.LOCAL_REGISTRATION_ID_PREF, registrationId)
     }
 
-    override fun isInThreadNotifications(): Boolean {
+    fun isInThreadNotifications(): Boolean {
         return getBooleanPreference(TextSecurePreferences.IN_THREAD_NOTIFICATION_PREF, true)
     }
 
-    override fun isUniversalUnidentifiedAccess(): Boolean {
+    fun isUniversalUnidentifiedAccess(): Boolean {
         return getBooleanPreference(TextSecurePreferences.UNIVERSAL_UNIDENTIFIED_ACCESS, false)
     }
 
-    override fun getUpdateApkRefreshTime(): Long {
+    fun getUpdateApkRefreshTime(): Long {
         return getLongPreference(TextSecurePreferences.UPDATE_APK_REFRESH_TIME_PREF, 0L)
     }
 
-    override fun setUpdateApkRefreshTime(value: Long) {
+    fun setUpdateApkRefreshTime(value: Long) {
         setLongPreference(TextSecurePreferences.UPDATE_APK_REFRESH_TIME_PREF, value)
     }
 
-    override fun setUpdateApkDownloadId(value: Long) {
+    fun setUpdateApkDownloadId(value: Long) {
         setLongPreference(TextSecurePreferences.UPDATE_APK_DOWNLOAD_ID, value)
     }
 
-    override fun getUpdateApkDownloadId(): Long {
+    fun getUpdateApkDownloadId(): Long {
         return getLongPreference(TextSecurePreferences.UPDATE_APK_DOWNLOAD_ID, -1)
     }
 
-    override fun setUpdateApkDigest(value: String?) {
+    fun setUpdateApkDigest(value: String?) {
         setStringPreference(TextSecurePreferences.UPDATE_APK_DIGEST, value)
     }
 
-    override fun getUpdateApkDigest(): String? {
+    fun getUpdateApkDigest(): String? {
         return getStringPreference(TextSecurePreferences.UPDATE_APK_DIGEST, null)
     }
 
-    override fun getLocalNumber(): String? {
+    fun getLocalNumber(): String? {
         return getStringPreference(TextSecurePreferences.LOCAL_NUMBER_PREF, null)
     }
 
-    override fun getHasLegacyConfig(): Boolean {
+    fun getHasLegacyConfig(): Boolean {
         return getBooleanPreference(TextSecurePreferences.HAS_RECEIVED_LEGACY_CONFIG, false)
     }
 
-    override fun setHasLegacyConfig(newValue: Boolean) {
+    fun setHasLegacyConfig(newValue: Boolean) {
         setBooleanPreference(TextSecurePreferences.HAS_RECEIVED_LEGACY_CONFIG, newValue)
         TextSecurePreferences._events.tryEmit(TextSecurePreferences.HAS_RECEIVED_LEGACY_CONFIG)
     }
 
-    override fun setLocalNumber(localNumber: String) {
+    fun setLocalNumber(localNumber: String) {
         setStringPreference(TextSecurePreferences.LOCAL_NUMBER_PREF, localNumber.toLowerCase())
     }
 
-    override fun removeLocalNumber() {
+    fun removeLocalNumber() {
         removePreference(TextSecurePreferences.LOCAL_NUMBER_PREF)
     }
 
-    override fun isEnterSendsEnabled(): Boolean {
+    fun isEnterSendsEnabled(): Boolean {
         return getBooleanPreference(TextSecurePreferences.ENTER_SENDS_PREF, false)
     }
 
-    override fun isPasswordDisabled(): Boolean {
+    fun isPasswordDisabled(): Boolean {
         return getBooleanPreference(TextSecurePreferences.DISABLE_PASSPHRASE_PREF, true)
     }
 
-    override fun setPasswordDisabled(disabled: Boolean) {
+    fun setPasswordDisabled(disabled: Boolean) {
         setBooleanPreference(TextSecurePreferences.DISABLE_PASSPHRASE_PREF, disabled)
     }
 
-    override fun isScreenSecurityEnabled(): Boolean {
+    fun isScreenSecurityEnabled(): Boolean {
         return getBooleanPreference(TextSecurePreferences.SCREEN_SECURITY_PREF, true)
     }
 
-    override fun getLastVersionCode(): Int {
+    fun getLastVersionCode(): Int {
         return getIntegerPreference(TextSecurePreferences.LAST_VERSION_CODE_PREF, 0)
     }
 
     @Throws(IOException::class)
-    override fun setLastVersionCode(versionCode: Int) {
+    fun setLastVersionCode(versionCode: Int) {
         if (!setIntegerPreferenceBlocking(TextSecurePreferences.LAST_VERSION_CODE_PREF, versionCode)) {
             throw IOException("couldn't write version code to sharedpreferences")
         }
     }
 
-    override fun isPassphraseTimeoutEnabled(): Boolean {
+    fun isPassphraseTimeoutEnabled(): Boolean {
         return getBooleanPreference(TextSecurePreferences.PASSPHRASE_TIMEOUT_PREF, false)
     }
 
-    override fun getPassphraseTimeoutInterval(): Int {
+    fun getPassphraseTimeoutInterval(): Int {
         return getIntegerPreference(TextSecurePreferences.PASSPHRASE_TIMEOUT_INTERVAL_PREF, 5 * 60)
     }
 
-    override fun getLanguage(): String? {
+    fun getLanguage(): String? {
         return getStringPreference(TextSecurePreferences.LANGUAGE_PREF, "zz")
     }
 
-    override fun isNotificationsEnabled(): Boolean {
+    fun isNotificationsEnabled(): Boolean {
         return getBooleanPreference(TextSecurePreferences.NOTIFICATION_PREF, true)
     }
 
-    override fun getNotificationRingtone(): Uri {
+    fun getNotificationRingtone(): Uri {
         var result = getStringPreference(TextSecurePreferences.RINGTONE_PREF, Settings.System.DEFAULT_NOTIFICATION_URI.toString())
         if (result != null && result.startsWith("file:")) {
             result = Settings.System.DEFAULT_NOTIFICATION_URI.toString()
@@ -1185,130 +1016,130 @@ class AppTextSecurePreferences @Inject constructor(
         return Uri.parse(result)
     }
 
-    override fun removeNotificationRingtone() {
+    fun removeNotificationRingtone() {
         removePreference(TextSecurePreferences.RINGTONE_PREF)
     }
 
-    override fun setNotificationRingtone(ringtone: String?) {
+    fun setNotificationRingtone(ringtone: String?) {
         setStringPreference(TextSecurePreferences.RINGTONE_PREF, ringtone)
     }
 
-    override fun setNotificationVibrateEnabled(enabled: Boolean) {
+    fun setNotificationVibrateEnabled(enabled: Boolean) {
         setBooleanPreference(TextSecurePreferences.VIBRATE_PREF, enabled)
     }
 
-    override fun isNotificationVibrateEnabled(): Boolean {
+    fun isNotificationVibrateEnabled(): Boolean {
         return getBooleanPreference(TextSecurePreferences.VIBRATE_PREF, true)
     }
 
-    override fun getNotificationLedColor(): Int {
+    fun getNotificationLedColor(): Int {
         return getIntegerPreference(TextSecurePreferences.LED_COLOR_PREF_PRIMARY, context.getColor(R.color.accent_green))
     }
 
-    override fun isThreadLengthTrimmingEnabled(): Boolean {
+    fun isThreadLengthTrimmingEnabled(): Boolean {
         return getBooleanPreference(TextSecurePreferences.THREAD_TRIM_ENABLED, true)
     }
 
-    override fun isSystemEmojiPreferred(): Boolean {
+    fun isSystemEmojiPreferred(): Boolean {
         return getBooleanPreference(TextSecurePreferences.SYSTEM_EMOJI_PREF, false)
     }
 
-    override fun getMobileMediaDownloadAllowed(): Set<String>? {
+    fun getMobileMediaDownloadAllowed(): Set<String>? {
         return getMediaDownloadAllowed(TextSecurePreferences.MEDIA_DOWNLOAD_MOBILE_PREF, R.array.pref_media_download_mobile_data_default)
     }
 
-    override fun getWifiMediaDownloadAllowed(): Set<String>? {
+    fun getWifiMediaDownloadAllowed(): Set<String>? {
         return getMediaDownloadAllowed(TextSecurePreferences.MEDIA_DOWNLOAD_WIFI_PREF, R.array.pref_media_download_wifi_default)
     }
 
-    override fun getRoamingMediaDownloadAllowed(): Set<String>? {
+    fun getRoamingMediaDownloadAllowed(): Set<String>? {
         return getMediaDownloadAllowed(TextSecurePreferences.MEDIA_DOWNLOAD_ROAMING_PREF, R.array.pref_media_download_roaming_default)
     }
 
-    override fun getMediaDownloadAllowed(key: String, @ArrayRes defaultValuesRes: Int): Set<String>? {
+    fun getMediaDownloadAllowed(key: String, @ArrayRes defaultValuesRes: Int): Set<String>? {
         return getStringSetPreference(key, HashSet(listOf(*context.resources.getStringArray(defaultValuesRes))))
     }
 
-    override fun getLogEncryptedSecret(): String? {
+    fun getLogEncryptedSecret(): String? {
         return getStringPreference(TextSecurePreferences.LOG_ENCRYPTED_SECRET, null)
     }
 
-    override fun setLogEncryptedSecret(base64Secret: String?) {
+    fun setLogEncryptedSecret(base64Secret: String?) {
         setStringPreference(TextSecurePreferences.LOG_ENCRYPTED_SECRET, base64Secret)
     }
 
-    override fun getLogUnencryptedSecret(): String? {
+    fun getLogUnencryptedSecret(): String? {
         return getStringPreference(TextSecurePreferences.LOG_UNENCRYPTED_SECRET, null)
     }
 
-    override fun setLogUnencryptedSecret(base64Secret: String?) {
+    fun setLogUnencryptedSecret(base64Secret: String?) {
         setStringPreference(TextSecurePreferences.LOG_UNENCRYPTED_SECRET, base64Secret)
     }
 
-    override fun getNotificationChannelVersion(): Int {
+    fun getNotificationChannelVersion(): Int {
         return getIntegerPreference(TextSecurePreferences.NOTIFICATION_CHANNEL_VERSION, 1)
     }
 
-    override fun setNotificationChannelVersion(version: Int) {
+    fun setNotificationChannelVersion(version: Int) {
         setIntegerPreference(TextSecurePreferences.NOTIFICATION_CHANNEL_VERSION, version)
     }
 
-    override fun getNotificationMessagesChannelVersion(): Int {
+    fun getNotificationMessagesChannelVersion(): Int {
         return getIntegerPreference(TextSecurePreferences.NOTIFICATION_MESSAGES_CHANNEL_VERSION, 1)
     }
 
-    override fun setNotificationMessagesChannelVersion(version: Int) {
+    fun setNotificationMessagesChannelVersion(version: Int) {
         setIntegerPreference(TextSecurePreferences.NOTIFICATION_MESSAGES_CHANNEL_VERSION, version)
     }
 
-    override fun hasForcedNewConfig(): Boolean =
+    fun hasForcedNewConfig(): Boolean =
         getBooleanPreference(TextSecurePreferences.HAS_FORCED_NEW_CONFIG, false)
 
-    override fun getBooleanPreference(key: String?, defaultValue: Boolean): Boolean {
+    fun getBooleanPreference(key: String?, defaultValue: Boolean): Boolean {
         return getDefaultSharedPreferences(context).getBoolean(key, defaultValue)
     }
 
-    override fun setBooleanPreference(key: String?, value: Boolean) {
+    fun setBooleanPreference(key: String?, value: Boolean) {
         getDefaultSharedPreferences(context).edit().putBoolean(key, value).apply()
     }
 
-    override fun getStringPreference(key: String, defaultValue: String?): String? {
+    fun getStringPreference(key: String, defaultValue: String?): String? {
         return getDefaultSharedPreferences(context).getString(key, defaultValue)
     }
 
-    override fun setStringPreference(key: String?, value: String?) {
+    fun setStringPreference(key: String?, value: String?) {
         getDefaultSharedPreferences(context).edit().putString(key, value).apply()
     }
 
-    override fun getIntegerPreference(key: String, defaultValue: Int): Int {
+    fun getIntegerPreference(key: String, defaultValue: Int): Int {
         return getDefaultSharedPreferences(context).getInt(key, defaultValue)
     }
 
-    override fun setIntegerPreference(key: String, value: Int) {
+    fun setIntegerPreference(key: String, value: Int) {
         getDefaultSharedPreferences(context).edit().putInt(key, value).apply()
     }
 
-    override fun setIntegerPreferenceBlocking(key: String, value: Int): Boolean {
+    fun setIntegerPreferenceBlocking(key: String, value: Int): Boolean {
         return getDefaultSharedPreferences(context).edit().putInt(key, value).commit()
     }
 
-    override fun getLongPreference(key: String, defaultValue: Long): Long {
+    fun getLongPreference(key: String, defaultValue: Long): Long {
         return getDefaultSharedPreferences(context).getLong(key, defaultValue)
     }
 
-    override fun setLongPreference(key: String, value: Long) {
+    fun setLongPreference(key: String, value: Long) {
         getDefaultSharedPreferences(context).edit().putLong(key, value).apply()
     }
 
-    override fun hasPreference(key: String): Boolean {
+    fun hasPreference(key: String): Boolean {
         return getDefaultSharedPreferences(context).contains(key)
     }
 
-    override fun removePreference(key: String) {
+    fun removePreference(key: String) {
         getDefaultSharedPreferences(context).edit().remove(key).apply()
     }
 
-    override fun getStringSetPreference(key: String, defaultValues: Set<String>): Set<String>? {
+    fun getStringSetPreference(key: String, defaultValues: Set<String>): Set<String>? {
         val prefs = getDefaultSharedPreferences(context)
         return if (prefs.contains(key)) {
             prefs.getStringSet(key, emptySet())
@@ -1317,75 +1148,75 @@ class AppTextSecurePreferences @Inject constructor(
         }
     }
 
-    override fun getHasViewedSeed(): Boolean {
+    fun getHasViewedSeed(): Boolean {
         return getBooleanPreference("has_viewed_seed", false)
     }
 
-    override fun setHasViewedSeed(hasViewedSeed: Boolean) {
+    fun setHasViewedSeed(hasViewedSeed: Boolean) {
         setBooleanPreference("has_viewed_seed", hasViewedSeed)
     }
 
-    override fun setRestorationTime(time: Long) {
+    fun setRestorationTime(time: Long) {
         setLongPreference("restoration_time", time)
     }
 
-    override fun getRestorationTime(): Long {
+    fun getRestorationTime(): Long {
         return getLongPreference("restoration_time", 0)
     }
 
-    override fun getLastProfilePictureUpload(): Long {
+    fun getLastProfilePictureUpload(): Long {
         return getLongPreference("last_profile_picture_upload", 0)
     }
 
-    override fun setLastProfilePictureUpload(newValue: Long) {
+    fun setLastProfilePictureUpload(newValue: Long) {
         setLongPreference("last_profile_picture_upload", newValue)
     }
 
-    override fun getLastSnodePoolRefreshDate(): Long {
+    fun getLastSnodePoolRefreshDate(): Long {
         return getLongPreference("last_snode_pool_refresh_date", 0)
     }
 
-    override fun setLastSnodePoolRefreshDate(date: Date) {
+    fun setLastSnodePoolRefreshDate(date: Date) {
         setLongPreference("last_snode_pool_refresh_date", date.time)
     }
 
-    override fun shouldUpdateProfile(profileUpdateTime: Long): Boolean {
+    fun shouldUpdateProfile(profileUpdateTime: Long): Boolean {
         return profileUpdateTime > getLongPreference(TextSecurePreferences.LAST_PROFILE_UPDATE_TIME, 0)
     }
 
-    override fun setLastProfileUpdateTime(profileUpdateTime: Long) {
+    fun setLastProfileUpdateTime(profileUpdateTime: Long) {
         setLongPreference(TextSecurePreferences.LAST_PROFILE_UPDATE_TIME, profileUpdateTime)
     }
 
-    override fun getLastOpenTimeDate(): Long {
+    fun getLastOpenTimeDate(): Long {
         return getLongPreference(TextSecurePreferences.LAST_OPEN_DATE, 0)
     }
 
-    override fun setLastOpenDate() {
+    fun setLastOpenDate() {
         setLongPreference(TextSecurePreferences.LAST_OPEN_DATE, System.currentTimeMillis())
     }
 
-    override fun hasSeenLinkPreviewSuggestionDialog(): Boolean {
+    fun hasSeenLinkPreviewSuggestionDialog(): Boolean {
         return getBooleanPreference("has_seen_link_preview_suggestion_dialog", false)
     }
 
-    override fun setHasSeenLinkPreviewSuggestionDialog() {
+    fun setHasSeenLinkPreviewSuggestionDialog() {
         setBooleanPreference("has_seen_link_preview_suggestion_dialog", true)
     }
 
-    override fun isCallNotificationsEnabled(): Boolean {
+    fun isCallNotificationsEnabled(): Boolean {
         return getBooleanPreference(CALL_NOTIFICATIONS_ENABLED, false)
     }
 
-    override fun getLastVacuum(): Long {
+    fun getLastVacuum(): Long {
         return getLongPreference(LAST_VACUUM_TIME, 0)
     }
 
-    override fun setLastVacuumNow() {
+    fun setLastVacuumNow() {
         setLongPreference(LAST_VACUUM_TIME, System.currentTimeMillis())
     }
 
-    override fun setShownCallNotification(): Boolean {
+    fun setShownCallNotification(): Boolean {
         val previousValue = getBooleanPreference(SHOWN_CALL_NOTIFICATION, false)
         if (previousValue) return false
         val setValue = true
@@ -1398,7 +1229,7 @@ class AppTextSecurePreferences @Inject constructor(
      * Set the SHOWN_CALL_WARNING preference to `true`
      * Return `true` if the value did update (it was previously unset)
      */
-    override fun setShownCallWarning() : Boolean {
+    fun setShownCallWarning() : Boolean {
         val previousValue = getBooleanPreference(SHOWN_CALL_WARNING, false)
         if (previousValue) {
             return false
@@ -1408,27 +1239,27 @@ class AppTextSecurePreferences @Inject constructor(
         return previousValue != setValue
     }
 
-    override fun hasHiddenMessageRequests(): Boolean {
+    fun hasHiddenMessageRequests(): Boolean {
         return getBooleanPreference(TextSecurePreferences.HAS_HIDDEN_MESSAGE_REQUESTS, false)
     }
 
-    override fun setHasHiddenMessageRequests() {
+    fun setHasHiddenMessageRequests() {
         setBooleanPreference(TextSecurePreferences.HAS_HIDDEN_MESSAGE_REQUESTS, true)
     }
 
-    override fun getFingerprintKeyGenerated(): Boolean {
+    fun getFingerprintKeyGenerated(): Boolean {
         return getBooleanPreference(TextSecurePreferences.FINGERPRINT_KEY_GENERATED, false)
     }
 
-    override fun setFingerprintKeyGenerated() {
+    fun setFingerprintKeyGenerated() {
         setBooleanPreference(TextSecurePreferences.FINGERPRINT_KEY_GENERATED, true)
     }
 
-    override fun getSelectedAccentColor(): String? =
+    fun getSelectedAccentColor(): String? =
         getStringPreference(SELECTED_ACCENT_COLOR, null)
 
     @StyleRes
-    override fun getAccentColorStyle(): Int? {
+    fun getAccentColorStyle(): Int? {
         return when (getSelectedAccentColor()) {
             TextSecurePreferences.GREEN_ACCENT -> R.style.PrimaryGreen
             TextSecurePreferences.BLUE_ACCENT -> R.style.PrimaryBlue
@@ -1441,7 +1272,7 @@ class AppTextSecurePreferences @Inject constructor(
         }
     }
 
-    override fun setAccentColorStyle(@StyleRes newColorStyle: Int?) {
+    fun setAccentColorStyle(@StyleRes newColorStyle: Int?) {
         setStringPreference(
             TextSecurePreferences.SELECTED_ACCENT_COLOR, when (newColorStyle) {
                 R.style.PrimaryGreen -> TextSecurePreferences.GREEN_ACCENT
@@ -1456,7 +1287,7 @@ class AppTextSecurePreferences @Inject constructor(
         )
     }
 
-    override fun getThemeStyle(): String {
+    fun getThemeStyle(): String {
         val hasLegacy = getStringPreference(LEGACY_PREF_KEY_SELECTED_UI_MODE, null)
         if (!hasLegacy.isNullOrEmpty()) {
             migrateLegacyUiPref()
@@ -1465,12 +1296,12 @@ class AppTextSecurePreferences @Inject constructor(
         return getStringPreference(SELECTED_STYLE, CLASSIC_DARK)!!
     }
 
-    override fun setThemeStyle(themeStyle: String) {
+    fun setThemeStyle(themeStyle: String) {
         val safeTheme = if (themeStyle !in listOf(CLASSIC_DARK, CLASSIC_LIGHT, OCEAN_DARK, OCEAN_LIGHT)) CLASSIC_DARK else themeStyle
         setStringPreference(SELECTED_STYLE, safeTheme)
     }
 
-    override fun getFollowSystemSettings(): Boolean {
+    fun getFollowSystemSettings(): Boolean {
         val hasLegacy = getStringPreference(LEGACY_PREF_KEY_SELECTED_UI_MODE, null)
         if (!hasLegacy.isNullOrEmpty()) {
             migrateLegacyUiPref()
@@ -1502,21 +1333,21 @@ class AppTextSecurePreferences @Inject constructor(
         removePreference(LEGACY_PREF_KEY_SELECTED_UI_MODE)
     }
 
-    override fun setFollowSystemSettings(followSystemSettings: Boolean) {
+    fun setFollowSystemSettings(followSystemSettings: Boolean) {
         setBooleanPreference(FOLLOW_SYSTEM_SETTINGS, followSystemSettings)
     }
 
-    override fun autoplayAudioMessages(): Boolean {
+    fun autoplayAudioMessages(): Boolean {
         return getBooleanPreference(AUTOPLAY_AUDIO_MESSAGES, false)
     }
 
-    override fun clearAll() {
+    fun clearAll() {
         getDefaultSharedPreferences(context).edit().clear().commit()
     }
 
-    override fun getHidePassword() = getBooleanPreference(HIDE_PASSWORD, false)
+    fun getHidePassword() = getBooleanPreference(HIDE_PASSWORD, false)
 
-    override fun setHidePassword(value: Boolean) {
+    fun setHidePassword(value: Boolean) {
         setBooleanPreference(HIDE_PASSWORD, value)
     }
 }
