@@ -3,6 +3,7 @@ package org.session.libsession.messaging.jobs
 import network.loki.messenger.libsession_util.Config
 import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.GroupKeysConfig
+import java.util.concurrent.atomic.AtomicBoolean
 import network.loki.messenger.libsession_util.ConfigBase.Companion.protoKindFor
 import nl.komponents.kovenant.functional.bind
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -17,7 +18,6 @@ import org.session.libsession.utilities.ConfigFactoryProtocol
 import org.session.libsignal.utilities.Base64
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.SessionId
-import java.util.concurrent.atomic.AtomicBoolean
 
 class InvalidDestination :
         Exception("Trying to push configs somewhere other than our swarm or a closed group")

@@ -3,8 +3,11 @@ package org.session.libsession.messaging.file_server
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.functional.map
 import okhttp3.Headers
+import okhttp3.Headers.Companion.toHeaders
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody
 import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsignal.utilities.HTTP
@@ -37,18 +40,18 @@ object FileServerApi {
     )
 
     private fun createBody(body: ByteArray?, parameters: Any?): RequestBody? {
-        if (body != null) return RequestBody.create(MediaType.get("application/octet-stream"), body)
+        if (body != null) return RequestBody.create("application/octet-stream".toMediaType(), body)
         if (parameters == null) return null
         val parametersAsJSON = JsonUtil.toJson(parameters)
-        return RequestBody.create(MediaType.get("application/json"), parametersAsJSON)
+        return RequestBody.create("application/json".toMediaType(), parametersAsJSON)
     }
 
     private fun send(request: Request): Promise<ByteArray, Exception> {
-        val url = HttpUrl.parse(server) ?: return Promise.ofFail(Error.InvalidURL)
+        val url = server.toHttpUrlOrNull() ?: return Promise.ofFail(Error.InvalidURL)
         val urlBuilder = HttpUrl.Builder()
-            .scheme(url.scheme())
-            .host(url.host())
-            .port(url.port())
+            .scheme(url.scheme)
+            .host(url.host)
+            .port(url.port)
             .addPathSegments(request.endpoint)
         if (request.verb == HTTP.Verb.GET) {
             for ((key, value) in request.queryParameters) {
@@ -57,7 +60,7 @@ object FileServerApi {
         }
         val requestBuilder = okhttp3.Request.Builder()
             .url(urlBuilder.build())
-            .headers(Headers.of(request.headers))
+            .headers(request.headers.toHeaders())
         when (request.verb) {
             HTTP.Verb.GET -> requestBuilder.get()
             HTTP.Verb.PUT -> requestBuilder.put(createBody(request.body, request.parameters)!!)

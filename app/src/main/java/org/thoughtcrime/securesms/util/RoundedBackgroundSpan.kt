@@ -1,7 +1,6 @@
 package org.thoughtcrime.securesms.util
 
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
@@ -50,6 +49,17 @@ class RoundedBackgroundSpan(
     override fun getSize(
         paint: Paint, text: CharSequence?, start: Int, end: Int, fm: Paint.FontMetricsInt?
     ): Int {
+        // If the span covers the whole text, and the height is not set, draw() will not be called for the span.
+        // To help with that we need to take the font metric into account
+        val metrics = paint.fontMetricsInt
+        if (fm != null) {
+            fm.top = metrics.top
+            fm.ascent = metrics.ascent
+            fm.descent = metrics.descent
+
+            fm.bottom = metrics.bottom
+        }
+
         return (paint.measureText(text, start, end) + 2 * paddingHorizontal).toInt()
     }
 

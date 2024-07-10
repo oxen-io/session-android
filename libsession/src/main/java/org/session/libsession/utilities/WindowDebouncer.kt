@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicReference
  * Not really a 'debouncer' but named to be similar to the current Debouncer
  * designed to queue tasks on a window (if not already queued) like a timer
  */
-class WindowDebouncer(private val window: Long, private val timer: Timer) {
+class WindowDebouncer(private val timeWindowMilliseconds: Long, private val timer: Timer) {
 
     private val atomicRef: AtomicReference<Runnable?> = AtomicReference(null)
     private val hasStarted = AtomicBoolean(false)
@@ -23,7 +23,7 @@ class WindowDebouncer(private val window: Long, private val timer: Timer) {
 
     fun publish(runnable: Runnable) {
         if (hasStarted.compareAndSet(false, true)) {
-            timer.scheduleAtFixedRate(recursiveRunnable, 0, window)
+            timer.scheduleAtFixedRate(recursiveRunnable, 0, timeWindowMilliseconds)
         }
         atomicRef.compareAndSet(null, runnable)
     }

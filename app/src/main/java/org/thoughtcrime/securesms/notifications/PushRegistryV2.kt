@@ -11,6 +11,7 @@ import network.loki.messenger.libsession_util.GroupKeysConfig
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.functional.map
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
 import okhttp3.RequestBody
 import org.session.libsession.messaging.sending_receiving.notifications.Response
@@ -159,7 +160,7 @@ class PushRegistryV2 @Inject constructor(private val pushReceiver: PushReceiver)
     private inline fun <reified T: Response> getResponseBody(path: String, requestParameters: String): Promise<T, Exception> {
         val server = Server.LATEST
         val url = "${server.url}/$path"
-        val body = RequestBody.create(MediaType.get("application/json"), requestParameters)
+        val body = RequestBody.create("application/json".toMediaType(), requestParameters)
         val request = Request.Builder().url(url).post(body).build()
 
         return OnionRequestAPI.sendOnionRequest(

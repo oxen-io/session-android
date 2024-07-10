@@ -33,6 +33,7 @@ import java.util.Timer
 import java.util.concurrent.ConcurrentLinkedDeque
 
 object ConfigurationMessageUtilities {
+    private const val TAG = "ConfigMessageUtils"
 
     private val debouncer = WindowDebouncer(3000, Timer())
     private val destinationUpdater = Any()
@@ -62,15 +63,14 @@ object ConfigurationMessageUtilities {
                     (currentStorageJob as ConfigurationSyncJob).shouldRunAgain.set(true)
                     return@publish
                 }
-                val newConfigSync = ConfigurationSyncJob(destination)
-                JobQueue.shared.add(newConfigSync)
+                val newConfigSyncJob = ConfigurationSyncJob(destination)
+                JobQueue.shared.add(newConfigSyncJob)
             }
         }
     }
 
     @JvmStatic
     fun syncConfigurationIfNeeded(context: Context) {
-        // add if check here to schedule new config job process and return early
         val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return
         scheduleConfigSync(Destination.Contact(userPublicKey))
     }
@@ -82,8 +82,7 @@ object ConfigurationMessageUtilities {
 
     fun forceSyncConfigurationNowIfNeeded(context: Context) {
         val userPublicKey = TextSecurePreferences.getLocalNumber(context) ?: return Log.e("Loki", NullPointerException("User Public Key is null"))
-        // schedule job if none exist
-        // don't schedule job if we already have one
+        // Schedule a new job if one doesn't already exist (only)
         scheduleConfigSync(Destination.Contact(userPublicKey))
     }
 
