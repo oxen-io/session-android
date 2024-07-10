@@ -51,7 +51,7 @@ public abstract class AbstractNotificationBuilder extends NotificationCompat.Bui
   }
 
   public void setAlarms(@Nullable Uri ringtone, VibrateState vibrate) {
-    Uri     defaultRingtone = NotificationChannels.supported() ? NotificationChannels.getMessageRingtone(context) : MessagingModuleConfiguration.getShared().getPrefs().getNotificationRingtone();
+    Uri     defaultRingtone = NotificationChannels.supported() ? NotificationChannels.getMessageRingtone(context) : MessagingModuleConfiguration.getShared().getPrefs().getNotificationRingtoneUri();
     boolean defaultVibrate  = NotificationChannels.supported() ? NotificationChannels.getMessageVibrate(context)  : MessagingModuleConfiguration.getShared().getPrefs().isNotificationVibrateEnabled();
 
     if      (ringtone == null && !TextUtils.isEmpty(defaultRingtone.toString())) setSound(defaultRingtone);

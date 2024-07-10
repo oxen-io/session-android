@@ -156,7 +156,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         // Set up seed reminder view
         lifecycleScope.launchWhenStarted {
             binding.seedReminderView.setThemedContent {
-                if (!textSecurePreferences.getHasViewedSeed()) SeedReminder { start<RecoveryPasswordActivity>() }
+                if (!textSecurePreferences.hasViewedSeed()) SeedReminder { start<RecoveryPasswordActivity>() }
             }
         }
         // Set up recycler view
@@ -185,7 +185,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         // subscribe to outdated config updates, this should be removed after long enough time for device migration
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                TextSecurePreferences.events.filter { it == TextSecurePreferences.HAS_RECEIVED_LEGACY_CONFIG }.collect {
+                TextSecurePreferences.events.filter { it == TextSecurePreferences.HAS_RECEIVED_LEGACY_CONFIG.name }.collect {
                     updateLegacyConfigView()
                 }
             }
@@ -225,7 +225,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
                 withContext(Dispatchers.Main) {
                     updateProfileButton()
-                    TextSecurePreferences.events.filter { it == TextSecurePreferences.PROFILE_NAME_PREF }.collect {
+                    TextSecurePreferences.events.filter { it == TextSecurePreferences.PROFILE_NAME_PREF.name }.collect {
                         updateProfileButton()
                     }
                 }
@@ -325,7 +325,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         binding.sessionToolbar.isVisible = !isShown
         binding.recyclerView.isVisible = !isShown
         binding.emptyStateContainer.isVisible = (binding.recyclerView.adapter as HomeAdapter).itemCount == 0 && binding.recyclerView.isVisible
-        binding.seedReminderView.isVisible = !prefs.getHasViewedSeed() && !isShown
+        binding.seedReminderView.isVisible = !prefs.hasViewedSeed() && !isShown
         binding.globalSearchRecycler.isInvisible = !isShown
         binding.newConversationButton.isVisible = !isShown
     }
@@ -341,7 +341,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         IdentityKeyUtil.checkUpdate(this)
         binding.profileButton.recycle() // clear cached image before update tje profilePictureView
         binding.profileButton.update()
-        if (textSecurePreferences.getHasViewedSeed()) {
+        if (textSecurePreferences.hasViewedSeed()) {
             binding.seedReminderView.isVisible = false
         }
 

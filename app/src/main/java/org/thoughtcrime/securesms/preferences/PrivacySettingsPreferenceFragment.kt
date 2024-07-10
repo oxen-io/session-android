@@ -15,6 +15,7 @@ import network.loki.messenger.BuildConfig
 import network.loki.messenger.R
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.findPreference
 import org.session.libsession.utilities.prefs
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.components.SwitchPreferenceCompat

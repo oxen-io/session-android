@@ -436,7 +436,7 @@ public class NotificationChannels {
 
     messages.setGroup(CATEGORY_MESSAGES);
     messages.enableVibration(MessagingModuleConfiguration.getShared().getPrefs().isNotificationVibrateEnabled());
-    messages.setSound(MessagingModuleConfiguration.getShared().getPrefs().getNotificationRingtone(), getRingtoneAudioAttributes());
+    messages.setSound(MessagingModuleConfiguration.getShared().getPrefs().getNotificationRingtoneUri(), getRingtoneAudioAttributes());
     setLedPreference(messages, MessagingModuleConfiguration.getShared().getPrefs().getNotificationLedColor());
 
     calls.setShowBadge(false);

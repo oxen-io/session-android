@@ -48,7 +48,6 @@ class LoadAccountManager @Inject constructor(
             prefs.apply {
                 setLocalRegistrationId(registrationID)
                 setLocalNumber(userHexEncodedPublicKey)
-                setRestorationTime(System.currentTimeMillis())
                 setHasViewedSeed(true)
             }
 

@@ -51,8 +51,6 @@ class ConfigFactory(
     private val userGroupsLock = Object()
     private var _userGroups: UserGroupsConfig? = null
 
-    private val isConfigForcedOn by lazy { context.prefs.hasForcedNewConfig() }
-
     private val listeners: MutableList<ConfigFactoryUpdateListener> = mutableListOf()
     fun registerListener(listener: ConfigFactoryUpdateListener) {
         listeners += listener

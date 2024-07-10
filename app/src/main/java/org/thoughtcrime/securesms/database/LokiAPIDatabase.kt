@@ -480,11 +480,7 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
         database.insertOrUpdate(openGroupPublicKeyTable, row, "${LokiAPIDatabase.server} = ?", wrap(server))
     }
 
-    override fun getLastSnodePoolRefreshDate(): Date? {
-        val time = context.prefs.getLastSnodePoolRefreshDate()
-        if (time <= 0) { return null }
-        return Date(time)
-    }
+    override fun getLastSnodePoolRefreshDate(): Date? = context.prefs.getLastSnodePoolRefreshDate().takeIf { it > 0 }?.let(::Date)
 
     override fun setLastSnodePoolRefreshDate(date: Date) {
         context.prefs.setLastSnodePoolRefreshDate(date)

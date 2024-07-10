@@ -61,7 +61,7 @@ class HomeViewModel @Inject constructor(
     ).stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     private fun hasHiddenMessageRequests() = TextSecurePreferences.events
-        .filter { it == TextSecurePreferences.HAS_HIDDEN_MESSAGE_REQUESTS }
+        .filter { it == TextSecurePreferences.HAS_HIDDEN_MESSAGE_REQUESTS.name }
         .map { prefs.hasHiddenMessageRequests() }
         .onStart { emit(prefs.hasHiddenMessageRequests()) }
 

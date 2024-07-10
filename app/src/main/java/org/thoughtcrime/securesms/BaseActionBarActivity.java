@@ -1,7 +1,6 @@
 package org.thoughtcrime.securesms;
 
 import static android.os.Build.VERSION.SDK_INT;
-import static org.session.libsession.utilities.TextSecurePreferences.SELECTED_ACCENT_COLOR;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -62,7 +61,7 @@ public abstract class BaseActionBarActivity extends AppCompatActivity {
 
   @StyleRes @Nullable
   private Integer getAccentTheme() {
-    if (!getPreferences().hasPreference(SELECTED_ACCENT_COLOR)) return null;
+    if (!getPreferences().hasSelectedAccentColor()) return null;
     ThemeState themeState = ActivityUtilitiesKt.themeState(getPreferences());
     return themeState.getAccentStyle();
   }
