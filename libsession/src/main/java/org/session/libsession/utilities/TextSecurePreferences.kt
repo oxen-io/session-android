@@ -198,27 +198,21 @@ interface TextSecurePreferences {
 
         const val DISABLE_PASSPHRASE_PREF = "pref_disable_passphrase"
         const val LANGUAGE_PREF = "pref_language"
-        const val THREAD_TRIM_NOW = "pref_trim_now"
         const val LAST_VERSION_CODE_PREF = "last_version_code"
         const val RINGTONE_PREF = "pref_key_ringtone"
         const val VIBRATE_PREF = "pref_key_vibrate"
         const val NOTIFICATION_PREF = "pref_key_enable_notifications"
-        const val LED_COLOR_PREF = "pref_led_color"
         const val LED_COLOR_PREF_PRIMARY = "pref_led_color_primary"
-        const val LED_BLINK_PREF = "pref_led_blink"
-        const val LED_BLINK_PREF_CUSTOM = "pref_led_blink_custom"
         const val PASSPHRASE_TIMEOUT_INTERVAL_PREF = "pref_timeout_interval"
         const val PASSPHRASE_TIMEOUT_PREF = "pref_timeout_passphrase"
         const val SCREEN_SECURITY_PREF = "pref_screen_security"
         const val ENTER_SENDS_PREF = "pref_enter_sends"
         const val THREAD_TRIM_ENABLED = "pref_trim_threads"
         const val LOCAL_NUMBER_PREF = "pref_local_number"
-        const val REGISTERED_GCM_PREF = "pref_gcm_registered"
         const val UPDATE_APK_REFRESH_TIME_PREF = "pref_update_apk_refresh_time"
         const val UPDATE_APK_DOWNLOAD_ID = "pref_update_apk_download_id"
         const val UPDATE_APK_DIGEST = "pref_update_apk_digest"
         const val IN_THREAD_NOTIFICATION_PREF = "pref_key_inthread_notifications"
-        const val IN_APP_NOTIFICATION_SOUNDS = "pref_sound_when_app_open"
         const val MESSAGE_BODY_TEXT_SIZE_PREF = "pref_message_body_text_size"
         const val LOCAL_REGISTRATION_ID_PREF = "pref_local_registration_id"
         const val REPEAT_ALERTS_PREF = "pref_repeat_alerts"
@@ -244,7 +238,6 @@ interface TextSecurePreferences {
         const val BACKUP_PASSPHRASE = "pref_backup_passphrase"
         const val ENCRYPTED_BACKUP_PASSPHRASE = "pref_encrypted_backup_passphrase"
         const val BACKUP_TIME = "pref_backup_next_time"
-        const val BACKUP_NOW = "pref_backup_create"
         const val BACKUP_SAVE_DIR = "pref_save_dir"
         const val SCREEN_LOCK = "pref_android_screen_lock"
         const val SCREEN_LOCK_TIMEOUT = "pref_android_screen_lock_timeout"
@@ -297,16 +290,6 @@ interface TextSecurePreferences {
         const val ALLOW_MESSAGE_REQUESTS = "libsession.ALLOW_MESSAGE_REQUESTS"
 
         @JvmStatic
-        fun getLastConfigurationSyncTime(context: Context): Long {
-            return getLongPreference(context, LAST_CONFIGURATION_SYNC_TIME, 0)
-        }
-
-        @JvmStatic
-        fun setLastConfigurationSyncTime(context: Context, value: Long) {
-            setLongPreference(context, LAST_CONFIGURATION_SYNC_TIME, value)
-        }
-
-        @JvmStatic
         fun getConfigurationMessageSynced(context: Context): Boolean {
             return getBooleanPreference(context, CONFIGURATION_SYNCED, false)
         }
@@ -323,18 +306,8 @@ interface TextSecurePreferences {
         }
 
         @JvmStatic
-        fun setPushEnabled(context: Context, value: Boolean) {
-            setBooleanPreference(context, IS_PUSH_ENABLED, value)
-        }
-
-        @JvmStatic
         fun getPushToken(context: Context): String? {
             return getStringPreference(context, PUSH_TOKEN, "")
-        }
-
-        @JvmStatic
-        fun setPushToken(context: Context, value: String?) {
-            setStringPreference(context, PUSH_TOKEN, value)
         }
 
         fun getPushRegisterTime(context: Context): Long {
@@ -364,58 +337,6 @@ interface TextSecurePreferences {
         @JvmStatic
         fun setScreenLockTimeout(context: Context, value: Long) {
             setLongPreference(context, SCREEN_LOCK_TIMEOUT, value)
-        }
-
-        @JvmStatic
-        fun setBackupPassphrase(context: Context, passphrase: String?) {
-            setStringPreference(context, BACKUP_PASSPHRASE, passphrase)
-        }
-
-        @JvmStatic
-        fun getBackupPassphrase(context: Context): String? {
-            return getStringPreference(context, BACKUP_PASSPHRASE, null)
-        }
-
-        @JvmStatic
-        fun setEncryptedBackupPassphrase(context: Context, encryptedPassphrase: String?) {
-            setStringPreference(context, ENCRYPTED_BACKUP_PASSPHRASE, encryptedPassphrase)
-        }
-
-        @JvmStatic
-        fun getEncryptedBackupPassphrase(context: Context): String? {
-            return getStringPreference(context, ENCRYPTED_BACKUP_PASSPHRASE, null)
-        }
-
-        fun setBackupEnabled(context: Context, value: Boolean) {
-            setBooleanPreference(context, BACKUP_ENABLED, value)
-        }
-
-        @JvmStatic
-        fun isBackupEnabled(context: Context): Boolean {
-            return getBooleanPreference(context, BACKUP_ENABLED, false)
-        }
-
-        @JvmStatic
-        fun setNextBackupTime(context: Context, time: Long) {
-            setLongPreference(context, BACKUP_TIME, time)
-        }
-
-        @JvmStatic
-        fun getNextBackupTime(context: Context): Long {
-            return getLongPreference(context, BACKUP_TIME, -1)
-        }
-
-        fun setBackupSaveDir(context: Context, dirUri: String?) {
-            setStringPreference(context, BACKUP_SAVE_DIR, dirUri)
-        }
-
-        fun getBackupSaveDir(context: Context): String? {
-            return getStringPreference(context, BACKUP_SAVE_DIR, null)
-        }
-
-        @JvmStatic
-        fun getNeedsSqlCipherMigration(context: Context): Boolean {
-            return getBooleanPreference(context, NEEDS_SQLCIPHER_MIGRATION, false)
         }
 
         @JvmStatic
@@ -596,38 +517,8 @@ interface TextSecurePreferences {
         }
 
         @JvmStatic
-        fun isInThreadNotifications(context: Context): Boolean {
-            return getBooleanPreference(context, IN_THREAD_NOTIFICATION_PREF, true)
-        }
-
-        @JvmStatic
-        fun isUniversalUnidentifiedAccess(context: Context): Boolean {
-            return getBooleanPreference(context, UNIVERSAL_UNIDENTIFIED_ACCESS, false)
-        }
-
-        @JvmStatic
-        fun getUpdateApkRefreshTime(context: Context): Long {
-            return getLongPreference(context, UPDATE_APK_REFRESH_TIME_PREF, 0L)
-        }
-
-        @JvmStatic
-        fun setUpdateApkRefreshTime(context: Context, value: Long) {
-            setLongPreference(context, UPDATE_APK_REFRESH_TIME_PREF, value)
-        }
-
-        @JvmStatic
-        fun setUpdateApkDownloadId(context: Context, value: Long) {
-            setLongPreference(context, UPDATE_APK_DOWNLOAD_ID, value)
-        }
-
-        @JvmStatic
         fun getUpdateApkDownloadId(context: Context): Long {
             return getLongPreference(context, UPDATE_APK_DOWNLOAD_ID, -1)
-        }
-
-        @JvmStatic
-        fun setUpdateApkDigest(context: Context, value: String?) {
-            setStringPreference(context, UPDATE_APK_DIGEST, value)
         }
 
         @JvmStatic
@@ -641,11 +532,6 @@ interface TextSecurePreferences {
         }
 
         @JvmStatic
-        fun getHasLegacyConfig(context: Context): Boolean {
-            return getBooleanPreference(context, HAS_RECEIVED_LEGACY_CONFIG, false)
-        }
-
-        @JvmStatic
         fun setHasLegacyConfig(context: Context, newValue: Boolean) {
             setBooleanPreference(context, HAS_RECEIVED_LEGACY_CONFIG, newValue)
             _events.tryEmit(HAS_RECEIVED_LEGACY_CONFIG)
@@ -653,10 +539,6 @@ interface TextSecurePreferences {
 
         fun setLocalNumber(context: Context, localNumber: String) {
             setStringPreference(context, LOCAL_NUMBER_PREF, localNumber.toLowerCase())
-        }
-
-        fun removeLocalNumber(context: Context) {
-            removePreference(context, LOCAL_NUMBER_PREF)
         }
 
         @JvmStatic
@@ -716,21 +598,6 @@ interface TextSecurePreferences {
                 result = Settings.System.DEFAULT_NOTIFICATION_URI.toString()
             }
             return Uri.parse(result)
-        }
-
-        @JvmStatic
-        fun removeNotificationRingtone(context: Context) {
-            removePreference(context, RINGTONE_PREF)
-        }
-
-        @JvmStatic
-        fun setNotificationRingtone(context: Context, ringtone: String?) {
-            setStringPreference(context, RINGTONE_PREF, ringtone)
-        }
-
-        @JvmStatic
-        fun setNotificationVibrateEnabled(context: Context, enabled: Boolean) {
-            setBooleanPreference(context, VIBRATE_PREF, enabled)
         }
 
         @JvmStatic
@@ -882,10 +749,6 @@ interface TextSecurePreferences {
             setLongPreference(context, "restoration_time", time)
         }
 
-        fun getRestorationTime(context: Context): Long {
-            return getLongPreference(context, "restoration_time", 0)
-        }
-
         @JvmStatic
         fun getLastProfilePictureUpload(context: Context): Long {
             return getLongPreference(context, "last_profile_picture_upload", 0)
@@ -922,14 +785,6 @@ interface TextSecurePreferences {
             setLongPreference(context, LAST_OPEN_DATE, System.currentTimeMillis())
         }
 
-        fun hasSeenLinkPreviewSuggestionDialog(context: Context): Boolean {
-            return getBooleanPreference(context, "has_seen_link_preview_suggestion_dialog", false)
-        }
-
-        fun setHasSeenLinkPreviewSuggestionDialog(context: Context) {
-            setBooleanPreference(context, "has_seen_link_preview_suggestion_dialog", true)
-        }
-
         @JvmStatic
         fun hasHiddenMessageRequests(context: Context): Boolean {
             return getBooleanPreference(context, HAS_HIDDEN_MESSAGE_REQUESTS, false)
@@ -943,17 +798,6 @@ interface TextSecurePreferences {
         @JvmStatic
         fun isCallNotificationsEnabled(context: Context): Boolean {
             return getBooleanPreference(context, CALL_NOTIFICATIONS_ENABLED, false)
-        }
-
-        @JvmStatic
-        fun setShownCallWarning(context: Context): Boolean {
-            val previousValue = getBooleanPreference(context, SHOWN_CALL_WARNING, false)
-            if (previousValue) {
-                return false
-            }
-            val setValue = true
-            setBooleanPreference(context, SHOWN_CALL_WARNING, setValue)
-            return previousValue != setValue
         }
 
         @JvmStatic
