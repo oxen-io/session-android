@@ -29,6 +29,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.service.notification.StatusBarNotification;
+import android.text.SpannableString;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -145,9 +146,8 @@ public class DefaultMessageNotifier implements MessageNotifier {
   }
 
   public void notifyMessagesPending(Context context) {
-    if (!TextSecurePreferences.isNotificationsEnabled(context)) {
-      return;
-    }
+
+    if (!TextSecurePreferences.isNotificationsEnabled(context)) { return; }
 
     PendingMessageNotificationBuilder builder = new PendingMessageNotificationBuilder(context, TextSecurePreferences.getNotificationPrivacy(context));
     ServiceUtil.getNotificationManager(context).notify(PENDING_MESSAGES_ID, builder.build());
@@ -353,9 +353,17 @@ public class DefaultMessageNotifier implements MessageNotifier {
     // TODO: attributes to perform the colour lookup. Also, it makes little sense to highlight the mentions using
     // TODO: the app theme as it may result in insufficient contrast with the notification background which will
     // TODO: be using the SYSTEM theme.
-    builder.setPrimaryMessageBody(recipient, notifications.get(0).getIndividualRecipient(),
-                                  //MentionUtilities.highlightMentions(text == null ? "" : text, notifications.get(0).getThreadId(), context), // Removing hightlighting mentions -ACL
-                                  text == null ? "" : text,
+    CharSequence builderCS = text == null ? "" : text;
+    SpannableString ss = MentionUtilities.highlightMentions(builderCS,
+            false,
+            false,
+            true,
+            bundled ? notifications.get(0).getThreadId() : 0,
+            context);
+
+    builder.setPrimaryMessageBody(recipient,
+                                  notifications.get(0).getIndividualRecipient(),
+                                  ss,
                                   notifications.get(0).getSlideDeck());
 
     builder.setContentIntent(notifications.get(0).getPendingIntent(context));
@@ -505,24 +513,45 @@ public class DefaultMessageNotifier implements MessageNotifier {
           continue;
         }
       }
+
+      // If this is a message request from an unknown user..
       if (messageRequest) {
         body = SpanUtil.italic(context.getString(R.string.message_requests_notification));
+
+      // If we received some manner of notification but Session is locked..
       } else if (KeyCachingService.isLocked(context)) {
         body = SpanUtil.italic(context.getString(R.string.MessageNotifier_locked_message));
+
+      // ----- All further cases assume we know the contact and that Session isn't locked -----
+
+      // If this is a notification about a multimedia message from a contact we know about..
       } else if (record.isMms() && !((MmsMessageRecord) record).getSharedContacts().isEmpty()) {
         Contact contact = ((MmsMessageRecord) record).getSharedContacts().get(0);
         body = ContactUtil.getStringSummary(context, contact);
+
+      // If this is a notification about a multimedia message which contains no text but DOES contain a slide deck with at least one slide..
       } else if (record.isMms() && TextUtils.isEmpty(body) && !((MmsMessageRecord) record).getSlideDeck().getSlides().isEmpty()) {
         slideDeck = ((MediaMmsMessageRecord)record).getSlideDeck();
         body = SpanUtil.italic(slideDeck.getBody());
+
+      // If this is a notification about a multimedia message, but it's NOT (perhaps because it's a `MediaMmsMessageRecord` that for some
+      // reason returns false), AND it contains a slide deck with at least one slide..
       } else if (record.isMms() && !record.isMmsNotification() && !((MmsMessageRecord) record).getSlideDeck().getSlides().isEmpty()) {
         slideDeck = ((MediaMmsMessageRecord)record).getSlideDeck();
         String message      = slideDeck.getBody() + ": " + record.getBody();
         int    italicLength = message.length() - body.length();
         body = SpanUtil.italic(message, italicLength);
+
+      // If this is a notification about an invitation to a community..
       } else if (record.isOpenGroupInvitation()) {
         body = SpanUtil.italic(context.getString(R.string.ThreadRecord_open_group_invitation));
       }
+      else if (record.isMmsNotification()) {
+        // If this is a Mms notification but any of the above spaghetti logic checks weren't met..
+      } else {
+        // We will hit this else block if the notification is for a text only / SMS message from a known contact
+      }
+
       String userPublicKey = TextSecurePreferences.getLocalNumber(context);
       String blindedPublicKey = cache.get(threadId);
       if (blindedPublicKey == null) {

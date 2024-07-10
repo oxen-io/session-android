@@ -160,9 +160,6 @@
     <string name="MediaOverviewActivity_Select_all">Selectează tot</string>
     <string name="MediaOverviewActivity_collecting_attachments">Se colectează atașamentele...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Mesaj multimedia</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Se descarcă mesajul MMS</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Eroare la descărcarea mesajului MMS, apasă pentru reîncercare</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Trimiteți la %s</string>
     <!-- MediaSendActivity -->

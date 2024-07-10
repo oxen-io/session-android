@@ -100,9 +100,6 @@
     <string name="MediaOverviewActivity_Select_all">Chagua vyote</string>
     <string name="MediaOverviewActivity_collecting_attachments">kukusanya viambatisho</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Ujumbe wa Multimedia</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">kupakua ujumbe wa mms</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Hitilafu kupakua ujumbe wa MMS, bomba ili ujaribu tena</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">tuma kwa 1%s</string>
     <!-- MediaSendActivity -->

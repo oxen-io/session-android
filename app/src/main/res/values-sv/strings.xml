@@ -150,9 +150,6 @@
     <string name="MediaOverviewActivity_Select_all">Markera alla</string>
     <string name="MediaOverviewActivity_collecting_attachments">Samlar bifogade filer...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimediameddelande</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Hämtning av MMS-meddelanden</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Fel vid hämtning av MMS-meddelanden, tryck för att försöka igen</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Skicka till %s</string>
     <!-- MediaSendActivity -->

@@ -16,12 +16,16 @@
  */
 package org.thoughtcrime.securesms.mms;
 
+import static org.session.libsession.utilities.StringSubstitutionConstants.EMOJI_KEY;
+
 import android.content.Context;
 import android.content.res.Resources.Theme;
 import android.net.Uri;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.squareup.phrase.Phrase;
 
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress;
 import org.thoughtcrime.securesms.util.MediaUtil;
@@ -72,20 +76,24 @@ public abstract class Slide {
         return Optional.fromNullable("🎤 " + attachmentString);
       }
     }
-    return Optional.fromNullable(emojiForMimeType() + attachmentString);
+    String txt = Phrase.from(context, R.string.attachmentsNotification)
+            .put(EMOJI_KEY, emojiForMimeType())
+            .format().toString();
+    return Optional.fromNullable(txt);
+    //return Optional.fromNullable(emojiForMimeType() + attachmentString);
   }
 
   private String emojiForMimeType() {
     if (MediaUtil.isImage(attachment)) {
-      return "📷 ";
+      return "📷";
     } else if (MediaUtil.isVideo(attachment)) {
-      return "🎥 ";
+      return "🎥";
     } else if (MediaUtil.isAudio(attachment)) {
-      return "🎧 ";
+      return "🎧";
     } else if (MediaUtil.isFile(attachment)) {
-      return "📎 ";
+      return "📎";
     } else {
-      return "🎡 ";
+      return "🎡"; // `isGif`
     }
   }
 

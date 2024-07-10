@@ -166,9 +166,6 @@
     <string name="MediaOverviewActivity_Select_all">Žymėti visus</string>
     <string name="MediaOverviewActivity_collecting_attachments">Renkami priedai...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimedijos žinutė</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Atsiunčiama MMS žinutė</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Klaida, atsiunčiant MMS žinutę, bakstelėkite, norėdami bandyti dar kartą</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Siųsti adresatui %s</string>
     <!-- MediaSendActivity -->

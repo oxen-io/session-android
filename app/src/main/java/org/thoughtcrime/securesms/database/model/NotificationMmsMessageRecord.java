@@ -20,15 +20,10 @@ import static java.util.Collections.emptyList;
 
 import android.content.Context;
 import android.text.SpannableString;
-
 import androidx.annotation.NonNull;
-
 import org.session.libsession.utilities.recipients.Recipient;
-import org.thoughtcrime.securesms.database.MmsDatabase;
 import org.thoughtcrime.securesms.database.SmsDatabase.Status;
 import org.thoughtcrime.securesms.mms.SlideDeck;
-
-import network.loki.messenger.R;
 
 /**
  * Represents the message record model for MMS messages that are
@@ -37,13 +32,15 @@ import network.loki.messenger.R;
  * @author Moxie Marlinspike
  *
  */
-
 public class NotificationMmsMessageRecord extends MmsMessageRecord {
   private final byte[] contentLocation;
   private final long   messageSize;
   private final long   expiry;
   private final int    status;
   private final byte[] transactionId;
+
+  // A single static final spannable string to prevent us having to allocate memory when returning it
+  private static final SpannableString EMPTY_SS = new SpannableString("");
 
   public NotificationMmsMessageRecord(long id, Recipient conversationRecipient,
     Recipient individualRecipient,
@@ -64,50 +61,44 @@ public class NotificationMmsMessageRecord extends MmsMessageRecord {
     this.transactionId   = transactionId;
   }
 
-  public byte[] getTransactionId() {
-    return transactionId;
-  }
-  public int getStatus() {
-    return this.status;
-  }
-  public byte[] getContentLocation() {
-    return contentLocation;
-  }
-  public long getMessageSize() {
-    return (messageSize + 1023) / 1024;
-  }
-  public long getExpiration() {
-    return expiry * 1000;
-  }
+  public byte[] getTransactionId() { return transactionId; }
+
+  public int getStatus() { return this.status; }
+
+  public byte[] getContentLocation() { return contentLocation; }
+
+  public long getMessageSize() { return (messageSize + 1023) / 1024; }
+
+  public long getExpiration() {  return expiry * 1000; }
 
   @Override
-  public boolean isOutgoing() {
-    return false;
-  }
+  public boolean isOutgoing() { return false; }
 
   @Override
-  public boolean isPending() {
-    return false;
-  }
+  public boolean isPending() { return false; }
 
   @Override
-  public boolean isMmsNotification() {
-    return true;
-  }
+  public boolean isMmsNotification() { return true; }
 
   @Override
-  public boolean isMediaPending() {
-    return true;
-  }
+  public boolean isMediaPending() { return true; }
 
   @Override
   public SpannableString getDisplayBody(@NonNull Context context) {
-    if (status == MmsDatabase.Status.DOWNLOAD_INITIALIZED) {
-      return emphasisAdded(context.getString(R.string.NotificationMmsMessageRecord_multimedia_message));
-    } else if (status == MmsDatabase.Status.DOWNLOAD_CONNECTING) {
-      return emphasisAdded(context.getString(R.string.NotificationMmsMessageRecord_downloading_mms_message));
-    } else {
-      return emphasisAdded(context.getString(R.string.NotificationMmsMessageRecord_error_downloading_mms_message));
-    }
+    // To the best of my knowledge and ability to trace through the code this never gets used in any
+    // way that is ever displayed to the user. Previously, it would return:
+    //
+    //     - NotificationMmsMessageRecord_multimedia_message ("Multimedia message")
+    //         - If `status` was DOWNLOAD_INITIALIZED,
+    //     - NotificationMmsMessageRecord_downloading_mms_message ("Downloading MMS message")
+    //         - if `status` was DOWNLOAD_CONNECTING, and
+    //     - NotificationMmsMessageRecord_error_downloading_mms_message ("Error downloading MMS message, tap to retry")
+    //         - otherwise.
+    //
+    // As i.) the user never sees these, ii.) the strings are flagged for removal in SS-40, and
+    // iii.) SES-562 will provide updated attachment download controls - I'm going to delete the
+    // above strings as part of SS-40 and return an empty SpannableString which is never seen or
+    // used just to satisfy the method contract.
+    return EMPTY_SS;
   }
 }

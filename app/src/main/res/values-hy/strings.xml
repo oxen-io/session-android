@@ -155,9 +155,6 @@
     <string name="MediaOverviewActivity_Select_all">Ընտրել բոլորը</string>
     <string name="MediaOverviewActivity_collecting_attachments">Կցորդների հավաքում...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Մուլտիմեդիա հաղորդագրություններ</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Ներբեռնում է MMS հաղորդագրությունը</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Խնդիր առաջացավ MMS հաղորդագրությունը ներբեռնելիս, սեղմեք կրկին փորձելու համար</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Ուղարկել %s֊ին</string>
     <!-- MediaSendActivity -->

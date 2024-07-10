@@ -151,9 +151,6 @@
     <string name="MediaOverviewActivity_Select_all">Összes kiválasztása</string>
     <string name="MediaOverviewActivity_collecting_attachments">Mellékletek összegyűjtése...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimédia üzenet</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">MMS üzenet letöltése</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Hiba történt az MMS üzenet letöltése során, koppints az újrapróbálkozáshoz</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Küldés neki: %s</string>
     <!-- MediaSendActivity -->

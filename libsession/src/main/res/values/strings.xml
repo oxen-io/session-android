@@ -80,4 +80,8 @@
     <string name="clearDevice">Clear Device</string>
     <string name="clearDeviceOnly">Clear device only</string>
     <string name="clearDeviceAndNetwork">Clear device and network</string>
+
+    <!-- Added for SS-40 -->
+    <string name="attachmentsNotification">{emoji} Attachment</string>
+    "
 </resources>

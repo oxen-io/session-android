@@ -150,9 +150,6 @@
     <string name="MediaOverviewActivity_Select_all">Alle auswählen</string>
     <string name="MediaOverviewActivity_collecting_attachments">Anhänge werden gesammelt …</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">MMS</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">MMS wird heruntergeladen …</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Fehler beim Herunterladen der MMS. Für erneuten Versuch antippen.</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">An %s senden</string>
     <!-- MediaSendActivity -->

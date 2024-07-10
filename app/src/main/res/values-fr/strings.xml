@@ -157,9 +157,6 @@
     <string name="MediaOverviewActivity_Select_all">Tout sélectionner</string>
     <string name="MediaOverviewActivity_collecting_attachments">Récupération des pièces jointes…</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Message multimédia</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Téléchargement du message multimédia</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Erreur de téléchargement du message multimédia. Touchez pour ressayer</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Envoyer à %s</string>
     <!-- MediaSendActivity -->

@@ -168,9 +168,6 @@
     <string name="MediaOverviewActivity_Select_all">Označit vše</string>
     <string name="MediaOverviewActivity_collecting_attachments">Shromažďuji přílohy...</string>
     <!-- NotificationMmsMessageRecord -->
-    <string name="NotificationMmsMessageRecord_multimedia_message">Multimediální zpráva</string>
-    <string name="NotificationMmsMessageRecord_downloading_mms_message">Stahuji MMS zprávu</string>
-    <string name="NotificationMmsMessageRecord_error_downloading_mms_message">Chyba při stahování MMS zprávy, ťukněte pro opakování</string>
     <!-- MediaPickerActivity -->
     <string name="MediaPickerActivity_send_to">Poslat %s</string>
     <!-- MediaSendActivity -->
