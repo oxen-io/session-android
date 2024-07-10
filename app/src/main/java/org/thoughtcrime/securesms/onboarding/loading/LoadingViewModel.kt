@@ -12,8 +12,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.timeout
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -44,10 +42,8 @@ internal class LoadingViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                TextSecurePreferences.events
-                    .filter { it == TextSecurePreferences.CONFIGURATION_SYNCED.name }
-                    .onStart { emit(TextSecurePreferences.CONFIGURATION_SYNCED.name) }
-                    .filter { prefs.getConfigurationMessageSynced() }
+                prefs.configurationMessageSyncedFlow()
+                    .filter { it }
                     .timeout(TIMEOUT_TIME)
                     .collectLatest { onSuccess() }
             } catch (e: Exception) {

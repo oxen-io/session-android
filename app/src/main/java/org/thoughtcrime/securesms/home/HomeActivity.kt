@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.provider.Telephony.Mms.Addr
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.os.bundleOf
@@ -21,7 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -185,9 +183,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         // subscribe to outdated config updates, this should be removed after long enough time for device migration
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                TextSecurePreferences.events.filter { it == TextSecurePreferences.HAS_RECEIVED_LEGACY_CONFIG.name }.collect {
-                    updateLegacyConfigView()
-                }
+                prefs.hasLegacyConfigFlow().collect(::updateLegacyConfigView)
             }
         }
 
@@ -224,10 +220,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                 }
 
                 withContext(Dispatchers.Main) {
-                    updateProfileButton()
-                    TextSecurePreferences.events.filter { it == TextSecurePreferences.PROFILE_NAME_PREF.name }.collect {
-                        updateProfileButton()
-                    }
+                    prefs.profileNameFlow().collect(::updateProfileButton)
                 }
             }
 
@@ -330,8 +323,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         binding.newConversationButton.isVisible = !isShown
     }
 
-    private fun updateLegacyConfigView() {
-        binding.configOutdatedView.isVisible = textSecurePreferences.getHasLegacyConfig()
+    private fun updateLegacyConfigView(hasLegacyConfig: Boolean = textSecurePreferences.getHasLegacyConfig()) {
+        binding.configOutdatedView.isVisible = hasLegacyConfig
     }
 
     override fun onResume() {
@@ -382,9 +375,9 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         }
     }
 
-    private fun updateProfileButton() {
+    private fun updateProfileButton(profileName: String? = textSecurePreferences.getProfileName()) {
         binding.profileButton.publicKey = publicKey
-        binding.profileButton.displayName = textSecurePreferences.getProfileName()
+        binding.profileButton.displayName = profileName
         binding.profileButton.recycle()
         binding.profileButton.update()
     }

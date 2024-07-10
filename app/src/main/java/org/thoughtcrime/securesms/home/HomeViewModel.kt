@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
@@ -60,11 +59,6 @@ class HomeViewModel @Inject constructor(
         ::Data
     ).stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
-    private fun hasHiddenMessageRequests() = TextSecurePreferences.events
-        .filter { it == TextSecurePreferences.HAS_HIDDEN_MESSAGE_REQUESTS.name }
-        .map { prefs.hasHiddenMessageRequests() }
-        .onStart { emit(prefs.hasHiddenMessageRequests()) }
-
     private fun observeTypingStatus(): Flow<Set<Long>> =
             ApplicationContext.getInstance(context).typingStatusRepository
                     .typingThreads
@@ -74,7 +68,7 @@ class HomeViewModel @Inject constructor(
 
     private fun messageRequests() = combine(
         unapprovedConversationCount(),
-        hasHiddenMessageRequests(),
+        prefs.hasHiddenMessageRequestsFlow(),
         latestUnapprovedConversationTimestamp(),
         ::createMessageRequests
     ).flowOn(Dispatchers.IO)

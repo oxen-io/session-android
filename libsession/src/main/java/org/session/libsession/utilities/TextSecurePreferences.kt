@@ -2,6 +2,7 @@ package org.session.libsession.utilities
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.hardware.Camera
 import android.net.Uri
 import android.provider.Settings
@@ -12,9 +13,9 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager.getDefaultSharedPreferences
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import org.session.libsession.R
 import org.session.libsession.utilities.TextSecurePreferences.Companion.instance
 import java.util.Date
@@ -41,7 +42,6 @@ fun Pref(name: String, default: Long) = Pref(name, default, SharedPreferences::g
 fun Pref(name: String, default: String) = Pref(name, default, { _, _ -> getString(name, null) ?: default }, SharedPreferences.Editor::putStringOrRemove)
 fun Pref(name: String) = Pref(name, null, SharedPreferences::getString, SharedPreferences.Editor::putStringOrRemove)
 fun Pref(name: String, default: Set<String>) = Pref(name, default, SharedPreferences::getStringSet, SharedPreferences.Editor::putStringSet)
-
 
 private fun SharedPreferences.Editor.putStringOrRemove(name: String, value: String?) = value?.let { putString(name, it) } ?: run { remove(name) }
 
@@ -75,9 +75,6 @@ class TextSecurePreferences @Inject constructor(
         val TAG = TextSecurePreferences::class.simpleName
 
         var instance: TextSecurePreferences? = null
-
-        internal val _events = MutableSharedFlow<String>(0, 64, BufferOverflow.DROP_OLDEST)
-        val events get() = _events.asSharedFlow()
 
         @JvmStatic
         var pushSuffix = ""
@@ -165,19 +162,26 @@ class TextSecurePreferences @Inject constructor(
     fun <T> set(pref: Pref<T>, value: T?) = sharedPreferences.set(pref, value)
     fun <T> remove(pref: Pref<T>) = sharedPreferences.set(pref, null)
     fun <T> has(pref: Pref<T>) = sharedPreferences.contains(pref.name)
+    fun <T> flow(pref: Pref<T>) = callbackFlow {
+        OnSharedPreferenceChangeListener { _, _ -> trySend(sharedPreferences[pref]) }.let {
+            trySend(sharedPreferences[pref])
+
+            sharedPreferences.registerOnSharedPreferenceChangeListener(it)
+
+            awaitClose {
+                sharedPreferences.unregisterOnSharedPreferenceChangeListener(it)
+            }
+        }
+    }
 
     fun getConfigurationMessageSynced(): Boolean = sharedPreferences[CONFIGURATION_SYNCED]
-
-    fun setConfigurationMessageSynced(value: Boolean) {
-        set(CONFIGURATION_SYNCED, value)
-        _events.tryEmit(CONFIGURATION_SYNCED.name)
-    }
+    fun configurationMessageSyncedFlow() = flow(CONFIGURATION_SYNCED)
+    fun setConfigurationMessageSynced(value: Boolean) = set(CONFIGURATION_SYNCED, value)
     fun isPushEnabled(): Boolean = sharedPreferences[IS_PUSH_ENABLED]
     fun setPushEnabled(value: Boolean) = sharedPreferences.set(IS_PUSH_ENABLED, value)
     fun getPushToken(): String? = sharedPreferences[PUSH_TOKEN]
     fun setPushToken(value: String) = set(PUSH_TOKEN, value)
     fun getPushRegisterTime(): Long = sharedPreferences[PUSH_REGISTER_TIME]
-
     fun setPushRegisterTime(value: Long) = set(PUSH_REGISTER_TIME, value)
     fun isScreenLockEnabled() = sharedPreferences[SCREEN_LOCK]
     fun setScreenLockEnabled(value: Boolean) = set(SCREEN_LOCK, value)
@@ -202,11 +206,9 @@ class TextSecurePreferences @Inject constructor(
     fun setIsGifSearchInGridLayout(isGrid: Boolean) = set(GIF_GRID_LAYOUT, isGrid)
     fun getProfileKey(): String? = sharedPreferences[PROFILE_KEY_PREF]
     fun setProfileKey(key: String?) = set(PROFILE_KEY_PREF, key)
-    fun setProfileName(name: String?) {
-        sharedPreferences[PROFILE_NAME_PREF] = name
-        _events.tryEmit(PROFILE_NAME_PREF.name)
-    }
+    fun setProfileName(name: String?) = sharedPreferences.set(PROFILE_NAME_PREF, name)
     fun getProfileName(): String? = sharedPreferences[PROFILE_NAME_PREF]
+    fun profileNameFlow() = flow(PROFILE_NAME_PREF)
     fun setProfileAvatarId(id: Int) = set(PROFILE_AVATAR_ID_PREF, id)
     fun getProfileAvatarId(): Int = sharedPreferences[PROFILE_AVATAR_ID_PREF]
     fun setProfilePictureURL(url: String?) = set(PROFILE_AVATAR_URL_PREF, url)
@@ -220,10 +222,8 @@ class TextSecurePreferences @Inject constructor(
     fun setLocalRegistrationId(registrationId: Int) = set(LOCAL_REGISTRATION_ID_PREF, registrationId)
     fun getLocalNumber(): String? = sharedPreferences[LOCAL_NUMBER_PREF]
     fun getHasLegacyConfig(): Boolean = sharedPreferences[HAS_RECEIVED_LEGACY_CONFIG]
-    fun setHasLegacyConfig(newValue: Boolean) {
-        sharedPreferences[HAS_RECEIVED_LEGACY_CONFIG] = newValue
-        _events.tryEmit(HAS_RECEIVED_LEGACY_CONFIG.name)
-    }
+    fun hasLegacyConfigFlow(): Flow<Boolean> = flow(HAS_RECEIVED_LEGACY_CONFIG)
+    fun setHasLegacyConfig(newValue: Boolean) = sharedPreferences.set(HAS_RECEIVED_LEGACY_CONFIG, newValue)
     fun setLocalNumber(localNumber: String) = set(LOCAL_NUMBER_PREF, localNumber.lowercase())
     fun isEnterSendsEnabled() = sharedPreferences[ENTER_SENDS_PREF]
     fun isPasswordDisabled(): Boolean = sharedPreferences[DISABLE_PASSPHRASE_PREF]
@@ -278,6 +278,7 @@ class TextSecurePreferences @Inject constructor(
         }
     }
     fun hasHiddenMessageRequests(): Boolean = sharedPreferences[HAS_HIDDEN_MESSAGE_REQUESTS]
+    fun hasHiddenMessageRequestsFlow() = flow(HAS_HIDDEN_MESSAGE_REQUESTS)
     fun setHasHiddenMessageRequests() = set(HAS_HIDDEN_MESSAGE_REQUESTS, true)
     fun removeHasHiddenMessageRequests() = remove(HAS_HIDDEN_MESSAGE_REQUESTS)
     fun getFingerprintKeyGenerated(): Boolean = sharedPreferences[FINGERPRINT_KEY_GENERATED]
