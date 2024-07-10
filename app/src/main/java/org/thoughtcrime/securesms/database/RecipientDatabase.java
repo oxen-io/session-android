@@ -55,7 +55,7 @@ public class RecipientDatabase extends Database {
   private static final String SYSTEM_PHONE_LABEL       = "system_phone_label";
   private static final String SYSTEM_CONTACT_URI       = "system_contact_uri";
   private static final String SIGNAL_PROFILE_NAME      = "signal_profile_name";
-  private static final String SIGNAL_PROFILE_AVATAR    = "signal_profile_avatar";
+  private static final String SESSION_PROFILE_AVATAR = "signal_profile_avatar";
   private static final String PROFILE_SHARING          = "profile_sharing_approval";
   private static final String CALL_RINGTONE            = "call_ringtone";
   private static final String CALL_VIBRATE             = "call_vibrate";
@@ -69,7 +69,7 @@ public class RecipientDatabase extends Database {
   private static final String[] RECIPIENT_PROJECTION = new String[] {
       BLOCK, APPROVED, APPROVED_ME, NOTIFICATION, CALL_RINGTONE, VIBRATE, CALL_VIBRATE, MUTE_UNTIL, COLOR, SEEN_INVITE_REMINDER, DEFAULT_SUBSCRIPTION_ID, EXPIRE_MESSAGES, REGISTERED,
       PROFILE_KEY, SYSTEM_DISPLAY_NAME, SYSTEM_PHOTO_URI, SYSTEM_PHONE_LABEL, SYSTEM_CONTACT_URI,
-      SIGNAL_PROFILE_NAME, SIGNAL_PROFILE_AVATAR, PROFILE_SHARING, NOTIFICATION_CHANNEL,
+      SIGNAL_PROFILE_NAME, SESSION_PROFILE_AVATAR, PROFILE_SHARING, NOTIFICATION_CHANNEL,
       UNIDENTIFIED_ACCESS_MODE,
       FORCE_SMS_SELECTION, NOTIFY_TYPE, DISAPPEARING_STATE, WRAPPER_HASH, BLOCKS_COMMUNITY_MESSAGE_REQUESTS
   };
@@ -97,7 +97,7 @@ public class RecipientDatabase extends Database {
           SYSTEM_CONTACT_URI + " TEXT DEFAULT NULL, " +
           PROFILE_KEY + " TEXT DEFAULT NULL, " +
           SIGNAL_PROFILE_NAME + " TEXT DEFAULT NULL, " +
-          SIGNAL_PROFILE_AVATAR + " TEXT DEFAULT NULL, " +
+              SESSION_PROFILE_AVATAR + " TEXT DEFAULT NULL, " +
           PROFILE_SHARING + " INTEGER DEFAULT 0, " +
           CALL_RINGTONE + " TEXT DEFAULT NULL, " +
           CALL_VIBRATE + " INTEGER DEFAULT " + Recipient.VibrateState.DEFAULT.getId() + ", " +
@@ -204,7 +204,7 @@ public class RecipientDatabase extends Database {
     String  systemPhoneLabel       = cursor.getString(cursor.getColumnIndexOrThrow(SYSTEM_PHONE_LABEL));
     String  systemContactUri       = cursor.getString(cursor.getColumnIndexOrThrow(SYSTEM_CONTACT_URI));
     String  signalProfileName      = cursor.getString(cursor.getColumnIndexOrThrow(SIGNAL_PROFILE_NAME));
-    String  signalProfileAvatar    = cursor.getString(cursor.getColumnIndexOrThrow(SIGNAL_PROFILE_AVATAR));
+    String  signalProfileAvatar    = cursor.getString(cursor.getColumnIndexOrThrow(SESSION_PROFILE_AVATAR));
     boolean profileSharing         = cursor.getInt(cursor.getColumnIndexOrThrow(PROFILE_SHARING))      == 1;
     String  notificationChannel    = cursor.getString(cursor.getColumnIndexOrThrow(NOTIFICATION_CHANNEL));
     int     unidentifiedAccessMode = cursor.getInt(cursor.getColumnIndexOrThrow(UNIDENTIFIED_ACCESS_MODE));
@@ -361,7 +361,7 @@ public class RecipientDatabase extends Database {
 
   public void setProfileAvatar(@NonNull Recipient recipient, @Nullable String profileAvatar) {
     ContentValues contentValues = new ContentValues(1);
-    contentValues.put(SIGNAL_PROFILE_AVATAR, profileAvatar);
+    contentValues.put(SESSION_PROFILE_AVATAR, profileAvatar);
     updateOrInsert(recipient.getAddress(), contentValues);
     recipient.resolve().setProfileAvatar(profileAvatar);
     notifyRecipientListeners();

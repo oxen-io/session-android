@@ -1,6 +1,7 @@
 package org.session.libsession.messaging.jobs
 
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -141,8 +142,8 @@ class AttachmentDownloadJob(val attachmentID: Long, val databaseMessageID: Long)
                 DownloadUtilities.downloadFile(tempFile, attachment.url)
             } else {
                 Log.d("AttachmentDownloadJob", "downloading open group attachment")
-                val url = HttpUrl.parse(attachment.url)!!
-                val fileID = url.pathSegments().last()
+                val url = attachment.url.toHttpUrlOrNull()!!
+                val fileID = url.pathSegments.last()
                 OpenGroupApi.download(fileID, openGroup.room, openGroup.server).get().let {
                     tempFile.writeBytes(it)
                 }

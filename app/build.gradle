@@ -271,7 +271,7 @@ dependencies {
     if (project.hasProperty('huawei')) huaweiImplementation 'com.huawei.hms:push:6.7.0.300'
     implementation 'com.google.android.exoplayer:exoplayer-core:2.9.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.9.1'
-    implementation 'org.conscrypt:conscrypt-android:2.0.0'
+    implementation 'org.conscrypt:conscrypt-android:2.5.2'
     implementation 'org.signal:aesgcmprovider:0.0.3'
     implementation 'org.webrtc:google-webrtc:1.0.32006'
     implementation "me.leolin:ShortcutBadger:1.1.16"

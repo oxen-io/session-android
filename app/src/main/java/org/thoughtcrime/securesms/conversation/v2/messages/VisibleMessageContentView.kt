@@ -22,6 +22,7 @@ import androidx.core.view.isVisible
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ViewVisibleMessageContentBinding
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
@@ -289,7 +290,7 @@ class VisibleMessageContentView : ConstraintLayout {
 
             // replace URLSpans with ModalURLSpans
             body.getSpans<URLSpan>(0, body.length).toList().forEach { urlSpan ->
-                val updatedUrl = urlSpan.url.let { HttpUrl.parse(it).toString() }
+                val updatedUrl = urlSpan.url.let { it.toHttpUrlOrNull().toString() }
                 val replacementSpan = ModalURLSpan(updatedUrl) { url ->
                     val activity = context as AppCompatActivity
                     ModalUrlBottomSheet(url).show(activity.supportFragmentManager, "Open URL Dialog")

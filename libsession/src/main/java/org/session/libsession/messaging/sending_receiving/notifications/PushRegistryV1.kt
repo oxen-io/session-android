@@ -3,6 +3,7 @@ package org.session.libsession.messaging.sending_receiving.notifications
 import android.annotation.SuppressLint
 import nl.komponents.kovenant.Promise
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
 import okhttp3.RequestBody
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -58,7 +59,7 @@ object PushRegistryV1 {
 
         val url = "${server.url}/register_legacy_groups_only"
         val body = RequestBody.create(
-            MediaType.get("application/json"),
+            "application/json".toMediaType(),
             JsonUtil.toJson(parameters)
         )
         val request = Request.Builder().url(url).post(body).build()
@@ -83,7 +84,7 @@ object PushRegistryV1 {
         return retryIfNeeded(maxRetryCount) {
             val parameters = mapOf("token" to token)
             val url = "${server.url}/unregister"
-            val body = RequestBody.create(MediaType.get("application/json"), JsonUtil.toJson(parameters))
+            val body = RequestBody.create("application/json".toMediaType(), JsonUtil.toJson(parameters))
             val request = Request.Builder().url(url).post(body).build()
 
             sendOnionRequest(request) success {
@@ -120,7 +121,7 @@ object PushRegistryV1 {
     ): Promise<*, Exception> {
         val parameters = mapOf("closedGroupPublicKey" to closedGroupPublicKey, "pubKey" to publicKey)
         val url = "${server.url}/$operation"
-        val body = RequestBody.create(MediaType.get("application/json"), JsonUtil.toJson(parameters))
+        val body = RequestBody.create("application/json".toMediaType(), JsonUtil.toJson(parameters))
         val request = Request.Builder().url(url).post(body).build()
 
         return retryIfNeeded(maxRetryCount) {

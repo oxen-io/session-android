@@ -1,5 +1,6 @@
 package org.session.libsession.messaging.jobs
 
+import java.util.concurrent.atomic.AtomicBoolean
 import network.loki.messenger.libsession_util.ConfigBase.Companion.protoKindFor
 import nl.komponents.kovenant.functional.bind
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -10,7 +11,6 @@ import org.session.libsession.messaging.utilities.Data
 import org.session.libsession.snode.RawResponse
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsignal.utilities.Log
-import java.util.concurrent.atomic.AtomicBoolean
 
 // only contact (self) and closed group destinations will be supported
 data class ConfigurationSyncJob(val destination: Destination): Job {
@@ -180,7 +180,6 @@ data class ConfigurationSyncJob(val destination: Destination): Job {
         // type mappings
         const val CONTACT_TYPE = 1
         const val GROUP_TYPE = 2
-
     }
 
     class Factory: Job.Factory<ConfigurationSyncJob> {
