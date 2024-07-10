@@ -3,11 +3,13 @@ package org.thoughtcrime.securesms.groups
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.utilities.Address
 import org.thoughtcrime.securesms.contacts.UserView
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 
 class EditClosedGroupMembersAdapter(
     private val context: Context,
@@ -41,7 +43,7 @@ class EditClosedGroupMembersAdapter(
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val member = members[position]
 
-        val unlocked = admin && member != TextSecurePreferences.getLocalNumber(context)
+        val unlocked = admin && member != context.prefs.getLocalNumber()
 
         viewHolder.view.bind(Recipient.from(
             context,

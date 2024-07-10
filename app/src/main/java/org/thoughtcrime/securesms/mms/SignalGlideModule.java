@@ -58,7 +58,7 @@ public class SignalGlideModule extends AppGlideModule {
 
   @Override
   public void registerComponents(@NonNull Context context, @NonNull Glide glide, @NonNull Registry registry) {
-    AttachmentSecret attachmentSecret = AttachmentSecretProvider.getInstance(context).getOrCreateAttachmentSecret();
+    AttachmentSecret attachmentSecret = AttachmentSecretProvider.getInstance().getOrCreateAttachmentSecret();
     byte[]           secret           = attachmentSecret.getModernKey();
 
     registry.prepend(File.class, File.class, UnitModelLoader.Factory.getInstance());

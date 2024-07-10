@@ -7,6 +7,7 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.ProfileKeyUtil
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.session.libsignal.crypto.ecc.DjbECPrivateKey
 import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.session.libsignal.crypto.ecc.ECKeyPair
@@ -117,8 +118,9 @@ class ConfigurationMessage(var closedGroups: List<ClosedGroup>, var openGroups: 
             val sharedConfig = MessagingModuleConfiguration.shared
             val storage = sharedConfig.storage
             val context = sharedConfig.context
-            val displayName = TextSecurePreferences.getProfileName(context) ?: return null
-            val profilePicture = TextSecurePreferences.getProfilePictureURL(context)
+            val prefs = context.prefs
+            val displayName = prefs.getProfileName() ?: return null
+            val profilePicture = prefs.getProfilePictureURL()
             val profileKey = ProfileKeyUtil.getProfileKey(context)
             val groups = storage.getAllGroups(includeInactive = false)
             for (group in groups) {

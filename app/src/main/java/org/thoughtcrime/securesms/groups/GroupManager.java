@@ -56,7 +56,7 @@ public class GroupManager {
     final Recipient     groupRecipient  = Recipient.from(context, Address.fromSerialized(groupId), false);
     final Set<Address>  memberAddresses = new HashSet<>();
 
-    memberAddresses.add(Address.fromSerialized(Objects.requireNonNull(TextSecurePreferences.getLocalNumber(context))));
+    memberAddresses.add(Address.fromSerialized(Objects.requireNonNull(MessagingModuleConfiguration.getShared().getPrefs().getLocalNumber())));
     groupDatabase.create(groupId, name, new LinkedList<>(memberAddresses), null, null, new LinkedList<>(), System.currentTimeMillis());
 
     groupDatabase.updateProfilePicture(groupId, avatarBytes);

@@ -40,6 +40,7 @@ import com.annimon.stream.Optional;
 import com.annimon.stream.Stream;
 import com.goterl.lazysodium.utils.KeyPair;
 
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.messaging.open_groups.OpenGroup;
 import org.session.libsession.messaging.sending_receiving.notifications.MessageNotifier;
 import org.session.libsession.messaging.utilities.AccountId;
@@ -138,18 +139,18 @@ public class DefaultMessageNotifier implements MessageNotifier {
       intent.putExtra(ConversationActivityV2.THREAD_ID, threadId);
       intent.setData((Uri.parse("custom://" + SnodeAPI.getNowWithOffset())));
 
-      FailedNotificationBuilder builder = new FailedNotificationBuilder(context, TextSecurePreferences.getNotificationPrivacy(context), intent);
+      FailedNotificationBuilder builder = new FailedNotificationBuilder(context, MessagingModuleConfiguration.getShared().getPrefs().getNotificationPrivacy(), intent);
       ((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE))
         .notify((int)threadId, builder.build());
     }
   }
 
   public void notifyMessagesPending(Context context) {
-    if (!TextSecurePreferences.isNotificationsEnabled(context)) {
+    if (!MessagingModuleConfiguration.getShared().getPrefs().isNotificationsEnabled()) {
       return;
     }
 
-    PendingMessageNotificationBuilder builder = new PendingMessageNotificationBuilder(context, TextSecurePreferences.getNotificationPrivacy(context));
+    PendingMessageNotificationBuilder builder = new PendingMessageNotificationBuilder(context, MessagingModuleConfiguration.getShared().getPrefs().getNotificationPrivacy());
     ServiceUtil.getNotificationManager(context).notify(PENDING_MESSAGES_ID, builder.build());
   }
 
@@ -210,7 +211,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
   @Override
   public void updateNotification(@NonNull Context context) {
-    if (!TextSecurePreferences.isNotificationsEnabled(context)) {
+    if (!MessagingModuleConfiguration.getShared().getPrefs().isNotificationsEnabled()) {
       return;
     }
 
@@ -238,10 +239,10 @@ public class DefaultMessageNotifier implements MessageNotifier {
 
     if (recipient != null && !recipient.isGroupRecipient() && threads.getMessageCount(threadId) == 1 &&
             !(recipient.isApproved() || threads.getLastSeenAndHasSent(threadId).second())) {
-      TextSecurePreferences.removeHasHiddenMessageRequests(context);
+      MessagingModuleConfiguration.getShared().getPrefs().removeHasHiddenMessageRequests();
     }
 
-    if (!TextSecurePreferences.isNotificationsEnabled(context) ||
+    if (!MessagingModuleConfiguration.getShared().getPrefs().isNotificationsEnabled() ||
         (recipient != null && recipient.isMuted()))
     {
       return;
@@ -271,7 +272,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
     try {
       telcoCursor = DatabaseComponent.get(context).mmsSmsDatabase().getUnread(); // TODO: add a notification specific lighter query here
 
-      if ((telcoCursor == null || telcoCursor.isAfterLast()) || TextSecurePreferences.getLocalNumber(context) == null)
+      if ((telcoCursor == null || telcoCursor.isAfterLast()) || MessagingModuleConfiguration.getShared().getPrefs().getLocalNumber() == null)
       {
         updateBadge(context, 0);
         cancelActiveNotifications(context);
@@ -324,7 +325,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
       return;
     }
 
-    SingleRecipientNotificationBuilder builder        = new SingleRecipientNotificationBuilder(context, TextSecurePreferences.getNotificationPrivacy(context));
+    SingleRecipientNotificationBuilder builder        = new SingleRecipientNotificationBuilder(context, MessagingModuleConfiguration.getShared().getPrefs().getNotificationPrivacy());
     List<NotificationItem>             notifications  = notificationState.getNotifications();
     Recipient                          recipient      = notifications.get(0).getRecipient();
     int                                notificationId = (int) (SUMMARY_NOTIFICATION_ID + (bundled ? notifications.get(0).getThreadId() : 0));
@@ -411,7 +412,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
   {
     Log.i(TAG, "sendMultiThreadNotification()  signal: " + signal);
 
-    MultipleRecipientNotificationBuilder builder       = new MultipleRecipientNotificationBuilder(context, TextSecurePreferences.getNotificationPrivacy(context));
+    MultipleRecipientNotificationBuilder builder       = new MultipleRecipientNotificationBuilder(context, MessagingModuleConfiguration.getShared().getPrefs().getNotificationPrivacy());
     List<NotificationItem>               notifications = notificationState.getNotifications();
 
     builder.setMessageCount(notificationState.getMessageCount(), notificationState.getThreadCount());
@@ -501,7 +502,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
         threadRecipients = threadDatabase.getRecipientForThreadId(threadId);
         messageRequest = threadRecipients != null && !threadRecipients.isGroupRecipient() &&
                 !threadRecipients.isApproved() && !threadDatabase.getLastSeenAndHasSent(threadId).second();
-        if (messageRequest && (threadDatabase.getMessageCount(threadId) > 1 || !TextSecurePreferences.hasHiddenMessageRequests(context))) {
+        if (messageRequest && (threadDatabase.getMessageCount(threadId) > 1 || !MessagingModuleConfiguration.getShared().getPrefs().hasHiddenMessageRequests())) {
           continue;
         }
       }
@@ -523,7 +524,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
       } else if (record.isOpenGroupInvitation()) {
         body = SpanUtil.italic(context.getString(R.string.ThreadRecord_open_group_invitation));
       }
-      String userPublicKey = TextSecurePreferences.getLocalNumber(context);
+      String userPublicKey = MessagingModuleConfiguration.getShared().getPrefs().getLocalNumber();
       String blindedPublicKey = cache.get(threadId);
       if (blindedPublicKey == null) {
         blindedPublicKey = generateBlindedId(threadId, context);
@@ -594,7 +595,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
   }
 
   private void scheduleReminder(Context context, int count) {
-    if (count >= TextSecurePreferences.getRepeatAlertsCount(context)) {
+    if (count >= MessagingModuleConfiguration.getShared().getPrefs().getRepeatAlertsCount()) {
       return;
     }
 

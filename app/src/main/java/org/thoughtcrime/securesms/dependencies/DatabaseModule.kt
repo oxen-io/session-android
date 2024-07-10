@@ -8,6 +8,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.utilities.SSKEnvironment
+import org.session.libsession.utilities.TextSecurePreferences
 import org.thoughtcrime.securesms.attachments.DatabaseAttachmentProvider
 import org.thoughtcrime.securesms.crypto.AttachmentSecret
 import org.thoughtcrime.securesms.crypto.AttachmentSecretProvider
@@ -32,12 +33,12 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideAttachmentSecret(@ApplicationContext context: Context) = AttachmentSecretProvider.getInstance(context).orCreateAttachmentSecret
+    fun provideAttachmentSecret(@ApplicationContext context: Context) = AttachmentSecretProvider.getInstance().orCreateAttachmentSecret
 
     @Provides
     @Singleton
-    fun provideOpenHelper(@ApplicationContext context: Context): SQLCipherOpenHelper {
-        val dbSecret = DatabaseSecretProvider(context).orCreateDatabaseSecret
+    fun provideOpenHelper(@ApplicationContext context: Context, prefs: TextSecurePreferences): SQLCipherOpenHelper {
+        val dbSecret = DatabaseSecretProvider(prefs).orCreateDatabaseSecret
         SQLCipherOpenHelper.migrateSqlCipher3To4IfNeeded(context, dbSecret)
         return SQLCipherOpenHelper(context, dbSecret)
     }

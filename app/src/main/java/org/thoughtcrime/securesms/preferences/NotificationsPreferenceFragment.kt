@@ -18,8 +18,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.utilities.TextSecurePreferences
-import org.session.libsession.utilities.TextSecurePreferences.Companion.isNotificationsEnabled
+import org.session.libsession.utilities.prefs
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.components.SwitchPreferenceCompat
 import org.thoughtcrime.securesms.notifications.NotificationChannels
@@ -175,7 +176,7 @@ class NotificationsPreferenceFragment : ListSummaryPreferenceFragment() {
     companion object {
         @Suppress("unused")
         private val TAG = NotificationsPreferenceFragment::class.java.simpleName
-        fun getSummary(context: Context): CharSequence = when (isNotificationsEnabled(context)) {
+        fun getSummary(context: Context): CharSequence = when (context.prefs.isNotificationsEnabled()) {
                 true -> R.string.ApplicationPreferencesActivity_On
                 false -> R.string.ApplicationPreferencesActivity_Off
             }.let(context::getString)

@@ -14,6 +14,7 @@ import com.annimon.stream.Stream;
 import net.zetetic.database.sqlcipher.SQLiteDatabase;
 
 import org.jetbrains.annotations.NotNull;
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.GroupRecord;
 import org.session.libsession.utilities.TextSecurePreferences;
@@ -172,7 +173,7 @@ public class GroupDatabase extends Database implements LokiOpenGroupDatabaseProt
     List<Recipient> recipients  = new LinkedList<>();
 
     for (Address member : members) {
-      if (!includeSelf && Util.isOwnNumber(context, member.serialize()))
+      if (!includeSelf && Util.isOwnNumber(member.serialize()))
         continue;
 
       if (member.isContact()) {
@@ -186,7 +187,7 @@ public class GroupDatabase extends Database implements LokiOpenGroupDatabaseProt
   public @NonNull List<Address> getGroupMemberAddresses(String groupId, boolean includeSelf) {
     List<Address> members = getCurrentMembers(groupId, false);
     if (!includeSelf) {
-      String ownNumber = TextSecurePreferences.getLocalNumber(context);
+      String ownNumber = MessagingModuleConfiguration.getShared().getPrefs().getLocalNumber();
       if (ownNumber == null) return members;
       Address ownAddress = Address.fromSerialized(ownNumber);
       int indexOfSelf = members.indexOf(ownAddress);

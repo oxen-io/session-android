@@ -90,10 +90,10 @@ class LibSessionTests {
         val kp = KeyPairUtilities.generate(newBytes)
         KeyPairUtilities.store(context, kp.seed, kp.ed25519KeyPair, kp.x25519KeyPair)
         val registrationID = KeyHelper.generateRegistrationId(false)
-        TextSecurePreferences.setLocalRegistrationId(context, registrationID)
-        TextSecurePreferences.setLocalNumber(context, kp.x25519KeyPair.hexEncodedPublicKey)
-        TextSecurePreferences.setRestorationTime(context, 0)
-        TextSecurePreferences.setHasViewedSeed(context, false)
+        context.prefs.setLocalRegistrationId(context, registrationID)
+        context.prefs.setLocalNumber(context, kp.x25519KeyPair.hexEncodedPublicKey)
+        context.prefs.setRestorationTime(context, 0)
+        context.prefs.setHasViewedSeed(context, false)
     }
 
     @Test

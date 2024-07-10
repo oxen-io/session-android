@@ -16,6 +16,8 @@
  */
 package org.session.libsession.utilities.recipients;
 
+import static org.session.libsession.utilities.TextSecurePreferencesKt.getPrefs;
+
 import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -80,14 +82,16 @@ class RecipientProvider {
     return recipientCache.remove(address);
   }
 
-  private @NonNull Optional<RecipientDetails> createPrefetchedRecipientDetails(@NonNull Context context, @NonNull Address address,
+  private @NonNull Optional<RecipientDetails> createPrefetchedRecipientDetails(@NonNull Context context,
+                                                                               @NonNull Address address,
                                                                                @NonNull Optional<RecipientSettings> settings,
                                                                                @NonNull Optional<GroupRecord> groupRecord)
   {
     if (address.isGroup() && settings.isPresent() && groupRecord.isPresent()) {
       return Optional.of(getGroupRecipientDetails(context, address, groupRecord, settings, true));
     } else if (!address.isGroup() && settings.isPresent()) {
-      boolean isLocalNumber = address.serialize().equals(TextSecurePreferences.getLocalNumber(context));
+      TextSecurePreferences prefs = getPrefs(context);
+      boolean isLocalNumber = address.serialize().equals(prefs.getLocalNumber());
       return Optional.of(new RecipientDetails(null, null, !TextUtils.isEmpty(settings.get().getSystemDisplayName()), isLocalNumber, settings.get(), null));
     }
 
@@ -114,7 +118,8 @@ class RecipientProvider {
     }
 
     boolean systemContact = settings.isPresent() && !TextUtils.isEmpty(settings.get().getSystemDisplayName());
-    boolean isLocalNumber = address.serialize().equals(TextSecurePreferences.getLocalNumber(context));
+    TextSecurePreferences prefs = getPrefs(context);
+    boolean isLocalNumber = address.serialize().equals(prefs.getLocalNumber());
     return new RecipientDetails(null, null, systemContact, isLocalNumber, settings.orNull(), null);
   }
 

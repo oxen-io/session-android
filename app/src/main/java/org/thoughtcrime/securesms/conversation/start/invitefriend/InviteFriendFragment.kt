@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.Fragment
 import dagger.hilt.android.AndroidEntryPoint
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.thoughtcrime.securesms.conversation.start.StartConversationDelegate
 import org.thoughtcrime.securesms.preferences.copyPublicKey
 import org.thoughtcrime.securesms.preferences.sendInvitationToUseSession
@@ -22,7 +24,7 @@ class InviteFriendFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View = createThemedComposeView {
         InviteFriend(
-            TextSecurePreferences.getLocalNumber(LocalContext.current)!!,
+            requireContext().prefs.getLocalNumber()!!,
             onBack = { delegate.onDialogBackPressed() },
             onClose = { delegate.onDialogClosePressed() },
             copyPublicKey = requireContext()::copyPublicKey,

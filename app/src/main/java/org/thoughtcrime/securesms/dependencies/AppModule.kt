@@ -13,6 +13,7 @@ import org.thoughtcrime.securesms.repository.DefaultConversationRepository
 @InstallIn(SingletonComponent::class)
 abstract class AppModule {
 
+
     @Binds
     abstract fun bindConversationRepository(repository: DefaultConversationRepository): ConversationRepository
 }

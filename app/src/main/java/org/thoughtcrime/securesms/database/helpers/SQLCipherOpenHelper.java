@@ -13,6 +13,7 @@ import net.zetetic.database.sqlcipher.SQLiteDatabase;
 import net.zetetic.database.sqlcipher.SQLiteDatabaseHook;
 import net.zetetic.database.sqlcipher.SQLiteOpenHelper;
 
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.crypto.DatabaseSecret;
@@ -125,9 +126,9 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
           // if not vacuumed in a while, perform that operation
           long currentTime = System.currentTimeMillis();
           // 7 days
-          if (currentTime - TextSecurePreferences.getLastVacuumTime(context) > 604_800_000) {
+          if (currentTime - MessagingModuleConfiguration.getShared().getPrefs().getLastVacuumTime() > 604_800_000) {
             connection.execute("VACUUM;", null, null);
-            TextSecurePreferences.setLastVacuumNow(context);
+            MessagingModuleConfiguration.getShared().getPrefs().setLastVacuumNow();
           }
         }
       },

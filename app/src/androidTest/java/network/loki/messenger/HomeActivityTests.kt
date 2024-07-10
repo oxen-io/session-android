@@ -100,7 +100,7 @@ class HomeActivityTests {
         // PN select
         if (hasViewedSeed) {
             // has viewed seed is set to false after register activity
-            TextSecurePreferences.setHasViewedSeed(InstrumentationRegistry.getInstrumentation().targetContext, true)
+            context.prefs.setHasViewedSeed(InstrumentationRegistry.getInstrumentation().targetContext, true)
         }
         // allow notification permission
         PermissionGranter.allowPermissionsIfNeeded(Manifest.permission.POST_NOTIFICATIONS)
@@ -149,7 +149,7 @@ class HomeActivityTests {
     fun testChat_withSelf() {
         setupLoggedInState()
         goToMyChat()
-        TextSecurePreferences.setLinkPreviewsEnabled(context, true)
+        context.prefs.setLinkPreviewsEnabled(context, true)
         sendMessage("howdy")
         sendMessage("test")
         // tests url rewriter doesn't crash
@@ -161,7 +161,7 @@ class HomeActivityTests {
     fun testChat_displaysCorrectUrl() {
         setupLoggedInState()
         goToMyChat()
-        TextSecurePreferences.setLinkPreviewsEnabled(InstrumentationRegistry.getInstrumentation().targetContext, true)
+        context.prefs.setLinkPreviewsEnabled(InstrumentationRegistry.getInstrumentation().targetContext, true)
         // given the link url text
         val url = "https://www.ámazon.com"
         sendMessage(url, LinkPreview(url, "amazon", Optional.absent()))

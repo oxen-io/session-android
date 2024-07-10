@@ -11,6 +11,7 @@ import org.session.libsession.snode.OnionResponse
 import org.session.libsession.snode.Version
 import org.session.libsession.utilities.Device
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.session.libsignal.utilities.JsonUtil
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.emptyPromise
@@ -28,9 +29,9 @@ object PushRegistryV1 {
 
     fun register(
         device: Device,
-        isPushEnabled: Boolean = TextSecurePreferences.isPushEnabled(context),
-        token: String? = TextSecurePreferences.getPushToken(context),
-        publicKey: String? = TextSecurePreferences.getLocalNumber(context),
+        isPushEnabled: Boolean = context.prefs.isPushEnabled(),
+        token: String? = context.prefs.getPushToken(),
+        publicKey: String? = context.prefs.getLocalNumber(),
         legacyGroupPublicKeys: Collection<String> = MessagingModuleConfiguration.shared.storage.getAllClosedGroupPublicKeys()
     ): Promise<*, Exception> = when {
         isPushEnabled -> retryIfNeeded(maxRetryCount) {
@@ -78,7 +79,7 @@ object PushRegistryV1 {
     fun unregister(): Promise<*, Exception> {
         Log.d(TAG, "unregisterV1 requested")
 
-        val token = TextSecurePreferences.getPushToken(context) ?: emptyPromise()
+        val token = context.prefs.getPushToken() ?: emptyPromise()
 
         return retryIfNeeded(maxRetryCount) {
             val parameters = mapOf("token" to token)
@@ -99,7 +100,7 @@ object PushRegistryV1 {
 
     fun subscribeGroup(
         closedGroupPublicKey: String,
-        isPushEnabled: Boolean = TextSecurePreferences.isPushEnabled(context),
+        isPushEnabled: Boolean = context.prefs.isPushEnabled(),
         publicKey: String = MessagingModuleConfiguration.shared.storage.getUserPublicKey()!!
     ) = if (isPushEnabled) {
         performGroupOperation("subscribe_closed_group", closedGroupPublicKey, publicKey)
@@ -107,7 +108,7 @@ object PushRegistryV1 {
 
     fun unsubscribeGroup(
         closedGroupPublicKey: String,
-        isPushEnabled: Boolean = TextSecurePreferences.isPushEnabled(context),
+        isPushEnabled: Boolean = context.prefs.isPushEnabled(),
         publicKey: String = MessagingModuleConfiguration.shared.storage.getUserPublicKey()!!
     ) = if (isPushEnabled) {
         performGroupOperation("unsubscribe_closed_group", closedGroupPublicKey, publicKey)

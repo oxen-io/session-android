@@ -39,14 +39,13 @@ import android.widget.ImageView;
 import androidx.core.hardware.fingerprint.FingerprintManagerCompat;
 import androidx.core.os.CancellationSignal;
 
-import org.session.libsession.utilities.TextSecurePreferences;
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.components.AnimatingToggle;
 import org.thoughtcrime.securesms.crypto.BiometricSecretProvider;
 import org.thoughtcrime.securesms.service.KeyCachingService;
 import org.thoughtcrime.securesms.util.AnimationCompleteListener;
 
-import java.security.InvalidKeyException;
 import java.security.Signature;
 
 import network.loki.messenger.R;
@@ -103,7 +102,7 @@ public class PassphrasePromptActivity extends BaseActionBarActivity {
 
     setLockTypeVisibility();
 
-    if (TextSecurePreferences.isScreenLockEnabled(this) && !authenticated && !failure) {
+    if (MessagingModuleConfiguration.getShared().getPrefs().isScreenLockEnabled() && !authenticated && !failure) {
       resumeScreenLock();
     }
 
@@ -114,7 +113,7 @@ public class PassphrasePromptActivity extends BaseActionBarActivity {
   public void onPause() {
     super.onPause();
 
-    if (TextSecurePreferences.isScreenLockEnabled(this)) {
+    if (MessagingModuleConfiguration.getShared().getPrefs().isScreenLockEnabled()) {
       pauseScreenLock();
     }
   }
@@ -176,7 +175,7 @@ public class PassphrasePromptActivity extends BaseActionBarActivity {
   }
 
   private void setLockTypeVisibility() {
-    if (TextSecurePreferences.isScreenLockEnabled(this)) {
+    if (MessagingModuleConfiguration.getShared().getPrefs().isScreenLockEnabled()) {
       if (fingerprintManager.isHardwareDetected() && fingerprintManager.hasEnrolledFingerprints()) {
         fingerprintPrompt.setVisibility(View.VISIBLE);
         lockScreenButton.setVisibility(View.GONE);
@@ -197,8 +196,8 @@ public class PassphrasePromptActivity extends BaseActionBarActivity {
 
     if (!keyguardManager.isKeyguardSecure()) {
       Log.w(TAG ,"Keyguard not secure...");
-      TextSecurePreferences.setScreenLockEnabled(getApplicationContext(), false);
-      TextSecurePreferences.setScreenLockTimeout(getApplicationContext(), 0);
+      MessagingModuleConfiguration.getShared().getPrefs().setScreenLockEnabled(false);
+      MessagingModuleConfiguration.getShared().getPrefs().setScreenLockTimeout(0);
       handleAuthenticated();
       return;
     }

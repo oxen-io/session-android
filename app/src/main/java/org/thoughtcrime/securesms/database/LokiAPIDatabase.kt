@@ -2,7 +2,9 @@ package org.thoughtcrime.securesms.database
 
 import android.content.ContentValues
 import android.content.Context
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.session.libsignal.crypto.ecc.DjbECPrivateKey
 import org.session.libsignal.crypto.ecc.DjbECPublicKey
 import org.session.libsignal.crypto.ecc.ECKeyPair
@@ -479,13 +481,13 @@ class LokiAPIDatabase(context: Context, helper: SQLCipherOpenHelper) : Database(
     }
 
     override fun getLastSnodePoolRefreshDate(): Date? {
-        val time = TextSecurePreferences.getLastSnodePoolRefreshDate(context)
+        val time = context.prefs.getLastSnodePoolRefreshDate()
         if (time <= 0) { return null }
         return Date(time)
     }
 
     override fun setLastSnodePoolRefreshDate(date: Date) {
-        TextSecurePreferences.setLastSnodePoolRefreshDate(context, date)
+        context.prefs.setLastSnodePoolRefreshDate(date)
     }
 
     override fun getUserX25519KeyPair(): ECKeyPair {

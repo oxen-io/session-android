@@ -10,6 +10,7 @@ import org.session.libsession.messaging.messages.visible.VisibleMessage
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.utilities.UpdateMessageData
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
@@ -44,7 +45,7 @@ object ResendMessageUtilities {
             messageRecord.linkPreviews.firstOrNull()?.let { message.linkPreview = LinkPreview.from(it) }
             messageRecord.quote?.quoteModel?.let {
                 message.quote = Quote.from(it)?.apply {
-                    if (userBlindedKey != null && publicKey == TextSecurePreferences.getLocalNumber(context)) {
+                    if (userBlindedKey != null && publicKey == context.prefs.getLocalNumber()) {
                         publicKey = userBlindedKey
                     }
                 }

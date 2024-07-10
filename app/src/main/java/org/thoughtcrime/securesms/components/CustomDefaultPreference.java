@@ -12,6 +12,8 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsignal.utilities.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -84,19 +86,19 @@ public class CustomDefaultPreference extends DialogPreference {
   }
 
   private boolean isCustom() {
-    return TextSecurePreferences.getBooleanPreference(getContext(), customToggle, false);
+    return MessagingModuleConfiguration.getShared().getPrefs().getBooleanPreference(customToggle, false);
   }
 
   private void setCustom(boolean custom) {
-    TextSecurePreferences.setBooleanPreference(getContext(), customToggle, custom);
+    MessagingModuleConfiguration.getShared().getPrefs().setBooleanPreference(customToggle, custom);
   }
 
   private String getCustomValue() {
-    return TextSecurePreferences.getStringPreference(getContext(), customPreference, "");
+    return MessagingModuleConfiguration.getShared().getPrefs().getStringPreference(customPreference, "");
   }
 
   private void setCustomValue(String value) {
-    TextSecurePreferences.setStringPreference(getContext(), customPreference, value);
+    MessagingModuleConfiguration.getShared().getPrefs().setStringPreference(customPreference, value);
   }
 
   private String getDefaultValue() {

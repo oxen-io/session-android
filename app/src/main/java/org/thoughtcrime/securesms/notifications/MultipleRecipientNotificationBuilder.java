@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.messaging.contacts.Contact;
 import org.session.libsession.utilities.NotificationPrivacyPreference;
 import org.session.libsession.utilities.TextSecurePreferences;
@@ -39,7 +40,7 @@ public class MultipleRecipientNotificationBuilder extends AbstractNotificationBu
     setGroupSummary(true);
 
     if (!NotificationChannels.supported()) {
-      setPriority(TextSecurePreferences.getNotificationPriority(context));
+      setPriority(MessagingModuleConfiguration.getShared().getPrefs().getNotificationPriority());
     }
   }
 

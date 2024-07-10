@@ -18,11 +18,13 @@ import network.loki.messenger.R
 import network.loki.messenger.databinding.FragmentCreateGroupBinding
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.groupSizeLimit
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Device
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.contacts.SelectContactsAdapter
 import org.thoughtcrime.securesms.conversation.start.StartConversationDelegate
@@ -88,7 +90,7 @@ class CreateGroupFragment : Fragment() {
             if (selectedMembers.count() >= groupSizeLimit) { // Minus one because we're going to include self later
                 return@setOnClickListener Toast.makeText(context, R.string.activity_create_closed_group_too_many_group_members_error, Toast.LENGTH_LONG).show()
             }
-            val userPublicKey = TextSecurePreferences.getLocalNumber(requireContext())!!
+            val userPublicKey = requireContext().prefs.getLocalNumber()!!
             isLoading = true
             binding.loaderContainer.fadeIn()
             MessageSender.createClosedGroup(device, name.toString(), selectedMembers + setOf( userPublicKey )).successUi { groupID ->

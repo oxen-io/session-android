@@ -16,11 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.thoughtcrime.securesms.giph.model.GiphyImage;
 import org.thoughtcrime.securesms.giph.net.GiphyLoader;
 import org.thoughtcrime.securesms.giph.util.InfiniteScrollListener;
 import org.thoughtcrime.securesms.mms.GlideApp;
-import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.ViewUtil;
 
 import java.util.LinkedList;
@@ -57,7 +57,7 @@ public abstract class GiphyFragment extends Fragment implements LoaderManager.Lo
     this.giphyAdapter = new GiphyAdapter(getActivity(), GlideApp.with(this), new LinkedList<>());
     this.giphyAdapter.setListener(this);
 
-    setLayoutManager(TextSecurePreferences.isGifSearchInGridLayout(getContext()));
+    setLayoutManager(MessagingModuleConfiguration.getShared().getPrefs().isGifSearchInGridLayout());
     this.recyclerView.setItemAnimator(new DefaultItemAnimator());
     this.recyclerView.setAdapter(giphyAdapter);
     this.recyclerView.addOnScrollListener(new GiphyScrollListener());

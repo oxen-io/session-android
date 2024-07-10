@@ -31,6 +31,7 @@ import androidx.annotation.Nullable;
 import com.annimon.stream.Stream;
 import net.zetetic.database.sqlcipher.SQLiteDatabase;
 import org.jetbrains.annotations.NotNull;
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.snode.SnodeAPI;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.Contact;
@@ -924,7 +925,7 @@ public class ThreadDatabase extends Database {
       Uri                snippetUri           = getSnippetUri(cursor);
       boolean            pinned              = cursor.getInt(cursor.getColumnIndexOrThrow(ThreadDatabase.IS_PINNED)) != 0;
 
-      if (!TextSecurePreferences.isReadReceiptsEnabled(context)) {
+      if (!MessagingModuleConfiguration.getShared().getPrefs().isReadReceiptsEnabled()) {
         readReceiptCount = 0;
       }
 

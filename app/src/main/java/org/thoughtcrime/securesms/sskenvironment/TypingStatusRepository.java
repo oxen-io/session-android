@@ -11,6 +11,7 @@ import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.SSKEnvironment;
 import org.session.libsession.utilities.TextSecurePreferences;
@@ -48,7 +49,7 @@ public class TypingStatusRepository implements SSKEnvironment.TypingIndicatorsPr
 
   @Override
   public synchronized void didReceiveTypingStartedMessage(@NotNull Context context, long threadId, @NotNull Address author, int device) {
-    if (author.serialize().equals(TextSecurePreferences.getLocalNumber(context))) {
+    if (author.serialize().equals(MessagingModuleConfiguration.getShared().getPrefs().getLocalNumber())) {
       return;
     }
 
@@ -77,7 +78,7 @@ public class TypingStatusRepository implements SSKEnvironment.TypingIndicatorsPr
 
   @Override
   public synchronized void didReceiveTypingStoppedMessage(@NotNull Context context, long threadId, @NotNull Address author, int device, boolean isReplacedByIncomingMessage) {
-    if (author.serialize().equals(TextSecurePreferences.getLocalNumber(context))) {
+    if (author.serialize().equals(MessagingModuleConfiguration.getShared().getPrefs().getLocalNumber())) {
       return;
     }
 

@@ -17,6 +17,8 @@
  */
 package org.session.libsession.utilities.recipients;
 
+import static org.session.libsession.utilities.TextSecurePreferencesKt.getPrefs;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -524,7 +526,7 @@ public class Recipient implements RecipientModifiedListener {
   }
 
   public synchronized @Nullable ContactPhoto getContactPhoto() {
-    if      (isLocalNumber)                               return new ProfileContactPhoto(address, String.valueOf(TextSecurePreferences.getProfileAvatarId(context)));
+    if      (isLocalNumber)                               return new ProfileContactPhoto(address, String.valueOf(getPrefs(MessagingModuleConfiguration.getShared().getContext()).getProfileAvatarId()));
     else if (isGroupRecipient() && groupAvatarId != null) return new GroupRecordContactPhoto(address, groupAvatarId);
     else if (systemContactPhoto != null)                  return new SystemContactPhoto(address, systemContactPhoto, 0);
     else if (profileAvatar != null)                       return new ProfileContactPhoto(address, profileAvatar);

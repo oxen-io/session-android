@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms.ui.color
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.TextSecurePreferences.Companion.BLUE_ACCENT
 import org.session.libsession.utilities.TextSecurePreferences.Companion.CLASSIC_DARK

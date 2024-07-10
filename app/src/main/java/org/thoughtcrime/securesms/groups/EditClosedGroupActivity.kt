@@ -22,12 +22,14 @@ import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.sending_receiving.MessageSender
 import org.session.libsession.messaging.sending_receiving.groupSizeLimit
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.TextSecurePreferences
 import org.session.libsession.utilities.ThemeUtil
+import org.session.libsession.utilities.prefs
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.toHexString
@@ -107,7 +109,7 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
         groupID = intent.getStringExtra(groupIDKey)!!
         val groupInfo = DatabaseComponent.get(this).groupDatabase().getGroup(groupID).get()
         originalName = groupInfo.title
-        isSelfAdmin = groupInfo.admins.any{ it.serialize() == TextSecurePreferences.getLocalNumber(this) }
+        isSelfAdmin = groupInfo.admins.any{ it.serialize() == prefs.getLocalNumber() }
 
         name = originalName
 
@@ -291,7 +293,7 @@ class EditClosedGroupActivity : PassphraseRequiredActionBarActivity() {
             return Toast.makeText(this, R.string.activity_create_closed_group_too_many_group_members_error, Toast.LENGTH_LONG).show()
         }
 
-        val userPublicKey = TextSecurePreferences.getLocalNumber(this)!!
+        val userPublicKey = prefs.getLocalNumber()!!
         val userAsRecipient = Recipient.from(this, Address.fromSerialized(userPublicKey), false)
 
         if (!members.contains(userAsRecipient) && !members.map { it.address.toString() }.containsAll(originalMembers.minus(userPublicKey))) {

@@ -20,6 +20,7 @@ import androidx.annotation.WorkerThread;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.utilities.Address;
 import org.session.libsession.utilities.ServiceUtil;
 import org.session.libsession.utilities.TextSecurePreferences;
@@ -69,10 +70,10 @@ public class NotificationChannels {
 
     NotificationManager notificationManager = ServiceUtil.getNotificationManager(context);
 
-    int oldVersion = TextSecurePreferences.getNotificationChannelVersion(context);
+    int oldVersion = MessagingModuleConfiguration.getShared().getPrefs().getNotificationChannelVersion();
     if (oldVersion != VERSION) {
       onUpgrade(notificationManager, oldVersion, VERSION);
-      TextSecurePreferences.setNotificationChannelVersion(context, VERSION);
+      MessagingModuleConfiguration.getShared().getPrefs().setNotificationChannelVersion(VERSION);
     }
 
     onCreate(context, notificationManager);
@@ -112,7 +113,7 @@ public class NotificationChannels {
    * @return The channel ID for the default messages channel.
    */
   public static synchronized @NonNull String getMessagesChannel(@NonNull Context context) {
-    return getMessagesChannelId(TextSecurePreferences.getNotificationMessagesChannelVersion(context));
+    return getMessagesChannelId(MessagingModuleConfiguration.getShared().getPrefs().getNotificationMessagesChannelVersion());
   }
 
   /**
@@ -143,7 +144,7 @@ public class NotificationChannels {
    */
   public static synchronized String createChannelFor(@NonNull Context context, @NonNull Recipient recipient) {
     VibrateState vibrateState     = recipient.getMessageVibrate();
-    boolean      vibrationEnabled = vibrateState == VibrateState.DEFAULT ? TextSecurePreferences.isNotificationVibrateEnabled(context) : vibrateState == VibrateState.ENABLED;
+    boolean      vibrationEnabled = vibrateState == VibrateState.DEFAULT ? MessagingModuleConfiguration.getShared().getPrefs().isNotificationVibrateEnabled() : vibrateState == VibrateState.ENABLED;
     Uri          messageRingtone  = recipient.getMessageRingtone() != null ? recipient.getMessageRingtone() : getMessageRingtone(context);
     String       displayName      = getChannelDisplayNameFor(context, recipient.getName(), recipient.getProfileName(), recipient.getAddress());
 
@@ -166,7 +167,7 @@ public class NotificationChannels {
     String              channelId = generateChannelIdFor(address);
     NotificationChannel channel   = new NotificationChannel(channelId, displayName, NotificationManager.IMPORTANCE_HIGH);
 
-    setLedPreference(channel, TextSecurePreferences.getNotificationLedColor(context));
+    setLedPreference(channel, MessagingModuleConfiguration.getShared().getPrefs().getNotificationLedColor());
     channel.setGroup(CATEGORY_MESSAGES);
     channel.enableVibration(vibrationEnabled);
 
@@ -434,9 +435,9 @@ public class NotificationChannels {
     NotificationChannel other        = new NotificationChannel(OTHER, context.getString(R.string.NotificationChannel_other), NotificationManager.IMPORTANCE_LOW);
 
     messages.setGroup(CATEGORY_MESSAGES);
-    messages.enableVibration(TextSecurePreferences.isNotificationVibrateEnabled(context));
-    messages.setSound(TextSecurePreferences.getNotificationRingtone(context), getRingtoneAudioAttributes());
-    setLedPreference(messages, TextSecurePreferences.getNotificationLedColor(context));
+    messages.enableVibration(MessagingModuleConfiguration.getShared().getPrefs().isNotificationVibrateEnabled());
+    messages.setSound(MessagingModuleConfiguration.getShared().getPrefs().getNotificationRingtone(), getRingtoneAudioAttributes());
+    setLedPreference(messages, MessagingModuleConfiguration.getShared().getPrefs().getNotificationLedColor());
 
     calls.setShowBadge(false);
     calls.setSound(null, null);
@@ -528,12 +529,12 @@ public class NotificationChannels {
   @TargetApi(26)
   private static void updateMessageChannel(@NonNull Context context, @NonNull ChannelUpdater updater) {
     NotificationManager notificationManager = ServiceUtil.getNotificationManager(context);
-    int existingVersion                     = TextSecurePreferences.getNotificationMessagesChannelVersion(context);
+    int existingVersion                     = MessagingModuleConfiguration.getShared().getPrefs().getNotificationMessagesChannelVersion();
     int newVersion                          = existingVersion + 1;
 
     Log.i(TAG, "Updating message channel from version " + existingVersion + " to " + newVersion);
     if (updateExistingChannel(notificationManager, getMessagesChannelId(existingVersion), getMessagesChannelId(newVersion), updater)) {
-      TextSecurePreferences.setNotificationMessagesChannelVersion(context, newVersion);
+      MessagingModuleConfiguration.getShared().getPrefs().setNotificationMessagesChannelVersion(newVersion);
     } else {
       onCreate(context, notificationManager);
     }

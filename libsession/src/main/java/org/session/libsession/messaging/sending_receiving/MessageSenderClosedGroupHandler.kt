@@ -16,6 +16,7 @@ import org.session.libsession.utilities.Address.Companion.fromSerialized
 import org.session.libsession.utilities.Device
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.session.libsignal.crypto.ecc.Curve
 import org.session.libsignal.crypto.ecc.ECKeyPair
 import org.session.libsignal.messages.SignalServiceGroup
@@ -240,7 +241,7 @@ fun MessageSender.leave(groupPublicKey: String, notifyUser: Boolean = true): Pro
     ThreadUtils.queue {
         val context = MessagingModuleConfiguration.shared.context
         val storage = MessagingModuleConfiguration.shared.storage
-        val userPublicKey = TextSecurePreferences.getLocalNumber(context)!!
+        val userPublicKey = context.prefs.getLocalNumber()!!
         val groupID = GroupUtil.doubleEncodeGroupID(groupPublicKey)
         val group = storage.getGroup(groupID) ?: return@queue deferred.reject(Error.NoThread)
         val updatedMembers = group.members.map { it.serialize() }.toSet() - userPublicKey

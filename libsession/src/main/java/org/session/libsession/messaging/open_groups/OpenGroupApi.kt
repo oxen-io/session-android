@@ -26,6 +26,7 @@ import org.session.libsession.snode.OnionRequestAPI
 import org.session.libsession.snode.OnionResponse
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.session.libsignal.utilities.Base64.decode
 import org.session.libsignal.utilities.Base64.encodeBytes
 import org.session.libsignal.utilities.HTTP
@@ -50,8 +51,7 @@ object OpenGroupApi {
     private val hasPerformedInitialPoll = mutableMapOf<String, Boolean>()
     private var hasUpdatedLastOpenDate = false
     private val timeSinceLastOpen by lazy {
-        val context = MessagingModuleConfiguration.shared.context
-        val lastOpenDate = TextSecurePreferences.getLastOpenTimeDate(context)
+        val lastOpenDate = MessagingModuleConfiguration.shared.context.prefs.getLastOpenTimeDate()
         val now = System.currentTimeMillis()
         now - lastOpenDate
     }
@@ -703,7 +703,7 @@ object OpenGroupApi {
         hasPerformedInitialPoll[server] = true
         if (!hasUpdatedLastOpenDate) {
             hasUpdatedLastOpenDate = true
-            TextSecurePreferences.setLastOpenDate(context)
+            context.prefs.setLastOpenDate()
         }
         val lastInboxMessageId = storage.getLastInboxMessageId(server)
         val lastOutboxMessageId = storage.getLastOutboxMessageId(server)

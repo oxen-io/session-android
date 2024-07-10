@@ -2,12 +2,14 @@ package org.thoughtcrime.securesms.sskenvironment
 
 import android.content.Context
 import network.loki.messenger.libsession_util.util.UserPic
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.contacts.Contact
 import org.session.libsession.messaging.jobs.JobQueue
 import org.session.libsession.messaging.jobs.RetrieveProfileAvatarJob
 import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.utilities.SSKEnvironment
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.IdPrefix
 import org.thoughtcrime.securesms.dependencies.ConfigFactory
@@ -91,7 +93,7 @@ class ProfileManager(private val context: Context, private val configFactory: Co
 
     override fun contactUpdatedInternal(contact: Contact): String? {
         val contactConfig = configFactory.contacts ?: return null
-        if (contact.accountID == TextSecurePreferences.getLocalNumber(context)) return null
+        if (contact.accountID == context.prefs.getLocalNumber()) return null
         val sessionId = AccountId(contact.accountID)
         if (sessionId.prefix != IdPrefix.STANDARD) return null // only internally store standard session IDs
         contactConfig.upsertContact(contact.accountID) {

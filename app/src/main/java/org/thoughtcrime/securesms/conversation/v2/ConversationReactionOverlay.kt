@@ -30,9 +30,10 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
+import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.snode.SnodeAPI
-import org.session.libsession.utilities.TextSecurePreferences.Companion.getLocalNumber
 import org.session.libsession.utilities.ThemeUtil
+import org.session.libsession.utilities.prefs
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView
 import org.thoughtcrime.securesms.components.emoji.RecentEmojiPageModel
 import org.thoughtcrime.securesms.components.menu.ActionItem
@@ -514,7 +515,7 @@ class ConversationReactionOverlay : FrameLayout {
 
     private fun getOldEmoji(messageRecord: MessageRecord): String? =
         messageRecord.reactions
-            .filter { it.author == getLocalNumber(context) }
+            .filter { it.author == context.prefs.getLocalNumber() }
             .firstOrNull()
             ?.let(ReactionRecord::emoji)
 
@@ -527,7 +528,7 @@ class ConversationReactionOverlay : FrameLayout {
         val openGroup = get(context).lokiThreadDatabase().getOpenGroupChat(message.threadId)
         val recipient = get(context).threadDatabase().getRecipientForThreadId(message.threadId)
                 ?: return emptyList()
-        val userPublicKey = getLocalNumber(context)!!
+        val userPublicKey = context.prefs.getLocalNumber()!!
         // Select message
         items += ActionItem(R.attr.menu_select_icon, R.string.conversation_context__menu_select, { handleActionItemClicked(Action.SELECT) }, R.string.AccessibilityId_select)
         // Reply

@@ -29,6 +29,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import org.session.libsession.avatars.ContactColors;
 import org.session.libsession.avatars.ContactPhoto;
 import org.session.libsession.avatars.GeneratedContactPhoto;
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.messaging.contacts.Contact;
 import org.session.libsession.utilities.NotificationPrivacyPreference;
 import org.session.libsession.utilities.TextSecurePreferences;
@@ -69,7 +70,7 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
     setCategory(NotificationCompat.CATEGORY_MESSAGE);
 
     if (!NotificationChannels.supported()) {
-      setPriority(TextSecurePreferences.getNotificationPriority(context));
+      setPriority(MessagingModuleConfiguration.getShared().getPrefs().getNotificationPriority());
     }
   }
 

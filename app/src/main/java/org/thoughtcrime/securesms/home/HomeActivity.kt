@@ -38,6 +38,7 @@ import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.GroupUtil
 import org.session.libsession.utilities.ProfilePictureModifiedEvent
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.session.libsession.utilities.recipients.Recipient
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.ThreadUtils
@@ -324,7 +325,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         binding.sessionToolbar.isVisible = !isShown
         binding.recyclerView.isVisible = !isShown
         binding.emptyStateContainer.isVisible = (binding.recyclerView.adapter as HomeAdapter).itemCount == 0 && binding.recyclerView.isVisible
-        binding.seedReminderView.isVisible = !TextSecurePreferences.getHasViewedSeed(this) && !isShown
+        binding.seedReminderView.isVisible = !prefs.getHasViewedSeed() && !isShown
         binding.globalSearchRecycler.isInvisible = !isShown
         binding.newConversationButton.isVisible = !isShown
     }

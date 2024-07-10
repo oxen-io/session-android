@@ -108,7 +108,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         set(value) { field = value; handleDisplayNameEditActionModeChanged() }
     private var tempFile: File? = null
 
-    private val hexEncodedPublicKey: String get() = TextSecurePreferences.getLocalNumber(this)!!
+    private val hexEncodedPublicKey: String get() = prefs.getLocalNumber()!!
 
     companion object {
         private const val SCROLL_STATE = "SCROLL_STATE"
@@ -140,7 +140,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
     }
 
     private fun getDisplayName(): String =
-        TextSecurePreferences.getProfileName(this) ?: truncateIdForDisplay(hexEncodedPublicKey)
+        prefs.getProfileName() ?: truncateIdForDisplay(hexEncodedPublicKey)
 
     private fun setupProfilePictureView(view: ProfilePictureView) {
         view.apply {
@@ -255,7 +255,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         binding.loader.isVisible = true
         val promises = mutableListOf<Promise<*, Exception>>()
         if (displayName != null) {
-            TextSecurePreferences.setProfileName(this, displayName)
+            prefs.setProfileName(displayName)
             configFactory.user?.setName(displayName)
         }
         val encodedProfileKey = ProfileKeyUtil.generateEncodedProfileKey(this)
@@ -269,11 +269,11 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         all(promises) successUi { // Do this on the UI thread so that it happens before the alwaysUi clause below
             val userConfig = configFactory.user
             if (isUpdatingProfilePicture) {
-                AvatarHelper.setAvatar(this, Address.fromSerialized(TextSecurePreferences.getLocalNumber(this)!!), profilePicture)
+                AvatarHelper.setAvatar(this, Address.fromSerialized(prefs.getLocalNumber()!!), profilePicture)
                 prefs.setProfileAvatarId(profilePicture?.let { SecureRandom().nextInt() } ?: 0 )
                 ProfileKeyUtil.setEncodedProfileKey(this, encodedProfileKey)
                 // new config
-                val url = TextSecurePreferences.getProfilePictureURL(this)
+                val url = prefs.getProfilePictureURL()
                 val profileKey = ProfileKeyUtil.getProfileKey(this)
                 if (profilePicture == null) {
                     userConfig?.setPic(UserPic.DEFAULT)

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.messaging.sending_receiving.attachments.AttachmentId;
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment;
 import org.session.libsession.utilities.ServiceUtil;
@@ -79,9 +80,9 @@ public class AttachmentUtil {
   }
 
   private static @NonNull Set<String> getAllowedAutoDownloadTypes(@NonNull Context context) {
-    if      (isConnectedWifi(context))    return TextSecurePreferences.getWifiMediaDownloadAllowed(context);
-    else if (isConnectedRoaming(context)) return TextSecurePreferences.getRoamingMediaDownloadAllowed(context);
-    else if (isConnectedMobile(context))  return TextSecurePreferences.getMobileMediaDownloadAllowed(context);
+    if      (isConnectedWifi(context))    return MessagingModuleConfiguration.getShared().getPrefs().getWifiMediaDownloadAllowed();
+    else if (isConnectedRoaming(context)) return MessagingModuleConfiguration.getShared().getPrefs().getRoamingMediaDownloadAllowed();
+    else if (isConnectedMobile(context))  return MessagingModuleConfiguration.getShared().getPrefs().getMobileMediaDownloadAllowed();
     else                                  return Collections.emptySet();
   }
 

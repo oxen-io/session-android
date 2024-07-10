@@ -13,6 +13,7 @@ import android.net.Uri;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.utilities.FileUtils;
 import org.session.libsession.utilities.ServiceUtil;
 import org.session.libsession.utilities.TextSecurePreferences;
@@ -39,9 +40,9 @@ public class UpdateApkReadyListener extends BroadcastReceiver {
     if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(intent.getAction())) {
       long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -2);
 
-      if (downloadId == TextSecurePreferences.getUpdateApkDownloadId(context)) {
+      if (downloadId == MessagingModuleConfiguration.getShared().getPrefs().getUpdateApkDownloadId()) {
         Uri    uri           = getLocalUriForDownloadId(context, downloadId);
-        String encodedDigest = TextSecurePreferences.getUpdateApkDigest(context);
+        String encodedDigest = MessagingModuleConfiguration.getShared().getPrefs().getUpdateApkDigest();
 
         if (uri == null) {
           Log.w(TAG, "Downloaded local URI is null?");

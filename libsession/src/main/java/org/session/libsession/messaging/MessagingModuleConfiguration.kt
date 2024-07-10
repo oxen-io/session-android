@@ -1,11 +1,13 @@
 package org.session.libsession.messaging
 
+import android.annotation.SuppressLint
 import android.content.Context
 import com.goterl.lazysodium.utils.KeyPair
 import org.session.libsession.database.MessageDataProvider
 import org.session.libsession.database.StorageProtocol
 import org.session.libsession.utilities.ConfigFactoryProtocol
 import org.session.libsession.utilities.Device
+import org.session.libsession.utilities.prefs
 
 class MessagingModuleConfiguration(
     val context: Context,
@@ -16,19 +18,11 @@ class MessagingModuleConfiguration(
     val configFactory: ConfigFactoryProtocol,
     val lastSentTimestampCache: LastSentTimestampCache
 ) {
+    val prefs get() = context.prefs
 
     companion object {
+        @SuppressLint("StaticFieldLeak")
         @JvmStatic
-        val shared: MessagingModuleConfiguration
-        get() = context.getSystemService(MESSAGING_MODULE_SERVICE) as MessagingModuleConfiguration
-
-        const val MESSAGING_MODULE_SERVICE: String = "MessagingModuleConfiguration_MESSAGING_MODULE_SERVICE"
-
-        private lateinit var context: Context
-
-        @JvmStatic
-        fun configure(context: Context) {
-            this.context = context
-        }
+        lateinit var shared: MessagingModuleConfiguration
     }
 }

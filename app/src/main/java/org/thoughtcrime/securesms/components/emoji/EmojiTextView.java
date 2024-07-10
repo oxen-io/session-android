@@ -1,7 +1,6 @@
 package org.thoughtcrime.securesms.components.emoji;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,9 +11,10 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import network.loki.messenger.R;
+
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.thoughtcrime.securesms.components.emoji.EmojiProvider.EmojiDrawable;
 import org.thoughtcrime.securesms.components.emoji.parsing.EmojiParser;
-import org.session.libsession.utilities.TextSecurePreferences;
 import org.session.libsession.utilities.Util;
 import org.session.libsignal.utilities.guava.Optional;
 
@@ -171,7 +171,7 @@ public class EmojiTextView extends AppCompatTextView {
   }
 
   private boolean useSystemEmoji() {
-   return TextSecurePreferences.isSystemEmojiPreferred(getContext());
+   return MessagingModuleConfiguration.getShared().getPrefs().isSystemEmojiPreferred();
   }
 
   @Override

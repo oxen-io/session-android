@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import org.session.libsession.utilities.TextSecurePreferences;
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.home.HomeActivity;
 import org.thoughtcrime.securesms.onboarding.landing.LandingActivity;
@@ -39,8 +39,8 @@ public abstract class PassphraseRequiredActionBarActivity extends BaseActionBarA
     onPreCreate();
 
     final boolean locked = KeyCachingService.isLocked(this) &&
-            TextSecurePreferences.isScreenLockEnabled(this) &&
-            TextSecurePreferences.getLocalNumber(this) != null;
+            MessagingModuleConfiguration.getShared().getPrefs().isScreenLockEnabled() &&
+            MessagingModuleConfiguration.getShared().getPrefs().getLocalNumber() != null;
     routeApplicationState(locked);
 
     super.onCreate(savedInstanceState);
@@ -125,7 +125,7 @@ public abstract class PassphraseRequiredActionBarActivity extends BaseActionBarA
   }
 
   private int getApplicationState(boolean locked) {
-    if (TextSecurePreferences.getLocalNumber(this) == null) {
+    if (MessagingModuleConfiguration.getShared().getPrefs().getLocalNumber() == null) {
       return STATE_WELCOME_SCREEN;
     } else if (locked) {
       return STATE_PROMPT_PASSPHRASE;

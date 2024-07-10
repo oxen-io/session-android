@@ -22,6 +22,7 @@ import org.session.libsession.messaging.sending_receiving.pollers.ClosedGroupPol
 import org.session.libsession.messaging.sending_receiving.pollers.OpenGroupPoller
 import org.session.libsession.snode.SnodeAPI
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.session.libsignal.utilities.Log
 import org.session.libsignal.utilities.recover
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent
@@ -76,7 +77,7 @@ class BackgroundPollWorker(val context: Context, params: WorkerParameters) : Wor
     }
 
     override fun doWork(): Result {
-        if (TextSecurePreferences.getLocalNumber(context) == null) {
+        if (MessagingModuleConfiguration.shared.prefs.getLocalNumber() == null) {
             Log.v(TAG, "User not registered yet.")
             return Result.failure()
         }
@@ -108,7 +109,7 @@ class BackgroundPollWorker(val context: Context, params: WorkerParameters) : Wor
             var dmsPromise: Promise<Unit, Exception> = Promise.ofSuccess(Unit)
 
             if (requestTargets.contains(Targets.DMS)) {
-                val userPublicKey = TextSecurePreferences.getLocalNumber(context)!!
+                val userPublicKey = context.prefs.getLocalNumber()!!
                 dmsPromise = SnodeAPI.getMessages(userPublicKey).bind { envelopes ->
                     val params = envelopes.map { (envelope, serverHash) ->
                         // FIXME: Using a job here seems like a bad idea...

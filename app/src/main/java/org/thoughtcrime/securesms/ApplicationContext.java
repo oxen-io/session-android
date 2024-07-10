@@ -110,7 +110,6 @@ import javax.inject.Inject;
 import dagger.hilt.EntryPoints;
 import dagger.hilt.android.HiltAndroidApp;
 import kotlin.Unit;
-import kotlinx.coroutines.Job;
 import network.loki.messenger.BuildConfig;
 import network.loki.messenger.libsession_util.ConfigBase;
 import network.loki.messenger.libsession_util.UserProfile;
@@ -152,19 +151,10 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     @Inject ConfigFactory configFactory;
     @Inject LastSentTimestampCache lastSentTimestampCache;
     CallMessageProcessor callMessageProcessor;
-    MessagingModuleConfiguration messagingModuleConfiguration;
 
     private volatile boolean isAppVisible;
 
     public boolean newAccount = false;
-
-    @Override
-    public Object getSystemService(String name) {
-        if (MessagingModuleConfiguration.MESSAGING_MODULE_SERVICE.equals(name)) {
-            return messagingModuleConfiguration;
-        }
-        return super.getSystemService(name);
-    }
 
     public static ApplicationContext getInstance(Context context) {
         return (ApplicationContext) context.getApplicationContext();
@@ -214,9 +204,8 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
         TextSecurePreferences.setPushSuffix(BuildConfig.PUSH_KEY_SUFFIX);
 
         DatabaseModule.init(this);
-        MessagingModuleConfiguration.configure(this);
         super.onCreate();
-        messagingModuleConfiguration = new MessagingModuleConfiguration(
+        MessagingModuleConfiguration.shared = new MessagingModuleConfiguration(
                 this,
                 storage,
                 device,
@@ -431,12 +420,12 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     @Override
     protected void attachBaseContext(Context base) {
         initializeLocaleParser();
-        super.attachBaseContext(DynamicLanguageContextWrapper.updateContext(base, TextSecurePreferences.getLanguage(base)));
+        super.attachBaseContext(DynamicLanguageContextWrapper.updateContext(base, new TextSecurePreferences(base).getLanguage()));
     }
 
     private static class ProviderInitializationException extends RuntimeException { }
     private void setUpPollingIfNeeded() {
-        String userPublicKey = TextSecurePreferences.getLocalNumber(this);
+        String userPublicKey = textSecurePreferences.getLocalNumber();
         if (userPublicKey == null) return;
         if (poller != null) {
             poller.setUserPublicKey(userPublicKey);
@@ -463,15 +452,15 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
     private void resubmitProfilePictureIfNeeded() {
         // Files expire on the file server after a while, so we simply re-upload the user's profile picture
         // at a certain interval to ensure it's always available.
-        String userPublicKey = TextSecurePreferences.getLocalNumber(this);
+        String userPublicKey = textSecurePreferences.getLocalNumber();
         if (userPublicKey == null) return;
         long now = new Date().getTime();
-        long lastProfilePictureUpload = TextSecurePreferences.getLastProfilePictureUpload(this);
+        long lastProfilePictureUpload = textSecurePreferences.getLastProfilePictureUpload();
         if (now - lastProfilePictureUpload <= 14 * 24 * 60 * 60 * 1000) return;
         ThreadUtils.queue(() -> {
             // Don't generate a new profile key here; we do that when the user changes their profile picture
             Log.d("Loki-Avatar", "Uploading Avatar Started");
-            String encodedProfileKey = TextSecurePreferences.getProfileKey(ApplicationContext.this);
+            String encodedProfileKey = textSecurePreferences.getProfileKey();
             try {
                 // Read the file into a byte array
                 InputStream inputStream = AvatarHelper.getInputStreamFor(ApplicationContext.this, Address.fromSerialized(userPublicKey));
@@ -486,7 +475,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
                 // Re-upload it
                 ProfilePictureUtilities.INSTANCE.upload(profilePicture, encodedProfileKey, ApplicationContext.this).success(unit -> {
                     // Update the last profile picture upload date
-                    TextSecurePreferences.setLastProfilePictureUpload(ApplicationContext.this, new Date().getTime());
+                    textSecurePreferences.setLastProfilePictureUpload(new Date().getTime());
                     Log.d("Loki-Avatar", "Uploading Avatar Finished");
                     return Unit.INSTANCE;
                 });
@@ -518,7 +507,7 @@ public class ApplicationContext extends Application implements DefaultLifecycleO
      */
     @SuppressLint("ApplySharedPref")
     public boolean clearAllData() {
-        TextSecurePreferences.clearAll(this);
+        getPrefs().clearAll();
         getSharedPreferences(PREFERENCES_NAME, 0).edit().clear().commit();
         if (!deleteDatabase(SQLCipherOpenHelper.DATABASE_NAME)) {
             Log.d("Loki", "Failed to delete database.");

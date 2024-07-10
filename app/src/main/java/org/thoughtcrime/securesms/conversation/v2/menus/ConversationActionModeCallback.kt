@@ -9,6 +9,7 @@ import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.utilities.TextSecurePreferences
+import org.session.libsession.utilities.prefs
 import org.session.libsignal.utilities.IdPrefix
 import org.thoughtcrime.securesms.conversation.v2.ConversationAdapter
 import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord
@@ -36,7 +37,7 @@ class ConversationActionModeCallback(private val adapter: ConversationAdapter, p
         val firstMessage = selectedItems.iterator().next()
         val openGroup = DatabaseComponent.get(context).lokiThreadDatabase().getOpenGroupChat(threadID)
         val thread = DatabaseComponent.get(context).threadDatabase().getRecipientForThreadId(threadID)!!
-        val userPublicKey = TextSecurePreferences.getLocalNumber(context)!!
+        val userPublicKey = context.prefs.getLocalNumber()!!
         val edKeyPair = MessagingModuleConfiguration.shared.getUserED25519KeyPair()!!
         val blindedPublicKey = openGroup?.publicKey?.let { SodiumUtilities.blindedKeyPair(it, edKeyPair)?.publicKey?.asBytes }
             ?.let { AccountId(IdPrefix.BLINDED, it) }?.hexString

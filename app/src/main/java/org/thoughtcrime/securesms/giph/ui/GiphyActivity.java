@@ -18,6 +18,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 
+import org.session.libsession.messaging.MessagingModuleConfiguration;
 import org.session.libsession.utilities.MediaTypes;
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity;
 import org.session.libsignal.utilities.Log;
@@ -59,7 +60,7 @@ public class GiphyActivity extends PassphraseRequiredActionBarActivity
     GiphyActivityToolbar toolbar = ViewUtil.findById(this, R.id.giphy_toolbar);
     toolbar.setOnFilterChangedListener(this);
     toolbar.setOnLayoutChangedListener(this);
-    toolbar.setPersistence(GiphyActivityToolbarTextSecurePreferencesPersistence.fromContext(this));
+    toolbar.setPersistence(new GiphyActivityToolbarTextSecurePreferencesPersistence());
 
     setSupportActionBar(toolbar);
 

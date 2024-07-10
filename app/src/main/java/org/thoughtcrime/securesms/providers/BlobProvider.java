@@ -98,7 +98,7 @@ public class BlobProvider {
         String directory = getDirectory(storageType);
         File   file      = new File(getOrCreateCacheDirectory(context, directory), buildFileName(id));
 
-        return ModernDecryptingPartInputStream.createFor(AttachmentSecretProvider.getInstance(context).getOrCreateAttachmentSecret(), file, 0);
+        return ModernDecryptingPartInputStream.createFor(AttachmentSecretProvider.getInstance().getOrCreateAttachmentSecret(), file, 0);
       }
     } else {
       throw new IOException("Provided URI does not match this spec. Uri: " + uri);
@@ -174,7 +174,7 @@ public class BlobProvider {
 
   @WorkerThread
   private synchronized @NonNull Uri writeBlobSpecToDisk(@NonNull Context context, @NonNull BlobSpec blobSpec, @Nullable ErrorListener errorListener) throws IOException {
-    AttachmentSecret attachmentSecret = AttachmentSecretProvider.getInstance(context).getOrCreateAttachmentSecret();
+    AttachmentSecret attachmentSecret = AttachmentSecretProvider.getInstance().getOrCreateAttachmentSecret();
     String           directory        = getDirectory(blobSpec.getStorageType());
     File             outputFile       = new File(getOrCreateCacheDirectory(context, directory), buildFileName(blobSpec.id));
     OutputStream     outputStream     = ModernEncryptingPartOutputStream.createFor(attachmentSecret, outputFile, true).second;
