@@ -38,7 +38,6 @@
     <string name="BucketedThreadMedia_This_week">This week</string>
     <string name="BucketedThreadMedia_Today">Today</string>
     <string name="BucketedThreadMedia_Yesterday">Yesterday</string>
-    <string name="ConversationActivity_copy_open_group_url">Copy Community URL</string>
     <string name="ConversationActivity_send_after_approval">You will be able to send voice messages and attachments once the recipient has approved this message request</string>
     <string name="ConversationItem_error_not_delivered">Send failed, tap for details</string>
     <string name="DateUtils_just_now">Now</string>

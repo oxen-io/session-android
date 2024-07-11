@@ -31,7 +31,7 @@
         android:drawableStart="@drawable/ic_content_copy_white_24dp"
         android:drawableTint="?attr/colorControlNormal"
         android:visibility="gone"
-        android:text="@string/ConversationActivity_copy_open_group_url" />
+        android:text="@string/communityUrlCopy" />
 
     <TextView
         android:id="@+id/pinTextView"

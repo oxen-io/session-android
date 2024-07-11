@@ -87,6 +87,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     SeedReminderViewDelegate,
     GlobalSearchInputLayout.GlobalSearchInputLayoutListener {
 
+    private val TAG = "HomeActivity"
+
     companion object {
         const val FROM_ONBOARDING = "HomeActivity_FROM_ONBOARDING"
     }
@@ -588,8 +590,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                     .put(GROUP_NAME_KEY, group.title)
                     .format()
             } else {
-                // Otherwise if you're not an admin you can only leave the group
-                title = getString(R.string.groupLeave)
+                // Otherwise this is either a community, or it's a group you're not an admin of
+                title = if (recipient.isCommunityRecipient) getString(R.string.communityLeave) else getString(R.string.groupLeave)
                 message = Phrase.from(this.applicationContext, R.string.groupLeaveDescription)
                     .put(GROUP_NAME_KEY, group.title)
                     .format()
@@ -623,7 +625,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                             GroupUtil.doubleDecodeGroupID(recipient.address.toString()).toHexString()
                                 .takeIf(DatabaseComponent.get(context).lokiAPIDatabase()::isClosedGroup)
                                 ?.let { MessageSender.explicitLeave(it, false) }
-                        } catch (_: IOException) {
+                        } catch (ioe: IOException) {
+                            Log.w(TAG, "Got an IOException while sending leave group message")
                         }
                     }
                     // Delete the conversation
