@@ -22,7 +22,7 @@
         app:showAsAction="always" />
 
     <item
-        android:title="@string/messageInfo"
+        android:title="@string/info"
         android:id="@+id/menu_message_details"
         app:showAsAction="never" />
 

@@ -6,7 +6,6 @@
     <string name="groupNameUpdatedBy">{name} a renommé le groupe en : {group_name}</string>
     <string name="groupYouAdded">Vous avez ajouté {members} au groupe.</string>
     <string name="groupNameAdded">%1$s a ajouté %2$s au groupe.</string>
-    <string name="MessageRecord_s_removed_s_from_the_group">%1$s a supprimé %2$s du groupe.</string>
     <string name="you">Vous</string>
 
     <!-- RecipientProvider -->

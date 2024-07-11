@@ -314,7 +314,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             view(R.layout.dialog_change_avatar)
             button(R.string.activity_settings_upload) { startAvatarSelection() }
             if (TextSecurePreferences.getProfileAvatarId(context) != 0) {
-                button(R.string.activity_settings_remove) { removeAvatar() }
+                button(R.string.remove) { removeAvatar() }
             }
             cancelButton()
         }.apply {

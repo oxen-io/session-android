@@ -7,42 +7,29 @@
     <string name="groupNameUpdatedBy">{name} renamed the group to: {group_name}</string>
     <string name="groupYouAdded">You added {members} to the group.</string>
     <string name="groupNameAdded">{name} added {members} to the group.</string>
-    <string name="MessageRecord_s_removed_s_from_the_group">%1$s removed %2$s from the group.</string>
     <string name="disappearingMessagesUpdatedYours">You set your messages to disappear {time} after they have been {disappearing_messages_type}.</string>
 
     <!-- RecipientProvider -->
 
     <!-- Everything in this section is used by the app but missing from the CrowdIn translations as of 2024-03-14 -ACL -->
     <!-- ======================================================================================= -->
-    <plurals name="ApplicationPreferencesActivity_messages_per_conversation">
-        <item quantity="one">%d message per conversation</item>
-        <item quantity="other">%d messages per conversation</item>
-    </plurals>
-
-    <plurals name="ConversationFragment_saving_n_media_to_storage_warning">
-        <item quantity="one">Saving this media to storage will allow any other apps on your device to access it.\n\nContinue?</item>
-        <item quantity="other">Saving all %1$d media to storage will allow any other apps on your device to access them.\n\nContinue?</item>
-    </plurals>
-
-    <plurals name="ReactionsRecipientAdapter_other_reactors">
-        <item quantity="one">And %1$d other has reacted %2$s to this message</item>
-        <item quantity="other">And %1$d others have reacted %2$s to this message</item>
-    </plurals>
-
-    <plurals name="Unblock_dialog__message_multiple_overflow">
-        <item quantity="one">and %d other</item>
-        <item quantity="other">and %d others</item>
-    </plurals>
 
     <!-- Old naming convention strings that need to me renamed to their modern equivalents and have any % substitution modified to use {braces} -->
-    <string name="BucketedThreadMedia_This_week">This week</string>
+
+    <string name="DateUtils_today">Today</string>
     <string name="BucketedThreadMedia_Today">Today</string>
+    <string name="DateUtils_yesterday">Yesterday</string>
     <string name="BucketedThreadMedia_Yesterday">Yesterday</string>
+    <string name="DateUtils_just_now">Now</string>
+
+    <string name="BucketedThreadMedia_This_week">This week</string>
+
+
     <string name="ConversationActivity_send_after_approval">You will be able to send voice messages and attachments once the recipient has approved this message request</string>
     <string name="ConversationItem_error_not_delivered">Send failed, tap for details</string>
-    <string name="DateUtils_just_now">Now</string>
-    <string name="DateUtils_today">Today</string>
-    <string name="DateUtils_yesterday">Yesterday</string>
+
+
+
     <string name="DisappearingMessagesActivity_settings_not_updated">Settings not updated and please try again</string>
     <string name="ErrorNotifier_migration">Database Upgrade Failed</string>
     <string name="ErrorNotifier_migration_downgrade">Please contact support to report the error.</string>
@@ -84,7 +71,6 @@
     <string name="activity_seed_explanation">Your recovery phrase is the master key to your Session ID — you can use it to restore your Session ID if you lose access to your device. Store your recovery phrase in a safe place, and don\'t give it to anyone.</string> <!-- Replaced during onboarding -->
     <string name="activity_seed_reveal_button_title">Hold to reveal</string>
     <string name="activity_seed_title_2">Meet your recovery phrase</string>
-    <string name="activity_settings_remove">Remove</string>
     <string name="activity_settings_upload">Upload</string>
     <string name="actualSize">Actual Size</string>
     <string name="add">Add</string>
@@ -541,7 +527,7 @@
     <string name="messageErrorLimit">Message limit reached</string>
     <string name="messageErrorOld">Received a message encrypted using an old version of {app_name} that is no longer supported. Please ask the sender to update to the most recent version and resend the message.</string>
     <string name="messageErrorOriginal">Original message not found</string>
-    <string name="messageInfo">Message Info</string>  <!-- ACL - Potentially replaced by 'info' -->
+    <string name="messageInfo">Message Info</string>  <!-- Heading when user long presses and selects `info` ("Info") on a msg -->
     <string name="messageMarkRead">Mark read</string>
     <string name="messageMarkUnread">Mark unread</string>
     <string name="messageNew">New Message</string>
@@ -576,7 +562,6 @@
     <string name="message_details_header__file_id">File Id:</string>
     <string name="messages">Messages</string>
     <string name="minimize">Minimize</string>
-
     <string name="next">Next</string>
     <string name="nicknameDescription">Choose a nickname for {name}. This will appear to you in your one-to-one and group conversations.</string>
     <string name="nicknameEnter">Enter nickname</string>

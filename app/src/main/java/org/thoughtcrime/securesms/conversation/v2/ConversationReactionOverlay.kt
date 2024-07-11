@@ -47,7 +47,7 @@ import org.thoughtcrime.securesms.database.model.ReactionRecord
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent.Companion.get
 import org.thoughtcrime.securesms.repository.ConversationRepository
 import org.thoughtcrime.securesms.util.AnimationCompleteListener
-import org.thoughtcrime.securesms.util.DateUtils
+import org.thoughtcrime.securesms.util.DateUtilities
 import java.util.Locale
 import javax.inject.Inject
 import kotlin.time.Duration
@@ -143,7 +143,7 @@ class ConversationReactionOverlay : FrameLayout {
         val conversationItemSnapshot = selectedConversationModel.bitmap
         conversationBubble.layoutParams = LinearLayout.LayoutParams(conversationItemSnapshot.width, conversationItemSnapshot.height)
         conversationBubble.background = BitmapDrawable(resources, conversationItemSnapshot)
-        conversationTimestamp.text = DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), messageRecord.timestamp)
+        conversationTimestamp.text = DateUtilities.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), messageRecord.timestamp)
         updateConversationTimestamp(messageRecord)
         val isMessageOnLeft = selectedConversationModel.isOutgoing xor ViewUtil.isLtr(this)
         conversationItem.scaleX = LONG_PRESS_SCALE_FACTOR

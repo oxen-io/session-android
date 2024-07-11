@@ -79,7 +79,7 @@ import org.thoughtcrime.securesms.mms.GlideRequests;
 import org.thoughtcrime.securesms.mms.Slide;
 import org.thoughtcrime.securesms.permissions.Permissions;
 import org.thoughtcrime.securesms.util.AttachmentUtil;
-import org.thoughtcrime.securesms.util.DateUtils;
+import org.thoughtcrime.securesms.util.DateUtilities;
 import org.thoughtcrime.securesms.util.SaveAttachmentTask;
 import org.thoughtcrime.securesms.util.SaveAttachmentTask.Attachment;
 
@@ -244,7 +244,7 @@ public class MediaPreviewActivity extends PassphraseRequiredActionBarActivity im
       CharSequence relativeTimeSpan;
 
       if (mediaItem.date > 0) {
-        relativeTimeSpan = DateUtils.getDisplayFormattedTimeSpanString(this, Locale.getDefault(), mediaItem.date);
+        relativeTimeSpan = DateUtilities.INSTANCE.getDisplayFormattedTimeSpanString(this, Locale.getDefault(), mediaItem.date);
       } else {
         relativeTimeSpan = getString(R.string.draft);
       }

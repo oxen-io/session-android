@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.SpannableString
+import android.text.format.DateUtils
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.os.bundleOf
@@ -74,11 +75,15 @@ import org.thoughtcrime.securesms.preferences.SettingsActivity
 import org.thoughtcrime.securesms.showMuteDialog
 import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
+import org.thoughtcrime.securesms.util.DateUtilities
 import org.thoughtcrime.securesms.util.IP2Country
+import org.thoughtcrime.securesms.util.RelativeDay
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
 import java.io.IOException
+import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -155,9 +160,39 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         }
     }
 
+
+
     // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {
         super.onCreate(savedInstanceState, isReady)
+
+
+        val startOfDay = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+
+        Locale.setDefault(Locale.ENGLISH)
+        val now = Calendar.getInstance()
+        val s2 = DateUtils.getRelativeTimeSpanString(
+            startOfDay.timeInMillis,
+            now.timeInMillis,
+            DateUtils.DAY_IN_MILLIS,
+            DateUtils.FORMAT_SHOW_DATE
+        ).toString();
+        Log.w("ACL", s2)
+        Log.w("ACL", DateUtilities.getLocalisedRelativeDayString(RelativeDay.YESTERDAY))
+        Log.w("ACL", DateUtilities.getLocalisedRelativeDayString(RelativeDay.TODAY))
+        Log.w("ACL", DateUtilities.getLocalisedRelativeDayString(RelativeDay.TOMORROW))
+        Log.w("ACL", DateUtilities.getLocalisedNowString())
+
+        resources.getQuantityString(R.plurals.messages, 0, 0)
+
+
+
+
         // Set content view
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)

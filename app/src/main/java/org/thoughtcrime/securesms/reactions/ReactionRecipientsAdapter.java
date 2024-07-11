@@ -1,5 +1,8 @@
 package org.thoughtcrime.securesms.reactions;
 
+import static org.session.util.StringSubstitutionConstants.COUNT_KEY;
+import static org.session.util.StringSubstitutionConstants.EMOJI_KEY;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.phrase.Phrase;
+
 import org.session.libsession.messaging.utilities.SessionId;
 import org.thoughtcrime.securesms.components.ProfilePictureView;
 import org.thoughtcrime.securesms.components.emoji.EmojiImageView;
@@ -184,7 +190,15 @@ final class ReactionRecipientsAdapter extends RecyclerView.Adapter<ReactionRecip
     private void bind(@NonNull final EmojiCount emoji) {
       if (emoji.getCount() > 5) {
         TextView count = itemView.findViewById(R.id.footer_view_emoji_count);
-        count.setText(itemView.getContext().getResources().getQuantityString(R.plurals.ReactionsRecipientAdapter_other_reactors, emoji.getCount() - 5, emoji.getCount() - 5, emoji.getBaseEmoji()));
+
+        // We display the first 5 people to react w/ a given emoji so we'll subtract that to get the 'others' count
+        int othersCount = emoji.getCount() - 5;
+        CharSequence cs = Phrase.from(itemView.getContext(), R.string.emojiReactsCountOthers)
+                .put(COUNT_KEY, othersCount)
+                .put(EMOJI_KEY, emoji.getBaseEmoji())
+                .format();
+        count.setText(cs);
+
         itemView.setVisibility(View.VISIBLE);
       } else {
         itemView.setVisibility(View.GONE);
