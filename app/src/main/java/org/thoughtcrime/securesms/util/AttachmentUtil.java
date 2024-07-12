@@ -58,8 +58,8 @@ public class AttachmentUtil {
   public static void deleteAttachment(@NonNull Context context,
                                       @NonNull DatabaseAttachment attachment)
   {
-    AttachmentId attachmentId    = attachment.getAttachmentId();
-    long         mmsId           = attachment.getMmsId();
+    AttachmentId attachmentId    = attachment.attachmentId;
+    long         mmsId           = attachment.mmsId;
     int          attachmentCount = DatabaseComponent.get(context).attachmentDatabase()
         .getAttachmentsForMessage(mmsId)
         .size();

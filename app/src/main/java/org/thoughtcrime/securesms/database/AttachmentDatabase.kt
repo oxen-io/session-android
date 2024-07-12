@@ -313,8 +313,8 @@ class AttachmentDatabase(
         return DatabaseAttachment(
             attachment.attachmentId,
             attachment.mmsId,
-            attachment.hasData(),
-            attachment.hasThumbnail(),
+            attachment.hasData,
+            attachment.hasThumbnail,
             mediaStream.mimeType,
             attachment.transferState,
             dataInfo.length,
@@ -792,4 +792,4 @@ class AttachmentDatabase(
 }
 
 private val DatabaseAttachment.hasVideoData: Boolean get() =
-    takeIf { it.hasData() }?.contentType?.let(MediaUtil::isVideoType) == true
+    takeIf { it.hasData }?.contentType?.let(MediaUtil::isVideoType) == true

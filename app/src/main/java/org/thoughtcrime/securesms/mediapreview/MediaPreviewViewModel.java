@@ -57,7 +57,7 @@ public class MediaPreviewViewModel extends ViewModel {
 
     while (cursor.moveToPrevious()) {
       MediaRecord record = MediaRecord.from(context, cursor);
-      if (record.getAttachment().getMmsId() == activeRecord.getAttachment().getMmsId()) {
+      if (record.getAttachment().mmsId == activeRecord.getAttachment().mmsId) {
         Media media = toMedia(record);
         if (media != null) rail.addFirst(media);
       } else {
@@ -69,7 +69,7 @@ public class MediaPreviewViewModel extends ViewModel {
 
     while (cursor.moveToNext()) {
       MediaRecord record = MediaRecord.from(context, cursor);
-      if (record.getAttachment().getMmsId() == activeRecord.getAttachment().getMmsId()) {
+      if (record.getAttachment().mmsId == activeRecord.getAttachment().mmsId) {
         Media media = toMedia(record);
         if (media != null) rail.addLast(media);
       } else {

@@ -33,7 +33,7 @@ public class LinkPreview {
     this.url          = url;
     this.title        = title;
     this.thumbnail    = Optional.of(thumbnail);
-    this.attachmentId = thumbnail.getAttachmentId();
+    this.attachmentId = thumbnail.attachmentId;
   }
 
   public LinkPreview(@NonNull String url, @NonNull String title, @NonNull Optional<Attachment> thumbnail) {
