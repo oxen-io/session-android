@@ -21,6 +21,8 @@ import android.content.Context
 import android.os.Build
 import android.text.format.DateFormat
 import org.session.libsignal.utilities.Log
+import java.text.DateFormat.SHORT
+import java.text.DateFormat.getTimeInstance
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -35,6 +37,7 @@ public enum class RelativeDay { TODAY, YESTERDAY, TOMORROW }
  * Utility methods to help display dates in a nice, easily readable way.
  */
 object DateUtils : android.text.format.DateUtils() {
+
     @Suppress("unused")
     private val TAG: String = DateUtils::class.java.simpleName
     private val DAY_PRECISION_DATE_FORMAT = SimpleDateFormat("yyyyMMdd")
@@ -57,11 +60,11 @@ object DateUtils : android.text.format.DateUtils() {
 
         val now = Calendar.getInstance()
 
-        // To compare a time to 'now' we need to use get a date one day ahead or behind 'now'
+        // To compare a time to 'now' we need to use get a date relative it, so plus or minus a day, or not
         val dayAddition = when (relativeDay) {
             RelativeDay.TOMORROW  -> {  1 }
             RelativeDay.YESTERDAY -> { -1 }
-            else -> 0
+            else -> 0 // Today
         }
 
         val comparisonTime = Calendar.getInstance().apply {
@@ -79,11 +82,28 @@ object DateUtils : android.text.format.DateUtils() {
     }
 
     // Method to get the locale-aware String for the word "Now"
-    public fun getLocalisedNowString(): String {
-        val now = Calendar.getInstance().timeInMillis
-        return getRelativeTimeSpanString(now, now,MINUTE_IN_MILLIS, FORMAT_SHOW_TIME).toString()
-    }
+//    public fun getLocalisedNowString(): String {
+//        val now = Calendar.getInstance().timeInMillis
+//        return getRelativeTimeSpanString(now, now,MINUTE_IN_MILLIS, FORMAT_SHOW_TIME).toString()
+//    }
 
+    // THIS DOES NOT WORK
+    public fun getLocalisedNowString(): String {
+
+        val now = Calendar.getInstance().timeInMillis
+        val relativeTime = getRelativeTimeSpanString(now, now, MINUTE_IN_MILLIS, FORMAT_SHOW_TIME).toString()
+
+        // Create a DateFormat instance for the current time
+        val timeFormat = getTimeInstance(SHORT, Locale.getDefault())
+        val formattedTime = timeFormat.format(Calendar.getInstance().time)
+
+        // Check if the relative time indicates "0 minutes ago" or similar and replace it with the formatted time
+        return if (relativeTime == "0 minutes ago" || relativeTime == "in 0 minutes") {
+            formattedTime
+        } else {
+            relativeTime
+        }
+    }
 
     fun getFormattedDateTime(time: Long, template: String, locale: Locale): String {
         val localizedPattern = getLocalizedPattern(template, locale)
@@ -155,7 +175,8 @@ object DateUtils : android.text.format.DateUtils() {
      * @return The timestamp if able to be parsed, otherwise -1.
      */
     @SuppressLint("ObsoleteSdkInt")
-    fun parseIso8601(date: String?): Long {
+    @JvmStatic
+    public fun parseIso8601(date: String?): Long {
 
         if (date.isNullOrEmpty()) { return -1 }
 
@@ -164,8 +185,6 @@ object DateUtils : android.text.format.DateUtils() {
         } else {
             SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault())
         }
-
-
 
         try {
             return format.parse(date).time

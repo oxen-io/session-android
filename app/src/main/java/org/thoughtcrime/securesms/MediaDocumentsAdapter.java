@@ -22,7 +22,7 @@ import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.mms.DocumentSlide;
 import org.thoughtcrime.securesms.mms.PartAuthority;
 import org.thoughtcrime.securesms.mms.Slide;
-import org.thoughtcrime.securesms.util.DateUtilities;
+import org.thoughtcrime.securesms.util.DateUtils;
 import org.thoughtcrime.securesms.util.MediaUtil;
 import org.thoughtcrime.securesms.util.StickyHeaderDecoration;
 
@@ -61,7 +61,7 @@ public class MediaDocumentsAdapter extends CursorRecyclerViewAdapter<ViewHolder>
     if (slide != null && slide.hasDocument()) {
       viewHolder.documentView.setDocument((DocumentSlide)slide, false);
 
-      String relativeDate = DateUtilities.INSTANCE.getRelativeDate(getContext(), locale, mediaRecord.getDate());
+      String relativeDate = DateUtils.INSTANCE.getRelativeDate(getContext(), locale, mediaRecord.getDate());
       viewHolder.date.setText(relativeDate);
 
       viewHolder.documentView.setVisibility(View.VISIBLE);
@@ -107,7 +107,7 @@ public class MediaDocumentsAdapter extends CursorRecyclerViewAdapter<ViewHolder>
   public void onBindHeaderViewHolder(HeaderViewHolder viewHolder, int position) {
     Cursor                    cursor      = getCursorAtPositionOrThrow(position);
     MediaDatabase.MediaRecord mediaRecord = MediaDatabase.MediaRecord.from(getContext(), cursor);
-    viewHolder.textView.setText(DateUtilities.INSTANCE.getRelativeDate(getContext(), locale, mediaRecord.getDate()));
+    viewHolder.textView.setText(DateUtils.INSTANCE.getRelativeDate(getContext(), locale, mediaRecord.getDate()));
   }
 
   public static class ViewHolder extends RecyclerView.ViewHolder {

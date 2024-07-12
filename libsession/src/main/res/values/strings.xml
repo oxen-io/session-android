@@ -15,21 +15,10 @@
     <!-- ======================================================================================= -->
 
     <!-- Old naming convention strings that need to me renamed to their modern equivalents and have any % substitution modified to use {braces} -->
-
-    <string name="DateUtils_today">Today</string>
-    <string name="BucketedThreadMedia_Today">Today</string>
-    <string name="DateUtils_yesterday">Yesterday</string>
-    <string name="BucketedThreadMedia_Yesterday">Yesterday</string>
     <string name="DateUtils_just_now">Now</string>
-
     <string name="BucketedThreadMedia_This_week">This week</string>
-
-
     <string name="ConversationActivity_send_after_approval">You will be able to send voice messages and attachments once the recipient has approved this message request</string>
     <string name="ConversationItem_error_not_delivered">Send failed, tap for details</string>
-
-
-
     <string name="DisappearingMessagesActivity_settings_not_updated">Settings not updated and please try again</string>
     <string name="ErrorNotifier_migration">Database Upgrade Failed</string>
     <string name="ErrorNotifier_migration_downgrade">Please contact support to report the error.</string>

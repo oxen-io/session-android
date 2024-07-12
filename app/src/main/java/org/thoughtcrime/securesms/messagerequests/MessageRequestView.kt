@@ -12,7 +12,7 @@ import org.session.libsession.utilities.recipients.Recipient
 import org.thoughtcrime.securesms.conversation.v2.utilities.MentionUtilities.highlightMentions
 import org.thoughtcrime.securesms.database.model.ThreadRecord
 import org.thoughtcrime.securesms.mms.GlideRequests
-import org.thoughtcrime.securesms.util.DateUtilities
+import org.thoughtcrime.securesms.util.DateUtils
 import java.util.Locale
 
 class MessageRequestView : LinearLayout {
@@ -37,7 +37,7 @@ class MessageRequestView : LinearLayout {
         val senderDisplayName = getUserDisplayName(thread.recipient)
             ?: thread.recipient.address.toString()
         binding.displayNameTextView.text = senderDisplayName
-        binding.timestampTextView.text = DateUtilities.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), thread.date)
+        binding.timestampTextView.text = DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), thread.date)
         val rawSnippet = thread.getDisplayBody(context)
         val snippet = highlightMentions(
             text = rawSnippet,

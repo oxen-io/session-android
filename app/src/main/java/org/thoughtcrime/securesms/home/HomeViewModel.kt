@@ -28,7 +28,7 @@ import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.database.DatabaseContentProviders
 import org.thoughtcrime.securesms.database.ThreadDatabase
 import org.thoughtcrime.securesms.database.model.ThreadRecord
-import org.thoughtcrime.securesms.util.DateUtilities
+import org.thoughtcrime.securesms.util.DateUtils
 import org.thoughtcrime.securesms.util.observeChanges
 import java.util.Locale
 import javax.inject.Inject
@@ -116,7 +116,7 @@ class HomeViewModel @Inject constructor(
         timestamp: Long
     ) = if (count > 0 && !hidden) MessageRequests(
         count.toString(),
-        DateUtilities.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), timestamp)
+        DateUtils.getDisplayFormattedTimeSpanString(context, Locale.getDefault(), timestamp)
     ) else null
 
     data class MessageRequests(val count: String, val timestamp: String)

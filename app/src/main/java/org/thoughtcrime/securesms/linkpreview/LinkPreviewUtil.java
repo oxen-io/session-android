@@ -1,9 +1,12 @@
 package org.thoughtcrime.securesms.linkpreview;
 
+import static org.thoughtcrime.securesms.giph.util.InfiniteScrollListener.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -12,18 +15,23 @@ import android.text.util.Linkify;
 
 import com.annimon.stream.Stream;
 
-import org.thoughtcrime.securesms.util.DateUtilities;
+import org.session.libsignal.utilities.Log;
 import org.thoughtcrime.securesms.util.DateUtils;
 import org.session.libsignal.utilities.guava.Optional;
 
 import org.session.libsession.utilities.Util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import android.text.format.DateFormat;
+
 
 import okhttp3.HttpUrl;
 
@@ -197,13 +205,32 @@ public final class LinkPreviewUtil {
             return Optional.of(Util.getFirstNonEmpty(values.get(KEY_IMAGE_URL), faviconUrl));
         }
 
+         private static long parseISO8601(String date) {
+
+            if (date == null || date.isEmpty()) { return -1L; }
+
+            SimpleDateFormat format;
+            if (Build.VERSION.SDK_INT >= 24) {
+                format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX", Locale.getDefault());
+            } else {
+                format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault());
+            }
+
+            try {
+                return format.parse(date).getTime();
+            } catch (ParseException pe) {
+                Log.w("OpenGraph", "Failed to parse date.", pe);
+                return -1L;
+            }
+        }
+
         @SuppressLint("ObsoleteSdkInt")
         public long getDate() {
             return Stream.of(values.get(KEY_PUBLISHED_TIME_1),
                             values.get(KEY_PUBLISHED_TIME_2),
                             values.get(KEY_MODIFIED_TIME_1),
                             values.get(KEY_MODIFIED_TIME_2))
-                    .map(DateUtilities.INSTANCE.parseIso8601)
+                    .map(OpenGraph::parseISO8601)
                     .filter(time -> time > 0)
                     .findFirst()
                     .orElse(0L);
