@@ -286,7 +286,7 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
     }
 
     private void handleMediaPreviewClick(@NonNull MediaDatabase.MediaRecord mediaRecord) {
-      if (mediaRecord.getAttachment().getDataUri() == null) {
+      if (mediaRecord.attachment.getDataUri() == null) {
         return;
       }
 
@@ -296,13 +296,13 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
       }
 
       Intent intent = new Intent(context, MediaPreviewActivity.class);
-      intent.putExtra(MediaPreviewActivity.DATE_EXTRA, mediaRecord.getDate());
-      intent.putExtra(MediaPreviewActivity.SIZE_EXTRA, mediaRecord.getAttachment().getSize());
+      intent.putExtra(MediaPreviewActivity.DATE_EXTRA, mediaRecord.date);
+      intent.putExtra(MediaPreviewActivity.SIZE_EXTRA, mediaRecord.attachment.getSize());
       intent.putExtra(MediaPreviewActivity.ADDRESS_EXTRA, recipient.getAddress());
       intent.putExtra(MediaPreviewActivity.OUTGOING_EXTRA, mediaRecord.isOutgoing());
       intent.putExtra(MediaPreviewActivity.LEFT_IS_RECENT_EXTRA, true);
 
-      intent.setDataAndType(mediaRecord.getAttachment().getDataUri(), mediaRecord.getContentType());
+      intent.setDataAndType(mediaRecord.attachment.getDataUri(), mediaRecord.getContentType());
       context.startActivity(intent);
     }
 
@@ -337,11 +337,11 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
                       List<SaveAttachmentTask.Attachment> attachments = new LinkedList<>();
 
                       for (MediaDatabase.MediaRecord mediaRecord : mediaRecords) {
-                        if (mediaRecord.getAttachment().getDataUri() != null) {
-                          attachments.add(new SaveAttachmentTask.Attachment(mediaRecord.getAttachment().getDataUri(),
+                        if (mediaRecord.attachment.getDataUri() != null) {
+                          attachments.add(new SaveAttachmentTask.Attachment(mediaRecord.attachment.getDataUri(),
                                   mediaRecord.getContentType(),
-                                  mediaRecord.getDate(),
-                                  mediaRecord.getAttachment().getFileName()));
+                                  mediaRecord.date,
+                                  mediaRecord.attachment.getFileName()));
                         }
                       }
 
@@ -391,7 +391,7 @@ public class MediaOverviewActivity extends PassphraseRequiredActionBarActivity {
           }
 
           for (MediaDatabase.MediaRecord record : records) {
-            AttachmentUtil.deleteAttachment(getContext(), record.getAttachment());
+            AttachmentUtil.deleteAttachment(getContext(), record.attachment);
           }
           return null;
         }

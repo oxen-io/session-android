@@ -56,11 +56,11 @@ public class MediaDocumentsAdapter extends CursorRecyclerViewAdapter<ViewHolder>
   @Override
   public void onBindItemViewHolder(ViewHolder viewHolder, @NonNull Cursor cursor) {
     MediaDatabase.MediaRecord mediaRecord = MediaDatabase.MediaRecord.from(getContext(), cursor);
-    Slide                     slide       = MediaUtil.getSlideForAttachment(getContext(), mediaRecord.getAttachment());
+    Slide                     slide       = MediaUtil.getSlideForAttachment(getContext(), mediaRecord.attachment);
 
     if (slide != null && slide.hasDocument()) {
       viewHolder.documentView.setDocument((DocumentSlide)slide, false);
-      viewHolder.date.setText(DateUtils.getRelativeDate(getContext(), locale, mediaRecord.getDate()));
+      viewHolder.date.setText(DateUtils.getRelativeDate(getContext(), locale, mediaRecord.date));
       viewHolder.documentView.setVisibility(View.VISIBLE);
       viewHolder.date.setVisibility(View.VISIBLE);
       viewHolder.documentView.setOnClickListener(view -> {
@@ -91,7 +91,7 @@ public class MediaDocumentsAdapter extends CursorRecyclerViewAdapter<ViewHolder>
     Cursor                    cursor      = getCursorAtPositionOrThrow(position);
     MediaDatabase.MediaRecord mediaRecord = MediaDatabase.MediaRecord.from(getContext(), cursor);
 
-    calendar.setTime(new Date(mediaRecord.getDate()));
+    calendar.setTime(new Date(mediaRecord.date));
     return Util.hashCode(calendar.get(Calendar.YEAR), calendar.get(Calendar.DAY_OF_YEAR));
   }
 
@@ -104,7 +104,7 @@ public class MediaDocumentsAdapter extends CursorRecyclerViewAdapter<ViewHolder>
   public void onBindHeaderViewHolder(HeaderViewHolder viewHolder, int position) {
     Cursor                    cursor      = getCursorAtPositionOrThrow(position);
     MediaDatabase.MediaRecord mediaRecord = MediaDatabase.MediaRecord.from(getContext(), cursor);
-    viewHolder.textView.setText(DateUtils.getRelativeDate(getContext(), locale, mediaRecord.getDate()));
+    viewHolder.textView.setText(DateUtils.getRelativeDate(getContext(), locale, mediaRecord.date));
   }
 
   public static class ViewHolder extends RecyclerView.ViewHolder {

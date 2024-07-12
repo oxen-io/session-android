@@ -14,7 +14,6 @@ import org.session.libsession.utilities.IdentityKeyMismatchList;
 import org.session.libsignal.crypto.IdentityKey;
 import org.session.libsignal.utilities.JsonUtil;
 import org.session.libsignal.utilities.Log;
-import org.thoughtcrime.securesms.conversation.disappearingmessages.ExpiryType;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.util.SqlUtil;

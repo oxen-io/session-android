@@ -7,6 +7,8 @@ import net.zetetic.database.sqlcipher.SQLiteDatabase
 import org.session.libsession.messaging.sending_receiving.attachments.DatabaseAttachment
 import org.session.libsession.utilities.Address
 import org.session.libsession.utilities.Address.Companion.fromSerialized
+import org.thoughtcrime.securesms.database.MmsSmsColumns.ADDRESS
+import org.thoughtcrime.securesms.database.MmsSmsColumns.THREAD_ID
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper
 import org.thoughtcrime.securesms.dependencies.DatabaseComponent.Companion.get
 
@@ -14,7 +16,7 @@ class MediaDatabase(context: Context?, databaseHelper: SQLCipherOpenHelper?) : D
     context!!, databaseHelper!!
 ) {
     fun getGalleryMediaForThread(threadId: Long): Cursor {
-        val database: SQLiteDatabase = databaseHelper.getReadableDatabase()
+        val database: SQLiteDatabase = databaseHelper.readableDatabase
         val cursor = database.rawQuery(GALLERY_MEDIA_QUERY, arrayOf(threadId.toString() + ""))
         setNotifyConversationListeners(cursor, threadId)
         return cursor
@@ -28,52 +30,39 @@ class MediaDatabase(context: Context?, databaseHelper: SQLCipherOpenHelper?) : D
         context.contentResolver.unregisterContentObserver(observer)
     }
 
-    fun getDocumentMediaForThread(threadId: Long): Cursor {
-        val database: SQLiteDatabase = databaseHelper.getReadableDatabase()
-        val cursor = database.rawQuery(DOCUMENT_MEDIA_QUERY, arrayOf(threadId.toString() + ""))
-        setNotifyConversationListeners(cursor, threadId)
-        return cursor
-    }
+    fun getDocumentMediaForThread(threadId: Long): Cursor =
+        databaseHelper.readableDatabase.rawQuery(DOCUMENT_MEDIA_QUERY, arrayOf(threadId.toString() + ""))
+            .also { setNotifyConversationListeners(it, threadId) }
 
     class MediaRecord private constructor(
-        val attachment: DatabaseAttachment?,
-        val address: Address?,
-        val date: Long,
-        val isOutgoing: Boolean
+      @JvmField val attachment: DatabaseAttachment?,
+      @JvmField val address: Address?,
+      @JvmField val date: Long,
+      val isOutgoing: Boolean
     ) {
         val contentType: String
             get() = attachment!!.contentType
 
         companion object {
+            @JvmStatic
             fun from(context: Context, cursor: Cursor): MediaRecord {
                 val attachmentDatabase = get(context).attachmentDatabase()
                 val attachments = attachmentDatabase.getAttachment(cursor)
-                val serializedAddress =
-                    cursor.getString(cursor.getColumnIndexOrThrow(MmsDatabase.ADDRESS))
-                val outgoing: Boolean = MessagingDatabase.Types.isOutgoingMessageType(
-                    cursor.getLong(
-                        cursor.getColumnIndexOrThrow(MmsDatabase.MESSAGE_BOX)
-                    )
-                )
-                var address: Address? = null
+                val serializedAddress = cursor.getString(cursor.getColumnIndexOrThrow(MmsSmsColumns.ADDRESS))
+                val outgoing: Boolean = cursor.getColumnIndexOrThrow(MmsDatabase.MESSAGE_BOX)
+                    .let(cursor::getLong)
+                    .let(MmsSmsColumns.Types::isOutgoingMessageType)
+                val address: Address? = serializedAddress?.let(::fromSerialized)
 
-                if (serializedAddress != null) {
-                    address = fromSerialized(serializedAddress)
-                }
-
-                val date = if (MmsDatabase.Types.isPushType(
-                        cursor.getLong(
-                            cursor.getColumnIndexOrThrow(MmsDatabase.MESSAGE_BOX)
-                        )
-                    )
-                ) {
-                    cursor.getLong(cursor.getColumnIndexOrThrow(MmsDatabase.DATE_SENT))
-                } else {
-                    cursor.getLong(cursor.getColumnIndexOrThrow(MmsDatabase.DATE_RECEIVED))
-                }
+                val date = when {
+                    cursor.getColumnIndexOrThrow(MmsDatabase.MESSAGE_BOX)
+                        .let(cursor::getLong)
+                        .let(MmsSmsColumns.Types::isPushType) -> MmsDatabase.DATE_SENT
+                    else -> MmsDatabase.DATE_RECEIVED
+                }.let(cursor::getColumnIndexOrThrow).let(cursor::getLong)
 
                 return MediaRecord(
-                    if (attachments != null && attachments.size > 0) attachments[0] else null,
+                    attachments.firstOrNull(),
                     address,
                     date,
                     outgoing
@@ -111,12 +100,12 @@ class MediaDatabase(context: Context?, databaseHelper: SQLCipherOpenHelper?) : D
                     + MmsDatabase.TABLE_NAME + "." + MmsDatabase.MESSAGE_BOX + ", "
                     + MmsDatabase.TABLE_NAME + "." + MmsDatabase.DATE_SENT + ", "
                     + MmsDatabase.TABLE_NAME + "." + MmsDatabase.DATE_RECEIVED + ", "
-                    + MmsDatabase.TABLE_NAME + "." + MmsDatabase.ADDRESS + " "
+                    + MmsDatabase.TABLE_NAME + "." + MmsSmsColumns.ADDRESS + " "
                     + "FROM " + AttachmentDatabase.TABLE_NAME + " LEFT JOIN " + MmsDatabase.TABLE_NAME
-                    + " ON " + AttachmentDatabase.TABLE_NAME + "." + AttachmentDatabase.MMS_ID + " = " + MmsDatabase.TABLE_NAME + "." + MmsDatabase.ID + " "
+                    + " ON " + AttachmentDatabase.TABLE_NAME + "." + AttachmentDatabase.MMS_ID + " = " + MmsDatabase.TABLE_NAME + "." + MmsSmsColumns.ID + " "
                     + "WHERE " + AttachmentDatabase.MMS_ID + " IN (SELECT " + MmsSmsColumns.ID
                     + " FROM " + MmsDatabase.TABLE_NAME
-                    + " WHERE " + MmsDatabase.THREAD_ID + " = ?) AND (%s) AND "
+                    + " WHERE " + THREAD_ID + " = ?) AND (%s) AND "
                     + AttachmentDatabase.DATA + " IS NOT NULL AND "
                     + AttachmentDatabase.QUOTE + " = 0 AND "
                     + AttachmentDatabase.STICKER_PACK_ID + " IS NULL "
