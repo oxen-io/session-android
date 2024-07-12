@@ -307,7 +307,13 @@ object MessageSender {
         isSyncMessage: Boolean
     ): Long? {
         // For ClosedGroupControlMessage or GroupUpdateMemberLeftMessage, the expiration timer doesn't apply
-        if (message is ClosedGroupControlMessage || (message is GroupUpdated && message.inner.hasMemberLeftMessage())) {
+        if (message is ClosedGroupControlMessage || (
+                    message is GroupUpdated && (
+                            message.inner.hasMemberLeftMessage() ||
+                            message.inner.hasInviteMessage() ||
+                            message.inner.hasInviteResponse() ||
+                            message.inner.hasDeleteMemberContent() ||
+                            message.inner.hasPromoteMessage()))) {
             return null
         }
 
