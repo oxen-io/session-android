@@ -600,12 +600,11 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         if (!contentValues.containsKey(DATE_SENT)) {
             contentValues.put(DATE_SENT, contentValues.getAsLong(DATE_RECEIVED))
         }
-        var quoteAttachments: List<Attachment?>? = LinkedList()
+        val quoteAttachments: List<Attachment> = retrieved.quote.attachments ?: emptyList()
         if (retrieved.quote != null) {
             contentValues.put(QUOTE_ID, retrieved.quote.id)
             contentValues.put(QUOTE_AUTHOR, retrieved.quote.author.serialize())
             contentValues.put(QUOTE_MISSING, if (retrieved.quote.missing) 1 else 0)
-            quoteAttachments = retrieved.quote.attachments
         }
         if (retrieved.isPushMessage && isDuplicate(retrieved, threadId) ||
             retrieved.isMessageRequestResponse && isDuplicateMessageRequestResponse(
@@ -619,7 +618,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         val messageId = insertMediaMessage(
             retrieved.body,
             retrieved.attachments,
-            quoteAttachments!!,
+            quoteAttachments,
             retrieved.sharedContacts,
             retrieved.linkPreviews,
             contentValues,
@@ -724,13 +723,12 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             READ_RECEIPT_COUNT,
             Stream.of(earlyReadReceipts.values).mapToLong { obj: Long -> obj }
                 .sum())
-        val quoteAttachments: MutableList<Attachment?> = LinkedList()
         if (message.outgoingQuote != null) {
             contentValues.put(QUOTE_ID, message.outgoingQuote!!.id)
             contentValues.put(QUOTE_AUTHOR, message.outgoingQuote!!.author.serialize())
             contentValues.put(QUOTE_MISSING, if (message.outgoingQuote!!.missing) 1 else 0)
-            quoteAttachments.addAll(message.outgoingQuote!!.attachments!!)
         }
+        val quoteAttachments = message.outgoingQuote?.attachments ?: emptyList()
         if (isDuplicate(message, threadId)) {
             Log.w(TAG, "Ignoring duplicate media message (" + message.sentTimeMillis + ")")
             return -1
@@ -781,8 +779,8 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
     @Throws(MmsException::class)
     private fun insertMediaMessage(
         body: String?,
-        attachments: List<Attachment?>,
-        quoteAttachments: List<Attachment?>,
+        attachments: List<Attachment>,
+        quoteAttachments: List<Attachment>,
         sharedContacts: List<Contact>,
         linkPreviews: List<LinkPreview>,
         contentValues: ContentValues,
@@ -790,18 +788,13 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
     ): Long {
         val db = databaseHelper.writableDatabase
         val partsDatabase = get(context).attachmentDatabase()
-        val allAttachments: MutableList<Attachment?> = LinkedList()
-        val contactAttachments =
-            Stream.of(sharedContacts).map { obj: Contact -> obj.avatarAttachment }
-                .filter { a: Attachment? -> a != null }
-                .toList()
-        val previewAttachments =
-            Stream.of(linkPreviews).filter { lp: LinkPreview -> lp.getThumbnail().isPresent }
-                .map { lp: LinkPreview -> lp.getThumbnail().get() }
-                .toList()
-        allAttachments.addAll(attachments)
-        allAttachments.addAll(contactAttachments)
-        allAttachments.addAll(previewAttachments)
+        val contactAttachments = sharedContacts.mapNotNull { it.avatarAttachment }
+        val previewAttachments = linkPreviews.mapNotNull { it.getThumbnail().orNull() }
+        val allAttachments = buildList {
+            addAll(attachments)
+            addAll(contactAttachments)
+            addAll(previewAttachments)
+        }
         contentValues.put(BODY, body)
         contentValues.put(PART_COUNT, allAttachments.size)
         db.beginTransaction()
@@ -958,7 +951,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
     }
 
     private fun getSerializedSharedContacts(
-        insertedAttachmentIds: Map<Attachment?, AttachmentId?>,
+        insertedAttachmentIds: Map<Attachment, AttachmentId>,
         contacts: List<Contact?>
     ): String? {
         if (contacts.isEmpty()) return null
@@ -989,7 +982,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
     }
 
     private fun getSerializedLinkPreviews(
-        insertedAttachmentIds: Map<Attachment?, AttachmentId?>,
+        insertedAttachmentIds: Map<Attachment, AttachmentId>,
         previews: List<LinkPreview?>
     ): String? {
         if (previews.isEmpty()) return null
