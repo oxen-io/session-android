@@ -2,6 +2,8 @@ package org.thoughtcrime.securesms.webrtc
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import org.thoughtcrime.securesms.webrtc.audio.SignalAudioManager
@@ -29,16 +31,11 @@ class CallViewModel @Inject constructor(private val callManager: CallManager): V
         UNTRUSTED_IDENTITY,
     }
 
-    val localRenderer: SurfaceViewRenderer?
-    get() = callManager.localRenderer
+    val floatingRenderer: SurfaceViewRenderer?
+    get() = callManager.floatingRenderer
 
-    val remoteRenderer: SurfaceViewRenderer?
-    get() = callManager.remoteRenderer
-
-    private var _videoEnabled: Boolean = false
-
-    val videoEnabled: Boolean
-        get() = _videoEnabled
+    val fullscreenRenderer: SurfaceViewRenderer?
+    get() = callManager.fullscreenRenderer
 
     private var _microphoneEnabled: Boolean = true
 
@@ -59,18 +56,13 @@ class CallViewModel @Inject constructor(private val callManager: CallManager): V
         get() = callManager.audioEvents.map { it.isEnabled }
             .onEach { _microphoneEnabled = it }
 
-    val localVideoEnabledState
-        get() = callManager.videoEvents
-                .map { it.isEnabled }
-                .onEach { _videoEnabled = it }
+    val videoState: StateFlow<VideoState>
+        get() = callManager.videoState
 
-    val remoteVideoEnabledState
-        get() = callManager.remoteVideoEvents.map { it.isEnabled }
-
-    var deviceRotation: Int = 0
+    var deviceOrientation: Orientation = Orientation.UNKNOWN
         set(value) {
             field = value
-            callManager.setDeviceRotation(value)
+            callManager.setDeviceOrientation(value)
         }
 
     val currentCallState
@@ -85,4 +77,7 @@ class CallViewModel @Inject constructor(private val callManager: CallManager): V
     val callStartTime: Long
         get() = callManager.callStartTime
 
+    fun swapVideos() {
+       callManager.swapVideos()
+    }
 }

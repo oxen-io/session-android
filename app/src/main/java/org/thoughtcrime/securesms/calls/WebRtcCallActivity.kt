@@ -5,11 +5,17 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Outline
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorManager
 import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.MenuItem
-import android.view.OrientationEventListener
+import android.view.View
+import android.view.ViewOutlineProvider
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
@@ -21,7 +27,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
-import android.provider.Settings
 import kotlinx.coroutines.launch
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivityWebrtcBinding
@@ -43,8 +48,10 @@ import org.thoughtcrime.securesms.webrtc.CallViewModel.State.CALL_OUTGOING
 import org.thoughtcrime.securesms.webrtc.CallViewModel.State.CALL_PRE_INIT
 import org.thoughtcrime.securesms.webrtc.CallViewModel.State.CALL_RECONNECTING
 import org.thoughtcrime.securesms.webrtc.CallViewModel.State.CALL_RINGING
+import org.thoughtcrime.securesms.webrtc.Orientation
 import org.thoughtcrime.securesms.webrtc.audio.SignalAudioManager.AudioDevice.EARPIECE
 import org.thoughtcrime.securesms.webrtc.audio.SignalAudioManager.AudioDevice.SPEAKER_PHONE
+import kotlin.math.asin
 
 @AndroidEntryPoint
 class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
@@ -71,16 +78,13 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
         }
     private var hangupReceiver: BroadcastReceiver? = null
 
-    private val rotationListener by lazy {
-        object : OrientationEventListener(this) {
-            override fun onOrientationChanged(orientation: Int) {
-                if ((orientation + 15) % 90 < 30) {
-                    viewModel.deviceRotation = orientation
-//                    updateControlsRotation(orientation.quadrantRotation() * -1)
-                }
-            }
-        }
-    }
+    /**
+     * We need to track the device's orientation so we can calculate whether or not to rotate the video streams
+     * This works a lot better than using `OrientationEventListener > onOrientationChanged'
+     * which gives us a rotation angle that doesn't take into account pitch vs roll, so tipping the device from front to back would
+     * trigger the video rotation logic, while we really only want it when the device is in portrait or landscape.
+     */
+    private var orientationManager = OrientationManager(this)
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
@@ -101,13 +105,6 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?, ready: Boolean) {
         super.onCreate(savedInstanceState, ready)
-
-        // Only enable auto-rotate if system auto-rotate is enabled
-        if (isAutoRotateOn()) {
-            rotationListener.enable()
-        } else {
-            rotationListener.disable()
-        }
 
         binding = ActivityWebrtcBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -134,6 +131,10 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
         }
         if (intent.action == ACTION_FULL_SCREEN_INTENT) {
             supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        }
+
+        binding.floatingRendererContainer.setOnClickListener {
+            viewModel.swapVideos()
         }
 
         binding.microphoneButton.setOnClickListener {
@@ -174,7 +175,7 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
             Permissions.with(this)
                 .request(Manifest.permission.CAMERA)
                 .onAllGranted {
-                    val intent = WebRtcCallService.cameraEnabled(this, !viewModel.videoEnabled)
+                    val intent = WebRtcCallService.cameraEnabled(this, !viewModel.videoState.value.userVideoEnabled)
                     startService(intent)
                 }
                 .execute()
@@ -191,14 +192,44 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
             onBackPressed()
         }
 
+        lifecycleScope.launch {
+            orientationManager.orientation.collect { orientation ->
+                viewModel.deviceOrientation = orientation
+                updateControlsRotation()
+            }
+        }
+
+        clipFloatingInsets()
     }
 
-    //Function to check if Android System Auto-rotate is on or off
-    private fun isAutoRotateOn(): Boolean {
-        return Settings.System.getInt(
-            contentResolver,
-            Settings.System.ACCELEROMETER_ROTATION, 0
-        ) == 1
+    /**
+     * Makes sure the floating video inset has clipped rounded corners, included with the video stream itself
+     */
+    private fun clipFloatingInsets() {
+        // clip the video inset with rounded corners
+        val videoInsetProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                // all corners
+                outline.setRoundRect(
+                    0, 0, view.width, view.height,
+                    resources.getDimensionPixelSize(R.dimen.video_inset_radius).toFloat()
+                )
+            }
+        }
+
+        binding.floatingRendererContainer.outlineProvider = videoInsetProvider
+        binding.floatingRendererContainer.clipToOutline = true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        orientationManager.startOrientationListener()
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        orientationManager.stopOrientationListener()
     }
 
     override fun onDestroy() {
@@ -206,7 +237,8 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
         hangupReceiver?.let { receiver ->
             LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
         }
-        rotationListener.disable()
+
+        orientationManager.destroy()
     }
 
     private fun answerCall() {
@@ -214,15 +246,31 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
         ContextCompat.startForegroundService(this, answerIntent)
     }
 
-    private fun updateControlsRotation(newRotation: Int) {
+    private fun updateControlsRotation() {
         with (binding) {
-            val rotation = newRotation.toFloat()
-            remoteRecipient.rotation = rotation
-            speakerPhoneButton.rotation = rotation
-            microphoneButton.rotation = rotation
-            enableCameraButton.rotation = rotation
-            switchCameraButton.rotation = rotation
-            endCallButton.rotation = rotation
+            val rotation = when(viewModel.deviceOrientation){
+                Orientation.LANDSCAPE -> -90f
+                Orientation.REVERSED_LANDSCAPE -> 90f
+                else -> 0f
+            }
+
+            remoteRecipient.animate().cancel()
+            remoteRecipient.animate().rotation(rotation).start()
+
+            speakerPhoneButton.animate().cancel()
+            speakerPhoneButton.animate().rotation(rotation).start()
+
+            microphoneButton.animate().cancel()
+            microphoneButton.animate().rotation(rotation).start()
+
+            enableCameraButton.animate().cancel()
+            enableCameraButton.animate().rotation(rotation).start()
+
+            switchCameraButton.animate().cancel()
+            switchCameraButton.animate().rotation(rotation).start()
+
+            endCallButton.animate().cancel()
+            endCallButton.animate().rotation(rotation).start()
         }
     }
 
@@ -346,34 +394,43 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
                 }
             }
 
+            // handle video state
             launch {
-                viewModel.localVideoEnabledState.collect { isEnabled ->
-                    binding.localRenderer.removeAllViews()
-                    if (isEnabled) {
-                        viewModel.localRenderer?.let { surfaceView ->
-                            surfaceView.setZOrderOnTop(true)
+                viewModel.videoState.collect { state ->
+                    binding.floatingRenderer.removeAllViews()
+                    binding.fullscreenRenderer.removeAllViews()
 
-                            // Mirror the video preview of the person making the call to prevent disorienting them
-                            surfaceView.setMirror(true)
+                    // the floating video inset (empty or not) should be shown
+                    // the moment we have either of the video streams
+                    val showFloatingContainer = state.userVideoEnabled || state.remoteVideoEnabled
+                    binding.floatingRendererContainer.isVisible = showFloatingContainer
+                    binding.swapViewIcon.isVisible = showFloatingContainer
 
-                            binding.localRenderer.addView(surfaceView)
+                    // handle fullscreen video window
+                    if(state.showFullscreenVideo()){
+                        viewModel.fullscreenRenderer?.let { surfaceView ->
+                            binding.fullscreenRenderer.addView(surfaceView)
+                            binding.fullscreenRenderer.isVisible = true
+                            binding.remoteRecipient.isVisible = false
                         }
+                    } else {
+                        binding.fullscreenRenderer.isVisible = false
+                        binding.remoteRecipient.isVisible = true
                     }
-                    binding.localRenderer.isVisible = isEnabled
-                    binding.enableCameraButton.isSelected = isEnabled
-                }
-            }
 
-            launch {
-                viewModel.remoteVideoEnabledState.collect { isEnabled ->
-                    binding.remoteRenderer.removeAllViews()
-                    if (isEnabled) {
-                        viewModel.remoteRenderer?.let { surfaceView ->
-                            binding.remoteRenderer.addView(surfaceView)
+                    // handle floating video window
+                    if(state.showFloatingVideo()){
+                        viewModel.floatingRenderer?.let { surfaceView ->
+                            binding.floatingRenderer.addView(surfaceView)
+                            binding.floatingRenderer.isVisible = true
+                            binding.swapViewIcon.bringToFront()
                         }
+                    } else {
+                        binding.floatingRenderer.isVisible = false
                     }
-                    binding.remoteRenderer.isVisible = isEnabled
-                    binding.remoteRecipient.isVisible = !isEnabled
+
+                    // handle buttons
+                    binding.enableCameraButton.isSelected = state.userVideoEnabled
                 }
             }
         }
@@ -388,7 +445,7 @@ class WebRtcCallActivity : PassphraseRequiredActionBarActivity() {
     override fun onStop() {
         super.onStop()
         uiJob?.cancel()
-        binding.remoteRenderer.removeAllViews()
-        binding.localRenderer.removeAllViews()
+        binding.fullscreenRenderer.removeAllViews()
+        binding.floatingRenderer.removeAllViews()
     }
 }

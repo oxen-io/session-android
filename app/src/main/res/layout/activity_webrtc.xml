@@ -8,7 +8,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
-        android:id="@+id/remote_parent"
+        android:id="@+id/fullscreen_renderer_container"
         android:background="@color/black"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,17 +18,17 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <FrameLayout
-            android:id="@+id/remote_renderer"
+            android:id="@+id/fullscreen_renderer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"/>
     </FrameLayout>
     <ImageView
         android:id="@+id/remote_recipient"
-        app:layout_constraintStart_toStartOf="@id/remote_parent"
-        app:layout_constraintEnd_toEndOf="@id/remote_parent"
-        app:layout_constraintTop_toTopOf="@id/remote_parent"
-        app:layout_constraintBottom_toBottomOf="@id/remote_parent"
+        app:layout_constraintStart_toStartOf="@id/fullscreen_renderer_container"
+        app:layout_constraintEnd_toEndOf="@id/fullscreen_renderer_container"
+        app:layout_constraintTop_toTopOf="@id/fullscreen_renderer_container"
+        app:layout_constraintBottom_toBottomOf="@id/fullscreen_renderer_container"
         app:layout_constraintVertical_bias="0.4"
         android:layout_width="@dimen/extra_large_profile_picture_size"
         android:layout_height="@dimen/extra_large_profile_picture_size"/>
@@ -111,6 +111,7 @@
         android:layout_height="wrap_content"/>
 
     <FrameLayout
+        android:id="@+id/floating_renderer_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintDimensionRatio="h,9:16"
@@ -118,12 +119,21 @@
         android:layout_marginVertical="@dimen/massive_spacing"
         app:layout_constraintWidth_percent="0.2"
         android:layout_height="0dp"
-        android:layout_width="0dp">
+        android:layout_width="0dp"
+        android:background="?backgroundSecondary">
+        <ImageView
+            android:id="@+id/videocam_off_icon"
+            android:src="@drawable/ic_baseline_videocam_off_24"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            app:tint="?android:textColorPrimary"/>
         <FrameLayout
             android:elevation="8dp"
-            android:id="@+id/local_renderer"
+            android:id="@+id/floating_renderer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
         <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/local_loading_view"
             style="@style/SpinKitView.Large.ThreeBounce"
@@ -133,7 +143,19 @@
             android:layout_gravity="center"
             tools:visibility="visible"
             android:visibility="gone" />
+
     </FrameLayout>
+
+    <ImageView
+        android:id="@+id/swap_view_icon"
+        android:src="@drawable/ic_baseline_screen_rotation_alt_24"
+        app:layout_constraintTop_toTopOf="@id/floating_renderer_container"
+        app:layout_constraintEnd_toEndOf="@id/floating_renderer_container"
+        app:tint="?android:textColorPrimary"
+        android:layout_marginTop="@dimen/very_small_spacing"
+        android:layout_marginEnd="@dimen/very_small_spacing"
+        android:layout_width="14dp"
+        android:layout_height="14dp"/>
 
     <ImageView
         android:id="@+id/endCallButton"

@@ -32,6 +32,7 @@
     <dimen name="fake_chat_view_height">250dp</dimen>
     <dimen name="setting_button_height">64dp</dimen>
     <dimen name="dialog_corner_radius">8dp</dimen>
+    <dimen name="video_inset_radius">11dp</dimen>
     <dimen name="dialog_button_corner_radius">4dp</dimen>
     <dimen name="pn_option_corner_radius">8dp</dimen>
     <dimen name="path_status_view_size">8dp</dimen>

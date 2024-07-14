@@ -24,8 +24,7 @@
 
     <style name="ThemeOverlay.Session.AlertDialog" parent="ThemeOverlay.AppCompat.Dialog.Alert">
         <item name="android:windowBackground">@drawable/default_dialog_background</item>
-        <item name="android:colorBackground">?attr/dialog_background_color</item>
-        <item name="dialog_background_color">?colorPrimary</item>
+        <item name="android:colorBackground">?backgroundSecondary</item>
         <item name="android:colorBackgroundFloating">?colorPrimary</item>
         <item name="backgroundTint">?colorPrimary</item>
         <item name="android:backgroundDimEnabled">true</item>
@@ -288,7 +287,7 @@
     </style>
 
     <style name="PopupMenu.MessageRequests" parent="@style/Widget.AppCompat.PopupMenu">
-        <item name="android:background">?attr/colorSettingsBackground</item>
+        <item name="android:background">?backgroundSecondary</item>
     </style>
 
 </resources>

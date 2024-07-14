@@ -34,7 +34,7 @@ fun AppTheme(
 ) {
     val extraColors = LocalContext.current.run {
         ExtraColors(
-            settingsBackground = getColorFromTheme(R.attr.colorSettingsBackground),
+            settingsBackground = getColorFromTheme(R.attr.backgroundSecondary),
             prominentButtonColor = getColorFromTheme(R.attr.prominentButtonColor),
         )
     }

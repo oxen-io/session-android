@@ -81,6 +81,7 @@ class WebRtcCallService : LifecycleService(), CallManager.WebRtcListener {
         const val EXTRA_RECIPIENT_ADDRESS = "RECIPIENT_ID"
         const val EXTRA_ENABLED = "ENABLED"
         const val EXTRA_AUDIO_COMMAND = "AUDIO_COMMAND"
+        const val EXTRA_SWAPPED = "is_video_swapped"
         const val EXTRA_MUTE = "mute_value"
         const val EXTRA_AVAILABLE = "enabled_value"
         const val EXTRA_REMOTE_DESCRIPTION = "remote_description"
