@@ -35,7 +35,7 @@ public class OptimizedMessageNotifier implements MessageNotifier {
   }
 
   @Override
-  public void setLastDesktopActivityTimestamp(long timestamp) { wrapped.setLastDesktopActivityTimestamp(timestamp);}
+  public void setLastNotificationTimestamp(long timestamp) { wrapped.setLastNotificationTimestamp(timestamp);}
 
   @Override
   public void notifyMessageDeliveryFailed(Context context, Recipient recipient, long threadId) {
@@ -46,53 +46,47 @@ public class OptimizedMessageNotifier implements MessageNotifier {
   public void cancelDelayedNotifications() { wrapped.cancelDelayedNotifications(); }
 
   @Override
-  public void updateNotification(@NonNull Context context) {
+  public void updateNotificationWithoutSignalingAndResetReminderCount(@NonNull Context context) {
     Poller poller = ApplicationContext.getInstance(context).poller;
     boolean isCaughtUp = true;
-    if (poller != null) {
-      isCaughtUp = isCaughtUp && poller.isCaughtUp();
-    }
+    if (poller != null) { isCaughtUp = poller.isCaughtUp(); }
 
     isCaughtUp = isCaughtUp && OpenGroupManager.INSTANCE.isAllCaughtUp();
 
     if (isCaughtUp) {
-      performOnBackgroundThreadIfNeeded(() -> wrapped.updateNotification(context));
+      performOnBackgroundThreadIfNeeded(() -> wrapped.updateNotificationWithoutSignalingAndResetReminderCount(context));
     } else {
-      debouncer.publish(() -> performOnBackgroundThreadIfNeeded(() -> wrapped.updateNotification(context)));
+      debouncer.publish(() -> performOnBackgroundThreadIfNeeded(() -> wrapped.updateNotificationWithoutSignalingAndResetReminderCount(context)));
     }
   }
 
   @Override
-  public void updateNotification(@NonNull Context context, long threadId) {
+  public void scheduleDelayedNotificationOrPassThroughToSpecificThreadAndSignal(@NonNull Context context, long threadId) {
     Poller lokiPoller = ApplicationContext.getInstance(context).poller;
     boolean isCaughtUp = true;
-    if (lokiPoller != null) {
-      isCaughtUp = isCaughtUp && lokiPoller.isCaughtUp();
-    }
+    if (lokiPoller != null) { isCaughtUp = lokiPoller.isCaughtUp(); }
 
     isCaughtUp = isCaughtUp && OpenGroupManager.INSTANCE.isAllCaughtUp();
     
     if (isCaughtUp) {
-      performOnBackgroundThreadIfNeeded(() -> wrapped.updateNotification(context, threadId));
+      performOnBackgroundThreadIfNeeded(() -> wrapped.scheduleDelayedNotificationOrPassThroughToSpecificThreadAndSignal(context, threadId));
     } else {
-      debouncer.publish(() -> performOnBackgroundThreadIfNeeded(() -> wrapped.updateNotification(context, threadId)));
+      debouncer.publish(() -> performOnBackgroundThreadIfNeeded(() -> wrapped.scheduleDelayedNotificationOrPassThroughToSpecificThreadAndSignal(context, threadId)));
     }
   }
 
   @Override
-  public void updateNotification(@NonNull Context context, long threadId, boolean signal) {
+  public void updateNotificationForSpecificThread(@NonNull Context context, long threadId, boolean signal) {
     Poller lokiPoller = ApplicationContext.getInstance(context).poller;
     boolean isCaughtUp = true;
-    if (lokiPoller != null) {
-      isCaughtUp = isCaughtUp && lokiPoller.isCaughtUp();
-    }
+    if (lokiPoller != null) { isCaughtUp = lokiPoller.isCaughtUp(); }
 
     isCaughtUp = isCaughtUp && OpenGroupManager.INSTANCE.isAllCaughtUp();
 
     if (isCaughtUp) {
-      performOnBackgroundThreadIfNeeded(() -> wrapped.updateNotification(context, threadId, signal));
+      performOnBackgroundThreadIfNeeded(() -> wrapped.updateNotificationForSpecificThread(context, threadId, signal));
     } else {
-      debouncer.publish(() -> performOnBackgroundThreadIfNeeded(() -> wrapped.updateNotification(context, threadId, signal)));
+      debouncer.publish(() -> performOnBackgroundThreadIfNeeded(() -> wrapped.updateNotificationForSpecificThread(context, threadId, signal)));
     }
   }
 
@@ -100,9 +94,7 @@ public class OptimizedMessageNotifier implements MessageNotifier {
   public void updateNotification(@androidx.annotation.NonNull Context context, boolean signal, int reminderCount) {
     Poller lokiPoller = ApplicationContext.getInstance(context).poller;
     boolean isCaughtUp = true;
-    if (lokiPoller != null) {
-      isCaughtUp = isCaughtUp && lokiPoller.isCaughtUp();
-    }
+    if (lokiPoller != null) { isCaughtUp = lokiPoller.isCaughtUp(); }
 
     isCaughtUp = isCaughtUp && OpenGroupManager.INSTANCE.isAllCaughtUp();
 

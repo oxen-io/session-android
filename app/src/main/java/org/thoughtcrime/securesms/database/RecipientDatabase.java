@@ -154,9 +154,9 @@ public class RecipientDatabase extends Database {
             "ADD COLUMN "+BLOCKS_COMMUNITY_MESSAGE_REQUESTS+" INT DEFAULT 0;";
   }
 
-  public static final int NOTIFY_TYPE_ALL = 0;
-  public static final int NOTIFY_TYPE_MENTIONS = 1;
-  public static final int NOTIFY_TYPE_NONE = 2;
+  public static final int NOTIFY_TYPE_ALL      = 0; // Standard notification
+  public static final int NOTIFY_TYPE_MENTIONS = 1; // Notification that we were mentioned
+  public static final int NOTIFY_TYPE_NONE     = 2; // If the user or thread is muted this will be the notification type, and we won't notify
 
   public RecipientDatabase(Context context, SQLCipherOpenHelper databaseHelper) {
     super(context, databaseHelper);

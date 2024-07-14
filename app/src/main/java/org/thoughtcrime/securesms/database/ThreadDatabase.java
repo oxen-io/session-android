@@ -45,6 +45,7 @@ import org.session.libsignal.utilities.IdPrefix;
 import org.session.libsignal.utilities.Log;
 import org.session.libsignal.utilities.Pair;
 import org.session.libsignal.utilities.guava.Optional;
+
 import org.thoughtcrime.securesms.ApplicationContext;
 import org.thoughtcrime.securesms.contacts.ContactUtil;
 import org.thoughtcrime.securesms.database.helpers.SQLCipherOpenHelper;
@@ -794,9 +795,11 @@ public class ThreadDatabase extends Database {
   public boolean markAllAsRead(long threadId, boolean isGroupRecipient, long lastSeenTime, boolean force) {
     MmsSmsDatabase mmsSmsDatabase = DatabaseComponent.get(context).mmsSmsDatabase();
     if (mmsSmsDatabase.getConversationCount(threadId) <= 0 && !force) return false;
+
     List<MarkedMessageInfo> messages = setRead(threadId, lastSeenTime);
     MarkReadReceiver.process(context, messages);
-    ApplicationContext.getInstance(context).messageNotifier.updateNotification(context, threadId);
+    ApplicationContext.getInstance(context).messageNotifier.scheduleDelayedNotificationOrPassThroughToSpecificThreadAndSignal(context, threadId);
+
     return setLastSeen(threadId, lastSeenTime);
   }
 

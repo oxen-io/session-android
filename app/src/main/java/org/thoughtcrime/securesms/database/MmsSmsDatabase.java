@@ -352,6 +352,20 @@ public class MmsSmsDatabase extends Database {
     }
   }
 
+  public int getNotifiedCount(long threadId) {
+    String selection = MmsSmsColumns.NOTIFIED + " = 1 AND " + MmsSmsColumns.THREAD_ID + " = " + threadId;
+    try (Cursor cursor = queryTables(PROJECTION, selection, null, null)) {
+      if (cursor == null) {
+        Log.w(TAG, "Cursor is null in MmsSmsDB.getNotifiedCount - returning 0.");
+        return 0;
+      }
+      else {
+        Log.w(TAG, "Cursor `getNotifiedCount` is: " + cursor.getCount());
+        return cursor.getCount();
+      }
+    }
+  }
+
   public long getConversationCount(long threadId) {
     long count = DatabaseComponent.get(context).smsDatabase().getMessageCountForThread(threadId);
     count    += DatabaseComponent.get(context).mmsDatabase().getMessageCountForThread(threadId);

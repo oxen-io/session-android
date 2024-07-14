@@ -196,7 +196,6 @@ class BatchMessageReceiveJob(
                                         messageIds.remove(deletedMessageId)
                                     }
                                 }
-
                                 else -> MessageReceiver.handle(message, proto, threadId, openGroupID)
                             }
                         } catch (e: Exception) {
@@ -218,7 +217,7 @@ class BatchMessageReceiveJob(
                         storage.markConversationAsRead(threadId, newLastSeen, force = true)
                     }
                     storage.updateThread(threadId, true)
-                    SSKEnvironment.shared.notificationManager.updateNotification(context, threadId)
+                    SSKEnvironment.shared.notificationManager.scheduleDelayedNotificationOrPassThroughToSpecificThreadAndSignal(context, threadId)
                 }
 
                 val withoutDefault = threadMap.entries.filter { it.key != NO_THREAD_MAPPING }
