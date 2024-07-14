@@ -15,10 +15,10 @@
     <!-- ======================================================================================= -->
 
     <!-- Old naming convention strings that need to me renamed to their modern equivalents and have any % substitution modified to use {braces} -->
-    <string name="DateUtils_just_now">Now</string>
     <string name="BucketedThreadMedia_This_week">This week</string>
     <string name="ConversationActivity_send_after_approval">You will be able to send voice messages and attachments once the recipient has approved this message request</string>
     <string name="ConversationItem_error_not_delivered">Send failed, tap for details</string>
+    <string name="DateUtils_just_now">Now</string>
     <string name="DisappearingMessagesActivity_settings_not_updated">Settings not updated and please try again</string>
     <string name="ErrorNotifier_migration">Database Upgrade Failed</string>
     <string name="ErrorNotifier_migration_downgrade">Please contact support to report the error.</string>
@@ -27,7 +27,48 @@
     <string name="KeyboardPagerfragment_clear_search_entry">Clear search entry</string>
     <string name="MediaPickerActivity_send_to">Send to %s</string>
     <string name="ReactionsConversationView_plus">+%1$d</string>
-
+    <string name="activity_create_closed_group_empty_state_button_title">Start a Session</string>
+    <string name="activity_disappearing_messages_subtitle">This setting applies to messages you send in this conversation.</string>
+    <string name="activity_disappearing_messages_subtitle_sent">Messages disappear after they have been sent.</string>
+    <string name="activity_disappearing_messages_timer">Timer</string>
+    <string name="activity_disappearing_messages_title">Disappearing Messages</string>
+    <string name="activity_help_settings__export_logs">Export Logs</string>
+    <string name="activity_home_empty_state_button_title">Start a Session</string>
+    <string name="activity_home_outdated_client_config">Some of your devices are using outdated versions. Syncing may be unreliable until they are updated.</string>
+    <string name="activity_link_device_skip_prompt">This is taking a while, would you like to skip?</string>
+    <string name="activity_pn_mode_no_option_picked_dialog_title">Please Pick an Option</string>
+    <string name="activity_register_explanation">Your Session ID is the unique address people can use to contact you on Session. With no connection to your real identity, your Session ID is totally anonymous and private by design.</string> <!-- Replaced during onboarding -->
+    <string name="activity_register_title">Say hello to your Session ID</string> <!-- Replaced during onboarding -->
+    <string name="activity_seed_explanation">Your recovery phrase is the master key to your Session ID — you can use it to restore your Session ID if you lose access to your device. Store your recovery phrase in a safe place, and don\'t give it to anyone.</string> <!-- Replaced during onboarding -->
+    <string name="activity_seed_reveal_button_title">Hold to reveal</string>
+    <string name="activity_seed_title_2">Meet your recovery phrase</string>
+    <string name="activity_settings_upload">Upload</string>
+    <string name="arrays__images">Images</string>
+    <string name="attachment_type_selector__drawer_description">Toggle attachment drawer</string>
+    <string name="attachment_type_selector__gallery">Gallery</string>
+    <string name="attachment_type_selector__gallery_description">Image or video</string>
+    <string name="conversation_activity__attachment_thumbnail">Attachment Thumbnail</string>
+    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Toggle quick camera attachment drawer</string>
+    <string name="conversation_activity__wait_until_attachment_has_finished_downloading">Please wait until attachment has finished downloading</string>
+    <string name="conversation_context__menu_resync_message">Resync message</string>
+    <string name="conversation_context_image__save_attachment">Save attachment</string>
+    <string name="conversation_item_sent__delivered_description">Delivered</string>
+    <string name="dialog_disappearing_messages_follow_setting_confirm">Confirm</string>
+    <string name="dialog_disappearing_messages_follow_setting_off_body">Messages you send will no longer disappear. Are you sure you want to turn off disappearing messages?</string>
+    <string name="dialog_disappearing_messages_follow_setting_on_body">Set your messages to disappear %1$s after they have been %2$s?</string>
+    <string name="dialog_disappearing_messages_follow_setting_title">Follow Setting</string>
+    <string name="fragment_enter_public_key_prompt">Start a new conversation by entering someone\'s Session ID or share your Session ID with them.</string>
+    <string name="fragment_view_my_qr_code_share_title">Share QR Code</string>
+    <string name="fragment_view_my_qr_code_title">Scan Me</string>
+    <string name="menu_apply_button">Apply</string>
+    <string name="message_details_header__disappears">Disappears</string>
+    <string name="message_details_header__file_id">File Id:</string>
+    <string name="registration_activity__skip">Skip</string> <!-- Replaced during onboarding -->
+    <string name="view_fake_chat_bubble_4">Using a combination of advanced anonymous routing and end-to-end encryption technologies.</string>
+    <string name="view_fake_chat_bubble_5">Friends don\'t let friends use compromised messengers. You\'re welcome.</string>
+    <string name="view_seed_reminder_subtitle_1">Secure your account by saving your recovery phrase</string>
+    <string name="view_seed_reminder_subtitle_2">Tap and hold the redacted words to reveal your recovery phrase, then store it safely to secure your Session ID.</string>
+    <string name="view_seed_reminder_title">You\'re almost finished! 80%</string>
 
     <!-- Strings with modern names and {braced} substitution markers-->
     <string name="andMore">+{count}</string>
@@ -45,22 +86,6 @@
     <string name="accountIdShare">Hey, I\'ve been using {app_name} to chat with complete privacy and security. Come join me! My Account ID is<br/><br/>{account_id}<br/><br/>Download it at {download_url}</string>
     <string name="accountIdYours">Your Account ID</string>
     <string name="accountIdYoursDescription">This is your Account ID. Other users can scan it to start a conversation with you.</string>
-    <string name="activity_create_closed_group_empty_state_button_title">Start a Session</string>
-    <string name="activity_disappearing_messages_subtitle">This setting applies to messages you send in this conversation.</string>
-    <string name="activity_disappearing_messages_subtitle_sent">Messages disappear after they have been sent.</string>
-    <string name="activity_disappearing_messages_timer">Timer</string>
-    <string name="activity_disappearing_messages_title">Disappearing Messages</string>
-    <string name="activity_help_settings__export_logs">Export Logs</string>
-    <string name="activity_home_empty_state_button_title">Start a Session</string>
-    <string name="activity_home_outdated_client_config">Some of your devices are using outdated versions. Syncing may be unreliable until they are updated.</string>
-    <string name="activity_link_device_skip_prompt">This is taking a while, would you like to skip?</string>
-    <string name="activity_pn_mode_no_option_picked_dialog_title">Please Pick an Option</string>
-    <string name="activity_register_explanation">Your Session ID is the unique address people can use to contact you on Session. With no connection to your real identity, your Session ID is totally anonymous and private by design.</string> <!-- Replaced during onboarding -->
-    <string name="activity_register_title">Say hello to your Session ID</string> <!-- Replaced during onboarding -->
-    <string name="activity_seed_explanation">Your recovery phrase is the master key to your Session ID — you can use it to restore your Session ID if you lose access to your device. Store your recovery phrase in a safe place, and don\'t give it to anyone.</string> <!-- Replaced during onboarding -->
-    <string name="activity_seed_reveal_button_title">Hold to reveal</string>
-    <string name="activity_seed_title_2">Meet your recovery phrase</string>
-    <string name="activity_settings_upload">Upload</string>
     <string name="actualSize">Actual Size</string>
     <string name="add">Add</string>
     <string name="adminAddAsAdmin">Add as Admin</string>
@@ -100,12 +125,8 @@
     <string name="appearanceZoom">Zoom</string>
     <string name="appearanceZoomIn">Zoom In</string>
     <string name="appearanceZoomOut">Zoom Out</string>
-    <string name="arrays__images">Images</string>
     <string name="attachment">Attachment</string>
     <string name="attachmentsNotification">{emoji} Attachment</string>
-    <string name="attachment_type_selector__drawer_description">Toggle attachment drawer</string>
-    <string name="attachment_type_selector__gallery">Gallery</string>
-    <string name="attachment_type_selector__gallery_description">Image or video</string>
     <string name="attachmentsAdd">Add attachment</string>
     <string name="attachmentsAlbumUnnamed">Unnamed Album</string>
     <string name="attachmentsAutoDownload">Auto-download Attachments</string>
@@ -255,12 +276,6 @@
     <string name="contentDescriptionCamera">Camera</string>
     <string name="contentDescriptionMediaMessage">Media message</string>
     <string name="contentDescriptionMessageComposition">Message composition</string>
-    <string name="conversation_activity__attachment_thumbnail">Attachment Thumbnail</string>
-    <string name="conversation_activity__quick_attachment_drawer_toggle_camera_description">Toggle quick camera attachment drawer</string>
-    <string name="conversation_activity__wait_until_attachment_has_finished_downloading">Please wait until attachment has finished downloading</string>
-    <string name="conversation_context__menu_resync_message">Resync message</string>
-    <string name="conversation_context_image__save_attachment">Save attachment</string>
-    <string name="conversation_item_sent__delivered_description">Delivered</string>
     <string name="conversationsAddToHome">Add to home screen</string>
     <string name="conversationsAddedToHome">Added to home screen</string>
     <string name="conversationsAudioMessages">Audio Messages</string>
@@ -309,10 +324,6 @@
     <string name="deleteMessagesDescriptionEveryone">Are you sure you want to delete these messages for everyone?</string>
     <string name="deleting">Deleting</string>
     <string name="developerToolsToggle">Toggle Developer Tools</string>
-    <string name="dialog_disappearing_messages_follow_setting_confirm">Confirm</string>
-    <string name="dialog_disappearing_messages_follow_setting_off_body">Messages you send will no longer disappear. Are you sure you want to turn off disappearing messages?</string>
-    <string name="dialog_disappearing_messages_follow_setting_on_body">Set your messages to disappear %1$s after they have been %2$s?</string>
-    <string name="dialog_disappearing_messages_follow_setting_title">Follow Setting</string>
     <string name="disappearingMessages">Disappearing Messages</string>
     <string name="disappearingMessagesAddedYou">{name} added you to the group.</string>
     <string name="disappearingMessagesCountdownBigMobile">Auto-deletes in {time_large}</string>
@@ -384,9 +395,6 @@
     <string name="file">File</string>
     <string name="files">Files</string>
     <string name="followSystemSettings">Follow system settings</string>
-    <string name="fragment_enter_public_key_prompt">Start a new conversation by entering someone\'s Session ID or share your Session ID with them.</string>
-    <string name="fragment_view_my_qr_code_share_title">Share QR Code</string>
-    <string name="fragment_view_my_qr_code_title">Scan Me</string>
     <string name="from">From:</string>
     <string name="fullScreenToggle">Toggle Full Screen</string>
     <string name="gif">GIF</string>
@@ -467,7 +475,7 @@
     <string name="image">Image</string>
     <string name="incognitoKeyboard">Incognito Keyboard</string>
     <string name="incognitoKeyboardDescription">Request incognito mode if available. Depending on the keyboard you are using, your keyboard may ignore this request.</string>
-    <string name="info">Info</string>  <!-- ACL - Potential replacement for 'messageInfo'? -->
+    <string name="info">Info</string>
     <string name="invalidShortcut">Invalid shortcut</string>
     <string name="join">Join</string>
     <string name="later">Later</string>
@@ -508,7 +516,6 @@
     <string name="membersInviteShareNewMessagesOnly">Share new messages only</string>
     <string name="membersInviteShareTwoDescription">Would you like to share group message history with <b>{name}</b> and <b>{other_name}</b>?</string>
     <string name="membersInviteTitle">Invite</string>
-    <string name="menu_apply_button">Apply</string>
     <string name="message">Message</string>
     <string name="messageCopy">Copy message</string>
     <string name="messageEmpty">This message is empty.</string>
@@ -547,8 +554,6 @@
     <string name="messageVoice">Voice Message</string>
     <string name="messageVoiceErrorShort">Hold to record a voice message.</string>
     <string name="messageVoiceSlideToCancel">Slide to Cancel</string>
-    <string name="message_details_header__disappears">Disappears</string>
-    <string name="message_details_header__file_id">File Id:</string>
     <string name="messages">Messages</string>
     <string name="minimize">Minimize</string>
     <string name="next">Next</string>
@@ -691,7 +696,6 @@
     <string name="recoveryPasswordView">View Password</string>
     <string name="recoveryPasswordWarningSendDescription">This is your recovery password. If you send it to someone they\'ll have full access to your account.</string>
     <string name="redo">Redo</string>
-    <string name="registration_activity__skip">Skip</string> <!-- Replaced during onboarding -->
     <string name="remove">Remove</string>
     <string name="reply">Reply</string>
     <string name="resend">Resend</string>
@@ -767,11 +771,6 @@
     <string name="video">Video</string>
     <string name="videoErrorPlay">Unable to play video.</string>
     <string name="view">View</string>
-    <string name="view_fake_chat_bubble_4">Using a combination of advanced anonymous routing and end-to-end encryption technologies.</string>
-    <string name="view_fake_chat_bubble_5">Friends don\'t let friends use compromised messengers. You\'re welcome.</string>
-    <string name="view_seed_reminder_subtitle_1">Secure your account by saving your recovery phrase</string>
-    <string name="view_seed_reminder_subtitle_2">Tap and hold the redacted words to reveal your recovery phrase, then store it safely to secure your Session ID.</string>
-    <string name="view_seed_reminder_title">You\'re almost finished! 80%</string>
     <string name="waitFewMinutes">This can take a few minutes.</string>
     <string name="waitOneMoment">One moment please...</string>
     <string name="warning">Warning</string>
