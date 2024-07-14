@@ -24,6 +24,7 @@ import android.net.Uri;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.squareup.phrase.Phrase;
 import java.security.SecureRandom;
 import network.loki.messenger.R;
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment;
@@ -74,7 +75,6 @@ public abstract class Slide {
             .put(EMOJI_KEY, emojiForMimeType())
             .format().toString();
     return Optional.fromNullable(txt);
-    //return Optional.fromNullable(emojiForMimeType() + attachmentString);
   }
 
   private String emojiForMimeType() {
@@ -157,20 +157,20 @@ public abstract class Slide {
     return false;
   }
 
-  protected static Attachment constructAttachmentFromUri(@NonNull  Context        context,
-                                                         @NonNull  Uri            uri,
-                                                         @NonNull  String         defaultMime,
-                                                                   long           size,
-                                                                   int            width,
-                                                                   int            height,
-                                                                   boolean        hasThumbnail,
-                                                         @Nullable String         fileName,
-                                                         @Nullable String         caption,
-                                                                   boolean        voiceNote,
-                                                                   boolean        quote)
+  protected static Attachment constructAttachmentFromUri(@NonNull  Context context,
+                                                         @NonNull  Uri     uri,
+                                                         @NonNull  String  defaultMime,
+                                                                   long    size,
+                                                                   int     width,
+                                                                   int     height,
+                                                                   boolean hasThumbnail,
+                                                         @Nullable String  fileName,
+                                                         @Nullable String  caption,
+                                                                   boolean voiceNote,
+                                                                   boolean quote)
   {
-    String                 resolvedType    = Optional.fromNullable(MediaUtil.getMimeType(context, uri)).or(defaultMime);
-    String                 fastPreflightId = String.valueOf(new SecureRandom().nextLong());
+    String resolvedType    = Optional.fromNullable(MediaUtil.getMimeType(context, uri)).or(defaultMime);
+    String fastPreflightId = String.valueOf(new SecureRandom().nextLong());
     return new UriAttachment(uri,
                              hasThumbnail ? uri : null,
                              resolvedType,

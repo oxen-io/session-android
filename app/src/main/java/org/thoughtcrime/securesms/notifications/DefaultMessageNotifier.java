@@ -185,9 +185,9 @@ public class DefaultMessageNotifier implements MessageNotifier {
       for (StatusBarNotification notification : activeNotifications) {
         boolean validNotification = false;
 
-        if (notification.getId() != SUMMARY_NOTIFICATION_ID &&
-            notification.getId() != KeyCachingService.SERVICE_RUNNING_ID          &&
-            notification.getId() != FOREGROUND_ID         &&
+        if (notification.getId() != SUMMARY_NOTIFICATION_ID              &&
+            notification.getId() != KeyCachingService.SERVICE_RUNNING_ID &&
+            notification.getId() != FOREGROUND_ID                        &&
             notification.getId() != PENDING_MESSAGES_ID)
         {
           for (NotificationItem item : notificationState.getNotifications()) {
@@ -197,9 +197,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
             }
           }
 
-          if (!validNotification) {
-            notifications.cancel(notification.getId());
-          }
+          if (!validNotification) { notifications.cancel(notification.getId()); }
         }
       }
     } catch (Throwable e) {
@@ -231,7 +229,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
   @Override
   public void updateNotification(@NonNull Context context, long threadId, boolean signal)
   {
-    boolean    isVisible  = visibleThread == threadId;
+    boolean isVisible = visibleThread == threadId;
 
     ThreadDatabase threads    = DatabaseComponent.get(context).threadDatabase();
     Recipient      recipient = threads.getRecipientForThreadId(threadId);
