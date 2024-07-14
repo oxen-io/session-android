@@ -24,20 +24,14 @@ import android.net.Uri;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.squareup.phrase.Phrase;
-
-import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress;
-import org.thoughtcrime.securesms.util.MediaUtil;
-import org.session.libsignal.utilities.guava.Optional;
-
+import java.security.SecureRandom;
+import network.loki.messenger.R;
 import org.session.libsession.messaging.sending_receiving.attachments.Attachment;
+import org.session.libsession.messaging.sending_receiving.attachments.AttachmentTransferProgress;
 import org.session.libsession.messaging.sending_receiving.attachments.UriAttachment;
 import org.session.libsession.utilities.Util;
-
-import java.security.SecureRandom;
-
-import network.loki.messenger.R;
+import org.session.libsignal.utilities.guava.Optional;
+import org.thoughtcrime.securesms.util.MediaUtil;
 
 public abstract class Slide {
 
