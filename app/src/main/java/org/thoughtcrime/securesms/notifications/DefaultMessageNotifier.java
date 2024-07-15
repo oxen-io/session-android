@@ -544,11 +544,6 @@ public class DefaultMessageNotifier implements MessageNotifier {
       } else if (record.isOpenGroupInvitation()) {
         body = SpanUtil.italic(context.getString(R.string.ThreadRecord_open_group_invitation));
       }
-      else if (record.isMmsNotification()) {
-        // If this is a Mms notification but any of the above spaghetti logic checks weren't met..
-      } else {
-        // We will hit this else block if the notification is for a text only / SMS message from a known contact
-      }
 
       String userPublicKey = TextSecurePreferences.getLocalNumber(context);
       String blindedPublicKey = cache.get(threadId);
