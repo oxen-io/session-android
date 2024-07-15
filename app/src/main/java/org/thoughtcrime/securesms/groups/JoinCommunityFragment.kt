@@ -70,7 +70,7 @@ class JoinCommunityFragment : Fragment() {
                 OpenGroupUrlParser.parseUrl(url)
             } catch (e: OpenGroupUrlParser.Error) {
                 when (e) {
-                    is OpenGroupUrlParser.Error.MalformedURL, OpenGroupUrlParser.Error.NoRoomSpecified -> {
+                    is OpenGroupUrlParser.Error.MalformedURL, OpenGroupUrlParser.Error.NoRoom -> {
                         val txt = Phrase.from(context, R.string.groupErrorJoin).put(GROUP_NAME_KEY, url).format().toString()
                         return Toast.makeText(activity, txt, Toast.LENGTH_SHORT).show()
                     }

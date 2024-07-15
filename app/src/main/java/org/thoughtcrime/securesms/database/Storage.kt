@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms.database
 
 import android.content.Context
 import android.net.Uri
+import java.security.MessageDigest
 import network.loki.messenger.libsession_util.ConfigBase
 import network.loki.messenger.libsession_util.ConfigBase.Companion.PRIORITY_HIDDEN
 import network.loki.messenger.libsession_util.ConfigBase.Companion.PRIORITY_PINNED
@@ -10,6 +11,7 @@ import network.loki.messenger.libsession_util.ConversationVolatileConfig
 import network.loki.messenger.libsession_util.UserGroupsConfig
 import network.loki.messenger.libsession_util.UserProfile
 import network.loki.messenger.libsession_util.util.BaseCommunityInfo
+import network.loki.messenger.libsession_util.util.Contact as LibSessionContact
 import network.loki.messenger.libsession_util.util.Conversation
 import network.loki.messenger.libsession_util.util.ExpiryMode
 import network.loki.messenger.libsession_util.util.GroupInfo
@@ -91,8 +93,6 @@ import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.mms.PartAuthority
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.SessionMetaProtocol
-import java.security.MessageDigest
-import network.loki.messenger.libsession_util.util.Contact as LibSessionContact
 
 private const val TAG = "Storage"
 
@@ -471,7 +471,8 @@ open class Storage(
         val userPublicKey = getUserPublicKey() ?: return
         // would love to get rid of recipient and context from this
         val recipient = Recipient.from(context, fromSerialized(userPublicKey), false)
-        // update name
+
+        // Update profile name
         val name = userProfile.getName() ?: return
         val userPic = userProfile.getPic()
         val profileManager = SSKEnvironment.shared.profileManager
@@ -480,13 +481,14 @@ open class Storage(
             profileManager.setName(context, recipient, name)
         }
 
-        // update pfp
+        // Update profile picture
         if (userPic == UserPic.DEFAULT) {
             clearUserPic()
         } else if (userPic.key.isNotEmpty() && userPic.url.isNotEmpty()
             && TextSecurePreferences.getProfilePictureURL(context) != userPic.url) {
             setUserProfilePicture(userPic.url, userPic.key)
         }
+
         if (userProfile.getNtsPriority() == PRIORITY_HIDDEN) {
             // delete nts thread if needed
             val ourThread = getThreadId(recipient) ?: return
@@ -514,12 +516,13 @@ open class Storage(
         addLibSessionContacts(extracted, messageTimestamp)
     }
 
-    override fun clearUserPic() {
-        val userPublicKey = getUserPublicKey() ?: return
+    override  fun clearUserPic() {
+        val userPublicKey = getUserPublicKey() ?: return Log.w(TAG, "No user public key when trying to clear user pic")
         val recipientDatabase = DatabaseComponent.get(context).recipientDatabase()
-        // would love to get rid of recipient and context from this
+
         val recipient = Recipient.from(context, fromSerialized(userPublicKey), false)
-        // clear picture if userPic is null
+
+        // Clear details related to the user's profile picture
         TextSecurePreferences.setProfileKey(context, null)
         ProfileKeyUtil.setEncodedProfileKey(context, null)
         recipientDatabase.setProfileAvatar(recipient, null)
@@ -528,7 +531,6 @@ open class Storage(
 
         Recipient.removeCached(fromSerialized(userPublicKey))
         configFactory.user?.setPic(UserPic.DEFAULT)
-        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
     }
 
     private fun updateConvoVolatile(convos: ConversationVolatileConfig, messageTimestamp: Long) {

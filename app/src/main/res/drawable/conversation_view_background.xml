@@ -4,6 +4,6 @@
     android:color="?android:colorControlHighlight">
 
     <item>
-        <color android:color="?colorCellBackground" />
+        <color android:color="?colorPrimary" />
     </item>
 </ripple>

@@ -235,6 +235,7 @@
     <string name="clearDataErrorDescriptionGeneric">An unknown error occurred and your data was not deleted. Do you want to delete your data from just this device instead?</string>
     <string name="clearDevice">Clear Device</string>
     <string name="clearDeviceAndNetwork">Clear device and network</string>
+    <!-- ACL -->
     <string name="clearDeviceAndNetworkConfirm">Are you sure you want to delete your data from the network? If you continue, you will not be able to restore your messages or contacts.</string>
     <string name="clearDeviceDescription">Are you sure you want to clear your device?</string>
     <string name="clearDeviceOnly">Clear device only</string>
@@ -665,6 +666,7 @@
     <string name="profileDisplayPicture">Display Picture</string>
     <string name="profileDisplayPictureRemoveError">Failed to remove display picture.</string>
     <string name="profileDisplayPictureSet">Set Display Picture</string>
+    <string name="profileErrorUpdate">Failed to update profile.</string>
     <string name="promote">Promote</string>
     <string name="qrCode">QR Code</string>
     <string name="qrNotAccountId">This QR code does not contain an Account ID</string>

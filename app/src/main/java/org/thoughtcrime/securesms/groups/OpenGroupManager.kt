@@ -6,6 +6,7 @@ import androidx.annotation.WorkerThread
 import com.squareup.phrase.Phrase
 import network.loki.messenger.R
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.open_groups.GroupMemberRole
 import org.session.libsession.messaging.open_groups.OpenGroup
@@ -155,9 +156,9 @@ object OpenGroupManager {
 
     @WorkerThread
     fun addOpenGroup(urlAsString: String, context: Context): OpenGroupApi.RoomInfo? {
-        val url = HttpUrl.parse(urlAsString) ?: return null
+        val url = urlAsString.toHttpUrlOrNull() ?: return null
         val server = OpenGroup.getServer(urlAsString)
-        val room = url.pathSegments().firstOrNull() ?: return null
+        val room = url.pathSegments.firstOrNull() ?: return null
         val publicKey = url.queryParameter("public_key") ?: return null
 
         return add(server.toString().removeSuffix("/"), room, publicKey, context).second // assume migrated from calling function

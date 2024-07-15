@@ -85,8 +85,7 @@
                         android:textColor="?unreadIndicatorTextColor"
                         android:textSize="@dimen/very_small_font_size"
                         android:textStyle="bold"
-                        tools:text="8"
-                        tools:textColor="?android:textColorPrimary" />
+                        tools:text="8"/>
 
                 </RelativeLayout>
 
@@ -115,8 +114,7 @@
                         android:textColor="?unreadIndicatorTextColor"
                         android:textSize="@dimen/very_small_font_size"
                         android:textStyle="bold"
-                        android:text="@"
-                        tools:textColor="?android:textColorPrimary" />
+                        android:text="@" />
 
                 </RelativeLayout>
 

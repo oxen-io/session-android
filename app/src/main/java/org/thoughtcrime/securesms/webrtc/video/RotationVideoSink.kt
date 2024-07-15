@@ -1,7 +1,6 @@
 package org.thoughtcrime.securesms.webrtc.video
 
-import org.session.libsignal.utilities.Log
-import org.thoughtcrime.securesms.webrtc.data.quadrantRotation
+
 import org.webrtc.CapturerObserver
 import org.webrtc.VideoFrame
 import org.webrtc.VideoProcessor
@@ -12,7 +11,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 class RotationVideoSink: CapturerObserver, VideoProcessor {
 
     var rotation: Int = 0
-    var mirrored = false
 
     private val capturing = AtomicBoolean(false)
     private var capturerObserver = SoftReference<CapturerObserver>(null)
@@ -31,13 +29,14 @@ class RotationVideoSink: CapturerObserver, VideoProcessor {
         val observer = capturerObserver.get()
         if (videoFrame == null || observer == null || !capturing.get()) return
 
-        val quadrantRotation = rotation.quadrantRotation()
+        // cater for frame rotation so that the video is always facing up as we rotate pas a certain point
+        val newFrame = VideoFrame(videoFrame.buffer, videoFrame.rotation - rotation, videoFrame.timestampNs)
 
-        val newFrame = VideoFrame(videoFrame.buffer, (videoFrame.rotation + quadrantRotation * if (mirrored && quadrantRotation in listOf(90,270)) -1 else 1) % 360, videoFrame.timestampNs)
-        val localFrame = VideoFrame(videoFrame.buffer, videoFrame.rotation * if (mirrored && quadrantRotation in listOf(90,270)) -1 else 1, videoFrame.timestampNs)
-
+        // the frame we are sending to our contact needs to cater for rotation
         observer.onFrameCaptured(newFrame)
-        sink.get()?.onFrame(localFrame)
+
+        // the frame we see on the user's phone doesn't require changes
+        sink.get()?.onFrame(videoFrame)
     }
 
     override fun setSink(sink: VideoSink?) {
