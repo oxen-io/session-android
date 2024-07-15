@@ -1095,7 +1095,7 @@ open class Storage(
             LibSessionGroupMember(ourSessionId, getUserProfile().displayName, admin = true)
         )
 
-        members.forEach { groupMembers.set(LibSessionGroupMember(it.sessionID, it.name, invitePending = true)) }
+        members.forEach { groupMembers.set(LibSessionGroupMember(it.sessionID, it.name).setInvited()) }
 
         val groupKeys = configFactory.constructGroupKeysConfig(group.groupSessionId,
             info = groupInfo,
@@ -1470,7 +1470,7 @@ open class Storage(
             }
             if (!member.invitePending) return groupMembers.close()
             if (approved) {
-                groupMembers.set(member.copy(invitePending = false))
+                groupMembers.set(member.setAccepted())
             } else {
                 groupMembers.erase(member)
             }
@@ -1525,8 +1525,7 @@ open class Storage(
             val member = membersConfig.getOrConstruct(memberSessionId).copy(
                 name = name,
                 profilePicture = userPic,
-                invitePending = true,
-            )
+            ).setInvited()
             membersConfig.set(member)
         }
 
@@ -1695,9 +1694,7 @@ open class Storage(
         val keys = configFactory.getGroupKeysConfig(closedGroupId, info, members, free = false) ?: return
 
         promotions.forEach { sessionId ->
-            val promoted = members.get(sessionId)?.copy(
-                promotionPending = true,
-            ) ?: return@forEach
+            val promoted = members.get(sessionId)?.setPromoteSent() ?: return@forEach
             members.set(promoted)
 
             val message = GroupUpdated(
@@ -1852,17 +1849,13 @@ open class Storage(
         val closedGroup = userGroups.getClosedGroup(closedGroupId.hexString())
             ?: return Log.w("ClosedGroup", "No closed group in user groups matching promoted message")
 
-        val modified = closedGroup.copy(adminKey = keyPair.secretKey, authData = byteArrayOf())
+        val modified = closedGroup.copy(adminKey = keyPair.secretKey, authData = null)
         userGroups.set(modified)
         configFactory.scheduleUpdate(Destination.from(fromSerialized(getUserPublicKey()!!)))
         val info = configFactory.getGroupInfoConfig(closedGroupId) ?: return
         val members = configFactory.getGroupMemberConfig(closedGroupId) ?: return
         val keys = configFactory.getGroupKeysConfig(closedGroupId, info, members, free = false) ?: return
-        val ourMember = members.get(ourSessionId)?.copy(
-            admin = true,
-            promotionPending = false,
-            promotionFailed = false
-        ) ?: return Log.e("ClosedGroup", "We aren't a member in the closed group")
+        val ourMember = members.get(ourSessionId)?.setPromoteSuccess() ?: return Log.e("ClosedGroup", "We aren't a member in the closed group")
         members.set(ourMember)
         configFactory.saveGroupConfigs(keys, info, members)
         ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(Destination.ClosedGroup(closedGroupId.hexString()))

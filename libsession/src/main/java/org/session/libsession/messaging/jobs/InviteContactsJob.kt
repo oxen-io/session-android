@@ -72,7 +72,7 @@ class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<
                             NullPointerException("No group member ${memberSessionId.prettifiedDescription()} in members config")
                         )
                     }
-                    members.set(member.copy(invitePending = true, inviteFailed = false))
+                    members.set(member.setInvited())
                     configs.saveGroupConfigs(keys, info, members)
 
                     val subAccount = keys.makeSubAccount(SessionId.from(memberSessionId))
@@ -103,19 +103,11 @@ class InviteContactsJob(val groupSessionId: String, val memberSessionIds: Array<
             }
             val results = requests.awaitAll()
             results.forEach { result ->
-                if (result.success) {
-                    // update invite pending / invite failed
-                    val toSet = members.get(result.memberSessionId)!!.copy(
-                        inviteFailed = false,
-                        invitePending = false
-                    )
-                    members.set(toSet)
-                } else {
+                if (!result.success) {
                     // update invite failed
-                    val toSet = members.get(result.memberSessionId)?.copy(
-                        inviteFailed = true,
-                        invitePending = false
-                    ) ?: return@forEach
+                    val toSet = members.get(result.memberSessionId)
+                        ?.setInviteFailed()
+                        ?: return@forEach
                     members.set(toSet)
                 }
             }
