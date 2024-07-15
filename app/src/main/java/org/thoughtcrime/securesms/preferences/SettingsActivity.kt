@@ -56,6 +56,7 @@ import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.BitmapDecodingException
 import org.thoughtcrime.securesms.util.BitmapUtil
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
+import org.thoughtcrime.securesms.util.NetworkUtils
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
@@ -228,6 +229,49 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         }
     }
 
+    // Method to update the display name if possible
+    private fun handleDisplayNameChange(displayName: String?) {
+
+        // If we don't have a working network connection we'll decline the display name change and bail..
+        val haveNetworkConnection = NetworkUtils.haveValidNetworkConnection(this@SettingsActivity)
+        if (!haveNetworkConnection) {
+            binding.loader.isVisible = false
+            Log.w(TAG, "Declining attempt to change display name without network connection.")
+            Toast.makeText(this@SettingsActivity, R.string.profileErrorUpdate, Toast.LENGTH_LONG).show()
+            return
+        }
+
+        // ..otherwise we'll attempt to make the change.
+        var failedToUpdateDisplayName = false
+
+        // As long as we have a new display name to set..
+        if (displayName != null) {
+            TextSecurePreferences.setProfileName(this, displayName)
+            val user = configFactory.user
+            if (user == null) {
+                // Couldn't get the user for some reason, so we'll fail to change the display name
+                Log.w(TAG, "Could not obtain user details from configFactory - failing display name change.")
+                failedToUpdateDisplayName = true
+            } else {
+                configFactory.user?.setName(displayName)
+            }
+        } else {
+            // If for some reason we were asked to set a null display name we'll not..
+            failedToUpdateDisplayName = true
+            Log.w(TAG, "Asked to set display name to null - not doing that.")
+        }
+
+        // Regardless of success or failure we'll hide the loader animation (three animated dots)
+        binding.loader.isVisible = false
+
+        // Either warn the user there was an issue or set the new display name as appropriate
+        if (failedToUpdateDisplayName) {
+            Toast.makeText(this@SettingsActivity, R.string.profileErrorUpdate, Toast.LENGTH_LONG).show()
+        } else {
+            binding.btnGroupNameDisplay.text = displayName
+        }
+    }
+
     private fun updateProfile(
         isUpdatingProfilePicture: Boolean,
         profilePicture: ByteArray? = null,
@@ -235,16 +279,15 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
     ) {
         binding.loader.isVisible = true
 
-        if (displayName != null) {
-            TextSecurePreferences.setProfileName(this, displayName)
-            configFactory.user?.setName(displayName)
+        // If we're not updating the profile picture then we must be updating the display name..
+        if (!isUpdatingProfilePicture) {
+            // ..so we'll do so and bail without performing any profile picture change operations.
+            handleDisplayNameChange(displayName)
+            return
         }
 
-        // Bail if we're not updating the profile picture in any way
-        if (!isUpdatingProfilePicture) return
-
+        // Otherwise if we're updating the profile picture then lets do that.
         val encodedProfileKey = ProfileKeyUtil.generateEncodedProfileKey(this)
-
         val uploadProfilePicturePromise: Promise<*, Exception>
         var removingProfilePic = false
 
