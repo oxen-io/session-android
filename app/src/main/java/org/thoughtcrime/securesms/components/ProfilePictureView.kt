@@ -88,7 +88,7 @@ class ProfilePictureView @JvmOverloads constructor(
     }
 
     fun update() {
-        val publicKey = publicKey ?: return Log.w(TAG, "Cannot update profile picture without a public key")
+        val publicKey = publicKey ?: return Log.i(TAG, "Profile picture lacks a public key - if we were removing the profile picture this is not a problem.")
         val additionalPublicKey = additionalPublicKey
         if (additionalPublicKey != null) {
             setProfilePictureIfNeeded(binding.doubleModeImageView1, publicKey, displayName)
