@@ -58,6 +58,7 @@ import org.thoughtcrime.securesms.showSessionDialog
 import org.thoughtcrime.securesms.util.BitmapDecodingException
 import org.thoughtcrime.securesms.util.BitmapUtil
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
+import org.thoughtcrime.securesms.util.NetworkUtils
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
@@ -182,7 +183,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                     try {
                         val profilePictureToBeUploaded = BitmapUtil.createScaledBytes(this@SettingsActivity, AvatarSelection.getResultUri(data), ProfileMediaConstraints()).bitmap
                         Handler(Looper.getMainLooper()).post {
-                            updateProfile(true, profilePictureToBeUploaded)
+                            updateProfilePicture(profilePictureToBeUploaded)
                         }
                     } catch (e: BitmapDecodingException) {
                         e.printStackTrace()
@@ -231,56 +232,59 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
         }
     }
 
-    private fun updateProfile(
-        isUpdatingProfilePicture: Boolean,
-        profilePicture: ByteArray? = null,
-        displayName: String? = null
-    ) {
+    private fun updateDisplayName(displayName: String): Boolean {
         binding.loader.isVisible = true
 
-        if (displayName != null) {
-            TextSecurePreferences.setProfileName(this, displayName)
-            configFactory.user?.setName(displayName)
-        }
+        // We'll assume we fail & flip the flag on success
+        var updateWasSuccessful = false
 
-        // Bail if we're not updating the profile picture in any way
-        if (!isUpdatingProfilePicture) return
-
-        val encodedProfileKey = ProfileKeyUtil.generateEncodedProfileKey(this)
-
-        val uploadProfilePicturePromise: Promise<*, Exception>
-        var removingProfilePic = false
-
-        // Adding a new profile picture?
-        if (profilePicture != null) {
-            uploadProfilePicturePromise = ProfilePictureUtilities.upload(profilePicture, encodedProfileKey, this)
+        val haveNetworkConnection = NetworkUtils.haveValidNetworkConnection(this@SettingsActivity);
+        if (!haveNetworkConnection) {
+            Log.w(TAG, "Cannot update display name - no network connection.")
         } else {
-            // If not then we must be removing the existing one.
-            // Note: To get a promise that will resolve / sync correctly we overwrite the existing profile picture with
-            // a 0 byte image.
-            removingProfilePic = true
-            val emptyByteArray = ByteArray(0)
-            uploadProfilePicturePromise = ProfilePictureUtilities.upload(emptyByteArray, encodedProfileKey, this)
+            // if we have a network connection then attempt to update the display name
+            TextSecurePreferences.setProfileName(this, displayName)
+            val user = configFactory.user
+            if (user == null) {
+                Log.w(TAG, "Cannot update display name - missing user details from configFactory.")
+            } else {
+                user.setName(displayName)
+                binding.btnGroupNameDisplay.text = displayName
+                updateWasSuccessful = true
+            }
         }
 
-        // If the upload picture promise succeeded then we hit this successUi block
-        uploadProfilePicturePromise.successUi {
+        // Inform the user if we failed to update the display name
+        if (!updateWasSuccessful) {
+            Toast.makeText(this@SettingsActivity, R.string.profileErrorUpdate, Toast.LENGTH_LONG).show()
+        }
 
-            // If we successfully removed the profile picture on the network then we can clear the
-            // local data - otherwise it's weird to fail the online section but it _looks_ like it
-            // worked because we cleared the local image (also it denies them the chance to retry
-            // removal if we do it locally, and may result in them having a visible profile picture
-            // everywhere EXCEPT on their own device!).
-            if (removingProfilePic) {
+        binding.loader.isVisible = false
+        return updateWasSuccessful
+    }
+
+    // Helper method used by updateProfilePicture and removeProfilePicture to sync it online
+    private fun syncProfilePicture(profilePicture: ByteArray, onFail: () -> Unit) {
+        binding.loader.isVisible = true
+
+        // Grab the profile key and kick of the promise to update the profile picture
+        val encodedProfileKey = ProfileKeyUtil.generateEncodedProfileKey(this)
+        val updateProfilePicturePromise = ProfilePictureUtilities.upload(profilePicture, encodedProfileKey, this)
+
+        // If the online portion of the update succeeded then update the local state
+        updateProfilePicturePromise.successUi {
+
+            // When removing the profile picture the supplied ByteArray is empty so we'll clear the local data
+            if (profilePicture.isEmpty()) {
                 MessagingModuleConfiguration.shared.storage.clearUserPic()
             }
 
             val userConfig = configFactory.user
             AvatarHelper.setAvatar(this, Address.fromSerialized(TextSecurePreferences.getLocalNumber(this)!!), profilePicture)
-            TextSecurePreferences.setProfileAvatarId(this, profilePicture?.let { SecureRandom().nextInt() } ?: 0 )
+            TextSecurePreferences.setProfileAvatarId(this, profilePicture.let { SecureRandom().nextInt() } )
             ProfileKeyUtil.setEncodedProfileKey(this, encodedProfileKey)
 
-            // new config
+            // Attempt to grab the details we require to update the profile picture
             val url = TextSecurePreferences.getProfilePictureURL(this)
             val profileKey = ProfileKeyUtil.getProfileKey(this)
 
@@ -294,30 +298,52 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             }
 
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@SettingsActivity)
+
+            // Update our visuals
+            binding.profilePictureView.recycle()
+            binding.profilePictureView.update()
         }
 
-        // Or if the promise failed to upload the new profile picture then we hit this failUi block
-        uploadProfilePicturePromise.failUi {
-            if (removingProfilePic) {
-                Log.e(TAG, "Failed to remove profile picture")
-                Toast.makeText(this@SettingsActivity, R.string.profileDisplayPictureRemoveError, Toast.LENGTH_LONG).show()
-            } else {
-                Log.e(TAG, "Failed to upload profile picture")
-                Toast.makeText(this@SettingsActivity, R.string.profileErrorUpdate, Toast.LENGTH_LONG).show()
-            }
+        // If the sync failed then inform the user
+        updateProfilePicturePromise.failUi { onFail() }
+
+        // Finally, remove the loader animation after we've waited for the attempt to succeed or fail
+        updateProfilePicturePromise.alwaysUi { binding.loader.isVisible = false }
+    }
+
+    private fun updateProfilePicture(profilePicture: ByteArray) {
+
+        val haveNetworkConnection = NetworkUtils.haveValidNetworkConnection(this@SettingsActivity);
+        if (!haveNetworkConnection) {
+            Log.w(TAG, "Cannot update profile picture - no network connection.")
+            Toast.makeText(this@SettingsActivity, R.string.profileErrorUpdate, Toast.LENGTH_LONG).show()
+            return
         }
 
-        // Finally, regardless of whether the promise succeeded or failed, we always hit this `alwaysUi` block
-        uploadProfilePicturePromise.alwaysUi {
-            if (displayName != null) {
-                binding.btnGroupNameDisplay.text = displayName
-            }
-            if (isUpdatingProfilePicture) {
-                binding.profilePictureView.recycle() // Clear the cached image before updating
-                binding.profilePictureView.update()
-            }
-            binding.loader.isVisible = false
+        val onFail: () -> Unit = {
+            Log.e(TAG, "Sync failed when uploading profile picture.")
+            Toast.makeText(this@SettingsActivity, R.string.profileErrorUpdate, Toast.LENGTH_LONG).show()
         }
+
+        syncProfilePicture(profilePicture, onFail)
+    }
+
+    private fun removeProfilePicture() {
+
+        val haveNetworkConnection = NetworkUtils.haveValidNetworkConnection(this@SettingsActivity);
+        if (!haveNetworkConnection) {
+            Log.w(TAG, "Cannot remove profile picture - no network connection.")
+            Toast.makeText(this@SettingsActivity, R.string.profileDisplayPictureRemoveError, Toast.LENGTH_LONG).show()
+            return
+        }
+
+        val onFail: () -> Unit = {
+            Log.e(TAG, "Sync failed when removing profile picture.")
+            Toast.makeText(this@SettingsActivity, R.string.profileDisplayPictureRemoveError, Toast.LENGTH_LONG).show()
+        }
+
+        val emptyProfilePicture = ByteArray(0)
+        syncProfilePicture(emptyProfilePicture, onFail)
     }
     // endregion
 
@@ -336,8 +362,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             Toast.makeText(this, R.string.activity_settings_display_name_too_long_error, Toast.LENGTH_SHORT).show()
             return false
         }
-        updateProfile(false, displayName = displayName)
-        return true
+        return updateDisplayName(displayName)
     }
 
     private fun showQRCode() {
@@ -351,7 +376,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             view(R.layout.dialog_change_avatar)
             button(R.string.activity_settings_upload) { startAvatarSelection() }
             if (TextSecurePreferences.getProfileAvatarId(context) != 0) {
-                button(R.string.activity_settings_remove) { removeAvatar() }
+                button(R.string.activity_settings_remove) { removeProfilePicture() }
             }
             cancelButton()
         }.apply {
@@ -367,10 +392,6 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
                 profilePic?.isVisible = photoSet
                 pictureIcon?.isVisible = !photoSet
             }
-    }
-
-    private fun removeAvatar() {
-        updateProfile(true)
     }
 
     private fun startAvatarSelection() {
