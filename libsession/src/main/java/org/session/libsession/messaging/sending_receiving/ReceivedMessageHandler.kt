@@ -642,12 +642,18 @@ private fun handleGroupInfoChange(message: GroupUpdated, closedGroup: SessionId)
 private fun handlePromotionMessage(message: GroupUpdated) {
     val storage = MessagingModuleConfiguration.shared.storage
     val promotion = message.inner.promoteMessage
-    if (!promotion.hasGroupIdentitySeed()) {
-        Log.e("GroupUpdated", "")
-    }
     val seed = promotion.groupIdentitySeed.toByteArray()
     val keyPair = Sodium.ed25519KeyPair(seed)
-    storage.handlePromoted(keyPair)
+    val sender = message.sender!!
+    val adminId = SessionId.from(sender)
+    storage.addClosedGroupInvite(
+        groupId = SessionId(IdPrefix.GROUP, keyPair.pubKey),
+        name = promotion.name,
+        authData = null,
+        adminKey = keyPair.secretKey,
+        invitingAdmin = adminId,
+        message.serverHash
+    )
 }
 
 private fun MessageReceiver.handleInviteResponse(message: GroupUpdated, closedGroup: SessionId) {
@@ -667,7 +673,14 @@ private fun MessageReceiver.handleNewLibSessionClosedGroupMessage(message: Group
     val sender = message.sender!!
     val adminId = SessionId.from(sender)
     // add the group
-    storage.addClosedGroupInvite(groupId, invite.name, invite.memberAuthData.toByteArray(), adminId, message.serverHash)
+    storage.addClosedGroupInvite(
+        groupId,
+        invite.name,
+        invite.memberAuthData.toByteArray(),
+        null,
+        adminId,
+        message.serverHash
+    )
 }
 
 /**

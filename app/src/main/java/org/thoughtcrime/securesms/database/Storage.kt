@@ -1363,6 +1363,50 @@ open class Storage(
     override fun getMembers(groupPublicKey: String): List<LibSessionGroupMember> =
         configFactory.getGroupMemberConfig(SessionId.from(groupPublicKey))?.use { it.all() }?.toList() ?: emptyList()
 
+    private fun approveGroupInvite(threadId: Long, groupSessionId: SessionId) {
+        val groups = configFactory.userGroups ?: return
+        val group = groups.getClosedGroup(groupSessionId.hexString()) ?: return
+
+        configFactory.persist(
+            forConfigObject = groups.apply { set(group.copy(invited = false)) },
+            timestamp = SnodeAPI.nowWithOffset
+        )
+
+        // Send invite response if we aren't admin. If we already have admin access,
+        // the group configs are already up-to-date (hence no need to reponse to the invite)
+        if (group.adminKey == null) {
+            val inviteResponse = GroupUpdateInviteResponseMessage.newBuilder()
+                .setIsApproved(true)
+            val responseData = GroupUpdateMessage.newBuilder()
+                .setInviteResponse(inviteResponse)
+            val responseMessage = GroupUpdated(responseData.build())
+            clearMessages(threadId)
+            // this will fail the first couple of times :)
+            MessageSender.send(responseMessage, fromSerialized(groupSessionId.hexString()))
+        } else {
+            // Update our on member state
+            configFactory.getGroupMemberConfig(groupSessionId)?.use { members ->
+                configFactory.getGroupInfoConfig(groupSessionId)?.use { info ->
+                    configFactory.getGroupKeysConfig(groupSessionId, info)?.use { keys ->
+                        members.get(getUserPublicKey().orEmpty())?.let { member ->
+                            members.set(member.setPromoteSuccess().setInvited())
+                        }
+
+                        configFactory.saveGroupConfigs(keys, info, members)
+                    }
+                }
+            }
+        }
+
+        configFactory.persist(groups, SnodeAPI.nowWithOffset)
+        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
+        pollerFactory.pollerFor(groupSessionId)?.start()
+
+        // clear any group invites for this session ID (just in case there's a re-invite from an approved member after an invite from non-approved)
+        DatabaseComponent.get(context).lokiMessageDatabase().deleteGroupInviteReferrer(threadId)
+        pushRegistry.registerForGroup(groupSessionId)
+    }
+
     override fun respondToClosedGroupInvitation(
         threadId: Long,
         groupRecipient: Recipient,
@@ -1379,31 +1423,23 @@ open class Storage(
             deleteConversation(threadId)
             return
         } else {
-            val closedGroupInfo = groups.getClosedGroup(groupSessionId.hexString())?.copy(
-                invited = false
-            ) ?: return
-            groups.set(closedGroupInfo)
-            configFactory.persist(groups, SnodeAPI.nowWithOffset)
-            ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(context)
-            pollerFactory.pollerFor(groupSessionId)?.start()
-            val inviteResponse = GroupUpdateInviteResponseMessage.newBuilder()
-                .setIsApproved(true)
-            val responseData = GroupUpdateMessage.newBuilder()
-                .setInviteResponse(inviteResponse)
-            val responseMessage = GroupUpdated(responseData.build())
-            clearMessages(threadId)
-            // this will fail the first couple of times :)
-            MessageSender.send(responseMessage, fromSerialized(groupSessionId.hexString()))
+            approveGroupInvite(threadId, groupSessionId)
         }
+
     }
 
     override fun addClosedGroupInvite(
         groupId: SessionId,
         name: String,
-        authData: ByteArray,
+        authData: ByteArray?,
+        adminKey: ByteArray?,
         invitingAdmin: SessionId,
         invitingMessageHash: String?,
     ) {
+        require(authData != null || adminKey != null) {
+            "Must provide either authData or adminKey"
+        }
+
         val recipient = Recipient.from(context, fromSerialized(groupId.hexString()), false)
         val profileManager = SSKEnvironment.shared.profileManager
         val groups = configFactory.userGroups ?: return
@@ -1411,30 +1447,21 @@ open class Storage(
         val shouldAutoApprove = getRecipientApproved(fromSerialized(invitingAdmin.hexString()))
         val closedGroupInfo = GroupInfo.ClosedGroupInfo(
             groupSessionId = groupId,
-            adminKey = null,
+            adminKey = adminKey,
             authData = authData,
             priority = PRIORITY_VISIBLE,
             invited = !shouldAutoApprove,
             name = name,
         )
         groups.set(closedGroupInfo)
+
         configFactory.persist(groups, SnodeAPI.nowWithOffset)
         profileManager.setName(context, recipient, name)
         val groupThreadId = getOrCreateThreadIdFor(recipient.address)
         setRecipientApprovedMe(recipient, true)
         setRecipientApproved(recipient, shouldAutoApprove)
         if (shouldAutoApprove) {
-            // clear any group invites for this session ID (just in case there's a re-invite from an approved member after an invite from non-approved)
-            inviteDb.deleteGroupInviteReferrer(groupThreadId)
-            pollerFactory.pollerFor(groupId)?.start()
-            pushRegistry.registerForGroup(groupId)
-            val inviteResponse = GroupUpdateInviteResponseMessage.newBuilder()
-                .setIsApproved(true)
-            val responseData = GroupUpdateMessage.newBuilder()
-                .setInviteResponse(inviteResponse)
-            val responseMessage = GroupUpdated(responseData.build())
-            // this will fail the first couple of times :)
-            MessageSender.send(responseMessage, fromSerialized(groupId.hexString()))
+            approveGroupInvite(groupThreadId, groupId)
         } else {
             inviteDb.addGroupInviteReferrer(groupThreadId, invitingAdmin.hexString())
             insertGroupInviteControlMessage(SnodeAPI.nowWithOffset, invitingAdmin.hexString(), groupId)
@@ -1702,6 +1729,7 @@ open class Storage(
                     .setPromoteMessage(
                         DataMessage.GroupUpdatePromoteMessage.newBuilder()
                             .setGroupIdentitySeed(ByteString.copyFrom(adminKey))
+                            .setName(info.getName())
                     )
                     .build()
             )
@@ -1840,28 +1868,6 @@ open class Storage(
 
     override fun removeMember(groupSessionId: String, removedMembers: Array<String>) {
         doRemoveMember(groupSessionId, removedMembers, sendRemovedMessage = true)
-    }
-
-    override fun handlePromoted(keyPair: KeyPair) {
-        val closedGroupId = SessionId(IdPrefix.GROUP, keyPair.pubKey)
-        val ourSessionId = getUserPublicKey()!!
-        val userGroups = configFactory.userGroups ?: return
-        val closedGroup = userGroups.getClosedGroup(closedGroupId.hexString())
-            ?: return Log.w("ClosedGroup", "No closed group in user groups matching promoted message")
-
-        val modified = closedGroup.copy(adminKey = keyPair.secretKey, authData = null)
-        userGroups.set(modified)
-        configFactory.scheduleUpdate(Destination.from(fromSerialized(getUserPublicKey()!!)))
-        val info = configFactory.getGroupInfoConfig(closedGroupId) ?: return
-        val members = configFactory.getGroupMemberConfig(closedGroupId) ?: return
-        val keys = configFactory.getGroupKeysConfig(closedGroupId, info, members, free = false) ?: return
-        val ourMember = members.get(ourSessionId)?.setPromoteSuccess() ?: return Log.e("ClosedGroup", "We aren't a member in the closed group")
-        members.set(ourMember)
-        configFactory.saveGroupConfigs(keys, info, members)
-        ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(Destination.ClosedGroup(closedGroupId.hexString()))
-        info.free()
-        members.free()
-        keys.free()
     }
 
     override fun handleMemberLeft(message: GroupUpdated, closedGroupId: SessionId) {

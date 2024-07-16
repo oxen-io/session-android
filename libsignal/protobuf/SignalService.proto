@@ -163,6 +163,8 @@ message DataMessage {
   message GroupUpdatePromoteMessage {
     // @required
     required bytes          groupIdentitySeed       = 1;
+    // @required
+    required string         name                    = 2;
   }
 
   message GroupUpdateInfoChangeMessage {

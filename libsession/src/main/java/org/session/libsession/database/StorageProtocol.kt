@@ -5,7 +5,6 @@ import android.net.Uri
 import network.loki.messenger.libsession_util.Config
 import network.loki.messenger.libsession_util.util.GroupDisplayInfo
 import network.loki.messenger.libsession_util.util.GroupInfo
-import network.loki.messenger.libsession_util.util.KeyPair
 import nl.komponents.kovenant.Promise
 import org.session.libsession.messaging.BlindedIdMapping
 import org.session.libsession.messaging.calls.CallMessageType
@@ -172,7 +171,7 @@ interface StorageProtocol {
     fun createNewGroup(groupName: String, groupDescription: String, members: Set<Contact>): Optional<Recipient>
     fun getMembers(groupPublicKey: String): List<LibSessionGroupMember>
     fun respondToClosedGroupInvitation(threadId: Long, groupRecipient: Recipient, approved: Boolean)
-    fun addClosedGroupInvite(groupId: SessionId, name: String, authData: ByteArray, invitingAdmin: SessionId, invitingMessageHash: String?)
+    fun addClosedGroupInvite(groupId: SessionId, name: String, authData: ByteArray?, adminKey: ByteArray?, invitingAdmin: SessionId, invitingMessageHash: String?)
     fun setGroupInviteCompleteIfNeeded(approved: Boolean, invitee: String, closedGroup: SessionId)
     fun getLibSessionClosedGroup(groupSessionId: String): GroupInfo.ClosedGroupInfo?
     fun getClosedGroupDisplayInfo(groupSessionId: String): GroupDisplayInfo?
@@ -182,7 +181,6 @@ interface StorageProtocol {
     fun updateGroupInfoChange(messageId: Long, newType: UpdateMessageData.Kind)
     fun promoteMember(groupSessionId: String, promotions: Array<String>)
     fun removeMember(groupSessionId: String, removedMembers: Array<String>)
-    fun handlePromoted(keyPair: KeyPair)
     fun handleMemberLeft(message: GroupUpdated, closedGroupId: SessionId)
     fun handleMemberLeftNotification(message: GroupUpdated, closedGroupId: SessionId)
     fun handleKicked(groupSessionId: SessionId)
