@@ -15,6 +15,7 @@ import nl.komponents.kovenant.deferred
 import nl.komponents.kovenant.functional.bind
 import nl.komponents.kovenant.functional.map
 import nl.komponents.kovenant.task
+import org.session.libsession.BuildConfig
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.utilities.MessageWrapper
 import org.session.libsession.messaging.utilities.SodiumUtilities.sodium
@@ -73,7 +74,7 @@ object SnodeAPI {
     // Use port 4433 if the API level can handle the network security configuration and enforce pinned certificates
     private val seedNodePort = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) 443 else 4443
     private val seedNodePool by lazy {
-        if (useTestnet) {
+        if (BuildConfig.USE_TESTNET) {
             setOf( "http://public.loki.foundation:38157" )
         } else {
             setOf(
@@ -85,8 +86,6 @@ object SnodeAPI {
     }
     private const val snodeFailureThreshold = 3
     private const val useOnionRequests = true
-
-    const val useTestnet = false
 
     // Error
     internal sealed class Error(val description: String) : Exception(description) {
