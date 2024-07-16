@@ -231,17 +231,6 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
 
     // Method to update the display name if possible
     private fun handleDisplayNameChange(displayName: String?) {
-
-        // If we don't have a working network connection we'll decline the display name change and bail..
-        val haveNetworkConnection = NetworkUtils.haveValidNetworkConnection(this@SettingsActivity)
-        if (!haveNetworkConnection) {
-            binding.loader.isVisible = false
-            Log.w(TAG, "Declining attempt to change display name without network connection.")
-            Toast.makeText(this@SettingsActivity, R.string.profileErrorUpdate, Toast.LENGTH_LONG).show()
-            return
-        }
-
-        // ..otherwise we'll attempt to make the change.
         var failedToUpdateDisplayName = false
 
         // As long as we have a new display name to set..
@@ -279,9 +268,19 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
     ) {
         binding.loader.isVisible = true
 
-        // If we're not updating the profile picture then we must be updating the display name..
+        // If we don't have a working network connection we'll decline any profile change & bail as we can't sync it
+        val haveNetworkConnection = NetworkUtils.haveValidNetworkConnection(this@SettingsActivity)
+        if (!haveNetworkConnection) {
+            binding.loader.isVisible = false
+            Log.w(TAG, "Declining attempt to update profile - no network connection.")
+            Toast.makeText(this@SettingsActivity, R.string.profileErrorUpdate, Toast.LENGTH_LONG).show()
+            return
+        }
+
+        // If we're not updating the profile picture then we must be updating the display name - so
+        // we'll do that (which will pass or fail instantly) then skip over the profile picture
+        // updating section, below.
         if (!isUpdatingProfilePicture) {
-            // ..so we'll do so and bail without performing any profile picture change operations.
             handleDisplayNameChange(displayName)
             return
         }
@@ -296,31 +295,25 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             uploadProfilePicturePromise = ProfilePictureUtilities.upload(profilePicture, encodedProfileKey, this)
         } else {
             // If not then we must be removing the existing one.
-            // Note: To get a promise that will resolve / sync correctly we overwrite the existing profile picture with
-            // a 0 byte image.
+            // Note: To get a promise that will resolve / sync correctly we overwrite the existing
+            // profile picture with a 0 byte image.
             removingProfilePic = true
             val emptyByteArray = ByteArray(0)
             uploadProfilePicturePromise = ProfilePictureUtilities.upload(emptyByteArray, encodedProfileKey, this)
         }
 
-        // If the upload picture promise succeeded then we hit this successUi block
+        // If the upload or remove picture promise succeeded..
         uploadProfilePicturePromise.successUi {
 
-            // If we successfully removed the profile picture on the network then we can clear the
-            // local data - otherwise it's weird to fail the online section but it _looks_ like it
-            // worked because we cleared the local image (also it denies them the chance to retry
-            // removal if we do it locally, and may result in them having a visible profile picture
-            // everywhere EXCEPT on their own device!).
-            if (removingProfilePic) {
-                MessagingModuleConfiguration.shared.storage.clearUserPic()
-            }
+            // If we successfully removed the profile picture on the network then we can clear the local data
+            if (removingProfilePic) { MessagingModuleConfiguration.shared.storage.clearUserPic() }
 
             val userConfig = configFactory.user
             AvatarHelper.setAvatar(this, Address.fromSerialized(TextSecurePreferences.getLocalNumber(this)!!), profilePicture)
             TextSecurePreferences.setProfileAvatarId(this, profilePicture?.let { SecureRandom().nextInt() } ?: 0 )
             ProfileKeyUtil.setEncodedProfileKey(this, encodedProfileKey)
 
-            // new config
+            // Attempt to grab the details we require to update the profile picture
             val url = TextSecurePreferences.getProfilePictureURL(this)
             val profileKey = ProfileKeyUtil.getProfileKey(this)
 
@@ -334,9 +327,13 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             }
 
             ConfigurationMessageUtilities.forceSyncConfigurationNowIfNeeded(this@SettingsActivity)
+
+            // Update our visuals to display the new profile picture
+            binding.profilePictureView.recycle()
+            binding.profilePictureView.update()
         }
 
-        // Or if the promise failed to upload the new profile picture then we hit this failUi block
+        // Or if the upload or removal failed we'll inform the user appropriately
         uploadProfilePicturePromise.failUi {
             if (removingProfilePic) {
                 Log.e(TAG, "Failed to remove profile picture")
@@ -347,17 +344,8 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             }
         }
 
-        // Finally, regardless of whether the promise succeeded or failed, we always hit this `alwaysUi` block
-        uploadProfilePicturePromise.alwaysUi {
-            if (displayName != null) {
-                binding.btnGroupNameDisplay.text = displayName
-            }
-            if (isUpdatingProfilePicture) {
-                binding.profilePictureView.recycle() // Clear the cached image before updating
-                binding.profilePictureView.update()
-            }
-            binding.loader.isVisible = false
-        }
+        // Finally, regardless of success or failure, we always remove the loader animation
+        uploadProfilePicturePromise.alwaysUi { binding.loader.isVisible = false }
     }
     // endregion
 
