@@ -1242,73 +1242,50 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             }
 
         private fun getNotificationMmsMessageRecord(cursor: Cursor): NotificationMmsMessageRecord {
-            val id = cursor.getLong(cursor.getColumnIndexOrThrow(ID))
-            val dateSent = cursor.getLong(cursor.getColumnIndexOrThrow(NORMALIZED_DATE_SENT))
-            val dateReceived = cursor.getLong(
-                cursor.getColumnIndexOrThrow(
-                    NORMALIZED_DATE_RECEIVED
-                )
-            )
-            val threadId = cursor.getLong(cursor.getColumnIndexOrThrow(THREAD_ID))
-            val mailbox = cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_BOX))
-            val address = cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS))
-            val addressDeviceId = cursor.getInt(cursor.getColumnIndexOrThrow(ADDRESS_DEVICE_ID))
-            val recipient = getRecipientFor(address)
-            val contentLocation = cursor.getString(cursor.getColumnIndexOrThrow(CONTENT_LOCATION))
-            val transactionId = cursor.getString(cursor.getColumnIndexOrThrow(TRANSACTION_ID))
-            val messageSize = cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_SIZE))
-            val expiry = cursor.getLong(cursor.getColumnIndexOrThrow(EXPIRY))
-            val status = cursor.getInt(cursor.getColumnIndexOrThrow(STATUS))
-            val deliveryReceiptCount = cursor.getInt(
-                cursor.getColumnIndexOrThrow(
-                    DELIVERY_RECEIPT_COUNT
-                )
-            )
-            val readReceiptCount = if (isReadReceiptsEnabled(context)) cursor.getInt(cursor.getColumnIndexOrThrow(READ_RECEIPT_COUNT)) else 0
-            val hasMention = (cursor.getInt(cursor.getColumnIndexOrThrow(HAS_MENTION)) == 1)
-            val contentLocationBytes: ByteArray? = contentLocation?.takeUnless { it.isEmpty() }?.let(::toIsoBytes)
-            val transactionIdBytes: ByteArray? = transactionId?.takeUnless { it.isEmpty() }?.let(::toIsoBytes)
-            val slideDeck = SlideDeck(context, MmsNotificationAttachment(status, messageSize))
+            // Note: Additional details such as ADDRESS_DEVICE_ID, CONTENT_LOCATION, and TRANSACTION_ID are available if required.
+            val id                   = cursor.getLong(cursor.getColumnIndexOrThrow(ID))
+            val dateSent             = cursor.getLong(cursor.getColumnIndexOrThrow(NORMALIZED_DATE_SENT))
+            val dateReceived         = cursor.getLong(cursor.getColumnIndexOrThrow(NORMALIZED_DATE_RECEIVED))
+            val threadId             = cursor.getLong(cursor.getColumnIndexOrThrow(THREAD_ID))
+            val mailbox              = cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_BOX))
+            val address              = cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS))
+            val recipient            = getRecipientFor(address)
+            val messageSize          = cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_SIZE))
+            val expiry               = cursor.getLong(cursor.getColumnIndexOrThrow(EXPIRY))
+            val status               = cursor.getInt(cursor.getColumnIndexOrThrow(STATUS))
+            val deliveryReceiptCount = cursor.getInt(cursor.getColumnIndexOrThrow(DELIVERY_RECEIPT_COUNT))
+            val readReceiptCount     = if (isReadReceiptsEnabled(context)) cursor.getInt(cursor.getColumnIndexOrThrow(READ_RECEIPT_COUNT)) else 0
+            val hasMention           = (cursor.getInt(cursor.getColumnIndexOrThrow(HAS_MENTION)) == 1)
+            val slideDeck            = SlideDeck(context, MmsNotificationAttachment(status, messageSize))
+
             return NotificationMmsMessageRecord(
                 id, recipient, recipient,
                 dateSent, dateReceived, deliveryReceiptCount, threadId,
-                contentLocationBytes, messageSize, expiry, status,
-                transactionIdBytes, mailbox, slideDeck,
+                messageSize, expiry, status, mailbox, slideDeck,
                 readReceiptCount, hasMention
             )
         }
 
         private fun getMediaMmsMessageRecord(cursor: Cursor, getQuote: Boolean): MediaMmsMessageRecord {
-            val id = cursor.getLong(cursor.getColumnIndexOrThrow(ID))
-            val dateSent = cursor.getLong(cursor.getColumnIndexOrThrow(NORMALIZED_DATE_SENT))
-            val dateReceived = cursor.getLong(
-                cursor.getColumnIndexOrThrow(
-                    NORMALIZED_DATE_RECEIVED
-                )
-            )
-            val box = cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_BOX))
-            val threadId = cursor.getLong(cursor.getColumnIndexOrThrow(THREAD_ID))
-            val address = cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS))
-            val addressDeviceId = cursor.getInt(cursor.getColumnIndexOrThrow(ADDRESS_DEVICE_ID))
-            val deliveryReceiptCount = cursor.getInt(
-                cursor.getColumnIndexOrThrow(
-                    DELIVERY_RECEIPT_COUNT
-                )
-            )
-            var readReceiptCount = cursor.getInt(cursor.getColumnIndexOrThrow(READ_RECEIPT_COUNT))
-            val body = cursor.getString(cursor.getColumnIndexOrThrow(BODY))
-            val partCount = cursor.getInt(cursor.getColumnIndexOrThrow(PART_COUNT))
-            val mismatchDocument = cursor.getString(
-                cursor.getColumnIndexOrThrow(
-                    MISMATCHED_IDENTITIES
-                )
-            )
-            val networkDocument = cursor.getString(cursor.getColumnIndexOrThrow(NETWORK_FAILURE))
-            val subscriptionId = cursor.getInt(cursor.getColumnIndexOrThrow(SUBSCRIPTION_ID))
-            val expiresIn = cursor.getLong(cursor.getColumnIndexOrThrow(EXPIRES_IN))
-            val expireStarted = cursor.getLong(cursor.getColumnIndexOrThrow(EXPIRE_STARTED))
-            val unidentified = cursor.getInt(cursor.getColumnIndexOrThrow(UNIDENTIFIED)) == 1
-            val hasMention = cursor.getInt(cursor.getColumnIndexOrThrow(HAS_MENTION)) == 1
+            val id                   = cursor.getLong(cursor.getColumnIndexOrThrow(ID))
+            val dateSent             = cursor.getLong(cursor.getColumnIndexOrThrow(NORMALIZED_DATE_SENT))
+            val dateReceived         = cursor.getLong(cursor.getColumnIndexOrThrow(NORMALIZED_DATE_RECEIVED))
+            val box                  = cursor.getLong(cursor.getColumnIndexOrThrow(MESSAGE_BOX))
+            val threadId             = cursor.getLong(cursor.getColumnIndexOrThrow(THREAD_ID))
+            val address              = cursor.getString(cursor.getColumnIndexOrThrow(ADDRESS))
+            val addressDeviceId      = cursor.getInt(cursor.getColumnIndexOrThrow(ADDRESS_DEVICE_ID))
+            val deliveryReceiptCount = cursor.getInt(cursor.getColumnIndexOrThrow(DELIVERY_RECEIPT_COUNT))
+            var readReceiptCount     = cursor.getInt(cursor.getColumnIndexOrThrow(READ_RECEIPT_COUNT))
+            val body                 = cursor.getString(cursor.getColumnIndexOrThrow(BODY))
+            val partCount            = cursor.getInt(cursor.getColumnIndexOrThrow(PART_COUNT))
+            val mismatchDocument     = cursor.getString(cursor.getColumnIndexOrThrow(MISMATCHED_IDENTITIES))
+            val networkDocument      = cursor.getString(cursor.getColumnIndexOrThrow(NETWORK_FAILURE))
+            val subscriptionId       = cursor.getInt(cursor.getColumnIndexOrThrow(SUBSCRIPTION_ID))
+            val expiresIn            = cursor.getLong(cursor.getColumnIndexOrThrow(EXPIRES_IN))
+            val expireStarted        = cursor.getLong(cursor.getColumnIndexOrThrow(EXPIRE_STARTED))
+            val unidentified         = cursor.getInt(cursor.getColumnIndexOrThrow(UNIDENTIFIED)) == 1
+            val hasMention           = cursor.getInt(cursor.getColumnIndexOrThrow(HAS_MENTION)) == 1
+
             if (!isReadReceiptsEnabled(context)) {
                 readReceiptCount = 0
             }

@@ -346,18 +346,15 @@ public class DefaultMessageNotifier implements MessageNotifier {
     builder.setThread(notifications.get(0).getRecipient());
     builder.setMessageCount(notificationState.getMessageCount());
 
-    // TODO: Removing highlighting mentions in the notification because this context is the libsession one which
-    // TODO: doesn't have access to the `R.attr.message_sent_text_color` and `R.attr.message_received_text_color`
-    // TODO: attributes to perform the colour lookup. Also, it makes little sense to highlight the mentions using
-    // TODO: the app theme as it may result in insufficient contrast with the notification background which will
-    // TODO: be using the SYSTEM theme.
     CharSequence builderCS = text == null ? "" : text;
-    SpannableString ss = MentionUtilities.highlightMentions(builderCS,
+    SpannableString ss = MentionUtilities.highlightMentions(
+            builderCS,
             false,
             false,
             true,
             bundled ? notifications.get(0).getThreadId() : 0,
-            context);
+            context
+    );
 
     builder.setPrimaryMessageBody(recipient,
                                   notifications.get(0).getIndividualRecipient(),
@@ -532,8 +529,7 @@ public class DefaultMessageNotifier implements MessageNotifier {
         slideDeck = ((MediaMmsMessageRecord)record).getSlideDeck();
         body = SpanUtil.italic(slideDeck.getBody());
 
-      // If this is a notification about a multimedia message, but it's NOT (perhaps because it's a `MediaMmsMessageRecord` that for some
-      // reason returns false), AND it contains a slide deck with at least one slide..
+      // If this is a notification about a multimedia message, but it's not ITSELF a multimedia notification AND it contains a slide deck with at least one slide..
       } else if (record.isMms() && !record.isMmsNotification() && !((MmsMessageRecord) record).getSlideDeck().getSlides().isEmpty()) {
         slideDeck = ((MediaMmsMessageRecord)record).getSlideDeck();
         String message      = slideDeck.getBody() + ": " + record.getBody();
