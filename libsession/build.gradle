@@ -10,7 +10,6 @@ android {
     defaultConfig {
         minSdkVersion androidMinimumSdkVersion
 
-
         def useTestnet = project.hasProperty('testnet')
         buildConfigField "boolean", "USE_TESTNET", "$useTestnet"
     }

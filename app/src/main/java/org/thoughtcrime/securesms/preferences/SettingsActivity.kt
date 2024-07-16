@@ -35,6 +35,7 @@ import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
+import org.session.libsession.BuildConfig.USE_TESTNET
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.avatars.ProfileContactPhoto
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -114,7 +115,7 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             clearAllDataButton.setOnClickListener { clearAllData() }
 
             val gitCommitFirstSixChars = BuildConfig.GIT_HASH.take(6)
-            val isTestNetString = if (org.session.libsession.BuildConfig.USE_TESTNET) " testnet" else ""
+            val isTestNetString = if (USE_TESTNET) " testnet" else ""
             versionTextView.text = String.format(getString(R.string.version_s), "$VERSION_NAME ($VERSION_CODE - $gitCommitFirstSixChars)$isTestNetString")
         }
     }
