@@ -16,6 +16,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -39,12 +40,16 @@ import org.thoughtcrime.securesms.util.fadeIn
 import org.thoughtcrime.securesms.util.fadeOut
 import org.thoughtcrime.securesms.util.getAccentColor
 import org.thoughtcrime.securesms.util.getColorWithID
+import javax.inject.Inject
 
-class PathActivity : PassphraseRequiredActionBarActivity() {
+@AndroidEntryPoint
+class PathActivity: PassphraseRequiredActionBarActivity() {
     private lateinit var binding: ActivityPathBinding
     private val broadcastReceivers = mutableListOf<BroadcastReceiver>()
 
-    // region Lifecycle
+    @Inject
+    lateinit var ip2Country: IP2Country
+
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {
         super.onCreate(savedInstanceState, isReady)
         binding = ActivityPathBinding.inflate(layoutInflater)
@@ -89,9 +94,7 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
         }
         super.onDestroy()
     }
-    // endregion
 
-    // region Updating
     private fun handleBuildingPathsEvent() { update(false) }
     private fun handlePathsBuiltEvent() { update(false) }
     private fun handleOnionRequestPathCountriesLoaded() { update(false) }
@@ -126,9 +129,7 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
             }
         }
     }
-    // endregion
 
-    // region General
     private fun getPathRow(title: String, subtitle: String?, location: LineView.Location, dotAnimationStartDelay: Long, dotAnimationRepeatInterval: Long): LinearLayout {
         val mainContainer = LinearLayout(this)
         mainContainer.orientation = LinearLayout.HORIZONTAL
@@ -165,16 +166,10 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
 
     private fun getPathRow(snode: Snode, location: LineView.Location, dotAnimationStartDelay: Long, dotAnimationRepeatInterval: Long, isGuardSnode: Boolean): LinearLayout {
         val title = if (isGuardSnode) resources.getString(R.string.activity_path_guard_node_row_title) else resources.getString(R.string.activity_path_service_node_row_title)
-        val subtitle = if (IP2Country.isInitialized) {
-            IP2Country.shared.countryNamesCache[snode.ip] ?: resources.getString(R.string.activity_path_resolving_progress)
-        } else {
-            resources.getString(R.string.activity_path_resolving_progress)
-        }
+        val subtitle = ip2Country.countryNamesCache[snode.ip] ?: resources.getString(R.string.activity_path_resolving_progress)
         return getPathRow(title, subtitle, location, dotAnimationStartDelay, dotAnimationRepeatInterval)
     }
-    // endregion
 
-    // region Interaction
     private fun learnMore() {
         try {
             val url = "https://getsession.org/faq/#onion-routing"
@@ -184,9 +179,7 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
             Toast.makeText(this, R.string.invalid_url, Toast.LENGTH_SHORT).show()
         }
     }
-    // endregion
 
-    // region Line View
     private class LineView : RelativeLayout {
         private lateinit var location: Location
         private var dotAnimationStartDelay: Long = 0
@@ -302,5 +295,4 @@ class PathActivity : PassphraseRequiredActionBarActivity() {
             private const val EXPAND_ANIM_DELAY_MILLS = 1000L
         }
     }
-    // endregion
 }
