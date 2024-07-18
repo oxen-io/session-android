@@ -429,12 +429,14 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         cursor.getString(cursor.getColumnIndexOrThrow(SHARED_CONTACTS))
             ?.takeUnless { it.isEmpty() }
             ?.let(::JSONArray)
-            ?.map { Contact.deserialize(it.toString()) }?.map { contact ->
-                contact.avatar?.takeIf { it.attachmentId != null }?.run {
-                    Contact.Avatar(attachmentId, attachmentIdMap[attachmentId], isProfile)
-                        .let { Contact(contact, it) }
-                } ?: contact
-            } ?: emptyList()
+            ?.map(JSONArray::getString)
+            ?.map(Contact::deserialize)
+            ?.map { contact ->
+                contact.avatar?.takeIf { it.attachmentId != null }
+                    ?.run { Contact.Avatar(attachmentId, attachmentIdMap[attachmentId], isProfile) }
+                    ?.let { Contact(contact, it) }
+                    ?: contact
+            }?.toList() ?: emptyList()
     } catch (e: JSONException) {
         Log.w(TAG, "Failed to parse shared contacts.", e)
         emptyList()
@@ -451,13 +453,13 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         cursor.getString(cursor.getColumnIndexOrThrow(LINK_PREVIEWS))
             ?.takeUnless { it.isEmpty() }
             ?.let(::JSONArray)
-            ?.map{ it.toString() }
+            ?.map(JSONArray::getString)
             ?.map(LinkPreview::deserialize)
             ?.map { preview ->
                 preview.attachmentId?.let { id ->
                     attachmentIdMap[id]?.let { LinkPreview(preview.url, preview.title, it) }
                 } ?: preview
-            } ?: emptyList()
+            }?.toList() ?: emptyList()
     } catch (e: JSONException) {
         Log.w(TAG, "Failed to parse shared contacts.", e)
         emptyList()

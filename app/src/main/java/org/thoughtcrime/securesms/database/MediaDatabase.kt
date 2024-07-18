@@ -17,7 +17,7 @@ class MediaDatabase(context: Context?, databaseHelper: SQLCipherOpenHelper?) : D
 ) {
     fun getGalleryMediaForThread(threadId: Long): Cursor {
         val database: SQLiteDatabase = databaseHelper.readableDatabase
-        val cursor = database.rawQuery(GALLERY_MEDIA_QUERY, arrayOf(threadId.toString() + ""))
+        val cursor = database.rawQuery(GALLERY_MEDIA_QUERY, arrayOf(threadId.toString()))
         setNotifyConversationListeners(cursor, threadId)
         return cursor
     }
@@ -31,7 +31,7 @@ class MediaDatabase(context: Context?, databaseHelper: SQLCipherOpenHelper?) : D
     }
 
     fun getDocumentMediaForThread(threadId: Long): Cursor =
-        databaseHelper.readableDatabase.rawQuery(DOCUMENT_MEDIA_QUERY, arrayOf(threadId.toString() + ""))
+        databaseHelper.readableDatabase.rawQuery(DOCUMENT_MEDIA_QUERY, arrayOf(threadId.toString()))
             .also { setNotifyConversationListeners(it, threadId) }
 
     class MediaRecord private constructor(

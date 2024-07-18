@@ -377,7 +377,7 @@ class AttachmentDatabase(
             null,
             null
         ).use { cursor ->
-            cursor.takeIf { it.moveToFirst() && ! it.isNull(0) }?.run {
+            cursor.takeIf { it.moveToFirst() && !it.isNull(0) }?.run {
                 DataInfo(
                     File(getString(0)),
                     getLong(1),
@@ -432,38 +432,28 @@ class AttachmentDatabase(
                     )
                 )
 
-                for (i in 0 until array.length()) {
-                    val `object` = SaneJSONObject(array.getJSONObject(i))
-
-                    if (!`object`.isNull(ROW_ID)) {
-                        result.add(
-                            DatabaseAttachment(
-                                AttachmentId(
-                                    `object`.getLong(ROW_ID), `object`.getLong(
-                                        UNIQUE_ID
-                                    )
-                                ),
-                                `object`.getLong(MMS_ID),
-                                !TextUtils.isEmpty(`object`.getString(DATA)),
-                                !TextUtils.isEmpty(`object`.getString(THUMBNAIL)),
-                                `object`.getString(CONTENT_TYPE),
-                                `object`.getInt(TRANSFER_STATE),
-                                `object`.getLong(SIZE),
-                                `object`.getString(FILE_NAME),
-                                `object`.getString(CONTENT_LOCATION),
-                                `object`.getString(CONTENT_DISPOSITION),
-                                `object`.getString(NAME),
-                                null,
-                                `object`.getString(FAST_PREFLIGHT_ID),
-                                `object`.getInt(VOICE_NOTE) == 1,
-                                `object`.getInt(WIDTH),
-                                `object`.getInt(HEIGHT),
-                                `object`.getInt(QUOTE) == 1,
-                                `object`.getString(CAPTION),
-                                ""
-                            )
-                        ) // TODO: Not sure if this will break something
-                    }
+                result += array.asObjectSequence().filter { !it.isNull(ROW_ID) }.map {
+                    DatabaseAttachment(
+                        AttachmentId(it.getLong(ROW_ID), it.getLong(UNIQUE_ID)),
+                        it.getLong(MMS_ID),
+                        !TextUtils.isEmpty(it.getString(DATA)),
+                        !TextUtils.isEmpty(it.getString(THUMBNAIL)),
+                        it.getString(CONTENT_TYPE),
+                        it.getInt(TRANSFER_STATE),
+                        it.getLong(SIZE),
+                        it.getString(FILE_NAME),
+                        it.getString(CONTENT_LOCATION),
+                        it.getString(CONTENT_DISPOSITION),
+                        it.getString(NAME),
+                        null,
+                        it.getString(FAST_PREFLIGHT_ID),
+                        it.getInt(VOICE_NOTE) == 1,
+                        it.getInt(WIDTH),
+                        it.getInt(HEIGHT),
+                        it.getInt(QUOTE) == 1,
+                        it.getString(CAPTION),
+                        ""
+                    )
                 }
 
                 return ArrayList(result)
