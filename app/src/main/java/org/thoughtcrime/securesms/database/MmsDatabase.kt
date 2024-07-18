@@ -353,7 +353,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             val contacts = getSharedContacts(cursor, associatedAttachments)
             val contactAttachments: Set<Attachment> = contacts.mapNotNull { it.avatarAttachment }.toSet()
             val previews = getLinkPreviews(cursor, associatedAttachments)
-            val previewAttachments = previews.mapNotNull { it.getThumbnail().orNull() }
+            val previewAttachments = previews.mapNotNull { it.thumbnail.orNull() }
             val attachments = associatedAttachments.filterNot { it.isQuote || it in contactAttachments || it in previewAttachments }
             val recipient = Recipient.from(context, fromSerialized(address), false)
             val quote = quoteId.takeIf { it > 0 && (!quoteText.isNullOrEmpty() || quoteAttachments.isNotEmpty()) }?.let {
@@ -619,7 +619,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         val db = databaseHelper.writableDatabase
         val partsDatabase = get(context).attachmentDatabase()
         val contactAttachments = sharedContacts.mapNotNull { it.avatarAttachment }
-        val previewAttachments = linkPreviews.mapNotNull { it.getThumbnail().orNull() }
+        val previewAttachments = linkPreviews.mapNotNull { it.thumbnail.orNull() }
         val allAttachments = buildList {
             addAll(attachments)
             addAll(contactAttachments)
@@ -819,8 +819,8 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
         for (preview in previews) {
             try {
                 var attachmentId: AttachmentId? = null
-                if (preview!!.getThumbnail().isPresent) {
-                    attachmentId = insertedAttachmentIds[preview.getThumbnail().get()]
+                if (preview!!.thumbnail.isPresent) {
+                    attachmentId = insertedAttachmentIds[preview.thumbnail.get()]
                 }
                 val updatedPreview = LinkPreview(
                     preview.url, preview.title, attachmentId
@@ -1121,7 +1121,7 @@ class MmsDatabase(context: Context, databaseHelper: SQLCipherOpenHelper) : Messa
             val contactAttachments: Set<Attachment> = contacts.mapNotNull { it.avatarAttachment }.toSet()
             val previews: List<LinkPreview?> = getLinkPreviews(cursor, attachments)
             val previewAttachments: Set<Attachment?> =
-                previews.mapNotNull { it?.getThumbnail()?.orNull() }.toSet()
+                previews.mapNotNull { it?.thumbnail?.orNull() }.toSet()
             val slideDeck = getSlideDeck(
                 attachments.filterNot { it in contactAttachments || it in previewAttachments }
             )
