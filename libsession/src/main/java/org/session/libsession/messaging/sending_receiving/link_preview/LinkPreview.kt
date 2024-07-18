@@ -14,8 +14,9 @@ data class LinkPreview(
     @JsonProperty val attachmentId: AttachmentId?,
     @JsonIgnore var thumbnail: Attachment?
 ) {
-    constructor(url: String, title: String, thumbnail: DatabaseAttachment): this(url, title, thumbnail.attachmentId, thumbnail)
+    constructor(url: String, title: String): this(url, title, null, null)
     constructor(url: String, title: String, thumbnail: Attachment?): this(url, title, null, thumbnail)
+    constructor(url: String, title: String, thumbnail: DatabaseAttachment): this(url, title, thumbnail.attachmentId, thumbnail)
     constructor(
         @JsonProperty("url") url: String,
         @JsonProperty("title") title: String,

@@ -39,9 +39,9 @@ class LinkPreviewView : LinearLayout {
         val linkPreview = message.linkPreviews.first()
         url = linkPreview.url
         // Thumbnail
-        if (linkPreview.thumbnail.isPresent) {
+        linkPreview.thumbnail?.let {
             // This internally fetches the thumbnail
-            binding.thumbnailImageView.root.setImageResource(glide, ImageSlide(context, linkPreview.thumbnail.get()), isPreview = false)
+            binding.thumbnailImageView.root.setImageResource(glide, ImageSlide(context, it), isPreview = false)
             binding.thumbnailImageView.root.loadIndicator.isVisible = false
         }
         // Title
