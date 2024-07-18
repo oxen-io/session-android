@@ -30,19 +30,17 @@ abstract class Database @SuppressLint("WrongConstant") constructor(
   @JvmField protected val context: Context,
   @JvmField protected var databaseHelper: SQLCipherOpenHelper
 ) {
+    protected val readableDatabase: SQLiteDatabase = databaseHelper.readableDatabase
+    protected val writableDatabase: SQLiteDatabase = databaseHelper.writableDatabase
+
     private val conversationListNotificationDebouncer: WindowDebouncer =
-        ApplicationContext.getInstance(
-            context
-        ).conversationListDebouncer
+        ApplicationContext.getInstance(context).conversationListDebouncer
     private val conversationListUpdater = Runnable {
-        context.contentResolver.notifyChange(
-            DatabaseContentProviders.ConversationList.CONTENT_URI,
-            null
-        )
+        context.contentResolver.notifyChange(DatabaseContentProviders.ConversationList.CONTENT_URI, null)
     }
 
     protected fun notifyConversationListeners(threadIds: Set<Long>) {
-        for (threadId in threadIds) notifyConversationListeners(threadId)
+        threadIds.forEach(::notifyConversationListeners)
     }
 
     protected fun notifyConversationListeners(threadId: Long) {
@@ -95,12 +93,6 @@ abstract class Database @SuppressLint("WrongConstant") constructor(
     fun reset(databaseHelper: SQLCipherOpenHelper) {
         this.databaseHelper = databaseHelper
     }
-
-    protected val readableDatabase: SQLiteDatabase
-        get() = databaseHelper.readableDatabase
-
-    protected val writableDatabase: SQLiteDatabase
-        get() = databaseHelper.writableDatabase
 
     companion object {
         const val ID_WHERE: String = "_id = ?"
