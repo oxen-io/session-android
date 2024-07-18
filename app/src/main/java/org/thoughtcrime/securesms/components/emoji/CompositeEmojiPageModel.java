@@ -22,7 +22,7 @@ public class CompositeEmojiPageModel implements EmojiPageModel {
 
   @Override
   public String getKey() {
-    return Util.hasItems(models) ? models.get(0).getKey() : "";
+    return models.isEmpty() ? "" : models.get(0).getKey();
   }
 
   public int getIconAttr() {
