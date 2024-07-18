@@ -181,7 +181,7 @@ interface StorageProtocol {
     fun setLastLegacyRecipient(threadRecipient: String, senderRecipient: String?)
 
     // Contacts
-    fun getContactWithSessionID(sessionID: String): Contact?
+    fun getContactWithAccountID(accountID: String): Contact?
     fun getAllContacts(): Set<Contact>
     fun setContact(contact: Contact)
     fun getRecipientForThread(threadId: Long): Recipient?

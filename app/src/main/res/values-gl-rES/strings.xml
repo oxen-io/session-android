@@ -515,17 +515,14 @@
     <string name="copied_to_clipboard">Copiado ao portapapeis</string>
     <string name="next">Seguinte</string>
     <string name="share">Partillar</string>
-    <string name="invalid_session_id">ID de Session inválido</string>
+    <string name="invalid_account_id">ID de Session inválido</string>
     <string name="cancel">Cancelar</string>
-    <string name="your_session_id">O teu ID de Session</string>
-    <string name="activity_landing_title_2">A túa sesión comeza aquí...</string>
-    <string name="activity_landing_register_button_title">Crear ID de Session</string>
-    <string name="activity_landing_restore_button_title">Continuar coa túa sesión</string>
+    <string name="your_account_id">O teu ID de Session</string>
     <string name="view_fake_chat_bubble_1">Que é Session?</string>
     <string name="view_fake_chat_bubble_2">É unha app de mensaxería cifrada e descentralizada</string>
     <string name="view_fake_chat_bubble_3">Entón non recompila a miña información persoal ou os metadatos das miñas conversas? Como funciona?</string>
     <string name="view_fake_chat_bubble_4">Empregando unha combinación de tecnoloxías avanzadas de encamiñamento anónimo e cifrado punto-a-punto.</string>
-    <string name="activity_register_title">Di ola ao teu ID de Session</string>
+
     <string name="activity_home_empty_state_button_title">Iniciar unha sesión</string>
     <string name="activity_home_leave_group_dialog_message">Tes a certeza de querer abandonar este grupo?</string>
     <string name="activity_home_leaving_group_failed_message">"Non foi posible abandonar o grupo"</string>
@@ -534,7 +531,7 @@
     <string name="activity_path_device_row_title">Ti</string>
     <string name="activity_path_resolving_progress">Procesando…</string>
     <string name="activity_create_private_chat_title">Nova sesión</string>
-    <string name="activity_create_private_chat_enter_session_id_tab_title">Introducir ID de Session</string>
+    <string name="activity_create_private_chat_enter_account_id_tab_title">Introducir ID de Session</string>
     <string name="activity_create_private_chat_scan_qr_code_tab_title">Escanear código QR</string>
     <string name="fragment_scan_qr_code_grant_camera_access_button_title">Conceder acceso á cámara</string>
     <string name="activity_create_closed_group_title">Crear grupo pechado</string>
@@ -564,7 +561,7 @@
     <string name="activity_edit_closed_group_group_name_too_long_error">Introduce un nome de grupo máis curto, por favor</string>
     <string name="activity_edit_closed_group_not_enough_group_members_error">Os grupos deben ter polo menos 1 membro</string>
     <string name="fragment_edit_group_bottom_sheet_remove">Eliminar usuario do grupo</string>
-    <string name="activity_conversation_menu_copy_session_id">Copiar ID de Session</string>
+    <string name="activity_conversation_menu_copy_account_id">Copiar ID de Session</string>
     <string name="dialog_join_open_group_title">Entrar no grupo %s?</string>
     <string name="dialog_join_open_group_explanation">Tes a certeza de querer entrar no grupo aberto %s?</string>
     <string name="activity_conversation_blocked_banner_text">%s está bloqueado. Desbloquealo?</string>

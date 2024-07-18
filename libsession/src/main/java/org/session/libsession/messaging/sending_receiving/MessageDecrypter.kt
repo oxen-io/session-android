@@ -6,7 +6,7 @@ import com.goterl.lazysodium.interfaces.Box
 import com.goterl.lazysodium.interfaces.Sign
 import org.session.libsession.messaging.MessagingModuleConfiguration
 import org.session.libsession.messaging.sending_receiving.MessageReceiver.Error
-import org.session.libsession.messaging.utilities.SessionId
+import org.session.libsession.messaging.utilities.AccountId
 import org.session.libsession.messaging.utilities.SodiumUtilities
 import org.session.libsession.messaging.utilities.SodiumUtilities.sodium
 import org.session.libsignal.crypto.ecc.ECKeyPair
@@ -58,7 +58,7 @@ object MessageDecrypter {
         val senderX25519PublicKey = ByteArray(Sign.CURVE25519_PUBLICKEYBYTES)
         sodium.convertPublicKeyEd25519ToCurve25519(senderX25519PublicKey, senderED25519PublicKey)
 
-        val id = SessionId(IdPrefix.STANDARD, senderX25519PublicKey)
+        val id = AccountId(IdPrefix.STANDARD, senderX25519PublicKey)
         return Pair(plaintext, id.hexString)
     }
 
@@ -104,7 +104,7 @@ object MessageDecrypter {
         // Get the sender's X25519 public key
         val senderX25519PublicKey = SodiumUtilities.toX25519(senderEdPublicKey) ?: throw Error.InvalidSignature
 
-        val id = SessionId(IdPrefix.STANDARD, senderX25519PublicKey)
+        val id = AccountId(IdPrefix.STANDARD, senderX25519PublicKey)
         return Pair(plaintext, id.hexString)
     }
 }

@@ -28,6 +28,9 @@
     <attr name="ic_visibility_on" format="reference" />
     <attr name="ic_visibility_off" format="reference" />
 
+    <attr name="lightCell" format="reference|color"/>
+    <attr name="onLightCell" format="reference|color"/>
+
     <attr name="accentColor" format="reference|color"/>
     <attr name="backgroundSecondary" format="reference|color"/>
     <attr name="prominentButtonColor" format="reference|color"/>

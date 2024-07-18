@@ -18,10 +18,12 @@ import org.session.libsession.utilities.TextSecurePreferences.Companion.CALL_NOT
 import org.session.libsession.utilities.TextSecurePreferences.Companion.CLASSIC_DARK
 import org.session.libsession.utilities.TextSecurePreferences.Companion.CLASSIC_LIGHT
 import org.session.libsession.utilities.TextSecurePreferences.Companion.FOLLOW_SYSTEM_SETTINGS
+import org.session.libsession.utilities.TextSecurePreferences.Companion.HIDE_PASSWORD
 import org.session.libsession.utilities.TextSecurePreferences.Companion.LAST_VACUUM_TIME
 import org.session.libsession.utilities.TextSecurePreferences.Companion.LEGACY_PREF_KEY_SELECTED_UI_MODE
 import org.session.libsession.utilities.TextSecurePreferences.Companion.OCEAN_DARK
 import org.session.libsession.utilities.TextSecurePreferences.Companion.OCEAN_LIGHT
+import org.session.libsession.utilities.TextSecurePreferences.Companion.SELECTED_ACCENT_COLOR
 import org.session.libsession.utilities.TextSecurePreferences.Companion.SELECTED_STYLE
 import org.session.libsession.utilities.TextSecurePreferences.Companion.SHOWN_CALL_NOTIFICATION
 import org.session.libsession.utilities.TextSecurePreferences.Companion.SHOWN_CALL_WARNING
@@ -30,6 +32,7 @@ import java.io.IOException
 import java.util.Arrays
 import java.util.Date
 import javax.inject.Inject
+import javax.inject.Singleton
 
 interface TextSecurePreferences {
 
@@ -115,8 +118,6 @@ interface TextSecurePreferences {
     fun isPassphraseTimeoutEnabled(): Boolean
     fun getPassphraseTimeoutInterval(): Int
     fun getLanguage(): String?
-    fun hasSeenWelcomeScreen(): Boolean
-    fun setHasSeenWelcomeScreen(value: Boolean)
     fun isNotificationsEnabled(): Boolean
     fun getNotificationRingtone(): Uri
     fun removeNotificationRingtone()
@@ -172,6 +173,7 @@ interface TextSecurePreferences {
     fun setLastVacuumNow()
     fun getFingerprintKeyGenerated(): Boolean
     fun setFingerprintKeyGenerated()
+    fun getSelectedAccentColor(): String?
     @StyleRes fun getAccentColorStyle(): Int?
     fun setAccentColorStyle(@StyleRes newColorStyle: Int?)
     fun getThemeStyle(): String
@@ -182,6 +184,8 @@ interface TextSecurePreferences {
     fun hasForcedNewConfig(): Boolean
     fun hasPreference(key: String): Boolean
     fun clearAll()
+    fun getHidePassword(): Boolean
+    fun setHidePassword(value: Boolean)
 
     companion object {
         val TAG = TextSecurePreferences::class.simpleName
@@ -210,7 +214,6 @@ interface TextSecurePreferences {
         const val THREAD_TRIM_ENABLED = "pref_trim_threads"
         const val LOCAL_NUMBER_PREF = "pref_local_number"
         const val REGISTERED_GCM_PREF = "pref_gcm_registered"
-        const val SEEN_WELCOME_SCREEN_PREF = "pref_seen_welcome_screen"
         const val UPDATE_APK_REFRESH_TIME_PREF = "pref_update_apk_refresh_time"
         const val UPDATE_APK_DOWNLOAD_ID = "pref_update_apk_download_id"
         const val UPDATE_APK_DIGEST = "pref_update_apk_digest"
@@ -283,6 +286,7 @@ interface TextSecurePreferences {
 
         const val SELECTED_STYLE = "pref_selected_style" // classic_dark/light, ocean_dark/light
         const val FOLLOW_SYSTEM_SETTINGS = "pref_follow_system" // follow system day/night
+        const val HIDE_PASSWORD = "pref_hide_password"
 
         const val LEGACY_PREF_KEY_SELECTED_UI_MODE = "SELECTED_UI_MODE" // this will be cleared upon launching app, for users migrating to theming build
         const val CLASSIC_DARK = "classic.dark"
@@ -701,15 +705,6 @@ interface TextSecurePreferences {
         }
 
         @JvmStatic
-        fun hasSeenWelcomeScreen(context: Context): Boolean {
-            return getBooleanPreference(context, SEEN_WELCOME_SCREEN_PREF, false)
-        }
-
-        fun setHasSeenWelcomeScreen(context: Context, value: Boolean) {
-            setBooleanPreference(context, SEEN_WELCOME_SCREEN_PREF, value)
-        }
-
-        @JvmStatic
         fun isNotificationsEnabled(context: Context): Boolean {
             return getBooleanPreference(context, NOTIFICATION_PREF, true)
         }
@@ -981,34 +976,6 @@ interface TextSecurePreferences {
             setBooleanPreference(context, FINGERPRINT_KEY_GENERATED, true)
         }
 
-        @JvmStatic @StyleRes
-        fun getAccentColorStyle(context: Context): Int? {
-            return when (getStringPreference(context, SELECTED_ACCENT_COLOR, ORANGE_ACCENT)) {
-                GREEN_ACCENT -> R.style.PrimaryGreen
-                BLUE_ACCENT -> R.style.PrimaryBlue
-                PURPLE_ACCENT -> R.style.PrimaryPurple
-                PINK_ACCENT -> R.style.PrimaryPink
-                RED_ACCENT -> R.style.PrimaryRed
-                ORANGE_ACCENT -> R.style.PrimaryOrange
-                YELLOW_ACCENT -> R.style.PrimaryYellow
-                else -> null
-            }
-        }
-
-        @JvmStatic
-        fun setAccentColorStyle(context: Context, @StyleRes newColor: Int?) {
-            setStringPreference(context, SELECTED_ACCENT_COLOR, when (newColor) {
-                R.style.PrimaryGreen -> GREEN_ACCENT
-                R.style.PrimaryBlue -> BLUE_ACCENT
-                R.style.PrimaryPurple -> PURPLE_ACCENT
-                R.style.PrimaryPink -> PINK_ACCENT
-                R.style.PrimaryRed -> RED_ACCENT
-                R.style.PrimaryOrange -> ORANGE_ACCENT
-                R.style.PrimaryYellow -> YELLOW_ACCENT
-                else -> null
-            })
-        }
-
         @JvmStatic
         fun clearAll(context: Context) {
             getDefaultSharedPreferences(context).edit().clear().commit()
@@ -1016,6 +983,7 @@ interface TextSecurePreferences {
     }
 }
 
+@Singleton
 class AppTextSecurePreferences @Inject constructor(
     @ApplicationContext private val context: Context
 ): TextSecurePreferences {
@@ -1361,14 +1329,6 @@ class AppTextSecurePreferences @Inject constructor(
         return getStringPreference(TextSecurePreferences.LANGUAGE_PREF, "zz")
     }
 
-    override fun hasSeenWelcomeScreen(): Boolean {
-        return getBooleanPreference(TextSecurePreferences.SEEN_WELCOME_SCREEN_PREF, false)
-    }
-
-    override fun setHasSeenWelcomeScreen(value: Boolean) {
-        setBooleanPreference(TextSecurePreferences.SEEN_WELCOME_SCREEN_PREF, value)
-    }
-
     override fun isNotificationsEnabled(): Boolean {
         return getBooleanPreference(TextSecurePreferences.NOTIFICATION_PREF, true)
     }
@@ -1620,13 +1580,12 @@ class AppTextSecurePreferences @Inject constructor(
         setBooleanPreference(TextSecurePreferences.FINGERPRINT_KEY_GENERATED, true)
     }
 
+    override fun getSelectedAccentColor(): String? =
+        getStringPreference(SELECTED_ACCENT_COLOR, null)
+
     @StyleRes
     override fun getAccentColorStyle(): Int? {
-        val prefColor = getStringPreference(
-            TextSecurePreferences.SELECTED_ACCENT_COLOR,
-            null
-        )
-        return when (prefColor) {
+        return when (getSelectedAccentColor()) {
             TextSecurePreferences.GREEN_ACCENT -> R.style.PrimaryGreen
             TextSecurePreferences.BLUE_ACCENT -> R.style.PrimaryBlue
             TextSecurePreferences.PURPLE_ACCENT -> R.style.PrimaryPurple
@@ -1711,4 +1670,9 @@ class AppTextSecurePreferences @Inject constructor(
         getDefaultSharedPreferences(context).edit().clear().commit()
     }
 
+    override fun getHidePassword() = getBooleanPreference(HIDE_PASSWORD, false)
+
+    override fun setHidePassword(value: Boolean) {
+        setBooleanPreference(HIDE_PASSWORD, value)
+    }
 }

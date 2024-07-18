@@ -24,7 +24,7 @@ object MentionsManager {
         val userPublicKey = storage.getUserPublicKey()
         // Gather candidates
         var candidates: List<Mention> = cache.mapNotNull { publicKey ->
-            val contact = storage.getContactWithSessionID(publicKey)
+            val contact = storage.getContactWithAccountID(publicKey)
             val displayName = contact?.displayName(context) ?: return@mapNotNull null
             Mention(publicKey, displayName)
         }

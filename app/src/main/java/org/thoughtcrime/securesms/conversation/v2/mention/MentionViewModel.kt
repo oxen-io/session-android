@@ -117,9 +117,9 @@ class MentionViewModel(
 
                 contactDatabase.getContacts(memberIDs).map { contact ->
                     Member(
-                        publicKey = contact.sessionID,
+                        publicKey = contact.accountID,
                         name = contact.displayName(contactContext).orEmpty(),
-                        isModerator = contact.sessionID in moderatorIDs,
+                        isModerator = contact.accountID in moderatorIDs,
                     )
                 }
             }

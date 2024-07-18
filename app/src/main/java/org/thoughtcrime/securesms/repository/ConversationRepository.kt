@@ -99,7 +99,7 @@ class DefaultConversationRepository @Inject constructor(
         if (!recipient.isOpenGroupInboxRecipient) return null
         return Recipient.from(
             context,
-            Address.fromSerialized(GroupUtil.getDecodedOpenGroupInboxSessionId(recipient.address.serialize())),
+            Address.fromSerialized(GroupUtil.getDecodedOpenGroupInboxAccountId(recipient.address.serialize())),
             false
         )
     }
@@ -281,9 +281,9 @@ class DefaultConversationRepository @Inject constructor(
 
     override suspend fun banUser(threadId: Long, recipient: Recipient): ResultOf<Unit> =
         suspendCoroutine { continuation ->
-            val sessionID = recipient.address.toString()
+            val accountID = recipient.address.toString()
             val openGroup = lokiThreadDb.getOpenGroupChat(threadId)!!
-            OpenGroupApi.ban(sessionID, openGroup.room, openGroup.server)
+            OpenGroupApi.ban(accountID, openGroup.room, openGroup.server)
                 .success {
                     continuation.resume(ResultOf.Success(Unit))
                 }.fail { error ->
@@ -293,11 +293,11 @@ class DefaultConversationRepository @Inject constructor(
 
     override suspend fun banAndDeleteAll(threadId: Long, recipient: Recipient): ResultOf<Unit> =
         suspendCoroutine { continuation ->
-            // Note: This sessionId could be the blinded Id
-            val sessionID = recipient.address.toString()
+            // Note: This accountId could be the blinded Id
+            val accountID = recipient.address.toString()
             val openGroup = lokiThreadDb.getOpenGroupChat(threadId)!!
 
-            OpenGroupApi.banAndDeleteAll(sessionID, openGroup.room, openGroup.server)
+            OpenGroupApi.banAndDeleteAll(accountID, openGroup.room, openGroup.server)
                 .success {
                     continuation.resume(ResultOf.Success(Unit))
                 }.fail { error ->

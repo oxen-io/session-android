@@ -57,9 +57,9 @@ object ConversationMenuHelper {
         if (!isOpenGroup && (thread.hasApprovedMe() || thread.isClosedGroupRecipient || thread.isLocalNumber)) {
             inflater.inflate(R.menu.menu_conversation_expiration, menu)
         }
-        // One-on-one chat menu allows copying the session id
+        // One-on-one chat menu allows copying the account id
         if (thread.isContactRecipient) {
-            inflater.inflate(R.menu.menu_conversation_copy_session_id, menu)
+            inflater.inflate(R.menu.menu_conversation_copy_account_id, menu)
         }
         // One-on-one chat menu (options that should only be present for one-on-one chats)
         if (thread.isContactRecipient) {
@@ -135,7 +135,7 @@ object ConversationMenuHelper {
             R.id.menu_unblock -> { unblock(context, thread) }
             R.id.menu_block -> { block(context, thread, deleteThread = false) }
             R.id.menu_block_delete -> { blockAndDelete(context, thread) }
-            R.id.menu_copy_session_id -> { copySessionID(context, thread) }
+            R.id.menu_copy_account_id -> { copyAccountID(context, thread) }
             R.id.menu_copy_open_group_url -> { copyOpenGroupUrl(context, thread) }
             R.id.menu_edit_group -> { editClosedGroup(context, thread) }
             R.id.menu_leave_group -> { leaveClosedGroup(context, thread) }
@@ -246,10 +246,10 @@ object ConversationMenuHelper {
         listener.block(deleteThread = true)
     }
 
-    private fun copySessionID(context: Context, thread: Recipient) {
+    private fun copyAccountID(context: Context, thread: Recipient) {
         if (!thread.isContactRecipient) { return }
         val listener = context as? ConversationMenuListener ?: return
-        listener.copySessionID(thread.address.toString())
+        listener.copyAccountID(thread.address.toString())
     }
 
     private fun copyOpenGroupUrl(context: Context, thread: Recipient) {
@@ -271,8 +271,8 @@ object ConversationMenuHelper {
 
         val group = DatabaseComponent.get(context).groupDatabase().getGroup(thread.address.toGroupString()).orNull()
         val admins = group.admins
-        val sessionID = TextSecurePreferences.getLocalNumber(context)
-        val isCurrentUserAdmin = admins.any { it.toString() == sessionID }
+        val accountID = TextSecurePreferences.getLocalNumber(context)
+        val isCurrentUserAdmin = admins.any { it.toString() == accountID }
         val message = if (isCurrentUserAdmin) {
             "Because you are the creator of this group it will be deleted for everyone. This cannot be undone."
         } else {
@@ -325,7 +325,7 @@ object ConversationMenuHelper {
     interface ConversationMenuListener {
         fun block(deleteThread: Boolean = false)
         fun unblock()
-        fun copySessionID(sessionId: String)
+        fun copyAccountID(accountId: String)
         fun copyOpenGroupUrl(thread: Recipient)
         fun showDisappearingMessages(thread: Recipient)
     }

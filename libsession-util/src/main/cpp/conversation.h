@@ -14,10 +14,10 @@ inline session::config::ConvoInfoVolatile *ptrToConvoInfo(JNIEnv *env, jobject o
 inline jobject serialize_one_to_one(JNIEnv *env, session::config::convo::one_to_one one_to_one) {
     jclass clazz = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$OneToOne");
     jmethodID constructor = env->GetMethodID(clazz, "<init>", "(Ljava/lang/String;JZ)V");
-    auto session_id = env->NewStringUTF(one_to_one.session_id.data());
+    auto account_id = env->NewStringUTF(one_to_one.session_id.data());
     auto last_read = one_to_one.last_read;
     auto unread = one_to_one.unread;
-    jobject serialized = env->NewObject(clazz, constructor, session_id, last_read, unread);
+    jobject serialized = env->NewObject(clazz, constructor, account_id, last_read, unread);
     return serialized;
 }
 
@@ -55,7 +55,7 @@ inline jobject serialize_any(JNIEnv *env, session::config::convo::any any) {
 
 inline session::config::convo::one_to_one deserialize_one_to_one(JNIEnv *env, jobject info, session::config::ConvoInfoVolatile *conf) {
     auto clazz = env->FindClass("network/loki/messenger/libsession_util/util/Conversation$OneToOne");
-    auto id_getter = env->GetFieldID(clazz, "sessionId", "Ljava/lang/String;");
+    auto id_getter = env->GetFieldID(clazz, "accountId", "Ljava/lang/String;");
     auto last_read_getter = env->GetFieldID(clazz, "lastRead", "J");
     auto unread_getter = env->GetFieldID(clazz, "unread", "Z");
     jstring id = static_cast<jstring>(env->GetObjectField(info, id_getter));

@@ -157,8 +157,8 @@
         <item name="android:layout">@layout/preference_category_session</item>
     </style>
 
-    <style name="SessionIDTextView">
-        <item name="android:background">@drawable/session_id_text_view_background</item>
+    <style name="AccountIdTextView">
+        <item name="android:background">@drawable/account_id_text_view_background</item>
         <item name="android:padding">@dimen/medium_spacing</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">?android:textColorPrimary</item>
@@ -167,7 +167,7 @@
     </style>
 
     <style name="SessionEditText">
-        <item name="android:background">@drawable/session_id_text_view_background</item>
+        <item name="android:background">@drawable/account_id_text_view_background</item>
         <item name="android:paddingLeft">@dimen/medium_spacing</item>
         <item name="android:paddingTop">30dp</item>
         <item name="android:paddingRight">@dimen/medium_spacing</item>
@@ -180,7 +180,7 @@
     </style>
 
     <style name="SmallSessionEditText">
-        <item name="android:background">@drawable/session_id_text_view_background</item>
+        <item name="android:background">@drawable/account_id_text_view_background</item>
         <item name="android:paddingLeft">@dimen/medium_spacing</item>
         <item name="android:paddingTop">@dimen/medium_spacing</item>
         <item name="android:paddingRight">@dimen/medium_spacing</item>
@@ -204,28 +204,6 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <style name="FakeChatViewMessageBubble">
-        <item name="android:paddingLeft">@dimen/medium_spacing</item>
-        <item name="android:paddingTop">12dp</item>
-        <item name="android:paddingRight">@dimen/medium_spacing</item>
-        <item name="android:paddingBottom">12dp</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:elevation">0dp</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
-    </style>
-
-    <style name="FakeChatViewMessageBubble.Incoming">
-        <item name="android:background">@drawable/fake_chat_view_incoming_message_background</item>
-        <item name="android:elevation">10dp</item>
-        <item name="android:textColor">?message_received_text_color</item>
-    </style>
-
-    <style name="FakeChatViewMessageBubble.Outgoing">
-        <item name="android:background">@drawable/fake_chat_view_outgoing_message_background</item>
-        <item name="android:elevation">10dp</item>
-        <item name="android:textColor">?message_sent_text_color</item>
-    </style>
     <!-- Session -->
 
     <style name="NoAnimation.Theme.AppCompat.Light.DarkActionBar" parent="@style/Theme.AppCompat.Light.DarkActionBar">

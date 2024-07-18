@@ -4,13 +4,14 @@ import android.Manifest
 import android.app.NotificationManager
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.text.SpannableString
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.os.bundleOf
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -18,11 +19,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import network.loki.messenger.R
@@ -44,7 +44,7 @@ import org.session.libsignal.utilities.ThreadUtils
 import org.session.libsignal.utilities.toHexString
 import org.thoughtcrime.securesms.ApplicationContext
 import org.thoughtcrime.securesms.PassphraseRequiredActionBarActivity
-import org.thoughtcrime.securesms.conversation.start.NewConversationFragment
+import org.thoughtcrime.securesms.conversation.start.StartConversationFragment
 import org.thoughtcrime.securesms.conversation.v2.ConversationActivityV2
 import org.thoughtcrime.securesms.conversation.v2.utilities.NotificationUtils
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
@@ -59,35 +59,36 @@ import org.thoughtcrime.securesms.dependencies.DatabaseComponent
 import org.thoughtcrime.securesms.groups.OpenGroupManager
 import org.thoughtcrime.securesms.home.search.GlobalSearchAdapter
 import org.thoughtcrime.securesms.home.search.GlobalSearchInputLayout
+import org.thoughtcrime.securesms.home.search.GlobalSearchResult
 import org.thoughtcrime.securesms.home.search.GlobalSearchViewModel
 import org.thoughtcrime.securesms.messagerequests.MessageRequestsActivity
 import org.thoughtcrime.securesms.mms.GlideApp
 import org.thoughtcrime.securesms.mms.GlideRequests
 import org.thoughtcrime.securesms.notifications.PushRegistry
-import org.thoughtcrime.securesms.onboarding.SeedActivity
-import org.thoughtcrime.securesms.onboarding.SeedReminderViewDelegate
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.preferences.SettingsActivity
+import org.thoughtcrime.securesms.recoverypassword.RecoveryPasswordActivity
 import org.thoughtcrime.securesms.showMuteDialog
 import org.thoughtcrime.securesms.showSessionDialog
+import org.thoughtcrime.securesms.ui.setThemedContent
 import org.thoughtcrime.securesms.util.ConfigurationMessageUtilities
 import org.thoughtcrime.securesms.util.IP2Country
 import org.thoughtcrime.securesms.util.disableClipping
 import org.thoughtcrime.securesms.util.push
 import org.thoughtcrime.securesms.util.show
+import org.thoughtcrime.securesms.util.start
 import java.io.IOException
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeActivity : PassphraseRequiredActionBarActivity(),
     ConversationClickListener,
-    SeedReminderViewDelegate,
     GlobalSearchInputLayout.GlobalSearchInputLayoutListener {
 
     companion object {
+        const val NEW_ACCOUNT = "HomeActivity_NEW_ACCOUNT"
         const val FROM_ONBOARDING = "HomeActivity_FROM_ONBOARDING"
     }
-
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var glide: GlideRequests
@@ -104,8 +105,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     private val globalSearchViewModel by viewModels<GlobalSearchViewModel>()
     private val homeViewModel by viewModels<HomeViewModel>()
 
-    private val publicKey: String
-        get() = textSecurePreferences.getLocalNumber()!!
+    private val publicKey: String by lazy { textSecurePreferences.getLocalNumber()!! }
 
     private val homeAdapter: HomeAdapter by lazy {
         HomeAdapter(context = this, configFactory = configFactory, listener = this, ::showMessageRequests, ::hideMessageRequests)
@@ -113,47 +113,38 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
     private val globalSearchAdapter = GlobalSearchAdapter { model ->
         when (model) {
-            is GlobalSearchAdapter.Model.Message -> {
-                val threadId = model.messageResult.threadId
-                val timestamp = model.messageResult.sentTimestampMs
-                val author = model.messageResult.messageRecipient.address
-
-                val intent = Intent(this, ConversationActivityV2::class.java)
-                intent.putExtra(ConversationActivityV2.THREAD_ID, threadId)
-                intent.putExtra(ConversationActivityV2.SCROLL_MESSAGE_ID, timestamp)
-                intent.putExtra(ConversationActivityV2.SCROLL_MESSAGE_AUTHOR, author)
-                push(intent)
-            }
-            is GlobalSearchAdapter.Model.SavedMessages -> {
-                val intent = Intent(this, ConversationActivityV2::class.java)
-                intent.putExtra(ConversationActivityV2.ADDRESS, Address.fromSerialized(model.currentUserPublicKey))
-                push(intent)
-            }
-            is GlobalSearchAdapter.Model.Contact -> {
-                val address = model.contact.sessionID
-
-                val intent = Intent(this, ConversationActivityV2::class.java)
-                intent.putExtra(ConversationActivityV2.ADDRESS, Address.fromSerialized(address))
-                push(intent)
-            }
-            is GlobalSearchAdapter.Model.GroupConversation -> {
-                val groupAddress = Address.fromSerialized(model.groupRecord.encodedId)
-                val threadId = threadDb.getThreadIdIfExistsFor(Recipient.from(this, groupAddress, false))
-                if (threadId >= 0) {
-                    val intent = Intent(this, ConversationActivityV2::class.java)
-                    intent.putExtra(ConversationActivityV2.THREAD_ID, threadId)
-                    push(intent)
+            is GlobalSearchAdapter.Model.Message -> push<ConversationActivityV2> {
+                model.messageResult.run {
+                    putExtra(ConversationActivityV2.THREAD_ID, threadId)
+                    putExtra(ConversationActivityV2.SCROLL_MESSAGE_ID, sentTimestampMs)
+                    putExtra(ConversationActivityV2.SCROLL_MESSAGE_AUTHOR, messageRecipient.address)
                 }
             }
-            else -> {
-                Log.d("Loki", "callback with model: $model")
+            is GlobalSearchAdapter.Model.SavedMessages -> push<ConversationActivityV2> {
+                putExtra(ConversationActivityV2.ADDRESS, Address.fromSerialized(model.currentUserPublicKey))
             }
+            is GlobalSearchAdapter.Model.Contact -> push<ConversationActivityV2> {
+                putExtra(ConversationActivityV2.ADDRESS, model.contact.accountID.let(Address::fromSerialized))
+            }
+            is GlobalSearchAdapter.Model.GroupConversation -> model.groupRecord.encodedId
+                .let { Recipient.from(this, Address.fromSerialized(it), false) }
+                .let(threadDb::getThreadIdIfExistsFor)
+                .takeIf { it >= 0 }
+                ?.let {
+                    push<ConversationActivityV2> { putExtra(ConversationActivityV2.THREAD_ID, it) }
+                }
+            else -> Log.d("Loki", "callback with model: $model")
         }
     }
+
+    private val isNewAccount: Boolean get() = intent.getBooleanExtra(FROM_ONBOARDING, false)
 
     // region Lifecycle
     override fun onCreate(savedInstanceState: Bundle?, isReady: Boolean) {
         super.onCreate(savedInstanceState, isReady)
+
+        if (!isTaskRoot) { finish(); return }
+
         // Set content view
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -164,20 +155,14 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         // Set up toolbar buttons
         binding.profileButton.setOnClickListener { openSettings() }
         binding.searchViewContainer.setOnClickListener {
+            globalSearchViewModel.refresh()
             binding.globalSearchInputLayout.requestFocus()
         }
         binding.sessionToolbar.disableClipping()
         // Set up seed reminder view
         lifecycleScope.launchWhenStarted {
-            val hasViewedSeed = textSecurePreferences.getHasViewedSeed()
-            if (!hasViewedSeed) {
-                binding.seedReminderView.isVisible = true
-                binding.seedReminderView.title = SpannableString("You're almost finished! 80%") // Intentionally not yet translated
-                binding.seedReminderView.subtitle = resources.getString(R.string.view_seed_reminder_subtitle_1)
-                binding.seedReminderView.setProgress(80, false)
-                binding.seedReminderView.delegate = this@HomeActivity
-            } else {
-                binding.seedReminderView.isVisible = false
+            binding.seedReminderView.setThemedContent {
+                if (!textSecurePreferences.getHasViewedSeed()) SeedReminder { start<RecoveryPasswordActivity>() }
             }
         }
         // Set up recycler view
@@ -193,11 +178,14 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         }
 
         // Set up empty state view
-        binding.createNewPrivateChatButton.setOnClickListener { showNewConversation() }
+        binding.emptyStateContainer.setThemedContent {
+            EmptyView(isNewAccount)
+        }
+
         IP2Country.configureIfNeeded(this@HomeActivity)
 
         // Set up new conversation button
-        binding.newConversationButton.setOnClickListener { showNewConversation() }
+        binding.newConversationButton.setOnClickListener { showStartConversation() }
         // Observe blocked contacts changed events
 
         // subscribe to outdated config updates, this should be removed after long enough time for device migration
@@ -252,51 +240,29 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
             // monitor the global search VM query
             launch {
                 binding.globalSearchInputLayout.query
-                        .onEach(globalSearchViewModel::postQuery)
-                        .collect()
+                    .collect(globalSearchViewModel::setQuery)
             }
             // Get group results and display them
             launch {
-                globalSearchViewModel.result.collect { result ->
-                    val currentUserPublicKey = publicKey
-                    val contactAndGroupList = result.contacts.map { GlobalSearchAdapter.Model.Contact(it) } +
-                            result.threads.map { GlobalSearchAdapter.Model.GroupConversation(it) }
-
-                    val contactResults = contactAndGroupList.toMutableList()
-
-                    if (contactResults.isEmpty()) {
-                        contactResults.add(GlobalSearchAdapter.Model.SavedMessages(currentUserPublicKey))
+                globalSearchViewModel.result.map { result ->
+                    result.query to when {
+                        result.query.isEmpty() -> buildList {
+                            add(GlobalSearchAdapter.Model.Header(R.string.contacts))
+                            add(GlobalSearchAdapter.Model.SavedMessages(publicKey))
+                            addAll(result.groupedContacts)
+                        }
+                        else -> buildList {
+                            result.contactAndGroupList.takeUnless { it.isEmpty() }?.let {
+                                add(GlobalSearchAdapter.Model.Header(R.string.contacts))
+                                addAll(it)
+                            }
+                            result.messageResults.takeUnless { it.isEmpty() }?.let {
+                                add(GlobalSearchAdapter.Model.Header(R.string.global_search_messages))
+                                addAll(it)
+                            }
+                        }
                     }
-
-                    val userIndex = contactResults.indexOfFirst { it is GlobalSearchAdapter.Model.Contact && it.contact.sessionID == currentUserPublicKey }
-                    if (userIndex >= 0) {
-                        contactResults[userIndex] = GlobalSearchAdapter.Model.SavedMessages(currentUserPublicKey)
-                    }
-
-                    if (contactResults.isNotEmpty()) {
-                        contactResults.add(0, GlobalSearchAdapter.Model.Header(R.string.global_search_contacts_groups))
-                    }
-
-                    val unreadThreadMap = result.messages
-                            .groupBy { it.threadId }.keys
-                            .map { it to mmsSmsDatabase.getUnreadCount(it) }
-                            .toMap()
-
-                    val messageResults: MutableList<GlobalSearchAdapter.Model> = result.messages
-                            .map { messageResult ->
-                                GlobalSearchAdapter.Model.Message(
-                                        messageResult,
-                                        unreadThreadMap[messageResult.threadId] ?: 0
-                                )
-                            }.toMutableList()
-
-                    if (messageResults.isNotEmpty()) {
-                        messageResults.add(0, GlobalSearchAdapter.Model.Header(R.string.global_search_messages))
-                    }
-
-                    val newData = contactResults + messageResults
-                    globalSearchAdapter.setNewData(result.query, newData)
-                }
+                }.collectLatest(globalSearchAdapter::setNewData)
             }
         }
         EventBus.getDefault().register(this@HomeActivity)
@@ -308,20 +274,62 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
                     .request(Manifest.permission.POST_NOTIFICATIONS)
                     .execute()
             }
-            configFactory.user?.let { user ->
-                if (!user.isBlockCommunityMessageRequestsSet()) {
-                    user.setCommunityMessageRequests(false)
+            configFactory.user
+                ?.takeUnless { it.isBlockCommunityMessageRequestsSet() }
+                ?.setCommunityMessageRequests(false)
+        }
+    }
+
+    private val GlobalSearchResult.groupedContacts: List<GlobalSearchAdapter.Model> get() {
+        class NamedValue<T>(val name: String?, val value: T)
+
+        // Unknown is temporarily to be grouped together with numbers title.
+        // https://optf.atlassian.net/browse/SES-2287
+        val numbersTitle = "#"
+        val unknownTitle = numbersTitle
+
+        return contacts
+            // Remove ourself, we're shown above.
+            .filter { it.accountID != publicKey }
+            // Get the name that we will display and sort by, and uppercase it to
+            // help with sorting and we need the char uppercased later.
+            .map { (it.nickname?.takeIf(String::isNotEmpty) ?: it.name?.takeIf(String::isNotEmpty))
+                .let { name -> NamedValue(name?.uppercase(), it) } }
+            // Digits are all grouped under a #, the rest are grouped by their first character.uppercased()
+            // If there is no name, they go under Unknown
+            .groupBy { it.name?.run { first().takeUnless(Char::isDigit)?.toString() ?: numbersTitle } ?: unknownTitle }
+            // place the # at the end, after all the names starting with alphabetic chars
+            .toSortedMap(compareBy {
+                when (it) {
+                    unknownTitle -> Char.MAX_VALUE
+                    numbersTitle -> Char.MAX_VALUE - 1
+                    else -> it.first()
                 }
+            })
+            // Flatten the map of char to lists into an actual List that can be displayed.
+            .flatMap { (key, contacts) ->
+                listOf(
+                    GlobalSearchAdapter.Model.SubHeader(key)
+                ) + contacts.sortedBy { it.name ?: it.value.accountID }.map { it.value }.map { GlobalSearchAdapter.Model.Contact(it, it.nickname ?: it.name, it.accountID == publicKey) }
             }
+    }
+
+    private val GlobalSearchResult.contactAndGroupList: List<GlobalSearchAdapter.Model> get() =
+        contacts.map { GlobalSearchAdapter.Model.Contact(it, it.nickname ?: it.name, it.accountID == publicKey) } +
+            threads.map(GlobalSearchAdapter.Model::GroupConversation)
+
+    private val GlobalSearchResult.messageResults: List<GlobalSearchAdapter.Model> get() {
+        val unreadThreadMap = messages
+            .map { it.threadId }.toSet()
+            .associateWith { mmsSmsDatabase.getUnreadCount(it) }
+
+        return messages.map {
+            GlobalSearchAdapter.Model.Message(it, unreadThreadMap[it.threadId] ?: 0, it.conversationRecipient.isLocalNumber)
         }
     }
 
     override fun onInputFocusChanged(hasFocus: Boolean) {
-        if (hasFocus) {
-            setSearchShown(true)
-        } else {
-            setSearchShown(!binding.globalSearchInputLayout.query.value.isNullOrEmpty())
-        }
+        setSearchShown(hasFocus || binding.globalSearchInputLayout.query.value.isNotEmpty())
     }
 
     private fun setSearchShown(isShown: Boolean) {
@@ -330,7 +338,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         binding.recyclerView.isVisible = !isShown
         binding.emptyStateContainer.isVisible = (binding.recyclerView.adapter as HomeAdapter).itemCount == 0 && binding.recyclerView.isVisible
         binding.seedReminderView.isVisible = !TextSecurePreferences.getHasViewedSeed(this) && !isShown
-        binding.globalSearchRecycler.isVisible = isShown
+        binding.globalSearchRecycler.isInvisible = !isShown
         binding.newConversationButton.isVisible = !isShown
     }
 
@@ -397,16 +405,8 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
     // region Interaction
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        if (binding.globalSearchRecycler.isVisible) {
-            binding.globalSearchInputLayout.clearSearch(true)
-            return
-        }
-        super.onBackPressed()
-    }
-
-    override fun handleSeedReminderViewContinueButtonTapped() {
-        val intent = Intent(this, SeedActivity::class.java)
-        show(intent)
+        if (binding.globalSearchRecycler.isVisible) binding.globalSearchInputLayout.clearSearch(true)
+        else super.onBackPressed()
     }
 
     override fun onConversationClick(thread: ThreadRecord) {
@@ -431,17 +431,17 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         bottomSheet.onCopyConversationId = onCopyConversationId@{
             bottomSheet.dismiss()
             if (!thread.recipient.isGroupRecipient && !thread.recipient.isLocalNumber) {
-                val clip = ClipData.newPlainText("Session ID", thread.recipient.address.toString())
-                val manager = getSystemService(PassphraseRequiredActionBarActivity.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("Account ID", thread.recipient.address.toString())
+                val manager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                 manager.setPrimaryClip(clip)
                 Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
             }
             else if (thread.recipient.isCommunityRecipient) {
-                val threadId = threadDb.getThreadIdIfExistsFor(thread.recipient) ?: return@onCopyConversationId Unit
+                val threadId = threadDb.getThreadIdIfExistsFor(thread.recipient)
                 val openGroup = DatabaseComponent.get(this@HomeActivity).lokiThreadDatabase().getOpenGroupChat(threadId) ?: return@onCopyConversationId Unit
 
                 val clip = ClipData.newPlainText("Community URL", openGroup.joinURL)
-                val manager = getSystemService(PassphraseRequiredActionBarActivity.CLIPBOARD_SERVICE) as ClipboardManager
+                val manager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                 manager.setPrimaryClip(clip)
                 Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
             }
@@ -569,7 +569,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         val message = if (recipient.isGroupRecipient) {
             val group = groupDatabase.getGroup(recipient.address.toString()).orNull()
             if (group != null && group.admins.map { it.toString() }.contains(textSecurePreferences.getLocalNumber())) {
-                "Because you are the creator of this group it will be deleted for everyone. This cannot be undone."
+                getString(R.string.admin_group_leave_warning)
             } else {
                 resources.getString(R.string.activity_home_leave_group_dialog_message)
             }
@@ -625,7 +625,7 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
 
     private fun hideMessageRequests() {
         showSessionDialog {
-            text("Hide message requests?")
+            text(getString(R.string.hide_message_requests))
             button(R.string.yes) {
                 textSecurePreferences.setHasHiddenMessageRequests()
                 homeViewModel.tryReload()
@@ -634,9 +634,15 @@ class HomeActivity : PassphraseRequiredActionBarActivity(),
         }
     }
 
-    private fun showNewConversation() {
-        NewConversationFragment().show(supportFragmentManager, "NewConversationFragment")
+    private fun showStartConversation() {
+        StartConversationFragment().show(supportFragmentManager, "StartConversationFragment")
     }
+}
 
-    // endregion
+fun Context.startHomeActivity(isNewAccount: Boolean) {
+    Intent(this, HomeActivity::class.java).apply {
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        putExtra(HomeActivity.NEW_ACCOUNT, true)
+        putExtra(HomeActivity.FROM_ONBOARDING, true)
+    }.also(::startActivity)
 }

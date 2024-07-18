@@ -524,27 +524,24 @@
     <string name="copied_to_clipboard">क्लिपबोर्ड पर कॉपी किया गया है</string>
     <string name="next">अगला</string>
     <string name="share">साझा करें</string>
-    <string name="invalid_session_id">अमान्य सेशन आईडी</string>
+    <string name="invalid_account_id">अमान्य सेशन आईडी</string>
     <string name="cancel">रद्द करें</string>
-    <string name="your_session_id">आपकी सेशन आईडी</string>
-    <string name="activity_landing_title_2">आपका सेशन यहां आरंभ होता है...</string>
-    <string name="activity_landing_register_button_title">सेशन आईडी बनाएं</string>
-    <string name="activity_landing_restore_button_title">अपना सेशन जारी रखें</string>
+    <string name="your_account_id">आपकी सेशन आईडी</string>
     <string name="view_fake_chat_bubble_1">सेशन क्या है?</string>
     <string name="view_fake_chat_bubble_2">यह एक decentralized, encrypted मेसेजिंग ऐप है</string>
     <string name="view_fake_chat_bubble_3">इसलिए यह मेरी निजी जानकारी या बातचीत का metadata इकठ्ठा नहीं करता? यह कैसे काम करता है?</string>
     <string name="view_fake_chat_bubble_4">एडवांस्ड anonymous routing और end-to-end encryption के मिश्रण का प्रयोग करके।</string>
     <string name="view_fake_chat_bubble_5">दोस्त दोस्तों को असुरक्षित मैसेंजर नहीं उपयोग करने देते। आपका स्वागत है।</string>
-    <string name="activity_register_title">अपनी सेशन आईडी को हेल्लो कहें</string>
-    <string name="activity_register_explanation">आपकी Session ID एक ऐसा अनोखा पता है जिसका उपयोग करके लोग आपसे Session पर संपर्क कर सकते हैं। आपकी वास्तविक पहचान से कोई संबंध नहीं होने के कारण, आपका Session ID डिज़ाइन द्वारा पूरी तरह से गुमनाम और निजी है |</string>
+
+
     <string name="activity_restore_title">अकाउंट रिस्टोर करें</string>
     <string name="activity_restore_explanation">अकाउंट बनाते समय बनाया गया अपना रिकवरी वाक्य डालें।</string>
     <string name="activity_restore_seed_edit_text_hint">अपना पुनर्प्राप्ति वाक्यांश लिखें</string>
-    <string name="activity_display_name_title_2">अपना प्रदर्शन नाम चुनें</string>
-    <string name="activity_display_name_explanation">यह सेशन इस्तेमाल करते समय आपका नाम होगा। यह आपका असली नाम, उपनाम या कुछ और भी हो सकता है।</string>
-    <string name="activity_display_name_edit_text_hint">डिस्प्ले नाम डालें</string>
-    <string name="activity_display_name_display_name_missing_error">कृपया एक डिस्प्ले नाम चुनें</string>
-    <string name="activity_display_name_display_name_too_long_error">कृपया एक छोटा डिसप्ले नाम चुनें</string>
+    <string name="displayNamePick">अपना प्रदर्शन नाम चुनें</string>
+    <string name="displayNameDescription">यह सेशन इस्तेमाल करते समय आपका नाम होगा। यह आपका असली नाम, उपनाम या कुछ और भी हो सकता है।</string>
+    <string name="displayNameEnter">डिस्प्ले नाम डालें</string>
+    <string name="displayNameErrorDescription">कृपया एक डिस्प्ले नाम चुनें</string>
+    <string name="displayNameErrorDescriptionShorter">कृपया एक छोटा डिसप्ले नाम चुनें</string>
     <string name="activity_pn_mode_recommended_option_tag">सुझाया गया</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">कृपया एक विकल्प चुनें।</string>
     <string name="activity_home_empty_state_message">अभी तक आपके पास कोई कॉन्टैक्ट्स नहीं हैं</string>
@@ -553,13 +550,8 @@
     <string name="activity_home_leaving_group_failed_message">"ग्रुप नहीं छोड़ सके"</string>
     <string name="activity_home_delete_conversation_dialog_message">क्या वाकई आप इस वार्तालाप को हटाना चाहते हैं?</string>
     <string name="activity_home_conversation_deleted_message">बातचीत हटाई गई</string>
-    <string name="activity_seed_title">आपका पुनर्प्राप्ति वाक्यांश</string>
-    <string name="activity_seed_title_2">अपने पुनर्प्राप्ति वाक्यांश से मिलें</string>
-    <string name="activity_seed_explanation">आपका रिकवरी फ्रेज आपके Session Id की मास्टर कीय है — आप इसका इस्तेमाल अपनी Session ID को वापिस पाने के लिए कर सकते है अगर आपका फ़ोन गुम हो गया है | अपने रिकवरी फ्रेज को एक सुरक्षित जगह रखे और इसे किसी के साथ शेयर न करे |</string>
-    <string name="activity_seed_reveal_button_title">देखने के लिए दबाएं</string>
-    <string name="view_seed_reminder_title">पूर्ण होने वाला है! 80%</string>
     <string name="view_seed_reminder_subtitle_1">अकाउंट सुरक्षित रखने के लिए अपनी पुनर्व्यप्ती वाक्यांश को सेव करके रखें</string>
-    <string name="view_seed_reminder_subtitle_2">अपना पुनर्प्राप्ति वाक्यांश प्रकट करने के लिए संशोधित शब्दों को टैप और होल्ड करें, फिर अपनी Session ID को सुरक्षित करने के लिए इसे सुरक्षित रूप से संग्रहीत करें।</string>
+    <string name="view_seed_reminder_subtitle_2">अपना पुनर्प्राप्ति वाक्यांश प्रकट करने के लिए संशोधित शब्दों को टैप और होल्ड करें, फिर अपनी Account ID को सुरक्षित करने के लिए इसे सुरक्षित रूप से संग्रहीत करें।</string>
     <string name="view_seed_reminder_subtitle_3">अपने रिकवरी फ्रेज को एक सुरक्षित जगह रखे</string>
     <string name="activity_path_title">पथ</string>
     <string name="activity_path_explanation">सेशन आपके मैसेज को सेशन के डेंटरलिज़्ड नेटवर्क की बहुत साडी सर्विस नोड्स में भेज देता है जो आपकी IP को छुपाती है.</string>
@@ -570,7 +562,7 @@
     <string name="activity_path_learn_more_button_title">अधिक जानें</string>
     <string name="activity_path_resolving_progress">हल किया जा रहा है</string>
     <string name="activity_create_private_chat_title">नया सेशन</string>
-    <string name="activity_create_private_chat_enter_session_id_tab_title">सेशन आईडी डालें</string>
+    <string name="activity_create_private_chat_enter_account_id_tab_title">सेशन आईडी डालें</string>
     <string name="activity_create_private_chat_scan_qr_code_tab_title">QR कोड को स्कैन करें</string>
     <string name="activity_create_private_chat_scan_qr_code_explanation">सेशन शुरू करने के लिए यूजर के क्यूआर कोड को स्कैन करें। क्यूआर कोड को अकाउंट सेटिंग में क्यूआर कोड आइकन पर टैप करके पाया जा सकता है।</string>
     <string name="fragment_enter_public_key_edit_text_hint">Session आईडी या ओएनएस नाम दर्ज करें</string>
@@ -602,7 +594,6 @@
     <string name="activity_settings_devices_button_title">डिवाइसेज़</string>
     <string name="activity_settings_invite_button_title">किसी मित्र को आमंत्रित करें</string>
     <string name="activity_settings_faq_button_title">अकसर किये गए सवाल</string>
-    <string name="activity_settings_recovery_phrase_button_title">पुनर्प्राप्ति वाक्यांश</string>
     <string name="activity_settings_clear_all_data_button_title">डेटा हटाएं</string>
     <string name="activity_settings_clear_all_data_and_network_button_title">डाटा नेटवर्क के समेत साफ करें।</string>
     <string name="activity_settings_help_translate_session">सेशन का अनुवाद करने में सहायता करें</string>
@@ -615,8 +606,6 @@
     <string name="preferences_notifications_strategy_category_fast_mode_summary">आपको नई सूचनाओं के बारे में google के नोटीफिकेशन servers से तत्काल सूचित किया जाएगा।</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">नाम बदलें</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">डिवाइस को अनलिंक करें</string>
-    <string name="dialog_seed_title">आपका पुनर्प्राप्ति वाक्यांश</string>
-    <string name="dialog_seed_explanation">यह आपका रिकवरी फ्रेज है | इसके साथ, आप अपनी Session ID को किसी नए डिवाइस पर माइग्रेट कर सकते हैं।</string>
     <string name="dialog_clear_all_data_title">सभी डेटा हटाएं</string>
     <string name="dialog_clear_all_data_explanation">यह आपके मैसेजस, सेशन और कॉन्टैक्टस को स्थायी रूप से हटा देगा।</string>
     <string name="dialog_clear_all_data_network_explanation">क्या आप सिर्फ इस यंत्र को साफ करना चाहेंगे या अपना पूरा अकाउंट डिलीट करना चाहिएं?</string>
@@ -650,7 +639,7 @@
     <string name="dialog_ui_mode_option_day">हलका</string>
     <string name="dialog_ui_mode_option_night">अंधेरा</string>
     <string name="dialog_ui_mode_option_system_default">सिस्टम डिफ़ॉल्ट का इस्तेमाल करें</string>
-    <string name="activity_conversation_menu_copy_session_id">कापी सेशन आईडी</string>
+    <string name="activity_conversation_menu_copy_account_id">कापी सेशन आईडी</string>
     <string name="attachment">अटैचमेंट</string>
     <string name="attachment_type_voice_message">वौइस् मैसेज</string>
     <string name="details">विस्तार</string>
@@ -660,7 +649,6 @@
     <string name="activity_backup_restore_explanation_1">एक बैकअप फ़ाइल चुनें और वह पासफ़्रेज़ दर्ज करें जिसके साथ इसे बनाया गया था।</string>
     <string name="activity_backup_restore_passphrase">30 अंक का पासफ्रेस</string>
     <string name="activity_link_device_skip_prompt">यह समय ले रहा है, इसे छोड़ दें?</string>
-    <string name="activity_link_device_link_device">डिवाइस को लिंक करें</string>
     <string name="activity_link_device_recovery_phrase">पुनर्प्राप्ति वाक्यांश</string>
     <string name="activity_link_device_scan_qr_code">QR कोड को स्कैन करें</string>
     <string name="activity_link_device_qr_message">अपना क्यूआर कोड दिखाने के लिए अपने अन्य डिवाइस पर सेटिंग्स →पुनर्प्राप्ति वाक्यांश में जाएंं।</string>
@@ -671,7 +659,6 @@
     <string name="activity_pn_mode_slow_mode">स्लो मोड</string>
     <string name="activity_pn_mode_fast_mode_explanation">आपको नई सूचनाओं के बारे में google के नोटीफिकेशन servers से तत्काल सूचित किया जाएगा।</string>
     <string name="activity_pn_mode_slow_mode_explanation">Session कभी-कभी पृष्ठभूमि में नए संदेशों की जांच करेगा।</string>
-    <string name="fragment_recovery_phrase_title">पुनर्प्राप्ति वाक्यांश</string>
     <string name="activity_prompt_passphrase_session_locked">Session लॉक है</string>
     <string name="activity_prompt_passphrase_tap_to_unlock">अनलॉक करने के लिए टैप करें</string>
     <string name="fragment_user_details_bottom_sheet_edit_text_hint">उपनाम चुनें</string>

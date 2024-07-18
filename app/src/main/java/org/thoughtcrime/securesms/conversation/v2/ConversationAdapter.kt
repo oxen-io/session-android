@@ -70,7 +70,7 @@ class ConversationAdapter(
 
     @WorkerThread
     private fun getSenderInfo(sender: String): Contact? {
-        return contactDB.getContactWithSessionID(sender)
+        return contactDB.getContactWithAccountID(sender)
     }
 
     sealed class ViewType(val rawValue: Int) {

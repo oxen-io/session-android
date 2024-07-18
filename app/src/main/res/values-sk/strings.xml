@@ -539,25 +539,24 @@ výmeny kľúčov.</string>
     <string name="copied_to_clipboard">Skopírované do schránky</string>
     <string name="next">Ďalej</string>
     <string name="share">Zdieľať</string>
-    <string name="invalid_session_id">Neplatné Session ID</string>
+    <string name="invalid_account_id">Neplatné Account ID</string>
     <string name="cancel">Zrušiť</string>
-    <string name="your_session_id">Vaše Session ID</string>
-    <string name="activity_landing_register_button_title">Vytvoriť Session ID</string>
+    <string name="your_account_id">Vaše Account ID</string>
     <string name="view_fake_chat_bubble_1">Čo je Session?</string>
     <string name="view_fake_chat_bubble_2">Je to decentralizovaná, šifrovaná aplikácia na posielanie správ</string>
     <string name="view_fake_chat_bubble_3">Takže nezbiera moje osobné informácie alebo metadáta mojich konverzácií? Ako to funguje?</string>
     <string name="view_fake_chat_bubble_4">Použitím kombinácie pokročilých technológií anonymného smerovania a end-to-end šifrovania.</string>
     <string name="view_fake_chat_bubble_5">Priatelia nedovolia priateľom používať skompromitované chatové aplikácie. Nieje za čo.</string>
-    <string name="activity_register_title">Povedzte ahoj svojmu Session ID</string>
-    <string name="activity_register_explanation">Vaše Session ID je jedinečná adresa, ktorú môžu ľudia použiť aby sa s vami skontaktovali v Session. Pretože Session ID nemá žiadne spojenie s vašou skutočnou identitou, je Session ID úplne anonymné a súkromé.</string>
+
+
     <string name="activity_restore_title">Obnoviť účet</string>
     <string name="activity_restore_explanation">Zadajte frázu na obnovenie, ktorá vám bola poskytnutá pri registrácii na obnovenie účtu.</string>
     <string name="activity_restore_seed_edit_text_hint">Zadajte vašu obnovovaciu frázu</string>
-    <string name="activity_display_name_title_2">Vyberte svoje zobrazované meno</string>
-    <string name="activity_display_name_explanation">Toto bude vaše meno pri používaní Session. Môže to byť vaše skutočné meno, prezývka alebo čokoľvek čo chcete.</string>
-    <string name="activity_display_name_edit_text_hint">Zadajte zobrazované meno</string>
-    <string name="activity_display_name_display_name_missing_error">Zvoľte prosím zobrazované meno</string>
-    <string name="activity_display_name_display_name_too_long_error">Zvoľte prosím kratšie zobrazované meno</string>
+    <string name="displayNamePick">Vyberte svoje zobrazované meno</string>
+    <string name="displayNameDescription">Toto bude vaše meno pri používaní Session. Môže to byť vaše skutočné meno, prezývka alebo čokoľvek čo chcete.</string>
+    <string name="displayNameEnter">Zadajte zobrazované meno</string>
+    <string name="displayNameErrorDescription">Zvoľte prosím zobrazované meno</string>
+    <string name="displayNameErrorDescriptionShorter">Zvoľte prosím kratšie zobrazované meno</string>
     <string name="activity_pn_mode_recommended_option_tag">Odporúčané</string>
     <string name="activity_pn_mode_no_option_picked_dialog_title">Prosím, zvoľte možnosť</string>
     <string name="activity_home_empty_state_message">Zatiaľ nemáte žiadne kontakty</string>
@@ -565,11 +564,6 @@ výmeny kľúčov.</string>
     <string name="activity_home_leaving_group_failed_message">"Skupinu sa nepodarilo opustiť"</string>
     <string name="activity_home_delete_conversation_dialog_message">Naozaj chcete odstrániť túto konverzáciu?</string>
     <string name="activity_home_conversation_deleted_message">Konverzácia úspešne zmazaná</string>
-    <string name="activity_seed_title">Vaša fráza pre obnovenie</string>
-    <string name="activity_seed_title_2">Toto je vaša fráza pre obnovenie</string>
-    <string name="activity_seed_explanation">Vaša fráza na obnovenie je hlavným kľúčom k vášmu Session ID - môžete ju použiť na obnovenie svojho Session ID ak stratíte prístup k zariadeniu. Uložte frázu na obnovenie na bezpečnom mieste a nikomu ju nedávajte.</string>
-    <string name="activity_seed_reveal_button_title">Podržaním odhaľte</string>
-    <string name="view_seed_reminder_title">Ste takmer hotoví! 80%</string>
     <string name="view_seed_reminder_subtitle_1">Zabezpečte svoj účet uložením frázy obnovenia</string>
     <string name="view_seed_reminder_subtitle_3">Uistite sa, že frázu na obnovenie máte uloženú na bezpečnom mieste</string>
     <string name="activity_path_title">Cesta</string>
@@ -579,10 +573,10 @@ výmeny kľúčov.</string>
     <string name="activity_path_service_node_row_title">Servisný uzol</string>
     <string name="activity_path_destination_row_title">Cieľ</string>
     <string name="activity_path_learn_more_button_title">Viac informácií</string>
-    <string name="activity_create_private_chat_enter_session_id_tab_title">Zadajte Session ID</string>
+    <string name="activity_create_private_chat_enter_account_id_tab_title">Zadajte Account ID</string>
     <string name="activity_create_private_chat_scan_qr_code_tab_title">Skenovať QR kód</string>
     <string name="activity_create_private_chat_scan_qr_code_explanation">Začnite stretnutie naskenovaním QR kódu iného používateľa. QR kód nájdete ťuknutím na ikonu QR kódu v nastaveniach účtu.</string>
-    <string name="fragment_enter_public_key_explanation">Používatelia môžu zdieľať svoje Session ID tak, že prejdú do nastavení svojho účtu a klepnú na možnosť „Zdieľať Session ID“ alebo zdieľajú svoj QR kód.</string>
+    <string name="fragment_enter_public_key_explanation">Používatelia môžu zdieľať svoje Account ID tak, že prejdú do nastavení svojho účtu a klepnú na možnosť „Zdieľať Account ID“ alebo zdieľajú svoj QR kód.</string>
     <string name="fragment_scan_qr_code_camera_access_explanation">Session potrebuje prístup k fotoaparátu na skenovanie QR kódov</string>
     <string name="fragment_scan_qr_code_grant_camera_access_button_title">Udeliť prístup k fotoaparátu</string>
     <string name="activity_create_closed_group_title">Nová uzatvorená skupina</string>
@@ -605,7 +599,6 @@ výmeny kľúčov.</string>
     <string name="activity_settings_privacy_button_title">Súkromie</string>
     <string name="activity_settings_notifications_button_title">Upozornenia</string>
     <string name="activity_settings_devices_button_title">Zariadenia</string>
-    <string name="activity_settings_recovery_phrase_button_title">Fráza pre obnovenie</string>
     <string name="activity_settings_clear_all_data_button_title">Odstrániť dáta</string>
     <string name="activity_settings_help_translate_session">Pomôžte nám preložiť Session</string>
     <string name="activity_notification_settings_title">Upozornenia</string>
@@ -614,8 +607,6 @@ výmeny kľúčov.</string>
     <string name="activity_privacy_settings_title">Súkromie</string>
     <string name="fragment_device_list_bottom_sheet_change_name_button_title">Zmeniť meno</string>
     <string name="fragment_device_list_bottom_sheet_unlink_device_button_title">Odpojenie zariadenia</string>
-    <string name="dialog_seed_title">Vaša fráza pre obnovenie</string>
-    <string name="dialog_seed_explanation">Toto je vaša fráza pre obnovenie. S jej pomocou môžete obnoviť alebo presunúť svoje Session ID na nové zariadenie.</string>
     <string name="dialog_clear_all_data_title">Odstrániť všetky dáta</string>
     <string name="activity_qr_code_title">QR kód</string>
     <string name="activity_qr_code_view_my_qr_code_tab_title">Zobraziť môj QR kód</string>
@@ -642,7 +633,7 @@ výmeny kľúčov.</string>
     <string name="dialog_ui_mode_option_day">Deň</string>
     <string name="dialog_ui_mode_option_night">Nočný režim</string>
     <string name="dialog_ui_mode_option_system_default">Predvolené systémom</string>
-    <string name="activity_conversation_menu_copy_session_id">Kopírovať Session ID</string>
+    <string name="activity_conversation_menu_copy_account_id">Kopírovať Account ID</string>
     <string name="attachment">Príloha</string>
     <string name="attachment_type_voice_message">Hlasová správa</string>
     <string name="details">Podrobnosti</string>
@@ -651,7 +642,6 @@ výmeny kľúčov.</string>
     <string name="activity_backup_restore_select_file">Vybrať súbor</string>
     <string name="activity_backup_restore_explanation_1">Vyberte súbor zálohy a zadajte prístupovú frázu, pomocou ktorej bol vytvorený.</string>
     <string name="activity_backup_restore_passphrase">30-znaková prístupová fráza</string>
-    <string name="activity_link_device_link_device">Pripojiť zariadenie</string>
     <string name="activity_join_public_chat_join_rooms">Alebo sa pripojte k jednej z týchto…</string>
     <string name="activity_pn_mode_message_notifications">Upozornenia na správy</string>
     <string name="activity_pn_mode_fast_mode">Rýchly režim</string>

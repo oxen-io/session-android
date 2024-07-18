@@ -143,7 +143,7 @@ class VisibleMessageView : FrameLayout {
         glide: GlideRequests = GlideApp.with(this),
         searchQuery: String? = null,
         contact: Contact? = null,
-        senderSessionID: String,
+        senderAccountID: String,
         lastSeen: Long,
         delegate: VisibleMessageViewDelegate? = null,
         onAttachmentNeedsDownload: (DatabaseAttachment) -> Unit,
@@ -178,30 +178,30 @@ class VisibleMessageView : FrameLayout {
 
         if (isGroupThread && !message.isOutgoing) {
             if (isEndOfMessageCluster) {
-                binding.profilePictureView.publicKey = senderSessionID
+                binding.profilePictureView.publicKey = senderAccountID
                 binding.profilePictureView.update(message.individualRecipient)
                 binding.profilePictureView.setOnClickListener {
                     if (thread.isCommunityRecipient) {
                         val openGroup = lokiThreadDb.getOpenGroupChat(threadID)
-                        if (IdPrefix.fromValue(senderSessionID) == IdPrefix.BLINDED && openGroup?.canWrite == true) {
+                        if (IdPrefix.fromValue(senderAccountID) == IdPrefix.BLINDED && openGroup?.canWrite == true) {
                             // TODO: support v2 soon
                             val intent = Intent(context, ConversationActivityV2::class.java)
                             intent.putExtra(ConversationActivityV2.FROM_GROUP_THREAD_ID, threadID)
-                            intent.putExtra(ConversationActivityV2.ADDRESS, Address.fromSerialized(senderSessionID))
+                            intent.putExtra(ConversationActivityV2.ADDRESS, Address.fromSerialized(senderAccountID))
                             context.startActivity(intent)
                         }
                     } else {
-                        maybeShowUserDetails(senderSessionID, threadID)
+                        maybeShowUserDetails(senderAccountID, threadID)
                     }
                 }
                 if (thread.isCommunityRecipient) {
                     val openGroup = lokiThreadDb.getOpenGroupChat(threadID) ?: return
                     var standardPublicKey = ""
                     var blindedPublicKey: String? = null
-                    if (IdPrefix.fromValue(senderSessionID)?.isBlinded() == true) {
-                        blindedPublicKey = senderSessionID
+                    if (IdPrefix.fromValue(senderAccountID)?.isBlinded() == true) {
+                        blindedPublicKey = senderAccountID
                     } else {
-                        standardPublicKey = senderSessionID
+                        standardPublicKey = senderAccountID
                     }
                     val isModerator = OpenGroupManager.isUserModerator(context, openGroup.groupId, standardPublicKey, blindedPublicKey)
                     binding.moderatorIconImageView.isVisible = !message.isOutgoing && isModerator
@@ -211,7 +211,7 @@ class VisibleMessageView : FrameLayout {
         binding.senderNameTextView.isVisible = !message.isOutgoing && (isStartOfMessageCluster && (isGroupThread || snIsSelected))
         val contactContext =
             if (thread.isCommunityRecipient) ContactContext.OPEN_GROUP else ContactContext.REGULAR
-        binding.senderNameTextView.text = contact?.displayName(contactContext) ?: senderSessionID
+        binding.senderNameTextView.text = contact?.displayName(contactContext) ?: senderAccountID
 
         // Unread marker
         val shouldShowUnreadMarker = lastSeen != -1L && message.timestamp > lastSeen && (previous == null || previous.timestamp <= lastSeen) && !message.isOutgoing

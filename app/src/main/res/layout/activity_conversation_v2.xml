@@ -279,6 +279,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/outdatedBanner"
         android:elevation="8dp"
+        android:contentDescription="@string/AccessibilityId_control_message"
         tools:text="@string/activity_conversation_empty_state_default"
         />
 

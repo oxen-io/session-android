@@ -89,7 +89,7 @@ object SnodeAPI {
     const val useTestnet = false
 
     // Error
-    internal sealed class Error(val description: String) : Exception(description) {
+    sealed class Error(val description: String) : Exception(description) {
         object Generic : Error("An error occurred.")
         object ClockOutOfSync : Error("Your clock is out of sync with the Service Node network.")
         object NoKeyPair : Error("Missing user key pair.")
@@ -220,11 +220,11 @@ object SnodeAPI {
     }
 
     // Public API
-    fun getSessionID(onsName: String): Promise<String, Exception> {
+    fun getAccountID(onsName: String): Promise<String, Exception> {
         val deferred = deferred<String, Exception>()
         val promise = deferred.promise
         val validationCount = 3
-        val sessionIDByteCount = 33
+        val accountIDByteCount = 33
         // Hash the ONS name using BLAKE2b
         val onsName = onsName.toLowerCase(Locale.US)
         val nameAsData = onsName.toByteArray()
@@ -234,7 +234,7 @@ object SnodeAPI {
             return promise
         }
         val base64EncodedNameHash = Base64.encodeBytes(nameHash)
-        // Ask 3 different snodes for the Session ID associated with the given name hash
+        // Ask 3 different snodes for the Account ID associated with the given name hash
         val parameters = mapOf(
                 "endpoint" to "ons_resolve",
                 "params" to mapOf( "type" to 0, "name_hash" to base64EncodedNameHash )
@@ -247,7 +247,7 @@ object SnodeAPI {
             }
         }
         all(promises).success { results ->
-            val sessionIDs = mutableListOf<String>()
+            val accountIDs = mutableListOf<String>()
             for (json in results) {
                 val intermediate = json["result"] as? Map<*, *>
                 val hexEncodedCiphertext = intermediate?.get("encrypted_value") as? String
@@ -259,18 +259,18 @@ object SnodeAPI {
                         val salt = ByteArray(PwHash.SALTBYTES)
                         val key: ByteArray
                         val nonce = ByteArray(SecretBox.NONCEBYTES)
-                        val sessionIDAsData = ByteArray(sessionIDByteCount)
+                        val accountIDAsData = ByteArray(accountIDByteCount)
                         try {
                             key = Key.fromHexString(sodium.cryptoPwHash(onsName, SecretBox.KEYBYTES, salt, PwHash.OPSLIMIT_MODERATE, PwHash.MEMLIMIT_MODERATE, PwHash.Alg.PWHASH_ALG_ARGON2ID13)).asBytes
                         } catch (e: SodiumException) {
                             deferred.reject(Error.HashingFailed)
                             return@success
                         }
-                        if (!sodium.cryptoSecretBoxOpenEasy(sessionIDAsData, ciphertext, ciphertext.size.toLong(), nonce, key)) {
+                        if (!sodium.cryptoSecretBoxOpenEasy(accountIDAsData, ciphertext, ciphertext.size.toLong(), nonce, key)) {
                             deferred.reject(Error.DecryptionFailed)
                             return@success
                         }
-                        sessionIDs.add(Hex.toStringCondensed(sessionIDAsData))
+                        accountIDs.add(Hex.toStringCondensed(accountIDAsData))
                     } else {
                         val hexEncodedNonce = intermediate["nonce"] as? String
                         if (hexEncodedNonce == null) {
@@ -283,20 +283,20 @@ object SnodeAPI {
                             deferred.reject(Error.HashingFailed)
                             return@success
                         }
-                        val sessionIDAsData = ByteArray(sessionIDByteCount)
-                        if (!sodium.cryptoAeadXChaCha20Poly1305IetfDecrypt(sessionIDAsData, null, null, ciphertext, ciphertext.size.toLong(), null, 0, nonce, key)) {
+                        val accountIDAsData = ByteArray(accountIDByteCount)
+                        if (!sodium.cryptoAeadXChaCha20Poly1305IetfDecrypt(accountIDAsData, null, null, ciphertext, ciphertext.size.toLong(), null, 0, nonce, key)) {
                             deferred.reject(Error.DecryptionFailed)
                             return@success
                         }
-                        sessionIDs.add(Hex.toStringCondensed(sessionIDAsData))
+                        accountIDs.add(Hex.toStringCondensed(accountIDAsData))
                     }
                 } else {
                     deferred.reject(Error.Generic)
                     return@success
                 }
             }
-            if (sessionIDs.size == validationCount && sessionIDs.toSet().size == 1) {
-                deferred.resolve(sessionIDs.first())
+            if (accountIDs.size == validationCount && accountIDs.toSet().size == 1) {
+                deferred.resolve(accountIDs.first())
             } else {
                 deferred.reject(Error.ValidationFailed)
             }
@@ -520,7 +520,7 @@ object SnodeAPI {
                     Log.w("Loki", "response code was not 200")
                     handleSnodeError(
                         response["code"] as? Int ?: 0,
-                        response,
+                        response["body"] as? Map<*, *>,
                         snode,
                         publicKey
                     )

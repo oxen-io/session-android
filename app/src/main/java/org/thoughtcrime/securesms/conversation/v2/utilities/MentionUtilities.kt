@@ -62,7 +62,7 @@ object MentionUtilities {
                 val userDisplayName: String? = if (isYou) {
                     context.getString(R.string.MessageRecord_you)
                 } else {
-                    val contact = DatabaseComponent.get(context).sessionContactDatabase().getContactWithSessionID(publicKey)
+                    val contact = DatabaseComponent.get(context).sessionContactDatabase().getContactWithAccountID(publicKey)
                     @Suppress("NAME_SHADOWING") val context = if (openGroup != null) Contact.ContactContext.OPEN_GROUP else Contact.ContactContext.REGULAR
                     contact?.displayName(context) ?: truncateIdForDisplay(publicKey)
                 }
@@ -157,7 +157,7 @@ object MentionUtilities {
     }
 
     private fun isYou(mentionedPublicKey: String, userPublicKey: String, openGroup: OpenGroup?): Boolean {
-        val isUserBlindedPublicKey = openGroup?.let { SodiumUtilities.sessionId(userPublicKey, mentionedPublicKey, it.publicKey) } ?: false
+        val isUserBlindedPublicKey = openGroup?.let { SodiumUtilities.accountId(userPublicKey, mentionedPublicKey, it.publicKey) } ?: false
         return mentionedPublicKey.equals(userPublicKey, ignoreCase = true) || isUserBlindedPublicKey
     }
 }

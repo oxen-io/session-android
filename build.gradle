@@ -12,6 +12,7 @@ buildscript {
 
     dependencies {
         classpath "com.android.tools.build:gradle:$gradlePluginVersion"
+        classpath files('libs/gradle-witness.jar')
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         classpath "com.google.gms:google-services:$googleServicesVersion"
