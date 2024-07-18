@@ -43,12 +43,15 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import network.loki.messenger.BuildConfig
+import network.loki.messenger.BuildConfig.VERSION_CODE
+import network.loki.messenger.BuildConfig.VERSION_NAME
 import network.loki.messenger.R
 import network.loki.messenger.databinding.ActivitySettingsBinding
 import network.loki.messenger.libsession_util.util.UserPic
 import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
+import org.session.libsession.BuildConfig.USE_TESTNET
 import org.session.libsession.avatars.AvatarHelper
 import org.session.libsession.avatars.ProfileContactPhoto
 import org.session.libsession.messaging.MessagingModuleConfiguration
@@ -130,7 +133,8 @@ class SettingsActivity : PassphraseRequiredActionBarActivity() {
             btnGroupNameDisplay.text = getDisplayName()
             publicKeyTextView.text = hexEncodedPublicKey
             val gitCommitFirstSixChars = BuildConfig.GIT_HASH.take(6)
-            versionTextView.text = String.format(getString(R.string.version_s), "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE} - $gitCommitFirstSixChars)")
+            val isTestNetString = if (USE_TESTNET) " testnet" else ""
+            versionTextView.text = String.format(getString(R.string.version_s), "$VERSION_NAME ($VERSION_CODE - $gitCommitFirstSixChars)$isTestNetString")
         }
 
         binding.composeView.setThemedContent {
